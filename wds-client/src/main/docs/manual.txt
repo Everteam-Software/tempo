@@ -1,0 +1,277 @@
+						Workflow Deployment Service Command Line Interface
+
+										User's Manual
+
+									   (version 4.1.5)
+									   
+									   
+INTRODUCTION
+
+	Workflow Deployment Service (WDS) is a component of Intalio|BPMS which 
+	provides generic capabilities for storing various Workflow artefacts, 
+	such as	task forms or task attachments.
+	
+	WDS is used both in design time and runtime.
+	
+	Itself, WDS has no human interface. It is only supposed to be used by
+	other components internally, and is transparent to the end-user.
+
+	For the time being though, some components of Intalio|BPMS are not ready 
+	to fully engage WDS, for various reasons. That, and the need to be able to
+	do some administrative tasks, caused the development of WDS-CLI.
+	
+	WDS-CLI (WDS Command Line Interface) is a command-line utility which acts
+	as a WDS client capable of triggering all operations WDS can perform.
+	
+	Thus, WDS-CLI could be used for two main purposes:
+	1) Performing administrative/scripted tasks (e.g. while integrating a new 
+	BPMS build).
+	2) Performing end-user tasks which are not yet implemented in the BPMS 
+	components where they belong, by hand (obviously the need to do this will 
+	fade away time after time, as the respective features are implemented in 
+	those components).
+
+	Now WDS-CLI can also be used from within Ant (http://ant.apache.org ) build
+	scripts. It follows syntax defined for command line calls of WDS-CLI. Example
+	script can be found in file build.xml.
+	
+PLAIN FILES vs WORKFLOW XFORMS
+
+	WDS is capable of storing any octet streams (files), BUT it contains 
+	special support for Workflow XForms (such as those created using Form 
+	Editor).
+	
+	Whether WDS treats your data as a plain octet stream or a Workflow XForm 
+	depends on how it is invoked. The respective options are reflected in WDS-CLI
+	invokation syntax, i.e. you explicitly specify whether you want WDS to 
+	treat the specified file as an XForms document or a plain file.
+	
+	See below for WDS-CLI syntax details.
+	
+SUPPORT FOR WORKFLOW XFORMS
+
+	Any Intalio|BPMS Workflow Task requires a human user to fill out a 
+	web-based form. The person which designs a business process which includes
+	Workflow tasks will obviously have to design those forms (or reuse 
+	previously designed ones).
+	
+	Intalio uses XForms as the form format, and Designer includes a
+	built-in XForms editor (FE).
+	
+	After a form has been designed in FE, it must be stored on WDS in order
+	to become available in runtime. WDS-CLI can be used to do this.
+	
+	WDS-CLI also takes care to handle the related XSD whenever you work with an
+	XForms document.
+	
+SYNTAX
+
+	The high-level syntax is:
+	
+	> wds-cli <options> <command> <arguments>
+	
+	Currently supported commands are:
+	
+	store
+	retrieve
+	delete
+	
+	store-activity
+	store-pipa
+	create-pipa
+	delete-pipa
+	delete-activity
+	
+	Each of the above commands will be explained below.
+	
+	There is a single option which is applicable to any command:
+	-w [endpoint]
+	or
+	--wds [endpoint]
+	
+	That option is used to specify the endpoint WDS-CLI will use as
+	the target WDS endpoint, for example
+	> wds-cli -w http://some-bpms-host:8080/wds/
+
+	By default, the following endpoint is assumed:
+	http://localhost:8080/wds/
+
+	Please note that you _must_ specify the trailing slash (/).
+	
+	Many commands require a URI. In WDS context, URI is the identifier of the
+	stored item.
+	
+	For example, if you store an item at URI 'abc' (and your WDS is running
+	at http://localhost:8080/wds/), then it will be available at:
+	
+	http://localhost:8080/wds/abc
+	
+COMMAND: store
+	
+	Syntax:
+	
+	> wds-cli [options] store <uri> <file>
+	
+	Stores a file on WDS.
+	
+	uri -- the URI to store the specified file at
+	file -- a (relative) path to the file to store
+
+	Note: if an item is already stored at the specified URI, it will be
+	replaced silently.
+	
+COMMAND: retrieve
+
+	Syntax:
+	
+	> wds-cli [options] retrieve <uri>
+	
+	Retrieves an item from WDS.
+	
+	uri -- the URI of the item to retrieve
+	
+	Note: the item octet stream will be directed to stdout.
+	
+COMMAND: delete
+
+	Syntax:
+	
+	> wds-cli [options] delete <uri>
+	
+	Deletes an item from WDS.
+	
+	uri -- the URI of the item to delete.
+	
+COMMAND: store-activity	
+
+	Syntax:
+	
+	> wds-cli [options] store-activity <uri> <form-file>
+	
+	Stores a PA (Activity) XForm.
+	If the form schema (XSD) is specified using a relative URL, WDS-CLI
+	will try to fetch it and store it as well.
+	
+	uri -- the URI to store the form at. 
+	form-file -- the .xform file which is the PA form to store.
+	
+	Note: If an item is already stored at the specified URI, WDS-CLI will warn
+	you and will NOT proceed, unless you specify the -f (--force) option.
+	
+COMMAND: store-pipa
+
+	Syntax:
+	
+	> wds-cli [options] -d <deployment-descriptor> store-pipa <uri> <form-file>
+	
+	Stores a PIPA XForm and creates a corresponding PIPA task in the Workflow 
+	database.
+	If the form schema (XSD) is specified using a relative URL, WDS-CLI
+	will try to fetch it and store it as well.
+	
+	deployment-descriptor -- the XML file containing the deployment descriptor.
+							 (See the corresponding section for the deployment 
+							 descriptor format.)
+	uri -- the URI to store the form at. 
+	form-file -- the .xform file which is the PIPA form to store.
+	
+	Note: If an item is already stored at the specified URI, WDS-CLI will warn
+	you and will NOT proceed, unless you specify the -f (--force) option.
+	
+COMMAND: create-pipa
+
+	Syntax:
+	
+	> wds-cli [options] -d <deployment-descriptor> create-pipa
+	
+	Creates a PIPA task in the Workflow database.
+	
+	deployment-descriptor -- the XML file containing the deployment descriptor.
+							 (See the corresponding section for the deployment 
+							 descriptor format.)
+	
+COMMAND: delete-pipa
+
+	Syntax:
+	
+	> wds-cli [options] delete-pipa <uri>
+	
+	Deletes a PIPA form from WDS.
+	Also deletes the form schema (if it is local w.r.t. the form) and all PIPA tasks
+	from the Workflow database which refer to this form.
+	
+	uri -- URI of the PIPA form to delete.
+	
+COMMAND: delete-activity			
+
+	Syntax:
+	
+	> wds-cli [options] delete-activit <uri>
+	
+	Deletes a PA form from WDS.
+	Also deletes the form schema (if it is local w.r.t. the form).
+	
+	uri -- URI of the PA form to delete.
+		
+DEPLOYMENT DESCRIPTOR FORMAT
+
+<deployment>
+  <!-- A human-readable task description, will appear in the task list -->
+  <task-description>Initiate an Absence Request</task-description> 
+  <!-- User owners of the task -->
+  <task-user-owners>
+    <user>examples/msmith</user>
+    <user>examples/ewilliams</user>
+  </task-user-owners>
+  <!-- Role owners of the task -->
+  <task-role-owners>
+    <role>examples/employee</role>
+    <role>examples/somebody</role>
+  </task-role-owners>
+  <!-- URI of the form, relative to WDS -->
+  <formURI>AbsenceRequest/AbsenceRequest.xform</formURI>
+  <!-- Form namespace (the namespace that the form model schema targets) -->
+  <formNamespace>http://www.intalio.com/bpms/workflow/xforms/AbsenceRequest/AbsenceRequest</formNamespace>
+  <!-- Endpoint to invoke in order to initiate the business process -->
+  <processEndpoint>http://localhost:8080/pxe/soap/AbsenceRequest/workflow_To_AbsenceRequest</processEndpoint>
+  <!-- SOAP action to use to initiate the business process -->
+  <userProcessInitSOAPAction>initProcess</userProcessInitSOAPAction>
+</deployment>					
+
+DEPLOYMENT DESCRIPTOR XSD SCHEMA
+
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="unqualified">
+
+    <xs:element name="deployment">
+        <xs:complexType>
+            <xs:all>
+                <xs:element name="task-description" type="xs:string"/>
+                <xs:element ref="task-user-owners"/>
+                <xs:element ref="task-role-owners"/>
+                <xs:element name="formURI" type="xs:anyURI"/>
+                <xs:element name="formNamespace" type="xs:anyURI"/>
+                <xs:element name="processEndpoint" type="xs:anyURI"/>
+                <xs:element name="userProcessInitSOAPAction" type="xs:anyURI"/>
+            </xs:all>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="task-user-owners">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="user" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="task-role-owners">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="role" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

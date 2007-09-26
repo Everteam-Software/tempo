@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/**
+ * Copyright (c) 2005-2007 Intalio inc.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * Intalio inc. - initial API and implementation
+ */
+ -->
+<serviceGroup>
+    <service name="TaskManagementServices" class="org.intalio.tempo.workflow.tms.server.SpringInit">
+        <description>Intalio|BPMS Task Management Services</description>
+
+        <parameter name="SpringContextFile">file:${org.intalio.tempo.configDirectory}/tempo-tms.xml</parameter>
+        <parameter name="ServiceObjectSupplier">org.intalio.tempo.workflow.tms.server.ServiceObjectSupplier</parameter>
+        <parameter name="SpringBeanName">tms.serviceImplementation</parameter>
+
+        <operation name="getTaskList">
+            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+            <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getTaskList</actionMapping>
+        </operation>
+
+        <operation name="getTask">
+            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+            <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getTask</actionMapping>
+        </operation>
+
+        <operation name="setOutput">
+            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+            <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/setOutput</actionMapping>
+        </operation>
+
+        <operation name="setOutputAndComplete">
+            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+            <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/setOutputAndComplete</actionMapping>
+        </operation>
+
+        <operation name="complete">
+            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+            <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/complete</actionMapping>
+        </operation>
+
+        <operation name="fail">
+            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+            <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/fail</actionMapping>
+        </operation>
+
+        <operation name="delete">
+            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+            <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/delete</actionMapping>
+        </operation>
+
+        <operation name="create">
+            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+            <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/create</actionMapping>
+        </operation>
+
+        <operation name="initProcess">
+            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+            <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/initProcess</actionMapping>
+        </operation>
+
+        <operation name="getAttachments">
+            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+            <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getAttachments</actionMapping>
+        </operation>
+
+        <operation name="addAttachment">
+            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+            <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/addAttachment</actionMapping>
+        </operation>
+
+        <operation name="removeAttachment">
+            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+            <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/removeAttachment</actionMapping>
+        </operation>
+
+        <operation name="reassign">
+            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+            <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/reassign</actionMapping>
+        </operation>
+    </service>
+</serviceGroup>

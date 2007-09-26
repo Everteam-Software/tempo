@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="Pool_And_userProcessPort_PLT" targetNamespace="http://www.example.com/Pool_And_userProcessPort_PLT" xmlns:tns="http://www.example.com/Pool_And_userProcessPort_PLT" xmlns:plnk="http://schemas.xmlsoap.org/ws/2004/03/partner-link/" xmlns:portTypeNS1="http://www.intalio.com/bpms/workflow/xforms/PIPA/startform" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:import namespace="http://www.intalio.com/bpms/workflow/xforms/PIPA/startform" location="PIPA-userProcessPort_To_Pool.wsdl"/>
+<plnk:partnerLinkType name="Pool_And_userProcessPort_PLT">
+    <plnk:role name="Pool_Role" portType="portTypeNS1:userProcessPort_To_Pool_PortType"/>
+</plnk:partnerLinkType>
+</wsdl:definitions>

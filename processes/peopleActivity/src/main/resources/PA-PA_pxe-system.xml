@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<system-descriptor
+    xmlns="http://www.fivesight.com/pxe/system-descriptor/"
+    xmlns:portTypeNs0="http://www.example.com/PA_To_User"
+    xmlns:portTypeNs1="http://www.example.com/User_To_PA"
+    xmlns:portTypeNs2="http://www.example.com/Start--004_To_PA"
+    name="PA_pxe-system" wsdlUri="urn:/PA-PA.wsdl">
+    <channels>
+        <channel name="PA_And_User.User_Channel"/>
+        <channel name="PA_And_User.PA_Channel"/>
+        <channel name="PA_And_Start--004.PA_Channel"/>
+    </channels>
+    <services>
+        <service name="PA.BpelService" provider="uri:bpelProvider">
+            <properties>
+                <property name="compiledProcess" value="PA.cbp"/>
+            </properties>
+            <imports>
+                <port name="PA_And_User_PLink.User_Role"
+                    type="portTypeNs0:PA_To_User_PortType" channel-ref="PA_And_User.User_Channel"/>
+            </imports>
+            <exports>
+                <port name="PA_And_User_PLink.PA_Role"
+                    type="portTypeNs1:User_To_PA_PortType" channel-ref="PA_And_User.PA_Channel"/>
+                <port name="PA_And_Start--004_PLink.PA_Role"
+                    type="portTypeNs2:Start--004_To_PA_PortType" channel-ref="PA_And_Start--004.PA_Channel"/>
+            </exports>
+        </service>
+        <service name="PA_To_User_Service" provider="uri:protocoladapter.soap">
+            <properties>
+                <property name="serviceWsdlNamespace" value="http://www.example.com/PA_To_User"/>
+            </properties>
+            <exports>
+                <port name="PA_To_User_Http"
+                    type="portTypeNs0:PA_To_User_PortType" channel-ref="PA_And_User.User_Channel"/>
+            </exports>
+        </service>
+        <service name="User_To_PA_Service" provider="uri:protocoladapter.soap">
+            <properties>
+                <property name="serviceWsdlNamespace" value="http://www.example.com/User_To_PA"/>
+            </properties>
+            <imports>
+                <port name="User_To_PA_Http"
+                    type="portTypeNs1:User_To_PA_PortType" channel-ref="PA_And_User.PA_Channel"/>
+            </imports>
+        </service>
+        <service name="Start--004_To_PA_Service" provider="uri:protocoladapter.soap">
+            <properties>
+                <property name="serviceWsdlNamespace" value="http://www.example.com/Start--004_To_PA"/>
+            </properties>
+            <imports>
+                <port name="Start--004_To_PA_Http"
+                    type="portTypeNs2:Start--004_To_PA_PortType" channel-ref="PA_And_Start--004.PA_Channel"/>
+            </imports>
+        </service>
+    </services>
+</system-descriptor>

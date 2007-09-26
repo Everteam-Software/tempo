@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="User_To_PA" targetNamespace="http://www.example.com/User_To_PA" xmlns:tns="http://www.example.com/User_To_PA" xmlns:ns0="http://www.intalio.com/bpms/workflow/xforms/PeopleActivity/PA" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema"><import namespace="http://www.intalio.com/bpms/workflow/xforms/PeopleActivity/PA" schemaLocation="PA.xform.complete.xsd"/></schema>
+  </wsdl:types>
+  <wsdl:message name="notifyTaskCompletionResponse">
+    <wsdl:part name="response" element="ns0:response"/>
+  </wsdl:message>
+  <wsdl:message name="notifyTaskCompletionRequest">
+    <wsdl:part name="notifyTaskCompletionRequest" element="ns0:notifyTaskCompletionRequest"/>
+  </wsdl:message>
+  <wsdl:portType name="User_To_PA_PortType">
+    <wsdl:operation name="Complete_People_Activity">
+      <wsdl:input name="notifyTaskCompletionRequest" message="tns:notifyTaskCompletionRequest"/>
+      <wsdl:output name="notifyTaskCompletionResponse" message="tns:notifyTaskCompletionResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="User_To_PA_Binding" type="tns:User_To_PA_PortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="Complete_People_Activity">
+      <soap:operation soapAction="http://www.example.com/User_To_PA/User_To_PA_PortType/Complete_People_Activity" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal" namespace="http://www.example.com/User_To_PA"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" namespace="http://www.example.com/User_To_PA"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="User_To_PA_Service">
+    <wsdl:port name="User_To_PA_Http" binding="tns:User_To_PA_Binding">
+      <soap:address location="http://localhost:8080/ode/processes/User_To_PA"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

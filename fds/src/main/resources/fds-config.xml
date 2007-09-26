@@ -1,0 +1,19 @@
+<!-- 
+  Copyright (c) 2005-2006 Intalio inc.
+ 
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the Eclipse Public License v1.0
+  which accompanies this distribution, and is available at
+  http://www.eclipse.org/legal/epl-v10.html
+ 
+  Contributors:
+  Intalio inc. - initial API and implementation
+ -->
+<!-- Form Dispatcher Services configuration -->
+<!-- $Id: fds-config.xml 7202 2006-08-03 08:57:24Z imemruk $ -->
+<config>
+    <pxeBaseUrl>http://localhost:8080/ode/processes</pxeBaseUrl>
+    <workflowProcessesRelativeUrl>/workflow/ib4p</workflowProcessesRelativeUrl>
+    <tmsUrl>http://localhost:8080/axis2/services/TaskManagementServices</tmsUrl>
+    <fdsUrl>http://localhost:8080/fds/workflow/ib4p</fdsUrl>
+</config>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema elementFormDefault="qualified"
+  targetNamespace="http://www.intalio.com/bpms/workflow/xforms/PIPA/startform"
+  xmlns:ar="http://www.intalio.com/bpms/workflow/xforms/PIPA/startform" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="output">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="myname" type="xs:string"/>
+      </xs:sequence>
+      <xs:attribute name="taskId" type="xs:string"/>
+      <xs:attribute name="participantToken" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="input">
+    <xs:complexType>
+      <xs:sequence/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="initProcessRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="taskId" type="xs:string"/>
+        <xs:element name="participantToken" type="xs:string"/>
+        <xs:element name="taskOutput">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="ar:output"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="initProcessResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="status" type="xs:string"/>
+        <xs:element minOccurs="0" name="errorCode" type="xs:string"/>
+        <xs:element minOccurs="0" name="errorReason" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

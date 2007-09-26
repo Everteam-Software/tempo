@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<service name="TokenService" scope="application">
+    <description>Token Service</description>
+    <operation name="authenticateUser">
+        <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+    </operation>
+    <operation name="authenticateUserWithCredentials">
+        <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+    </operation>
+    <operation name="getTokenProperties">
+        <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+    </operation>
+    <parameter name="ServiceClass">org.intalio.tempo.security.ws.TokenWS</parameter>
+</service>
+

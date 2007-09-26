@@ -1,0 +1,11 @@
+<deployment>
+  <task-description>Examples - Absence Request</task-description>
+  <task-user-owners/>
+  <task-role-owners>
+  	<role>examples\employee</role>
+  </task-role-owners>
+  <formURI>/AbsenceRequest/AbsenceRequest.xform</formURI>
+  <formNamespace>http://www.intalio.com/workflow/forms/AbsenceRequest/AbsenceRequest</formNamespace>
+  <processEndpoint>http://localhost:8080/ode/processes/AbsenceRequest/Employee_To_AbsenceRequest</processEndpoint>
+  <userProcessInitSOAPAction>http://www.example.com/AbsenceRequest/Employee_To_AbsenceRequest/Employee_To_AbsenceRequest_PortType/Receive_Absence_Request</userProcessInitSOAPAction>
+</deployment>

@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<security>
+    <defaultRealm>exolab</defaultRealm>
+    <caseSensitive>false</caseSensitive>
+
+    <realm identifier="exolab">
+        <user identifier="castor">
+            <name>Castor Workaholic</name>
+            <email>castor@exolab.org</email>
+            <password>castor</password>
+            <assignRole>committer</assignRole>
+        </user>
+        
+        <user identifier="tyrex">
+            <name>Tyranosaurus Rex</name>
+            <email>tyrex@exolab.org</email>
+            <password>tyrex</password>
+            <assignRole>committer</assignRole>
+        </user>
+
+        <user identifier="anonymous">
+            <name>Anonymous Coward</name>
+            <email></email>
+            <password>anonymous</password>
+            <assignRole>participant</assignRole>
+        </user>
+
+        <role identifier="committer">
+            <description>Committer</description>
+            <descendantRole>participant</descendantRole>
+            <permission operation="commit" object="cvs"/>
+        </role>
+
+        <role identifier="participant">
+            <description>Community Participant</description>
+            <permission operation="checkout" object="cvs"/>
+        </role>
+
+    </realm>
+    
+</security>

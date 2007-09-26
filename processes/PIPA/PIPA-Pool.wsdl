@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="Pool" targetNamespace="http://www.example.com/Pool" xmlns:tns="http://www.example.com/Pool" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:import namespace="http://www.intalio.com/bpms/workflow/xforms/PIPA/startform" location="PIPA-userProcessPort_To_Pool.wsdl"/>
+  <wsdl:import namespace="http://www.example.com/Pool_And_userProcessPort_PLT" location="PIPA-Pool_And_userProcessPort_PLT.wsdl"/>
+</wsdl:definitions>

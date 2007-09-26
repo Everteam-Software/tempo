@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="AbsenceRequest_And_Employee_PLT" targetNamespace="http://www.example.com/AbsenceRequest/AbsenceRequest_And_Employee_PLT" xmlns:tns="http://www.example.com/AbsenceRequest/AbsenceRequest_And_Employee_PLT" xmlns:portTypeNS2="http://www.example.com/AbsenceRequest/AbsenceRequest_To_Employee" xmlns:plnk="http://schemas.xmlsoap.org/ws/2004/03/partner-link/" xmlns:portTypeNS1="http://www.example.com/AbsenceRequest/Employee_To_AbsenceRequest" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:import namespace="http://www.example.com/AbsenceRequest/Employee_To_AbsenceRequest" location="AbsenceRequest-Employee_To_AbsenceRequest.wsdl"/>
+  <wsdl:import namespace="http://www.example.com/AbsenceRequest/AbsenceRequest_To_Employee" location="AbsenceRequest-AbsenceRequest_To_Employee.wsdl"/>
+<plnk:partnerLinkType name="AbsenceRequest_And_Employee_PLT">
+    <plnk:role name="AbsenceRequest_Role" portType="portTypeNS1:Employee_To_AbsenceRequest_PortType"/>
+    <plnk:role name="Employee_Role" portType="portTypeNS2:AbsenceRequest_To_Employee_PortType"/>
+</plnk:partnerLinkType>
+</wsdl:definitions>

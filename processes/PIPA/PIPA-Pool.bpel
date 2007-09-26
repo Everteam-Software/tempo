@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process xmlns="http://schemas.xmlsoap.org/ws/2004/03/business-process/"
+    xmlns:wsdlns1="http://www.example.com/Pool_And_userProcessPort_PLT"
+    xmlns:tns="http://www.example.com/Pool"
+    xmlns:startform="http://www.intalio.com/bpms/workflow/xforms/PIPA/startform"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:wsdlns0="http://www.intalio.com/bpms/workflow/xforms/PIPA/startform"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:this="http://www.example.com/Pool"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" name="PIPA-Pool"
+    targetNamespace="http://www.example.com/Pool"
+    queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0"
+    expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0"
+    suppressJoinFailure="yes" abstractProcess="no" exitOnStandardFault="no">
+    <rdfs:label xml:space="preserve">Pool</rdfs:label>
+    <import namespace="http://www.example.com/Pool"
+        location="urn:/PIPA-Pool.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <partnerLinks>
+        <partnerLink name="Pool_And_userProcessPort_PLink"
+            partnerLinkType="wsdlns1:Pool_And_userProcessPort_PLT"
+            myRole="Pool_Role" initializePartnerRole="no"/>
+    </partnerLinks>
+    <variables>
+        <variable name="initProcessRequest" messageType="startform:initProcessRequest"/>
+        <variable name="initProcessResponse" messageType="startform:initProcessResponse"/>
+    </variables>
+    <sequence name="Pool-Sequence">
+        <receive name="startTask-Receive"
+            partnerLink="Pool_And_userProcessPort_PLink"
+            portType="startform:userProcessPort_To_Pool_PortType"
+            operation="startTask" variable="initProcessRequest" createInstance="yes">
+            <rdfs:label xml:space="preserve">startTask</rdfs:label>
+        </receive>
+        <assign name="startTask-Assign" validate="no">
+            <copy>
+                <from>
+                    <literal>
+                        <startform:initProcessResponse>
+                            <startform:status>OK</startform:status>
+                        </startform:initProcessResponse>
+                    </literal>
+                </from>
+                <to>$initProcessResponse.initProcessResponse</to>
+            </copy>
+        </assign>
+        <reply name="startTask-Reply"
+            partnerLink="Pool_And_userProcessPort_PLink"
+            portType="startform:userProcessPort_To_Pool_PortType"
+            operation="startTask" variable="initProcessResponse">
+            <rdfs:label xml:space="preserve">startTask</rdfs:label>
+        </reply>
+        <empty name="Name_Not_Specified">
+            <rdfs:label xml:space="preserve"/>
+        </empty>
+    </sequence>
+</process>

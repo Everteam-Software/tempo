@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dd:deploy xmlns:dd="http://ode.fivesight.com/schemas/2006/06/27/dd">
+  <dd:process xmlns:abs="http://www.example.com/AbsenceRequest/AbsenceRequest" name="abs:AbsenceRequest">
+    <dd:provide partnerLink="AbsenceRequest_And_Employee_PLink">
+      <dd:service xmlns:emp="http://www.example.com/AbsenceRequest/Employee_To_AbsenceRequest" name="emp:Employee_To_AbsenceRequest_Service" port="Employee_To_AbsenceRequest_Http"/>
+    </dd:provide>
+    <dd:provide partnerLink="AbsenceRequest_And_Manager_PLink">
+      <dd:service xmlns:man="http://www.example.com/AbsenceRequest/Manager_To_AbsenceRequest" name="man:Manager_To_AbsenceRequest_Service" port="Manager_To_AbsenceRequest_Http"/>
+    </dd:provide>
+    <dd:invoke partnerLink="AbsenceRequest_And_Employee_PLink">
+      <dd:service xmlns:abs1="http://www.example.com/AbsenceRequest/AbsenceRequest_To_Employee" name="abs1:AbsenceRequest_To_Employee_Service" port="AbsenceRequest_To_Employee_Http"/>
+    </dd:invoke>
+    <dd:invoke partnerLink="AbsenceRequest_And_Manager_PLink">
+      <dd:service xmlns:abs1="http://www.example.com/AbsenceRequest/AbsenceRequest_To_Manager" name="abs1:AbsenceRequest_To_Manager_Service" port="AbsenceRequest_To_Manager_Http"/>
+    </dd:invoke>
+  </dd:process>
+</dd:deploy>

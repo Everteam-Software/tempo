@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  Copyright (c) 2005-2006 Intalio inc.
+ 
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the Eclipse Public License v1.0
+  which accompanies this distribution, and is available at
+  http://www.eclipse.org/legal/epl-v10.html
+ 
+  Contributors:
+  Intalio inc. - initial API and implementation
+ -->
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+    <bean id="realms" class="com.intalio.n3.security.impl.Realms">
+        <property name="securityProviders">
+            <list>
+                <ref bean="simpleSecurity"/>
+          	</list>
+		</property>
+    </bean>
+
+    <bean id="simpleSecurity" class="com.intalio.n3.security.simple.SimpleSecurityProvider" init-method="init">
+        <property name="configFile"><value>/n3-security.xml</value></property>
+    </bean>
+
+    <bean id="tokenHandler" class="com.intalio.n3.security.impl.TokenHandler">
+        <property name="secret"><value>mySecret</value></property>
+    </bean>
+    
+    <bean id="tokenService" class="com.intalio.n3.security.impl.TokenServiceImpl">
+        <property name="realms"><ref bean="realms"/></property>
+        <property name="tokenHandler"><ref bean="tokenHandler"/></property>
+    </bean>
+
+</beans>
