@@ -5,7 +5,7 @@ require "buildr"
 
 # Keep this structure to allow the build system to update version numbers.
 VERSION_NUMBER = "5.1.0.0-SNAPSHOT"
-NEXT_VERSION = "5.1.0.0"
+NEXT_VERSION = "5.1.0.1"
 
 ENV['TEST'] = 'no'
 
