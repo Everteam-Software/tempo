@@ -3,7 +3,10 @@ ANT = [ "ant:ant:jar:1.6.5" ]
 
 AXIOM = group("axiom-api", "axiom-dom", "axiom-impl", :under=>"org.apache.ws.commons.axiom", :version=>"1.2.5")
 
-AXIS2 = group("axis2-adb", "axis2-kernel", "axis2-xmlbeans", :under=>"org.apache.axis2", :version=>"1.3")
+AXIS2 = [
+  "org.apache.axis2:axis2-adb:jar:1.3",
+  "org.apache.axis2:axis2-kernel:jar:1.3i1",
+  "org.apache.axis2:axis2-xmlbeans:jar:1.3" ]
 
 CASTOR = "castor:castor:jar:1.0"
 
