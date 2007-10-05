@@ -14,7 +14,7 @@ require "repositories.rb"
 
 # TODO
 # -Update version number in geronimo-web.xml
-# -Synchronize config files w/ integr
+# -Synchronize tempo config files w/ integr
 # -Make sure tests work
 
 desc "Tempo Workflow"
