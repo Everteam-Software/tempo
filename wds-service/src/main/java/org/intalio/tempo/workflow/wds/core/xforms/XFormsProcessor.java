@@ -56,8 +56,12 @@ public class XFormsProcessor {
         if (LOG.isDebugEnabled()) LOG.debug("Processing " + itemUri);
         StringWriter out = new StringWriter();
         SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-
-        SchemaURLRewriter ser = new SchemaURLRewriter(out, null, itemUri);
+        OutputFormat format = new OutputFormat();
+        format.setEncoding("UTF-8");
+        format.setOmitXMLDeclaration(false);
+        format.setOmitComments(false);
+        format.setPreserveSpace(true);
+        SchemaURLRewriter ser = new SchemaURLRewriter(out, format, itemUri);
         parser.getXMLReader().setContentHandler(ser);
         parser.getXMLReader().parse(new InputSource(inputStream));
         Item item = new Item(itemUri, XFORMS_CONTENT_TYPE, out.toString().getBytes());
