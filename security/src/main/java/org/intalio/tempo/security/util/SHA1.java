@@ -38,6 +38,8 @@
  */
 package org.intalio.tempo.security.util;
 
+import java.io.UnsupportedEncodingException;
+
 /**
  * A Java implementation of the Secure Hash Algorithm, SHA-1, as defined
  * in FIPS PUB 180-1.
@@ -51,8 +53,15 @@ package org.intalio.tempo.security.util;
  */
 public class SHA1
 {
-    private static byte[] BASE64 
-        = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".getBytes();
+    private static final byte[] BASE64;
+    
+    static {
+        try {
+            BASE64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".getBytes("UTF-8");
+        } catch (UnsupportedEncodingException except) {
+            throw new RuntimeException(except);
+        }
+    }
 
     /**
      * Bitwise rotate a 32-bit number to the left
@@ -69,7 +78,12 @@ public class SHA1
     {
         // Convert a string to a sequence of 16-word blocks, stored as an array.
         // Append padding bits and the length, as described in the SHA1 standard
-        byte[] x = str.getBytes();
+        byte[] x;
+        try { 
+            x = str.getBytes("UTF-8");
+        } catch (UnsupportedEncodingException except) {
+            throw new RuntimeException(except);
+        }
         int[] blks = new int[( ( ( x.length + 8 ) >> 6 ) + 1 ) * 16];
         int i;
         for ( i = 0; i < x.length; i++ ) {

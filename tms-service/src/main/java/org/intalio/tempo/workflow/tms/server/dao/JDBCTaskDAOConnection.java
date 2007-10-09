@@ -125,7 +125,7 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             try {
                 DocumentBuilder builder = factory.newDocumentBuilder();
-                return builder.parse(new ByteArrayInputStream(xmlString.getBytes()));
+                return builder.parse(new ByteArrayInputStream(xmlString.getBytes("UTF-8")));
             } catch (SAXException e) {
                 throw new RuntimeException("Error while parsing XML:\n" + xmlString, e);
             } catch (IOException e) {

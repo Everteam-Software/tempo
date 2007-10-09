@@ -53,9 +53,10 @@ class TestUtils {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
         DocumentBuilder builder = factory.newDocumentBuilder();
-        Document doc = builder.parse(new ByteArrayInputStream(uglyString.getBytes()));
+        Document doc = builder.parse(new ByteArrayInputStream(uglyString.getBytes("UTF-8")));
 
         OutputFormat format = new OutputFormat(doc);
+        format.setEncoding("UTF-8");
         format.setLineWidth(65);
         format.setIndenting(true);
         format.setIndent(2);
