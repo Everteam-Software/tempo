@@ -189,8 +189,8 @@ public abstract class UIController extends AbstractFormController {
         }
     }
 
-    protected Action instantiateDefaultAction() {
-        Action action = instantiateAction(_defaultAction.getActionName());
+    protected Action<Object> instantiateDefaultAction() {
+        Action<Object> action = instantiateAction(_defaultAction.getActionName());
         String[] roles = convertRoles(_actionGrantedRoles.get(_defaultAction.getActionName()));
         action.setRequiredRoles(roles);
         return action;

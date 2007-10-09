@@ -43,7 +43,7 @@ public class SecuredController extends UIController {
                     mav = securedShowForm(request, response, errors);
                 } else {
                     // Do default action
-                    Action action = instantiateDefaultAction();
+                    Action<Object> action = instantiateDefaultAction();
                     action.setRequest(request);
                     action.setResponse(response);
                     action.setCommand(getCommand(request));
