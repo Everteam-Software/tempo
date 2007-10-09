@@ -28,6 +28,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
+import org.apache.commons.lang.CharEncoding;
 
 
 /**
@@ -57,15 +58,14 @@ public class XFormsProcessor {
         StringWriter out = new StringWriter();
         SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
         OutputFormat format = new OutputFormat();
-        format.setEncoding("UTF-8");
+        format.setEncoding(CharEncoding.UTF_8);
         format.setOmitXMLDeclaration(false);
         format.setOmitComments(false);
         format.setPreserveSpace(true);
         SchemaURLRewriter ser = new SchemaURLRewriter(out, format, itemUri);
         parser.getXMLReader().setContentHandler(ser);
         parser.getXMLReader().parse(new InputSource(inputStream));
-        Item item = new Item(itemUri, XFORMS_CONTENT_TYPE, out.toString().getBytes());
-        return item;
+        return new Item(itemUri, XFORMS_CONTENT_TYPE, out.toString().getBytes(CharEncoding.UTF_8));
     }
 
     static class SchemaURLRewriter extends XMLSerializer {
