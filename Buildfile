@@ -4,8 +4,8 @@ require "rubygems"
 require "buildr"
 
 # Keep this structure to allow the build system to update version numbers.
-VERSION_NUMBER = "5.1.0.0-SNAPSHOT"
-NEXT_VERSION = "5.1.0.1"
+VERSION_NUMBER = "5.1.0.1-SNAPSHOT"
+NEXT_VERSION = "5.1.0.2"
 
 ENV['TEST'] = 'no'
 
