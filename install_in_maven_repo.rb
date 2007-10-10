@@ -37,6 +37,8 @@ module Buildr
     puts "Copy a group of dependencies from one repository to another"
   end
 
+  PKG = ["jar", "war", "pom"]
+  
   def sync_repositories
     group_name = ARGV[0]
     group_version = ARGV[1]
@@ -44,27 +46,31 @@ module Buildr
     url_dest = ARGV[3]
     
     repositories.remote << url_source
-
+   
     artifacts = list_artifacts(url_source, group_name)
     artifacts_d = Array.new
     artifacts.each do |artifact|
-      artifact_spec = artifact_spec_from_name group_name, group_version, artifact
-      begin
-        a = artifact(artifact_spec)
-        a.invoke
-        artifacts_d << a
-      rescue 
-        puts "Could not download:" + artifact_spec
+      PKG.each do |pkg|
+        artifact_spec = artifact_spec_from_name group_name, group_version, pkg, artifact
+        begin
+        verbose(false) do 
+          a = artifact(artifact_spec)
+          a.invoke
+          puts "Processing #{a}"
+          artifacts_d << a
+        end
+        rescue 
+        end          
       end
     end
     
     artifacts_d.each do |e|
-      install_single_jar(url_dest, e)
+      install_item url_dest, e
     end
   end
   
-  def artifact_spec_from_name group, version, name
-    group + ":" + name + ":jar:" + version
+  def artifact_spec_from_name group, version, pkg, name
+    "#{group}:#{name}:#{pkg}:#{version}"
   end
   
   def list_artifacts url_source, group_name
@@ -79,7 +85,7 @@ module Buildr
     doc = Hpricot(open(url))
      doc.search("//a").each do |e|
        href = e.attributes['href']
-       artifacts << href[0..name.length-2] if r1.match href # skip those not starting with a letter (not artifacts)
+       artifacts << href[0..href.length-2] if r1.match href # skip those not starting with a letter (not artifacts)
      end
      
     artifacts
