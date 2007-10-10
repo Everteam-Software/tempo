@@ -109,8 +109,13 @@ module Buildr
     uri.user = ENV['USER'] if ENV['USER']
     uri.password = ENV['PASSWORD'] if ENV['PASSWORD']
     puts "Uploading #{file(artifact.name)} to #{uri}"
-    uri.upload file(artifact.name)
+    verbose(true) do
+      uri.upload file(artifact.name)
+    end
   end
+
+
+
 
   # Run script for installing a single artifact  
   if ARGV.length == 2
