@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2005-2006 Intalio inc.
+# Copyright (c) 2005-2007 Intalio inc.
 #
 # All rights reserved. This program and the accompanying materials
 # are made available under the terms of the Eclipse Public License v1.0
@@ -29,7 +29,7 @@ namespace "check" do
  * Intalio inc. - initial API and implementation
  */
 EOF
-    licenses[".xml"] = <<EOF
+    licenses[".xml2"] = <<EOF
 <!--
   ~ Copyright (c) 2005-2007 Intalio inc.
   ~
@@ -42,9 +42,9 @@ EOF
   ~ Intalio inc. - initial API and implementation
   -->
 EOF
-    licenses[".properties"] = <<EOF
+    licenses[".properties2"] = <<EOF
 #
-# Copyright (c) 2005-2006 Intalio inc.
+# Copyright (c) 2005-2007 Intalio inc.
 #
 # All rights reserved. This program and the accompanying materials
 # are made available under the terms of the Eclipse Public License v1.0
@@ -55,13 +55,13 @@ EOF
 # Intalio inc. - initial API and implementation
 #
 EOF
-    licenses[".bpel"] = licenses[".wsdl"] = licenses[".xsd"] = licenses[".soap"] = licenses[".xml"]
-    licenses['.xpl'] = licenses['.xsl'] = licenses[".rake"] = licenses[".properties"]
+    licenses[".bpel"] = licenses[".wsdl"] = licenses[".xsd"] = licenses[".soap"] = licenses['.xpl'] = licenses['.xsl'] = licenses[".xml2"]
+    licenses[".rake"] = licenses[".properties2"]
     
     # This also tells us which files to look at.
     extensions = licenses.keys.join(",")
     count = FileList["**/*{#{extensions}}"].inject(0) do |count, filename|
-      if File.readlines(filename)[0..3].join !~ /Copyright (c) 2005-2007 Intalio inc/
+      if File.readlines(filename)[0..3].join !~ /Copyright.*(Intalio|Orbeon)/i
         when_writing "Missing header in #{filename}" do
           # Figure the license from the file, inject it into the file and rewrite it.
           license = licenses[filename.pathmap("%x")]

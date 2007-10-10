@@ -1,4 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?><!--
+  ~ Copyright (c) 2005-2007 Intalio inc.
+  ~
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v1.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.eclipse.org/legal/epl-v10.html
+  ~
+  ~ Contributors:
+  ~ Intalio inc. - initial API and implementation
+  -->
+
 <wsdl:definitions name="AbsenceRequest" targetNamespace="http://www.example.com/AbsenceRequest/AbsenceRequest" xmlns:bpws="http://schemas.xmlsoap.org/ws/2004/03/business-process/" xmlns:tns="http://www.example.com/AbsenceRequest/AbsenceRequest" xmlns:Employee1="http://www.example.com/AbsenceRequest/AbsenceRequest_To_Employee" xmlns:Manager1="http://www.example.com/AbsenceRequest/Manager_To_AbsenceRequest" xmlns:Employee="http://www.example.com/AbsenceRequest/Employee_To_AbsenceRequest" xmlns:Manager="http://www.example.com/AbsenceRequest/AbsenceRequest_To_Manager" xmlns:AbsenceRequest="http://www.intalio.com/workflow/forms/AbsenceRequest/AbsenceRequest" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fe="http://www.intalio.com/workflow/forms/AbsenceRequest/Notification" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:this="http://www.example.com/AbsenceRequest/AbsenceRequest">
   <wsdl:import namespace="http://www.example.com/AbsenceRequest/Employee_To_AbsenceRequest" location="AbsenceRequest-Employee_To_AbsenceRequest.wsdl"/>
   <wsdl:import namespace="http://www.example.com/AbsenceRequest/AbsenceRequest_And_Manager_PLT" location="AbsenceRequest-AbsenceRequest_And_Manager_PLT.wsdl"/>

@@ -1,4 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?><!--
+  ~ Copyright (c) 2005-2007 Intalio inc.
+  ~
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v1.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.eclipse.org/legal/epl-v10.html
+  ~
+  ~ Contributors:
+  ~ Intalio inc. - initial API and implementation
+  -->
+
 <wsdl:definitions name="PA" targetNamespace="http://www.example.com/PA" xmlns:bpws="http://schemas.xmlsoap.org/ws/2004/03/business-process/" xmlns:tns="http://www.example.com/PA" xmlns:Start="http://www.example.com/Start--004_To_PA" xmlns:PA="http://www.intalio.com/bpms/workflow/xforms/PeopleActivity/PA" xmlns:User="http://www.example.com/PA_To_User" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:this="http://www.example.com/PA" xmlns:User1="http://www.example.com/User_To_PA">
   <wsdl:import namespace="http://www.example.com/User_To_PA" location="PA-User_To_PA.wsdl"/>
   <wsdl:import namespace="http://www.example.com/PA_And_Start--004_PLT" location="PA-PA_And_Start--004_PLT.wsdl"/>

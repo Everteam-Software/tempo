@@ -1,3 +1,15 @@
+<!--
+  ~ Copyright (c) 2005-2007 Intalio inc.
+  ~
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v1.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.eclipse.org/legal/epl-v10.html
+  ~
+  ~ Contributors:
+  ~ Intalio inc. - initial API and implementation
+  -->
+
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:b4p="http://www.intalio.com/bpms/workflow/ib4p_20051115"
                 xmlns:tms="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
