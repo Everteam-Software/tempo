@@ -78,10 +78,8 @@ module Buildr
     
     doc = Hpricot(open(url))
      doc.search("//a").each do |e|
-       if r1.match e.attributes['href'] # skip those not starting with a letter (not artifacts)
-         name = e.inner_html 
-         artifacts << name[0..name.length-2] 
-       end
+       href = e.attributes['href']
+       artifacts << href[0..name.length-2] if r1.match href # skip those not starting with a letter (not artifacts)
      end
      
     artifacts
