@@ -16,11 +16,13 @@
         <property name="serviceEndpoint" value="/axis2/services/TaskManagementServices"/>
         <property name="pagingLength" value="10"/>
     </bean>
+
     <bean id="xFormManager" class="org.intalio.tempo.uiframework.forms.XFormsManager">
         <property name="peopleInitiatedProcessURL" value="/xFormsManager/init"/>
         <property name="peopleActivityURL" value="/xFormsManager/act"/>
         <property name="notificationURL" value="/xFormsManager/notification"/>
     </bean>
+
     <bean id="formManagerBroker" class="org.intalio.tempo.uiframework.forms.FormManagerBroker"
           factory-method="getInstance">
         <property name="formManager">
@@ -29,9 +31,8 @@
     </bean>
 
     <bean id="tokenService" class="org.intalio.tempo.security.ws.TokenClient">
-        <constructor-arg>
-            <value>http://localhost:8080/axis2/services/TokenService</value>
-        </constructor-arg>
+        <constructor-arg value="http://localhost:8080/axis2/services/TokenService"/>
     </bean>
 
+    <bean id="applicationState" class="org.intalio.tempo.uiframework.UIFWApplicationState"/>
 </beans>
