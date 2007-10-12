@@ -13,7 +13,6 @@ require "dependencies.rb"
 require "repositories.rb"
 
 # TODO
-# -Update version number in geronimo-web.xml
 # -Synchronize config files w/ integr
 # -Make sure tests work
 
@@ -184,7 +183,6 @@ define "tempo" do
     package(:war).with(:libs=>libs).
       include("src/main/config/geronimo/1.0/*", path_to(compile.target, "dojo"))
   end  
-
   
   desc "Workflow Deployment Service Client"
   define "wds-client" do

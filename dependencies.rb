@@ -4,9 +4,9 @@ ANT = [ "ant:ant:jar:1.6.5" ]
 AXIOM = group("axiom-api", "axiom-dom", "axiom-impl", :under=>"org.apache.ws.commons.axiom", :version=>"1.2.5")
 
 AXIS2 = [
-  "org.apache.axis2:axis2-adb:jar:1.3",
-  "org.apache.axis2:axis2-kernel:jar:1.3i1",
-  "org.apache.axis2:axis2-xmlbeans:jar:1.3" ]
+  group("axis2-adb", "axis2-xmlbeans", :under=>"org.apache.axis2", :version=>"1.3"),
+  "org.apache.axis2:axis2-kernel:jar:1.3i1"
+]
 
 CASTOR = "castor:castor:jar:1.0"
 
@@ -84,45 +84,56 @@ XMLBEANS = [
 
 XOM = [ "xom:xom:jar:1.1" ]
 
-ORBEON_LIBS = [
+
+ORBEON_AXIS = [
+  AXIS2,
+  group("axis2-saaj", "axis2", :under=>"org.apache.axis2", :version=>"1.3")
+  #group("axis2-jaxrpc", "axis2-saaj", "axis2-wsdl4j", "axis", :under=>"org.apache.axis2", :version=>"1.3")
+]
+ORBEON_CORE = [
+  group("ops", "ops-resources-public", "ops-resources-private", :under=>"orbeon", :version=>"20070331")
+]
+ORBEON_CUSTOM = [
+  "orbeon:jakarta-oro-orbeon:jar:2.0.8",
+  "orbeon:resolver-xerces-orbeon:jar:2.6.2",
+  "orbeon:saxon-orbeon:jar:8.8",
+  "orbeon:saxpath:jar:dev_orbeon",
+  "orbeon:xsltc-orbeon:jar:2.5.1",
+  "orbeon:xalan-orbeon:jar:2.5.1",
+  "orbeon:xercesimpl-orbeon:jar:2.6.2",
+  "orbeon:xml-apis-xerces-orbeon:jar:2.6.2",
+  "orbeon:xsdlib:jar:20031020"
+]
+ORBEON_COMMONS = [
   "commons-codec:commons-codec:jar:1.3",
   "commons-collections:commons-collections:jar:3.1",
   "commons-digester:commons-digester:jar:1.7",
   "commons-fileupload:commons-fileupload:jar:1.0",
-  "commons-httpclient:commons-httpclient:jar:3.0",
+  "commons-httpclient:commons-httpclient:jar:3.0.1",
   "commons-io:commons-io:jar:1.2",
   "commons-lang:commons-lang:jar:2.1",
-  "commons-pool:commons-pool:jar:1.2",
+  "commons-pool:commons-pool:jar:1.3",
   "commons-beanutils:commons-beanutils:jar:1.7.0",
   "commons-validator:commons-validator:jar:1.1.4",
   "commons-discovery:commons-discovery:jar:0.2",
-  JAVAMAIL,
+]
+
+ORBEON_LIBS = [
+  DOM4J,
   FOP,
-  "orbeon:avalon-framework:jar:cvs-20020315",
-  "orbeon:axis-orbeon:jar:1.2.1",
-  "orbeon:axis-jaxrpc:jar:1.2.1",
-  "orbeon:axis-saaj:jar:1.2.1",
-  "orbeon:axis-wsdl4j:jar:1.2.1-1.5.1",
-  "orbeon:dom4j-orbeon:jar:1.6.1",
-  "orbeon:isorelax:jar:20031020",
-  "orbeon:jakarta-oro-orbeon:jar:2.0.8",
-  "orbeon:jaxen:jar:1.1-beta-1-dev",
-  "orbeon:jdom:jar:b9",
-  "orbeon:msv:jar:20031020",
-  "orbeon:ops:jar:20061103i",
-  "orbeon:ops-resources-public:jar:20061103",
-  "orbeon:ops-resources-private:jar:20061103",
-  "orbeon:relaxng-datatype:jar:20031020",
-  "orbeon:resolver-xerces-orbeon:jar:2.6.2",
-  "orbeon:saxon-orbeon:jar:8.8",
-  "orbeon:saxpath-orbeon:jar:dev",
-  "orbeon:struts:jar:1.1",
-  "orbeon:jtidy:jar:04aug2000r7",
-  "orbeon:xalan-orbeon:jar:2.5.1",
-  "orbeon:xercesimpl-orbeon:jar:2.6.2",
-  "orbeon:xml-apis-xerces-orbeon:jar:2.6.2",
-  "orbeon:xsdlib:jar:20031020",
-  "orbeon:xsltc-orbeon:jar:2.5.1",
-  "org.apache.geronimo.specs:geronimo-activation_1.0.2_spec:jar:1.1",
-  "portlet-api:portlet-api:jar:1.0" ]
+  JAVAMAIL,
+  ORBEON_AXIS,
+  ORBEON_COMMONS,
+  ORBEON_CORE,
+  ORBEON_CUSTOM,
+  "avalon:avalon-framework:jar:4.1.4",
+  "jaxen:jaxen:jar:1.1.1", 
+  "jdom:jdom:jar:b9",
+  "msv:msv:jar:20050913",
+  "msv:isorelax:jar:20050913",
+  "relaxng:relaxng-datatype:jar:20031020",
+  "struts:struts:jar:1.2.9",
+  "jtidy:jtidy:jar:4aug2000r7-dev",
+  "portlet-api:portlet-api:jar:1.0" 
+]
 

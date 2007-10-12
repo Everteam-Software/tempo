@@ -114,9 +114,6 @@ module Buildr
     end
   end
 
-
-
-
   # Run script for installing a single artifact  
   if ARGV.length == 2
     repository = "sftp://www.intalio.org/tmp"
