@@ -7,7 +7,7 @@
 
 	<description>Intalio tag files</description>
 	<tlib-version>1.0</tlib-version>
-	<short-name>Intalio tag files</short-name>
+	<short-name>Intalio</short-name>
 	<uri>http://www.intalio.com/tagfiles</uri>
 	
 	<tag-file>
