@@ -78,7 +78,7 @@ define "tempo" do
   define "security-ws-client" do
     compile.with projects("security", "security-ws-common"), 
                  AXIOM, AXIS2, SLF4J, STAX_API, SPRING
-    test.with COMMONS, CASTOR, LOG4J, XERCES, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX
+    test.with project("security-ws-service").path_to("target/classes"), COMMONS, CASTOR, LOG4J, XERCES, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX
 
     # Remember to set JAVA_OPTIONS before starting Jetty
     # export JAVA_OPTIONS=-Dorg.intalio.tempo.configDirectory=/home/boisvert/svn/tempo/security-ws2/src/test/resources
@@ -130,6 +130,8 @@ define "tempo" do
   define "tms-common" do
     compile.with projects("security", "security-ws-client"), 
                  AXIOM, LOG4J, SPRING, STAX_API
+    test.with SLF4J, WOODSTOX
+    test.exclude '*TestUtils*'
     package(:jar)
   end
   

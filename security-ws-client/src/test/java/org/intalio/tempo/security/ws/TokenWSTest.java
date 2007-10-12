@@ -99,7 +99,7 @@ public class TokenWSTest {
 
     static class TokenClientMock extends TokenClient {
 
-        TokenConstants _tokenWS = new TokenConstants();
+        TokenWS _tokenWS = new TokenWS();
 
         public TokenClientMock() {
             super("internal://");
