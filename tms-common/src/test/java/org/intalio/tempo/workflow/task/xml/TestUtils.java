@@ -39,6 +39,7 @@ class TestUtils {
 
     public static OMElement loadElementFromResource(String resource) throws Exception {
         InputStream requestInputStream = TestUtils.class.getResourceAsStream(resource);
+        if (requestInputStream == null) throw new IllegalStateException("Missing resource: "+resource);
 
         XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(requestInputStream);
         StAXOMBuilder builder = new StAXOMBuilder(parser);

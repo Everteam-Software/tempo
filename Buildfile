@@ -7,8 +7,6 @@ require "buildr"
 VERSION_NUMBER = "5.1.0.1-SNAPSHOT"
 NEXT_VERSION = "5.1.0.2"
 
-ENV['TEST'] = 'no'
-
 require "dependencies.rb"
 require "repositories.rb"
 
