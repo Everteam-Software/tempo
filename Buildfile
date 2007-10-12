@@ -26,6 +26,7 @@ define "tempo" do
   define "fds" do
     compile.with AXIS2, COMMONS, LOG4J, SERVLET_API, STAX_API, XOM
     resources.filter.using "version" => VERSION_NUMBER
+    test.with DOM4J
     package :war
   end  
 

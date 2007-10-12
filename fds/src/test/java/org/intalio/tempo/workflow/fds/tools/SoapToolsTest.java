@@ -16,6 +16,8 @@ import nu.xom.Builder;
 import nu.xom.Document;
 import nu.xom.Serializer;
 import org.intalio.tempo.workflow.fds.tools.SoapTools;
+import java.io.ByteArrayOutputStream;
+import org.dom4j.util.NodeComparator;
 
 public class SoapToolsTest extends TestCase {
     private Document createRequest()
@@ -25,7 +27,8 @@ public class SoapToolsTest extends TestCase {
 
     private void printXML(Document document)
             throws Exception {
-        Serializer sr = new Serializer(System.out);
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+        Serializer sr = new Serializer(out);
         sr.setIndent(2);
         sr.write(document);
         sr.flush();
@@ -34,10 +37,8 @@ public class SoapToolsTest extends TestCase {
     public void testSoapTools()
             throws Exception {
         Document request = createRequest();
-        printXML(request);
         Document soap = SoapTools.wrapMessage(request);
-        printXML(soap);
         Document request2 = SoapTools.unwrapMessage(soap);
-        printXML(request2);
+		assertTrue(new NodeComparator().compare( request, request2 ) == 0);
     }
 }

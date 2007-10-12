@@ -9,17 +9,20 @@
  * Contributors:
  * Intalio inc. - initial API and implementation
  */
-package org.intalio.tempo.workflow.fds;
+package org.intalio.tempo.workflow.fds.tools;
 
+import java.io.IOException;
 import java.io.InputStream;
 
-import org.intalio.tempo.workflow.fds.core.UserProcessMessageConvertor;
-import org.intalio.tempo.workflow.fds.core.WorkflowProcessesMessageConvertor;
-
+import junit.framework.TestCase;
 import nu.xom.Builder;
 import nu.xom.Document;
+import nu.xom.ParsingException;
+import nu.xom.ValidityException;
 
-import junit.framework.TestCase;
+import org.dom4j.util.NodeComparator;
+import org.intalio.tempo.workflow.fds.core.UserProcessMessageConvertor;
+import org.intalio.tempo.workflow.fds.core.WorkflowProcessesMessageConvertor;
 
 public class MessageConversionTest extends TestCase {
 
@@ -57,16 +60,25 @@ public class MessageConversionTest extends TestCase {
         Document message = new Builder().build(inputMessageStream);
         UserProcessMessageConvertor convertor = new UserProcessMessageConvertor();
         convertor.convertMessage(message);
-        System.out.println(message.toXML());
+        compareDocument(_USER_PROCESS_MESSAGE_XML,message);
     }
 
     public void testWorkflowProcessesMessageConversion() throws Exception {
-        InputStream inputMessageStream
-            = this.getClass().getClassLoader().getResourceAsStream(_WORKFLOW_PROCESSES_MESSAGE_XML);
-
-        Document message = new Builder().build(inputMessageStream);
+        Document message = getMessageDocument(_WORKFLOW_PROCESSES_MESSAGE_XML);
         WorkflowProcessesMessageConvertor convertor = new WorkflowProcessesMessageConvertor();
         convertor.convertMessage(message, null);
-        System.out.println(message.toXML());
+        compareDocument(_WORKFLOW_PROCESSES_MESSAGE_XML,message);
     }
+
+	private Document getMessageDocument(String messageFile) throws ParsingException,
+			ValidityException, IOException {
+		InputStream inputMessageStream
+            = this.getClass().getClassLoader().getResourceAsStream(messageFile);
+        return new Builder().build(inputMessageStream);
+	}
+	
+
+	private void compareDocument(String original, Document converted) throws Exception {
+		assertTrue(new NodeComparator().compare( getMessageDocument(original), converted) == 0);
+	}
 }
