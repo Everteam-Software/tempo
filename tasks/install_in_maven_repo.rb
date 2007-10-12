@@ -28,7 +28,7 @@ module Buildr
 
   def usage
     puts "Usage1:"
-    puts "  install_in_maven_repo <spec> <filepath>"
+    puts "  install_in_maven_repo <spec> [<filepath>]"
     puts "Install a single file in the current local and remote repositories."
     puts "This also generate the related pom file."
     puts
@@ -92,7 +92,13 @@ module Buildr
   end
   
   def install_single_artifact repository, spec, from_file
-    artifact = artifact(spec).from(from_file)
+    artifact = 
+    if from_file 
+      artifact(spec).from(from_file) 
+    else
+      artifact(spec)
+    end
+
     puts "Installing #{ARGV[1]} to #{artifact.name}"
     artifact.invoke
     install_single_jar repository, artifact   
@@ -110,13 +116,13 @@ module Buildr
     uri.password = ENV['PASSWORD'] if ENV['PASSWORD']
     puts "Uploading #{file(artifact.name)} to #{uri}"
     verbose(true) do
-      uri.upload file(artifact.name)
+      uri.upload file(artifact.name), :permissions => 0664
     end
   end
 
   # Run script for installing a single artifact  
-  if ARGV.length == 2
-    repository = "sftp://www.intalio.org/tmp"
+  if ARGV.length == 2 or ARGV.length == 1
+    repository = ENV['REPOSITORY'] if ENV['REPOSITORY']
     install_single_artifact repository, ARGV[0], ARGV[1]
   
   # Copy all artifacts of the specified group for the specified version 
