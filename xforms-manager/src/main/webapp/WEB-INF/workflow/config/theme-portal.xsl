@@ -17,7 +17,8 @@
     xmlns:f="http://orbeon.org/oxf/xml/formatting"
     xmlns:xhtml="http://www.w3.org/1999/xhtml"
     xmlns:xforms="http://www.w3.org/2002/xforms"
-    xmlns:xxforms="http://orbeon.org/oxf/xml/xforms">
+    xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
+    xmlns:version="java:org.orbeon.oxf.common.Version">
 
     <!-- Get generic templates from plain theme -->
     <xsl:import href="theme-plain.xsl"/>
@@ -43,18 +44,17 @@
     <xsl:template match="/">
         <xhtml:html>
             <xhtml:head>
-                <xhtml:title>Orbeon Forms Examples - <xsl:value-of select="$title"/></xhtml:title>
+                <xhtml:title>Orbeon Forms Example Applications - <xsl:value-of select="$title"/></xhtml:title>
                 <!-- Standard scripts/styles -->
                 <!-- NOTE: The XForms engine may place additional scripts and stylesheets here as needed -->
                 <xhtml:link rel="stylesheet" href="/config/theme/orbeon.css" type="text/css"/>
-                <!-- Handle meta elements -->
-                <xsl:apply-templates select="/xhtml:html/xhtml:head/xhtml:meta"/>
-                <!-- Handle user-defined links -->
-                <xsl:apply-templates select="/xhtml:html/xhtml:head/xhtml:link"/>
-                <!-- Handle user-defined stylesheets -->
-                <xsl:apply-templates select="/xhtml:html/xhtml:head/xhtml:style"/>
-                <!-- Handle user-defined scripts -->
-                <xsl:apply-templates select="/xhtml:html/xhtml:head/xhtml:script"/>
+                <!-- Handle head elements -->
+                <xsl:for-each select="/xhtml:html/xhtml:head/(xhtml:meta | xhtml:link | xhtml:style | xhtml:script)">
+                    <xsl:element name="xhtml:{local-name()}" namespace="{namespace-uri()}">
+                        <xsl:copy-of select="@*"/>
+                        <xsl:apply-templates/>
+                    </xsl:element>
+                </xsl:for-each>
             </xhtml:head>
             <xhtml:body>
                 <!-- Copy body attributes -->
@@ -112,7 +112,7 @@
                     <xhtml:tr>
                         <!-- List of examples -->
                         <xhtml:td id="leftcontent" valign="top" width="1%">
-                            <h1>Examples</h1>
+                            <h1>Orbeon Forms Apps</h1>
                             <xhtml:ul class="tree-sections">
                                 <xsl:for-each select="$applications/*/section">
                                     <xhtml:li class="tree-section">
@@ -159,6 +159,7 @@
                         </xhtml:td>
                     </xhtml:tr>
                 </xhtml:table>
+                <!--<xhtml:p class="ops-version">Orbeon Forms <xsl:value-of select="$orbeon-forms-version"/></xhtml:p>-->
             </xhtml:body>
         </xhtml:html>
     </xsl:template>

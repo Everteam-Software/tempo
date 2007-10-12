@@ -5,7 +5,10 @@
 		<dep:moduleId>
 			<dep:groupId>org.intalio.tempo</dep:groupId>
 			<dep:artifactId>xforms-manager</dep:artifactId>
-			<dep:version>${version}</dep:version>
+			<!--
+				TODO: check we should remove the version here.
+				<dep:version>${version}</dep:version>
+			-->
 			<dep:type>war</dep:type>
 		</dep:moduleId>
 		<dep:dependencies>
