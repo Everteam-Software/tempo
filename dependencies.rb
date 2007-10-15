@@ -86,22 +86,24 @@ XOM = [ "xom:xom:jar:1.1" ]
 
 
 ORBEON_AXIS = [
-  AXIS2,
-  group("axis2-saaj", "axis2", :under=>"org.apache.axis2", :version=>"1.3")
-  #group("axis2-jaxrpc", "axis2-saaj", "axis2-wsdl4j", "axis", :under=>"org.apache.axis2", :version=>"1.3")
+ "orbeon:axis-orbeon:jar:1.2.1",
+ "orbeon:axis-jaxrpc:jar:1.2.1",
+ "orbeon:axis-saaj:jar:1.2.1",
+ "orbeon:axis-wsdl4j:jar:1.2.1-1.5.1"
+]
+ORBEON_XERCES = [
+  group("xerces-resolver", "xerces-serializer", "xerces-xml-apis", "xerces-xercesImpl", :under => "orbeon" , :version => "2_9_orbeon_20070711")
 ]
 ORBEON_CORE = [
-  group("ops", "ops-resources-public", "ops-resources-private", :under=>"orbeon", :version=>"20070331")
+  group("ops", "ops-xforms-filter", "ops-resources-public", "ops-resources-private", :under=>"orbeon", :version=>"3.6.0beta.200710150210"),
 ]
 ORBEON_CUSTOM = [
+  ORBEON_XERCES,
   "orbeon:jakarta-oro-orbeon:jar:2.0.8",
-  "orbeon:resolver-xerces-orbeon:jar:2.6.2",
-  "orbeon:saxon-orbeon:jar:8.8",
+  "orbeon:saxon-orbeon:jar:8_8_orbeon_20070817",
   "orbeon:saxpath:jar:dev_orbeon",
   "orbeon:xsltc-orbeon:jar:2.5.1",
   "orbeon:xalan-orbeon:jar:2.5.1",
-  "orbeon:xercesimpl-orbeon:jar:2.6.2",
-  "orbeon:xml-apis-xerces-orbeon:jar:2.6.2",
   "orbeon:xsdlib:jar:20031020"
 ]
 ORBEON_COMMONS = [
@@ -117,7 +119,6 @@ ORBEON_COMMONS = [
   "commons-validator:commons-validator:jar:1.1.4",
   "commons-discovery:commons-discovery:jar:0.2",
 ]
-
 ORBEON_LIBS = [
   DOM4J,
   FOP,
@@ -133,7 +134,7 @@ ORBEON_LIBS = [
   "msv:isorelax:jar:20050913",
   "relaxng:relaxng-datatype:jar:20031020",
   "struts:struts:jar:1.2.9",
-  "jtidy:jtidy:jar:4aug2000r7-dev",
+  "jtidy:jtidy:jar:8.0-20060801.131059-3",
   "portlet-api:portlet-api:jar:1.0" 
 ]
 

@@ -159,7 +159,7 @@
                         </xhtml:td>
                     </xhtml:tr>
                 </xhtml:table>
-                <!--<xhtml:p class="ops-version">Orbeon Forms <xsl:value-of select="$orbeon-forms-version"/></xhtml:p>-->
+
             </xhtml:body>
         </xhtml:html>
     </xsl:template>

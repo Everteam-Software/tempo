@@ -21,11 +21,8 @@
     xmlns:f="http://orbeon.org/oxf/xml/formatting"
     xmlns:xhtml="http://www.w3.org/1999/xhtml"
     xmlns:xforms="http://www.w3.org/2002/xforms"
-    xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
-    xmlns:version="java:org.orbeon.oxf.common.Version">
+    xmlns:xxforms="http://orbeon.org/oxf/xml/xforms">
 
-    <!-- Orbeon Forms version -->
-    <!--<xsl:variable name="orbeon-forms-version" select="version:getVersion()" as="xs:string"/>-->
 
     <!-- - - - - - - Themed page template - - - - - - -->
     <xsl:template match="/">

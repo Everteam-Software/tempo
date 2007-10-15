@@ -233,6 +233,10 @@
         <url-pattern>/xforms-server</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>ops-xforms-server-servlet</servlet-name>
+        <url-pattern>//xforms-server</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>struts-servlet</servlet-name>
         <url-pattern>/struts/*</url-pattern>
     </servlet-mapping>
