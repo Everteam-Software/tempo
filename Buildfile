@@ -22,6 +22,18 @@ define "tempo" do
   compile.options.source = "1.5"
   compile.options.target = "1.5"
 
+  desc "Deployment Framework"
+  define "deploy-api" do
+    compile.with LOG4J
+    package :jar
+  end  
+
+  desc "Deployment Implementation"
+  define "deploy-impl" do
+    compile.with projects("deploy-api", "security", "web-nutsNbolts"), AXIOM, LOG4J, SERVLET_API, SPRING, STAX_API
+    package :jar
+  end  
+
   desc "Form Dispatcher Servlet"
   define "fds" do
     compile.with AXIS2, COMMONS, LOG4J, SERVLET_API, STAX_API, XOM
@@ -188,7 +200,7 @@ define "tempo" do
   desc "Workflow Deployment Service Client"
   define "wds-client" do
     compile.with ANT, COMMONS, JARGS, JUNIT, LOG4J
-    package(:jar)
+    package(:jar) 
   end
 
   desc "Workflow Deployment Service"
