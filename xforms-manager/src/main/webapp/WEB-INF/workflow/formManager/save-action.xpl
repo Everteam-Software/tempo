@@ -66,7 +66,7 @@
 	</p:processor>
 
     <p:processor name="oxf:delegation">
-        <p:input name="interface">
+        <p:input name="interface" debug="setOutput">
             <config>
                 <service id="TMS_WS" type="webservice"
                     endpoint="http://localhost:8080/axis2/services/TaskManagementServices">
@@ -82,8 +82,8 @@
     </p:processor>
 
     <p:processor name="oxf:exception-catcher">
-        <p:input name="data" href="#saveTaskOutput"/>
-        <p:output name="data" id="ws_call_output"/>
+        <p:input name="data" href="#saveTaskOutput" debug="saveTaskOutput"/>
+        <p:output name="data" id="ws_call_output" />
     </p:processor>
 
     <p:choose href="#ws_call_output">
@@ -91,7 +91,7 @@
             <p:processor name="oxf:pipeline">
                 <p:input name="config" href="exception-handler.xpl"/>
                 <p:input name="data" href="#ws_call_output"/>
-                <p:input name="delegation" href="#saveTaskInput"/>
+                <p:input name="ws-request" href="#saveTaskInput"/>
                 <p:input name="header">
                     <b>http://localhost:8080/axis2/services/TaskManagementServices</b>
                 </p:input>
