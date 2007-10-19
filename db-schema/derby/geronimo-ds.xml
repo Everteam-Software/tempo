@@ -1,9 +1,9 @@
-<connector xmlns="http://geronimo.apache.org/xml/ns/j2ee/connector" version="1.5">
+<connector xmlns="http://geronimo.apache.org/xml/ns/j2ee/connector">
 
     <dep:environment
         xmlns:dep="http://geronimo.apache.org/xml/ns/deployment-1.1">
         <dep:moduleId>
-            <dep:groupId>com.intalio.bpms</dep:groupId>
+            <dep:groupId>org.intalio.bpms</dep:groupId>
             <dep:artifactId>BPMSDS</dep:artifactId>
             <dep:version>1.0</dep:version>
             <dep:type>rar</dep:type>
