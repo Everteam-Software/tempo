@@ -95,16 +95,18 @@ ORBEON_XERCES = [
   group("xerces-resolver", "xerces-serializer", "xerces-xml-apis", "xerces-xercesImpl", :under => "orbeon" , :version => "2_9_orbeon_20070711")
 ]
 ORBEON_CORE = [
-  group("ops", "ops-xforms-filter", "ops-resources-public", "ops-resources-private", :under=>"orbeon", :version=>"3.6.0beta.200710150210"),
+  group("ops", "ops-xforms-filter", "ops-resources-public", "ops-resources-private", :under=>"orbeon", :version=>"3.6.0-200710181533")
 ]
 ORBEON_CUSTOM = [
   ORBEON_XERCES,
   "orbeon:jakarta-oro-orbeon:jar:2.0.8",
-  "orbeon:saxon-orbeon:jar:8_8_orbeon_20070817",
+  #"orbeon:saxon-orbeon:jar:8_8_orbeon_20070817" is buggy, 
+  # the saxon-orbeon jar below is a slightly modified version
+  # that works
+  "orbeon-saxon:orbeon-saxon:jar:8.8-intalio",
   "orbeon:saxpath:jar:dev_orbeon",
   "orbeon:xsltc-orbeon:jar:2.5.1",
   "orbeon:xalan-orbeon:jar:2.5.1",
-  "orbeon:xsdlib:jar:20031020"
 ]
 ORBEON_COMMONS = [
   "commons-codec:commons-codec:jar:1.3",
@@ -119,6 +121,9 @@ ORBEON_COMMONS = [
   "commons-validator:commons-validator:jar:1.1.4",
   "commons-discovery:commons-discovery:jar:0.2",
 ]
+ORBEON_MSV = [
+  group("msv", "isorelax", "relaxng-datatype","xsdlib", :under => "msv", :version => "20070407")
+]
 ORBEON_LIBS = [
   DOM4J,
   FOP,
@@ -127,12 +132,11 @@ ORBEON_LIBS = [
   ORBEON_COMMONS,
   ORBEON_CORE,
   ORBEON_CUSTOM,
+  ORBEON_MSV,
   "avalon:avalon-framework:jar:4.1.4",
-  "jaxen:jaxen:jar:1.1.1", 
+  # orbeon not compatible with any other recent jaxen yet
+  "orbeon:jaxen:jar:1.1-beta-1-dev", 
   "jdom:jdom:jar:b9",
-  "msv:msv:jar:20050913",
-  "msv:isorelax:jar:20050913",
-  "relaxng:relaxng-datatype:jar:20031020",
   "struts:struts:jar:1.2.9",
   "jtidy:jtidy:jar:8.0-20060801.131059-3",
   "portlet-api:portlet-api:jar:1.0" 
