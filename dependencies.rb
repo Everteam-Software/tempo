@@ -74,7 +74,7 @@ WS_COMMONS_SCHEMA = "org.apache.ws.commons.schema:XmlSchema:jar:1.3.1"
 WSDL4J = [ "wsdl4j:wsdl4j:jar:1.5.2" ]
 
 XERCES = [
-
+  "xerces:xercesImpl:jar:2.9.0",
   "xerces:xmlParserAPIs:jar:2.9.0" ]
 
 XMLBEANS = [
@@ -119,7 +119,7 @@ ORBEON_COMMONS = [
   "commons-pool:commons-pool:jar:1.3",
   "commons-beanutils:commons-beanutils:jar:1.7.0",
   "commons-validator:commons-validator:jar:1.1.4",
-
+  "commons-discovery:commons-discovery:jar:0.2",
 ]
 
 ORBEON_MSV = [
