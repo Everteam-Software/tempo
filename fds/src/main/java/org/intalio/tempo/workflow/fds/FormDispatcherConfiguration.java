@@ -11,6 +11,8 @@
  */
 package org.intalio.tempo.workflow.fds;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 
 import nu.xom.Builder;
@@ -34,7 +36,11 @@ import org.apache.log4j.Logger;
  * @version $Revision: 842 $
  */
 public final class FormDispatcherConfiguration {
-
+    /**
+     * Configuration file location property
+     */
+    public static final String CONFIG_DIR_PROPERTY = "org.intalio.tempo.configDirectory";
+    
     /**
      * The name of the resource containing the configuration.
      */
@@ -54,7 +60,7 @@ public final class FormDispatcherConfiguration {
      * The base URL of PXE deployment. <br>
      * The initialization value is the default.
      */
-    private String _pxeBaseUrl = "http://localhost:8080/pxe";
+    private String _pxeBaseUrl = "http://localhost:8080/ode";
     
     /**
      * The FDS endpoint
@@ -127,7 +133,17 @@ public final class FormDispatcherConfiguration {
      */
     private FormDispatcherConfiguration() {
         try {
-            InputStream configInputStream = this.getClass().getClassLoader().getResourceAsStream(_CONFIG_RESOURCE_NAME);
+            String configDir = System.getProperty(CONFIG_DIR_PROPERTY);
+            if (configDir == null) {
+                _log.error("Property "+CONFIG_DIR_PROPERTY+" not set; using configuration defaults for FDS");
+                return;
+            }
+            File f = new File(configDir, _CONFIG_RESOURCE_NAME);
+            if (!f.exists()) {
+                _log.error("Missing FDS configuration file: " + f.toString());
+                return;
+            }
+            InputStream configInputStream = new FileInputStream(f);
             Document configDocument = new Builder().build(configInputStream);
 
             String pxeBaseUrl = configDocument.query("/config/pxeBaseUrl").get(0).getValue();
