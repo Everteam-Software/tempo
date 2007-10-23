@@ -106,9 +106,8 @@ define "tempo" do
     package(:aar).with :libs => [ projects("security", "security-ws-common"), CASTOR, LOG4J, SLF4J, SPRING ]
   end
   
-  
-  desc "Task Attachment Service"
-  define "tas-service" do
+  desc "Task Attachment Service Common"
+  define "tas-common" do
     compile.with projects("security", "security-ws-client"), 
                  AXIOM, AXIS2, COMMONS, JUNIT, LOG4J, STAX_API, XOM
 
@@ -121,8 +120,13 @@ define "tempo" do
       test.exclude '*WDSStorageTest*'
     end
 
-    package(:aar).with :libs => [ projects("security", "security-ws-client", "security-ws-common"),
-                                  SLF4J, LOG4J ]
+    package(:jar)
+  end
+
+  desc "Task Attachment Service"
+  define "tas-service" do
+    package(:aar).with(:libs => [ 
+        projects("security", "security-ws-client", "security-ws-common", "tas-common"),SLF4J, LOG4J])
   end
   
   desc "Task Management Services Common Library"

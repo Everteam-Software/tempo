@@ -3,7 +3,7 @@
     <dep:environment
         xmlns:dep="http://geronimo.apache.org/xml/ns/deployment-1.1">
         <dep:moduleId>
-            <dep:groupId>org.intalio.bpms</dep:groupId>
+            <dep:groupId>com.intalio.bpms</dep:groupId>
             <dep:artifactId>BPMSDS</dep:artifactId>
             <dep:version>1.0</dep:version>
             <dep:type>rar</dep:type>
