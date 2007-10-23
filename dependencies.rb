@@ -74,7 +74,7 @@ WS_COMMONS_SCHEMA = "org.apache.ws.commons.schema:XmlSchema:jar:1.3.1"
 WSDL4J = [ "wsdl4j:wsdl4j:jar:1.5.2" ]
 
 XERCES = [
-  "xerces:xercesImpl:jar:2.9.0",
+
   "xerces:xmlParserAPIs:jar:2.9.0" ]
 
 XMLBEANS = [
@@ -103,7 +103,7 @@ ORBEON_CUSTOM = [
   #"orbeon:saxon-orbeon:jar:8_8_orbeon_20070817" is buggy, 
   # the saxon-orbeon jar below is a slightly modified version
   # that works
-  "orbeon-saxon:orbeon-saxon:jar:8.8-intalio",
+  "orbeon-saxon:orbeon-saxon:jar:8.8-intalio-2",
   "orbeon:saxpath:jar:dev_orbeon",
   "orbeon:xsltc-orbeon:jar:2.5.1",
   "orbeon:xalan-orbeon:jar:2.5.1",
@@ -119,11 +119,13 @@ ORBEON_COMMONS = [
   "commons-pool:commons-pool:jar:1.3",
   "commons-beanutils:commons-beanutils:jar:1.7.0",
   "commons-validator:commons-validator:jar:1.1.4",
-  "commons-discovery:commons-discovery:jar:0.2",
+
 ]
+
 ORBEON_MSV = [
   group("msv", "isorelax", "relaxng-datatype","xsdlib", :under => "msv", :version => "20070407")
 ]
+
 ORBEON_LIBS = [
   DOM4J,
   FOP,
@@ -141,4 +143,6 @@ ORBEON_LIBS = [
   "jtidy:jtidy:jar:8.0-20060801.131059-3",
   "portlet-api:portlet-api:jar:1.0" 
 ]
+
+
 
