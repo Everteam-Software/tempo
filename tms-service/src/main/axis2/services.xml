@@ -13,11 +13,11 @@
  */
  -->
 <serviceGroup>
-    <service name="TaskManagementServices" class="org.intalio.tempo.workflow.tms.server.SpringInit">
+    <service name="TaskManagementServices" class="org.intalio.tempo.workflow.SpringInit">
         <description>Intalio|BPMS Task Management Services</description>
 
         <parameter name="SpringContextFile">file:${org.intalio.tempo.configDirectory}/tempo-tms.xml</parameter>
-        <parameter name="ServiceObjectSupplier">org.intalio.tempo.workflow.tms.server.ServiceObjectSupplier</parameter>
+        <parameter name="ServiceObjectSupplier">org.intalio.tempo.workflow.ServiceObjectSupplier</parameter>
         <parameter name="SpringBeanName">tms.serviceImplementation</parameter>
 
         <operation name="getTaskList">

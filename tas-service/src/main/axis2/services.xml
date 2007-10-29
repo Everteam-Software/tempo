@@ -12,11 +12,12 @@
  -->
 
 <serviceGroup>
-  <service name="tas">
+  <service name="tas" class="org.intalio.tempo.workflow.SpringInit">
       <description>
           Intalio|BPMS Task Attachment Service
       </description>
-      <parameter name="ServiceObjectSupplier" locked="false">org.apache.axis2.extensions.spring.receivers.SpringServletContextObjectSupplier</parameter>
+      <parameter name="SpringContextFile">file:${org.intalio.tempo.configDirectory}/tempo-tas.xml</parameter>
+      <parameter name="ServiceObjectSupplier">org.intalio.tempo.workflow.ServiceObjectSupplier</parameter>
       <parameter name="SpringBeanName" locked="false">tas.serviceImplementation</parameter>
       <operation name="add">
           <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
