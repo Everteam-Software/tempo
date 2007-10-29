@@ -5,7 +5,7 @@ require "buildr"
 
 # Keep this structure to allow the build system to update version numbers.
 VERSION_NUMBER = "5.1.0.3-SNAPSHOT"
-NEXT_VERSION = "5.1.0.4"
+NEXT_VERSION = "5.1.0.3"
 
 require "dependencies.rb"
 require "repositories.rb"
@@ -204,8 +204,7 @@ define "tempo" do
   end
 
   define "web-nutsNbolts" do
-    compile.with project("security"), 
-                 COMMONS, INTALIO_STATS, JSP_API, LOG4J, SERVLET_API, SLF4J, SPRING
+    compile.with project("security"), COMMONS, INTALIO_STATS, JSP_API, LOG4J, SERVLET_API, SLF4J, SPRING, AXIS2
     package :jar
   end
   
