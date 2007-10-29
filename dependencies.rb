@@ -15,7 +15,7 @@ COMMONS = [
   "commons-collections:commons-collections:jar:3.1",
   "commons-digester:commons-digester:jar:1.7",
   "commons-fileupload:commons-fileupload:jar:1.1.1",
-  "commons-httpclient:commons-httpclient:jar:3.0",
+  "commons-httpclient:commons-httpclient:jar:3.15",
   "commons-io:commons-io:jar:1.2",
   "commons-lang:commons-lang:jar:2.1",
   "commons-pool:commons-pool:jar:1.2" ]
