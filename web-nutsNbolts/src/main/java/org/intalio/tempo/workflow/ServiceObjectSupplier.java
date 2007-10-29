@@ -13,7 +13,7 @@
  * $Log:$
  */
 
-package org.intalio.tempo.workflow.tms.server;
+package org.intalio.tempo.workflow;
 
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.description.AxisService;
