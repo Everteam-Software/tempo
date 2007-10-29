@@ -50,6 +50,7 @@
                         </tas:authCredentials>
                         <tas:attachmentMetadata>
                             <tas:mimeType><xsl:value-of select="/attachments/new/file/@mediatype"/></tas:mimeType>
+	                        <tas:filename><xsl:value-of select="/attachments/new/file/@filename"/></tas:filename>
                         </tas:attachmentMetadata>
                         <tas:localFileURL>
                             <xsl:value-of select="/attachments/new/file"/>
@@ -63,8 +64,7 @@
             <p:processor name="oxf:delegation">
                 <p:input name="interface">
                     <config>
-                        <service id="tasWS" type="webservice"
-                            endpoint="http://localhost:8080/axis2/services/tas">
+                        <service id="tasWS" type="webservice" endpoint="http://localhost:8080/axis2/services/tas">
                             <operation nsuri="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/" name="addRequest" soap-action="add"/>
                         </service>
                     </config>
