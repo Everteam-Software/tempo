@@ -109,11 +109,13 @@ ORBEON_CUSTOM = [
   "orbeon:xalan-orbeon:jar:2.5.1",
 ]
 
+COMMONS_DISCOVERY = [  "commons-discovery:commons-discovery:jar:0.2"]
+
 ORBEON_COMMONS = [
   COMMONS,
+  COMMONS_DISCOVERY,
   "commons-beanutils:commons-beanutils:jar:1.7.0",
-  "commons-validator:commons-validator:jar:1.1.4",
-  "commons-discovery:commons-discovery:jar:0.2",
+  "commons-validator:commons-validator:jar:1.1.4"
 ]
 
 ORBEON_MSV = [
