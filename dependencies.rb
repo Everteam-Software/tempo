@@ -95,7 +95,7 @@ ORBEON_XERCES = [
   group("xerces-resolver", "xerces-serializer", "xerces-xml-apis", "xerces-xercesImpl", :under => "orbeon" , :version => "2_9_orbeon_20070711")
 ]
 ORBEON_CORE = [
-  group("ops", "ops-xforms-filter", "ops-resources-public", "ops-resources-private", :under=>"orbeon", :version=>"3.6.0-200710181533")
+  group("ops", "ops-xforms-filter", "ops-resources-public", "ops-resources-private", :under=>"orbeon", :version=>"3.6.0beta.200710290905")
 ]
 ORBEON_CUSTOM = [
   ORBEON_XERCES,
