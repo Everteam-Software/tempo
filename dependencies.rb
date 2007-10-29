@@ -15,7 +15,7 @@ COMMONS = [
   "commons-collections:commons-collections:jar:3.1",
   "commons-digester:commons-digester:jar:1.7",
   "commons-fileupload:commons-fileupload:jar:1.1.1",
-  "commons-httpclient:commons-httpclient:jar:3.15",
+  "commons-httpclient:commons-httpclient:jar:3.1",
   "commons-io:commons-io:jar:1.2",
   "commons-lang:commons-lang:jar:2.1",
   "commons-pool:commons-pool:jar:1.2" ]
@@ -108,15 +108,9 @@ ORBEON_CUSTOM = [
   "orbeon:xsltc-orbeon:jar:2.5.1",
   "orbeon:xalan-orbeon:jar:2.5.1",
 ]
+
 ORBEON_COMMONS = [
-  "commons-codec:commons-codec:jar:1.3",
-  "commons-collections:commons-collections:jar:3.1",
-  "commons-digester:commons-digester:jar:1.7",
-  "commons-fileupload:commons-fileupload:jar:1.0",
-  "commons-httpclient:commons-httpclient:jar:3.0.1",
-  "commons-io:commons-io:jar:1.2",
-  "commons-lang:commons-lang:jar:2.1",
-  "commons-pool:commons-pool:jar:1.3",
+  COMMONS,
   "commons-beanutils:commons-beanutils:jar:1.7.0",
   "commons-validator:commons-validator:jar:1.1.4",
   "commons-discovery:commons-discovery:jar:0.2",
