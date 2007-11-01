@@ -12,13 +12,13 @@ CASTOR = "castor:castor:jar:1.0"
 
 COMMONS = [
   "commons-codec:commons-codec:jar:1.3",
-  "commons-collections:commons-collections:jar:3.1",
+  "commons-collections:commons-collections:jar:3.2", 
   "commons-digester:commons-digester:jar:1.7",
-  "commons-fileupload:commons-fileupload:jar:1.1.1",
-  "commons-httpclient:commons-httpclient:jar:3.1",
+  "commons-fileupload:commons-fileupload:jar:1.0",
+  "commons-httpclient:commons-httpclient:jar:3.0.1",
   "commons-io:commons-io:jar:1.2",
   "commons-lang:commons-lang:jar:2.1",
-  "commons-pool:commons-pool:jar:1.2" ]
+  "commons-pool:commons-pool:jar:1.3" ]
 
 DOJO_VERSION = "0.2.2"
 DOJO_URL = "http://download.dojotoolkit.org/release-#{DOJO_VERSION}/dojo-#{DOJO_VERSION}-widget.zip"
@@ -46,6 +46,21 @@ JUNIT = "junit:junit:jar:3.8.1"
 LOG4J = [ "log4j:log4j:jar:1.2.15" ]
 
 JPA = [ "javax.persistence:persistence-api:jar:1.0" ]
+
+APACHE_JPA = [
+  #COMMONS["commons-pool"],
+  #COMMONS["commons-collections"],
+  #COMMONS["commons-pool"],
+  COMMONS,
+  "org.apache.geronimo.specs:geronimo-jta_1.1_spec:jar:1.1",
+  "org.apache.geronimo.specs:geronimo-jpa_3.0_spec:jar:1.0",
+  "org.apache.geronimo.specs:geronimo-jms_1.1_spec:jar:1.0.1",
+  "org.apache.openjpa:openjpa:jar:1.0.0",
+  "commons-logging:commons-logging:jar:1.0.4",
+  "commons-lang:commons-lang:jar:2.1",
+  "org.apache.derby:derby:jar:10.2.2.0",
+  "serp:serp:jar:1.13.1"
+]
 
 QOM = [ "net.sf.qom:qom:jar:0.1alpha3" ]
 
@@ -95,7 +110,7 @@ ORBEON_XERCES = [
   group("xerces-resolver", "xerces-serializer", "xerces-xml-apis", "xerces-xercesImpl", :under => "orbeon" , :version => "2_9_orbeon_20070711")
 ]
 ORBEON_CORE = [
-  group("ops", "ops-xforms-filter", "ops-resources-public", "ops-resources-private", :under=>"orbeon", :version=>"3.6.0beta.200710290905")
+  group("ops", "ops-xforms-filter", "ops-resources-public", "ops-resources-private", :under=>"orbeon", :version=>"3.6.0-cvs-1"),
 ]
 ORBEON_CUSTOM = [
   ORBEON_XERCES,
@@ -107,6 +122,12 @@ ORBEON_CUSTOM = [
   "orbeon:saxpath:jar:dev_orbeon",
   "orbeon:xsltc-orbeon:jar:2.5.1",
   "orbeon:xalan-orbeon:jar:2.5.1",
+  
+  # "orbeon:xmldb-exist:jar:1_1_1",
+  # "orbeon:exist:jar:1.1.1",
+  # "orbeon:xmlrpc:jar:1.2-patched-exist_1_1_1",
+  # "orbeon:antlr:jar:antlr-2.7.6-exist_1_1_1"
+  
 ]
 
 COMMONS_DISCOVERY = [  "commons-discovery:commons-discovery:jar:0.2"]
