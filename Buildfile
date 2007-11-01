@@ -126,7 +126,7 @@ define "tempo" do
   desc "Task Attachment Service"
   define "tas-service" do
     package(:aar).with(:libs => [ 
-        projects("security", "security-ws-client", "security-ws-common", "tas-common", "web-nutsNbolts"),SLF4J, LOG4J])
+        projects("security", "security-ws-client", "security-ws-common", "tas-common", "web-nutsNbolts"), SPRING, AXIS2, SLF4J, LOG4J])
   end
   
   desc "Task Management Services Common Library"
