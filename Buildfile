@@ -4,8 +4,8 @@ require "rubygems"
 require "buildr"
 
 # Keep this structure to allow the build system to update version numbers.
-VERSION_NUMBER = "5.1.0.4-SNAPSHOT"
-NEXT_VERSION = "5.1.0.5"
+VERSION_NUMBER = "5.1.0.3-SNAPSHOT"
+NEXT_VERSION = "5.1.0.4"
 
 require "dependencies.rb"
 require "repositories.rb"
@@ -213,6 +213,11 @@ define "tempo" do
     resources.filter.using "version" => VERSION_NUMBER
     package(:war).with :libs=> ORBEON_LIBS
   end
-
+  
+  define "tms-jpa" do
+    compile.with project("tms-common"), APACHE_JPA, LOG4J
+    test.with project("tms-common"), APACHE_JPA, LOG4J, SLF4J, APACHE_JPA, LOG4J, XERCES
+    package(:jar)
+  end
   
 end

@@ -1,0 +1,75 @@
+<entity-mappings
+    xmlns="http://java.sun.com/xml/ns/persistence/orm"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm_1_0.xsd"
+    version="1.0">
+    <!-- 
+        tasks.task_id, "
+        + "tasks.process_id, tasks.type_id, tasks.state_id, tasks.description, "
+        + "tasks.creation_date, tasks.form_url, tasks.failure_code, tasks.failure_reason, tasks.input_xml, "
+        + "tasks.output_xml, tasks.endpoint, tasks.namespace, "
+        + "tasks.init_soap_action, tasks.complete_soap_action, tasks.is_chained_before, "
+        + "tasks.previous_task_id ";
+    -->
+    <mapped-superclass class="org.intalio.tempo.workflow.task.Task">
+
+        <attributes>
+            <id name="_id">
+                <column name="task_id" />
+            </id>
+            <basic name="_description">
+                <column name="description" />
+            </basic>
+            <basic name="_creationDate">
+                <column name="creation_date" />
+            </basic>
+            <basic name="_formURL">
+                <column name="form_url" />
+                <lob />
+            </basic>
+            <transient name="_internalId" />
+        </attributes>
+    </mapped-superclass>
+
+    <entity class="org.intalio.tempo.workflow.task.PATask">
+        <table name="tasks" />
+        <inheritance strategy="SINGLE_TABLE" />
+        <pre-persist method-name="serializeDocument"/>
+        <post-load method-name="deserializeDocument"/>
+        <attributes>
+            <basic name="_processID">
+                <column name="process_id"></column>
+            </basic>
+            <basic name="_state">
+                <column name="state_id"></column>
+                <enumerated>STRING</enumerated>
+            </basic>
+            <basic name="_previousTaskID">
+                <column name="previous_task_id"></column>
+            </basic>
+            <basic name="_failureReason">
+                <column name="failure_reason"></column>
+            </basic>
+            <basic name="_completeSOAPAction">
+                <column name="complete_soap_action"></column>
+            </basic>
+            <basic name="_failureCode">
+                <column name="failure_code"></column>
+            </basic>
+            <basic name="_isChainedBefore">
+                <column name="is_chained_before"></column>
+            </basic>
+
+            <basic name="_input_xml">
+                <column name="input_xml" />
+                <lob/>
+            </basic>
+            <basic name="_output_xml">
+                <column name="output_xml" />
+                <lob/>
+            </basic>
+        </attributes>
+    </entity>
+
+
+</entity-mappings>

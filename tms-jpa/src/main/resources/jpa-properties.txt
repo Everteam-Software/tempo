@@ -1,0 +1,6 @@
+openjpa.ConnectionDriverName : org.apache.derby.jdbc.EmbeddedDriver
+openjpa.ConnectionURL : jdbc:derby:database;create=true
+openjpa.ConnectionUserName : 
+openjpa.ConnectionPassword : 
+openjpa.jdbc.SynchronizeMappings : buildSchema
+openjpa.Log : DefaultLevel=WARN,SQL=TRACE
