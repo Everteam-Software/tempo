@@ -16,8 +16,7 @@
 package org.intalio.tempo.workflow.tms.server.dao;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -36,16 +35,14 @@ import java.util.List;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.pool.ObjectPool;
+import org.apache.commons.pool.impl.StackObjectPool;
 import org.apache.log4j.Logger;
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.Notification;
@@ -60,6 +57,9 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 class JDBCTaskDAOConnection implements ITaskDAOConnection {
+	ObjectPool builderPool = new StackObjectPool(new DocumentBuilderPool());
+	ObjectPool transformerPool = new StackObjectPool(new TransformerPool());
+	
     private static final Logger _logger = Logger.getLogger(JDBCTaskDAOConnection.class);
 
     private static final String _SELECT_TASK_FIELDS = " tasks.id, tasks.task_id, "
@@ -117,21 +117,22 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
     }
     */
 
-    private Document parseXML(String xmlString) {
-        if ((xmlString == null) || ("".equals(xmlString))) {
+    private Document parseXML(String xml) {
+        if (xml==null || xml.equalsIgnoreCase("")) {
             return null;
         } else {
-            // TODO (alex) This is a performance hog, we need to pool DocumentBuilder's
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        	DocumentBuilder borrowObject = null;
             try {
-                DocumentBuilder builder = factory.newDocumentBuilder();
-                return builder.parse(new ByteArrayInputStream(xmlString.getBytes("UTF-8")));
+            	 borrowObject = (DocumentBuilder)builderPool.borrowObject();
+            	 return (borrowObject).parse(new ByteArrayInputStream(xml.getBytes("UTF-8")));
             } catch (SAXException e) {
-                throw new RuntimeException("Error while parsing XML:\n" + xmlString, e);
-            } catch (IOException e) {
+                throw new RuntimeException("Error while parsing XML:\n" + xml, e);
+            } catch (Exception e) {
                 throw new RuntimeException(e);
-            } catch (ParserConfigurationException e) {
-                throw new RuntimeException(e);
+            } finally {
+            	if(borrowObject!=null) 
+            		try {builderPool.returnObject(borrowObject);} 
+            		catch(Exception e) {}
             }
         }
     }
@@ -429,22 +430,22 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
     }
 
     private String serializeXML(Document xml) {
-        String resultString = null;
         if (xml != null) {
             Source source = new DOMSource(xml);
-            ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-            Result result = new StreamResult(outStream);
+            StringWriter writer = new StringWriter();
+            Result result = new StreamResult(writer);
+            Transformer transformer = null;
             try {
-                Transformer transformer = TransformerFactory.newInstance().newTransformer();
+                transformer = (Transformer) transformerPool.borrowObject();
                 transformer.transform(source, result);
-            } catch (TransformerException e) {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
+            } finally {
+            	try {transformerPool.returnObject(transformer);} catch(Exception e) {}
             }
-
-            resultString = new String(outStream.toByteArray());
-        }
-        _logger.debug("XML parsed to string :\n" + resultString);
-        return resultString;
+            return writer.toString();
+        } else
+        	return null;
     }
 
     private void insertAttachments(int taskID, Collection<Attachment> attachments) {
@@ -528,6 +529,7 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
                 }
                 createTaskStatement.setString(i++, serializeXML(paTask.getInput()));
                 createTaskStatement.setString(i++, serializeXML(paTask.getOutput()));
+                
                 createTaskStatement.setString(i++, paTask.getCompleteSOAPAction());
                 createTaskStatement.setString(i++, paTask.isChainedBefore() ? "1" : "0");
                 createTaskStatement.setString(i++, paTask.getPreviousTaskID());
