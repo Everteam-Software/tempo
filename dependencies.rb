@@ -10,6 +10,7 @@ AXIS2 = [
 
 CASTOR = "castor:castor:jar:1.0"
 
+COMMONS_POOL = ["commons-pool:commons-pool:jar:1.3"]
 COMMONS = [
   "commons-codec:commons-codec:jar:1.3",
   "commons-collections:commons-collections:jar:3.2", 
@@ -18,7 +19,8 @@ COMMONS = [
   "commons-httpclient:commons-httpclient:jar:3.0.1",
   "commons-io:commons-io:jar:1.2",
   "commons-lang:commons-lang:jar:2.1",
-  "commons-pool:commons-pool:jar:1.3" ]
+  COMMONS_POOL
+]
 
 DOJO_VERSION = "0.2.2"
 DOJO_URL = "http://download.dojotoolkit.org/release-#{DOJO_VERSION}/dojo-#{DOJO_VERSION}-widget.zip"

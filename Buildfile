@@ -132,7 +132,7 @@ define "tempo" do
   desc "Task Management Services Common Library"
   define "tms-common" do
     compile.with projects("security", "security-ws-client"), 
-                 AXIOM, LOG4J, SPRING, STAX_API
+                 AXIOM, LOG4J, SPRING, STAX_API, APACHE_JPA
     test.with SLF4J, WOODSTOX
     test.exclude '*TestUtils*'
     package(:jar)
@@ -167,7 +167,7 @@ define "tempo" do
     test.exclude '*TestUtils*'
     package(:aar).with :libs => 
         [ projects("security", "security-ws-client", "security-ws-common", "tms-common", "web-nutsNbolts"), 
-          LOG4J, SLF4J, SPRING, XOM ] 
+          LOG4J, SLF4J, SPRING, XOM, COMMONS_POOL ] 
   end
   
   
@@ -213,4 +213,6 @@ define "tempo" do
     resources.filter.using "version" => VERSION_NUMBER
     package(:war).with :libs=> ORBEON_LIBS
   end
+
+  
 end
