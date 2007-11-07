@@ -15,8 +15,6 @@
 
 package org.intalio.tempo.workflow.tms.server.dao;
 
-import java.io.ByteArrayInputStream;
-import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -34,15 +32,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
-import org.apache.commons.pool.ObjectPool;
-import org.apache.commons.pool.impl.StackObjectPool;
 import org.apache.log4j.Logger;
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.Notification;
@@ -52,13 +41,13 @@ import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.TaskState;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.task.attachments.AttachmentMetadata;
+import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
 import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
 class JDBCTaskDAOConnection implements ITaskDAOConnection {
-	ObjectPool builderPool = new StackObjectPool(new DocumentBuilderPool());
-	ObjectPool transformerPool = new StackObjectPool(new TransformerPool());
+	
+    private XmlTooling xmltooling = new XmlTooling();
 	
     private static final Logger _logger = Logger.getLogger(JDBCTaskDAOConnection.class);
 
@@ -117,25 +106,7 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
     }
     */
 
-    private Document parseXML(String xml) {
-        if (xml==null || xml.equalsIgnoreCase("")) {
-            return null;
-        } else {
-        	DocumentBuilder borrowObject = null;
-            try {
-            	 borrowObject = (DocumentBuilder)builderPool.borrowObject();
-            	 return (borrowObject).parse(new ByteArrayInputStream(xml.getBytes("UTF-8")));
-            } catch (SAXException e) {
-                throw new RuntimeException("Error while parsing XML:\n" + xml, e);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            } finally {
-            	if(borrowObject!=null) 
-            		try {builderPool.returnObject(borrowObject);} 
-            		catch(Exception e) {}
-            }
-        }
-    }
+   
 
     private Task mapToTaskWithoutOwners(ResultSet resultSet) {
         try {
@@ -152,8 +123,8 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
             URI formURL = new URI(resultSet.getString(i++));
             String failureCode = resultSet.getString(i++);
             String failureReason = resultSet.getString(i++);
-            Document inputXML = parseXML(resultSet.getString(i++));
-            Document outputXML = parseXML(resultSet.getString(i++));
+            Document inputXML = xmltooling.parseXML(resultSet.getString(i++));
+            Document outputXML = xmltooling.parseXML(resultSet.getString(i++));
             String processEndpoint = resultSet.getString(i++);
             String namespace = resultSet.getString(i++);
             String initSOAPAction = resultSet.getString(i++);
@@ -429,24 +400,6 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
         }
     }
 
-    private String serializeXML(Document xml) {
-        if (xml != null) {
-            Source source = new DOMSource(xml);
-            StringWriter writer = new StringWriter();
-            Result result = new StreamResult(writer);
-            Transformer transformer = null;
-            try {
-                transformer = (Transformer) transformerPool.borrowObject();
-                transformer.transform(source, result);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            } finally {
-            	try {transformerPool.returnObject(transformer);} catch(Exception e) {}
-            }
-            return writer.toString();
-        } else
-        	return null;
-    }
 
     private void insertAttachments(int taskID, Collection<Attachment> attachments) {
         try {
@@ -527,8 +480,8 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
                     createTaskStatement.setString(i++, null);
                     createTaskStatement.setString(i++, null);
                 }
-                createTaskStatement.setString(i++, serializeXML(paTask.getInput()));
-                createTaskStatement.setString(i++, serializeXML(paTask.getOutput()));
+                createTaskStatement.setString(i++, xmltooling.serializeXML(paTask.getInput()));
+                createTaskStatement.setString(i++, xmltooling.serializeXML(paTask.getOutput()));
                 
                 createTaskStatement.setString(i++, paTask.getCompleteSOAPAction());
                 createTaskStatement.setString(i++, paTask.isChainedBefore() ? "1" : "0");
@@ -590,7 +543,7 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
                     createTaskStatement.setString(i++, null);
                     createTaskStatement.setString(i++, null);
                 }
-                createTaskStatement.setString(i++, serializeXML(notification.getInput()));
+                createTaskStatement.setString(i++, xmltooling.serializeXML(notification.getInput()));
                 createTaskStatement.setString(i++, null);
                 createTaskStatement.setString(i++, null);
                 createTaskStatement.setString(i++, null);

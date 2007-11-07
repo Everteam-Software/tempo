@@ -22,9 +22,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.w3c.dom.Document;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
-
 import org.intalio.tempo.workflow.task.traits.IChainableTask;
 import org.intalio.tempo.workflow.task.traits.ICompleteReportingTask;
 import org.intalio.tempo.workflow.task.traits.IProcessBoundTask;
@@ -32,7 +30,9 @@ import org.intalio.tempo.workflow.task.traits.ITaskWithAttachments;
 import org.intalio.tempo.workflow.task.traits.ITaskWithInput;
 import org.intalio.tempo.workflow.task.traits.ITaskWithOutput;
 import org.intalio.tempo.workflow.task.traits.ITaskWithState;
+import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
+import org.w3c.dom.Document;
 
 public class PATask extends Task implements ITaskWithState, IProcessBoundTask, ITaskWithInput, ITaskWithOutput,
     ICompleteReportingTask, ITaskWithAttachments, IChainableTask {
@@ -47,8 +47,21 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
     private String _completeSOAPAction;
 
     private Document _input;
-
+    
     private Document _output;
+    
+    private String _input_xml;
+    private String _output_xml;
+    private XmlTooling xml = new XmlTooling();
+    public void serializeDocument() {
+        _input_xml = xml.serializeXML(_input);
+        _output_xml = xml.serializeXML(_output);
+    }
+    
+    public void deserializeDocument() {
+        _input = xml.parseXML(_input_xml);
+        _output = xml.parseXML(_output_xml);
+    }
 
     private Map<URL, Attachment> _attachments = new HashMap<URL, Attachment>();
 
@@ -56,6 +69,10 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
 
     private String _previousTaskID = null;
 
+    public PATask() {
+        super();
+    }
+    
     public PATask(String id, URI formURL, String processID, String completeSOAPAction, Document input) {
         super(id, formURL);
         this.setProcessID(processID);

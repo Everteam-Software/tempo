@@ -41,6 +41,10 @@ public abstract class Task extends BaseRestrictedEntity {
 
     private Map<String,ACL> _actionACLs = new HashMap<String,ACL>();
     
+    public Task() {
+        
+    }
+    
     public Task(String id, URI formURL) {
         this.setID(id);
         this.setFormURL(formURL);

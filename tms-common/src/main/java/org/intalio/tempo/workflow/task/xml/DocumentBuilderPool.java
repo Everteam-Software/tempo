@@ -1,4 +1,4 @@
-package org.intalio.tempo.workflow.tms.server.dao;
+package org.intalio.tempo.workflow.task.xml;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
