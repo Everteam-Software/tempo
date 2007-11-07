@@ -31,11 +31,57 @@
         </attributes>
     </mapped-superclass>
 
+    <entity class="org.intalio.tempo.workflow.task.Notification">
+        <table name="tasks" />
+        <inheritance strategy="SINGLE_TABLE" />
+        <pre-persist method-name="serializeDocument" />
+        <post-load method-name="deserializeDocument" />
+        <attributes>
+            <basic name="_state">
+                <column name="state_id"></column>
+                <enumerated>STRING</enumerated>
+            </basic>
+
+            <basic name="_failureReason">
+                <column name="failure_reason"></column>
+            </basic>
+
+            <basic name="_failureCode">
+                <column name="failure_code"></column>
+            </basic>
+
+            <basic name="_input_xml">
+                <column name="input_xml" />
+                <lob />
+            </basic>
+        </attributes>
+    </entity>
+
+    <entity class="org.intalio.tempo.workflow.task.PIPATask">
+        <table name="tasks" />
+        <inheritance strategy="SINGLE_TABLE" />
+        <attributes>
+
+            <basic name="_processEndpoint">
+                <column name="process_endpoing"></column>
+            </basic>
+
+            <basic name="_initMessageNamespaceURI">
+                <column name="init_message_namespaceURI"></column>
+            </basic>
+
+            <basic name="_initOperationSOAPAction">
+                <column name="init_operation_soap_action"></column>
+            </basic>
+
+        </attributes>
+    </entity>
+
     <entity class="org.intalio.tempo.workflow.task.PATask">
         <table name="tasks" />
         <inheritance strategy="SINGLE_TABLE" />
-        <pre-persist method-name="serializeDocument"/>
-        <post-load method-name="deserializeDocument"/>
+        <pre-persist method-name="serializeDocument" />
+        <post-load method-name="deserializeDocument" />
         <attributes>
             <basic name="_processID">
                 <column name="process_id"></column>
@@ -62,11 +108,11 @@
 
             <basic name="_input_xml">
                 <column name="input_xml" />
-                <lob/>
+                <lob />
             </basic>
             <basic name="_output_xml">
                 <column name="output_xml" />
-                <lob/>
+                <lob />
             </basic>
         </attributes>
     </entity>

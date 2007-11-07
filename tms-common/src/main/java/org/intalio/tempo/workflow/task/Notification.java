@@ -20,6 +20,7 @@ import org.w3c.dom.Document;
 import org.intalio.tempo.workflow.task.traits.ITaskWithInput;
 
 import org.intalio.tempo.workflow.task.traits.ITaskWithState;
+import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
 public class Notification extends Task implements ITaskWithState, ITaskWithInput {
@@ -28,6 +29,20 @@ public class Notification extends Task implements ITaskWithState, ITaskWithInput
     private String _failureReason;
     private Document _input;
 
+    public Notification() {
+        super();
+    }
+    
+    private String _input_xml;
+    private XmlTooling xml = new XmlTooling();
+    public void serializeDocument() {
+        _input_xml = xml.serializeXML(_input);
+    }
+    
+    public void deserializeDocument() {
+        _input = xml.parseXML(_input_xml);
+    }
+    
     public Notification(String id, URI formURL, Document input) {
         super(id, formURL);
         _input = input;

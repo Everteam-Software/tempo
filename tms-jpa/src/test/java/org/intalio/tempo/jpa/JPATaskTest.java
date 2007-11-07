@@ -12,7 +12,9 @@ import javax.persistence.Query;
 import junit.framework.Assert;
 
 import org.apache.log4j.Logger;
+import org.intalio.tempo.workflow.task.Notification;
 import org.intalio.tempo.workflow.task.PATask;
+import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.junit.After;
 import org.junit.Before;
@@ -63,6 +65,34 @@ public class JPATaskTest {
         Assert.assertEquals(task1, task2);
         Assert.assertEquals(task1.getInput(), task2.getInput());
         Assert.assertEquals(task1.getOutput(), task2.getOutput());
+    }
+    
+    public void testBasicPIPATaskPersistence() throws Exception {
+        em.getTransaction().begin();
+        String id = "id"+System.currentTimeMillis();
+        PIPATask task1 = new PIPATask(id,
+                new URI("http://hellonico.net"),
+                new URI("http://hellonico.net"),
+                new URI("http://hellonico.net"),
+                "initOperationSOAPAction");
+        em.persist(task1);
+        em.getTransaction().commit();
+        PIPATask task2 = (PIPATask) em.find(PIPATask.class, id);
+        em.close();
+        Assert.assertEquals(task1, task2);
+    }
+    
+    public void testBasicNotificationPersistence() throws Exception {
+        em.getTransaction().begin();
+        String id = "id"+System.currentTimeMillis();
+        Notification task1 = new Notification(id,
+                new URI("http://hellonico.net"),
+                getXmlSampleDocument());
+        em.persist(task1);
+        em.getTransaction().commit();
+        PIPATask task2 = (PIPATask) em.find(PIPATask.class, id);
+        em.close();
+        Assert.assertEquals(task1, task2);
     }
 
     private Document getXmlSampleDocument() throws Exception {

@@ -21,11 +21,13 @@ import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
 public class PIPATask extends Task {
     private URI _processEndpoint;
-
     private URI _initMessageNamespaceURI;
-
     private String _initOperationSOAPAction;
 
+    public PIPATask() {
+        super();
+    }
+    
     public PIPATask(String id,
                     URI formURL,
                     URI processEndpoint,
