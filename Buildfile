@@ -2,6 +2,7 @@ $LOAD_PATH.unshift "#{ENV['HOME']}/svn/buildr-trunk/lib/"
 
 require "rubygems"
 require "buildr"
+require "buildr/openjpa"
 
 # Keep this structure to allow the build system to update version numbers.
 VERSION_NUMBER = "5.1.0.3-SNAPSHOT"
@@ -133,16 +134,16 @@ define "tempo" do
   define "tms-common" do
     compile.with projects("security", "security-ws-client"), 
                  AXIOM, LOG4J, SPRING, STAX_API, APACHE_JPA
-    test.with SLF4J, WOODSTOX
+    compile{ open_jpa_enhance }
+    
+    test.with SLF4J, WOODSTOX, APACHE_JPA, LOG4J, SLF4J, APACHE_JPA, XERCES, DOM4J
     test.exclude '*TestUtils*'
     package(:jar)
   end
   
   desc "Task Management Service Client"
   define "tms-client" do
-    compile.with project("tms-common"),
-                 AXIOM, AXIS2, COMMONS, LOG4J, STAX_API, WS_COMMONS_SCHEMA, WSDL4J
-
+    compile.with project("tms-common"), AXIOM, AXIS2, COMMONS, LOG4J, STAX_API, WS_COMMONS_SCHEMA, WSDL4J, APACHE_JPA
     test.with SLF4J, WOODSTOX
     test.exclude '*TestUtils*'
 
@@ -152,11 +153,10 @@ define "tempo" do
     package(:jar)
   end
   
-  
   desc "Task Management Service"
   define "tms-service" do
     compile.with projects("security", "security-ws-client", "tms-common", "web-nutsNbolts"),
-                 AXIOM, AXIS2, COMMONS, LOG4J, SPRING, STAX_API, XOM
+                 AXIOM, AXIS2, COMMONS, LOG4J, SPRING, STAX_API, XOM, APACHE_JPA
 
     test.with JAVAMAIL, SLF4J, SPRING, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX
 
@@ -167,7 +167,7 @@ define "tempo" do
     test.exclude '*TestUtils*'
     package(:aar).with :libs => 
         [ projects("security", "security-ws-client", "security-ws-common", "tms-common", "web-nutsNbolts"), 
-          LOG4J, SLF4J, SPRING, XOM, COMMONS_POOL ] 
+          LOG4J, SLF4J, SPRING, XOM, COMMONS_POOL, APACHE_JPA ] 
   end
   
   
@@ -177,7 +177,7 @@ define "tempo" do
                     "tms-client", "tms-common", "web-nutsNbolts"),
            AXIOM, AXIS2, COMMONS, DOM4J, INTALIO_STATS, JSP_API, JSTL,
            LOG4J, SPRING, SERVLET_API, SLF4J, STAX_API, TAGLIBS, WOODSTOX, 
-           WS_COMMONS_SCHEMA, WSDL4J, XERCES, XMLBEANS
+           WS_COMMONS_SCHEMA, WSDL4J, XERCES, XMLBEANS, APACHE_JPA
     compile.with libs
 
     dojo = unzip(path_to(compile.target, "dojo") => download(artifact(DOJO)=>DOJO_URL))
@@ -212,12 +212,6 @@ define "tempo" do
   define "xforms-manager" do
     resources.filter.using "version" => VERSION_NUMBER
     package(:war).with :libs=> ORBEON_LIBS
-  end
-  
-  define "tms-jpa" do
-    compile.with project("tms-common"), APACHE_JPA, LOG4J
-    test.with project("tms-common"), APACHE_JPA, LOG4J, SLF4J, APACHE_JPA, LOG4J, XERCES
-    package(:jar)
   end
   
 end
