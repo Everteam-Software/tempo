@@ -52,6 +52,19 @@
     </property>
   </bean>
 
+  <bean id="updatesController"
+        class="org.intalio.tempo.web.controller.SecuredController">
+    <property name="commandClass" value="java.lang.Object"/>
+    <property name="defaultAction">
+      <ref bean="tasksDefaultAction"/>
+    </property>
+    <property name="actionDefs">
+      <list>
+        <ref bean="tasksDefaultAction"/>
+      </list>
+    </property>
+  </bean>
+  
   <bean id="messageSource"
         class="org.springframework.context.support.ResourceBundleMessageSource">
     <property name="basename">
@@ -64,6 +77,7 @@
       <props>
         <prop key="/login.htm">loginController</prop>
         <prop key="/tasks.htm">tasksController</prop>
+        <prop key="/updates.htm">updatesController</prop>
       </props>
     </property>
   </bean>
