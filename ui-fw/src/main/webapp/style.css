@@ -709,3 +709,32 @@ a.time-line2 #arrow{
 .eventPropertyText{
 	color:#000066;
 }
+
+#properties_content{
+	border:1px solid #404040;
+	font-size:12px;
+	margin-left: 20px;
+}
+
+#properties_content tr td{
+	padding:0 0 0 2px;
+	height:16px;
+}
+
+#headerTr td{
+	font-weight:bold;
+	border-bottom:solid 1px #404040;
+	border-right:solid 1px #a1a1a1;
+	border-left:solid 1px #e2e2e2;
+	background:#bbbbbb url(images/headerTr_bg.png) repeat-x;
+}
+
+.oddTr td{
+	background:#f1f5fa;
+	border-right:solid 1px #e2e2e2;
+}
+
+.evenTr td{
+	background:#ffffff;
+	border-right:solid 1px #e2e2e2;
+}

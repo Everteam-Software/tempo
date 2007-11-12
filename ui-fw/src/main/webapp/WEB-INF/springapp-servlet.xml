@@ -35,6 +35,22 @@
         <property name="actionClass"
             value="org.intalio.tempo.uiframework.actions.TasksAction"/>
     </bean>
+
+	<!-- for auto update -->
+    <bean id="updatesController"
+        class="org.intalio.tempo.uiframework.SecuredController">
+        <property name="commandClass"
+            value="java.lang.Object"/>
+        <property name="defaultAction">
+            <ref bean="tasksDefaultAction"/>
+        </property>
+        <property name="actionDefs">
+            <list>
+                <ref bean="tasksDefaultAction"/>
+            </list>
+        </property>
+    </bean>
+
     <bean id="tasksController"
         class="org.intalio.tempo.uiframework.SecuredController">
         <property name="commandClass"
@@ -48,6 +64,9 @@
             </list>
         </property>
     </bean>
+
+
+
     <!-- -->
     <!-- -->
     <bean id="messageSource"
@@ -62,6 +81,7 @@
             <props>
                 <prop key="/login.htm">loginController</prop>
                 <prop key="/tasks.htm">tasksController</prop>
+                <prop key="/updates.htm">updatesController</prop>
             </props>
         </property>
     </bean>

@@ -30,8 +30,6 @@
 				            ${currentUser}
 				            &nbsp;&nbsp;
 						</td>
-						<td class="menuItemSeparator"><img src="images/spacer.gif" width="1" alt="" height="30"></td>																									
-						<td> <a href="javascript:document.getElementById('form').submit();" class="mainMenuItem" ><fmt:message key="com_intalio_bpms_workflow_pageHeader_refresh"/></a></td>
 						<td class="menuItemSeparator"><img src="images/spacer.gif" width="1" alt="" height="30"></td>																
 						<td> <a href="javascript:submitActionToURL('login.htm','logOut')" class="mainMenuItem" ><fmt:message key="com_intalio_bpms_workflow_pageHeader_logout"/></a> </td>								
 					</tr>

@@ -14,11 +14,24 @@
 
 <%@ taglib prefix="custom" tagdir="/WEB-INF/tags"%>
 
+
 <c:set var="headerCell">
 	<%@ include file="/WEB-INF/jsp/siteHeader.jsp"%>
 </c:set>
 
+
+<script type="text/javascript" src="/ui-fw/script/prototype.js"></script>
+<script type="text/javascript" src="/ui-fw/script/tasks.js"></script>
+
+<script type="text/javascript">
+	window.onload = startTimer(<fmt:message key="com_intalio_tempo_tasks_update_interval"/>);
+</script>
+
+
 <custom:workflowBody headerCell="${headerCell}">
+
+<div id="timer"></div>
+
 	    <table id="tabPanel" width="100%" border="0" cellspacing="0" cellpadding="0" >
 	      <tr>
 	        <td id="ActiveTab" onClick="changetab(this,'tabContainer', 'tab1')">Tasks</td>
@@ -34,26 +47,38 @@
 			<!-- Third Level Header b -->
 	        <br/>
 	        <!-- Third Level Header e -->
-	        <table width="600" border="0" cellspacing="0" cellpadding="4" style="margin-left: 20px; " id="properties_content">
-	            <tr>
-	              <td width="10%"><strong>Task State</strong></td>
-	              <td width="65%"><strong>Description</strong></td>
-	              <td width="25%"><strong>Creation Date/Time</strong></td>
+
+	      <div id="taskdiv">
+	        <table width="600"  cellspacing="0" cellpadding="0" id="properties_content">
+	            <tr id="headertr">
+	              <td width="13%"><strong>Task State</strong></td>
+	              <td width="55%"><strong>Description</strong></td>
+	              <td width="32%"><strong>Creation Date/Time</strong></td>
 	            </tr>
-	            <c:forEach items="${activityTasks}" var="taskHolder">
-	            	<tr>
-	            		<td>
-	            			<a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}&user=${currentUser}" target="taskform"  >${taskHolder.task.state.name}</a>
-	            		</td>
-	            		<td>
-	            			<a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}&user=${currentUser}" target="taskform"  >${taskHolder.task.description}</a>
-	            		</td>
-	            		<td>
-	            			<a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}&user=${currentUser}" target="taskform"  >${taskHolder.task.creationDate}</a>
-	            		</td>
-	            	</tr>
-	        	</c:forEach>
+	            
+		            <c:forEach items="${activityTasks}" var="taskHolder" varStatus="status">
+		                
+	            	<c:choose>
+	            		<c:when test="${(status.index%2) == 0}">
+							<tr class="oddTr">
+	            		</c:when>
+	            		<c:otherwise>
+							<tr class="evenTr">
+	            		</c:otherwise>
+	            	</c:choose>
+		            		<td>
+		            			<a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}&user=${currentUser}" target="taskform"  >${taskHolder.task.state.name}</a>
+		            		</td>
+		            		<td>
+		            			<a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}&user=${currentUser}" target="taskform"  >${taskHolder.task.description}</a>
+		            		</td>
+		            		<td>
+		            			<a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}&user=${currentUser}" target="taskform"  >${taskHolder.task.creationDate}</a>
+		            		</td>
+		            	</tr>
+		        	</c:forEach>
 	        </table>
+	       </div>
 	        <!-- Data e -->
 	        <br />
 			
@@ -62,44 +87,64 @@
 			<!-- Third Level Header b -->
 	        <br/>
 	        <!-- Third Level Header e -->
-	        <table width="600" border="0" cellspacing="0" cellpadding="4" style="margin-left: 20px; " id="properties_content">
-	            <tr>
-	              <td width="65%"><strong>Description</strong></td>
-	              <td width="35%"><strong>Creation Date/Time</strong></td>
-	            </tr>
-	            <c:forEach items="${notifications}" var="taskHolder">
-	            	<tr>
-	            		<td>
-	            			<a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}" target="taskform"  >${taskHolder.task.description}</a>
-	            		</td>
-	            		<td>
-	            			<a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}" target="taskform"  >${taskHolder.task.creationDate}</a>
-	            		</td>
-	            	</tr>
-	        	</c:forEach>
-	        </table>
+	        <div id="notificationdiv">
+		        <table width="600"  cellspacing="0" cellpadding="0" id="properties_content">
+		            <tr id="headertr">
+		              <td width="65%"><strong>Description</strong></td>
+		              <td width="35%"><strong>Creation Date/Time</strong></td>
+		            </tr>
+		            
+			            <c:forEach items="${notifications}" var="taskHolder" varStatus="status">
+		            	<c:choose>
+		            		<c:when test="${(status.index%2) == 0}">
+								<tr class="oddTr">
+		            		</c:when>
+		            		<c:otherwise>
+								<tr class="evenTr">
+		            		</c:otherwise>
+		            	</c:choose>
+			            		<td>
+			            			<a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}" target="taskform"  >${taskHolder.task.description}</a>
+			            		</td>
+			            		<td>
+			            			<a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}" target="taskform"  >${taskHolder.task.creationDate}</a>
+			            		</td>
+			            	</tr>
+			        	</c:forEach>
+		        </table>
+	        </div>
 	        <!-- Data e -->
 	        <br />
 			
 			</div>
 			<div class="notvisibletab" id="tab2">
 				<!-- Third Level Header b -->
-	        <table width="600" border="0" cellspacing="0" cellpadding="4" style="margin-left: 20px; " id="properties_content">
-	            <tr>
-	              <td width="65%"><strong>Description</strong></td>
-	              <td width="35%"><strong>Creation Date/Time</strong></td>
-	            </tr>
-	            <c:forEach items="${initTasks}" var="taskHolder">
-	            	<tr>
-	            		<td>
-	            			<a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}&user=${currentUser}" target="taskform"  >${taskHolder.task.description}</a>
-	            		</td>
-	            		<td>
-	            			<a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}&user=${currentUser}" target="taskform"  >${taskHolder.task.creationDate}</a>
-	            		</td>
-	            	</tr>
-	            </c:forEach>
-	        </table>
+		        <br/>
+	        <div id="processdiv">
+		        <table width="600"  cellspacing="0" cellpadding="0" id="properties_content">
+		            <tr id="headertr">
+		              <td width="65%"><strong>Description</strong></td>
+		              <td width="35%"><strong>Creation Date/Time</strong></td>
+		            </tr>
+			            <c:forEach items="${initTasks}" var="taskHolder" varStatus="status">
+		            	<c:choose>
+		            		<c:when test="${(status.index%2) == 0}">
+								<tr class="oddTr">
+		            		</c:when>
+		            		<c:otherwise>
+								<tr class="evenTr">
+		            		</c:otherwise>
+		            	</c:choose>
+			            		<td>
+			            			<a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}&user=${currentUser}" target="taskform"  >${taskHolder.task.description}</a>
+			            		</td>
+			            		<td>
+			            			<a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}&user=${currentUser}" target="taskform"  >${taskHolder.task.creationDate}</a>
+			            		</td>
+			            	</tr>
+			            </c:forEach>
+		        </table>
+		    </div>
 		        <br/>
 			</div>
 	  </div>				  

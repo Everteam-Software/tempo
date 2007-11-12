@@ -211,7 +211,20 @@ public class TasksAction extends Action {
         } catch (Exception ex) {
             _log.error("Error during TasksAction execute()", ex);
         }
-        return new ModelAndView(Constants.TASKS_VIEW, createModel());
+        
+        
+        String updateFlag = _request.getParameter("update");
+        
+        ModelAndView modelView = null;
+        
+        //udateFlag==true -> auto update
+        if(updateFlag != null && updateFlag.equals("true")) {
+        	modelView = new ModelAndView("updates", createModel());
+        } else {
+        	modelView = new ModelAndView(Constants.TASKS_VIEW, createModel());
+        }
+        
+        return modelView;
     }
 
     public ModelAndView getErrorView() {
@@ -221,7 +234,7 @@ public class TasksAction extends Action {
     @Override
     protected void fillModel(Map model) {
         super.fillModel(model);
-        fillBuildProperties(model);
+        //fillBuildProperties(model);
         UIFWApplicationState state = ApplicationState.getCurrentInstance(_request);
         model.put("activityTasks", _activityTasks);
         model.put("notifications", _notifications);
