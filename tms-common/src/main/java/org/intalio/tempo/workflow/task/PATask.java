@@ -22,6 +22,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+
+import org.apache.openjpa.persistence.Externalizer;
+import org.apache.openjpa.persistence.Factory;
+import org.apache.openjpa.persistence.Persistent;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.task.traits.IChainableTask;
 import org.intalio.tempo.workflow.task.traits.ICompleteReportingTask;
@@ -30,43 +38,52 @@ import org.intalio.tempo.workflow.task.traits.ITaskWithAttachments;
 import org.intalio.tempo.workflow.task.traits.ITaskWithInput;
 import org.intalio.tempo.workflow.task.traits.ITaskWithOutput;
 import org.intalio.tempo.workflow.task.traits.ITaskWithState;
-import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 import org.w3c.dom.Document;
 
+@Entity
+@Inheritance(strategy=InheritanceType.JOINED)
 public class PATask extends Task implements ITaskWithState, IProcessBoundTask, ITaskWithInput, ITaskWithOutput,
     ICompleteReportingTask, ITaskWithAttachments, IChainableTask {
+    
+    @Persistent
+    @Column(name="process_id")
     private String _processID;
 
+    @Persistent
+    @Column(name="state")
     private TaskState _state = TaskState.READY;
 
+    @Persistent
+    @Column(name="failure_code")
     private String _failureCode = "";
-
+    
+    @Persistent
+    @Column(name="failure_reason")
     private String _failureReason = "";
-
+    
+    @Persistent
+    @Column(name="complete_soap_action")
     private String _completeSOAPAction;
 
+    @Factory("XmlTooling.deserializeDocument")
+    @Externalizer("XmlTooling.serializeDocument")
+    @Column(name="input_xml")
     private Document _input;
     
+    @Factory("XmlTooling.deserializeDocument")
+    @Externalizer("XmlTooling.serializeDocument")
+    @Column(name="output_xml")
     private Document _output;
-    
-    private String _input_xml;
-    private String _output_xml;
-    private XmlTooling xml = new XmlTooling();
-    public void serializeDocument() {
-        _input_xml = xml.serializeXML(_input);
-        _output_xml = xml.serializeXML(_output);
-    }
-    
-    public void deserializeDocument() {
-        _input = xml.parseXML(_input_xml);
-        _output = xml.parseXML(_output_xml);
-    }
 
     private Map<URL, Attachment> _attachments = new HashMap<URL, Attachment>();
 
+    @Persistent
+    @Column(name="is_chained_before")
     private boolean _isChainedBefore = false;
 
+    @Persistent
+    @Column(name="previous_task_id")
     private String _previousTaskID = null;
 
     public PATask() {

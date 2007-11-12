@@ -22,18 +22,15 @@ import java.util.Iterator;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.log4j.Logger;
-import org.w3c.dom.Document;
-
+import org.intalio.tempo.workflow.auth.ACL;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.task.Notification;
 import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.TaskState;
-import org.intalio.tempo.workflow.task.xml.TaskTypeMapper;
-import org.intalio.tempo.workflow.task.traits.IChainableTask;
-import org.intalio.tempo.workflow.task.Task.ACL;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
+import org.intalio.tempo.workflow.task.traits.IChainableTask;
 import org.intalio.tempo.workflow.task.traits.ICompleteReportingTask;
 import org.intalio.tempo.workflow.task.traits.IProcessBoundTask;
 import org.intalio.tempo.workflow.task.traits.ITaskWithAttachments;
@@ -47,6 +44,7 @@ import org.intalio.tempo.workflow.util.xml.OMDOMConvertor;
 import org.intalio.tempo.workflow.util.xml.OMElementQueue;
 import org.intalio.tempo.workflow.util.xml.OMUnmarshaller;
 import org.intalio.tempo.workflow.util.xml.XsdDateTime;
+import org.w3c.dom.Document;
 
 public class TaskUnmarshaller extends OMUnmarshaller {
 
@@ -79,10 +77,10 @@ public class TaskUnmarshaller extends OMUnmarshaller {
         AuthIdentifierSet userOwners = expectAuthIdentifiers(rootQueue, "userOwner");
         AuthIdentifierSet roleOwners = expectAuthIdentifiers(rootQueue, "roleOwner");
 
-        Task.ACL claim = readACL(rootQueue, "claim");
-        Task.ACL revoke = readACL(rootQueue, "revoke");
-        Task.ACL save = readACL(rootQueue, "save");
-        Task.ACL complete = readACL(rootQueue, "complete");
+        ACL claim = readACL(rootQueue, "claim");
+        ACL revoke = readACL(rootQueue, "revoke");
+        ACL save = readACL(rootQueue, "save");
+        ACL complete = readACL(rootQueue, "complete");
               
         String formURLStr = requireElementValue(rootQueue, "formUrl");
         URI formURL = null;
@@ -234,8 +232,8 @@ public class TaskUnmarshaller extends OMUnmarshaller {
         }
     }
 
-    private Task.ACL readACL(OMElementQueue rootQueue, String action) {
-        Task.ACL acl = new Task.ACL();
+    private ACL readACL(OMElementQueue rootQueue, String action) {
+        ACL acl = new ACL();
         OMElement el = expectElement(rootQueue, action+"Action");
         if (el != null) {
             OMElementQueue queue = new OMElementQueue(el);

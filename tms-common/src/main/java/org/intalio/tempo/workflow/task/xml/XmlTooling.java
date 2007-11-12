@@ -17,6 +17,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 public class XmlTooling {
+    static final XmlTooling xml = new XmlTooling();
     static final ObjectPool builderPool = new StackObjectPool(new DocumentBuilderPool());
     static final ObjectPool transformerPool = new StackObjectPool(new TransformerPool());
 
@@ -24,11 +25,14 @@ public class XmlTooling {
         if (xml == null || xml.equalsIgnoreCase("")) {
             return null;
         } else {
-            try { return parseXml(new ByteArrayInputStream(xml.getBytes("UTF-8")));} 
-            catch (Exception e) {return null;}
+            try {
+                return parseXml(new ByteArrayInputStream(xml.getBytes("UTF-8")));
+            } catch (Exception e) {
+                return null;
+            }
         }
     }
-    
+
     public Document parseXml(InputStream is) {
         DocumentBuilder borrowObject = null;
         try {
@@ -46,7 +50,7 @@ public class XmlTooling {
                 }
         }
     }
-    
+
     public String serializeXML(Document xml) {
         if (xml != null) {
             Source source = new DOMSource(xml);
@@ -59,10 +63,26 @@ public class XmlTooling {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             } finally {
-                try {transformerPool.returnObject(transformer);} catch(Exception e) {}
+                try {
+                    transformerPool.returnObject(transformer);
+                } catch (Exception e) {
+                }
             }
             return writer.toString();
         } else
             return null;
     }
+
+    public static String serializeDocument(Document doc) {
+        synchronized (xml) {
+            return xml.serializeXML(doc);
+        }
+    }
+    
+    public static Document deserializeDocument(String doc) {
+        synchronized (xml) {
+            return xml.parseXML(doc);
+        }
+    }
+
 }

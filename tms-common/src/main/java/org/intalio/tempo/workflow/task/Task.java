@@ -22,28 +22,63 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.MapKey;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.QueryHint;
+
+import org.apache.openjpa.persistence.Externalizer;
+import org.apache.openjpa.persistence.Persistent;
+import org.intalio.tempo.workflow.auth.ACL;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.BaseRestrictedEntity;
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
-public abstract class Task extends BaseRestrictedEntity {
+@Entity
+@NamedQueries({
+    @NamedQuery(
+            name=Task.FIND_BY_ID, 
+            query="select m from Task m where m._id=?1", 
+            hints={ @QueryHint  (name="openjpa.hint.OptimizeResultCount", value="1")})
+    })
+public class Task extends BaseRestrictedEntity {
 
+    public static final String FIND_BY_ID ="find_by_id";
+    
+    @Column(name="internal_id")
+    @Persistent
     private int _internalId;
 
+    @Column(name="tid")
+    @Persistent
     private String _id;
 
+    @Column(name="description")
+    @Persistent
     private String _description = "";
 
+    @Column(name="creation_date")
+    @Persistent
     private Date _creationDate = new Date();
 
+    @Persistent
+    @Externalizer("toString")
+    @Column(name="form_url")
     private URI _formURL;
 
+    @OneToMany(cascade={CascadeType.PERSIST,CascadeType.REMOVE})
+    @MapKey(name="tid")
     private Map<String,ACL> _actionACLs = new HashMap<String,ACL>();
     
     public Task() {
         
     }
+    
     
     public Task(String id, URI formURL) {
         this.setID(id);
@@ -119,7 +154,7 @@ public abstract class Task extends BaseRestrictedEntity {
     public void authorizeActionForUser(String action, String user) {
         ACL acl = _actionACLs.get(action);
         if (acl == null) {
-            acl = new ACL();
+            acl = new ACL(_id);
             _actionACLs.put(action, acl);
         }
         acl._users.add(user);
@@ -128,7 +163,7 @@ public abstract class Task extends BaseRestrictedEntity {
     public void authorizeActionForRole(String action, String role) {
         ACL acl = _actionACLs.get(action);
         if (acl == null) {
-            acl = new ACL();
+            acl = new ACL(_id);
             _actionACLs.put(action, acl);
         }
         acl._roles.add(role);
@@ -165,8 +200,4 @@ public abstract class Task extends BaseRestrictedEntity {
         return "Workflow Task " + _id;
     }
     
-    public static class ACL {
-        public AuthIdentifierSet _users = new AuthIdentifierSet();
-        public AuthIdentifierSet _roles = new AuthIdentifierSet();
-    }
 }

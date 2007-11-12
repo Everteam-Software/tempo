@@ -19,17 +19,20 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
 public class AuthIdentifierSet implements Iterable<String> {
-    private Set<String> _backingSet = new HashSet<String>();
+    private Collection<String> _backingSet = new HashSet<String>();
 
     public AuthIdentifierSet() {
 
     }
 
+    public AuthIdentifierSet(Collection<String> strings) {
+        _backingSet.addAll(strings);
+    }
+    
     public AuthIdentifierSet(AuthIdentifierSet instance) {
         _backingSet.addAll(instance._backingSet);
     }
@@ -50,6 +53,10 @@ public class AuthIdentifierSet implements Iterable<String> {
         }
 
         return result;
+    }
+    
+    public Collection<String> toCollection() {
+        return _backingSet;
     }
 
     @Override

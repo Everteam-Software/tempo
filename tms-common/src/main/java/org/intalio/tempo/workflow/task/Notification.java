@@ -16,33 +16,44 @@ package org.intalio.tempo.workflow.task;
 
 import java.net.URI;
 
-import org.w3c.dom.Document;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+
+import org.apache.openjpa.persistence.Externalizer;
+import org.apache.openjpa.persistence.Factory;
+import org.apache.openjpa.persistence.Persistent;
 import org.intalio.tempo.workflow.task.traits.ITaskWithInput;
-
 import org.intalio.tempo.workflow.task.traits.ITaskWithState;
-import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
+import org.w3c.dom.Document;
 
+@Entity
+@Inheritance(strategy=InheritanceType.JOINED)
 public class Notification extends Task implements ITaskWithState, ITaskWithInput {
+   
+    @Column(name="state")
+    @Persistent
     private TaskState _state = TaskState.READY;
+    
+    @Column(name="failure_code")
+    @Persistent
     private String _failureCode;
+    
+    @Column(name="failure_reason")
+    @Persistent
     private String _failureReason;
+
+    @Factory("XmlTooling.deserializeDocument")
+    @Externalizer("XmlTooling.serializeDocument")
+    @Column(name="input")
     private Document _input;
 
     public Notification() {
         super();
     }
-    
-    private String _input_xml;
-    private XmlTooling xml = new XmlTooling();
-    public void serializeDocument() {
-        _input_xml = xml.serializeXML(_input);
-    }
-    
-    public void deserializeDocument() {
-        _input = xml.parseXML(_input_xml);
-    }
-    
+        
     public Notification(String id, URI formURL, Document input) {
         super(id, formURL);
         _input = input;
