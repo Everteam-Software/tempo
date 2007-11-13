@@ -23,7 +23,6 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 
 import org.apache.openjpa.persistence.Externalizer;
-import org.apache.openjpa.persistence.Factory;
 import org.apache.openjpa.persistence.Persistent;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
@@ -31,12 +30,10 @@ import org.intalio.tempo.workflow.util.RequiredArgumentException;
 @Inheritance(strategy=InheritanceType.JOINED)
 public class PIPATask extends Task {
     
-    @Factory("URI.create")
     @Externalizer("toString")
     @Column(name="process_endpoint")
     private URI _processEndpoint;
     
-    @Factory("URI.create")
     @Externalizer("toString")
     @Column(name="init_message")
     private URI _initMessageNamespaceURI;
