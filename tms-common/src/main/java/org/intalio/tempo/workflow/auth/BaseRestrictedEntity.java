@@ -15,11 +15,8 @@
 
 package org.intalio.tempo.workflow.auth;
 
-import org.apache.log4j.Logger;
 
 public abstract class BaseRestrictedEntity implements IRestrictedEntity {
-
-    private static final Logger _logger = Logger.getLogger(BaseRestrictedEntity.class);
 
     private AuthIdentifierSet _userOwners = new AuthIdentifierSet();
 
@@ -38,9 +35,6 @@ public abstract class BaseRestrictedEntity implements IRestrictedEntity {
 
     public boolean isAvailableTo(UserRoles credentials) {
         boolean available = false;
-        _logger.debug("isAvailableTo credentials: " + credentials);
-        _logger.debug("isAvailableTo users: " + _userOwners);
-        _logger.debug("isAvailableTo roles: " + _roleOwners);
         for (String userOwner : _userOwners) {
             if (userOwner.equals(credentials.getUserID())) {
                 available = true;
