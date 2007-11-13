@@ -11,10 +11,6 @@ NEXT_VERSION = "5.1.0.4"
 require "dependencies.rb"
 require "repositories.rb"
 
-# TODO
-# -Synchronize config files w/ integr
-# -Make sure tests work
-
 desc "Tempo Workflow"
 define "tempo" do
   project.version = VERSION_NUMBER
