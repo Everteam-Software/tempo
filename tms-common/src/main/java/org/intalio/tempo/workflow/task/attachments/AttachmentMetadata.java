@@ -13,7 +13,12 @@ package org.intalio.tempo.workflow.task.attachments;
 
 import java.util.Date;
 
-import org.apache.log4j.Logger;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.apache.openjpa.persistence.Persistent;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
 /**
@@ -21,25 +26,38 @@ import org.intalio.tempo.workflow.util.RequiredArgumentException;
  * @author Iwan Memruk
  * @version $Revision: 1022 $
  */
+@Entity
+@Table(name="attmeta")
 public class AttachmentMetadata {
 
+    @Transient
     public static final String DEFAULT_MIME_TYPE = "application/octet-stream";
-
-    private static final Logger _logger = Logger.getLogger(AttachmentMetadata.class);
 
     /**
      * MIME type of the atachment.
      */
+    @Persistent
+    @Column(name="mime_type")
     private String _mimeType = DEFAULT_MIME_TYPE;
 
+    @Persistent
+    @Column(name="widget")
     private String _widget = "";
 
+    @Persistent
+    @Column(name="file_name")
     private String _fileName = "attachment";
 
+    @Persistent
+    @Column(name="title")
     private String _title = "(untitled)";
 
+    @Persistent
+    @Column(name="description")
     private String _description = "";
 
+    @Persistent
+    @Column(name="creation_date")
     private Date _creationDate = new Date();
 
     /**
@@ -150,9 +168,6 @@ public class AttachmentMetadata {
     public void setCreationDate(Date creationDate) {
         if (creationDate == null) {
             throw new RequiredArgumentException("creationDate");
-        }
-        if (creationDate.after(new Date())) {
-            _logger.warn("Attempt to set date later than current: " + creationDate);
         }
         _creationDate = creationDate;
     }

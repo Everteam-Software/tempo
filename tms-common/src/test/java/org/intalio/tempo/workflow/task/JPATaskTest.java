@@ -1,6 +1,7 @@
 package org.intalio.tempo.workflow.task;
 
 import java.net.URI;
+import java.net.URL;
 import java.util.Properties;
 
 import javax.persistence.EntityManager;
@@ -13,10 +14,8 @@ import junit.framework.Assert;
 
 import org.apache.log4j.Logger;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
-import org.intalio.tempo.workflow.task.Notification;
-import org.intalio.tempo.workflow.task.PATask;
-import org.intalio.tempo.workflow.task.PIPATask;
-import org.intalio.tempo.workflow.task.Task;
+import org.intalio.tempo.workflow.task.attachments.Attachment;
+import org.intalio.tempo.workflow.task.attachments.AttachmentMetadata;
 import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.junit.After;
 import org.junit.Before;
@@ -105,6 +104,8 @@ public class JPATaskTest {
                 new URI("http://hellonico.net"),
                 getXmlSampleDocument());
         task1.authorizeActionForUser("play", "niko");
+        task1.authorizeActionForUser("go_home", "niko");
+        task1.authorizeActionForUser("eat", "alex");
         em.persist(task1);
         jpa.commit();
         
@@ -112,10 +113,38 @@ public class JPATaskTest {
         Notification task2 = (Notification) (q.getResultList()).get(0); 
         AuthIdentifierSet players = task2.getAuthorizedUsers("play");
         Assert.assertTrue(players.contains("niko"));
+        Assert.assertFalse(players.contains("alex"));
+        
+        AuthIdentifierSet homers = task2.getAuthorizedUsers("go_home");
+        Assert.assertTrue(homers.contains("niko"));
+        Assert.assertFalse(homers.contains("alex"));
+        
         AuthIdentifierSet eaters = task2.getAuthorizedUsers("eat");
         Assert.assertFalse(eaters.contains("niko"));
+        Assert.assertTrue(eaters.contains("alex"));
         
         em.close();
+    }
+    
+    @Test
+    public void attachmentsPATask() throws Exception {
+        AttachmentMetadata metadata = new AttachmentMetadata();
+        Attachment att = new Attachment(metadata,new URL("http://hellonico.net"));
+        String id = "pa" + System.currentTimeMillis();
+        PATask task1 = new PATask(id, new URI("http://hellonico.net"), "processId", "soap", getXmlSampleDocument());
+        task1.addAttachment(att);
+        
+        jpa.begin();
+        em.persist(task1);
+        jpa.commit();
+        
+        Query q = em.createNamedQuery(Task.FIND_BY_ID).setParameter(1, id);
+        PATask task2 = (PATask) (q.getResultList()).get(0);
+        em.close();
+        
+        Assert.assertEquals(task1, task2);
+        Assert.assertEquals(1,task2.getAttachments().size());
+        
     }
 
     private Document getXmlSampleDocument() throws Exception {

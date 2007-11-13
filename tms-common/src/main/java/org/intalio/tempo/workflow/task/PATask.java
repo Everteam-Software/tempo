@@ -22,10 +22,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.MapKey;
+import javax.persistence.OneToMany;
 
 import org.apache.openjpa.persistence.Externalizer;
 import org.apache.openjpa.persistence.Factory;
@@ -75,8 +78,10 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
     @Externalizer("XmlTooling.serializeDocument")
     @Column(name="output_xml")
     private Document _output;
-
-    private Map<URL, Attachment> _attachments = new HashMap<URL, Attachment>();
+    
+    @OneToMany(cascade={CascadeType.PERSIST,CascadeType.REMOVE})
+    @MapKey(name="payloadURLAsString")
+    private Map<String, Attachment> _attachments = new HashMap<String, Attachment>();
 
     @Persistent
     @Column(name="is_chained_before")
@@ -204,11 +209,11 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
     }
 
     public Attachment addAttachment(Attachment attachment) {
-        return _attachments.put(attachment.getPayloadURL(), attachment);
+        return _attachments.put(attachment.getPayloadURL().toExternalForm(), attachment);
     }
 
     public Attachment removeAttachment(URL attachmentURL) {
-        return _attachments.remove(attachmentURL);
+        return _attachments.remove(attachmentURL.toExternalForm());
     }
 
     public Collection<Attachment> getAttachments() {

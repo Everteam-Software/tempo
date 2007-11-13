@@ -17,11 +17,30 @@ package org.intalio.tempo.workflow.task.attachments;
 
 import java.net.URL;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.apache.openjpa.persistence.Persistent;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
+@Entity
+@Table(name="attachments")
 public class Attachment {
-    private AttachmentMetadata _metadata;
+    
+    @OneToOne(fetch=FetchType.LAZY, cascade={CascadeType.PERSIST,CascadeType.REMOVE})
+    private AttachmentMetadata metadata;
+    
+    @Transient
     private URL _payloadURL;
+    
+    @Persistent
+    @Column(name="payload_url")
+    private String payloadURLAsString;
 
     protected Attachment() {
 
@@ -33,18 +52,18 @@ public class Attachment {
 
     public Attachment(AttachmentMetadata metadata, URL payloadURL) {
         this.setMetadata(metadata);
-        this.setPayloadURL(payloadURL);
+        this.setPayloadURL(payloadURL); 
     }
 
     public AttachmentMetadata getMetadata() {
-        return _metadata;
+        return metadata;
     }
 
     public void setMetadata(AttachmentMetadata metadata) {
         if (metadata == null) {
             throw new RequiredArgumentException("metadata");
         }
-        _metadata = metadata;
+        this.metadata = metadata;
     }
 
     public URL getPayloadURL() {
@@ -56,10 +75,11 @@ public class Attachment {
             throw new RequiredArgumentException("payloadURL");
         }
         _payloadURL = payloadURL;
+        payloadURLAsString = _payloadURL.toExternalForm();
     }
 
     @Override
     public String toString() {
-        return "" + _payloadURL;
+        return payloadURLAsString;
     }
 }

@@ -30,6 +30,8 @@
         <class>org.intalio.tempo.workflow.task.PIPATask</class>
         <class>org.intalio.tempo.workflow.task.Notification</class>
         <class>org.intalio.tempo.workflow.auth.ACL</class>
+        <class>org.intalio.tempo.workflow.task.attachments.Attachment</class>
+        <class>org.intalio.tempo.workflow.task.attachments.AttachmentMetadata</class>
         <properties />
     </persistence-unit>
 </persistence>

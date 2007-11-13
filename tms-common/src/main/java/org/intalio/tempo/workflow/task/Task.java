@@ -72,7 +72,7 @@ public class Task extends BaseRestrictedEntity {
     private URI _formURL;
 
     @OneToMany(cascade={CascadeType.PERSIST,CascadeType.REMOVE})
-    @MapKey(name="tid")
+    @MapKey(name="action")
     private Map<String,ACL> _actionACLs = new HashMap<String,ACL>();
     
     public Task() {
