@@ -24,6 +24,7 @@ import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.task.Notification;
 import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.TaskState;
+import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.w3c.dom.Document;
 
@@ -58,13 +59,13 @@ public class TMSServerTest extends TestCase {
         Document newOutput1 = TestUtils.createXMLDocument();
         server.setOutput("taskID", newOutput1, "token1");
         PATask taskWithSetOutput = (PATask) server.getTask("taskID", "token2");
-        Assert.assertSame(newOutput1, taskWithSetOutput.getOutput());
+        Assert.assertTrue(XmlTooling.equals(newOutput1, taskWithSetOutput.getOutput()));
         Assert.assertEquals(TaskState.READY, taskWithSetOutput.getState());
 
         Document newOutput2 = TestUtils.createXMLDocument();
         server.setOutputAndComplete("taskID", newOutput2, "token2");
         PATask completedTask = (PATask) server.getTask("taskID", "token1");
-        Assert.assertSame(newOutput2, completedTask.getOutput());
+        Assert.assertTrue(XmlTooling.equals(newOutput2, completedTask.getOutput()));
         Assert.assertEquals(TaskState.COMPLETED, completedTask.getState());
 
         String failureCode = "failure-code";
