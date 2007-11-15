@@ -96,7 +96,7 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
         super(id, formURL);
         this.setProcessID(processID);
         this.setCompleteSOAPAction(completeSOAPAction);
-        this.setInput(input);
+        if(input!=null) this.setInput(input);
     }
 
     public String getProcessID() {
