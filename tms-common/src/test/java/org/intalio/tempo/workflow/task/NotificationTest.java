@@ -43,7 +43,6 @@ public class NotificationTest extends TestCase {
     public void testNotification() throws Exception {
         Document input = createXMLDocument();
         Notification n = new Notification("id", new URI("http://localhost/"), input);
-
         Assert.assertEquals(input, n.getInput());
     }
 }

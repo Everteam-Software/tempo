@@ -52,7 +52,7 @@ public class Notification extends Task implements ITaskWithState, ITaskWithInput
         
     public Notification(String id, URI formURL, Document input) {
         super(id, formURL);
-        setInput(input);
+        if(input!=null)setInput(input);
     }
 
     public TaskState getState() {

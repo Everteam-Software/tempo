@@ -30,10 +30,10 @@ import org.intalio.tempo.workflow.util.RequiredArgumentException;
 public class AuthIdentifierSet implements Iterable<String> {
     
     @PersistentCollection(elementCascade=CascadeType.ALL)
-    private Collection<String> backingSet; 
+    private Collection<String> backingSet = new HashSet<String>(); 
 
     public AuthIdentifierSet() {
-        backingSet = new HashSet<String>();
+        
     }
 
     public AuthIdentifierSet(Collection<String> strings) {
