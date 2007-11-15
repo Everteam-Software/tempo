@@ -5,22 +5,7 @@ module Buildr
   # Provides OpenJPA bytecode enhancement and Mapping tool task. Require explicitly using <code>require "buildr/openjpa"</code>.
   module OpenJPA
 
-    VERSION = "1.1.0-SNAPSHOT"
-
-    REQUIRES = [ 
-      "org.apache.geronimo.specs:geronimo-jta_1.1_spec:jar:1.1",
-      "org.apache.geronimo.specs:geronimo-jpa_3.0_spec:jar:1.0",
-      "org.apache.geronimo.specs:geronimo-jms_1.1_spec:jar:1.0.1",
-      "org.apache.openjpa:openjpa:jar:#{VERSION}",
-      "commons-logging:commons-logging:jar:1.0.4",
-      "commons-lang:commons-lang:jar:2.1",
-      "org.apache.derby:derby:jar:10.2.2.0",
-      "serp:serp:jar:1.13.1",
-      "commons-collections:commons-collections:jar:3.1",
-      "commons-dbcp:commons-dbcp:jar:1.2.1", 
-      "commons-lang:commons-lang:jar:2.1",
-      "commons-pool:commons-pool:jar:1.2",
-    ]
+    REQUIRES = APACHE_JPA
 
     Java.wrapper.classpath << REQUIRES
 

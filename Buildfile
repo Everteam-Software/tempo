@@ -2,7 +2,7 @@ $LOAD_PATH.unshift "#{ENV['HOME']}/svn/buildr-trunk/lib/"
 
 require "rubygems"
 require "buildr"
-require "tasks/openjpa"
+
 
 # Keep this structure to allow the build system to update version numbers.
 VERSION_NUMBER = "5.1.0.3-SNAPSHOT"
@@ -10,6 +10,8 @@ NEXT_VERSION = "5.1.0.4"
 
 require "dependencies.rb"
 require "repositories.rb"
+# leave this require after dependencies.rb so the same jpa version is used throughout the whole build
+require "tasks/openjpa" 
 
 desc "Tempo Workflow"
 define "tempo" do

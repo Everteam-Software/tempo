@@ -57,7 +57,7 @@ APACHE_JPA = [
   "org.apache.geronimo.specs:geronimo-jta_1.1_spec:jar:1.1",
   "org.apache.geronimo.specs:geronimo-jpa_3.0_spec:jar:1.0",
   "org.apache.geronimo.specs:geronimo-jms_1.1_spec:jar:1.0.1",
-  "org.apache.openjpa:openjpa:jar:1.1.0-SNAPSHOT",
+  "org.apache.openjpa:openjpa:jar:1.1.0-SNAPSHOT-20071115",
   "commons-logging:commons-logging:jar:1.0.4",
   "commons-lang:commons-lang:jar:2.1",
   "org.apache.derby:derby:jar:10.2.2.0",
