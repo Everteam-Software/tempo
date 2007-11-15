@@ -13,10 +13,13 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.pool.ObjectPool;
 import org.apache.commons.pool.impl.StackObjectPool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 public class XmlTooling {
+    static final Logger log = LoggerFactory.getLogger(XmlTooling.class);
     static final XmlTooling xml = new XmlTooling();
     static final ObjectPool builderPool = new StackObjectPool(new DocumentBuilderPool());
     static final ObjectPool transformerPool = new StackObjectPool(new TransformerPool());

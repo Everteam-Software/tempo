@@ -21,7 +21,6 @@ import java.util.Date;
 import java.util.Iterator;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.log4j.Logger;
 import org.intalio.tempo.workflow.auth.ACL;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.task.Notification;
@@ -44,12 +43,14 @@ import org.intalio.tempo.workflow.util.xml.OMDOMConvertor;
 import org.intalio.tempo.workflow.util.xml.OMElementQueue;
 import org.intalio.tempo.workflow.util.xml.OMUnmarshaller;
 import org.intalio.tempo.workflow.util.xml.XsdDateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 public class TaskUnmarshaller extends OMUnmarshaller {
 
     @SuppressWarnings("unused")
-    private static final Logger _logger = Logger.getLogger(TaskUnmarshaller.class);
+    private static final Logger _logger = LoggerFactory.getLogger(TaskUnmarshaller.class);
 
     public TaskUnmarshaller() {
         super(TaskXMLConstants.TASK_NAMESPACE, TaskXMLConstants.TASK_NAMESPACE_PREFIX);
@@ -224,10 +225,10 @@ public class TaskUnmarshaller extends OMUnmarshaller {
     }
 
     private void authorize(Task resultTask, String action, ACL acl) {
-        for (String user: acl._users) {
+        for (String user: acl.users) {
             resultTask.authorizeActionForUser(action, user);
         }
-        for (String role: acl._roles) {
+        for (String role: acl.roles) {
             resultTask.authorizeActionForRole(action, role);
         }
     }
@@ -237,8 +238,8 @@ public class TaskUnmarshaller extends OMUnmarshaller {
         OMElement el = expectElement(rootQueue, action+"Action");
         if (el != null) {
             OMElementQueue queue = new OMElementQueue(el);
-            acl._users = expectAuthIdentifiers(queue, "user");
-            acl._roles = expectAuthIdentifiers(queue, "role");
+            acl.users = expectAuthIdentifiers(queue, "user");
+            acl.roles = expectAuthIdentifiers(queue, "role");
         }
         return acl;
     }

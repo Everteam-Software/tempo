@@ -20,26 +20,33 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+
+import org.apache.openjpa.persistence.PersistentCollection;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
+@Entity
 public class AuthIdentifierSet implements Iterable<String> {
-    private Collection<String> _backingSet = new HashSet<String>();
+    
+    @PersistentCollection(elementCascade=CascadeType.ALL)
+    private Collection<String> backingSet; 
 
     public AuthIdentifierSet() {
-
+        backingSet = new HashSet<String>();
     }
 
     public AuthIdentifierSet(Collection<String> strings) {
-        _backingSet.addAll(strings);
+        backingSet.addAll(strings);
     }
     
     public AuthIdentifierSet(AuthIdentifierSet instance) {
-        _backingSet.addAll(instance._backingSet);
+        backingSet.addAll(instance.backingSet);
     }
 
     public AuthIdentifierSet(String[] idArray) {
         Collection<String> normalizedIDs = Arrays.asList(AuthIdentifierNormalizer.normalizeAuthIdentifiers(idArray));
-        _backingSet.addAll(normalizedIDs);
+        backingSet.addAll(normalizedIDs);
     }
 
     @Override
@@ -49,32 +56,32 @@ public class AuthIdentifierSet implements Iterable<String> {
         if (rhs instanceof AuthIdentifierSet) {
             AuthIdentifierSet rhsSet = (AuthIdentifierSet) rhs;
 
-            result = rhsSet._backingSet.equals(_backingSet);
+            result = rhsSet.backingSet.equals(backingSet);
         }
 
         return result;
     }
     
     public Collection<String> toCollection() {
-        return _backingSet;
+        return backingSet;
     }
 
     @Override
     public int hashCode() {
-        return _backingSet.hashCode();
+        return backingSet.hashCode();
     }
 
     @Override
     public String toString() {
-        return _backingSet.toString();
+        return backingSet.toString();
     }
 
     public boolean isEmpty() {
-        return _backingSet.isEmpty();
+        return backingSet.isEmpty();
     }
 
     public int size() {
-        return _backingSet.size();
+        return backingSet.size();
     }
 
     public boolean add(String authID) {
@@ -82,7 +89,7 @@ public class AuthIdentifierSet implements Iterable<String> {
             throw new RequiredArgumentException("authID");
         }
         String normalizedID = AuthIdentifierNormalizer.normalizeAuthIdentifier(authID);
-        return _backingSet.add(normalizedID);
+        return backingSet.add(normalizedID);
     }
 
     public void addAll(AuthIdentifierSet rhs) {
@@ -91,7 +98,7 @@ public class AuthIdentifierSet implements Iterable<String> {
         }
 
         for (String id : rhs) {
-            _backingSet.add(id);
+            backingSet.add(id);
         }
     }
 
@@ -100,7 +107,7 @@ public class AuthIdentifierSet implements Iterable<String> {
 
         if (object instanceof String) {
             String normalizedID = AuthIdentifierNormalizer.normalizeAuthIdentifier((String) object);
-            result = _backingSet.contains(normalizedID);
+            result = backingSet.contains(normalizedID);
         }
 
         return result;
@@ -111,18 +118,18 @@ public class AuthIdentifierSet implements Iterable<String> {
 
         if (object instanceof String) {
             String normalizedID = AuthIdentifierNormalizer.normalizeAuthIdentifier((String) object);
-            result = _backingSet.remove(normalizedID);
+            result = backingSet.remove(normalizedID);
         }
 
         return result;
     }
 
     public void clear() {
-        _backingSet.clear();
+        backingSet.clear();
     }
 
     public Iterator<String> iterator() {
-        return _backingSet.iterator();
+        return backingSet.iterator();
     }
 
     public boolean intersects(AuthIdentifierSet rhs) {

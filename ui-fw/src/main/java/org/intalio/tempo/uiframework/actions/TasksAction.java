@@ -25,8 +25,6 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.intalio.tempo.uiframework.Configuration;
 import org.intalio.tempo.uiframework.Constants;
 import org.intalio.tempo.uiframework.UIFWApplicationState;
@@ -46,10 +44,12 @@ import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.TaskState;
 import org.intalio.tempo.workflow.tms.ITaskManagementService;
 import org.intalio.tempo.workflow.tms.client.RemoteTMSFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.ModelAndView;
 
 public class TasksAction extends Action {
-    private static final Log _log = LogFactory.getLog(TasksAction.class);
+    private static final Logger _log = LoggerFactory.getLogger(TasksAction.class);
 
     protected final Collection<Task> _tasks = new ArrayList<Task>();
 

@@ -22,17 +22,21 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.MapKey;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.QueryHint;
 
 import org.apache.openjpa.persistence.Externalizer;
+import org.apache.openjpa.persistence.Factory;
 import org.apache.openjpa.persistence.Persistent;
+import org.apache.openjpa.persistence.PersistentMap;
 import org.intalio.tempo.workflow.auth.ACL;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.BaseRestrictedEntity;
@@ -40,38 +44,41 @@ import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @NamedQueries({
     @NamedQuery(
             name=Task.FIND_BY_ID, 
             query="select m from Task m where m._id=?1", 
             hints={ @QueryHint  (name="openjpa.hint.OptimizeResultCount", value="1")})
     })
-public class Task extends BaseRestrictedEntity {
-
+public abstract class Task extends BaseRestrictedEntity {
+    
     public static final String FIND_BY_ID ="find_by_id";
+    public static final String FIND_BY_USER ="find_by_user";
     
     @Column(name="internal_id")
-    @Persistent
+    @Basic
     private int _internalId;
 
     @Column(name="tid")
-    @Persistent
+    @Basic
     private String _id;
 
     @Column(name="description")
-    @Persistent
+    @Basic
     private String _description = "";
 
     @Column(name="creation_date")
-    @Persistent
+    @Basic
     private Date _creationDate = new Date();
 
     @Persistent
+    @Factory("URI.create")
     @Externalizer("toString")
     @Column(name="form_url")
     private URI _formURL;
 
-    @OneToMany(cascade={CascadeType.PERSIST,CascadeType.REMOVE})
+    @PersistentMap(keyCascade=CascadeType.ALL, elementCascade=CascadeType.ALL)
     @MapKey(name="action")
     private Map<String,ACL> _actionACLs = new HashMap<String,ACL>();
     
@@ -79,7 +86,20 @@ public class Task extends BaseRestrictedEntity {
         
     }
     
-    
+    @Override
+    public boolean equals(Object o) {
+        if(!(o instanceof Task)) return false;
+        Task t = (Task)o;
+        boolean b = _id.equalsIgnoreCase(t.getID());
+        b = b && (_formURL.equals(t.getFormURL()));
+        b = b && (_description.equals(t.getDescription()));
+        b = b && (_creationDate.equals(t.getCreationDate()));
+        b = b && (_actionACLs.keySet().equals(t.getAuthorizedActions()));
+        return b;
+    }
+
+
+
     public Task(String id, URI formURL) {
         this.setID(id);
         this.setFormURL(formURL);
@@ -154,30 +174,30 @@ public class Task extends BaseRestrictedEntity {
     public void authorizeActionForUser(String action, String user) {
         ACL acl = _actionACLs.get(action);
         if (acl == null) {
-            acl = new ACL(_id);
+            acl = new ACL(action);
             _actionACLs.put(action, acl);
         }
-        acl._users.add(user);
+        acl.users.add(user);
     }
     
     public void authorizeActionForRole(String action, String role) {
         ACL acl = _actionACLs.get(action);
         if (acl == null) {
-            acl = new ACL(_id);
+            acl = new ACL(action);
             _actionACLs.put(action, acl);
         }
-        acl._roles.add(role);
+        acl.roles.add(role);
     }
     
     public AuthIdentifierSet getAuthorizedUsers(String action) {
         ACL acl = _actionACLs.get(action);
-        if (acl != null) return acl._users;
+        if (acl != null) return acl.users;
         return new AuthIdentifierSet();
     }
 
     public AuthIdentifierSet getAuthorizedRoles(String action) {
         ACL acl = _actionACLs.get(action);
-        if (acl != null) return acl._roles;
+        if (acl != null) return acl.roles;
         return new AuthIdentifierSet();
     }
 
@@ -185,9 +205,9 @@ public class Task extends BaseRestrictedEntity {
         // Note: Action is authorized if there's no ACL provided (default)
         ACL acl = _actionACLs.get(action);
         if (acl == null) return true;
-        if (acl._users.isEmpty() && acl._roles.isEmpty()) return true;
-        if (acl._users.contains(user.getUserID())) return true;
-        if (acl._roles.intersects(user.getAssignedRoles())) return true;
+        if (acl.users.isEmpty() && acl.roles.isEmpty()) return true;
+        if (acl.users.contains(user.getUserID())) return true;
+        if (acl.roles.intersects(user.getAssignedRoles())) return true;
         return false;
     }
 

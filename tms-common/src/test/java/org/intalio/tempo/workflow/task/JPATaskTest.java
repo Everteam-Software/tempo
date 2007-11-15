@@ -28,7 +28,7 @@ public class JPATaskTest {
     EntityManager em;
     EntityManagerFactory factory;
     EntityTransaction jpa;
-    
+
     XmlTooling xml = new XmlTooling();
 
     @Before
@@ -39,112 +39,121 @@ public class JPATaskTest {
         factory = Persistence.createEntityManagerFactory("org.intalio.tempo", System.getProperties());
         em = factory.createEntityManager();
         jpa = em.getTransaction();
+        jpa.begin();
     }
 
     @After
     public void closeFactory() throws Exception {
-        if(em!=null && em.isOpen()) em.close();
-        if(factory!=null && factory.isOpen()) factory.close();
+        try {
+            em.close();
+        } catch (Exception e) {
+        }
+        try {
+            factory.close();
+        } catch (Exception e) {
+        }
     }
-    
+
+    private void persist(Object o) throws Exception {
+        em.persist(o);
+        jpa.commit();
+        em.clear();
+    }
 
     @SuppressWarnings("unchecked")
     @Test
     public void testBasicPATaskPersistence() throws Exception {
-        jpa.begin();
 
         String id = "My id" + System.currentTimeMillis();
         PATask task1 = new PATask(id, new URI("http://hellonico.net"), "processId", "soap", getXmlSampleDocument());
 
-        em.persist(task1);
-        jpa.commit();
+        persist(task1);
 
         Query q = em.createNamedQuery(Task.FIND_BY_ID).setParameter(1, id);
         PATask task2 = (PATask) (q.getResultList()).get(0);
+
         em.close();
 
-        Assert.assertEquals(task1, task2);
-        Assert.assertEquals(task1.getInput(), task2.getInput());
-        Assert.assertEquals(task1.getOutput(), task2.getOutput());
+        Assert.assertEquals(task1.getInputAsXmlString(), task2.getInputAsXmlString());
+        Assert.assertEquals(task1.getInputAsXmlString(), task2.getInputAsXmlString());
     }
 
     @Test
     public void testBasicPIPATaskPersistence() throws Exception {
-        jpa.begin();
         String id = "id" + System.currentTimeMillis();
         PIPATask task1 = new PIPATask(id, new URI("http://hellonico.net"), new URI("http://hellonico.net"), new URI(
                 "http://hellonico.net"), "initOperationSOAPAction");
-        em.persist(task1);
-        jpa.commit();
+
+        persist(task1);
+
         Query q = em.createNamedQuery(Task.FIND_BY_ID).setParameter(1, id);
         PIPATask task2 = (PIPATask) (q.getResultList()).get(0);
-        em.close();
+
         Assert.assertEquals(task1, task2);
     }
 
     @Test
     public void testBasicNotificationPersistence() throws Exception {
-        jpa.begin();
+
         String id = "id" + System.currentTimeMillis();
         Notification task1 = new Notification(id, new URI("http://hellonico.net"), getXmlSampleDocument());
-        em.persist(task1);
-        jpa.commit();
+
+        persist(task1);
+
         Query q = em.createNamedQuery(Task.FIND_BY_ID).setParameter(1, id);
         Notification task2 = (Notification) (q.getResultList()).get(0);
 
-        em.close();
         Assert.assertEquals(task1, task2);
+
+        em.close();
     }
-    
+
     @Test
     public void authorizeActionForUser() throws Exception {
-        jpa.begin();
-        String id = "id"+System.currentTimeMillis();
-        Notification task1 = new Notification(id,
-                new URI("http://hellonico.net"),
-                getXmlSampleDocument());
+        String id = "id" + System.currentTimeMillis();
+        Notification task1 = new Notification(id, new URI("http://hellonico.net"), getXmlSampleDocument());
         task1.authorizeActionForUser("play", "niko");
         task1.authorizeActionForUser("go_home", "niko");
         task1.authorizeActionForUser("eat", "alex");
-        em.persist(task1);
-        jpa.commit();
-        
+        log.info(task1.getAuthorizedUsers("play").toString());
+
+        persist(task1);
+
         Query q = em.createNamedQuery(Task.FIND_BY_ID).setParameter(1, id);
-        Notification task2 = (Notification) (q.getResultList()).get(0); 
+        Notification task2 = (Notification) (q.getResultList()).get(0);
+
         AuthIdentifierSet players = task2.getAuthorizedUsers("play");
+        log.info(players.toString());
         Assert.assertTrue(players.contains("niko"));
         Assert.assertFalse(players.contains("alex"));
-        
+
         AuthIdentifierSet homers = task2.getAuthorizedUsers("go_home");
         Assert.assertTrue(homers.contains("niko"));
         Assert.assertFalse(homers.contains("alex"));
-        
+
         AuthIdentifierSet eaters = task2.getAuthorizedUsers("eat");
         Assert.assertFalse(eaters.contains("niko"));
         Assert.assertTrue(eaters.contains("alex"));
-        
+
         em.close();
     }
-    
+
     @Test
     public void attachmentsPATask() throws Exception {
         AttachmentMetadata metadata = new AttachmentMetadata();
-        Attachment att = new Attachment(metadata,new URL("http://hellonico.net"));
+        Attachment att = new Attachment(metadata, new URL("http://hellonico.net"));
         String id = "pa" + System.currentTimeMillis();
         PATask task1 = new PATask(id, new URI("http://hellonico.net"), "processId", "soap", getXmlSampleDocument());
         task1.addAttachment(att);
-        
-        jpa.begin();
-        em.persist(task1);
-        jpa.commit();
-        
+
+        persist(task1);
+
         Query q = em.createNamedQuery(Task.FIND_BY_ID).setParameter(1, id);
         PATask task2 = (PATask) (q.getResultList()).get(0);
-        em.close();
-        
+
         Assert.assertEquals(task1, task2);
-        Assert.assertEquals(1,task2.getAttachments().size());
-        
+        Assert.assertEquals(1, task2.getAttachments().size());
+
     }
 
     private Document getXmlSampleDocument() throws Exception {

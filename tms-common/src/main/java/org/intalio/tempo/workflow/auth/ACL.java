@@ -1,26 +1,24 @@
 package org.intalio.tempo.workflow.auth;
 
-import java.util.Collection;
-
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 
-import org.apache.openjpa.persistence.Externalizer;
 import org.apache.openjpa.persistence.Persistent;
-import org.apache.openjpa.persistence.Type;
 
 @Entity
 public class ACL {
     
     @Persistent
+    @Column(name="action")
     public String action; 
     
-    @Externalizer("toCollection")
-    @Type(Collection.class)
-    public AuthIdentifierSet _users = new AuthIdentifierSet();
+    @OneToOne(cascade=CascadeType.ALL)
+    public AuthIdentifierSet users = new AuthIdentifierSet();
     
-    @Externalizer("toCollection")
-    @Type(Collection.class)
-    public AuthIdentifierSet _roles = new AuthIdentifierSet();
+    @OneToOne(cascade=CascadeType.ALL)
+    public AuthIdentifierSet roles = new AuthIdentifierSet();
     
     public ACL() {
         
@@ -37,5 +35,23 @@ public class ACL {
     public void setAction(String action) {
         this.action = action;
     }
+
+    public AuthIdentifierSet getUsers() {
+        return users;
+    }
+
+    public void setUsers(AuthIdentifierSet users) {
+        this.users = users;
+    }
+
+    public AuthIdentifierSet getRoles() {
+        return roles;
+    }
+
+    public void setRoles(AuthIdentifierSet roles) {
+        this.roles = roles;
+    }
+    
+    
     
 }

@@ -32,12 +32,13 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 public final class OMDOMConvertor {
 
-    private static final Logger _logger = Logger.getLogger(OMDOMConvertor.class);
+    private static final Logger _logger = LoggerFactory.getLogger(OMDOMConvertor.class);
 
     public static OMElement convertDOMToOM(Document document, OMFactory omFactory) { 
         // TODO: this is extremely slow.

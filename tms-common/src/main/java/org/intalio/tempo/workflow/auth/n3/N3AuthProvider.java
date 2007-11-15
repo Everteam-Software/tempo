@@ -15,7 +15,7 @@
 
 package org.intalio.tempo.workflow.auth.n3;
 
-import org.apache.log4j.Logger;
+
 import org.intalio.tempo.security.Property;
 import org.intalio.tempo.security.token.TokenService;
 import org.intalio.tempo.security.util.PropertyUtils;
@@ -24,13 +24,15 @@ import org.intalio.tempo.security.ws.TokenClient;
 import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.auth.IAuthProvider;
 import org.intalio.tempo.workflow.auth.UserRoles;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 public class N3AuthProvider implements IAuthProvider {
 
-    private static final Logger _logger = Logger.getLogger(N3AuthProvider.class);
+    private static final Logger _logger = LoggerFactory.getLogger(N3AuthProvider.class);
 
     private static final String TOKEN_SERVICE_BEAN_NAME = "tokenService";
 

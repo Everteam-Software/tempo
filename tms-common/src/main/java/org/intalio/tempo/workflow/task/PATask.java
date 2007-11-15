@@ -25,14 +25,11 @@ import java.util.Map;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
+import javax.persistence.Lob;
 import javax.persistence.MapKey;
-import javax.persistence.OneToMany;
 
-import org.apache.openjpa.persistence.Externalizer;
-import org.apache.openjpa.persistence.Factory;
 import org.apache.openjpa.persistence.Persistent;
+import org.apache.openjpa.persistence.PersistentMap;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.task.traits.IChainableTask;
 import org.intalio.tempo.workflow.task.traits.ICompleteReportingTask;
@@ -41,11 +38,11 @@ import org.intalio.tempo.workflow.task.traits.ITaskWithAttachments;
 import org.intalio.tempo.workflow.task.traits.ITaskWithInput;
 import org.intalio.tempo.workflow.task.traits.ITaskWithOutput;
 import org.intalio.tempo.workflow.task.traits.ITaskWithState;
+import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 import org.w3c.dom.Document;
 
 @Entity
-@Inheritance(strategy=InheritanceType.JOINED)
 public class PATask extends Task implements ITaskWithState, IProcessBoundTask, ITaskWithInput, ITaskWithOutput,
     ICompleteReportingTask, ITaskWithAttachments, IChainableTask {
     
@@ -69,17 +66,17 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
     @Column(name="complete_soap_action")
     private String _completeSOAPAction;
 
-    @Factory("XmlTooling.deserializeDocument")
-    @Externalizer("XmlTooling.serializeDocument")
+    @Persistent(cascade=CascadeType.ALL)
     @Column(name="input_xml")
-    private Document _input;
+    @Lob
+    private String _input;
     
-    @Factory("XmlTooling.deserializeDocument")
-    @Externalizer("XmlTooling.serializeDocument")
+    @Persistent(cascade=CascadeType.ALL)
     @Column(name="output_xml")
-    private Document _output;
+    @Lob
+    private String _output;
     
-    @OneToMany(cascade={CascadeType.PERSIST,CascadeType.REMOVE})
+    @PersistentMap(keyCascade=CascadeType.ALL, elementCascade=CascadeType.ALL)
     @MapKey(name="payloadURLAsString")
     private Map<String, Attachment> _attachments = new HashMap<String, Attachment>();
 
@@ -99,7 +96,7 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
         super(id, formURL);
         this.setProcessID(processID);
         this.setCompleteSOAPAction(completeSOAPAction);
-        _input = input;
+        this.setInput(input);
     }
 
     public String getProcessID() {
@@ -187,25 +184,29 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
         if (! this.isInputAvailable()) {
             throw new IllegalStateException("Task input not available (e.g. was not retrieved).");
         }
-        return _input;
+        return XmlTooling.deserializeDocument(_input);
     }
 
     public void setInput(Document inputDocument) {
         if (inputDocument == null) {
             throw new RequiredArgumentException("inputDocument");
         }
-        _input = inputDocument;
+        _input = XmlTooling.serializeDocument(inputDocument);
     }
 
     public Document getOutput() {
-        return _output;
+        return XmlTooling.deserializeDocument(_output);
     }
+    
+    public String getInputAsXmlString() { return _input;}
+    
+    public String getOutputAsXmlString() {return _output;}
 
     public void setOutput(Document outputDocument) {
         if (outputDocument == null) {
             throw new RequiredArgumentException("outputDocument");
         }
-        _output = outputDocument;
+        _output = XmlTooling.serializeDocument(outputDocument);
     }
 
     public Attachment addAttachment(Attachment attachment) {

@@ -18,19 +18,16 @@ import java.net.URI;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
+import javax.persistence.Lob;
 
-import org.apache.openjpa.persistence.Externalizer;
-import org.apache.openjpa.persistence.Factory;
 import org.apache.openjpa.persistence.Persistent;
 import org.intalio.tempo.workflow.task.traits.ITaskWithInput;
 import org.intalio.tempo.workflow.task.traits.ITaskWithState;
+import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 import org.w3c.dom.Document;
 
 @Entity
-@Inheritance(strategy=InheritanceType.JOINED)
 public class Notification extends Task implements ITaskWithState, ITaskWithInput {
    
     @Column(name="state")
@@ -45,10 +42,9 @@ public class Notification extends Task implements ITaskWithState, ITaskWithInput
     @Persistent
     private String _failureReason;
 
-    @Factory("XmlTooling.deserializeDocument")
-    @Externalizer("XmlTooling.serializeDocument")
-    @Column(name="input")
-    private Document _input;
+    @Column(name="input_xml")
+    @Lob
+    private String  _input;
 
     public Notification() {
         super();
@@ -56,7 +52,7 @@ public class Notification extends Task implements ITaskWithState, ITaskWithInput
         
     public Notification(String id, URI formURL, Document input) {
         super(id, formURL);
-        _input = input;
+        setInput(input);
     }
 
     public TaskState getState() {
@@ -115,13 +111,13 @@ public class Notification extends Task implements ITaskWithState, ITaskWithInput
     }
 
     public Document getInput() {
-        return _input;
+        return XmlTooling.deserializeDocument(_input);
     }
 
     public void setInput(Document input) {
         if (input == null) {
             throw new RequiredArgumentException("input");
         }
-        _input = input;
+        _input = XmlTooling.serializeDocument(input);
     }
 }

@@ -2,7 +2,7 @@ $LOAD_PATH.unshift "#{ENV['HOME']}/svn/buildr-trunk/lib/"
 
 require "rubygems"
 require "buildr"
-require "buildr/openjpa"
+require "tasks/openjpa"
 
 # Keep this structure to allow the build system to update version numbers.
 VERSION_NUMBER = "5.1.0.3-SNAPSHOT"
@@ -128,13 +128,11 @@ define "tempo" do
   
   desc "Task Management Services Common Library"
   define "tms-common" do
-    compile.with projects("security", "security-ws-client"), 
-                 AXIOM, LOG4J, SPRING, STAX_API, APACHE_JPA
-    compile{ open_jpa_enhance }
-    
-    test.with SLF4J, WOODSTOX, APACHE_JPA, LOG4J, SLF4J, APACHE_JPA, XERCES, DOM4J
-    test.exclude '*TestUtils*'
+    compile.with projects("security", "security-ws-client"),AXIOM, SLF4J, SPRING, STAX_API, APACHE_JPA, XERCES
+    compile { open_jpa_enhance }    
     package(:jar)
+    test.with SLF4J, WOODSTOX, APACHE_JPA, SLF4J, LOG4J, APACHE_JPA, XERCES, DOM4J
+    test.exclude '*TestUtils*'
   end
   
   desc "Task Management Service Client"

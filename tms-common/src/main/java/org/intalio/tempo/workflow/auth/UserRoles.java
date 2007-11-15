@@ -19,9 +19,7 @@ import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
 public class UserRoles {
     private String _userID;
-
     private AuthIdentifierSet _assignedRoles;
-
     private final static String _SYSTEM_ROLE_ID = "system\\system";
 
     public UserRoles(String userID, String[] assignedRoles) {
@@ -29,12 +27,9 @@ public class UserRoles {
     }
 
     public UserRoles(String userID, AuthIdentifierSet assignedRoles) {
-        if (userID == null) {
-            throw new RequiredArgumentException("userID");
-        }
-        if (assignedRoles == null) {
-            throw new RequiredArgumentException("assignedRoles");
-        }
+        if (userID == null) throw new RequiredArgumentException("userID");
+        if (assignedRoles == null) throw new RequiredArgumentException("assignedRoles");
+        
         _userID = AuthIdentifierNormalizer.normalizeAuthIdentifier(userID);
         _assignedRoles = assignedRoles;
     }

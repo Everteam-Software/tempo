@@ -17,40 +17,39 @@ package org.intalio.tempo.workflow.task;
 
 import java.net.URI;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 
 import org.apache.openjpa.persistence.Externalizer;
-import org.apache.openjpa.persistence.Persistent;
+import org.apache.openjpa.persistence.Factory;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
 @Entity
-@Inheritance(strategy=InheritanceType.JOINED)
 public class PIPATask extends Task {
-    
+
+    @Basic
+    @Factory("URI.create")
     @Externalizer("toString")
-    @Column(name="process_endpoint")
+    @Column(name = "process_endpoint")
     private URI _processEndpoint;
-    
+
+    @Basic
+    @Factory("URI.create")
     @Externalizer("toString")
-    @Column(name="init_message")
+    @Column(name = "init_message")
     private URI _initMessageNamespaceURI;
-    
-    @Persistent
-    @Column(name="init_soap")
+
+    @Basic
+    @Column(name = "init_soap")
     private String _initOperationSOAPAction;
 
     public PIPATask() {
         super();
     }
-    
-    public PIPATask(String id,
-                    URI formURL,
-                    URI processEndpoint,
-                    URI initMessageNamespaceURI,
-                    String initOperationSOAPAction) {
+
+    public PIPATask(String id, URI formURL, URI processEndpoint, URI initMessageNamespaceURI,
+            String initOperationSOAPAction) {
         super(id, formURL);
         _processEndpoint = processEndpoint;
         _initMessageNamespaceURI = initMessageNamespaceURI;
@@ -97,6 +96,21 @@ public class PIPATask extends Task {
             throw new RequiredArgumentException("processEndpoint");
         }
         _processEndpoint = processEndpoint;
+    }
+
+    @Override
+    public String toString() {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("PIPATask fields:\n");
+        buffer.append("Endpoint:"+_processEndpoint+"\n");
+        buffer.append("ACLs:"+getAuthorizedActions().size()+"\n");
+        buffer.append("Date:"+this.getCreationDate()+"\n");
+        buffer.append("_initMessageNamespaceURI:"+_initMessageNamespaceURI.toString()+"\n");
+        buffer.append("_initOperationSOAPAction:"+_initOperationSOAPAction+"\n");
+        buffer.append("description"+getDescription()+"\n");
+        buffer.append("id"+getID()+"\n");
+        buffer.append("formURL:"+getFormURL());
+        return buffer.toString();
     }
 
 }

@@ -20,19 +20,15 @@ import java.net.URL;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.apache.openjpa.persistence.Persistent;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
 @Entity
-@Table(name="attachments")
 public class Attachment {
     
-    @OneToOne(fetch=FetchType.LAZY, cascade={CascadeType.PERSIST,CascadeType.REMOVE})
+    @Persistent(cascade={CascadeType.ALL})
     private AttachmentMetadata metadata;
     
     @Transient
@@ -42,7 +38,7 @@ public class Attachment {
     @Column(name="payload_url")
     private String payloadURLAsString;
 
-    protected Attachment() {
+    public Attachment() {
 
     }
 

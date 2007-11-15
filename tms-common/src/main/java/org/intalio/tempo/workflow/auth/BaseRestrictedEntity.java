@@ -15,7 +15,6 @@
 
 package org.intalio.tempo.workflow.auth;
 
-
 public abstract class BaseRestrictedEntity implements IRestrictedEntity {
 
     private AuthIdentifierSet _userOwners = new AuthIdentifierSet();
@@ -34,16 +33,10 @@ public abstract class BaseRestrictedEntity implements IRestrictedEntity {
     }
 
     public boolean isAvailableTo(UserRoles credentials) {
-        boolean available = false;
         for (String userOwner : _userOwners) {
-            if (userOwner.equals(credentials.getUserID())) {
-                available = true;
-                break;
-            }
+            if (userOwner.equals(credentials.getUserID()))
+                return true;
         }
-        if (!available) {
-            available = _roleOwners.intersects(credentials.getAssignedRoles());
-        }
-        return available;
+        return _roleOwners.intersects(credentials.getAssignedRoles());
     }
 }

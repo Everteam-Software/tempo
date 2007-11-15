@@ -3,6 +3,7 @@ package org.intalio.tempo.workflow.tms.server.dao;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
@@ -40,8 +41,8 @@ public class JPATaskDaoConnection implements ITaskDAOConnection {
     }
 
     public Task[] fetchAllAvailableTasks(UserRoles user) {
-        user.getAssignedRoles();
-        user.getUserID();
+        AuthIdentifierSet roles = user.getAssignedRoles();
+        String userid = user.getUserID();
         return null;
     }
 
