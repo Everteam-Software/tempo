@@ -23,13 +23,11 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import org.w3c.dom.Document;
-import org.intalio.tempo.workflow.task.PATask;
-import org.intalio.tempo.workflow.task.TaskState;
-
 import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.task.attachments.AttachmentMetadata;
+import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
+import org.w3c.dom.Document;
 
 public class PATaskTest extends TestCase {
 
@@ -69,7 +67,7 @@ public class PATaskTest extends TestCase {
         PATask task = new PATask(taskID, formURL, processID, completeSOAPAction, input);
         Assert.assertEquals(processID, task.getProcessID());
         Assert.assertEquals(completeSOAPAction, task.getCompleteSOAPAction());
-        Assert.assertEquals(input, task.getInput());
+        Assert.assertTrue(XmlTooling.equals(input, task.getInput()));
         Assert.assertEquals(TaskState.READY, task.getState());
         Assert.assertNull(task.getOutput());
         Assert.assertTrue(task.getAttachments().isEmpty());
@@ -199,7 +197,7 @@ public class PATaskTest extends TestCase {
         PATask task = this.createPATask();
         Document input = this.createXMLDocument();
         task.setInput(input);
-        Assert.assertSame(input, task.getInput());
+        Assert.assertTrue(XmlTooling.equals(input, task.getInput()));
         try {
             task.setInput(null);
             Assert.fail("RequiredArgumentException expected");
@@ -212,7 +210,7 @@ public class PATaskTest extends TestCase {
         PATask task = this.createPATask();
         Document output = this.createXMLDocument();
         task.setOutput(output);
-        Assert.assertSame(output, task.getOutput());
+        Assert.assertTrue(XmlTooling.equals(output, task.getOutput()));
         try {
             task.setOutput(null);
             Assert.fail("RequiredArgumentException expected");

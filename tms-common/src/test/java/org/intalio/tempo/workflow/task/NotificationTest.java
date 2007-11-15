@@ -22,10 +22,13 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+import org.intalio.tempo.workflow.task.xml.XmlTooling;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
-import org.intalio.tempo.workflow.task.Notification;
 
 public class NotificationTest extends TestCase {
+    Logger log = LoggerFactory.getLogger(Notification.class);
     public static void main(String[] args) {
         junit.textui.TestRunner.run(PATaskTest.class);
     }
@@ -36,13 +39,12 @@ public class NotificationTest extends TestCase {
         DocumentBuilder builder = builderFactory.newDocumentBuilder();
         Document doc = builder.newDocument();
         doc.appendChild(doc.createElement("testDocument"));
-
         return doc;
     }
 
     public void testNotification() throws Exception {
         Document input = createXMLDocument();
         Notification n = new Notification("id", new URI("http://localhost/"), input);
-        Assert.assertEquals(input, n.getInput());
+        Assert.assertTrue(XmlTooling.equals(input,n.getInput()));
     }
 }

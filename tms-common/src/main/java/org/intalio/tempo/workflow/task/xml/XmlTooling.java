@@ -87,5 +87,9 @@ public class XmlTooling {
             return xml.parseXML(doc);
         }
     }
+    
+    public static boolean equals(Document doc1, Document doc2) {
+        return serializeDocument(doc1).equals(serializeDocument(doc2));
+    }
 
 }
