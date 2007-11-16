@@ -55,6 +55,7 @@ public class XmlTooling {
     }
 
     public String serializeXML(Document xml) {
+        
         if (xml != null) {
             Source source = new DOMSource(xml);
             StringWriter writer = new StringWriter();

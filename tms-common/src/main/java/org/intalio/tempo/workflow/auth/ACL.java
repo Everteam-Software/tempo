@@ -1,9 +1,8 @@
 package org.intalio.tempo.workflow.auth;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.apache.openjpa.persistence.Persistent;
@@ -16,12 +15,10 @@ public class ACL {
     @Column(name="action")
     public String action; 
     
-    @OneToOne(cascade=CascadeType.ALL)
-    @Column(name="users")
+    @Embedded
     public AuthIdentifierSet users = new AuthIdentifierSet();
     
-    @OneToOne(cascade=CascadeType.ALL)
-    @Column(name="roles")
+    @Embedded
     public AuthIdentifierSet roles = new AuthIdentifierSet();
     
     public ACL() {

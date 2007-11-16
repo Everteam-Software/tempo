@@ -24,22 +24,27 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 
 import org.apache.openjpa.persistence.PersistentCollection;
+import org.apache.openjpa.persistence.jdbc.ContainerTable;
+import org.apache.openjpa.persistence.jdbc.ElementJoinColumn;
+import org.apache.openjpa.persistence.jdbc.XJoinColumn;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
 @Entity
 public class AuthIdentifierSet implements Iterable<String> {
-    
-    @PersistentCollection(elementCascade=CascadeType.ALL)
-    private Collection<String> backingSet = new HashSet<String>(); 
+
+    @PersistentCollection(elementCascade = CascadeType.ALL)
+    @ContainerTable(name="BACKING_SET",joinColumns=@XJoinColumn(name="SET_ID"))
+    @ElementJoinColumn(name="AUTH_ID")
+    private Collection<String> backingSet = new HashSet<String>();
 
     public AuthIdentifierSet() {
-        
+
     }
 
     public AuthIdentifierSet(Collection<String> strings) {
         backingSet.addAll(strings);
     }
-    
+
     public AuthIdentifierSet(AuthIdentifierSet instance) {
         backingSet.addAll(instance.backingSet);
     }
@@ -51,17 +56,9 @@ public class AuthIdentifierSet implements Iterable<String> {
 
     @Override
     public boolean equals(Object rhs) {
-        boolean result = false;
-
-        if (rhs instanceof AuthIdentifierSet) {
-            AuthIdentifierSet rhsSet = (AuthIdentifierSet) rhs;
-
-            result = rhsSet.backingSet.equals(backingSet);
-        }
-
-        return result;
+        return rhs instanceof AuthIdentifierSet && ((AuthIdentifierSet) rhs).backingSet.equals(backingSet);
     }
-    
+
     public Collection<String> toCollection() {
         return backingSet;
     }
@@ -73,7 +70,15 @@ public class AuthIdentifierSet implements Iterable<String> {
 
     @Override
     public String toString() {
-        return backingSet.toString();
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("(");
+        if(!backingSet.isEmpty()) {
+            for(String s : backingSet) buffer.append("'"+s+"'"+",");
+            buffer.setCharAt(buffer.length()-1, ')');    
+        } else {
+            buffer.append(")");
+        }
+        return buffer.toString();
     }
 
     public boolean isEmpty() {

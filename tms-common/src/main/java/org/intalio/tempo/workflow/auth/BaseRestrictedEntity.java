@@ -15,19 +15,24 @@
 
 package org.intalio.tempo.workflow.auth;
 
-import javax.persistence.Embedded;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.OneToOne;
 
 @MappedSuperclass
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class BaseRestrictedEntity implements IRestrictedEntity {
 
-    @Embedded
+    
+    @OneToOne(cascade=CascadeType.ALL)
+    @Column(name="users")
     private AuthIdentifierSet _userOwners = new AuthIdentifierSet();
 
-    @Embedded
+    @OneToOne(cascade=CascadeType.ALL)
+    @Column(name="roles")
     private AuthIdentifierSet _roleOwners = new AuthIdentifierSet();
 
     protected BaseRestrictedEntity() {

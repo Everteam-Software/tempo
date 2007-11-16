@@ -58,6 +58,10 @@ public abstract class Task extends BaseRestrictedEntity {
     public static final String FIND_BY_ID ="find_by_id";
     public static final String FIND_BY_USER ="find_by_user";
     
+    public static final String FIND_BY_USERS ="SELECT * FROM TASKS m WHERE m.USERS IN (SELECT SET_ID FROM BACKING_SET WHERE AUTH_ID IN  {0})";
+    public static final String FIND_BY_ROLES ="SELECT * FROM TASKS m WHERE m.ROLES IN (SELECT SET_ID FROM BACKING_SET WHERE AUTH_ID IN  {0})";
+    public static final String FIND_BY_USER_AND_ROLES = "SELECT * FROM TASKS m WHERE (m.ROLES IN (SELECT SET_ID FROM BACKING_SET WHERE AUTH_ID IN  {0})) OR (m.USERS IN (SELECT SET_ID FROM BACKING_SET WHERE AUTH_ID IN  {1}))";
+    
     @Column(name="internal_id")
     @Basic
     private int _internalId;

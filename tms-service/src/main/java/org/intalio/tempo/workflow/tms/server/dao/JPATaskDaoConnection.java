@@ -1,5 +1,9 @@
 package org.intalio.tempo.workflow.tms.server.dao;
 
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
@@ -40,10 +44,14 @@ public class JPATaskDaoConnection implements ITaskDAOConnection {
         return true;
     }
 
+    @SuppressWarnings("unchecked")
     public Task[] fetchAllAvailableTasks(UserRoles user) {
         AuthIdentifierSet roles = user.getAssignedRoles();
         String userid = user.getUserID();
-        return null;
+        String s = MessageFormat.format(Task.FIND_BY_USER_AND_ROLES, new Object[]{roles.toString(),userid});
+        Query q = entityManager.createNativeQuery(s,Task.class);
+        List<Task> l = q.getResultList();
+        return (Task[])new ArrayList(l).toArray(new Task[l.size()]);
     }
 
     public Task fetchTaskIfExists(String taskID) {

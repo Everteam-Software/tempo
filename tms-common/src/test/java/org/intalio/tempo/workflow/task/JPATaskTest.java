@@ -2,6 +2,9 @@ package org.intalio.tempo.workflow.task;
 
 import java.net.URI;
 import java.net.URL;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import javax.persistence.EntityManager;
@@ -14,6 +17,7 @@ import junit.framework.Assert;
 
 import org.apache.log4j.Logger;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
+import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.task.attachments.AttachmentMetadata;
 import org.intalio.tempo.workflow.task.xml.XmlTooling;
@@ -115,6 +119,8 @@ public class JPATaskTest {
         task1.authorizeActionForUser("play", "niko");
         task1.authorizeActionForUser("go_home", "niko");
         task1.authorizeActionForUser("eat", "alex");
+        task1.getRoleOwners().add("role1");
+        task1.getUserOwners().add("user1");
         log.info(task1.getAuthorizedUsers("play").toString());
 
         persist(task1);
@@ -135,6 +141,11 @@ public class JPATaskTest {
         Assert.assertFalse(eaters.contains("niko"));
         Assert.assertTrue(eaters.contains("alex"));
 
+        Assert.assertTrue(task2.getUserOwners().contains("user1"));
+        Assert.assertFalse(task2.getUserOwners().contains("user2"));
+        Assert.assertTrue(task2.getRoleOwners().contains("role1"));
+        Assert.assertFalse(task2.getRoleOwners().contains("role2"));
+        
         em.close();
     }
 
@@ -156,17 +167,38 @@ public class JPATaskTest {
 
     }
     
-//    @Test 
-//    public void seachQuery() throws Exception {
-//        
-//        String s = "SELECT i FROM AuthIdentifierSet i where backingSet IN ('niko')";
-//        //String s = "SELECT DISTINCT TASK_ID FROM TASKS__ACTIONACLS WHERE ELEMENT_ID IN (SELECT ID FROM ACLS WHERE USERS_ID IN (SELECT AUTHIDENTIFIERSET_ID FROM AUTHIDENTIFIERSET_BACKINGSET where ELEMENT='niko'))";
-//        Query q = em.createNativeQuery(s);
-//        List l = q.getResultList();
-//        for(Object o : l)  {
-//            log.info(l.toString());
-//        }
-//    }
+    @SuppressWarnings("unchecked")
+    @Test 
+    public void searchQuery() throws Exception {
+        testQuery(MessageFormat.format(Task.FIND_BY_USERS, "('user1')"));
+        testQuery(MessageFormat.format(Task.FIND_BY_ROLES, "('role1')"));
+        
+        testUserRoles("user1",new String[]{"role2"},1);
+        testUserRoles("user2",new String[]{"role1"},1);
+        testUserRoles("user2",new String[]{"role2"},0);
+    }
+    
+    private void testUserRoles(String userId, String[] roles, int size) throws Exception {
+        UserRoles ur = new UserRoles(userId,roles);
+        Task[] tasks = fetchAllAvailableTasks(ur);
+        Assert.assertEquals(tasks.length, size);
+    }
+    
+    private Task[] fetchAllAvailableTasks(UserRoles user) {
+        AuthIdentifierSet roles = user.getAssignedRoles();
+        String userid = user.getUserID();
+        String s = MessageFormat.format(Task.FIND_BY_USER_AND_ROLES, new Object[]{roles.toString(),"('"+userid+"')"});
+        Query q = em.createNativeQuery(s,Task.class);
+        List<Task> l = q.getResultList();
+        return (Task[])new ArrayList(l).toArray(new Task[l.size()]);
+    }
+
+    private void testQuery(String s) {
+        Query q = em.createNativeQuery(s,Task.class);
+        List<Task> l = q.getResultList();
+        Assert.assertEquals(l.size(), 1);
+        Assert.assertEquals(l.get(0).getClass(), Notification.class);
+    }
 
     private Document getXmlSampleDocument() throws Exception {
         return xml.parseXml(getClass().getResourceAsStream("/employees.xml"));
