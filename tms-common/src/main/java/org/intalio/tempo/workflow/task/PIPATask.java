@@ -23,18 +23,19 @@ import javax.persistence.Entity;
 
 import org.apache.openjpa.persistence.Externalizer;
 import org.apache.openjpa.persistence.Factory;
+import org.apache.openjpa.persistence.Persistent;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
 @Entity
 public class PIPATask extends Task {
 
-    @Basic
+    @Persistent
     @Factory("URI.create")
     @Externalizer("toString")
     @Column(name = "process_endpoint")
     private URI _processEndpoint;
 
-    @Basic
+    @Persistent
     @Factory("URI.create")
     @Externalizer("toString")
     @Column(name = "init_message")

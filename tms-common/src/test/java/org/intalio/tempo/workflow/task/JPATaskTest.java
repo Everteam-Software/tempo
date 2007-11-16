@@ -155,6 +155,18 @@ public class JPATaskTest {
         Assert.assertEquals(1, task2.getAttachments().size());
 
     }
+    
+//    @Test 
+//    public void seachQuery() throws Exception {
+//        
+//        String s = "SELECT i FROM AuthIdentifierSet i where backingSet IN ('niko')";
+//        //String s = "SELECT DISTINCT TASK_ID FROM TASKS__ACTIONACLS WHERE ELEMENT_ID IN (SELECT ID FROM ACLS WHERE USERS_ID IN (SELECT AUTHIDENTIFIERSET_ID FROM AUTHIDENTIFIERSET_BACKINGSET where ELEMENT='niko'))";
+//        Query q = em.createNativeQuery(s);
+//        List l = q.getResultList();
+//        for(Object o : l)  {
+//            log.info(l.toString());
+//        }
+//    }
 
     private Document getXmlSampleDocument() throws Exception {
         return xml.parseXml(getClass().getResourceAsStream("/employees.xml"));

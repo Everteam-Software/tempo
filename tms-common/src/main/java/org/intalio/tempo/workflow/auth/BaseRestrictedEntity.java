@@ -15,10 +15,19 @@
 
 package org.intalio.tempo.workflow.auth;
 
+import javax.persistence.Embedded;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.MappedSuperclass;
+
+@MappedSuperclass
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class BaseRestrictedEntity implements IRestrictedEntity {
 
+    @Embedded
     private AuthIdentifierSet _userOwners = new AuthIdentifierSet();
 
+    @Embedded
     private AuthIdentifierSet _roleOwners = new AuthIdentifierSet();
 
     protected BaseRestrictedEntity() {

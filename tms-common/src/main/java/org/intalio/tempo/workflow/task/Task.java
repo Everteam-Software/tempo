@@ -32,6 +32,7 @@ import javax.persistence.MapKey;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.QueryHint;
+import javax.persistence.Table;
 
 import org.apache.openjpa.persistence.Externalizer;
 import org.apache.openjpa.persistence.Factory;
@@ -44,7 +45,8 @@ import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
+@Table(name="tasks")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @NamedQueries({
     @NamedQuery(
             name=Task.FIND_BY_ID, 
