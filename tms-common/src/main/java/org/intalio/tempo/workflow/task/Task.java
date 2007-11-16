@@ -46,7 +46,7 @@ import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
 @Entity
 @Table(name="tasks")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.JOINED)
 @NamedQueries({
     @NamedQuery(
             name=Task.FIND_BY_ID, 
