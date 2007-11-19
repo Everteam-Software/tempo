@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.intalio.tempo.web.SysPropApplicationContextLoader;
 import org.intalio.tempo.workflow.wds.config.WDSConfigBean;
@@ -67,13 +68,11 @@ import org.intalio.tempo.workflow.wds.core.xforms.XFormsProcessor;
  * @version $Revision: 1176 $
  */
 public class WDSServlet extends HttpServlet {
-    private static final Logger LOG = Logger.getLogger(WDSServlet.class);
-
-    private WDSServiceFactory _serviceFactory;
-
+    private static final Logger logger = Logger.getLogger(WDSServlet.class);
     private static final long serialVersionUID = -5714415376114167497L;
-
     private static final String DEFAULT_CONFIG_FILE = "file:${org.intalio.tempo.configDirectory}/tempo-tms.xml";
+    
+    private WDSServiceFactory _serviceFactory;
 
     @Override
     public void init() throws ServletException {
@@ -82,26 +81,23 @@ public class WDSServlet extends HttpServlet {
         if (configFile == null) {
             configFile = DEFAULT_CONFIG_FILE;
         }
-        LOG.debug("Loading configuration...");
-        try {
-            loader = new SysPropApplicationContextLoader(configFile);
-        } catch (IOException except) {
+        if (logger.isDebugEnabled()) logger.debug("Loading WDS configuration...");
+        try { loader = new SysPropApplicationContextLoader(configFile); } catch (IOException except) {
             throw new ServletException(except);
         }
         WDSConfigBean config = loader.getBean("config");
 
-        LOG.debug("Creating DAO factory...");
+        if (logger.isDebugEnabled()) logger.debug("Creating DAO factory...");
         ItemDaoConnectionFactory daoFactory = new JdbcItemDaoConnectionFactory(config.getWdsDataSource());
 
-        LOG.debug("Creating TMS factory...");
+        if (logger.isDebugEnabled()) logger.debug("Creating TMS factory...");
         TMSConnectionFactoryInterface tmsFactory = new TMSConnectionFactory(config.getTmsDataSource());
 
-        LOG.debug("Creating Service Factory...");
+        if (logger.isDebugEnabled()) logger.debug("Creating Service Factory...");
         _serviceFactory = new WDSServiceFactory(daoFactory, tmsFactory);
-
         _serviceFactory.setWdsEndpoint(config.getWdsEndpoint());
-
-        LOG.debug("Servlet initialized.");
+        
+        if (logger.isDebugEnabled())  logger.debug("Servlet initialized.");
     }
 
     /**
@@ -112,13 +108,9 @@ public class WDSServlet extends HttpServlet {
     private static String getResourceUri(HttpServletRequest request) {
         String requestUri = request.getRequestURI();
         String relativeUri = requestUri.substring(request.getContextPath().length());
-        while (relativeUri.startsWith("/")) {
-            // handle frequent typo when manually deploy form (using wds-cli)
-            relativeUri = relativeUri.substring(1);
-        }
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Resource URI: '" + relativeUri + "'");
-        }
+        // handle frequent typo when manually deploy form (using wds-cli)
+        while (relativeUri.startsWith("/")) {relativeUri = relativeUri.substring(1); }
+        if (logger.isDebugEnabled())  logger.debug("Resource URI: '" + relativeUri + "'");
         return relativeUri;
     }
 
@@ -126,10 +118,9 @@ public class WDSServlet extends HttpServlet {
      * Fetches the participant token specified in an HTTP request.
      */
     private String getParticipantToken(HttpServletRequest request) {
-        String participantToken = ""; // FIXME: request.getHeader("Participant-Token");
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Participant token: '" + participantToken + "'");
-        }
+        String participantToken = StringUtils.EMPTY; 
+        // FIXME: request.getHeader("Participant-Token");
+        if (logger.isDebugEnabled())  logger.debug("Participant token: '" + participantToken + "'");
         return participantToken;
     }
 
@@ -137,14 +128,13 @@ public class WDSServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) 
         throws ServletException, IOException
     {
-        if (LOG.isDebugEnabled()) LOG.debug("doDelete request="+request);
+        if (logger.isDebugEnabled()) logger.debug("doDelete request="+request);
 
         String resourceUri = getResourceUri(request);
         String participantToken = getParticipantToken(request);
-
         WDSService service = null;
         try {
-            LOG.debug("Deleting item: '" + resourceUri + "'");
+            if (logger.isDebugEnabled()) logger.debug("Deleting item: '" + resourceUri + "'");
             service = _serviceFactory.getWDSService();
             if (Boolean.valueOf(request.getHeader("Delete-PIPA-Tasks"))) {
                 String formUrl = request.getRequestURL().toString();
@@ -158,7 +148,7 @@ public class WDSServlet extends HttpServlet {
                 service.deleteItem(resourceUri, participantToken);
                 service.commit();
             }
-            LOG.debug("Item '" + resourceUri + "' deleted OK.");
+            if (logger.isDebugEnabled()) logger.debug("Item '" + resourceUri + "' deleted OK.");
         } catch (AuthenticationException e) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             warn("Authentication error", e);
@@ -182,7 +172,7 @@ public class WDSServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        LOG.debug("doGet request="+request);
+        if (logger.isDebugEnabled()) logger.debug("doGet request="+request);
 
         String resourceUri = getResourceUri(request);
         if ("".equals(resourceUri)) {
@@ -194,25 +184,24 @@ public class WDSServlet extends HttpServlet {
             try {
                 service = _serviceFactory.getWDSService();
 
-                LOG.debug("Retrieving the item.");
+                if (logger.isDebugEnabled()) logger.debug("Retrieving the item.");
                 Item item = service.retrieveItem(resourceUri, participantToken);
                 dataStream = new ByteArrayInputStream(item.getPayload());
                 OutputStream outputStream = response.getOutputStream();
                 response.setContentLength(item.getContentLength());
                 response.setContentType(item.getContentType());
 
-                LOG.debug("Sending the data..");
+                if (logger.isDebugEnabled()) logger.debug("Sending the data..");
                 IOUtils.copy(dataStream, outputStream);
                 outputStream.flush();
-
                 service.commit();
-                LOG.debug("Item retrieved & sent OK.");
+                if (logger.isDebugEnabled()) logger.debug("Item retrieved & sent OK.");
             } catch (AuthenticationException e) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-                LOG.warn("Authentication error", e);
+                logger.warn("Authentication error", e);
             } catch (UnavailableItemException e) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
-                LOG.warn("Item not found: '" + resourceUri + "'", e);
+                logger.warn("Item not found: '" + resourceUri + "'", e);
             } finally {
                 if (service != null) service.close();
                 if (dataStream != null) dataStream.close();
@@ -227,10 +216,7 @@ public class WDSServlet extends HttpServlet {
         if (source == null) return new String[0];
         List<String> list = new ArrayList<String>();
         StringTokenizer tok = new StringTokenizer(source, ",");
-        while (tok.hasMoreTokens()) {
-            String id = tok.nextToken();
-            list.add(id);
-        }
+        while (tok.hasMoreTokens()) { list.add(tok.nextToken());}
         return list.toArray(new String[list.size()]);
     }
 
@@ -268,8 +254,8 @@ public class WDSServlet extends HttpServlet {
     protected void doPut(HttpServletRequest request, HttpServletResponse response) 
         throws ServletException, IOException
     {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("doPut request="+request+" contentType="+request.getContentType()+
+        if (logger.isDebugEnabled()) {
+            logger.debug("doPut request="+request+" contentType="+request.getContentType()+
                       " contentLength="+request.getContentLength());
         }
         String resourceUri = getResourceUri(request);
@@ -301,8 +287,8 @@ public class WDSServlet extends HttpServlet {
             			ZipEntry entry = zstream.getNextEntry(); 
                         while (entry != null) {
                             if (entry.getName().endsWith(".pipa")) {
-                                if (LOG.isDebugEnabled()) {
-                                    LOG.debug("Pipa descriptor "+ resourceUri + entry.getName());
+                                if (logger.isDebugEnabled()) {
+                                    logger.debug("Pipa descriptor "+ resourceUri + entry.getName());
                                 }
                                 Properties prop = new Properties();
                                 prop.load(zstream);
@@ -311,18 +297,18 @@ public class WDSServlet extends HttpServlet {
                                     throw new InvalidRequestFormatException("Invalid PIPA task:\n" + task);
                                 }
                                 service.storePipaTask(task, participantToken);
-                                LOG.debug("Pipa descriptor '" + resourceUri + "' stored OK.");
+                                if (logger.isDebugEnabled()) logger.debug("Pipa descriptor '" + resourceUri + "' stored OK.");
                             } else if (entry.getName().endsWith(".xform")){
-                                LOG.debug("Processing xform '" + resourceUri + "'");
+                                if (logger.isDebugEnabled()) logger.debug("Processing xform '" + resourceUri + "'");
                                 try {
                                     ByteArrayOutputStream output = new ByteArrayOutputStream();
                                     copy(zstream, output);
                                     ByteArrayInputStream input = new ByteArrayInputStream(output.toByteArray());
                                     Item item = XFormsProcessor.processXForm(entry.getName(), input);
                                     service.storeItem(item, participantToken);
-                                    LOG.debug("Storing the item: '" + resourceUri + entry.getName());
+                                    if (logger.isDebugEnabled()) logger.debug("Storing the item: '" + resourceUri + entry.getName());
                                 } catch (Exception e) {
-                                   LOG.error(e.getMessage(), e);
+                                   logger.error(e.getMessage(), e);
                                    throw new RuntimeException(e);
                                 }
                             } else {
@@ -330,7 +316,7 @@ public class WDSServlet extends HttpServlet {
                                 copy(zstream, output);
                                 Item item = new Item(entry.getName(), "application/xml", output.toByteArray());
                                 service.storeItem(item, participantToken);
-                                LOG.debug("Storing the item: '" + resourceUri + entry.getName());
+                                if (logger.isDebugEnabled())  logger.debug("Storing the item: '" + resourceUri + entry.getName());
                             }
                             entry = zstream.getNextEntry(); 
             			}
@@ -349,36 +335,36 @@ public class WDSServlet extends HttpServlet {
             			byte[] payload = IOUtils.toByteArray(payloadStream);
             			item = new Item(resourceUri, contentType, payload);
             		}
-                    LOG.debug("Storing the item: '" + resourceUri + "'.");
+            		if (logger.isDebugEnabled())  logger.debug("Storing the item: '" + resourceUri + "'.");
                     try {
                         service.deleteItem(item.getURI(), participantToken);
                     } catch (UnavailableItemException except) {
                         // ignore
                     }
             		service.storeItem(item, participantToken);
-            		LOG.debug("Item '" + resourceUri + "' stored OK.");
+            		if (logger.isDebugEnabled()) logger.debug("Item '" + resourceUri + "' stored OK.");
             	}
             	
             } else if ("True".equals(request.getHeader("Create-PIPA-Task"))) {
                 PipaTask pipaTask = parsePipaTaskFromHeaders(request);
-                if (LOG.isDebugEnabled()) LOG.debug("Storing pipa task:\n" + pipaTask);
+                if (logger.isDebugEnabled()) logger.debug("Storing pipa task:\n" + pipaTask);
                 service.storePipaTask(pipaTask, participantToken);
-                if (LOG.isDebugEnabled()) LOG.debug("Pipa task stored OK.");
+                if (logger.isDebugEnabled()) logger.debug("Pipa task stored OK.");
             }
             service.commit();
             response.setStatus(HttpServletResponse.SC_OK);
         } catch (InvalidRequestFormatException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().write(e.getMessage());
-            LOG.warn("Invalid request message format", e);
+            logger.warn("Invalid request message format", e);
         } catch (AuthenticationException e) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write(e.getMessage());
-            LOG.warn("Authentication error", e);
+            logger.warn("Authentication error", e);
         } catch (UnavailableItemException e) {
             response.sendError(HttpServletResponse.SC_CONFLICT);
             response.getWriter().write(e.getMessage());
-            LOG.warn("URI already taken", e);
+            logger.warn("URI already taken", e);
         } finally {
             if (service != null) {
                 service.close();
@@ -430,10 +416,7 @@ public class WDSServlet extends HttpServlet {
     }
     
     private void warn(String message, Throwable t) {
-        if (LOG.isDebugEnabled()) {
-            LOG.warn(message, t);
-        } else {
-            LOG.warn(message + ": " + t.getMessage());
-        }
+        if (logger.isDebugEnabled())  logger.warn(message, t);
+        else  logger.warn(message + ": " + t.getMessage());
     }
 }
