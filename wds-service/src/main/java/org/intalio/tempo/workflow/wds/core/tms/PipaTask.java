@@ -11,52 +11,87 @@
  */
 package org.intalio.tempo.workflow.wds.core.tms;
 
+import java.util.Arrays;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Lob;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.QueryHint;
+
 /**
  * Encapsulates all (relevant) properties of a PIPA task.
  * 
  * @author Iwan Memruk
  * @version $Revision: 40 $
  */
+@Entity
+@NamedQueries({
+    @NamedQuery(
+            name=PipaTask.FIND_BY_ID, 
+            query="select m from PipaTask m where m._id=?1", 
+            hints={ @QueryHint  (name="openjpa.hint.OptimizeResultCount", value="1")})
+    })
 public class PipaTask {
 
+    static final String FIND_BY_ID = "find_by_id";
+    
     /**
      * Task identifier.
      */
+    @Basic
+    @Column(name="tid")
     private String _id;
 
     /**
      * A human-readable task description (caption).
      */
+    @Basic
+    @Column(name="description")
     private String _description = "";
 
     /**
      * Task user owner identifiers, such as "group&#0092;user".
      */
+    @Lob
+    @Column(name="user_owners")
     private String[] _userOwners = {};
 
     /**
      * Task role owner identifiers, such as "group&#0092;role".
      */
+    @Lob
+    @Column(name="role_owners")
     private String[] _roleOwners = {};
 
     /**
      * Task form URL.
      */
+    @Basic
+    @Column(name="form_url")
     private String _formURL;
 
     /**
      * The endpoint of the business process to start when the task form is submitted.
      */
+    @Basic
+    @Column(name="process_endpoint")
     private String _processEndpoint;
 
     /**
      * Form namespace.
      */
+    @Basic
+    @Column(name="form_namespace")
     private String _formNamespace;
 
     /**
      * The SOAPAction to start the business process with.
      */
+    @Basic
+    @Column(name="init_soap_action")
     private String _initSoapAction;
 
     /**
@@ -307,5 +342,21 @@ public class PipaTask {
         } else {
             _userOwners = null;
         }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof PipaTask)) 
+            return false;
+        PipaTask task2 = (PipaTask)obj;
+        return 
+         task2._id.equals(_id)  
+        && task2._description.equals(_description) 
+        && task2._formNamespace.equals(_formNamespace) 
+        && task2._formURL.equals(_formURL)
+        && task2._initSoapAction.equals(_initSoapAction) 
+        && task2._processEndpoint.equals(_processEndpoint) 
+        && Arrays.equals(task2._roleOwners,_roleOwners) 
+        && Arrays.equals(task2._userOwners,_userOwners);
     }
 }

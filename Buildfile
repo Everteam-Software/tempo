@@ -193,8 +193,9 @@ define "tempo" do
 
   desc "Workflow Deployment Service"
   define "wds-service" do
-    libs = [ project("web-nutsNbolts"), COMMONS, LOG4J, SERVLET_API, SPRING, XERCES ]
+    libs = [ project("web-nutsNbolts"), COMMONS, LOG4J, SERVLET_API, SPRING, XERCES, APACHE_JPA ]
     compile.with libs
+    compile { open_jpa_enhance }    
     resources.filter.using "version" => VERSION_NUMBER
     package(:war).with :libs=>libs
   end

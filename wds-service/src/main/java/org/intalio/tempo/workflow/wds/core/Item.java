@@ -11,16 +11,46 @@
  */
 package org.intalio.tempo.workflow.wds.core;
 
+import java.util.Arrays;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Lob;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.QueryHint;
+
 /**
  * A WDS item is a byte stream which is stored on WDS at a specific URI.
  * 
  * @author Iwan Memruk
  * @version $Revision: 1176 $
  */
+@Entity
+@NamedQueries({
+    @NamedQuery(
+            name=Item.FIND_BY_URI, 
+            query="select m from Item m where m._uri=?1", 
+            hints={ @QueryHint  (name="openjpa.hint.OptimizeResultCount", value="1")})
+    })
 public class Item {
+    public static final String FIND_BY_URI = "find_by_uri";
+
+    @Basic
+    @Column(name="uri")
     private String _uri;
+    @Basic
+    @Column(name="content_type")
     private String _contentType;
+    @Basic
+    @Column(name="payload")
+    @Lob
     private byte[] _payload;
+    
+    public Item() {
+        
+    }
     
     /**
      * Create an Item
@@ -63,6 +93,16 @@ public class Item {
      */
     public byte[] getPayload() {
         return _payload;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Item)) return false;
+        Item item = (Item)obj;
+        return 
+        item._contentType.equals(_contentType)
+        && Arrays.equals(item._payload,_payload)
+        && _uri.equals(_uri);
     }
     
 }
