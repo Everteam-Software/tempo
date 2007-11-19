@@ -19,7 +19,7 @@ import java.sql.*;
  * 
  * @see TMSConnectionFactory
  */
-public class TMSConnection {
+public class TMSConnection implements TMSConnectionInterface {
     private Connection _jdbcConnection;
     private PreparedStatement _insertTaskStatement;
     private PreparedStatement _insertTaskUserOwnerStatement;

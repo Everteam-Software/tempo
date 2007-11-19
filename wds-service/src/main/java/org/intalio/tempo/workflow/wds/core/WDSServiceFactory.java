@@ -11,7 +11,7 @@
  */
 package org.intalio.tempo.workflow.wds.core;
 
-import org.intalio.tempo.workflow.wds.core.tms.TMSConnectionFactory;
+import org.intalio.tempo.workflow.wds.core.tms.TMSConnectionFactoryInterface;
 
 /**
  * This factory class is used to obtain {@link org.intalio.tempo.workflow.wds.core.WDSService} instances.
@@ -31,7 +31,7 @@ public class WDSServiceFactory {
     /**
      * The TMS connection factory to get TMS connections from.
      */
-    private TMSConnectionFactory _tmsFactory;
+    private TMSConnectionFactoryInterface _tmsFactory;
 
     private String _wdsEndpoint;
 
@@ -43,7 +43,7 @@ public class WDSServiceFactory {
      * @param tmsFactory
      *            The TMS connections factory to get TMS connections from.
      */
-    public WDSServiceFactory(ItemDaoConnectionFactory daoFactory, TMSConnectionFactory tmsFactory) {
+    public WDSServiceFactory(ItemDaoConnectionFactory daoFactory, TMSConnectionFactoryInterface tmsFactory) {
         if (daoFactory == null) {
             throw new NullPointerException("daoFactory");
         }

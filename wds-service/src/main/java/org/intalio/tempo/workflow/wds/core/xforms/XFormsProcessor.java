@@ -20,6 +20,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.apache.commons.lang.CharEncoding;
 import org.apache.log4j.Logger;
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
@@ -28,7 +29,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
-import org.apache.commons.lang.CharEncoding;
 
 
 /**

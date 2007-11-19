@@ -32,11 +32,16 @@ import javax.persistence.QueryHint;
     @NamedQuery(
             name=PipaTask.FIND_BY_ID, 
             query="select m from PipaTask m where m._id=?1", 
+            hints={ @QueryHint  (name="openjpa.hint.OptimizeResultCount", value="1")}),
+    @NamedQuery(
+            name=PipaTask.FIND_BY_URL, 
+            query="select m from PipaTask m where m._form_url=?1", 
             hints={ @QueryHint  (name="openjpa.hint.OptimizeResultCount", value="1")})
     })
 public class PipaTask {
 
     static final String FIND_BY_ID = "find_by_id";
+    static final String FIND_BY_URL = "find_by_url";
     
     /**
      * Task identifier.

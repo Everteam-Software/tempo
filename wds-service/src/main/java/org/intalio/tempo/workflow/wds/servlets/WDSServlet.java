@@ -42,6 +42,7 @@ import org.intalio.tempo.workflow.wds.core.WDSService;
 import org.intalio.tempo.workflow.wds.core.WDSServiceFactory;
 import org.intalio.tempo.workflow.wds.core.tms.PipaTask;
 import org.intalio.tempo.workflow.wds.core.tms.TMSConnectionFactory;
+import org.intalio.tempo.workflow.wds.core.tms.TMSConnectionFactoryInterface;
 import org.intalio.tempo.workflow.wds.core.xforms.XFormsProcessor;
 
 /**
@@ -93,7 +94,7 @@ public class WDSServlet extends HttpServlet {
         ItemDaoConnectionFactory daoFactory = new JdbcItemDaoConnectionFactory(config.getWdsDataSource());
 
         LOG.debug("Creating TMS factory...");
-        TMSConnectionFactory tmsFactory = new TMSConnectionFactory(config.getTmsDataSource());
+        TMSConnectionFactoryInterface tmsFactory = new TMSConnectionFactory(config.getTmsDataSource());
 
         LOG.debug("Creating Service Factory...");
         _serviceFactory = new WDSServiceFactory(daoFactory, tmsFactory);

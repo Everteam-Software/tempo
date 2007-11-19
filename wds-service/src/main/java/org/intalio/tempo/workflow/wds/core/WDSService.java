@@ -12,7 +12,7 @@
 package org.intalio.tempo.workflow.wds.core;
 
 import org.intalio.tempo.workflow.wds.core.tms.PipaTask;
-import org.intalio.tempo.workflow.wds.core.tms.TMSConnection;
+import org.intalio.tempo.workflow.wds.core.tms.TMSConnectionInterface;
 
 /**
  * This class represents a single connection to the WDS service.
@@ -40,14 +40,14 @@ public class WDSService {
 
     private ItemDaoConnection _dao;
 
-    private TMSConnection _tmsConnection;
+    private TMSConnectionInterface _tmsConnection;
 
     private String _wdsEndpoint;
 
     /**
      * Package-accessible constructor. Used by {@link WDSServiceFactory}.
      */
-    WDSService(ItemDaoConnection dao, TMSConnection tmsConnection) {
+    WDSService(ItemDaoConnection dao, TMSConnectionInterface tmsConnection) {
         if (dao == null) throw new NullPointerException("dao");
         if (tmsConnection == null) throw new NullPointerException("tmsConnection");
         _dao = dao;

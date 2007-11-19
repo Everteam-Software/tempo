@@ -79,4 +79,12 @@ public class PipaJpaTest {
         Item i2 = (Item)(q.getResultList().get(0));
         Assert.assertEquals(i1,i2);
     }
+    
+    @Test 
+    public void countItems() throws Exception {
+        Item i1 = new Item("http://www.hellonico.net", "meta", new byte[]{1,2,3});
+        persist(i1);
+        Query q = em.createNamedQuery(Item.COUNT_FOR_URI).setParameter(1, "http://www.hellonico.net");
+        Assert.assertEquals((long)1, q.getResultList().get(0));
+    }
 }

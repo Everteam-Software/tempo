@@ -22,7 +22,7 @@ import javax.sql.DataSource;
  * This class is a factory for end-users to get 
  * {@link org.intalio.tempo.workflow.wds.core.tms.TMSConnection} instances.
  */
-public class TMSConnectionFactory {
+public class TMSConnectionFactory implements TMSConnectionFactoryInterface {
 
     private DataSource _dataSource;
 
@@ -44,10 +44,10 @@ public class TMSConnectionFactory {
      * Returns a new TMS connection instance. <br />
      * It is required that you use the <code>close()</code> method after using the connection instance.
      */
-    public synchronized TMSConnection getTMSConnection() {
+    public synchronized TMSConnectionInterface getTMSConnection() {
         try {
             Connection jdbcConnection = _dataSource.getConnection();
-            TMSConnection tmsConnection = new TMSConnection(jdbcConnection);
+            TMSConnectionInterface tmsConnection = new TMSConnection(jdbcConnection);
             return tmsConnection;
         } catch (SQLException e) {
             throw new RuntimeException(e);

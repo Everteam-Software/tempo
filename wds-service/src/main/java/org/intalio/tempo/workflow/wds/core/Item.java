@@ -32,10 +32,15 @@ import javax.persistence.QueryHint;
     @NamedQuery(
             name=Item.FIND_BY_URI, 
             query="select m from Item m where m._uri=?1", 
-            hints={ @QueryHint  (name="openjpa.hint.OptimizeResultCount", value="1")})
+            hints={ @QueryHint  (name="openjpa.hint.OptimizeResultCount", value="1")}),
+    @NamedQuery(
+             name=Item.COUNT_FOR_URI, 
+             query="select COUNT(m) from Item m where m._uri=?1", 
+             hints={ @QueryHint  (name="openjpa.hint.OptimizeResultCount", value="1")})       
     })
 public class Item {
     public static final String FIND_BY_URI = "find_by_uri";
+    public static final String COUNT_FOR_URI = "count_for_uri";
 
     @Basic
     @Column(name="uri")
