@@ -190,7 +190,7 @@ public class TokenHandler
                     order = s1.compareTo(s2);
                 }
                 return order;
-            };
+            }
         });
         
         /*
@@ -279,13 +279,10 @@ public class TokenHandler
         }
         String digest = (String) prop.getValue();
 
-        Property[] propsArray = (Property[]) props.values().toArray( new Property[ props.size() ] );
+        Property[] propsArray = props.values().toArray( new Property[ props.size() ] );
         
         String localDigest = digest( timestamp, nonce, _secret, propsArray );
-        /*
-        LOG.debug( "rm-digest: " +  digest );
-        LOG.debug( "my-digest: " +  localDigest );
-        */
+
         if ( ! localDigest.equals( digest ) ) {
             throw new AuthenticationException( "Incorrect digest" );
         }

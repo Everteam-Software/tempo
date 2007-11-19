@@ -48,6 +48,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.ModelAndView;
 
+@SuppressWarnings("unchecked")
 public class TasksAction extends Action {
     private static final Logger _log = LoggerFactory.getLogger(TasksAction.class);
 

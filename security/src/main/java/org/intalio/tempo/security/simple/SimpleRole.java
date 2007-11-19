@@ -231,12 +231,10 @@ public class SimpleRole
      */
     public boolean checkAccess( String operation, String object )
     {
-        HashMap perms;
-        
-        perms = (HashMap) _objectMap.get( object );
+        HashMap perms =  _objectMap.get( object );
         if ( perms == null ) {
             // the star "*" indicates all objects
-            perms = (HashMap) _objectMap.get( "*" );
+            perms =  _objectMap.get( "*" );
             if ( perms == null ) {
                 return false;
             }

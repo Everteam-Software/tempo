@@ -85,15 +85,13 @@ public class LDAPAuthenticationTest extends TestCase {
     public String getName() {
         if ( _suite==null )
             return super.getName();
-        else
-            return super.getName()+" with "+_suite.getName();
+        return super.getName()+" with "+_suite.getName();
     }
 
     public String toString() {
         if ( _suite==null )
             return super.toString();
-        else
-            return super.toString()+" with "+_suite.getClass().getName();
+        return super.toString()+" with "+_suite.getClass().getName();
     }
     
     public void testQueryUserCredential() throws Exception {

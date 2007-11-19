@@ -115,6 +115,6 @@ public class XFormsProcessor {
             }
             super.startElement(uri, localName, qname, attrs);
         }
-    };
+    }
 
 }

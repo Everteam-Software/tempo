@@ -414,7 +414,7 @@ public class LDAPRBACProviderTest extends TestCase {
         
         props = query.roleProperties(role);
         LOG.info(listArray(props));
-        result = (Collection<Property>) toCollection(props);
+        result = toCollection(props);
         // too bad... not much common attribute between group or test...
         control.add(new Property("objectclass", "top"));
         assertTrue("Some expected items are missing.", result.containsAll(control));
@@ -423,7 +423,7 @@ public class LDAPRBACProviderTest extends TestCase {
     @SuppressWarnings("unchecked")
     private Collection<Property> toCollection(Property[] array) {
         if (array==null||array.length==0)
-            return (Collection<Property>) Collections.EMPTY_LIST;
+            return Collections.EMPTY_LIST;
 
         Collection<Property> res = new ArrayList<Property>();
         for (int i = 0; i < array.length; i++) {
