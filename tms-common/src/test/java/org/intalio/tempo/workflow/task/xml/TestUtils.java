@@ -109,9 +109,7 @@ class TestUtils {
 	public static String toPrettyXML(XmlObject element) throws Exception {
 		HashMap suggestedPrefixes = new HashMap();
 		suggestedPrefixes
-				.put(
-						"http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/",
-						"tms");
+				.put(TaskXMLConstants.TASK_NAMESPACE, TaskXMLConstants.TASK_NAMESPACE_PREFIX);
 		XmlOptions opts = new XmlOptions();
 		opts.setSaveSuggestedPrefixes(suggestedPrefixes);
 

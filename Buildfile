@@ -144,8 +144,8 @@ define "tempo" do
     test.exclude '*TestUtils*'
     
     # TODO: Make those tests pass
-    test.exclude '*TaskMarshallingRoundtripTest*'
-    test.exclude '*TaskUnmarshallerTest*'
+    #test.exclude '*TaskMarshallingRoundtripTest*'
+    #test.exclude '*TaskUnmarshallerTest*'
     
   end
   

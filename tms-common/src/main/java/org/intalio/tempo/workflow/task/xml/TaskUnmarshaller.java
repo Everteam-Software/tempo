@@ -71,9 +71,13 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
 	public Task unmarshalTaskFromMetadata(OMElement rootElement)
 			throws InvalidInputFormatException {
 		try {
-			TaskMetadata taskMetadata = TaskMetadata.Factory.parse(rootElement
-					.getXMLStreamReader());
-			return unmarshalFullTask(taskMetadata);
+			XmlObject xmlObject = XmlObject.Factory.parse(rootElement.getXMLStreamReader());
+			XmlCursor xmlCursor = xmlObject.newCursor();
+			xmlCursor.toStartDoc();
+			xmlCursor.toNextToken();
+			TaskMetadata taskMetadata =  com.intalio.bpms.workflow.taskManagementServices20051109.Task.Factory.newInstance().addNewMetadata();
+			taskMetadata.set(xmlCursor.getObject());
+			return unmarshalTaskFromMetadata(taskMetadata);
 		} catch (XmlException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

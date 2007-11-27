@@ -19,6 +19,7 @@ import java.util.Calendar;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
+import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlString;
@@ -196,6 +197,7 @@ public class TaskMarshaller extends XmlBeanMarshaller {
 			com.intalio.bpms.workflow.taskManagementServices20051109.Task xmlTask =
 			com.intalio.bpms.workflow.taskManagementServices20051109.Task.Factory.parse(parent.getXMLStreamReader());
 			marshalFullTask(task, xmlTask, user);
+			parent.addChild(XmlTooling.convertDocument(xmlTask));
 		} catch (XmlException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

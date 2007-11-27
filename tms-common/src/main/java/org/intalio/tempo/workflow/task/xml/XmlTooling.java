@@ -3,9 +3,10 @@ package org.intalio.tempo.workflow.task.xml;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -17,6 +18,7 @@ import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.pool.ObjectPool;
 import org.apache.commons.pool.impl.StackObjectPool;
 import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.XmlOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -104,9 +106,21 @@ public class XmlTooling {
     }
     
     private OMElement convertXML(XmlObject xmlObject){
-    	XMLStreamReader reader = xmlObject.newXMLStreamReader();
-        StAXOMBuilder builder = new StAXOMBuilder(reader);
-        OMElement dm= builder.getDocumentElement();
+		HashMap suggestedPrefixes = new HashMap();
+		suggestedPrefixes
+				.put(TaskXMLConstants.TASK_NAMESPACE, TaskXMLConstants.TASK_NAMESPACE_PREFIX);
+		XmlOptions opts = new XmlOptions();
+		opts.setSaveSuggestedPrefixes(suggestedPrefixes);
+    	OMElement dm = null;
+    	InputStream is = xmlObject.newInputStream(opts);
+        StAXOMBuilder builder;
+		try {
+			builder = new StAXOMBuilder(is);
+			dm= builder.getDocumentElement();
+		} catch (XMLStreamException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         return dm;
     }
 }
