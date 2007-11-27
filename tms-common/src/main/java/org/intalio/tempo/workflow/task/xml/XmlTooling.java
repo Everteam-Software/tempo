@@ -5,14 +5,18 @@ import java.io.InputStream;
 import java.io.StringWriter;
 
 import javax.xml.parsers.DocumentBuilder;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.pool.ObjectPool;
 import org.apache.commons.pool.impl.StackObjectPool;
+import org.apache.xmlbeans.XmlObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -93,4 +97,16 @@ public class XmlTooling {
         return serializeDocument(doc1).equals(serializeDocument(doc2));
     }
 
+    public static OMElement convertDocument(XmlObject doc){
+    	synchronized (xml){
+    		return xml.convertXML(doc);
+    	}
+    }
+    
+    private OMElement convertXML(XmlObject xmlObject){
+    	XMLStreamReader reader = xmlObject.newXMLStreamReader();
+        StAXOMBuilder builder = new StAXOMBuilder(reader);
+        OMElement dm= builder.getDocumentElement();
+        return dm;
+    }
 }

@@ -59,22 +59,24 @@ public class TMSServer implements ITMSServer {
     }
 
     public TMSServer(IAuthProvider authProvider, ITaskDAOConnectionFactory taskDAOFactory) {
+        _logger.info("New TMS Instance");
         assert authProvider != null : "IAuthProvider implementation is absent!";
         assert taskDAOFactory != null : "ITaskDAOConnectionFactory implementation is absent!";
 
         setAuthProvider(authProvider);
 		setTaskDAOFactory(taskDAOFactory);
+		_logger.info("Finished loading");
 	}
 
 
     public void setAuthProvider(IAuthProvider authProvider) {
         this._authProvider = authProvider;
-        _logger.debug("IAuthProvider implementation : " + _authProvider.getClass());
+        _logger.info("IAuthProvider implementation : " + _authProvider.getClass());
     }
 
     public void setTaskDAOFactory(ITaskDAOConnectionFactory taskDAOFactory) {
         this._taskDAOFactory = taskDAOFactory;
-        _logger.debug("ITaskDAOConnectionFactory implementation : " + _taskDAOFactory.getClass());
+        _logger.info("ITaskDAOConnectionFactory implementation : " + _taskDAOFactory.getClass());
     }
 
     public Task[] getTaskList(String participantToken) throws AuthException {

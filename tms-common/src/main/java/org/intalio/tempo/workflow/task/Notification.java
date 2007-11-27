@@ -15,14 +15,18 @@
 package org.intalio.tempo.workflow.task;
 
 import java.net.URI;
+import java.util.HashMap;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
 
 import org.apache.openjpa.persistence.Persistent;
+import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.XmlOptions;
 import org.intalio.tempo.workflow.task.traits.ITaskWithInput;
 import org.intalio.tempo.workflow.task.traits.ITaskWithState;
+import org.intalio.tempo.workflow.task.xml.TaskXMLConstants;
 import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 import org.w3c.dom.Document;
@@ -120,4 +124,16 @@ public class Notification extends Task implements ITaskWithState, ITaskWithInput
         }
         _input = XmlTooling.serializeDocument(input);
     }
+
+	public void setInput(XmlObject input) {
+		HashMap suggestedPrefixes = new HashMap();
+		suggestedPrefixes
+				.put(TaskXMLConstants.TASK_NAMESPACE,
+						TaskXMLConstants.TASK_NAMESPACE_PREFIX);
+		XmlOptions opts = new XmlOptions();
+		opts.setSaveSuggestedPrefixes(suggestedPrefixes);
+
+		_input = input.xmlText(opts);
+		
+	}
 }

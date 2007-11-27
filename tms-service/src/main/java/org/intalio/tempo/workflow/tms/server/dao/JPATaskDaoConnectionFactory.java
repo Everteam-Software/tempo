@@ -9,19 +9,26 @@ import org.apache.log4j.Logger;
 
 public class JPATaskDaoConnectionFactory implements ITaskDAOConnectionFactory {
     final static Logger log = Logger.getLogger(JPATaskDaoConnectionFactory.class);
-    EntityManagerFactory factory;    
-    
-    public JPATaskDaoConnectionFactory() {
-        Properties p = new Properties();
-        try {
-            p.load(this.getClass().getResourceAsStream("/jpa-properties.txt"));
-        }
-        catch (Exception e) {
-            log.info("Properties not found.");
-        }
-        System.getProperties().putAll(p);
-        factory = Persistence.createEntityManagerFactory("org.intalio.tempo", System.getProperties());
+    EntityManagerFactory factory;
+
+    public JPATaskDaoConnectionFactory(String jndiPath) {
+        Properties sysProp = System.getProperties();
+        sysProp.put("jta-data-source", jndiPath);
+        log.info("Setting datasource to:"+jndiPath);
+        factory = Persistence.createEntityManagerFactory("org.intalio.tempo", sysProp);
     }
+    
+//
+//    public JPATaskDaoConnectionFactory() {
+//        try {
+//            Properties p = new Properties();
+//            p.load(this.getClass().getResourceAsStream("/jpa-properties.txt"));
+//            System.getProperties().putAll(p);
+//        } catch (Exception e) {
+//            log.info("Properties not found.");
+//        }
+//        factory = Persistence.createEntityManagerFactory("org.intalio.tempo", System.getProperties());
+//    }
 
     public ITaskDAOConnection openConnection() {
         return new JPATaskDaoConnection(factory.createEntityManager());

@@ -199,7 +199,8 @@ public class PATaskTest extends TestCase {
         task.setInput(input);
         Assert.assertTrue(XmlTooling.equals(input, task.getInput()));
         try {
-            task.setInput(null);
+        	input = null;
+            task.setInput(input);
             Assert.fail("RequiredArgumentException expected");
         } catch (RequiredArgumentException e) {
 
@@ -212,7 +213,8 @@ public class PATaskTest extends TestCase {
         task.setOutput(output);
         Assert.assertTrue(XmlTooling.equals(output, task.getOutput()));
         try {
-            task.setOutput(null);
+        	output = null;
+            task.setOutput(output);
             Assert.fail("RequiredArgumentException expected");
         } catch (RequiredArgumentException e) {
 

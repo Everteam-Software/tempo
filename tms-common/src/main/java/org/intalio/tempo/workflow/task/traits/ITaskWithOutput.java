@@ -14,9 +14,12 @@
  */
 package org.intalio.tempo.workflow.task.traits;
 
+import org.apache.xmlbeans.XmlObject;
 import org.w3c.dom.Document;
 
 public interface ITaskWithOutput {
     Document getOutput();
     void setOutput(Document output);
+    
+    void setOutput(XmlObject output);
 }

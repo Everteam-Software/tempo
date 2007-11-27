@@ -19,12 +19,28 @@ import org.apache.axis2.AxisFault;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.description.Parameter;
 import org.apache.log4j.Logger;
+import org.springframework.aop.framework.ProxyFactoryBean;
 
 public class ServiceObjectSupplier implements org.apache.axis2.ServiceObjectSupplier {
 
 	private static final Logger LOG = Logger.getLogger(ServiceObjectSupplier.class);
 
 	public Object getServiceObject(AxisService service) throws AxisFault {
+	    Parameter fac = service.getParameter("SpringBeanFactory");
+	    if(fac!=null) {
+	        try {   
+	            String factoryName = (String)fac.getValue();
+	            LOG.info("Using factory:"+factoryName);
+	            Object o = SpringInit.CONTEXT.getBean(factoryName);
+	            LOG.info("Class:"+o.getClass().getName());
+	            Thread.currentThread().setContextClassLoader(SpringInit.CONTEXT.getClass().getClassLoader());
+	            ProxyFactoryBean factory = (ProxyFactoryBean)o;
+	            return factory.getObject();    
+	        } catch (Exception e) {
+	            LOG.info("Error while using factory",e);
+	        }    
+	    }
+				
 		String beanName = "#unspecified#";
 		Parameter p = service.getParameter("SpringBeanName");
 		if (p != null) {

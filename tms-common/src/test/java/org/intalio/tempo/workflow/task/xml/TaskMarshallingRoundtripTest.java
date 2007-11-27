@@ -53,7 +53,7 @@ public class TaskMarshallingRoundtripTest extends TestCase {
                 TaskXMLConstants.TASK_NAMESPACE_PREFIX);
 
         marshaller.marshalFullTask(task1, marshalledTask, null);
-        _logger.debug(TestUtils.toPrettyXML(marshalledTask));
+        _logger.info(TestUtils.toPrettyXML(marshalledTask));
 
         TaskUnmarshaller unmarshaller = new TaskUnmarshaller();
 
@@ -73,7 +73,7 @@ public class TaskMarshallingRoundtripTest extends TestCase {
                 TaskXMLConstants.TASK_NAMESPACE_PREFIX);
 
         marshaller.marshalFullTask(task1, marshalledTask, null);
-        _logger.debug(TestUtils.toPrettyXML(marshalledTask));
+        _logger.info(TestUtils.toPrettyXML(marshalledTask));
 
         TaskUnmarshaller unmarshaller = new TaskUnmarshaller();
 
