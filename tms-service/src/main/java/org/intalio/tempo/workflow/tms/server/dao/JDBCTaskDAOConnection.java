@@ -32,7 +32,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.Notification;
 import org.intalio.tempo.workflow.task.PATask;
@@ -43,13 +42,15 @@ import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.task.attachments.AttachmentMetadata;
 import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 class JDBCTaskDAOConnection implements ITaskDAOConnection {
 	
     private XmlTooling xmltooling = new XmlTooling();
 	
-    private static final Logger _logger = Logger.getLogger(JDBCTaskDAOConnection.class);
+    private static final Logger _logger = LoggerFactory.getLogger(JDBCTaskDAOConnection.class);
 
     private static final String _SELECT_TASK_FIELDS = " tasks.id, tasks.task_id, "
             + "tasks.process_id, task_types.code, task_states.code, tasks.description, "

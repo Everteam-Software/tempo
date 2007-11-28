@@ -21,11 +21,13 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 public class JDBCTaskDAOConnectionFactory implements ITaskDAOConnectionFactory {
 
-    private static final Logger _logger = Logger.getLogger(JDBCTaskDAOConnectionFactory.class);
+    private static final Logger _logger = LoggerFactory.getLogger(JDBCTaskDAOConnectionFactory.class);
 
     private DataSource _dataSource;
 

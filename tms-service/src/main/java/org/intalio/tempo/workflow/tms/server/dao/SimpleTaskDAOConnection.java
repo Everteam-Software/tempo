@@ -18,15 +18,16 @@ package org.intalio.tempo.workflow.tms.server.dao;
 import java.util.ArrayList;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SimpleTaskDAOConnection implements ITaskDAOConnection {
 
-    private static final Logger _logger = Logger.getLogger(SimpleTaskDAOConnection.class);
+    private static final Logger _logger = LoggerFactory.getLogger(SimpleTaskDAOConnection.class);
     
     private boolean _closed = false;
     

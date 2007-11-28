@@ -5,10 +5,11 @@ import java.util.Properties;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JPATaskDaoConnectionFactory implements ITaskDAOConnectionFactory {
-    final static Logger log = Logger.getLogger(JPATaskDaoConnectionFactory.class);
+    final static Logger log = LoggerFactory.getLogger(JPATaskDaoConnectionFactory.class);
     EntityManagerFactory factory;
 
     public JPATaskDaoConnectionFactory(String jndiPath) {

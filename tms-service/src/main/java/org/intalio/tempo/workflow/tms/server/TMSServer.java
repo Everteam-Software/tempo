@@ -26,7 +26,6 @@ import org.apache.axis2.AxisFault;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
-import org.apache.log4j.Logger;
 import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.IAuthProvider;
@@ -45,11 +44,13 @@ import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnectionFactory;
 import org.intalio.tempo.workflow.util.xml.OMDOMConvertor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 public class TMSServer implements ITMSServer {
 
-	private static final Logger _logger = Logger.getLogger(TMSServer.class);
+	private static final Logger _logger = LoggerFactory.getLogger(TMSServer.class);
 
     private IAuthProvider _authProvider;
 
