@@ -92,6 +92,7 @@ class RemoteTMSClient extends OMUnmarshaller implements ITaskManagementService {
             OMElement response = serviceClient.sendReceive(request);
             return response;
         } catch (AxisFault f) {
+            
             throw new RemoteTMSException(f);
         }
     }
@@ -118,6 +119,8 @@ class RemoteTMSClient extends OMUnmarshaller implements ITaskManagementService {
                         tasks.add(task);
                     } catch (InvalidInputFormatException e) {
                         LOG.error("Error reading task: " +taskElement, new RuntimeException(e));
+                    } catch (Exception e) {
+                        LOG.error("Error reading task: " +taskElement, e);
                     }
                 } else {
                     done = true;

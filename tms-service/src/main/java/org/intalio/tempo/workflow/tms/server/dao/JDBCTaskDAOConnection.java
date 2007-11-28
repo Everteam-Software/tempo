@@ -77,7 +77,7 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
     public void commit() {
         try {
             _con.commit();
-            _logger.debug("committed");
+            if(_logger.isDebugEnabled()) _logger.debug("committed");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -87,7 +87,7 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
         if (_con != null) {
             try {
                 _con.close();
-                _logger.debug("Closed connection");
+                if(_logger.isDebugEnabled()) _logger.debug("Closed connection");
                 _con = null;
             } catch (SQLException e) {
                 throw new RuntimeException(e);
@@ -178,7 +178,7 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
             resultTask.setDescription(description == null ? "" : description);
             resultTask.setCreationDate(creationDate);
 
-            _logger.debug("Workflow Task " + resultTask.getID() + " has been read from TMS DB");
+            if(_logger.isDebugEnabled()) _logger.debug("Workflow Task " + resultTask.getID() + " has been read from TMS DB");
             return resultTask;
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -196,11 +196,11 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
                         + "FROM tasks, task_types, task_states WHERE tasks.type_id = task_types.id "
                         + "AND tasks.state_id = task_states.id AND tasks.task_id = ?");
                 select.setString(1, taskID);
-                _logger.debug("About to retrieve Workflow Task with ID " + taskID);
+                if(_logger.isDebugEnabled()) _logger.debug("About to retrieve Workflow Task with ID " + taskID);
                 ResultSet taskResultSet = select.executeQuery();
                 try {
                     if (! taskResultSet.next()) {
-                        _logger.debug("No such Workflow Task!");
+                        if(_logger.isDebugEnabled()) _logger.debug("No such Workflow Task!");
                         return null;
                     }
                     resultTask = mapToTaskWithoutOwners(taskResultSet);
@@ -216,11 +216,11 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
                         + "FROM tasks, task_user_owners WHERE tasks.id = ? "
                         + "AND task_user_owners.task_id = tasks.id");
                 select.setInt(1, resultTask.getInternalId());
-                _logger.debug("About to retrieve user owners for task " + taskID);
+                if(_logger.isDebugEnabled()) _logger.debug("About to retrieve user owners for task " + taskID);
                 ResultSet userOwnerResultSet = select.executeQuery();
                 while (userOwnerResultSet.next()) {
                     String userID = userOwnerResultSet.getString(1);
-                    _logger.debug("User Owner : " + userID);
+                    if(_logger.isDebugEnabled()) _logger.debug("User Owner : " + userID);
                     resultTask.getUserOwners().add(userID);
                 }
                 close(userOwnerResultSet);
@@ -232,11 +232,11 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
                         + "FROM tasks, task_role_owners WHERE tasks.id = ? "
                         + "AND task_role_owners.task_id = tasks.id");
                 select.setInt(1, resultTask.getInternalId());
-                _logger.debug("About to retrieve role owners for task " + taskID);
+                if(_logger.isDebugEnabled()) _logger.debug("About to retrieve role owners for task " + taskID);
                 ResultSet roleOwnerResultSet = select.executeQuery();
                 while (roleOwnerResultSet.next()) {
                     String roleID = roleOwnerResultSet.getString(1);
-                    _logger.debug("Role Owner : " + roleID);
+                    if(_logger.isDebugEnabled()) _logger.debug("Role Owner : " + roleID);
                     resultTask.getRoleOwners().add(roleID);
                 }
                 close(roleOwnerResultSet);
@@ -281,7 +281,7 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
                         + "ta.payload_url, ta.file_name, ta.mime_type, ta.widget, ta.creation_date, ta.title, ta.description "
                         + "FROM tasks t, task_attachments ta " + "WHERE ta.task_id = t.id AND t.task_id = ?");
                 select.setString(1, taskID);
-                _logger.debug("About to retrieve attachments for task " + taskID);
+                if(_logger.isDebugEnabled()) _logger.debug("About to retrieve attachments for task " + taskID);
                 ResultSet rs = select.executeQuery();
                 try {
                     while (rs.next()) {
@@ -303,7 +303,7 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
                         if (description != null) metadata.setDescription(description);
     
                         Attachment attachment = new Attachment(metadata, new URL(payloadURLStr));
-                        _logger.debug("Attachment : " + attachment.getPayloadURL());
+                        if(_logger.isDebugEnabled()) _logger.debug("Attachment : " + attachment.getPayloadURL());
                         ((PATask) resultTask).addAttachment(attachment);
                     }
                 } finally {
@@ -329,13 +329,13 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
                     + "WHERE tasks.id = task_user_owners.task_id AND task_user_owners.user_id = ? ");
             selectByUserStatement.setString(1, user.getUserID());
 
-            _logger.debug("About to fetch all Workflow Tasks for user owner : " + user.getUserID());
+            if(_logger.isDebugEnabled()) _logger.debug("About to fetch all Workflow Tasks for user owner : " + user.getUserID());
             ResultSet resultSet = selectByUserStatement.executeQuery();
             while (resultSet.next()) {
                 String taskID = resultSet.getString(1);
                 taskIDs.add(taskID);
             }
-            _logger.debug("Workflow Tasks : " + taskIDs);
+            if(_logger.isDebugEnabled()) _logger.debug("Workflow Tasks : " + taskIDs);
             selectByUserStatement.close();
 
             for (String role : user.getAssignedRoles()) {
@@ -344,14 +344,14 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
                         + "WHERE tasks.id = task_role_owners.task_id AND task_role_owners.role_id = ? ");
                 selectByRoleStatement.setString(1, role);
 
-                _logger.debug("About to fetch all Workflow Tasks for role owner : " + role);
+                if(_logger.isDebugEnabled()) _logger.debug("About to fetch all Workflow Tasks for role owner : " + role);
                 ResultSet roleResultSet = selectByRoleStatement.executeQuery();
                 while (roleResultSet.next()) {
                     String taskID = roleResultSet.getString(1);
                     taskIDs.add(taskID);
                 }
 
-                _logger.debug("Workflow Tasks now : " + taskIDs);
+                if(_logger.isDebugEnabled()) _logger.debug("Workflow Tasks now : " + taskIDs);
                 selectByRoleStatement.close();
             }
 
@@ -423,7 +423,8 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
                 insertAttachmentStatement.setString(i++, metadata.getDescription());
 
                 insertAttachmentStatement.executeUpdate();
-                _logger.debug(" attachment filename=" + metadata.getFileName()
+                if(_logger.isDebugEnabled()) 
+                    _logger.debug(" attachment filename=" + metadata.getFileName()
                         + " title=" + metadata.getTitle()
                         + " widget=" + metadata.getWidget());
             }
@@ -489,7 +490,7 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
                 createTaskStatement.setString(i++, paTask.isChainedBefore() ? "1" : "0");
                 createTaskStatement.setString(i++, paTask.getPreviousTaskID());
 
-                _logger.debug("Workflow PA Task " + paTask.getID() + " is about to be registered in TMS DB");
+                if(_logger.isDebugEnabled()) _logger.debug("Workflow PA Task " + paTask.getID() + " is about to be registered in TMS DB");
                 createTaskStatement.executeUpdate();
                 createTaskStatement.close();
 
@@ -497,7 +498,7 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
                         new String[] {paTask.getID()});
                 int internalTaskID = Integer.parseInt(id);
 
-                _logger.debug("Workflow PA Task " + paTask.getID() + " registered with ID=" + internalTaskID);
+                if(_logger.isDebugEnabled()) _logger.debug("Workflow PA Task " + paTask.getID() + " registered with ID=" + internalTaskID);
                 if (!task.getUserOwners().isEmpty()) {
                     insertUserOwner(task, internalTaskID);
                 }
@@ -551,14 +552,14 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
                 createTaskStatement.setString(i++, null);
                 createTaskStatement.setString(i++, null);
 
-                _logger.debug("Workflow Notification Task " + notification.getID() + " is about to be registered in TMS DB");
+                if(_logger.isDebugEnabled()) _logger.debug("Workflow Notification Task " + notification.getID() + " is about to be registered in TMS DB");
                 createTaskStatement.executeUpdate();
                 createTaskStatement.close();
 
                 String internalTaskID = selectSingleValue("SELECT id FROM tasks WHERE task_id = ?",
                         new String[] {notification.getID()});
 
-                _logger.debug("Workflow Notification Task " + notification.getID() + " registered with ID=" + internalTaskID);
+                if(_logger.isDebugEnabled()) _logger.debug("Workflow Notification Task " + notification.getID() + " registered with ID=" + internalTaskID);
                 if (! task.getUserOwners().isEmpty()) {
                     PreparedStatement insertTaskUserOwnerStatement = _con.prepareStatement("INSERT INTO "
                             + "task_user_owners (task_id, user_id) VALUES (?, ?)");
@@ -566,7 +567,7 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
                     for (String userOwnerID : task.getUserOwners()) {
                         insertTaskUserOwnerStatement.setString(2, userOwnerID);
                         insertTaskUserOwnerStatement.executeUpdate();
-                        _logger.debug(" and User Owner : " + userOwnerID);
+                        if(_logger.isDebugEnabled()) _logger.debug(" and User Owner : " + userOwnerID);
                     }
                     insertTaskUserOwnerStatement.close();
                 }
@@ -577,7 +578,7 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
                     for (String roleOwnerID : task.getRoleOwners()) {
                         insertTaskRoleOwnerStatement.setString(2, roleOwnerID);
                         insertTaskRoleOwnerStatement.executeUpdate();
-                        _logger.debug(" and Role Owner : " + roleOwnerID);
+                        if(_logger.isDebugEnabled()) _logger.debug(" and Role Owner : " + roleOwnerID);
                     }
                     insertTaskRoleOwnerStatement.close();
                 }
@@ -597,7 +598,7 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
         for (String roleOwnerID : task.getRoleOwners()) {
             insertTaskRoleOwnerStatement.setString(2, roleOwnerID);
             insertTaskRoleOwnerStatement.executeUpdate();
-            _logger.debug(" and Role Owner : " + roleOwnerID);
+            if(_logger.isDebugEnabled()) _logger.debug(" and Role Owner : " + roleOwnerID);
         }
         insertTaskRoleOwnerStatement.close();
     }
@@ -609,7 +610,7 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
         for (String userOwnerID : task.getUserOwners()) {
             insertTaskUserOwnerStatement.setString(2, userOwnerID);
             insertTaskUserOwnerStatement.executeUpdate();
-            _logger.debug(" and User Owner : " + userOwnerID);
+            if(_logger.isDebugEnabled()) _logger.debug(" and User Owner : " + userOwnerID);
         }
         insertTaskUserOwnerStatement.close();
     }
@@ -622,7 +623,7 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
             insert.setString(2, action);
             insert.setString(3, user);
             insert.executeUpdate();
-            _logger.debug(" and user "+user+" for action"+action);
+            if(_logger.isDebugEnabled()) _logger.debug(" and user "+user+" for action"+action);
         }
         insert.close();
     }
@@ -635,14 +636,14 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
             insert.setString(2, action);
             insert.setString(3, role);
             insert.executeUpdate();
-            _logger.debug(" and role "+role+" for action"+action);
+            if(_logger.isDebugEnabled()) _logger.debug(" and role "+role+" for action"+action);
         }
         insert.close();
     }
 
     public boolean deleteTask(int internalTaskId, String taskID) {
         try {
-            _logger.debug("Attempt to delete Workflow Task " + taskID);
+            if(_logger.isDebugEnabled()) _logger.debug("Attempt to delete Workflow Task " + taskID);
             
             // delete role actions
             {

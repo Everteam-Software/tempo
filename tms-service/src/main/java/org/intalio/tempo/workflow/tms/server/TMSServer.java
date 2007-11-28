@@ -81,13 +81,11 @@ public class TMSServer implements ITMSServer {
     }
 
     public Task[] getTaskList(String participantToken) throws AuthException {
-        _logger.info("Getting task list for :"+participantToken);
-
         UserRoles credentials = _authProvider.authenticate(participantToken);
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
 		try {
 		    Task[] result = dao.fetchAllAvailableTasks(credentials);
-            if(_logger.isDebugEnabled()) _logger.debug("Workflow Tasks for user " + credentials.getUserID() + "\n" + result);
+            _logger.info("Number of workflow Tasks for user " + credentials.getUserID() + ":" + result.length);
             return result;
         } catch(Exception e) {
             _logger.error("Error while tasks list retrieval for user " + credentials.getUserID(), e);
@@ -113,7 +111,8 @@ public class TMSServer implements ITMSServer {
 			dao.close();
 		}
         if ((task != null) && task.isAvailableTo(credentials)) {
-            _logger.debug("Workflow Task " + task + " for user " + credentials.getUserID());
+            if (_logger.isDebugEnabled())
+                _logger.debug("Workflow Task " + task + " for user " + credentials.getUserID());
         } else {
             throw new UnavailableTaskException("Workflow Task " + task + " is not for " + credentials.getUserID());
         }
@@ -136,7 +135,8 @@ public class TMSServer implements ITMSServer {
                 taskWithOutput.setOutput(output);
                 dao.updateTask(task);
                 dao.commit();
-                _logger.debug(credentials.getUserID() + " has set output for Workflow Task " + task);
+                if (_logger.isDebugEnabled())
+                    _logger.debug(credentials.getUserID() + " has set output for Workflow Task " + task);
             }
         } catch (Exception e) {
             _logger.error("Cannot retrieve Workflow Task " + taskID, e);
@@ -163,7 +163,8 @@ public class TMSServer implements ITMSServer {
 				taskWithState.setState(TaskState.COMPLETED);
 				dao.updateTask(task);
 				dao.commit();
-                _logger.debug(credentials.getUserID() + " has completed the Workflow Task " + task);
+				if (_logger.isDebugEnabled())
+                    _logger.debug(credentials.getUserID() + " has completed the Workflow Task " + task);
 			}
         } catch (Exception e) {
             _logger.error("Error to complete Workflow Task " + taskID);
@@ -192,7 +193,8 @@ public class TMSServer implements ITMSServer {
 				((ITaskWithState) task).setState(TaskState.COMPLETED);
 				dao.updateTask(task);
 				dao.commit();
-                _logger.debug(credentials.getUserID() + " has set output and completed Workflow Task " + task);
+				if (_logger.isDebugEnabled())
+                    _logger.debug(credentials.getUserID() + " has set output and completed Workflow Task " + task);
 			}
         } catch (Exception e) {
             _logger.error("Error to set output abd complete Workflow Task " + taskID, e);
@@ -258,7 +260,8 @@ public class TMSServer implements ITMSServer {
     				if (available) {
     					dao.deleteTask(task.getInternalId(), taskID);
     					dao.commit();
-    					_logger.debug(credentials.getUserID() + " has deleted Workflow Task " + task);
+    					if (_logger.isDebugEnabled())
+                            _logger.debug(credentials.getUserID() + " has deleted Workflow Task " + task);
     				} else {
     					problemTasks.add(task);
     				}
@@ -285,7 +288,9 @@ public class TMSServer implements ITMSServer {
 		try {
 			dao.createTask(task);
 			dao.commit();
-            _logger.debug("Workflow Task " + task + " was created");	// TODO : Use credentials.getUserID() 	:vb
+			if (_logger.isDebugEnabled())
+                _logger.debug("Workflow Task " + task + " was created");	
+			// TODO : Use credentials.getUserID() 	:vb
         } catch (Exception e) {
             _logger.error("Cannot create Workflow Tasks", e);		// TODO : TaskIDConflictException must be rethrowed	:vb
 		} finally {
@@ -326,7 +331,8 @@ public class TMSServer implements ITMSServer {
 			client.setOptions(options);
 
 			OMElement response = client.sendReceive(omInitProcessRequest);
-            _logger.debug(task + " was used to start the process " + task.getProcessEndpoint());
+			if (_logger.isDebugEnabled())
+                _logger.debug(task + " was used to start the process " + task.getProcessEndpoint());
 
 			return OMDOMConvertor.convertOMToDOM(response);
 		} catch (AxisFault f) {
@@ -349,8 +355,9 @@ public class TMSServer implements ITMSServer {
 			if (available) {
 				PIPATask pipaTask = (PIPATask) task;
 				document = this.sendInitMessage(pipaTask, participantToken, input);
-				_logger.debug(credentials.getUserID() + " has initialized process " +
-                        pipaTask.getProcessEndpoint() +" with Workflow PIPA Task " + task);
+				if (_logger.isDebugEnabled())
+                    _logger.debug(credentials.getUserID() + " has initialized process " + pipaTask.getProcessEndpoint()
+                            + " with Workflow PIPA Task " + task);
 			}
         } catch (Exception e) {
             _logger.error("Error to start the process with PIPA task " + taskID, e);
@@ -411,8 +418,9 @@ public class TMSServer implements ITMSServer {
 			taskWithAttachments.addAttachment(attachment);
 			dao.updateTask(task);
 			dao.commit();
-			_logger.debug(credentials.getUserID() + " has added attachment " +
-                    attachment +"to Workflow Task " + task);
+			if (_logger.isDebugEnabled())
+                _logger.debug(credentials.getUserID() + " has added attachment " + attachment + "to Workflow Task "
+                        + task);
         } catch (RuntimeException e) {
             _logger.error("Cannot retrieve workflow tasks", e);
             throw e;
@@ -441,7 +449,9 @@ public class TMSServer implements ITMSServer {
 				if (availableAttachment) {
 					dao.updateTask(task);
 					dao.commit();
-					_logger.debug(credentials.getUserID() + " has removed attachment " + attachmentURL + " for Workflow Task " + task);
+					if (_logger.isDebugEnabled())
+                        _logger.debug(credentials.getUserID() + " has removed attachment " + attachmentURL
+                                + " for Workflow Task " + task);
 				}
 			}
         } catch (Exception e) {
@@ -476,6 +486,7 @@ public class TMSServer implements ITMSServer {
 				((ITaskWithState) task).setState(state);
                 AuthIdentifierSet uOwners = task.getUserOwners();
                 AuthIdentifierSet rOwners = task.getRoleOwners();
+                if(_logger.isDebugEnabled())
                 _logger.debug("For Workflow Task " + taskID + " user owners " + uOwners + " and role owners " + rOwners);
                 uOwners.clear();
 				task.getUserOwners().addAll(users);
@@ -484,6 +495,7 @@ public class TMSServer implements ITMSServer {
 
 				dao.updateTask(task);
 				dao.commit();
+				if(_logger.isDebugEnabled())
 				_logger.debug(" changed to user owners " + users + " and role owners " + roles);
 			}
         } catch (Exception e) {
