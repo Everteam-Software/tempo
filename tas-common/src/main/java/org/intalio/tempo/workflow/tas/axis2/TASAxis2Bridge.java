@@ -20,10 +20,11 @@ import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.util.Base64;
 import org.apache.axis2.AxisFault;
-import org.apache.log4j.Logger;
 import org.intalio.tempo.workflow.tas.core.AttachmentMetadata;
 import org.intalio.tempo.workflow.tas.core.AuthCredentials;
 import org.intalio.tempo.workflow.tas.core.TaskAttachmentService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class acts as a bridge between a {@link org.intalio.tempo.workflow.tas.core.TaskAttachmentService} implementation
@@ -34,7 +35,7 @@ import org.intalio.tempo.workflow.tas.core.TaskAttachmentService;
  * to AXIOM form.
  */
 public class TASAxis2Bridge {
-    private static final Logger _logger = Logger.getLogger(TASAxis2Bridge.class);
+    private static final Logger _logger = LoggerFactory.getLogger(TASAxis2Bridge.class);
 
     public static final String TAS_XMLNS = "http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/";
 
@@ -175,7 +176,7 @@ public class TASAxis2Bridge {
             responseElement.addChild(urlElement);
             return responseElement;
         } catch (Exception e) {
-            _logger.error(e);
+            _logger.error(e.getMessage(),e);
             throw TASAxis2Bridge.convertExceptionToSOAPFault(e);
         }
     }

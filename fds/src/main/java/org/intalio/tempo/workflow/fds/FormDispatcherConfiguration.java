@@ -18,7 +18,8 @@ import java.io.InputStream;
 import nu.xom.Builder;
 import nu.xom.Document;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class holds the configuration of the FDS. <br>
@@ -49,7 +50,7 @@ public final class FormDispatcherConfiguration {
     /**
      * The Log4j logger for this class.
      */
-    private static Logger _log = Logger.getLogger(FormDispatcherConfiguration.class);
+    private static Logger _log = LoggerFactory.getLogger(FormDispatcherConfiguration.class);
 
     /**
      * The shared singleton instance of this class.

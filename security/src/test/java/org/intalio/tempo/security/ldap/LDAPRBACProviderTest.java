@@ -19,13 +19,13 @@ import java.util.Map;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.apache.log4j.Logger;
-
 import org.intalio.tempo.security.Property;
 import org.intalio.tempo.security.provider.SecurityProvider;
 import org.intalio.tempo.security.rbac.RBACQuery;
 import org.intalio.tempo.security.rbac.RoleNotFoundException;
 import org.intalio.tempo.security.rbac.UserNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * LDAPRBACProviderTest
@@ -34,7 +34,7 @@ import org.intalio.tempo.security.rbac.UserNotFoundException;
  */
 public class LDAPRBACProviderTest extends TestCase {
 
-    protected final static Logger LOG = Logger.getLogger("tempo.security.test");
+    protected final static Logger LOG = LoggerFactory.getLogger("tempo.security.test");
     
     private final static String REALM = "intalio";
 

@@ -14,12 +14,13 @@ package org.intalio.tempo.workflow.tas.axis2;
 import junit.framework.TestCase;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.log4j.Logger;
 import org.intalio.tempo.workflow.tas.core.TaskAttachmentServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TASAxis2BridgeTest extends TestCase {
 
-    private final static Logger _logger = Logger.getLogger(TASAxis2BridgeTest.class);
+    private final static Logger _logger = LoggerFactory.getLogger(TASAxis2BridgeTest.class);
 
     private TASAxis2Bridge _bridge;
 

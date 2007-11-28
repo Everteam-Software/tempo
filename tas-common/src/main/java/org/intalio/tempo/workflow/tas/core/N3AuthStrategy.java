@@ -14,13 +14,14 @@ package org.intalio.tempo.workflow.tas.core;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.intalio.tempo.security.Property;
 import org.intalio.tempo.security.authentication.AuthenticationConstants;
 import org.intalio.tempo.security.token.TokenService;
 import org.intalio.tempo.security.util.PropertyUtils;
 import org.intalio.tempo.security.util.StringArrayUtils;
 import org.intalio.tempo.security.ws.TokenClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An n3-security based implementation of {@link org.intalio.tempo.workflow.tas.core.AuthStrategy}.<br />
@@ -35,7 +36,7 @@ public class N3AuthStrategy implements AuthStrategy {
     /**
      * Log4J logger for this class.
      */
-    private static final Logger _logger = Logger.getLogger(N3AuthStrategy.class);
+    private static final Logger _logger = LoggerFactory.getLogger(N3AuthStrategy.class);
 
     /**
      * An n3-security token service instance used to process security credentials.

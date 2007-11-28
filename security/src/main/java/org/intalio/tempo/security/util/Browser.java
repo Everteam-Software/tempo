@@ -11,12 +11,13 @@
 
 package org.intalio.tempo.security.util;
 
-import org.apache.log4j.Logger;
 import org.intalio.tempo.security.Property;
 import org.intalio.tempo.security.authentication.AuthenticationConstants;
 import org.intalio.tempo.security.impl.Realms;
 import org.intalio.tempo.security.provider.SecurityProvider;
 import org.intalio.tempo.security.rbac.RBACQuery;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -29,7 +30,7 @@ import org.springframework.core.io.Resource;
  */
 public class Browser
 {
-    protected transient Logger _log = Logger.getLogger( getClass() );
+    protected transient Logger _log = LoggerFactory.getLogger( getClass() );
 
     protected String _contextFilename;
     

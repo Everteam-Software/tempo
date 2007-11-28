@@ -19,14 +19,15 @@ import nu.xom.Nodes;
 import nu.xom.Text;
 import nu.xom.XPathContext;
 
-import org.apache.log4j.Logger;
 import org.intalio.tempo.workflow.fds.FormDispatcherConfiguration;
 import org.intalio.tempo.workflow.fds.core.MessageConstants;
 import org.intalio.tempo.workflow.fds.tools.NamespaceConvertor;
 import org.intalio.tempo.workflow.fds.tools.XPath;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class NotifyDispatcher implements IDispatcher {
-    private static final Logger LOG = Logger.getLogger(NotifyDispatcher.class);
+    private static final Logger LOG = LoggerFactory.getLogger(NotifyDispatcher.class);
     
     private static final String TMS_NS = "http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/";
 

@@ -15,7 +15,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 import org.intalio.tempo.security.Property;
 import org.intalio.tempo.security.authentication.AuthenticationConstants;
@@ -23,9 +24,8 @@ import org.intalio.tempo.security.authentication.AuthenticationQuery;
 import org.intalio.tempo.security.authentication.AuthenticationRuntime;
 import org.intalio.tempo.security.authentication.provider.AuthenticationProvider;
 import org.intalio.tempo.security.provider.SecurityProvider;
-
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * LDAPAuthenticationTest
@@ -34,7 +34,7 @@ import junit.framework.TestSuite;
  */
 public class LDAPAuthenticationTest extends TestCase {
 
-    protected final static Logger LOG = Logger.getLogger("tempo.security.test");
+    protected final static Logger LOG = LoggerFactory.getLogger("tempo.security.test");
     
     private final static String REALM = "intalio";
     

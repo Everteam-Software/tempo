@@ -13,14 +13,15 @@ package org.intalio.tempo.workflow.tas.axis2;
 
 import junit.framework.TestCase;
 
-import org.apache.log4j.Logger;
 import org.intalio.tempo.workflow.tas.core.TaskAttachmentService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 // TODO: update this test!
 public class N3AuthTest extends TestCase {
 
     @SuppressWarnings("unused")
-    private final static Logger _logger = Logger.getLogger(TASAxis2BridgeTest.class);
+    private final static Logger _logger = LoggerFactory.getLogger(TASAxis2BridgeTest.class);
     
     @SuppressWarnings("unused")
     private final static String SYSTEM_TEST_TOKEN = "VE9LRU4mJnVzZXI9PXRlc3Rcc3lzdGVtLXRlc3QmJmlzc3VlZD09MTEzNzQxOTg"

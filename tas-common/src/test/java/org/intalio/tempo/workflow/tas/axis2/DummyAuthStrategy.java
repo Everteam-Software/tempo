@@ -11,22 +11,21 @@
  */
 package org.intalio.tempo.workflow.tas.axis2;
 
-import org.apache.log4j.Logger;
-
 import org.intalio.tempo.workflow.tas.core.AuthCredentials;
 import org.intalio.tempo.workflow.tas.core.AuthException;
 import org.intalio.tempo.workflow.tas.core.AuthStrategy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A dummy implementation of {@link org.intalio.tempo.workflow.tas.core.AuthStrategy}. Always authenticates any provided
  * credentials successfully and outputs debug messages.
  */
 public class DummyAuthStrategy implements AuthStrategy {
-    private static final Logger _logger = Logger.getLogger(DummyAuthStrategy.class);
+    private static final Logger _logger = LoggerFactory.getLogger(DummyAuthStrategy.class);
 
     public void authenticate(AuthCredentials credentials)
             throws AuthException {
-        _logger.debug("Dummy authorization OK.");
-        _logger.debug(credentials);
+        _logger.debug("Dummy authorization OK."+credentials);
     }
 }

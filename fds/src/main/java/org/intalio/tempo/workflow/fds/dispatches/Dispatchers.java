@@ -14,10 +14,11 @@ package org.intalio.tempo.workflow.fds.dispatches;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Dispatchers {
-    private static Logger logger = Logger.getLogger(Dispatchers.class);
+    private static Logger logger = LoggerFactory.getLogger(Dispatchers.class);
     private static Map<String, Class<? extends IDispatcher>> dispatcherMap
         = new HashMap<String, Class<? extends IDispatcher>>();
         

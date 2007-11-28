@@ -15,17 +15,14 @@
 
 package org.intalio.tempo;
 
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Logger;
-import org.apache.log4j.xml.DOMConfigurator;
-
-import java.io.IOException;
 import java.io.File;
 import java.io.FileInputStream;
-
+import java.io.IOException;
 import java.util.Properties;
 
 import org.intalio.tempo.test.FuncTestSuite;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -69,10 +66,7 @@ public class BaseSuite extends FuncTestSuite {
     }
     
     protected void setUp() throws Exception {
-
-        initLog4J();
-
-        log = Logger.getLogger( "tempo.main" );
+        log = LoggerFactory.getLogger( "tempo.main" );
 
         // read "system.properties" file
         Properties props = System.getProperties();
@@ -84,17 +78,5 @@ public class BaseSuite extends FuncTestSuite {
                 log.info( "Error while loading system.properties", ioe );
             }
         }
-    }
-
-    protected void tearDown() throws Exception {
-        BasicConfigurator.resetConfiguration();
-    }
-
-    protected static void initLog4J() {
-        // initial Log4J configuration while we are loading the real Log4J
-        // configuration using XML libraries
-        BasicConfigurator.configure();
-
-        DOMConfigurator.configureAndWatch( DEFAULT_LOG_FILE, DEFAULT_LOG_REFRESH );
     }
 }

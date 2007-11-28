@@ -31,7 +31,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.intalio.tempo.web.SysPropApplicationContextLoader;
 import org.intalio.tempo.workflow.wds.config.WDSConfigBean;
 import org.intalio.tempo.workflow.wds.core.AuthenticationException;
@@ -45,6 +44,8 @@ import org.intalio.tempo.workflow.wds.core.tms.PipaTask;
 import org.intalio.tempo.workflow.wds.core.tms.TMSConnectionFactory;
 import org.intalio.tempo.workflow.wds.core.tms.TMSConnectionFactoryInterface;
 import org.intalio.tempo.workflow.wds.core.xforms.XFormsProcessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Provides a REST-style web interface for WDS.
@@ -68,7 +69,7 @@ import org.intalio.tempo.workflow.wds.core.xforms.XFormsProcessor;
  * @version $Revision: 1176 $
  */
 public class WDSServlet extends HttpServlet {
-    private static final Logger logger = Logger.getLogger(WDSServlet.class);
+    private static final Logger logger = LoggerFactory.getLogger(WDSServlet.class);
     private static final long serialVersionUID = -5714415376114167497L;
     private static final String DEFAULT_CONFIG_FILE = "file:${org.intalio.tempo.configDirectory}/tempo-tms.xml";
     

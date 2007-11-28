@@ -24,12 +24,13 @@ import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 
-import org.apache.log4j.Logger;
 import org.intalio.tempo.security.authentication.AuthenticationException;
 import org.intalio.tempo.security.authentication.provider.AuthenticationProvider;
 import org.intalio.tempo.security.provider.SecurityProvider;
 import org.intalio.tempo.security.rbac.RBACException;
 import org.intalio.tempo.security.rbac.provider.RBACProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An implementation of SecurityProvider that is backed by a LDAP directory
@@ -47,7 +48,7 @@ public class LDAPSecurityProvider implements SecurityProvider {
     
     protected static final String DEFAULT_SECURITY_CREDENTIALS = "password";
     
-    protected static final Logger LOG = Logger.getLogger("tempo.security");
+    protected static final Logger LOG = LoggerFactory.getLogger("tempo.security");
 
 	private String                      _name = "LDAP";
 
@@ -282,7 +283,7 @@ public class LDAPSecurityProvider implements SecurityProvider {
             try {
                 rbac.dispose();
             } catch (RBACException re) {
-                LOG.warn(re);
+                LOG.warn(re.getMessage(),re);
                 except = re;
             }
         }
@@ -295,7 +296,7 @@ public class LDAPSecurityProvider implements SecurityProvider {
                 if ( except==null ) {
                     except = new RBACException(ae);
                 } else {
-                    LOG.warn(ae);
+                    LOG.warn(ae.getMessage(),ae);
                 }
             }
             _auths = null;

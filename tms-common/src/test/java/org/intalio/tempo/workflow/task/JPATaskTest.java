@@ -15,7 +15,6 @@ import javax.persistence.Query;
 
 import junit.framework.Assert;
 
-import org.apache.log4j.Logger;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
@@ -24,10 +23,12 @@ import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 public class JPATaskTest {
-    final static Logger log = Logger.getLogger(JPATaskTest.class);
+    final static Logger log = LoggerFactory.getLogger(JPATaskTest.class);
 
     EntityManager em;
     EntityManagerFactory factory;

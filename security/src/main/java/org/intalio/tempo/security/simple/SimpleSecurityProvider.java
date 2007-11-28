@@ -17,7 +17,6 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.intalio.tempo.security.authentication.AuthenticationAdmin;
 import org.intalio.tempo.security.authentication.AuthenticationException;
 import org.intalio.tempo.security.authentication.AuthenticationQuery;
@@ -29,6 +28,8 @@ import org.intalio.tempo.security.rbac.RBACException;
 import org.intalio.tempo.security.rbac.RBACQuery;
 import org.intalio.tempo.security.rbac.RBACRuntime;
 import org.intalio.tempo.security.rbac.provider.RBACProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.SystemPropertyUtils;
 
@@ -98,7 +99,7 @@ public final class SimpleSecurityProvider
     /**
      * Log4J logger
      */
-	static final Logger LOG = Logger.getLogger( "tempo.security.simple" );
+	static final Logger LOG = LoggerFactory.getLogger( "tempo.security.simple" );
 
 
     /**

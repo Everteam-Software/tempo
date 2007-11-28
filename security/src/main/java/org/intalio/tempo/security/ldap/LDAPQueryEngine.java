@@ -10,11 +10,14 @@
  */
 package org.intalio.tempo.security.ldap;
 
+import static org.intalio.tempo.security.ldap.LDAPSecurityProvider.close;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeSet;
+
 import javax.naming.NameClassPair;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
@@ -22,11 +25,11 @@ import javax.naming.directory.Attribute;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
-import org.apache.log4j.Logger;
+
 import org.intalio.tempo.security.Property;
 import org.intalio.tempo.security.util.StringArrayUtils;
-
-import static org.intalio.tempo.security.ldap.LDAPSecurityProvider.close;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * LDAPQueryEngine
@@ -36,7 +39,7 @@ import static org.intalio.tempo.security.ldap.LDAPSecurityProvider.close;
  */
 public class LDAPQueryEngine {
 
-    protected final static Logger LOG = Logger.getLogger("tempo.security");
+    protected final static Logger LOG = LoggerFactory.getLogger("tempo.security");
 
     private final static Inverter BASE_STRIPER  = new BaseStriper();
 

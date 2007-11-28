@@ -21,10 +21,11 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.lang.CharEncoding;
-import org.apache.log4j.Logger;
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
 import org.intalio.tempo.workflow.wds.core.Item;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -36,7 +37,7 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class XFormsProcessor {
 
-    private static Logger LOG = Logger.getLogger(XFormsProcessor.class);
+    private static Logger LOG = LoggerFactory.getLogger(XFormsProcessor.class);
 
     private final static String XFORMS_CONTENT_TYPE = "application/xml";
 

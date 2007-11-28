@@ -18,11 +18,12 @@ package org.intalio.tempo.workflow.tms.server;
 import junit.framework.TestCase;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TMSRequestProcessorTest extends TestCase {
 
-    private static final Logger _logger = Logger.getLogger(TMSRequestProcessorTest.class);
+    private static final Logger _logger = LoggerFactory.getLogger(TMSRequestProcessorTest.class);
 
     private TMSRequestProcessor createRequestProcessor() throws Exception {
         ITMSServer server = TestUtils.createTMSServer();

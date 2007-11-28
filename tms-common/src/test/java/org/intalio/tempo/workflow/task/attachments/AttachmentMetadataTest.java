@@ -18,16 +18,16 @@ package org.intalio.tempo.workflow.task.attachments;
 
 import java.util.Date;
 
-import org.apache.log4j.Logger;
-import org.intalio.tempo.workflow.task.attachments.AttachmentMetadata;
-import org.intalio.tempo.workflow.util.RequiredArgumentException;
-
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+import org.intalio.tempo.workflow.util.RequiredArgumentException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class AttachmentMetadataTest extends TestCase {
     
-    private static final Logger _logger = Logger.getLogger(AttachmentMetadataTest.class);
+    private static final Logger _logger = LoggerFactory.getLogger(AttachmentMetadataTest.class);
 
     public static void main(String[] args) {
         junit.textui.TestRunner.run(AttachmentMetadataTest.class);

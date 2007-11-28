@@ -12,12 +12,14 @@
 package org.intalio.tempo.security.simple;
 
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.xml.XmlBeanFactory;
-import org.springframework.core.io.ClassPathResource;
+
 import org.intalio.tempo.security.Property;
 import org.intalio.tempo.security.authentication.AuthenticationConstants;
 import org.intalio.tempo.security.impl.Realms;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.xml.XmlBeanFactory;
+import org.springframework.core.io.ClassPathResource;
 
 /**
  * Test SimpleProvider with a Spring-based configuration.
@@ -28,7 +30,7 @@ import org.intalio.tempo.security.impl.Realms;
 public class SimpleSpringTest
     extends TestCase
 {
-    protected transient Logger _log = Logger.getLogger( getClass() );
+    protected transient Logger _log = LoggerFactory.getLogger( getClass() );
 
     /**
      * Get Realms instance

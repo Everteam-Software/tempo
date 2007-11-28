@@ -362,6 +362,7 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
 
             return resultTasks.toArray(new Task[] {});
         } catch (SQLException e) {
+            _logger.error("Error while retrieving task list",e);
             throw new RuntimeException(e);
         }
     }

@@ -10,15 +10,16 @@ import javax.persistence.Query;
 
 import junit.framework.Assert;
 
-import org.apache.log4j.Logger;
 import org.intalio.tempo.workflow.wds.core.Item;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class PipaJpaTest {
-    final static Logger log = Logger.getLogger(PipaJpaTest.class);
+    final static Logger log = LoggerFactory.getLogger(PipaJpaTest.class);
 
     EntityManager em;
     EntityManagerFactory factory;

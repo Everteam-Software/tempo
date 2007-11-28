@@ -20,14 +20,15 @@ import org.apache.axis2.AxisFault;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
-import org.apache.log4j.Logger;
 import org.intalio.tempo.workflow.tas.axis2.TASAxis2Bridge;
 import org.intalio.tempo.workflow.tas.axis2.TASAxis2BridgeTest;
 import org.intalio.tempo.workflow.tas.axis2.TestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Axis2TASServiceTest extends TestCase {
 
-    private static final Logger _logger = Logger.getLogger(TASAxis2BridgeTest.class);
+    private static final Logger _logger = LoggerFactory.getLogger(TASAxis2BridgeTest.class);
 
     private static final String TAS_ENDPOINT = "http://localhost:8080/axis2/services/tas";
 

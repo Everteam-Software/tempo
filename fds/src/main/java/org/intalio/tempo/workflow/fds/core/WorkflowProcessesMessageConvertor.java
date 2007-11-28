@@ -11,14 +11,15 @@
  */
 package org.intalio.tempo.workflow.fds.core;
 
-import org.apache.log4j.Logger;
-
 import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Node;
 import nu.xom.Nodes;
 import nu.xom.Text;
 import nu.xom.XPathContext;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Converts SOAP messages from the Workflow Processes format to user process
@@ -29,7 +30,7 @@ import nu.xom.XPathContext;
  * @see <a href="http://www.w3.org/TR/soap/">The SOAP specification.</a>
  */
 public class WorkflowProcessesMessageConvertor {
-    private static final Logger LOG = Logger.getLogger(UserProcessMessageConvertor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UserProcessMessageConvertor.class);
 
     /**
      * The XML namespace URI of the user process which has been the message

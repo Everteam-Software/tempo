@@ -27,7 +27,6 @@ import org.apache.axis2.AxisFault;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
-import org.apache.log4j.Logger;
 import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
@@ -47,11 +46,13 @@ import org.intalio.tempo.workflow.util.xml.OMDOMConvertor;
 import org.intalio.tempo.workflow.util.xml.OMElementQueue;
 import org.intalio.tempo.workflow.util.xml.OMMarshaller;
 import org.intalio.tempo.workflow.util.xml.OMUnmarshaller;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 class RemoteTMSClient extends OMUnmarshaller implements ITaskManagementService {
 
-    Logger LOG = Logger.getLogger(OMUnmarshaller.class);
+    Logger LOG = LoggerFactory.getLogger(OMUnmarshaller.class);
     
     private EndpointReference _endpoint;
 

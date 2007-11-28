@@ -23,7 +23,8 @@ import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
 import org.apache.commons.httpclient.methods.PutMethod;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A WDS (Workflow Deployment Service) based {@link org.intalio.tempo.workflow.tas.core.StorageStrategy} implementation.
@@ -34,7 +35,7 @@ import org.apache.log4j.Logger;
  * </pre>
  */
 public class WDSStorageStrategy implements StorageStrategy {
-    private static final Logger _logger = Logger.getLogger(WDSStorageStrategy.class);
+    private static final Logger _logger = LoggerFactory.getLogger(WDSStorageStrategy.class);
 
     private static final String ATTACHMENT_URI_PREFIX = "attachments/";
 

@@ -23,20 +23,17 @@ import junit.framework.TestCase;
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
-import org.apache.log4j.Logger;
-
 import org.intalio.tempo.workflow.task.Notification;
 import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
-import org.intalio.tempo.workflow.task.xml.TaskMarshaller;
-import org.intalio.tempo.workflow.task.xml.TaskUnmarshaller;
-import org.intalio.tempo.workflow.task.xml.TaskXMLConstants;
 import org.intalio.tempo.workflow.util.xml.OMDOMConvertor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TaskMarshallingRoundtripTest extends TestCase {
 
-    private static final Logger _logger = Logger.getLogger(TaskMarshallingRoundtripTest.class);
+    private static final Logger _logger = LoggerFactory.getLogger(TaskMarshallingRoundtripTest.class);
 
     public static void main(String[] args) {
         junit.textui.TestRunner.run(TaskMarshallingRoundtripTest.class);

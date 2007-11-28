@@ -1,25 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright (c) 2005-2006 Intalio inc.
+	Copyright (c) 2005-2007 Intalio inc.
 
-  All rights reserved. This program and the accompanying materials
-  are made available under the terms of the Eclipse Public License v1.0
-  which accompanies this distribution, and is available at
-  http://www.eclipse.org/legal/epl-v10.html
+	All rights reserved. This program and the accompanying materials
+	are made available under the terms of the Eclipse Public License v1.0
+	which accompanies this distribution, and is available at
+	http://www.eclipse.org/legal/epl-v10.html
 
-  Contributors:
-  Intalio inc. - initial API and implementation
- -->
+	Contributors:
+	Intalio inc. - initial API and implementation
+-->
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
-
-    <bean id="tms.serviceImplementation" class="org.intalio.tempo.workflow.tms.server.TMSRequestProcessor">
-        <property name="server">
-            <ref bean="tms.server"/>
-        </property>
-    </bean>
-
-    <bean id="tms.server" class="org.intalio.tempo.workflow.tms.server.TMSServer">
+	<bean id="tms.serviceFactory" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>org.intalio.tempo.workflow.tms.server.ITMSServer</value>
+		</property>
+		<property name="target">
+			<ref local="tms.serviceImplementation"/>
+		</property>
+		<property name="interceptorNames">
+			<list>				
+				<value>loggingInterceptor</value>
+			</list>
+		</property>		
+	</bean>	
+	
+	<bean id="loggingInterceptor"  class="org.intalio.tempo.workflow.tms.server.LoggingInterceptor"/>
+	<bean id="tms.serviceImplementation" class="org.intalio.tempo.workflow.tms.server.TMSRequestProcessor">
+		<property name="server">
+			<ref bean="tms.server"/>
+		</property>
+	</bean>
+	<bean id="tms.server" class="org.intalio.tempo.workflow.tms.server.TMSServer">
 		<property name="authProvider">
 			<ref bean="tms.authProvider"/>
 		</property>
@@ -28,13 +41,13 @@
 		</property>
 	</bean>
 	<bean id="tms.authProvider" class="org.intalio.tempo.workflow.auth.n3.N3AuthProvider">
-        <property name="wsEndpoint">
-            <value>http://localhost:8080/axis2/services/TokenService</value>
-        </property>
-    </bean>
+		<property name="wsEndpoint">
+			<value>http://localhost:8080/axis2/services/TokenService</value>
+		</property>
+	</bean>
 	<bean id="tms.daoFactory" class="org.intalio.tempo.workflow.tms.server.dao.JDBCTaskDAOConnectionFactory">
-        <constructor-arg>
-            <value>java:comp/env/jdbc/BPMSDB</value>
-        </constructor-arg>
+		<constructor-arg>
+			<value>java:comp/env/jdbc/BPMSDB</value>
+		</constructor-arg>
 	</bean>
 </beans>

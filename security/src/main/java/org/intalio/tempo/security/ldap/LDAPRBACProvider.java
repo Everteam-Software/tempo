@@ -21,7 +21,6 @@ import java.util.TreeSet;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
 
-import org.apache.log4j.Logger;
 import org.intalio.tempo.security.Property;
 import org.intalio.tempo.security.rbac.ObjectNotFoundException;
 import org.intalio.tempo.security.rbac.RBACAdmin;
@@ -32,6 +31,8 @@ import org.intalio.tempo.security.rbac.RoleNotFoundException;
 import org.intalio.tempo.security.rbac.UserNotFoundException;
 import org.intalio.tempo.security.rbac.provider.RBACProvider;
 import org.intalio.tempo.security.util.IdentifierUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * LDAP RBAC Provider
@@ -40,7 +41,7 @@ import org.intalio.tempo.security.util.IdentifierUtils;
  */
 class LDAPRBACProvider implements RBACProvider, LDAPProperties {
 
-    final static Logger LOG = Logger.getLogger("tempo.security");
+    final static Logger LOG = LoggerFactory.getLogger("tempo.security");
 
     private final static String[] EMPTY_STRINGS = new String[0];
 
@@ -274,7 +275,7 @@ class LDAPRBACProvider implements RBACProvider, LDAPProperties {
                 throw new RoleNotFoundException("Role, "+role+", is not found!", nnfe);
             } catch ( NamingException ne ) {
                 if (LOG.isInfoEnabled())
-                    LOG.info(ne);
+                    LOG.info(ne.getMessage(),ne);
                 throw new RBACException(ne);
             }
         }
@@ -315,7 +316,7 @@ class LDAPRBACProvider implements RBACProvider, LDAPProperties {
                 return prefix(result);
             } catch ( NamingException ne ) {
                 if (LOG.isInfoEnabled())
-                    LOG.info(ne);
+                    LOG.info(ne.getMessage(),ne);
                 throw new RBACException(ne);
             }
         }
@@ -345,7 +346,7 @@ class LDAPRBACProvider implements RBACProvider, LDAPProperties {
                 return prefix(list);
             } catch (NamingException ne) {
                 if (LOG.isInfoEnabled())
-                    LOG.info(ne);
+                    LOG.info(ne.getMessage(),ne);
                 throw new RBACException(ne);
             }
         }
@@ -393,7 +394,7 @@ class LDAPRBACProvider implements RBACProvider, LDAPProperties {
                 return prefix(list);
             } catch (NamingException ne) {
                 if (LOG.isInfoEnabled())
-                    LOG.info(ne);
+                    LOG.info(ne.getMessage(),ne);
                 throw new RBACException(ne);
             }
         }
@@ -431,7 +432,7 @@ class LDAPRBACProvider implements RBACProvider, LDAPProperties {
                 return prefix(list);
             } catch ( NamingException ne ) {
                 if (LOG.isInfoEnabled())
-                    LOG.info(ne);
+                    LOG.info(ne.getMessage(),ne);
                 throw new RBACException(ne);
             }
         }
@@ -451,7 +452,7 @@ class LDAPRBACProvider implements RBACProvider, LDAPProperties {
                 return prefix(list);
             } catch ( NamingException ne ) {
                 if (LOG.isInfoEnabled())
-                    LOG.info(ne);
+                    LOG.info(ne.getMessage(),ne);
                 throw new RBACException(ne);
             }
         }*/
@@ -482,7 +483,7 @@ class LDAPRBACProvider implements RBACProvider, LDAPProperties {
                 }
             } catch (NamingException ne) {
                 if (LOG.isInfoEnabled())
-                    LOG.info(ne);
+                    LOG.info(ne.getMessage(),ne);
                 throw new RBACException(ne);
             }
         }
@@ -513,7 +514,7 @@ class LDAPRBACProvider implements RBACProvider, LDAPProperties {
                 }
             } catch (NamingException ne) {
                 if (LOG.isInfoEnabled())
-                    LOG.info(ne);
+                    LOG.info(ne.getMessage(),ne);
                 throw new RBACException(ne);
             }
         }
@@ -549,7 +550,7 @@ class LDAPRBACProvider implements RBACProvider, LDAPProperties {
                 return (String[])result.toArray(new String[result.size()]);
             } catch (NamingException ne) {
                 if (LOG.isInfoEnabled())
-                    LOG.info(ne);
+                    LOG.info(ne.getMessage(),ne);
                 throw new RBACException(ne);
             }
         }
@@ -598,7 +599,7 @@ class LDAPRBACProvider implements RBACProvider, LDAPProperties {
                 return (String[])result.toArray(new String[result.size()]);
             } catch (NamingException ne) {
                 if (LOG.isInfoEnabled())
-                    LOG.info(ne);
+                    LOG.info(ne.getMessage(),ne);
                 throw new RBACException(ne);
             }
         }
@@ -617,7 +618,7 @@ class LDAPRBACProvider implements RBACProvider, LDAPProperties {
                 return (Property[])result.values().toArray(new Property[result.size()]);
             } catch (NamingException ne) {
                 if (LOG.isInfoEnabled())
-                    LOG.info(ne);
+                    LOG.info(ne.getMessage(),ne);
                 throw new RBACException(ne);
             }
         }
@@ -636,7 +637,7 @@ class LDAPRBACProvider implements RBACProvider, LDAPProperties {
                 return (Property[])result.values().toArray(new Property[result.size()]);
             } catch (NamingException ne) {
                 if (LOG.isInfoEnabled())
-                    LOG.info(ne);
+                    LOG.info(ne.getMessage(),ne);
                 throw new RBACException(ne);
             }
         }

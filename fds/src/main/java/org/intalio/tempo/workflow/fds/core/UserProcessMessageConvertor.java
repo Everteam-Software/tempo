@@ -18,8 +18,9 @@ import nu.xom.Nodes;
 import nu.xom.Text;
 import nu.xom.XPathContext;
 
-import org.apache.log4j.Logger;
 import org.intalio.tempo.workflow.fds.FormDispatcherConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Converts SOAP messages from a user process format to the Workflow Processes
@@ -30,7 +31,7 @@ import org.intalio.tempo.workflow.fds.FormDispatcherConfiguration;
  * @see <a href="http://www.w3.org/TR/soap/">The SOAP specification.</a>
  */
 public class UserProcessMessageConvertor {
-    private static Logger _log = Logger.getLogger(UserProcessMessageConvertor.class);
+    private static Logger _log = LoggerFactory.getLogger(UserProcessMessageConvertor.class);
 
     /**
      * The XML namespace URI of the user process which has been the message

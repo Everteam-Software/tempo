@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.Properties;
 import java.util.Random;
 
-import org.apache.log4j.Logger;
 import org.castor.util.Base64Decoder;
 import org.castor.util.Base64Encoder;
 import org.intalio.tempo.security.Property;

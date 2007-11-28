@@ -5,11 +5,12 @@ import java.util.Properties;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JpaItemDaoConnectionFactory implements ItemDaoConnectionFactory {
 
-    final static Logger log = Logger.getLogger(JpaItemDaoConnectionFactory.class);
+    final static Logger log = LoggerFactory.getLogger(JpaItemDaoConnectionFactory.class);
     EntityManagerFactory factory;    
     
     public JpaItemDaoConnectionFactory() {

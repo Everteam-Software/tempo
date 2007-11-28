@@ -25,7 +25,6 @@ import nu.xom.ParsingException;
 import nu.xom.Serializer;
 import nu.xom.ValidityException;
 
-import org.apache.log4j.Logger;
 import org.intalio.tempo.workflow.fds.core.MessageFormatException;
 import org.intalio.tempo.workflow.fds.core.MessageSender;
 import org.intalio.tempo.workflow.fds.core.UserProcessMessageConvertor;
@@ -35,6 +34,8 @@ import org.intalio.tempo.workflow.fds.dispatches.IDispatcher;
 import org.intalio.tempo.workflow.fds.dispatches.InvalidInputFormatException;
 import org.intalio.tempo.workflow.fds.dispatches.NoDispatcherException;
 import org.intalio.tempo.workflow.fds.tools.SoapTools;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This servlet perfoms message conversion between the Workflow Processes and
@@ -77,7 +78,7 @@ import org.intalio.tempo.workflow.fds.tools.SoapTools;
 public class FormDispatcherServlet extends HttpServlet {
     private static final long serialVersionUID = 4254576521832014537L;
 
-    private static Logger _log = Logger.getLogger(FormDispatcherServlet.class);
+    private static Logger _log = LoggerFactory.getLogger(FormDispatcherServlet.class);
 
     /**
      * The common prefix for all handled request URI's. <br>

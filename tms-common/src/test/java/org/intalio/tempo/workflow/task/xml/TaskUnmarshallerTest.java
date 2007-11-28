@@ -23,16 +23,14 @@ import junit.framework.TestCase;
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
-import org.apache.log4j.Logger;
 import org.intalio.tempo.workflow.task.Task;
-import org.intalio.tempo.workflow.task.xml.TaskMarshaller;
-import org.intalio.tempo.workflow.task.xml.TaskUnmarshaller;
-import org.intalio.tempo.workflow.task.xml.TaskXMLConstants;
 import org.intalio.tempo.workflow.util.xml.InvalidInputFormatException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TaskUnmarshallerTest extends TestCase {
 
-    private static final Logger _logger = Logger.getLogger(TaskUnmarshallerTest.class);
+    private static final Logger _logger = LoggerFactory.getLogger(TaskUnmarshallerTest.class);
 
     public static void main(String[] args) {
         junit.textui.TestRunner.run(TaskUnmarshallerTest.class);

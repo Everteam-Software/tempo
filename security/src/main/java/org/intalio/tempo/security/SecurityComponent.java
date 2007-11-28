@@ -10,9 +10,12 @@
 package org.intalio.tempo.security;
 
 import java.util.HashMap;
+
 import javax.management.ObjectName;
-import org.apache.log4j.Logger;
+
 import org.intalio.tempo.security.provider.SecurityProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Security Provider component
@@ -28,7 +31,7 @@ public class SecurityComponent
     protected HashMap<String, Object> _props; 
     
     
-    static Logger CATEGORY = Logger.getLogger( "tempo.security.SecurityComponent" );
+    final static Logger _logger = LoggerFactory.getLogger( "tempo.security.SecurityComponent" );
 
 
     /**
@@ -181,7 +184,7 @@ public class SecurityComponent
                 _provider.dispose();
             }
         } catch ( Exception except ) {
-            CATEGORY.error( "Error during shutdown", except );
+            _logger.error( "Error during shutdown", except );
         }
     }
 

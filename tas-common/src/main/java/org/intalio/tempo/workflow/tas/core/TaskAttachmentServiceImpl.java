@@ -16,12 +16,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-import org.apache.log4j.Logger;
-import org.intalio.tempo.workflow.tas.core.AttachmentMetadata;
-import org.intalio.tempo.workflow.tas.core.AuthCredentials;
-import org.intalio.tempo.workflow.tas.core.AuthStrategy;
-import org.intalio.tempo.workflow.tas.core.StorageStrategy;
-import org.intalio.tempo.workflow.tas.core.TaskAttachmentService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -29,7 +25,7 @@ import org.intalio.tempo.workflow.tas.core.TaskAttachmentService;
  */
 public class TaskAttachmentServiceImpl implements TaskAttachmentService {
 
-    private static final Logger _logger = Logger.getLogger(TaskAttachmentServiceImpl.class);
+    private static final Logger _logger = LoggerFactory.getLogger(TaskAttachmentServiceImpl.class);
 
     private AuthStrategy _authStrategy;
 

@@ -24,7 +24,7 @@ define "tempo" do
 
   desc "Form Dispatcher Servlet"
   define "fds" do
-    compile.with AXIS2, COMMONS, LOG4J, SERVLET_API, STAX_API, XOM
+    compile.with AXIS2, COMMONS, SLF4J, LOG4J, SERVLET_API, STAX_API, XOM
     resources.filter.using "version" => VERSION_NUMBER
     test.with DOM4J
     package :war
@@ -109,7 +109,7 @@ define "tempo" do
   desc "Task Attachment Service Common"
   define "tas-common" do
     compile.with projects("security", "security-ws-client"), 
-                 AXIOM, AXIS2, COMMONS, JUNIT, LOG4J, STAX_API, XOM
+                 AXIOM, AXIS2, COMMONS, JUNIT, SLF4J, LOG4J, STAX_API, XOM
 
     test.with JAVAMAIL, SLF4J, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX
     test.exclude '*TestUtils*'
@@ -151,7 +151,7 @@ define "tempo" do
   
   desc "Task Management Service Client"
   define "tms-client" do
-    compile.with projects("tms-axis", "tms-common"), AXIOM, AXIS2, COMMONS, LOG4J, STAX_API, WS_COMMONS_SCHEMA, WSDL4J, APACHE_JPA, XMLBEANS
+    compile.with projects("tms-axis", "tms-common"), AXIOM, AXIS2, COMMONS, LOG4J, SLF4J, STAX_API, WS_COMMONS_SCHEMA, WSDL4J, APACHE_JPA, XMLBEANS
     test.with SLF4J, WOODSTOX
     test.exclude '*TestUtils*'
 
@@ -198,13 +198,13 @@ define "tempo" do
   
   desc "Workflow Deployment Service Client"
   define "wds-client" do
-    compile.with ANT, COMMONS, JARGS, JUNIT, LOG4J
+    compile.with ANT, COMMONS, JARGS, JUNIT, LOG4J, SLF4J
     package(:jar) 
   end
 
   desc "Workflow Deployment Service"
   define "wds-service" do
-    libs = [ project("web-nutsNbolts"), COMMONS, LOG4J, SERVLET_API, SPRING, XERCES, APACHE_JPA ]
+    libs = [ project("web-nutsNbolts"), COMMONS, LOG4J, SERVLET_API, SPRING, XERCES, APACHE_JPA, SLF4J ]
     compile.with libs
     compile { open_jpa_enhance }    
     resources.filter.using "version" => VERSION_NUMBER

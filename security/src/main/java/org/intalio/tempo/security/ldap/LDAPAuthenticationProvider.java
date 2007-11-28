@@ -21,7 +21,6 @@ import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 
-import org.apache.log4j.Logger;
 import org.intalio.tempo.security.Property;
 import org.intalio.tempo.security.authentication.AuthenticationAdmin;
 import org.intalio.tempo.security.authentication.AuthenticationConstants;
@@ -31,6 +30,8 @@ import org.intalio.tempo.security.authentication.AuthenticationRuntime;
 import org.intalio.tempo.security.authentication.UserNotFoundException;
 import org.intalio.tempo.security.authentication.provider.AuthenticationProvider;
 import org.intalio.tempo.security.util.IdentifierUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * LDAPAuthenticationProvider
@@ -40,7 +41,7 @@ import org.intalio.tempo.security.util.IdentifierUtils;
 public class LDAPAuthenticationProvider 
 implements AuthenticationProvider, LDAPProperties {
 
-    final static Logger LOG = Logger.getLogger("tempo.security");
+    final static Logger LOG = LoggerFactory.getLogger("tempo.security");
 
     private final static Property[] EMPTY_PROPERTIES = new Property[0];
     

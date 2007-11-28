@@ -9,13 +9,14 @@
 
 package org.intalio.tempo.security.simple;
 
-import org.apache.log4j.Logger;
 import org.intalio.tempo.security.Property;
 import org.intalio.tempo.security.authentication.AuthenticationConstants;
 import org.intalio.tempo.security.authentication.AuthenticationException;
 import org.intalio.tempo.security.authentication.AuthenticationRuntime;
 import org.intalio.tempo.security.authentication.UserNotFoundException;
 import org.intalio.tempo.security.util.PropertyUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Simple implementation of the authentication runtime functions.
@@ -28,7 +29,7 @@ class SimpleAuthenticationRuntime
 
     private SimpleSecurityProvider _provider;
     
-	static final Logger LOGGER = Logger.getLogger( "tempo.security.simple.authentication" );
+	static final Logger LOGGER = LoggerFactory.getLogger( "tempo.security.simple.authentication" );
 
     /** 
      * Construct simple authentication runtime functions.

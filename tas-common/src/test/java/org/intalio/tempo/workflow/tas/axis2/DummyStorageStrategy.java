@@ -14,24 +14,22 @@ package org.intalio.tempo.workflow.tas.axis2;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.log4j.Logger;
 import org.intalio.tempo.workflow.tas.core.AttachmentMetadata;
-import org.intalio.tempo.workflow.tas.core.UnavailableAttachmentException;
-
 import org.intalio.tempo.workflow.tas.core.StorageStrategy;
+import org.intalio.tempo.workflow.tas.core.UnavailableAttachmentException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A dummy implementation of {@link org.intalio.tempo.workflow.tas.core.StorageStrategy}.
  * Always acts as if attachment payload storage and deletion went OK and outputs log messages.
  */
 public class DummyStorageStrategy implements StorageStrategy {
-    private static final Logger _logger = Logger.getLogger(DummyStorageStrategy.class);
+    private static final Logger _logger = LoggerFactory.getLogger(DummyStorageStrategy.class);
 
     public String storeAttachment(AttachmentMetadata metadata, InputStream payload)
             throws IOException {
-        _logger.debug("Dummy storage item storing OK.");
-        _logger.debug(metadata);
-
+        _logger.debug("Dummy storage item storing OK."+metadata);
         return "http://dummy-URL";
     }
 

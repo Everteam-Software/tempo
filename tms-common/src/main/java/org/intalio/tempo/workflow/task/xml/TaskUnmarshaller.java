@@ -26,7 +26,6 @@ import java.util.Iterator;
 import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
@@ -52,6 +51,8 @@ import org.intalio.tempo.workflow.util.xml.InvalidInputFormatException;
 import org.intalio.tempo.workflow.util.xml.OMDOMConvertor;
 import org.intalio.tempo.workflow.util.xml.XmlBeanUnmarshaller;
 import org.intalio.tempo.workflow.util.xml.XsdDateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
@@ -59,8 +60,7 @@ import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
 public class TaskUnmarshaller extends XmlBeanUnmarshaller {
 
 	@SuppressWarnings("unused")
-	private static final Logger _logger = Logger
-			.getLogger(TaskUnmarshaller.class);
+	private static final Logger _logger = LoggerFactory.getLogger(TaskUnmarshaller.class);
 
 	public TaskUnmarshaller() {
 		super(TaskXMLConstants.TASK_NAMESPACE,

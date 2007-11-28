@@ -81,19 +81,20 @@ public class TMSServer implements ITMSServer {
     }
 
     public Task[] getTaskList(String participantToken) throws AuthException {
-        Task[] result = null;
+        _logger.info("Getting task list for :"+participantToken);
 
         UserRoles credentials = _authProvider.authenticate(participantToken);
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
 		try {
-            result = dao.fetchAllAvailableTasks(credentials);
-            _logger.debug("Workflow Tasks for user " + credentials.getUserID() + "\n" + result);
+		    Task[] result = dao.fetchAllAvailableTasks(credentials);
+            if(_logger.isDebugEnabled()) _logger.debug("Workflow Tasks for user " + credentials.getUserID() + "\n" + result);
+            return result;
         } catch(Exception e) {
             _logger.error("Error while tasks list retrieval for user " + credentials.getUserID(), e);
+            throw new RuntimeException(e);
         } finally {
 			dao.close();
 		}
-        return result;
     }
 
     public UserRoles getUserRoles(String participantToken) throws AuthException {

@@ -22,13 +22,13 @@ import org.apache.axis2.AxisFault;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
-import org.apache.log4j.Logger;
-
 import org.intalio.tempo.workflow.tms.server.TestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TMSAxis2RemoteTest extends TestCase {
 
-    private static final Logger _logger = Logger.getLogger(TMSAxis2RemoteTest.class);
+    private static final Logger _logger = LoggerFactory.getLogger(TMSAxis2RemoteTest.class);
 
     private static final String TMS_ENDPOINT = "http://localhost:8080/axis2/services/tms";
 

@@ -15,15 +15,15 @@
 
 package org.intalio.tempo.workflow.auth;
 
-import org.apache.log4j.Logger;
-import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
-
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class AuthIdentifierSetTest extends TestCase {
 
-    private static final Logger _logger = Logger.getLogger(AuthIdentifierSetTest.class);
+    private static final Logger _logger = LoggerFactory.getLogger(AuthIdentifierSetTest.class);
     
     public static void main(String[] args) {
         junit.textui.TestRunner.run(AuthIdentifierSetTest.class);
@@ -84,10 +84,10 @@ public class AuthIdentifierSetTest extends TestCase {
     }
     
     public void testToString() throws Exception {
-        _logger.debug(new AuthIdentifierSet());
+        _logger.debug(new AuthIdentifierSet().toString());
         
         AuthIdentifierSet set1 = new AuthIdentifierSet(new String[] {"test/user1", "test.user2", "test\\user3"});
-        _logger.debug(set1);
+        _logger.debug(set1.toString());
     }
     
     public void testIsEmpty() {

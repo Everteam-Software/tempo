@@ -18,32 +18,42 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
 import java.net.URI;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
-
-import org.intalio.tempo.workflow.wds.client.*;
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Node;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
-import javax.xml.validation.Schema;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
-import javax.xml.xpath.XPathFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
+
+import org.apache.commons.io.IOUtils;
+import org.intalio.tempo.workflow.wds.client.PipaTask;
+import org.intalio.tempo.workflow.wds.client.UIDGenerator;
+import org.intalio.tempo.workflow.wds.client.UnavailableItemException;
+import org.intalio.tempo.workflow.wds.client.ValidationException;
+import org.intalio.tempo.workflow.wds.client.WDSClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * Implements the command-line interface (CLI) for REST WDS client.
@@ -53,7 +63,7 @@ import javax.xml.transform.stream.StreamSource;
  */
 public class WDSCommandLineClient {
 
-    private static Logger _log = (Logger) Logger.getLogger(WDSCommandLineClient.class);
+    private static Logger _log = LoggerFactory.getLogger(WDSCommandLineClient.class);
 
     private static final String DEPLOYMENT_DESCRIPTOR_SCHEMA =  "deployment.xsd";
 

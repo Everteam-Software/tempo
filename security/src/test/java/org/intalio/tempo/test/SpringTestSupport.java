@@ -13,10 +13,14 @@
 package org.intalio.tempo.test;
 
 import java.io.InputStream;
+
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
+
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.support.AbstractXmlApplicationContext;
 
 /**
@@ -26,7 +30,7 @@ public abstract class SpringTestSupport
     extends TestCase
 {
 
-    protected transient Logger _log = Logger.getLogger( getClass() );
+    protected transient Logger _log = LoggerFactory.getLogger( getClass() );
 
     protected AbstractXmlApplicationContext _context;
 

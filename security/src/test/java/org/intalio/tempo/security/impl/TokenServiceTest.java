@@ -11,14 +11,16 @@
 
 package org.intalio.tempo.security.impl;
 
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.xml.XmlBeanFactory;
-import org.springframework.core.io.ClassPathResource;
 import junit.framework.TestCase;
+
 import org.intalio.tempo.security.Property;
 import org.intalio.tempo.security.authentication.AuthenticationException;
 import org.intalio.tempo.security.rbac.RBACConstants;
 import org.intalio.tempo.security.token.TokenService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.xml.XmlBeanFactory;
+import org.springframework.core.io.ClassPathResource;
 
 /**
  * Test the TokenHandler class.
@@ -29,7 +31,7 @@ import org.intalio.tempo.security.token.TokenService;
 public class TokenServiceTest
     extends TestCase
 {
-    protected transient Logger _log = Logger.getLogger( getClass() );
+    protected transient Logger _log = LoggerFactory.getLogger( getClass() );
 
     /**
      * Get TokenService instance

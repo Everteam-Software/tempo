@@ -17,12 +17,11 @@ import java.io.IOException;
 import nu.xom.Document;
 import nu.xom.Serializer;
 
-import org.apache.log4j.Logger;
-import org.intalio.tempo.workflow.fds.dispatches.FilterDispatcher;
-import org.intalio.tempo.workflow.fds.dispatches.IDispatcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class LoggerDispatcher extends FilterDispatcher {
-    private static final Logger logger = Logger.getLogger(LoggerDispatcher.class);
+    private static final Logger logger = LoggerFactory.getLogger(LoggerDispatcher.class);
     private Class<? extends IDispatcher> targetDispatcherClass;
 
     public LoggerDispatcher(IDispatcher targetDispatcher) {
