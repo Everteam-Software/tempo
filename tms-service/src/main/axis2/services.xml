@@ -19,7 +19,7 @@
         <parameter name="SpringContextFile">file:${org.intalio.tempo.configDirectory}/tempo-tms.xml</parameter>
         <parameter name="ServiceObjectSupplier">org.intalio.tempo.workflow.ServiceObjectSupplier</parameter>
         <parameter name="SpringBeanName">tms.serviceImplementation</parameter>
-        <parameter name="SpringBeanFactory">tms.serviceFactory</parameter>
+        <!-- <parameter name="SpringBeanFactory">tms.serviceFactory</parameter> -->
 
         <operation name="getTaskList">
             <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
