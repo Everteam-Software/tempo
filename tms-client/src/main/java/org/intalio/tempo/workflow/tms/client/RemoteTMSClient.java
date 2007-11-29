@@ -52,12 +52,9 @@ import org.w3c.dom.Document;
 
 class RemoteTMSClient extends OMUnmarshaller implements ITaskManagementService {
 
-    Logger LOG = LoggerFactory.getLogger(OMUnmarshaller.class);
-    
+    private static final Logger _log = LoggerFactory.getLogger(OMUnmarshaller.class);
     private EndpointReference _endpoint;
-
     private String _participantToken;
-
     private OMFactory _omFactory;
 
     private class TMSMarshaller extends OMMarshaller {
@@ -118,9 +115,9 @@ class RemoteTMSClient extends OMUnmarshaller implements ITaskManagementService {
                         Task task = new TaskUnmarshaller().unmarshalTaskFromMetadata(taskElement);
                         tasks.add(task);
                     } catch (InvalidInputFormatException e) {
-                        LOG.error("Error reading task: " +taskElement, new RuntimeException(e));
+                        _log.error("Error reading task: " +taskElement, new RuntimeException(e));
                     } catch (Exception e) {
-                        LOG.error("Error reading task: " +taskElement, e);
+                        _log.error("Error reading task: " +taskElement, e);
                     }
                 } else {
                     done = true;

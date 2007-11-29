@@ -36,196 +36,184 @@ import org.intalio.tempo.workflow.task.traits.ITaskWithOutput;
 import org.intalio.tempo.workflow.task.traits.ITaskWithState;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 import org.intalio.tempo.workflow.util.xml.XmlBeanMarshaller;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
 
 public class TaskMarshaller extends XmlBeanMarshaller {
-	public TaskMarshaller() {
-		super(TaskXMLConstants.TASK_NAMESPACE,
-				TaskXMLConstants.TASK_NAMESPACE_PREFIX);
-	}
-	
-	//dummy for compatibility
-	public TaskMarshaller(OMFactory omFactory){
-		super(TaskXMLConstants.TASK_NAMESPACE,
-				TaskXMLConstants.TASK_NAMESPACE_PREFIX);		
-	}
+    final static Logger _log = LoggerFactory.getLogger(TaskMarshaller.class);
 
-	public OMElement marshalTaskMetadata(Task task, UserRoles roles){
-		return XmlTooling.convertDocument(marshalXMLTaskMetadata(task, roles));
-	}
-	
-	private XmlObject marshalXMLTaskMetadata(Task task, UserRoles roles) {
-		TaskMetadata taskMetadataElement = TaskMetadata.Factory.newInstance();
-		taskMetadataElement.setTaskId(task.getID());
-		if (task instanceof ITaskWithState) {
-			taskMetadataElement.setTaskState(((ITaskWithState) task).getState()
-					.toString());
-		}
-		taskMetadataElement.setTaskType(TaskTypeMapper.getTypeClassName(task
-				.getClass()));
-		taskMetadataElement.setDescription(task.getDescription());
+    public TaskMarshaller() {
+        super(TaskXMLConstants.TASK_NAMESPACE, TaskXMLConstants.TASK_NAMESPACE_PREFIX);
+    }
 
-		if (task instanceof IProcessBoundTask) {
-			taskMetadataElement.setProcessId(((IProcessBoundTask) task)
-					.getProcessID());
+    // dummy for compatibility
+    public TaskMarshaller(OMFactory omFactory) {
+        super(TaskXMLConstants.TASK_NAMESPACE, TaskXMLConstants.TASK_NAMESPACE_PREFIX);
+    }
 
-		}
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(task.getCreationDate());
-		taskMetadataElement.setCreationDate(cal);
+    public OMElement marshalTaskMetadata(Task task, UserRoles roles) {
+        return XmlTooling.convertDocument(marshalXMLTaskMetadata(task, roles));
+    }
 
-		for (String userOwner : task.getUserOwners()) {
-			XmlString XmlStrUserOwner = taskMetadataElement.addNewUserOwner();
-			XmlStrUserOwner.setStringValue(userOwner);
-		}
-		for (String roleOwner : task.getRoleOwners()) {
-			XmlString XmlStrRoleOwner = taskMetadataElement.addNewRoleOwner();
-			XmlStrRoleOwner.setStringValue(roleOwner);
+    private XmlObject marshalXMLTaskMetadata(Task task, UserRoles roles) {
+        TaskMetadata taskMetadataElement = TaskMetadata.Factory.newInstance();
+        taskMetadataElement.setTaskId(task.getID());
+        if (task instanceof ITaskWithState) {
+            taskMetadataElement.setTaskState(((ITaskWithState) task).getState().toString());
+        }
+        taskMetadataElement.setTaskType(TaskTypeMapper.getTypeClassName(task.getClass()));
+        taskMetadataElement.setDescription(task.getDescription());
 
-		}
+        if (task instanceof IProcessBoundTask) {
+            taskMetadataElement.setProcessId(((IProcessBoundTask) task).getProcessID());
 
-		createACL("claim", task, roles, taskMetadataElement);
-		createACL("revoke", task, roles, taskMetadataElement);
-		createACL("save", task, roles, taskMetadataElement);
-		createACL("complete", task, roles, taskMetadataElement);
+        }
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(task.getCreationDate());
+        taskMetadataElement.setCreationDate(cal);
 
-		taskMetadataElement.setFormUrl(task.getFormURL().toString());
+        for (String userOwner : task.getUserOwners()) {
+            XmlString XmlStrUserOwner = taskMetadataElement.addNewUserOwner();
+            XmlStrUserOwner.setStringValue(userOwner);
+        }
+        for (String roleOwner : task.getRoleOwners()) {
+            XmlString XmlStrRoleOwner = taskMetadataElement.addNewRoleOwner();
+            XmlStrRoleOwner.setStringValue(roleOwner);
 
-		if (task instanceof ITaskWithState) {
-			ITaskWithState taskWithState = (ITaskWithState) task;
-			if (taskWithState.getState().equals(TaskState.FAILED)) {
-				taskMetadataElement.setFailureCode(taskWithState
-						.getFailureCode());
-				taskMetadataElement.setFailureReason(taskWithState
-						.getFailureReason());
-			}
-		}
+        }
 
-		if (task instanceof ICompleteReportingTask) {
-			ICompleteReportingTask crTask = (ICompleteReportingTask) task;
-			taskMetadataElement.setUserProcessCompleteSOAPAction(crTask
-					.getCompleteSOAPAction());
-		}
+        createACL("claim", task, roles, taskMetadataElement);
+        createACL("revoke", task, roles, taskMetadataElement);
+        createACL("save", task, roles, taskMetadataElement);
+        createACL("complete", task, roles, taskMetadataElement);
 
-		if (task instanceof ITaskWithAttachments) {
-			ITaskWithAttachments taskWithAttachments = (ITaskWithAttachments) task;
-			for (Attachment attachment : taskWithAttachments.getAttachments()) {
-				TaskMetadata.Attachments xmlAttachments = taskMetadataElement
-						.addNewAttachments();
-				com.intalio.bpms.workflow.taskManagementServices20051109.Attachment xmlAttachment = xmlAttachments
-						.addNewAttachment();
-				com.intalio.bpms.workflow.taskManagementServices20051109.AttachmentMetadata xmlAttachmentMetadata = xmlAttachment
-						.addNewAttachmentMetadata();
+        taskMetadataElement.setFormUrl(task.getFormURL().toString());
 
-				AttachmentMetadata metadata = attachment.getMetadata();
-				xmlAttachmentMetadata.setMimeType(metadata.getMimeType());
-				xmlAttachmentMetadata.setFileName(metadata.getFileName());
-				xmlAttachmentMetadata.setTitle(metadata.getTitle());
-				xmlAttachmentMetadata.setDescription(metadata.getDescription());
-				Calendar attachmentCreateDate = Calendar.getInstance();
-				attachmentCreateDate.setTime(metadata.getCreationDate());
-				xmlAttachmentMetadata.setCreationDate(attachmentCreateDate);
+        if (task instanceof ITaskWithState) {
+            ITaskWithState taskWithState = (ITaskWithState) task;
+            if (taskWithState.getState().equals(TaskState.FAILED)) {
+                taskMetadataElement.setFailureCode(taskWithState.getFailureCode());
+                taskMetadataElement.setFailureReason(taskWithState.getFailureReason());
+            }
+        }
 
-				xmlAttachment.setPayloadUrl(attachment.getPayloadURL()
-						.toString());
-			}
-		}
+        if (task instanceof ICompleteReportingTask) {
+            ICompleteReportingTask crTask = (ICompleteReportingTask) task;
+            taskMetadataElement.setUserProcessCompleteSOAPAction(crTask.getCompleteSOAPAction());
+        }
 
-		if (task instanceof IChainableTask) {
-			IChainableTask chainableTask = (IChainableTask) task;
-			String isChainedBeforeStr = chainableTask.isChainedBefore() ? "true"
-					: "false";
-			createElement(taskMetadataElement, "isChainedBefore",
-					isChainedBeforeStr);
-			if (chainableTask.isChainedBefore()) {
-				createElement(taskMetadataElement, "previousTaskId",
-						chainableTask.getPreviousTaskID());
-			}
-		}
-		
-		return taskMetadataElement;
-	}
+        if (task instanceof ITaskWithAttachments) {
+            ITaskWithAttachments taskWithAttachments = (ITaskWithAttachments) task;
+            for (Attachment attachment : taskWithAttachments.getAttachments()) {
+                TaskMetadata.Attachments xmlAttachments = taskMetadataElement.addNewAttachments();
+                com.intalio.bpms.workflow.taskManagementServices20051109.Attachment xmlAttachment = xmlAttachments
+                        .addNewAttachment();
+                com.intalio.bpms.workflow.taskManagementServices20051109.AttachmentMetadata xmlAttachmentMetadata = xmlAttachment
+                        .addNewAttachmentMetadata();
 
-	private void createACL(String action, Task task, UserRoles roles,
-			XmlObject taskMetadata) {
-		if (task.getAuthorizedActions().contains(action)) {
-			XmlObject acl = createElement(taskMetadata, action + "Action");
-			for (String user : task.getAuthorizedUsers(action)) {
-				createElement(acl, "user", user);
-			}
-			for (String role : task.getAuthorizedRoles(action)) {
-				createElement(acl, "role", role);
-			}
-			if (roles != null) {
-				boolean authorized = task.isAuthorizedAction(roles, action);
-				createElement(acl, "authorized", authorized ? "true" : "false");
-			}
-		}
-	}
+                AttachmentMetadata metadata = attachment.getMetadata();
+                xmlAttachmentMetadata.setMimeType(metadata.getMimeType());
+                xmlAttachmentMetadata.setFileName(metadata.getFileName());
+                xmlAttachmentMetadata.setTitle(metadata.getTitle());
+                xmlAttachmentMetadata.setDescription(metadata.getDescription());
+                Calendar attachmentCreateDate = Calendar.getInstance();
+                attachmentCreateDate.setTime(metadata.getCreationDate());
+                xmlAttachmentMetadata.setCreationDate(attachmentCreateDate);
 
-	public void marshalTaskInput(ITaskWithInput task, com.intalio.bpms.workflow.taskManagementServices20051109.Task.Input parent) {
-		try {
-			XmlObject xmlTaskInput = XmlObject.Factory.parse(task.getInput());
-			parent.set(xmlTaskInput);
-		} catch (XmlException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+                xmlAttachment.setPayloadUrl(attachment.getPayloadURL().toString());
+            }
+        }
 
-	public void marshalTaskOutput(ITaskWithOutput task, com.intalio.bpms.workflow.taskManagementServices20051109.Task.Output parent) {
-		Document output = task.getOutput();
-		if (output == null) {
-			throw new IllegalArgumentException("Task has no output");
-		}
-		try {
-			XmlObject xmlTaskOutput = XmlObject.Factory.parse(output);
-			parent.set(xmlTaskOutput);
-		} catch (XmlException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        if (task instanceof IChainableTask) {
+            IChainableTask chainableTask = (IChainableTask) task;
+            String isChainedBeforeStr = chainableTask.isChainedBefore() ? "true" : "false";
+            createElement(taskMetadataElement, "isChainedBefore", isChainedBeforeStr);
+            if (chainableTask.isChainedBefore()) {
+                createElement(taskMetadataElement, "previousTaskId", chainableTask.getPreviousTaskID());
+            }
+        }
 
-	}
+        return taskMetadataElement;
+    }
 
-	//for compatibility usage
-	public void marshalFullTask(Task task, OMElement  parent, UserRoles user) {
-		try {
-			com.intalio.bpms.workflow.taskManagementServices20051109.Task xmlTask =
-			com.intalio.bpms.workflow.taskManagementServices20051109.Task.Factory.parse(parent.getXMLStreamReader());
-			marshalFullTask(task, xmlTask, user);
-			parent.addChild(XmlTooling.convertDocument(xmlTask));
-		} catch (XmlException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
+    private void createACL(String action, Task task, UserRoles roles, XmlObject taskMetadata) {
+        if (task.getAuthorizedActions().contains(action)) {
+            XmlObject acl = createElement(taskMetadata, action + "Action");
+            for (String user : task.getAuthorizedUsers(action)) {
+                createElement(acl, "user", user);
+            }
+            for (String role : task.getAuthorizedRoles(action)) {
+                createElement(acl, "role", role);
+            }
+            if (roles != null) {
+                boolean authorized = task.isAuthorizedAction(roles, action);
+                createElement(acl, "authorized", authorized ? "true" : "false");
+            }
+        }
+    }
 
-	private void marshalFullTask(Task task, com.intalio.bpms.workflow.taskManagementServices20051109.Task  parent, UserRoles user) {
-		if (task == null) {
-			throw new RequiredArgumentException("task");
-		}
+    public void marshalTaskInput(ITaskWithInput task,
+            com.intalio.bpms.workflow.taskManagementServices20051109.Task.Input parent) {
+        try {
+            XmlObject xmlTaskInput = XmlObject.Factory.parse(task.getInput());
+            parent.set(xmlTaskInput);
+        } catch (XmlException e) {
+            _log.error("Error while marshalling input", e);
+        }
+    }
 
-		XmlObject metadataElement = marshalXMLTaskMetadata(task, user);
-		parent.setMetadata((TaskMetadata) metadataElement);
+    public void marshalTaskOutput(ITaskWithOutput task,
+            com.intalio.bpms.workflow.taskManagementServices20051109.Task.Output parent) {
+        Document output = task.getOutput();
+        if (output == null) {
+            throw new IllegalArgumentException("Task has no output");
+        }
+        try {
+            XmlObject xmlTaskOutput = XmlObject.Factory.parse(output);
+            parent.set(xmlTaskOutput);
+        } catch (XmlException e) {
+            _log.error("Error while marshalling output", e);
+        }
 
-		if (task instanceof ITaskWithInput) {
-			ITaskWithInput taskWithInput = (ITaskWithInput) task;
-			com.intalio.bpms.workflow.taskManagementServices20051109.Task.Input taskInput = parent.addNewInput();
-			marshalTaskInput(taskWithInput, taskInput);
-		}
+    }
 
-		if (task instanceof ITaskWithOutput) {
-			ITaskWithOutput taskWithOutput = (ITaskWithOutput) task;
-			if (taskWithOutput.getOutput() != null) {
-				com.intalio.bpms.workflow.taskManagementServices20051109.Task.Output taskOutput = parent.addNewOutput();
-				marshalTaskOutput(taskWithOutput, taskOutput);
-			}
-		}
-		
-	}
-	
+    // for compatibility usage
+    public void marshalFullTask(Task task, OMElement parent, UserRoles user) {
+        try {
+            com.intalio.bpms.workflow.taskManagementServices20051109.Task xmlTask = com.intalio.bpms.workflow.taskManagementServices20051109.Task.Factory.parse(parent.getXMLStreamReader());
+            marshalFullTask(task, xmlTask, user);
+            parent.addChild(XmlTooling.convertDocument(xmlTask));
+        } catch (XmlException e) {
+            _log.error("Error while marshalling fulltask", e);
+        }
+    }
+
+    private void marshalFullTask(Task task, com.intalio.bpms.workflow.taskManagementServices20051109.Task parent,
+            UserRoles user) {
+        if (task == null) {
+            throw new RequiredArgumentException("task");
+        }
+
+        XmlObject metadataElement = marshalXMLTaskMetadata(task, user);
+        parent.setMetadata((TaskMetadata) metadataElement);
+
+        if (task instanceof ITaskWithInput) {
+            ITaskWithInput taskWithInput = (ITaskWithInput) task;
+            com.intalio.bpms.workflow.taskManagementServices20051109.Task.Input taskInput = parent.addNewInput();
+            marshalTaskInput(taskWithInput, taskInput);
+        }
+
+        if (task instanceof ITaskWithOutput) {
+            ITaskWithOutput taskWithOutput = (ITaskWithOutput) task;
+            if (taskWithOutput.getOutput() != null) {
+                com.intalio.bpms.workflow.taskManagementServices20051109.Task.Output taskOutput = parent.addNewOutput();
+                marshalTaskOutput(taskWithOutput, taskOutput);
+            }
+        }
+
+    }
+
 }

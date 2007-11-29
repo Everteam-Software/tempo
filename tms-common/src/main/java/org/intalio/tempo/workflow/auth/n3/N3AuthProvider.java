@@ -15,7 +15,6 @@
 
 package org.intalio.tempo.workflow.auth.n3;
 
-
 import org.intalio.tempo.security.Property;
 import org.intalio.tempo.security.token.TokenService;
 import org.intalio.tempo.security.util.PropertyUtils;
@@ -43,9 +42,11 @@ public class N3AuthProvider implements IAuthProvider {
     public N3AuthProvider() {
         // empty constructor for Spring
     }
-    
+
     /**
-     * This constructor is left for temporary campatibility with UI-FW not migrated to Security WS
+     * This constructor is left for temporary campatibility with UI-FW not
+     * migrated to Security WS
+     * 
      * @param resourceName
      * @param resourceClassLoader
      * @throws Exception
@@ -61,8 +62,8 @@ public class N3AuthProvider implements IAuthProvider {
             XmlBeanFactory beanFactory = new XmlBeanFactory(beanConfig);
 
             _tokenService = (TokenService) beanFactory.getBean(TOKEN_SERVICE_BEAN_NAME);
-            _logger.debug("Spring Bean '" +
-                    TOKEN_SERVICE_BEAN_NAME + "' is read from file " + resourceName + " as " + _tokenService);
+            _logger.debug("Spring Bean '" + TOKEN_SERVICE_BEAN_NAME + "' is read from file " + resourceName + " as "
+                    + _tokenService);
 
         } catch (Exception e) {
             _logger.error("Cannot properly read Spring Bean " + TOKEN_SERVICE_BEAN_NAME, e);
@@ -80,14 +81,16 @@ public class N3AuthProvider implements IAuthProvider {
 
         try {
             Property[] properties = connect2tokenService().getTokenProperties(participantToken);
-            _logger.debug("Token '" + participantToken + "' is resolved to " + properties);
-
             String invokerUser = (String) PropertyUtils.getProperty(properties, "user").getValue();
+            if (_logger.isDebugEnabled()) {
+                _logger.debug("Token '" + participantToken + "' is resolved to " + invokerUser);
+            }
             Property roleProperty = PropertyUtils.getProperty(properties, "roles");
             String[] invokerRoles = StringArrayUtils.parseCommaDelimited((String) roleProperty.getValue());
             if (_logger.isDebugEnabled()) {
                 String roles = "";
-                for (int i=0; i<invokerRoles.length; i++) roles += (i==0 ? "" : ",") + invokerRoles[i];
+                for (int i = 0; i < invokerRoles.length; i++)
+                    roles += (i == 0 ? "" : ",") + invokerRoles[i];
                 _logger.debug("User " + invokerUser + " with roles " + roles);
             }
             return new UserRoles(invokerUser, invokerRoles);
@@ -103,6 +106,5 @@ public class N3AuthProvider implements IAuthProvider {
         }
         return _tokenService;
     }
-
 
 }
