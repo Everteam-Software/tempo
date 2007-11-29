@@ -10,8 +10,7 @@
  * Intalio inc. - initial API and implementation
  */
 
-package org.intalio.tempo.deployment;
-
+package org.intalio.tempo.deployment.spi;
 
 /**
  * Callback interface for the deployment service.

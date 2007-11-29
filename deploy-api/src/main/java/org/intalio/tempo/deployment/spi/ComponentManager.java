@@ -10,9 +10,13 @@
  * Intalio inc. - initial API and implementation
  */
 
-package org.intalio.tempo.deployment;
+package org.intalio.tempo.deployment.spi;
 
 import java.io.File;
+import java.util.List;
+
+import org.intalio.tempo.deployment.ComponentName;
+import org.intalio.tempo.deployment.DeploymentMessage;
 
 
 /**
@@ -30,40 +34,43 @@ public interface ComponentManager {
      * <p>
      * In a clustered environment, this method is called on a single node (the coordinator)
      */
-    void deploy(ComponentName name, File path);
+    List<DeploymentMessage> deploy(ComponentName name, File path);
 
     /**
      * Undeploy an assembly component
      * <p>
      * In a clustered environment, this method is called on a single node (the coordinator)
      */
-    void undeploy(ComponentName name, File path);
+    List<DeploymentMessage> undeploy(ComponentName name, File path);
     
     /**
-     * Initialize a component.
+     * Activate a component.
      * <p>
      * In a clustered environment, called on every node after deployment.
      */
-    void init(ComponentName name, File path);
+    List<DeploymentMessage> activate(ComponentName name, File path);
 
     /**
-     * Shutdown a component.
-     * <p>
+     * Deactivate a component.
+     * <p/>
      * In a clustered environment, called on every node before undeployment.
      */
-    void shutdown(ComponentName name);
+    List<DeploymentMessage> deactivate(ComponentName name);
 
     
     /**
      * Start a component.
-     * <p>
-     * Called after init() to start a component.
+     * <p/>
+     * Called after activate() to start the execution of a component (if necessary).
      */
-    void start(ComponentName name);
+    List<DeploymentMessage> start(ComponentName name);
 
     /**
      * Stop a component.
+     * <p/>
+     * Called before deactivate to stop the execution of a component (if necessary).  This method should only return once the component has stopped
+     * all current processing.
      */
-    void stop(ComponentName name);
+    List<DeploymentMessage> stop(ComponentName name);
 }
 
