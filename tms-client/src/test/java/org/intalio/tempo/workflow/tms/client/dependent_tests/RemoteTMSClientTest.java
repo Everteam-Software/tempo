@@ -17,49 +17,45 @@ package org.intalio.tempo.workflow.tms.client.dependent_tests;
 
 import java.net.URI;
 import java.net.URL;
-import java.util.Random;
+import java.security.SecureRandom;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import org.w3c.dom.Document;
-
-import org.intalio.tempo.workflow.tms.client.RemoteTMSFactory;
-import org.intalio.tempo.workflow.tms.ITaskManagementService;
 import org.intalio.tempo.workflow.task.PATask;
-import org.intalio.tempo.workflow.task.TaskState;
 import org.intalio.tempo.workflow.task.Task;
-import org.intalio.tempo.workflow.task.attachments.AttachmentMetadata;
+import org.intalio.tempo.workflow.task.TaskState;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
+import org.intalio.tempo.workflow.task.attachments.AttachmentMetadata;
+import org.intalio.tempo.workflow.tms.ITaskManagementService;
+import org.intalio.tempo.workflow.tms.client.RemoteTMSFactory;
+import org.w3c.dom.Document;
 
 public class RemoteTMSClientTest extends TestCase {
 
-    private static final String TOKEN = "VE9LRU4mJnVzZXI9PXRlc3Rcc3lzdGVtLXRlc3QmJmlzc3VlZD09MTEzNzQxOTg"
-            + "xNTAwMyYmcm9sZXM9PXN5c3RlbVxzeXN0ZW0mJmZ1bGxOYW1lPT1Qcm9kdWN0IE1hbmFnZXIgIzEmJmVtYWlsPT1wcm9kL"
-            + "W1hbmFnZXIxQGludGFsaW8uY29tJiZub25jZT09LTI4OTY1NDQxODc3OTI0MjY0MDUmJnRpbWVzdGFtcD09MTEzNzQxOTg"
-            + "xNTAwMyYmZGlnZXN0PT1wVVc0aXFiMWd1ZnV5TEwxYXNZcit4MS8rRW89JiYmJlRPS0VO";
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
+    private static final String TOKEN = "VE9LRU4mJnVzZXI9PWludGFsaW9cYWRtaW4mJmlzc3VlZD09MTE5NjI5NjM1MzQ4MyYmcm9sZXM9PWludGFsaW9ccHJvY2Vzc2FkbWluaXN0cmF0b3IsZXhhbXBsZXNcZW1wbG95ZWUsaW50YWxpb1xwcm9jZXNzbWFuYWdlcixleGFtcGxlc1xtYW5hZ2VyJiZmdWxsTmFtZT09QWRtaW5pbmlzdHJhdG9yJiZlbWFpbD09YWRtaW5AZXhhbXBsZS5jb20mJm5vbmNlPT0tODI1MzI1NjkwNzg0MzU2NTk0JiZ0aW1lc3RhbXA9PTExOTYyOTYzNTM0ODUmJmRpZ2VzdD09WnVLd2JWaDUxeWdMZ2FqSjVhTDlITk02anh3PSYmJiZUT0tFTg==";
 
     public static void main(String[] args) {
         junit.textui.TestRunner.run(RemoteTMSClientTest.class);
     }
 
-    public void testBasicPATaskLifecycle()
-            throws Exception {
+    public void testBasicPATaskLifecycle() throws Exception {
         ITaskManagementService tms = new RemoteTMSFactory(
                 "http://localhost:8080/axis2/services/TaskManagementServices", TOKEN).getService();
         Task[] tasks = tms.getTaskList();
         Assert.assertNotNull(tasks);
 
-        String task1ID = ((Integer) new Random().nextInt(10000)).toString();
+        String task1ID = nextRandom();
         PATask task1 = new PATask(task1ID, new URI("http://localhost/1"), "processID", "urn:completeSOAPAction",
                 TestUtils.createXMLDocument());
-        task1.getUserOwners().add("test.system-test");
+        task1.getUserOwners().add("intalio.admin");
         tms.create(task1);
 
         PATask task2 = (PATask) tms.getTask(task1ID);
         Assert.assertTrue(task1.equalsTask(task2));
 
-        String task3ID = ((Integer) new Random().nextInt(10000)).toString();
+        String task3ID = nextRandom();
         PATask task3 = new PATask(task3ID, new URI("http://localhost/3"), "processID", "urn:completeSOAPAction",
                 TestUtils.createXMLDocument());
         task3.getUserOwners().add("test.system-test");
@@ -81,7 +77,7 @@ public class RemoteTMSClientTest extends TestCase {
         Assert.assertEquals("Hi world #2", task5.getOutput().getDocumentElement().getTextContent().trim());
         Assert.assertEquals(TaskState.COMPLETED, task5.getState());
 
-        String task6ID = ((Integer) new Random().nextInt(10000)).toString();
+        String task6ID = nextRandom();
         PATask task6 = new PATask(task6ID, new URI("http://localhost/6"), "processID", "urn:completeSOAPAction",
                 TestUtils.createXMLDocument());
         task6.getUserOwners().add("test.system-test");
@@ -109,12 +105,15 @@ public class RemoteTMSClientTest extends TestCase {
         }
     }
 
-    public void testAttachments()
-            throws Exception {
+    private String nextRandom() {
+        return String.valueOf(((Integer) SECURE_RANDOM.nextInt(10000)));
+    }
+
+    public void testAttachments() throws Exception {
         ITaskManagementService tms = new RemoteTMSFactory(
                 "http://localhost:8080/axis2/services/TaskManagementServices", TOKEN).getService();
 
-        String task1ID = ((Integer) new Random().nextInt(10000)).toString();
+        String task1ID = nextRandom();
         PATask task1 = new PATask(task1ID, new URI("http://localhost/1"), "processID", "urn:completeSOAPAction",
                 TestUtils.createXMLDocument());
         task1.getUserOwners().add("test.system-test");

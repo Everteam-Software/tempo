@@ -12,42 +12,54 @@
 -->
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
-	<bean id="tms.serviceFactory" class="org.springframework.aop.framework.ProxyFactoryBean">
-		<property name="proxyInterfaces">
-			<value>org.intalio.tempo.workflow.tms.server.ITMSServer</value>
-		</property>
-		<property name="target">
-			<ref local="tms.serviceImplementation"/>
-		</property>
-		<property name="interceptorNames">
-			<list>				
-				<value>loggingInterceptor</value>
-			</list>
-		</property>		
-	</bean>	
-	
-	<bean id="loggingInterceptor"  class="org.intalio.tempo.workflow.tms.server.LoggingInterceptor"/>
-	<bean id="tms.serviceImplementation" class="org.intalio.tempo.workflow.tms.server.TMSRequestProcessor">
-		<property name="server">
-			<ref bean="tms.server"/>
-		</property>
-	</bean>
-	<bean id="tms.server" class="org.intalio.tempo.workflow.tms.server.TMSServer">
-		<property name="authProvider">
-			<ref bean="tms.authProvider"/>
-		</property>
-		<property name="taskDAOFactory">
-			<ref bean="tms.daoFactory"/>
-		</property>
-	</bean>
-	<bean id="tms.authProvider" class="org.intalio.tempo.workflow.auth.n3.N3AuthProvider">
-		<property name="wsEndpoint">
-			<value>http://localhost:8080/axis2/services/TokenService</value>
-		</property>
-	</bean>
-	<bean id="tms.daoFactory" class="org.intalio.tempo.workflow.tms.server.dao.JDBCTaskDAOConnectionFactory">
-		<constructor-arg>
-			<value>java:comp/env/jdbc/BPMSDB</value>
-		</constructor-arg>
-	</bean>
+
+	<!-- 	<bean id="tms.serviceFactory" class="org.springframework.aop.framework.ProxyFactoryBean">
+	<property name="interceptorNames">
+		<list>				
+			<value>loggingInterceptor</value>
+		</list>
+	</property>
+	<property name="target">
+		<ref bean="tms.serviceImplementation"/>
+	</property>		
+</bean>	
+
+<bean id="loggingInterceptor"  class="org.intalio.tempo.workflow.tms.server.LoggingInterceptor"/>
+-->
+<bean id="tms.serviceImplementation" class="org.intalio.tempo.workflow.tms.server.TMSRequestProcessor">
+	<property name="server">
+		<ref bean="tms.server"/>
+	</property>
+</bean>
+<bean id="tms.server" class="org.intalio.tempo.workflow.tms.server.TMSServer">
+	<property name="authProvider">
+		<ref bean="tms.authProvider"/>
+	</property>
+	<property name="taskDAOFactory">
+		<ref bean="tms.daoFactory"/>
+	</property>
+</bean>
+<bean id="tms.authProvider" class="org.intalio.tempo.workflow.auth.n3.N3AuthProvider">
+	<property name="wsEndpoint">
+		<value>http://localhost:8080/axis2/services/TokenService</value>
+	</property>
+</bean>
+<bean id="tms.daoFactory" class="org.intalio.tempo.workflow.tms.server.dao.JPATaskDaoConnectionFactory">
+	<constructor-arg>
+		<map>
+			<!--
+				<entry><key><value>jta-data-source</value></key><value>java:comp/env/jdbc/JPADB</value></entry>
+				<entry><key><value>openjpa.Connection2UserName</value></key><value>APP</value></entry>
+				<entry><key><value>openjpa.Connection2Password</value></key><value>APP</value></entry>
+				<entry><key><value>openjpa.Connection2DriverName</value></key><value>org.apache.derby.jdbc.EmbeddedDriver</value></entry>
+				<entry><key><value>openjpa.Connection2URL</value></key><value>jdbc:derby:BPMSDB;create=false</value></entry>
+			-->
+			<entry><key><value>openjpa.jdbc.SynchronizeMappings</value></key><value>buildSchema</value></entry>
+			<entry><key><value>openjpa.ConnectionUserName</value></key><value>APP</value></entry>
+			<entry><key><value>openjpa.ConnectionPassword</value></key><value>APP</value></entry>
+			<entry><key><value>openjpa.ConnectionDriverName</value></key><value>org.apache.derby.jdbc.EmbeddedDriver</value></entry>
+			<entry><key><value>openjpa.ConnectionURL</value></key><value>jdbc:derby:BPMSDB;create=false</value></entry>
+		</map>
+	</constructor-arg>
+</bean>
 </beans>

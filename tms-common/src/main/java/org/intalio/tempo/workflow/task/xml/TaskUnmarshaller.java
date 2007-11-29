@@ -59,7 +59,6 @@ import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
 
 public class TaskUnmarshaller extends XmlBeanUnmarshaller {
 
-	@SuppressWarnings("unused")
 	private static final Logger _logger = LoggerFactory.getLogger(TaskUnmarshaller.class);
 
 	public TaskUnmarshaller() {
@@ -72,19 +71,23 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
 			throws InvalidInputFormatException {
 		try {
 			XmlObject xmlObject = XmlObject.Factory.parse(rootElement.getXMLStreamReader());
+			_logger.info("Umarshalling");
+			_logger.info(xmlObject.xmlText());
 			XmlCursor xmlCursor = xmlObject.newCursor();
 			xmlCursor.toStartDoc();
 			xmlCursor.toNextToken();
 			TaskMetadata taskMetadata =  com.intalio.bpms.workflow.taskManagementServices20051109.Task.Factory.newInstance().addNewMetadata();
 			taskMetadata.set(xmlCursor.getObject());
 			return unmarshalTaskFromMetadata(taskMetadata);
+		} catch (InvalidInputFormatException e) {
+		    throw e;
 		} catch (XmlException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
+            _logger.error("Error in unmarshalling task from metadata",e);
+            return null;
+        }
+		
 	}
-
+	
 	private Task unmarshalTaskFromMetadata(TaskMetadata taskMetadata)
 			throws XmlValueOutOfRangeException {
 		if (taskMetadata == null) {
@@ -106,10 +109,10 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
 			Calendar cal = taskMetadata.getCreationDate();
 			if (cal != null) {
 				creationDateStr = cal.toString();
-
 			}
 		} catch (Exception e) {
 			// TODO need to confirm how to deal with it
+		    _logger.error("Error in unmarshalling task from metadata",e);
 		}
 
 		AuthIdentifierSet userOwners = new AuthIdentifierSet(taskMetadata
@@ -166,6 +169,7 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
 				taskState = (taskStateStr == null) ? TaskState.READY
 						: TaskState.valueOf(taskStateStr.toUpperCase());
 			} catch (IllegalArgumentException e) {
+			    _logger.error("Error in unmarshalling task from metadata",e);
 				throw new InvalidInputFormatException("Unknown task state: '"
 						+ taskStateStr + "'");
 			}
@@ -274,6 +278,7 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
 										.toString()).getTime());
 							}
 						} catch (Exception e) {
+						    _logger.error("Error in unmarshalling task from metadata",e);
 							// TODO
 						}
 

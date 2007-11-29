@@ -152,7 +152,8 @@ define "tempo" do
   desc "Task Management Service Client"
   define "tms-client" do
     compile.with projects("tms-axis", "tms-common"), AXIOM, AXIS2, COMMONS, LOG4J, SLF4J, STAX_API, WS_COMMONS_SCHEMA, WSDL4J, APACHE_JPA, XMLBEANS
-    test.with SLF4J, WOODSTOX
+
+    test.with projects("tms-axis", "tms-common"), SLF4J, WOODSTOX, XMLBEANS
     test.exclude '*TestUtils*'
 
     unless ENV["LIVE"] == 'yes'
@@ -166,7 +167,7 @@ define "tempo" do
     compile.with projects("security", "security-ws-client", "tms-common", "tms-axis", "web-nutsNbolts"),
                  AXIOM, AXIS2, COMMONS, SLF4J, LOG4J, SPRING, STAX_API, XOM, APACHE_JPA, XMLBEANS
 
-    test.with JAVAMAIL, SLF4J, SPRING, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX
+    test.with projects("tms-common", "tms-axis"), JAVAMAIL, SLF4J, SPRING, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX
 
     # require live Axis2 instance
     unless ENV["LIVE"] == 'yes'
@@ -175,13 +176,13 @@ define "tempo" do
     test.exclude '*TestUtils*'
     
     package(:aar).with :libs => 
-        [ projects("security", "security-ws-client", "security-ws-common", "tms-common", "web-nutsNbolts"), LOG4J, SLF4J, SPRING, XOM, APACHE_JPA ] 
+        [ projects("security", "security-ws-client", "tms-axis", "security-ws-common", "tms-common", "web-nutsNbolts"), LOG4J, SLF4J, SPRING, XOM, APACHE_JPA ] 
   end
   
   desc "User-Interface Framework"
   define "ui-fw" do
     libs = projects("security", "security-ws-client", "security-ws-common",
-                    "tms-client", "tms-common", "web-nutsNbolts"),
+                    "tms-client", "tms-common", "tms-axis", "web-nutsNbolts"),
            AXIOM, AXIS2, COMMONS, DOM4J, INTALIO_STATS, JSP_API, JSTL,
            LOG4J, SPRING, SERVLET_API, SLF4J, STAX_API, TAGLIBS, WOODSTOX, 
            WS_COMMONS_SCHEMA, WSDL4J, XERCES, XMLBEANS, APACHE_JPA

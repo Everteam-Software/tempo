@@ -28,7 +28,7 @@ public class SpringInit implements ServiceLifeCycle {
 
 	private static final Logger LOG = Logger.getLogger(SpringInit.class);
 
-    static SysPropApplicationContextLoader CONTEXT;
+    public static SysPropApplicationContextLoader CONTEXT;
     
 	/**
 	 * Called by Axis2 during deployment

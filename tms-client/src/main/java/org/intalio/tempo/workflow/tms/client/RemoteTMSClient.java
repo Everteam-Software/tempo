@@ -78,6 +78,7 @@ class RemoteTMSClient extends OMUnmarshaller implements ITaskManagementService {
     }
 
     private OMElement sendRequest(OMElement request, String soapAction) {
+        _log.info(request.toString());
         try {
             Options options = new Options();
             options.setTo(_endpoint);
