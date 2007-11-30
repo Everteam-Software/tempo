@@ -21,22 +21,18 @@ public abstract class TMSException extends WorkflowException {
 
     public TMSException() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-    public TMSException(String arg0) {
-        super(arg0);
-        // TODO Auto-generated constructor stub
+    public TMSException(String message) {
+        super(message);
     }
 
-    public TMSException(String arg0, Throwable arg1) {
-        super(arg0, arg1);
-        // TODO Auto-generated constructor stub
+    public TMSException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public TMSException(Throwable arg0) {
-        super(arg0);
-        // TODO Auto-generated constructor stub
+    public TMSException(Throwable cause) {
+        super(cause);
     }
 
 }

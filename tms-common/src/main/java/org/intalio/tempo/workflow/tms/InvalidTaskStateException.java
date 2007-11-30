@@ -18,29 +18,22 @@ package org.intalio.tempo.workflow.tms;
 
 public class InvalidTaskStateException extends TMSException {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = - 4058158782128861920L;
 
     public InvalidTaskStateException() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-    public InvalidTaskStateException(String arg0) {
-        super(arg0);
-        // TODO Auto-generated constructor stub
+    public InvalidTaskStateException(String message) {
+        super(message);
     }
 
-    public InvalidTaskStateException(String arg0, Throwable arg1) {
-        super(arg0, arg1);
-        // TODO Auto-generated constructor stub
+    public InvalidTaskStateException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public InvalidTaskStateException(Throwable arg0) {
-        super(arg0);
-        // TODO Auto-generated constructor stub
+    public InvalidTaskStateException(Throwable cause) {
+        super(cause);
     }
 
 }

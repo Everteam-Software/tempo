@@ -19,29 +19,22 @@ import org.intalio.tempo.workflow.WorkflowException;
 
 public class AuthException extends WorkflowException {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = - 829405988516362302L;
 
     public AuthException() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-    public AuthException(String arg0) {
-        super(arg0);
-        // TODO Auto-generated constructor stub
+    public AuthException(String message) {
+        super(message);
     }
 
-    public AuthException(String arg0, Throwable arg1) {
-        super(arg0, arg1);
-        // TODO Auto-generated constructor stub
+    public AuthException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public AuthException(Throwable arg0) {
-        super(arg0);
-        // TODO Auto-generated constructor stub
+    public AuthException(Throwable cause) {
+        super(cause);
     }
 
 }

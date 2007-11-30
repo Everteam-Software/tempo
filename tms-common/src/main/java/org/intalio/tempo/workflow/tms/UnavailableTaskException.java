@@ -18,29 +18,22 @@ package org.intalio.tempo.workflow.tms;
 
 public class UnavailableTaskException extends TMSException {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 7637648273589386865L;
 
     public UnavailableTaskException() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-    public UnavailableTaskException(String arg0) {
-        super(arg0);
-        // TODO Auto-generated constructor stub
+    public UnavailableTaskException(String message) {
+        super(message);
     }
 
-    public UnavailableTaskException(String arg0, Throwable arg1) {
-        super(arg0, arg1);
-        // TODO Auto-generated constructor stub
+    public UnavailableTaskException(String msg, Throwable cause) {
+        super(msg, cause);
     }
 
-    public UnavailableTaskException(Throwable arg0) {
-        super(arg0);
-        // TODO Auto-generated constructor stub
+    public UnavailableTaskException(Throwable cause) {
+        super(cause);
     }
 
 }

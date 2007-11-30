@@ -18,29 +18,22 @@ package org.intalio.tempo.workflow.tms;
 
 public class TaskIDConflictException extends TMSException {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = - 7147054177991439296L;
 
     public TaskIDConflictException() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-    public TaskIDConflictException(String arg0) {
-        super(arg0);
-        // TODO Auto-generated constructor stub
+    public TaskIDConflictException(String message) {
+        super(message);
     }
 
-    public TaskIDConflictException(String arg0, Throwable arg1) {
-        super(arg0, arg1);
-        // TODO Auto-generated constructor stub
+    public TaskIDConflictException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public TaskIDConflictException(Throwable arg0) {
-        super(arg0);
-        // TODO Auto-generated constructor stub
+    public TaskIDConflictException(Throwable cause) {
+        super(cause);
     }
 
 }

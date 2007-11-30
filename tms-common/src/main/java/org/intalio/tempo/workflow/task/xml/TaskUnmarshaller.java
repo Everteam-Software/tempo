@@ -415,7 +415,6 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
 					.getXMLStreamReader());
 			return unmarshalFullTask(xmlObject);
 		} catch (XmlException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}

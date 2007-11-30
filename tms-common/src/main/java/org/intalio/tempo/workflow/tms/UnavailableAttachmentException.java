@@ -18,29 +18,22 @@ package org.intalio.tempo.workflow.tms;
 
 public class UnavailableAttachmentException extends TMSException {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = - 6458999700604792163L;
 
     public UnavailableAttachmentException() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-    public UnavailableAttachmentException(String arg0) {
-        super(arg0);
-        // TODO Auto-generated constructor stub
+    public UnavailableAttachmentException(String message) {
+        super(message);
     }
 
-    public UnavailableAttachmentException(String arg0, Throwable arg1) {
-        super(arg0, arg1);
-        // TODO Auto-generated constructor stub
+    public UnavailableAttachmentException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public UnavailableAttachmentException(Throwable arg0) {
-        super(arg0);
-        // TODO Auto-generated constructor stub
+    public UnavailableAttachmentException(Throwable cause) {
+        super(cause);
     }
 
 }

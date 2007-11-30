@@ -118,8 +118,7 @@ public class XmlTooling {
 			builder = new StAXOMBuilder(is);
 			dm= builder.getDocumentElement();
 		} catch (XMLStreamException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
         return dm;
     }
