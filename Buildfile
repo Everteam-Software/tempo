@@ -217,6 +217,11 @@ define "tempo" do
     package :jar
   end
   
+  define "deploy-api" do 
+    compile
+    package(:jar)
+  end
+  
   desc "XForms Manager"
   define "xforms-manager" do
     resources.filter.using "version" => VERSION_NUMBER
