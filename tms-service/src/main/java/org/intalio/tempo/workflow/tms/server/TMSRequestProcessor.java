@@ -69,7 +69,7 @@ public class TMSRequestProcessor extends OMUnmarshaller {
         _server = server;
     }
 
-    public OMElement getTaskList(OMElement requestElement)
+    public OMElement getTaskList(final OMElement requestElement)
             throws AxisFault {
         try {
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
@@ -81,14 +81,12 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             OMElement response = new TMSResponseMarshaller(requestElement.getOMFactory()) {
                 public OMElement marshalResponse(Task[] tasks) {
                     OMElement response = createElement("getTaskListResponse");
-                    for (Task task : tasks) {
-                        OMElement taskElement = new TaskMarshaller(getOMFactory()).marshalTaskMetadata(task, user);
-                        taskElement.setLocalName("tms:task");
-                        response.addChild(taskElement);
-                    }
+                    for (Task task : tasks) 
+                        response.addChild(new TaskMarshaller().marshalTaskMetadata(task, user));
                     return response;
                 }
             }.marshalResponse(tasks);
+            
             if(_logger.isDebugEnabled()) _logger.debug(response.toString());
 
             return response;
@@ -112,8 +110,7 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             OMElement response = new TMSResponseMarshaller(requestElement.getOMFactory()) {
                 public OMElement marshalResponse(Task task) {
                     OMElement response = createElement("getTaskResponse");
-                    OMElement taskElement = createElement(response, "task");
-                    new TaskMarshaller(getOMFactory()).marshalFullTask(task, taskElement, user);
+                    response.addChild(new TaskMarshaller().marshalTaskMetadata(task, user));
                     return response;
                 }
             }.marshalResponse(task);

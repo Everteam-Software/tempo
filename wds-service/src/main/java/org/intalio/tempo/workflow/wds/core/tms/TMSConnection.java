@@ -124,10 +124,6 @@ public class TMSConnection implements TMSConnectionInterface {
             throw new RuntimeException(e);
         }
     }
-
-    private static String getQParam(String value) {
-        return value != null && !"".equals(value.trim()) ? value : "%";
-    }
     
     private PreparedStatement prepare(String statement) throws SQLException {
         return _jdbcConnection.prepareStatement(statement);

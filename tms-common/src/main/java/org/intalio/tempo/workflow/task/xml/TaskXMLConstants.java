@@ -20,5 +20,7 @@ public final class TaskXMLConstants {
     public static final String TASK_NAMESPACE = "http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/";
 
     public static final String TASK_NAMESPACE_PREFIX = "tms";
+    
+    public static final String TASK_LOCAL_NAME = "task";
 
 }

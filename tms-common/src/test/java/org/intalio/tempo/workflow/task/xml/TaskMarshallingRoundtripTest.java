@@ -45,7 +45,7 @@ public class TaskMarshallingRoundtripTest extends TestCase {
                 TestUtils.createXMLDocument());
 
         OMFactory factory = OMAbstractFactory.getOMFactory();
-        TaskMarshaller marshaller = new TaskMarshaller(factory);
+        TaskMarshaller marshaller = new TaskMarshaller();
         OMElement marshalledTask = factory.createOMElement("task", TaskXMLConstants.TASK_NAMESPACE,
                 TaskXMLConstants.TASK_NAMESPACE_PREFIX);
 
@@ -65,7 +65,7 @@ public class TaskMarshallingRoundtripTest extends TestCase {
                 new URI("urn:ns"), "urn:action");
 
         OMFactory factory = OMAbstractFactory.getOMFactory();
-        TaskMarshaller marshaller = new TaskMarshaller(factory);
+        TaskMarshaller marshaller = new TaskMarshaller();
         OMElement marshalledTask = factory.createOMElement("task", TaskXMLConstants.TASK_NAMESPACE,
                 TaskXMLConstants.TASK_NAMESPACE_PREFIX);
 
@@ -84,7 +84,7 @@ public class TaskMarshallingRoundtripTest extends TestCase {
                 TestUtils.createXMLDocument());
         
         OMFactory factory = OMAbstractFactory.getOMFactory();
-        TaskMarshaller marshaller = new TaskMarshaller(factory);
+        TaskMarshaller marshaller = new TaskMarshaller();
         OMElement marshalledTask = factory.createOMElement("task", TaskXMLConstants.TASK_NAMESPACE,
                 TaskXMLConstants.TASK_NAMESPACE_PREFIX);
 

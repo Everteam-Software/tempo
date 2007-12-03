@@ -18,7 +18,8 @@ package org.intalio.tempo.workflow.task.xml;
 import java.util.Calendar;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.OMFactory;
+import org.apache.axiom.om.OMNamespace;
+import org.apache.axiom.soap.impl.dom.factory.DOMSOAPFactory;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlString;
@@ -44,18 +45,20 @@ import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
 
 public class TaskMarshaller extends XmlBeanMarshaller {
     final static Logger _log = LoggerFactory.getLogger(TaskMarshaller.class);
+    
+    final static OMNamespace TASK_NAMESPACE = new DOMSOAPFactory().createOMNamespace(
+            TaskXMLConstants.TASK_NAMESPACE, 
+            TaskXMLConstants.TASK_NAMESPACE_PREFIX);
 
     public TaskMarshaller() {
         super(TaskXMLConstants.TASK_NAMESPACE, TaskXMLConstants.TASK_NAMESPACE_PREFIX);
     }
 
-    // dummy for compatibility
-    public TaskMarshaller(OMFactory omFactory) {
-        super(TaskXMLConstants.TASK_NAMESPACE, TaskXMLConstants.TASK_NAMESPACE_PREFIX);
-    }
-
     public OMElement marshalTaskMetadata(Task task, UserRoles roles) {
-        return XmlTooling.convertDocument(marshalXMLTaskMetadata(task, roles));
+        OMElement om = XmlTooling.convertDocument(marshalXMLTaskMetadata(task, roles));
+        om.setLocalName(TaskXMLConstants.TASK_LOCAL_NAME);
+        om.setNamespace(TASK_NAMESPACE);
+        return om;
     }
 
     private XmlObject marshalXMLTaskMetadata(Task task, UserRoles roles) {
@@ -82,7 +85,6 @@ public class TaskMarshaller extends XmlBeanMarshaller {
         for (String roleOwner : task.getRoleOwners()) {
             XmlString XmlStrRoleOwner = taskMetadataElement.addNewRoleOwner();
             XmlStrRoleOwner.setStringValue(roleOwner);
-
         }
 
         createACL("claim", task, roles, taskMetadataElement);
@@ -183,7 +185,8 @@ public class TaskMarshaller extends XmlBeanMarshaller {
     // for compatibility usage
     public void marshalFullTask(Task task, OMElement parent, UserRoles user) {
         try {
-            com.intalio.bpms.workflow.taskManagementServices20051109.Task xmlTask = com.intalio.bpms.workflow.taskManagementServices20051109.Task.Factory.parse(parent.getXMLStreamReader());
+            com.intalio.bpms.workflow.taskManagementServices20051109.Task xmlTask = com.intalio.bpms.workflow.taskManagementServices20051109.Task.Factory
+                    .parse(parent.getXMLStreamReader());
             marshalFullTask(task, xmlTask, user);
             parent.addChild(XmlTooling.convertDocument(xmlTask));
         } catch (XmlException e) {

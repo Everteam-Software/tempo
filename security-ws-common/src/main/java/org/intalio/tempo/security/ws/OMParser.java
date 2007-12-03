@@ -54,10 +54,10 @@ public class OMParser {
         while (iter.hasNext()) {
             OMElement prop = iter.next();
             OMElement name = prop.getFirstChildWithName(Constants.NAME);
-            if (e == null)
+            if (name == null)
                 throw new IllegalArgumentException("Missing property name: " + prop);
             OMElement value = prop.getFirstChildWithName(Constants.VALUE);
-            if (e == null)
+            if (value == null)
                 throw new IllegalArgumentException("Missing property value: " + prop);
             props.add(new Property(name.getText(), value.getText()));
         }

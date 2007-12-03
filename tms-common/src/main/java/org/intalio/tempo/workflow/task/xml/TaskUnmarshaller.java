@@ -250,9 +250,9 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
 				for (int i = 0; i < attachmentsElement.sizeOfAttachmentArray(); i++) {
 					com.intalio.bpms.workflow.taskManagementServices20051109.Attachment attachmentElement = attachmentsElement
 							.getAttachmentArray(i);
+					if (attachmentElement != null) {
 					com.intalio.bpms.workflow.taskManagementServices20051109.AttachmentMetadata attachmentMetadata = attachmentElement
 							.getAttachmentMetadata();
-					if (attachmentElement != null) {
 						AttachmentMetadata metadata = new AttachmentMetadata();
 						String mimeType = attachmentMetadata.getMimeType();
 						if (mimeType != null) {
@@ -279,7 +279,6 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
 							}
 						} catch (Exception e) {
 						    _logger.error("Error in unmarshalling task from metadata",e);
-							// TODO
 						}
 
 						String payloadURLStr = attachmentElement

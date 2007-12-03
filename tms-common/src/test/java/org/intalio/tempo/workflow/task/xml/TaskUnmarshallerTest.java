@@ -38,7 +38,7 @@ public class TaskUnmarshallerTest extends TestCase {
 
     public void testMetadataUnmarshalling() throws Exception {
         TaskUnmarshaller unmarshaller = new TaskUnmarshaller();
-        TaskMarshaller marshaller = new TaskMarshaller(OMAbstractFactory.getOMFactory());
+        TaskMarshaller marshaller = new TaskMarshaller();
 
         OMElement rootElement = TestUtils.loadElementFromResource("/taskMetadata.xml");
 
@@ -72,8 +72,7 @@ public class TaskUnmarshallerTest extends TestCase {
     private void testFullTask(String resourceName) throws Exception {
         TaskUnmarshaller unmarshaller = new TaskUnmarshaller();
         OMFactory factory = OMAbstractFactory.getOMFactory();
-        TaskMarshaller marshaller = new TaskMarshaller(factory);
-
+        TaskMarshaller marshaller = new TaskMarshaller();
         OMElement rootElement = TestUtils.loadElementFromResource(resourceName);
 
         Task task = unmarshaller.unmarshalFullTask(rootElement);

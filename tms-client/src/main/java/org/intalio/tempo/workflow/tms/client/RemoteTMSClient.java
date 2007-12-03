@@ -271,9 +271,8 @@ class RemoteTMSClient extends OMUnmarshaller implements ITaskManagementService {
             public OMElement marshalRequest() {
                 OMElement request = createElement("createTaskRequest");
                 OMElement taskElement = createElement(request, "task");
-                new TaskMarshaller(_omFactory).marshalFullTask(task, taskElement, null);
+                new TaskMarshaller().marshalFullTask(task, taskElement, null);
                 createElement(request, "participantToken", _participantToken);
-
                 return request;
             }
         }.marshalRequest();

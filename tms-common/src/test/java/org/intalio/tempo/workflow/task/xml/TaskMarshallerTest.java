@@ -43,7 +43,7 @@ public class TaskMarshallerTest extends TestCase {
     private void testTaskMarshalling(Task task)
             throws Exception {
         OMFactory factory = OMAbstractFactory.getOMFactory();
-        TaskMarshaller marshaller = new TaskMarshaller(factory);
+        TaskMarshaller marshaller = new TaskMarshaller();
         OMElement parent = factory.createOMElement("task", TaskXMLConstants.TASK_NAMESPACE,
                 TaskXMLConstants.TASK_NAMESPACE_PREFIX);
         marshaller.marshalFullTask(task, parent, null);
