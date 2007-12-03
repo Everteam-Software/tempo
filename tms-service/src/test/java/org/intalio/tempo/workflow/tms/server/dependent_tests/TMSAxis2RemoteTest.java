@@ -30,14 +30,13 @@ public class TMSAxis2RemoteTest extends TestCase {
 
     private static final Logger _logger = LoggerFactory.getLogger(TMSAxis2RemoteTest.class);
 
-    private static final String TMS_ENDPOINT = "http://localhost:8080/axis2/services/tms";
+    private static final String TMS_ENDPOINT = "http://localhost:8080/axis2/services/TaskManagementServices";
 
     public static void main(String[] args) {
         junit.textui.TestRunner.run(TMSAxis2RemoteTest.class);
     }
 
-    private OMElement sendRequest(OMElement request, String soapAction)
-            throws Exception {
+    private OMElement sendRequest(OMElement request, String soapAction) throws Exception {
         Options options = new Options();
         options.setAction(soapAction);
         options.setTo(new EndpointReference(TMS_ENDPOINT));
@@ -45,23 +44,26 @@ public class TMSAxis2RemoteTest extends TestCase {
         ServiceClient serviceClient = new ServiceClient();
         serviceClient.setOptions(options);
 
-        OMElement result = null;
         try {
-            result = serviceClient.sendReceive(request);
+            return serviceClient.sendReceive(request);
         } catch (AxisFault f) {
             String message = (f.getMessage() == null ? "(no message)" : f.getMessage());
             String detail = (f.getDetail() == null ? "(no detailed description)" : f.getDetail().getText());
             _logger.error("Remote exception:\n" + message + '\n' + detail);
-            throw (Exception) f.getCause();
+            if (f.getCause() != null)
+                throw (Exception) f.getCause();
+            else
+                throw f;
         }
-        return result;
     }
 
-    public void testGetTaskList()
-            throws Exception {
+    public void testGetTaskList() throws Exception {
         OMElement request = TestUtils.loadElementFromResource("/remote/getTaskListRequest1.xml");
+        _logger.info("---------");
+        _logger.info(request.toString());
+        _logger.info("---------");
         OMElement response = this.sendRequest(request,
                 "http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getTaskList");
-        _logger.debug(TestUtils.toPrettyXML(response));
+        _logger.info(TestUtils.toPrettyXML(response));
     }
 }
