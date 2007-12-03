@@ -76,6 +76,7 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
 
     public void commit() {
         try {
+            if(_con.getAutoCommit()) _con.setAutoCommit(false);
             _con.commit();
             if(_logger.isDebugEnabled()) _logger.debug("committed");
         } catch (SQLException e) {
