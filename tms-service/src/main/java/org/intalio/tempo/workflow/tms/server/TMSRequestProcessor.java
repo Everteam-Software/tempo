@@ -44,10 +44,13 @@ import org.intalio.tempo.workflow.util.xml.OMDOMConvertor;
 import org.intalio.tempo.workflow.util.xml.OMElementQueue;
 import org.intalio.tempo.workflow.util.xml.OMMarshaller;
 import org.intalio.tempo.workflow.util.xml.OMUnmarshaller;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 
 public class TMSRequestProcessor extends OMUnmarshaller {
+    final static Logger _logger = LoggerFactory.getLogger(TMSRequestProcessor.class);
 
     private abstract class TMSResponseMarshaller extends OMMarshaller {
         public TMSResponseMarshaller(OMFactory omFactory) {
@@ -80,12 +83,13 @@ public class TMSRequestProcessor extends OMUnmarshaller {
                     OMElement response = createElement("getTaskListResponse");
                     for (Task task : tasks) {
                         OMElement taskElement = new TaskMarshaller(getOMFactory()).marshalTaskMetadata(task, user);
-                        taskElement.setLocalName("task");
+                        taskElement.setLocalName("tms:task");
                         response.addChild(taskElement);
                     }
                     return response;
                 }
             }.marshalResponse(tasks);
+            if(_logger.isDebugEnabled()) _logger.debug(response.toString());
 
             return response;
         } catch (InvalidInputFormatException e) {
