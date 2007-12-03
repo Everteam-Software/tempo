@@ -31,9 +31,7 @@ public class Axis2TASServiceTest extends TestCase {
     private static final Logger _logger = LoggerFactory.getLogger(TASAxis2BridgeTest.class);
 
     private static final String TAS_ENDPOINT = "http://localhost:8080/axis2/services/tas";
-
     private static final String ADD_SOAP_ACTION = "http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/add";
-
     private static final String DELETE_SOAP_ACTION
         = "http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/delete";
 
@@ -60,12 +58,6 @@ public class Axis2TASServiceTest extends TestCase {
 
     public static void main(String[] args) {
         junit.textui.TestRunner.run(Axis2TASServiceTest.class);
-    }
-
-    @Override
-    protected void setUp()
-            throws Exception {
-
     }
 
     public void testAddDelete() throws Throwable {

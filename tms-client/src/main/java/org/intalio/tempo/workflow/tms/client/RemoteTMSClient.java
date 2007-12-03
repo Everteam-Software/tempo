@@ -50,9 +50,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
-class RemoteTMSClient extends OMUnmarshaller implements ITaskManagementService {
+class RemoteTMSClient implements ITaskManagementService {
 
     private static final Logger _log = LoggerFactory.getLogger(OMUnmarshaller.class);
+    
     private EndpointReference _endpoint;
     private String _participantToken;
     private OMFactory _omFactory;
@@ -60,14 +61,12 @@ class RemoteTMSClient extends OMUnmarshaller implements ITaskManagementService {
     private class TMSMarshaller extends OMMarshaller {
 
         protected TMSMarshaller() {
-            super(_omFactory, _omFactory.createOMNamespace(TaskXMLConstants.TASK_NAMESPACE,
-                    TaskXMLConstants.TASK_NAMESPACE_PREFIX));
+            super(_omFactory, TaskXMLConstants.TASK_OM_NAMESPACE);
         }
 
     }
 
     public RemoteTMSClient(String endpoint, String participantToken) {
-        super(TaskXMLConstants.TASK_NAMESPACE, TaskXMLConstants.TASK_NAMESPACE_PREFIX);
         _endpoint = new EndpointReference(endpoint);
         _participantToken = participantToken;
         _omFactory = OMAbstractFactory.getOMFactory();
@@ -90,7 +89,6 @@ class RemoteTMSClient extends OMUnmarshaller implements ITaskManagementService {
             OMElement response = serviceClient.sendReceive(request);
             return response;
         } catch (AxisFault f) {
-            
             throw new RemoteTMSException(f);
         }
     }
@@ -103,32 +101,34 @@ class RemoteTMSClient extends OMUnmarshaller implements ITaskManagementService {
                 return request;
             }
         }.marshalRequest();
-
         OMElement response = sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "getTaskList");
+        
         List<Task> tasks = new ArrayList<Task>();
-        try {
-            OMElementQueue rootQueue = new OMElementQueue(response);
-            boolean done = false;
-            while (!done) {
-                OMElement taskElement = expectElement(rootQueue, "task");
-                if (taskElement != null) {
-                    try {
-                        Task task = new TaskUnmarshaller().unmarshalTaskFromMetadata(taskElement);
-                        tasks.add(task);
-                    } catch (InvalidInputFormatException e) {
-                        _log.error("Error reading task: " +taskElement, new RuntimeException(e));
-                    } catch (Exception e) {
-                        _log.error("Error reading task: " +taskElement, e);
-                    }
-                } else {
-                    done = true;
-                }
-            }
-        } catch (InvalidInputFormatException e) {
-            throw new RuntimeException(e);
+        OMElementQueue rootQueue = new OMElementQueue(response);
+        while (true) {
+            OMElement taskElement = expectElement(rootQueue, "task");
+            if (taskElement == null)  break;
+           
+            try {
+                Task task = new TaskUnmarshaller().unmarshalTaskFromMetadata(taskElement);
+                tasks.add(task);
+            } catch (Exception e) {
+                _log.error("Error reading task: " + taskElement, e);
+            }   
         }
+        return tasks.toArray(new Task[tasks.size()]);
+    }
 
-        return tasks.toArray(new Task[] {});
+    private OMElement expectElement(OMElementQueue queue, String name) {
+        OMElement element = queue.getNextElement();
+        if (element != null) {
+            if (element.getQName().equals(TaskXMLConstants.TASK_QNAME)) {
+                return element;
+            } else {
+                queue.pushElementBack(element);
+            }
+        }
+        return null;
     }
 
     public Task getTask(final String taskID) throws AuthException, UnavailableTaskException {

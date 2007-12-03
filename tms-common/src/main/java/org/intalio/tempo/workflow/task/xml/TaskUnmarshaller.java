@@ -59,429 +59,394 @@ import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
 
 public class TaskUnmarshaller extends XmlBeanUnmarshaller {
 
-	private static final Logger _logger = LoggerFactory.getLogger(TaskUnmarshaller.class);
+    private static final Logger _logger = LoggerFactory.getLogger(TaskUnmarshaller.class);
 
-	public TaskUnmarshaller() {
-		super(TaskXMLConstants.TASK_NAMESPACE,
-				TaskXMLConstants.TASK_NAMESPACE_PREFIX);
-	}
+    public TaskUnmarshaller() {
+        super(TaskXMLConstants.TASK_NAMESPACE, TaskXMLConstants.TASK_NAMESPACE_PREFIX);
+    }
 
-	// for compatibility usage
-	public Task unmarshalTaskFromMetadata(OMElement rootElement)
-			throws InvalidInputFormatException {
-		try {
-			XmlObject xmlObject = XmlObject.Factory.parse(rootElement.getXMLStreamReader());
-			_logger.info("Umarshalling");
-			_logger.info(xmlObject.xmlText());
-			XmlCursor xmlCursor = xmlObject.newCursor();
-			xmlCursor.toStartDoc();
-			xmlCursor.toNextToken();
-			TaskMetadata taskMetadata =  com.intalio.bpms.workflow.taskManagementServices20051109.Task.Factory.newInstance().addNewMetadata();
-			taskMetadata.set(xmlCursor.getObject());
-			return unmarshalTaskFromMetadata(taskMetadata);
-		} catch (InvalidInputFormatException e) {
-		    throw e;
-		} catch (XmlException e) {
-            _logger.error("Error in unmarshalling task from metadata",e);
+    // for compatibility usage
+    public Task unmarshalTaskFromMetadata(OMElement rootElement) throws InvalidInputFormatException {
+        try {
+            XmlObject xmlObject = XmlObject.Factory.parse(rootElement.getXMLStreamReader());
+            if (_logger.isDebugEnabled()) {
+                _logger.debug("Umarshalling");
+                _logger.debug(xmlObject.xmlText());
+            }
+            XmlCursor xmlCursor = xmlObject.newCursor();
+            xmlCursor.toStartDoc();
+            xmlCursor.toNextToken();
+            TaskMetadata taskMetadata = com.intalio.bpms.workflow.taskManagementServices20051109.Task.Factory
+                    .newInstance().addNewMetadata();
+            taskMetadata.set(xmlCursor.getObject());
+            return unmarshalTaskFromMetadata(taskMetadata);
+        } catch (InvalidInputFormatException e) {
+            throw e;
+        } catch (XmlException e) {
+            _logger.error("Error in unmarshalling task from metadata", e);
             return null;
         }
-		
-	}
-	
-	private Task unmarshalTaskFromMetadata(TaskMetadata taskMetadata)
-			throws XmlValueOutOfRangeException {
-		if (taskMetadata == null) {
-			throw new RequiredArgumentException("rootElement");
-		}
-		checkNS(taskMetadata);
 
-		String taskID = taskMetadata.getTaskId();
-		if (taskID == null) {
-			throw new InvalidInputFormatException("No task id specified");
-		}
-		String taskStateStr = taskMetadata.getTaskState();
-		String taskTypeStr = taskMetadata.getTaskType();
-		String description = taskMetadata.getDescription();
-		String processID = taskMetadata.getProcessId();
-		String creationDateStr = null;
+    }
 
-		try {
-			Calendar cal = taskMetadata.getCreationDate();
-			if (cal != null) {
-				creationDateStr = cal.toString();
-			}
-		} catch (Exception e) {
-			// TODO need to confirm how to deal with it
-		    _logger.error("Error in unmarshalling task from metadata",e);
-		}
+    private Task unmarshalTaskFromMetadata(TaskMetadata taskMetadata) throws XmlValueOutOfRangeException {
+        if (taskMetadata == null) {
+            throw new RequiredArgumentException("rootElement");
+        }
+        checkNS(taskMetadata);
 
-		AuthIdentifierSet userOwners = new AuthIdentifierSet(taskMetadata
-				.getUserOwnerArray());
-		AuthIdentifierSet roleOwners = new AuthIdentifierSet(taskMetadata
-				.getRoleOwnerArray());
+        String taskID = taskMetadata.getTaskId();
+        if (taskID == null) {
+            throw new InvalidInputFormatException("No task id specified");
+        }
+        String taskStateStr = taskMetadata.getTaskState();
+        String taskTypeStr = taskMetadata.getTaskType();
+        String description = taskMetadata.getDescription();
+        String processID = taskMetadata.getProcessId();
+        String creationDateStr = null;
 
-		ACL claim = readACL(taskMetadata, "claim");
-		ACL revoke = readACL(taskMetadata, "revoke");
-		ACL save = readACL(taskMetadata, "save");
-		ACL complete = readACL(taskMetadata, "complete");
+        try {
+            Calendar cal = taskMetadata.getCreationDate();
+            if (cal != null) {
+                creationDateStr = cal.toString();
+            }
+        } catch (Exception e) {
+            // TODO need to confirm how to deal with it
+            _logger.error("Error in unmarshalling task from metadata", e);
+        }
 
-		String formURLStr = taskMetadata.getFormUrl();
-		URI formURL = null;
-		try {
-			if (formURLStr != null) {
-				formURL = new URI(formURLStr);
-			} else {
-				throw new InvalidInputFormatException("No formURL specified");
-			}
-		} catch (URISyntaxException e) {
-			throw new InvalidInputFormatException(e);
-		}
+        AuthIdentifierSet userOwners = new AuthIdentifierSet(taskMetadata.getUserOwnerArray());
+        AuthIdentifierSet roleOwners = new AuthIdentifierSet(taskMetadata.getRoleOwnerArray());
 
-		String failureCode = taskMetadata.getFailureCode();
-		String failureReason = taskMetadata.getFailureReason();
-		expectElementValue(taskMetadata, "userProcessEndpoint"); // TODO:
-		// these
-		// violate
-		// the WSDL!
-		// do
-		// something
-		expectElementValue(taskMetadata, "userProcessNamespaceURI");
-		String completeSOAPAction = taskMetadata
-				.getUserProcessCompleteSOAPAction();
-		com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata.Attachments attachmentsElement = taskMetadata
-				.getAttachments();
-		String isChainedBeforeStr = expectElementValue(taskMetadata,
-				"isChainedBefore");
-		String previousTaskID = expectElementValue(taskMetadata,
-				"previousTaskId");
+        ACL claim = readACL(taskMetadata, "claim");
+        ACL revoke = readACL(taskMetadata, "revoke");
+        ACL save = readACL(taskMetadata, "save");
+        ACL complete = readACL(taskMetadata, "complete");
 
-		Class<? extends Task> taskClass = TaskTypeMapper
-				.getTypeClassByName(taskTypeStr);
-		Task resultTask = null;
-		TaskState taskState = null;
+        String formURLStr = taskMetadata.getFormUrl();
+        URI formURL = null;
+        try {
+            if (formURLStr != null) {
+                formURL = new URI(formURLStr);
+            } else {
+                throw new InvalidInputFormatException("No formURL specified");
+            }
+        } catch (URISyntaxException e) {
+            throw new InvalidInputFormatException(e);
+        }
 
-		if (!ITaskWithState.class.isAssignableFrom(taskClass)) {
-			forbidParameter(taskStateStr, "task state");
-			forbidParameter(failureCode, "failure code");
-			forbidParameter(failureReason, "failure reason");
-		} else {
-			try {
-				taskState = (taskStateStr == null) ? TaskState.READY
-						: TaskState.valueOf(taskStateStr.toUpperCase());
-			} catch (IllegalArgumentException e) {
-			    _logger.error("Error in unmarshalling task from metadata",e);
-				throw new InvalidInputFormatException("Unknown task state: '"
-						+ taskStateStr + "'");
-			}
-		}
-		if (IProcessBoundTask.class.isAssignableFrom(taskClass)) {
-			requireParameter(processID, "processID");
-		} else {
-			forbidParameter(processID, "processID");
-		}
-		if (ICompleteReportingTask.class.isAssignableFrom(taskClass)) {
-			requireParameter(completeSOAPAction, "completion SOAPAction");
-		} else {
-			forbidParameter(completeSOAPAction, "completion SOAPAction");
-		}
-		if (!ITaskWithAttachments.class.isAssignableFrom(taskClass)) {
-			forbidParameter(attachmentsElement, "task attachment(s)");
-		}
-		if (!IChainableTask.class.isAssignableFrom(taskClass)) {
-			forbidParameter(isChainedBeforeStr, "is-chained-before flag");
-			forbidParameter(previousTaskID, "previous chained task ID");
-		}
+        String failureCode = taskMetadata.getFailureCode();
+        String failureReason = taskMetadata.getFailureReason();
+        expectElementValue(taskMetadata, "userProcessEndpoint"); // TODO:
+        // these
+        // violate
+        // the WSDL!
+        // do
+        // something
+        expectElementValue(taskMetadata, "userProcessNamespaceURI");
+        String completeSOAPAction = taskMetadata.getUserProcessCompleteSOAPAction();
+        com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata.Attachments attachmentsElement = taskMetadata
+                .getAttachments();
+        String isChainedBeforeStr = expectElementValue(taskMetadata, "isChainedBefore");
+        String previousTaskID = expectElementValue(taskMetadata, "previousTaskId");
 
-		// TODO: the following is a loathsome if-cascade:
-		if (taskClass.equals(PIPATask.class)) {
-			resultTask = new PIPATask(taskID, formURL, null, null, null);
-		} else if (taskClass.equals(PATask.class)) {
-			resultTask = new PATask(taskID, formURL, processID,
-					completeSOAPAction, null);
-		} else if (taskClass.equals(Notification.class)) {
-			resultTask = new Notification(taskID, formURL, null);
-		} else {
-			throw new RuntimeException("Unknown task class: " + taskClass);
-		}
+        Class<? extends Task> taskClass = TaskTypeMapper.getTypeClassByName(taskTypeStr);
+        Task resultTask = null;
+        TaskState taskState = null;
 
-		resultTask.getUserOwners().addAll(userOwners);
-		resultTask.getRoleOwners().addAll(roleOwners);
+        if (!ITaskWithState.class.isAssignableFrom(taskClass)) {
+            forbidParameter(taskStateStr, "task state");
+            forbidParameter(failureCode, "failure code");
+            forbidParameter(failureReason, "failure reason");
+        } else {
+            try {
+                taskState = (taskStateStr == null) ? TaskState.READY : TaskState.valueOf(taskStateStr.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                _logger.error("Error in unmarshalling task from metadata", e);
+                throw new InvalidInputFormatException("Unknown task state: '" + taskStateStr + "'");
+            }
+        }
+        if (IProcessBoundTask.class.isAssignableFrom(taskClass)) {
+            requireParameter(processID, "processID");
+        } else {
+            forbidParameter(processID, "processID");
+        }
+        if (ICompleteReportingTask.class.isAssignableFrom(taskClass)) {
+            requireParameter(completeSOAPAction, "completion SOAPAction");
+        } else {
+            forbidParameter(completeSOAPAction, "completion SOAPAction");
+        }
+        if (!ITaskWithAttachments.class.isAssignableFrom(taskClass)) {
+            forbidParameter(attachmentsElement, "task attachment(s)");
+        }
+        if (!IChainableTask.class.isAssignableFrom(taskClass)) {
+            forbidParameter(isChainedBeforeStr, "is-chained-before flag");
+            forbidParameter(previousTaskID, "previous chained task ID");
+        }
 
-		resultTask.setDescription(description == null ? "" : description);
-		_logger.debug("Setting date from " + creationDateStr);
-		if ((creationDateStr != null) && (creationDateStr.trim().length() > 0)) {
-			resultTask.setCreationDate(new XsdDateTime(creationDateStr)
-					.getTime());
-		} else {
-			resultTask.setCreationDate(new Date());
-		}
-		_logger.debug("Date set to " + resultTask.getCreationDate());
+        // TODO: the following is a loathsome if-cascade:
+        if (taskClass.equals(PIPATask.class)) {
+            resultTask = new PIPATask(taskID, formURL, null, null, null);
+        } else if (taskClass.equals(PATask.class)) {
+            resultTask = new PATask(taskID, formURL, processID, completeSOAPAction, null);
+        } else if (taskClass.equals(Notification.class)) {
+            resultTask = new Notification(taskID, formURL, null);
+        } else {
+            throw new RuntimeException("Unknown task class: " + taskClass);
+        }
 
-		authorize(resultTask, "claim", claim);
-		authorize(resultTask, "revoke", revoke);
-		authorize(resultTask, "save", save);
-		authorize(resultTask, "complete", complete);
+        resultTask.getUserOwners().addAll(userOwners);
+        resultTask.getRoleOwners().addAll(roleOwners);
 
-		if (ITaskWithState.class.isAssignableFrom(taskClass)) {
-			ITaskWithState taskWithState = (ITaskWithState) resultTask;
-			taskWithState.setState(taskState);
-			if (taskWithState.getState().equals(TaskState.FAILED)) {
-				requireParameter(failureCode, "failure code");
+        resultTask.setDescription(description == null ? "" : description);
+        _logger.debug("Setting date from " + creationDateStr);
+        if ((creationDateStr != null) && (creationDateStr.trim().length() > 0)) {
+            resultTask.setCreationDate(new XsdDateTime(creationDateStr).getTime());
+        } else {
+            resultTask.setCreationDate(new Date());
+        }
+        _logger.debug("Date set to " + resultTask.getCreationDate());
 
-				taskWithState.setFailureCode(failureCode);
-				taskWithState.setFailureReason(failureReason == null ? ""
-						: failureReason);
-			} else {
-				forbidParameter(failureCode, "failure code");
-				forbidParameter(failureReason, "failure reason");
-			}
-		}
-		if (IProcessBoundTask.class.isAssignableFrom(taskClass)) {
-			((IProcessBoundTask) resultTask).setProcessID(processID);
-		}
-		if (ICompleteReportingTask.class.isAssignableFrom(taskClass)) {
-			((ICompleteReportingTask) resultTask)
-					.setCompleteSOAPAction(completeSOAPAction);
-		}
-		if (ITaskWithAttachments.class.isAssignableFrom(taskClass)) {
-			ITaskWithAttachments taskWithAttachments = (ITaskWithAttachments) resultTask;
-			if (attachmentsElement != null) {
+        authorize(resultTask, "claim", claim);
+        authorize(resultTask, "revoke", revoke);
+        authorize(resultTask, "save", save);
+        authorize(resultTask, "complete", complete);
 
-				for (int i = 0; i < attachmentsElement.sizeOfAttachmentArray(); i++) {
-					com.intalio.bpms.workflow.taskManagementServices20051109.Attachment attachmentElement = attachmentsElement
-							.getAttachmentArray(i);
-					if (attachmentElement != null) {
-					com.intalio.bpms.workflow.taskManagementServices20051109.AttachmentMetadata attachmentMetadata = attachmentElement
-							.getAttachmentMetadata();
-						AttachmentMetadata metadata = new AttachmentMetadata();
-						String mimeType = attachmentMetadata.getMimeType();
-						if (mimeType != null) {
-							metadata.setMimeType(mimeType);
-						}
-						String fileName = attachmentMetadata.getFileName();
-						if (fileName != null) {
-							metadata.setFileName(fileName);
-						}
-						String title = attachmentMetadata.getTitle();
-						if (title != null) {
-							metadata.setTitle(title);
-						}
-						String description2 = attachmentMetadata
-								.getDescription();
-						if (description2 != null) {
-							metadata.setDescription(description2);
-						}
-						try {
-							Calendar cal = attachmentMetadata.getCreationDate();
-							if ((cal != null)) {
-								metadata.setCreationDate(new XsdDateTime(cal
-										.toString()).getTime());
-							}
-						} catch (Exception e) {
-						    _logger.error("Error in unmarshalling task from metadata",e);
-						}
+        if (ITaskWithState.class.isAssignableFrom(taskClass)) {
+            ITaskWithState taskWithState = (ITaskWithState) resultTask;
+            taskWithState.setState(taskState);
+            if (taskWithState.getState().equals(TaskState.FAILED)) {
+                requireParameter(failureCode, "failure code");
 
-						String payloadURLStr = attachmentElement
-								.getPayloadUrl();
-						URL payloadURL;
-						try {
-							payloadURL = new URL(payloadURLStr);
-						} catch (MalformedURLException e) {
-							throw new InvalidInputFormatException(e);
-						}
+                taskWithState.setFailureCode(failureCode);
+                taskWithState.setFailureReason(failureReason == null ? "" : failureReason);
+            } else {
+                forbidParameter(failureCode, "failure code");
+                forbidParameter(failureReason, "failure reason");
+            }
+        }
+        if (IProcessBoundTask.class.isAssignableFrom(taskClass)) {
+            ((IProcessBoundTask) resultTask).setProcessID(processID);
+        }
+        if (ICompleteReportingTask.class.isAssignableFrom(taskClass)) {
+            ((ICompleteReportingTask) resultTask).setCompleteSOAPAction(completeSOAPAction);
+        }
+        if (ITaskWithAttachments.class.isAssignableFrom(taskClass)) {
+            ITaskWithAttachments taskWithAttachments = (ITaskWithAttachments) resultTask;
+            if (attachmentsElement != null) {
 
-						Attachment attachment = new Attachment(metadata,
-								payloadURL);
-						taskWithAttachments.addAttachment(attachment);
-					}
-				}
-			}
-		}
-		if (IChainableTask.class.isAssignableFrom(taskClass)) {
-			IChainableTask chainableTask = (IChainableTask) resultTask;
-			if (isChainedBeforeStr != null) {
-				if ("1".equals(isChainedBeforeStr)
-						|| "true".equals(isChainedBeforeStr)) {
-					if (previousTaskID == null) {
-						throw new InvalidInputFormatException(
-								"tms:previousTaskId is required "
-										+ "if tms:isChainedBefore is true");
-					}
-					chainableTask.setPreviousTaskID(previousTaskID);
-					chainableTask.setChainedBefore(true);
-				} else {
-					if ((previousTaskID != null)
-							&& (!"".equals(previousTaskID))) {
-						throw new InvalidInputFormatException(
-								"tms:previousTaskId must be empty or not present "
-										+ "if tms:isChainedBefore is false");
-					}
-				}
-			} else {
-				if (previousTaskID != null) {
-					throw new InvalidInputFormatException(
-							"tms:isChainedBefore is required "
-									+ "if tms:previousTaskId is present");
-				}
-			}
-		}
+                for (int i = 0; i < attachmentsElement.sizeOfAttachmentArray(); i++) {
+                    com.intalio.bpms.workflow.taskManagementServices20051109.Attachment attachmentElement = attachmentsElement
+                            .getAttachmentArray(i);
+                    if (attachmentElement != null) {
+                        com.intalio.bpms.workflow.taskManagementServices20051109.AttachmentMetadata attachmentMetadata = attachmentElement
+                                .getAttachmentMetadata();
+                        AttachmentMetadata metadata = new AttachmentMetadata();
+                        String mimeType = attachmentMetadata.getMimeType();
+                        if (mimeType != null) {
+                            metadata.setMimeType(mimeType);
+                        }
+                        String fileName = attachmentMetadata.getFileName();
+                        if (fileName != null) {
+                            metadata.setFileName(fileName);
+                        }
+                        String title = attachmentMetadata.getTitle();
+                        if (title != null) {
+                            metadata.setTitle(title);
+                        }
+                        String description2 = attachmentMetadata.getDescription();
+                        if (description2 != null) {
+                            metadata.setDescription(description2);
+                        }
+                        try {
+                            Calendar cal = attachmentMetadata.getCreationDate();
+                            if ((cal != null)) {
+                                metadata.setCreationDate(new XsdDateTime(cal.toString()).getTime());
+                            }
+                        } catch (Exception e) {
+                            _logger.error("Error in unmarshalling task from metadata", e);
+                        }
 
-		return resultTask;
-	}
+                        String payloadURLStr = attachmentElement.getPayloadUrl();
+                        URL payloadURL;
+                        try {
+                            payloadURL = new URL(payloadURLStr);
+                        } catch (MalformedURLException e) {
+                            throw new InvalidInputFormatException(e);
+                        }
 
-	private void authorize(Task resultTask, String action, ACL acl) {
-		for (String user : acl.getUsers()) {
-			resultTask.authorizeActionForUser(action, user);
-		}
-		for (String role : acl.getRoles()) {
-			resultTask.authorizeActionForRole(action, role);
-		}
-	}
+                        Attachment attachment = new Attachment(metadata, payloadURL);
+                        taskWithAttachments.addAttachment(attachment);
+                    }
+                }
+            }
+        }
+        if (IChainableTask.class.isAssignableFrom(taskClass)) {
+            IChainableTask chainableTask = (IChainableTask) resultTask;
+            if (isChainedBeforeStr != null) {
+                if ("1".equals(isChainedBeforeStr) || "true".equals(isChainedBeforeStr)) {
+                    if (previousTaskID == null) {
+                        throw new InvalidInputFormatException("tms:previousTaskId is required "
+                                + "if tms:isChainedBefore is true");
+                    }
+                    chainableTask.setPreviousTaskID(previousTaskID);
+                    chainableTask.setChainedBefore(true);
+                } else {
+                    if ((previousTaskID != null) && (!"".equals(previousTaskID))) {
+                        throw new InvalidInputFormatException("tms:previousTaskId must be empty or not present "
+                                + "if tms:isChainedBefore is false");
+                    }
+                }
+            } else {
+                if (previousTaskID != null) {
+                    throw new InvalidInputFormatException("tms:isChainedBefore is required "
+                            + "if tms:previousTaskId is present");
+                }
+            }
+        }
 
-	private ACL readACL(XmlObject root, String action) {
-		ACL acl = new ACL();
-		XmlObject el = expectElement(root, action + "Action");
-		if (el != null) {
-			acl.setUsers(expectAuthIdentifiers(el, "user"));
-			acl.setRoles(expectAuthIdentifiers(el, "role"));
-		}
-		return acl;
-	}
+        return resultTask;
+    }
 
-	private void checkTaskPayload(XmlObject containerElement)
-			throws InvalidInputFormatException {
-		if (containerElement == null) {
-			throw new RequiredArgumentException("containerElement");
-		}
-		XmlCursor payloadCursor = containerElement.newCursor();
+    private void authorize(Task resultTask, String action, ACL acl) {
+        for (String user : acl.getUsers()) {
+            resultTask.authorizeActionForUser(action, user);
+        }
+        for (String role : acl.getRoles()) {
+            resultTask.authorizeActionForRole(action, role);
+        }
+    }
 
-		if (!payloadCursor.toFirstChild()) {
-			throw new InvalidInputFormatException(
-					"Payload container element must contain exactly one child element");
-		}
-		if (payloadCursor.toNextSibling()) {
-			throw new InvalidInputFormatException(
-					"Task payload must consist of exactly one element.");
-		}
-		payloadCursor.dispose();
-	}
+    private ACL readACL(XmlObject root, String action) {
+        ACL acl = new ACL();
+        XmlObject el = expectElement(root, action + "Action");
+        if (el != null) {
+            acl.setUsers(expectAuthIdentifiers(el, "user"));
+            acl.setRoles(expectAuthIdentifiers(el, "role"));
+        }
+        return acl;
+    }
 
-	public XmlObject unmarshalTaskInput(XmlObject inputContainerElement)
-			throws InvalidInputFormatException {
-		checkTaskPayload(inputContainerElement);
-		return inputContainerElement;
+    private void checkTaskPayload(XmlObject containerElement) throws InvalidInputFormatException {
+        if (containerElement == null) {
+            throw new RequiredArgumentException("containerElement");
+        }
+        XmlCursor payloadCursor = containerElement.newCursor();
 
-	}
+        if (!payloadCursor.toFirstChild()) {
+            throw new InvalidInputFormatException("Payload container element must contain exactly one child element");
+        }
+        if (payloadCursor.toNextSibling()) {
+            throw new InvalidInputFormatException("Task payload must consist of exactly one element.");
+        }
+        payloadCursor.dispose();
+    }
 
-	// for compatibility usage
-	private Document unmarshalTaskPayload(OMElement containerElement)
-			throws InvalidInputFormatException {
-		if (containerElement == null) {
-			throw new RequiredArgumentException("containerElement");
-		}
-		Iterator<OMElement> it = containerElement.getChildElements();
-		if (!it.hasNext()) {
-			throw new InvalidInputFormatException(
-					"Payload container element must contain exactly one child element");
-		}
-		Document result = null;
-		OMElement firstPayloadElement = it.next();
-		if (it.hasNext()) {
-			throw new InvalidInputFormatException(
-					"Task payload must consist of exactly one element.");
-		} else {
-			result = OMDOMConvertor.convertOMToDOM(firstPayloadElement);
-		}
-		return result;
-	}
+    public XmlObject unmarshalTaskInput(XmlObject inputContainerElement) throws InvalidInputFormatException {
+        checkTaskPayload(inputContainerElement);
+        return inputContainerElement;
 
-	// for compatibility usage
-	public Document unmarshalTaskOutput(OMElement outputContainerElement)
-			throws InvalidInputFormatException {
-		return unmarshalTaskPayload(outputContainerElement);
-	}
+    }
 
-	public XmlObject unmarshalTaskOutput(XmlObject outputContainerElement)
-			throws InvalidInputFormatException {
-		checkTaskPayload(outputContainerElement);
-		return outputContainerElement;
-	}
+    // for compatibility usage
+    private Document unmarshalTaskPayload(OMElement containerElement) throws InvalidInputFormatException {
+        if (containerElement == null) {
+            throw new RequiredArgumentException("containerElement");
+        }
+        Iterator<OMElement> it = containerElement.getChildElements();
+        if (!it.hasNext()) {
+            throw new InvalidInputFormatException("Payload container element must contain exactly one child element");
+        }
+        Document result = null;
+        OMElement firstPayloadElement = it.next();
+        if (it.hasNext()) {
+            throw new InvalidInputFormatException("Task payload must consist of exactly one element.");
+        } else {
+            result = OMDOMConvertor.convertOMToDOM(firstPayloadElement);
+        }
+        return result;
+    }
 
-	public Task unmarshalFullTask(OMElement rootElement)
-			throws InvalidInputFormatException {
-		try {
-			XmlObject xmlObject = XmlObject.Factory.parse(rootElement
-					.getXMLStreamReader());
-			return unmarshalFullTask(xmlObject);
-		} catch (XmlException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
+    // for compatibility usage
+    public Document unmarshalTaskOutput(OMElement outputContainerElement) throws InvalidInputFormatException {
+        return unmarshalTaskPayload(outputContainerElement);
+    }
 
-	private Task unmarshalFullTask(XmlObject rootElement)
-			throws InvalidInputFormatException {
-		if (rootElement == null) {
-			throw new RequiredArgumentException("rootElement");
-		}
-		Task resultTask = null;
+    public XmlObject unmarshalTaskOutput(XmlObject outputContainerElement) throws InvalidInputFormatException {
+        checkTaskPayload(outputContainerElement);
+        return outputContainerElement;
+    }
 
-		requireElement(rootElement, "metadata");
+    public Task unmarshalFullTask(OMElement rootElement) throws InvalidInputFormatException {
+        try {
+            XmlObject xmlObject = XmlObject.Factory.parse(rootElement.getXMLStreamReader());
+            return unmarshalFullTask(xmlObject);
+        } catch (XmlException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
-		com.intalio.bpms.workflow.taskManagementServices20051109.Task taskElement = com.intalio.bpms.workflow.taskManagementServices20051109.Task.Factory
-				.newInstance();
+    private Task unmarshalFullTask(XmlObject rootElement) throws InvalidInputFormatException {
+        if (rootElement == null) {
+            throw new RequiredArgumentException("rootElement");
+        }
+        Task resultTask = null;
 
-		TaskMetadata metadataElement = taskElement.addNewMetadata();
-		metadataElement.set(expectElement(rootElement, "metadata"));
+        requireElement(rootElement, "metadata");
 
-		com.intalio.bpms.workflow.taskManagementServices20051109.Task.Input inputElement = null;
-		XmlObject xmlInput = expectElement(rootElement, "input");
-		if (xmlInput != null) {
-			inputElement = taskElement.addNewInput();
-			inputElement.set(xmlInput);
-		}
+        com.intalio.bpms.workflow.taskManagementServices20051109.Task taskElement = com.intalio.bpms.workflow.taskManagementServices20051109.Task.Factory
+                .newInstance();
 
-		com.intalio.bpms.workflow.taskManagementServices20051109.Task.Output outputElement = null;
-		XmlObject xmlOutput = expectElement(rootElement, "output");
-		if (xmlOutput != null) {
-			outputElement = taskElement.addNewOutput();
-			outputElement.set(xmlOutput);
-		}
+        TaskMetadata metadataElement = taskElement.addNewMetadata();
+        metadataElement.set(expectElement(rootElement, "metadata"));
 
-		resultTask = unmarshalTaskFromMetadata(metadataElement);
-		if (resultTask instanceof ITaskWithInput) {
-			requireParameter(inputElement, "task input");
-			XmlObject input = unmarshalTaskInput(inputElement);
-			((ITaskWithInput) resultTask).setInput(input);
-		} else {
-			forbidParameter(inputElement, "task input");
-		}
-		if ((resultTask instanceof ITaskWithOutput) && outputElement != null) {
-			requireParameter(outputElement, "task output");
-			XmlObject output = unmarshalTaskOutput(outputElement);
-			((ITaskWithOutput) resultTask).setOutput(output);
-		} else {
-			forbidParameter(outputElement, "task output");
-		}
+        com.intalio.bpms.workflow.taskManagementServices20051109.Task.Input inputElement = null;
+        XmlObject xmlInput = expectElement(rootElement, "input");
+        if (xmlInput != null) {
+            inputElement = taskElement.addNewInput();
+            inputElement.set(xmlInput);
+        }
 
-		return resultTask;
-	}
+        com.intalio.bpms.workflow.taskManagementServices20051109.Task.Output outputElement = null;
+        XmlObject xmlOutput = expectElement(rootElement, "output");
+        if (xmlOutput != null) {
+            outputElement = taskElement.addNewOutput();
+            outputElement.set(xmlOutput);
+        }
 
-	private void checkNS(XmlObject containerElement)
-			throws InvalidInputFormatException {
-		if (containerElement == null) {
-			throw new RequiredArgumentException("containerElement");
-		}
-		XmlCursor payloadCursor = containerElement.newCursor();
+        resultTask = unmarshalTaskFromMetadata(metadataElement);
+        if (resultTask instanceof ITaskWithInput) {
+            requireParameter(inputElement, "task input");
+            XmlObject input = unmarshalTaskInput(inputElement);
+            ((ITaskWithInput) resultTask).setInput(input);
+        } else {
+            forbidParameter(inputElement, "task input");
+        }
+        if ((resultTask instanceof ITaskWithOutput) && outputElement != null) {
+            requireParameter(outputElement, "task output");
+            XmlObject output = unmarshalTaskOutput(outputElement);
+            ((ITaskWithOutput) resultTask).setOutput(output);
+        } else {
+            forbidParameter(outputElement, "task output");
+        }
 
-		if (!payloadCursor.toFirstChild()) {
-			throw new InvalidInputFormatException("No taskmetadata element");
-		}
-		QName qName = payloadCursor.getName();
-		if (qName == null || qName.getNamespaceURI() == null
-				|| qName.getNamespaceURI().trim().length() == 0) {
-			throw new InvalidInputFormatException("No namespace defined");
-		}
-		payloadCursor.dispose();
-	}
+        return resultTask;
+    }
+
+    private void checkNS(XmlObject containerElement) throws InvalidInputFormatException {
+        if (containerElement == null) {
+            throw new RequiredArgumentException("containerElement");
+        }
+        XmlCursor payloadCursor = containerElement.newCursor();
+
+        if (!payloadCursor.toFirstChild()) {
+            throw new InvalidInputFormatException("No taskmetadata element");
+        }
+        QName qName = payloadCursor.getName();
+        if (qName == null || qName.getNamespaceURI() == null || qName.getNamespaceURI().trim().length() == 0) {
+            throw new InvalidInputFormatException("No namespace defined");
+        }
+        payloadCursor.dispose();
+    }
 }

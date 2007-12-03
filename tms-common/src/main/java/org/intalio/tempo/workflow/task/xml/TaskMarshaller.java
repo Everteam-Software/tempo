@@ -18,8 +18,6 @@ package org.intalio.tempo.workflow.task.xml;
 import java.util.Calendar;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.OMNamespace;
-import org.apache.axiom.soap.impl.dom.factory.DOMSOAPFactory;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlString;
@@ -45,10 +43,6 @@ import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
 
 public class TaskMarshaller extends XmlBeanMarshaller {
     final static Logger _log = LoggerFactory.getLogger(TaskMarshaller.class);
-    
-    final static OMNamespace TASK_NAMESPACE = new DOMSOAPFactory().createOMNamespace(
-            TaskXMLConstants.TASK_NAMESPACE, 
-            TaskXMLConstants.TASK_NAMESPACE_PREFIX);
 
     public TaskMarshaller() {
         super(TaskXMLConstants.TASK_NAMESPACE, TaskXMLConstants.TASK_NAMESPACE_PREFIX);
@@ -57,7 +51,7 @@ public class TaskMarshaller extends XmlBeanMarshaller {
     public OMElement marshalTaskMetadata(Task task, UserRoles roles) {
         OMElement om = XmlTooling.convertDocument(marshalXMLTaskMetadata(task, roles));
         om.setLocalName(TaskXMLConstants.TASK_LOCAL_NAME);
-        om.setNamespace(TASK_NAMESPACE);
+        om.setNamespace(TaskXMLConstants.TASK_OM_NAMESPACE);
         return om;
     }
 
