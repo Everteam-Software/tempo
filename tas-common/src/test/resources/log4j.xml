@@ -9,18 +9,8 @@
 				value="%-5p [%F:%L] %n%m%n%n" />
 		</layout>
 	</appender>
-
-	<appender name="logfile" class="org.apache.log4j.FileAppender">
-		<param name="File" value="fds.log" />
-		<param name="Append" value="true" />
-		<param name="Encoding" value="UTF-8" />
-		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern"
-				value="%n%d{yyyy-MM-dd HH:mm:ss} %-5p - %c:%L %n%m%n" />
-		</layout>
-	</appender>
-
-	<category name="org.intalio.tempo.workflow.tas" additivity="false">
+    
+	<category name="org.intalio.tempo.workflow">
 		<priority value="debug"/>
 		<appender-ref ref="console"/>
 	</category> 	
