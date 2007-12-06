@@ -110,10 +110,12 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             OMElement response = new TMSResponseMarshaller(requestElement.getOMFactory()) {
                 public OMElement marshalResponse(Task task) {
                     OMElement response = createElement("getTaskResponse");
-                    response.addChild(new TaskMarshaller().marshalTaskMetadata(task, user));
+                    new TaskMarshaller().marshalFullTask(task, response, user);
                     return response;
                 }
             }.marshalResponse(task);
+            
+            if(_logger.isDebugEnabled()) _logger.debug(response.toString());
 
             return response;
         } catch (InvalidInputFormatException e) {
@@ -350,6 +352,9 @@ public class TMSRequestProcessor extends OMUnmarshaller {
     public OMElement addAttachment(OMElement requestElement)
             throws AxisFault {
         try {
+            if(_logger.isDebugEnabled())
+                _logger.debug(requestElement.toString());
+            
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
             String taskID = requireElementValue(rootQueue, "taskId");
             OMElement attachmentElement = requireElement(rootQueue, "attachment");

@@ -33,7 +33,6 @@ import org.intalio.tempo.workflow.task.traits.ITaskWithAttachments;
 import org.intalio.tempo.workflow.task.traits.ITaskWithInput;
 import org.intalio.tempo.workflow.task.traits.ITaskWithOutput;
 import org.intalio.tempo.workflow.task.traits.ITaskWithState;
-import org.intalio.tempo.workflow.util.RequiredArgumentException;
 import org.intalio.tempo.workflow.util.xml.XmlBeanMarshaller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -173,26 +172,24 @@ public class TaskMarshaller extends XmlBeanMarshaller {
         } catch (XmlException e) {
             _log.error("Error while marshalling output", e);
         }
-
     }
-
+    
     // for compatibility usage
     public void marshalFullTask(Task task, OMElement parent, UserRoles user) {
         try {
-            com.intalio.bpms.workflow.taskManagementServices20051109.Task xmlTask = com.intalio.bpms.workflow.taskManagementServices20051109.Task.Factory
-                    .parse(parent.getXMLStreamReader());
-            marshalFullTask(task, xmlTask, user);
-            parent.addChild(XmlTooling.convertDocument(xmlTask));
-        } catch (XmlException e) {
+            com.intalio.bpms.workflow.taskManagementServices20051109.Task  taskElement = com.intalio.bpms.workflow.taskManagementServices20051109.Task.Factory.newInstance();
+            marshalFullTask(task, taskElement, user);
+            OMElement om = XmlTooling.convertDocument(taskElement);
+            om.setLocalName(TaskXMLConstants.TASK_LOCAL_NAME);
+            om.setNamespace(TaskXMLConstants.TASK_OM_NAMESPACE);
+            parent.addChild(om);
+        } catch (Exception e) {
             _log.error("Error while marshalling fulltask", e);
         }
     }
-
+    
     private void marshalFullTask(Task task, com.intalio.bpms.workflow.taskManagementServices20051109.Task parent,
             UserRoles user) {
-        if (task == null) {
-            throw new RequiredArgumentException("task");
-        }
 
         XmlObject metadataElement = marshalXMLTaskMetadata(task, user);
         parent.setMetadata((TaskMetadata) metadataElement);
@@ -210,7 +207,6 @@ public class TaskMarshaller extends XmlBeanMarshaller {
                 marshalTaskOutput(taskWithOutput, taskOutput);
             }
         }
-
     }
 
 }
