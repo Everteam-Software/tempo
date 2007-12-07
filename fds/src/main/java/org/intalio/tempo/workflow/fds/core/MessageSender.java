@@ -15,18 +15,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import nu.xom.Builder;
-import nu.xom.Document;
-import nu.xom.ParsingException;
-import nu.xom.Serializer;
-import nu.xom.ValidityException;
-
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.io.SAXReader;
 
 /**
  * Sends XML/HTTP requests to web services and returns the replies.
@@ -62,20 +59,17 @@ public class MessageSender {
      * @throws IOException
      *             If a low-level input/output error happens (e.g. a
      *             disconnection during the request/response).
-     * @throws ValidityException
-     *             If the response is an invalid XML document.
-     * @throws ParsingException
-     *             If the response is not a well-formed XML document.
+     * @throws DocumentException 
      * @see <a href="http://www.w3.org/TR/soap/">The SOAP specification.</a>
      */
     public Document requestAndGetReply(Document requestMessage, String endpoint, String soapAction)
-        throws HttpException, IOException, ValidityException, ParsingException
+        throws HttpException, IOException, DocumentException
     {
         Document result = null;
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream(16*1024);
-        Serializer serializer = new Serializer(baos, "UTF-8");
-        serializer.write(requestMessage);
+        //Serializer serializer = new Serializer(baos, "UTF-8");
+        //serializer.write(requestMessage);
 
         PostMethod postMethod = new PostMethod(endpoint);
         postMethod.addRequestHeader("SOAPAction", soapAction);
@@ -88,13 +82,13 @@ public class MessageSender {
         httpClient.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, retryhandler);
 
         // Prepare an XML parser 
-        Builder builder = new Builder();
+        SAXReader reader = new SAXReader();
 
         InputStream responseInputStream = null;
         try {
             httpClient.executeMethod(postMethod);
             responseInputStream = postMethod.getResponseBodyAsStream();
-            result = builder.build(responseInputStream);
+            result = reader.read(responseInputStream);
         } finally {
             postMethod.releaseConnection();
             if (responseInputStream != null) responseInputStream.close();

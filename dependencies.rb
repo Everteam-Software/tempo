@@ -37,6 +37,8 @@ JAVAMAIL = "geronimo-spec:geronimo-spec-javamail:jar:1.3.1-rc5"
 
 JARGS = [ "jargs:jargs:jar:1.0" ]
 
+JAXEN = [ "jaxen:jaxen:jar:1.1.1" ]
+
 JENCKS = [ "jencks:jencks-all:jar:1.1.3" ]
 
 JSP_API = [ "javax.servlet:jsp-api:jar:2.0" ]
@@ -97,7 +99,7 @@ XMLBEANS = [
   "xmlbeans:xmlpublic:jar:2.1.0" ]
 
 XOM = [ "xom:xom:jar:1.1" ]
-
+XMLUNIT = ["xmlunit:xmlunit:jar:1.1"]
 
 ORBEON_AXIS = [
  "orbeon:axis-orbeon:jar:1.2.1",

@@ -14,9 +14,9 @@ package org.intalio.tempo.workflow.fds.dispatches;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import nu.xom.Document;
-import nu.xom.Serializer;
-
+import org.dom4j.Document;
+import org.dom4j.io.OutputFormat;
+import org.dom4j.io.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,17 +29,18 @@ class LoggerDispatcher extends FilterDispatcher {
         targetDispatcherClass = targetDispatcher.getClass();
     }
 
-    private void logMessage(String message, Document doc) {
+    private void logMessage(String message, org.dom4j.Document doc) {
         if (logger.isDebugEnabled()) {
             try {
                 logger.debug("Dispatcher " + targetDispatcherClass.getCanonicalName() + ": " + message);
 
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                Serializer ser = new Serializer(bos);
-                ser.setIndent(2);
-                ser.write(doc);
-                ser.flush();
+                OutputFormat of = OutputFormat.createPrettyPrint();
+                of.setEncoding("UTF-8");
 
+                XMLWriter writer = new XMLWriter(bos, of);
+                writer.write(doc);
+                
                 String serializedDoc = bos.toString();
 
                 logger.debug(serializedDoc);

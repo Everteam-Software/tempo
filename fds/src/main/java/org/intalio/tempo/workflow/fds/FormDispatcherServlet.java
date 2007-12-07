@@ -18,13 +18,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import nu.xom.Builder;
-import nu.xom.Document;
-import nu.xom.Element;
-import nu.xom.ParsingException;
-import nu.xom.Serializer;
-import nu.xom.ValidityException;
-
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
 import org.intalio.tempo.workflow.fds.core.MessageFormatException;
 import org.intalio.tempo.workflow.fds.core.MessageSender;
 import org.intalio.tempo.workflow.fds.core.UserProcessMessageConvertor;
@@ -130,7 +127,7 @@ public class FormDispatcherServlet extends HttpServlet {
         WorkflowProcessesMessageConvertor wf2up = new WorkflowProcessesMessageConvertor();
         UserProcessMessageConvertor up2wf = new UserProcessMessageConvertor();
 
-        Builder builder = new Builder();
+        SAXReader reader = new SAXReader();
         MessageSender messageSender = new MessageSender();
         FormDispatcherConfiguration config = FormDispatcherConfiguration.getInstance();
 
@@ -142,9 +139,9 @@ public class FormDispatcherServlet extends HttpServlet {
                 _log.info("Workflow Processes -> User Process");
 
                 _log.debug("Parsing the request from the Workflow Processes.");
-                Document workflowProcessesRequest = builder.build(request.getInputStream());
+                Document workflowProcessesRequest = reader.read(request.getInputStream());
                 if (_log.isDebugEnabled()) {
-                    _log.debug("Workflow process request:\n" + workflowProcessesRequest.toXML() + "\n");
+                    _log.debug("Workflow process request:\n" + workflowProcessesRequest.asXML() + "\n");
                     _log.debug("Converting the request to the user process format.");
                 }
                 
@@ -152,7 +149,7 @@ public class FormDispatcherServlet extends HttpServlet {
                 // process namespace itself
                 wf2up.convertMessage(workflowProcessesRequest, null);
                 if (_log.isDebugEnabled()) {
-                    _log.debug("Workflow process request (after conversion):\n" + workflowProcessesRequest.toXML() + "\n");
+                    _log.debug("Workflow process request (after conversion):\n" + workflowProcessesRequest.asXML() + "\n");
                 }
 
                 if (wf2up.getSoapAction() != null) {
@@ -172,13 +169,13 @@ public class FormDispatcherServlet extends HttpServlet {
                 Document userProcessResponse = messageSender.requestAndGetReply(workflowProcessesRequest,
                         userProcessEndpoint, soapAction);
                 if (_log.isDebugEnabled()) {
-                    _log.debug("User process response:\n" + userProcessResponse.toXML() + "\n");
+                    _log.debug("User process response:\n" + userProcessResponse.asXML() + "\n");
                     _log.debug("Converting the response to the Workflow Processes format.");
                 }
                 up2wf.convertMessage(userProcessResponse);
                 if (_log.isDebugEnabled()) {
                     _log.debug("Sending the converted response back to the Workflow Processes.");
-                    _log.debug("User process response (after conversion)\n" + userProcessResponse.toXML() + "\n");
+                    _log.debug("User process response (after conversion)\n" + userProcessResponse.asXML() + "\n");
                 }
                 responseDocument = userProcessResponse;
             } else {
@@ -189,14 +186,14 @@ public class FormDispatcherServlet extends HttpServlet {
                 String workflowProcessesEndpoint = config.getPxeBaseUrl() + config.getWorkflowProcessesRelativeUrl();
 
                 _log.debug("Parsing the request from the user process.");
-                Document userProcessRequest = builder.build(request.getInputStream());
+                Document userProcessRequest = reader.read(request.getInputStream());
                 if (_log.isDebugEnabled()) {
-                    _log.debug("User process request:\n" + userProcessRequest.toXML() + "\n");
+                    _log.debug("User process request:\n" + userProcessRequest.asXML() + "\n");
                 }
 
                 Document pureRequest = SoapTools.unwrapMessage(userProcessRequest);
                 Element rootElement = pureRequest.getRootElement();
-                String rootElementName = rootElement.getLocalName();
+                String rootElementName = rootElement.getName();
 
                 IDispatcher dispatcher = null;
                 try {
@@ -228,7 +225,7 @@ public class FormDispatcherServlet extends HttpServlet {
                     _log.debug("Converting the request to the Workflow Processes format.");
                     up2wf.convertMessage(userProcessRequest);
                     if (_log.isDebugEnabled()) {
-                        _log.debug("\n" + userProcessRequest.toXML() + "\n");
+                        _log.debug("\n" + userProcessRequest.asXML() + "\n");
                     }
                     String userProcessNamespaceUri = up2wf.getUserProcessNamespaceUri();
                     _log.debug("Sending the converted request to the Workflow Processes and getting the response.");
@@ -240,13 +237,13 @@ public class FormDispatcherServlet extends HttpServlet {
                     Document workflowProcessesResponse = messageSender.requestAndGetReply(userProcessRequest,
                             workflowProcessesEndpoint, soapAction);
                     if (_log.isDebugEnabled()) {
-                        _log.debug("\n" + workflowProcessesResponse.toXML() + "\n");
+                        _log.debug("\n" + workflowProcessesResponse.asXML() + "\n");
                     }
                     _log.debug("Converting the response to the user process format.");
                     wf2up.convertMessage(workflowProcessesResponse, userProcessNamespaceUri);
                     if (_log.isDebugEnabled()) {
                         _log.debug("Sending the converted response back to the user process.");
-                        _log.debug("Converted response:\n" + workflowProcessesResponse.toXML() + "\n");
+                        _log.debug("Converted response:\n" + workflowProcessesResponse.asXML() + "\n");
                     }
                     responseDocument = workflowProcessesResponse;
                 }
@@ -260,16 +257,16 @@ public class FormDispatcherServlet extends HttpServlet {
             response.setContentType("text/xml; charset="+charset);
 
             // serialize the response to the output stream as pretty XML
-            Serializer serializer = new Serializer(response.getOutputStream(), charset);
-            serializer.write(responseDocument);
+            //Serializer serializer = new Serializer(response.getOutputStream(), charset);
+            //serializer.write(responseDocument);
 
             _log.info("Request processed OK.");
         } catch (IOException e) {
             _log.warn("Input/output error: " + e.getMessage(), e);
-        } catch (ValidityException e) {
+        } catch (DocumentException e) {
             _log.warn("Invalid XML in message: " + e.getMessage(), e);
-        } catch (ParsingException e) {
-            _log.warn("Malformed XML in message: " + e.getMessage(), e);
+        //} catch (ParsingException e) {
+           // _log.warn("Malformed XML in message: " + e.getMessage(), e);
         } catch (MessageFormatException e) {
             _log.warn("Invalid message format: " + e.getMessage(), e);
         } catch (InvalidInputFormatException e) {

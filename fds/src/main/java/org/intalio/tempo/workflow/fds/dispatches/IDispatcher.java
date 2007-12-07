@@ -11,7 +11,7 @@
  */
 package org.intalio.tempo.workflow.fds.dispatches;
 
-import nu.xom.Document;
+import org.dom4j.Document;
 
 public interface IDispatcher {
     Document dispatchRequest(Document request) throws InvalidInputFormatException;

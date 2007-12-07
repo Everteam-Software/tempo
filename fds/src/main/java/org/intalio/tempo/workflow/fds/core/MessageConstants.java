@@ -11,7 +11,7 @@
  */
 package org.intalio.tempo.workflow.fds.core;
 
-import nu.xom.XPathContext;
+import java.util.HashMap;
 
 /**
  * This non-instantiatable class acts as a qualifier for FDS constants, such
@@ -24,73 +24,61 @@ import nu.xom.XPathContext;
  * @see nu.xom.XPathContext
  */
 public final class MessageConstants {
-    /**
-     * The standard namespace for Intalio Business Processes. Used by the
-     * Workflow Processes messages.
-     */
-    public final static String IB4P_NS = "http://www.intalio.com/bpms/workflow/ib4p_20051115";
+	/**
+	 * The standard namespace for Intalio Business Processes. Used by the
+	 * Workflow Processes messages.
+	 */
+	public final static String IB4P_NS = "http://www.intalio.com/bpms/workflow/ib4p_20051115";
 
-    /**
-     * The namespace of SOAP Envelope elements.
-     * 
-     * @see <a href="http://www.w3.org/TR/soap/">The SOAP specification</a>
-     */
-    public final static String SOAPENV_NS = "http://schemas.xmlsoap.org/soap/envelope/";
-                                             
-    /**
-     * The namespace of Web Services Addressing elements, which can be present
-     * in any SOAP message received by the FDS.
-     * 
-     * @see <a href="http://www.w3.org/Submission/ws-addressing/">The Web
-     *      Services Addressing homepage</a>
-     */
-    public final static String WS_ADDRESSING_NS = "http://schemas.xmlsoap.org/ws/2004/08/addressing";
-    
-    /**
-     * The standard namespace for W3C WS Addressing.
-     */
-    public final static String ADDR_NS = "http://www.w3.org/2005/08/addressing";
-    
-    /**
-     * The standard namespace for Intalio Magic Session.
-     */
-    public final static String INTALIO_NS = "http://www.intalio.com/type/session";
+	/**
+	 * The namespace of SOAP Envelope elements.
+	 * 
+	 * @see <a href="http://www.w3.org/TR/soap/">The SOAP specification</a>
+	 */
+	public final static String SOAPENV_NS = "http://schemas.xmlsoap.org/soap/envelope/";
 
-    /**
-     * The shared instance of <code>XPathContext</code> that keeps bindings to
-     * all the above namespaces. <br>
-     * Used for queries that include references to elements from the standard
-     * namespaces.
-     * 
-     * @see nu.xom.XPathContext
-     */
-    private static XPathContext _xPathContext = new XPathContext();
+	/**
+	 * The namespace of Web Services Addressing elements, which can be present
+	 * in any SOAP message received by the FDS.
+	 * 
+	 * @see <a href="http://www.w3.org/Submission/ws-addressing/">The Web
+	 *      Services Addressing homepage</a>
+	 */
+	public final static String WS_ADDRESSING_NS = "http://schemas.xmlsoap.org/ws/2004/08/addressing";
 
-    static {
-        /* Initialize the shared XPathContext instance */
-        _xPathContext.addNamespace("ib4p", MessageConstants.IB4P_NS);
-        _xPathContext.addNamespace("soapenv", MessageConstants.SOAPENV_NS);
-        _xPathContext.addNamespace("wsa", MessageConstants.WS_ADDRESSING_NS);
-        _xPathContext.addNamespace("addr", MessageConstants.ADDR_NS);
-        _xPathContext.addNamespace("intalio", MessageConstants.INTALIO_NS);
-    }
+	/**
+	 * The standard namespace for W3C WS Addressing.
+	 */
+	public final static String ADDR_NS = "http://www.w3.org/2005/08/addressing";
 
-    /**
-     * Returns the shared instance of <code>XPathContext</code> that keeps the
-     * standard namespace bindings.
-     * 
-     * @return The shared instance of <code>XPathContext</code> that keeps the
-     *         standard namespace bindings.
-     */
-    public static XPathContext getXPathContext() {
-        return _xPathContext;
-    }
+	/**
+	 * The standard namespace for Intalio Magic Session.
+	 */
+	public final static String INTALIO_NS = "http://www.intalio.com/type/session";
 
-    /**
-     * Inaccessible instance constructor. <br>
-     * Prevents instantiation.
-     */
-    private MessageConstants() {
+	public final static String AR_NS = "http://www.intalio.com/bpms/workflow/forms/examples/absence-request/absence-approval";
+	/**
+	 * Inaccessible instance constructor. <br>
+	 * Prevents instantiation.
+	 */
 
-    }
+	private static HashMap _nsMap = new HashMap();
+	static {
+		_nsMap.put("addr", MessageConstants.ADDR_NS);
+		_nsMap.put("intalio", MessageConstants.INTALIO_NS);
+		_nsMap.put("soapenv", MessageConstants.SOAPENV_NS);
+		_nsMap.put("ib4p", MessageConstants.IB4P_NS);
+		_nsMap.put("wsa", MessageConstants.WS_ADDRESSING_NS);
+		_nsMap.put("userProcess", MessageConstants.AR_NS);
+	}
+
+	private MessageConstants() {
+
+	}
+
+	public static HashMap get_nsMap() {
+		return _nsMap;
+	}
+	
+	
 }

@@ -8,7 +8,7 @@
  *
  * Contributors:
  * Intalio inc. - initial API and implementation
- */
+ *//*
 package org.intalio.tempo.workflow.fds.tools;
 
 import java.util.ArrayList;
@@ -22,9 +22,9 @@ import nu.xom.Elements;
 import nu.xom.Nodes;
 import nu.xom.XPathContext;
 
-/**
+*//**
  * Not thread-safe
- */
+ *//*
 public class NamespaceConvertor {
     private String targetNamespace;
     private Set<String> excludeQueries = new HashSet<String>();
@@ -85,3 +85,4 @@ public class NamespaceConvertor {
         cleanupExcludedElements();
     }
 }
+*/

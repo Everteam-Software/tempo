@@ -11,18 +11,17 @@
  */
 package org.intalio.tempo.workflow.fds.dispatches;
 
+import java.util.List;
 import java.util.Random;
 
-import nu.xom.Document;
-import nu.xom.Element;
-import nu.xom.Nodes;
-import nu.xom.Text;
-import nu.xom.XPathContext;
-
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.Node;
+import org.dom4j.QName;
+import org.dom4j.XPath;
 import org.intalio.tempo.workflow.fds.FormDispatcherConfiguration;
 import org.intalio.tempo.workflow.fds.core.MessageConstants;
-import org.intalio.tempo.workflow.fds.tools.NamespaceConvertor;
-import org.intalio.tempo.workflow.fds.tools.XPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +31,6 @@ class NotifyDispatcher implements IDispatcher {
     private static final String TMS_NS = "http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/";
 
     private String userProcessNamespace;
-    private XPathContext xpathContext;
 
     private static final String UID_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
@@ -56,52 +54,64 @@ class NotifyDispatcher implements IDispatcher {
     public Document dispatchRequest(Document request) throws InvalidInputFormatException {
         Element rootElement = request.getRootElement();
         userProcessNamespace = rootElement.getNamespaceURI();
-        xpathContext = new XPathContext("up", userProcessNamespace);
 
-        XPath xpath = new XPath(xpathContext);
-        rootElement.setLocalName("createTaskRequest");
-        Element taskElement = new Element("task", userProcessNamespace);
-        rootElement.appendChild(taskElement);
-        Element metadataElement = xpath.requireElement(rootElement, "up:metadata");
-        if (metadataElement.getFirstChildElement("taskId", userProcessNamespace) == null) {
-            Element taskIdElement = new Element("taskId", userProcessNamespace);
-            taskIdElement.appendChild(new Text(generateUID()));
-            metadataElement.insertChild(taskIdElement, 0);
-        }
-        if (metadataElement.getFirstChildElement("taskType", userProcessNamespace) == null) {
-            Element taskTypeElement = new Element("taskType", userProcessNamespace);
-            taskTypeElement.appendChild(new Text("NOTIFICATION"));
-            metadataElement.insertChild(taskTypeElement, 1);
-        }
+        rootElement.setName("createTaskRequest");
+        Element taskElement = rootElement.addElement("task", userProcessNamespace);
+
+        Element metadataElement = rootElement.element("metadata");
         metadataElement.detach();
-        Element inputElement = xpath.requireElement(rootElement, "up:input");
+        taskElement.add(metadataElement);
+        if (metadataElement.selectSingleNode("taskId") == null) {
+            Element taskIdElement = metadataElement.addElement("taskId", userProcessNamespace);
+            taskIdElement.setText(generateUID());
+        }
+        if (metadataElement.selectSingleNode("taskType") == null) {
+            Element taskTypeElement = metadataElement.addElement("taskType", userProcessNamespace);
+            taskTypeElement.setText("NOTIFICATION");
+        }
+
+        Element inputElement = rootElement.element("input");
         inputElement.detach();
-        taskElement.appendChild(metadataElement);
-        taskElement.appendChild(inputElement);
+        taskElement.add(inputElement);
 
         // TODO: is this still necessary?
-        rootElement.appendChild(new Element("participantToken", userProcessNamespace));
+        rootElement.addElement("participantToken", userProcessNamespace);
 
-        NamespaceConvertor nsConvertor = new NamespaceConvertor(TMS_NS, xpathContext);
-        nsConvertor.addExcludeQuery("/*[1]/up:task/up:input/*");
-        nsConvertor.apply(request);
+        /*
+         * Now, change the namespace the
+         * input, to TMS_NS.
+         */
+        
+        XPath xpath = DocumentHelper.createXPath("/createTaskRequest/task/input//*");
+        List allTaskInputElements = xpath.selectNodes(request);
+        
+        xpath = DocumentHelper.createXPath("//*");
+        List allBody = xpath.selectNodes(request);
+        for (int i = 0; i < allBody.size(); ++i) {
+            Node node = (Node)allBody.get(i);
+            if (! allTaskInputElements.contains(node)) {
+                Element element = (Element) node;
+                element.remove(element.getNamespaceForURI(userProcessNamespace));
+                element.setQName(QName.get(element.getName(),TMS_NS));
+            }
+        }
 
         return request;
     }
 
     public Document dispatchResponse(Document response) throws InvalidInputFormatException {
-        XPathContext globalXPathContext = MessageConstants.getXPathContext();
-        Nodes fault = response.query("/soapenv:Envelope/soapenv:Body/soapenv:Fault/node()", globalXPathContext);
+    	XPath xpath = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Body/soapenv:Fault");
+    	xpath.setNamespaceURIs(MessageConstants.get_nsMap());
+        List fault = xpath.selectNodes(response);
         if(fault.size() != 0) {
             // return fault as-is
-            LOG.error("Fault response during notify:\n"+response.toXML());
+            LOG.error("Fault response during notify:\n"+response.asXML());
             return response;
         }
-        Element rootElement = new Element("notifyResponse", userProcessNamespace);
-        Document notifyResponse = new Document(rootElement);
-        Element statusElement = new Element("status", userProcessNamespace);
-        statusElement.appendChild(new Text("OK"));
-        rootElement.appendChild(statusElement);
+        Document notifyResponse = DocumentHelper.createDocument();
+        Element rootElement = notifyResponse.addElement("notifyResponse", userProcessNamespace);
+        Element statusElement = rootElement.addElement("status", userProcessNamespace);
+        statusElement.setText("OK");
         return notifyResponse;
     }
 

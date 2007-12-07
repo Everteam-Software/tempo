@@ -12,11 +12,11 @@
 
 package org.intalio.tempo.workflow.fds.dispatches;
 
-import nu.xom.Document;
-import nu.xom.Element;
-import nu.xom.Nodes;
-import nu.xom.Text;
+import java.util.List;
 
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 import org.intalio.tempo.workflow.fds.FormDispatcherConfiguration;
 
 class EscalateDispatcher implements IDispatcher {
@@ -29,27 +29,28 @@ class EscalateDispatcher implements IDispatcher {
 			throws InvalidInputFormatException {
 		Element rootElement = request.getRootElement();
         userProcessNamespace = rootElement.getNamespaceURI();		
-		Nodes nodes = request.query("//*");
+		List nodes = DocumentHelper.createXPath("//*").selectNodes(request);
 		for (int i = 0; i < nodes.size(); ++i) {
 			Element element = (Element) nodes.get(i);
-			element.setNamespaceURI(NS_URI);
-			element.setNamespacePrefix(NS_PREFIX);
+			element.addNamespace(NS_PREFIX, NS_URI);
 		}
-		rootElement.setLocalName("escalateTaskRequest"); // TODO: fix this in VC!
+		rootElement.setName("escalateTaskRequest"); // TODO: fix this in VC!
 		return request;
 	}
 
 	public Document dispatchResponse(Document response)
 			throws InvalidInputFormatException {
 		// TODO: process the TMP response
+		Document document = DocumentHelper.createDocument();
 		
-        Element rootElement = new Element("escalateResponse", userProcessNamespace);
-        Document escalateResponse = new Document(rootElement);
-        Element statusElement = new Element("status", userProcessNamespace);
-        statusElement.appendChild(new Text("OK"));
-        rootElement.appendChild(statusElement);
+        Element rootElement = document.addElement("escalateResponse");
+        rootElement.addNamespace(null, userProcessNamespace);
 
-        return escalateResponse;
+        Element statusElement = rootElement.addElement("status");
+        statusElement.addNamespace(null, userProcessNamespace);
+        statusElement.setText("OK");
+
+        return document;
 	}
 
 	public String getTargetEndpoint() {

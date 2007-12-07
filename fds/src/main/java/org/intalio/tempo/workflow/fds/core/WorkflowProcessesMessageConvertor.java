@@ -11,13 +11,14 @@
  */
 package org.intalio.tempo.workflow.fds.core;
 
-import nu.xom.Document;
-import nu.xom.Element;
-import nu.xom.Node;
-import nu.xom.Nodes;
-import nu.xom.Text;
-import nu.xom.XPathContext;
+import java.util.List;
 
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.Node;
+import org.dom4j.QName;
+import org.dom4j.XPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,56 +80,66 @@ public class WorkflowProcessesMessageConvertor {
      */
     public void convertMessage(Document message, String userProcessNamespaceUri)
             throws MessageFormatException {
-        XPathContext xPathContext = MessageConstants.getXPathContext();
-        Nodes fault = message.query("/soapenv:Envelope/soapenv:Body/soapenv:Fault/node()", xPathContext);
+    	XPath xpathSelector = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Body/soapenv:Fault");
+    	xpathSelector.setNamespaceURIs(MessageConstants.get_nsMap());
+    	List fault = xpathSelector.selectNodes(message);
         if(fault.size() != 0) {
             // return fault as-is
-            LOG.error("Fault in response:\n"+message.toXML());
+            LOG.error("Fault in response:\n"+message.asXML());
             return;
         }
                 
         //retrieve session
-        Nodes sessionNodes = message.query("//ib4p:taskMetaData/ib4p:session[1]", xPathContext);
+        xpathSelector = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Body/ib4p:response/ib4p:taskMetaData/ib4p:session");
+        xpathSelector.setNamespaceURIs(MessageConstants.get_nsMap());
+        List sessionNodes = xpathSelector.selectNodes(message);
         if (sessionNodes.size() > 0) {
             Element sessionElement = (Element) sessionNodes.get(0);
-            String session = sessionElement.getValue();
+            String session = sessionElement.getText();
             
             //remove callback
-            Nodes callbackNodes = message.query("/soapenv:Envelope/soapenv:Header/intalio:callback", xPathContext);
+            xpathSelector = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Header/intalio:callback");
+            xpathSelector.setNamespaceURIs(MessageConstants.get_nsMap());
+            List callbackNodes = xpathSelector.selectNodes(message);
             if (callbackNodes.size() != 0) {
                 Element wsaTo = (Element) callbackNodes.get(0);
                 Element header = (Element)wsaTo.getParent();
-                header.removeChild(wsaTo);
-                sessionElement = new Element("session", MessageConstants.INTALIO_NS);
-                sessionElement.appendChild(new Text(session));
-                header.appendChild(sessionElement);
+                header.remove(wsaTo);
+                sessionElement = header.addElement("session");
+                sessionElement.addNamespace(null, MessageConstants.INTALIO_NS);
+                sessionElement.setText(session);
             }
         }
 
         /* fetch the user process endpoint element from the task metadata */
-        Nodes userProcessEndpointNodes = message.query("//ib4p:taskMetaData/ib4p:userProcessEndpoint[1]", xPathContext);
+        xpathSelector = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Body/ib4p:response/ib4p:taskMetaData/ib4p:userProcessEndpoint");
+        xpathSelector.setNamespaceURIs(MessageConstants.get_nsMap());
+        List userProcessEndpointNodes = xpathSelector.selectNodes(message);
         if (userProcessEndpointNodes.size() > 0) {
             /* found the user process endpoint element */
             Element userProcessEndpointElement = (Element) userProcessEndpointNodes.get(0);
             /* save it for later use */
-            _userProcessEndpoint = userProcessEndpointElement.getValue();
+            _userProcessEndpoint = userProcessEndpointElement.getText();
 
             /* do we have a wsa:To element? */
-            Nodes wsaToNodes = message.query("//wsa:To", xPathContext);
+            xpathSelector = DocumentHelper.createXPath("//wsa:To");
+            xpathSelector.setNamespaceURIs(MessageConstants.get_nsMap());
+            List wsaToNodes = xpathSelector.selectNodes(message);
             if (wsaToNodes.size() != 0) {
                 /* We have the wsa:To element. Set the correct target endpoint */
                 Element wsaTo = (Element) wsaToNodes.get(0);
-                wsaTo.removeChildren();
-                wsaTo.appendChild(new Text(_userProcessEndpoint));
+                wsaTo.setText(_userProcessEndpoint);
             }
 
             /* do we have a addr:To element? */
-            Nodes addrToNodes = message.query("//addr:To", xPathContext);
+            xpathSelector = DocumentHelper.createXPath("//addr:To");
+            xpathSelector.setNamespaceURIs(MessageConstants.get_nsMap());
+            List addrToNodes = xpathSelector.selectNodes(message);
             if (addrToNodes.size() != 0) {
                 /* We have the wsa:To element. Set the correct target endpoint */
                 Element wsaTo = (Element) addrToNodes.get(0);
-                wsaTo.removeChildren();
-                wsaTo.appendChild(new Text(_userProcessEndpoint));
+                //wsaTo.removeChildren();
+                wsaTo.setText(_userProcessEndpoint);
             }
         }
         
@@ -139,28 +150,32 @@ public class WorkflowProcessesMessageConvertor {
          * section.
          */
         if (userProcessNamespaceUri == null) {
-            Nodes namespaceElementQueryResult = message.query("//ib4p:taskMetaData/ib4p:userProcessNamespaceURI[1]",
-                    xPathContext);
+        	xpathSelector = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Body/ib4p:response/ib4p:taskMetaData/ib4p:userProcessNamespaceURI");
+        	xpathSelector.setNamespaceURIs(MessageConstants.get_nsMap());
+            List namespaceElementQueryResult = xpathSelector.selectNodes(message);
             if (namespaceElementQueryResult.size() == 0) {
                 throw new MessageFormatException("No user process namespace specified "
                         + "and no ib4p:userProcessNamespaceURI element present to determine those.");
             }
             Element userProcessNamespaceUriElement = (Element) namespaceElementQueryResult.get(0);
-            userProcessNamespaceUri = userProcessNamespaceUriElement.getValue();
+            userProcessNamespaceUri = userProcessNamespaceUriElement.getText();
             _userProcessNamespaceUri = userProcessNamespaceUri;
         }
 
-        Nodes soapActionQueryResult = message.query("//ib4p:taskMetaData/ib4p:userProcessCompleteSOAPAction[1]", 
-                xPathContext);
+        xpathSelector = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Body/ib4p:response/ib4p:taskMetaData/ib4p:userProcessCompleteSOAPAction");
+        xpathSelector.setNamespaceURIs(MessageConstants.get_nsMap());
+        List soapActionQueryResult = xpathSelector.selectNodes(message);
         if (soapActionQueryResult.size() > 0) {
             Element soapActionElement = (Element) soapActionQueryResult.get(0);
-            _soapAction = soapActionElement.getValue();
+            _soapAction = soapActionElement.getText();
             
-            Nodes actionNodes = message.query("//addr:Action[1]", xPathContext);
+            xpathSelector = DocumentHelper.createXPath("//addr:Action");
+            xpathSelector.setNamespaceURIs(MessageConstants.get_nsMap());
+            List actionNodes = xpathSelector.selectNodes(message);
             if (actionNodes.size() > 0) {
                 Element wsaTo = (Element) actionNodes.get(0);
-                wsaTo.removeChildren();
-                wsaTo.appendChild(new Text(_soapAction));
+                //wsaTo.removeChildren();
+                wsaTo.setText(_soapAction);
             }
         }
         
@@ -168,21 +183,24 @@ public class WorkflowProcessesMessageConvertor {
         String userProcessNamespace = "userProcess";
 
         /* Select all elements inside the soap envelope body. */
-        Nodes bodyNodes = message.query("//soapenv:Body//*", xPathContext);
+        xpathSelector = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Body//*");
+        xpathSelector.setNamespaceURIs(MessageConstants.get_nsMap());
+        List bodyNodes = xpathSelector.selectNodes(message);
         /* Select all elements inside the task output payload. */
-        Nodes taskOutputNodes = message.query("//ib4p:taskOutput//*", xPathContext);
+        xpathSelector = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Body/ib4p:response/ib4p:taskOutput//*");
+        xpathSelector.setNamespaceURIs(MessageConstants.get_nsMap());
+        List taskOutputNodes = xpathSelector.selectNodes(message);
         /*
          * Change namespace for all the elements which are inside the soap
          * envelope body but not inside the task output payload.
          */
         for (int i = 0; i < bodyNodes.size(); ++i) {
-            Node node = bodyNodes.get(i);
+            Node node = (Node)bodyNodes.get(i);
 
             if (! taskOutputNodes.contains(node)) {
                 Element element = (Element) node;
-
-                element.setNamespaceURI(userProcessNamespaceUri);
-                element.setNamespacePrefix(userProcessNamespace);
+                element.remove(element.getNamespace());
+                element.setQName(QName.get(element.getName(),userProcessNamespace, userProcessNamespaceUri));
             }
         }
     }

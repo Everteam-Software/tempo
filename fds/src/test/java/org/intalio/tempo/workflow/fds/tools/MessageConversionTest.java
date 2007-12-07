@@ -14,50 +14,26 @@ package org.intalio.tempo.workflow.fds.tools;
 import java.io.IOException;
 import java.io.InputStream;
 
-import junit.framework.TestCase;
-import nu.xom.Builder;
-import nu.xom.Document;
-import nu.xom.ParsingException;
-import nu.xom.ValidityException;
-
-import org.dom4j.util.NodeComparator;
+import org.custommonkey.xmlunit.XMLTestCase;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.io.SAXReader;
 import org.intalio.tempo.workflow.fds.core.UserProcessMessageConvertor;
 import org.intalio.tempo.workflow.fds.core.WorkflowProcessesMessageConvertor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class MessageConversionTest extends TestCase {
+public class MessageConversionTest extends XMLTestCase {
 
     private static final String _USER_PROCESS_MESSAGE_XML = "userProcessMessage.xml";
     private static final String _WORKFLOW_PROCESSES_MESSAGE_XML = "workflowProcessesMessage.xml";
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(MessageConversionTest.class);
-    }
-
-    public MessageConversionTest(String name) {
-        super(name);
-    }
-
-    @Override
-    protected void setUp()
-            throws Exception {
-        super.setUp();
-
-        System.out.println();
-    }
-
-    @Override
-    protected void tearDown()
-            throws Exception {
-        super.tearDown();
-
-        System.out.println();
-    }
+    static final Logger log = LoggerFactory.getLogger(MessageConversionTest.class);
 
     public void testUserProcessMessageConversion() throws Exception {
         InputStream inputMessageStream
             = this.getClass().getClassLoader().getResourceAsStream(_USER_PROCESS_MESSAGE_XML);
 
-        Document message = new Builder().build(inputMessageStream);
+        Document message = new SAXReader().read(inputMessageStream);
         UserProcessMessageConvertor convertor = new UserProcessMessageConvertor();
         convertor.convertMessage(message);
         compareDocument(_USER_PROCESS_MESSAGE_XML,message);
@@ -70,15 +46,18 @@ public class MessageConversionTest extends TestCase {
         compareDocument(_WORKFLOW_PROCESSES_MESSAGE_XML,message);
     }
 
-	private Document getMessageDocument(String messageFile) throws ParsingException,
-			ValidityException, IOException {
+	private Document getMessageDocument(String messageFile) throws IOException, DocumentException {
 		InputStream inputMessageStream
             = this.getClass().getClassLoader().getResourceAsStream(messageFile);
-        return new Builder().build(inputMessageStream);
+        return new SAXReader().read(inputMessageStream);
 	}
 	
 
 	private void compareDocument(String original, Document converted) throws Exception {
-		assertTrue(new NodeComparator().compare( getMessageDocument(original), converted) == 0);
+	    compareRootNodes(converted, getMessageDocument(original));
+	}
+	
+	private void compareRootNodes(Document doc1, Document doc2) throws Exception {
+	    assertXMLEqual(doc1.getRootElement().asXML(), doc2.getRootElement().asXML());
 	}
 }

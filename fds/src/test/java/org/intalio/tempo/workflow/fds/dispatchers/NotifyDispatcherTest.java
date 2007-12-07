@@ -12,18 +12,19 @@
 package org.intalio.tempo.workflow.fds.dispatchers;
 
 import junit.framework.TestCase;
-import nu.xom.Builder;
-import nu.xom.Document;
+
+import org.dom4j.Document;
+import org.dom4j.io.SAXReader;
 import org.intalio.tempo.workflow.fds.dispatches.Dispatchers;
 import org.intalio.tempo.workflow.fds.dispatches.IDispatcher;
 
 public class NotifyDispatcherTest extends TestCase {
     private Document createRequest() throws Exception {
-        return new Builder().build(this.getClass().getResourceAsStream("/notifyRequest1.xml"));
+        return new SAXReader().read(this.getClass().getResourceAsStream("/notifyRequest1.xml"));
     }
 
     private Document createResponse() throws Exception {
-        return new Builder().build(this.getClass().getResourceAsStream("/notifyResponse1.xml"));
+        return new SAXReader().read(this.getClass().getResourceAsStream("/notifyResponse1.xml"));
     }
 
 //    private void printXML(Document document) throws Exception {

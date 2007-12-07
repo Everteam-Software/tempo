@@ -8,7 +8,7 @@
  *
  * Contributors:
  * Intalio inc. - initial API and implementation
- */
+ *//*
 package org.intalio.tempo.workflow.fds.tools;
 
 import org.intalio.tempo.workflow.fds.dispatches.InvalidInputFormatException;
@@ -34,3 +34,4 @@ public class XPath {
     }
 
 }
+*/

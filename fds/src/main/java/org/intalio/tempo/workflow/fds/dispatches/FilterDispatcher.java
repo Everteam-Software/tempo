@@ -11,7 +11,7 @@
  */
 package org.intalio.tempo.workflow.fds.dispatches;
 
-import nu.xom.Document;
+import org.dom4j.Document;
 
 abstract class FilterDispatcher implements IDispatcher {
     protected IDispatcher targetDispatcher;

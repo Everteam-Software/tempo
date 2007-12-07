@@ -15,9 +15,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
-import nu.xom.Builder;
-import nu.xom.Document;
-
+import org.dom4j.Document;
+import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -145,13 +144,12 @@ public final class FormDispatcherConfiguration {
                 return;
             }
             InputStream configInputStream = new FileInputStream(f);
-            Document configDocument = new Builder().build(configInputStream);
+            Document configDocument = new SAXReader().read(configInputStream);
 
-            String pxeBaseUrl = configDocument.query("/config/pxeBaseUrl").get(0).getValue();
-            String workflowProcessesRelativeUrl = configDocument.query("/config/workflowProcessesRelativeUrl").get(0)
-                    .getValue();
-            String tmsUrl = configDocument.query("/config/tmsUrl").get(0).getValue();
-            String fdsUrl = configDocument.query("/config/fdsUrl").get(0).getValue();
+            String pxeBaseUrl = configDocument.valueOf("/config/pxeBaseUrl");
+            String workflowProcessesRelativeUrl = configDocument.valueOf("/config/workflowProcessesRelativeUrl");
+            String tmsUrl = configDocument.valueOf("/config/tmsUrl");
+            String fdsUrl = configDocument.valueOf("/config/fdsUrl");
 
             _pxeBaseUrl = pxeBaseUrl;
             _workflowProcessesRelativeUrl = workflowProcessesRelativeUrl;

@@ -11,34 +11,30 @@
  */
 package org.intalio.tempo.workflow.fds.tools;
 
-import junit.framework.TestCase;
-import nu.xom.Builder;
-import nu.xom.Document;
-import nu.xom.Serializer;
-import org.intalio.tempo.workflow.fds.tools.SoapTools;
-import java.io.ByteArrayOutputStream;
-import org.dom4j.util.NodeComparator;
+import org.custommonkey.xmlunit.XMLTestCase;
+import org.dom4j.Document;
+import org.dom4j.io.SAXReader;
 
-public class SoapToolsTest extends TestCase {
+public class SoapToolsTest extends XMLTestCase {
     private Document createRequest()
             throws Exception {
-        return new Builder().build(this.getClass().getResourceAsStream("/notifyRequest1.xml"));
+        return new SAXReader().read(this.getClass().getResourceAsStream("/notifyRequest1.xml"));
     }
 
-    private void printXML(Document document)
+    /*private void printXML(Document document)
             throws Exception {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
         Serializer sr = new Serializer(out);
         sr.setIndent(2);
         sr.write(document);
         sr.flush();
-    }
+    }*/
 
     public void testSoapTools()
             throws Exception {
         Document request = createRequest();
         Document soap = SoapTools.wrapMessage(request);
         Document request2 = SoapTools.unwrapMessage(soap);
-		assertTrue(new NodeComparator().compare( request, request2 ) == 0);
+        assertXMLEqual(soap.asXML(), request2.asXML());
     }
 }
