@@ -8,10 +8,45 @@
 		    <dep:version>SNAPSHOT</dep:version>
 		    <dep:type>war</dep:type>
 		</dep:moduleId>
-        <dep:dependencies>
-        </dep:dependencies>
+		<dependencies>
+			<dependency>
+				<groupId>org.apache.pluto</groupId>
+				<artifactId>pluto</artifactId>
+				<version>1.1.4</version>
+				<type>war</type>
+				<import>classes</import>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.pluto</groupId>
+				<artifactId>pluto-taglib</artifactId>
+				<version>1.1.4</version>
+				<type>jar</type>
+				</dependency>
+			<dependency>
+                <groupId>portlet-api</groupId>
+                <artifactId>portlet-api</artifactId>
+                <version>1.0</version>
+                <type>jar</type>
+            </dependency>
+			<dependency>
+                <groupId>json-taglib</groupId>
+                <artifactId>json-taglib</artifactId>
+                <version>0.4.1</version>
+                <type>jar</type>
+            </dependency>
+		</dependencies>
+
+        <hidden-classes>
+          <filter>org.intalio.tempo</filter> 
+          <filter>org.springframework</filter> 
+          <filter>META-INF/spring</filter> 
+        </hidden-classes>
+        
+        <!-- 
+
+        <inverse-classloading />
+
+         -->
 	</dep:environment>
-
 	<context-root>/ui-fw</context-root>
-
 </web-app>
