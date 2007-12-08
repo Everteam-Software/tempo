@@ -1,0 +1,52 @@
+// ------------------------------------------------------------------
+// NOTICE file corresponding to the section 4d of The Apache License,
+// Version 2.0, in this case for Pluto Portal
+// ------------------------------------------------------------------
+
+Pluto Portal
+Copyright 2003-2007 Apache Software Foundation
+
+This product includes software developed at
+Apache Software Foundation (http://www.apache.org/).
+
+This product includes/uses software, AOP Alliance (http://aopalliance.sourceforge.net/),
+developed by AOP Alliance  (http://aopalliance.sourceforge.net)
+
+This product includes/uses software, Spring Framework: Context (http://www.springframework.org),
+developed by Spring Framework  (http://www.springframework.org/)
+
+This product includes/uses software, Digester (http://jakarta.apache.org/commons/digester/),
+developed by The Apache Software Foundation  (http://jakarta.apache.org)
+
+This product includes/uses software, JSP Standard Tag Library (http://java.sun.com/products/jsp/jstl/),
+developed by Sun Microsystems  (http://www.sun.com/)
+
+This product includes/uses software, Spring Framework: Core (http://www.springframework.org),
+developed by Spring Framework  (http://www.springframework.org/)
+
+This product includes/uses software, Spring Framework: Beans (http://www.springframework.org),
+developed by Spring Framework  (http://www.springframework.org/)
+
+This product includes/uses software, Apache Commons Beanutils (http://jakarta.apache.org/commons/beanutils/),
+developed by Apache Software Foundation  (http://www.apache.org/)
+
+This product includes/uses software, Pluto Portal Driver Implementation Classes (http://portals.apache.org/pluto/pluto-portal-driver-impl),
+developed by Apache Software Foundation  (http://www.apache.org/)
+
+This product includes/uses software, Spring Framework: Web (http://www.springframework.org),
+developed by Spring Framework  (http://www.springframework.org/)
+
+This product includes/uses software, Pluto Portal Driver (http://portals.apache.org/pluto/pluto-portal-driver),
+developed by Apache Software Foundation  (http://www.apache.org/)
+
+This product includes/uses software, JSP Standard Tag Library Implementation (http://jakarta.apache.org/taglibs/doc/standard-1.0-doc/intro.html),
+developed by Apache Software Foundation  (http://www.apache.org/)
+
+This product includes/uses software, Apache Commons Logging API (http://jakarta.apache.org/commons/logging/),
+developed by Apache Software Foundation  (http://www.apache.org/)
+
+This product includes/uses software, IO (http://jakarta.apache.org/commons/io/),
+developed by The Apache Software Foundation  (http://jakarta.apache.org)
+
+
+
