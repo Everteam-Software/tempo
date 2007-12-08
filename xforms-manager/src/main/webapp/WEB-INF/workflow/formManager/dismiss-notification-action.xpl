@@ -84,7 +84,7 @@
             <p:processor name="oxf:identity">
                 <p:input name="data" xmlns:xhtml="http://www.w3.org/1999/xhtml">
                     <xhtml:html>
-                        <xhtml:body onLoad="window.open('../../ui-fw/tasks.htm', '_parent')">
+                        <xhtml:body onLoad="parent.window.hideWindow();">
                             <xhtml:center>Dismissed</xhtml:center>
                         </xhtml:body>
                     </xhtml:html>
