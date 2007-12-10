@@ -136,6 +136,12 @@ ORBEON_CUSTOM = [
 
 COMMONS_DISCOVERY = [  "commons-discovery:commons-discovery:jar:0.2"]
 
+PLUTO = [
+  "org.apache.pluto:pluto-container:jar:1.1.4",
+  "org.apache.pluto:pluto-taglib:jar:1.1.4",
+  PORTLET_API
+]
+
 ORBEON_COMMONS = [
   COMMONS,
   COMMONS_DISCOVERY,

@@ -16,6 +16,7 @@
 				<type>war</type>
 				<import>classes</import>
 			</dependency>
+<!--
 			<dependency>
 				<groupId>org.apache.pluto</groupId>
 				<artifactId>pluto-taglib</artifactId>
@@ -28,12 +29,14 @@
                 <version>1.0</version>
                 <type>jar</type>
             </dependency>
+
 			<dependency>
                 <groupId>json-taglib</groupId>
                 <artifactId>json-taglib</artifactId>
                 <version>0.4.1</version>
                 <type>jar</type>
             </dependency>
+-->
 		</dependencies>
 
         <hidden-classes>
