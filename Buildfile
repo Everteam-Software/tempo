@@ -164,7 +164,7 @@ define "tempo" do
   
   desc "Task Management Service"
   define "tms-service" do
-    compile.with projects("security", "security-ws-client", "tms-common", "tms-axis", "web-nutsNbolts"),
+    compile.with projects("security", "security-ws-client", "tms-common", "tms-axis", "tms-client", "web-nutsNbolts"),
                  AXIOM, AXIS2, COMMONS, SLF4J, LOG4J, SPRING, STAX_API, APACHE_JPA, XMLBEANS
 
     test.with projects("tms-common", "tms-axis"), JAVAMAIL, SLF4J, SPRING, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX
@@ -172,6 +172,7 @@ define "tempo" do
     # require live Axis2 instance
     unless ENV["LIVE"] == 'yes'
       test.exclude '*TMSAxis2RemoteTest*'
+      test.exclude '*RemoteReassginTaskTest*'
     end
     test.exclude '*TestUtils*'
     
