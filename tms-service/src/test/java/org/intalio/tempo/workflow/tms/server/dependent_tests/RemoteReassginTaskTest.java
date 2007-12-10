@@ -110,7 +110,9 @@ public class RemoteReassginTaskTest extends TestCase {
         AuthIdentifierSet uOwners = selectTask.getUserOwners();
         uOwners.clear();
         selectTask.getUserOwners().addAll(targetUserSet);
-        tms.reassign(selectTask);
+        
+        //Now, RemoteTMSClient interface does not support task re-assign.
+        //tms.reassign(selectTask);
         _logger.debug("Reassign task[" + selectTaskId + "] to " + targetUserId);
         
         
