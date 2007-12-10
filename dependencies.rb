@@ -37,6 +37,8 @@ JAVAMAIL = "geronimo-spec:geronimo-spec-javamail:jar:1.3.1-rc5"
 
 JARGS = [ "jargs:jargs:jar:1.0" ]
 
+JSON = [ "json:json-taglib:jar:0.4.1" ]
+
 JAXEN = [ "jaxen:jaxen:jar:1.1.1" ]
 
 JENCKS = [ "jencks:jencks-all:jar:1.1.3" ]
@@ -62,6 +64,8 @@ APACHE_JPA = [
   "org.apache.derby:derby:jar:10.2.2.0",
   "serp:serp:jar:1.13.1"
 ]
+
+PORTLET_API = ["portlet-api:portlet-api:jar:1.0"]
 
 QOM = [ "net.sf.qom:qom:jar:0.1alpha3" ]
 
@@ -98,7 +102,6 @@ XMLBEANS = [
   "xmlbeans:xbean_xpath:jar:2.1.0",
   "xmlbeans:xmlpublic:jar:2.1.0" ]
 
-XOM = [ "xom:xom:jar:1.1" ]
 XMLUNIT = ["xmlunit:xmlunit:jar:1.1"]
 
 ORBEON_AXIS = [
@@ -159,7 +162,7 @@ ORBEON_LIBS = [
   "jdom:jdom:jar:b9",
   "struts:struts:jar:1.2.9",
   "jtidy:jtidy:jar:8.0-20060801.131059-3",
-  "portlet-api:portlet-api:jar:1.0" 
+  PORTLET_API
 ]
 
 

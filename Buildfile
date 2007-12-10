@@ -109,7 +109,7 @@ define "tempo" do
   desc "Task Attachment Service Common"
   define "tas-common" do
     compile.with projects("security", "security-ws-client"), 
-                 AXIOM, AXIS2, COMMONS, JUNIT, SLF4J, LOG4J, STAX_API, XOM
+                 AXIOM, AXIS2, COMMONS, JUNIT, SLF4J, LOG4J, STAX_API, JAXEN
 
     test.with JAVAMAIL, SLF4J, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX
     test.exclude '*TestUtils*'
@@ -126,7 +126,7 @@ define "tempo" do
   desc "Task Attachment Service"
   define "tas-service" do
     package(:aar).with(:libs => [ 
-        projects("security", "security-ws-client", "security-ws-common", "tas-common", "web-nutsNbolts"), SPRING, AXIS2, SLF4J, LOG4J])
+        projects("security", "security-ws-client", "security-ws-common", "tas-common", "web-nutsNbolts"), JAXEN, SPRING, AXIS2, SLF4J, LOG4J])
   end
 
   desc "Xml Beans generation"
@@ -165,7 +165,7 @@ define "tempo" do
   desc "Task Management Service"
   define "tms-service" do
     compile.with projects("security", "security-ws-client", "tms-common", "tms-axis", "web-nutsNbolts"),
-                 AXIOM, AXIS2, COMMONS, SLF4J, LOG4J, SPRING, STAX_API, XOM, APACHE_JPA, XMLBEANS
+                 AXIOM, AXIS2, COMMONS, SLF4J, LOG4J, SPRING, STAX_API, APACHE_JPA, XMLBEANS
 
     test.with projects("tms-common", "tms-axis"), JAVAMAIL, SLF4J, SPRING, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX
 
@@ -176,16 +176,16 @@ define "tempo" do
     test.exclude '*TestUtils*'
     
     package(:aar).with :libs => 
-        [ projects("security", "security-ws-client", "tms-axis", "security-ws-common", "tms-common", "web-nutsNbolts"), LOG4J, SLF4J, SPRING, XOM, APACHE_JPA ] 
+        [ projects("security", "security-ws-client", "tms-axis", "security-ws-common", "tms-common", "web-nutsNbolts"), LOG4J, SLF4J, SPRING, APACHE_JPA ] 
   end
   
   desc "User-Interface Framework"
   define "ui-fw" do
     libs = projects("security", "security-ws-client", "security-ws-common",
-                    "tms-client", "tms-common", "tms-axis", "web-nutsNbolts"),
+                    "tms-client", "tms-common", "web-nutsNbolts"),
            AXIOM, AXIS2, COMMONS, DOM4J, INTALIO_STATS, JSP_API, JSTL,
            LOG4J, SPRING, SERVLET_API, SLF4J, STAX_API, TAGLIBS, WOODSTOX, 
-           WS_COMMONS_SCHEMA, WSDL4J, XERCES, XMLBEANS, APACHE_JPA
+           WS_COMMONS_SCHEMA, WSDL4J, XERCES, XMLBEANS, APACHE_JPA,ORBEON_LIBS,JSON
     compile.with libs
 
     dojo = unzip(path_to(compile.target, "dojo") => download(artifact(DOJO)=>DOJO_URL))
@@ -195,7 +195,11 @@ define "tempo" do
     resources.filter.using "version" => VERSION_NUMBER
     package(:war).with(:libs=>libs).
       include("src/main/config/geronimo/1.0/*", path_to(compile.target, "dojo"))
-  end  
+  end
+  
+  define "ui-pluto" do
+    package(:war)
+  end
   
   desc "Workflow Deployment Service Client"
   define "wds-client" do
