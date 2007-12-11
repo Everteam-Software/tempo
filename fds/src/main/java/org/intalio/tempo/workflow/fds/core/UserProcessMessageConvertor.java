@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
 public class UserProcessMessageConvertor {
     private static Logger _log = LoggerFactory.getLogger(UserProcessMessageConvertor.class);
 
-    private static String REQUEST_PREFIX = "xform"; //userProcess
+    private static String REQUEST_PREFIX = "userProcess"; //xform
     
     /**
      * The XML namespace URI of the user process which has been the message
