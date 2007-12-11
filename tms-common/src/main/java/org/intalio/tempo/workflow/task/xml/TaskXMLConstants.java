@@ -32,6 +32,6 @@ public final class TaskXMLConstants {
             TASK_NAMESPACE, 
             TASK_NAMESPACE_PREFIX);
     
-    public static final QName TASK_QNAME = new QName(TASK_NAMESPACE, TASK_NAMESPACE_PREFIX);
+    public static final QName TASK_QNAME = new QName(TASK_NAMESPACE, TASK_LOCAL_NAME);
 
 }

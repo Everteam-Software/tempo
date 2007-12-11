@@ -270,8 +270,7 @@ class RemoteTMSClient implements ITaskManagementService {
         OMElement request = new TMSMarshaller() {
             public OMElement marshalRequest() {
                 OMElement request = createElement("createTaskRequest");
-                OMElement taskElement = createElement(request, "task");
-                new TaskMarshaller().marshalFullTask(task, taskElement, null);
+                new TaskMarshaller().marshalFullTask(task, request, null);
                 createElement(request, "participantToken", _participantToken);
                 return request;
             }

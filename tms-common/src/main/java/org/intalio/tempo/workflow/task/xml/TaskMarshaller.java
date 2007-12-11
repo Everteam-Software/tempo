@@ -178,8 +178,8 @@ public class TaskMarshaller extends XmlBeanMarshaller {
         com.intalio.bpms.workflow.taskManagementServices20051109.Task  taskElement = com.intalio.bpms.workflow.taskManagementServices20051109.Task.Factory.newInstance();
         marshalFullTask(task, taskElement, user);
         OMElement om = XmlTooling.convertDocument(taskElement);
-        om.setLocalName(TaskXMLConstants.TASK_LOCAL_NAME);
-        om.setNamespace(TaskXMLConstants.TASK_OM_NAMESPACE);
+        //om.setLocalName(TaskXMLConstants.TASK_LOCAL_NAME);
+        //om.setNamespace(TaskXMLConstants.TASK_OM_NAMESPACE);
         return om;
     }
     
