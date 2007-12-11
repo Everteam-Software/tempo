@@ -34,6 +34,8 @@ import org.slf4j.LoggerFactory;
 public class UserProcessMessageConvertor {
     private static Logger _log = LoggerFactory.getLogger(UserProcessMessageConvertor.class);
 
+    private static String REQUEST_PREFIX = "xform"; //userProcess
+    
     /**
      * The XML namespace URI of the user process which has been the message
      * source. <br>
@@ -75,12 +77,17 @@ public class UserProcessMessageConvertor {
             throws MessageFormatException {
         FormDispatcherConfiguration config = FormDispatcherConfiguration.getInstance();
 
-        XPath xpath = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Body/soapenv:Fault");
-        List fault = xpath.selectNodes(message);
-        if(fault.size() != 0) {
-            // return fault as-is
-            _log.error("Fault in response:\n"+message.asXML());
-            return;
+        XPath xpath = null;
+        try{
+	        xpath = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Body/soapenv:Fault");
+	        List fault = xpath.selectNodes(message);
+	        if(fault.size() != 0) {
+	            // return fault as-is
+	            _log.error("Fault in response:\n"+message.asXML());
+	            return;
+	        }
+        }catch(Exception e){
+        	
         }
         
         //Check SOAP action
@@ -158,7 +165,7 @@ public class UserProcessMessageConvertor {
         if (sessionQueryResult.size() != 0) {
             Element wsaToElement = (Element) sessionQueryResult.get(0);
             String session = wsaToElement.getText();
-            List tmdQueryResult = DocumentHelper.createXPath("//userProcess:taskMetaData").selectNodes(message);
+            List tmdQueryResult = DocumentHelper.createXPath("//"+REQUEST_PREFIX+":taskMetaData").selectNodes(message);
             Element tmdElement = (Element) tmdQueryResult.get(0);
             Element sessionElement = tmdElement.addElement("session");
             sessionElement.addNamespace("ib4p", MessageConstants.IB4P_NS);
@@ -167,7 +174,7 @@ public class UserProcessMessageConvertor {
 
         //retrieve userProcessEndpoint from task meta data 
         //or put sender endpoint in task meta data if not defined
-        xpath = DocumentHelper.createXPath("//userProcess:taskMetaData/userProcess:userProcessEndpoint");
+        xpath = DocumentHelper.createXPath("//"+REQUEST_PREFIX+":taskMetaData/"+REQUEST_PREFIX+":userProcessEndpoint");
         xpath.setNamespaceURIs(MessageConstants.get_nsMap());
         List endpointQueryResult = xpath.selectNodes(message);
         if (endpointQueryResult.size() != 0) {
@@ -180,7 +187,7 @@ public class UserProcessMessageConvertor {
             }
         } else if(_userProcessEndpoint != null) {
         	_log.info("User process endpoint is not defined in task metadata, adding " + _userProcessEndpoint);
-        	xpath = DocumentHelper.createXPath("//userProcess:taskMetaData");
+        	xpath = DocumentHelper.createXPath("//"+REQUEST_PREFIX+":taskMetaData");
         	xpath.setNamespaceURIs(MessageConstants.get_nsMap());
         	List tmdQueryResult = xpath.selectNodes(message);
         	if(tmdQueryResult.size()>0) {
@@ -191,11 +198,11 @@ public class UserProcessMessageConvertor {
         }
         
         //Add user process namespace to taskmetadata if not already defined
-        xpath = DocumentHelper.createXPath("//userProcess:taskMetaData/userProcess:userProcessNamespaceURI");
+        xpath = DocumentHelper.createXPath("//"+REQUEST_PREFIX+":taskMetaData/"+REQUEST_PREFIX+":userProcessNamespaceURI");
         xpath.setNamespaceURIs(MessageConstants.get_nsMap());
         List nsQueryResult = xpath.selectNodes(message);
         if (nsQueryResult.size() == 0 && _userProcessNamespaceUri != null) {
-        	xpath = DocumentHelper.createXPath("//userProcess:taskMetaData");
+        	xpath = DocumentHelper.createXPath("//"+REQUEST_PREFIX+":taskMetaData");
         	xpath.setNamespaceURIs(MessageConstants.get_nsMap());
         	List tmdQueryResult = xpath.selectNodes(message);
         	if(tmdQueryResult.size()>0) {
@@ -216,7 +223,7 @@ public class UserProcessMessageConvertor {
          * Now, change the namespace of all soapenv:Body elements, except the
          * task input, to ib4p.
          */
-        xpath = DocumentHelper.createXPath("//userProcess:taskInput//*");
+        xpath = DocumentHelper.createXPath("//"+REQUEST_PREFIX+":taskInput//*");
         xpath.setNamespaceURIs(MessageConstants.get_nsMap());
         List allTaskInputElements = xpath.selectNodes(message);
 
