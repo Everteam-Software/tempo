@@ -167,7 +167,7 @@ define "tempo" do
     compile.with projects("security", "security-ws-client", "tms-common", "tms-axis", "tms-client", "web-nutsNbolts"),
                  AXIOM, AXIS2, COMMONS, SLF4J, LOG4J, SPRING, STAX_API, APACHE_JPA, XMLBEANS
 
-    test.with projects("tms-common", "tms-axis"), JAVAMAIL, SLF4J, SPRING, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX
+    test.with projects("tms-common", "tms-axis"), JAVAMAIL, SLF4J, SPRING, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX, CASTOR, XERCES
 
     # require live Axis2 instance
     unless ENV["LIVE"] == 'yes'
