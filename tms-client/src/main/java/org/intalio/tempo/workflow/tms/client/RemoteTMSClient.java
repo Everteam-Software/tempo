@@ -28,7 +28,10 @@ import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.intalio.tempo.workflow.auth.AuthException;
+import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
+import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.Task;
+import org.intalio.tempo.workflow.task.TaskState;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.task.xml.TaskMarshaller;
 import org.intalio.tempo.workflow.task.xml.TaskUnmarshaller;
@@ -382,6 +385,61 @@ class RemoteTMSClient implements ITaskManagementService {
         }.marshalRequest();
 
         sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "removeAttachment");
+    }
+    
+    public void reassign(final Task task)throws AuthException,
+	   UnavailableTaskException{
+    	if(!(task instanceof PATask)){
+    		throw new UnavailableTaskException("Task is not PATask");
+    	}
+    	if (task == null) {
+    		throw new RequiredArgumentException("task");
+    	}
+
+    	OMElement request = new TMSMarshaller() {
+    		public OMElement marshalRequest() {
+    			OMElement request = createElement("reassignRequest");
+    			createElement(request, "taskId", task.getID());
+    			for (String userOwner : task.getUserOwners()) {
+    				createElement(request, "userOwner", userOwner);
+    			}
+    			for (String roleOwner : task.getRoleOwners()) {
+    				createElement(request, "roleOwner", roleOwner);
+    			}
+    			createElement(request, "taskState", ((PATask)task).getState().toString() );
+    			createElement(request, "participantToken", _participantToken);
+    			return request;
+    		}
+    	}.marshalRequest();
+
+    	sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "reassign");
+    }    
+    
+    public void reassign(final String taskID, final AuthIdentifierSet users,
+    		final AuthIdentifierSet roles, final TaskState state)
+    		throws AuthException,
+			   		UnavailableTaskException{
+    	 if (taskID == null) {
+             throw new RequiredArgumentException("taskID");
+         }
+
+    	OMElement request = new TMSMarshaller() {
+    		public OMElement marshalRequest() {
+    			OMElement request = createElement("reassignRequest");
+    			createElement(request, "taskId", taskID);
+    			for (String userOwner : users) {
+    				createElement(request, "userOwner", userOwner);
+    			}
+    			for (String roleOwner : roles) {
+    				createElement(request, "roleOwner", roleOwner);
+    			}
+    			createElement(request, "taskState", state.toString() );
+    			createElement(request, "participantToken", _participantToken);
+    			return request;
+    		}
+    	}.marshalRequest();
+
+    	sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "reassign");
     }
 
 }

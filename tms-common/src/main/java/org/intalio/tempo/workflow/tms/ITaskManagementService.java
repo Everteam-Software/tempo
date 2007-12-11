@@ -19,7 +19,9 @@ import java.net.URL;
 
 import org.w3c.dom.Document;
 import org.intalio.tempo.workflow.auth.AuthException;
+import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.task.Task;
+import org.intalio.tempo.workflow.task.TaskState;
 
 import org.intalio.tempo.workflow.task.attachments.Attachment;
 
@@ -77,4 +79,13 @@ public interface ITaskManagementService {
             throws AuthException,
                 UnavailableTaskException,
                 UnavailableAttachmentException;
+    
+//    void reassign(Task task)
+//    		throws AuthException,
+//    			   UnavailableTaskException;
+    
+    void reassign(String taskID, AuthIdentifierSet users,
+			AuthIdentifierSet roles, TaskState state)
+    		throws AuthException,
+			   		UnavailableTaskException;
 }

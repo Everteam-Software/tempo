@@ -11,6 +11,7 @@ import org.intalio.tempo.security.rbac.RBACException;
 import org.intalio.tempo.security.rbac.RBACQuery;
 import org.intalio.tempo.security.rbac.provider.RBACProvider;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
+import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.tms.ITaskManagementService;
 import org.intalio.tempo.workflow.tms.client.RemoteTMSFactory;
@@ -40,17 +41,23 @@ public class RemoteReassginTaskTest extends TestCase {
 
 	private static final Logger _logger = LoggerFactory.getLogger(RemoteReassginTaskTest.class);
     
+	private final static String REALM_INTALIO = "intalio";
+	private final static String REALM_EXAMPLES = "examples";
+	
+	
     private final static String USER_CURRENT = "examples\\msmith";
     private final static String ROLE_TARGET = "examples\\manager";
+    private final static String ROLE_TARGET2 = "intalio\\eng";
     
     // examples\msmith
     private static final String TOKEN_CURRENT = "VE9LRU4mJnVzZXI9PWV4YW1wbGVzXG1zbWl0aCYmaXNzdWVkPT0xMTk3MjkxMDI4ODU5JiZyb2xlcz09ZXhhbXBsZXNcZW1wbG95ZWUmJmZ1bGxOYW1lPT1NaWNoYWVsIFNtaXRoJiZlbWFpbD09bXNtaXRoQGV4YW1wbGVzLmludGFsaW8uY29tJiZub25jZT09MjE3OTg2Njc4OTg4NzUwNTk2MiYmdGltZXN0YW1wPT0xMTk3MjkxMDI4ODU5JiZkaWdlc3Q9PUZNWUNtM0tkYVNzTnJZMVFHTWtqTjNmRVFNND0mJiYmVE9LRU4=";
 
     // examples\ewilliams
     private static final String TOKEN_TARGET = "VE9LRU4mJnVzZXI9PWV4YW1wbGVzXGV3aWxsaWFtcyYmaXNzdWVkPT0xMTk3Mjg5NzgzNTYyJiZyb2xlcz09ZXhhbXBsZXNcZW1wbG95ZWUsZXhhbXBsZXNcbWFuYWdlciYmZnVsbE5hbWU9PUVtaWx5IFdpbGxpYW1zJiZlbWFpbD09ZXdpbGxpYW1zQGV4YW1wbGVzLmludGFsaW8uY29tJiZub25jZT09LTYxNzAzMDk5ODE2MjkzNDA0MTAmJnRpbWVzdGFtcD09MTE5NzI4OTc4MzU2MiYmZGlnZXN0PT1jbDlaV1Rmd0JrRkZQcGRQVHlPYk9LdXNpOXM9JiYmJlRPS0VO";
-
     
-    //private static final String TOKEN = "VE9LRU4mJnVzZXI9PWludGFsaW9cYWRtaW4mJmlzc3VlZD09MTE5NjI5NjM1MzQ4MyYmcm9sZXM9PWludGFsaW9ccHJvY2Vzc2FkbWluaXN0cmF0b3IsZXhhbXBsZXNcZW1wbG95ZWUsaW50YWxpb1xwcm9jZXNzbWFuYWdlcixleGFtcGxlc1xtYW5hZ2VyJiZmdWxsTmFtZT09QWRtaW5pbmlzdHJhdG9yJiZlbWFpbD09YWRtaW5AZXhhbXBsZS5jb20mJm5vbmNlPT0tODI1MzI1NjkwNzg0MzU2NTk0JiZ0aW1lc3RhbXA9PTExOTYyOTYzNTM0ODUmJmRpZ2VzdD09WnVLd2JWaDUxeWdMZ2FqSjVhTDlITk02anh3PSYmJiZUT0tFTg==";
+    // intalio\eng1
+    private static final String TOKEN_TARGET2 = "VE9LRU4mJnVzZXI9PWludGFsaW9cZW5nMSYmaXNzdWVkPT0xMTk3MzYzMzk4MzQzJiZyb2xlcz09aW50YWxpb1xlbmcmJmZ1bGxOYW1lPT1FbmdpbmVlciAjMSYmZW1haWw9PWVuZzFAaW50YWxpby5jb20mJm5vbmNlPT0tNzc0MzkyOTM1NjE1MDQxMjU1MiYmdGltZXN0YW1wPT0xMTk3MzYzMzk4MzQzJiZkaWdlc3Q9PUFBMHRlZ0dTbEhaMzI1VGUyNHNnSnRyQ3orUT0mJiYmVE9LRU4=";
+    
     
     private SecurityProvider securityProvider;
     private RBACProvider rbacProvider;
@@ -78,9 +85,9 @@ public class RemoteReassginTaskTest extends TestCase {
 		/*
          * Get available users
          */
-        _logger.debug("Get the users from role: " + ROLE_TARGET);
+        _logger.debug("Get the users from role: " + ROLE_TARGET2);
         RBACQuery query = rbacProvider.getQuery();
-        String[] users = query.assignedUsers(ROLE_TARGET);
+        String[] users = query.assignedUsers(ROLE_TARGET2);
         _logger.debug("Get the users: " + Arrays.asList(users));
 
         /*
@@ -92,7 +99,16 @@ public class RemoteReassginTaskTest extends TestCase {
         /*
          * Select one task to re-assign
          */
-        Task selectTask = tasks[0];
+        PATask selectTask = null;
+        for (Task task : tasks) {
+			if(task instanceof PATask){
+				selectTask = (PATask)task;
+				break;
+			}
+		}
+        if(selectTask==null){
+        	throw new Exception("There is no PATask in the current user[examples\\msmith] task list");
+        }
         String selectTaskId = selectTask.getID();
         _logger.debug("Select one task: " + selectTaskId);
         
@@ -100,7 +116,7 @@ public class RemoteReassginTaskTest extends TestCase {
          * Select a user to be re-assigned.
          */
         AuthIdentifierSet targetUserSet = new AuthIdentifierSet();
-        String targetUserId = "examples\\ewilliams";
+        String targetUserId = users[0];
         _logger.debug("Select one target user = " + targetUserId);
         targetUserSet.add(targetUserId);
         
@@ -109,10 +125,11 @@ public class RemoteReassginTaskTest extends TestCase {
          */
         AuthIdentifierSet uOwners = selectTask.getUserOwners();
         uOwners.clear();
+        selectTask.getRoleOwners().clear();
         selectTask.getUserOwners().addAll(targetUserSet);
         
         //Now, RemoteTMSClient interface does not support task re-assign.
-        //tms.reassign(selectTask);
+        tms.reassign(selectTask.getID(),selectTask.getUserOwners(),selectTask.getRoleOwners(),selectTask.getState());
         _logger.debug("Reassign task[" + selectTaskId + "] to " + targetUserId);
         
         
@@ -135,7 +152,7 @@ public class RemoteReassginTaskTest extends TestCase {
          * check that the task is not in the inbox of target user
          */
         ITaskManagementService tms_target = new RemoteTMSFactory(
-                "http://localhost:8080/axis2/services/TaskManagementServices", TOKEN_TARGET).getService();
+                "http://localhost:8080/axis2/services/TaskManagementServices", TOKEN_TARGET2).getService();
         boolean task_targetuser_inbox = false;
         Task[] tasks3 = tms_target.getTaskList();
         for (int i = 0; i < tasks3.length; i++) {
@@ -180,7 +197,7 @@ public class RemoteReassginTaskTest extends TestCase {
 	}
 	
 	void initRBACProvider() throws RBACException {
-        rbacProvider = securityProvider.getRBACProvider("examples");
+        rbacProvider = securityProvider.getRBACProvider(REALM_INTALIO);
     }
 
 }
