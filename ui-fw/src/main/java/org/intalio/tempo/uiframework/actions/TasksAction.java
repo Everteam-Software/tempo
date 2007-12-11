@@ -49,8 +49,8 @@ public class TasksAction extends Action {
     private static final Logger _log = LoggerFactory.getLogger(TasksAction.class);
 
     private final Collection<Task> _tasks = new ArrayList<Task>();
-    private final Collection<TaskHolder<? extends Task>> _activityTasks = new ArrayList<TaskHolder<? extends Task>>();
-    private final Collection<TaskHolder<? extends Task>> _notifications = new ArrayList<TaskHolder<? extends Task>>();
+    private final Collection<TaskHolder<PATask>> _activityTasks = new ArrayList<TaskHolder<PATask>>();
+    private final Collection<TaskHolder<Notification>> _notifications = new ArrayList<TaskHolder<Notification>>();
     private final Collection<TaskHolder<PIPATask>> _initTasks = new ArrayList<TaskHolder<PIPATask>>();
 
     private void initLists() throws RemoteException, AuthException {
@@ -81,7 +81,6 @@ public class TasksAction extends Action {
 
         }
     }
-
 
     private String resoleUrl(String url) {
         try {
@@ -133,10 +132,14 @@ public class TasksAction extends Action {
         } catch (Exception ex) {
             _log.error("Error during TasksAction execute()", ex);
         }
-        //concat tasks data and notifications data.
-        _activityTasks.addAll(_notifications);
-        ModelAndView modelView = new ModelAndView("updates", createModel());
-        return modelView;
+
+        String updateFlag = _request.getParameter("update");
+        // udateFlag==true -> auto update
+        if (updateFlag != null && updateFlag.equals("true")) {
+            return new ModelAndView("updates", createModel());
+        } else {
+            return new ModelAndView(Constants.TASKS_VIEW, createModel());
+        }
     }
 
     public ModelAndView getErrorView() {
