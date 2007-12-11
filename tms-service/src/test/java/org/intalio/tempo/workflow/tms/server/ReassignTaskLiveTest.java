@@ -62,8 +62,6 @@ public class ReassignTaskLiveTest extends TestCase {
     }
 
     public void testReassginLive() throws Exception {
-        if(true)
-            return;
 
         /*
          * Get available users

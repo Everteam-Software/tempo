@@ -142,11 +142,6 @@ define "tempo" do
     package(:jar)
     test.with project("tms-axis"), SLF4J, WOODSTOX, APACHE_JPA, SLF4J, LOG4J, APACHE_JPA, XERCES, DOM4J, XMLBEANS
     test.exclude '*TestUtils*'
-    
-    # TODO: Make those tests pass
-    #test.exclude '*TaskMarshallingRoundtripTest*'
-    #test.exclude '*TaskUnmarshallerTest*'
-    
   end
   
   desc "Task Management Service Client"
@@ -175,6 +170,8 @@ define "tempo" do
       test.exclude '*RemoteReassginTaskTest*'
     end
     test.exclude '*TestUtils*'
+    # TODO: get necessary security file
+    test.exclude "*ReassignTaskLiveTest*"
     
     package(:aar).with :libs => 
         [ projects("security", "security-ws-client", "tms-axis", "security-ws-common", "tms-common", "web-nutsNbolts"), LOG4J, SLF4J, SPRING, APACHE_JPA ] 
