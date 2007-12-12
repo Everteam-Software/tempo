@@ -175,14 +175,17 @@ public class TaskMarshaller extends XmlBeanMarshaller {
     }
 
     public OMElement marshalFullTask(Task task, UserRoles user) {
-        com.intalio.bpms.workflow.taskManagementServices20051109.Task  taskElement = com.intalio.bpms.workflow.taskManagementServices20051109.Task.Factory.newInstance();
+        com.intalio.bpms.workflow.taskManagementServices20051109.Task taskElement = com.intalio.bpms.workflow.taskManagementServices20051109.Task.Factory
+                .newInstance();
         marshalFullTask(task, taskElement, user);
         OMElement om = XmlTooling.convertDocument(taskElement);
-        om.setLocalName(TaskXMLConstants.TASK_LOCAL_NAME);
-        om.setNamespace(TaskXMLConstants.TASK_OM_NAMESPACE);
+        if (om.getLocalName().equalsIgnoreCase("xml-fragment")) {
+            om.setLocalName(TaskXMLConstants.TASK_LOCAL_NAME);
+            om.setNamespace(TaskXMLConstants.TASK_OM_NAMESPACE);
+        }
         return om;
     }
-    
+
     // for compatibility usage
     public void marshalFullTask(Task task, OMElement parent, UserRoles user) {
         try {
@@ -191,12 +194,13 @@ public class TaskMarshaller extends XmlBeanMarshaller {
             _log.error("Error while marshalling fulltask", e);
         }
     }
-    
+
     private void marshalFullTask(Task task, com.intalio.bpms.workflow.taskManagementServices20051109.Task parent,
             UserRoles user) {
 
         XmlObject metadataElement = marshalXMLTaskMetadata(task, user);
-        if(_log.isDebugEnabled()) _log.debug(metadataElement.xmlText());
+        if (_log.isDebugEnabled())
+            _log.debug(metadataElement.xmlText());
         parent.setMetadata((TaskMetadata) metadataElement);
 
         if (task instanceof ITaskWithInput) {

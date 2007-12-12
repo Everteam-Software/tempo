@@ -51,10 +51,13 @@ public class TaskMarshallingRoundtripTest extends TestCase {
 
     private void testRoundTrip(Task task1) throws Exception {
         TaskMarshaller marshaller = new TaskMarshaller();
+        task1.getUserOwners().add("user1");
+        task1.getUserOwners().add("user2");
         OMElement marshalledTask = marshaller.marshalFullTask(task1, null);
         _logger.debug(TestUtils.toPrettyXML(marshalledTask));
         TaskUnmarshaller unmarshaller = new TaskUnmarshaller();
         Task task2 = unmarshaller.unmarshalFullTask(marshalledTask);
+        Assert.assertEquals(2,task2.getUserOwners().size());
         Assert.assertTrue(task2.equalsTask(task1));
     }
 }
