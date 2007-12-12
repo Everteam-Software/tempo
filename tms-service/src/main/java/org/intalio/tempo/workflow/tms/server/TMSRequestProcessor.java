@@ -110,7 +110,7 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             OMElement response = new TMSResponseMarshaller(requestElement.getOMFactory()) {
                 public OMElement marshalResponse(Task task) {
                     OMElement response = createElement("getTaskResponse");
-                    new TaskMarshaller().marshalFullTask(task, response, user);
+                    response.addChild(new TaskMarshaller().marshalFullTask(task, user));
                     return response;
                 }
             }.marshalResponse(task);
