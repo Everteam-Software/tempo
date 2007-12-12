@@ -12,7 +12,6 @@
     
 	<category name="org.intalio.tempo.workflow">
 		<priority value="debug"/>
-		<appender-ref ref="console"/>
 	</category> 	
 	
 	<root>

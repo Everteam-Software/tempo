@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+  Copyright (c) 2005-2006 Intalio inc.
+
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the Eclipse Public License v1.0
+  which accompanies this distribution, and is available at
+  http://www.eclipse.org/legal/epl-v10.html
+
+  Contributors:
+  Intalio inc. - initial API and implementation
+ -->
+
+<m:getTaskRequest xmlns:m="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+  <m:taskId>102_Create_Good_Test_Task</m:taskId>
+  <m:participantToken>
+  VE9LRU4mJnVzZXI9PWludGFsaW9cYWRtaW4mJmlzc3VlZD09MTE5NjI5NjM1MzQ4MyYmcm9sZXM9PWludGFsaW9ccHJvY2Vzc2FkbWluaXN0cmF0b3IsZXhhbXBsZXNcZW1wbG95ZWUsaW50YWxpb1xwcm9jZXNzbWFuYWdlcixleGFtcGxlc1xtYW5hZ2VyJiZmdWxsTmFtZT09QWRtaW5pbmlzdHJhdG9yJiZlbWFpbD09YWRtaW5AZXhhbXBsZS5jb20mJm5vbmNlPT0tODI1MzI1NjkwNzg0MzU2NTk0JiZ0aW1lc3RhbXA9PTExOTYyOTYzNTM0ODUmJmRpZ2VzdD09WnVLd2JWaDUxeWdMZ2FqSjVhTDlITk02anh3PSYmJiZUT0tFTg==
+  </m:participantToken>
+</m:getTaskRequest>

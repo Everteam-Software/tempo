@@ -15,6 +15,7 @@
 
 package org.intalio.tempo.workflow.tms.server.dependent_tests;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.apache.axiom.om.OMElement;
@@ -57,13 +58,24 @@ public class TMSAxis2RemoteTest extends TestCase {
         }
     }
 
+    public void requestToServer(String remoteRequestFilename, String expectedAxisFault) throws Exception {
+        try {
+            OMElement request = TestUtils.loadElementFromResource("/remote/" + remoteRequestFilename);
+            OMElement listResponse = sendRequest(request,
+                    "http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109");
+            _logger.info(TestUtils.toPrettyXML(listResponse));
+        } catch (AxisFault f) {
+            if (expectedAxisFault != null)
+                Assert.assertTrue(f.getMessage().contains(expectedAxisFault));
+            else
+                throw f;
+        }
+    }
+
     public void testGetTaskList() throws Exception {
-        OMElement request = TestUtils.loadElementFromResource("/remote/getTaskListRequest1.xml");
-        _logger.info("---------");
-        _logger.info(request.toString());
-        _logger.info("---------");
-        OMElement response = this.sendRequest(request,
-                "http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getTaskList");
-        _logger.info(TestUtils.toPrettyXML(response));
+        requestToServer("getTaskListRequest1.xml", null);
+        requestToServer("createTaskRequest1.xml", null);
+        requestToServer("deleteRequest1.xml", "Only User with System Role");
+        requestToServer("getTaskRequest1.xml", null);
     }
 }
