@@ -97,10 +97,12 @@ public abstract class Task extends BaseRestrictedEntity {
         if(!(o instanceof Task)) return false;
         Task t = (Task)o;
         boolean b = _id.equalsIgnoreCase(t.getID());
-        b = b && (_formURL.equals(t.getFormURL()));
-        b = b && (_description.equals(t.getDescription()));
-        b = b && (_creationDate.equals(t.getCreationDate()));
-        b = b && (_actionACLs.keySet().equals(t.getAuthorizedActions()));
+        b &= _formURL.equals(t.getFormURL());
+        b &= _description.equals(t.getDescription());
+        b &= _creationDate.equals(t.getCreationDate());
+        b &= _actionACLs.keySet().equals(t.getAuthorizedActions());
+        b &= getUserOwners().equals(t.getUserOwners());
+        b &= getRoleOwners().equals(t.getRoleOwners());
         return b;
     }
 

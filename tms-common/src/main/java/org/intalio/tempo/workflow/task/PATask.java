@@ -95,6 +95,20 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
         super();
     }
     
+    public boolean equals(Object o) {
+        if(!(o instanceof PATask)) return false;
+        PATask t = (PATask)o;
+        boolean b = _input.equals(t._input);
+        b&= (_output!=null) ? _output.equals(t._output) : t._output == null;  
+        b &= _isChainedBefore == t._isChainedBefore;
+        b &= _processID.equals(t._processID);
+        b &= (_previousTaskID!=null) ? _previousTaskID.equals(t._previousTaskID) : t._previousTaskID == null;
+        b &= _failureReason.equals(t._failureReason);
+        b &= _failureCode.equals(t._failureCode);
+        b &= super.equals(t);
+        return b ;
+    }
+    
     public PATask(String id, URI formURL, String processID, String completeSOAPAction, Document input) {
         super(id, formURL);
         this.setProcessID(processID);

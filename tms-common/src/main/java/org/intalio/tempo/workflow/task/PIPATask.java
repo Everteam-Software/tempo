@@ -56,6 +56,16 @@ public class PIPATask extends Task {
         _initMessageNamespaceURI = initMessageNamespaceURI;
         _initOperationSOAPAction = initOperationSOAPAction;
     }
+    
+    public boolean equals(Object o) {
+        if(!(o instanceof PIPATask)) return false;
+        PIPATask t = (PIPATask)o;
+        boolean b = _initMessageNamespaceURI.equals(t._initMessageNamespaceURI);
+        b &= _initOperationSOAPAction.equals(t._initOperationSOAPAction);
+        b &= _processEndpoint.equals(t._processEndpoint);
+        b &= super.equals(t);
+        return b ;
+    }
 
     public URI getInitMessageNamespaceURI() {
         if (_initMessageNamespaceURI == null) {

@@ -69,6 +69,17 @@ public class Notification extends Task implements ITaskWithState, ITaskWithInput
         }
         _state = state;
     }
+    
+    public boolean equals(Object o) {
+        if(!(o instanceof Notification)) return false;
+        Notification t = (Notification)o;
+        boolean b = _state.equals(t._state);
+        b &= _failureCode!=null ? _failureCode.equals(t._failureCode) : t._failureCode == null;
+        b &= _failureReason !=null ? _failureReason.equals(t._failureReason) : t._failureReason == null;
+        b &= _input != null ? _input.equals(t._input) : t._input == null;
+        b &= super.equals(t);
+        return b ;
+    }
 
     public String getFailureCode() {
         if (_state.equals(TaskState.FAILED)) {

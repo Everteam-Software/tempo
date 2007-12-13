@@ -14,7 +14,6 @@ import org.intalio.tempo.security.rbac.RBACQuery;
 import org.intalio.tempo.security.rbac.provider.RBACProvider;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.task.PATask;
-import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.tms.ITaskManagementService;
 import org.intalio.tempo.workflow.tms.client.RemoteTMSFactory;
@@ -55,7 +54,6 @@ public class RemoteReassginTaskTest extends TestCase {
     private static final String TOKEN_CURRENT = "VE9LRU4mJnVzZXI9PWV4YW1wbGVzXG1zbWl0aCYmaXNzdWVkPT0xMTk3MjkxMDI4ODU5JiZyb2xlcz09ZXhhbXBsZXNcZW1wbG95ZWUmJmZ1bGxOYW1lPT1NaWNoYWVsIFNtaXRoJiZlbWFpbD09bXNtaXRoQGV4YW1wbGVzLmludGFsaW8uY29tJiZub25jZT09MjE3OTg2Njc4OTg4NzUwNTk2MiYmdGltZXN0YW1wPT0xMTk3MjkxMDI4ODU5JiZkaWdlc3Q9PUZNWUNtM0tkYVNzTnJZMVFHTWtqTjNmRVFNND0mJiYmVE9LRU4=";
 
     // examples\ewilliams
-    private static final String TOKEN_TARGET = "VE9LRU4mJnVzZXI9PWV4YW1wbGVzXGV3aWxsaWFtcyYmaXNzdWVkPT0xMTk3Mjg5NzgzNTYyJiZyb2xlcz09ZXhhbXBsZXNcZW1wbG95ZWUsZXhhbXBsZXNcbWFuYWdlciYmZnVsbE5hbWU9PUVtaWx5IFdpbGxpYW1zJiZlbWFpbD09ZXdpbGxpYW1zQGV4YW1wbGVzLmludGFsaW8uY29tJiZub25jZT09LTYxNzAzMDk5ODE2MjkzNDA0MTAmJnRpbWVzdGFtcD09MTE5NzI4OTc4MzU2MiYmZGlnZXN0PT1jbDlaV1Rmd0JrRkZQcGRQVHlPYk9LdXNpOXM9JiYmJlRPS0VO";
 
     // intalio\eng1
     private static final String TOKEN_TARGET2 = "VE9LRU4mJnVzZXI9PWludGFsaW9cZW5nMSYmaXNzdWVkPT0xMTk3MzYzMzk4MzQzJiZyb2xlcz09aW50YWxpb1xlbmcmJmZ1bGxOYW1lPT1FbmdpbmVlciAjMSYmZW1haWw9PWVuZzFAaW50YWxpby5jb20mJm5vbmNlPT0tNzc0MzkyOTM1NjE1MDQxMjU1MiYmdGltZXN0YW1wPT0xMTk3MzYzMzk4MzQzJiZkaWdlc3Q9PUFBMHRlZ0dTbEhaMzI1VGUyNHNnSnRyQ3orUT0mJiYmVE9LRU4=";
