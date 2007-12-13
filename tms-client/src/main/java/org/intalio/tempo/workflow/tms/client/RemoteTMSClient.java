@@ -389,11 +389,11 @@ class RemoteTMSClient implements ITaskManagementService {
     
     public void reassign(final Task task)throws AuthException,
 	   UnavailableTaskException{
-    	if(!(task instanceof PATask)){
+        if (task == null) {
+            throw new RequiredArgumentException("task");
+        }
+        if(!(task instanceof PATask)){
     		throw new UnavailableTaskException("Task is not PATask");
-    	}
-    	if (task == null) {
-    		throw new RequiredArgumentException("task");
     	}
 
     	OMElement request = new TMSMarshaller() {

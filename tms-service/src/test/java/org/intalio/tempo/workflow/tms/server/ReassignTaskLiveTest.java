@@ -147,7 +147,7 @@ public class ReassignTaskLiveTest extends TestCase {
     }
 
     void initTMSServer() throws Exception {
-        tmsServer = TestUtils.createTMSServer();
+        tmsServer = Utils.createTMSServer();
     }
 
     void initTMSRequestProcessor() throws Exception {
@@ -156,7 +156,7 @@ public class ReassignTaskLiveTest extends TestCase {
     }
 
     void createTask() throws Exception {
-        OMElement createTaskRequest = TestUtils.loadElementFromResource("/createTaskRequest1.xml");
+        OMElement createTaskRequest = Utils.loadElementFromResource("/createTaskRequest1.xml");
         requestProcessor.create(createTaskRequest);
     }
 

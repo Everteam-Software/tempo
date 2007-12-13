@@ -23,7 +23,7 @@ import org.apache.axis2.AxisFault;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
-import org.intalio.tempo.workflow.tms.server.TestUtils;
+import org.intalio.tempo.workflow.tms.server.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,10 +60,10 @@ public class TMSAxis2RemoteTest extends TestCase {
 
     public void requestToServer(String remoteRequestFilename, String expectedAxisFault) throws Exception {
         try {
-            OMElement request = TestUtils.loadElementFromResource("/remote/" + remoteRequestFilename);
+            OMElement request = Utils.loadElementFromResource("/remote/" + remoteRequestFilename);
             OMElement listResponse = sendRequest(request,
                     "http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109");
-            _logger.info(TestUtils.toPrettyXML(listResponse));
+            _logger.info(Utils.toPrettyXML(listResponse));
         } catch (AxisFault f) {
             if (expectedAxisFault != null)
                 Assert.assertTrue(f.getMessage().contains(expectedAxisFault));

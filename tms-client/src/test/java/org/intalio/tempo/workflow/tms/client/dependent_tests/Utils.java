@@ -31,15 +31,11 @@ import org.w3c.dom.Document;
 import com.sun.org.apache.xml.internal.serialize.OutputFormat;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
-public class TestUtils {
-
-    private TestUtils() {
-
-    }
+public class Utils {
 
     public static OMElement loadElementFromResource(String resource)
             throws Exception {
-        InputStream requestInputStream = TestUtils.class.getResourceAsStream(resource);
+        InputStream requestInputStream = Utils.class.getResourceAsStream(resource);
 
         XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(requestInputStream);
         StAXOMBuilder builder = new StAXOMBuilder(parser);
@@ -80,7 +76,7 @@ public class TestUtils {
     }
     
     public static Document createXMLDocument(String resource) throws Exception {
-        InputStream requestInputStream = TestUtils.class.getResourceAsStream(resource);
+        InputStream requestInputStream = Utils.class.getResourceAsStream(resource);
         DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = builderFactory.newDocumentBuilder();
         Document doc = builder.parse(requestInputStream);

@@ -36,10 +36,10 @@ public class TMSServerTest extends TestCase {
 
     public void testPATaskLifecycle()
             throws Exception {
-        ITMSServer server = TestUtils.createTMSServer();
+        ITMSServer server = Utils.createTMSServer();
 
         PATask paTask = new PATask("taskID", new URI("http://localhost/1"), "processID", "urn:completeSOAPAction",
-                TestUtils.createXMLDocument());
+                Utils.createXMLDocument());
         paTask.getUserOwners().add("test/user1");
         paTask.getRoleOwners().add("test/role3");
         server.create(paTask, "token1");
@@ -56,13 +56,13 @@ public class TMSServerTest extends TestCase {
         }
         Assert.assertEquals(0, server.getTaskList("token3").length);
 
-        Document newOutput1 = TestUtils.createXMLDocument();
+        Document newOutput1 = Utils.createXMLDocument();
         server.setOutput("taskID", newOutput1, "token1");
         PATask taskWithSetOutput = (PATask) server.getTask("taskID", "token2");
         Assert.assertTrue(XmlTooling.equals(newOutput1, taskWithSetOutput.getOutput()));
         Assert.assertEquals(TaskState.READY, taskWithSetOutput.getState());
 
-        Document newOutput2 = TestUtils.createXMLDocument();
+        Document newOutput2 = Utils.createXMLDocument();
         server.setOutputAndComplete("taskID", newOutput2, "token2");
         PATask completedTask = (PATask) server.getTask("taskID", "token1");
         Assert.assertTrue(XmlTooling.equals(newOutput2, completedTask.getOutput()));
@@ -88,10 +88,10 @@ public class TMSServerTest extends TestCase {
     }
     
     public void testNotificationLifecycle() throws Exception {
-        ITMSServer server = TestUtils.createTMSServer();
+        ITMSServer server = Utils.createTMSServer();
 
         Notification notification = new Notification("taskID", new URI("http://localhost/1"),
-                TestUtils.createXMLDocument());
+                Utils.createXMLDocument());
         notification.getUserOwners().add("test/user1");
         notification.getRoleOwners().add("test/role3");
         server.create(notification, "token1");

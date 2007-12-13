@@ -50,7 +50,7 @@ public class RemoteTMSClientTest extends TestCase {
     public void testInput() throws Exception {
         ITaskManagementService tms = new RemoteTMSFactory(
                 "http://localhost:8080/axis2/services/TaskManagementServices", TOKEN).getService();
-        Document input1 = TestUtils.createXMLDocument("/absr.xml");
+        Document input1 = Utils.createXMLDocument("/absr.xml");
         String task1ID = nextRandom();
         PATask task1 = new PATask(task1ID, new URI("http://localhost/1"), "processID", "urn:completeSOAPAction", input1);
         task1.getUserOwners().add("intalio.admin");
@@ -79,7 +79,7 @@ public class RemoteTMSClientTest extends TestCase {
 
         String task1ID = nextRandom();
         PATask task1 = new PATask(task1ID, new URI("http://localhost/1"), "processID", "urn:completeSOAPAction",
-                TestUtils.createXMLDocument());
+                Utils.createXMLDocument());
         task1.getUserOwners().add("intalio.admin");
         tms.create(task1);
 
@@ -88,12 +88,12 @@ public class RemoteTMSClientTest extends TestCase {
 
         String task3ID = nextRandom();
         PATask task3 = new PATask(task3ID, new URI("http://localhost/3"), "processID", "urn:completeSOAPAction",
-                TestUtils.createXMLDocument());
+                Utils.createXMLDocument());
         task3.getUserOwners().add("intalio.admin");
         task3.getUserOwners().add("intalio\\admin");
         tms.create(task3);
 
-        Document output1 = TestUtils.createXMLDocument();
+        Document output1 = Utils.createXMLDocument();
         output1.getDocumentElement().appendChild(output1.createTextNode("Hi world"));
         tms.setOutput(task3ID, output1);
 
@@ -101,7 +101,7 @@ public class RemoteTMSClientTest extends TestCase {
         Assert.assertEquals("Hi world", task4.getOutput().getDocumentElement().getTextContent().trim());
         Assert.assertEquals(TaskState.READY, task4.getState());
 
-        Document output2 = TestUtils.createXMLDocument();
+        Document output2 = Utils.createXMLDocument();
         output2.getDocumentElement().appendChild(output2.createTextNode("Hi world #2"));
         tms.setOutputAndComplete(task3ID, output2);
 
@@ -111,7 +111,7 @@ public class RemoteTMSClientTest extends TestCase {
 
         String task6ID = nextRandom();
         PATask task6 = new PATask(task6ID, new URI("http://localhost/6"), "processID", "urn:completeSOAPAction",
-                TestUtils.createXMLDocument());
+                Utils.createXMLDocument());
         task6.getUserOwners().add("intalio.admin");
         tms.create(task6);
         tms.complete(task6ID);
@@ -148,7 +148,7 @@ public class RemoteTMSClientTest extends TestCase {
 
         String task1ID = nextRandom();
         PATask task1 = new PATask(task1ID, new URI("http://localhost/1"), "processID", "urn:completeSOAPAction",
-                TestUtils.createXMLDocument());
+                Utils.createXMLDocument());
         task1.getUserOwners().add("test.system-test");
         task1.getUserOwners().add("intalio.admin");
         Attachment attachment1 = new Attachment(new AttachmentMetadata(), new URL("http://localhost/a1"));

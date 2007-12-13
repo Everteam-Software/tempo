@@ -171,10 +171,10 @@ define "tempo" do
     unless ENV["LIVE"] == 'yes'
       test.exclude '*TMSAxis2RemoteTest*'
       test.exclude '*RemoteReassginTaskTest*'
+      test.exclude "*ReassignTaskLiveTest*"
     end
     test.exclude '*TestUtils*'
-    # TODO: get necessary security file
-    test.exclude "*ReassignTaskLiveTest*"
+
     
     package(:aar).with :libs => 
         [ projects("security", "security-ws-client", "tms-axis", "security-ws-common", "tms-common", "web-nutsNbolts"), LOG4J, SLF4J, SPRING, APACHE_JPA ] 
