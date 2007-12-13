@@ -80,7 +80,7 @@ class RemoteTMSClient implements ITaskManagementService {
     }
 
     private OMElement sendRequest(OMElement request, String soapAction) {
-        _log.info(request.toString());
+        if(_log.isDebugEnabled()) _log.debug(request.toString());
         try {
             Options options = new Options();
             options.setTo(_endpoint);

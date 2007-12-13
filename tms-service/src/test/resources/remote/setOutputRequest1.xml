@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2005-2006 Intalio inc.
+    
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+    
+    Contributors:
+    Intalio inc. - initial API and implementation
+-->
+
+<tms:setOutputRequest
+    xmlns:tms="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+    <tms:taskId>8837</tms:taskId>
+    <tms:data>
+        <testDocument>Hi world</testDocument>
+    </tms:data>
+    <tms:participantToken>
+        VE9LRU4mJnVzZXI9PWludGFsaW9cYWRtaW4mJmlzc3VlZD09MTE5NzQ0ODYzNjIzNSYmcm9sZXM9PWludGFsaW9ccHJvY2Vzc2FkbWluaXN0cmF0b3IsZXhhbXBsZXNcZW1wbG95ZWUsaW50YWxpb1xwcm9jZXNzbWFuYWdlcixleGFtcGxlc1xtYW5hZ2VyJiZmdWxsTmFtZT09QWRtaW5pbmlzdHJhdG9yJiZlbWFpbD09YWRtaW5AZXhhbXBsZS5jb20mJm5vbmNlPT0tMjM1OTg5Mzc4MzQ0MDg3MTE5MCYmdGltZXN0YW1wPT0xMTk3NDQ4NjM2MjM2JiZkaWdlc3Q9PXdLNzJnTXhDWDhzS2ZoM29oOFJwcGVjYlV1ND0mJiYmVE9LRU4=
+    </tms:participantToken>
+</tms:setOutputRequest>

@@ -33,7 +33,7 @@ FOP = [ "fop:fop:jar:0.20.5" ]
 
 INTALIO_STATS = [ "org.intalio.common:intalio-stats:jar:1.0.1" ]
 
-JAVAMAIL = "geronimo-spec:geronimo-spec-javamail:jar:1.3.1-rc5"
+JAVAMAIL = "geronimo-spec:geronimo-spec-javamail:jar:1.3.1-rc5", "geronimo-spec:geronimo-spec-activation:jar:1.0.2-rc4"
 SUNMAIL = ["javax.mail:mail:jar:1.4.1", "javax.activation:activation:jar:1.1.1"]
 
 JARGS = [ "jargs:jargs:jar:1.0" ]

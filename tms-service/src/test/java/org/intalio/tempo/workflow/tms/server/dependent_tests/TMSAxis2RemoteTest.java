@@ -77,5 +77,6 @@ public class TMSAxis2RemoteTest extends TestCase {
         requestToServer("createTaskRequest1.xml", null);
         requestToServer("deleteRequest1.xml", "Only User with System Role");
         requestToServer("getTaskRequest1.xml", null);
+        requestToServer("setOutputRequest1.xml", null);
     }
 }

@@ -22,9 +22,7 @@
     </layout>
   </appender>
   <category
-    name="org.intalio.tempo.workflow"
-    additivity="false">
-    <priority value="debug" />
+    name="org.intalio.tempo.workflow" additivity="false">
     <appender-ref ref="ConsoleAppender" />
   </category>
   <root>

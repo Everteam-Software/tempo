@@ -77,7 +77,7 @@ define "tempo" do
   define "security-ws-client" do
     compile.with projects("security", "security-ws-common"), 
                  AXIOM, AXIS2, SLF4J, STAX_API, SPRING
-    test.with project("security-ws-common"), COMMONS, CASTOR, LOG4J, XERCES, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX
+    test.with project("security-ws-common"), COMMONS, CASTOR, LOG4J, XERCES, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX, SUNMAIL
 
     # Remember to set JAVA_OPTIONS before starting Jetty
     # export JAVA_OPTIONS=-Dorg.intalio.tempo.configDirectory=/home/boisvert/svn/tempo/security-ws2/src/test/resources
@@ -88,7 +88,7 @@ define "tempo" do
     end
     
     if defined? LIVE_ENDPOINT
-      test.junit.using :properties => 
+      test.using :properties => 
         { "org.intalio.tempo.security.ws.endpoint" => LIVE_ENDPOINT,
           "org.intalio.tempo.configDirectory" => _("src/test/resources") }
     end
@@ -111,7 +111,7 @@ define "tempo" do
     compile.with projects("security", "security-ws-client"), 
                  AXIOM, AXIS2, COMMONS, JUNIT, SLF4J, LOG4J, STAX_API, JAXEN
 
-    test.with JAVAMAIL, SLF4J, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX
+    test.with SUNMAIL, SLF4J, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX
     test.exclude '*TestUtils*'
 
     # require live Axis2 instance
@@ -148,7 +148,7 @@ define "tempo" do
   define "tms-client" do
     compile.with projects("tms-axis", "tms-common"), AXIOM, AXIS2, COMMONS, LOG4J, SLF4J, STAX_API, WS_COMMONS_SCHEMA, WSDL4J, APACHE_JPA, XMLBEANS
 
-    test.with projects("tms-axis", "tms-common"), SLF4J, WOODSTOX, XMLBEANS
+    test.with projects("tms-axis", "tms-common"), SLF4J, WOODSTOX, XMLBEANS, SUNMAIL
     test.exclude '*TestUtils*'
 
     unless ENV["LIVE"] == 'yes'
@@ -162,9 +162,9 @@ define "tempo" do
     compile.with projects("security", "security-ws-client", "tms-common", "tms-axis", "tms-client", "web-nutsNbolts"),
                  AXIOM, AXIS2, COMMONS, SLF4J, LOG4J, SPRING, STAX_API, APACHE_JPA, XMLBEANS
 
-    test.with projects("tms-common", "tms-axis"), JAVAMAIL, SLF4J, SPRING, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX, CASTOR, XERCES, SUNMAIL
+    test.with projects("tms-common", "tms-axis"), SUNMAIL, SLF4J, SPRING, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX, CASTOR, XERCES
 
-    test.junit.using :properties => 
+    test.using :properties => 
       { "org.intalio.tempo.configDirectory" => _("src/test/resources") }
 
     # require live Axis2 instance

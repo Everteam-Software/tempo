@@ -78,5 +78,13 @@ public class TestUtils {
 
         return doc;
     }
+    
+    public static Document createXMLDocument(String resource) throws Exception {
+        InputStream requestInputStream = TestUtils.class.getResourceAsStream(resource);
+        DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = builderFactory.newDocumentBuilder();
+        Document doc = builder.parse(requestInputStream);
+        return doc;
+    }
 
 }
