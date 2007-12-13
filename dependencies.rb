@@ -22,6 +22,8 @@ COMMONS = [
   COMMONS_POOL
 ]
 
+CASCLIENT = "cas:casclient:jar:2.1.1"
+
 DOJO_VERSION = "0.2.2"
 DOJO_URL = "http://download.dojotoolkit.org/release-#{DOJO_VERSION}/dojo-#{DOJO_VERSION}-widget.zip"
 DOJO = "dojo:dojo-widget:zip:#{DOJO_VERSION}"

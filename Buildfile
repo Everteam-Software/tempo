@@ -183,7 +183,7 @@ define "tempo" do
                     "tms-client", "tms-common", "web-nutsNbolts"),
            AXIOM, AXIS2, COMMONS, DOM4J, INTALIO_STATS, JSP_API, JSTL,
            LOG4J, SPRING, SERVLET_API, SLF4J, STAX_API, TAGLIBS, WOODSTOX, 
-           WS_COMMONS_SCHEMA, WSDL4J, XERCES, XMLBEANS, APACHE_JPA, JSON, PLUTO
+           WS_COMMONS_SCHEMA, WSDL4J, XERCES, XMLBEANS, APACHE_JPA, JSON, PLUTO, CASCLIENT
     compile.with libs
 
     dojo = unzip(path_to(compile.target, "dojo") => download(artifact(DOJO)=>DOJO_URL))
@@ -196,7 +196,7 @@ define "tempo" do
   end
   
   define "ui-pluto" do
-    package(:war)
+    package(:war).with :libs => ["xalan:xalan:jar:2.7.0", "xerces:xercesImpl:jar:2.8.1", "org.codehaus.castor:castor:jar:1.0.5"]
   end
   
   desc "Workflow Deployment Service Client"
