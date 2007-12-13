@@ -13,7 +13,7 @@
 package org.intalio.tempo.deployment;
 
 import java.io.InputStream;
-import java.util.List;
+import java.util.Collection;
 
 
 /**
@@ -24,30 +24,17 @@ public interface DeploymentService {
     /**
      * Deploy a packaged (zipped) assembly
      */
-    DeploymentResult deployZipAssembly(String assemblyName, InputStream zip, 
-                                       boolean replaceExistingAssembly, 
-                                       boolean activateAfterDeploy,
-                                       boolean allowPartialDeployment);
+    DeploymentResult deployAssembly(String assemblyName, InputStream zip, 
+                                    boolean replaceExistingAssemblies);
 
     /**
      * Undeploy an assembly 
      */
-    DeploymentResult undeployAssembly(String assemblyName);
-
-    /**
-     * Activate an assembly
-     */
-    DeploymentResult activateAssembly(String assemblyName, boolean allowPartialActivation);
-
-    /**
-     * Deactivate an assembly
-     */
-    DeploymentResult deactivateAssembly(String assemblyName);
+    DeploymentResult undeployAssembly(AssemblyId assemblyId);
 
     /**
      * Obtain the current list of deployed assemblies
      */
-    List<DeployedAssembly> getDeployedAssemblies();
+    Collection<DeployedAssembly> getDeployedAssemblies();
     
 }
-

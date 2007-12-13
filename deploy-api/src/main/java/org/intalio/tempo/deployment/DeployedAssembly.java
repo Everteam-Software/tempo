@@ -13,28 +13,30 @@
 package org.intalio.tempo.deployment;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.List;
 
 /**
- * Deployed assembly
+ * Deployed assembly.
+ * <p>
+ * This is an immutable data object returned when querying {@link DeploymentService#getDeployedAssemblies()} 
  */
-public class DeployedAssembly {
-    final String _assemblyName;
+public class DeployedAssembly implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
+    final AssemblyId _aid;
     final File _assemblyDir;
     final List<DeployedComponent> _components;
-    final boolean _activated;
 
-    public DeployedAssembly(String assemblyName, File assemblyDir, List<DeployedComponent> components, 
-                            boolean activated)
+    public DeployedAssembly(AssemblyId assemblyId, File assemblyDir, List<DeployedComponent> components)
     {
-        _assemblyName = assemblyName;
+        _aid = assemblyId;
         _assemblyDir = assemblyDir;
         _components = components;
-        _activated = activated;
     }
     
-    public String getAssemblyName() {
-        return _assemblyName;
+    public AssemblyId getAssemblyId() {
+        return _aid;
     }
     
     public File getAssemblyDir() {
@@ -44,8 +46,8 @@ public class DeployedAssembly {
     public List<DeployedComponent> getDeployedComponents() {
         return _components;
     }
-    
-    public boolean isActivated() {
-        return _activated;
+
+    public String toString() {
+        return _aid.toString();
     }
 }

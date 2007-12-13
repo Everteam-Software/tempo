@@ -15,7 +15,7 @@ package org.intalio.tempo.deployment;
 import java.io.File;
 
 /**
- * Deployment message
+ * Deployment message, contains the description and detail of deployment operation.
  */
 public class DeploymentMessage {
 
@@ -23,7 +23,7 @@ public class DeploymentMessage {
     private Level _level;
     private File _resource;
     private String _location;
-    private ComponentName _componentName;
+    private ComponentId _cid;
     private String _componentManagerName;
 
     public enum Level { INFO, WARNING, ERROR }
@@ -70,12 +70,12 @@ public class DeploymentMessage {
         _location = location;
     }
     
-    public ComponentName getComponentName() {
-        return _componentName;
+    public ComponentId getComponentId() {
+        return _cid;
     }
     
-    public void setComponentName(ComponentName componentName) {
-        _componentName = componentName;
+    public void setComponentId(ComponentId cid) {
+        _cid = cid;
     }
     
     public String getComponentManagerName() {
@@ -100,9 +100,9 @@ public class DeploymentMessage {
             buf.append(",");
             buf.append(_location);
         }
-        if (_componentName != null) {
+        if (_cid != null) {
             buf.append(",");
-            buf.append(_componentName);
+            buf.append(_cid);
         }
         if (_componentManagerName != null) {
             buf.append(",");

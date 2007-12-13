@@ -16,29 +16,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Deployment result
+ * Deployment result, encapsultates the result of deployment operations.
  */
 public class DeploymentResult {
 
     private boolean _success;
     private List<DeploymentMessage> _messages;
-    private String _assemblyName;
+    private AssemblyId _aid;
     
-    public DeploymentResult(String assemblyName, boolean success, List<DeploymentMessage> messages) {
-        _assemblyName = assemblyName;
+    public DeploymentResult(AssemblyId aid, boolean success, List<DeploymentMessage> messages) {
+        _aid = aid;
         _success = success;
         _messages = messages;
     }
 
-    public DeploymentResult(String assemblyName, boolean success, DeploymentMessage message) {
-        _assemblyName = assemblyName;
+    public DeploymentResult(AssemblyId aid, boolean success, DeploymentMessage message) {
+        _aid = aid;
         _success = success;
         _messages = new ArrayList<DeploymentMessage>();
         _messages.add(message);
     }
 
-    public String getAssemblyName() {
-        return _assemblyName;
+    public AssemblyId getAssemblyId() {
+        return _aid;
     }
     
     public boolean isSuccessful() {
@@ -52,7 +52,7 @@ public class DeploymentResult {
     public String toString() {
         StringBuffer buf = new StringBuffer();
         buf.append("DeploymentResult: ");
-        buf.append(_assemblyName);
+        buf.append(_aid);
         if (_success) buf.append(" -> Success\n");
         else buf.append(" -> Failed\n");
         for (DeploymentMessage m : _messages) {

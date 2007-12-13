@@ -13,20 +13,28 @@
 package org.intalio.tempo.deployment;
 
 import java.io.File;
+import java.io.Serializable;
 
-public class DeployedComponent {
-    final ComponentName _componentName;
+/**
+ * Deployed component.
+ * <p>
+ * This is an immutable data object returned when querying {@link DeploymentService#getDeployedAssemblies()} 
+ */
+public class DeployedComponent implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    final ComponentId _componentId;
     final File _componentDir;
     final String _componentManagerName;
 
-    public DeployedComponent(ComponentName componentName, File componentDir, String componentManagerName) {
-        _componentName = componentName;
+    public DeployedComponent(ComponentId ComponentId, File componentDir, String componentManagerName) {
+        _componentId = ComponentId;
         _componentDir = componentDir;
         _componentManagerName = componentManagerName;
     }
     
-    public ComponentName getComponentName() {
-        return _componentName;
+    public ComponentId getComponentId() {
+        return _componentId;
     }
     
     public File getComponentDir() {
@@ -36,4 +44,9 @@ public class DeployedComponent {
     public String getComponentManagerName() {
         return _componentManagerName;
     }
+    
+    public String toString() {
+        return _componentId.toString();
+    }
+
 }

@@ -12,26 +12,29 @@
 
 package org.intalio.tempo.deployment;
 
+import java.io.Serializable;
+
 
 /**
- * Component name encapsulates both assembly and local component name.
+ * Component identifier encapsulates assembly identifier and component name.
  * <p>
  * This is an immutable object.
  */
-public class ComponentName {
+public class ComponentId implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-    private String _assemblyName;
-    private String _componentName;
+    private AssemblyId _assemblyId;
+    private String     _componentName;
     
-    public ComponentName(String assemblyName, String componentName) {
-        if (assemblyName == null) throw new IllegalArgumentException("Assembly name cannot be null");
+    public ComponentId(AssemblyId assemblyId, String componentName) {
+        if (assemblyId == null) throw new IllegalArgumentException("Assembly id cannot be null");
         if (componentName == null) throw new IllegalArgumentException("Component name cannot be null");
-        _assemblyName = assemblyName;
+        _assemblyId = assemblyId;
         _componentName = componentName;
     }
     
-    public String getAssemblyName() {
-        return _assemblyName;
+    public AssemblyId getAssemblyId() {
+        return _assemblyId;
     }
     
     public String getComponentName() {
@@ -39,21 +42,20 @@ public class ComponentName {
     }
     
     public boolean equals(Object obj) {
-        if (obj instanceof ComponentName) {
-            ComponentName other = (ComponentName) obj;
+        if (obj instanceof ComponentId) {
+            ComponentId other = (ComponentId) obj;
             return _componentName.equals(other._componentName)
-                && _assemblyName.equals(other._assemblyName);
+                && _assemblyId.equals(other._assemblyId);
         } else {
             return false;
         }
     }
 
     public int hashCode() {
-        return _assemblyName.hashCode() ^ _componentName.hashCode();
+        return _componentName.hashCode() + _assemblyId.hashCode();
     }
     
     public String toString() {
-        return "{assembly="+_assemblyName+", component="+_componentName+"}";
+        return "{"+_assemblyId.toString()+"}"+_componentName;
     }
 }
-

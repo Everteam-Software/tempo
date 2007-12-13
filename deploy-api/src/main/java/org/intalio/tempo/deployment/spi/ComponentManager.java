@@ -15,7 +15,7 @@ package org.intalio.tempo.deployment.spi;
 import java.io.File;
 import java.util.List;
 
-import org.intalio.tempo.deployment.ComponentName;
+import org.intalio.tempo.deployment.ComponentId;
 import org.intalio.tempo.deployment.DeploymentMessage;
 
 
@@ -32,45 +32,67 @@ public interface ComponentManager {
     /**
      * Deploy a new assembly component
      * <p>
-     * In a clustered environment, this method is called on a single node (the coordinator)
+     * In a clustered environment, this method is called on a single node (the coordinator).
+     * The ComponentManager must validate the component for consistency and must make any necessary 
+     * internal state change(s) to existing components in order to successfully deploy this component.
+     * This might entail retiring or disabling previously deployed components that may conflict or be 
+     * superceeded with this new component.
+     * <p>
+     * The notions of conflict or superceedance are specific to the component type, and may apply 
+     * to component interface, endpoint(s), or rely on naming convention to determine the replacement
+     * behavior.
+     * <p>
+     * If the ComponentManager is unable to safely resolve conflicts, it should return ERROR-level 
+     * messages with an appropriate description of the issue.  
      */
-    List<DeploymentMessage> deploy(ComponentName name, File path);
+    List<DeploymentMessage> deploy(ComponentId name, File path);
 
     /**
-     * Undeploy an assembly component
+     * Undeploy an assembly component.
      * <p>
-     * In a clustered environment, this method is called on a single node (the coordinator)
+     * In a clustered environment, this method is called on a single node (the coordinator).
+     * This method must release any persistent resources previously allocated or used by the component.
      */
-    List<DeploymentMessage> undeploy(ComponentName name, File path);
+    void undeploy(ComponentId name);
     
     /**
      * Activate a component.
      * <p>
-     * In a clustered environment, called on every node after deployment.
+     * In a clustered environment, called on every node after deployment of a new component, or during
+     * system startup to activate the component.  This method should return only when the component is
+     * available and ready for processing, provided its dependencies are also available and ready.   
+     * However, the component should not yet initiate processing.    Processing should only be initiated 
+     * after the start() method is called. 
+     * 
+     * @param name Component identifier
      */
-    List<DeploymentMessage> activate(ComponentName name, File path);
+    void activate(ComponentId name, File path);
 
     /**
      * Deactivate a component.
      * <p/>
-     * In a clustered environment, called on every node before undeployment.
+     * In a clustered environment, called on every node before undeployment.  This method effectively renders
+     * the component unavailable for processing and should release any transient resources allocated for the 
+     * purpose of the component.
      */
-    List<DeploymentMessage> deactivate(ComponentName name);
+    void deactivate(ComponentId name);
 
     
     /**
      * Start a component.
      * <p/>
-     * Called after activate() to start the execution of a component (if necessary).
+     * Called after activate() to start the execution of a component (if necessary).  When this method is called,
+     * the component may initiate processing, such as polling messages from a queue, dispatching new requests or
+     * generating events.
      */
-    List<DeploymentMessage> start(ComponentName name);
+    void start(ComponentId name);
 
     /**
      * Stop a component.
      * <p/>
-     * Called before deactivate to stop the execution of a component (if necessary).  This method should only return once the component has stopped
-     * all current processing.
+     * Called before deactivate to stop the execution of a component (if necessary).  After this method returns,
+     * the component should no longer initiate any new processing.   It may still process outstanding requests
+     * until deactivate() is called and returns.
      */
-    List<DeploymentMessage> stop(ComponentName name);
+    void stop(ComponentId name);
 }
-
