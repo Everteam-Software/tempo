@@ -11,7 +11,9 @@
  */
 package org.intalio.tempo.workflow.fds.core;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -156,16 +158,27 @@ public class UserProcessMessageConvertor {
         _userProcessNamespaceUri = messageNamespace;
 
         /*
+         * To fix exception: 
+         * org.dom4j.XPathException: 
+         * Exception occurred evaluting XPath: //userProcess:taskMetaData. 
+         * Exception: XPath expression uses unbound namespace prefix userProcess
+         */
+        Map namespaceURIs = new HashMap(MessageConstants.get_nsMap());
+        namespaceURIs.put(REQUEST_PREFIX, _userProcessNamespaceUri);
+        
+        /*
          * Add session in task meta data
          * so that it can be retrieved when workflow process needs to send a message to the user process
          */
         xpath = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Header/intalio:callback/intalio:session");
-        xpath.setNamespaceURIs(MessageConstants.get_nsMap());
+        xpath.setNamespaceURIs(namespaceURIs/*MessageConstants.get_nsMap()*/);
         List sessionQueryResult = xpath.selectNodes(message);
         if (sessionQueryResult.size() != 0) {
             Element wsaToElement = (Element) sessionQueryResult.get(0);
             String session = wsaToElement.getText();
-            List tmdQueryResult = DocumentHelper.createXPath("//"+REQUEST_PREFIX+":taskMetaData").selectNodes(message);
+            xpath = DocumentHelper.createXPath("//"+REQUEST_PREFIX+":taskMetaData");
+            xpath.setNamespaceURIs(namespaceURIs/*MessageConstants.get_nsMap()*/);
+            List tmdQueryResult = xpath.selectNodes(message);
             Element tmdElement = (Element) tmdQueryResult.get(0);
             Element sessionElement = tmdElement.addElement("session");
             sessionElement.addNamespace("ib4p", MessageConstants.IB4P_NS);
@@ -175,7 +188,7 @@ public class UserProcessMessageConvertor {
         //retrieve userProcessEndpoint from task meta data 
         //or put sender endpoint in task meta data if not defined
         xpath = DocumentHelper.createXPath("//"+REQUEST_PREFIX+":taskMetaData/"+REQUEST_PREFIX+":userProcessEndpoint");
-        xpath.setNamespaceURIs(MessageConstants.get_nsMap());
+        xpath.setNamespaceURIs(namespaceURIs/*MessageConstants.get_nsMap()*/);
         List endpointQueryResult = xpath.selectNodes(message);
         if (endpointQueryResult.size() != 0) {
             Element userProcessEndpointElement = (Element) endpointQueryResult.get(0);
@@ -188,7 +201,7 @@ public class UserProcessMessageConvertor {
         } else if(_userProcessEndpoint != null) {
         	_log.info("User process endpoint is not defined in task metadata, adding " + _userProcessEndpoint);
         	xpath = DocumentHelper.createXPath("//"+REQUEST_PREFIX+":taskMetaData");
-        	xpath.setNamespaceURIs(MessageConstants.get_nsMap());
+        	xpath.setNamespaceURIs(namespaceURIs/*MessageConstants.get_nsMap()*/);
         	List tmdQueryResult = xpath.selectNodes(message);
         	if(tmdQueryResult.size()>0) {
 	            Element wsaToElement = (Element) tmdQueryResult.get(0);
@@ -199,11 +212,11 @@ public class UserProcessMessageConvertor {
         
         //Add user process namespace to taskmetadata if not already defined
         xpath = DocumentHelper.createXPath("//"+REQUEST_PREFIX+":taskMetaData/"+REQUEST_PREFIX+":userProcessNamespaceURI");
-        xpath.setNamespaceURIs(MessageConstants.get_nsMap());
+        xpath.setNamespaceURIs(namespaceURIs/*MessageConstants.get_nsMap()*/);
         List nsQueryResult = xpath.selectNodes(message);
         if (nsQueryResult.size() == 0 && _userProcessNamespaceUri != null) {
         	xpath = DocumentHelper.createXPath("//"+REQUEST_PREFIX+":taskMetaData");
-        	xpath.setNamespaceURIs(MessageConstants.get_nsMap());
+        	xpath.setNamespaceURIs(namespaceURIs/*MessageConstants.get_nsMap()*/);
         	List tmdQueryResult = xpath.selectNodes(message);
         	if(tmdQueryResult.size()>0) {
             	_log.info("User process namespace is not defined in task metadata, adding " + _userProcessNamespaceUri);
@@ -224,7 +237,7 @@ public class UserProcessMessageConvertor {
          * task input, to ib4p.
          */
         xpath = DocumentHelper.createXPath("//"+REQUEST_PREFIX+":taskInput//*");
-        xpath.setNamespaceURIs(MessageConstants.get_nsMap());
+        xpath.setNamespaceURIs(namespaceURIs/*MessageConstants.get_nsMap()*/);
         List allTaskInputElements = xpath.selectNodes(message);
 
         for (int i = 0; i < allSoapBodyElements.size(); ++i) {
