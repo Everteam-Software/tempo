@@ -255,10 +255,7 @@ public class FormDispatcherServlet extends HttpServlet {
             if (charset == null || !Charset.isSupported(charset)) charset = "UTF-8";
             response.setCharacterEncoding(charset);
             response.setContentType("text/xml; charset="+charset);
-
-            // serialize the response to the output stream as pretty XML
-            //Serializer serializer = new Serializer(response.getOutputStream(), charset);
-            //serializer.write(responseDocument);
+            response.getWriter().write(responseDocument.asXML());
 
             _log.info("Request processed OK.");
         } catch (IOException e) {
