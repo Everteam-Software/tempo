@@ -11,7 +11,6 @@
  */
 package org.intalio.tempo.workflow.fds.core;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -68,21 +67,11 @@ public class MessageSender {
     public Document requestAndGetReply(Document requestMessage, String endpoint, String soapAction)
         throws HttpException, IOException, DocumentException
     {
-        if(log.isDebugEnabled()) {
-            log.debug(requestMessage.asXML());
-            log.debug(endpoint);
-            log.debug(soapAction);    
-        }
-        
         Document result = null;
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(16*1024);
-        //Serializer serializer = new Serializer(baos, "UTF-8");
-        //serializer.write(requestMessage);
-
+        
         PostMethod postMethod = new PostMethod(endpoint);
         postMethod.addRequestHeader("SOAPAction", soapAction);
-        postMethod.setRequestEntity(new ByteArrayRequestEntity(baos.toByteArray(), "text/xml; charset=UTF-8"));
+        postMethod.setRequestEntity(new ByteArrayRequestEntity(requestMessage.asXML().getBytes(), "text/xml; charset=UTF-8"));
         
         HttpClient httpClient = new HttpClient();
 
@@ -92,7 +81,6 @@ public class MessageSender {
 
         // Prepare an XML parser 
         SAXReader reader = new SAXReader();
-
         InputStream responseInputStream = null;
         try {
             httpClient.executeMethod(postMethod);
