@@ -22,6 +22,12 @@ define "tempo" do
   compile.options.source = "1.5"
   compile.options.target = "1.5"
 
+  desc "Deployment API"
+  define "deploy-api" do
+    compile.with SERVLET_API, SLF4J, SPRING
+    package :jar
+  end  
+  
   desc "Form Dispatcher Servlet"
   define "fds" do
     libs = [AXIS2, COMMONS, SLF4J, LOG4J, SERVLET_API, STAX_API, DOM4J, JAXEN, COMMONS]
@@ -221,11 +227,6 @@ define "tempo" do
   define "web-nutsNbolts" do
     compile.with project("security"), COMMONS, INTALIO_STATS, JSP_API, LOG4J, SERVLET_API, SLF4J, SPRING, AXIS2
     package :jar
-  end
-  
-  define "deploy-api" do 
-    compile
-    package(:jar)
   end
   
   desc "XForms Manager"
