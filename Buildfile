@@ -24,10 +24,11 @@ define "tempo" do
 
   desc "Form Dispatcher Servlet"
   define "fds" do
-    compile.with AXIS2, COMMONS, SLF4J, LOG4J, SERVLET_API, STAX_API, DOM4J
+    libs = [AXIS2, COMMONS, SLF4J, LOG4J, SERVLET_API, STAX_API, DOM4J, JAXEN, COMMONS]
+    compile.with libs 
     resources.filter.using "version" => VERSION_NUMBER
-    test.with DOM4J, JAXEN, XMLUNIT
-    package :war
+    test.with libs, XMLUNIT
+    package(:war).with :libs => libs
   end  
 
 
