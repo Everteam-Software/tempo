@@ -34,6 +34,9 @@ define "tempo" do
     compile.with libs 
     resources.filter.using "version" => VERSION_NUMBER
     test.with libs, XMLUNIT
+    unless ENV["LIVE"] == 'yes'
+      test.exclude '*RemoteFDSTest*'
+    end
     package(:war).with :libs => libs
   end  
 

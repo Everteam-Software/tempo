@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope
+    xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Header>
+        <addr:To xmlns:addr="http://www.w3.org/2005/08/addressing">
+            http://localhost:8080/ode/processes/workflow/ib4p
+        </addr:To>
+        <addr:Action
+            xmlns:addr="http://www.w3.org/2005/08/addressing">
+            createTask
+        </addr:Action>
+        <addr:ReplyTo
+            xmlns:addr="http://www.w3.org/2005/08/addressing">
+            <addr:Address>
+                http://www.w3.org/2005/08/addressing/anonymous
+            </addr:Address>
+        </addr:ReplyTo>
+        <addr:MessageID
+            xmlns:addr="http://www.w3.org/2005/08/addressing">
+            uuid:f12e3f25-7292-49f9-96c7-450fdccf8d45-3
+        </addr:MessageID>
+        <intalio:callback
+            xmlns:intalio="http://www.intalio.com/type/session">
+            <addr:Address
+                xmlns:addr="http://www.w3.org/2005/08/addressing">
+                http://localhost:8080/fds/workflow/ib4p
+            </addr:Address>
+            <intalio:session>
+                f12e3f25-7292-49f9-96c7-450fdccf8d45-1
+            </intalio:session>
+        </intalio:callback>
+    </soapenv:Header>
+    <soapenv:Body>
+        <ib4p:createTaskRequest
+            xmlns:ib4p="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+            xmlns:AbsenceRequest="http://www.intalio.com/workflow/forms/AbsenceRequest/AbsenceRequest"
+            xmlns="http://www.intalio.com/workflow/forms/AbsenceRequest/AbsenceRequest">
+            <ib4p:taskMetaData>
+                <ib4p:description>
+                    Examples - Absence Approval
+                </ib4p:description>
+                <ib4p:processId>
+                    pstvi62duee6nh9fp0yh6gqi86x1v959
+                </ib4p:processId>
+                <ib4p:userOwner />
+                <ib4p:roleOwner>examples\manager</ib4p:roleOwner>
+                <ib4p:formUrl>
+                    http://localhost:8080/wds/AbsenceRequest/AbsenceApproval.xform
+                </ib4p:formUrl>
+                <ib4p:userProcessEndpoint>
+                    http://localhost:8080/ode/processes/AbsenceRequest/Manager_To_AbsenceRequest
+                </ib4p:userProcessEndpoint>
+                <ib4p:userProcessNamespaceURI>
+                    http://www.intalio.com/workflow/forms/AbsenceRequest/AbsenceRequest
+                </ib4p:userProcessNamespaceURI>
+                <ib4p:userProcessCompleteSOAPAction>
+                    http://www.example.com/AbsenceRequest/Manager_To_AbsenceRequest/Manager_To_AbsenceRequest_PortType/Receive_Manager_Approval
+                </ib4p:userProcessCompleteSOAPAction>
+                <session>
+                    f12e3f25-7292-49f9-96c7-450fdccf8d45-1
+                </session>
+            </ib4p:taskMetaData>
+            <ib4p:taskInput>
+                <input
+                    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                    xmlns:fe="http://www.intalio.com/workflow/forms/AbsenceRequest/AbsenceRequest"
+                    xmlns:f="http://orbeon.org/oxf/xml/formatting"
+                    xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
+                    user="intalio\admin">
+                    <request>
+                        <employee>
+                            <name>Michael Smith</name>
+                            <phone>+1(650)596-1800</phone>
+                            <email>msmith@examples.intalio.com</email>
+                        </employee>
+                        <details>
+                            <request>
+                                <from>2005-12-05</from>
+                                <to>2005-12-09</to>
+                                <type />
+                                <hours>40</hours>
+                            </request>
+                            <request>
+                                <from>2006-02-06</from>
+                                <to>2006-02-10</to>
+                                <type />
+                                <hours>40</hours>
+                            </request>
+                        </details>
+                        <contactWhileAway>
+                            <name>Emily Williams</name>
+                            <phone>+1(650)596-1800</phone>
+                            <email>
+                                ewilliams@examples.intalio.com
+                            </email>
+                        </contactWhileAway>
+                        <notes>
+                            This is sample data for this form.
+                        </notes>
+                    </request>
+                </input>
+            </ib4p:taskInput>
+        </ib4p:createTaskRequest>
+    </soapenv:Body>
+</soapenv:Envelope>

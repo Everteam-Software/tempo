@@ -24,6 +24,8 @@ import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Sends XML/HTTP requests to web services and returns the replies.
@@ -41,6 +43,7 @@ import org.dom4j.io.SAXReader;
  * @see <a href="http://www.w3.org/TR/soap/">The SOAP specification.</a>
  */
 public class MessageSender {
+    static final public Logger log = LoggerFactory.getLogger(MessageSender.class);
 
     /**
      * Sends an XML request to a specific HTTP endpoint with a specific
@@ -65,6 +68,12 @@ public class MessageSender {
     public Document requestAndGetReply(Document requestMessage, String endpoint, String soapAction)
         throws HttpException, IOException, DocumentException
     {
+        if(log.isDebugEnabled()) {
+            log.debug(requestMessage.asXML());
+            log.debug(endpoint);
+            log.debug(soapAction);    
+        }
+        
         Document result = null;
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream(16*1024);
