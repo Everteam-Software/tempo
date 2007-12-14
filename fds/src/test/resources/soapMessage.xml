@@ -1,0 +1,91 @@
+<soapenv:Envelope
+    xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Header>
+        <addr:To xmlns:addr="http://www.w3.org/2005/08/addressing">
+            http://localhost:8080/fds/workflow/examples/AbsenceRequest
+        </addr:To>
+        <addr:Action
+            xmlns:addr="http://www.w3.org/2005/08/addressing">
+            http://www.example.com/AbsenceRequest/AbsenceRequest_To_Manager/AbsenceRequest_To_Manager_PortType/Receive_Absence_Request--006
+        </addr:Action>
+        <addr:ReplyTo
+            xmlns:addr="http://www.w3.org/2005/08/addressing">
+            <addr:Address>
+                http://www.w3.org/2005/08/addressing/anonymous
+            </addr:Address>
+        </addr:ReplyTo>
+        <addr:MessageID
+            xmlns:addr="http://www.w3.org/2005/08/addressing">
+            uuid:87037d0d-7ad9-4086-8b72-85aedbf29b1c-3
+        </addr:MessageID>
+        <intalio:callback
+            xmlns:intalio="http://www.intalio.com/type/session">
+            <addr:Address
+                xmlns:addr="http://www.w3.org/2005/08/addressing">
+                http://localhost:8080/ode/processes/AbsenceRequest/Manager_To_AbsenceRequest
+            </addr:Address>
+            <intalio:session>
+                87037d0d-7ad9-4086-8b72-85aedbf29b1c-1
+            </intalio:session>
+        </intalio:callback>
+    </soapenv:Header>
+    <soapenv:Body>
+        <axis2ns10:createTaskRequest
+            xmlns:axis2ns10="http://www.intalio.com/workflow/forms/AbsenceRequest/AbsenceRequest"
+            xmlns:AbsenceRequest="http://www.intalio.com/workflow/forms/AbsenceRequest/AbsenceRequest"
+            xmlns="http://www.intalio.com/workflow/forms/AbsenceRequest/AbsenceRequest">
+            <AbsenceRequest:taskMetaData>
+                <AbsenceRequest:description>
+                    Examples - Absence Approval
+                </AbsenceRequest:description>
+                <processId>pstvi62duee6nh9fp0yh6gqi86x1v959</processId>
+                <AbsenceRequest:userOwner />
+                <AbsenceRequest:roleOwner>
+                    examples\manager
+                </AbsenceRequest:roleOwner>
+                <AbsenceRequest:formUrl>
+                    http://localhost:8080/wds/AbsenceRequest/AbsenceApproval.xform
+                </AbsenceRequest:formUrl>
+                <AbsenceRequest:userProcessEndpoint>
+                    http://localhost:8080/ode/processes/AbsenceRequest/Manager_To_AbsenceRequest
+                </AbsenceRequest:userProcessEndpoint>
+                <AbsenceRequest:userProcessNamespaceURI>
+                    http://www.intalio.com/workflow/forms/AbsenceRequest/AbsenceRequest
+                </AbsenceRequest:userProcessNamespaceURI>
+                <AbsenceRequest:userProcessCompleteSOAPAction>
+                    http://www.example.com/AbsenceRequest/Manager_To_AbsenceRequest/Manager_To_AbsenceRequest_PortType/Receive_Manager_Approval
+                </AbsenceRequest:userProcessCompleteSOAPAction>
+            </AbsenceRequest:taskMetaData>
+            <AbsenceRequest:taskInput>
+                <input
+                    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                    xmlns:fe="http://www.intalio.com/workflow/forms/AbsenceRequest/AbsenceRequest"
+                    xmlns:f="http://orbeon.org/oxf/xml/formatting"
+                    xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
+                    user="intalio\admin">
+                    <request>
+                        <employee>
+                            <name />
+                            <phone />
+                            <email />
+                        </employee>
+                        <details>
+                            <request>
+                                <from />
+                                <to />
+                                <type />
+                                <hours />
+                            </request>
+                        </details>
+                        <contactWhileAway>
+                            <name />
+                            <phone />
+                            <email />
+                        </contactWhileAway>
+                        <notes />
+                    </request>
+                </input>
+            </AbsenceRequest:taskInput>
+        </axis2ns10:createTaskRequest>
+    </soapenv:Body>
+</soapenv:Envelope>

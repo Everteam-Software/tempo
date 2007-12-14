@@ -15,12 +15,16 @@ import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.intalio.tempo.workflow.fds.dispatches.InvalidInputFormatException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SoapTools {
+    private static final Logger _log = LoggerFactory.getLogger(SoapTools.class);
     private static final String SOAP_NS = "http://schemas.xmlsoap.org/soap/envelope/";
 
     public static Document unwrapMessage(Document soapEnvelope) throws InvalidInputFormatException {
-    	
+        if(_log.isDebugEnabled()) _log.debug(soapEnvelope.asXML());
+        
     	Document result = DocumentHelper.createDocument();
     	
         Element rootElement = (Element)soapEnvelope.getRootElement();

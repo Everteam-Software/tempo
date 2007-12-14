@@ -20,6 +20,13 @@ public class SoapToolsTest extends XMLTestCase {
             throws Exception {
         return new SAXReader().read(this.getClass().getResourceAsStream("/notifyRequest1.xml"));
     }
+    
+    public void testSoapMessage() throws Exception {
+        Document request = new SAXReader().read(this.getClass().getResourceAsStream("/soapMessage.xml"));
+        Document soap = SoapTools.wrapMessage(request);
+        Document request2 = SoapTools.unwrapMessage(soap);
+        assertXMLEqual(request.asXML(), request2.asXML());
+    }
 
     public void testSoapTools()
             throws Exception {
