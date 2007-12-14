@@ -62,7 +62,7 @@ public final class MessageConstants {
 	 * Prevents instantiation.
 	 */
 
-	private static HashMap _nsMap = new HashMap();
+	public static HashMap _nsMap = new HashMap();
 	static {
 		_nsMap.put("addr", MessageConstants.ADDR_NS);
 		_nsMap.put("intalio", MessageConstants.INTALIO_NS);
