@@ -31,6 +31,7 @@ public class MessageConversionTest extends XMLTestCase {
 
     private static final String _USER_PROCESS_MESSAGE_XML = "userProcessMessage.xml";
     private static final String _WORKFLOW_PROCESSES_MESSAGE_XML = "workflowProcessesMessage.xml";
+    private static final String _CREATE_MESSAGE_XML = "createTask.xml";
     static final Logger log = LoggerFactory.getLogger(MessageConversionTest.class);
 
     public void testUserProcessMessageConversion() throws Exception {
@@ -48,6 +49,12 @@ public class MessageConversionTest extends XMLTestCase {
         WorkflowProcessesMessageConvertor convertor = new WorkflowProcessesMessageConvertor();
         convertor.convertMessage(message, null);
         compareDocument(_WORKFLOW_PROCESSES_MESSAGE_XML, message);
+    }
+    
+    public void testCreateTaskMessageConversion() throws Exception {
+        Document message = getMessageDocument(_CREATE_MESSAGE_XML);
+        WorkflowProcessesMessageConvertor convertor = new WorkflowProcessesMessageConvertor();
+        convertor.convertMessage(message, null);
     }
 
     private Document getMessageDocument(String messageFile) throws IOException, DocumentException {
