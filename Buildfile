@@ -147,7 +147,7 @@ define "tempo" do
   
   desc "Task Management Services Common Library"
   define "tms-common" do
-    compile.with projects("security", "security-ws-client", "tms-axis"),AXIOM, SLF4J, SPRING, STAX_API, APACHE_JPA, XERCES, LOG4J, XMLBEANS
+    compile.with projects("security", "security-ws-client", "tms-axis"),AXIOM, SLF4J, SPRING, STAX_API, APACHE_JPA, XERCES, LOG4J, XMLBEANS, DOM4J, JAXEN
     compile { open_jpa_enhance }    
     package(:jar)
     test.with project("tms-axis"), SLF4J, WOODSTOX, APACHE_JPA, SLF4J, LOG4J, APACHE_JPA, XERCES, DOM4J, XMLBEANS
@@ -170,9 +170,9 @@ define "tempo" do
   desc "Task Management Service"
   define "tms-service" do
     compile.with projects("security", "security-ws-client", "tms-common", "tms-axis", "tms-client", "web-nutsNbolts"),
-                 AXIOM, AXIS2, COMMONS, SLF4J, LOG4J, SPRING, STAX_API, APACHE_JPA, XMLBEANS
+                 AXIOM, AXIS2, COMMONS, SLF4J, LOG4J, SPRING, STAX_API, APACHE_JPA, XMLBEANS, JAXEN
 
-    test.with projects("tms-common", "tms-axis"), SUNMAIL, SLF4J, SPRING, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX, CASTOR, XERCES
+    test.with projects("tms-common", "tms-axis"), SUNMAIL, SLF4J, SPRING, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX, CASTOR, XERCES, JAXEN
 
     test.using :properties => 
       { "org.intalio.tempo.configDirectory" => _("src/test/resources") }

@@ -99,9 +99,9 @@ XERCES = [
   "xerces:xmlParserAPIs:jar:2.9.0" ]
 
 XMLBEANS = [
-  "xmlbeans:xbean:jar:2.1.0",
-  "xmlbeans:xbean_xpath:jar:2.1.0",
-  "xmlbeans:xmlpublic:jar:2.1.0" ]
+  "xmlbeans:xbean:jar:2.3.0",
+  "xmlbeans:xbean_xpath:jar:2.3.0",
+  "xmlbeans:xmlpublic:jar:2.3.0" ]
 
 XMLUNIT = ["xmlunit:xmlunit:jar:1.1"]
 
