@@ -15,7 +15,11 @@
 
 package org.intalio.tempo.workflow.task.xml;
 
+import java.io.InputStream;
 import java.net.URI;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -27,6 +31,7 @@ import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
 
 public class TaskMarshallingRoundtripTest extends TestCase {
 
@@ -48,8 +53,24 @@ public class TaskMarshallingRoundtripTest extends TestCase {
         Notification task1 = new Notification("taskID", new URI("http://localhost/URL"), TestUtils.createXMLDocument());
         testRoundTrip(task1);
     }
+    
+    public void testPAWithInput() throws Exception {
 
-    private void testRoundTrip(Task task1) throws Exception {
+        String resource = "/InputWithNamespace.xml";
+        InputStream requestInputStream = TestUtils.class.getResourceAsStream(resource);
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setNamespaceAware(true);
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document doc = builder.parse(requestInputStream);
+        
+        PATask task = new PATask("taskID", new URI("http://localhost/URL"), "processID", "urn:completeSOAPAction", doc);
+        task.setInput(doc);
+        PATask task2 = (PATask)testRoundTrip(task);
+        
+        Assert.assertEquals(doc.getBaseURI(), task2.getInput().getBaseURI());
+    }
+
+    private Task testRoundTrip(Task task1) throws Exception {
         TaskMarshaller marshaller = new TaskMarshaller();
         task1.getUserOwners().add("user1");
         task1.getUserOwners().add("user2");
@@ -59,5 +80,6 @@ public class TaskMarshallingRoundtripTest extends TestCase {
         Task task2 = unmarshaller.unmarshalFullTask(marshalledTask);
         Assert.assertEquals(2,task2.getUserOwners().size());
         Assert.assertTrue(task2.equalsTask(task1));
+        return task2;
     }
 }

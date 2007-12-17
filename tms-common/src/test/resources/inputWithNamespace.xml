@@ -1,0 +1,10 @@
+<axis2ns19:input
+    xmlns=" http://www.intalio.com/workflow/forms/AbsenceRequest/AbsenceRequest"
+    xmlns:axis2ns19=" http://www.intalio.com/workflow/forms/AbsenceRequest/AbsenceRequest"
+    xmlns:f="http://orbeon.org/oxf/xml/formatting"
+    xmlns:fe="http://www.intalio.com/workflow/forms/AbsenceRequest/AbsenceRequest"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
+    user="intalio\admin">
+    <request>request</request>
+</axis2ns19:input>

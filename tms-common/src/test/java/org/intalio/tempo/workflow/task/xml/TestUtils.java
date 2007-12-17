@@ -38,110 +38,85 @@ import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
 class TestUtils {
 
-	private TestUtils() {
+    private TestUtils() {
 
-	}
+    }
 
-	public static OMElement loadElementFromResource(String resource)
-			throws Exception {
-		InputStream requestInputStream = TestUtils.class
-				.getResourceAsStream(resource);
-		if (requestInputStream == null)
-			throw new IllegalStateException("Missing resource: " + resource);
+    public static OMElement loadElementFromResource(String resource) throws Exception {
+        InputStream requestInputStream = TestUtils.class.getResourceAsStream(resource);
+        if (requestInputStream == null)
+            throw new IllegalStateException("Missing resource: " + resource);
 
-		XMLStreamReader parser = XMLInputFactory.newInstance()
-				.createXMLStreamReader(requestInputStream);
-		StAXOMBuilder builder = new StAXOMBuilder(parser);
+        XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(requestInputStream);
+        StAXOMBuilder builder = new StAXOMBuilder(parser);
 
-		return builder.getDocumentElement();
-	}
+        return builder.getDocumentElement();
+    }
 
-	public static XmlObject loadXmlObjectFromResource(String resource) throws Exception {
-		InputStream requestInputStream = TestUtils.class
-				.getResourceAsStream(resource);
-		if (requestInputStream == null)
-			throw new IllegalStateException("Missing resource: " + resource);
+    public static XmlObject loadXmlObjectFromResource(String resource) throws Exception {
+        InputStream requestInputStream = TestUtils.class.getResourceAsStream(resource);
+        if (requestInputStream == null)
+            throw new IllegalStateException("Missing resource: " + resource);
 
-		return XmlObject.Factory.parse(requestInputStream);
-	}
-	
-	public static Task loadTaskFromResource(String resource) throws Exception {
-		InputStream requestInputStream = TestUtils.class
-				.getResourceAsStream(resource);
-		if (requestInputStream == null)
-			throw new IllegalStateException("Missing resource: " + resource);
-		XmlOptions opt = new XmlOptions();
-		return Task.Factory.parse(requestInputStream, opt);
-	}
+        return XmlObject.Factory.parse(requestInputStream);
+    }
 
-	public static TaskMetadata loadTaskMetadataFromResource(String resource) throws Exception {
-		InputStream requestInputStream = TestUtils.class
-				.getResourceAsStream(resource);
-		if (requestInputStream == null)
-			throw new IllegalStateException("Missing resource: " + resource);
+    public static Task loadTaskFromResource(String resource) throws Exception {
+        InputStream requestInputStream = TestUtils.class.getResourceAsStream(resource);
+        if (requestInputStream == null)
+            throw new IllegalStateException("Missing resource: " + resource);
+        XmlOptions opt = new XmlOptions();
+        return Task.Factory.parse(requestInputStream, opt);
+    }
 
-		return TaskMetadata.Factory.parse(requestInputStream);
-	}
+    public static TaskMetadata loadTaskMetadataFromResource(String resource) throws Exception {
+        InputStream requestInputStream = TestUtils.class.getResourceAsStream(resource);
+        if (requestInputStream == null)
+            throw new IllegalStateException("Missing resource: " + resource);
 
-	public static String toPrettyXML(OMElement element) throws Exception {
-		String uglyString = element.toString();
+        return TaskMetadata.Factory.parse(requestInputStream);
+    }
 
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		factory.setNamespaceAware(true);
-		DocumentBuilder builder = factory.newDocumentBuilder();
-		Document doc = builder.parse(new ByteArrayInputStream(uglyString
-				.getBytes("UTF-8")));
+    public static String toPrettyXML(OMElement element) throws Exception {
+        String uglyString = element.toString();
+        return toPrettyXML(uglyString);
+    }
 
-		OutputFormat format = new OutputFormat(doc);
-		format.setEncoding("UTF-8");
-		format.setLineWidth(65);
-		format.setIndenting(true);
-		format.setIndent(2);
+    public static String toPrettyXML(String uglyString) throws Exception {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setNamespaceAware(true);
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document doc = builder.parse(new ByteArrayInputStream(uglyString.getBytes("UTF-8")));
 
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        OutputFormat format = new OutputFormat(doc);
+        format.setEncoding("UTF-8");
+        format.setLineWidth(65);
+        format.setIndenting(true);
+        format.setIndent(2);
 
-		XMLSerializer serializer = new XMLSerializer(outputStream, format);
-		serializer.serialize(doc);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-		return new String(outputStream.toByteArray(), "UTF-8");
-	}
+        XMLSerializer serializer = new XMLSerializer(outputStream, format);
+        serializer.serialize(doc);
 
-	public static String toPrettyXML(XmlObject element) throws Exception {
-		HashMap suggestedPrefixes = new HashMap();
-		suggestedPrefixes
-				.put(TaskXMLConstants.TASK_NAMESPACE, TaskXMLConstants.TASK_NAMESPACE_PREFIX);
-		XmlOptions opts = new XmlOptions();
-		opts.setSaveSuggestedPrefixes(suggestedPrefixes);
+        return new String(outputStream.toByteArray(), "UTF-8");
+    }
 
-		String uglyString = element.xmlText(opts);
+    public static String toPrettyXML(XmlObject element) throws Exception {
+        HashMap suggestedPrefixes = new HashMap();
+        suggestedPrefixes.put(TaskXMLConstants.TASK_NAMESPACE, TaskXMLConstants.TASK_NAMESPACE_PREFIX);
+        XmlOptions opts = new XmlOptions();
+        opts.setSaveSuggestedPrefixes(suggestedPrefixes);
+        String uglyString = element.xmlText(opts);
+        return toPrettyXML(uglyString);
+    }
 
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		factory.setNamespaceAware(true);
-		DocumentBuilder builder = factory.newDocumentBuilder();
-		Document doc = builder.parse(new ByteArrayInputStream(uglyString
-				.getBytes("UTF-8")));
+    public static Document createXMLDocument() throws Exception {
+        DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = builderFactory.newDocumentBuilder();
+        Document doc = builder.newDocument();
+        doc.appendChild(doc.createElement("testDocument"));
 
-		OutputFormat format = new OutputFormat(doc);
-		format.setEncoding("UTF-8");
-		format.setLineWidth(65);
-		format.setIndenting(true);
-		format.setIndent(2);
-
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-		XMLSerializer serializer = new XMLSerializer(outputStream, format);
-		serializer.serialize(doc);
-
-		return new String(outputStream.toByteArray(), "UTF-8");
-	}
-
-	public static Document createXMLDocument() throws Exception {
-		DocumentBuilderFactory builderFactory = DocumentBuilderFactory
-				.newInstance();
-		DocumentBuilder builder = builderFactory.newDocumentBuilder();
-		Document doc = builder.newDocument();
-		doc.appendChild(doc.createElement("testDocument"));
-
-		return doc;
-	}
+        return doc;
+    }
 }
