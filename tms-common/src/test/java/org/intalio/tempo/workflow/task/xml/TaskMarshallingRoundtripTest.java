@@ -57,7 +57,7 @@ public class TaskMarshallingRoundtripTest extends TestCase {
     public void testPAWithInput() throws Exception {
 
         String resource = "/InputWithNamespace.xml";
-        InputStream requestInputStream = TestUtils.class.getResourceAsStream(resource);
+        InputStream requestInputStream = TaskMarshallingRoundtripTest.class.getResourceAsStream(resource);
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
         DocumentBuilder builder = factory.newDocumentBuilder();
