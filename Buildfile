@@ -2,6 +2,7 @@ $LOAD_PATH.unshift "#{ENV['HOME']}/svn/buildr-trunk/lib/"
 
 require "rubygems"
 require "buildr"
+require "buildr/cobertura"
 
 
 # Keep this structure to allow the build system to update version numbers.
