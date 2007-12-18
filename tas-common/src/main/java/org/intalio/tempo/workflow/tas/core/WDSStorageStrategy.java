@@ -13,6 +13,8 @@ package org.intalio.tempo.workflow.tas.core;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,12 +39,37 @@ public class WDSStorageStrategy implements StorageStrategy {
     private static final Logger _logger = Logger.getLogger(WDSStorageStrategy.class);
 
     private static final String ATTACHMENT_URI_PREFIX = "attachments/";
+    
+    /**
+     * Replace localhost by a proper host name, otherwise the attachment could not be accessed.
+     */
+    public static String filterLocalhost(String endpoint) {
+    	try {
+    		URL url = new URL(endpoint);
+        	if(url.getHost().equalsIgnoreCase("localhost")) {
+        		InetAddress[] list = InetAddress.getAllByName(InetAddress.getLocalHost().getHostAddress());
+            	if(list.length > 0) {
+            		URL filtered = new URL(url.getProtocol(),list[0].getHostName(),url.getPort(), url.getFile());
+            		return filtered.toExternalForm();
+        		}	
+        	} 
+        	return endpoint;	
+    	} catch(Exception e) {
+    		// if we are here, that means either:
+    		// 1. the url for the endpoint is not a valid url
+    		// 2 the url in the config file has a host set to localhost, but an exception happened while
+    		// 		trying to find the hostname of the machine.
+    		throw new RuntimeException(e);
+    	}
+    	
+    }
 
     /**
      * WDS endpoint (including the trailing slash), such as <code>http://localhost:8080/wds/</code>
      */
     private String _wdsEndpoint;
 
+    
     /**
      * Instance constructor.
      */
@@ -64,7 +91,8 @@ public class WDSStorageStrategy implements StorageStrategy {
         if (endpoint == null) {
             throw new IllegalArgumentException("WDS endpoint may not be null");
         }
-        _wdsEndpoint = endpoint;
+        _wdsEndpoint = filterLocalhost(endpoint);
+
     }
 
     public String storeAttachment(AttachmentMetadata metadata, InputStream payload) throws IOException {
