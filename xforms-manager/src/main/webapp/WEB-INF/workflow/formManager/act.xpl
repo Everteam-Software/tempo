@@ -238,13 +238,13 @@
                                 </xsl:if>
 
                                 <xforms:submission id="showAttachments" ref="instance('taskAttachments')"
-                                                   validate="true" action="/act" method="post" replace="instance"
+                                                   validate="false" action="/act" method="post" replace="instance"
                                                    instance="taskAttachments">
 
                                     <xforms:message ev:event="xforms-submit-error" level="modal">Error while attachments retrieval</xforms:message>
                                 </xforms:submission>
 
-                                <xforms:submission id="attachFile" ref="instance('taskAttachments')" validate="true"
+                                <xforms:submission id="attachFile" ref="instance('taskAttachments')" validate="false"
                                                    action="/new-attachment" method="post" replace="all">
 
                                     <xforms:toggle ev:event="xforms-submit" case="submit-wait"/>
@@ -255,7 +255,7 @@
                                     </xforms:action>
                                 </xforms:submission>
 
-                                <xforms:submission id="attachText" ref="instance('taskAttachments')" validate="true"
+                                <xforms:submission id="attachText" ref="instance('taskAttachments')" validate="false"
                                                    action="/attachments" method="post" replace="instance"
                                                    instance="taskAttachments">
 
@@ -263,7 +263,7 @@
                                 </xforms:submission>
 
                                 <xforms:submission id="deleteAttachment" ref="instance('taskAttachments')"
-                                                   validate="true"
+                                                   validate="false"
                                                    action="/attachments" method="post" replace="instance"
                                                    instance="taskAttachments">
 
@@ -271,7 +271,7 @@
                                 </xforms:submission>
 
                                 <!-- Declares the Save Task action -->
-                                <xforms:submission id="saveSubmission" ref="instance('taskoutput')" validate="true"
+                                <xforms:submission id="saveSubmission" ref="instance('taskoutput')" validate="false"
                                                    action="/formManager/save" method="post" replace="all">
 
                                     <xforms:toggle ev:event="xforms-submit" case="submit-wait"/>
@@ -295,7 +295,7 @@
                                 </xforms:submission>
 
                                 <!-- Declares the Claim Task action -->
-                                <xforms:submission id="claimSubmission" ref="instance('taskoutput')" validate="true"
+                                <xforms:submission id="claimSubmission" ref="instance('taskoutput')" validate="false"
                                                    action="/formManager/claim" method="post" replace="all">
 
                                     <xforms:toggle ev:event="xforms-submit" case="submit-wait"/>
@@ -307,7 +307,7 @@
                                 </xforms:submission>
 
                                 <!-- Declares the Revoke Task action -->
-                                <xforms:submission id="revokeSubmission" ref="instance('taskoutput')" validate="true"
+                                <xforms:submission id="revokeSubmission" ref="instance('taskoutput')" validate="false"
                                                    action="/formManager/revoke" method="post" replace="all">
 
                                     <xforms:toggle ev:event="xforms-submit" case="submit-wait"/>
