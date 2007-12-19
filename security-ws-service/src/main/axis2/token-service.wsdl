@@ -34,59 +34,59 @@
                 </xsd:complexType>
             </xsd:element>
             
-            <xsd:complexType name="authenticateUser">
+            <xsd:element name="authenticateUser">
                 <xsd:sequence>
                     <xsd:element name="user" type="xsd:string"/>
                     <xsd:element name="password" type="xsd:string"/>
                 </xsd:sequence>
-            </xsd:complexType>
+            </xsd:element>
             
-            <xsd:complexType name="authenticateUserWithCredentials">
+            <xsd:element name="authenticateUserWithCredentials">
                 <xsd:sequence>
                     <xsd:element name="user" type="xsd:string"/>
                     <xsd:element name="credentials" type="tns:PropertyType" maxOccurs="1" minOccurs="1" />
                 </xsd:sequence>
-            </xsd:complexType>
+            </xsd:element>
             
-            <xsd:complexType name="authenticateUserResponse">
+            <xsd:element name="authenticateUserResponse">
                 <xsd:sequence>
                     <xsd:element name="token" type="xsd:string"/>
                 </xsd:sequence>
-            </xsd:complexType>
+            </xsd:element>
 
-            <xsd:complexType name="getTokenProperties">
+            <xsd:element name="getTokenProperties">
                 <xsd:sequence>
                     <xsd:element name="token" type="xsd:string"/>
                 </xsd:sequence>
-            </xsd:complexType>
+            </xsd:element>
 
-            <xsd:complexType name="getTokenPropertiesResponse">
+            <xsd:element name="getTokenPropertiesResponse">
                 <xsd:sequence>
                     <xsd:element name="credentials" type="tns:PropertyType" maxOccurs="1" minOccurs="1" />
                 </xsd:sequence>
-            </xsd:complexType>
+            </xsd:element>
         </xsd:schema>
     </wsdl:types>
     
     
     <wsdl:message name="authenticateUser">
-        <wsdl:part name="payload" type="tns:authenticateUser" />
+        <wsdl:part name="payload" element="tns:authenticateUser" />
     </wsdl:message>
     
     <wsdl:message name="authenticateUserWithCredentials">
-        <wsdl:part name="payload" type="tns:authenticateUserWithCredentials" />
+        <wsdl:part name="payload" element="tns:authenticateUserWithCredentials" />
     </wsdl:message>
     
     <wsdl:message name="authenticateUserResponse">
-        <wsdl:part name="payload" type="tns:authenticateUserResponse" />
+        <wsdl:part name="payload" element="tns:authenticateUserResponse" />
     </wsdl:message>
     
     <wsdl:message name="getTokenProperties">
-        <wsdl:part name="payload" type="tns:getTokenProperties" />
+        <wsdl:part name="payload" element="tns:getTokenProperties" />
     </wsdl:message>
     
     <wsdl:message name="getTokenPropertiesResponse">
-        <wsdl:part name="payload" type="tns:getTokenPropertiesResponse" />
+        <wsdl:part name="payload" element="tns:getTokenPropertiesResponse" />
     </wsdl:message>
     
     <wsdl:portType name="TokenService">
@@ -107,12 +107,12 @@
     </wsdl:portType>
     
     <wsdl:binding name="TokenServiceSOAP" type="tns:TokenService">
-        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http" />
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
 
         <wsdl:operation name="authenticateUser">
             <soap:operation soapAction="authenticateUser" />
             <wsdl:input>
-                <soap:body parts="payload" use="literal" namespace="http://tempo.intalio.org/security/tokenService/"/>
+                <soap:body parts="payload" use="literal" />
             </wsdl:input>
             <wsdl:output>
                 <soap:body parts="payload" use="literal" />
@@ -122,7 +122,7 @@
         <wsdl:operation name="authenticateUserWithCredentials">
             <soap:operation soapAction="authenticateUserWithCredentials" />
             <wsdl:input>
-                <soap:body parts="payload" use="literal" namespace="http://tempo.intalio.org/security/tokenService/"/>
+                <soap:body parts="payload" use="literal" />
             </wsdl:input>
             <wsdl:output>
                 <soap:body parts="payload" use="literal" />
@@ -132,7 +132,7 @@
         <wsdl:operation name="getTokenProperties">
             <soap:operation soapAction="getTokenProperties" />
             <wsdl:input>
-                <soap:body parts="payload" use="literal" namespace="http://tempo.intalio.org/security/tokenService/"/>
+                <soap:body parts="payload" use="literal"/>
             </wsdl:input>
             <wsdl:output>
                 <soap:body parts="payload" use="literal" />
