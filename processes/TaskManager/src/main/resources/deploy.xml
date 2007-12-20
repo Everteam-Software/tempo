@@ -1,38 +1,23 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<deploy xmlns="http://ode.fivesight.com/schemas/2006/06/27/dd" 
-        xmlns:process="http://www.intalio.com/bpms/workflow/ib4p_20051115"
-        xmlns:sns="http://www.intalio.com/bpms/workflow/ib4p_20051115"
-	xmlns:tms="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
-
-	<process name="process:TaskManager">
-		<active>true</active>
-        
-        <!-- userProcessPartnerLink -->
-		<provide partnerLink="userProcessPartnerLink">
-			<service name="sns:createTaskService" port="userProcessPort"/>
-		</provide>
-		<invoke partnerLink="userProcessPartnerLink">
-			<service name="sns:notifyTaskCompletionService" port="userProcessPort"/>
-		</invoke>
-        
-        <!-- uifwPartnerLink -->
-		<provide partnerLink="uifwPartnerLink">
-			<service name="sns:completeTaskService" port="uifwPort"/>
-		</provide>
-        
-        <!-- TMSPartnerLink -->
-		<invoke partnerLink="TMSPartnerLink">
-			<service name="tms:TaskManagementServices" port="TaskManagementServicesSOAP"/>
-		</invoke>
-        
-        <!-- taskManagerPartnerLink -->
-		<provide partnerLink="nextTaskManagerPartnerLink">
-			<service name="sns:nextTaskReadyService" port="taskManagerPort"/>
-		</provide>
-		<invoke partnerLink="previousTaskManagerPartnerLink">
-			<service name="sns:nextTaskReadyService" port="taskManagerPort"/>
-		</invoke>
-        
-	</process>
-    
-</deploy>
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<dd:deploy xmlns:dd="http://ode.fivesight.com/schemas/2006/06/27/dd"><dd:process xmlns:UserBusinessProcess="http://example.com/TMP/UserBusinessProcess" xmlns:UIFW="http://example.com/TMP/UIFW" xmlns:b4px="java:org.intalio.tempo.workflow.processes.xpath.UID" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:b4p="http://www.intalio.com/bpms/workflow/ib4p_20051115" xmlns:NextTaskManager="http://example.com/TMP/NextTaskManager" xmlns:dd="http://ode.fivesight.com/schemas/2006/06/27/dd" xmlns:UserBusinessProcess1="http://www.intalio.com/bpms/ubp" xmlns:diag="http://example.com/TMP" xmlns:tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:TaskManagementSystem="http://example.com/TMP/TaskManagementSystem" xmlns:PreviousProcessTaskManager="http://example.com/TMP/PreviousProcessTaskManager" xmlns:this="http://example.com/TMP/TaskManagementProcess" name="this:TaskManagementProcess" fileName="TMP-TaskManagementProcess.bpel">
+  <dd:property name="PATH">TMP</dd:property>
+  <dd:property name="SVG">TMP.svg</dd:property>
+  <dd:invoke partnerLink="taskManagementProcessAndTaskManagementSystemForPortTaskManagementServicesSOAPPlkVar">
+    <dd:service name="tns:TaskManagementServices" port="TaskManagementServicesSOAP" />
+  </dd:invoke>
+  <dd:provide partnerLink="taskManagementProcessAndUIFWForUIFWPortPlkVar">
+    <dd:service name="b4p:UIFWService" port="UIFWPort" />
+  </dd:provide>
+  <dd:provide partnerLink="taskManagementProcessAndNextTaskManagerForTMPPortPlkVar">
+    <dd:service name="b4p:TMPService" port="TMPPort" />
+  </dd:provide>
+  <dd:invoke partnerLink="taskManagementProcessAndPreviousProcessTaskManagerForTMPPortPlkVar">
+    <dd:service name="b4p:TMPService" port="TMPPort" />
+  </dd:invoke>
+  <dd:provide partnerLink="tMPAndUBPPlkVar">
+    <dd:service name="b4p:UserBusinessProcessService" port="UserBusinessProcessPort" />
+  </dd:provide>
+  <dd:invoke partnerLink="tMPAndUBPPlkVar">
+    <dd:service name="UserBusinessProcess1:UserBusinessProcessesServices" port="userProcessPort" />
+  </dd:invoke>
+</dd:process></dd:deploy>

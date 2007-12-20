@@ -13,7 +13,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:b4p="http://www.intalio.com/bpms/workflow/ib4p_20051115"
                 xmlns:tms="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
-                version="1.0">
+                version="2.0">
 
     <xsl:output method="xml"/>
     <xsl:param name="metadata"/>

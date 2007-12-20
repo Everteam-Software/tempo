@@ -1,0 +1,1429 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<bpel:process xmlns:bpel="http://schemas.xmlsoap.org/ws/2004/03/business-process/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:pnlk="http://schemas.xmlsoap.org/ws/2004/03/partner-link/" xmlns:b4px="java:org.intalio.tempo.workflow.processes.xpath.UID" xmlns:tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:UIFW="http://example.com/TMP/UIFW" xmlns:TaskManagementSystem="http://example.com/TMP/TaskManagementSystem" xmlns:PreviousProcessTaskManager="http://example.com/TMP/PreviousProcessTaskManager" xmlns:b4p="http://www.intalio.com/bpms/workflow/ib4p_20051115" xmlns:UserBusinessProcess1="http://www.intalio.com/bpms/ubp" xmlns:this="http://example.com/TMP/TaskManagementProcess" xmlns:UserBusinessProcess="http://example.com/TMP/UserBusinessProcess" xmlns:NextTaskManager="http://example.com/TMP/NextTaskManager" xmlns:diag="http://example.com/TMP" xmlns:bpmn="http://www.intalio.com/bpms" xmlns:atomic="http://ode.apache.org/atomicScope" queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0" bpmn:label="TaskManagementProcess" bpmn:id="_opUVQKdvEdyId4P63ChZuw" name="TaskManagementProcess" targetNamespace="http://example.com/TMP/TaskManagementProcess">
+  <bpel:import namespace="http://example.com/TMP/TaskManagementProcess" location="TMP-TaskManagementProcess.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+  <bpel:import namespace="http://example.com/TMP" location="TMP.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+  <bpel:import namespace="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" location="TaskManagementSystem.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+  <bpel:import namespace="http://www.intalio.com/bpms/ubp" location="UserBusinessProcess.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+  <bpel:import namespace="http://www.intalio.com/bpms/workflow/ib4p_20051115" location="TaskManagerProcess.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+  <bpel:import namespace="http://www.intalio.com/bpms/workflow/ib4p_20051115" location="b4p.xsd" importType="http://www.w3.org/2001/XMLSchema"></bpel:import>
+  <bpel:partnerLinks>
+    <bpel:partnerLink name="taskManagementProcessAndTaskManagementSystemForPortTaskManagementServicesSOAPPlkVar" partnerLinkType="diag:TaskManagementProcessAndTaskManagementSystemForPortTaskManagementServicesSOAPPlk" initializePartnerRole="true" partnerRole="TaskManagementSystem_for_TaskManagementProcess"/>
+    <bpel:partnerLink name="taskManagementProcessAndUIFWForUIFWPortPlkVar" partnerLinkType="diag:TaskManagementProcessAndUIFWForUIFWPortPlk" myRole="TaskManagementProcess_for_UIFW"/>
+    <bpel:partnerLink name="taskManagementProcessAndNextTaskManagerForTMPPortPlkVar" partnerLinkType="diag:TaskManagementProcessAndNextTaskManagerForTMPPortPlk" myRole="TaskManagementProcess_for_NextTaskManager"/>
+    <bpel:partnerLink name="taskManagementProcessAndPreviousProcessTaskManagerForTMPPortPlkVar" partnerLinkType="diag:TaskManagementProcessAndPreviousProcessTaskManagerForTMPPortPlk" initializePartnerRole="true" partnerRole="PreviousProcessTaskManager_for_TaskManagementProcess"/>
+    <bpel:partnerLink name="tMPAndUBPPlkVar" partnerLinkType="diag:TMPAndUBP" initializePartnerRole="true" myRole="TaskManagementProcess_for_UserBusinessProcessForUserBusinessProcessPort" partnerRole="UserBusinessProcess_for_TaskManagementProcessForUserProcessPort"/>
+  </bpel:partnerLinks>
+  <bpel:correlationSets>
+    <bpel:correlationSet name="task" properties="this:taskId"/>
+  </bpel:correlationSets>
+  <bpel:variables>
+    <bpel:variable name="createTMSTaskRequest" messageType="tns:createRequest"/>
+    <bpel:variable name="createTMSTaskResponse" messageType="tns:okResponse"/>
+    <bpel:variable name="taskCompleted" type="xs:boolean"/>
+    <bpel:variable name="taskClaimed" type="xs:boolean"/>
+    <bpel:variable name="taskEscalated" type="xs:boolean"/>
+    <bpel:variable name="nextTaskReady" messageType="b4p:nextTaskReady"/>
+    <bpel:variable name="initialOwners" element="b4p:usersAndRoles"/>
+    <bpel:variable name="createTaskRequest" messageType="b4p:createTaskRequest"/>
+    <bpel:variable name="createTaskResponse" messageType="b4p:createTaskResponse"/>
+  </bpel:variables>
+  <bpel:sequence>
+    <bpel:receive partnerLink="tMPAndUBPPlkVar" portType="b4p:UserBusinessProcessPortType" operation="createTask" variable="createTaskRequest" createInstance="yes" bpmn:label="Create Task" bpmn:id="_kh8I0KdyEdyId4P63ChZuw"></bpel:receive>
+    <bpel:assign name="init-variables-TaskManagementProcess">
+      <bpel:copy bpmn:label="$createTMSTaskRequest">
+        <bpel:from>
+          <bpel:literal><tns:createRequest>
+    <tns:task>
+        <tns:metadata>
+            <tns:taskId></tns:taskId>
+            <tns:taskType></tns:taskType>
+            <tns:description></tns:description>
+            <tns:processId></tns:processId>
+            <tns:creationDate></tns:creationDate>
+            <tns:userOwner></tns:userOwner>
+            <tns:roleOwner></tns:roleOwner>
+            <tns:formUrl></tns:formUrl>
+            <tns:userProcessCompleteSOAPAction></tns:userProcessCompleteSOAPAction>
+            <tns:userProcessEndpoint></tns:userProcessEndpoint>
+            <tns:userProcessNamespaceURI></tns:userProcessNamespaceURI>
+        </tns:metadata><tns:input/>
+        </tns:task>
+    <tns:participantToken></tns:participantToken>
+</tns:createRequest>
+          </bpel:literal>
+        </bpel:from>
+        <bpel:to>$createTMSTaskRequest.createRequest</bpel:to>
+      </bpel:copy>
+      <bpel:copy bpmn:label="$taskCompleted">
+        <bpel:from>
+          <bpel:literal>false
+          </bpel:literal>
+        </bpel:from>
+        <bpel:to>$taskCompleted</bpel:to>
+      </bpel:copy>
+      <bpel:copy bpmn:label="$taskClaimed">
+        <bpel:from>
+          <bpel:literal>false
+          </bpel:literal>
+        </bpel:from>
+        <bpel:to>$taskClaimed</bpel:to>
+      </bpel:copy>
+      <bpel:copy bpmn:label="$taskEscalated">
+        <bpel:from>
+          <bpel:literal>false
+          </bpel:literal>
+        </bpel:from>
+        <bpel:to>$taskEscalated</bpel:to>
+      </bpel:copy>
+      <bpel:copy bpmn:label="$nextTaskReady">
+        <bpel:from>
+          <bpel:literal><b4p:chainedExecution>
+    <b4p:previousTaskId>
+    </b4p:previousTaskId>
+    <b4p:nextTaskId>
+    </b4p:nextTaskId>
+    <b4p:nextTaskURL>
+    </b4p:nextTaskURL>
+</b4p:chainedExecution>
+          </bpel:literal>
+        </bpel:from>
+        <bpel:to>$nextTaskReady.root</bpel:to>
+      </bpel:copy>
+      <bpel:copy bpmn:label="$initialOwners">
+        <bpel:from>
+          <bpel:literal><b4p:usersAndRoles>
+    <b4p:userOwner/>
+    <b4p:roleOwner/>
+</b4p:usersAndRoles>
+          </bpel:literal>
+        </bpel:from>
+        <bpel:to>$initialOwners</bpel:to>
+      </bpel:copy>
+      <bpel:copy bpmn:label="$createTaskResponse">
+        <bpel:from>
+          <bpel:literal>
+<b4p:response>
+  <b4p:taskMetaData>
+    <b4p:taskId>
+    </b4p:taskId>
+    <b4p:taskState>
+    </b4p:taskState>
+    <b4p:taskType>
+    </b4p:taskType>
+    <b4p:description>
+    </b4p:description>
+    <b4p:processId>
+    </b4p:processId>
+    <b4p:creationDate>
+    </b4p:creationDate>
+    <b4p:userOwner>
+    </b4p:userOwner>
+    <b4p:roleOwner>
+    </b4p:roleOwner>
+    <b4p:formUrl>
+    </b4p:formUrl>
+    <b4p:failureCode>
+    </b4p:failureCode>
+    <b4p:failureReason>
+    </b4p:failureReason>
+    <b4p:userEndpoint>
+    </b4p:userEndpoint>
+    <b4p:userProcessEndpoint>
+    </b4p:userProcessEndpoint>
+    <b4p:userProcessNamespaceURI>
+    </b4p:userProcessNamespaceURI>
+    <b4p:userProcessCompleteSOAPAction>
+    </b4p:userProcessCompleteSOAPAction>
+    <b4p:isChainedBefore>
+    </b4p:isChainedBefore>
+    <b4p:previousTaskId>
+    </b4p:previousTaskId>
+    <b4p:nextTaskId>
+    </b4p:nextTaskId>
+    <b4p:session>
+    </b4p:session>
+    <b4p:nextTaskURL>
+    </b4p:nextTaskURL>
+  </b4p:taskMetaData>
+  <b4p:status>
+  </b4p:status>
+  <b4p:errorCode>
+  </b4p:errorCode>
+  <b4p:errorReason>
+  </b4p:errorReason>
+  <b4p:isChainedAfter>
+  </b4p:isChainedAfter>
+</b4p:response>
+          </bpel:literal>
+        </bpel:from>
+        <bpel:to>$createTaskResponse.root</bpel:to>
+      </bpel:copy>
+    </bpel:assign>
+    <bpel:assign bpmn:label="Create Task" bpmn:id="_kh8I0KdyEdyId4P63ChZuw">
+      <bpel:copy>
+        <bpel:from>$createTaskRequest.root/b4p:taskMetaData/b4p:processId</bpel:from>
+        <bpel:to>$createTaskResponse.root/b4p:taskMetaData/b4p:processId</bpel:to>
+      </bpel:copy>
+      <bpel:copy>
+        <bpel:from xmlns:ode="http://www.apache.org/ode/type/extension">concat($ode:pid, b4px:create())</bpel:from>
+        <bpel:to>$createTaskResponse.root/b4p:taskMetaData/b4p:taskId</bpel:to>
+      </bpel:copy>
+      <bpel:copy>
+        <bpel:from>$createTaskRequest.root/b4p:taskMetaData/b4p:formUrl</bpel:from>
+        <bpel:to>$createTaskResponse.root/b4p:taskMetaData/b4p:formUrl</bpel:to>
+      </bpel:copy>
+    </bpel:assign>
+    <bpel:reply partnerLink="tMPAndUBPPlkVar" portType="b4p:UserBusinessProcessPortType" operation="createTask" variable="createTaskResponse" bpmn:label="Create Task" bpmn:id="_kh8I0KdyEdyId4P63ChZuw">
+      <bpel:correlations>
+        <bpel:correlation set="task" initiate="yes"></bpel:correlation>
+      </bpel:correlations>
+    </bpel:reply>
+    <bpel:assign bpmn:label="Prepare creation Task in Database" bpmn:id="_Yppk0Kd1EdyId4P63ChZuw">
+      <bpel:copy>
+        <bpel:from>"activity"</bpel:from>
+        <bpel:to>$createTMSTaskRequest.createRequest/tns:task/tns:metadata/tns:taskType</bpel:to>
+      </bpel:copy>
+      <bpel:copy>
+        <bpel:from>$createTaskResponse.root/b4p:taskMetaData/b4p:taskId</bpel:from>
+        <bpel:to>$createTMSTaskRequest.createRequest/tns:task/tns:metadata/tns:taskId</bpel:to>
+      </bpel:copy>
+      <bpel:copy>
+        <bpel:from>$createTaskRequest.root/b4p:taskMetaData/b4p:description</bpel:from>
+        <bpel:to>$createTMSTaskRequest.createRequest/tns:task/tns:metadata/tns:description</bpel:to>
+      </bpel:copy>
+      <bpel:copy>
+        <bpel:from>$createTaskRequest.root/b4p:taskMetaData/b4p:processId</bpel:from>
+        <bpel:to>$createTMSTaskRequest.createRequest/tns:task/tns:metadata/tns:processId</bpel:to>
+      </bpel:copy>
+      <bpel:copy>
+        <bpel:from>bpel:doXslTransform("userRoleOwner.xsl", $createTMSTaskRequest.createRequest, "metadata", $createTaskRequest.root/b4p:taskMetaData)</bpel:from>
+        <bpel:to>$createTMSTaskRequest.createRequest</bpel:to>
+      </bpel:copy>
+    </bpel:assign>
+    <bpel:assign bpmn:label="Create Task in Database" bpmn:id="_jiUMsKgTEdylDI4yblkdQQ">
+      <bpel:copy>
+        <bpel:from>bpel:doXslTransform("actions.xsl", $createTMSTaskRequest.createRequest, "metadata", $createTaskRequest.root/b4p:taskMetaData)</bpel:from>
+        <bpel:to>$createTMSTaskRequest.createRequest</bpel:to>
+      </bpel:copy>
+      <bpel:copy>
+        <bpel:from>$createTaskRequest.root/b4p:taskMetaData/b4p:formUrl</bpel:from>
+        <bpel:to>$createTMSTaskRequest.createRequest/tns:task/tns:metadata/tns:formUrl</bpel:to>
+      </bpel:copy>
+      <bpel:copy>
+        <bpel:from>$createTaskRequest.root/b4p:taskInput</bpel:from>
+        <bpel:to>$createTMSTaskRequest.createRequest/tns:task/tns:input</bpel:to>
+      </bpel:copy>
+      <bpel:copy>
+        <bpel:from>$createTaskRequest.root/b4p:taskMetaData/b4p:userProcessEndpoint</bpel:from>
+        <bpel:to>$createTMSTaskRequest.createRequest/tns:task/tns:metadata/tns:userProcessEndpoint</bpel:to>
+      </bpel:copy>
+      <bpel:copy>
+        <bpel:from>$createTaskRequest.root/b4p:taskMetaData/b4p:userProcessNamespaceURI</bpel:from>
+        <bpel:to>$createTMSTaskRequest.createRequest/tns:task/tns:metadata/tns:userProcessNamespaceURI</bpel:to>
+      </bpel:copy>
+      <bpel:copy>
+        <bpel:from>$createTaskRequest.root/b4p:taskMetaData/b4p:userProcessCompleteSOAPAction</bpel:from>
+        <bpel:to>$createTMSTaskRequest.createRequest/tns:task/tns:metadata/tns:userProcessCompleteSOAPAction</bpel:to>
+      </bpel:copy>
+      <bpel:copy>
+        <bpel:from>current-dateTime()</bpel:from>
+        <bpel:to>$createTMSTaskRequest.createRequest/tns:task/tns:metadata/tns:creationDate</bpel:to>
+      </bpel:copy>
+    </bpel:assign>
+    <bpel:invoke partnerLink="taskManagementProcessAndTaskManagementSystemForPortTaskManagementServicesSOAPPlkVar" portType="tns:TaskManagementServices" operation="create" inputVariable="createTMSTaskRequest" outputVariable="createTMSTaskResponse" bpmn:label="Create Task in Database" bpmn:id="_jiUMsKgTEdylDI4yblkdQQ"></bpel:invoke>
+    <bpel:if>
+      <bpel:condition>"true" = $createTaskRequest.root/b4p:taskMetaData/b4p:isChainedBefore</bpel:condition>
+      <bpel:sequence>
+        <bpel:assign bpmn:label="Notify previous Task Manager" bpmn:id="_DkaEoKgeEdylDI4yblkdQQ">
+          <bpel:copy>
+            <bpel:from>$createTaskRequest.root/b4p:taskMetaData/b4p:previousTaskId</bpel:from>
+            <bpel:to>$nextTaskReady.root/b4p:previousTaskId</bpel:to>
+          </bpel:copy>
+          <bpel:copy>
+            <bpel:from>$createTaskRequest.root/b4p:taskMetaData/b4p:formUrl</bpel:from>
+            <bpel:to>$nextTaskReady.root/b4p:nextTaskURL</bpel:to>
+          </bpel:copy>
+          <bpel:copy>
+            <bpel:from>$createTaskResponse.root/b4p:taskMetaData/b4p:taskId</bpel:from>
+            <bpel:to>$nextTaskReady.root/b4p:nextTaskId</bpel:to>
+          </bpel:copy>
+        </bpel:assign>
+        <bpel:invoke partnerLink="taskManagementProcessAndPreviousProcessTaskManagerForTMPPortPlkVar" portType="b4p:TMPPortType" operation="nextTaskReady" inputVariable="nextTaskReady" bpmn:label="Notify previous Task Manager" bpmn:id="_DkaEoKgeEdylDI4yblkdQQ"></bpel:invoke>
+      </bpel:sequence>
+    </bpel:if>
+    <bpel:scope bpmn:label="SubProcess" bpmn:id="_TbKiIKhDEdyQFMjeTyvJzg">
+      <bpel:variables>
+        <bpel:variable name="tnsReassignRequestMsg" messageType="tns:reassignRequest"/>
+        <bpel:variable name="tnsReassignResponseMsg" messageType="tns:okResponse"/>
+        <bpel:variable name="completeTaskRequest" messageType="b4p:completeTaskRequest"/>
+        <bpel:variable name="completeTMSTaskRequest" messageType="tns:setOutputAndCompleteRequest"/>
+        <bpel:variable name="completeTMSTaskResponse" messageType="tns:okResponse"/>
+        <bpel:variable name="nextTaskReady" messageType="b4p:nextTaskReady"/>
+        <bpel:variable name="completeTaskResponse" messageType="b4p:completeTaskResponse"/>
+        <bpel:variable name="claimTaskRequest" messageType="b4p:claimTaskRequest"/>
+        <bpel:variable name="claimTaskResponse" messageType="b4p:claimTaskResponse"/>
+        <bpel:variable name="revokeTaskRequest" messageType="b4p:revokeTaskRequest"/>
+        <bpel:variable name="revokeTaskResponse" messageType="b4p:revokeTaskResponse"/>
+        <bpel:variable name="escalateTaskRequest" messageType="b4p:escalateTaskRequest"/>
+        <bpel:variable name="escalateTaskResponse" messageType="b4p:escalateTaskResponse"/>
+        <bpel:variable name="notifyTaskCompletionRequest" messageType="UserBusinessProcess1:notifyTaskCompletionRequest"/>
+        <bpel:variable name="notifyTaskCompletionResponse" messageType="UserBusinessProcess1:notifyTaskCompletionResponse"/>
+      </bpel:variables>
+      <bpel:while>
+        <bpel:condition>not($taskCompleted)</bpel:condition>
+        <bpel:sequence>
+          <bpel:assign name="init-variables-SubProcess">
+            <bpel:copy bpmn:label="$tnsReassignRequestMsg">
+              <bpel:from>
+                <bpel:literal>
+<tns:reassignRequest>
+  <tns:taskId>
+  </tns:taskId>
+  <tns:userOwner>
+  </tns:userOwner>
+  <tns:roleOwner>
+  </tns:roleOwner>
+  <tns:taskState>
+  </tns:taskState>
+  <tns:participantToken>
+  </tns:participantToken>
+</tns:reassignRequest>
+                </bpel:literal>
+              </bpel:from>
+              <bpel:to>$tnsReassignRequestMsg.reassignRequest</bpel:to>
+            </bpel:copy>
+            <bpel:copy bpmn:label="$completeTMSTaskRequest">
+              <bpel:from>
+                <bpel:literal>
+<tns:setOutputAndCompleteRequest>
+  <tns:taskId>
+  </tns:taskId><tns:data/>
+  
+  <tns:participantToken>
+  </tns:participantToken>
+</tns:setOutputAndCompleteRequest>
+                </bpel:literal>
+              </bpel:from>
+              <bpel:to>$completeTMSTaskRequest.setOutputAndCompleteRequest</bpel:to>
+            </bpel:copy>
+            <bpel:copy bpmn:label="$completeTaskResponse">
+              <bpel:from>
+                <bpel:literal>
+<b4p:response>
+  <b4p:taskMetaData>
+    <b4p:taskId>
+    </b4p:taskId>
+    <b4p:taskState>
+    </b4p:taskState>
+    <b4p:taskType>
+    </b4p:taskType>
+    <b4p:description>
+    </b4p:description>
+    <b4p:processId>
+    </b4p:processId>
+    <b4p:creationDate>
+    </b4p:creationDate>
+    <b4p:userOwner>
+    </b4p:userOwner>
+    <b4p:roleOwner>
+    </b4p:roleOwner>
+    <b4p:formUrl>
+    </b4p:formUrl>
+    <b4p:failureCode>
+    </b4p:failureCode>
+    <b4p:failureReason>
+    </b4p:failureReason>
+    <b4p:userEndpoint>
+    </b4p:userEndpoint>
+    <b4p:userProcessEndpoint>
+    </b4p:userProcessEndpoint>
+    <b4p:userProcessNamespaceURI>
+    </b4p:userProcessNamespaceURI>
+    <b4p:userProcessCompleteSOAPAction>
+    </b4p:userProcessCompleteSOAPAction>
+    <b4p:isChainedBefore>
+    </b4p:isChainedBefore>
+    <b4p:previousTaskId>
+    </b4p:previousTaskId>
+    <b4p:nextTaskId>
+    </b4p:nextTaskId>
+    <b4p:session>
+    </b4p:session>
+    <b4p:nextTaskURL>
+    </b4p:nextTaskURL>
+  </b4p:taskMetaData>
+  <b4p:status>
+  </b4p:status>
+  <b4p:errorCode>
+  </b4p:errorCode>
+  <b4p:errorReason>
+  </b4p:errorReason>
+  <b4p:isChainedAfter>
+  </b4p:isChainedAfter>
+</b4p:response>
+                </bpel:literal>
+              </bpel:from>
+              <bpel:to>$completeTaskResponse.root</bpel:to>
+            </bpel:copy>
+            <bpel:copy bpmn:label="$claimTaskResponse">
+              <bpel:from>
+                <bpel:literal>
+<b4p:claimTaskResponse>
+  <b4p:status>
+  </b4p:status>
+</b4p:claimTaskResponse>
+                </bpel:literal>
+              </bpel:from>
+              <bpel:to>$claimTaskResponse.root</bpel:to>
+            </bpel:copy>
+            <bpel:copy bpmn:label="$revokeTaskResponse">
+              <bpel:from>
+                <bpel:literal>
+<b4p:revokeTaskResponse>
+  <b4p:status>
+  </b4p:status>
+</b4p:revokeTaskResponse>
+                </bpel:literal>
+              </bpel:from>
+              <bpel:to>$revokeTaskResponse.root</bpel:to>
+            </bpel:copy>
+            <bpel:copy bpmn:label="$escalateTaskResponse">
+              <bpel:from>
+                <bpel:literal>
+<b4p:escalateTaskResponse>
+  <b4p:status>
+  </b4p:status>
+</b4p:escalateTaskResponse>
+                </bpel:literal>
+              </bpel:from>
+              <bpel:to>$escalateTaskResponse.root</bpel:to>
+            </bpel:copy>
+            <bpel:copy bpmn:label="$notifyTaskCompletionRequest">
+              <bpel:from>
+                <bpel:literal>
+<b4p:notifyTaskCompletionRequest>
+  <b4p:taskMetaData>
+    <b4p:taskId>
+    </b4p:taskId>
+    <b4p:taskState>
+    </b4p:taskState>
+    <b4p:taskType>
+    </b4p:taskType>
+    <b4p:description>
+    </b4p:description>
+    <b4p:processId>
+    </b4p:processId>
+    <b4p:creationDate>
+    </b4p:creationDate>
+    <b4p:userOwner>
+    </b4p:userOwner>
+    <b4p:roleOwner>
+    </b4p:roleOwner>
+    <b4p:formUrl>
+    </b4p:formUrl>
+    <b4p:failureCode>
+    </b4p:failureCode>
+    <b4p:failureReason>
+    </b4p:failureReason>
+    <b4p:userEndpoint>
+    </b4p:userEndpoint>
+    <b4p:userProcessEndpoint>
+    </b4p:userProcessEndpoint>
+    <b4p:userProcessNamespaceURI>
+    </b4p:userProcessNamespaceURI>
+    <b4p:userProcessCompleteSOAPAction>
+    </b4p:userProcessCompleteSOAPAction>
+    <b4p:isChainedBefore>
+    </b4p:isChainedBefore>
+    <b4p:previousTaskId>
+    </b4p:previousTaskId>
+    <b4p:nextTaskId>
+    </b4p:nextTaskId>
+    <b4p:session>
+    </b4p:session>
+    <b4p:nextTaskURL>
+    </b4p:nextTaskURL>
+  </b4p:taskMetaData><b4p:taskOutput/>
+  
+  <b4p:status>
+  </b4p:status>
+</b4p:notifyTaskCompletionRequest>
+                </bpel:literal>
+              </bpel:from>
+              <bpel:to>$notifyTaskCompletionRequest.root</bpel:to>
+            </bpel:copy>
+          </bpel:assign>
+          <bpel:pick bpmn:label="Waiting for requests" bpmn:id="_ESlcoKhHEdyQFMjeTyvJzg">
+            <bpel:onMessage partnerLink="tMPAndUBPPlkVar" portType="b4p:UserBusinessProcessPortType" operation="escalateTask" variable="escalateTaskRequest" bpmn:label="Receive escalate Task Request" bpmn:id="_P5U2QKhHEdyQFMjeTyvJzg">
+              <bpel:correlations>
+                <bpel:correlation set="task" initiate="no"></bpel:correlation>
+              </bpel:correlations>
+              <bpel:sequence>
+                <bpel:assign name="init-variables-SubProcess">
+                  <bpel:copy bpmn:label="$tnsReassignRequestMsg">
+                    <bpel:from>
+                      <bpel:literal>
+<tns:reassignRequest>
+  <tns:taskId>
+  </tns:taskId>
+  <tns:userOwner>
+  </tns:userOwner>
+  <tns:roleOwner>
+  </tns:roleOwner>
+  <tns:taskState>
+  </tns:taskState>
+  <tns:participantToken>
+  </tns:participantToken>
+</tns:reassignRequest>
+                      </bpel:literal>
+                    </bpel:from>
+                    <bpel:to>$tnsReassignRequestMsg.reassignRequest</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy bpmn:label="$completeTMSTaskRequest">
+                    <bpel:from>
+                      <bpel:literal>
+<tns:setOutputAndCompleteRequest>
+  <tns:taskId>
+  </tns:taskId><tns:data/>
+  
+  <tns:participantToken>
+  </tns:participantToken>
+</tns:setOutputAndCompleteRequest>
+                      </bpel:literal>
+                    </bpel:from>
+                    <bpel:to>$completeTMSTaskRequest.setOutputAndCompleteRequest</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy bpmn:label="$completeTaskResponse">
+                    <bpel:from>
+                      <bpel:literal>
+<b4p:response>
+  <b4p:taskMetaData>
+    <b4p:taskId>
+    </b4p:taskId>
+    <b4p:taskState>
+    </b4p:taskState>
+    <b4p:taskType>
+    </b4p:taskType>
+    <b4p:description>
+    </b4p:description>
+    <b4p:processId>
+    </b4p:processId>
+    <b4p:creationDate>
+    </b4p:creationDate>
+    <b4p:userOwner>
+    </b4p:userOwner>
+    <b4p:roleOwner>
+    </b4p:roleOwner>
+    <b4p:formUrl>
+    </b4p:formUrl>
+    <b4p:failureCode>
+    </b4p:failureCode>
+    <b4p:failureReason>
+    </b4p:failureReason>
+    <b4p:userEndpoint>
+    </b4p:userEndpoint>
+    <b4p:userProcessEndpoint>
+    </b4p:userProcessEndpoint>
+    <b4p:userProcessNamespaceURI>
+    </b4p:userProcessNamespaceURI>
+    <b4p:userProcessCompleteSOAPAction>
+    </b4p:userProcessCompleteSOAPAction>
+    <b4p:isChainedBefore>
+    </b4p:isChainedBefore>
+    <b4p:previousTaskId>
+    </b4p:previousTaskId>
+    <b4p:nextTaskId>
+    </b4p:nextTaskId>
+    <b4p:session>
+    </b4p:session>
+    <b4p:nextTaskURL>
+    </b4p:nextTaskURL>
+  </b4p:taskMetaData>
+  <b4p:status>
+  </b4p:status>
+  <b4p:errorCode>
+  </b4p:errorCode>
+  <b4p:errorReason>
+  </b4p:errorReason>
+  <b4p:isChainedAfter>
+  </b4p:isChainedAfter>
+</b4p:response>
+                      </bpel:literal>
+                    </bpel:from>
+                    <bpel:to>$completeTaskResponse.root</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy bpmn:label="$claimTaskResponse">
+                    <bpel:from>
+                      <bpel:literal>
+<b4p:claimTaskResponse>
+  <b4p:status>
+  </b4p:status>
+</b4p:claimTaskResponse>
+                      </bpel:literal>
+                    </bpel:from>
+                    <bpel:to>$claimTaskResponse.root</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy bpmn:label="$revokeTaskResponse">
+                    <bpel:from>
+                      <bpel:literal>
+<b4p:revokeTaskResponse>
+  <b4p:status>
+  </b4p:status>
+</b4p:revokeTaskResponse>
+                      </bpel:literal>
+                    </bpel:from>
+                    <bpel:to>$revokeTaskResponse.root</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy bpmn:label="$escalateTaskResponse">
+                    <bpel:from>
+                      <bpel:literal>
+<b4p:escalateTaskResponse>
+  <b4p:status>
+  </b4p:status>
+</b4p:escalateTaskResponse>
+                      </bpel:literal>
+                    </bpel:from>
+                    <bpel:to>$escalateTaskResponse.root</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy bpmn:label="$notifyTaskCompletionRequest">
+                    <bpel:from>
+                      <bpel:literal>
+<b4p:notifyTaskCompletionRequest>
+  <b4p:taskMetaData>
+    <b4p:taskId>
+    </b4p:taskId>
+    <b4p:taskState>
+    </b4p:taskState>
+    <b4p:taskType>
+    </b4p:taskType>
+    <b4p:description>
+    </b4p:description>
+    <b4p:processId>
+    </b4p:processId>
+    <b4p:creationDate>
+    </b4p:creationDate>
+    <b4p:userOwner>
+    </b4p:userOwner>
+    <b4p:roleOwner>
+    </b4p:roleOwner>
+    <b4p:formUrl>
+    </b4p:formUrl>
+    <b4p:failureCode>
+    </b4p:failureCode>
+    <b4p:failureReason>
+    </b4p:failureReason>
+    <b4p:userEndpoint>
+    </b4p:userEndpoint>
+    <b4p:userProcessEndpoint>
+    </b4p:userProcessEndpoint>
+    <b4p:userProcessNamespaceURI>
+    </b4p:userProcessNamespaceURI>
+    <b4p:userProcessCompleteSOAPAction>
+    </b4p:userProcessCompleteSOAPAction>
+    <b4p:isChainedBefore>
+    </b4p:isChainedBefore>
+    <b4p:previousTaskId>
+    </b4p:previousTaskId>
+    <b4p:nextTaskId>
+    </b4p:nextTaskId>
+    <b4p:session>
+    </b4p:session>
+    <b4p:nextTaskURL>
+    </b4p:nextTaskURL>
+  </b4p:taskMetaData><b4p:taskOutput/>
+  
+  <b4p:status>
+  </b4p:status>
+</b4p:notifyTaskCompletionRequest>
+                      </bpel:literal>
+                    </bpel:from>
+                    <bpel:to>$notifyTaskCompletionRequest.root</bpel:to>
+                  </bpel:copy>
+                </bpel:assign>
+                <bpel:assign bpmn:label="Invoke TMS to reassign Task" bpmn:id="_p3IKIKhJEdyQFMjeTyvJzg">
+                  <bpel:copy>
+                    <bpel:from>"READY"</bpel:from>
+                    <bpel:to>$tnsReassignRequestMsg.reassignRequest/tns:taskState</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy>
+                    <bpel:from>$escalateTaskRequest.root/b4p:taskId</bpel:from>
+                    <bpel:to>$tnsReassignRequestMsg.reassignRequest/tns:taskId</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy>
+                    <bpel:from>$escalateTaskRequest.root/b4p:roleOwner</bpel:from>
+                    <bpel:to>$tnsReassignRequestMsg.reassignRequest/tns:roleOwner</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy>
+                    <bpel:from>$escalateTaskRequest.root/b4p:userOwner</bpel:from>
+                    <bpel:to>$tnsReassignRequestMsg.reassignRequest/tns:userOwner</bpel:to>
+                  </bpel:copy>
+                </bpel:assign>
+                <bpel:invoke partnerLink="taskManagementProcessAndTaskManagementSystemForPortTaskManagementServicesSOAPPlkVar" portType="tns:TaskManagementServices" operation="reassign" inputVariable="tnsReassignRequestMsg" outputVariable="tnsReassignResponseMsg" bpmn:label="Invoke TMS to reassign Task" bpmn:id="_p3IKIKhJEdyQFMjeTyvJzg"></bpel:invoke>
+                <bpel:assign bpmn:label="Send response back to UBP" bpmn:id="_NRL9EKhMEdyQFMjeTyvJzg">
+                  <bpel:copy>
+                    <bpel:from>false()</bpel:from>
+                    <bpel:to>$taskClaimed</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy>
+                    <bpel:from>"OK"</bpel:from>
+                    <bpel:to>$escalateTaskResponse.root/b4p:status</bpel:to>
+                  </bpel:copy>
+                </bpel:assign>
+                <bpel:reply partnerLink="tMPAndUBPPlkVar" portType="b4p:UserBusinessProcessPortType" operation="escalateTask" variable="escalateTaskResponse" bpmn:label="Send response back to UBP" bpmn:id="_NRL9EKhMEdyQFMjeTyvJzg"></bpel:reply>
+                <bpel:empty bpmn:label="Mark task as escalated" bpmn:id="_9BJAkKhMEdyQFMjeTyvJzg"/>
+              </bpel:sequence>
+            </bpel:onMessage>
+            <bpel:onMessage partnerLink="taskManagementProcessAndUIFWForUIFWPortPlkVar" portType="b4p:UIFWPortType" operation="completeTask" variable="completeTaskRequest" bpmn:label="Receive complete Task Request" bpmn:id="_QcFlEKhHEdyQFMjeTyvJzg">
+              <bpel:correlations>
+                <bpel:correlation set="task" initiate="no"></bpel:correlation>
+              </bpel:correlations>
+              <bpel:sequence>
+                <bpel:assign name="init-variables-SubProcess">
+                  <bpel:copy bpmn:label="$tnsReassignRequestMsg">
+                    <bpel:from>
+                      <bpel:literal>
+<tns:reassignRequest>
+  <tns:taskId>
+  </tns:taskId>
+  <tns:userOwner>
+  </tns:userOwner>
+  <tns:roleOwner>
+  </tns:roleOwner>
+  <tns:taskState>
+  </tns:taskState>
+  <tns:participantToken>
+  </tns:participantToken>
+</tns:reassignRequest>
+                      </bpel:literal>
+                    </bpel:from>
+                    <bpel:to>$tnsReassignRequestMsg.reassignRequest</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy bpmn:label="$completeTMSTaskRequest">
+                    <bpel:from>
+                      <bpel:literal>
+<tns:setOutputAndCompleteRequest>
+  <tns:taskId>
+  </tns:taskId><tns:data/>
+  
+  <tns:participantToken>
+  </tns:participantToken>
+</tns:setOutputAndCompleteRequest>
+                      </bpel:literal>
+                    </bpel:from>
+                    <bpel:to>$completeTMSTaskRequest.setOutputAndCompleteRequest</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy bpmn:label="$completeTaskResponse">
+                    <bpel:from>
+                      <bpel:literal>
+<b4p:response>
+  <b4p:taskMetaData>
+    <b4p:taskId>
+    </b4p:taskId>
+    <b4p:taskState>
+    </b4p:taskState>
+    <b4p:taskType>
+    </b4p:taskType>
+    <b4p:description>
+    </b4p:description>
+    <b4p:processId>
+    </b4p:processId>
+    <b4p:creationDate>
+    </b4p:creationDate>
+    <b4p:userOwner>
+    </b4p:userOwner>
+    <b4p:roleOwner>
+    </b4p:roleOwner>
+    <b4p:formUrl>
+    </b4p:formUrl>
+    <b4p:failureCode>
+    </b4p:failureCode>
+    <b4p:failureReason>
+    </b4p:failureReason>
+    <b4p:userEndpoint>
+    </b4p:userEndpoint>
+    <b4p:userProcessEndpoint>
+    </b4p:userProcessEndpoint>
+    <b4p:userProcessNamespaceURI>
+    </b4p:userProcessNamespaceURI>
+    <b4p:userProcessCompleteSOAPAction>
+    </b4p:userProcessCompleteSOAPAction>
+    <b4p:isChainedBefore>
+    </b4p:isChainedBefore>
+    <b4p:previousTaskId>
+    </b4p:previousTaskId>
+    <b4p:nextTaskId>
+    </b4p:nextTaskId>
+    <b4p:session>
+    </b4p:session>
+    <b4p:nextTaskURL>
+    </b4p:nextTaskURL>
+  </b4p:taskMetaData>
+  <b4p:status>
+  </b4p:status>
+  <b4p:errorCode>
+  </b4p:errorCode>
+  <b4p:errorReason>
+  </b4p:errorReason>
+  <b4p:isChainedAfter>
+  </b4p:isChainedAfter>
+</b4p:response>
+                      </bpel:literal>
+                    </bpel:from>
+                    <bpel:to>$completeTaskResponse.root</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy bpmn:label="$claimTaskResponse">
+                    <bpel:from>
+                      <bpel:literal>
+<b4p:claimTaskResponse>
+  <b4p:status>
+  </b4p:status>
+</b4p:claimTaskResponse>
+                      </bpel:literal>
+                    </bpel:from>
+                    <bpel:to>$claimTaskResponse.root</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy bpmn:label="$revokeTaskResponse">
+                    <bpel:from>
+                      <bpel:literal>
+<b4p:revokeTaskResponse>
+  <b4p:status>
+  </b4p:status>
+</b4p:revokeTaskResponse>
+                      </bpel:literal>
+                    </bpel:from>
+                    <bpel:to>$revokeTaskResponse.root</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy bpmn:label="$escalateTaskResponse">
+                    <bpel:from>
+                      <bpel:literal>
+<b4p:escalateTaskResponse>
+  <b4p:status>
+  </b4p:status>
+</b4p:escalateTaskResponse>
+                      </bpel:literal>
+                    </bpel:from>
+                    <bpel:to>$escalateTaskResponse.root</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy bpmn:label="$notifyTaskCompletionRequest">
+                    <bpel:from>
+                      <bpel:literal>
+<b4p:notifyTaskCompletionRequest>
+  <b4p:taskMetaData>
+    <b4p:taskId>
+    </b4p:taskId>
+    <b4p:taskState>
+    </b4p:taskState>
+    <b4p:taskType>
+    </b4p:taskType>
+    <b4p:description>
+    </b4p:description>
+    <b4p:processId>
+    </b4p:processId>
+    <b4p:creationDate>
+    </b4p:creationDate>
+    <b4p:userOwner>
+    </b4p:userOwner>
+    <b4p:roleOwner>
+    </b4p:roleOwner>
+    <b4p:formUrl>
+    </b4p:formUrl>
+    <b4p:failureCode>
+    </b4p:failureCode>
+    <b4p:failureReason>
+    </b4p:failureReason>
+    <b4p:userEndpoint>
+    </b4p:userEndpoint>
+    <b4p:userProcessEndpoint>
+    </b4p:userProcessEndpoint>
+    <b4p:userProcessNamespaceURI>
+    </b4p:userProcessNamespaceURI>
+    <b4p:userProcessCompleteSOAPAction>
+    </b4p:userProcessCompleteSOAPAction>
+    <b4p:isChainedBefore>
+    </b4p:isChainedBefore>
+    <b4p:previousTaskId>
+    </b4p:previousTaskId>
+    <b4p:nextTaskId>
+    </b4p:nextTaskId>
+    <b4p:session>
+    </b4p:session>
+    <b4p:nextTaskURL>
+    </b4p:nextTaskURL>
+  </b4p:taskMetaData><b4p:taskOutput/>
+  
+  <b4p:status>
+  </b4p:status>
+</b4p:notifyTaskCompletionRequest>
+                      </bpel:literal>
+                    </bpel:from>
+                    <bpel:to>$notifyTaskCompletionRequest.root</bpel:to>
+                  </bpel:copy>
+                </bpel:assign>
+                <bpel:assign bpmn:label="Invoke TMS to mark Task as completed" bpmn:id="_wSyCIKhNEdyQFMjeTyvJzg">
+                  <bpel:copy>
+                    <bpel:from>$createTaskResponse.root/b4p:taskMetaData/b4p:taskId</bpel:from>
+                    <bpel:to>$completeTMSTaskRequest.setOutputAndCompleteRequest/tns:taskId</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy>
+                    <bpel:from>$completeTaskRequest.root/b4p:taskOutput</bpel:from>
+                    <bpel:to>$completeTMSTaskRequest.setOutputAndCompleteRequest/tns:data</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy>
+                    <bpel:from>$completeTaskRequest.root/b4p:participantToken</bpel:from>
+                    <bpel:to>$completeTMSTaskRequest.setOutputAndCompleteRequest/tns:participantToken</bpel:to>
+                  </bpel:copy>
+                </bpel:assign>
+                <bpel:invoke partnerLink="taskManagementProcessAndTaskManagementSystemForPortTaskManagementServicesSOAPPlkVar" portType="tns:TaskManagementServices" operation="setOutputAndComplete" inputVariable="completeTMSTaskRequest" outputVariable="completeTMSTaskResponse" bpmn:label="Invoke TMS to mark Task as completed" bpmn:id="_wSyCIKhNEdyQFMjeTyvJzg"></bpel:invoke>
+                <bpel:assign bpmn:label="notify Task Completion Request" bpmn:id="_JP7KQKhQEdyQFMjeTyvJzg">
+                  <bpel:copy>
+                    <bpel:from>$createTaskResponse.root/b4p:taskMetaData/b4p:taskId</bpel:from>
+                    <bpel:to>$notifyTaskCompletionRequest.root/b4p:taskMetaData/b4p:taskId</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy>
+                    <bpel:from>$createTaskRequest.root/b4p:taskMetaData/b4p:processId</bpel:from>
+                    <bpel:to>$notifyTaskCompletionRequest.root/b4p:taskMetaData/b4p:processId</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy>
+                    <bpel:from>$completeTaskRequest.root/b4p:taskOutput</bpel:from>
+                    <bpel:to>$notifyTaskCompletionRequest.root/b4p:taskOutput</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy>
+                    <bpel:from>$createTaskRequest.root/b4p:taskMetaData/b4p:userProcessEndpoint</bpel:from>
+                    <bpel:to>$notifyTaskCompletionRequest.root/b4p:taskMetaData/b4p:userProcessEndpoint</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy>
+                    <bpel:from>$createTaskRequest.root/b4p:taskMetaData/b4p:userProcessNamespaceURI</bpel:from>
+                    <bpel:to>$notifyTaskCompletionRequest.root/b4p:taskMetaData/b4p:userProcessNamespaceURI</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy>
+                    <bpel:from>$createTaskRequest.root/b4p:taskMetaData/b4p:userProcessCompleteSOAPAction</bpel:from>
+                    <bpel:to>$notifyTaskCompletionRequest.root/b4p:taskMetaData/b4p:userProcessCompleteSOAPAction</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy>
+                    <bpel:from>$createTaskRequest.root/b4p:taskMetaData/b4p:session</bpel:from>
+                    <bpel:to>$notifyTaskCompletionRequest.root/b4p:taskMetaData/b4p:session</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy>
+                    <bpel:from>"OK"</bpel:from>
+                    <bpel:to>$notifyTaskCompletionRequest.root/b4p:status</bpel:to>
+                  </bpel:copy>
+                </bpel:assign>
+                <bpel:invoke partnerLink="tMPAndUBPPlkVar" portType="UserBusinessProcess1:userProcessPortType" operation="notifyTaskCompletion" inputVariable="notifyTaskCompletionRequest" outputVariable="notifyTaskCompletionResponse" bpmn:label="notify Task Completion Request" bpmn:id="_JP7KQKhQEdyQFMjeTyvJzg"></bpel:invoke>
+                <bpel:if>
+                  <bpel:condition>$notifyTaskCompletionResponse.root/b4p:isChainedAfter/text() = "true"</bpel:condition>
+                  <bpel:sequence>
+                    <bpel:receive partnerLink="taskManagementProcessAndNextTaskManagerForTMPPortPlkVar" portType="b4p:TMPPortType" operation="nextTaskReady" variable="nextTaskReady" bpmn:label="wait for next Task to be created" bpmn:id="_tth9iKhVEdyQFMjeTyvJzg"></bpel:receive>
+                    <bpel:assign bpmn:label="Prepare response to UIFW" bpmn:id="_R5Kh4KhZEdyXuZws7kaYiQ">
+                      <bpel:copy>
+                        <bpel:from>"OK"</bpel:from>
+                        <bpel:to>$completeTaskResponse.root/b4p:status</bpel:to>
+                      </bpel:copy>
+                      <bpel:copy>
+                        <bpel:from>$nextTaskReady.root/b4p:nextTaskId</bpel:from>
+                        <bpel:to>$completeTaskResponse.root/b4p:taskMetaData/b4p:nextTaskId</bpel:to>
+                      </bpel:copy>
+                      <bpel:copy>
+                        <bpel:from>$nextTaskReady.root/b4p:nextTaskURL</bpel:from>
+                        <bpel:to>$completeTaskResponse.root/b4p:taskMetaData/b4p:nextTaskURL</bpel:to>
+                      </bpel:copy>
+                    </bpel:assign>
+                  </bpel:sequence>
+                </bpel:if>
+                <bpel:reply partnerLink="taskManagementProcessAndUIFWForUIFWPortPlkVar" portType="b4p:UIFWPortType" operation="completeTask" variable="completeTaskResponse" bpmn:label="send  Complete Task response back to UI" bpmn:id="_yEJboKhZEdyXuZws7kaYiQ"></bpel:reply>
+                <bpel:assign bpmn:label="mark task as completed" bpmn:id="_Gri9cKhaEdyXuZws7kaYiQ">
+                  <bpel:copy>
+                    <bpel:from>true()</bpel:from>
+                    <bpel:to>$taskCompleted</bpel:to>
+                  </bpel:copy>
+                </bpel:assign>
+              </bpel:sequence>
+            </bpel:onMessage>
+            <bpel:onMessage partnerLink="taskManagementProcessAndUIFWForUIFWPortPlkVar" portType="b4p:UIFWPortType" operation="claimTask" variable="claimTaskRequest" bpmn:label="Receive Claim request" bpmn:id="_WYkDIKkOEdyRnIK1kDiFhA">
+              <bpel:correlations>
+                <bpel:correlation set="task" initiate="no"></bpel:correlation>
+              </bpel:correlations>
+              <bpel:sequence>
+                <bpel:assign name="init-variables-SubProcess">
+                  <bpel:copy bpmn:label="$tnsReassignRequestMsg">
+                    <bpel:from>
+                      <bpel:literal>
+<tns:reassignRequest>
+  <tns:taskId>
+  </tns:taskId>
+  <tns:userOwner>
+  </tns:userOwner>
+  <tns:roleOwner>
+  </tns:roleOwner>
+  <tns:taskState>
+  </tns:taskState>
+  <tns:participantToken>
+  </tns:participantToken>
+</tns:reassignRequest>
+                      </bpel:literal>
+                    </bpel:from>
+                    <bpel:to>$tnsReassignRequestMsg.reassignRequest</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy bpmn:label="$completeTMSTaskRequest">
+                    <bpel:from>
+                      <bpel:literal>
+<tns:setOutputAndCompleteRequest>
+  <tns:taskId>
+  </tns:taskId><tns:data/>
+  
+  <tns:participantToken>
+  </tns:participantToken>
+</tns:setOutputAndCompleteRequest>
+                      </bpel:literal>
+                    </bpel:from>
+                    <bpel:to>$completeTMSTaskRequest.setOutputAndCompleteRequest</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy bpmn:label="$completeTaskResponse">
+                    <bpel:from>
+                      <bpel:literal>
+<b4p:response>
+  <b4p:taskMetaData>
+    <b4p:taskId>
+    </b4p:taskId>
+    <b4p:taskState>
+    </b4p:taskState>
+    <b4p:taskType>
+    </b4p:taskType>
+    <b4p:description>
+    </b4p:description>
+    <b4p:processId>
+    </b4p:processId>
+    <b4p:creationDate>
+    </b4p:creationDate>
+    <b4p:userOwner>
+    </b4p:userOwner>
+    <b4p:roleOwner>
+    </b4p:roleOwner>
+    <b4p:formUrl>
+    </b4p:formUrl>
+    <b4p:failureCode>
+    </b4p:failureCode>
+    <b4p:failureReason>
+    </b4p:failureReason>
+    <b4p:userEndpoint>
+    </b4p:userEndpoint>
+    <b4p:userProcessEndpoint>
+    </b4p:userProcessEndpoint>
+    <b4p:userProcessNamespaceURI>
+    </b4p:userProcessNamespaceURI>
+    <b4p:userProcessCompleteSOAPAction>
+    </b4p:userProcessCompleteSOAPAction>
+    <b4p:isChainedBefore>
+    </b4p:isChainedBefore>
+    <b4p:previousTaskId>
+    </b4p:previousTaskId>
+    <b4p:nextTaskId>
+    </b4p:nextTaskId>
+    <b4p:session>
+    </b4p:session>
+    <b4p:nextTaskURL>
+    </b4p:nextTaskURL>
+  </b4p:taskMetaData>
+  <b4p:status>
+  </b4p:status>
+  <b4p:errorCode>
+  </b4p:errorCode>
+  <b4p:errorReason>
+  </b4p:errorReason>
+  <b4p:isChainedAfter>
+  </b4p:isChainedAfter>
+</b4p:response>
+                      </bpel:literal>
+                    </bpel:from>
+                    <bpel:to>$completeTaskResponse.root</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy bpmn:label="$claimTaskResponse">
+                    <bpel:from>
+                      <bpel:literal>
+<b4p:claimTaskResponse>
+  <b4p:status>
+  </b4p:status>
+</b4p:claimTaskResponse>
+                      </bpel:literal>
+                    </bpel:from>
+                    <bpel:to>$claimTaskResponse.root</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy bpmn:label="$revokeTaskResponse">
+                    <bpel:from>
+                      <bpel:literal>
+<b4p:revokeTaskResponse>
+  <b4p:status>
+  </b4p:status>
+</b4p:revokeTaskResponse>
+                      </bpel:literal>
+                    </bpel:from>
+                    <bpel:to>$revokeTaskResponse.root</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy bpmn:label="$escalateTaskResponse">
+                    <bpel:from>
+                      <bpel:literal>
+<b4p:escalateTaskResponse>
+  <b4p:status>
+  </b4p:status>
+</b4p:escalateTaskResponse>
+                      </bpel:literal>
+                    </bpel:from>
+                    <bpel:to>$escalateTaskResponse.root</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy bpmn:label="$notifyTaskCompletionRequest">
+                    <bpel:from>
+                      <bpel:literal>
+<b4p:notifyTaskCompletionRequest>
+  <b4p:taskMetaData>
+    <b4p:taskId>
+    </b4p:taskId>
+    <b4p:taskState>
+    </b4p:taskState>
+    <b4p:taskType>
+    </b4p:taskType>
+    <b4p:description>
+    </b4p:description>
+    <b4p:processId>
+    </b4p:processId>
+    <b4p:creationDate>
+    </b4p:creationDate>
+    <b4p:userOwner>
+    </b4p:userOwner>
+    <b4p:roleOwner>
+    </b4p:roleOwner>
+    <b4p:formUrl>
+    </b4p:formUrl>
+    <b4p:failureCode>
+    </b4p:failureCode>
+    <b4p:failureReason>
+    </b4p:failureReason>
+    <b4p:userEndpoint>
+    </b4p:userEndpoint>
+    <b4p:userProcessEndpoint>
+    </b4p:userProcessEndpoint>
+    <b4p:userProcessNamespaceURI>
+    </b4p:userProcessNamespaceURI>
+    <b4p:userProcessCompleteSOAPAction>
+    </b4p:userProcessCompleteSOAPAction>
+    <b4p:isChainedBefore>
+    </b4p:isChainedBefore>
+    <b4p:previousTaskId>
+    </b4p:previousTaskId>
+    <b4p:nextTaskId>
+    </b4p:nextTaskId>
+    <b4p:session>
+    </b4p:session>
+    <b4p:nextTaskURL>
+    </b4p:nextTaskURL>
+  </b4p:taskMetaData><b4p:taskOutput/>
+  
+  <b4p:status>
+  </b4p:status>
+</b4p:notifyTaskCompletionRequest>
+                      </bpel:literal>
+                    </bpel:from>
+                    <bpel:to>$notifyTaskCompletionRequest.root</bpel:to>
+                  </bpel:copy>
+                </bpel:assign>
+                <bpel:if>
+                  <bpel:condition>true() = $taskClaimed</bpel:condition>
+                  <bpel:sequence>
+                    <bpel:throw faultName="this:EventEndError"/>
+                  </bpel:sequence>
+                  <bpel:else>
+                    <bpel:sequence>
+                      <bpel:if>
+                        <bpel:condition>$taskEscalated</bpel:condition>
+                        <bpel:sequence>
+                          <bpel:assign bpmn:label="save previous owners from escalation request " bpmn:id="_wb66gKkSEdyRnIK1kDiFhA">
+                            <bpel:copy>
+                              <bpel:from>$escalateTaskRequest.root/b4p:userOwner</bpel:from>
+                              <bpel:to>$initialOwners/b4p:userOwner</bpel:to>
+                            </bpel:copy>
+                            <bpel:copy>
+                              <bpel:from>$escalateTaskRequest.root/b4p:roleOwner</bpel:from>
+                              <bpel:to>$initialOwners/b4p:roleOwner</bpel:to>
+                            </bpel:copy>
+                          </bpel:assign>
+                        </bpel:sequence>
+                        <bpel:elseif>
+                          <bpel:condition>not($taskEscalated)</bpel:condition>
+                          <bpel:sequence>
+                            <bpel:assign bpmn:label="save previous owners from creation request" bpmn:id="_ChVnwKkTEdyRnIK1kDiFhA">
+                              <bpel:copy>
+                                <bpel:from>$createTaskRequest.root/b4p:taskMetaData/b4p:userOwner</bpel:from>
+                                <bpel:to>$initialOwners/b4p:userOwner</bpel:to>
+                              </bpel:copy>
+                              <bpel:copy>
+                                <bpel:from>$createTaskRequest.root/b4p:taskMetaData/b4p:roleOwner</bpel:from>
+                                <bpel:to>$initialOwners/b4p:roleOwner</bpel:to>
+                              </bpel:copy>
+                            </bpel:assign>
+                          </bpel:sequence>
+                        </bpel:elseif>
+                      </bpel:if>
+                      <bpel:assign bpmn:label="Invoke TMS to reassign claimed Task" bpmn:id="_D1muMKkiEdyFPr8ebhWveQ">
+                        <bpel:copy>
+                          <bpel:from>$claimTaskRequest.root/b4p:participantToken</bpel:from>
+                          <bpel:to>$tnsReassignRequestMsg.reassignRequest/tns:participantToken</bpel:to>
+                        </bpel:copy>
+                        <bpel:copy>
+                          <bpel:from>$claimTaskRequest.root/b4p:claimerUser</bpel:from>
+                          <bpel:to>$tnsReassignRequestMsg.reassignRequest/tns:userOwner</bpel:to>
+                        </bpel:copy>
+                        <bpel:copy>
+                          <bpel:from>$claimTaskRequest.root/b4p:taskId</bpel:from>
+                          <bpel:to>$tnsReassignRequestMsg.reassignRequest/tns:taskId</bpel:to>
+                        </bpel:copy>
+                        <bpel:copy>
+                          <bpel:from>"CLAIMED"</bpel:from>
+                          <bpel:to>$tnsReassignRequestMsg.reassignRequest/tns:taskState</bpel:to>
+                        </bpel:copy>
+                      </bpel:assign>
+                      <bpel:invoke partnerLink="taskManagementProcessAndTaskManagementSystemForPortTaskManagementServicesSOAPPlkVar" portType="tns:TaskManagementServices" operation="reassign" inputVariable="tnsReassignRequestMsg" outputVariable="tnsReassignResponseMsg" bpmn:label="Invoke TMS to reassign claimed Task" bpmn:id="_D1muMKkiEdyFPr8ebhWveQ"></bpel:invoke>
+                      <bpel:assign bpmn:label="send claim Task response to UIFW" bpmn:id="_Vv8-cKkjEdyFPr8ebhWveQ">
+                        <bpel:copy>
+                          <bpel:from>true()</bpel:from>
+                          <bpel:to>$taskClaimed</bpel:to>
+                        </bpel:copy>
+                      </bpel:assign>
+                      <bpel:reply partnerLink="taskManagementProcessAndUIFWForUIFWPortPlkVar" portType="b4p:UIFWPortType" operation="claimTask" variable="claimTaskResponse" bpmn:label="send claim Task response to UIFW" bpmn:id="_Vv8-cKkjEdyFPr8ebhWveQ"></bpel:reply>
+                      <bpel:empty bpmn:label="mark task as claimed" bpmn:id="_qcCL8KkjEdyFPr8ebhWveQ"/>
+                    </bpel:sequence>
+                  </bpel:else>
+                </bpel:if>
+              </bpel:sequence>
+            </bpel:onMessage>
+            <bpel:onMessage partnerLink="taskManagementProcessAndUIFWForUIFWPortPlkVar" portType="b4p:UIFWPortType" operation="revokeTask" variable="revokeTaskRequest" bpmn:label="Receive Revoke Request" bpmn:id="_7pZP0KkjEdyFPr8ebhWveQ">
+              <bpel:correlations>
+                <bpel:correlation set="task" initiate="no"></bpel:correlation>
+              </bpel:correlations>
+              <bpel:sequence>
+                <bpel:assign name="init-variables-SubProcess">
+                  <bpel:copy bpmn:label="$tnsReassignRequestMsg">
+                    <bpel:from>
+                      <bpel:literal>
+<tns:reassignRequest>
+  <tns:taskId>
+  </tns:taskId>
+  <tns:userOwner>
+  </tns:userOwner>
+  <tns:roleOwner>
+  </tns:roleOwner>
+  <tns:taskState>
+  </tns:taskState>
+  <tns:participantToken>
+  </tns:participantToken>
+</tns:reassignRequest>
+                      </bpel:literal>
+                    </bpel:from>
+                    <bpel:to>$tnsReassignRequestMsg.reassignRequest</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy bpmn:label="$completeTMSTaskRequest">
+                    <bpel:from>
+                      <bpel:literal>
+<tns:setOutputAndCompleteRequest>
+  <tns:taskId>
+  </tns:taskId><tns:data/>
+  
+  <tns:participantToken>
+  </tns:participantToken>
+</tns:setOutputAndCompleteRequest>
+                      </bpel:literal>
+                    </bpel:from>
+                    <bpel:to>$completeTMSTaskRequest.setOutputAndCompleteRequest</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy bpmn:label="$completeTaskResponse">
+                    <bpel:from>
+                      <bpel:literal>
+<b4p:response>
+  <b4p:taskMetaData>
+    <b4p:taskId>
+    </b4p:taskId>
+    <b4p:taskState>
+    </b4p:taskState>
+    <b4p:taskType>
+    </b4p:taskType>
+    <b4p:description>
+    </b4p:description>
+    <b4p:processId>
+    </b4p:processId>
+    <b4p:creationDate>
+    </b4p:creationDate>
+    <b4p:userOwner>
+    </b4p:userOwner>
+    <b4p:roleOwner>
+    </b4p:roleOwner>
+    <b4p:formUrl>
+    </b4p:formUrl>
+    <b4p:failureCode>
+    </b4p:failureCode>
+    <b4p:failureReason>
+    </b4p:failureReason>
+    <b4p:userEndpoint>
+    </b4p:userEndpoint>
+    <b4p:userProcessEndpoint>
+    </b4p:userProcessEndpoint>
+    <b4p:userProcessNamespaceURI>
+    </b4p:userProcessNamespaceURI>
+    <b4p:userProcessCompleteSOAPAction>
+    </b4p:userProcessCompleteSOAPAction>
+    <b4p:isChainedBefore>
+    </b4p:isChainedBefore>
+    <b4p:previousTaskId>
+    </b4p:previousTaskId>
+    <b4p:nextTaskId>
+    </b4p:nextTaskId>
+    <b4p:session>
+    </b4p:session>
+    <b4p:nextTaskURL>
+    </b4p:nextTaskURL>
+  </b4p:taskMetaData>
+  <b4p:status>
+  </b4p:status>
+  <b4p:errorCode>
+  </b4p:errorCode>
+  <b4p:errorReason>
+  </b4p:errorReason>
+  <b4p:isChainedAfter>
+  </b4p:isChainedAfter>
+</b4p:response>
+                      </bpel:literal>
+                    </bpel:from>
+                    <bpel:to>$completeTaskResponse.root</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy bpmn:label="$claimTaskResponse">
+                    <bpel:from>
+                      <bpel:literal>
+<b4p:claimTaskResponse>
+  <b4p:status>
+  </b4p:status>
+</b4p:claimTaskResponse>
+                      </bpel:literal>
+                    </bpel:from>
+                    <bpel:to>$claimTaskResponse.root</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy bpmn:label="$revokeTaskResponse">
+                    <bpel:from>
+                      <bpel:literal>
+<b4p:revokeTaskResponse>
+  <b4p:status>
+  </b4p:status>
+</b4p:revokeTaskResponse>
+                      </bpel:literal>
+                    </bpel:from>
+                    <bpel:to>$revokeTaskResponse.root</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy bpmn:label="$escalateTaskResponse">
+                    <bpel:from>
+                      <bpel:literal>
+<b4p:escalateTaskResponse>
+  <b4p:status>
+  </b4p:status>
+</b4p:escalateTaskResponse>
+                      </bpel:literal>
+                    </bpel:from>
+                    <bpel:to>$escalateTaskResponse.root</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy bpmn:label="$notifyTaskCompletionRequest">
+                    <bpel:from>
+                      <bpel:literal>
+<b4p:notifyTaskCompletionRequest>
+  <b4p:taskMetaData>
+    <b4p:taskId>
+    </b4p:taskId>
+    <b4p:taskState>
+    </b4p:taskState>
+    <b4p:taskType>
+    </b4p:taskType>
+    <b4p:description>
+    </b4p:description>
+    <b4p:processId>
+    </b4p:processId>
+    <b4p:creationDate>
+    </b4p:creationDate>
+    <b4p:userOwner>
+    </b4p:userOwner>
+    <b4p:roleOwner>
+    </b4p:roleOwner>
+    <b4p:formUrl>
+    </b4p:formUrl>
+    <b4p:failureCode>
+    </b4p:failureCode>
+    <b4p:failureReason>
+    </b4p:failureReason>
+    <b4p:userEndpoint>
+    </b4p:userEndpoint>
+    <b4p:userProcessEndpoint>
+    </b4p:userProcessEndpoint>
+    <b4p:userProcessNamespaceURI>
+    </b4p:userProcessNamespaceURI>
+    <b4p:userProcessCompleteSOAPAction>
+    </b4p:userProcessCompleteSOAPAction>
+    <b4p:isChainedBefore>
+    </b4p:isChainedBefore>
+    <b4p:previousTaskId>
+    </b4p:previousTaskId>
+    <b4p:nextTaskId>
+    </b4p:nextTaskId>
+    <b4p:session>
+    </b4p:session>
+    <b4p:nextTaskURL>
+    </b4p:nextTaskURL>
+  </b4p:taskMetaData><b4p:taskOutput/>
+  
+  <b4p:status>
+  </b4p:status>
+</b4p:notifyTaskCompletionRequest>
+                      </bpel:literal>
+                    </bpel:from>
+                    <bpel:to>$notifyTaskCompletionRequest.root</bpel:to>
+                  </bpel:copy>
+                </bpel:assign>
+                <bpel:if>
+                  <bpel:condition>$taskClaimed</bpel:condition>
+                  <bpel:sequence>
+                    <bpel:assign bpmn:label="reassign revoked task" bpmn:id="_TtOm0KklEdyFPr8ebhWveQ">
+                      <bpel:copy>
+                        <bpel:from>"READY"</bpel:from>
+                        <bpel:to>$tnsReassignRequestMsg.reassignRequest/tns:taskState</bpel:to>
+                      </bpel:copy>
+                      <bpel:copy>
+                        <bpel:from>$initialOwners/b4p:roleOwner</bpel:from>
+                        <bpel:to>$tnsReassignRequestMsg.reassignRequest/tns:roleOwner</bpel:to>
+                      </bpel:copy>
+                      <bpel:copy>
+                        <bpel:from>$initialOwners/b4p:userOwner</bpel:from>
+                        <bpel:to>$tnsReassignRequestMsg.reassignRequest/tns:userOwner</bpel:to>
+                      </bpel:copy>
+                      <bpel:copy>
+                        <bpel:from>$revokeTaskRequest.root/b4p:taskId</bpel:from>
+                        <bpel:to>$tnsReassignRequestMsg.reassignRequest/tns:taskId</bpel:to>
+                      </bpel:copy>
+                      <bpel:copy>
+                        <bpel:from>$revokeTaskRequest.root/b4p:participantToken</bpel:from>
+                        <bpel:to>$tnsReassignRequestMsg.reassignRequest/tns:participantToken</bpel:to>
+                      </bpel:copy>
+                    </bpel:assign>
+                    <bpel:invoke partnerLink="taskManagementProcessAndTaskManagementSystemForPortTaskManagementServicesSOAPPlkVar" portType="tns:TaskManagementServices" operation="reassign" inputVariable="tnsReassignRequestMsg" outputVariable="tnsReassignResponseMsg" bpmn:label="reassign revoked task" bpmn:id="_TtOm0KklEdyFPr8ebhWveQ"></bpel:invoke>
+                    <bpel:reply partnerLink="taskManagementProcessAndUIFWForUIFWPortPlkVar" portType="b4p:UIFWPortType" operation="revokeTask" variable="revokeTaskResponse" bpmn:label="send revoke Task response to UIFW" bpmn:id="_FpfJ0KkmEdyFPr8ebhWveQ"></bpel:reply>
+                    <bpel:assign bpmn:label="mark task as not claimed" bpmn:id="_KlyrwKkmEdyFPr8ebhWveQ">
+                      <bpel:copy>
+                        <bpel:from>false()</bpel:from>
+                        <bpel:to>$taskClaimed</bpel:to>
+                      </bpel:copy>
+                    </bpel:assign>
+                  </bpel:sequence>
+                  <bpel:else>
+                    <bpel:sequence>
+                      <bpel:throw faultName="this:EventEndError"/>
+                    </bpel:sequence>
+                  </bpel:else>
+                </bpel:if>
+              </bpel:sequence>
+            </bpel:onMessage>
+          </bpel:pick>
+        </bpel:sequence>
+      </bpel:while>
+    </bpel:scope>
+  </bpel:sequence>
+</bpel:process>
