@@ -6,8 +6,8 @@ require "buildr/cobertura"
 
 
 # Keep this structure to allow the build system to update version numbers.
-VERSION_NUMBER = "5.1.0.3-SNAPSHOT"
-NEXT_VERSION = "5.1.0.4"
+VERSION_NUMBER = "5.1.0.6-SNAPSHOT"
+NEXT_VERSION = "5.1.0.7"
 
 require "dependencies.rb"
 require "repositories.rb"
@@ -31,7 +31,7 @@ define "tempo" do
   
   desc "Form Dispatcher Servlet"
   define "fds" do
-    libs = [AXIS2, COMMONS, SLF4J, LOG4J, SERVLET_API, STAX_API, DOM4J, JAXEN, COMMONS]
+    libs = [AXIS2, COMMONS, DOM4J, JAXEN, LOG4J, SERVLET_API, SLF4J, STAX_API]
     compile.with libs 
     resources.filter.using "version" => VERSION_NUMBER
     test.with libs, XMLUNIT
@@ -68,7 +68,7 @@ define "tempo" do
 
   desc "Security Framework"
   define "security" do
-    compile.with COMMONS, CASTOR, LOG4J, SLF4J, SPRING, XERCES
+    compile.with CASTOR, COMMONS, LOG4J, SLF4J, SPRING, XERCES
 
     test.exclude "*BaseSuite"
     test.exclude "*FuncTestSuite"
@@ -79,16 +79,14 @@ define "tempo" do
   
   desc "Security Web-Service Common Library"
   define "security-ws-common" do
-    compile.with project("security"), 
-                 AXIOM, AXIS2, SLF4J, STAX_API, SPRING
+    compile.with project("security"), AXIOM, AXIS2, SLF4J, SPRING, STAX_API 
     package(:jar)
   end
   
   desc "Security Web-Service Client"
   define "security-ws-client" do
-    compile.with projects("security", "security-ws-common"), 
-                 AXIOM, AXIS2, SLF4J, STAX_API, SPRING
-    test.with project("security-ws-common"), COMMONS, CASTOR, LOG4J, XERCES, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX, SUNMAIL
+    compile.with projects("security", "security-ws-common"),AXIOM, AXIS2, SLF4J, SPRING, STAX_API 
+    test.with project("security-ws-common"), CASTOR, COMMONS, LOG4J, SUNMAIL, WOODSTOX, WSDL4J, WS_COMMONS_SCHEMA, XERCES
 
     # Remember to set JAVA_OPTIONS before starting Jetty
     # export JAVA_OPTIONS=-Dorg.intalio.tempo.configDirectory=/home/boisvert/svn/tempo/security-ws2/src/test/resources
@@ -120,9 +118,9 @@ define "tempo" do
   desc "Task Attachment Service Common"
   define "tas-common" do
     compile.with projects("security", "security-ws-client"), 
-                 AXIOM, AXIS2, COMMONS, JUNIT, SLF4J, LOG4J, STAX_API, JAXEN
+                 AXIOM, AXIS2, COMMONS, JAXEN, SLF4J, STAX_API
 
-    test.with SUNMAIL, SLF4J, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX
+    test.with JUNIT, LOG4J, SUNMAIL, WOODSTOX, WSDL4J, WS_COMMONS_SCHEMA
     test.exclude '*TestUtils*'
 
     # require live Axis2 instance
@@ -137,7 +135,7 @@ define "tempo" do
   desc "Task Attachment Service"
   define "tas-service" do
     package(:aar).with(:libs => [ 
-        projects("security", "security-ws-client", "security-ws-common", "tas-common", "web-nutsNbolts"), JAXEN, SPRING, AXIS2, SLF4J, LOG4J])
+        projects("security", "security-ws-client", "security-ws-common", "tas-common", "web-nutsNbolts"), AXIS2, JAXEN, LOG4J, SLF4J, SPRING])
   end
 
   desc "Xml Beans generation"
@@ -148,18 +146,20 @@ define "tempo" do
   
   desc "Task Management Services Common Library"
   define "tms-common" do
-    compile.with projects("security", "security-ws-client", "tms-axis"),AXIOM, SLF4J, SPRING, STAX_API, APACHE_JPA, XERCES, LOG4J, XMLBEANS, DOM4J, JAXEN
+    compile.with projects("security", "security-ws-client", "tms-axis"),
+      APACHE_JPA, AXIOM, DOM4J, JAXEN, SLF4J, SPRING, STAX_API, XERCES, XMLBEANS
     compile { open_jpa_enhance }    
     package(:jar)
-    test.with project("tms-axis"), SLF4J, WOODSTOX, APACHE_JPA, SLF4J, LOG4J, APACHE_JPA, XERCES, DOM4J, XMLBEANS
+    test.with project("tms-axis"), WOODSTOX, LOG4J
     test.exclude '*TestUtils*'
   end
   
   desc "Task Management Service Client"
   define "tms-client" do
-    compile.with projects("tms-axis", "tms-common"), AXIOM, AXIS2, COMMONS, LOG4J, SLF4J, STAX_API, WS_COMMONS_SCHEMA, WSDL4J, APACHE_JPA, XMLBEANS
+    compile.with projects("tms-axis", "tms-common"), 
+      APACHE_JPA, AXIOM, AXIS2, COMMONS, SLF4J, STAX_API, WSDL4J, WS_COMMONS_SCHEMA, XMLBEANS
 
-    test.with projects("tms-axis", "tms-common"), SLF4J, WOODSTOX, XMLBEANS, SUNMAIL
+    test.with projects("tms-axis", "tms-common"), LOG4J, WOODSTOX, SUNMAIL
     test.exclude '*TestUtils*'
 
     unless ENV["LIVE"] == 'yes'
@@ -171,9 +171,9 @@ define "tempo" do
   desc "Task Management Service"
   define "tms-service" do
     compile.with projects("security", "security-ws-client", "tms-common", "tms-axis", "tms-client", "web-nutsNbolts"),
-                 AXIOM, AXIS2, COMMONS, SLF4J, LOG4J, SPRING, STAX_API, APACHE_JPA, XMLBEANS, JAXEN
+                 APACHE_JPA, AXIOM, AXIS2, COMMONS, JAXEN, SLF4J, SPRING, STAX_API, XMLBEANS
 
-    test.with projects("tms-common", "tms-axis"), SUNMAIL, SLF4J, SPRING, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX, CASTOR, XERCES, JAXEN
+    test.with projects("tms-common", "tms-axis"), CASTOR, LOG4J, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES
 
     test.using :properties => 
       { "org.intalio.tempo.configDirectory" => _("src/test/resources") }
@@ -188,16 +188,34 @@ define "tempo" do
 
     
     package(:aar).with :libs => 
-        [ projects("security", "security-ws-client", "tms-axis", "security-ws-common", "tms-common", "web-nutsNbolts"), LOG4J, SLF4J, SPRING, APACHE_JPA ] 
+        [ projects("security", "security-ws-client", "tms-axis", "security-ws-common", "tms-common", "web-nutsNbolts"), APACHE_JPA, LOG4J, SLF4J, SPRING,  ] 
   end
   
   desc "User-Interface Framework"
   define "ui-fw" do
     libs = projects("security", "security-ws-client", "security-ws-common",
                     "tms-axis", "tms-client", "tms-common", "web-nutsNbolts"),
-           AXIOM, AXIS2, COMMONS, DOM4J, INTALIO_STATS, JSP_API, JSTL,
-           LOG4J, SPRING, SERVLET_API, SLF4J, STAX_API, TAGLIBS, WOODSTOX, 
-           WS_COMMONS_SCHEMA, WSDL4J, XERCES, XMLBEANS, APACHE_JPA, JSON, PLUTO
+           APACHE_JPA, 
+           AXIOM, 
+           AXIS2, 
+           COMMONS, 
+           DOM4J, 
+           INTALIO_STATS, 
+           JSON,
+           JSP_API, 
+           JSTL,
+           LOG4J, 
+           PLUTO,
+           SERVLET_API, 
+           SPRING, 
+           SLF4J, 
+           STAX_API, 
+           TAGLIBS, 
+           WOODSTOX, 
+           WSDL4J, 
+           WS_COMMONS_SCHEMA, 
+           XERCES, 
+           XMLBEANS
     compile.with libs
 
     dojo = unzip(path_to(compile.target, "dojo") => download(artifact(DOJO)=>DOJO_URL))
@@ -221,7 +239,7 @@ define "tempo" do
 
   desc "Workflow Deployment Service"
   define "wds-service" do
-    libs = [ project("web-nutsNbolts"), COMMONS, LOG4J, SERVLET_API, SPRING, XERCES, APACHE_JPA, SLF4J ]
+    libs = [ project("web-nutsNbolts"), APACHE_JPA, COMMONS, LOG4J, SERVLET_API, SLF4J, SPRING, XERCES ]
     compile.with libs
     compile { open_jpa_enhance }    
     resources.filter.using "version" => VERSION_NUMBER
@@ -229,7 +247,7 @@ define "tempo" do
   end
 
   define "web-nutsNbolts" do
-    compile.with project("security"), COMMONS, INTALIO_STATS, JSP_API, LOG4J, SERVLET_API, SLF4J, SPRING, AXIS2
+    compile.with project("security"), AXIS2, COMMONS, INTALIO_STATS, JSP_API, LOG4J, SERVLET_API, SLF4J, SPRING
     package :jar
   end
   

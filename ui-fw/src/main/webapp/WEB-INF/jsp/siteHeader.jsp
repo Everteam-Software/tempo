@@ -9,6 +9,8 @@
  Contributors:
  Intalio inc. - initial API and implementation
 --%>
+	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+	
 	<table style="height: 40px;" border="0" cellpadding="0" cellspacing="0" width="100%">
 	<tbody><tr>
 	  <td width="10"><img src="images/spacer.gif" alt="" height="23" width="10"></td>

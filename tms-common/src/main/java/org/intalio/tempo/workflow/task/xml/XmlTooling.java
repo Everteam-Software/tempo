@@ -6,7 +6,6 @@ import java.io.StringWriter;
 import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -37,7 +36,7 @@ public class XmlTooling {
             try {
                 return parseXml(new ByteArrayInputStream(xml.getBytes("UTF-8")));
             } catch (Exception e) {
-                return null;
+                throw new RuntimeException(e);
             }
         }
     }
@@ -55,13 +54,16 @@ public class XmlTooling {
             if (borrowObject != null)
                 try {
                     builderPool.returnObject(borrowObject);
-                } catch (Exception e) {
+                } catch (Exception e) {        
+                    // if the object cannot be returned to the pool, 
+                    // then we have no more references on it and it should be 
+                    // garbage collected.
                 }
         }
     }
 
     public String serializeXML(Document xml) {
-        
+
         if (xml != null) {
             Source source = new DOMSource(xml);
             StringWriter writer = new StringWriter();
@@ -76,6 +78,7 @@ public class XmlTooling {
                 try {
                     transformerPool.returnObject(transformer);
                 } catch (Exception e) {
+                    // no more references on the used transformer.
                 }
             }
             return writer.toString();
@@ -88,23 +91,23 @@ public class XmlTooling {
             return xml.serializeXML(doc);
         }
     }
-    
+
     public static Document deserializeDocument(String doc) {
         synchronized (xml) {
             return xml.parseXML(doc);
         }
     }
-    
+
     public static boolean equals(Document doc1, Document doc2) {
         return serializeDocument(doc1).equals(serializeDocument(doc2));
     }
 
-    public static OMElement convertDocument(XmlObject doc){
-    	synchronized (xml){
-    		return xml.convertXML(doc);
-    	}
+    public static OMElement convertDocument(XmlObject doc) {
+        synchronized (xml) {
+            return xml.convertXML(doc);
+        }
     }
-    
+
     private OMElement convertXML(XmlObject xmlObject){
 		HashMap suggestedPrefixes = new HashMap();
 		suggestedPrefixes
@@ -117,9 +120,10 @@ public class XmlTooling {
 		try {
 			builder = new StAXOMBuilder(is);
 			dm= builder.getDocumentElement();
-		} catch (XMLStreamException e) {
+		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
         return dm;
     }
+
 }

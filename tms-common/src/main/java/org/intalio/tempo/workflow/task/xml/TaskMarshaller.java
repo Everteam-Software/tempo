@@ -155,8 +155,9 @@ public class TaskMarshaller extends XmlBeanMarshaller {
         try {
             XmlObject xmlTaskInput = XmlObject.Factory.parse(task.getInput());
             parent.set(xmlTaskInput);
-        } catch (XmlException e) {
-            _log.error("Error while marshalling input", e);
+        } catch (Exception e) {
+            // if we can't marshal the input, the task is loosing some data.
+            throw new RuntimeException(e);
         }
     }
 
@@ -169,8 +170,10 @@ public class TaskMarshaller extends XmlBeanMarshaller {
         try {
             XmlObject xmlTaskOutput = XmlObject.Factory.parse(output);
             parent.set(xmlTaskOutput);
+
         } catch (XmlException e) {
-            _log.error("Error while marshalling output", e);
+            // if we can't marshal the input, the task is loosing some data.
+            throw new RuntimeException(e);
         }
     }
 
@@ -191,7 +194,8 @@ public class TaskMarshaller extends XmlBeanMarshaller {
         try {
             parent.addChild(marshalFullTask(task, user));
         } catch (Exception e) {
-            _log.error("Error while marshalling fulltask", e);
+            // if we can't marshal the task, better fail fast.
+            throw new RuntimeException(e);
         }
     }
 

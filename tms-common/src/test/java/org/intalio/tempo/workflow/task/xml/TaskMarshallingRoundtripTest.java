@@ -56,7 +56,7 @@ public class TaskMarshallingRoundtripTest extends TestCase {
     
     public void testPAWithInput() throws Exception {
 
-        String resource = "/InputWithNamespace.xml";
+        String resource = "/inputWithNamespace.xml";
         InputStream requestInputStream = TaskMarshallingRoundtripTest.class.getResourceAsStream(resource);
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
@@ -64,7 +64,6 @@ public class TaskMarshallingRoundtripTest extends TestCase {
         Document doc = builder.parse(requestInputStream);
         
         PATask task = new PATask("taskID", new URI("http://localhost/URL"), "processID", "urn:completeSOAPAction", doc);
-        task.setInput(doc);
         PATask task2 = (PATask)testRoundTrip(task);
         
         Assert.assertEquals(doc.getBaseURI(), task2.getInput().getBaseURI());
