@@ -283,9 +283,9 @@
                                 </xforms:submission>
 
                                 <!-- Declares the Complete Task action -->
-                                <xforms:submission id="completeSubmission" ref="instance('taskoutput')" validate="false"
+                                <xforms:submission id="completeSubmission" ref="instance('taskoutput')" validate="true"
                                                    action="/formManager/complete" method="post" replace="all">
-
+                                    <xforms:delete ev:event="xforms-submit" nodeset="instance('taskoutput')/@saved" at="0"/>
                                     <xforms:toggle ev:event="xforms-submit" case="submit-wait"/>
                                     <xforms:toggle ev:event="xforms-submit-done" case="refresh-all"/>
                                     <xforms:action ev:event="xforms-submit-error">
@@ -577,10 +577,7 @@
                                     <xforms:case id="refresh-all">
                                     <xsl:if test="doc('input:xpl-input')/task/reloadTaskList">
                                         <xhtml:html>
-                                            <!--
                                             <xhtml:body onLoad="window.open('../../ui-fw/tasks.htm', '_parent')">
-                                            -->
-                                            <xhtml:body onLoad="parent.window.hideWindow();">
                                                 <xhtml:center>Wait for refresh please...</xhtml:center>
                                                 <xhtml:center>
                                                     <xhtml:img src="/images/loading.gif" alt="..."/>
