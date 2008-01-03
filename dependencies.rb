@@ -54,11 +54,15 @@ LOG4J = [ "log4j:log4j:jar:1.2.15" ]
 
 JPA = [ "javax.persistence:persistence-api:jar:1.0" ]
 
+GERONIMO_SPECS = {
+  "jta" => "org.apache.geronimo.specs:geronimo-jta_1.1_spec:jar:1.1",
+  "jpa" => "org.apache.geronimo.specs:geronimo-jpa_3.0_spec:jar:1.0",
+  "jms" => "org.apache.geronimo.specs:geronimo-jms_1.1_spec:jar:1.0.1"
+}
+
 APACHE_JPA = [
   COMMONS,
-  "org.apache.geronimo.specs:geronimo-jta_1.1_spec:jar:1.1",
-  "org.apache.geronimo.specs:geronimo-jpa_3.0_spec:jar:1.0",
-  "org.apache.geronimo.specs:geronimo-jms_1.1_spec:jar:1.0.1",
+  GERONIMO_SPECS.values,
   "org.apache.openjpa:openjpa:jar:1.1.0-svn-596491",
   "commons-logging:commons-logging:jar:1.0.4",
   "commons-lang:commons-lang:jar:2.1",
@@ -165,6 +169,7 @@ ORBEON_LIBS = [
   ORBEON_MSV,
   "avalon:avalon-framework:jar:4.1.4",
   # orbeon not compatible with any other recent jaxen yet
+  GERONIMO_SPECS["jms"],
   "orbeon:jaxen:jar:1.1-beta-1-dev", 
   "jdom:jdom:jar:b9",
   "struts:struts:jar:1.2.9",
