@@ -14,12 +14,11 @@
  */
 package org.intalio.tempo.workflow.task.traits;
 
-import org.apache.xmlbeans.XmlObject;
 import org.w3c.dom.Document;
 
 public interface ITaskWithInput {
     Document getInput();
     void setInput(Document input);
     
-    void setInput(XmlObject input);
+    void setInput(String input);
 }

@@ -16,10 +16,12 @@
 package org.intalio.tempo.workflow.task.xml;
 
 import java.util.Calendar;
+import java.util.HashMap;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.XmlOptions;
 import org.apache.xmlbeans.XmlString;
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.Task;
@@ -37,6 +39,8 @@ import org.intalio.tempo.workflow.util.xml.XmlBeanMarshaller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 
 import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
 
@@ -48,11 +52,11 @@ public class TaskMarshaller extends XmlBeanMarshaller {
     }
 
     public OMElement marshalTaskMetadata(Task task, UserRoles roles) {
-        OMElement om = XmlTooling.convertDocument(marshalXMLTaskMetadata(task, roles));
-        om.setLocalName(TaskXMLConstants.TASK_LOCAL_NAME);
-        om.setNamespace(TaskXMLConstants.TASK_OM_NAMESPACE);
-        return om;
-    }
+            OMElement om = XmlTooling.convertDocument(marshalXMLTaskMetadata(task, roles));
+            om.setLocalName(TaskXMLConstants.TASK_LOCAL_NAME);
+            om.setNamespace(TaskXMLConstants.TASK_OM_NAMESPACE);
+            return om;
+        }
 
     private XmlObject marshalXMLTaskMetadata(Task task, UserRoles roles) {
         TaskMetadata taskMetadataElement = TaskMetadata.Factory.newInstance();
@@ -153,26 +157,55 @@ public class TaskMarshaller extends XmlBeanMarshaller {
     public void marshalTaskInput(ITaskWithInput task,
             com.intalio.bpms.workflow.taskManagementServices20051109.Task.Input parent) {
         try {
-            XmlObject xmlTaskInput = XmlObject.Factory.parse(task.getInput());
-            parent.set(xmlTaskInput);
+            parent.set(extractXmlObject(task.getInput()));
         } catch (Exception e) {
             // if we can't marshal the input, the task is loosing some data.
             throw new RuntimeException(e);
         }
     }
 
+    /**
+     * The default namespace is lost when using xmlbeans. This methods sets some xmlbeans options
+     * so we can find/restore the namespaces properly from the original document to the XmlObject 
+     * @param doc the original xml document
+     * @return an <code>XmlObject</code> instance with the default namespace restored properly
+     * @throws XmlException only if parsing fails. Other exceptions that can occured when looking for NS are hidden 
+     */
+    static XmlObject extractXmlObject(final Document doc) throws XmlException {
+        XmlOptions opts = new XmlOptions();
+        try {
+            _log.debug("==");
+            _log.debug(XmlTooling.serializeDocument(doc));
+            _log.debug("==");
+            Node firstChild = doc.getFirstChild();
+            String nodeName = firstChild.getNodeName();
+            String prefix = nodeName.substring(0, nodeName.lastIndexOf(":"));
+            NamedNodeMap atts = firstChild.getAttributes();
+            int len = atts.getLength();
+            String uri = null;
+            for (int i = 0; i < len && uri == null; i++) {
+                String nodeName2 = atts.item(i).getNodeName();
+                if (nodeName2.equalsIgnoreCase("xmlns:" + prefix)) {
+                    uri = atts.item(i).getNodeValue();
+                    if(_log.isDebugEnabled()) _log.debug("Restoring NS:" + uri);
+                    HashMap map = new HashMap();
+                    map.put("", uri);
+                    opts.setLoadSubstituteNamespaces(map);
+                }
+            }
+        } catch (Exception e) {
+            if(_log.isDebugEnabled())_log.debug("Error while settings xml opts", e);
+        }
+        XmlObject xmlTaskOutput = XmlObject.Factory.parse(doc, opts);
+        return xmlTaskOutput;
+    }
+
     public void marshalTaskOutput(ITaskWithOutput task,
             com.intalio.bpms.workflow.taskManagementServices20051109.Task.Output parent) {
-        Document output = task.getOutput();
-        if (output == null) {
-            throw new IllegalArgumentException("Task has no output");
-        }
         try {
-            XmlObject xmlTaskOutput = XmlObject.Factory.parse(output);
-            parent.set(xmlTaskOutput);
-
+            parent.set(extractXmlObject(task.getOutput()));
         } catch (XmlException e) {
-            // if we can't marshal the input, the task is loosing some data.
+            // if we can't marshal the output, the task is loosing some data.
             throw new RuntimeException(e);
         }
     }

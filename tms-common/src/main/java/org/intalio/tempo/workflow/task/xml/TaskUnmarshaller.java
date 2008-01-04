@@ -29,6 +29,7 @@ import org.apache.axiom.om.OMElement;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.XmlOptions;
 import org.apache.xmlbeans.impl.values.XmlValueOutOfRangeException;
 import org.intalio.tempo.workflow.auth.ACL;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
@@ -345,7 +346,6 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
     public XmlObject unmarshalTaskInput(XmlObject inputContainerElement) throws InvalidInputFormatException {
         checkTaskPayload(inputContainerElement);
         return inputContainerElement;
-
     }
 
     // for compatibility usage
@@ -382,8 +382,7 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
             XmlObject xmlObject = XmlObject.Factory.parse(rootElement.getXMLStreamReader());
             return unmarshalFullTask(xmlObject);
         } catch (XmlException e) {
-            e.printStackTrace();
-            return null;
+            throw new RuntimeException(e.getMessage(),e);
         }
     }
 
@@ -419,19 +418,27 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
         if (resultTask instanceof ITaskWithInput) {
             requireParameter(inputElement, "task input");
             XmlObject input = unmarshalTaskInput(inputElement);
-            ((ITaskWithInput) resultTask).setInput(input);
+            ((ITaskWithInput) resultTask).setInput(serializeXMLObject(input));
         } else {
             forbidParameter(inputElement, "task input");
         }
         if ((resultTask instanceof ITaskWithOutput) && outputElement != null) {
             requireParameter(outputElement, "task output");
             XmlObject output = unmarshalTaskOutput(outputElement);
-            ((ITaskWithOutput) resultTask).setOutput(output);
+            ((ITaskWithOutput) resultTask).setOutput(serializeXMLObject(output));
         } else {
             forbidParameter(outputElement, "task output");
         }
 
         return resultTask;
+    }
+    
+    private String serializeXMLObject(XmlObject xmlObject){
+        XmlCursor cursor = xmlObject.newCursor();
+        cursor.toFirstChild();
+        XmlOptions opts = new XmlOptions();
+        opts.setLoadReplaceDocumentElement(cursor.getName());
+        return xmlObject.xmlText(opts);     
     }
 
     private void checkNS(XmlObject containerElement) throws InvalidInputFormatException {

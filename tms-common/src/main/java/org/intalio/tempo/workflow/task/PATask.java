@@ -30,8 +30,6 @@ import javax.persistence.MapKey;
 
 import org.apache.openjpa.persistence.Persistent;
 import org.apache.openjpa.persistence.PersistentMap;
-import org.apache.xmlbeans.XmlObject;
-import org.apache.xmlbeans.XmlOptions;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.task.traits.IChainableTask;
 import org.intalio.tempo.workflow.task.traits.ICompleteReportingTask;
@@ -40,7 +38,6 @@ import org.intalio.tempo.workflow.task.traits.ITaskWithAttachments;
 import org.intalio.tempo.workflow.task.traits.ITaskWithInput;
 import org.intalio.tempo.workflow.task.traits.ITaskWithOutput;
 import org.intalio.tempo.workflow.task.traits.ITaskWithState;
-import org.intalio.tempo.workflow.task.xml.TaskXMLConstants;
 import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 import org.w3c.dom.Document;
@@ -263,23 +260,13 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
         }
         _previousTaskID = previousTaskID;
     }
-
-	public void setInput(XmlObject input) {
-		_input = serializeXML(input);
-	}
-
-	public void setOutput(XmlObject output) {
-		_output = serializeXML(output);
+	
+	public void setInput(String input) {
+	    _input = input;
 	}
 	
-	private String serializeXML(XmlObject xmlObject){
-		HashMap suggestedPrefixes = new HashMap();
-		suggestedPrefixes
-				.put(TaskXMLConstants.TASK_NAMESPACE,
-						TaskXMLConstants.TASK_NAMESPACE_PREFIX);
-		XmlOptions opts = new XmlOptions();
-		opts.setSaveSuggestedPrefixes(suggestedPrefixes);
-
-		return xmlObject.xmlText(opts);		
-	}
+	public void setOutput(String output) {
+        _output = output;
+    }
+	
 }
