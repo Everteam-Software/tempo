@@ -174,18 +174,16 @@ public class TaskMarshaller extends XmlBeanMarshaller {
     static XmlObject extractXmlObject(final Document doc) throws XmlException {
         XmlOptions opts = new XmlOptions();
         try {
-            _log.debug("==");
-            _log.debug(XmlTooling.serializeDocument(doc));
-            _log.debug("==");
             Node firstChild = doc.getFirstChild();
             String nodeName = firstChild.getNodeName();
-            String prefix = nodeName.substring(0, nodeName.lastIndexOf(":"));
+            int dot = nodeName.lastIndexOf(":");
+            String xmlns = (dot>0) ? "xmlns:"+nodeName.substring(0, dot) : "xmlns";
             NamedNodeMap atts = firstChild.getAttributes();
             int len = atts.getLength();
             String uri = null;
             for (int i = 0; i < len && uri == null; i++) {
-                String nodeName2 = atts.item(i).getNodeName();
-                if (nodeName2.equalsIgnoreCase("xmlns:" + prefix)) {
+                String nn = atts.item(i).getNodeName();
+                if (nn.equalsIgnoreCase(xmlns)) {
                     uri = atts.item(i).getNodeValue();
                     if(_log.isDebugEnabled()) _log.debug("Restoring NS:" + uri);
                     HashMap map = new HashMap();
@@ -194,7 +192,7 @@ public class TaskMarshaller extends XmlBeanMarshaller {
                 }
             }
         } catch (Exception e) {
-            if(_log.isDebugEnabled())_log.debug("Error while settings xml opts", e);
+            throw new RuntimeException("Error while settings xml opts",e);
         }
         XmlObject xmlTaskOutput = XmlObject.Factory.parse(doc, opts);
         return xmlTaskOutput;

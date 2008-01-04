@@ -433,12 +433,18 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
         return resultTask;
     }
     
+    /**
+     * Xmlbeans is wrapping the content with some <code>xml-fragment</code> tag
+     * Position the cursor on the data we really want.
+     * @param xmlObject 
+     * @return
+     */
     private String serializeXMLObject(XmlObject xmlObject){
         XmlCursor cursor = xmlObject.newCursor();
         cursor.toFirstChild();
         XmlOptions opts = new XmlOptions();
         opts.setLoadReplaceDocumentElement(cursor.getName());
-        return xmlObject.xmlText(opts);     
+        return cursor.xmlText(opts);     
     }
 
     private void checkNS(XmlObject containerElement) throws InvalidInputFormatException {
