@@ -15,4 +15,4 @@ done
 # Get standard environment variables
 WDS_HOME=`dirname "$PRG"`
 echo WDS_HOME=$WDS_HOME
-java -cp $WDS_HOME/target/intalio-bpms-workflow-wds-cli-*.jar org.intalio.tempo.workflow.wds.cli.WDSCommandLineClient "$@"
+java -cp $WDS_HOME/target/tempo-wds-client-*.jar org.intalio.tempo.workflow.wds.cli.WDSCommandLineClient "$@"
