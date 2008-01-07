@@ -17,25 +17,25 @@
 }
 
 .widget-tab-spacer-side {
-    border-bottom: 1px solid #669;
+    border-bottom: 1px solid &medium-color;;
     width: 1.5em;
 }
 
 .widget-tab-spacer-between {
-    border-bottom: 1px solid #669;
+    border-bottom: 1px solid &medium-color;;
     width: 1em;
 }
 
 .widget-tab {
-    border-top: 1px solid #669;
-    border-left: 1px solid #669;
-    border-right: 1px solid #669;
-    border-bottom: 1px solid #dde;
+    border-top: 1px solid &medium-color;;
+    border-left: 1px solid &medium-color;;
+    border-right: 1px solid &medium-color;;
+    border-bottom: 1px solid &xlight-color;;
 }
 
 .widget-tab-active {
-    background: #dde;
-    color: #336;
+    background: &xlight-color;;
+    color: &dark-color;;
     font-weight: bold;
     text-align: center;
     padding-left: 1em;
@@ -45,8 +45,8 @@
 }
 
 .widget-tab-inactive {
-    background: #eee;
-    color: #669;
+    background: &xxlight-color;;
+    color: &medium-color;;
     font-weight: bold;
     text-align: center;
     padding-left: 1em;
@@ -56,9 +56,9 @@
 }
 
 .widget-tabs-panel {
-    border-left: 1px solid #669;
-    border-right: 1px solid #669;
-    border-bottom: 1px solid #669;
+    border-left: 1px solid &medium-color;;
+    border-right: 1px solid &medium-color;;
+    border-bottom: 1px solid &medium-color;;
     padding-top: 1em;
     padding-bottom: 1em;
     padding-left: 2em;
@@ -73,7 +73,7 @@
 
 .widgets-xforms-instance-inspector-source {
     background-color: #eeeeee;
-    border: solid #336 1px;
+    border: solid &dark-color; 1px;
     padding: .5em;
     line-height: 110%;
     overflow: auto;

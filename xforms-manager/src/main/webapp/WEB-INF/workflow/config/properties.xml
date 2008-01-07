@@ -46,7 +46,7 @@
     <property as="xs:string"  name="oxf.xforms.format.double"                        value="if (. castable as xs:double) then format-number(xs:double(.),'#,##0.000') else ."/>
 
     <!-- XForms cache configuration -->
-    <property as="xs:string"  name="oxf.xforms.state-handling"                       value="session"/>
+    <property as="xs:string"  name="oxf.xforms.state-handling"                       value="client"/>
     <property as="xs:boolean" name="oxf.xforms.cache.document"                       value="true"/>
     <property as="xs:integer" name="oxf.xforms.cache.session.size"                   value="500000"/>
     <property as="xs:integer" name="oxf.xforms.cache.application.size"               value="2000000"/>

@@ -16,9 +16,9 @@ COMMONS = [
   "commons-collections:commons-collections:jar:3.2", 
   "commons-digester:commons-digester:jar:1.7",
   "commons-fileupload:commons-fileupload:jar:1.0",
-  "commons-httpclient:commons-httpclient:jar:3.0.1",
+  "commons-httpclient:commons-httpclient:jar:3.1",
   "commons-io:commons-io:jar:1.2",
-  "commons-lang:commons-lang:jar:2.1",
+  "commons-lang:commons-lang:jar:2.3",
   COMMONS_POOL
 ]
 
@@ -119,7 +119,7 @@ ORBEON_XERCES = [
   group("xerces-resolver", "xerces-serializer", "xerces-xml-apis", "xerces-xercesImpl", :under => "orbeon" , :version => "2_9_orbeon_20070711")
 ]
 ORBEON_CORE = [
-  group("ops", "ops-xforms-filter", "ops-resources-public", "ops-resources-private", :under=>"orbeon", :version=>"3.6.0-cvs-1"),
+  group("orbeon", "orbeon-xforms-filter", "orbeon-resources-public", "orbeon-resources-private", :under=>"ops", :version=>"3.6.0.200712061930"),
 ]
 ORBEON_CUSTOM = [
   ORBEON_XERCES,
@@ -132,11 +132,12 @@ ORBEON_CUSTOM = [
   "orbeon:xsltc-orbeon:jar:2.5.1",
   "orbeon:xalan-orbeon:jar:2.5.1",
   
+  #  Not needed unless we want to force server caching for xforms
   # "orbeon:xmldb-exist:jar:1_1_1",
   # "orbeon:exist:jar:1.1.1",
   # "orbeon:xmlrpc:jar:1.2-patched-exist_1_1_1",
-  # "orbeon:antlr:jar:antlr-2.7.6-exist_1_1_1"
-  
+  # "orbeon:antlr:jar:antlr-2.7.6-exist_1_1_1",
+  # "orbeon:exist-optional:jar:1.1.1"
 ]
 
 COMMONS_DISCOVERY = [  "commons-discovery:commons-discovery:jar:0.2"]
@@ -159,18 +160,15 @@ ORBEON_MSV = [
 ]
 
 ORBEON_LIBS = [
+     JAVAMAIL,
+     ORBEON_AXIS,
+     ORBEON_COMMONS,
+     ORBEON_CORE,
+     ORBEON_CUSTOM,
+     ORBEON_MSV,
   DOM4J,
-  FOP,
-  JAVAMAIL,
-  ORBEON_AXIS,
-  ORBEON_COMMONS,
-  ORBEON_CORE,
-  ORBEON_CUSTOM,
-  ORBEON_MSV,
-  "avalon:avalon-framework:jar:4.1.4",
-  # orbeon not compatible with any other recent jaxen yet
   GERONIMO_SPECS["jms"],
-  "orbeon:jaxen:jar:1.1-beta-1-dev", 
+  "orbeon:jaxen:jar:1.1-beta-1-dev",
   "jdom:jdom:jar:b9",
   "struts:struts:jar:1.2.9",
   "jtidy:jtidy:jar:8.0-20060801.131059-3",

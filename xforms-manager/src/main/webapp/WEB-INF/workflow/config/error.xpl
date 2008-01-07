@@ -1,23 +1,17 @@
 <!--
-    Copyright (C) 2004 Orbeon, Inc.
-  
+    Copyright (C) 2004-2007 Orbeon, Inc.
+
     This program is free software; you can redistribute it and/or modify it under the terms of the
     GNU Lesser General Public License as published by the Free Software Foundation; either version
     2.1 of the License, or (at your option) any later version.
-  
+
     This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
     without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
     See the GNU Lesser General Public License for more details.
-  
+
     The full text of the license is available at http://www.gnu.org/copyleft/lesser.html
 -->
-<!--
-
-  This pipeline is called by OPS when an exception occurs, as configured in web.xml. Developers can
-  customize this at will.
-
--->
-<p:config xmlns:p="http://www.orbeon.com/oxf/pipeline"
+<p:pipeline xmlns:p="http://www.orbeon.com/oxf/pipeline"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:oxf="http://www.orbeon.com/oxf/processors">
@@ -28,9 +22,9 @@
     </p:processor>
 
     <!-- Format exception page -->
-    <p:processor name="oxf:xslt">
+    <p:processor name="oxf:unsafe-xslt">
         <p:input name="data" href="#exception"/>
-        <p:input name="config" href="error.xsl"/>
+        <p:input name="config" href="oxf:/config/error.xsl"/>
         <p:output name="data" id="document"/>
     </p:processor>
 
@@ -46,10 +40,15 @@
     </p:processor>
 
     <!-- Apply theme -->
-    <p:processor name="oxf:xslt">
+    <p:processor name="oxf:unsafe-xslt">
         <p:input name="data" href="#document"/>
         <p:input name="request" href="#request"/>
-        <p:input name="config" href="oxf:/config/theme-plain.xsl"/>
+        <p:input name="config">
+            <xsl:stylesheet version="2.0">
+                <xsl:import href="oxf:/config/theme-plain.xsl"/>
+                <xsl:import href="oxf:/ops/utils/formatting/formatting.xsl"/>
+            </xsl:stylesheet>
+        </p:input>
         <p:output name="data" id="themed"/>
     </p:processor>
 
@@ -102,4 +101,4 @@
         <p:input name="data" href="#converted"/>
     </p:processor>
 
-</p:config>
+</p:pipeline>

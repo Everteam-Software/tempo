@@ -25,27 +25,7 @@
 }
 
 .xforms-hint {
-    color: #666;
-    font-size: 85%;
-    min-height: 2em;
-    background-image: url(../../ops/images/xforms/greybracket.gif);
-    background-repeat: no-repeat;
-    background-position: left center;
-    margin-left: .25em;
-    padding-left: 1.5em;
-    vertical-align: middle;
-}
-
-.xforms-hint-active {
-    color: #000;
-    font-size: 85%;
-    min-height: 2em;
-    background-image: url(../../ops/images/xforms/bracket.gif);
-    background-repeat: no-repeat;
-    background-position: left center;
-    margin-left: .25em;
-    padding-left: 1.5em;
-    vertical-align: middle;
+    display: none;
 }
 
 .xforms-alert-inactive, .xforms-alert-active {
@@ -92,16 +72,17 @@
     right: 2em;
 }
 
-.xforms-loading-error {
-    background-image: url(../../ops/images/xforms/error.gif);
-    background-repeat: no-repeat;
-    background-position: top left;
-    padding-left: 20px;
-    margin-left: 0;
-    color: #c00;
-    display: none;
-    height: 18px;
-}
+.xforms-error-panel .bd { overflow: auto; }
+.xforms-error-panel .hd { background-color: #FF6600; }
+.xforms-error-panel-details-hidden, .xforms-error-panel-details-shown { vertical-align: middle; }
+.xforms-error-panel-show-details, .xforms-error-panel-hide-details { cursor: pointer; }
+.xforms-error-panel-close { cursor: pointer; }
+.xforms-error-panel-reload { cursor: pointer; }
+
+.xforms-help-panel { width: 300px; }
+.xforms-help-panel-message { margin-bottom: 1em; margin-top: 1em; }
+.xforms-help-panel-message { margin-bottom: 1em; margin-top: 1em; }
+.xforms-help-panel-close { text-align: right; }
 
 .xforms-loading-none {
     display: block;
@@ -117,13 +98,14 @@
 
 .xforms-showcalendar {
     margin-left: .5em;
-    background-image: url(../../ops/images/xforms/calendar.gif);
-    background-repeat: no-repeat;
-    background-position: left center;
-    display: -moz-inline-box;
-    display: inline-block;
-    width: 26px;
-    height: 19px;
+    margin-right: .5em;
+    /*background-image: url(../../ops/images/xforms/calendar.gif);*/
+    /*background-repeat: no-repeat;*/
+    /*background-position: left center;*/
+    /*display: -moz-inline-box;*/
+    /*display: inline-block;*/
+    /*width: 26px;*/
+    /*height: 19px;*/
     vertical-align: middle;
 }
 
@@ -162,6 +144,14 @@
     padding-bottom: 2px;
     padding-left: 1px;
     padding-right: 1px;
+}
+
+span.xforms-select-appearance-full.xforms-required-empty, span.xforms-select1-appearance-full.xforms-required-empty {
+    background-color: #fcc
+}
+
+span.xforms-select-appearance-full.xforms-required-empty input, span.xforms-select1-appearance-full.xforms-required-empty input {
+    border: none
 }
 
 .xforms-select1-appearance-full input { vertical-align: middle }
@@ -231,6 +221,10 @@
     background-color: #ff3;
 }
 
+.xforms-group-begin-end {
+    display: none;
+}
+
 .xforms-debug {
     background-color: #fc9;
     position: absolute;
@@ -262,6 +256,10 @@
 .xforms-upload-size { padding-left: .5em; }
 .xforms-upload-remove { vertical-align: -20%; padding-left: .5em; cursor: pointer; }
 
+.xforms-dialog-appearance-minimal { visibility:hidden; border: 1px outset #eef; }
+.xforms-dialog-appearance-minimal div { border: 0; padding: 5px; background-color: #dde; margin: 0; }
+.xforms-dialog-appearance-minimal div div { padding: 3px; background-color: #fff }
+
 select.xforms-required-empty {
     background-color: #fcc;
 }
@@ -277,13 +275,18 @@ a.xforms-trigger img { vertical-align: middle }
 a.xforms-trigger span { vertical-align: middle }
 
 /* Hide input field for <xforms:input> when type is date */
-input.xforms-type-date {
+.xforms-type-date input {
     display: none;
 }
 
 /* Hide date pickend for <xforms:input> when type not date */
-span.xforms-type-string {
+.xforms-showcalendar {
     display: none;
+}
+
+.xforms-type-date .xforms-showcalendar {
+    display: -moz-inline-box;
+    display: inline-block;
 }
 
 a.xforms-readonly {
@@ -296,6 +299,10 @@ a.xforms-readonly {
     margin-left: 2em;
 }
 
+.xforms-tree-label-selected {
+    background-color: #ffc;
+}
+
 #xforms-repeat-tree {
     display: none;
 }
@@ -303,6 +310,9 @@ a.xforms-readonly {
 #xforms-repeat-indexes {
     display: none;
 }
+
+/* In the tree, because we don't have an href, we use this CSS so the cursor is a pointer when over the link */
+a.ygtvlabel { cursor: pointer; }
 
 /* Styles used by xforms-to-xhtml.xsl */
 .xforms-legacy-error-table { border: 0; margin: 0; padding: 0; }
