@@ -35,7 +35,7 @@ public class JDBCTaskDAOConnectionFactory implements ITaskDAOConnectionFactory {
         if (jndiPath == null) throw new IllegalArgumentException("JNDI path is null");
         try {
             InitialContext initialContext = new InitialContext();
-            _logger.debug("About to get hook for DataSource " + jndiPath);
+            if(_logger.isDebugEnabled()) _logger.debug("About to get hook for DataSource " + jndiPath);
             _dataSource = (DataSource) initialContext.lookup(jndiPath);
         } catch (NamingException e) {
             throw new RuntimeException(e);
@@ -45,9 +45,9 @@ public class JDBCTaskDAOConnectionFactory implements ITaskDAOConnectionFactory {
     public ITaskDAOConnection openConnection() {
         Connection con = null;
         try {
-            _logger.debug("Getting connection to TMS DB");
+            if(_logger.isDebugEnabled()) _logger.debug("Getting connection to TMS DB");
             con = _dataSource.getConnection();
-            return new JDBCTaskDAOConnection(_dataSource.getConnection());
+            return new JDBCTaskDAOConnection(con);
         } catch (Exception e) {
             close(con);
             throw new RuntimeException(e);
