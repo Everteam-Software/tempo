@@ -1,6 +1,10 @@
 require "net/http"
 require 'uri'
 
+#
+# This is a rest access example to the WDS service of tempo
+#
+
 FILE_WE_WANT_TO_STORE = "http://tempo.intalio.org/tempo/trunk/wds-client/AbsenceRequest/AbsenceApproval.xform"
 FILE_URL = URI.parse FILE_WE_WANT_TO_STORE
 FILE_DATA = Net::HTTP.get(FILE_URL.host, FILE_URL.path, FILE_URL.port)

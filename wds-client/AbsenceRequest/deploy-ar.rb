@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 require "../wds-cli"
 
-wds_deploy "store-activity AbsenceRequest/AbsenceApproval.xform AbsenceApproval.xform"
-wds_deploy "-d ar-deploy.xml store-pipa AbsenceRequest/AbsenceRequest.xform AbsenceRequest.xform"
-wds_deploy "store-activity AbsenceRequest/Notification.xform Notification.xform"
+wds_client [
+  Pipa.new("AbsenceRequest/AbsenceApproval.xform", "AbsenceApproval.xform", "ar-deploy.xml"),
+  Activity.new("AbsenceRequest/AbsenceApproval.xform", "AbsenceApproval.xform"),
+  Activity.new("AbsenceRequest/Notification.xform", "Notification.xform")]

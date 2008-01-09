@@ -1,2 +1,4 @@
-require "../wds_cli"
-wds_deploy "-d pipa-deploy.xml store-pipa PIPA/PIPA.xform startform.xform"
+#!/usr/bin/env ruby
+require "../wds-cli"
+
+wds_client [Pipa.new("PIPA/PIPA.xform", "startform.xform", "pipa-deploy.xml")]
