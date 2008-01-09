@@ -2,6 +2,18 @@
 require "rubygems"
 require "buildr"
 
+#
+# To deploy your own items. Import this file into a new rubvy script, and use something like:
+# wds_client [
+#   Pipa.new("AbsenceRequest/AbsenceApproval.xform", "AbsenceApproval.xform", "ar-deploy.xml"),
+#   Activity.new("AbsenceRequest/AbsenceApproval.xform", "AbsenceApproval.xform"),
+#   Activity.new("AbsenceRequest/Notification.xform", "Notification.xform")]
+#
+# wds_client takes an array of items to deploy.
+#
+# The new script will allow to store and delete as requested in parameter on the command line.
+#
+
 # Configurable options
 BASE = "http://localhost:8080/wds/"
 DEBUG = true
@@ -44,13 +56,21 @@ def delete_activity args, base=BASE
 end
 
 def wds_client items, url=BASE
-  items.each do |item|
-    item.store url
-  end if ARGV and ARGV[0] == "store" 
-  
-  items.each do |item|
-    item.delete url
-  end if ARGV and ARGV[0] == "delete" 
+  if not ARGV.empty?
+    if ARGV[0] == "store"
+      items.each do |item|
+        item.store url
+      end     
+    elsif ARGV[0] == "delete"
+      items.each do |item|
+        item.delete url
+      end
+    else
+      puts "Unsupported command: #{ARGV[0]}"
+    end
+  else
+    puts "WDS client usage: Please use one of -store- or -delete- command."
+  end
 end
 
 class Activity
