@@ -57,6 +57,7 @@ end
 
 def wds_client items, url=BASE
   if not ARGV.empty?
+    url = if ARGV[1] then ARGV[1] else url end
     if ARGV[0] == "store"
       items.each do |item|
         item.store url
