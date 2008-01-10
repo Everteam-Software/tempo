@@ -12,20 +12,6 @@
 -->
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
-
-	<!-- 	<bean id="tms.serviceFactory" class="org.springframework.aop.framework.ProxyFactoryBean">
-	<property name="interceptorNames">
-		<list>				
-			<value>loggingInterceptor</value>
-		</list>
-	</property>
-	<property name="target">
-		<ref bean="tms.serviceImplementation"/>
-	</property>		
-</bean>	
-
-<bean id="loggingInterceptor"  class="org.intalio.tempo.workflow.tms.server.LoggingInterceptor"/>
--->
 <bean id="tms.serviceImplementation" class="org.intalio.tempo.workflow.tms.server.TMSRequestProcessor">
 	<property name="server">
 		<ref bean="tms.server"/>
@@ -44,16 +30,21 @@
 		<value>http://localhost:8080/axis2/services/TokenService</value>
 	</property>
 </bean>
+<bean id="tms.daoFactory" class="org.intalio.tempo.workflow.tms.server.dao.JDBCTaskDAOConnectionFactory">
+	<constructor-arg>
+		<value>java:comp/env/jdbc/BPMSDB</value>
+	</constructor-arg>
+</bean>
+<!--
 <bean id="tms.daoFactory" class="org.intalio.tempo.workflow.tms.server.dao.JPATaskDaoConnectionFactory">
 	<constructor-arg>
 		<map>
-			<!--
 				<entry><key><value>jta-data-source</value></key><value>java:comp/env/jdbc/JPADB</value></entry>
 				<entry><key><value>openjpa.Connection2UserName</value></key><value>APP</value></entry>
 				<entry><key><value>openjpa.Connection2Password</value></key><value>APP</value></entry>
 				<entry><key><value>openjpa.Connection2DriverName</value></key><value>org.apache.derby.jdbc.EmbeddedDriver</value></entry>
 				<entry><key><value>openjpa.Connection2URL</value></key><value>jdbc:derby:BPMSDB;create=false</value></entry>
-			-->
+				
 			<entry><key><value>openjpa.jdbc.SynchronizeMappings</value></key><value>buildSchema</value></entry>
 			<entry><key><value>openjpa.ConnectionUserName</value></key><value>APP</value></entry>
 			<entry><key><value>openjpa.ConnectionPassword</value></key><value>APP</value></entry>
@@ -62,4 +53,5 @@
 		</map>
 	</constructor-arg>
 </bean>
+-->
 </beans>
