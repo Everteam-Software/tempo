@@ -180,8 +180,7 @@ public class UserProcessMessageConvertor {
             xpath.setNamespaceURIs(namespaceURIs/*MessageConstants.get_nsMap()*/);
             List tmdQueryResult = xpath.selectNodes(message);
             Element tmdElement = (Element) tmdQueryResult.get(0);
-            Element sessionElement = tmdElement.addElement("session");
-            sessionElement.addNamespace("ib4p", MessageConstants.IB4P_NS);
+            Element sessionElement = tmdElement.addElement("session",MessageConstants.IB4P_NS);
             sessionElement.setText(session);
         }
 
