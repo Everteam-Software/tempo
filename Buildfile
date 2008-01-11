@@ -196,6 +196,7 @@ define "tempo" do
   end
   
   define "ui-pluto" do
+    compile.with PLUTO
     package(:war).with :libs => ["xalan:xalan:jar:2.7.0", "xerces:xercesImpl:jar:2.8.1", "org.codehaus.castor:castor:jar:1.0.5"]
   end
   
@@ -225,7 +226,7 @@ define "tempo" do
   end
   
   define "cas-server-webapp" do
-    libs = projects("security", "security-ws-client", "security-ws-common"), CAS_LIBS, COMMONS_LOG
+    libs = projects("security", "security-ws-client", "security-ws-common"), AXIOM, AXIS2, CAS_LIBS, COMMONS, COMMONS_LOG, LOG4J
     compile.with libs
     package(:war).with :libs=>libs
   end
