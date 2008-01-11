@@ -43,10 +43,15 @@ CAS_LIBS = [
   # "cas-server-integration-jboss",
   # "cas-server-integration-berkeleydb", 
   :under=>"org.jasig.cas", :version=>"3.1.1"),
+  "org.jasig.service:person-directory:jar:1.0.1",
   "org.acegisecurity:acegi-security:jar:1.0.4",
   "net.sf.ehcache:ehcache:jar:1.2.3",
   "quartz:quartz:jar:1.5.2",
+  "org.springframework:spring-binding:jar:1.0.3",
+  "org.springframework:spring:jar:2.0.6",
+  "org.springframework:spring-webflow:jar:1.0.3",  
   "ognl:ognl:jar:2.6.9",
+  "org.opensaml:opensaml:jar:1.1b",
   "jdom:jdom:jar:1.0",
   CAS_CLIENT
   ]

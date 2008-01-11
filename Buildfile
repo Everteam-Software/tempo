@@ -225,7 +225,7 @@ define "tempo" do
   end
   
   define "cas-server-webapp" do
-    libs = projects("security", "security-ws-client", "security-ws-common"), CAS_LIBS, COMMONS_LOG, SPRING
+    libs = projects("security", "security-ws-client", "security-ws-common"), CAS_LIBS, COMMONS_LOG
     compile.with libs
     package(:war).with :libs=>libs
   end

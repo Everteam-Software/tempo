@@ -11,6 +11,7 @@
 		<dep:dependencies></dep:dependencies>
 		<dep:hidden-classes>
 			<dep:filter>org.springframework.</dep:filter>
+			<dep:filter>org.apache.cxf</dep:filter>
 		</dep:hidden-classes>
 	</dep:environment>
 	<context-root>/cas</context-root>
