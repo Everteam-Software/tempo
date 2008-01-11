@@ -22,7 +22,34 @@ COMMONS = [
   COMMONS_POOL
 ]
 
-CASCLIENT = "cas:casclient:jar:2.1.1"
+COMMONS_LOG = [
+  "commons-logging:commons-logging:jar:1.0.4"
+  ]
+
+
+CAS_CLIENT = "cas:casclient:jar:2.1.1"
+
+CAS_LIBS = [
+  group("cas-server-core",
+  # "cas-server-support-generic",
+  # "cas-server-support-jdbc",
+  # "cas-server-support-ldap",
+  # "cas-server-support-legacy",
+  # "cas-server-support-openid",
+  # "cas-server-support-radius",
+  # "cas-server-support-spnego",
+  # "cas-server-support-trusted",
+  # "cas-server-support-x509",
+  # "cas-server-integration-jboss",
+  # "cas-server-integration-berkeleydb", 
+  :under=>"org.jasig.cas", :version=>"3.1.1"),
+  "org.acegisecurity:acegi-security:jar:1.0.4",
+  "net.sf.ehcache:ehcache:jar:1.2.3",
+  "quartz:quartz:jar:1.5.2",
+  "ognl:ognl:jar:2.6.9",
+  "jdom:jdom:jar:1.0",
+  CAS_CLIENT
+  ]
 
 DOJO_VERSION = "0.2.2"
 DOJO_URL = "http://download.dojotoolkit.org/release-#{DOJO_VERSION}/dojo-#{DOJO_VERSION}-widget.zip"

@@ -183,7 +183,7 @@ define "tempo" do
                     "tms-client", "tms-common", "web-nutsNbolts", "tms-axis"),
            AXIOM, AXIS2, COMMONS, DOM4J, INTALIO_STATS, JSP_API, JSTL,
            LOG4J, SPRING, SERVLET_API, SLF4J, STAX_API, TAGLIBS, WOODSTOX, 
-           WS_COMMONS_SCHEMA, WSDL4J, XERCES, XMLBEANS, APACHE_JPA, JSON, PLUTO, CASCLIENT
+           WS_COMMONS_SCHEMA, WSDL4J, XERCES, XMLBEANS, APACHE_JPA, JSON, PLUTO, CAS_CLIENT
     compile.with libs
 
     dojo = unzip(path_to(compile.target, "dojo") => download(artifact(DOJO)=>DOJO_URL))
@@ -222,6 +222,12 @@ define "tempo" do
   define "deploy-api" do 
     compile
     package(:jar)
+  end
+  
+  define "cas-server-webapp" do
+    libs = projects("security", "security-ws-client", "security-ws-common"), CAS_LIBS, COMMONS_LOG, SPRING
+    compile.with libs
+    package(:war).with :libs=>libs
   end
   
   desc "XForms Manager"
