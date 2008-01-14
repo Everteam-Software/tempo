@@ -20,15 +20,15 @@
   </context-param>
 
     <context-param>
-        <param-name>oxf.resources.priority.1</param-name>
+        <param-name>oxf.resources.priority.2</param-name>
         <param-value>org.orbeon.oxf.resources.WebAppResourceManagerFactory</param-value>
     </context-param>
     <context-param>
-        <param-name>oxf.resources.priority.1.oxf.resources.webapp.rootdir</param-name>
+        <param-name>oxf.resources.priority.2.oxf.resources.webapp.rootdir</param-name>
         <param-value>/WEB-INF/workflow</param-value>
     </context-param>
     <context-param>
-        <param-name>oxf.resources.priority.2</param-name>
+        <param-name>oxf.resources.priority.1</param-name>
         <param-value>org.orbeon.oxf.resources.ClassLoaderResourceManagerFactory</param-value>
     </context-param>
 

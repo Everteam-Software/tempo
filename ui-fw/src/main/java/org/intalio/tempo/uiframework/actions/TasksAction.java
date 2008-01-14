@@ -62,6 +62,7 @@ public class TasksAction extends Action {
         String peopleInitiatedProcessURL = resoleUrl(fmanager.getPeopleInitiatedProcessURL());
         
         for (Object task : _tasks) {
+        	_log.info(((Task)task).getID() + ":"+ task.getClass().getName());
             if (task instanceof Notification) {
                 Notification notification = (Notification) task;
                 if (!TaskState.COMPLETED.equals(notification.getState())) {

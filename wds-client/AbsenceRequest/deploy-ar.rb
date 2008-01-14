@@ -2,6 +2,6 @@
 require "../wds-cli"
 
 wds_client [
-  Pipa.new("AbsenceRequest/AbsenceApproval.xform", "AbsenceApproval.xform", "ar-deploy.xml"),
+  Pipa.new("AbsenceRequest/AbsenceRequest.xform", "AbsenceRequest.xform" , "ar-deploy.xml"),
   Activity.new("AbsenceRequest/AbsenceApproval.xform", "AbsenceApproval.xform"),
   Activity.new("AbsenceRequest/Notification.xform", "Notification.xform")]
