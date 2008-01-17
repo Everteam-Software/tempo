@@ -31,7 +31,7 @@ define "tempo" do
   
   desc "Form Dispatcher Servlet"
   define "fds" do
-    libs = [AXIS2, COMMONS, DOM4J, JAXEN, LOG4J, SERVLET_API, SLF4J, STAX_API, "xom:xom:jar:1.1"]
+    libs = [AXIS2, COMMONS, DOM4J, JAXEN, LOG4J, SERVLET_API, SLF4J, STAX_API]
     compile.with libs 
     resources.filter.using "version" => VERSION_NUMBER
     test.with libs, XMLUNIT
