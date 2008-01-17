@@ -4,8 +4,8 @@ require "rubygems"
 require "buildr"
 
 # Keep this structure to allow the build system to update version numbers.
-VERSION_NUMBER = "5.1.0.9-SNAPSHOT"
-NEXT_VERSION = "5.1.0.10"
+VERSION_NUMBER = "5.1.0.10-SNAPSHOT"
+NEXT_VERSION = "5.1.0.11"
 
 require "dependencies.rb"
 require "repositories.rb"
