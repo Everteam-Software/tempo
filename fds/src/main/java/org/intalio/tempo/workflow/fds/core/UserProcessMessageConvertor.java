@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.axis2.AxisFault;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -76,23 +77,16 @@ public class UserProcessMessageConvertor {
      *             to be corrupted.
      */
     public void convertMessage(Document message)
-            throws MessageFormatException {
+            throws MessageFormatException, AxisFault {
         FormDispatcherConfiguration config = FormDispatcherConfiguration.getInstance();
 
         XPath xpath = null;
-        try{
-	        xpath = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Body/soapenv:Fault");
-	        List fault = xpath.selectNodes(message);
-	        if(fault.size() != 0) {
-	            // return fault as-is
-	            _log.error("Fault in response:\n"+message.asXML());
-	            return;
-	        }
-        }catch(Exception e){
-        	
-        }
-        
-        //Check SOAP action
+		xpath = DocumentHelper
+				.createXPath("/soapenv:Envelope/soapenv:Body/soapenv:Fault");
+		List fault = xpath.selectNodes(message);
+		if (fault.size() != 0) throw new RuntimeException(fault.toString());
+		
+        // Check SOAP action
         xpath = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Body");
         xpath.setNamespaceURIs(MessageConstants.get_nsMap());
         List bodyQueryResult = xpath.selectNodes(message);
@@ -157,12 +151,6 @@ public class UserProcessMessageConvertor {
         String messageNamespace = firstPayloadElement.getNamespaceURI();
         _userProcessNamespaceUri = messageNamespace;
 
-        /*
-         * To fix exception: 
-         * org.dom4j.XPathException: 
-         * Exception occurred evaluting XPath: //userProcess:taskMetaData. 
-         * Exception: XPath expression uses unbound namespace prefix userProcess
-         */
         Map namespaceURIs = new HashMap(MessageConstants.get_nsMap());
         namespaceURIs.put(REQUEST_PREFIX, _userProcessNamespaceUri);
         

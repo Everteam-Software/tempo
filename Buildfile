@@ -6,8 +6,8 @@ require "buildr/cobertura"
 
 
 # Keep this structure to allow the build system to update version numbers.
-VERSION_NUMBER = "5.1.0.9-SNAPSHOT"
-NEXT_VERSION = "5.1.0.10"
+VERSION_NUMBER = "5.1.1.1-SNAPSHOT"
+NEXT_VERSION = "5.1.1.1"
 
 require "dependencies.rb"
 require "repositories.rb"
@@ -31,7 +31,7 @@ define "tempo" do
   
   desc "Form Dispatcher Servlet"
   define "fds" do
-    libs = [AXIS2, COMMONS, DOM4J, JAXEN, LOG4J, SERVLET_API, SLF4J, STAX_API]
+    libs = [AXIS2, COMMONS, DOM4J, JAXEN, LOG4J, SERVLET_API, SLF4J, STAX_API, "xom:xom:jar:1.1"]
     compile.with libs 
     resources.filter.using "version" => VERSION_NUMBER
     test.with libs, XMLUNIT

@@ -11,12 +11,14 @@
  */
 package org.intalio.tempo.workflow.fds.dispatches;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.dom4j.Namespace;
 import org.dom4j.Node;
 import org.dom4j.QName;
 import org.dom4j.XPath;
@@ -50,49 +52,64 @@ class NotifyDispatcher implements IDispatcher {
     public NotifyDispatcher() {
 
     }
+    
 
     public Document dispatchRequest(Document request) throws InvalidInputFormatException {
         Element rootElement = request.getRootElement();
         userProcessNamespace = rootElement.getNamespaceURI();
 
-        rootElement.setName("createTaskRequest");
-        Element taskElement = rootElement.addElement("task", userProcessNamespace);
-
+        Namespace ns = new Namespace("tms", TMS_NS);
+        rootElement.setQName(new QName("createTaskRequest", ns));
+        
         Element metadataElement = rootElement.element("metadata");
+        metadataElement.setQName(new QName("metadata", ns));
         metadataElement.detach();
+        
+        
+        Element taskElement = rootElement.addElement("task");
+        taskElement.setQName(new QName("task",ns));
+        
         taskElement.add(metadataElement);
         if (metadataElement.selectSingleNode("taskId") == null) {
-            Element taskIdElement = metadataElement.addElement("taskId", userProcessNamespace);
+            Element taskIdElement = metadataElement.addElement(new QName("taskId",ns));
             taskIdElement.setText(generateUID());
         }
         if (metadataElement.selectSingleNode("taskType") == null) {
-            Element taskTypeElement = metadataElement.addElement("taskType", userProcessNamespace);
+            Element taskTypeElement = metadataElement.addElement(new QName("taskType", ns));
             taskTypeElement.setText("NOTIFICATION");
         }
 
         Element inputElement = rootElement.element("input");
+        inputElement.setQName(new QName("input",ns));
+        //inputElement.addNamespace("fe", userProcessNamespace);
         inputElement.detach();
         taskElement.add(inputElement);
 
-        // TODO: is this still necessary?
-        rootElement.addElement("participantToken", userProcessNamespace);
+        //TODO remove from TMS. Not needed
+        rootElement.addElement("participantToken");
 
         /*
          * Now, change the namespace the
          * input, to TMS_NS.
          */
         
-        XPath xpath = DocumentHelper.createXPath("/createTaskRequest/task/input//*");
+        XPath xpath = DocumentHelper.createXPath("/tms:createTaskRequest/tms:task/tms:input//*");
+        HashMap map = MessageConstants._nsMap;
+        map.put("tms", TMS_NS);
+        xpath.setNamespaceURIs(MessageConstants._nsMap);
         List allTaskInputElements = xpath.selectNodes(request);
+        
         
         xpath = DocumentHelper.createXPath("//*");
         List allBody = xpath.selectNodes(request);
-        for (int i = 0; i < allBody.size(); ++i) {
+        int size = allBody.size();
+        LOG.debug(allTaskInputElements.size()+":"+size);
+        for (int i = 0; i < size; ++i) {
             Node node = (Node)allBody.get(i);
             if (! allTaskInputElements.contains(node)) {
                 Element element = (Element) node;
                 element.remove(element.getNamespaceForURI(userProcessNamespace));
-                element.setQName(QName.get(element.getName(),TMS_NS));
+                element.setQName(new QName(element.getName(),ns));
             }
         }
 
