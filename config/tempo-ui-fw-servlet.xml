@@ -53,10 +53,10 @@
   </bean>
 
   <bean id="messageSource"
-        class="org.springframework.context.support.ResourceBundleMessageSource">
-    <property name="basename">
-      <value>messages</value>
-    </property>
+      class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+      <property name="basenames">
+          <value>/WEB-INF/classes/messages</value>
+      </property>
   </bean>
 
   <bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
