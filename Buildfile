@@ -253,6 +253,7 @@ define "tempo" do
   
   desc "XForms Manager"
   define "xforms-manager" do
+	compile.with ORBEON_LIBS
     resources.filter.using "version" => VERSION_NUMBER
     package(:war).with :libs=> ORBEON_LIBS
   end

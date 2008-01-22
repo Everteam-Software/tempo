@@ -13,12 +13,6 @@
         <param-value>org.orbeon.oxf.resources.PriorityResourceManagerFactory</param-value>
     </context-param>
 
-    <!-- URL resource manager base -->
-  <context-param>
-      <param-name>oxf.resources.url.base</param-name>
-      <param-value>http://localhost:8080/wds/</param-value>
-  </context-param>
-
     <context-param>
         <param-name>oxf.resources.priority.2</param-name>
         <param-value>org.orbeon.oxf.resources.WebAppResourceManagerFactory</param-value>
@@ -34,8 +28,9 @@
 
     <context-param>
         <param-name>oxf.resources.priority.3</param-name>
-        <param-value>org.orbeon.oxf.resources.URLResourceManagerFactory</param-value>
+        <param-value>org.intalio.tempo.oxf.TempoURLResourceManagerFactory</param-value>
     </context-param>
+    
     <!-- End flat file resource manager -->
     <!-- OXF Class Loader -->
     <context-param>
