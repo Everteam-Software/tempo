@@ -173,19 +173,6 @@
         <load-on-startup>2</load-on-startup>
     </servlet>
     -->
-    <servlet>
-        <servlet-name>struts-servlet</servlet-name>
-        <servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
-        <init-param>
-            <param-name>config</param-name>
-            <param-value>/WEB-INF/struts-config.xml</param-value>
-        </init-param>
-        <init-param>
-            <param-name>config/examples/struts/module</param-name>
-            <param-value>/WEB-INF/struts-module.xml</param-value>
-        </init-param>
-        <load-on-startup>3</load-on-startup>
-    </servlet>
     <!-- Uncomment this for the SQL examples -->
     <!--
     <servlet>
@@ -209,10 +196,6 @@
     <servlet-mapping>
         <servlet-name>ops-xforms-server-servlet</servlet-name>
         <url-pattern>//xforms-server</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>struts-servlet</servlet-name>
-        <url-pattern>/struts/*</url-pattern>
     </servlet-mapping>
     <!-- Uncomment this for the SQL examples -->
     <!--
