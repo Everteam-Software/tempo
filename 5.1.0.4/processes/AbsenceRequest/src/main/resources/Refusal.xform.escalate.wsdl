@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2005-2007 Intalio inc.
+  ~
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v1.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.eclipse.org/legal/epl-v10.html
+  ~
+  ~ Contributors:
+  ~ Intalio inc. - initial API and implementation
+  -->
+<wsdl:definitions
+  targetNamespace="http://www.intalio.com/workflow/forms/AbsenceRequest/Refusal"
+  xmlns="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:ar="http://www.intalio.com/workflow/forms/AbsenceRequest/Refusal"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <wsdl:types>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://www.intalio.com/workflow/forms/AbsenceRequest/Refusal">
+      <xsd:include schemaLocation="Refusal.xform.escalate.xsd"/>
+    </xsd:schema>
+  </wsdl:types>
+  <!-- Messages -->
+  <wsdl:message name="escalateRequest">
+    <wsdl:part element="ar:escalateRequest" name="root"/>
+  </wsdl:message>
+  <wsdl:message name="escalateResponse">
+    <wsdl:part element="ar:escalateResponse" name="root"/>
+  </wsdl:message>
+  <!-- Port Types -->
+  <wsdl:portType name="EscalationPort">
+    <wsdl:operation name="escalate">
+      <wsdl:input message="ar:escalateRequest" name="escalateRequest"/>
+      <wsdl:output message="ar:escalateResponse" name="escalateResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <!-- SOAP Bindings -->
+  <wsdl:binding name="EscalationSoapBinding" type="ar:EscalationPort">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="escalate">
+      <soap:operation soapAction="escalate" style="document"/>
+      <wsdl:input>
+        <soap:body
+          namespace="http://www.intalio.com/workflow/forms/AbsenceRequest/Refusal" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body
+          namespace="http://www.intalio.com/workflow/forms/AbsenceRequest/Refusal" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <!-- Services -->
+  <wsdl:service name="EscalationService">
+    <wsdl:port binding="ar:EscalationSoapBinding" name="EscalationPort">
+      <soap:address location="http://localhost:8080/fds/workflow"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

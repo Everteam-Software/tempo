@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+* Copyright (c) 2005-2006 Intalio inc.
+*
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License v1.0
+* which accompanies this distribution, and is available at
+* http://www.eclipse.org/legal/epl-v10.html
+*
+* Contributors:
+* Intalio inc. - initial API and implementation
+-->
+<wsdl:definitions
+	targetNamespace="http://www.intalio.com/bpms/workflow/examples/Store"
+	xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:this="http://www.intalio.com/bpms/workflow/examples/Store"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:bpws="http://schemas.xmlsoap.org/ws/2004/03/business-process/"
+	xmlns:plnk="http://schemas.xmlsoap.org/ws/2004/03/partner-link/"
+	xmlns:fds="http://www.intalio.com/bpms/workflow/forms/examples/Store">
+
+	<wsdl:import namespace="http://www.intalio.com/bpms/workflow/forms/examples/Store" location="FormDispatcher.wsdl"/>
+
+	<!-- Properties used for correlations -->
+
+	<bpws:property name="taskId" type="xsd:string"/>
+	<bpws:property name="taskId2" type="xsd:string"/>
+    <bpws:property name="processId" type="xsd:string"/>
+
+	<wsdl:types>
+			<xsd:schema targetNamespace="http://www.intalio.com/bpms/workflow/examples/Store">
+					<xsd:element name="initProcessRequest">
+							<xsd:complexType>
+									<xsd:sequence>
+											<xsd:element name="taskId" type="xsd:string"/>
+											<xsd:element name="participantToken" type="xsd:string"/>
+											<xsd:element name="taskOutput"/>
+									</xsd:sequence>
+							</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="initProcessResponse">
+							<xsd:complexType>
+									<xsd:sequence>
+											<xsd:element name="status" type="xsd:string"/>
+											<xsd:element name="errorCode" type="xsd:string" minOccurs="0"/>
+											<xsd:element name="errorReason" type="xsd:string" minOccurs="0"/>
+									</xsd:sequence>
+							</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="notifyTaskCompletionRequest">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="taskMetaData" type="this:taskMetaDataType"/>
+								<xsd:element name="taskOutput"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="response">
+							<xsd:complexType>
+									<xsd:sequence>
+											<xsd:element name="taskMetaData" type="this:taskMetaDataType"/>
+											<xsd:element name="status" type="xsd:string"/>
+											<xsd:element name="errorCode" type="xsd:string" minOccurs="0"/>
+											<xsd:element name="errorReason" type="xsd:string" minOccurs="0"/>
+											<xsd:element name="isChained" type="xsd:boolean" minOccurs="0"/>
+									</xsd:sequence>
+							</xsd:complexType>
+					</xsd:element>
+					<xsd:complexType name="taskMetaDataType">
+							<xsd:sequence>
+									<xsd:element name="taskId" type="xsd:string"/>
+									<xsd:element name="taskState" type="xsd:token"/>
+									<xsd:element name="taskType" type="xsd:token"/>
+									<xsd:element name="description" type="xsd:string"/>
+									<xsd:element name="processId" type="xsd:string"/>
+									<xsd:element name="creationDate" type="xsd:dateTime"/>
+									<xsd:element name="userOwner" type="xsd:string" maxOccurs="unbounded" minOccurs="0"/>
+									<xsd:element name="roleOwner" type="xsd:string" maxOccurs="unbounded" minOccurs="0"/>
+									<xsd:element name="formUrl" type="xsd:anyURI"/>
+									<xsd:element name="failureCode" type="xsd:string"/>
+									<xsd:element name="failureReason" type="xsd:string"/>
+							</xsd:sequence>
+					</xsd:complexType>
+			</xsd:schema>
+	</wsdl:types>
+
+	<!-- Messages -->
+
+	<wsdl:message name="initProcessRequest">
+		<wsdl:part name="root" element="this:initProcessRequest"/>
+	</wsdl:message>
+
+	<wsdl:message name="initProcessResponse">
+		<wsdl:part name="root" element="this:initProcessResponse"/>
+	</wsdl:message>
+
+	<wsdl:message name="notifyTaskCompletionRequest">
+		<wsdl:part name="root" element="this:notifyTaskCompletionRequest"/>
+	</wsdl:message>
+
+	<wsdl:message name="notifyTaskCompletionResponse">
+		<wsdl:part name="root" element="this:response"/>
+	</wsdl:message>
+
+	<!-- Correlations -->
+
+	<bpws:propertyAlias propertyName="this:taskId" messageType="fds:createTaskResponse" part="root">
+		<bpws:query>//fds:taskMetaData/fds:taskId</bpws:query>
+	</bpws:propertyAlias>
+
+	<bpws:propertyAlias propertyName="this:taskId" messageType="this:notifyTaskCompletionRequest" part="root">
+		<bpws:query>//this:taskMetaData/this:taskId</bpws:query>
+	</bpws:propertyAlias>
+
+	<bpws:propertyAlias propertyName="this:taskId2" messageType="fds:createTaskResponse" part="root">
+		<bpws:query>//fds:taskMetaData/fds:taskId</bpws:query>
+	</bpws:propertyAlias>
+
+	<bpws:propertyAlias propertyName="this:taskId2" messageType="this:notifyTaskCompletionRequest" part="root">
+		<bpws:query>//this:taskMetaData/this:taskId</bpws:query>
+	</bpws:propertyAlias>
+
+	<bpws:propertyAlias propertyName="this:processId" messageType="this:notifyTaskCompletionRequest" part="root">
+		<bpws:query>//this:taskMetaData/this:processId</bpws:query>
+	</bpws:propertyAlias>
+
+	<!-- Port Types -->
+
+	<wsdl:portType name="userProcessPortType">
+		<wsdl:operation name="initProcess">
+			<wsdl:input message="this:initProcessRequest" name="initProcessRequest"/>
+			<wsdl:output message="this:initProcessResponse" name="initProcessResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="notifyTaskCompletion">
+			<wsdl:input message="this:notifyTaskCompletionRequest" name="notifyTaskCompletionRequest"/>
+			<wsdl:output message="this:notifyTaskCompletionResponse" name="notifyTaskCompletionResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+
+	<!-- SOAP Bindings -->
+
+	<wsdl:binding name="userProcessSoapBinding" type="this:userProcessPortType">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="initProcess">
+			<soap:operation soapAction="initProcess" style="document" />
+			<wsdl:input>
+				<soap:body use="literal" namespace="http://www.intalio.com/bpms/workflow/examples/Store"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body namespace="http://www.intalio.com/bpms/workflow/examples/Store" use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="notifyTaskCompletion">
+			<soap:operation soapAction="notifyTaskCompletion" style="document" />
+			<wsdl:input>
+				<soap:body use="literal" namespace="http://www.intalio.com/bpms/workflow/examples/Store"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body namespace="http://www.intalio.com/bpms/workflow/examples/Store" use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+
+	<!-- Services -->
+
+	<wsdl:service name="StoreService">
+		<wsdl:port name="userProcessPort" binding="this:userProcessSoapBinding">
+			<soap:address location="http://localhost:8080/pxe/soap/examples/Store/workflow_To_Store"/>
+		</wsdl:port>
+	</wsdl:service>
+
+	<!-- Partner Link Types -->
+
+	<plnk:partnerLinkType name="initProcessPartnerLinkType">
+		<plnk:role name="userProcess" portType="this:userProcessPortType"/>
+		<plnk:role name="TMS" portType="this:userProcessPortType"/>
+	</plnk:partnerLinkType>
+
+</wsdl:definitions>

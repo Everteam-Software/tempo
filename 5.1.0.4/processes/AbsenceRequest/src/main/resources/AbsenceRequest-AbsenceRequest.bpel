@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2005-2007 Intalio inc.
+  ~
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v1.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.eclipse.org/legal/epl-v10.html
+  ~
+  ~ Contributors:
+  ~ Intalio inc. - initial API and implementation
+  -->
+<bpel:process
+    xmlns:bpel="http://schemas.xmlsoap.org/ws/2004/03/business-process/"
+    xmlns:wsdlns4="http://www.example.com/AbsenceRequest/AbsenceRequest_To_Employee"
+    xmlns:tns="http://www.example.com/AbsenceRequest/AbsenceRequest"
+    xmlns:Employee1="http://www.example.com/AbsenceRequest/AbsenceRequest_To_Employee"
+    xmlns:ode="http://www.apache.org/ode/type/extension"
+    xmlns:Employee="http://www.example.com/AbsenceRequest/Employee_To_AbsenceRequest"
+    xmlns:Manager="http://www.example.com/AbsenceRequest/AbsenceRequest_To_Manager"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:wsdlns0="http://www.example.com/AbsenceRequest/Employee_To_AbsenceRequest"
+    xmlns:wsdlns3="http://www.example.com/AbsenceRequest/AbsenceRequest_And_Employee_PLT"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:wsdlns1="http://www.example.com/AbsenceRequest/AbsenceRequest_And_Manager_PLT"
+    xmlns:bpmn="http://bpms.intalio.com/designer/bpmn"
+    xmlns:Manager1="http://www.example.com/AbsenceRequest/Manager_To_AbsenceRequest"
+    xmlns:wsdlns2="http://www.example.com/AbsenceRequest/Manager_To_AbsenceRequest"
+    xmlns:AbsenceRequest="http://www.intalio.com/workflow/forms/AbsenceRequest/AbsenceRequest"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:fe="http://www.intalio.com/workflow/forms/AbsenceRequest/Notification"
+    xmlns:this="http://www.example.com/AbsenceRequest/AbsenceRequest"
+    xmlns:wsdlns5="http://www.example.com/AbsenceRequest/AbsenceRequest_To_Manager"
+    bpmn:id="ID-59af76a4-c003-1004-827a-e5d06b4e900d"
+    name="AbsenceRequest"
+    targetNamespace="http://www.example.com/AbsenceRequest/AbsenceRequest"
+    queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0"
+    expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0"
+    suppressJoinFailure="yes" abstractProcess="no" exitOnStandardFault="no">
+    <rdfs:label xml:space="preserve">AbsenceRequest</rdfs:label>
+    <bpel:import
+        namespace="http://www.example.com/AbsenceRequest/AbsenceRequest"
+        location="AbsenceRequest-AbsenceRequest.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <bpel:partnerLinks>
+        <bpel:partnerLink name="AbsenceRequest_And_Employee_PLink"
+            partnerLinkType="wsdlns3:AbsenceRequest_And_Employee_PLT"
+            myRole="AbsenceRequest_Role" partnerRole="Employee_Role" initializePartnerRole="yes"/>
+        <bpel:partnerLink name="AbsenceRequest_And_Manager_PLink"
+            partnerLinkType="wsdlns1:AbsenceRequest_And_Manager_PLT"
+            myRole="AbsenceRequest_Role" partnerRole="Manager_Role" initializePartnerRole="yes"/>
+    </bpel:partnerLinks>
+    <bpel:variables>
+        <bpel:variable name="decision" type="xsd:string"/>
+        <bpel:variable name="initProcessRequest" messageType="Employee:initProcessRequest"/>
+        <bpel:variable name="initProcessResponse" messageType="Employee:initProcessResponse"/>
+        <bpel:variable name="createTaskResponse" messageType="Manager:createTaskResponse"/>
+        <bpel:variable name="createTaskRequest" messageType="Manager:createTaskRequest"/>
+        <bpel:variable name="notifyTaskCompletionRequest" messageType="Manager1:notifyTaskCompletionRequest"/>
+        <bpel:variable name="notifyTaskCompletionResponse" messageType="Manager1:notifyTaskCompletionResponse"/>
+        <bpel:variable name="NotifyResponse" messageType="wsdlns4:NotifyResponse"/>
+        <bpel:variable name="NotifyRequest" messageType="wsdlns4:NotifyRequest"/>
+    </bpel:variables>
+    <bpel:correlationSets>
+        <bpel:correlationSet properties="tns:approvalTaskProp" name="approvalTaskId"/>
+    </bpel:correlationSets>
+    <bpel:sequence name="AbsenceRequest-Sequence">
+        <bpel:receive bpmn:id="ID-59c2e4dc-c003-1004-827a-e5d06b4e900d"
+            name="Receive_Absence_Request-Receive"
+            partnerLink="AbsenceRequest_And_Employee_PLink"
+            portType="Employee:Employee_To_AbsenceRequest_PortType"
+            operation="Receive_Absence_Request"
+            variable="initProcessRequest" createInstance="yes">
+            <rdfs:label xml:space="preserve">Receive Absence Request</rdfs:label>
+        </bpel:receive>
+        <bpel:assign bpmn:id="ID-59c2e4dc-c003-1004-827a-e5d06b4e900d"
+            name="Receive_Absence_Request-Assign" validate="no">
+            <bpel:copy>
+                <bpel:from>
+                    <bpel:literal>
+                        <AbsenceRequest:initProcessResponse>
+                            <AbsenceRequest:status>OK</AbsenceRequest:status>
+                        </AbsenceRequest:initProcessResponse>
+                    </bpel:literal>
+                </bpel:from>
+                <bpel:to>$initProcessResponse.initProcessResponse</bpel:to>
+            </bpel:copy>
+        </bpel:assign>
+        <bpel:reply bpmn:id="ID-59c2e4dc-c003-1004-827a-e5d06b4e900d"
+            name="Receive_Absence_Request-Reply"
+            partnerLink="AbsenceRequest_And_Employee_PLink"
+            portType="Employee:Employee_To_AbsenceRequest_PortType"
+            operation="Receive_Absence_Request" variable="initProcessResponse">
+            <rdfs:label xml:space="preserve">Receive Absence Request</rdfs:label>
+        </bpel:reply>
+        <bpel:if bpmn:id="ID-846a18e0-c003-1004-827a-e5d06b4e900d" name="automatically_accept_-If">
+            <rdfs:label xml:space="preserve">automatically accept?</rdfs:label>
+            <bpel:condition>false()</bpel:condition>
+            <bpel:then>
+                <bpel:sequence name="automatically_accept_-Sequence">
+                    <bpel:empty
+                        bpmn:id="ID-8eb955d0-c003-1004-8077-894fdf0483ba" name="Accept_Request--011">
+                        <rdfs:label xml:space="preserve">Accept Request</rdfs:label>
+                    </bpel:empty>
+                </bpel:sequence>
+            </bpel:then>
+            <bpel:else>
+                <bpel:sequence name="automatically_accept_-Sequence--001">
+                    <bpel:assign
+                        bpmn:id="ID-59d252dc-c003-1004-827a-e5d06b4e900d"
+                        name="Request_Manager_Approval-Assign" validate="no">
+                        <bpel:copy>
+                            <bpel:from>
+                                <bpel:literal>
+                                    <AbsenceRequest:createTaskRequest>
+                                    <AbsenceRequest:taskMetaData>
+                                    <AbsenceRequest:description>Examples - Absence Approval</AbsenceRequest:description>
+                                    <AbsenceRequest:processId/>
+                                    <AbsenceRequest:userOwner/>
+                                    <AbsenceRequest:roleOwner>examples\manager</AbsenceRequest:roleOwner>
+                                    <AbsenceRequest:formUrl>http://localhost:8080/wds/AbsenceRequest/AbsenceApproval.xform</AbsenceRequest:formUrl>
+                                    <AbsenceRequest:userProcessEndpoint>http://localhost:8080/ode/processes/AbsenceRequest/Manager_To_AbsenceRequest</AbsenceRequest:userProcessEndpoint>
+                                    <AbsenceRequest:userProcessNamespaceURI>http://www.intalio.com/workflow/forms/AbsenceRequest/AbsenceRequest</AbsenceRequest:userProcessNamespaceURI>
+                                    <AbsenceRequest:userProcessCompleteSOAPAction>http://www.example.com/AbsenceRequest/Manager_To_AbsenceRequest/Manager_To_AbsenceRequest_PortType/Receive_Manager_Approval</AbsenceRequest:userProcessCompleteSOAPAction>
+                                    </AbsenceRequest:taskMetaData>
+                                    <AbsenceRequest:taskInput>
+                                    <AbsenceRequest:input/>
+                                    </AbsenceRequest:taskInput>
+                                    </AbsenceRequest:createTaskRequest>
+                                </bpel:literal>
+                            </bpel:from>
+                            <bpel:to>$createTaskRequest.createTaskRequest</bpel:to>
+                        </bpel:copy>
+                        <bpel:copy>
+                            <bpel:from>$initProcessRequest.initProcessRequest/AbsenceRequest:taskId</bpel:from>
+                            <bpel:to>$createTaskRequest.createTaskRequest/AbsenceRequest:taskMetaData/AbsenceRequest:processId</bpel:to>
+                        </bpel:copy>
+                        <bpel:copy>
+                            <bpel:from>$initProcessRequest.initProcessRequest/AbsenceRequest:taskOutput/AbsenceRequest:output</bpel:from>
+                            <bpel:to>$createTaskRequest.createTaskRequest/AbsenceRequest:taskInput/AbsenceRequest:input</bpel:to>
+                        </bpel:copy>
+                    </bpel:assign>
+                    <bpel:invoke
+                        bpmn:id="ID-59d252dc-c003-1004-827a-e5d06b4e900d"
+                        name="Request_Manager_Approval-Invoke"
+                        partnerLink="AbsenceRequest_And_Manager_PLink"
+                        portType="Manager:AbsenceRequest_To_Manager_PortType"
+                        operation="Receive_Absence_Request--006"
+                        inputVariable="createTaskRequest" outputVariable="createTaskResponse">
+                        <rdfs:label xml:space="preserve">Request Manager Approval</rdfs:label>
+                        <bpel:correlations>
+                            <bpel:correlation set="approvalTaskId"
+                                initiate="yes" pattern="response"/>
+                        </bpel:correlations>
+                    </bpel:invoke>
+                    <bpel:receive
+                        bpmn:id="ID-59d65120-c003-1004-827a-e5d06b4e900d"
+                        name="Receive_Manager_Approval-Receive"
+                        partnerLink="AbsenceRequest_And_Manager_PLink"
+                        portType="Manager1:Manager_To_AbsenceRequest_PortType"
+                        operation="Receive_Manager_Approval"
+                        variable="notifyTaskCompletionRequest" createInstance="no">
+                        <rdfs:label xml:space="preserve">Receive Manager Approval</rdfs:label>
+                        <bpel:correlations>
+                            <bpel:correlation set="approvalTaskId" initiate="no"/>
+                        </bpel:correlations>
+                    </bpel:receive>
+                    <bpel:assign
+                        bpmn:id="ID-59d65120-c003-1004-827a-e5d06b4e900d"
+                        name="Receive_Manager_Approval-Assign" validate="no">
+                        <bpel:copy>
+                            <bpel:from>
+                                <bpel:literal>
+                                    <AbsenceRequest:response>
+                                    <AbsenceRequest:status>OK</AbsenceRequest:status>
+                                    </AbsenceRequest:response>
+                                </bpel:literal>
+                            </bpel:from>
+                            <bpel:to>$notifyTaskCompletionResponse.response</bpel:to>
+                        </bpel:copy>
+                    </bpel:assign>
+                    <bpel:reply
+                        bpmn:id="ID-59d65120-c003-1004-827a-e5d06b4e900d"
+                        name="Receive_Manager_Approval-Reply"
+                        partnerLink="AbsenceRequest_And_Manager_PLink"
+                        portType="Manager1:Manager_To_AbsenceRequest_PortType"
+                        operation="Receive_Manager_Approval" variable="notifyTaskCompletionResponse">
+                        <rdfs:label xml:space="preserve">Receive Manager Approval</rdfs:label>
+                    </bpel:reply>
+                    <bpel:if
+                        bpmn:id="ID-2f5f3fb8-c0e1-1004-8422-2376677fd551" name="accepted_-If">
+                        <rdfs:label xml:space="preserve">accepted?</rdfs:label>
+                        <bpel:condition>$notifyTaskCompletionRequest.notifyTaskCompletionRequest/AbsenceRequest:taskOutput/AbsenceRequest:output/AbsenceRequest:approved = "true"</bpel:condition>
+                        <bpel:then>
+                            <bpel:sequence name="accepted_-Sequence">
+                                <bpel:assign
+                                    bpmn:id="ID-2f50fafc-c0e1-1004-8422-2376677fd551"
+                                    name="Accept-Assign" validate="no">
+                                    <bpel:copy>
+                                    <bpel:from>"accepted"</bpel:from>
+                                    <bpel:to>$decision</bpel:to>
+                                    </bpel:copy>
+                                </bpel:assign>
+                            </bpel:sequence>
+                        </bpel:then>
+                        <bpel:else>
+                            <bpel:sequence name="accepted_-Sequence--002">
+                                <bpel:assign
+                                    bpmn:id="ID-2f56fa24-c0e1-1004-8422-2376677fd551"
+                                    name="Reject-Assign" validate="no">
+                                    <bpel:copy>
+                                    <bpel:from>"rejected"</bpel:from>
+                                    <bpel:to>$decision</bpel:to>
+                                    </bpel:copy>
+                                </bpel:assign>
+                            </bpel:sequence>
+                        </bpel:else>
+                    </bpel:if>
+                    <bpel:assign
+                        bpmn:id="ID-2d010f58-c0e1-1004-8422-2376677fd551"
+                        name="Notify_Decision-Assign" validate="no">
+                        <bpel:copy>
+                            <bpel:from>
+                                <bpel:literal>
+                                    <fe:notifyRequest>
+                                    <fe:metadata>
+                                    <fe:description>string</fe:description>
+                                    <fe:userOwner>string</fe:userOwner>
+                                    <fe:roleOwner>string</fe:roleOwner>
+                                    <fe:formUrl>anyURI</fe:formUrl>
+                                    </fe:metadata>
+                                    <fe:input>
+                                    <fe:input>
+                                    <fe:details>
+                                    <fe:request>
+                                    <fe:from>date</fe:from>
+                                    <fe:to>date</fe:to>
+                                    <fe:type>string</fe:type>
+                                    <fe:hours>integer</fe:hours>
+                                    </fe:request>
+                                    </fe:details>
+                                    <fe:decision>string</fe:decision>
+                                    <fe:notes>string</fe:notes>
+                                    </fe:input>
+                                    </fe:input>
+                                    </fe:notifyRequest>
+                                </bpel:literal>
+                            </bpel:from>
+                            <bpel:to>$NotifyRequest.notifyRequest</bpel:to>
+                        </bpel:copy>
+                        <bpel:copy>
+                            <bpel:from>$initProcessRequest.initProcessRequest/AbsenceRequest:taskOutput/AbsenceRequest:output/AbsenceRequest:request/AbsenceRequest:details</bpel:from>
+                            <bpel:to>$NotifyRequest.notifyRequest/fe:input/fe:input/fe:details</bpel:to>
+                        </bpel:copy>
+                        <bpel:copy>
+                            <bpel:from>$notifyTaskCompletionRequest.notifyTaskCompletionRequest/AbsenceRequest:taskOutput/AbsenceRequest:output/AbsenceRequest:comment</bpel:from>
+                            <bpel:to>$NotifyRequest.notifyRequest/fe:input/fe:input/fe:notes</bpel:to>
+                        </bpel:copy>
+                        <bpel:copy>
+                            <bpel:from>"Absence Request - Decision"</bpel:from>
+                            <bpel:to>$NotifyRequest.notifyRequest/fe:metadata/fe:description</bpel:to>
+                        </bpel:copy>
+                        <bpel:copy>
+                            <bpel:from>"oxf://AbsenceRequest/Notification.xform"</bpel:from>
+                            <bpel:to>$NotifyRequest.notifyRequest/fe:metadata/fe:formUrl</bpel:to>
+                        </bpel:copy>
+                        <bpel:copy>
+                            <bpel:from>"examples\employee"</bpel:from>
+                            <bpel:to>$NotifyRequest.notifyRequest/fe:metadata/fe:roleOwner</bpel:to>
+                        </bpel:copy>
+                        <bpel:copy>
+                            <bpel:from>$decision</bpel:from>
+                            <bpel:to>$NotifyRequest.notifyRequest/fe:input/fe:input/fe:decision</bpel:to>
+                        </bpel:copy>
+                    </bpel:assign>
+                    <bpel:invoke
+                        bpmn:id="ID-2d010f58-c0e1-1004-8422-2376677fd551"
+                        name="Notify_Decision-Invoke"
+                        partnerLink="AbsenceRequest_And_Employee_PLink"
+                        portType="Employee1:AbsenceRequest_To_Employee_PortType"
+                        operation="Receive_Notification"
+                        inputVariable="NotifyRequest" outputVariable="NotifyResponse">
+                        <rdfs:label xml:space="preserve">Notify Decision</rdfs:label>
+                    </bpel:invoke>
+                </bpel:sequence>
+            </bpel:else>
+        </bpel:if>
+    </bpel:sequence>
+</bpel:process>

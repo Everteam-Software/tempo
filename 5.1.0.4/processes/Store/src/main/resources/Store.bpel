@@ -1,0 +1,294 @@
+<!--
+* Copyright (c) 2005-2006 Intalio inc.
+*
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License v1.0
+* which accompanies this distribution, and is available at
+* http://www.eclipse.org/legal/epl-v10.html
+*
+* Contributors:
+* Intalio inc. - initial API and implementation
+-->
+<process name="Store"
+    targetNamespace="http://www.intalio.com/bpms/workflow/examples/Store"
+    xmlns:bpws="http://schemas.xmlsoap.org/ws/2004/03/business-process/"
+    xmlns="http://schemas.xmlsoap.org/ws/2004/03/business-process/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:this="http://www.intalio.com/bpms/workflow/examples/Store"
+    xmlns:thisAdd="http://www.intalio.com/bpms/workflow/xforms/Examples/Store/Address"
+    xmlns:thisItem="http://www.intalio.com/bpms/workflow/xforms/Examples/Store/SelectItem"
+	xmlns:fds="http://www.intalio.com/bpms/workflow/forms/examples/Store"
+    xmlns:b4px="java:org.intalio.tempo.workflow.processes.xpath.UID">
+
+    <import namespace="http://www.intalio.com/bpms/workflow/examples/Store" location="urn:/Store.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+
+	<partnerLinks>
+		<partnerLink name="initProcessPartnerLink" partnerLinkType="this:initProcessPartnerLinkType" myRole="userProcess" />
+		<partnerLink name="FDSPartnerLink" partnerLinkType="fds:FDSPartnerLinkType" partnerRole="taskManager" initializePartnerRole="yes"/>
+	</partnerLinks>
+
+	<variables>
+		<variable name="initProcessRequest" messageType="this:initProcessRequest"/>
+		<variable name="initProcessResponse" messageType="this:initProcessResponse"/>
+		<variable name="createTaskRequest" messageType="fds:createTaskRequest"/>
+		<variable name="createTaskResponse" messageType="fds:createTaskResponse"/>
+		<variable name="notifyTaskCompletionRequest" messageType="this:notifyTaskCompletionRequest"/>
+		<variable name="notifyTaskCompletionResponse" messageType="this:notifyTaskCompletionResponse"/>
+		<variable name="createTaskRequest2" messageType="fds:createTaskRequest"/>
+		<variable name="createTaskResponse2" messageType="fds:createTaskResponse"/>
+		<variable name="notifyTaskCompletionRequest2" messageType="this:notifyTaskCompletionRequest"/>
+		<variable name="notifyTaskCompletionResponse2" messageType="this:notifyTaskCompletionResponse"/>
+		<variable name="processId" type="xsd:string"/>
+		<variable name="test" type="xsd:string"/>
+	</variables>
+
+	<scope name="ProcessScope">
+
+		<correlationSets>
+			<correlationSet name="pid" properties="this:processId"/>
+			<correlationSet name="taskId" properties="this:taskId"/>
+			<correlationSet name="taskId2" properties="this:taskId"/>
+		</correlationSets>
+
+		<sequence>
+
+			<!-- Start process from UI -->
+
+			<receive name="start"
+				partnerLink="initProcessPartnerLink"
+				portType="this:userProcessPortType"
+				operation="initProcess"
+				variable="initProcessRequest"
+				createInstance="yes"/>
+
+			<!-- Initialize PID -->
+
+			<assign name="createTaskRequest">
+				<copy xmlns:b4px="java:org.intalio.tempo.workflow.processes.xpath.UID">
+					<from expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0">b4px:create()</from>
+					<to>$processId</to>
+				</copy>
+			</assign>
+
+			<!-- Create Task #1 -->
+
+			<assign name="createTaskRequest">
+				<copy>
+					<from>
+						<literal>
+							<fds:createTaskRequest>
+								<fds:taskMetaData>
+									<fds:processId>examples.store.TestProcessID</fds:processId>
+									<fds:description>Store - Please provide your shipping address</fds:description>
+									<fds:userOwner/>
+									<fds:roleOwner>examples\employee</fds:roleOwner>
+									<fds:formUrl>/Examples/Store/Address.xform</fds:formUrl>
+									<fds:userProcessEndpoint>http://localhost:8080/pxe/soap/examples/Store/workflow_To_Store</fds:userProcessEndpoint>
+									<fds:userProcessNamespaceURI>http://www.intalio.com/bpms/workflow/examples/Store</fds:userProcessNamespaceURI>
+									<fds:userProcessCompleteSOAPAction>notifyTaskCompletion</fds:userProcessCompleteSOAPAction>
+									<fds:isChainedBefore>true</fds:isChainedBefore>
+									<fds:previousTaskId>PreviousTaskID</fds:previousTaskId>
+								</fds:taskMetaData>
+								<fds:taskInput>
+									<thisAdd:Order>
+										<thisAdd:reference/>
+									</thisAdd:Order>
+								</fds:taskInput>
+							</fds:createTaskRequest>
+						</literal>
+					</from>
+					<to variable="createTaskRequest" part="root"/>
+				</copy>
+				<copy>
+					<from>$initProcessRequest.root/this:taskOutput/this:output/thisItem:product</from>
+					<to>$createTaskRequest.root/fds:taskInput/thisAdd:Order/thisAdd:reference</to>
+				</copy>
+				<copy>
+					<from>$processId</from>
+					<to>$createTaskRequest.root/fds:taskMetaData/fds:processId</to>
+				</copy>
+				<copy>
+					<from>$initProcessRequest.root/this:taskId</from>
+					<to>$createTaskRequest.root/fds:taskMetaData/fds:previousTaskId</to>
+				</copy>
+			</assign>
+
+			<invoke operation="createTask"
+				inputVariable="createTaskRequest"
+				outputVariable="createTaskResponse"
+				partnerLink="FDSPartnerLink"
+				portType="fds:FDSPortType">
+				<correlations>
+					<correlation set="taskId" initiate="yes" pattern="response"/>
+				</correlations>
+			</invoke>
+
+			<!-- Acknowledge process is started -->
+
+			<assign name="startAcknowledgement">
+				<copy>
+					<from>
+						<literal>
+							<this:initProcessRequest>
+								<this:status>OK</this:status>
+								<this:taskMetaData>
+									<this:nextTaskId/>
+									<this:nextTaskURL/>
+								</this:taskMetaData>
+							</this:initProcessRequest>
+						</literal>
+					</from>
+					<to variable="initProcessResponse" part="root"/>
+				</copy>
+				<copy>
+					<from>$createTaskResponse.root/fds:taskMetaData/fds:taskId</from>
+					<to>$initProcessResponse.root/this:taskMetaData/this:nextTaskId</to>
+				</copy>
+				<copy>
+					<from>$createTaskRequest.root/fds:taskMetaData/fds:formUrl</from>
+					<to>$initProcessResponse.root/this:taskMetaData/this:nextTaskURL</to>
+				</copy>
+			</assign>
+
+			<reply name="startOK"
+				partnerLink="initProcessPartnerLink"
+				portType="this:userProcessPortType"
+				operation="initProcess"
+				variable="initProcessResponse"/>
+
+			<!-- Complete Task -->
+
+			<receive name="ReceiveCompleteTask"
+				partnerLink="initProcessPartnerLink"
+				portType="this:userProcessPortType"
+				operation="notifyTaskCompletion"
+				variable="notifyTaskCompletionRequest">
+				<correlations>
+					<correlation set="taskId" initiate="no"/>
+				</correlations>
+			</receive>
+
+			<assign name="CompleteTaskAcknowledgement">
+				<copy>
+					<from>
+						<literal>
+							<this:notifyTaskCompletionResponse>
+								<this:status>OK</this:status>
+								<this:isChainedAfter>true</this:isChainedAfter>
+							</this:notifyTaskCompletionResponse>
+						</literal>
+					</from>
+					<to variable="notifyTaskCompletionResponse" part="root"/>
+				</copy>
+			</assign>
+
+			<reply name="completeTaskOK"
+				partnerLink="initProcessPartnerLink"
+				portType="this:userProcessPortType"
+				operation="notifyTaskCompletion"
+				variable="notifyTaskCompletionResponse"/>
+
+			<!-- Create Task #2 -->
+
+			<assign>
+				<copy>
+					<from>
+						<literal>
+							<fds:createTaskRequest>
+								<fds:taskMetaData>
+									<fds:processId>examples.store.TestProcessID2</fds:processId>
+									<fds:description>Store - Please provide your credit card information</fds:description>
+									<fds:userOwner/>
+									<fds:roleOwner>examples\employee</fds:roleOwner>
+									<fds:formUrl>/Examples/Store/Payment.xform</fds:formUrl>
+									<fds:userProcessEndpoint>http://localhost:8080/pxe/soap/examples/Store/workflow_To_Store</fds:userProcessEndpoint>
+									<fds:userProcessNamespaceURI>http://www.intalio.com/bpms/workflow/examples/Store</fds:userProcessNamespaceURI>
+									<fds:userProcessCompleteSOAPAction>notifyTaskCompletion</fds:userProcessCompleteSOAPAction>
+									<fds:isChainedBefore>true</fds:isChainedBefore>
+									<fds:previousTaskId>PreviousTaskID</fds:previousTaskId>
+								</fds:taskMetaData>
+								<fds:taskInput>
+								  <thisAdd:Input>
+  									<thisAdd:Order>
+  										<thisAdd:reference/>
+  									</thisAdd:Order>
+  									<thisAdd:Address>
+  										<thisAdd:country/>
+  										<thisAdd:state/>
+  										<thisAdd:zip/>
+  										<thisAdd:city/>
+  										<thisAdd:street1/>
+  										<thisAdd:street2/>
+  									</thisAdd:Address>
+  								</thisAdd:Input>
+								</fds:taskInput>
+							</fds:createTaskRequest>
+						</literal>
+					</from>
+					<to variable="createTaskRequest2" part="root"/>
+				</copy>
+				<copy>
+					<from>$initProcessRequest.root/this:taskOutput/this:output/thisItem:product</from>
+					<to>$createTaskRequest2.root/fds:taskInput/thisAdd:Input/thisAdd:Order/thisAdd:reference</to>
+				</copy>
+				<copy>
+					<from>$notifyTaskCompletionRequest.root/this:taskOutput/thisAdd:output/thisAdd:Address</from>
+					<to>$createTaskRequest2.root/fds:taskInput/thisAdd:Input/thisAdd:Address</to>
+				</copy>
+				<copy>
+					<from>$createTaskResponse.root/fds:taskMetaData/fds:taskId</from>
+					<to>$createTaskRequest2.root/fds:taskMetaData/fds:previousTaskId</to>
+				</copy>
+				<copy>
+					<from>$processId</from>
+					<to>$createTaskRequest2.root/fds:taskMetaData/fds:processId</to>
+				</copy>
+			</assign>
+
+			<invoke name="CreateTask2"
+				operation="createTask"
+				inputVariable="createTaskRequest2"
+				outputVariable="createTaskResponse2"
+				partnerLink="FDSPartnerLink"
+				portType="fds:FDSPortType">
+				<correlations>
+					<correlation set="taskId2" initiate="yes" pattern="response"/>
+				</correlations>
+			</invoke>
+
+			<!-- Complete Task -->
+
+			<receive name="ReceiveCompleteTask2"
+				partnerLink="initProcessPartnerLink"
+				portType="this:userProcessPortType"
+				operation="notifyTaskCompletion"
+				variable="notifyTaskCompletionRequest2">
+				<correlations>
+					<correlation set="taskId2" initiate="no"/>
+				</correlations>
+			</receive>
+
+			<assign name="CompleteTaskAcknowledgement2">
+				<copy>
+					<from>
+						<literal>
+							<this:notifyTaskCompletionResponse>
+								<this:status>OK</this:status>
+								<this:isChainedAfter>false</this:isChainedAfter>
+							</this:notifyTaskCompletionResponse>
+						</literal>
+					</from>
+					<to variable="notifyTaskCompletionResponse2" part="root"/>
+				</copy>
+			</assign>
+
+			<reply name="completeTaskOK2"
+				partnerLink="initProcessPartnerLink"
+				portType="this:userProcessPortType"
+				operation="notifyTaskCompletion"
+				variable="notifyTaskCompletionResponse2"/>
+
+		</sequence>
+
+	</scope>
+</process>

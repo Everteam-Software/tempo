@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- 
+  Copyright (c) 2005-2006 Intalio inc.
+ 
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the Eclipse Public License v1.0
+  which accompanies this distribution, and is available at
+  http://www.eclipse.org/legal/epl-v10.html
+ 
+  Contributors:
+  Intalio inc. - initial API and implementation
+ -->
+
+<!-- $Id: workflowProcessesMessage.xml 3302 2006-03-29 13:41:51Z ozenzin $ -->
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Header xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">
+        <wsa:To xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://localhost:8081/fds/workflow/ib4p</wsa:To>
+        <wsa:ReplyTo xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">
+            <wsa:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:Address>
+        </wsa:ReplyTo>
+        <wsa:MessageID xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">
+            BF930F2392FDC15C2A113759611707612
+        </wsa:MessageID>
+    </soapenv:Header>
+    <soapenv:Body>
+        <ib4p:response xmlns:ib4p="http://www.intalio.com/bpms/workflow/ib4p_20051115" xmlns:ar="http://www.intalio.com/bpms/workflow/forms/examples/absence-request/absence-approval">
+            <ib4p:taskMetaData>
+                <!-- Task Meta Data -->
+                <ib4p:userProcessEndpoint>http://localhost:8081/workflow/forms/examples/absence-request/absence-approval</ib4p:userProcessEndpoint>
+                <ib4p:userProcessNamespaceURI>http://www.intalio.com/bpms/workflow/forms/examples/absence-request/absence-approval</ib4p:userProcessNamespaceURI>
+            </ib4p:taskMetaData>
+            
+            <ib4p:taskOutput>
+                <ar:output xmlns:ar="http://www.intalio.com/bpms/workflow/forms/examples/absence-request/absence-approval">
+                   <ar:name>
+                       <ar:firstName>Iwan</ar:firstName>
+                       <ar:lastName>Memruk</ar:lastName>
+                   </ar:name>
+                </ar:output>
+            </ib4p:taskOutput>
+        </ib4p:response>
+    </soapenv:Body>
+</soapenv:Envelope>

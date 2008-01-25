@@ -1,0 +1,25 @@
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd" >
+<web-app id="com.intalio.bpms.wds">
+  <display-name>Intalio|BPMS Workflow Deployment Service</display-name>
+
+  <servlet>
+    <servlet-name>WorkflowDeploymentService</servlet-name>
+    <servlet-class>org.intalio.tempo.workflow.wds.servlets.WDSServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>file:${org.intalio.tempo.configDirectory}/tempo-wds.xml</param-value>
+    </init-param>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>WorkflowDeploymentService</servlet-name>
+    <url-pattern>/*</url-pattern>
+  </servlet-mapping>
+
+  <resource-ref>
+    <res-ref-name>jdbc/BPMSDB</res-ref-name>
+    <res-type>javax.sql.DataSource</res-type>
+    <res-auth>Container</res-auth>
+    <res-sharing-scope>Shareable</res-sharing-scope>
+  </resource-ref>
+</web-app>
