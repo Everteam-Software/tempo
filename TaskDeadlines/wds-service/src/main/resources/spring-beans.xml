@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+  <bean id="config" class="org.intalio.tempo.workflow.wds.config.WDSConfigBean">
+    <property name="wdsDataSource">
+        <value>java:comp/env/jdbc/BPMSDB</value>
+    </property>
+    <property name="tmsDataSource">
+        <value>java:comp/env/jdbc/BPMSDB</value>
+    </property>
+  </bean>
+</beans>

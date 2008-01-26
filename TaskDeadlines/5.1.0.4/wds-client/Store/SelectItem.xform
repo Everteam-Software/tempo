@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (C) 2005-06, Intalio Inc. The program(s) herein may be used and/or copied only with the written permission of Intalio Inc. or in accordance with the terms and conditions stipulated in the agreement/contract under which the program(s) have been supplied. -->
+<xhtml:html xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:f="http://orbeon.org/oxf/xml/formatting" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fe="http://www.intalio.com/bpms/workflow/xforms/Examples/Store/SelectItem" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xforms="http://www.w3.org/2002/xforms">
+  <xhtml:head>
+    <xhtml:style type="text/css" id="intalio-fe-default" xml:space="preserve">
+            h1 {
+              color: #333333;
+              background-color: #CCCCCC;
+              font-family: Verdana;
+              font-size: 16px;
+              font-weight: bold;
+            }
+
+            h2 {
+              color: #AAAAAA;
+              font-family: Verdana;
+              font-size: 14px;
+              font-weight: bold;
+              border-width: 0px;
+              border-bottom-color: #AAAAAA;
+              border-bottom-width: 1px;
+              border-style: solid;
+            }
+
+            div#intalio-bpms-form {
+                height: 430px;
+                width: 97%;
+                overflow: auto;
+            }
+
+            div#intalio-bpms-form .xforms-control { 
+                font-family: Arial;
+                font-size: 11px;
+                font-weight: normal;
+            }
+            div#intalio-bpms-form div label.xforms-label {
+                font-family: Arial;
+                font-size: 11px;
+                font-weight: normal;
+            }
+        </xhtml:style>
+    <xhtml:style type="text/css" id="intalio-fe-xforms" xml:space="preserve">#xforms_cntrl_product {position : absolute; top : 33; left : 16; width : 420; height : 29; margin : 0; padding : 0;}
+#xforms_cntrl_product select {width : 372; height : 21}
+</xhtml:style>
+    <xforms:model schema="SelectItem.xform.xsd">
+      <!-- Task Input -->
+      <xforms:instance id="taskinput">
+        <input xmlns="http://www.intalio.com/bpms/workflow/xforms/Examples/Store/SelectItem"/>
+      </xforms:instance>
+      <!-- Task metadata - used only for People Initiating Processes Task forms -->
+      <xforms:instance id="taskmetadata">
+        <taskmetadata/>
+      </xforms:instance>
+      <!-- Task Output -->
+      <xforms:instance id="taskoutput">
+        <output xmlns="http://www.intalio.com/bpms/workflow/xforms/Examples/Store/SelectItem">
+          <product>P1</product>
+        </output>
+      </xforms:instance>
+    </xforms:model>
+  </xhtml:head>
+  <xhtml:body>
+    <xhtml:div id="intalio-bpms-form">
+      <xhtml:div id="xforms_cntrl_product">
+        <xforms:select1 appearance="minimal" ref="instance('taskoutput')/fe:product">
+          <xforms:label>Product:</xforms:label>
+          <xforms:item>
+            <xforms:label>Product #1</xforms:label>
+            <xforms:value>P1</xforms:value>
+          </xforms:item>
+          <xforms:item>
+            <xforms:label>Product #2</xforms:label>
+            <xforms:value>P2</xforms:value>
+          </xforms:item>
+          <xforms:item>
+            <xforms:label>Product #3</xforms:label>
+            <xforms:value>P3</xforms:value>
+          </xforms:item>
+        </xforms:select1>
+      </xhtml:div>
+    </xhtml:div>
+  </xhtml:body>
+</xhtml:html>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8" ?><!--
+* Copyright (c) 2005-2006 Intalio inc.
+*
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License v1.0
+* which accompanies this distribution, and is available at
+* http://www.eclipse.org/legal/epl-v10.html
+*
+* Contributors:
+* Intalio inc. - initial API and implementation
+-->
+
+
+<wsdl:definitions
+	targetNamespace="http://www.intalio.com/bpms/workflow/forms/examples/Store"
+	xmlns="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:bpws="http://schemas.xmlsoap.org/ws/2004/03/business-process/"
+	xmlns:plnk="http://schemas.xmlsoap.org/ws/2004/03/partner-link/"
+	xmlns:fds="http://www.intalio.com/bpms/workflow/forms/examples/Store">
+
+	<!-- Properties used for correlations -->
+
+    <bpws:property name="taskId" type="xsd:string"/>
+    <bpws:property name="processId" type="xsd:string"/>
+
+	<wsdl:types>
+			<xsd:schema targetNamespace="http://www.intalio.com/bpms/workflow/forms/examples/Store">
+					<xsd:element name="createTaskRequest">
+							<xsd:complexType>
+									<xsd:sequence>
+											<xsd:element name="taskMetaData" type="fds:taskMetaDataType"/>
+											<xsd:element name="participantToken" type="xsd:string"/>
+											<xsd:element name="taskInput"/>
+									</xsd:sequence>
+							</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="response">
+							<xsd:complexType>
+									<xsd:sequence>
+											<xsd:element name="taskMetaData" type="fds:taskMetaDataType"/>
+											<xsd:element name="status" type="xsd:string"/>
+											<xsd:element name="errorCode" type="xsd:string" minOccurs="0"/>
+											<xsd:element name="errorReason" type="xsd:string" minOccurs="0"/>											<xsd:element name="isChained" type="xsd:boolean" minOccurs="0"/>
+
+									</xsd:sequence>
+							</xsd:complexType>
+					</xsd:element>
+					<xsd:complexType name="taskMetaDataType">
+							<xsd:sequence>
+									<xsd:element name="taskId" type="xsd:string"/>
+									<xsd:element name="taskState" type="xsd:token"/>
+									<xsd:element name="taskType" type="xsd:token"/>
+									<xsd:element name="description" type="xsd:string"/>
+									<xsd:element name="processId" type="xsd:string"/>
+									<xsd:element name="creationDate" type="xsd:dateTime"/>
+									<xsd:element name="userOwner" type="xsd:string" maxOccurs="unbounded" minOccurs="0"/>
+									<xsd:element name="roleOwner" type="xsd:string" maxOccurs="unbounded" minOccurs="0"/>
+									<xsd:element name="formUrl" type="xsd:anyURI"/>
+									<xsd:element name="failureCode" type="xsd:string"/>
+									<xsd:element name="failureReason" type="xsd:string"/>
+									<xsd:element name="userProcessEndpoint" type="xsd:string"/>
+									<xsd:element name="userProcessNamespaceURI" type="xsd:string"/>
+							</xsd:sequence>
+					</xsd:complexType>
+			</xsd:schema>
+	</wsdl:types>
+
+	<!-- Messages -->
+
+	<wsdl:message name="createTaskRequest">
+		<wsdl:part name="root" element="fds:createTaskRequest"/>
+	</wsdl:message>
+
+	<wsdl:message name="createTaskResponse">
+		<wsdl:part name="root" element="fds:response"/>
+	</wsdl:message>
+
+	<!-- Correlations -->
+
+	<bpws:propertyAlias propertyName="fds:processId" messageType="fds:createTaskRequest" part="root">
+		<bpws:query>//fds:taskMetaData/fds:processId</bpws:query>
+	</bpws:propertyAlias>
+
+	<bpws:propertyAlias propertyName="fds:processId" messageType="fds:createTaskResponse" part="root">
+		<bpws:query>//fds:taskMetaData/fds:processId</bpws:query>
+	</bpws:propertyAlias>
+
+	<!-- Port Types -->
+
+	<wsdl:portType name="FDSPortType">
+		<wsdl:operation name="createTask">
+			<wsdl:input message="fds:createTaskRequest" name="createTaskRequest"/>
+			<wsdl:output message="fds:createTaskResponse" name="createTaskResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+
+	<!-- SOAP Bindings -->
+
+	<wsdl:binding name="FDSSoapBinding" type="fds:FDSPortType">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="createTask">
+			<soap:operation soapAction="createTask" style="document" />
+			<wsdl:input>
+				<soap:body use="literal" namespace="http://www.intalio.com/bpms/workflow/forms/examples/Store"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body namespace="http://www.intalio.com/bpms/workflow/forms/examples/Store" use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+
+	<!-- Services -->
+
+	<wsdl:service name="createTaskService">
+		<wsdl:port name="FDSPort" binding="fds:FDSSoapBinding">
+			<soap:address location="http://localhost:8080/fds/workflow/forms/examples/Store"/>
+		</wsdl:port>
+	</wsdl:service>
+
+	<!-- Partner Link Types -->
+
+	<plnk:partnerLinkType name="FDSPartnerLinkType">
+		<plnk:role name="taskManager" portType="fds:FDSPortType"/>
+		<plnk:role name="userProcess" portType="fds:FDSPortType"/>
+	</plnk:partnerLinkType>
+
+</wsdl:definitions>
+

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<datasources>
+   <local-tx-datasource>
+      <jndi-name>BPMSDB</jndi-name>
+
+      <connection-url>jdbc:derby:${jboss.home.dir}${/}var${/}derby${/}BPMSDB;create=false</connection-url>
+      <driver-class>org.apache.derby.jdbc.EmbeddedDriver</driver-class>
+
+      <user-name>APP</user-name>
+      <password>APP</password>
+
+      <min-pool-size>5</min-pool-size>
+      <max-pool-size>20</max-pool-size>
+      <idle-timeout-minutes>5</idle-timeout-minutes>
+      <track-statements/>
+
+   </local-tx-datasource>
+</datasources>
+

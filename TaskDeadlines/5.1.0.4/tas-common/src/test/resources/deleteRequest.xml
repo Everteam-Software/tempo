@@ -1,0 +1,13 @@
+<tas:deleteRequest xmlns:tas="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/">
+  <tas:authCredentials>
+    <tas:participantToken>token</tas:participantToken>
+    <tas:authorizedUsers>
+      <tas:user>examples/msmith</tas:user>
+      <tas:user>examples/ewilliams</tas:user>
+    </tas:authorizedUsers>
+    <tas:authorizedRoles>
+      <tas:role>examples/employee</tas:role>
+    </tas:authorizedRoles>
+  </tas:authCredentials>
+  <tas:attachmentURL>http://dummy-url</tas:attachmentURL>
+</tas:deleteRequest>

@@ -1,0 +1,125 @@
+    
+    .IncDecButtons {
+      padding-left: 5px;
+    }
+    
+    a:hover, a:active, a:visited {
+      text-decoration: none;
+    }
+    
+    .Label {
+      font: bold 12px arial, helvetica, sans-serif;
+      color: #000000;
+      background-color: transparent;
+    }
+    
+    .PopupTitle {
+      font: bold 11px arial, helvetica, sans-serif;
+      color: gray;
+      border-bottom: dashed gray 1px;
+      background-color: #CCCCCC;
+      padding-left: 5px;
+    }
+    
+    .DisplayDateTime {
+      height: 20px;
+      font: 12px arial, helvetica, sans-serif;
+      background-color: #FFFFFF;
+      border: #000000 solid 1px;
+      color: #000000;
+      padding-left: 2px;
+      padding-right: 2px;
+    }
+
+    .DateTimeType {
+      font: 13px arial, helvetica, sans-serif;
+    }
+    
+    .DateTimeLabel {
+      padding-left: 5px;
+      font: bold 12px arial, helvetica, sans-serif;
+      color: #000000;
+    }
+    
+    .DateTimeInputBorder {
+      border: solid #000000 1px;
+      font: 12px arial, helvetica, sans-serif;
+      color: #000000;
+    }
+    
+    .AbsoluteDateTimeInput {
+      border: none;
+      padding-left: 3px;
+      height: 17px;
+      font: 12px arial, helvetica, sans-serif;
+      color: #000000;
+    }
+    
+    .AbsoluteTimeBackground {
+      background-color: #FFFFFF;
+    }
+    
+    .RelativeDateTimeInput {
+      border: none;
+      width: 30px;
+      padding-left: 3px;
+      height: 17px;
+      font: 12px arial, helvetica, sans-serif;
+      color: #000000;
+    }
+    
+    .Button {
+      width: 80px;
+    }
+    
+    .Form {
+      margin: 0px;
+      padding: 0px;
+    }
+    
+    .DivMain {
+      background-color: transparent;
+	  display: none;
+      border: none;
+      left: 0px;
+      top: 0px;
+      position: absolute;
+	  z-index: 0;
+	}
+
+    .DivDateTime {
+      color: #000000;
+      background-color: #FFFFFF;
+	  display: none;
+      border: solid #888888 1px;
+      border-left-color: #CCCCCC;
+      border-top-color: #CCCCCC;
+      position: relative;
+      width: 265px;
+      height: 190px;
+	  z-index: 1;
+	}
+	
+    .DivAbsoluteDateTime {
+      color: #000000;
+      background-color: #FFFFFF;
+	  display: none;
+      position: absolute;
+      left: 0px;
+      top: 80px;
+      width: 100%;
+      height: 70px;
+      z-index: 3;
+    }
+    
+    .DivRelativeDateTime {
+      color: #000000;
+      background-color: #FFFFFF;
+	  display: none;
+      position: absolute;
+      left: 0px;
+      top: 80px;
+      width: 100%;
+      height: 70px;
+      z-index: 2;
+    }

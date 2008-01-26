@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2005-2007 Intalio inc.
+  ~
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v1.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.eclipse.org/legal/epl-v10.html
+  ~
+  ~ Contributors:
+  ~ Intalio inc. - initial API and implementation
+  -->
+<wsdl:definitions
+  targetNamespace="http://www.intalio.com/workflow/forms/AbsenceRequest/Notification"
+  xmlns="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:ar="http://www.intalio.com/workflow/forms/AbsenceRequest/Notification"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <wsdl:types>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://www.intalio.com/workflow/forms/AbsenceRequest/Notification">
+      <xsd:include schemaLocation="Notification.xform.complete.xsd"/>
+    </xsd:schema>
+  </wsdl:types>
+  <!-- Messages -->
+  <wsdl:message name="notifyTaskCompletionRequest">
+    <wsdl:part element="ar:notifyTaskCompletionRequest" name="root"/>
+  </wsdl:message>
+  <wsdl:message name="notifyTaskCompletionResponse">
+    <wsdl:part element="ar:response" name="root"/>
+  </wsdl:message>
+  <!-- Port Types -->
+  <wsdl:portType name="userProcessPortType">
+    <wsdl:operation name="notifyTaskCompletion">
+      <wsdl:input message="ar:notifyTaskCompletionRequest" name="notifyTaskCompletionRequest"/>
+      <wsdl:output message="ar:notifyTaskCompletionResponse" name="notifyTaskCompletionResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <!-- SOAP Bindings -->
+  <wsdl:binding name="userProcessSoapBinding" type="ar:userProcessPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="notifyTaskCompletion">
+      <soap:operation soapAction="notifyTaskCompletion" style="document"/>
+      <wsdl:input>
+        <soap:body
+          namespace="http://www.intalio.com/workflow/forms/AbsenceRequest/Notification" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body
+          namespace="http://www.intalio.com/workflow/forms/AbsenceRequest/Notification" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <!-- Services -->
+  <wsdl:service name="notifyTaskCompletionService">
+    <wsdl:port binding="ar:userProcessSoapBinding" name="userProcessPort">
+      <soap:address location="http://example.com/"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

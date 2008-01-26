@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (C) 2005-06, Intalio Inc. The program(s) herein may be used and/or copied only with the written permission of Intalio Inc. or in accordance with the terms and conditions stipulated in the agreement/contract under which the program(s) have been supplied. -->
+<xhtml:html xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:f="http://orbeon.org/oxf/xml/formatting" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fe="http://www.intalio.com/bpms/workflow/xforms/PeopleActivity/PA" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xforms="http://www.w3.org/2002/xforms">
+  <xhtml:head>
+    <xhtml:style type="text/css" id="intalio-fe-default"> h1 { color: #333333; background-color: #CCCCCC; font-family: Verdana; font-size: 16px; font-weight: bold; } h2 { color: #AAAAAA; font-family: Verdana; font-size: 14px; font-weight: bold; border-width: 0px; border-bottom-color: #AAAAAA; border-bottom-width: 1px; border-style: solid; } div#intalio-bpms-form { height: 430px; width: 97%; overflow: auto; } div#intalio-bpms-form .xforms-control { font-family: Arial; font-size: 11px; font-weight: normal; } </xhtml:style>
+    <xhtml:style type="text/css" id="intalio-fe-xforms">#xforms_cntrl_textarea0 {position : absolute; top : 60; left : 210; width : 480; height : 75;} #xforms_cntrl_textarea0 textarea {width : 468; height : 67} #xforms_cntrl_textarea0 label.xforms-label {vertical-align : top} #xforms_cntrl_select11 {position : absolute; top : 60; left : 15; width : 180; height : 71;} #xforms_cntrl_select11 span.xforms-control {width : 168; height : 63} #xforms_cntrl_select11 span.xforms-control span {display : block} #xforms_cntrl_select11 label.xforms-label {vertical-align : top} #xforms_cntrl_input2 {position : absolute; top : 15; left : 15; width : 675; height : 27;} #xforms_cntrl_input2 input {width : 623; height : 19} </xhtml:style>
+    <xforms:model schema="PA.xform.xsd">
+      <!-- Task Input -->
+      <xforms:instance id="taskinput">
+        <input xmlns="http://www.intalio.com/bpms/workflow/xforms/PeopleActivity/PA">
+          <request/>
+        </input>
+      </xforms:instance>
+      <!-- Task metadata - used only for People Initiating Processes Task forms -->
+      <xforms:instance id="taskmetadata">
+        <taskmetadata>
+          <tasktype>2</tasktype>
+          <endpoint/>
+          <userProcessNamespaceURI>http://www.intalio.com/bpms/workflow/xforms/PeopleActivity/PA</userProcessNamespaceURI>
+        </taskmetadata>
+      </xforms:instance>
+      <!-- Task Output -->
+      <xforms:instance id="taskoutput">
+        <output xmlns="http://www.intalio.com/bpms/workflow/xforms/PeopleActivity/PA">
+          <comment/>
+          <accept>true</accept>
+        </output>
+      </xforms:instance>
+    </xforms:model>
+  </xhtml:head>
+  <xhtml:body>
+    <xhtml:div id="intalio-bpms-form">
+      <xhtml:div id="xforms_cntrl_textarea0">
+        <xforms:textarea ref="instance('taskoutput')/fe:comment">
+          <xforms:label>Comment:</xforms:label>
+        </xforms:textarea>
+      </xhtml:div>
+      <xhtml:div id="xforms_cntrl_select11">
+        <xforms:select1 appearance="full" ref="instance('taskoutput')/fe:accept">
+          <xforms:item>
+            <xforms:label>Yes, I accept the request</xforms:label>
+            <xforms:value>true</xforms:value>
+          </xforms:item>
+          <xforms:item>
+            <xforms:label>No, I reject the request</xforms:label>
+            <xforms:value>false</xforms:value>
+          </xforms:item>
+        </xforms:select1>
+      </xhtml:div>
+      <xhtml:div id="xforms_cntrl_input2">
+        <xforms:input ref="instance('taskinput')/fe:request">
+          <xforms:label>Request:</xforms:label>
+        </xforms:input>
+      </xhtml:div>
+    </xhtml:div>
+  </xhtml:body>
+</xhtml:html>

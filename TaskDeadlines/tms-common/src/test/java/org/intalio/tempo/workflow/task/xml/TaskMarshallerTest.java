@@ -1,0 +1,87 @@
+/**
+ * Copyright (c) 2005-2006 Intalio inc.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * Intalio inc. - initial API and implementation
+ *
+ * $Id: TaskManagementServicesFacade.java 5440 2006-06-09 08:58:15Z imemruk $
+ * $Log:$
+ */
+
+package org.intalio.tempo.workflow.task.xml;
+
+import java.net.URI;
+import java.net.URL;
+
+import junit.framework.TestCase;
+
+import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMFactory;
+import org.apache.log4j.Logger;
+import org.intalio.tempo.workflow.task.Notification;
+
+import org.intalio.tempo.workflow.task.PATask;
+import org.intalio.tempo.workflow.task.PIPATask;
+import org.intalio.tempo.workflow.task.Task;
+import org.intalio.tempo.workflow.task.xml.TaskMarshaller;
+import org.intalio.tempo.workflow.task.xml.TaskXMLConstants;
+import org.intalio.tempo.workflow.task.attachments.Attachment;
+import org.intalio.tempo.workflow.task.attachments.AttachmentMetadata;
+
+public class TaskMarshallerTest extends TestCase {
+
+    private static final Logger _logger = Logger.getLogger(TaskMarshallerTest.class);
+
+    public static void main(String[] args) {
+        junit.textui.TestRunner.run(TaskMarshallerTest.class);
+    }
+
+    private void testTaskMarshalling(Task task)
+            throws Exception {
+        OMFactory factory = OMAbstractFactory.getOMFactory();
+        TaskMarshaller marshaller = new TaskMarshaller(factory);
+        OMElement parent = factory.createOMElement("task", TaskXMLConstants.TASK_NAMESPACE,
+                TaskXMLConstants.TASK_NAMESPACE_PREFIX);
+        marshaller.marshalFullTask(task, parent, null);
+        _logger.debug(TestUtils.toPrettyXML(parent));
+    }
+
+    public void testPIPATaskMarshalling()
+            throws Exception {
+        PIPATask task = new PIPATask("id", new URI("http://localhost/form"), new URI("http://localhost/endpoint"),
+                new URI("urn:initNS"), "urn:initSoapAction");
+        task.getUserOwners().add("test/user1");
+        task.getRoleOwners().add("test.role1");
+        task.getRoleOwners().add("test\\role2");
+        this.testTaskMarshalling(task);
+    }
+
+    public void testPATaskMarshalling()
+            throws Exception {
+        PATask task = new PATask("id", new URI("http://localhost/form"), "processID", "urn:completeSoapAction",
+                TestUtils.createXMLDocument());
+        task.getUserOwners().add("test/user1");
+        task.getRoleOwners().add("test.role1");
+        task.getRoleOwners().add("test\\role2");
+        task.setOutput(TestUtils.createXMLDocument());
+        
+        task.addAttachment(new Attachment(new AttachmentMetadata(), new URL("http://localhost/url1")));
+        AttachmentMetadata metadata = new AttachmentMetadata();
+        metadata.setMimeType("image/jpeg");
+        task.addAttachment(new Attachment(metadata, new URL("http://localhost/url2")));
+        
+        this.testTaskMarshalling(task);
+    }
+
+    public void testNotificationMarshalling() throws Exception {
+        Notification task = new Notification("id", new URI("http://localhost/form"), TestUtils.createXMLDocument());
+        
+        this.testTaskMarshalling(task);
+    }
+}

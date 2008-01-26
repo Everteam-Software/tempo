@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<system-descriptor
+    xmlns="http://www.fivesight.com/pxe/system-descriptor/"
+    xmlns:portTypeNs0="http://www.intalio.com/bpms/workflow/xforms/PIPA/startform"
+    name="pxe-system" wsdlUri="urn:/PIPA-Pool.wsdl">
+    <channels>
+        <channel name="Pool_And_userProcessPort.Pool_Channel"/>
+    </channels>
+    <services>
+        <service name="PIPA-Pool.BpelService" provider="uri:bpelProvider">
+            <properties>
+                <property name="compiledProcess" value="PIPA-Pool.cbp"/>
+            </properties>
+            <exports>
+                <port name="Pool_And_userProcessPort_PLink.Pool_Role"
+                    type="portTypeNs0:userProcessPort_To_Pool_PortType" channel-ref="Pool_And_userProcessPort.Pool_Channel"/>
+            </exports>
+        </service>
+        <service name="userProcessPort_To_Pool_Service" provider="uri:protocoladapter.soap">
+            <properties>
+                <property name="serviceWsdlNamespace" value="http://www.intalio.com/bpms/workflow/xforms/PIPA/startform"/>
+            </properties>
+            <imports>
+                <port name="userProcessPort_To_Pool_Http"
+                    type="portTypeNs0:userProcessPort_To_Pool_PortType" channel-ref="Pool_And_userProcessPort.Pool_Channel"/>
+            </imports>
+        </service>
+    </services>
+</system-descriptor>

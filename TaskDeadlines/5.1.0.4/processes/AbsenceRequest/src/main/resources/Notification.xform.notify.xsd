@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2005-2007 Intalio inc.
+  ~
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v1.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.eclipse.org/legal/epl-v10.html
+  ~
+  ~ Contributors:
+  ~ Intalio inc. - initial API and implementation
+  -->
+<xs:schema elementFormDefault="qualified"
+  targetNamespace="http://www.intalio.com/workflow/forms/AbsenceRequest/Notification"
+  xmlns:ar="http://www.intalio.com/workflow/forms/AbsenceRequest/Notification"
+  xmlns:fe="http://www.intalio.com/workflow/forms/AbsenceRequest/Notification" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="input">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="details">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="request">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="from" type="xs:date"/>
+                    <xs:element name="to" type="xs:date"/>
+                    <xs:element name="type" type="xs:string"/>
+                    <xs:element name="hours" type="xs:integer"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" name="decision" type="xs:string"/>
+        <xs:element minOccurs="0" name="notes" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="output">
+    <xs:complexType>
+      <xs:sequence/>
+      <xs:attribute name="taskId" type="xs:string"/>
+      <xs:attribute name="participantToken" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="notifyRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="metadata">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="1" minOccurs="0" name="description" type="xs:string"/>
+              <xs:element maxOccurs="1" minOccurs="0"
+                name="creationDate" type="xs:dateTime"/>
+              <xs:element maxOccurs="unbounded" minOccurs="0"
+                name="userOwner" type="xs:string"/>
+              <xs:element maxOccurs="unbounded" minOccurs="0"
+                name="roleOwner" type="xs:string"/>
+              <xs:element maxOccurs="1" minOccurs="1" name="formUrl" type="xs:anyURI"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="input">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="ar:input"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="notifyResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="1" minOccurs="1" name="status" type="xs:string"/>
+        <xs:element maxOccurs="1" minOccurs="0" name="errorCode" type="xs:string"/>
+        <xs:element maxOccurs="1" minOccurs="0" name="errorReason" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

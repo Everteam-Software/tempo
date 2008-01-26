@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+* Copyright (c) 2005-2006 Intalio inc.
+*
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License v1.0
+* which accompanies this distribution, and is available at
+* http://www.eclipse.org/legal/epl-v10.html
+*
+* Contributors:
+* Intalio inc. - initial API and implementation
+-->
+<xhtml:html xmlns:xforms="http://www.w3.org/2002/xforms"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
+        xmlns:ev="http://www.w3.org/2001/xml-events"
+        xmlns:f="http://orbeon.org/oxf/xml/formatting"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:fe="http://www.intalio.com/workflow/forms/AbsenceRequest/Notification"
+        xmlns:request="http://www.intalio.com/workflow/forms/AbsenceRequest/AbsenceRequest">
+	<xhtml:head>
+		<xforms:model schema="Notification.xform.xsd">
+			<xforms:instance id="taskinput">
+				<input xmlns="http://www.intalio.com/workflow/forms/AbsenceRequest/Notification"/>
+			</xforms:instance>
+      <!-- Task metadata - used only for People Initiating Processes Task forms -->
+      <xforms:instance id="taskmetadata">
+        <taskmetadata/>
+      </xforms:instance>
+      <!-- Task Output -->
+      <xforms:instance id="taskoutput">
+        <output xmlns="http://www.intalio.com/workflow/forms/AbsenceRequest/Notification"/>
+      </xforms:instance>
+		</xforms:model>
+	</xhtml:head>
+	<xhtml:body>
+		<xhtml:table style="background-color: #DDDDDD;width: 100%; border-collapse: collapse;border-style: double;border-width: 3px;border-color: #AAAAAA; padding: 5px">
+			<xhtml:tr>
+				<xhtml:td style="width: 50px;text-align: center">
+					<xhtml:img src="/images/help-small.gif"/>
+				</xhtml:td>
+				<xhtml:td>
+					<xhtml:p>This form is only for notification. No action is expected from the user.
+						<xhtml:br>This form corresponds to a notification that appears in the notifications list for all permitted users. The notification is initiated by the AbsenceRequest process</xhtml:br>
+					</xhtml:p>
+				</xhtml:td>
+			</xhtml:tr>
+		</xhtml:table>
+			<xhtml:h1>Absence Request Notification</xhtml:h1>
+		<xhtml:p>The following absence request has been <xforms:output ref="instance('taskinput')/fe:decision"/>.</xhtml:p>
+
+		<xhtml:h2>Absence Details</xhtml:h2>
+		<xhtml:table style="width: 100%; cell-padding: 4px; cell-spacing: 0px; border-collapse: collapse;border-width: 1px; border-style: solid; border-color: #333333">
+			<xhtml:tr>
+				<xhtml:td style="background-color: #CCCCCC; border-width: 1px; border-collapse: collapse; border-style: solid; border-color: #333333">From</xhtml:td>
+				<xhtml:td style="background-color: #CCCCCC; border-width: 1px; border-collapse: collapse; border-style: solid; border-color: #333333">To</xhtml:td>
+				<xhtml:td style="background-color: #CCCCCC; border-width: 1px; border-collapse: collapse; border-style: solid; border-color: #333333">Type</xhtml:td>
+				<xhtml:td style="background-color: #CCCCCC; border-width: 1px; border-collapse: collapse; border-style: solid; border-color: #333333">Nb Hours</xhtml:td>
+			</xhtml:tr>
+			<xforms:repeat nodeset="instance('taskinput')/fe:details/request:request" id="lineSet">
+				<xhtml:tr>
+					<xhtml:td style="border-width: 1px; border-collapse: collapse; border-style: solid; border-color: #333333">
+						<xforms:output ref="request:from"/>
+					</xhtml:td>
+					<xhtml:td style="border-width: 1px; border-collapse: collapse; border-style: solid; border-color: #333333">
+						<xforms:output ref="request:to"/>
+					</xhtml:td>
+					<xhtml:td style="border-width: 1px; border-collapse: collapse; border-style: solid; border-color: #333333">
+						<xforms:output ref="request:type"/>
+					</xhtml:td>
+					<xhtml:td style="border-width: 1px; border-collapse: collapse; border-style: solid; border-color: #333333">
+						<xforms:output ref="request:hours"/>
+					</xhtml:td>
+				</xhtml:tr>
+			</xforms:repeat>
+		</xhtml:table>
+
+		<xhtml:h2>Comments From Manager</xhtml:h2>
+		<xforms:output ref="instance('taskinput')/fe:notes"/>
+
+	</xhtml:body>
+</xhtml:html>

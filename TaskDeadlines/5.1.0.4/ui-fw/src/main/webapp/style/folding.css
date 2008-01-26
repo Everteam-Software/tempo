@@ -1,0 +1,25 @@
+body {
+	margin: 0px;
+	background-color: #FFFFFF; 
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 8pt;
+	color: #333333;	
+}
+
+span, div, td, a, p, li, input, select, optgroup{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 8pt;
+}
+
+a {
+	color: #333333;
+}
+
+a:hover {
+	color: #3082A8;
+}
+
+
+.thirdLevelHeader {
+	color:#94BE23;
+}

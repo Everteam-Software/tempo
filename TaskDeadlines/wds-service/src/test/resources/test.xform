@@ -1,0 +1,240 @@
+<xhtml:html xmlns:xforms="http://www.w3.org/2002/xforms"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
+        xmlns:ev="http://www.w3.org/2001/xml-events"
+        xmlns:f="http://orbeon.org/oxf/xml/formatting"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:ar="http://www.intalio.com/workflow/forms/AbsenceRequest/AbsenceRequest">
+	<xhtml:head>
+			<xforms:model schema="AbsenceRequest.xsd">
+					<xforms:instance id="taskoutput">
+						<output xmlns="http://www.intalio.com/workflow/forms/AbsenceRequest/AbsenceRequest">
+							<employee>
+								<name/>
+								<phone/>
+								<email/>
+							</employee>
+							<details>
+								<request>
+									<from/>
+									<to/>
+									<type/>
+									<hours/>
+								</request>
+							</details>
+							<contactWhileAway>
+								<name/>
+								<phone/>
+								<email/>
+							</contactWhileAway>
+							<notes/>
+						</output>
+					</xforms:instance>
+					<xforms:instance id="taskmetadata">
+						<taskmetadata>
+							<endpoint>http://localhost:8080/pxe/soap/AbsenceRequest/workflow_To_AbsenceRequest</endpoint>
+							<userProcessNamespaceURI>http://www.intalio.com/bpms/workflow/AbsenceRequest/AbsenceRequest</userProcessNamespaceURI>
+						</taskmetadata>
+					</xforms:instance>
+					<xforms:instance id="utils">
+						<utils>
+							<remove-trigger/>
+						</utils>
+					</xforms:instance>
+					<xforms:bind nodeset="instance('taskoutput')/ar:details/ar:request/ar:from" type="xs:date"/>
+					<xforms:bind nodeset="instance('taskoutput')/ar:details/ar:request/ar:to" type="xs:date"/>
+					<xforms:bind nodeset="instance('utils')/remove-trigger" relevant="count(instance('taskoutput')/ar:details/ar:request) &gt; 1"/>
+			</xforms:model>
+	</xhtml:head>
+	<xhtml:body>
+		<xhtml:table style="background-color: #DDDDDD;width: 100%; border-collapse: collapse;border-style: double;border-width: 3px;border-color: #AAAAAA; padding: 5px">
+			<xhtml:tr>
+				<xhtml:td style="width: 50px;text-align: center">
+					<xhtml:img src="/images/help-small.gif"/>
+				</xhtml:td>
+				<xhtml:td>
+					<xhtml:p>This form provides the ability for a user to file an absence request.
+						<xhtml:br>Submitting this form automatically kicks off an instance of the AbsenceRequest process</xhtml:br>
+					</xhtml:p>
+					<xhtml:p>
+						<xforms:trigger>
+							<xforms:label>Auto-Fill</xforms:label>
+							<xforms:action ev:event="DOMActivate">
+								<xforms:setvalue ref="instance('taskoutput')/ar:employee/ar:name" value="'Michael Smith'"/>
+								<xforms:setvalue ref="instance('taskoutput')/ar:employee/ar:phone" value="'+1(650)596-1800'"/>
+								<xforms:setvalue ref="instance('taskoutput')/ar:employee/ar:email" value="'msmith@examples.intalio.com'"/>
+								<xforms:setvalue ref="instance('taskoutput')/ar:details/ar:request[1]/ar:from" value="'2005-12-05'"/>
+								<xforms:setvalue ref="instance('taskoutput')/ar:details/ar:request[1]/ar:to" value="'2005-12-09'"/>
+								<xforms:setvalue ref="instance('taskoutput')/ar:details/ar:request[1]/ar:hours" value="40"/>
+								<xforms:insert nodeset="instance('taskoutput')/ar:details/ar:request" at="last()" position="after"/>
+								<xforms:setvalue ref="instance('taskoutput')/ar:details/ar:request[2]/ar:from" value="'2006-02-06'"/>
+								<xforms:setvalue ref="instance('taskoutput')/ar:details/ar:request[2]/ar:to" value="'2006-02-10'"/>
+								<xforms:setvalue ref="instance('taskoutput')/ar:details/ar:request[2]/ar:hours" value="40"/>
+								<xforms:setvalue ref="instance('taskoutput')/ar:contactWhileAway/ar:name" value="'Emily Williams'"/>
+								<xforms:setvalue ref="instance('taskoutput')/ar:contactWhileAway/ar:phone" value="'+1(650)596-1800'"/>
+								<xforms:setvalue ref="instance('taskoutput')/ar:contactWhileAway/ar:email" value="'ewilliams@examples.intalio.com'"/>
+								<xforms:setvalue ref="instance('taskoutput')/ar:notes" value="'This is sample data for this form.'"/>
+							</xforms:action>
+						</xforms:trigger>
+						Click this button to automatically fill the form with sample data.
+					</xhtml:p>
+				</xhtml:td>
+			</xhtml:tr>
+		</xhtml:table>
+			<xhtml:h1>Absence Request</xhtml:h1>
+			<xforms:group ref="instance('taskoutput')">
+			<xhtml:h2>Employee</xhtml:h2>
+			<xforms:group ref="ar:employee">
+				<xhtml:table border="0" cellpadding="0" cellspacing="0">
+					<xhtml:tr>
+						<xhtml:td width="50">Name: </xhtml:td>
+						<xhtml:td>
+							<xforms:input ref="ar:name">
+								<xforms:help>Some contextual help here</xforms:help>
+							</xforms:input>
+						</xhtml:td>
+					</xhtml:tr>
+					<xhtml:tr>
+						<xhtml:td>Phone: </xhtml:td>
+						<xhtml:td>
+								<xforms:input ref="ar:phone"/>
+						</xhtml:td>
+					</xhtml:tr>
+					<xhtml:tr>
+						<xhtml:td>E-mail: </xhtml:td>
+						<xhtml:td>
+								<xforms:input ref="ar:email"/>
+						</xhtml:td>
+					</xhtml:tr>
+				</xhtml:table>
+			</xforms:group>
+			<xhtml:h2>Absence Details</xhtml:h2>
+			<xhtml:table style="width: 100%; cell-padding: 4px; cell-spacing: 0px; border-collapse: collapse">
+				<xhtml:tr>
+					<xhtml:td style="border-width: 0px; border-collapse: collapse"/>
+					<xhtml:td style="background-color: #CCCCCC; border-width: 1px; border-collapse: collapse; border-style: solid; border-color: #333333">From</xhtml:td>
+					<xhtml:td style="background-color: #CCCCCC; border-width: 1px; border-collapse: collapse; border-style: solid; border-color: #333333">To</xhtml:td>
+					<xhtml:td style="background-color: #CCCCCC; border-width: 1px; border-collapse: collapse; border-style: solid; border-color: #333333">Type</xhtml:td>
+					<xhtml:td style="background-color: #CCCCCC; border-width: 1px; border-collapse: collapse; border-style: solid; border-color: #333333">Nb Hours</xhtml:td>
+				</xhtml:tr>
+				<xforms:group ref="ar:details">
+					<xforms:repeat nodeset="ar:request" id="lineSet">
+						<xhtml:tr>
+							<xhtml:td style="border-width: 0px; border-collapse: collapse;text-align: center">
+								<xforms:trigger appearance="xxforms:image" ref="instance('utils')/remove-trigger">
+									<xforms:label/>
+									<xxforms:img src="/images/remove.gif"/>
+									<xforms:delete ev:event="DOMActivate"
+										   nodeset="instance('taskoutput')/ar:details/ar:request"
+										   at="index('lineSet')"/>
+								</xforms:trigger>
+							</xhtml:td>
+							<xhtml:td style="border-width: 1px; border-collapse: collapse; border-style: solid; border-color: #333333">
+								<xforms:input ref="ar:from">
+									<xforms:help>First day when you will be away from the office</xforms:help>
+								</xforms:input>
+							</xhtml:td>
+							<xhtml:td style="border-width: 1px; border-collapse: collapse; border-style: solid; border-color: #333333">
+								<xforms:input ref="ar:to">
+									<xforms:help>Last day when you will be away from the office</xforms:help>
+								</xforms:input>
+							</xhtml:td>
+							<xhtml:td style="border-width: 1px; border-collapse: collapse; border-style: solid; border-color: #333333">
+								<xforms:select1 ref="ar:type" appearance="minimal">
+									<xforms:item>
+										<xforms:label>PTO (Paid Time Off)</xforms:label>
+										<xforms:value>PTO</xforms:value>
+									</xforms:item>
+									<xforms:item>
+										<xforms:label>Vacation</xforms:label>
+										<xforms:value>vacation</xforms:value>
+									</xforms:item>
+									<xforms:item>
+										<xforms:label>Paid Sabbatical</xforms:label>
+										<xforms:value>pidSabbatical</xforms:value>
+									</xforms:item>
+									<xforms:item>
+										<xforms:label>Jury Duty</xforms:label>
+										<xforms:value>juryDuty</xforms:value>
+									</xforms:item>
+									<xforms:item>
+										<xforms:label>Leave Without Pay</xforms:label>
+										<xforms:value>leaveWithoutPay</xforms:value>
+									</xforms:item>
+									<xforms:item>
+										<xforms:label>Pregnancy Disability</xforms:label>
+										<xforms:value>pregnancyDisability</xforms:value>
+									</xforms:item>
+									<xforms:item>
+										<xforms:label>Personal</xforms:label>
+										<xforms:value>personal</xforms:value>
+									</xforms:item>
+									<xforms:item>
+										<xforms:label>Military Leave</xforms:label>
+										<xforms:value>militaryLeave</xforms:value>
+									</xforms:item>
+									<xforms:item>
+										<xforms:label>Other Disability</xforms:label>
+										<xforms:value>otherDisability</xforms:value>
+									</xforms:item>
+									<xforms:item>
+										<xforms:label>Unpaid Sabbatical</xforms:label>
+										<xforms:value>unpaidSabbatical</xforms:value>
+									</xforms:item>
+									<xforms:item>
+										<xforms:label>Other</xforms:label>
+										<xforms:value>other</xforms:value>
+									</xforms:item>
+								</xforms:select1>
+							</xhtml:td>
+							<xhtml:td style="border-width: 1px; border-collapse: collapse; border-style: solid; border-color: #333333">
+								<xforms:input ref="ar:hours">
+									<xforms:help>Number of working hours you will be missing</xforms:help>
+								</xforms:input>
+							</xhtml:td>
+						</xhtml:tr>
+					</xforms:repeat>
+					<xhtml:tr>
+						<xhtml:td style="text-align: center">
+							<xforms:trigger appearance="xxforms:image">
+								<xforms:label/>
+								<xxforms:img src="/images/add.gif"/>
+								<xforms:insert ev:event="DOMActivate" nodeset="instance('taskoutput')/ar:details/ar:request" at="last()" position="after"/>
+							</xforms:trigger>
+						</xhtml:td>
+						<xhtml:td colspan="4">Add another entry in the table.
+						</xhtml:td>
+					</xhtml:tr>
+				</xforms:group>
+			</xhtml:table>
+
+			<xhtml:h2>Contact While Away</xhtml:h2>
+			<xforms:group ref="ar:contactWhileAway">
+				<xhtml:table border="0" cellpadding="0" cellspacing="0">
+					<xhtml:tr>
+						<xhtml:td width="50">Name: </xhtml:td>
+						<xhtml:td>
+								<xforms:input ref="ar:name"/>
+						</xhtml:td>
+					</xhtml:tr>
+					<xhtml:tr>
+						<xhtml:td>Phone: </xhtml:td>
+						<xhtml:td>
+								<xforms:input ref="ar:phone"/>
+						</xhtml:td>
+					</xhtml:tr>
+					<xhtml:tr>
+						<xhtml:td>E-mail: </xhtml:td>
+						<xhtml:td>
+								<xforms:input ref="ar:email"/>
+						</xhtml:td>
+					</xhtml:tr>
+				</xhtml:table>
+			</xforms:group>
+
+			<xhtml:h2>Comments</xhtml:h2>
+			<xhtml:p>You may add comments in the text area below.</xhtml:p>
+			<xforms:textarea ref="ar:notes" style="width: 100%; height: 100px"/>
+		</xforms:group>
+	</xhtml:body>
+</xhtml:html>

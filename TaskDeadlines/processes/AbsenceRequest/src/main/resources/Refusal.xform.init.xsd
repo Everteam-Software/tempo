@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+* Copyright (c) 2005-2006 Intalio inc.
+*
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License v1.0
+* which accompanies this distribution, and is available at
+* http://www.eclipse.org/legal/epl-v10.html
+*
+* Contributors:
+* Intalio inc. - initial API and implementation
+-->
+<xs:schema elementFormDefault="qualified"
+  targetNamespace="http://www.intalio.com/workflow/forms/AbsenceRequest/Refusal"
+  xmlns:ar="http://www.intalio.com/workflow/forms/AbsenceRequest/Refusal"
+  xmlns:fe="http://www.intalio.com/workflow/forms/AbsenceRequest/Refusal" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="input">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="details">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="request">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="from" type="xs:date"/>
+                    <xs:element name="to" type="xs:date"/>
+                    <xs:element name="type" type="xs:string"/>
+                    <xs:element name="hours" type="xs:integer"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" name="manager" type="fe:contact"/>
+        <xs:element minOccurs="0" name="notes" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="output">
+    <xs:complexType/>
+  </xs:element>
+  <xs:complexType name="contact">
+    <xs:sequence>
+      <xs:element name="name" type="xs:string"/>
+      <xs:element name="phone" type="xs:string"/>
+      <xs:element name="email">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:pattern value="[^@]+@[^\.]+\..+"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="initProcessRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="taskId" type="xs:string"/>
+        <xs:element name="participantToken" type="xs:string"/>
+        <xs:element name="taskOutput">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="ar:output"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="initProcessResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="status" type="xs:string"/>
+        <xs:element minOccurs="0" name="errorCode" type="xs:string"/>
+        <xs:element minOccurs="0" name="errorReason" type="xs:string"/>
+        <xs:element minOccurs="0" name="taskMetaData">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="nextTaskId" type="xs:string"/>
+              <xs:element name="nextTaskURL" type="xs:string"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
