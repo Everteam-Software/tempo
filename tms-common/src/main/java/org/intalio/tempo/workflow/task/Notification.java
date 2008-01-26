@@ -15,19 +15,23 @@
 package org.intalio.tempo.workflow.task;
 
 import java.net.URI;
+import java.util.Date;
 
 import org.w3c.dom.Document;
+import org.intalio.tempo.workflow.task.traits.ITaskWithDeadline;
 import org.intalio.tempo.workflow.task.traits.ITaskWithInput;
+import org.intalio.tempo.workflow.task.traits.ITaskWithPriority;
 
 import org.intalio.tempo.workflow.task.traits.ITaskWithState;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
-public class Notification extends Task implements ITaskWithState, ITaskWithInput {
+public class Notification extends Task implements ITaskWithState, ITaskWithInput ,ITaskWithPriority{
     private TaskState _state = TaskState.READY;
     private String _failureCode;
     private String _failureReason;
     private Document _input;
-
+    private Date _dealine=null;
+    private Integer _priority=0;
     public Notification(String id, URI formURL, Document input) {
         super(id, formURL);
         _input = input;
@@ -98,4 +102,33 @@ public class Notification extends Task implements ITaskWithState, ITaskWithInput
         }
         _input = input;
     }
+
+	
+	public Integer getPriority() {
+				return _priority;
+	}
+
+	
+	public void setPriority(Integer priority) {
+		_priority=priority;
+		
+	}
+
+
+	public Date getDeadline() {
+		
+		return _dealine;
+	}
+
+
+	public void setDeadline(Date deadline) {
+		 _dealine=deadline;
+		
+	}
+
+	
+
+	
+
+	
 }

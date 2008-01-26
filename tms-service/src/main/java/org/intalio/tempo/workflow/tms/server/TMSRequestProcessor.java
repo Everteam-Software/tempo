@@ -74,8 +74,9 @@ public class TMSRequestProcessor extends OMUnmarshaller {
 
             final UserRoles user = _server.getUserRoles(participantToken);
             Task[] tasks = _server.getTaskList(participantToken);
-
+           
             OMElement response = new TMSResponseMarshaller(requestElement.getOMFactory()) {
+            	
                 public OMElement marshalResponse(Task[] tasks) {
                     OMElement response = createElement("getTaskListResponse");
                     for (Task task : tasks) {
@@ -86,7 +87,7 @@ public class TMSRequestProcessor extends OMUnmarshaller {
                     return response;
                 }
             }.marshalResponse(tasks);
-
+           
             return response;
         } catch (InvalidInputFormatException e) {
             throw AxisFault.makeFault(e);
@@ -259,7 +260,27 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             throw AxisFault.makeFault(e);
         }
     }
+    public OMElement exit(OMElement requestElement)
+    throws AxisFault {
+try {
+	
+    OMElementQueue rootQueue = new OMElementQueue(requestElement);
+    String taskID = requireElementValue(rootQueue, "taskId");
+    String participantToken = requireElementValue(rootQueue, "participantToken");
 
+    _server.exit(taskID, participantToken);
+
+    return createOkResponse(requestElement.getOMFactory());
+} catch (InvalidInputFormatException e) {
+    throw AxisFault.makeFault(e);
+} catch (AuthException e) {
+    throw AxisFault.makeFault(e);
+} catch (UnavailableTaskException e) {
+    throw AxisFault.makeFault(e);
+} catch (InvalidTaskStateException e) {
+    throw AxisFault.makeFault(e);
+}
+}
     public OMElement fail(OMElement requestElement)
             throws AxisFault {
         try {

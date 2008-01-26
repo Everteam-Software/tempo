@@ -27,8 +27,10 @@ import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.task.traits.ICompleteReportingTask;
 import org.intalio.tempo.workflow.task.traits.IProcessBoundTask;
 import org.intalio.tempo.workflow.task.traits.ITaskWithAttachments;
+import org.intalio.tempo.workflow.task.traits.ITaskWithDeadline;
 import org.intalio.tempo.workflow.task.traits.ITaskWithInput;
 import org.intalio.tempo.workflow.task.traits.ITaskWithOutput;
+import org.intalio.tempo.workflow.task.traits.ITaskWithPriority;
 import org.intalio.tempo.workflow.task.traits.ITaskWithState;
 import org.intalio.tempo.workflow.task.xml.attachments.AttachmentMarshaller;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
@@ -65,7 +67,18 @@ public class TaskMarshaller extends OMMarshaller {
         for (String roleOwner : task.getRoleOwners()) {
             createElement(taskMetadataElement, "roleOwner", roleOwner);
         }
-
+        if (task instanceof ITaskWithDeadline) {
+        	ITaskWithDeadline crTask = (ITaskWithDeadline) task;
+        	
+        	if(crTask.getDeadline()==null)createElement(taskMetadataElement, "deadline", null);
+        	else {createElement(taskMetadataElement, "deadline", (new XsdDateTime(crTask.getDeadline())).toString());}
+        }
+        if (task instanceof ITaskWithPriority) {
+        	ITaskWithPriority crTask = (ITaskWithPriority) task;
+        	
+        	if(crTask.getPriority()==null)createElement(taskMetadataElement, "priority", null);
+        	else {createElement(taskMetadataElement, "priority", crTask.getPriority().toString());}
+        }
         createACL("claim", task, roles, taskMetadataElement);
         createACL("revoke", task, roles, taskMetadataElement);
         createACL("save", task, roles, taskMetadataElement);
@@ -85,6 +98,7 @@ public class TaskMarshaller extends OMMarshaller {
             ICompleteReportingTask crTask = (ICompleteReportingTask) task;
             createElement(taskMetadataElement, "userProcessCompleteSOAPAction", crTask.getCompleteSOAPAction());
         }
+       
         
         if (task instanceof ITaskWithAttachments) {
             ITaskWithAttachments taskWithAttachments = (ITaskWithAttachments) task;
@@ -102,6 +116,7 @@ public class TaskMarshaller extends OMMarshaller {
                 createElement(taskMetadataElement, "previousTaskId", chainableTask.getPreviousTaskID());
             }
         }
+        
         return taskMetadataElement;
     }
 

@@ -75,9 +75,10 @@ public class TasksAction extends Action {
         for (Task task : _tasks) {
             if (task instanceof PATask) {
                 PATask paTask = (PATask) task;
-                if (!TaskState.COMPLETED.equals(paTask.getState())) {
+                if (!TaskState.COMPLETED.equals(paTask.getState())&& !TaskState.FAILED.equals(paTask.getState())) {
                     activityTasks.add(new TaskHolder<PATask>(paTask, peopleActivityUrl));
                 }
+                
             }
         }
         if (_log.isDebugEnabled()) {
@@ -109,7 +110,7 @@ public class TasksAction extends Action {
         for (Task task : _tasks) {
             if (task instanceof Notification) {
                 Notification notification = (Notification) task;
-                if (!TaskState.COMPLETED.equals(notification.getState())) {
+                if (!TaskState.COMPLETED.equals(notification.getState()) && !TaskState.FAILED.equals(notification.getState())) {
                     notifications.add(new TaskHolder<Notification>(notification, notificationURL));
                 }
             }

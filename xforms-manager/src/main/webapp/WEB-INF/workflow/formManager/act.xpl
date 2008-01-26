@@ -326,32 +326,12 @@
                             </xsl:copy>
                         </xsl:template>
 
-						<!-- Copy the input of the task while preserving some input that was coded in the form -->
-						<xsl:template match="xforms:instance[@id = 'taskinput']/*:input">
-							<xsl:variable name="xinput" select="."/>
-							<xsl:variable name="input" select="doc('input:getTaskResponse')/tms:task/*:input/*"/>
-							<!-- Create an input element that will basically receive all the nodes coming from the task response -->
-							<xsl:element name="input" namespace="{namespace-uri($input)}">
-								<xsl:for-each select="$input//*">
-									<xsl:variable name="current" select="."/>
-									<xsl:choose>
-										<!-- 
-											if the value of the node from TMS is empty, we copy the one from the form.
-											In the best case, the form has a value so we preserve it.
-											In the worst case, the form had no value so we keep the same element.
-										-->
-										<xsl:when test="not(normalize-space(.))">
-											<xsl:variable name="same" select="$xinput//*[local-name( ) = local-name($current)]"/>
-											<xsl:copy-of select="$same"/>
-										</xsl:when>
-										<xsl:otherwise>
-											<!-- Copy all the nodes containing data as is -->
-											<xsl:copy-of select="."/>
-										</xsl:otherwise>
-									</xsl:choose>
-								</xsl:for-each>
-							</xsl:element>
-						</xsl:template>
+                        <!-- copy the task input to the 'taskinput' instance -->
+                        <xsl:template match="xforms:instance[@id = 'taskinput']">
+                            <xsl:copy>
+                                <xsl:copy-of select="@* | doc('input:getTaskResponse')/tms:task/tms:input/*"/>
+                            </xsl:copy>
+                        </xsl:template>
 
                         <!-- copy the task meta data to the 'taskMetaData' instance -->
                         <xsl:template match="xforms:instance[@id = 'taskmetadata']">

@@ -78,7 +78,7 @@ public class XsdDateTime extends GregorianCalendar {
     }
 
     public XsdDateTime(String dateTime) {
-        Matcher m = PATTERN.matcher(dateTime);
+    	        Matcher m = PATTERN.matcher(dateTime);
         if (m.matches()) {
             set(Integer.valueOf(m.group(YEAR_MG)), 
             //the following line has been modified by JAG to remove 1 as 

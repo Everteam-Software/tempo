@@ -34,11 +34,13 @@
 			<!-- Third Level Header b -->
 	        <br/>
 	        <!-- Third Level Header e -->
-	        <table width="600" border="0" cellspacing="0" cellpadding="4" style="margin-left: 20px; " id="properties_content">
+	        <table width="100%" border="0" cellspacing="0" cellpadding="4" style="margin-left: 20px; " id="properties_content">
 	            <tr>
 	              <td width="10%"><strong>Task State</strong></td>
-	              <td width="65%"><strong>Description</strong></td>
-	              <td width="25%"><strong>Creation Date/Time</strong></td>
+	              <td width="35%"><strong>Description</strong></td>
+	              <td width="10%"><strong>Creation Date/Time</strong></td>
+	              <td width="10%"><strong>Due Date/</strong></td>
+	              <td width="10%"><strong>Priority</strong></td>
 	            </tr>
 	            <c:forEach items="${activityTasks}" var="taskHolder">
 	            	<tr>
@@ -50,6 +52,12 @@
 	            		</td>
 	            		<td>
 	            			<a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}&user=${currentUser}" target="taskform"  >${taskHolder.task.creationDate}</a>
+	            		</td>
+	            		<td>
+	            			<a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}&user=${currentUser}" target="taskform"  >${taskHolder.task.deadline}</a>
+	            		</td>
+	            		<td>
+	            			<a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}&user=${currentUser}" target="taskform"  >${taskHolder.task.priority}</a>
 	            		</td>
 	            	</tr>
 	        	</c:forEach>

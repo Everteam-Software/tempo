@@ -28,6 +28,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -67,14 +68,14 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
             + "tasks.creation_date, tasks.form_url, tasks.failure_code, tasks.failure_reason, tasks.input_xml, "
             + "tasks.output_xml, tasks.endpoint, tasks.namespace, "
             + "tasks.init_soap_action, tasks.complete_soap_action, tasks.is_chained_before, "
-            + "tasks.previous_task_id ";
+            + "tasks.previous_task_id, tasks.deadline, tasks.priority ";
 
     private static final String _INSERT_TASK_FIELDS = " tasks.task_id, "
             + "tasks.process_id, tasks.type_id, tasks.state_id, tasks.description, "
             + "tasks.creation_date, tasks.form_url, tasks.failure_code, tasks.failure_reason, tasks.input_xml, "
             + "tasks.output_xml, tasks.endpoint, tasks.namespace, "
             + "tasks.init_soap_action, tasks.complete_soap_action, tasks.is_chained_before, "
-            + "tasks.previous_task_id ";
+            + "tasks.previous_task_id, tasks.deadline, tasks.priority";
 
     private Connection _con;
 
@@ -138,6 +139,7 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
 
     private Task mapToTaskWithoutOwners(ResultSet resultSet) {
         try {
+        	
             Task resultTask;
 
             int i = 1;
@@ -159,10 +161,13 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
             String completeSOAPAction = resultSet.getString(i++);
             String isChainedBefore = resultSet.getString(i++);
             String previousTaskID = resultSet.getString(i++);
-
+            Date deadline= resultSet.getTimestamp(i++);
+            Integer priority= (Integer) resultSet.getObject(i++);
+           
             if (type.equalsIgnoreCase("init")) {
                 PIPATask pipaTask = new PIPATask(taskID, formURL, new URI(processEndpoint), new URI(namespace),
                         initSOAPAction);
+                
                 resultTask = pipaTask;
             } else if (type.equalsIgnoreCase("activity")) {
                 PATask paTask = new PATask(taskID, formURL, processID, completeSOAPAction, inputXML);
@@ -182,7 +187,8 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
                     paTask.setPreviousTaskID(previousTaskID);
                     paTask.setChainedBefore(true);
                 }
-
+                paTask.setDeadline(deadline);
+                paTask.setPriority(priority);
                 resultTask = paTask;
             } else if (type.equalsIgnoreCase("notification")) {
                 Notification notification = new Notification(taskID, formURL, inputXML);
@@ -196,7 +202,9 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
                         notification.setFailureReason(failureReason);
                     }
                 }
-
+          
+                notification.setDeadline(deadline);
+                notification.setPriority(priority);
                 resultTask = notification;
             } else {
                 throw new RuntimeException("TMS inconsistency: unknown task type: '" + type + "'");
@@ -204,7 +212,8 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
             resultTask.setInternalID(internalId);
             resultTask.setDescription(description == null ? "" : description);
             resultTask.setCreationDate(creationDate);
-
+           
+            
             _logger.debug("Workflow Task " + resultTask.getID() + " has been read from TMS DB");
             return resultTask;
         } catch (SQLException e) {
@@ -216,6 +225,7 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
 
     private Task fetchTask(String taskID) {
         try {
+        	
             Task resultTask;
             {
                 PreparedStatement select;
@@ -228,8 +238,10 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
                 try {
                     if (! taskResultSet.next()) {
                         _logger.debug("No such Workflow Task!");
+                      
                         return null;
                     }
+                    
                     resultTask = mapToTaskWithoutOwners(taskResultSet);
                 } finally {
                     close(taskResultSet);
@@ -394,14 +406,17 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
     }
 
     public Task fetchTaskIfExists(String taskID) {
+    	
         return fetchTask(taskID);
     }
 
     public void updateTask(Task task) {
+
         if (!deleteTask(task.getInternalId(), task.getID())) {
             throw new RuntimeException("Attempt to update a nonexistent task (ID: '" + task.getID() + "'");
         }
         try {
+        	
             createTask(task);
         } catch (TaskIDConflictException e) {
             throw new RuntimeException(e);
@@ -510,7 +525,7 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
                         new String[] { paTask.getState().toString().toLowerCase() });
 
                 PreparedStatement createTaskStatement = _con.prepareStatement("INSERT INTO tasks ("
-                        + _INSERT_TASK_FIELDS + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, NULL, NULL, ?, ?, ?)");
+                        + _INSERT_TASK_FIELDS + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, NULL, NULL, ?, ?, ?,?,?)");
                 int i = 1;
                 createTaskStatement.setString(i++, paTask.getID());
                 createTaskStatement.setString(i++, paTask.getProcessID());
@@ -531,7 +546,11 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
                 createTaskStatement.setString(i++, paTask.getCompleteSOAPAction());
                 createTaskStatement.setString(i++, paTask.isChainedBefore() ? "1" : "0");
                 createTaskStatement.setString(i++, paTask.getPreviousTaskID());
-
+                if(paTask.getDeadline()==null)createTaskStatement.setTimestamp(i++, null);
+                else  createTaskStatement.setTimestamp(i++, new Timestamp(paTask.getDeadline().getTime()));
+                if(paTask.getPriority()==null) createTaskStatement.setNull(i++, Types.INTEGER);
+                else{createTaskStatement.setInt(i++, paTask.getPriority());}
+                
                 _logger.debug("Workflow PA Task " + paTask.getID() + " is about to be registered in TMS DB");
                 createTaskStatement.executeUpdate();
                 createTaskStatement.close();
@@ -572,7 +591,7 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
                         new String[] { notification.getState().toString().toLowerCase() });
 
                 PreparedStatement createTaskStatement = _con.prepareStatement("INSERT INTO tasks ("
-                        + _INSERT_TASK_FIELDS + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, NULL, NULL, ?, ?, ?)");
+                        + _INSERT_TASK_FIELDS + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, NULL, NULL, ?, ?, ?,?,?)");
                 int i = 1;
                 createTaskStatement.setString(i++, notification.getID());
                 createTaskStatement.setString(i++, null);
@@ -593,7 +612,9 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
                 createTaskStatement.setString(i++, null);
                 createTaskStatement.setString(i++, null);
                 createTaskStatement.setString(i++, null);
-
+                createTaskStatement.setTimestamp(i++, null);
+                if(notification.getPriority()==null) createTaskStatement.setNull(i++, Types.INTEGER);
+                else{createTaskStatement.setInt(i++, notification.getPriority());}
                 _logger.debug("Workflow Notification Task " + notification.getID() + " is about to be registered in TMS DB");
                 createTaskStatement.executeUpdate();
                 createTaskStatement.close();

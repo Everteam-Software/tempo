@@ -19,6 +19,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,15 +30,18 @@ import org.intalio.tempo.workflow.task.traits.IChainableTask;
 import org.intalio.tempo.workflow.task.traits.ICompleteReportingTask;
 import org.intalio.tempo.workflow.task.traits.IProcessBoundTask;
 import org.intalio.tempo.workflow.task.traits.ITaskWithAttachments;
+import org.intalio.tempo.workflow.task.traits.ITaskWithDeadline;
 import org.intalio.tempo.workflow.task.traits.ITaskWithInput;
 import org.intalio.tempo.workflow.task.traits.ITaskWithOutput;
+import org.intalio.tempo.workflow.task.traits.ITaskWithPriority;
 import org.intalio.tempo.workflow.task.traits.ITaskWithState;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
 public class PATask extends Task implements ITaskWithState, IProcessBoundTask, ITaskWithInput, ITaskWithOutput,
-    ICompleteReportingTask, ITaskWithAttachments, IChainableTask {
+    ICompleteReportingTask, ITaskWithAttachments, IChainableTask,ITaskWithPriority,ITaskWithDeadline {
     private String _processID;
-
+    private Date _deadline=null;
+    private Integer _priority=null;
     private TaskState _state = TaskState.READY;
 
     private String _failureCode = "";
@@ -206,4 +210,29 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
         }
         _previousTaskID = previousTaskID;
     }
+
+	
+	public Integer getPriority() {
+	
+		return _priority;
+		
+	}
+
+	
+	public void setPriority(Integer priority) {
+		_priority=priority;
+		
+	}
+
+	
+	public Date getDeadline() {
+		
+		return _deadline;
+	}
+
+	
+	public void setDeadline(Date deadline) {
+		_deadline=deadline;
+		
+	}
 }

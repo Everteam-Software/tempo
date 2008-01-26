@@ -67,7 +67,8 @@ public class SimpleTaskDAOConnection implements ITaskDAOConnection {
         return availableTasks.toArray(new Task[]{});
     }
 
-    public synchronized Task fetchTaskIfExists(String taskID) {        
+    public synchronized Task fetchTaskIfExists(String taskID) {
+    	
         return _tasks.get(taskID);
     }
 

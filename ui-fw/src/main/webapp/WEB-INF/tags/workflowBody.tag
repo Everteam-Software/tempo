@@ -13,6 +13,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
 <%@ taglib prefix="intalio" uri="http://www.intalio.com/tagfiles"%>
 
+
+
 <%@ attribute name="headerCell" required="false" type="java.lang.String" %>
 
 
@@ -52,6 +54,7 @@
 	dateTimePickerRequired="false"
 	toolbar="${toolbar}"
 	scripts="${scripts}"
+	
 	subMenuHeader="${subMenuHeader}"
 	headerCell="${headerCell}"
 	title="${title}"

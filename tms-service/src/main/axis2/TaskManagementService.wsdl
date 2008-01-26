@@ -111,6 +111,15 @@
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
+			<xsd:element name="exitRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="taskId" type="xsd:string"/>
+						<xsd:element name="participantToken" type="xsd:string">
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
 			<xsd:element name="setOutputAndCompleteRequest">
 				<xsd:complexType>
 					<xsd:sequence>
@@ -239,9 +248,13 @@
 					</xsd:element>
 					<xsd:element name="roleOwner" type="xsd:string" maxOccurs="unbounded" minOccurs="0">
 					</xsd:element>
+					<xsd:element name="deadline" type="xsd:dateTime" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="priority" type="xsd:int" maxOccurs="1" minOccurs="0"/>
+					
 					<xsd:element name="formUrl" type="xsd:anyURI"/>
 					<xsd:element name="failureCode" type="xsd:string" maxOccurs="1" minOccurs="0"/>
 					<xsd:element name="failureReason" type="xsd:string" maxOccurs="1" minOccurs="0"/>
+					
 					<xsd:element name="userProcessCompleteSOAPAction" type="xsd:string" maxOccurs="1" minOccurs="0"/>
 					<xsd:element name="attachments">
 					 <xsd:complexType>
@@ -311,6 +324,10 @@
 		<wsdl:part name="completeRequest" element="tns:completeRequest">
 		</wsdl:part>
 	</wsdl:message>
+	<wsdl:message name="exitRequest">
+		<wsdl:part name="exitRequest" element="tns:exitRequest">
+		</wsdl:part>
+	</wsdl:message>
 	<wsdl:message name="setOutputAndCompleteRequest">
 		<wsdl:part name="setOutputAndCompleteRequest" element="tns:setOutputAndCompleteRequest">
 		</wsdl:part>
@@ -361,6 +378,16 @@
 		</wsdl:operation>
 		<wsdl:operation name="complete">
 			<wsdl:input message="tns:completeRequest"/>
+			<wsdl:output message="tns:okResponse"/>
+			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault">
+			</wsdl:fault>
+			<wsdl:fault name="UnavailableTask" message="tns:unavailableTaskFault">
+			</wsdl:fault>
+			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault">
+			</wsdl:fault>
+		</wsdl:operation>
+			<wsdl:operation name="exit">
+			<wsdl:input message="tns:exitRequest"/>
 			<wsdl:output message="tns:okResponse"/>
 			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault">
 			</wsdl:fault>
@@ -477,6 +504,24 @@
 		</wsdl:operation>
 		<wsdl:operation name="complete">
 			<soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/complete"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="InvalidParticipantToken">
+				<soap:fault name="InvalidParticipantToken" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="UnavailableTask">
+				<soap:fault name="UnavailableTask" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="InvalidInputMessage">
+				<soap:fault name="InvalidInputMessage" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+			<wsdl:operation name="exit">
+			<soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/exit"/>
 			<wsdl:input>
 				<soap:body use="literal"/>
 			</wsdl:input>

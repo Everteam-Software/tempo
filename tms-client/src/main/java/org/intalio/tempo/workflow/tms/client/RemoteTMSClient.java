@@ -201,6 +201,23 @@ class RemoteTMSClient extends OMUnmarshaller implements ITaskManagementService {
 
         sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "complete");
     }
+    public void exit(final String taskID) throws AuthException, UnavailableTaskException, InvalidTaskStateException {
+        if (taskID == null) {
+            throw new RequiredArgumentException("taskID");
+        }
+
+        OMElement request = new TMSMarshaller() {
+            public OMElement marshalRequest() {
+                OMElement request = createElement("completeRequest");
+                createElement(request, "taskId", taskID);
+                createElement(request, "participantToken", _participantToken);
+
+                return request;
+            }
+        }.marshalRequest();
+
+        sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "complete");
+    }
 
     public void setOutputAndComplete(String taskID, Document output) throws AuthException, UnavailableTaskException,
             InvalidTaskStateException {

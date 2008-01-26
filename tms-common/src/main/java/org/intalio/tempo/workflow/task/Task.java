@@ -36,9 +36,9 @@ public abstract class Task extends BaseRestrictedEntity {
     private String _description = "";
 
     private Date _creationDate = new Date();
-
+    
     private URI _formURL;
-
+    
     private Map<String,ACL> _actionACLs = new HashMap<String,ACL>();
     
     public Task(String id, URI formURL) {
@@ -165,4 +165,6 @@ public abstract class Task extends BaseRestrictedEntity {
         public AuthIdentifierSet _users = new AuthIdentifierSet();
         public AuthIdentifierSet _roles = new AuthIdentifierSet();
     }
+
+
 }

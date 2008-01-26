@@ -42,7 +42,10 @@ public interface ITaskManagementService {
             throws AuthException,
                 UnavailableTaskException,
                 InvalidTaskStateException;
-
+    void exit(String taskID)
+    throws AuthException,
+        UnavailableTaskException,
+        InvalidTaskStateException;
     void setOutputAndComplete(String taskID, Document output)
             throws AuthException,
                 UnavailableTaskException,

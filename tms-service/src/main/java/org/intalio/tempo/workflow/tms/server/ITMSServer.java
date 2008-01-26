@@ -44,7 +44,10 @@ public interface ITMSServer {
             throws AuthException,
                 UnavailableTaskException,
                 InvalidTaskStateException;
-
+    void exit(String taskID, String participantToken)
+    throws AuthException,
+        UnavailableTaskException,
+        InvalidTaskStateException;
     void setOutputAndComplete(String taskID, Document output, String participantToken)
             throws AuthException,
                 UnavailableTaskException,
