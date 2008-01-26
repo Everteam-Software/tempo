@@ -1,7 +1,0 @@
-<Context path="/axis2" privileged="true" antiResourceLocking="false" antiJARLocking="false">
-    <ResourceLink
-             name="jdbc/BPMSDB"
-             global="BPMSDB"
-             type="javax.sql.DataSource"
-             />
-</Context>
