@@ -244,12 +244,9 @@
 					<xsd:element name="taskType" type="xsd:token"/>
 					<xsd:element name="description" type="xsd:string" maxOccurs="1" minOccurs="0"/>
 					<xsd:element name="processId" type="xsd:string" maxOccurs="1" minOccurs="0"/>
-					<xsd:element name="creationDate" type="xsd:dateTime" maxOccurs="1" minOccurs="0">
-					</xsd:element>
-					<xsd:element name="userOwner" type="xsd:string" maxOccurs="unbounded" minOccurs="0">
-					</xsd:element>
-					<xsd:element name="roleOwner" type="xsd:string" maxOccurs="unbounded" minOccurs="0">
-					</xsd:element>
+					<xsd:element name="creationDate" type="xsd:dateTime" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="userOwner" type="xsd:string" maxOccurs="unbounded" minOccurs="0"/>
+					<xsd:element name="roleOwner" type="xsd:string" maxOccurs="unbounded" minOccurs="0"/>
 					<xsd:element name="formUrl" type="xsd:anyURI"/>
 					<xsd:element name="failureCode" type="xsd:string" maxOccurs="1" minOccurs="0"/>
 					<xsd:element name="failureReason" type="xsd:string" maxOccurs="1" minOccurs="0"/>
@@ -263,12 +260,13 @@
 					   </xsd:sequence>
 					 </xsd:complexType>
 					</xsd:element>
+                                        <xsd:element name="isChainedBefore" type="xsd:string" maxOccurs="1" minOccurs="0"/>
+                                        <xsd:element name="previousTaskId" type="xsd:string" maxOccurs="1" minOccurs="0"/>
   				</xsd:sequence>
 			</xsd:complexType>
 			<xsd:complexType name="task">
 				<xsd:sequence>
-					<xsd:element name="metadata" type="tns:taskMetadata">
-					</xsd:element>
+					<xsd:element name="metadata" type="tns:taskMetadata"/>
 					<xsd:element name="input">
 						<xsd:complexType>
 							<xsd:sequence>
@@ -294,39 +292,31 @@
 		<wsdl:part name="getTaskListRequest" element="tns:getTaskListRequest"/>
 	</wsdl:message>
 	<wsdl:message name="getTaskResponse">
-		<wsdl:part name="getTaskResponse" element="tns:getTaskResponse">
-		</wsdl:part>
+		<wsdl:part name="getTaskResponse" element="tns:getTaskResponse"/>
 	</wsdl:message>
 	<wsdl:message name="getTaskRequest">
 		<wsdl:part name="getTaskRequest" element="tns:getTaskRequest"/>
 	</wsdl:message>
 	<wsdl:message name="setOutputRequest">
-		<wsdl:part name="setOutputRequest" element="tns:setOutputRequest">
-		</wsdl:part>
+		<wsdl:part name="setOutputRequest" element="tns:setOutputRequest"/>
 	</wsdl:message>
 	<wsdl:message name="unavailableTaskFault">
-		<wsdl:part name="unavailableTaskFault" element="tns:unavailableTaskFault">
-		</wsdl:part>
+		<wsdl:part name="unavailableTaskFault" element="tns:unavailableTaskFault"/>
 	</wsdl:message>
 	<wsdl:message name="invalidParticipantTokenFault">
-		<wsdl:part name="invalidParticipantTokenFault" element="tns:invalidParticipantTokenFault">
-		</wsdl:part>
+		<wsdl:part name="invalidParticipantTokenFault" element="tns:invalidParticipantTokenFault"/>
 	</wsdl:message>
 	<wsdl:message name="accessDeniedFault">
-		<wsdl:part name="accessDeniedFault" element="tns:accessDeniedFault">
-		</wsdl:part>
+		<wsdl:part name="accessDeniedFault" element="tns:accessDeniedFault"/>
 	</wsdl:message>
 	<wsdl:message name="invalidInputMessageFault">
-		<wsdl:part name="invalidInputMessageFault" element="tns:invalidInputMessageFault">
-		</wsdl:part>
+		<wsdl:part name="invalidInputMessageFault" element="tns:invalidInputMessageFault"/>
 	</wsdl:message>
 	<wsdl:message name="completeRequest">
-		<wsdl:part name="completeRequest" element="tns:completeRequest">
-		</wsdl:part>
+		<wsdl:part name="completeRequest" element="tns:completeRequest"/>
 	</wsdl:message>
 	<wsdl:message name="setOutputAndCompleteRequest">
-		<wsdl:part name="setOutputAndCompleteRequest" element="tns:setOutputAndCompleteRequest">
-		</wsdl:part>
+		<wsdl:part name="setOutputAndCompleteRequest" element="tns:setOutputAndCompleteRequest"/>
 	</wsdl:message>
 	<wsdl:message name="failRequest">
 		<wsdl:part name="failRequest" element="tns:failRequest"/>
@@ -350,100 +340,73 @@
 		<wsdl:operation name="getTaskList">
 			<wsdl:input message="tns:getTaskListRequest"/>
 			<wsdl:output message="tns:getTaskListResponse"/>
-			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault">
-			</wsdl:fault>
-			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault">
-			</wsdl:fault>
+			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault"/>
+			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault"/>
 		</wsdl:operation>
 		<wsdl:operation name="getTask">
 			<wsdl:input message="tns:getTaskRequest"/>
 			<wsdl:output message="tns:getTaskResponse"/>
-			<wsdl:fault name="UnavailableTask" message="tns:unavailableTaskFault">
-			</wsdl:fault>
-			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault">
-			</wsdl:fault>
-			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault">
-			</wsdl:fault>
+			<wsdl:fault name="UnavailableTask" message="tns:unavailableTaskFault"/>
+			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault"/>
+			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault"/>
 		</wsdl:operation>
 		<wsdl:operation name="setOutput">
 			<wsdl:input message="tns:setOutputRequest"/>
 			<wsdl:output message="tns:okResponse"/>
-			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault">
-			</wsdl:fault>
-			<wsdl:fault name="UnavailableTask" message="tns:unavailableTaskFault">
-			</wsdl:fault>
-			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault">
-			</wsdl:fault>
+			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault"/>
+			<wsdl:fault name="UnavailableTask" message="tns:unavailableTaskFault"/>
+			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault"/>
 		</wsdl:operation>
 		<wsdl:operation name="complete">
 			<wsdl:input message="tns:completeRequest"/>
 			<wsdl:output message="tns:okResponse"/>
-			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault">
-			</wsdl:fault>
-			<wsdl:fault name="UnavailableTask" message="tns:unavailableTaskFault">
-			</wsdl:fault>
-			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault">
-			</wsdl:fault>
+			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault"/>
+			<wsdl:fault name="UnavailableTask" message="tns:unavailableTaskFault"/>
+			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault"/>
 		</wsdl:operation>
 		<wsdl:operation name="setOutputAndComplete">
 			<wsdl:input message="tns:setOutputAndCompleteRequest"/>
 			<wsdl:output message="tns:okResponse"/>
-			<wsdl:fault name="UnavailableTask" message="tns:unavailableTaskFault">
-			</wsdl:fault>
-			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault">
-			</wsdl:fault>
-			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault">
-			</wsdl:fault>
+			<wsdl:fault name="UnavailableTask" message="tns:unavailableTaskFault"/>
+			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault"/>
+			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault"/>
 		</wsdl:operation>
 		<wsdl:operation name="fail">
 			<wsdl:input message="tns:failRequest"/>
 			<wsdl:output message="tns:okResponse"/>
-			<wsdl:fault name="AccessDenied" message="tns:accessDeniedFault">
-			</wsdl:fault>
-			<wsdl:fault name="UnavailableTask" message="tns:unavailableTaskFault">
-			</wsdl:fault>
-			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault">
-			</wsdl:fault>
-			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault">
-			</wsdl:fault>
+			<wsdl:fault name="AccessDenied" message="tns:accessDeniedFault"/>
+			<wsdl:fault name="UnavailableTask" message="tns:unavailableTaskFault"/>
+			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault"/>
+			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault"/>
 		</wsdl:operation>
 		<wsdl:operation name="delete">
 			<wsdl:input message="tns:deleteRequest"/>
 			<wsdl:output message="tns:okResponse"/>
-			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault">
-			</wsdl:fault>
-			<wsdl:fault name="AccessDenied" message="tns:accessDeniedFault">
-			</wsdl:fault>
-			<wsdl:fault name="UnavailableTasks" message="tns:unavailableTaskFault">
-			</wsdl:fault>
-			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault">
-			</wsdl:fault>
+			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault"/>
+			<wsdl:fault name="AccessDenied" message="tns:accessDeniedFault"/>
+			<wsdl:fault name="UnavailableTasks" message="tns:unavailableTaskFault"/>
+			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault"/>
 		</wsdl:operation>
 		<wsdl:operation name="create">
 			<wsdl:input message="tns:createRequest"/>
 			<wsdl:output message="tns:okResponse"/>
-			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault">
-			</wsdl:fault>
-			<wsdl:fault name="AccessDenied" message="tns:accessDeniedFault">
-			</wsdl:fault>
-			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault">
-			</wsdl:fault>
+			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault"/>
+			<wsdl:fault name="AccessDenied" message="tns:accessDeniedFault"/>
+			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault"/>
 		</wsdl:operation>
 		<wsdl:operation name="init">
 			<wsdl:input message="tns:initRequest"/>
 			<wsdl:output message="tns:okResponse"/>
 			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault"/>
 			<wsdl:fault name="UnavailableTask" message="tns:unavailableTaskFault"/>
-			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault">
-			</wsdl:fault>
+			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault"/>
 		</wsdl:operation>
 		<wsdl:operation name="reassign">
 			<wsdl:input message="tns:reassignRequest"/>
 			<wsdl:output message="tns:okResponse"/>
 			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault"/>
 			<wsdl:fault name="UnavailableTask" message="tns:unavailableTaskFault"/>
-			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault">
-			</wsdl:fault>
+			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault"/>
 		</wsdl:operation>
 	</wsdl:portType>
 	<wsdl:binding name="TaskManagementServicesSOAP" type="tns:TaskManagementServices">
