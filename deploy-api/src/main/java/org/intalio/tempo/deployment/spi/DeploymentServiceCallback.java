@@ -12,10 +12,12 @@
 
 package org.intalio.tempo.deployment.spi;
 
+import java.rmi.Remote;
+
 /**
  * Callback interface for the deployment service.
  */
-public interface DeploymentServiceCallback {
+public interface DeploymentServiceCallback extends Remote {
 
     /**
      * Notify the deployment service the given ComponentManager is available
