@@ -12,7 +12,6 @@
 
 package org.intalio.tempo.deployment;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.List;
 
@@ -25,10 +24,10 @@ public class DeployedAssembly implements Serializable {
     private static final long serialVersionUID = 1L;
     
     final AssemblyId _aid;
-    final File _assemblyDir;
+    final String _assemblyDir;
     final List<DeployedComponent> _components;
 
-    public DeployedAssembly(AssemblyId assemblyId, File assemblyDir, List<DeployedComponent> components)
+    public DeployedAssembly(AssemblyId assemblyId, String assemblyDir, List<DeployedComponent> components)
     {
         _aid = assemblyId;
         _assemblyDir = assemblyDir;
@@ -39,7 +38,7 @@ public class DeployedAssembly implements Serializable {
         return _aid;
     }
     
-    public File getAssemblyDir() {
+    public String getAssemblyDir() {
         return _assemblyDir;
     }
     
