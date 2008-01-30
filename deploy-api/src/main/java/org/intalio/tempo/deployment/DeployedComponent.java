@@ -12,7 +12,6 @@
 
 package org.intalio.tempo.deployment;
 
-import java.io.File;
 import java.io.Serializable;
 
 /**
@@ -24,10 +23,10 @@ public class DeployedComponent implements Serializable {
     private static final long serialVersionUID = 1L;
 
     final ComponentId _componentId;
-    final File _componentDir;
+    final String _componentDir;
     final String _componentManagerName;
 
-    public DeployedComponent(ComponentId ComponentId, File componentDir, String componentManagerName) {
+    public DeployedComponent(ComponentId ComponentId, String componentDir, String componentManagerName) {
         _componentId = ComponentId;
         _componentDir = componentDir;
         _componentManagerName = componentManagerName;
@@ -37,7 +36,7 @@ public class DeployedComponent implements Serializable {
         return _componentId;
     }
     
-    public File getComponentDir() {
+    public String getComponentDir() {
         return _componentDir;
     }
     
