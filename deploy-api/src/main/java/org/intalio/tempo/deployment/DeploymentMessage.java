@@ -12,7 +12,6 @@
 
 package org.intalio.tempo.deployment;
 
-import java.io.File;
 
 /**
  * Deployment message, contains the description and detail of deployment operation.
@@ -21,7 +20,7 @@ public class DeploymentMessage {
 
     private String _description;
     private Level _level;
-    private File _resource;
+    private String _resource;
     private String _location;
     private ComponentId _cid;
     private String _componentManagerName;
@@ -54,11 +53,11 @@ public class DeploymentMessage {
         return Level.ERROR.equals(_level);
     }
 
-    public File getResource() {
+    public String getResource() {
         return _resource;
     }
     
-    public void setResource(File resource) {
+    public void setResource(String resource) {
         _resource = resource;
     }
     
