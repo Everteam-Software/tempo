@@ -13,28 +13,30 @@
 package org.intalio.tempo.deployment;
 
 import java.io.InputStream;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 import java.util.Collection;
 
 
 /**
  * Interface for the deployment service.
  */
-public interface DeploymentService {
+public interface DeploymentService extends Remote {
 
     /**
      * Deploy a packaged (zipped) assembly
      */
     DeploymentResult deployAssembly(String assemblyName, InputStream zip, 
-                                    boolean replaceExistingAssemblies);
+                                    boolean replaceExistingAssemblies) throws RemoteException;
 
     /**
      * Undeploy an assembly 
      */
-    DeploymentResult undeployAssembly(AssemblyId assemblyId);
+    DeploymentResult undeployAssembly(AssemblyId assemblyId) throws RemoteException;
 
     /**
      * Obtain the current list of deployed assemblies
      */
-    Collection<DeployedAssembly> getDeployedAssemblies();
+    Collection<DeployedAssembly> getDeployedAssemblies() throws RemoteException;
     
 }
