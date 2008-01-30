@@ -23,7 +23,7 @@ import java.io.Serializable;
 public class AssemblyId implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    public static final int NO_VERSION = -1;
+    public static final int NO_VERSION = 0;
     
     private String _assemblyName;
     private int    _version;
