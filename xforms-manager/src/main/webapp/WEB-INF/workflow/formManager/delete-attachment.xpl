@@ -27,7 +27,7 @@
     <p:processor name="oxf:xslt">
         <p:input name="data" href="#instance"/>
         <p:input name="config">
-            <delegation:execute service="tasWS" operation="deleteRequest" xsl:version="2.0">
+            <delegation:execute service="tas" operation="deleteRequest" xsl:version="2.0">
                 <tas:authCredentials>
                     <tas:participantToken>
                         <xsl:value-of select="/*/@participantToken"/>
@@ -52,14 +52,7 @@
     </p:processor>
 
     <p:processor name="oxf:delegation">
-        <p:input name="interface">
-            <config>
-                <service id="tasWS" type="webservice"
-                    endpoint="http://localhost:8080/axis2/services/tas">
-                    <operation nsuri="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/" name="deleteRequest" soap-action="delete"/>
-                </service>
-            </config>
-        </p:input>
+        <p:input name="interface" href="oxf:/config/services.xml"/>
         <p:input name="call" href="#deleteRequest"/>
         <p:output name="data" id="deleteResponse"/>
     </p:processor>
@@ -73,7 +66,7 @@
     <p:processor name="oxf:xslt">
         <p:input name="data" href="#instance"/>
         <p:input name="config">
-            <delegation:execute service="TaskManagementServiceWS" operation="removeAttachmentTMS" xsl:version="2.0">
+            <delegation:execute service="tms" operation="removeAttachmentTMS" xsl:version="2.0">
                 <tms:taskId>
                     <xsl:value-of select="/*/@taskId"/>
                 </tms:taskId>
@@ -89,18 +82,8 @@
     </p:processor>
 
     <p:processor name="oxf:delegation">
-        <p:input name="interface">
-            <config>
-                <service id="TaskManagementServiceWS" type="webservice"
-                    endpoint="http://localhost:8080/axis2/services/TaskManagementServices">
-                    <operation nsuri="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
-                               name="removeAttachmentTMS" soap-action="removeAttachment"/>
-                </service>
-            </config>
-        </p:input>
+        <p:input name="interface" href="oxf:/config/services.xml"/>
         <p:input name="call" href="#removeAttachmentTMS"/>
-        <!-- This output is never used, but should be here as otherwise Orbeon XPL engine consider that calling
-        processor which output is not referenced further does not makes sense -->
         <p:output name="data" ref="data"/>
     </p:processor>
 

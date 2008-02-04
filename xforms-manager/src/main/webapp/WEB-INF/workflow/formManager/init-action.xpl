@@ -42,7 +42,7 @@
             <p:input name="data" href="#instance"/>
             <p:input name="widget" href="current()"/>
             <p:input name="config">
-                <delegation:execute service="tasWS" operation="addRequest" xsl:version="2.0">
+                <delegation:execute service="tas" operation="addRequest" xsl:version="2.0">
                     <tas:authCredentials>
                         <tas:participantToken>
                             <xsl:value-of select="/*:output/@participantToken"/>
@@ -68,14 +68,7 @@
 
         <!-- Call TAS.add -->
         <p:processor name="oxf:delegation">
-            <p:input name="interface">
-                <config>
-                    <service id="tasWS" type="webservice"
-                        endpoint="http://localhost:8080/axis2/services/tas">
-                        <operation nsuri="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/" name="addRequest" soap-action="add"/>
-                    </service>
-                </config>
-            </p:input>
+            <p:input name="interface" href="oxf:/config/services.xml"/>
             <p:input name="call" href="#addRequest"/>
             <p:output name="data" id="addResponse"/>
         </p:processor>
@@ -140,7 +133,7 @@
 
                 <xsl:template match="/">
                     <xsl:copy>
-                        <delegation:execute service="initWS" operation="initRequest" xsl:version="2.0">
+                        <delegation:execute service="tms" operation="initRequest" xsl:version="2.0">
                             <tms:taskId>
                                 <xsl:value-of select="/*:output/@taskId"/>
                             </tms:taskId>
@@ -166,17 +159,7 @@
     </p:processor>
 
     <p:processor name="oxf:delegation">
-        <p:input name="interface">
-            <config>
-                <service id="initWS" type="webservice"
-                         endpoint="http://localhost:8080/axis2/services/TaskManagementServices">
-                    <operation nsuri="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
-                               soap-action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/initProcess"
-                               name="initRequest"
-                               select="/*:Envelope/*:Body/text() | /*:Envelope/*:Body/*"/>
-                </service>
-            </config>
-        </p:input>
+        <p:input name="interface" href="oxf:/config/services.xml"/>
         <p:input name="call" href="#initInput"/>
         <p:output name="data" id="initOutput"/>
     </p:processor>
@@ -193,7 +176,7 @@
                 <p:input name="ws-request" href="#initInput"/>
                 <p:input name="data" href="#ws_call_output"/>
                 <p:input name="header">
-                    <b>http://localhost:8080/axis2/services/TaskManagementServices</b>
+                    <b>Init</b>
                 </p:input>
                 <p:output name="data" ref="data"/>
             </p:processor>

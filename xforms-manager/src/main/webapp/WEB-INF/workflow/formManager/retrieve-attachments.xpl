@@ -24,7 +24,7 @@
     <p:processor name="oxf:xslt">
         <p:input name="data" href="#instance"/>
         <p:input name="config">
-            <delegation:execute service="tmsAttachmentsWS" operation="getAttachmentsRequest" xsl:version="2.0">
+            <delegation:execute service="tms" operation="getAttachmentsRequest" xsl:version="2.0">
                 <tms:taskId>
                     <xsl:value-of select="/*/@taskId"/>
                 </tms:taskId>
@@ -37,14 +37,7 @@
     </p:processor>
 
     <p:processor name="oxf:delegation">
-        <p:input name="interface">
-            <config>
-                <service id="tmsAttachmentsWS" type="webservice"
-                    endpoint="http://localhost:8080/axis2/services/TaskManagementServices">
-                    <operation nsuri="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" name="getAttachmentsRequest" soap-action="getAttachments"/>
-                </service>
-            </config>
-        </p:input>
+        <p:input name="interface" href="oxf:/config/services.xml"/>
         <p:input name="call" href="#attachmentsRequest"/>
         <p:output name="data" id="taskAttachments"/>
     </p:processor>

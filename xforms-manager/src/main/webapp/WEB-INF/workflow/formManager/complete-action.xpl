@@ -43,7 +43,7 @@
             <p:input name="data" href="#instance"/>
             <p:input name="widget" href="current()"/>
             <p:input name="config">
-                <delegation:execute service="tasWS" operation="addRequest" xsl:version="2.0">
+                <delegation:execute service="tas" operation="addRequest" xsl:version="2.0">
                     <tas:authCredentials>
                         <tas:participantToken>
                             <xsl:value-of select="/*:output/@participantToken"/>
@@ -70,14 +70,7 @@
         <!-- Call TAS.add -->
         <p:processor name="oxf:delegation">
             <p:input name="call" href="#addRequest"/>
-            <p:input name="interface">
-                <config>
-                    <service id="tasWS" type="webservice"
-                        endpoint="http://localhost:8080/axis2/services/tas">
-                        <operation nsuri="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/" name="addRequest" soap-action="add"/>
-                    </service>
-                </config>
-            </p:input>
+            <p:input name="interface" href="oxf:/config/services.xml"/>
             <p:output name="data" id="addResponse"/>
         </p:processor>
 
@@ -88,7 +81,7 @@
             <p:input name="widget" href="current()"/>
             <p:input name="tasResponse" href="#addResponse"/>
             <p:input name="config">
-                <delegation:execute service="TaskManagementServiceWS" operation="addAttachmentRequest" xsl:version="2.0">
+                <delegation:execute service="tms" operation="addAttachmentRequest" xsl:version="2.0">
                     <tms:taskId>
                         <xsl:value-of select="/*/@taskId"/>
                     </tms:taskId>
@@ -110,16 +103,7 @@
 
         <!-- Call for TMS.addAttachment -->
         <p:processor name="oxf:delegation">
-            <p:input name="interface">
-                <config>
-                    <service id="TaskManagementServiceWS" type="webservice"
-                        endpoint="http://localhost:8080/axis2/services/TaskManagementServices">
-
-                        <operation nsuri="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
-                                    name="addAttachmentRequest" soap-action="addAttachment"/>
-                    </service>
-                </config>
-            </p:input>
+            <p:input name="interface" href="oxf:/config/services.xml"/>
             <p:input name="call" href="#addAttachmentTMS"/>
             <p:output name="data" id="dummy"/>
         </p:processor>
@@ -181,14 +165,14 @@
 
 
     <p:processor name="oxf:xslt">
-        <p:input name="data" href="#instance2" debug="instance2"/>
+        <p:input name="data" href="#instance2"/>
         <p:input name="config">
             <xsl:stylesheet version="2.0">
                 <xsl:import href="oxf:/oxf/xslt/utils/copy.xsl"/>
 
                 <xsl:template match="/">
                     <xsl:copy>
-                        <delegation:execute service="TMProcessWS" operation="completeTaskRequest" xsl:version="2.0">
+                        <delegation:execute service="tmp" operation="completeTaskRequest" xsl:version="2.0">
                             <b4p:taskMetaData>
                                 <b4p:taskId>
                                     <xsl:value-of select="/*:output/@taskId"/>
@@ -216,15 +200,7 @@
     </p:processor>
 
     <p:processor name="oxf:delegation">
-        <p:input name="interface">
-            <config>
-                <service id="TMProcessWS" type="webservice" endpoint="http://localhost:8080/ode/processes/completeTask">
-                    <operation nsuri="http://www.intalio.com/bpms/workflow/ib4p_20051115"
-                               name="completeTaskRequest" soap-action="completeTask"
-                               select="/*:Envelope/*:Body/text() | /*:Envelope/*:Body/*"/>
-                </service>
-            </config>
-        </p:input>
+        <p:input name="interface" href="oxf:/config/services.xml"/>
         <p:input name="call" href="#completeTaskInput"/>
         <p:output name="data" id="completeResponse"/>
     </p:processor>
@@ -241,7 +217,7 @@
                 <p:input name="data" href="#ws_call_output"/>
                 <p:input name="ws-request" href="#completeTaskInput"/>
                 <p:input name="header">
-                    <b>http://localhost:8080/ode/processes/completeTask</b>
+                    <b>Complete Task</b>
                 </p:input>
                 <p:output name="data" ref="data"/>
             </p:processor>

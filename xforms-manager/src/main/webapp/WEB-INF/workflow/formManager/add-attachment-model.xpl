@@ -32,7 +32,7 @@
             <p:processor name="oxf:xslt">
                 <p:input name="data" href="#instance"/>
                 <p:input name="config">
-                    <delegation:execute service="tasWS" operation="addRequest" xsl:version="2.0">
+                    <delegation:execute service="tas" operation="addRequest" xsl:version="2.0">
                         <tas:authCredentials>
                             <tas:participantToken>
                                 <xsl:value-of select="/*/@participantToken"/>
@@ -62,14 +62,8 @@
 
             <!-- Call TAS.add -->
             <p:processor name="oxf:delegation">
-                <p:input name="interface">
-                    <config>
-                        <service id="tasWS" type="webservice" endpoint="http://localhost:8080/axis2/services/tas">
-                            <operation nsuri="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/" name="addRequest" soap-action="add"/>
-                        </service>
-                    </config>
-                </p:input>
-                <p:input name="call" href="#addRequest"/>
+				<p:input name="interface" href="oxf:/config/services.xml"/>
+				<p:input name="call" href="#addRequest"/>
                 <p:output name="data" id="addResponse"/>
             </p:processor>
 
@@ -79,7 +73,7 @@
                 <p:input name="data" href="#instance"/>
                 <p:input name="tasResponse" href="#addResponse"/>
                 <p:input name="config">
-                    <delegation:execute service="TaskManagementServiceWS" operation="addAttachmentRequest" xsl:version="2.0">
+                    <delegation:execute service="tms" operation="addAttachmentRequest" xsl:version="2.0">
                         <tms:taskId>
                             <xsl:value-of select="/*/@taskId"/>
                         </tms:taskId>
@@ -103,16 +97,7 @@
 
             <!-- Call for TMS.addAttachment -->
             <p:processor name="oxf:delegation">
-                <p:input name="interface">
-                    <config>
-                        <service id="TaskManagementServiceWS" type="webservice"
-                            endpoint="http://localhost:8080/axis2/services/TaskManagementServices">
-
-                            <operation nsuri="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
-                                       name="addAttachmentRequest" soap-action="addAttachment"/>
-                        </service>
-                    </config>
-                </p:input>
+                <p:input name="interface" href="oxf:/config/services.xml"/>
                 <p:input name="call" href="#addAttachmentTMS"/>
                 <!-- This output is never used, but should be here as otherwise Orbeon XPL engine consider that calling
                 processor which output is not referenced further does not makes sense -->

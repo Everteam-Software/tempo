@@ -35,7 +35,7 @@
     <p:processor name="oxf:xslt">
         <p:input name="data" href="#instance"/>
         <p:input name="config">
-            <delegation:execute service="initWS" operation="completeRequest" xsl:version="2.0">
+            <delegation:execute service="tms" operation="completeRequest" xsl:version="2.0">
                 <tms:taskId>
                     <xsl:value-of select="/*:output/@taskId"/>
                 </tms:taskId>
@@ -48,16 +48,7 @@
     </p:processor>
 
     <p:processor name="oxf:delegation">
-        <p:input name="interface">
-            <config>
-                <service id="initWS" type="webservice"
-                         endpoint="http://localhost:8080/axis2/services/TaskManagementServices">
-                    <operation nsuri="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
-                               soap-action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/complete"
-                               name="completeRequest"/>
-                </service>
-            </config>
-        </p:input>
+        <p:input name="interface" href="oxf:/config/services.xml"/>
         <p:input name="call" href="#completeTaskInput"/>
         <p:output name="data" id="completeTaskOutput"/>
     </p:processor>
@@ -74,7 +65,7 @@
                 <p:input name="data" href="#ws-call-output"/>
                 <p:input name="ws-request" href="#completeTaskInput"/>
                 <p:input name="header">
-                    <b>http://localhost:8080/axis2/services/TaskManagementServices</b>
+                    <b>Complete Task</b>
                 </p:input>
                 <p:output name="data" ref="data"/>
             </p:processor>

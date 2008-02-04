@@ -77,21 +77,7 @@
                                 </xhtml:h3>
                                 <xhtml:p>
                                     <xsl:text>Cannot find form on address </xsl:text>
-                                    <b>
-                                    <xsl:choose>
-                                        <xsl:when test="starts-with(/task/url, 'http://')">
-                                            <xsl:value-of select="/task/url"/>
-                                        </xsl:when>
-                                        <xsl:when test="starts-with(/task/url, 'oxf://')">
-                                            <xsl:text>http://localhost:8080/wds/</xsl:text>
-                                            <xsl:value-of select="substring-after(/task/url, 'oxf://')"/>
-                                        </xsl:when>
-                                        <xsl:otherwise>
-                                            <xsl:text>http://localhost:8080/wds/</xsl:text>
-                                            <xsl:value-of select="/task/url"/>
-                                        </xsl:otherwise>
-                                    </xsl:choose>
-                                    </b>
+                                    <b><xsl:value-of select="/task/url"/></b>
                                 </xhtml:p>
                                 <xhtml:p>
                                     You need to deploy it from Intalio|BPMS Designer or use the WDS-CLI command line
@@ -108,7 +94,7 @@
             <p:processor name="oxf:xslt">
                 <p:input name="data" href="#data"/>
                 <p:input name="config">
-                    <delegation:execute service="getTaskWS" operation="getTaskRequest" xsl:version="2.0">
+                    <delegation:execute service="tms" operation="getTaskRequest" xsl:version="2.0">
                         <tms:taskId>
                             <xsl:value-of select="/task/id"/>
                         </tms:taskId>
@@ -123,15 +109,7 @@
             <!-- Replace this Web Service call with actual GetTask Web Service -->
             <!-- Invokes the web service -->
             <p:processor name="oxf:delegation">
-                <p:input name="interface">
-                    <config>
-                        <service id="getTaskWS" type="webservice"
-                                 endpoint="http://localhost:8080/axis2/services/TaskManagementServices">
-                            <operation nsuri="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
-                                       name="getTaskRequest" soap-action="getTask"/>
-                        </service>
-                    </config>
-                </p:input>
+				<p:input name="interface" href="oxf:/config/services.xml"/>
                 <p:input name="call" href="#getTaskRequest"/>
                 <p:output name="data" id="tms-output"/>
             </p:processor>
@@ -148,7 +126,7 @@
                         <p:input name="data" href="#getTaskResponse"/>
                         <p:input name="ws-request" href="#getTaskRequest"/>
                         <p:input name="header">
-                            <b>http://localhost:8080/axis2/services/TaskManagementServices</b>
+                            <b>GetTaskRequest</b>
                         </p:input>
                         <p:output name="data" ref="data"/>
                     </p:processor>

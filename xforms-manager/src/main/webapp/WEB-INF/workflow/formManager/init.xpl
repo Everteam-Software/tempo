@@ -73,21 +73,7 @@
                             </xhtml:h3>
                             <xhtml:p>
                                 <xsl:text>Cannot find form on address</xsl:text>
-                                <b>
-                                    <xsl:choose>
-                                        <xsl:when test="starts-with(/task/url, 'http://')">
-                                            <xsl:value-of select="/task/url"/>
-                                        </xsl:when>
-                                        <xsl:when test="starts-with(/task/url, 'oxf://')">
-                                            <xsl:text>http://localhost:8080/wds/</xsl:text>
-                                            <xsl:value-of select="substring-after(/task/url, 'oxf://')"/>
-                                        </xsl:when>
-                                        <xsl:otherwise>
-                                            <xsl:text>http://localhost:8080/wds/</xsl:text>
-                                            <xsl:value-of select="/task/url"/>
-                                        </xsl:otherwise>
-                                    </xsl:choose>
-                                </b>
+                                <b><xsl:value-of select="/task/url"/></b>
                             </xhtml:p>
                             <xhtml:p>
                                 You need to deploy it from Intalio|BPMS Designer or use the WDS-CLI

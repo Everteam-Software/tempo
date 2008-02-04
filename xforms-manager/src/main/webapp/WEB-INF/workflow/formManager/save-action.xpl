@@ -40,7 +40,7 @@
 
                 <xsl:template match="/">
                     <xsl:copy>
-                        <delegation:execute service="TMS_WS" operation="setOutput" xsl:version="2.0">
+                        <delegation:execute service="tms" operation="setOutput" xsl:version="2.0">
                             <tms:taskId>
                                 <xsl:value-of select="/*:output/@taskId"/>
                             </tms:taskId>
@@ -66,23 +66,13 @@
 	</p:processor>
 
     <p:processor name="oxf:delegation">
-        <p:input name="interface" debug="setOutput">
-            <config>
-                <service id="TMS_WS" type="webservice"
-                    endpoint="http://localhost:8080/axis2/services/TaskManagementServices">
-                    <operation name="setOutput"
-                               nsuri="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
-                               soap-action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/setOutput"
-                            select="/*:Envelope/*:Body/text() | /*:Envelope/*:Body/*"/>
-                </service>
-            </config>
-        </p:input>
+        <p:input name="interface" href="oxf:/config/services.xml"/>
         <p:input name="call" href="#saveTaskInput"/>
         <p:output name="data" id="saveTaskOutput"/>
     </p:processor>
 
     <p:processor name="oxf:exception-catcher">
-        <p:input name="data" href="#saveTaskOutput" debug="saveTaskOutput"/>
+        <p:input name="data" href="#saveTaskOutput"/>
         <p:output name="data" id="ws_call_output" />
     </p:processor>
 
@@ -93,7 +83,7 @@
                 <p:input name="data" href="#ws_call_output"/>
                 <p:input name="ws-request" href="#saveTaskInput"/>
                 <p:input name="header">
-                    <b>http://localhost:8080/axis2/services/TaskManagementServices</b>
+                    <b>Save Task</b>
                 </p:input>
                 <p:output name="data" ref="data"/>
             </p:processor>

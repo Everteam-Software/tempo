@@ -34,7 +34,7 @@
     <p:processor name="oxf:xslt">
         <p:input name="data" href="#instance"/>
         <p:input name="config">
-            <delegation:execute service="initWS" operation="revokeTaskRequest" xsl:version="2.0">
+            <delegation:execute service="tmp" operation="revokeTaskRequest" xsl:version="2.0">
                 <b4p:taskId>
                     <xsl:value-of select="/*:output/@taskId"/>
                 </b4p:taskId>
@@ -47,16 +47,7 @@
     </p:processor>
 
     <p:processor name="oxf:delegation">
-        <p:input name="interface">
-            <config>
-                <service id="initWS" type="webservice"
-                         endpoint="http://localhost:8080/ode/processes/completeTask">
-                    <operation nsuri="http://www.intalio.com/bpms/workflow/ib4p_20051115"
-                               name="revokeTaskRequest" soap-action="revokeTask"
-                               select="/*:Envelope/*:Body/text() | /*:Envelope/*:Body/*"/>
-                </service>
-            </config>
-        </p:input>
+        <p:input name="interface" href="oxf:/config/services.xml"/>
         <p:input name="call" href="#revokeTaskInput"/>
         <p:output name="data" id="revokeTaskOutput"/>
     </p:processor>
@@ -73,7 +64,7 @@
                 <p:input name="data" href="#revoke-ws-output"/>
                 <p:input name="delegation" href="#revokeTaskInput"/>
                 <p:input name="header">
-                    <b>http://localhost:8080/ode/processes/completeTask</b>
+                    <b>Revoke Task</b>
                 </p:input>
                 <p:output name="data" ref="data"/>
             </p:processor>
