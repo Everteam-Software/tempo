@@ -15,6 +15,13 @@
                         <dep:artifactId>BPMSDS</dep:artifactId>
                     </dep:dependency>
 		</dep:dependencies>
+		<dep:hidden-classes>
+			<dep:filter>org.apache.openjpa</dep:filter>
+			<dep:filter>org.apache.cxf</dep:filter>
+			<dep:filter>org.apache.xerces.parsers</dep:filter>
+			<dep:filter>org.apache.xerces</dep:filter>
+			<dep:filter>org.apache.xerces.jaxp</dep:filter>
+		</dep:hidden-classes>
 	</dep:environment>
 
 	<context-root>/wds</context-root>

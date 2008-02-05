@@ -11,11 +11,11 @@
 	</appender>
     
 	<category name="org.intalio.tempo.workflow">
-		<priority value="debug"/>
+		<priority value="ERROR"/>
 	</category> 	
 	
 	<root>
-		<priority value="info" />
+		<priority value="ERROR" />
 		<appender-ref ref="console" />
 	</root>
 	

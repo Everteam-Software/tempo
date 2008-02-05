@@ -39,7 +39,8 @@ import javax.persistence.QueryHint;
              hints={ @QueryHint  (name="openjpa.hint.OptimizeResultCount", value="1")})       
     })
 public class Item {
-    public static final String FIND_BY_URI = "find_by_uri";
+
+	public static final String FIND_BY_URI = "find_by_uri";
     public static final String COUNT_FOR_URI = "count_for_uri";
 
     @Basic
@@ -56,6 +57,8 @@ public class Item {
     public Item() {
         
     }
+    
+    
     
     /**
      * Create an Item

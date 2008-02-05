@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2005-2007 Intalio inc.
+ * Copyright (c) 2005-2008 Intalio inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -12,54 +12,53 @@
 
 package org.intalio.tempo.workflow.wds.core.tms;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
+import static org.intalio.tempo.workflow.wds.WDSUtil.*;
+import org.junit.runner.RunWith;
 
-import org.intalio.tempo.workflow.wds.core.tms.PipaTask;
+import com.googlecode.instinct.expect.ExpectThat;
+import com.googlecode.instinct.expect.ExpectThatImpl;
+import com.googlecode.instinct.integrate.junit4.InstinctRunner;
+import com.googlecode.instinct.marker.annotate.Specification;
 
-public class PipaTaskTest extends TestCase {
+@RunWith(InstinctRunner.class)
+public class PipaTaskTest {
 
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(PipaTaskTest.class);
-    }
+    final static ExpectThat expect = new ExpectThatImpl();
+	
+	@Specification
+    public void AValidPipaIsValid() throws Exception {
+        PipaTask task1 = getSamplePipa();
+        expect.that(task1.isValid()).isTrue();
+	}
 
-    public void testPipaTaskValidation() throws Exception {
-        PipaTask task1 = new PipaTask();
-        task1.setId("abc");
-        task1.setFormNamespace("urn:ns");
-        task1.setFormURL("http://localhost/");
-        task1.setProcessEndpoint("http://localhost/process");
-        task1.setInitSoapAction("initProcess");
+	@Specification
+	public void ANewlyCreatedPipaIsNotValid() throws Exception {
+		PipaTask task2 = new PipaTask();
+        expect.that(task2.isValid()).isFalse();
 
-        Assert.assertTrue(task1.isValid());
-
-        PipaTask task2 = new PipaTask();
-
-        Assert.assertFalse(task2.isValid());
-
+	}
+      
+	@Specification
+	public void UserNamesAreNormalized() throws Exception {
+		PipaTask task1 = getSamplePipa();
         String[] unnormalizedUsers = {"abc/abc", "def\\def", "ghi.ghi"};
         String[] normalizedUsers = {"abc\\abc", "def\\def", "ghi\\ghi"};
         task1.setUserOwners(unnormalizedUsers);
+        
+        for (int i = 0; i < normalizedUsers.length; ++i) 
+            expect.that(normalizedUsers[i]).isEqualTo(task1.getUserOwners()[i]);
 
-        for (int i = 0; i < normalizedUsers.length; ++i) {
-            String normalizedUser = normalizedUsers[i];
-            String actualUser = task1.getUserOwners()[i];
-
-            Assert.assertEquals(normalizedUser, actualUser);
-        }
-
+	}
+	
+	@Specification 
+	public void RoleNamesAreNormalized() throws Exception {
+		PipaTask task1 = getSamplePipa();
         String[] unnormalizedRoles = {"jkl/jkl", "mno\\mno", "pqr.pqr"};
         String[] normalizedRoles = {"jkl\\jkl", "mno\\mno", "pqr\\pqr"};
         task1.setRoleOwners(unnormalizedRoles);
 
-        for (int i = 0; i < normalizedRoles.length; ++i) {
-            String normalizedRole = normalizedRoles[i];
-            String actualRole = task1.getRoleOwners()[i];
-
-            Assert.assertEquals(normalizedRole, actualRole);
-        }
-
-        System.out.println(task1);
-        System.out.println(task2);
+        for (int i = 0; i < normalizedRoles.length; ++i) 
+            expect.that(normalizedRoles[i]).isEqualTo(task1.getRoleOwners()[i]);
+        
     }
 }

@@ -1,41 +1,28 @@
+/**
+ * Copyright (c) 2005-2007 Intalio inc.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ */
 package org.intalio.tempo.workflow.tms.server.dao;
 
 import java.util.Map;
 
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import org.intalio.tempo.workflow.dao.AbstractJPAConnectionFactory;
 
-import org.intalio.tempo.workflow.SpringInit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-public class JPATaskDaoConnectionFactory implements ITaskDAOConnectionFactory {
-    final static Logger log = LoggerFactory.getLogger(JPATaskDaoConnectionFactory.class);
-    EntityManagerFactory factory;
-
-    public JPATaskDaoConnectionFactory(Map properties) {
-        log.info("Using the following JPA properties:"+properties);
-        Thread.currentThread().setContextClassLoader(SpringInit.CONTEXT.getClass().getClassLoader());
-        factory = Persistence.createEntityManagerFactory("org.intalio.tempo", properties);
-        log.info("Factory was properly created:"+(factory!=null));
+/**
+ * Factory for JPA-based task persistence
+ */
+public class JPATaskDaoConnectionFactory extends AbstractJPAConnectionFactory implements ITaskDAOConnectionFactory {
+    
+    public JPATaskDaoConnectionFactory(Map<?,?> properties) {
+        super(properties);
     }
     
     public ITaskDAOConnection openConnection() {
-        log.info("Opening a new JPA connection");
-        try {
-            JPATaskDaoConnection taskDaoConnection = new JPATaskDaoConnection(factory.createEntityManager());
-            log.info(taskDaoConnection.getClass().getName());
-            return taskDaoConnection;
-        } catch (Exception e) {
-            log.error("Error while opening connection",e);
-            throw new RuntimeException(e);
-        }
+            return new JPATaskDaoConnection(factory.createEntityManager());
     }
-
-    @Override
-    protected void finalize() throws Throwable {
-        factory.close();
-        super.finalize();
-    }
-
 }

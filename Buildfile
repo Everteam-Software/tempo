@@ -14,6 +14,7 @@ require "repositories.rb"
 # leave this require after dependencies.rb so the same jpa version is used throughout the whole build
 require "tasks/openjpa"
 require "tasks/xmlbeans" 
+require "tasks/easyb"
 
 desc "Tempo Workflow"
 define "tempo" do
@@ -34,7 +35,7 @@ define "tempo" do
     libs = [AXIS2, COMMONS, DOM4J, JAXEN, LOG4J, SERVLET_API, SLF4J, STAX_API]
     compile.with libs 
     resources.filter.using "version" => VERSION_NUMBER
-    test.with libs, XMLUNIT
+    test.with libs, JUNIT, XMLUNIT
     unless ENV["LIVE"] == 'yes'
       test.exclude '*RemoteFDSTest*'
     end
@@ -150,7 +151,7 @@ define "tempo" do
       APACHE_JPA, AXIOM, DOM4J, JAXEN, SLF4J, SPRING, STAX_API, XERCES, XMLBEANS
     compile { open_jpa_enhance }    
     package(:jar)
-    test.with project("tms-axis"), WOODSTOX, LOG4J
+    test.with project("tms-axis"), JUNIT, LOG4J, WOODSTOX
     test.exclude '*TestUtils*'
   end
   
@@ -159,7 +160,7 @@ define "tempo" do
     compile.with projects("tms-axis", "tms-common"), 
       APACHE_JPA, AXIOM, AXIS2, COMMONS, SLF4J, STAX_API, WSDL4J, WS_COMMONS_SCHEMA, XMLBEANS
 
-    test.with projects("tms-axis", "tms-common"), LOG4J, WOODSTOX, SUNMAIL
+    test.with projects("tms-axis", "tms-common"), JUNIT, LOG4J, SUNMAIL, WOODSTOX
     test.exclude '*TestUtils*'
 
     unless ENV["LIVE"] == 'yes'
@@ -170,10 +171,10 @@ define "tempo" do
   
   desc "Task Management Service"
   define "tms-service" do
-    compile.with projects("security", "security-ws-client", "tms-common", "tms-axis", "tms-client", "web-nutsNbolts"),
+    compile.with projects("security", "security-ws-client", "tms-common", "tms-axis", "tms-client", "web-nutsNbolts", "dao-nutsNbolts"),
                  APACHE_JPA, AXIOM, AXIS2, COMMONS, JAXEN, SLF4J, SPRING, STAX_API, XMLBEANS
 
-    test.with projects("tms-common", "tms-axis"), CASTOR, LOG4J, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES
+    test.with projects("tms-common", "tms-axis"), CASTOR, JUNIT, LOG4J, SUNMAIL, WOODSTOX, WSDL4J, WS_COMMONS_SCHEMA, XERCES
 
     test.using :properties => 
       { "org.intalio.tempo.configDirectory" => _("src/test/resources") }
@@ -188,7 +189,7 @@ define "tempo" do
 
     
     package(:aar).with :libs => 
-        [ projects("security", "security-ws-client", "tms-axis", "security-ws-common", "tms-common", "web-nutsNbolts"), APACHE_JPA, LOG4J, SLF4J, SPRING,  ] 
+        [ projects("security", "security-ws-client", "tms-axis", "security-ws-common", "tms-common", "web-nutsNbolts", "dao-nutsNbolts"), APACHE_JPA, LOG4J, SLF4J, SPRING  ] 
   end
   
   desc "User-Interface Framework"
@@ -239,15 +240,24 @@ define "tempo" do
 
   desc "Workflow Deployment Service"
   define "wds-service" do
-    libs = [ project("web-nutsNbolts"), APACHE_JPA, COMMONS, LOG4J, SERVLET_API, SLF4J, SPRING, XERCES ]
-    compile.with libs
+    libs = [ projects("web-nutsNbolts", "dao-nutsNbolts"), APACHE_JPA, COMMONS, LOG4J, SERVLET_API, SLF4J, SPRING, XERCES ]
+    test_libs = libs + [EASY_B, INSTINCT]
+    
+    compile.with test_libs
     compile { open_jpa_enhance }    
+    compile { run_easyb }
+    
     resources.filter.using "version" => VERSION_NUMBER
     package(:war).with :libs=>libs
   end
 
   define "web-nutsNbolts" do
     compile.with project("security"), AXIS2, COMMONS, INTALIO_STATS, JSP_API, LOG4J, SERVLET_API, SLF4J, SPRING
+    package :jar
+  end
+  
+  define "dao-nutsNbolts" do
+    compile.with project("web-nutsNbolts"), APACHE_JPA, SLF4J
     package :jar
   end
   

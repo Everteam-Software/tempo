@@ -1,5 +1,5 @@
 
-ANT = [ "ant:ant:jar:1.6.5" ]
+ANT = [ "org.apache.ant:ant:jar:1.7.0" ]
 
 AXIOM = group("axiom-api", "axiom-dom", "axiom-impl", :under=>"org.apache.ws.commons.axiom", :version=>"1.2.5")
 
@@ -48,7 +48,7 @@ JSP_API = [ "javax.servlet:jsp-api:jar:2.0" ]
 
 JSTL = [ "javax.servlet:jstl:jar:1.1.2" ]
 
-JUNIT = "junit:junit:jar:3.8.1"
+JUNIT = "junit:junit:jar:4.4"
 
 LOG4J = [ "log4j:log4j:jar:1.2.15" ]
 
@@ -175,5 +175,22 @@ ORBEON_LIBS = [
   PORTLET_API
 ]
 
+# For testing
+EASY_B = [
+  "commons-cli:commons-cli:jar:1.1",
+  "org.codehaus.groovy:groovy-all:jar:1.5.4",
+  "org.disco:easyb:jar:0.6"
+]
+
+INSTINCT = [
+  "com.googlecode.instinct:instinct:jar:0.1.6",
+  "org.jmock:jmock:jar:2.4.0",
+  "org.jmock:jmock-legacy:jar:2.4.0",
+  "cglib:cglib-nodep:jar:2.1_3",
+  "org.hamcrest:hamcrest-all:jar:1.1",
+  "org.objenesis:objenesis:jar:1.0",
+  JUNIT,
+  ANT
+]
 
 

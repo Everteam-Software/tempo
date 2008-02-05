@@ -14,6 +14,7 @@ import javax.persistence.Persistence;
 import javax.persistence.Query;
 
 import junit.framework.Assert;
+import junit.framework.JUnit4TestAdapter;
 
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.UserRoles;
@@ -35,6 +36,10 @@ public class JPATaskTest {
     EntityTransaction jpa;
 
     XmlTooling xml = new XmlTooling();
+    
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(JPATaskTest.class); 
+    }
 
     @Before
     public void setUpEntityManager() throws Exception {
@@ -65,9 +70,8 @@ public class JPATaskTest {
         em.clear();
     }
 
-    @SuppressWarnings("unchecked")
     @Test
-    public void testBasicPATaskPersistence() throws Exception {
+    public void PATaskPersistence() throws Exception {
 
         String id = "My id" + System.currentTimeMillis();
         PATask task1 = new PATask(id, new URI("http://hellonico.net"), "processId", "soap", getXmlSampleDocument());
@@ -84,7 +88,7 @@ public class JPATaskTest {
     }
 
     @Test
-    public void testBasicPIPATaskPersistence() throws Exception {
+    public void PIPATaskPersistence() throws Exception {
         String id = "id" + System.currentTimeMillis();
         PIPATask task1 = new PIPATask(id, new URI("http://hellonico.net"), new URI("http://hellonico.net"), new URI(
                 "http://hellonico.net"), "initOperationSOAPAction");
@@ -98,7 +102,7 @@ public class JPATaskTest {
     }
 
     @Test
-    public void testBasicNotificationPersistence() throws Exception {
+    public void NotificationPersistence() throws Exception {
 
         String id = "id" + System.currentTimeMillis();
         Notification task1 = new Notification(id, new URI("http://hellonico.net"), getXmlSampleDocument());

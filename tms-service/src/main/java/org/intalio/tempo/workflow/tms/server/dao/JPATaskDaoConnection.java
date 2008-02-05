@@ -1,4 +1,13 @@
-package org.intalio.tempo.workflow.tms.server.dao;
+/**
+ * Copyright (c) 2005-2007 Intalio inc.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ */
+ package org.intalio.tempo.workflow.tms.server.dao;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -9,57 +18,47 @@ import javax.persistence.Query;
 
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.UserRoles;
+import org.intalio.tempo.workflow.dao.AbstractJPAConnection;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public class JPATaskDaoConnection implements ITaskDAOConnection {
+/**
+ * Persistence for task using JPA.
+ *
+ */
+public class JPATaskDaoConnection extends AbstractJPAConnection implements ITaskDAOConnection {
 
-    final static Logger _logger = LoggerFactory.getLogger(JPATaskDaoConnection.class);
-
-    private EntityManager entityManager;
     private Query find_by_id;
 
     public JPATaskDaoConnection(EntityManager createEntityManager) {
-        _logger.info("Loading jpa access");
-        this.entityManager = createEntityManager;
-        this.find_by_id = entityManager.createNamedQuery("find_by_id");
-    }
-
-    public void close() {
-        _logger.info("closing");
-        entityManager.close();
-    }
-
-    public void commit() {
-        _logger.info("commit");
-        if (entityManager.getTransaction().isActive())
-            entityManager.getTransaction().commit();
+    	super(createEntityManager);
+    	find_by_id = entityManager.createNamedQuery("find_by_id");
     }
 
     public void createTask(Task task) throws TaskIDConflictException {
-        _logger.info("create task");
+    	if(_logger.isDebugEnabled()) _logger.debug("create task of class:"+task.getClass().getName());
+    	checkTransactionIsActive();
         entityManager.persist(task);
     }
 
     public boolean deleteTask(int internalTaskId, String taskID) {
-        _logger.info("delete task");
-        Task t = null;
+    	if(_logger.isDebugEnabled()) _logger.debug("delete task with id:"+taskID);
+    	checkTransactionIsActive();
         synchronized (find_by_id) {
             Query q = find_by_id.setParameter(1, taskID);
-            t = (Task) (q.getResultList()).get(0);
+            Task t = (Task) (q.getResultList()).get(0);
+            entityManager.remove(t);
         }
-        entityManager.remove(t);
         return true;
     }
 
     @SuppressWarnings("unchecked")
     public Task[] fetchAllAvailableTasks(UserRoles user) {
-        _logger.info("fetch tasks");
+    	if(_logger.isDebugEnabled()) _logger.debug("fetch task");
         AuthIdentifierSet roles = user.getAssignedRoles();
         String userid = user.getUserID();
-        String s = MessageFormat.format(Task.FIND_BY_USER_AND_ROLES, new Object[] { roles.toString(), userid });
+        String s = MessageFormat.format(Task.FIND_BY_USER_AND_ROLES, new Object[] { roles.toString(), "('"+userid+"')" });
+        if(_logger.isDebugEnabled()) _logger.debug("fetchAllAvailableTasks query:"+s);
         Query q = entityManager.createNativeQuery(s, Task.class);
         List<Task> l = q.getResultList();
         return (Task[]) new ArrayList(l).toArray(new Task[l.size()]);
@@ -73,6 +72,8 @@ public class JPATaskDaoConnection implements ITaskDAOConnection {
     }
 
     public void updateTask(Task task) {
+    	if(_logger.isDebugEnabled()) _logger.debug("update task:"+task.toString());
+    	checkTransactionIsActive();
         entityManager.persist(task);
     }
 

@@ -1,6 +1,16 @@
-package org.intalio.tempo.workflow.wds.core.tms;
+/**
+ * Copyright (c) 2005-2008 Intalio inc.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * Intalio inc. - initial API and implementation
+ */
 
-import java.util.Properties;
+package org.intalio.tempo.workflow.wds.core.tms;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -8,84 +18,73 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 
-import junit.framework.Assert;
-
+import static org.intalio.tempo.workflow.wds.WDSUtil.*;
 import org.intalio.tempo.workflow.wds.core.Item;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.googlecode.instinct.expect.ExpectThat;
+import com.googlecode.instinct.expect.ExpectThatImpl;
+import com.googlecode.instinct.integrate.junit4.InstinctRunner;
+import com.googlecode.instinct.marker.annotate.AfterSpecification;
+import com.googlecode.instinct.marker.annotate.BeforeSpecification;
+import com.googlecode.instinct.marker.annotate.Specification;
 
+
+@RunWith(InstinctRunner.class)
 public class PipaJpaTest {
     final static Logger log = LoggerFactory.getLogger(PipaJpaTest.class);
+    final static ExpectThat expect = new ExpectThatImpl();
 
     EntityManager em;
     EntityManagerFactory factory;
     EntityTransaction jpa;
 
-
-    @Before
+    @BeforeSpecification
     public void setUpEntityManager() throws Exception {
-        Properties p = new Properties();
-        p.load(this.getClass().getResourceAsStream("/jpa.properties"));
-        System.getProperties().putAll(p);
-        factory = Persistence.createEntityManagerFactory("org.intalio.tempo", System.getProperties());
+        factory = Persistence.createEntityManagerFactory("org.intalio.tempo", getJpaProperties());
         em = factory.createEntityManager();
         jpa = em.getTransaction();
-        jpa.begin();
     }
 
-    @After
-    public void closeFactory() throws Exception {
-        try {
-            em.close();
-        } catch (Exception e) {
-        }
-        try {
-            factory.close();
-        } catch (Exception e) {
-        }
+    @AfterSpecification
+    public void closeEntityManager() {
+        try {em.close();} catch (Exception e) {}
+        try {factory.close();} catch (Exception e) {}
     }
 
-    private void persist(Object o) throws Exception {
+    private void persist(Object o) {
+    	jpa.begin();
         em.persist(o);
         jpa.commit();
         em.clear();
     }
     
-    @Test
-    public void storeAPipaAndRetrieveIt() throws Exception {
-        PipaTask task1 = new PipaTask();
-        task1.setId("abc");
-        task1.setFormNamespace("urn:ns");
-        task1.setFormURL("http://localhost/");
-        task1.setProcessEndpoint("http://localhost/process");
-        task1.setInitSoapAction("initProcess");
-        
+    @Specification
+    public void TheSamePIPACanBeRetrievedAfterBeingStored() {
+        PipaTask task1 = getSamplePipa();
         persist(task1);
+        Query q = em.createNamedQuery(PipaTask.FIND_BY_ID).setParameter(1, task1.getId());
+        PipaTask task2 = (PipaTask)(q.getSingleResult());
         
-        Query q = em.createNamedQuery(PipaTask.FIND_BY_ID).setParameter(1, "abc");
-        PipaTask task2 = (PipaTask)(q.getResultList().get(0));
-        Assert.assertEquals(task1,task2);
+        expect.that(task1).isEqualTo(task2);
     }
     
-    @Test 
-    public void storeAnItemAndRetrieveIt() throws Exception {
-        Item i1 = new Item("http://hellonico.net", "meta", new byte[]{1,2,3});
+    @Specification
+    public void TheSameItemCanBeRetrievedAfterBeingStored() throws Exception {
+        Item i1 = getSampleItem();
         persist(i1);
-
-        Query q = em.createNamedQuery(Item.FIND_BY_URI).setParameter(1, "http://hellonico.net");
-        Item i2 = (Item)(q.getResultList().get(0));
-        Assert.assertEquals(i1,i2);
+        Query q = em.createNamedQuery(Item.FIND_BY_URI).setParameter(1, i1.getURI());
+        Item i2 = (Item)q.getSingleResult();
+        
+        expect.that(i1).isEqualTo(i2);
     }
     
-    @Test 
-    public void countItems() throws Exception {
-        Item i1 = new Item("http://www.hellonico.net", "meta", new byte[]{1,2,3});
-        persist(i1);
+    @Specification 
+    public void ExpectOnlyOneItem() throws Exception {
         Query q = em.createNamedQuery(Item.COUNT_FOR_URI).setParameter(1, "http://www.hellonico.net");
-        Assert.assertEquals((long)1, q.getResultList().get(0));
+        
+        expect.that(q.getSingleResult()).isEqualTo(1l);
     }
 }

@@ -1,28 +1,36 @@
+/**
+ * Copyright (c) 2005-2007 Intalio inc.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ */
+
 package org.intalio.tempo.workflow.wds.core;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-public class JpaItemDaoConnection implements ItemDaoConnection {
-    private EntityManager entityManager;
-    
-    public JpaItemDaoConnection(EntityManager createEntityManager) {
-        this.entityManager = createEntityManager;
-    }
+import org.intalio.tempo.workflow.dao.AbstractJPAConnection;
 
-    public void close() {
-        entityManager.close();
-    }
+/**
+ * JPA-based item persistence
+ */
+public class JPAItemDaoConnection extends AbstractJPAConnection implements ItemDaoConnection {
 
-    public void commit() {
-        entityManager.getTransaction().commit();
+    public JPAItemDaoConnection(EntityManager createEntityManager) {
+    	super(createEntityManager);
     }
 
     public void deleteItem(String uri) throws UnavailableItemException {
         Query q = entityManager.createNamedQuery(Item.FIND_BY_URI).setParameter(1, uri);
         try {
-            Item i = (Item)q.getResultList().get(0);
-            entityManager.remove(i);
+            Item item = (Item)(q.getResultList().get(0));
+            checkTransactionIsActive();
+            entityManager.remove(item);	
+            commit();
         } catch (Exception e) {
             throw new UnavailableItemException(e);
         }
@@ -43,7 +51,9 @@ public class JpaItemDaoConnection implements ItemDaoConnection {
     }
 
     public void storeItem(Item item) throws UnavailableItemException {
+    	checkTransactionIsActive();
         entityManager.persist(item);
+        commit();
     }
 
 }

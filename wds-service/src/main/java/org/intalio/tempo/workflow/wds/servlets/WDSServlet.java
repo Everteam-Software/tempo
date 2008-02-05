@@ -32,17 +32,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.intalio.tempo.web.SysPropApplicationContextLoader;
-import org.intalio.tempo.workflow.wds.config.WDSConfigBean;
 import org.intalio.tempo.workflow.wds.core.AuthenticationException;
 import org.intalio.tempo.workflow.wds.core.Item;
-import org.intalio.tempo.workflow.wds.core.ItemDaoConnectionFactory;
-import org.intalio.tempo.workflow.wds.core.JdbcItemDaoConnectionFactory;
 import org.intalio.tempo.workflow.wds.core.UnavailableItemException;
 import org.intalio.tempo.workflow.wds.core.WDSService;
 import org.intalio.tempo.workflow.wds.core.WDSServiceFactory;
 import org.intalio.tempo.workflow.wds.core.tms.PipaTask;
-import org.intalio.tempo.workflow.wds.core.tms.TMSConnectionFactory;
-import org.intalio.tempo.workflow.wds.core.tms.TMSConnectionFactoryInterface;
 import org.intalio.tempo.workflow.wds.core.xforms.XFormsProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,18 +81,8 @@ public class WDSServlet extends HttpServlet {
         try { loader = new SysPropApplicationContextLoader(configFile); } catch (IOException except) {
             throw new ServletException(except);
         }
-        WDSConfigBean config = loader.getBean("config");
-
-        if (logger.isDebugEnabled()) logger.debug("Creating DAO factory...");
-        ItemDaoConnectionFactory daoFactory = new JdbcItemDaoConnectionFactory(config.getWdsDataSource());
-
-        if (logger.isDebugEnabled()) logger.debug("Creating TMS factory...");
-        TMSConnectionFactoryInterface tmsFactory = new TMSConnectionFactory(config.getTmsDataSource());
-
         if (logger.isDebugEnabled()) logger.debug("Creating Service Factory...");
-        _serviceFactory = new WDSServiceFactory(daoFactory, tmsFactory);
-        _serviceFactory.setWdsEndpoint(config.getWdsEndpoint());
-        
+        _serviceFactory = loader.getBean("wds.servicefactory");
         if (logger.isDebugEnabled())  logger.debug("Servlet initialized.");
     }
 

@@ -34,24 +34,25 @@ public class WDSServiceFactory {
     private TMSConnectionFactoryInterface _tmsFactory;
 
     private String _wdsEndpoint;
-
-    /**
-     * Instance constructor.
-     * 
-     * @param daoFactory
-     *            The DAO factory for this factory to get DAO connections from.
-     * @param tmsFactory
-     *            The TMS connections factory to get TMS connections from.
-     */
-    public WDSServiceFactory(ItemDaoConnectionFactory daoFactory, TMSConnectionFactoryInterface tmsFactory) {
-        if (daoFactory == null) {
-            throw new NullPointerException("daoFactory");
-        }
-        if (tmsFactory == null) {
-            throw new NullPointerException("tmsFactory");
-        }
-        _daoFactory = daoFactory;
-        _tmsFactory = tmsFactory;
+    
+    public WDSServiceFactory() {
+    	
+    }
+    
+    public void setDaoFactory(ItemDaoConnectionFactory daoFactory) {
+    	_daoFactory = daoFactory;
+    }
+    
+    public void setTmsFactory(TMSConnectionFactoryInterface tmsFactory) {
+    	  _tmsFactory = tmsFactory;
+    }
+    
+    public ItemDaoConnectionFactory getDaoFactory() {
+    	return _daoFactory;
+    }
+    
+    public TMSConnectionFactoryInterface getTmsFactory() {
+    	  return _tmsFactory;
     }
 
     public void setWdsEndpoint(String wdsEndpoint) {

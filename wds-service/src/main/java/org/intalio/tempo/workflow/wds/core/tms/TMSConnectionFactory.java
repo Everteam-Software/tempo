@@ -28,10 +28,16 @@ public class TMSConnectionFactory implements TMSConnectionFactoryInterface {
 
     /**
      * Instance constructor
-     * 
+     */
+    public TMSConnectionFactory() {
+  
+    }
+
+	/**
+	 *
      * @param dataSourceUrlJDBC URL of TMS database.
      */
-    public TMSConnectionFactory(String dataSourceUrl) {
+    public void setDataSourceUrl(String dataSourceUrl) {
         try {
             InitialContext ctx = new InitialContext();
             _dataSource = (DataSource) ctx.lookup(dataSourceUrl);

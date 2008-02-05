@@ -1,26 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright (c) 2005-2006 Intalio inc.
+	Copyright (c) 2005-2006 Intalio inc.
 
-  All rights reserved. This program and the accompanying materials
-  are made available under the terms of the Eclipse Public License v1.0
-  which accompanies this distribution, and is available at
-  http://www.eclipse.org/legal/epl-v10.html
+	All rights reserved. This program and the accompanying materials
+	are made available under the terms of the Eclipse Public License v1.0
+	which accompanies this distribution, and is available at
+	http://www.eclipse.org/legal/epl-v10.html
 
-  Contributors:
-  Intalio inc. - initial API and implementation
- -->
+	Contributors:
+	Intalio inc. - initial API and implementation
+-->
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
-  <bean id="config" class="org.intalio.tempo.workflow.wds.config.WDSConfigBean">
-    <property name="wdsEndpoint">
-        <value>http://localhost:8080/wds/</value>
-    </property>
-    <property name="wdsDataSource">
-        <value>java:comp/env/jdbc/BPMSDB</value>
-    </property>
-    <property name="tmsDataSource">
-        <value>java:comp/env/jdbc/BPMSDB</value>
-    </property>
-  </bean>
+	<bean id="wds.servicefactory" class="org.intalio.tempo.workflow.wds.core.WDSServiceFactory">
+		<property name="daoFactory">
+			<ref bean="wds.itemConnectionFactory"/>
+		</property>
+
+		<property name="tmsFactory">
+			<ref bean="wds.tmsConnectionFactory"/>
+		</property>
+
+		<property name="wdsEndpoint">
+			<value>http://localhost:8080/wds/</value>
+		</property>
+	</bean>
+
+		<bean id="wds.itemConnectionFactory" class="org.intalio.tempo.workflow.wds.core.JdbcItemDaoConnectionFactory">
+			<constructor-arg>
+				<value>java:comp/env/jdbc/BPMSDB</value>
+			</constructor-arg>
+		</bean>
+
+		<bean id="wds.tmsConnectionFactory" class="org.intalio.tempo.workflow.wds.core.tms.TMSConnectionFactory">
+			<property name="dataSourceUrl">
+				<value>java:comp/env/jdbc/BPMSDB</value>
+			</property>
+		</bean> 
+<!--
+	<bean id="wds.itemConnectionFactory" class="org.intalio.tempo.workflow.wds.core.JPAItemDaoConnectionFactory">
+		<constructor-arg>
+			<map>
+				<entry><key><value>openjpa.jdbc.SynchronizeMappings</value></key><value>buildSchema</value></entry>
+				<entry><key><value>openjpa.ConnectionUserName</value></key><value>APP</value></entry>
+				<entry><key><value>openjpa.ConnectionPassword</value></key><value>APP</value></entry>
+				<entry><key><value>openjpa.ConnectionDriverName</value></key><value>org.apache.derby.jdbc.EmbeddedDriver</value></entry>
+				<entry><key><value>openjpa.ConnectionURL</value></key><value>jdbc:derby:JPADB;create=true</value></entry>
+			</map>
+		</constructor-arg>
+	</bean>
+
+
+	<bean id="wds.tmsConnectionFactory" class="org.intalio.tempo.workflow.wds.core.tms.TMSJPAConnectionFactory">
+		<constructor-arg>
+			<map>
+				<entry><key><value>openjpa.jdbc.SynchronizeMappings</value></key><value>buildSchema</value></entry>
+				<entry><key><value>openjpa.ConnectionUserName</value></key><value>APP</value></entry>
+				<entry><key><value>openjpa.ConnectionPassword</value></key><value>APP</value></entry>
+				<entry><key><value>openjpa.ConnectionDriverName</value></key><value>org.apache.derby.jdbc.EmbeddedDriver</value></entry>
+				<entry><key><value>openjpa.ConnectionURL</value></key><value>jdbc:derby:JPADB;create=true</value></entry>
+			</map>
+		</constructor-arg>
+	</bean>
+-->
 </beans>

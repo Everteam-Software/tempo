@@ -1,0 +1,78 @@
+/**
+ * Copyright (c) 2005-2008 Intalio inc.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * Intalio inc. - initial API and implementation
+ */
+
+package org.intalio.tempo.workflow.wds.jpa;
+
+import static org.intalio.tempo.workflow.wds.WDSUtil.convertBundleToProperties;
+
+import java.util.Properties;
+import java.util.ResourceBundle;
+
+import org.intalio.tempo.workflow.wds.WDSUtil;
+import org.intalio.tempo.workflow.wds.core.Item;
+import org.intalio.tempo.workflow.wds.core.ItemDaoConnection;
+import org.intalio.tempo.workflow.wds.core.JPAItemDaoConnectionFactory;
+import org.intalio.tempo.workflow.wds.core.UnavailableItemException;
+import org.junit.runner.RunWith;
+
+import com.googlecode.instinct.expect.ExpectThat;
+import com.googlecode.instinct.expect.ExpectThatImpl;
+import com.googlecode.instinct.integrate.junit4.InstinctRunner;
+import com.googlecode.instinct.marker.annotate.AfterSpecification;
+import com.googlecode.instinct.marker.annotate.BeforeSpecification;
+import com.googlecode.instinct.marker.annotate.Specification;
+
+@RunWith(InstinctRunner.class)
+public final class JPAItemConnectionTest {
+    private ItemDaoConnection jpac;
+    public static final ExpectThat expect = new ExpectThatImpl();
+    Item item;
+
+    @BeforeSpecification
+    void createConnection() {
+    	Properties map = convertBundleToProperties(ResourceBundle.getBundle("jpa"));
+    	JPAItemDaoConnectionFactory factory = new JPAItemDaoConnectionFactory(map);
+    	jpac = factory.getItemDaoConnection();
+    	item = WDSUtil.getSampleItem();
+    }
+    
+    @AfterSpecification 
+    void closeConnection() {
+    	jpac.close();
+    }
+    
+    @Specification
+    void JPACanStoreAnItem() throws UnavailableItemException {
+    	jpac.storeItem(item);
+    }
+    
+    @Specification
+    void JPASaysTheItemExistsAfterItHasBeenStored() throws UnavailableItemException {
+    	jpac.storeItem(item);
+    	expect.that(jpac.itemExists(item.getURI()));
+    }
+    
+    @Specification 
+    void JPACanRetrieveTheSameItemThatWasStored() throws UnavailableItemException {
+    	jpac.storeItem(item);
+    	Item t1 = jpac.retrieveItem(item.getURI());
+    	expect.that(t1).isEqualTo(item);
+    }
+    
+    @Specification
+    void JPACanDeleteAnItemAndReportThatTheItemDoesNotExist() throws UnavailableItemException {
+    	jpac.storeItem(item);
+    	jpac.deleteItem(item.getURI());
+    	expect.that(jpac.itemExists(item.getURI())).isFalse();
+    }
+
+}
