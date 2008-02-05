@@ -29,20 +29,19 @@ define "tempo" do
     compile.with SERVLET_API, SLF4J, SPRING
     package :jar
   end  
-  
+
   desc "Form Dispatcher Servlet"
   define "fds" do
-    libs = [AXIS2, COMMONS, DOM4J, JAXEN, LOG4J, SERVLET_API, SLF4J, STAX_API]
+    libs = [AXIS2, COMMONS, DOM4J, LOG4J, SERVLET_API, SLF4J, STAX_API]
     compile.with libs 
     resources.filter.using "version" => VERSION_NUMBER
-    test.with libs, JUNIT, XMLUNIT
+    test.with JAXEN, XMLUNIT
     unless ENV["LIVE"] == 'yes'
       test.exclude '*RemoteFDSTest*'
     end
-    package(:war).with :libs => libs
-  end  
-
-
+    package(:war).with(:libs=>[libs,JAXEN])
+  end
+    
   desc "Workflow Processes"
   define "processes" do
     define "xpath-extensions" do
@@ -86,8 +85,9 @@ define "tempo" do
   
   desc "Security Web-Service Client"
   define "security-ws-client" do
-    compile.with projects("security", "security-ws-common"),AXIOM, AXIS2, SLF4J, SPRING, STAX_API 
-    test.with project("security-ws-common"), CASTOR, COMMONS, LOG4J, SUNMAIL, WOODSTOX, WSDL4J, WS_COMMONS_SCHEMA, XERCES
+    compile.with projects("security", "security-ws-common"), 
+                 AXIOM, AXIS2, SLF4J, STAX_API, SPRING
+    test.with COMMONS, CASTOR, LOG4J, SUNMAIL, XERCES, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX 
 
     # Remember to set JAVA_OPTIONS before starting Jetty
     # export JAVA_OPTIONS=-Dorg.intalio.tempo.configDirectory=/home/boisvert/svn/tempo/security-ws2/src/test/resources
@@ -121,7 +121,7 @@ define "tempo" do
     compile.with projects("security", "security-ws-client"), 
                  AXIOM, AXIS2, COMMONS, JAXEN, SLF4J, STAX_API
 
-    test.with JUNIT, LOG4J, SUNMAIL, WOODSTOX, WSDL4J, WS_COMMONS_SCHEMA
+    test.with LOG4J, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX
     test.exclude '*TestUtils*'
 
     # require live Axis2 instance
@@ -147,11 +147,11 @@ define "tempo" do
   
   desc "Task Management Services Common Library"
   define "tms-common" do
-    compile.with projects("security", "security-ws-client", "tms-axis"),
-      APACHE_JPA, AXIOM, DOM4J, JAXEN, SLF4J, SPRING, STAX_API, XERCES, XMLBEANS
-    compile { open_jpa_enhance }    
+    compile.with projects("security", "security-ws-client", "tms-axis"), 
+                 APACHE_JPA, AXIOM, DOM4J, JAXEN, LOG4J, SLF4J, SPRING, STAX_API, XERCES, XMLBEANS
+    compile { open_jpa_enhance }
     package(:jar)
-    test.with project("tms-axis"), JUNIT, LOG4J, WOODSTOX
+    test.with WOODSTOX, LOG4J
     test.exclude '*TestUtils*'
   end
   
@@ -160,7 +160,7 @@ define "tempo" do
     compile.with projects("tms-axis", "tms-common"), 
       APACHE_JPA, AXIOM, AXIS2, COMMONS, SLF4J, STAX_API, WSDL4J, WS_COMMONS_SCHEMA, XMLBEANS
 
-    test.with projects("tms-axis", "tms-common"), JUNIT, LOG4J, SUNMAIL, WOODSTOX
+    test.with LOG4J, WOODSTOX, SUNMAIL
     test.exclude '*TestUtils*'
 
     unless ENV["LIVE"] == 'yes'
@@ -171,10 +171,10 @@ define "tempo" do
   
   desc "Task Management Service"
   define "tms-service" do
-    compile.with projects("security", "security-ws-client", "tms-common", "tms-axis", "tms-client", "web-nutsNbolts", "dao-nutsNbolts"),
+    compile.with projects("security", "security-ws-client", "tms-axis", "tms-common", "tms-client", "web-nutsNbolts", "dao-nutsNbolts"),
                  APACHE_JPA, AXIOM, AXIS2, COMMONS, JAXEN, SLF4J, SPRING, STAX_API, XMLBEANS
 
-    test.with projects("tms-common", "tms-axis"), CASTOR, JUNIT, LOG4J, SUNMAIL, WOODSTOX, WSDL4J, WS_COMMONS_SCHEMA, XERCES
+    test.with CASTOR, LOG4J, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES
 
     test.using :properties => 
       { "org.intalio.tempo.configDirectory" => _("src/test/resources") }
@@ -189,7 +189,7 @@ define "tempo" do
 
     
     package(:aar).with :libs => 
-        [ projects("security", "security-ws-client", "tms-axis", "security-ws-common", "tms-common", "web-nutsNbolts", "dao-nutsNbolts"), APACHE_JPA, LOG4J, SLF4J, SPRING  ] 
+        [ projects("security", "security-ws-client", "security-ws-common", "tms-axis", "tms-common", "web-nutsNbolts", "dao-nutsNbolts"), APACHE_JPA, LOG4J, SLF4J, SPRING ] 
   end
   
   desc "User-Interface Framework"
