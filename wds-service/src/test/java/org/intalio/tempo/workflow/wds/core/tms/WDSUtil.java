@@ -10,7 +10,7 @@
  * Intalio inc. - initial API and implementation
  */
 
-package org.intalio.tempo.workflow.wds;
+package org.intalio.tempo.workflow.wds.core.tms;
 
 import java.util.Enumeration;
 import java.util.Map;

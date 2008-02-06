@@ -245,7 +245,6 @@ define "tempo" do
     
     compile.with test_libs
     compile { open_jpa_enhance }    
-    compile { run_easyb }
     
     resources.filter.using "version" => VERSION_NUMBER
     package(:war).with :libs=>libs

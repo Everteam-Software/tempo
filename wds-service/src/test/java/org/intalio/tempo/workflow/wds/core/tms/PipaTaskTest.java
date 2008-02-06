@@ -12,7 +12,7 @@
 
 package org.intalio.tempo.workflow.wds.core.tms;
 
-import static org.intalio.tempo.workflow.wds.WDSUtil.*;
+import static org.intalio.tempo.workflow.wds.core.tms.WDSUtil.*;
 import org.junit.runner.RunWith;
 
 import com.googlecode.instinct.expect.ExpectThat;
