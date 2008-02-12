@@ -78,9 +78,9 @@ public class DeploymentServiceLookup {
     private <T> T lookup(String name) {
         try {
             Context context = new InitialContext();
-            Object proxiedObject = context.lookup(name);
-            RemoteProxy proxy = new RemoteProxy(proxiedObject, getClass().getClassLoader(), proxiedObject.getClass().getClassLoader());
-            return (T) proxy.newProxyInstance();
+            T proxiedObject = (T) context.lookup(name);
+            RemoteProxy<T> proxy = new RemoteProxy<T>(proxiedObject, getClass().getClassLoader(), proxiedObject.getClass().getClassLoader());
+            return proxy.newProxyInstance();
         } catch (Exception except) {
             throw new RuntimeException(except);
         }
