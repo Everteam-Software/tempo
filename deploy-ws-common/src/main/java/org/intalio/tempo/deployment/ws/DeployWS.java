@@ -53,9 +53,14 @@ public class DeployWS {
     protected DeploymentServiceImpl _deployService;
     
     public DeployWS() {
-        initialize();
+        this(true);
     }
 
+    public DeployWS(boolean registerJNDI) {
+    	initialize();
+    	if (registerJNDI) registerJNDI();
+    }
+    
     protected void initialize() {
         try {
             synchronized (DeployWS.class) {
@@ -82,20 +87,26 @@ public class DeployWS {
                 _deployService.init();
                 _deployService.start();
                 _initialized = true;
-
-                
-                // JNDI registration
-                DeploymentServiceLookup lookup = new DeploymentServiceLookup();
-                lookup.loadProperties();
-
-                Context initialContext = new InitialContext();
-                
-                LOG.info("Registering DeploymentService at "+lookup.deploymentServiceName);
-                initialContext.rebind(lookup.deploymentServiceName, _deployService);
-                
-                LOG.info("Registering DeploymentServiceCallback at "+lookup.deploymentCallbackName);
-                initialContext.rebind(lookup.deploymentCallbackName, _deployService.getCallback());
             }
+        } catch (RuntimeException except) {
+            LOG.error("Error during initialization of deployment service", except);
+            throw except;
+        }
+    }
+
+    protected void registerJNDI() {
+        try {
+        	// JNDI registration
+        	DeploymentServiceLookup lookup = new DeploymentServiceLookup();
+        	lookup.loadProperties();
+
+        	Context initialContext = new InitialContext();
+
+        	LOG.info("Registering DeploymentService at "+lookup.deploymentServiceName);
+        	initialContext.rebind(lookup.deploymentServiceName, _deployService);
+
+        	LOG.info("Registering DeploymentServiceCallback at "+lookup.deploymentCallbackName);
+        	initialContext.rebind(lookup.deploymentCallbackName, _deployService.getCallback());
         } catch (RuntimeException except) {
             LOG.error("Error during initialization of deployment service", except);
             throw except;
