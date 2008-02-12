@@ -6,8 +6,8 @@ require "buildr/cobertura"
 
 
 # Keep this structure to allow the build system to update version numbers.
-VERSION_NUMBER = "5.2.0.1-SNAPSHOT"
-NEXT_VERSION = "5.2.0.2"
+VERSION_NUMBER = "5.2.0.2-SNAPSHOT"
+NEXT_VERSION = "5.2.0.3"
 
 require "dependencies.rb"
 require "repositories.rb"
