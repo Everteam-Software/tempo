@@ -13,6 +13,7 @@
 package org.intalio.tempo.deployment.spi;
 
 import java.io.File;
+import java.rmi.Remote;
 import java.util.List;
 
 import org.intalio.tempo.deployment.ComponentId;
@@ -22,7 +23,7 @@ import org.intalio.tempo.deployment.DeploymentMessage;
 /**
  * Component manager interface to manage component deployment and lifecycle.
  */
-public interface ComponentManager {
+public interface ComponentManager extends Remote {
 
     /**
      * Return the component manager's name
