@@ -1,4 +1,4 @@
-$LOAD_PATH.unshift "#{ENV['HOME']}/svn/buildr-trunk/lib/"
+gem "buildr", ">=1.2.10"
 
 require "rubygems"
 require "buildr"
