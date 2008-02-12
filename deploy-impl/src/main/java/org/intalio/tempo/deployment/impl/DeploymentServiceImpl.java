@@ -174,6 +174,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
             ensureDeploymentDirExists();
             _timer = new Timer("Deployment Service Timer", true);
             _serviceState = ServiceState.INITIALIZED;
+            LOG.debug(_("DeploymentService state is now INITIALIZED"));
         }
     }
 
@@ -186,6 +187,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
                 throw new IllegalStateException("Service not initialized");
             }
             _serviceState = ServiceState.STARTING;
+            LOG.debug(_("DeploymentService state is now STARTING"));
             checkRequiredComponentManagersAvailable();
         }
     }
@@ -208,11 +210,13 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
                 _timer.cancel();
             }
             _serviceState = ServiceState.STOPPING;
+            LOG.debug(_("DeploymentService state is now STOPPING"));
 
             Collection<DeployedAssembly> assemblies = getDeployedAssemblies();
             stopAndDeactivate(assemblies);
 
             _serviceState = null;
+            LOG.debug(_("DeploymentService state is now STOPPED"));
         }
     }
 
@@ -392,6 +396,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
      */
     public void scan() {
         LOG.debug(_("Scanning deployment directory {0}", _deployDir));
+        LOG.debug(_("Component managers: {0}", _componentManagers));
         synchronized (DEPLOY_LOCK) {
             Map<AssemblyId, DeployedAssembly> deployedMap = loadDeployedState();
             LOG.debug(_("Deployed assemblies: {0}", deployedMap.keySet()));
@@ -655,6 +660,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
             Collection<DeployedAssembly> assemblies = getDeployedAssemblies();
             if (activateAndStart(assemblies)) {
                 _serviceState = ServiceState.STARTED;
+                LOG.debug(_("DeploymentService state is now STARTED"));
                 if (_coordinator) {
                     _timer.schedule(_scanTask, _scanPeriod * 1000, _scanPeriod * 1000);
                 }
@@ -681,7 +687,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
                 mappings.put(ComponentId, managerName);
             }
         } catch (FileNotFoundException except) {
-            throw new RuntimeException("Missing deploy.properties file in assembly: " + assemblyDir.getName());
+            throw new RuntimeException(_("Missing assembly.properties file in assembly: {0}", assemblyDir.getName()));
         } catch (IOException except) {
             throw new RuntimeException(except);
         } finally {
@@ -949,33 +955,41 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
     }
 
     /**
-     * Callback when ComponentManager's become available/unavailable
+     * Callback when ComponentManager's become available/unavailable.
+     * <p>
+     * Note:  This implementation class needs to be public due to Java reflection limitations
+     *        http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4071957
      */
-    class Callback implements DeploymentServiceCallback {
+    public class Callback implements DeploymentServiceCallback {
 
         public void available(ComponentManager manager) {
             String name = manager.getComponentManagerName();
             _componentManagers.put(name, manager);
+            LOG.debug(_("ComponentManager now available: {0}", name));
+            
+            synchronized (LIFECYCLE_LOCK) {
+                if (ServiceState.STARTED.equals(_serviceState)) {
+                    synchronized (DEPLOY_LOCK) {
+                        Collection<DeployedAssembly> assemblies = getDeployedAssemblies();
+                        for (DeployedAssembly assembly : assemblies) {
+                            Collection<DeployedComponent> components = assembly.getDeployedComponents();
+                            for (DeployedComponent component: components) {
+                                String type = _componentTypes.get(component.getComponentManagerName());
+                                if (name.equals(component.getComponentManagerName()) || name.equals(type)) {
+                                    try {
+                                        manager.activate(component.getComponentId(), new File(component.getComponentDir()));
+                                    } catch (Exception except) {
+                                        LOG.error(_("Error while activating component {0}", component), except);
+                                    }
+                                    try {
+                                        manager.start(component.getComponentId());
+                                    } catch (Exception except) {
+                                        LOG.error(_("Error while activating component {0}", component), except);
+                                    }
+                                }
 
-            if (ServiceState.STARTED.equals(_serviceState)) {
-                Collection<DeployedAssembly> assemblies = getDeployedAssemblies();
-                for (DeployedAssembly assembly : assemblies) {
-                    Collection<DeployedComponent> components = assembly.getDeployedComponents();
-                    for (DeployedComponent component: components) {
-                        String type = _componentTypes.get(component.getComponentManagerName());
-                        if (name.equals(component.getComponentManagerName()) || name.equals(type)) {
-                            try {
-                                manager.activate(component.getComponentId(), new File(component.getComponentDir()));
-                            } catch (Exception except) {
-                                LOG.error(_("Error while activating component {0}", component), except);
-                            }
-                            try {
-                                manager.start(component.getComponentId());
-                            } catch (Exception except) {
-                                LOG.error(_("Error while activating component {0}", component), except);
                             }
                         }
-
                     }
                 }
             }

@@ -29,7 +29,7 @@ public class LocalizedMessages {
         try {
             _messages = ResourceBundle.getBundle("DeploymentService");
         } catch (Exception except) {
-            LOG.error("Error initializing localized message bundle", except);
+            LOG.warn("Exception while initializing localized message bundle: " + except.toString());
         }
     }
     

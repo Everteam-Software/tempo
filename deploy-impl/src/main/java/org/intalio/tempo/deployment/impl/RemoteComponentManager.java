@@ -12,8 +12,10 @@ package org.intalio.tempo.deployment.impl;
 import static org.intalio.tempo.deployment.impl.LocalizedMessages._;
 
 import java.io.File;
-import java.rmi.Naming;
 import java.util.List;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
 
 import org.intalio.tempo.deployment.ComponentId;
 import org.intalio.tempo.deployment.DeploymentMessage;
@@ -22,17 +24,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * RMI adapter for ComponentManager 
+ * Remote adapter for ComponentManager 
  */
-public class RMIComponentManager implements ComponentManager {
-    private static final Logger LOG = LoggerFactory.getLogger(RMIComponentManager.class);
+public class RemoteComponentManager implements ComponentManager {
+    private static final Logger LOG = LoggerFactory.getLogger(RemoteComponentManager.class);
     
     private String _name;
-    private String _rmiLookup;
+    private String _jndiLookup;
     
-    public RMIComponentManager(String componentManagerName, String rmiLookup) {
+    public RemoteComponentManager(String componentManagerName, String jndiLookup) {
         _name = componentManagerName;
-        _rmiLookup = rmiLookup;
+        _jndiLookup = jndiLookup;
     }
     
     public void setComponentManagerName(String name) {
@@ -43,21 +45,22 @@ public class RMIComponentManager implements ComponentManager {
         return _name;
     }
 
-    public void setRMILookup(String rmiLookup) {
-        _rmiLookup = rmiLookup;
+    public void setJNDILookup(String jndiLookup) {
+        _jndiLookup = jndiLookup;
     }
     
     public String getJNDILookup() {
-        return _rmiLookup;
+        return _jndiLookup;
     }
 
     protected ComponentManager getComponentManager() {
         try {
-            ComponentManager manager = (ComponentManager) Naming.lookup(_rmiLookup);
-            if (manager == null) throw new IllegalArgumentException("ComponentManager not found: "+_rmiLookup);
+            Context context = new InitialContext();
+            ComponentManager manager = (ComponentManager) context.lookup(_jndiLookup);
+            if (manager == null) throw new IllegalArgumentException("ComponentManager not found: "+_jndiLookup);
             return manager;
         } catch (Exception except) {
-            LOG.error(_("Error while looking up ComponentManager at {0}", _rmiLookup), except);
+            LOG.error(_("Error while looking up ComponentManager at {0}", _jndiLookup), except);
             throw new RuntimeException(except);
         }
     }
