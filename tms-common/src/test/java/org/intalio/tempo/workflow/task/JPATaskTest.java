@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 public class JPATaskTest {
-    final static Logger log = LoggerFactory.getLogger(JPATaskTest.class);
+    final static Logger _logger = LoggerFactory.getLogger(JPATaskTest.class);
 
     EntityManager em;
     EntityManagerFactory factory;
@@ -126,7 +126,7 @@ public class JPATaskTest {
         task1.authorizeActionForUser("eat", "alex");
         task1.getRoleOwners().add("role1");
         task1.getUserOwners().add("user1");
-        log.info(task1.getAuthorizedUsers("play").toString());
+        _logger.info(task1.getAuthorizedUsers("play").toString());
 
         persist(task1);
 
@@ -134,7 +134,7 @@ public class JPATaskTest {
         Notification task2 = (Notification) (q.getResultList()).get(0);
 
         AuthIdentifierSet players = task2.getAuthorizedUsers("play");
-        log.info(players.toString());
+        _logger.info(players.toString());
         Assert.assertTrue(players.contains("niko"));
         Assert.assertFalse(players.contains("alex"));
 
@@ -188,13 +188,33 @@ public class JPATaskTest {
         Assert.assertEquals(tasks.length, size);
     }
     
-    private Task[] fetchAllAvailableTasks(UserRoles user) {
+    private String getJPQLQueryFromIds(List<String> ids) {
+        StringBuffer buffer = new StringBuffer(Task.FIND_BY_IDS + "(");
+        for(String id : ids)  buffer.append("'"+id+"',");
+        buffer.deleteCharAt(buffer.length()-1);
+        buffer.append(")");
+        if(_logger.isDebugEnabled()) {
+            _logger.info("Query:"+buffer.toString());
+        }
+        return buffer.toString();
+    }
+    
+    @SuppressWarnings("unchecked")
+    public Task[] fetchAllAvailableTasks(UserRoles user) {
         AuthIdentifierSet roles = user.getAssignedRoles();
         String userid = user.getUserID();
-        String s = MessageFormat.format(Task.FIND_BY_USER_AND_ROLES, new Object[]{roles.toString(),"('"+userid+"')"});
-        Query q = em.createNativeQuery(s,Task.class);
-        List<Task> l = q.getResultList();
-        return (Task[])new ArrayList(l).toArray(new Task[l.size()]);
+        String s = MessageFormat.format(Task.FIND_BY_USER_AND_ROLES, new Object[] { roles.toString(), "('"+userid+"')" });
+        if(_logger.isDebugEnabled()) _logger.debug("fetchAllAvailableTasks query:"+s);
+        Query q = em.createNativeQuery(s, String.class);
+        List<String> l = q.getResultList();
+        if(l.size()<1) return new Task[0];
+        Query q2 = em.createQuery(getJPQLQueryFromIds(l));
+        List<Task> tasks = (List<Task>) q2.getResultList();
+        if(_logger.isDebugEnabled()) {
+            for(Task t : tasks)
+            _logger.info("Found task:"+t.getID());
+        }
+        return (Task[]) new ArrayList(tasks).toArray(new Task[tasks.size()]);
     }
 
     private void testQuery(String s) {

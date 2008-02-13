@@ -23,7 +23,6 @@ def convertBundleToProperties(ResourceBundle rb) {
 def getSampleItem() {
 	return new Item("http://www.hellonico.net", "meta", "hello".getBytes())
 }
-/*
 scenario "storing items using jpa", {
 	given "a JPA Item connection ", {
 		map = convertBundleToProperties(ResourceBundle.getBundle("jpa"))
@@ -78,7 +77,7 @@ scenario "storing pipa using jpa", {
 			jpac.deletePipaTask(formUrl)
 		}
 	}
-}*/
+}
 scenario "testing list of pipa tasks", {
 	given "a JPA Pipa connection", {
 		map = convertBundleToProperties(ResourceBundle.getBundle("jpa"))
@@ -102,7 +101,7 @@ scenario "testing list of pipa tasks", {
 	then "The task stored can be retrieved through a list", {
 		jpac = (TMSJPAConnection) factory.getTMSConnection()
 		list = jpac.fetchAllAvailableTasks(urs)
-		ensure(list.size() == 1)
+		ensure(list.size() >= 1)
 		ensure(list[0] instanceof PIPATask)
 	}
 }

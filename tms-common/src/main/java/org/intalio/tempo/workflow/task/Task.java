@@ -47,15 +47,13 @@ import org.intalio.tempo.workflow.util.RequiredArgumentException;
     @NamedQuery(name = Task.FIND_BY_ID, query = "select m from Task m where m._id=?1", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") })
 }
 )
-//@NamedNativeQueries({
-//    @NamedNativeQuery(name = Task._FIND_BY_USERS, query = Task.FIND_BY_USERS),
-//    @NamedNativeQuery(name = Task._FIND_BY_ROLES, query = Task.FIND_BY_ROLES),
-//    @NamedNativeQuery(name = Task._FIND_BY_USER_AND_ROLES, query = Task.FIND_BY_USER_AND_ROLES)
-//})
     
 public abstract class Task extends BaseRestrictedEntity {
 
 	public static final String FIND_BY_ID = "find_by_id";
+	
+	public static final String FIND_BY_IDS = "select m from Task m where m._id IN ";
+	
 	public static final String FIND_BY_USER = "find_by_user";
 	public static final String _FIND_BY_USERS = "find_by_user";
 	public static final String _FIND_BY_ROLES = "find_by_roles";
@@ -64,7 +62,7 @@ public abstract class Task extends BaseRestrictedEntity {
 	public static final String FIND_BY_USERS = "SELECT * FROM TASKS m WHERE m.USERS IN (SELECT SET_ID FROM BACKING_SET WHERE AUTH_ID IN  {0})";
 	public static final String FIND_BY_ROLES = "SELECT * FROM TASKS m WHERE m.ROLES IN (SELECT SET_ID FROM BACKING_SET WHERE AUTH_ID IN  {0})";
 	
-	public static final String FIND_BY_USER_AND_ROLES = "SELECT * from TASKS m WHERE (m.ROLES IN (SELECT SET_ID FROM BACKING_SET WHERE AUTH_ID IN  {0})) OR (m.USERS IN (SELECT SET_ID FROM BACKING_SET WHERE AUTH_ID IN  {1}))";
+	public static final String FIND_BY_USER_AND_ROLES = "SELECT tid from TASKS m WHERE (m.ROLES IN (SELECT SET_ID FROM BACKING_SET WHERE AUTH_ID IN  {0})) OR (m.USERS IN (SELECT SET_ID FROM BACKING_SET WHERE AUTH_ID IN  {1}))";
 	
 	@Column(name = "internal_id")
 	@Basic
@@ -265,6 +263,6 @@ public abstract class Task extends BaseRestrictedEntity {
 	@Override
 	public String toString() {
 		return "Workflow Task " + _id;
-	}
+    }
 
 }

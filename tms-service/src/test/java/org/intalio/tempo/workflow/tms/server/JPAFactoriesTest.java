@@ -55,10 +55,12 @@ public class JPAFactoriesTest {
 		map.put("openjpa.jdbc.SynchronizeMappings", "buildSchema");
 		map.put("openjpa.ConnectionUserName", "APP");
 		map.put("openjpa.ConnectionPassword", "APP");
+		map.put("openjpa.ConnectionPassword", "APP");
 		map.put("openjpa.ConnectionDriverName",
 				"org.apache.derby.jdbc.EmbeddedDriver");
 		map.put("openjpa.ConnectionURL", "jdbc:derby:target/JPADB;create=true");
-
+		map.put("openjpa.Log","DefaultLevel=TRACE");
+		
 		// create the factory and check no left overs from previous run.
 		jtdcf = new JPATaskDaoConnectionFactory(map);
 		connection = jtdcf.openConnection();

@@ -43,18 +43,33 @@ public class TMSJPAConnection extends AbstractJPAConnection implements
 		entityManager.persist(task);
 	}
 	
-	public Task[] fetchAllAvailableTasks(UserRoles user) {
-        AuthIdentifierSet roles = user.getAssignedRoles();
-        String userid = user.getUserID();
-        String s = MessageFormat.format(Task.FIND_BY_USER_AND_ROLES, new Object[] { roles.toString(), "('"+userid+"')" });
-        if(_logger.isDebugEnabled()) _logger.debug("fetchAllAvailableTasks query:"+s);
-        Query q = entityManager.createNativeQuery(s, Task.class);
-        List<Task> l = q.getResultList();
-        if(_logger.isDebugEnabled()) {
-            for(Task t : l) 
-            _logger.debug("Found task::"+t.toString());
-        }
-        return (Task[]) new ArrayList(l).toArray(new Task[l.size()]);
-    }
+	 private String getJPQLQueryFromIds(List<String> ids) {
+	        StringBuffer buffer = new StringBuffer(Task.FIND_BY_IDS + "(");
+	        for(String id : ids)  buffer.append("'"+id+"',");
+	        buffer.deleteCharAt(buffer.length()-1);
+	        buffer.append(")");
+	        if(_logger.isDebugEnabled()) {
+	            _logger.info("Query:"+buffer.toString());
+	        }
+	        return buffer.toString();
+	    }
+	    
+	    @SuppressWarnings("unchecked")
+	    public Task[] fetchAllAvailableTasks(UserRoles user) {
+	        AuthIdentifierSet roles = user.getAssignedRoles();
+	        String userid = user.getUserID();
+	        String s = MessageFormat.format(Task.FIND_BY_USER_AND_ROLES, new Object[] { roles.toString(), "('"+userid+"')" });
+	        if(_logger.isDebugEnabled()) _logger.debug("fetchAllAvailableTasks query:"+s);
+	        Query q = entityManager.createNativeQuery(s, String.class);
+	        List<String> l = q.getResultList();
+	        if(l.size()<1) return new Task[0];
+	        Query q2 = entityManager.createQuery(getJPQLQueryFromIds(l));
+	        List<Task> tasks = (List<Task>) q2.getResultList();
+	        if(_logger.isDebugEnabled()) {
+	            for(Task t : tasks)
+	            _logger.info("Found task:"+t.getID());
+	        }
+	        return (Task[]) new ArrayList(tasks).toArray(new Task[tasks.size()]);
+	    }
 
 }
