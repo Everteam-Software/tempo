@@ -25,7 +25,7 @@
 			<value>http://localhost:8080/wds/</value>
 		</property>
 	</bean>
-
+	<!--
 		<bean id="wds.itemConnectionFactory" class="org.intalio.tempo.workflow.wds.core.JdbcItemDaoConnectionFactory">
 			<constructor-arg>
 				<value>java:comp/env/jdbc/BPMSDB</value>
@@ -37,15 +37,17 @@
 				<value>java:comp/env/jdbc/BPMSDB</value>
 			</property>
 		</bean> 
-<!--
+	-->
+
 	<bean id="wds.itemConnectionFactory" class="org.intalio.tempo.workflow.wds.core.JPAItemDaoConnectionFactory">
 		<constructor-arg>
 			<map>
 				<entry><key><value>openjpa.jdbc.SynchronizeMappings</value></key><value>buildSchema</value></entry>
-				<entry><key><value>openjpa.ConnectionUserName</value></key><value>APP</value></entry>
-				<entry><key><value>openjpa.ConnectionPassword</value></key><value>APP</value></entry>
-				<entry><key><value>openjpa.ConnectionDriverName</value></key><value>org.apache.derby.jdbc.EmbeddedDriver</value></entry>
-				<entry><key><value>openjpa.ConnectionURL</value></key><value>jdbc:derby:JPADB;create=true</value></entry>
+				<entry><key><value>openjpa.ConnectionFactoryMode</value></key><value>managed</value></entry>
+				<entry><key><value>openjpa.ConnectionDriverName</value></key><value>org.apache.derby.jdbc.EmbeddedXADataSource</value></entry>				
+				<entry><key><value>tempo.datasourceURL</value></key><value>java:comp/env/jdbc/BPMSDB</value></entry>
+				<entry><key><value>openjpa.Log</value></key><value>DefaultLevel=Trace</value></entry>
+				<entry><key><value>openjpa.FlushBeforeQueries</value></key><value>true</value></entry>
 			</map>
 		</constructor-arg>
 	</bean>
@@ -55,12 +57,12 @@
 		<constructor-arg>
 			<map>
 				<entry><key><value>openjpa.jdbc.SynchronizeMappings</value></key><value>buildSchema</value></entry>
-				<entry><key><value>openjpa.ConnectionUserName</value></key><value>APP</value></entry>
-				<entry><key><value>openjpa.ConnectionPassword</value></key><value>APP</value></entry>
-				<entry><key><value>openjpa.ConnectionDriverName</value></key><value>org.apache.derby.jdbc.EmbeddedDriver</value></entry>
-				<entry><key><value>openjpa.ConnectionURL</value></key><value>jdbc:derby:JPADB;create=true</value></entry>
+				<entry><key><value>openjpa.ConnectionFactoryMode</value></key><value>managed</value></entry>
+				<entry><key><value>openjpa.ConnectionDriverName</value></key><value>org.apache.derby.jdbc.EmbeddedXADataSource</value></entry>				
+				<entry><key><value>tempo.datasourceURL</value></key><value>java:comp/env/jdbc/BPMSDB</value></entry>
+				<entry><key><value>openjpa.Log</value></key><value>DefaultLevel=Trace</value></entry>
+				<entry><key><value>openjpa.FlushBeforeQueries</value></key><value>true</value></entry>
 			</map>
 		</constructor-arg>
 	</bean>
--->
 </beans>

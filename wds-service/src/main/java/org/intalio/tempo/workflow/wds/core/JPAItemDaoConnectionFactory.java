@@ -17,8 +17,8 @@ import org.intalio.tempo.workflow.dao.AbstractJPAConnectionFactory;
 
 public class JPAItemDaoConnectionFactory extends AbstractJPAConnectionFactory implements ItemDaoConnectionFactory {
 
-    public JPAItemDaoConnectionFactory(Map<?,?> properties) {
-        super(properties);
+    public JPAItemDaoConnectionFactory(Map<String,Object> properties) {
+        super("org.intalio.tempo.wds", properties);
     }
 
     @Override

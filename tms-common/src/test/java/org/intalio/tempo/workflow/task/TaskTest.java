@@ -15,14 +15,12 @@
 package org.intalio.tempo.workflow.task;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Date;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
-import org.intalio.tempo.workflow.task.Task;
 
 public class TaskTest extends TestCase {
 
@@ -113,7 +111,7 @@ public class TaskTest extends TestCase {
         Assert.assertEquals(url2, task.getFormURL());
         String stringURL = "http://localhost/3";
         URI url3 = new URI(stringURL);
-        task.setFormURL(stringURL);
+        task.setFormURLFromString(stringURL);
         Assert.assertEquals(url3, task.getFormURL());
 
         try {
@@ -124,16 +122,16 @@ public class TaskTest extends TestCase {
         }
 
         try {
-            task.setFormURL((String) null);
+            task.setFormURLFromString(null);
             Assert.fail("RequiredArgumentException expected");
         } catch (RequiredArgumentException e) {
 
         }
 
         try {
-            task.setFormURL("ada:dada:12345#1#2");
+            task.setFormURLFromString("ada:dada:12345#1#2");
             Assert.fail("URISyntaxException expected");
-        } catch (URISyntaxException e) {
+        } catch (InvalidTaskException e) {
 
         }
     }

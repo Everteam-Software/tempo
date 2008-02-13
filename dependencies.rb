@@ -63,7 +63,7 @@ GERONIMO_SPECS = {
 APACHE_JPA = [
   COMMONS,
   GERONIMO_SPECS.values,
-  "org.apache.openjpa:openjpa:jar:1.1.0-svn-596491",
+  "org.apache.openjpa:openjpa:jar:1.1.0-svn-620200",
   "commons-logging:commons-logging:jar:1.0.4",
   "commons-lang:commons-lang:jar:2.1",
   "org.apache.derby:derby:jar:10.2.2.0",

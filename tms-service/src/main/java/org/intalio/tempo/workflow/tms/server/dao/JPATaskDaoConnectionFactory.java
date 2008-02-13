@@ -18,8 +18,8 @@ import org.intalio.tempo.workflow.dao.AbstractJPAConnectionFactory;
  */
 public class JPATaskDaoConnectionFactory extends AbstractJPAConnectionFactory implements ITaskDAOConnectionFactory {
     
-    public JPATaskDaoConnectionFactory(Map<?,?> properties) {
-        super(properties);
+    public JPATaskDaoConnectionFactory(Map<String,Object> properties) {
+        super("org.intalio.tempo.tms", properties);
     }
     
     public ITaskDAOConnection openConnection() {

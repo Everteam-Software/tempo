@@ -29,21 +29,18 @@ enum ACTION {
  */
 public class AbstractJPAConnection {
 
-	final static protected Logger _logger = LoggerFactory
-			.getLogger(AbstractJPAConnection.class);
+	protected Logger _logger;
 	protected EntityManager entityManager;
 
 	public AbstractJPAConnection(EntityManager createEntityManager) {
+		_logger = LoggerFactory.getLogger(this.getClass());
 		_logger.debug(ACTION.LOAD.toString());
 		entityManager = createEntityManager;
 	}
 
 	public void close() {
-		commit();
-		_logger.debug(ACTION.CLEAR.toString());
-		entityManager.clear();
+	    // commit();
 		_logger.debug(ACTION.CLOSE.toString());
-		entityManager.close();
 	}
 	
 	public void checkTransactionIsActive() {

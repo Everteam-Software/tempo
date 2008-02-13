@@ -77,6 +77,9 @@ public class TMSRequestProcessor extends OMUnmarshaller {
 
             final UserRoles user = _server.getUserRoles(participantToken);
             Task[] tasks = _server.getTaskList(participantToken);
+            for(Task t : tasks) {
+              _logger.info(t.getClass().getName()+"\n"+t.toString());  
+            }
 
             OMElement response = new TMSResponseMarshaller(requestElement.getOMFactory()) {
                 public OMElement marshalResponse(Task[] tasks) {
@@ -87,12 +90,15 @@ public class TMSRequestProcessor extends OMUnmarshaller {
                 }
             }.marshalResponse(tasks);
             
-            if(_logger.isDebugEnabled()) _logger.debug(response.toString());
+            _logger.info(response.toString());
 
             return response;
         } catch (InvalidInputFormatException e) {
             throw AxisFault.makeFault(e);
         } catch (AuthException e) {
+            throw AxisFault.makeFault(e);
+        } catch (Exception e) {
+            _logger.error("Cannot retrieve task list",e);
             throw AxisFault.makeFault(e);
         }
     }

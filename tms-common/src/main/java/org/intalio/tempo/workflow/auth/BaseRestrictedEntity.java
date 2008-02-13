@@ -29,11 +29,11 @@ public abstract class BaseRestrictedEntity implements IRestrictedEntity {
     
     @OneToOne(cascade=CascadeType.ALL)
     @Column(name="users")
-    private AuthIdentifierSet _userOwners = new AuthIdentifierSet();
+    protected AuthIdentifierSet _userOwners = new AuthIdentifierSet();
 
     @OneToOne(cascade=CascadeType.ALL)
     @Column(name="roles")
-    private AuthIdentifierSet _roleOwners = new AuthIdentifierSet();
+    protected AuthIdentifierSet _roleOwners = new AuthIdentifierSet();
 
     protected BaseRestrictedEntity() {
     }

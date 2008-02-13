@@ -24,8 +24,8 @@ public class TMSJPAConnectionFactory extends AbstractJPAConnectionFactory implem
     /**
      * Instance constructor
      */
-	public TMSJPAConnectionFactory(Map<?, ?> properties) {
-		super(properties);
+	public TMSJPAConnectionFactory(Map<String, Object> properties) {
+		super("org.intalio.tempo.tms", properties);
 	}
     
     @Override

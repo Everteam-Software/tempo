@@ -11,7 +11,13 @@
  */
 package org.intalio.tempo.workflow.wds.core.tms;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+
+import org.intalio.tempo.workflow.task.PIPATask;
 
 /**
  * This class represents a connection to TMS database.<br />
@@ -73,23 +79,23 @@ public class TMSConnection implements TMSConnectionInterface {
     /**
      * Stores a PIPA task in TMS database.
      */
-    public void storePipaTask(PipaTask task) {
+    public void storePipaTask(PIPATask task) {
         if (! task.isValid()) {
             throw new RuntimeException("Attempt to store an invalid pipa task:\n" + task.toString());
         }
 
         try {
             int i = 1;
-            _insertTaskStatement.setString(i++, task.getId());
+            _insertTaskStatement.setString(i++, task.getID());
             _insertTaskStatement.setString(i++, task.getDescription());
             _insertTaskStatement.setTimestamp(i++, new Timestamp(System.currentTimeMillis()));
-            _insertTaskStatement.setString(i++, task.getFormURL());
-            _insertTaskStatement.setString(i++, task.getProcessEndpoint());
+            _insertTaskStatement.setString(i++, task.getFormURL().toString());
+            _insertTaskStatement.setString(i++, task.getProcessEndpoint().toString());
             _insertTaskStatement.setString(i++, task.getFormNamespace());
-            _insertTaskStatement.setString(i++, task.getInitSoapAction());
+            _insertTaskStatement.setString(i++, task.getInitOperationSOAPAction());
             _insertTaskStatement.execute();
 
-            _justCreatedTaskId.setString(1, task.getId());
+            _justCreatedTaskId.setString(1, task.getID());
             ResultSet rs = _justCreatedTaskId.executeQuery();
             if (rs.next()) {
                 String justInsertedTaskId = rs.getString(1);

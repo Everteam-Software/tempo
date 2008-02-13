@@ -1,11 +1,13 @@
 package org.intalio.tempo.workflow.wds.core.tms;
 
+import org.intalio.tempo.workflow.task.PIPATask;
+
 public interface TMSConnectionInterface {
 
     /**
      * Stores a PIPA task in TMS database.
      */
-    public void storePipaTask(PipaTask task);
+    public void storePipaTask(PIPATask task);
 
     /**
      * Deletes all PIPA tasks which use the specified form URL, from TMS database.

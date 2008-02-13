@@ -46,7 +46,7 @@ public class JPATaskTest {
         Properties p = new Properties();
         p.load(this.getClass().getResourceAsStream("/jpa.properties"));
         System.getProperties().putAll(p);
-        factory = Persistence.createEntityManagerFactory("org.intalio.tempo", System.getProperties());
+        factory = Persistence.createEntityManagerFactory("org.intalio.tempo.tms", System.getProperties());
         em = factory.createEntityManager();
         jpa = em.getTransaction();
         jpa.begin();
@@ -172,7 +172,6 @@ public class JPATaskTest {
 
     }
     
-    @SuppressWarnings("unchecked")
     @Test 
     public void searchQuery() throws Exception {
         testQuery(MessageFormat.format(Task.FIND_BY_USERS, "('user1')"));

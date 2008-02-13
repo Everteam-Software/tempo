@@ -20,7 +20,7 @@ module Buildr
           fullpath = artifacts.join(File::PATH_SEPARATOR) + requires.join(File::PATH_SEPARATOR)
 
           ant.taskdef :name=>"easyb", :classname=>"org.disco.easyb.ant.SpecificationRunnerTask",:classpath=>requires.join(File::PATH_SEPARATOR)
-          ant.easyb do
+          ant.easyb :failureProperty=>"easyb.failed" do
             ant.report :location=>options[:report], :format=>options[:format]
             ant.classpath :path=>fullpath
             ant.behaviors :dir=>options[:storydir] do

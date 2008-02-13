@@ -90,9 +90,7 @@ public class TMSServer implements ITMSServer {
         } catch(Exception e) {
             _logger.error("Error while tasks list retrieval for user " + credentials.getUserID(), e);
             throw new RuntimeException(e);
-        } finally {
-			dao.close();
-		}
+        } 
     }
 
     public UserRoles getUserRoles(String participantToken) throws AuthException {
@@ -107,9 +105,7 @@ public class TMSServer implements ITMSServer {
             task = dao.fetchTaskIfExists(taskID);
         } catch (Exception e) {
             _logger.error("Cannot retrieve Workflow Task " + taskID);
-        } finally {
-			dao.close();
-		}
+        } 
         if ((task != null) && task.isAvailableTo(credentials)) {
             if (_logger.isDebugEnabled())
                 _logger.debug("Workflow Task " + task + " for user " + credentials.getUserID());
@@ -140,9 +136,7 @@ public class TMSServer implements ITMSServer {
             }
         } catch (Exception e) {
             _logger.error("Cannot retrieve Workflow Task " + taskID, e);
-        } finally {
-			dao.close();
-		}
+        }
         if (!available) {
             throw new UnavailableTaskException(credentials.getUserID() + " cannot set output for Workflow Task " + task);
         }
@@ -168,9 +162,7 @@ public class TMSServer implements ITMSServer {
 			}
         } catch (Exception e) {
             _logger.error("Error to complete Workflow Task " + taskID);
-		} finally {
-			dao.close();
-		}
+		} 
         if (!available) {
             throw new UnavailableTaskException(credentials.getUserID() + " cannot complete Workflow Task " + task);
         }
@@ -198,9 +190,7 @@ public class TMSServer implements ITMSServer {
 			}
         } catch (Exception e) {
             _logger.error("Error to set output abd complete Workflow Task " + taskID, e);
-		} finally {
-			dao.close();
-		}
+		} 
         if (!available) {
             throw new UnavailableTaskException(credentials.getUserID() +
             		" cannot set output and complete Workflow Task " + task);
@@ -230,8 +220,6 @@ public class TMSServer implements ITMSServer {
             }
         } catch (Exception e) {
             _logger.error("Error to set as failed the Workflow Task " + taskID, e);
-		} finally {
-			dao.close();
 		}
         if (!available) {
             throw new UnavailableTaskException(credentials.getUserID() +
@@ -270,7 +258,7 @@ public class TMSServer implements ITMSServer {
     			}
     		}
         } finally {
-            dao.close();
+            //dao.close();
         }
         if (problemTasks.size() > 0) {
             throw new UnavailableTaskException(credentials.getUserID() +

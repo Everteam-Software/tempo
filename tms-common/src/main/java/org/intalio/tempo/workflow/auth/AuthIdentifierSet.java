@@ -30,9 +30,9 @@ import org.apache.openjpa.persistence.jdbc.XJoinColumn;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
 @Entity
-public class AuthIdentifierSet implements Iterable<String> {
+public class AuthIdentifierSet extends HashSet<String> {
 
-    @PersistentCollection(elementCascade = CascadeType.ALL)
+	@PersistentCollection(elementCascade = CascadeType.ALL)
     @ContainerTable(name="BACKING_SET",joinColumns=@XJoinColumn(name="SET_ID"))
     @ElementJoinColumn(name="AUTH_ID")
     private Collection<String> backingSet = new HashSet<String>();

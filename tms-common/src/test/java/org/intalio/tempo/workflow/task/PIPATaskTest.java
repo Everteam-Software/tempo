@@ -97,7 +97,7 @@ public class PIPATaskTest extends TestCase {
     public void testGetAndSetProcessEndpoint() throws Exception {
         PIPATask task = this.createPIPATask();
         URI processEndpoint = new URI("http://localhost/processEndpoint");
-        task.setProcessEndpoint(processEndpoint);
+        task.setProcessEndpoint(processEndpoint.toString());
         Assert.assertEquals(processEndpoint, task.getProcessEndpoint());
         try {
             task.setProcessEndpoint(null);

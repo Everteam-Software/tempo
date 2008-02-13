@@ -18,8 +18,8 @@ import java.util.Properties;
 import java.util.Random;
 import java.util.ResourceBundle;
 
+import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.wds.core.Item;
-import org.intalio.tempo.workflow.wds.core.tms.PipaTask;
 
 public class WDSUtil {
 	static final Random rand = new Random();
@@ -38,13 +38,11 @@ public class WDSUtil {
 				.getBundle("jpa"));
 	}
 	
-	public static PipaTask getSamplePipa() {
-		PipaTask task1 = new PipaTask();
-        task1.setId("abc");
+	public static PIPATask getSamplePipa() {
+		PIPATask task1 = new PIPATask("abc","http://localhost/"+rand.nextInt());
         task1.setFormNamespace("urn:ns");
-        task1.setFormURL("http://localhost/"+rand.nextInt());
         task1.setProcessEndpoint("http://localhost/process"+rand.nextInt());
-        task1.setInitSoapAction("initProcess"+rand.nextInt());
+        task1.setInitOperationSOAPAction("initProcess"+rand.nextInt());
 		return task1;
 	}
 	

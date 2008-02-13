@@ -286,7 +286,7 @@ define "tempo" do
 
   desc "Workflow Deployment Service"
   define "wds-service" do
-    libs = [ projects("web-nutsNbolts", "dao-nutsNbolts"), APACHE_JPA, COMMONS, LOG4J, SERVLET_API, SLF4J, SPRING, XERCES ]
+    libs = [ projects("web-nutsNbolts", "dao-nutsNbolts", "tms-common"), APACHE_JPA, COMMONS, LOG4J, SERVLET_API, SLF4J, SPRING, XERCES ]
     test_libs = libs + [EASY_B, INSTINCT]
     
     compile.with test_libs

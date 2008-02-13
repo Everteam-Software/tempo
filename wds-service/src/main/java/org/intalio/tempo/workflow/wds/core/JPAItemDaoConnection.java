@@ -32,7 +32,7 @@ public class JPAItemDaoConnection extends AbstractJPAConnection implements ItemD
             entityManager.remove(item);	
             commit();
         } catch (Exception e) {
-            throw new UnavailableItemException(e);
+//            throw new UnavailableItemException(e);
         }
     }
 

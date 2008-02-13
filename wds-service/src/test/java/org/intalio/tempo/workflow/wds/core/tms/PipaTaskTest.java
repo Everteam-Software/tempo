@@ -12,7 +12,11 @@
 
 package org.intalio.tempo.workflow.wds.core.tms;
 
-import static org.intalio.tempo.workflow.wds.core.tms.WDSUtil.*;
+import static org.intalio.tempo.workflow.wds.core.tms.WDSUtil.getSamplePipa;
+
+import java.util.Arrays;
+
+import org.intalio.tempo.workflow.task.PIPATask;
 import org.junit.runner.RunWith;
 
 import com.googlecode.instinct.expect.ExpectThat;
@@ -27,38 +31,34 @@ public class PipaTaskTest {
 	
 	@Specification
     public void AValidPipaIsValid() throws Exception {
-        PipaTask task1 = getSamplePipa();
+		PIPATask task1 = getSamplePipa();
         expect.that(task1.isValid()).isTrue();
 	}
 
 	@Specification
 	public void ANewlyCreatedPipaIsNotValid() throws Exception {
-		PipaTask task2 = new PipaTask();
+		PIPATask task2 = new PIPATask();
         expect.that(task2.isValid()).isFalse();
 
 	}
       
 	@Specification
 	public void UserNamesAreNormalized() throws Exception {
-		PipaTask task1 = getSamplePipa();
+		PIPATask task1 = getSamplePipa();
         String[] unnormalizedUsers = {"abc/abc", "def\\def", "ghi.ghi"};
         String[] normalizedUsers = {"abc\\abc", "def\\def", "ghi\\ghi"};
         task1.setUserOwners(unnormalizedUsers);
-        
-        for (int i = 0; i < normalizedUsers.length; ++i) 
-            expect.that(normalizedUsers[i]).isEqualTo(task1.getUserOwners()[i]);
-
+        expect.that(Arrays.asList(normalizedUsers).containsAll(task1.getUserOwners()));
 	}
 	
 	@Specification 
 	public void RoleNamesAreNormalized() throws Exception {
-		PipaTask task1 = getSamplePipa();
+		PIPATask task1 = getSamplePipa();
         String[] unnormalizedRoles = {"jkl/jkl", "mno\\mno", "pqr.pqr"};
         String[] normalizedRoles = {"jkl\\jkl", "mno\\mno", "pqr\\pqr"};
-        task1.setRoleOwners(unnormalizedRoles);
-
-        for (int i = 0; i < normalizedRoles.length; ++i) 
-            expect.that(normalizedRoles[i]).isEqualTo(task1.getRoleOwners()[i]);
         
+        task1.setRoleOwners(unnormalizedRoles);
+        
+        expect.that(Arrays.asList(normalizedRoles).containsAll(task1.getRoleOwners()));
     }
 }

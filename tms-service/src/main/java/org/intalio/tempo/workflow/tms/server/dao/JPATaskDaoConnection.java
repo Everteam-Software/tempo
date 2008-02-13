@@ -54,13 +54,17 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
 
     @SuppressWarnings("unchecked")
     public Task[] fetchAllAvailableTasks(UserRoles user) {
-    	if(_logger.isDebugEnabled()) _logger.debug("fetch task");
         AuthIdentifierSet roles = user.getAssignedRoles();
         String userid = user.getUserID();
         String s = MessageFormat.format(Task.FIND_BY_USER_AND_ROLES, new Object[] { roles.toString(), "('"+userid+"')" });
         if(_logger.isDebugEnabled()) _logger.debug("fetchAllAvailableTasks query:"+s);
+        
         Query q = entityManager.createNativeQuery(s, Task.class);
         List<Task> l = q.getResultList();
+        if(_logger.isDebugEnabled()) {
+            for(Task t : l) 
+            _logger.debug("Found task::"+t.toString());
+        }
         return (Task[]) new ArrayList(l).toArray(new Task[l.size()]);
     }
 

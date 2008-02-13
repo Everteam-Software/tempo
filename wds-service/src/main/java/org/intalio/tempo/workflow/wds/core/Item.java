@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2005-2006 Intalio inc.
+ * Copyright (c) 2005-2008 Intalio inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -20,6 +20,7 @@ import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.QueryHint;
+import javax.persistence.Table;
 
 /**
  * A WDS item is a byte stream which is stored on WDS at a specific URI.
@@ -28,6 +29,7 @@ import javax.persistence.QueryHint;
  * @version $Revision: 1176 $
  */
 @Entity
+@Table(name = "items")
 @NamedQueries({
     @NamedQuery(
             name=Item.FIND_BY_URI, 

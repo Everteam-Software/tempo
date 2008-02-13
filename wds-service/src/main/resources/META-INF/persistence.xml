@@ -22,12 +22,11 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     version="1.0">
     <persistence-unit
-        name="org.intalio.tempo"
+        name="org.intalio.tempo.wds"
         transaction-type="RESOURCE_LOCAL">
         <!-- <jta-data-source>java:comp/env/jdbc/BPMSDB</jta-data-source> -->
         <!-- <mapping-file>orm.xml</mapping-file> -->
         <class>org.intalio.tempo.workflow.wds.core.Item</class>
-        <class>org.intalio.tempo.workflow.wds.core.tms.PipaTask</class>
         <properties />
     </persistence-unit>
 </persistence>
