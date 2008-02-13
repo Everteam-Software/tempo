@@ -49,26 +49,32 @@ public class Utils {
     public static void unzip(InputStream input, File dest) throws IOException {
         ZipInputStream zis = new ZipInputStream(input);
         ZipEntry entry;
-        while((entry = zis.getNextEntry()) != null) {
-            if(entry.isDirectory()) {
-                File dir = new File(dest, entry.getName());
-                dir.mkdir();
-                if (!dir.exists() || !dir.isDirectory()) {
-                    throw new IOException("Error creating directory: "+dir);
-                }
-                continue;
-            }
-            File destFile = new File(dest, entry.getName());
-            File parent = destFile.getParentFile();
-            if (!parent.exists()) parent.mkdirs();
-            if (!parent.exists() || !parent.isDirectory()) {
-                throw new IOException("Error creating directory: "+parent);
-            }
-            OutputStream out = new BufferedOutputStream(new FileOutputStream(destFile));
-            copyStream(zis, out);
-            out.close();
+        try {
+        	while((entry = zis.getNextEntry()) != null) {
+        		if(entry.isDirectory()) {
+        			File dir = new File(dest, entry.getName());
+        			dir.mkdir();
+        			if (!dir.exists() || !dir.isDirectory()) {
+        				throw new IOException("Error creating directory: "+dir);
+        			}
+        			continue;
+        		}
+        		File destFile = new File(dest, entry.getName());
+        		File parent = destFile.getParentFile();
+        		if (!parent.exists()) parent.mkdirs();
+        		if (!parent.exists() || !parent.isDirectory()) {
+        			throw new IOException("Error creating directory: "+parent);
+        		}
+        		OutputStream out = new BufferedOutputStream(new FileOutputStream(destFile));
+        		try {
+        			copyStream(zis, out);
+        		} finally {
+        			out.close();
+        		}
+        	}
+        } finally {
+        	zis.close();
         }
-        zis.close();
     }
     
     /**
@@ -82,7 +88,7 @@ public class Utils {
                     deleteRecursively(files[i]);
                 }
             }
-            if (!file.delete()) { 
+            if (file.exists() && !file.delete()) { 
                 throw new IllegalStateException("Unable to delete: "+ file);
             }
         }
