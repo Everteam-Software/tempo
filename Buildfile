@@ -187,7 +187,7 @@ define "tempo" do
 
   desc "Xml Beans generation"
   define "tms-axis" do
-    compile_xml_beans "tms-axis/src/main/axis2"
+    compile_xml_beans _("../tms-service/src/main/axis2")
     package(:jar)
   end
   
