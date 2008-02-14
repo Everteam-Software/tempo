@@ -49,7 +49,7 @@ public class DeployServiceDeployTest extends TestCase {
         service.init();
     }
 
-    public void shutDown() throws Exception {
+    public void tearDown() throws Exception {
         service.stop();
     }
 
