@@ -24,6 +24,13 @@ public class DeployWSConstants {
     public static final OMNamespace DEPLOY_NS =
         OM_FACTORY.createOMNamespace("http://tempo.intalio.org/deploy/deploymentService", "deploy");
 
+    
+    public static final QName USER = new QName(DEPLOY_NS.getNamespaceURI(), "user");
+
+    public static final QName PASSWORD = new QName(DEPLOY_NS.getNamespaceURI(), "password");
+
+    public static final QName TOKEN = new QName(DEPLOY_NS.getNamespaceURI(), "token");
+
     /* Deploy Request */
     
     public static final QName DEPLOY_REQUEST = new QName(DEPLOY_NS.getNamespaceURI(), "deployAssembly");

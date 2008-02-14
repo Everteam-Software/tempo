@@ -42,9 +42,16 @@ public class DeployWSTest extends TestCase {
         System.setProperty(DeployWS.CONFIG_DIR_PROPERTY, dir);
 
         String endpoint = System.getProperty("org.intalio.tempo.deploy.ws.endpoint");
+        String user = System.getProperty("org.intalio.tempo.deploy.ws.user");
+        String password = System.getProperty("org.intalio.tempo.deploy.ws.password");
+        String token = System.getProperty("org.intalio.tempo.deploy.ws.token");
         if (endpoint != null) {
             System.out.println("Using LIVE ENDPOINT "+endpoint);
-            _client = new DeployClient(endpoint);
+            _client = new DeployClient();
+            _client.setEndpointURL(endpoint);
+            _client.setUser(user);
+            _client.setPassword(password);
+            _client.setToken(token);
         } else {
             _client = new DeployClientMock();
         }
@@ -74,7 +81,7 @@ public class DeployWSTest extends TestCase {
         DeployWS _deployWS = new DeployWS(false);
 
         public DeployClientMock() {
-            super("internal://");
+            super();
         }
 
         protected OMParser invoke(String action, OMElement request) throws AxisFault {

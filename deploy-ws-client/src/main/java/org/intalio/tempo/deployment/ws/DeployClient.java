@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2005-2007 Intalio inc.
+ * Copyright (c) 2005-2008 Intalio inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -12,14 +12,7 @@
 
 package org.intalio.tempo.deployment.ws;
 
-import static org.intalio.tempo.deployment.ws.DeployWSConstants.ASSEMBLY_NAME;
-import static org.intalio.tempo.deployment.ws.DeployWSConstants.ASSEMBLY_VERSION;
-import static org.intalio.tempo.deployment.ws.DeployWSConstants.DEPLOY_REQUEST;
-import static org.intalio.tempo.deployment.ws.DeployWSConstants.GET_DEPLOYED_ASSEMBLIES_REQUEST;
-import static org.intalio.tempo.deployment.ws.DeployWSConstants.OM_FACTORY;
-import static org.intalio.tempo.deployment.ws.DeployWSConstants.REPLACE_EXISTING_ASSEMBLIES;
-import static org.intalio.tempo.deployment.ws.DeployWSConstants.UNDEPLOY_REQUEST;
-import static org.intalio.tempo.deployment.ws.DeployWSConstants.ZIP;
+import static org.intalio.tempo.deployment.ws.DeployWSConstants.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -40,7 +33,6 @@ import org.intalio.tempo.deployment.AssemblyId;
 import org.intalio.tempo.deployment.DeployedAssembly;
 import org.intalio.tempo.deployment.DeploymentResult;
 import org.intalio.tempo.deployment.DeploymentService;
-import org.intalio.tempo.deployment.ws.OMParser;
 
 /**
  * Client web services API for the Token Service.
@@ -48,18 +40,52 @@ import org.intalio.tempo.deployment.ws.OMParser;
 public class DeployClient implements DeploymentService {
 
     String _endpoint;
+    String _username;
+    String _password;
+    String _token;
 
     /**
      * Create a deployment service client
-     * 
-     * @param endpointUrl endpoint of the deployment service
      */
-    public DeployClient(String endpointUrl) {
-        _endpoint = endpointUrl;
+    public DeployClient() {
     }
 
+    public String getEndpointURL() {
+        return _endpoint;
+    }
+    
+    public void setEndpointURL(String url) {
+        _endpoint = url;
+    }
+    
+    public String getUser() {
+        return _username;
+    }
+    
+    public void setUser(String user) {
+        _username = user;
+    }
+    
+    public String getPassword() {
+        return _password;
+    }
+    
+    public void setPassword(String password) {
+        _password = password;
+    }
+    
+    public String getToken() {
+        return _token;
+    }
+    
+    public void setToken(String token) {
+        _token = token;
+    }
+    
     public DeploymentResult deployAssembly(String assemblyName, InputStream zip, boolean replaceExistingAssemblies) throws RemoteException {
         OMElement request = element(DEPLOY_REQUEST);
+        setAuthentication(request);
+        request.addChild( elementText(ASSEMBLY_NAME, assemblyName) );
         request.addChild( elementText(ASSEMBLY_NAME, assemblyName) );
         request.addChild( elementBinary(ZIP, zip) );
         request.addChild( elementBoolean(REPLACE_EXISTING_ASSEMBLIES, replaceExistingAssemblies) );
@@ -67,14 +93,25 @@ public class DeployClient implements DeploymentService {
         return OMParser.parseDeploymentResult(response);
     }
 
+    private void setAuthentication(OMElement request) {
+        if (_username != null) 
+            request.addChild( elementText(USER, _username) );
+        if (_password != null) 
+            request.addChild( elementText(PASSWORD, _password) );
+        if (_token != null) 
+            request.addChild( elementText(TOKEN, _token) );
+    }
+
     public Collection<DeployedAssembly> getDeployedAssemblies() throws RemoteException {
         OMElement request = element(GET_DEPLOYED_ASSEMBLIES_REQUEST);
+        setAuthentication(request);
         OMParser response = invoke(GET_DEPLOYED_ASSEMBLIES_REQUEST.getLocalPart(), request);
         return OMParser.parseDeployedAssemblies(response);
     }
 
     public DeploymentResult undeployAssembly(AssemblyId assemblyId) throws RemoteException {
         OMElement request = element(UNDEPLOY_REQUEST);
+        setAuthentication(request);
         request.addChild( elementText(ASSEMBLY_NAME, assemblyId.getAssemblyName()) );
         request.addChild( elementText(ASSEMBLY_VERSION, Integer.toString(assemblyId.getAssemblyVersion())) );
         OMParser response = invoke(UNDEPLOY_REQUEST.getLocalPart(), request);
