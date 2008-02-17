@@ -233,12 +233,9 @@
 					<xsd:element name="taskType" type="xsd:token"/>
 					<xsd:element name="description" type="xsd:string" maxOccurs="1" minOccurs="0"/>
 					<xsd:element name="processId" type="xsd:string" maxOccurs="1" minOccurs="0"/>
-					<xsd:element name="creationDate" type="xsd:dateTime" maxOccurs="1" minOccurs="0">
-					</xsd:element>
-					<xsd:element name="userOwner" type="xsd:string" maxOccurs="unbounded" minOccurs="0">
-					</xsd:element>
-					<xsd:element name="roleOwner" type="xsd:string" maxOccurs="unbounded" minOccurs="0">
-					</xsd:element>
+					<xsd:element name="creationDate" type="xsd:dateTime" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="userOwner" type="xsd:string" maxOccurs="unbounded" minOccurs="0"/>
+					<xsd:element name="roleOwner" type="xsd:string" maxOccurs="unbounded" minOccurs="0"/>
 					<xsd:element name="formUrl" type="xsd:anyURI"/>
 					<xsd:element name="failureCode" type="xsd:string" maxOccurs="1" minOccurs="0"/>
 					<xsd:element name="failureReason" type="xsd:string" maxOccurs="1" minOccurs="0"/>
@@ -254,8 +251,7 @@
 			</xsd:complexType>
 			<xsd:complexType name="task">
 				<xsd:sequence>
-					<xsd:element name="metadata" type="tns:taskMetadata">
-					</xsd:element>
+					<xsd:element name="metadata" type="tns:taskMetadata"/>
 					<xsd:element name="input">
 						<xsd:complexType>
 							<xsd:sequence>

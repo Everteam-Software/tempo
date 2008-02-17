@@ -197,7 +197,7 @@ define "tempo" do
                  APACHE_JPA, AXIOM, DOM4J, JAXEN, LOG4J, SLF4J, SPRING, STAX_API, XERCES, XMLBEANS
     compile { open_jpa_enhance }
     package(:jar)
-    test.with WOODSTOX, LOG4J
+    test.with WOODSTOX, LOG4J, XMLUNIT
     test.exclude '*TestUtils*'
   end
   

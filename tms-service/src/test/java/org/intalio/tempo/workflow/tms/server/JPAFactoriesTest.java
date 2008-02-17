@@ -25,6 +25,7 @@ import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
 import org.intalio.tempo.workflow.tms.server.dao.JPATaskDaoConnectionFactory;
+import org.intalio.tempo.workflow.util.TaskEquality;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,7 +108,7 @@ public class JPAFactoriesTest {
 			connection.createTask(t2);
 			connection.commit();
 			Task t3 = connection.fetchTaskIfExists(t2.getID());
-			Assert.assertEquals(t2, t3);
+			TaskEquality.areTasksEquals(t2, t3);
 		}
 		updateTasksAndCheckCount(USER, TASK_COUNT + 1,
 				"User does not have a proper task count in his inbox.");

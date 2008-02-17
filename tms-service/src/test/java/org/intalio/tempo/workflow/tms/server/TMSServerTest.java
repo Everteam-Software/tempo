@@ -26,6 +26,7 @@ import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.TaskState;
 import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
+import org.intalio.tempo.workflow.util.TaskEquality;
 import org.w3c.dom.Document;
 
 public class TMSServerTest extends TestCase {
@@ -44,10 +45,10 @@ public class TMSServerTest extends TestCase {
         paTask.getRoleOwners().add("test/role3");
         server.create(paTask, "token1");
 
-        Assert.assertEquals(paTask, server.getTask("taskID", "token1"));
-        Assert.assertEquals(paTask, server.getTask("taskID", "token2"));
-        Assert.assertEquals(paTask, server.getTaskList("token1")[0]);
-        Assert.assertEquals(paTask, server.getTaskList("token2")[0]);
+        TaskEquality.areTasksEquals(paTask, server.getTask("taskID", "token1"));
+        TaskEquality.areTasksEquals(paTask, server.getTask("taskID", "token2"));
+        TaskEquality.areTasksEquals(paTask, server.getTaskList("token1")[0]);
+        TaskEquality.areTasksEquals(paTask, server.getTaskList("token2")[0]);
         try {
             server.getTask("taskID", "token3");
             Assert.fail("UnavailableTaskException expected");
@@ -96,10 +97,10 @@ public class TMSServerTest extends TestCase {
         notification.getRoleOwners().add("test/role3");
         server.create(notification, "token1");
 
-        Assert.assertEquals(notification, server.getTask("taskID", "token1"));
-        Assert.assertEquals(notification, server.getTask("taskID", "token2"));
-        Assert.assertEquals(notification, server.getTaskList("token1")[0]);
-        Assert.assertEquals(notification, server.getTaskList("token2")[0]);
+        TaskEquality.areTasksEquals(notification, server.getTask("taskID", "token1"));
+        TaskEquality.areTasksEquals(notification, server.getTask("taskID", "token2"));
+        TaskEquality.areTasksEquals(notification, server.getTaskList("token1")[0]);
+        TaskEquality.areTasksEquals(notification, server.getTaskList("token2")[0]);
         try {
             server.getTask("taskID", "token3");
             Assert.fail("UnavailableTaskException expected");

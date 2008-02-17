@@ -36,6 +36,7 @@ import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.task.xml.TaskMarshaller;
 import org.intalio.tempo.workflow.task.xml.TaskUnmarshaller;
 import org.intalio.tempo.workflow.task.xml.TaskXMLConstants;
+import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.task.xml.attachments.AttachmentMarshaller;
 import org.intalio.tempo.workflow.task.xml.attachments.AttachmentUnmarshaller;
 import org.intalio.tempo.workflow.tms.ITaskManagementService;
@@ -45,7 +46,6 @@ import org.intalio.tempo.workflow.tms.UnavailableAttachmentException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 import org.intalio.tempo.workflow.util.xml.InvalidInputFormatException;
-import org.intalio.tempo.workflow.util.xml.OMDOMConvertor;
 import org.intalio.tempo.workflow.util.xml.OMElementQueue;
 import org.intalio.tempo.workflow.util.xml.OMMarshaller;
 import org.intalio.tempo.workflow.util.xml.OMUnmarshaller;
@@ -173,7 +173,7 @@ class RemoteTMSClient implements ITaskManagementService {
                 OMElement request = createElement(complete ? "setOutputAndCompleteRequest" : "setOutputRequest");
                 createElement(request, "taskId", taskID);
                 OMElement data = createElement(request, "data");
-                OMElement omOutput = OMDOMConvertor.convertDOMToOM(output, getOMFactory());
+                OMElement omOutput = XmlTooling.convertDOMToOM(output, getOMFactory());
                 data.addChild(omOutput);
                 createElement(request, "participantToken", _participantToken);
 
@@ -295,7 +295,7 @@ class RemoteTMSClient implements ITaskManagementService {
                 OMElement request = createElement("initRequest");
                 createElement(request, "taskId", taskID);
                 OMElement data = createElement(request, "input");
-                OMElement omOutput = OMDOMConvertor.convertDOMToOM(input, getOMFactory());
+                OMElement omOutput = XmlTooling.convertDOMToOM(input, getOMFactory());
                 data.addChild(omOutput);
                 createElement(request, "participantToken", _participantToken);
 
@@ -307,7 +307,7 @@ class RemoteTMSClient implements ITaskManagementService {
         OMElement userProcessResponseWrapper = response.getFirstElement();
         OMElement userProcessResponse = userProcessResponseWrapper.getFirstElement();
 
-        return OMDOMConvertor.convertOMToDOM(userProcessResponse);
+        return XmlTooling.convertOMToDOM(userProcessResponse);
     }
 
     public Attachment[] getAttachments(final String taskID) throws AuthException, UnavailableTaskException {

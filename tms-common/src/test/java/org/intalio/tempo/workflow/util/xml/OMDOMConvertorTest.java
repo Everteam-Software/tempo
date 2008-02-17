@@ -20,6 +20,7 @@ import junit.framework.TestCase;
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
+import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.w3c.dom.Document;
 
 public class OMDOMConvertorTest extends TestCase {
@@ -29,15 +30,16 @@ public class OMDOMConvertorTest extends TestCase {
     }
 
     public void testConversion() throws Exception {
+        Document doc = new XmlTooling().getXmlDocument("/createTaskRequest2.xml");
         OMFactory factory = OMAbstractFactory.getOMFactory();
-        OMElement el = factory.createOMElement("Foo", "http://example.com", "tns");
-        el.setText("Sample Text/ééà");
+        Document doc2 = rountTripTooling(doc, factory);
+        OMElement el = XmlTooling.convertDOMToOM(doc, factory);
+        OMElement el2 = XmlTooling.convertDOMToOM(doc2, factory);
+        assertEquals(el.toString(), el2.toString());
+    }
 
-        System.out.println("Element: " + el.toStringWithConsume());
-
-        // will throw an exception if character set doesn't match
-        Document document = OMDOMConvertor.convertOMToDOM(el);
-
-        System.out.println("Document: " + OMDOMConvertor.convertDOMToOM(document, factory));
+    private Document rountTripTooling(Document doc, OMFactory factory) {
+        OMElement el = XmlTooling.convertDOMToOM(doc, factory);
+        return XmlTooling.convertOMToDOM(el);
     }
 }

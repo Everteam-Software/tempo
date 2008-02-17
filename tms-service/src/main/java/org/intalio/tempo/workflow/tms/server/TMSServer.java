@@ -37,13 +37,13 @@ import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.task.traits.ITaskWithAttachments;
 import org.intalio.tempo.workflow.task.traits.ITaskWithOutput;
 import org.intalio.tempo.workflow.task.traits.ITaskWithState;
+import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.tms.InvalidTaskStateException;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
 import org.intalio.tempo.workflow.tms.UnavailableAttachmentException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnectionFactory;
-import org.intalio.tempo.workflow.util.xml.OMDOMConvertor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -307,7 +307,7 @@ public class TMSServer implements ITMSServer {
 		// OMElement omOutput = omFactory.createOMElement("output", omNamespace,
 		// omTaskOutput);
 		// omOutput.addChild(OMDOMConvertor.convertDOMToOM(input, omFactory));
-		omTaskOutput.addChild(OMDOMConvertor.convertDOMToOM(input, omFactory));
+		omTaskOutput.addChild(XmlTooling.convertDOMToOM(input, omFactory));
 
 		Options options = new Options();
 		options.setTo(new EndpointReference(task.getProcessEndpoint()
@@ -322,7 +322,7 @@ public class TMSServer implements ITMSServer {
 			if (_logger.isDebugEnabled())
                 _logger.debug(task + " was used to start the process " + task.getProcessEndpoint());
 
-			return OMDOMConvertor.convertOMToDOM(response);
+			return XmlTooling.convertOMToDOM(response);
 		} catch (AxisFault f) {
             throw new RuntimeException(f);
 		}

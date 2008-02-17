@@ -33,6 +33,7 @@ import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.task.xml.TaskMarshaller;
 import org.intalio.tempo.workflow.task.xml.TaskUnmarshaller;
 import org.intalio.tempo.workflow.task.xml.TaskXMLConstants;
+import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.task.xml.attachments.AttachmentMarshaller;
 import org.intalio.tempo.workflow.task.xml.attachments.AttachmentUnmarshaller;
 import org.intalio.tempo.workflow.tms.InvalidTaskStateException;
@@ -40,7 +41,6 @@ import org.intalio.tempo.workflow.tms.TaskIDConflictException;
 import org.intalio.tempo.workflow.tms.UnavailableAttachmentException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.intalio.tempo.workflow.util.xml.InvalidInputFormatException;
-import org.intalio.tempo.workflow.util.xml.OMDOMConvertor;
 import org.intalio.tempo.workflow.util.xml.OMElementQueue;
 import org.intalio.tempo.workflow.util.xml.OMMarshaller;
 import org.intalio.tempo.workflow.util.xml.OMUnmarshaller;
@@ -301,7 +301,8 @@ public class TMSRequestProcessor extends OMUnmarshaller {
 
             Document domInput = null;
             if (omInputContainer.getFirstElement() != null) {
-                domInput = new TaskUnmarshaller().unmarshalTaskOutput(omInputContainer);
+                TaskUnmarshaller taskUnmarshaller = new TaskUnmarshaller();
+                domInput = taskUnmarshaller.unmarshalTaskOutput(omInputContainer);
             }
             String participantToken = requireElementValue(rootQueue, "participantToken");
 
@@ -311,7 +312,7 @@ public class TMSRequestProcessor extends OMUnmarshaller {
                 public OMElement marshalResponse(Document userProcessResponse) {
                     OMElement response = createElement("initProcessResponse");
                     OMElement userProcessResponseWrapper = createElement(response, "userProcessResponse");
-                    userProcessResponseWrapper.addChild(OMDOMConvertor.convertDOMToOM(userProcessResponse, this
+                    userProcessResponseWrapper.addChild(XmlTooling.convertDOMToOM(userProcessResponse, this
                             .getOMFactory()));
                     return response;
                 }

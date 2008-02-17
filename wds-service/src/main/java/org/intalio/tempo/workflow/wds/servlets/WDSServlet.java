@@ -169,7 +169,7 @@ public class WDSServlet extends HttpServlet {
 		PIPATask pipaTask = new PIPATask();
 		pipaTask.setFormURLFromString(formUrl);
 		pipaTask.setDescription(request.getHeader("Delete-PIPA-Description"));
-		pipaTask.setProcessEndpoint(request.getHeader("Delete-PIPA-Process-endpoint"));
+		pipaTask.setProcessEndpointFromString(request.getHeader("Delete-PIPA-Process-endpoint"));
 		pipaTask.setFormNamespace(request
 				.getHeader("Delete-PIPA-Form-namespace"));
 		pipaTask.setInitOperationSOAPAction(request.getHeader("Delete-PIPA-InitSOAP-Action"));
@@ -248,7 +248,7 @@ public class WDSServlet extends HttpServlet {
 
 			task.setDescription(request.getHeader("Task-Description"));
 			task.setFormNamespace(request.getHeader("Form-Namespace"));
-			task.setProcessEndpoint(request.getHeader("Process-Endpoint"));
+			task.setProcessEndpointFromString(request.getHeader("Process-Endpoint"));
 			task.setInitOperationSOAPAction(request.getHeader("Process-InitSOAPAction"));
 
 			String userOwnerHeader = request.getHeader("Task-UserOwners");
@@ -421,7 +421,7 @@ public class WDSServlet extends HttpServlet {
 		PIPATask task = new PIPATask(UUID.randomUUID().toString(), prop.getProperty("formURI"));
 		task.setDescription(prop.getProperty("task-description"));
 		task.setFormNamespace(prop.getProperty("formNamespace"));
-		task.setProcessEndpoint(prop.getProperty("processEndpoint"));
+		task.setProcessEndpointFromString(prop.getProperty("processEndpoint"));
 		task.setInitOperationSOAPAction(prop.getProperty("userProcessInitSOAPAction"));
 
 		String userOwnerHeader = prop.getProperty("task-user-owners");

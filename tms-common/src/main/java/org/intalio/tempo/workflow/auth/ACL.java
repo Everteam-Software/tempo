@@ -16,10 +16,10 @@ public class ACL {
     public String action; 
     
     @Embedded
-    public AuthIdentifierSet users = new AuthIdentifierSet();
+    private AuthIdentifierSet users = new AuthIdentifierSet();
     
     @Embedded
-    public AuthIdentifierSet roles = new AuthIdentifierSet();
+    private AuthIdentifierSet roles = new AuthIdentifierSet();
     
     public ACL() {
         

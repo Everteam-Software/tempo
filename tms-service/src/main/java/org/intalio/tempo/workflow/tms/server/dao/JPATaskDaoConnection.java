@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2005-2007 Intalio inc.
+ * Copyright (c) 2005-2008 Intalio inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -7,90 +7,54 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  */
- package org.intalio.tempo.workflow.tms.server.dao;
-
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
+package org.intalio.tempo.workflow.tms.server.dao;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 
-import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.dao.AbstractJPAConnection;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
+import org.intalio.tempo.workflow.util.jpa.TaskFetcher;
 
 /**
  * Persistence for task using JPA.
- *
  */
 public class JPATaskDaoConnection extends AbstractJPAConnection implements ITaskDAOConnection {
 
-    private Query find_by_id;
+    private TaskFetcher _fetcher;
 
     public JPATaskDaoConnection(EntityManager createEntityManager) {
-    	super(createEntityManager);
-    	find_by_id = entityManager.createNamedQuery(Task.FIND_BY_ID);
+        super(createEntityManager);
+        _fetcher = new TaskFetcher(createEntityManager);
     }
 
     public void createTask(Task task) throws TaskIDConflictException {
-    	if(_logger.isDebugEnabled()) _logger.debug("create task of class:"+task.getClass().getName());
-    	checkTransactionIsActive();
+        if (_logger.isDebugEnabled())
+            _logger.debug("create task of class:" + task.getClass().getName());
+        checkTransactionIsActive();
         entityManager.persist(task);
     }
 
     public boolean deleteTask(int internalTaskId, String taskID) {
-    	if(_logger.isDebugEnabled()) _logger.debug("delete task with id:"+taskID);
-    	checkTransactionIsActive();
-        synchronized (find_by_id) {
-            Query q = find_by_id.setParameter(1, taskID);
-            Task t = (Task) (q.getResultList()).get(0);
-            entityManager.remove(t);
-        }
+        if (_logger.isDebugEnabled())
+            _logger.debug("delete task with id:" + taskID);
+        checkTransactionIsActive();
+        entityManager.remove(_fetcher.fetchTaskIfExists(taskID));
         return true;
     }
 
-    private String getJPQLQueryFromIds(List<String> ids) {
-        StringBuffer buffer = new StringBuffer(Task.FIND_BY_IDS + "(");
-        for(String id : ids)  buffer.append("'"+id+"',");
-        buffer.deleteCharAt(buffer.length()-1);
-        buffer.append(")");
-        if(_logger.isDebugEnabled()) {
-            _logger.info("Query:"+buffer.toString());
-        }
-        return buffer.toString();
-    }
-    
-    @SuppressWarnings("unchecked")
     public Task[] fetchAllAvailableTasks(UserRoles user) {
-        AuthIdentifierSet roles = user.getAssignedRoles();
-        String userid = user.getUserID();
-        String s = MessageFormat.format(Task.FIND_BY_USER_AND_ROLES, new Object[] { roles.toString(), "('"+userid+"')" });
-        if(_logger.isDebugEnabled()) _logger.debug("fetchAllAvailableTasks query:"+s);
-        Query q = entityManager.createNativeQuery(s, String.class);
-        List<String> l = q.getResultList();
-        if(l.size()<1) return new Task[0];
-        Query q2 = entityManager.createQuery(getJPQLQueryFromIds(l));
-        List<Task> tasks = (List<Task>) q2.getResultList();
-        if(_logger.isDebugEnabled()) {
-            for(Task t : tasks)
-            _logger.info("Found task:"+t.getID());
-        }
-        return (Task[]) new ArrayList(tasks).toArray(new Task[tasks.size()]);
+        return _fetcher.fetchAllAvailableTasks(user);
     }
 
     public Task fetchTaskIfExists(String taskID) {
-        synchronized (find_by_id) {
-            Query q = find_by_id.setParameter(1, taskID);
-            return (Task) (q.getResultList()).get(0);
-        }
+        return _fetcher.fetchTaskIfExists(taskID);
     }
 
     public void updateTask(Task task) {
-    	if(_logger.isDebugEnabled()) _logger.debug("update task:"+task.toString());
-    	checkTransactionIsActive();
+        if (_logger.isDebugEnabled()) _logger.debug("update task:" + task.toString());
+        checkTransactionIsActive();
         entityManager.persist(task);
     }
 

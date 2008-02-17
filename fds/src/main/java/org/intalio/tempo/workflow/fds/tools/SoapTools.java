@@ -48,8 +48,4 @@ public class SoapTools {
 
         return document;
     }
-
-    private SoapTools() {
-
-    }
 }

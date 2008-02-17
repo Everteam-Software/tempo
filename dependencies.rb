@@ -92,14 +92,14 @@ TEMPO_WORKFLOW_TOM = [ "org.intalio.tempo.workflow:intalio-tempo-workflow-tom:ja
 
 TEMPO_WORKFLOW_TMS_CLIENT = [ "org.intalio.tempo.workflow:intalio-tempo-workflow-tms-client:jar:5.0.0.3" ]
 
-WOODSTOX = [ "woodstox:wstx-asl:jar:3.2.1" ]
+WOODSTOX = [ "woodstox:wstx-asl:jar:3.2.4" ]
 
 WS_COMMONS_SCHEMA = "org.apache.ws.commons.schema:XmlSchema:jar:1.3.1"
 
 WSDL4J = [ "wsdl4j:wsdl4j:jar:1.5.2" ]
 
 XERCES = [
-  "xerces:xercesImpl:jar:2.9.0",
+  "xerces:xercesImpl:jar:2.9.1",
   "xerces:xmlParserAPIs:jar:2.9.0" ]
 
 XMLBEANS = [

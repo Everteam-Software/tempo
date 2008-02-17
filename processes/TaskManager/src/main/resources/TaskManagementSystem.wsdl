@@ -25,8 +25,7 @@
 			<xsd:element name="getTaskListResponse">
 				<xsd:complexType>
 					<xsd:sequence>
-						<xsd:element name="task" type="tns:taskMetadata" maxOccurs="unbounded" minOccurs="0">
-						</xsd:element>
+						<xsd:element name="task" type="tns:taskMetadata" maxOccurs="unbounded" minOccurs="0"/>
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
@@ -49,8 +48,7 @@
 				<xsd:complexType>
 					<xsd:sequence>
 						<xsd:element name="taskId" type="xsd:string"/>
-						<xsd:element name="participantToken" type="xsd:string">
-						</xsd:element>
+						<xsd:element name="participantToken" type="xsd:string"/>
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
@@ -65,8 +63,7 @@
 								</xsd:sequence>
 							</xsd:complexType>
 						</xsd:element>						
-						<xsd:element name="participantToken" type="xsd:string">
-						</xsd:element>
+						<xsd:element name="participantToken" type="xsd:string"/>
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
@@ -245,14 +242,18 @@
 					<xsd:element name="description" type="xsd:string" maxOccurs="1" minOccurs="0"/>
 					<xsd:element name="processId" type="xsd:string" maxOccurs="1" minOccurs="0"/>
 					<xsd:element name="creationDate" type="xsd:dateTime" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="formUrl" type="xsd:anyURI"/>
+					
 					<xsd:element name="userOwner" type="xsd:string" maxOccurs="unbounded" minOccurs="0"/>
 					<xsd:element name="roleOwner" type="xsd:string" maxOccurs="unbounded" minOccurs="0"/>
-					<xsd:element name="formUrl" type="xsd:anyURI"/>
+					
 					<xsd:element name="failureCode" type="xsd:string" maxOccurs="1" minOccurs="0"/>
 					<xsd:element name="failureReason" type="xsd:string" maxOccurs="1" minOccurs="0"/>
+					
 					<xsd:element name="userProcessCompleteSOAPAction" type="xsd:string" maxOccurs="1" minOccurs="0"/>
 					<xsd:element name="userProcessEndpoint" type="xsd:string" maxOccurs="1" minOccurs="0"/>
 					<xsd:element name="userProcessNamespaceURI" type="xsd:string" maxOccurs="1" minOccurs="0"/>
+					
 					<xsd:element name="attachments">
 					 <xsd:complexType>
 					   <xsd:sequence>

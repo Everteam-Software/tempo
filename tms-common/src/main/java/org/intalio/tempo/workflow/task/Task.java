@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2005-2006 Intalio inc.
+ * Copyright (c) 2005-2008 Intalio inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -8,9 +8,6 @@
  *
  * Contributors:
  * Intalio inc. - initial API and implementation
- *
- * $Id: TaskManagementServicesFacade.java 5440 2006-06-09 08:58:15Z imemruk $
- * $Log:$
  */
 
 package org.intalio.tempo.workflow.task;
@@ -48,18 +45,6 @@ public abstract class Task extends BaseRestrictedEntity {
 
     public static final String FIND_BY_ID = "find_by_id";
 
-    public static final String FIND_BY_IDS = "select m from Task m where m._id IN ";
-
-    public static final String FIND_BY_USER = "find_by_user";
-    public static final String _FIND_BY_USERS = "find_by_user";
-    public static final String _FIND_BY_ROLES = "find_by_roles";
-    public static final String _FIND_BY_USER_AND_ROLES = "find_by_user_and_roles";
-
-    public static final String FIND_BY_USERS = "SELECT * FROM TASKS m WHERE m.USERS IN (SELECT SET_ID FROM BACKING_SET WHERE AUTH_ID IN  {0})";
-    public static final String FIND_BY_ROLES = "SELECT * FROM TASKS m WHERE m.ROLES IN (SELECT SET_ID FROM BACKING_SET WHERE AUTH_ID IN  {0})";
-
-    public static final String FIND_BY_USER_AND_ROLES = "SELECT tid from TASKS m WHERE (m.ROLES IN (SELECT SET_ID FROM BACKING_SET WHERE AUTH_ID IN  {0})) OR (m.USERS IN (SELECT SET_ID FROM BACKING_SET WHERE AUTH_ID IN  {1}))";
-
     @Column(name = "internal_id")
     @Basic
     private int _internalId;
@@ -85,43 +70,40 @@ public abstract class Task extends BaseRestrictedEntity {
     private Map<String, ACL> _actionACLs = new HashMap<String, ACL>();
 
     public Task() {
-
+        _actionACLs = new HashMap<String, ACL>();
     }
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Task))
-            return false;
-        Task t = (Task) o;
-        boolean b = _id.equalsIgnoreCase(t.getID());
-        b &= _formURL.equals(t._formURL);
-        b &= _description.equals(t._description);
-        b &= _creationDate.equals(t._creationDate);
-        b &= bothNullOrEqual(_actionACLs, t._actionACLs);
-        b &= _userOwners.equals(t._userOwners);
-        b &= _roleOwners.equals(_roleOwners);
-        return b;
+        throw new RuntimeException("Do not use me for testing");
+        // if (!(o instanceof Task))
+        // return false;
+        // Task t = (Task) o;
+        // boolean b = _id.equalsIgnoreCase(t.getID());
+        // b &= _formURL.equals(t._formURL);
+        // b &= _description.equals(t._description);
+        // b &= _creationDate.equals(t._creationDate);
+        // b &= bothNullOrEqual(_actionACLs, t._actionACLs);
+        // b &= _userOwners.equals(t._userOwners);
+        // b &= _roleOwners.equals(_roleOwners);
+        // return b;
     }
 
-    boolean bothNullOrEqual(Object o1, Object o2) {
-        return o1 == null && o2 == null || o1.equals(o2);
-    }
+    //
+    // boolean bothNullOrEqual(Object o1, Object o2) {
+    // return o1 == null && o2 == null || o1.equals(o2);
+    // }
 
     public Task(String id, URI formURL) {
+        this();
         this.setID(id);
         this.setFormURL(formURL);
     }
 
     public Task(String id, String formURL) {
+        this();
         this.setID(id);
         this.setFormURLFromString(formURL);
-    }
-
-    public boolean equalsTask(Task rhs) {
-        if (rhs == null) {
-            return false;
-        }
-        return _id.equals(rhs._id) && _description.equals(rhs._description);
     }
 
     public String getID() {
@@ -191,28 +173,30 @@ public abstract class Task extends BaseRestrictedEntity {
         try {
             return new URI(fieldURL);
         } catch (Exception e) {
+            // we can use URI.create here, but we want to check for the validity
+            // of the uri whenever we set it
             throw new InvalidTaskException("Form URL is not valid", e);
         }
     }
 
     public void authorizeActionForUser(String action, String user) {
         ACL acl = getACLs(action);
-        acl.users.add(user);
+        acl.getUsers().add(user);
     }
 
     public void authorizeActionForRole(String action, String role) {
         ACL acl = getACLs(action);
-        acl.roles.add(role);
+        acl.getRoles().add(role);
     }
 
     public void authorizeActionForUsers(String action, AuthIdentifierSet users) {
         ACL acl = getACLs(action);
-        acl.users.addAll(users);
+        acl.getUsers().addAll(users);
     }
 
     public void authorizeActionForRoles(String action, AuthIdentifierSet roles) {
         ACL acl = getACLs(action);
-        acl.roles.addAll(roles);
+        acl.getRoles().addAll(roles);
     }
 
     private ACL getACLs(String action) {
@@ -227,14 +211,14 @@ public abstract class Task extends BaseRestrictedEntity {
     public AuthIdentifierSet getAuthorizedUsers(String action) {
         ACL acl = _actionACLs.get(action);
         if (acl != null)
-            return acl.users;
+            return acl.getUsers();
         return new AuthIdentifierSet();
     }
 
     public AuthIdentifierSet getAuthorizedRoles(String action) {
         ACL acl = _actionACLs.get(action);
         if (acl != null)
-            return acl.roles;
+            return acl.getRoles();
         return new AuthIdentifierSet();
     }
 
@@ -243,11 +227,11 @@ public abstract class Task extends BaseRestrictedEntity {
         ACL acl = _actionACLs.get(action);
         if (acl == null)
             return true;
-        if (acl.users.isEmpty() && acl.roles.isEmpty())
+        if (acl.getUsers().isEmpty() && acl.getRoles().isEmpty())
             return true;
-        if (acl.users.contains(user.getUserID()))
+        if (acl.getUsers().contains(user.getUserID()))
             return true;
-        if (acl.roles.intersects(user.getAssignedRoles()))
+        if (acl.getRoles().intersects(user.getAssignedRoles()))
             return true;
         return false;
     }

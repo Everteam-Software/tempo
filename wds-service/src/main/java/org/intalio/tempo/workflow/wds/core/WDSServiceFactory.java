@@ -76,7 +76,7 @@ public class WDSServiceFactory {
      */
     public WDSService getWDSService() {
         WDSService service = new WDSService(_daoFactory.getItemDaoConnection(), _tmsFactory.getTMSConnection());
-        service.setWdsEndPoint(_wdsEndpoint);
+        //        service.setWdsEndPoint(_wdsEndpoint);
         return service;
     }
 }

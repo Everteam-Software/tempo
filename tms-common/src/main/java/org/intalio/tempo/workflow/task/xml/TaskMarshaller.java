@@ -46,6 +46,7 @@ import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
 
 public class TaskMarshaller extends XmlBeanMarshaller {
     final static Logger _log = LoggerFactory.getLogger(TaskMarshaller.class);
+    final static String[] ACTIONS = new String[] {"claim","revoke","save","complete"};
 
     public TaskMarshaller() {
         super(TaskXMLConstants.TASK_NAMESPACE, TaskXMLConstants.TASK_NAMESPACE_PREFIX);
@@ -69,8 +70,8 @@ public class TaskMarshaller extends XmlBeanMarshaller {
 
         if (task instanceof IProcessBoundTask) {
             taskMetadataElement.setProcessId(((IProcessBoundTask) task).getProcessID());
-
         }
+        
         Calendar cal = Calendar.getInstance();
         cal.setTime(task.getCreationDate());
         taskMetadataElement.setCreationDate(cal);
@@ -84,10 +85,7 @@ public class TaskMarshaller extends XmlBeanMarshaller {
             XmlStrRoleOwner.setStringValue(roleOwner);
         }
 
-        createACL("claim", task, roles, taskMetadataElement);
-        createACL("revoke", task, roles, taskMetadataElement);
-        createACL("save", task, roles, taskMetadataElement);
-        createACL("complete", task, roles, taskMetadataElement);
+        for(String action : ACTIONS)  createACL(action, task, roles, taskMetadataElement);
 
         taskMetadataElement.setFormUrl(task.getFormURL().toString());
 
@@ -186,7 +184,7 @@ public class TaskMarshaller extends XmlBeanMarshaller {
                 if (nn.equalsIgnoreCase(xmlns)) {
                     uri = atts.item(i).getNodeValue();
                     if(_log.isDebugEnabled()) _log.debug("Restoring NS:" + uri);
-                    HashMap map = new HashMap();
+                    HashMap<String,String> map = new HashMap<String,String>();
                     map.put("", uri);
                     opts.setLoadSubstituteNamespaces(map);
                 }
@@ -234,8 +232,6 @@ public class TaskMarshaller extends XmlBeanMarshaller {
             UserRoles user) {
 
         XmlObject metadataElement = marshalXMLTaskMetadata(task, user);
-        if (_log.isDebugEnabled())
-            _log.debug(metadataElement.xmlText());
         parent.setMetadata((TaskMetadata) metadataElement);
 
         if (task instanceof ITaskWithInput) {

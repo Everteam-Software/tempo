@@ -2,9 +2,6 @@ package org.intalio.tempo.workflow.task;
 
 import java.net.URI;
 import java.net.URL;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 import javax.persistence.EntityManager;
@@ -16,11 +13,16 @@ import javax.persistence.Query;
 import junit.framework.Assert;
 import junit.framework.JUnit4TestAdapter;
 
-import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
+import org.apache.openjpa.persistence.OpenJPAPersistence;
+import org.apache.openjpa.persistence.OpenJPAQuery;
+import org.apache.openjpa.persistence.jdbc.FetchMode;
+import org.apache.openjpa.persistence.jdbc.JDBCFetchPlan;
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.task.attachments.AttachmentMetadata;
 import org.intalio.tempo.workflow.task.xml.XmlTooling;
+import org.intalio.tempo.workflow.util.TaskEquality;
+import org.intalio.tempo.workflow.util.jpa.TaskFetcher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,11 +36,10 @@ public class JPATaskTest {
     EntityManager em;
     EntityManagerFactory factory;
     EntityTransaction jpa;
-
     XmlTooling xml = new XmlTooling();
-    
+
     public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(JPATaskTest.class); 
+        return new JUnit4TestAdapter(JPATaskTest.class);
     }
 
     @Before
@@ -67,6 +68,7 @@ public class JPATaskTest {
     private void persist(Object o) throws Exception {
         em.persist(o);
         jpa.commit();
+        // this is to prevent caching at the entity manager level
         em.clear();
     }
 
@@ -79,9 +81,11 @@ public class JPATaskTest {
         persist(task1);
 
         Query q = em.createNamedQuery(Task.FIND_BY_ID).setParameter(1, id);
+        forceEagerFetching(q);
         PATask task2 = (PATask) (q.getResultList()).get(0);
 
         em.close();
+        TaskEquality.isEqual(task1, task2);
 
         Assert.assertEquals(task1.getInputAsXmlString(), task2.getInputAsXmlString());
         Assert.assertEquals(task1.getInputAsXmlString(), task2.getInputAsXmlString());
@@ -96,25 +100,11 @@ public class JPATaskTest {
         persist(task1);
 
         Query q = em.createNamedQuery(Task.FIND_BY_ID).setParameter(1, id);
+        forceEagerFetching(q);
+
         PIPATask task2 = (PIPATask) (q.getResultList()).get(0);
 
-        Assert.assertEquals(task1, task2);
-    }
-
-    @Test
-    public void NotificationPersistence() throws Exception {
-
-        String id = "id" + System.currentTimeMillis();
-        Notification task1 = new Notification(id, new URI("http://hellonico.net"), getXmlSampleDocument());
-
-        persist(task1);
-
-        Query q = em.createNamedQuery(Task.FIND_BY_ID).setParameter(1, id);
-        Notification task2 = (Notification) (q.getResultList()).get(0);
-
-        Assert.assertEquals(task1, task2);
-
-        em.close();
+        TaskEquality.isEqual(task1, task2);
     }
 
     @Test
@@ -126,31 +116,35 @@ public class JPATaskTest {
         task1.authorizeActionForUser("eat", "alex");
         task1.getRoleOwners().add("role1");
         task1.getUserOwners().add("user1");
-        _logger.info(task1.getAuthorizedUsers("play").toString());
 
         persist(task1);
 
         Query q = em.createNamedQuery(Task.FIND_BY_ID).setParameter(1, id);
         Notification task2 = (Notification) (q.getResultList()).get(0);
+        TaskEquality.areTasksEquals(task1, task2);
+    }
 
-        AuthIdentifierSet players = task2.getAuthorizedUsers("play");
-        _logger.info(players.toString());
-        Assert.assertTrue(players.contains("niko"));
-        Assert.assertFalse(players.contains("alex"));
+    private void forceEagerFetching(Query q) {
+        OpenJPAQuery kq = OpenJPAPersistence.cast(q);
+        JDBCFetchPlan fetch = (JDBCFetchPlan) kq.getFetchPlan();
+        fetch.setEagerFetchMode(FetchMode.PARALLEL);
+        fetch.setSubclassFetchMode(FetchMode.PARALLEL);
+    }
 
-        AuthIdentifierSet homers = task2.getAuthorizedUsers("go_home");
-        Assert.assertTrue(homers.contains("niko"));
-        Assert.assertFalse(homers.contains("alex"));
+    @Test
+    public void NotificationPersistence() throws Exception {
 
-        AuthIdentifierSet eaters = task2.getAuthorizedUsers("eat");
-        Assert.assertFalse(eaters.contains("niko"));
-        Assert.assertTrue(eaters.contains("alex"));
+        String id = "id" + System.currentTimeMillis();
+        Notification task1 = new Notification(id, new URI("http://hellonico.net"), getXmlSampleDocument());
 
-        Assert.assertTrue(task2.getUserOwners().contains("user1"));
-        Assert.assertFalse(task2.getUserOwners().contains("user2"));
-        Assert.assertTrue(task2.getRoleOwners().contains("role1"));
-        Assert.assertFalse(task2.getRoleOwners().contains("role2"));
-        
+        persist(task1);
+
+        Query q = em.createNamedQuery(Task.FIND_BY_ID).setParameter(1, id);
+        forceEagerFetching(q);
+        Notification task2 = (Notification) (q.getResultList()).get(0);
+
+        TaskEquality.areTasksEquals(task1, task2);
+
         em.close();
     }
 
@@ -167,65 +161,28 @@ public class JPATaskTest {
         Query q = em.createNamedQuery(Task.FIND_BY_ID).setParameter(1, id);
         PATask task2 = (PATask) (q.getResultList()).get(0);
 
-        Assert.assertEquals(task1, task2);
-        Assert.assertEquals(1, task2.getAttachments().size());
-
+        TaskEquality.areAttachmentsEqual(task1, task2);
     }
-    
-    @Test 
+
+    @Test
     public void searchQuery() throws Exception {
-        testQuery(MessageFormat.format(Task.FIND_BY_USERS, "('user1')"));
-        testQuery(MessageFormat.format(Task.FIND_BY_ROLES, "('role1')"));
-        
-        testUserRoles("user1",new String[]{"role2"},1);
-        testUserRoles("user2",new String[]{"role1"},1);
-        testUserRoles("user2",new String[]{"role2"},0);
-    }
-    
-    private void testUserRoles(String userId, String[] roles, int size) throws Exception {
-        UserRoles ur = new UserRoles(userId,roles);
-        Task[] tasks = fetchAllAvailableTasks(ur);
-        Assert.assertEquals(tasks.length, size);
-    }
-    
-    private String getJPQLQueryFromIds(List<String> ids) {
-        StringBuffer buffer = new StringBuffer(Task.FIND_BY_IDS + "(");
-        for(String id : ids)  buffer.append("'"+id+"',");
-        buffer.deleteCharAt(buffer.length()-1);
-        buffer.append(")");
-        if(_logger.isDebugEnabled()) {
-            _logger.info("Query:"+buffer.toString());
-        }
-        return buffer.toString();
-    }
-    
-    @SuppressWarnings("unchecked")
-    public Task[] fetchAllAvailableTasks(UserRoles user) {
-        AuthIdentifierSet roles = user.getAssignedRoles();
-        String userid = user.getUserID();
-        String s = MessageFormat.format(Task.FIND_BY_USER_AND_ROLES, new Object[] { roles.toString(), "('"+userid+"')" });
-        if(_logger.isDebugEnabled()) _logger.debug("fetchAllAvailableTasks query:"+s);
-        Query q = em.createNativeQuery(s, String.class);
-        List<String> l = q.getResultList();
-        if(l.size()<1) return new Task[0];
-        Query q2 = em.createQuery(getJPQLQueryFromIds(l));
-        List<Task> tasks = (List<Task>) q2.getResultList();
-        if(_logger.isDebugEnabled()) {
-            for(Task t : tasks)
-            _logger.info("Found task:"+t.getID());
-        }
-        return (Task[]) new ArrayList(tasks).toArray(new Task[tasks.size()]);
+        TaskFetcher fetcher = new TaskFetcher(em);
+        Assert.assertEquals(Notification.class, fetcher.fetchTasksForUser("user1")[0].getClass());
+        Assert.assertEquals(Notification.class, fetcher.fetchTasksForRole("role1")[0].getClass());
+
+        testFecthForUserRoles("user1", new String[] { "role2" }, 1);
+        testFecthForUserRoles("user2", new String[] { "role1" }, 1);
+        testFecthForUserRoles("user2", new String[] { "role2" }, 0);
+        testFecthForUserRoles("user3", new String[] { "role3" }, 0);
     }
 
-    private void testQuery(String s) {
-        Query q = em.createNativeQuery(s,Task.class);
-        List<Task> l = q.getResultList();
-        Assert.assertEquals(l.size(), 1);
-        Assert.assertEquals(l.get(0).getClass(), Notification.class);
+    private void testFecthForUserRoles(String userId, String[] roles, int size) throws Exception {
+        Task[] tasks = new TaskFetcher(em).fetchAllAvailableTasks(new UserRoles(userId, roles));
+        Assert.assertEquals(size, tasks.length);
     }
 
     private Document getXmlSampleDocument() throws Exception {
-        return xml.parseXml(getClass().getResourceAsStream("/employees.xml"));
+        return xml.getXmlDocument("/employees.xml");
     }
 
 }

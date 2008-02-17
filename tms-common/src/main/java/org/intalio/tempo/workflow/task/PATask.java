@@ -41,76 +41,65 @@ import org.intalio.tempo.workflow.task.traits.ITaskWithState;
 import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 import org.w3c.dom.Document;
-
+/**
+ * Activity task
+ */
 @Entity
 public class PATask extends Task implements ITaskWithState, IProcessBoundTask, ITaskWithInput, ITaskWithOutput,
-    ICompleteReportingTask, ITaskWithAttachments, IChainableTask {
-    
+        ICompleteReportingTask, ITaskWithAttachments, IChainableTask {
+
     @Persistent
-    @Column(name="process_id")
+    @Column(name = "process_id")
     private String _processID;
 
     @Persistent
-    @Column(name="state")
+    @Column(name = "state")
     private TaskState _state = TaskState.READY;
 
     @Persistent
-    @Column(name="failure_code")
+    @Column(name = "failure_code")
     private String _failureCode = "";
-    
+
     @Persistent
-    @Column(name="failure_reason")
+    @Column(name = "failure_reason")
     private String _failureReason = "";
-    
+
     @Persistent
-    @Column(name="complete_soap_action")
+    @Column(name = "complete_soap_action")
     private String _completeSOAPAction;
 
-    @Persistent(cascade=CascadeType.ALL)
-    @Column(name="input_xml")
+    @Persistent(cascade = CascadeType.ALL)
+    @Column(name = "input_xml")
     @Lob
     private String _input;
-    
-    @Persistent(cascade=CascadeType.ALL)
-    @Column(name="output_xml")
+
+    @Persistent(cascade = CascadeType.ALL)
+    @Column(name = "output_xml")
     @Lob
     private String _output;
-    
-    @PersistentMap(keyCascade=CascadeType.ALL, elementCascade=CascadeType.ALL)
-    @MapKey(name="payloadURLAsString")
+
+    @PersistentMap(keyCascade = CascadeType.ALL, elementCascade = CascadeType.ALL)
+    @MapKey(name = "payloadURLAsString")
     private Map<String, Attachment> _attachments = new HashMap<String, Attachment>();
 
     @Persistent
-    @Column(name="is_chained_before")
+    @Column(name = "is_chained_before")
     private boolean _isChainedBefore = false;
 
     @Persistent
-    @Column(name="previous_task_id")
+    @Column(name = "previous_task_id")
     private String _previousTaskID = null;
 
     public PATask() {
         super();
     }
-    
-    public boolean equals(Object o) {
-        if(!(o instanceof PATask)) return false;
-        PATask t = (PATask)o;
-        boolean b = _input.equals(t._input);
-        b&= (_output!=null) ? _output.equals(t._output) : t._output == null;  
-        b &= _isChainedBefore == t._isChainedBefore;
-        b &= _processID.equals(t._processID);
-        b &= (_previousTaskID!=null) ? _previousTaskID.equals(t._previousTaskID) : t._previousTaskID == null;
-        b &= _failureReason.equals(t._failureReason);
-        b &= _failureCode.equals(t._failureCode);
-        b &= super.equals(t);
-        return b ;
-    }
-    
+
     public PATask(String id, URI formURL, String processID, String completeSOAPAction, Document input) {
         super(id, formURL);
         this.setProcessID(processID);
         this.setCompleteSOAPAction(completeSOAPAction);
-        if(input!=null) this.setInput(input);
+        if (input != null)
+            this.setInput(input);
     }
 
     public String getProcessID() {
@@ -195,7 +184,7 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
     }
 
     public Document getInput() {
-        if (! this.isInputAvailable()) {
+        if (!this.isInputAvailable()) {
             throw new IllegalStateException("Task input not available (e.g. was not retrieved).");
         }
         return XmlTooling.deserializeDocument(_input);
@@ -211,10 +200,14 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
     public Document getOutput() {
         return XmlTooling.deserializeDocument(_output);
     }
-    
-    public String getInputAsXmlString() { return _input;}
-    
-    public String getOutputAsXmlString() {return _output;}
+
+    public String getInputAsXmlString() {
+        return _input;
+    }
+
+    public String getOutputAsXmlString() {
+        return _output;
+    }
 
     public void setOutput(Document outputDocument) {
         if (outputDocument == null) {
@@ -240,7 +233,7 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
     }
 
     public void setChainedBefore(boolean isChainedBefore) {
-        if (! isChainedBefore) {
+        if (!isChainedBefore) {
             _previousTaskID = null;
         } else {
             if (_previousTaskID == null) {
@@ -260,13 +253,13 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
         }
         _previousTaskID = previousTaskID;
     }
-	
-	public void setInput(String input) {
-	    _input = input;
-	}
-	
-	public void setOutput(String output) {
+
+    public void setInput(String input) {
+        _input = input;
+    }
+
+    public void setOutput(String output) {
         _output = output;
     }
-	
+
 }

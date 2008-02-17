@@ -28,11 +28,17 @@ import org.apache.openjpa.persistence.Externalizer;
 import org.apache.openjpa.persistence.Factory;
 import org.apache.openjpa.persistence.Persistent;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
+import org.intalio.tempo.workflow.task.traits.InitTask;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
+
+/**
+ * Init task
+ *
+ */
 @Entity
 @NamedQueries( { @NamedQuery(name = PIPATask.FIND_BY_URL, query = "select m from PIPATask m where m._formURL=?1", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }) })
-public class PIPATask extends Task {
+public class PIPATask extends Task implements InitTask {
 
 	public static final String FIND_BY_URL = "find_by_url";
 
@@ -76,18 +82,6 @@ public class PIPATask extends Task {
 		_initOperationSOAPAction = initOperationSOAPAction;
 	}
 
-	public boolean equals(Object o) {
-		if (!(o instanceof PIPATask))
-			return false;
-		PIPATask t = (PIPATask) o;
-		boolean b = bothNullOrEqual(_initMessageNamespaceURI,_initMessageNamespaceURI);
-		b &= bothNullOrEqual(_initOperationSOAPAction,t._initOperationSOAPAction);
-		b &= bothNullOrEqual(_processEndpoint,t._processEndpoint);
-		b &= super.equals(t);
-		return b;
-	}
-	
-
 	public URI getInitMessageNamespaceURI() {
 		if (_initMessageNamespaceURI == null) {
 			throw new IllegalStateException(
@@ -126,23 +120,12 @@ public class PIPATask extends Task {
 		return _processEndpoint;
 	}
 
-//	public void setProcessEndpoint(URI processEndpoint) {
-//		if (processEndpoint == null) {
-//			throw new RequiredArgumentException("processEndpoint");
-//		}
-//		_processEndpoint = processEndpoint;
-//	}
-
-	public void setProcessEndpoint(String processEndpoint) {
+	public void setProcessEndpointFromString(String processEndpoint) {
 		_processEndpoint = convertToFieldURI(processEndpoint);
 	}
-
-	private static void fieldToString(StringBuilder builder, String caption,
-			String value) {
-		builder.append(caption);
-		builder.append(": '");
-		builder.append(value);
-		builder.append("'\n");
+	
+	public void setProcessEndpoint(URI processEndpoint) {
+	    _processEndpoint = processEndpoint;
 	}
 
 	/**
@@ -161,52 +144,24 @@ public class PIPATask extends Task {
 				&& (getRoleOwners() != null);
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		fieldToString(builder, "ID", getID());
-		try {
-			fieldToString(builder, "Description", getDescription());
-			fieldToString(builder, "Valid?", String.valueOf(this.isValid()));
-			fieldToString(builder, "Total user owners", String
-					.valueOf(getUserOwners().size()));
-			for (String userOwner : getUserOwners()) {
-				fieldToString(builder, "User owner", userOwner);
-			}
-			fieldToString(builder, "Total role owners", String
-					.valueOf(getRoleOwners().size()));
-			for (String roleOwner : getRoleOwners()) {
-				fieldToString(builder, "Role owner", roleOwner);
-			}
-			fieldToString(builder, "Form URL", this.getFormURL().toString());
-			fieldToString(builder, "Process endpoint", getProcessEndpoint()
-					.toString());
-			fieldToString(builder, "Form namespace", _formNamespace);
-			fieldToString(builder, "Init SOAPAction", _initOperationSOAPAction);
-		} catch (Exception e) {
-			// some fields are not valid.
-		}
-		return builder.toString();
-	}
-
 	/**
 	 * Returns the task form namespace.
 	 * 
 	 * @return The task form namespace.
 	 */
 	public String getFormNamespace() {
-		return _formNamespace;
-	}
+        return _formNamespace;
+    }
 
-	/**
-	 * Sets the task form namespace.
-	 * 
-	 * @param formNamespace
-	 *            The task form namespace.
-	 */
-	public void setFormNamespace(String formNamespace) {
-		_formNamespace = formNamespace;
-	}
+    /**
+     * Sets the task form namespace.
+     * 
+     * @param formNamespace
+     *            The task form namespace.
+     */
+    public void setFormNamespace(String formNamespace) {
+        _formNamespace = formNamespace;
+    }
 
 	/**
 	 * Normalizes an array of auth (user or role) identifiers, by replacing all

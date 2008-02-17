@@ -16,7 +16,6 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import org.apache.openjpa.persistence.Persistent;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
@@ -30,7 +29,6 @@ import org.intalio.tempo.workflow.util.RequiredArgumentException;
 @Table(name="attmeta")
 public class AttachmentMetadata {
 
-    @Transient
     public static final String DEFAULT_MIME_TYPE = "application/octet-stream";
 
     /**

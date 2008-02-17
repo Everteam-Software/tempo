@@ -49,7 +49,6 @@ import org.intalio.tempo.workflow.task.traits.ITaskWithOutput;
 import org.intalio.tempo.workflow.task.traits.ITaskWithState;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 import org.intalio.tempo.workflow.util.xml.InvalidInputFormatException;
-import org.intalio.tempo.workflow.util.xml.OMDOMConvertor;
 import org.intalio.tempo.workflow.util.xml.XmlBeanUnmarshaller;
 import org.intalio.tempo.workflow.util.xml.XsdDateTime;
 import org.slf4j.Logger;
@@ -138,12 +137,8 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
 
         String failureCode = taskMetadata.getFailureCode();
         String failureReason = taskMetadata.getFailureReason();
-        expectElementValue(taskMetadata, "userProcessEndpoint"); // TODO:
-        // these
-        // violate
-        // the WSDL!
-        // do
-        // something
+        expectElementValue(taskMetadata, "userProcessEndpoint"); 
+        // TODO: these violate the WSDL! do something
         expectElementValue(taskMetadata, "userProcessNamespaceURI");
         String completeSOAPAction = taskMetadata.getUserProcessCompleteSOAPAction();
         com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata.Attachments attachmentsElement = taskMetadata
@@ -362,7 +357,7 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
         if (it.hasNext()) {
             throw new InvalidInputFormatException("Task payload must consist of exactly one element.");
         } else {
-            result = OMDOMConvertor.convertOMToDOM(firstPayloadElement);
+            result = XmlTooling.convertOMToDOM(firstPayloadElement);
         }
         return result;
     }
@@ -443,6 +438,7 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
         XmlCursor cursor = xmlObject.newCursor();
         cursor.toFirstChild();
         XmlOptions opts = new XmlOptions();
+        opts.setSaveNoXmlDecl();
         opts.setLoadReplaceDocumentElement(cursor.getName());
         return cursor.xmlText(opts);     
     }

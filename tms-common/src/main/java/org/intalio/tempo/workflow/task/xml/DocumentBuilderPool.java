@@ -7,16 +7,24 @@ import org.apache.commons.pool.BasePoolableObjectFactory;
 
 public class DocumentBuilderPool extends BasePoolableObjectFactory {
 
-	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-	
-	@Override
-	public Object makeObject() throws Exception {
-		return factory.newDocumentBuilder();
-	}
+    DocumentBuilderFactory factory;
 
-	@Override
-	public void passivateObject(Object obj) throws Exception {
-		((DocumentBuilder)obj).reset();
-	}
+    public DocumentBuilderPool() {
+        factory = DocumentBuilderFactory.newInstance();
+        factory.setNamespaceAware(true);
+        factory.setIgnoringComments(true);
+        factory.setExpandEntityReferences(false);
+    }
+
+    @Override
+    public Object makeObject() throws Exception {
+        DocumentBuilder newDocumentBuilder = factory.newDocumentBuilder();
+        return newDocumentBuilder;
+    }
+
+    @Override
+    public void passivateObject(Object obj) throws Exception {
+        ((DocumentBuilder) obj).reset();
+    }
 
 }

@@ -41,7 +41,7 @@ public class WDSUtil {
 	public static PIPATask getSamplePipa() {
 		PIPATask task1 = new PIPATask("abc","http://localhost/"+rand.nextInt());
         task1.setFormNamespace("urn:ns");
-        task1.setProcessEndpoint("http://localhost/process"+rand.nextInt());
+        task1.setProcessEndpointFromString("http://localhost/process"+rand.nextInt());
         task1.setInitOperationSOAPAction("initProcess"+rand.nextInt());
 		return task1;
 	}

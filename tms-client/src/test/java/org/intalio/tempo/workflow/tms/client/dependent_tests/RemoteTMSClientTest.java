@@ -32,6 +32,7 @@ import org.intalio.tempo.workflow.task.xml.TaskMarshaller;
 import org.intalio.tempo.workflow.task.xml.TaskUnmarshaller;
 import org.intalio.tempo.workflow.tms.ITaskManagementService;
 import org.intalio.tempo.workflow.tms.client.RemoteTMSFactory;
+import org.intalio.tempo.workflow.util.TaskEquality;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -58,8 +59,7 @@ public class RemoteTMSClientTest extends TestCase {
         testRoundTrip(task1, input1);
 
         PATask task2 = (PATask) tms.getTask(task1ID);
-        Assert.assertTrue(task2.equalsTask(task1));
-        Assert.assertEquals(task1.getInput().toString(),task2.getInput().toString());
+        TaskEquality.areTasksEquals(task1, task2);
     }
     
     private void testRoundTrip(PATask task1, Document input) throws Exception {
@@ -84,7 +84,7 @@ public class RemoteTMSClientTest extends TestCase {
         tms.create(task1);
 
         PATask task2 = (PATask) tms.getTask(task1ID);
-        Assert.assertTrue(task1.equalsTask(task2));
+        TaskEquality.areTasksEquals(task1, task2);
 
         String task3ID = nextRandom();
         PATask task3 = new PATask(task3ID, new URI("http://localhost/3"), "processID", "urn:completeSOAPAction",

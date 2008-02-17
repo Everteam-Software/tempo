@@ -15,12 +15,13 @@
 package org.intalio.tempo.workflow.task;
 
 import java.net.URI;
+import java.util.Date;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
-import org.intalio.tempo.workflow.task.PIPATask;
+import org.intalio.tempo.workflow.util.TaskEquality;
 
 public class PIPATaskTest extends TestCase {
 
@@ -97,13 +98,27 @@ public class PIPATaskTest extends TestCase {
     public void testGetAndSetProcessEndpoint() throws Exception {
         PIPATask task = this.createPIPATask();
         URI processEndpoint = new URI("http://localhost/processEndpoint");
-        task.setProcessEndpoint(processEndpoint.toString());
+        task.setProcessEndpointFromString(processEndpoint.toString());
         Assert.assertEquals(processEndpoint, task.getProcessEndpoint());
         try {
-            task.setProcessEndpoint(null);
+            task.setProcessEndpointFromString(null);
             Assert.fail("RequiredArgumentException expected");
         } catch (RequiredArgumentException e) {
 
         }
+    }
+    
+    public void testPIPAEquality() throws Exception {
+            PIPATask task1 = createPIPATask();
+            TaskEquality.isEqual(task1, task1);
+            
+            PIPATask task2 = createPIPATask();
+            task2.setCreationDate(new Date());
+            try {
+                TaskEquality.isEqual(task1, task2);
+            } catch (Exception NotEqualException) {
+                
+            }
+                
     }
 }

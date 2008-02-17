@@ -34,13 +34,13 @@ import org.slf4j.LoggerFactory;
  */
 public class WDSService {
 
-    private static final String OXF_PREFIX = "oxf://";
-
+    // TODO: check this is not needed
+    // private static final String OXF_PREFIX = "oxf://";
+    // private String _wdsEndpoint;
+    //    
     private ItemDaoConnection _dao;
 
     private TMSConnectionInterface _tmsConnection;
-
-    private String _wdsEndpoint;
 
     /**
      * Package-accessible constructor. Used by {@link WDSServiceFactory}.
@@ -74,9 +74,10 @@ public class WDSService {
             throw new NullPointerException("participantToken");
     }
 
-    public void setWdsEndPoint(String wdsEndpoint) {
-        _wdsEndpoint = wdsEndpoint;
-    }
+    // TODO: check this is not needed
+    // public void setWdsEndPoint(String wdsEndpoint) {
+    // _wdsEndpoint = wdsEndpoint;
+    // }
 
     /**
      * Stores an item on WDS.
@@ -138,9 +139,7 @@ public class WDSService {
      */
     public void commit() {
         LoggerFactory.getLogger(this.getClass()).info("Commit");
-        // commit the item
         _dao.commit();
-        // commit the pipa
         _tmsConnection.commit();
     }
 

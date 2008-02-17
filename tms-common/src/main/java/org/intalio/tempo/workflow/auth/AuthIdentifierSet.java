@@ -56,7 +56,7 @@ public class AuthIdentifierSet extends HashSet<String> {
 
     @Override
     public boolean equals(Object rhs) {
-        return rhs instanceof AuthIdentifierSet && ((AuthIdentifierSet) rhs).backingSet.equals(backingSet);
+        throw new RuntimeException("Do not use me for testing");
     }
 
     public Collection<String> toCollection() {
