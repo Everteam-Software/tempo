@@ -13,7 +13,7 @@
 
 <tms:setOutputRequest
     xmlns:tms="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
-    <tms:taskId>8837</tms:taskId>
+    <tms:taskId>102_Create_Good_Test_Task</tms:taskId>
     <tms:data>
         <testDocument>Hi world</testDocument>
     </tms:data>
