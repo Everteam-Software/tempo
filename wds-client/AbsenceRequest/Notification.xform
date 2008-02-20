@@ -19,7 +19,7 @@
         xmlns:fe="http://www.intalio.com/workflow/forms/AbsenceRequest/Notification"
         xmlns:request="http://www.intalio.com/workflow/forms/AbsenceRequest/AbsenceRequest">
 	<xhtml:head>
-		<xforms:model schema="Notification.xform.xsd">
+		<xforms:model>
 			<xforms:instance id="taskinput">
 				<input xmlns="http://www.intalio.com/workflow/forms/AbsenceRequest/Notification"/>
 			</xforms:instance>
@@ -57,19 +57,19 @@
 				<xhtml:td style="background-color: #CCCCCC; border-width: 1px; border-collapse: collapse; border-style: solid; border-color: #333333">Type</xhtml:td>
 				<xhtml:td style="background-color: #CCCCCC; border-width: 1px; border-collapse: collapse; border-style: solid; border-color: #333333">Nb Hours</xhtml:td>
 			</xhtml:tr>
-			<xforms:repeat nodeset="instance('taskinput')/fe:details/fe:request" id="lineSet">
+			<xforms:repeat nodeset="instance('taskinput')/fe:details/*:request" id="lineSet">
 				<xhtml:tr>
 					<xhtml:td style="border-width: 1px; border-collapse: collapse; border-style: solid; border-color: #333333">
-						<xforms:output ref="fe:from"/>
+						<xforms:output ref="*:from"/>
 					</xhtml:td>
 					<xhtml:td style="border-width: 1px; border-collapse: collapse; border-style: solid; border-color: #333333">
-						<xforms:output ref="fe:to"/>
+						<xforms:output ref="*:to"/>
 					</xhtml:td>
 					<xhtml:td style="border-width: 1px; border-collapse: collapse; border-style: solid; border-color: #333333">
-						<xforms:output ref="fe:type"/>
+						<xforms:output ref="*:type"/>
 					</xhtml:td>
 					<xhtml:td style="border-width: 1px; border-collapse: collapse; border-style: solid; border-color: #333333">
-						<xforms:output ref="fe:hours"/>
+						<xforms:output ref="*:hours"/>
 					</xhtml:td>
 				</xhtml:tr>
 			</xforms:repeat>
