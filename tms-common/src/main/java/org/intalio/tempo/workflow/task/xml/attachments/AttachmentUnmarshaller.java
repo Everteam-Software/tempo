@@ -15,11 +15,7 @@
 
 package org.intalio.tempo.workflow.task.xml.attachments;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import org.apache.axiom.om.OMElement;
-
 import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.task.attachments.AttachmentMetadata;
 import org.intalio.tempo.workflow.task.xml.TaskXMLConstants;
@@ -68,13 +64,6 @@ public class AttachmentUnmarshaller extends OMUnmarshaller {
         }
 
         String payloadURLStr = this.requireElementValue(rootQueue, "payloadUrl");
-        URL payloadURL;
-        try {
-            payloadURL = new URL(payloadURLStr);
-        } catch (MalformedURLException e) {
-            throw new InvalidInputFormatException(e);
-        }
-
-        return new Attachment(metadata, payloadURL);
+        return new Attachment(metadata, payloadURLStr);
     }
 }

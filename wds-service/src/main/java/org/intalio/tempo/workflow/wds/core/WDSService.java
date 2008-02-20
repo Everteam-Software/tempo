@@ -116,9 +116,9 @@ public class WDSService {
         _dao.commit();
     }
 
-    public void deletePIPA(String participantToken, PIPATask pipaTask) {
-        validateRequest(pipaTask.getFormURL(), participantToken);
-        _tmsConnection.deletePipaTask(pipaTask.getFormURLAsString());
+    public void deletePIPA(String participantToken, String formUrl) {
+        validateRequest(formUrl, participantToken);
+        _tmsConnection.deletePipaTask(formUrl);
         // TODO: check this is really not needed
         // _tmsConnection.deletePipaTask(OXF_PREFIX + pipaTask.getFormURL());
         // _tmsConnection.deletePipaTask(_wdsEndpoint + pipaTask.getFormURL());

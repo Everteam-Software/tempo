@@ -26,7 +26,7 @@ import org.intalio.tempo.workflow.util.RequiredArgumentException;
  * @version $Revision: 1022 $
  */
 @Entity
-@Table(name="attmeta")
+@Table(name="TEMPO_ATTACHMENT_META")
 public class AttachmentMetadata {
 
     public static final String DEFAULT_MIME_TYPE = "application/octet-stream";

@@ -39,6 +39,8 @@ import org.w3c.dom.Document;
 
 public class RemoteTMSClientTest extends TestCase {
 
+    private static final String TMS_REMOTE_URL = "http://localhost:8080/axis2/services/TaskManagementServices";
+
     static final Logger _logger = LoggerFactory.getLogger(RemoteTMSClientTest.class);
     
     private static final SecureRandom SECURE_RANDOM = new SecureRandom();
@@ -50,7 +52,7 @@ public class RemoteTMSClientTest extends TestCase {
 
     public void testInput() throws Exception {
         ITaskManagementService tms = new RemoteTMSFactory(
-                "http://localhost:8080/axis2/services/TaskManagementServices", TOKEN).getService();
+                TMS_REMOTE_URL, TOKEN).getService();
         Document input1 = Utils.createXMLDocument("/absr.xml");
         String task1ID = nextRandom();
         PATask task1 = new PATask(task1ID, new URI("http://localhost/1"), "processID", "urn:completeSOAPAction", input1);
@@ -73,7 +75,7 @@ public class RemoteTMSClientTest extends TestCase {
 
     public void testBasicPATaskLifecycle() throws Exception {
         ITaskManagementService tms = new RemoteTMSFactory(
-                "http://localhost:8080/axis2/services/TaskManagementServices", TOKEN).getService();
+                TMS_REMOTE_URL, TOKEN).getService();
         Task[] tasks = tms.getTaskList();
         Assert.assertNotNull(tasks);
 
@@ -144,7 +146,7 @@ public class RemoteTMSClientTest extends TestCase {
 
     public void testAttachments() throws Exception {
         ITaskManagementService tms = new RemoteTMSFactory(
-                "http://localhost:8080/axis2/services/TaskManagementServices", TOKEN).getService();
+                TMS_REMOTE_URL, TOKEN).getService();
 
         String task1ID = nextRandom();
         PATask task1 = new PATask(task1ID, new URI("http://localhost/1"), "processID", "urn:completeSOAPAction",

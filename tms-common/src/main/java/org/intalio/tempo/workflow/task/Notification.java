@@ -19,6 +19,7 @@ import java.net.URI;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
+import javax.persistence.Table;
 
 import org.apache.openjpa.persistence.Persistent;
 import org.intalio.tempo.workflow.task.traits.ITaskWithInput;
@@ -30,6 +31,7 @@ import org.w3c.dom.Document;
  * Notification tasks
  */
 @Entity
+@Table(name = "TEMPO_NOTIFICATION")
 public class Notification extends Task implements ITaskWithState, ITaskWithInput {
    
     @Column(name="state")

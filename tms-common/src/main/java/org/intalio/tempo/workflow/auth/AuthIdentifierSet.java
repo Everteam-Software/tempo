@@ -22,6 +22,7 @@ import java.util.Iterator;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 import org.apache.openjpa.persistence.PersistentCollection;
 import org.apache.openjpa.persistence.jdbc.ContainerTable;
@@ -30,10 +31,11 @@ import org.apache.openjpa.persistence.jdbc.XJoinColumn;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
 @Entity
+@Table(name = "TEMPO_AUTH_SET")
 public class AuthIdentifierSet extends HashSet<String> {
 
 	@PersistentCollection(elementCascade = CascadeType.ALL)
-    @ContainerTable(name="BACKING_SET",joinColumns=@XJoinColumn(name="SET_ID"))
+    @ContainerTable(name="TEMPO_BACKING_SET",joinColumns=@XJoinColumn(name="SET_ID"))
     @ElementJoinColumn(name="AUTH_ID")
     private Collection<String> backingSet = new HashSet<String>();
 

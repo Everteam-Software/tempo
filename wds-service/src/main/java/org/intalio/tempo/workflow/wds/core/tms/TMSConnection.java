@@ -91,7 +91,7 @@ public class TMSConnection implements TMSConnectionInterface {
             _insertTaskStatement.setTimestamp(i++, new Timestamp(System.currentTimeMillis()));
             _insertTaskStatement.setString(i++, task.getFormURL().toString());
             _insertTaskStatement.setString(i++, task.getProcessEndpoint().toString());
-            _insertTaskStatement.setString(i++, task.getFormNamespace());
+            _insertTaskStatement.setString(i++, task.getInitMessageNamespaceURI().toString());
             _insertTaskStatement.setString(i++, task.getInitOperationSOAPAction());
             _insertTaskStatement.execute();
 

@@ -2,17 +2,12 @@ package org.intalio.tempo.workflow.task.xml;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.PipedReader;
-import java.io.PipedWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.dom.DOMSource;
@@ -21,6 +16,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
+import org.apache.axis2.util.XMLUtils;
 import org.apache.commons.pool.ObjectPool;
 import org.apache.commons.pool.impl.StackObjectPool;
 import org.apache.xmlbeans.XmlObject;
@@ -29,6 +25,7 @@ import org.intalio.tempo.workflow.task.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -38,7 +35,6 @@ import org.xml.sax.SAXException;
  * 
  */
 public class XmlTooling {
-    private static final XMLInputFactory XmlInputFactory = XMLInputFactory.newInstance();
     static final Logger log = LoggerFactory.getLogger(XmlTooling.class);
     static final XmlTooling xml = new XmlTooling();
     static final ObjectPool builderPool = new StackObjectPool(new DocumentBuilderPool());
@@ -109,7 +105,7 @@ public class XmlTooling {
      */
     public Writer serializeXMLToWriter(Document xml, Writer writer) {
         Source source = new DOMSource(xml);
-        Result result = new StreamResult(writer);
+        StreamResult result = new StreamResult(writer);
         Transformer transformer = null;
         try {
             transformer = (Transformer) transformerPool.borrowObject();
@@ -213,18 +209,9 @@ public class XmlTooling {
      * @see #convertOMToDOM(OMElement)
      * @see #serializeXMLToWriter(Document, Writer)
      */
-    public static OMElement convertDOMToOM(final Document document, OMFactory omFactory) {
+    public OMElement convertDOMToOM(final Document document, final OMFactory omFactory) {
         try {
-            final PipedReader pr = new PipedReader();
-            final PipedWriter pw = new PipedWriter(pr);
-            new Thread(new Runnable() {
-                public void run() {
-                    new XmlTooling().serializeXMLToWriter(document, pw);
-                }
-            }).start();
-            XMLStreamReader parser = XmlInputFactory.createXMLStreamReader(pr);
-            StAXOMBuilder builder = new StAXOMBuilder(omFactory, parser);
-            return builder.getDocumentElement();
+            return XMLUtils.toOM((Element) document.getFirstChild());
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
         }
@@ -233,23 +220,9 @@ public class XmlTooling {
     /**
      * Convert an OMElement to a <code>org.w3dc.Document</code>
      */
-    public static Document convertOMToDOM(final OMElement omElement) {
+    public Document convertOMToDOM(final OMElement omElement) {
         try {
-            // final PipedReader pr = new PipedReader();
-            // final PipedWriter pw = new PipedWriter(pr);
-            //
-            // new Thread(new Runnable() {
-            // public void run() {
-            // try {
-            // OMOutputFormat f = new OMOutputFormat();
-            // f.setAutoCloseWriter(false);
-            // omElement.serialize(pw, f);
-            // } catch (Exception e) {
-            // throw new RuntimeException(e.getMessage(), e);
-            // }
-            // }
-            // }).start();
-            return new XmlTooling().parseXml(new InputSource(new StringReader(omElement.toStringWithConsume())));
+            return parseXml(new InputSource(new StringReader(omElement.toString())));
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
         }

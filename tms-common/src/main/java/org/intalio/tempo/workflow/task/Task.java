@@ -38,7 +38,7 @@ import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
 @Entity
-@Table(name = "TASKS")
+@Table(name = "TEMPO_TASKS")
 @Inheritance(strategy = InheritanceType.JOINED)
 @NamedQueries( { @NamedQuery(name = Task.FIND_BY_ID, query = "select m from Task m where m._id=?1", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }) })
 public abstract class Task extends BaseRestrictedEntity {
@@ -75,24 +75,8 @@ public abstract class Task extends BaseRestrictedEntity {
 
     @Override
     public boolean equals(Object o) {
-        throw new RuntimeException("Do not use me for testing");
-        // if (!(o instanceof Task))
-        // return false;
-        // Task t = (Task) o;
-        // boolean b = _id.equalsIgnoreCase(t.getID());
-        // b &= _formURL.equals(t._formURL);
-        // b &= _description.equals(t._description);
-        // b &= _creationDate.equals(t._creationDate);
-        // b &= bothNullOrEqual(_actionACLs, t._actionACLs);
-        // b &= _userOwners.equals(t._userOwners);
-        // b &= _roleOwners.equals(_roleOwners);
-        // return b;
+        return (o instanceof Task) && ((Task) o).getID().equalsIgnoreCase(_id);
     }
-
-    //
-    // boolean bothNullOrEqual(Object o1, Object o2) {
-    // return o1 == null && o2 == null || o1.equals(o2);
-    // }
 
     public Task(String id, URI formURL) {
         this();

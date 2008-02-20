@@ -182,7 +182,7 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
 
         // TODO: the following is a loathsome if-cascade:
         if (taskClass.equals(PIPATask.class)) {
-            resultTask = new PIPATask(taskID, formURL, null, null, null);
+            resultTask = new PIPATask(taskID, formURL);
         } else if (taskClass.equals(PATask.class)) {
             resultTask = new PATask(taskID, formURL, processID, completeSOAPAction, null);
         } else if (taskClass.equals(Notification.class)) {
@@ -357,7 +357,7 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
         if (it.hasNext()) {
             throw new InvalidInputFormatException("Task payload must consist of exactly one element.");
         } else {
-            result = XmlTooling.convertOMToDOM(firstPayloadElement);
+            result = new XmlTooling().convertOMToDOM(firstPayloadElement);
         }
         return result;
     }

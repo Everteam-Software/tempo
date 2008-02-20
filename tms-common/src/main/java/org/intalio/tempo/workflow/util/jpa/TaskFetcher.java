@@ -26,10 +26,11 @@ import org.slf4j.LoggerFactory;
 public class TaskFetcher {
     private static final String FIND_BY_IDS = "select m from Task m where m._id IN ";
 
-    private static final String SUBQUERY_FIND_USER = "m.USERS IN (SELECT SET_ID FROM BACKING_SET WHERE AUTH_ID IN  {0})";
-    private static final String SUBQUERY_FIND_ROLE = "m.ROLES IN (SELECT SET_ID FROM BACKING_SET WHERE AUTH_ID IN  {0})";
-    private static final String FIND_BY_USERS = "SELECT tid FROM TASKS m WHERE " + SUBQUERY_FIND_USER;
-    private static final String FIND_BY_ROLES = "SELECT tid FROM TASKS m WHERE " + SUBQUERY_FIND_ROLE;
+    private static final String SUBQUERY_FIND_USER = "m.USERS IN (SELECT SET_ID FROM TEMPO_BACKING_SET WHERE AUTH_ID IN  {0})";
+    private static final String SUBQUERY_FIND_ROLE = "m.ROLES IN (SELECT SET_ID FROM TEMPO_BACKING_SET WHERE AUTH_ID IN  {0})";
+    private static final String SUBQUERY_SELECT_FROM_TASKS = "SELECT tid FROM TEMPO_TASKS m WHERE " ; 
+    private static final String FIND_BY_USERS = SUBQUERY_SELECT_FROM_TASKS+ SUBQUERY_FIND_USER;
+    private static final String FIND_BY_ROLES = SUBQUERY_SELECT_FROM_TASKS + SUBQUERY_FIND_ROLE;
 
     final static Logger _logger = LoggerFactory.getLogger(TaskFetcher.class);
     private EntityManager _entityManager;
@@ -60,7 +61,7 @@ public class TaskFetcher {
      * Core method. retrieve all the tasks for the given <code>UserRoles</code>
      */
     public Task[] fetchAllAvailableTasks(UserRoles user) {
-        String query = "SELECT tid from TASKS m WHERE ("
+        String query = SUBQUERY_SELECT_FROM_TASKS+"("
                 + MessageFormat.format(SUBQUERY_FIND_ROLE, user.getAssignedRoles().toString()) + ") OR ("
                 + MessageFormat.format(SUBQUERY_FIND_USER, "('"+user.getUserID() + "')")+")";
         return fetchTasks(query, null);

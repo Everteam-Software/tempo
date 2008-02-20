@@ -27,6 +27,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.MapKey;
+import javax.persistence.Table;
 
 import org.apache.openjpa.persistence.Persistent;
 import org.apache.openjpa.persistence.PersistentMap;
@@ -45,6 +46,7 @@ import org.w3c.dom.Document;
  * Activity task
  */
 @Entity
+@Table(name = "TEMPO_PA")
 public class PATask extends Task implements ITaskWithState, IProcessBoundTask, ITaskWithInput, ITaskWithOutput,
         ICompleteReportingTask, ITaskWithAttachments, IChainableTask {
 

@@ -25,21 +25,24 @@ import org.w3c.dom.Document;
 
 public class OMDOMConvertorTest extends TestCase {
 
+    static final XmlTooling xmlTooling = new XmlTooling();
+    
     public static void main(String[] args) {
         junit.textui.TestRunner.run(OMDOMConvertorTest.class);
     }
 
     public void testConversion() throws Exception {
-        Document doc = new XmlTooling().getXmlDocument("/createTaskRequest2.xml");
+        
+        Document doc = xmlTooling.getXmlDocument("/createTaskRequest2.xml");
         OMFactory factory = OMAbstractFactory.getOMFactory();
         Document doc2 = rountTripTooling(doc, factory);
-        OMElement el = XmlTooling.convertDOMToOM(doc, factory);
-        OMElement el2 = XmlTooling.convertDOMToOM(doc2, factory);
+        OMElement el = xmlTooling.convertDOMToOM(doc, factory);
+        OMElement el2 = xmlTooling.convertDOMToOM(doc2, factory);
         assertEquals(el.toString(), el2.toString());
     }
 
     private Document rountTripTooling(Document doc, OMFactory factory) {
-        OMElement el = XmlTooling.convertDOMToOM(doc, factory);
-        return XmlTooling.convertOMToDOM(el);
+        OMElement el = xmlTooling.convertDOMToOM(doc, factory);
+        return xmlTooling.convertOMToDOM(el);
     }
 }

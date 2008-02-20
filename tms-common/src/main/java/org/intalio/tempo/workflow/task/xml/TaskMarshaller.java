@@ -15,6 +15,7 @@
 
 package org.intalio.tempo.workflow.task.xml;
 
+import java.net.URL;
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -120,7 +121,8 @@ public class TaskMarshaller extends XmlBeanMarshaller {
                 attachmentCreateDate.setTime(metadata.getCreationDate());
                 xmlAttachmentMetadata.setCreationDate(attachmentCreateDate);
 
-                xmlAttachment.setPayloadUrl(attachment.getPayloadURL().toString());
+                final URL payloadURL = attachment.getPayloadURL();
+                xmlAttachment.setPayloadUrl(payloadURL.toString());
             }
         }
 

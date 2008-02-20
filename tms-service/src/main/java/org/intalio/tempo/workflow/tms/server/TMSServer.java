@@ -302,12 +302,14 @@ public class TMSServer implements ITMSServer {
 		OMElement omParticipantToken = omFactory.createOMElement(
 				"participantToken", omNamespace, omInitProcessRequest);
 		omParticipantToken.setText(participantToken);
+		
 		OMElement omTaskOutput = omFactory.createOMElement("taskOutput",
 				omNamespace, omInitProcessRequest);
-		// OMElement omOutput = omFactory.createOMElement("output", omNamespace,
-		// omTaskOutput);
+		 OMElement omOutput = omFactory.createOMElement("output", omNamespace, omTaskOutput);
+		 
 		// omOutput.addChild(OMDOMConvertor.convertDOMToOM(input, omFactory));
-		omTaskOutput.addChild(XmlTooling.convertDOMToOM(input, omFactory));
+		 XmlTooling xmlTooling = new XmlTooling();
+		 omOutput.addChild(xmlTooling.convertDOMToOM(input, omFactory));
 
 		Options options = new Options();
 		options.setTo(new EndpointReference(task.getProcessEndpoint()
@@ -315,14 +317,17 @@ public class TMSServer implements ITMSServer {
 		options.setAction(task.getInitOperationSOAPAction());
 
 		try {
+	          if (_logger.isDebugEnabled()) {
+	              _logger.debug(task + " was used to start the process " + task.getProcessEndpoint());
+	              _logger.debug("Request to Ode:\n"+omInitProcessRequest.toString());
+	          }
+
 			ServiceClient client = new ServiceClient();
 			client.setOptions(options);
 
 			OMElement response = client.sendReceive(omInitProcessRequest);
-			if (_logger.isDebugEnabled())
-                _logger.debug(task + " was used to start the process " + task.getProcessEndpoint());
 
-			return XmlTooling.convertOMToDOM(response);
+			return xmlTooling.convertOMToDOM(response);
 		} catch (AxisFault f) {
             throw new RuntimeException(f);
 		}
@@ -342,11 +347,11 @@ public class TMSServer implements ITMSServer {
 			available = (task instanceof PIPATask) && (task.isAvailableTo(credentials));
 			if (available) {
 				PIPATask pipaTask = (PIPATask) task;
-				document = this.sendInitMessage(pipaTask, participantToken, input);
+				document = sendInitMessage(pipaTask, participantToken, input);
 				if (_logger.isDebugEnabled())
                     _logger.debug(credentials.getUserID() + " has initialized process " + pipaTask.getProcessEndpoint()
                             + " with Workflow PIPA Task " + task);
-			}
+			} 
         } catch (Exception e) {
             _logger.error("Error to start the process with PIPA task " + taskID, e);
 		} finally {

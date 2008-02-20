@@ -194,7 +194,7 @@ define "tempo" do
   desc "Task Management Services Common Library"
   define "tms-common" do
     compile.with projects("security", "security-ws-client", "tms-axis"), 
-                 APACHE_JPA, AXIOM, DOM4J, JAXEN, LOG4J, SLF4J, SPRING, STAX_API, XERCES, XMLBEANS
+                 APACHE_JPA, AXIS2, AXIOM, DOM4J, JAXEN, LOG4J, SLF4J, SPRING, STAX_API, XERCES, XMLBEANS
     compile { open_jpa_enhance }
     package(:jar)
     test.with WOODSTOX, LOG4J, XMLUNIT
@@ -286,7 +286,7 @@ define "tempo" do
 
   desc "Workflow Deployment Service"
   define "wds-service" do
-    libs = [ projects("web-nutsNbolts", "dao-nutsNbolts", "tms-common"), APACHE_JPA, COMMONS, LOG4J, SERVLET_API, SLF4J, SPRING, XERCES ]
+    libs = [ projects("web-nutsNbolts", "dao-nutsNbolts", "tms-common", "tms-axis"), AXIOM, APACHE_JPA, COMMONS, LOG4J, SERVLET_API, SLF4J, SPRING, XERCES ]
     test_libs = libs + [EASY_B, INSTINCT]
     
     compile.with test_libs

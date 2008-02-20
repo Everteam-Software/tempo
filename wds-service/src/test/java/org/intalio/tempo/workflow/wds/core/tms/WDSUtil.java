@@ -12,6 +12,7 @@
 
 package org.intalio.tempo.workflow.wds.core.tms;
 
+import java.net.URI;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Properties;
@@ -40,7 +41,7 @@ public class WDSUtil {
 	
 	public static PIPATask getSamplePipa() {
 		PIPATask task1 = new PIPATask("abc","http://localhost/"+rand.nextInt());
-        task1.setFormNamespace("urn:ns");
+		task1.setInitMessageNamespaceURI(URI.create("urn:ns"));
         task1.setProcessEndpointFromString("http://localhost/process"+rand.nextInt());
         task1.setInitOperationSOAPAction("initProcess"+rand.nextInt());
 		return task1;

@@ -13,14 +13,14 @@ package org.intalio.tempo.workflow.wds.core;
 
 import java.util.Arrays;
 
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.QueryHint;
 import javax.persistence.Table;
+
+import org.apache.openjpa.persistence.Persistent;
 
 /**
  * A WDS item is a byte stream which is stored on WDS at a specific URI.
@@ -29,7 +29,7 @@ import javax.persistence.Table;
  * @version $Revision: 1176 $
  */
 @Entity
-@Table(name = "items")
+@Table(name = "TEMPO_ITEM")
 @NamedQueries({
     @NamedQuery(
             name=Item.FIND_BY_URI, 
@@ -45,22 +45,17 @@ public class Item {
 	public static final String FIND_BY_URI = "find_by_uri";
     public static final String COUNT_FOR_URI = "count_for_uri";
 
-    @Basic
+    @Persistent
     @Column(name="uri")
     private String _uri;
-    @Basic
+    
+    @Persistent
     @Column(name="content_type")
     private String _contentType;
-    @Basic
+    
+    @Persistent
     @Column(name="payload")
-    @Lob
     private byte[] _payload;
-    
-    public Item() {
-        
-    }
-    
-    
     
     /**
      * Create an Item

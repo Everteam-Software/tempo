@@ -11,8 +11,5 @@ public interface InitTask {
     
     String getInitOperationSOAPAction();
     void setInitOperationSOAPAction(String initOperationSOAPAction);
-    
-     String getFormNamespace();
-     void setFormNamespace(String formNamespace);
 
 }

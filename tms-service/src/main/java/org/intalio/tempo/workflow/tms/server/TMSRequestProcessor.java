@@ -201,7 +201,6 @@ public class TMSRequestProcessor extends OMUnmarshaller {
         try {
         	
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
-            _logger.debug(rootQueue.toString());
             String taskID = requireElementValue(rootQueue, "taskId");
             OMElement omOutputContainer = requireElement(rootQueue, "data");
 
@@ -312,8 +311,7 @@ public class TMSRequestProcessor extends OMUnmarshaller {
                 public OMElement marshalResponse(Document userProcessResponse) {
                     OMElement response = createElement("initProcessResponse");
                     OMElement userProcessResponseWrapper = createElement(response, "userProcessResponse");
-                    userProcessResponseWrapper.addChild(XmlTooling.convertDOMToOM(userProcessResponse, this
-                            .getOMFactory()));
+                    userProcessResponseWrapper.addChild(new XmlTooling().convertDOMToOM(userProcessResponse, this.getOMFactory()));
                     return response;
                 }
             }.marshalResponse(userProcessResponse);

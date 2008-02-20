@@ -8,7 +8,7 @@ import javax.persistence.Table;
 import org.apache.openjpa.persistence.Persistent;
 
 @Entity
-@Table(name="acls")
+@Table(name="TEMPO_ACL")
 public class ACL {
     
     @Persistent

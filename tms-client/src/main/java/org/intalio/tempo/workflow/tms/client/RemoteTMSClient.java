@@ -173,7 +173,7 @@ class RemoteTMSClient implements ITaskManagementService {
                 OMElement request = createElement(complete ? "setOutputAndCompleteRequest" : "setOutputRequest");
                 createElement(request, "taskId", taskID);
                 OMElement data = createElement(request, "data");
-                OMElement omOutput = XmlTooling.convertDOMToOM(output, getOMFactory());
+                OMElement omOutput = new XmlTooling().convertDOMToOM(output, getOMFactory());
                 data.addChild(omOutput);
                 createElement(request, "participantToken", _participantToken);
 
@@ -290,12 +290,14 @@ class RemoteTMSClient implements ITaskManagementService {
             throw new RequiredArgumentException("input");
         }
 
+
+        final XmlTooling xmlTooling = new XmlTooling();
         OMElement request = new TMSMarshaller() {
             public OMElement marshalRequest() {
                 OMElement request = createElement("initRequest");
                 createElement(request, "taskId", taskID);
                 OMElement data = createElement(request, "input");
-                OMElement omOutput = XmlTooling.convertDOMToOM(input, getOMFactory());
+                OMElement omOutput = xmlTooling.convertDOMToOM(input, getOMFactory());
                 data.addChild(omOutput);
                 createElement(request, "participantToken", _participantToken);
 
@@ -307,7 +309,7 @@ class RemoteTMSClient implements ITaskManagementService {
         OMElement userProcessResponseWrapper = response.getFirstElement();
         OMElement userProcessResponse = userProcessResponseWrapper.getFirstElement();
 
-        return XmlTooling.convertOMToDOM(userProcessResponse);
+        return xmlTooling.convertOMToDOM(userProcessResponse);
     }
 
     public Attachment[] getAttachments(final String taskID) throws AuthException, UnavailableTaskException {
