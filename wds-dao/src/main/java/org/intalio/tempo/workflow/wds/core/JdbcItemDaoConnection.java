@@ -36,7 +36,7 @@ public class JdbcItemDaoConnection implements ItemDaoConnection {
     /**
      * Instance constructor.
      */
-    JdbcItemDaoConnection(Connection jdbcConnection) {
+    public JdbcItemDaoConnection(Connection jdbcConnection) {
         initConnection(jdbcConnection);
         prepareStatements();
     }

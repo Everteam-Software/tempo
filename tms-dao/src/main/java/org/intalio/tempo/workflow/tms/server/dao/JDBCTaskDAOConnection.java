@@ -46,7 +46,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
-class JDBCTaskDAOConnection implements ITaskDAOConnection {
+public class JDBCTaskDAOConnection implements ITaskDAOConnection {
 	
     private XmlTooling xmltooling = new XmlTooling();
 	
@@ -68,7 +68,7 @@ class JDBCTaskDAOConnection implements ITaskDAOConnection {
 
     private Connection _con;
 
-    JDBCTaskDAOConnection(Connection con) throws SQLException {
+    public JDBCTaskDAOConnection(Connection con) throws SQLException {
         if (con == null) throw new IllegalArgumentException("Connection is null");
         _con = con;
         _con.setAutoCommit(false);

@@ -215,9 +215,15 @@ define "tempo" do
     package(:jar)
   end
   
+  desc "Task Management DAO"
+  define "tms-dao" do 
+    compile.with projects("tms-common", "dao-nutsNbolts"), APACHE_JPA, SLF4J
+    package(:jar)                 
+  end
+  
   desc "Task Management Service"
   define "tms-service" do
-    compile.with projects("security", "security-ws-client", "tms-axis", "tms-common", "tms-client", "web-nutsNbolts", "dao-nutsNbolts"),
+    compile.with projects("security", "security-ws-client", "tms-axis", "tms-common", "tms-dao", "tms-client", "web-nutsNbolts", "dao-nutsNbolts"),
                  APACHE_JPA, AXIOM, AXIS2, COMMONS, JAXEN, SLF4J, SPRING, STAX_API, XMLBEANS
 
     test.with CASTOR, LOG4J, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES
@@ -284,9 +290,16 @@ define "tempo" do
     package(:jar) 
   end
 
+  desc "Workflow Deployment DAO"
+  define "wds-dao" do 
+    compile.with projects("dao-nutsNbolts", "tms-common"), APACHE_JPA, SLF4J
+    package(:jar)                 
+  end
+
+
   desc "Workflow Deployment Service"
   define "wds-service" do
-    libs = [ projects("web-nutsNbolts", "dao-nutsNbolts", "tms-common", "tms-axis"), AXIOM, APACHE_JPA, COMMONS, LOG4J, SERVLET_API, SLF4J, SPRING, XERCES ]
+    libs = [ projects("web-nutsNbolts", "dao-nutsNbolts", "wds-dao", "tms-common", "tms-axis"), AXIOM, APACHE_JPA, COMMONS, LOG4J, SERVLET_API, SLF4J, SPRING, XERCES ]
     test_libs = libs + [EASY_B, INSTINCT]
     
     compile.with test_libs
@@ -304,6 +317,11 @@ define "tempo" do
   define "dao-nutsNbolts" do
     compile.with project("web-nutsNbolts"), APACHE_JPA, SLF4J
     package :jar
+  end
+  
+  define "dao-tools" do
+    compile.with projects("tms-common", "dao-nutsNbolts","tms-dao", "wds-dao"), APACHE_JPA, SLF4J
+    package :war
   end
   
   desc "XForms Manager"

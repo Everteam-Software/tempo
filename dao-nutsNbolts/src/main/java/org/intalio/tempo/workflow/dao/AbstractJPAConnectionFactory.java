@@ -9,6 +9,7 @@
  */
 package org.intalio.tempo.workflow.dao;
 
+import java.sql.Connection;
 import java.util.Map;
 
 import javax.naming.InitialContext;
@@ -17,6 +18,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.sql.DataSource;
 
+import org.apache.openjpa.persistence.OpenJPAEntityManager;
+import org.apache.openjpa.persistence.OpenJPAPersistence;
 import org.intalio.tempo.web.SysPropApplicationContextLoader;
 import org.intalio.tempo.workflow.SpringInit;
 import org.slf4j.Logger;
@@ -46,6 +49,13 @@ public abstract class AbstractJPAConnectionFactory {
             // prevent from going anywhere else without this configured properly
             throw new RuntimeException(e);
         }
+    }
+    
+    public Connection getUnderlyingJDBCConnectionFromEntityManager() {
+        OpenJPAEntityManager kem = OpenJPAPersistence.cast(factory.createEntityManager());
+        Connection conn = (Connection) kem.getConnection();
+        //conn.close();
+        return conn;
     }
 
     private void initDatasourceIfNeeded(Map<String,Object> properties) {

@@ -20,13 +20,13 @@ import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
 
 public interface ITaskDAOConnection {
-    void commit();
-    void close();
+    public void commit();
+    public void close();
 
-    Task[] fetchAllAvailableTasks(UserRoles user);
-    Task fetchTaskIfExists(String taskID);
+    public Task[] fetchAllAvailableTasks(UserRoles user);
+    public Task fetchTaskIfExists(String taskID);
 
-    void updateTask(Task task);
-    void createTask(Task task) throws TaskIDConflictException;
-    boolean deleteTask(int internalTaskId, String taskID);
+    public void updateTask(Task task);
+    public void createTask(Task task) throws TaskIDConflictException;
+    public boolean deleteTask(int internalTaskId, String taskID);
 }
