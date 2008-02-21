@@ -20,9 +20,9 @@ import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
 import org.intalio.tempo.workflow.tms.server.dao.JDBCTaskDAOConnection;
 import org.intalio.tempo.workflow.tms.server.dao.JPATaskDaoConnectionFactory;
-import org.intalio.tempo.workflow.wds.Item;
-import org.intalio.tempo.workflow.wds.JPAItemDaoConnection;
-import org.intalio.tempo.workflow.wds.JPAItemDaoConnectionFactory;
+import org.intalio.tempo.workflow.wds.core.Item;
+import org.intalio.tempo.workflow.wds.core.JPAItemDaoConnection;
+import org.intalio.tempo.workflow.wds.core.JPAItemDaoConnectionFactory;
 import org.intalio.tempo.workflow.wds.core.JdbcItemDaoConnection;
 
 public class JDBC2JPAConverter {
