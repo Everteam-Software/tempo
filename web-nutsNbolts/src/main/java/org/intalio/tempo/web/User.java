@@ -7,13 +7,20 @@
  */
 package org.intalio.tempo.web;
 
+import java.io.Serializable;
 
-public class User {
+/**
+ * Used as an authentication container.
+ * 
+ */
+public class User implements Serializable {
+
+    private static final long serialVersionUID = 6896286857101107227L;
 
     private String _name;
-    
+
     private String[] _roles;
-    
+
     private String _token;
 
     public User(String name, String[] roles, String token) {
@@ -25,11 +32,11 @@ public class User {
     public String getName() {
         return _name;
     }
-    
+
     public String[] getRoles() {
         return copyArray(_roles);
     }
-    
+
     public String getToken() {
         return _token;
     }
@@ -51,7 +58,7 @@ public class User {
         }
         return false;
     }
-    
+
     private static String[] copyArray(String[] a) {
         if (a == null) {
             return new String[0];
