@@ -27,6 +27,11 @@ module Buildr
               ant.include :name=>"**.groovy"
             end
           end
+          
+          if ant.project.getProperty('easyb.failed') 
+            raise "Easyb tests have failed "
+          end
+          
         end
       end
 
