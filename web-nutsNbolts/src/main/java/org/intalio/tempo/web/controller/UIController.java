@@ -28,6 +28,8 @@ import org.intalio.tempo.web.User;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.ServletRequestDataBinder;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractFormController;
 
@@ -198,5 +200,23 @@ public abstract class UIController extends AbstractFormController {
     
     public static String[] convertRoles(Collection<String> roles) {
         return roles.toArray(new String[ roles.size() ]);
+    }
+
+    public ApplicationState getApplicationState(HttpServletRequest request) {
+        ApplicationState state = ApplicationState.getCurrentInstance(request);
+        if (state == null) {
+            WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+            state = (ApplicationState) context.getBean("applicationState");
+            if (state == null) {
+                throw new IllegalStateException("Missing 'applicationState' object in Spring context");
+            }
+            try {
+                state = state.getClass().newInstance();
+            } catch (Exception e) {
+                LOG.error("Unable to clone application state", e);
+            }
+            ApplicationState.setCurrentInstance(request, state);
+        }
+        return state;
     }
 }

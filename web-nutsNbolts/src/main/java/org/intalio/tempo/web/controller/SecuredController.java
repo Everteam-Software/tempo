@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2005-2006 Intalio inc.
+ * Copyright (c) 2005-2008 Intalio inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -28,7 +28,6 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.servlet.ModelAndView;
 
 public class SecuredController extends UIController {
-
     private static final Logger LOG = LogManager.getLogger(SecuredController.class);
 
     @Override
@@ -36,25 +35,23 @@ public class SecuredController extends UIController {
             throws Exception {
         ModelAndView mav = Constants.REDIRECTION_TO_LOGIN;
         ApplicationState state = getApplicationState(request);
-        if (state != null) {
-            User currentUser = state.getCurrentUser();
-            if (currentUser != null) {
-                if (_defaultAction == null) {
-                    mav = securedShowForm(request, response, errors);
-                } else {
-                    // Do default action
-                    Action<Object> action = instantiateDefaultAction();
-                    action.setRequest(request);
-                    action.setResponse(response);
-                    action.setCommand(getCommand(request));
-                    action.setBindErrors(errors);
-                    mav = action.doExecution();
-                }
-                
+        User currentUser = state.getCurrentUser();
+        if (currentUser != null) {
+            if (_defaultAction == null) {
+                mav = securedShowForm(request, response, errors);
+            } else {
+                // Do default action
+                Action<Object> action = instantiateDefaultAction();
+                action.setRequest(request);
+                action.setResponse(response);
+                action.setCommand(getCommand(request));
+                action.setBindErrors(errors);
+                mav = action.doExecution();
             }
-            fillAuthorization(request, mav);
-            state.setPreviousAction(request.getRequestURL().toString());
+            
         }
+        fillAuthorization(request, mav);
+        state.setPreviousAction(request.getRequestURL().toString());
         return mav;
     }
 
@@ -85,18 +82,4 @@ public class SecuredController extends UIController {
         return state.getCurrentUser().getName();
     }
 
-    private ApplicationState getApplicationState(HttpServletRequest request) {
-        ApplicationState state = ApplicationState.getCurrentInstance(request);
-        if (state == null) {
-            WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
-            state = (ApplicationState) context.getBean("applicationState");
-            try {
-                state = state.getClass().newInstance();
-            } catch (Exception e) {
-                LOG.error("Unable to clone application state", e);
-            }
-            ApplicationState.setCurrentInstance(request, state);
-        }
-        return state;
-    }
 }

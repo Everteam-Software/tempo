@@ -33,6 +33,11 @@ public abstract class ApplicationState implements Serializable {
     private String _previousAction;
 
     /**
+     * A secure random number issued after login to avoid re-authentication for every request
+     */
+    private String _secureRandom;
+
+    /**
      * Returns user which is currently logged in.
      * 
      * @return User currently logged in.
@@ -62,6 +67,17 @@ public abstract class ApplicationState implements Serializable {
         return _previousAction;
     }
 
+    
+    public String getSecureRandom() {
+        return _secureRandom;
+    }
+    
+    
+    public void setSecureRandom(String random) {
+        _secureRandom = random;
+    }
+    
+    
     public static <T extends ApplicationState> T getCurrentInstance(HttpServletRequest request) {
         HttpSession session = request.getSession();
         T state = (T) session.getAttribute(PARAMETER_NAME);

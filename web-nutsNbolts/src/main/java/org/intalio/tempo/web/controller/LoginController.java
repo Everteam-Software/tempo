@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.security.SecureRandom;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -41,9 +42,13 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 public class LoginController extends UIController {
-    private static final String AUTO_LOGIN_ID = "autoLogin";
+    public static final String AUTO_LOGIN_ID = "autoLogin";
 
-    private static final String SINGLE_LOGIN_ID = "singleLogin";
+    public static final String SINGLE_LOGIN_ID = "singleLogin";
+
+    public static final String REDIRECT_AFTER_LOGIN = "redirectAfterLogin";
+
+    public static final String SECURE_RANDOM = "SECURE_RANDOM";
 
     private static final Logger LOG = LogManager.getLogger(LoginController.class);
 
@@ -51,24 +56,103 @@ public class LoginController extends UIController {
 
     private List<String> _grantedRoles = new ArrayList<String>();
 
-    private ModelAndView _redirectSucessfulLogin;
+    private String _defaultRedirectAfterLogin;
 
+    private String _loginPageURL;
+
+    private static SecureRandom _random;
+
+    static {
+        try {
+            _random = SecureRandom.getInstance("SHA1PRNG");
+        } catch (Exception e) {
+            LOG.error("Cannot initialize secure random number generator", e);
+            throw new RuntimeException(e);
+        }
+    }
+    
     public LoginController(TokenService tokenService, String redirectSuccessfulLogin) {
         super();
         _tokenService = tokenService;
-        _redirectSucessfulLogin = new ModelAndView(new RedirectView(redirectSuccessfulLogin));
+        _defaultRedirectAfterLogin = redirectSuccessfulLogin;
     }
 
-    protected void clearAutoLogin(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        clearCookie(AUTO_LOGIN_ID, request, response);
+    public String getLoginPageURL() {
+        return _loginPageURL;
+    } 
+     
+    public void setLoginPageURL(String url) {
+        _loginPageURL = url;
+    }
+    
+    public static ModelAndView redirect(String url) {
+        return new ModelAndView(new RedirectView(url));
     }
 
-    protected void clearSingleLogin(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        clearCookie(SINGLE_LOGIN_ID, request, response);
+    public ModelAndView redirectAfterLogin(HttpServletRequest request, HttpServletResponse response) {
+        String url = _defaultRedirectAfterLogin;
+        Cookie cookie = getCookie(request, REDIRECT_AFTER_LOGIN);
+        if (cookie != null && cookie.getValue() != null) {
+            url = cookie.getValue();
+            clearCookie(REDIRECT_AFTER_LOGIN, response);
+        }
+        return redirect(url);
+    }
+    
+    public static void clearAutoLogin(HttpServletResponse response) {
+        clearCookie(AUTO_LOGIN_ID, response);
     }
 
-    protected void clearCookie(String cookieName, HttpServletRequest request, HttpServletResponse response)
-            throws Exception {
+    public static void clearSingleLogin(HttpServletResponse response) {
+        clearCookie(SINGLE_LOGIN_ID, response);
+    }
+
+    public static void clearSecureRandom(HttpServletResponse response) {
+        clearCookie(SECURE_RANDOM, response);
+    }
+
+    public static String getSecureRandomCookie(HttpServletRequest request) {
+        Cookie cookie = getCookie(request, SECURE_RANDOM);
+        if (cookie == null) return null;
+        return cookie.getValue();
+    }
+
+    public static String getSecureRandomSession(HttpServletRequest request) {
+        return (String) request.getSession().getAttribute(SECURE_RANDOM);
+    }
+
+    public static void setSecureRandomSession(HttpServletRequest request, String secureRandom) {
+        request.getSession().setAttribute(SECURE_RANDOM, secureRandom);
+    }
+
+    public static void generateSecureRandom(HttpServletRequest request, HttpServletResponse response) {
+        String secureRandom = generateSecureRandom();
+        request.getSession().setAttribute(SECURE_RANDOM, secureRandom);
+        Cookie cookie = new Cookie(SECURE_RANDOM, secureRandom);
+        cookie.setMaxAge(60*60*24*365); // one year
+        cookie.setPath("/");
+        response.addCookie(cookie);
+    }
+    
+    public static String generateSecureRandom() {
+        StringBuffer str = new StringBuffer();
+        byte[] buf = new byte[40];
+        _random.nextBytes(buf);
+        return bytesToHex(buf);
+    }
+    
+    public static String bytesToHex(byte[] bytes) {
+        final char[] hex = "0123456789ABCDEF".toCharArray();
+        StringBuffer buf = new StringBuffer();
+        for (int i=0; i<bytes.length; i++) {
+            int n = bytes[i]+128;
+            buf.append(hex[n/16]);
+            buf.append(hex[n%16]);
+        }
+        return buf.toString();
+    }
+
+    public static void clearCookie(String cookieName, HttpServletResponse response) {
         Cookie newCookie = new Cookie(cookieName, null);
         newCookie.setMaxAge(0);
         newCookie.setPath("/");
@@ -84,11 +168,11 @@ public class LoginController extends UIController {
         return null;
     }
 
-    private static String extractUser(Property[] props) {
+    public static String extractUser(Property[] props) {
         return extractProperty(AuthenticationConstants.PROPERTY_USER, props);
     }
 
-    private static String[] extractRoles(Property[] props) {
+    public static String[] extractRoles(Property[] props) {
         String rolesCommaList = extractProperty(AuthenticationConstants.PROPERTY_ROLES, props);
         if (rolesCommaList != null) {
             String[] roleStrings = StringArrayUtils.parseCommaDelimited(rolesCommaList);
@@ -96,49 +180,79 @@ public class LoginController extends UIController {
         }
         return null;
     }
+    
+    public User getCurrentUser(HttpServletRequest request) {
+        try {
+            User user = checkSingleLogin(request);
+            if (user == null) {
+                user = checkAutoLogin(request);
+            }
+            return user;
+        } catch (Exception except) {
+            return null;
+        }
+    }
 
-    protected User checkAutoLogin(HttpServletRequest request) throws Exception {
+    protected User checkAutoLogin(HttpServletRequest request) {
         return checkToken(request, AUTO_LOGIN_ID);
     }
 
-    protected User checkSingleLogin(HttpServletRequest request) throws Exception {
+    protected User checkSingleLogin(HttpServletRequest request) {
         return checkToken(request, SINGLE_LOGIN_ID);
     }
 
-    protected User checkToken(HttpServletRequest request, String cookieName) throws Exception {
+    protected static Cookie getCookie(HttpServletRequest request, String cookieName) {
+        Cookie cookie = null;
         if (request.getCookies() != null) {
-            for (Cookie cookie : request.getCookies()) {
-                if (cookieName.equals(cookie.getName())) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Got cookie: name=" + cookie.getName() + " value=" + cookie.getValue());
-                    }
-                    try {
-                        String token = cookie.getValue();
-                        if (token == null && token.trim().length() == 0) {
-                            return null;
-                        }
-                        Property[] props = _tokenService.getTokenProperties(token);
-                        String name = extractUser(props);
-                        String[] roles = extractRoles(props);
-                        return new User(name, roles, token);
-                    } catch (Exception ex) {
-                        LOG.error(ex.getMessage(), ex);
-                        return null;
-                    }
+            for (Cookie c : request.getCookies()) {
+                if (cookieName.equals(c.getName())) {
+                    cookie = c;
                 }
             }
         }
-        return null;
+        return cookie;
+    }
+    
+    protected User checkToken(HttpServletRequest request, String cookieName) {
+        Cookie cookie = getCookie(request, cookieName);
+        User user = null;
+        if (cookie != null) {
+            String token = cookie.getValue();
+            if (token != null && token.trim().length() > 0) {
+                try {
+                    Property[] props = _tokenService.getTokenProperties(token);
+                    String name = extractUser(props);
+                    String[] roles = extractRoles(props);
+                    user = new User(name, roles, token);
+                } catch (Exception ex) {
+                    LOG.error("Exception while verifying security token: "+ex);
+                }
+            }
+        }
+        return user;
     }
 
-    protected void setAutoLoginCookie(HttpServletResponse response, String token) throws Exception {
+    public void setRedirectAfterLoginCookie(HttpServletResponse response) {
+        setRedirectAfterLoginCookie(response, _defaultRedirectAfterLogin);
+    }
+    
+    
+    public static void setRedirectAfterLoginCookie(HttpServletResponse response, String url) {
+        Cookie cookie = new Cookie(REDIRECT_AFTER_LOGIN, url);
+        cookie.setMaxAge(60*60); // one hour
+        cookie.setPath("/");
+        response.addCookie(cookie);
+    }
+
+
+    public static void setAutoLoginCookie(HttpServletResponse response, String token) {
         Cookie cookie = new Cookie(AUTO_LOGIN_ID, token);
         cookie.setMaxAge(60*60*24*365); // one year
         cookie.setPath("/");
         response.addCookie(cookie);
     }
 
-    protected void setSingleLoginCookie(HttpServletResponse response, String token) throws Exception {
+    public static void setSingleLoginCookie(HttpServletResponse response, String token) {
         Cookie cookie = new Cookie(SINGLE_LOGIN_ID, token);
         cookie.setMaxAge(-1); // not persistent, kept until web browser exits
         cookie.setPath("/");
@@ -208,7 +322,7 @@ public class LoginController extends UIController {
         // Checking whether logged in
         ApplicationState state = getApplicationState(request);
         if (state.getCurrentUser() != null) {
-            return _redirectSucessfulLogin;
+            return redirectAfterLogin(request, response);
         }
         if (!errors.hasErrors()) {
             User user = authenticate(login.getUsername(), login.getPassword(), errors);
@@ -223,7 +337,7 @@ public class LoginController extends UIController {
                 setSingleLoginCookie(response, user.getToken());
                 String prevAction = state.getPreviousAction();
                 if (prevAction == null) {
-                    return _redirectSucessfulLogin;
+                    return redirectAfterLogin(request, response);
                 } else {
                     state.setPreviousAction(null);
                     return new ModelAndView(new RedirectView(prevAction));
@@ -236,21 +350,6 @@ public class LoginController extends UIController {
         return new ModelAndView(Constants.LOGIN_VIEW, model);
     }
 
-    private ApplicationState getApplicationState(HttpServletRequest request) {
-        ApplicationState state = ApplicationState.getCurrentInstance(request);
-        if (state == null) {
-            WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
-            state = (ApplicationState) context.getBean("applicationState");
-            try {
-                state = state.getClass().newInstance();
-            } catch (Exception e) {
-                LOG.error("Unable to clone application state", e);
-            }
-            ApplicationState.setCurrentInstance(request, state);
-        }
-        return state;
-    }
-
     // @note(alex) Called by reflection - see UIController
     public ModelAndView logOut(HttpServletRequest request, HttpServletResponse response, LoginCommand login,
             BindException errors) throws Exception {
@@ -259,8 +358,9 @@ public class LoginController extends UIController {
             if (state.getCurrentUser() != null) LOG.debug("Logout: user=" + state.getCurrentUser().getName());
             state.setCurrentUser(null);
             state.setPreviousAction(null);
-            clearAutoLogin(request, response);
-            clearSingleLogin(request, response);
+            clearAutoLogin(response);
+            clearSingleLogin(response);
+            clearSecureRandom(response);
         }
         Map model = new HashMap();
         model.put("login", new LoginCommand());
@@ -301,7 +401,7 @@ public class LoginController extends UIController {
             String prevAction = state.getPreviousAction();
             if (prevAction == null) {
                 LOG.debug("Redirect after succesful login");
-                return _redirectSucessfulLogin;
+                return redirectAfterLogin(request, response);
             } else {
                 LOG.debug("Redirect after succesful login: " + prevAction);
                 state.setPreviousAction(null);
