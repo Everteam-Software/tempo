@@ -28,8 +28,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.intalio.tempo.web.SysPropApplicationContextLoader;
+import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.task.PIPATask;
-import org.intalio.tempo.workflow.wds.core.AuthenticationException;
+import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.intalio.tempo.workflow.wds.core.Item;
 import org.intalio.tempo.workflow.wds.core.UnavailableItemException;
 import org.intalio.tempo.workflow.wds.core.WDSService;
@@ -146,12 +147,16 @@ public class WDSServlet extends HttpServlet {
             }
             if (logger.isDebugEnabled())
                 logger.debug("Item '" + resourceUri + "' deleted OK.");
-        } catch (AuthenticationException e) {
+        } catch (AuthException e) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             logger.warn("Authentication error", e);
         } catch (UnavailableItemException e) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             logger.warn("Item not found: '" + resourceUri + "'", e);
+
+        } catch (UnavailableTaskException e) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            logger.warn("PIPA not found: '" + resourceUri + "'", e);
         } finally {
             if (service != null)
                 service.close();
@@ -184,9 +189,9 @@ public class WDSServlet extends HttpServlet {
 
                 if (logger.isDebugEnabled())
                     logger.debug("Item retrieved & sent OK.");
-            } catch (AuthenticationException e) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-                logger.warn("Authentication error", e);
+//            } catch (AuthException e) {
+//                response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+//                logger.warn("Authentication error", e);
             } catch (UnavailableItemException e) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
                 logger.warn("Item not found: '" + resourceUri + "'", e);
@@ -196,9 +201,6 @@ public class WDSServlet extends HttpServlet {
             }
         }
     }
-
-
-   
 
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -231,7 +233,7 @@ public class WDSServlet extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().write(e.getMessage());
             logger.warn("Invalid request message format", e);
-        } catch (AuthenticationException e) {
+        } catch (AuthException e) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write(e.getMessage());
             logger.warn("Authentication error", e);
@@ -239,6 +241,10 @@ public class WDSServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_CONFLICT);
             response.getWriter().write(e.getMessage());
             logger.warn("URI already taken", e);
+        } catch (UnavailableTaskException e) {
+            response.sendError(HttpServletResponse.SC_CONFLICT);
+            response.getWriter().write(e.getMessage());
+            logger.warn("Task not available", e);
         } finally {
             if (service != null) {
                 service.close();
@@ -260,7 +266,7 @@ public class WDSServlet extends HttpServlet {
      */
     private void processItem(HttpServletRequest request, String resourceUri, String contentType,
             String participantToken, InputStream payloadStream, WDSService service)
-            throws InvalidRequestFormatException, IOException, AuthenticationException, UnavailableItemException {
+            throws InvalidRequestFormatException, IOException, UnavailableItemException {
         Item item;
         if ("True".equals(request.getHeader("Is-XForm"))) {
             try {
@@ -286,9 +292,10 @@ public class WDSServlet extends HttpServlet {
 
     /**
      * Generates a new pipa using the parameters found in the http headers.
+     * @throws UnavailableTaskException 
      */
     private void processCreatePipa(HttpServletRequest request, String participantToken, WDSService service)
-            throws InvalidRequestFormatException, AuthenticationException {
+            throws InvalidRequestFormatException, AuthException, UnavailableTaskException {
         PIPATask pipaTask = new PIPALoader().parsePipa(request);
         if (logger.isDebugEnabled())
             logger.debug("Storing pipa task:\n" + pipaTask);
@@ -298,8 +305,8 @@ public class WDSServlet extends HttpServlet {
     }
 
     private void processZipfile(String resourceUri, String participantToken, InputStream payloadStream,
-            WDSService service) throws IOException, InvalidRequestFormatException, AuthenticationException,
-            UnavailableItemException {
+            WDSService service) throws IOException, InvalidRequestFormatException, AuthException,
+            UnavailableItemException, UnavailableTaskException {
         if (!resourceUri.endsWith("/")) {
             resourceUri += "/";
         }
@@ -322,7 +329,7 @@ public class WDSServlet extends HttpServlet {
     }
 
     private void processZipEntryItem(String resourceUri, String participantToken, WDSService service,
-            ZipInputStream zstream, ZipEntry entry) throws IOException, AuthenticationException,
+            ZipInputStream zstream, ZipEntry entry) throws IOException, AuthException,
             UnavailableItemException {
         Item item = new Item(entry.getName(), "application/xml", copyToByteArray(zstream));
         service.storeItem(item, participantToken);
@@ -335,8 +342,8 @@ public class WDSServlet extends HttpServlet {
         if (logger.isDebugEnabled())
             logger.debug("Processing xform '" + resourceUri + "'");
         try {
-            Item item = XFormsProcessor.processXForm(entry.getName(), new ByteArrayInputStream(
-                    copyToByteArray(zstream)));
+            Item item = XFormsProcessor.processXForm(entry.getName(),
+                    new ByteArrayInputStream(copyToByteArray(zstream)));
             service.storeItem(item, participantToken);
             if (logger.isDebugEnabled())
                 logger.debug("Storing the item: '" + resourceUri + entry.getName());
@@ -348,7 +355,7 @@ public class WDSServlet extends HttpServlet {
 
     private void processZipEntryPipa(String resourceUri, String participantToken, WDSService service,
             ZipInputStream zstream, ZipEntry entry) throws IOException, InvalidRequestFormatException,
-            AuthenticationException {
+            AuthException, UnavailableTaskException {
         if (logger.isDebugEnabled()) {
             logger.debug("Pipa descriptor " + resourceUri + entry.getName());
         }

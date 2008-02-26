@@ -47,6 +47,7 @@ import org.intalio.tempo.workflow.task.traits.ITaskWithAttachments;
 import org.intalio.tempo.workflow.task.traits.ITaskWithInput;
 import org.intalio.tempo.workflow.task.traits.ITaskWithOutput;
 import org.intalio.tempo.workflow.task.traits.ITaskWithState;
+import org.intalio.tempo.workflow.task.traits.InitTask;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 import org.intalio.tempo.workflow.util.xml.InvalidInputFormatException;
 import org.intalio.tempo.workflow.util.xml.XmlBeanUnmarshaller;
@@ -220,6 +221,15 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
                 forbidParameter(failureCode, "failure code");
                 forbidParameter(failureReason, "failure reason");
             }
+        }
+        if (InitTask.class.isAssignableFrom(taskClass)) {
+            InitTask task = (InitTask) resultTask;
+            String uri1 =  taskMetadata.getInitMessageNamespaceURI();
+            if(uri1!=null) task.setInitMessageNamespaceURI(URI.create(uri1));
+            String soap = taskMetadata.getInitOperationSOAPAction();
+            if (soap!=null) task.setInitOperationSOAPAction(soap);
+            String uri2 = taskMetadata.getProcessEndpoint();
+            if (uri2!=null) task.setProcessEndpoint(URI.create(uri2));
         }
         if (IProcessBoundTask.class.isAssignableFrom(taskClass)) {
             ((IProcessBoundTask) resultTask).setProcessID(processID);
@@ -458,4 +468,5 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
         }
         payloadCursor.dispose();
     }
+
 }

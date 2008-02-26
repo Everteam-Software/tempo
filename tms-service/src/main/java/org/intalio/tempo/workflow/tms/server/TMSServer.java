@@ -30,6 +30,7 @@ import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.IAuthProvider;
 import org.intalio.tempo.workflow.auth.UserRoles;
+import org.intalio.tempo.workflow.task.InvalidTaskException;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.TaskState;
@@ -500,4 +501,34 @@ public class TMSServer implements ITMSServer {
             throw new UnavailableTaskException("Error to ressign Workflow Task " + task);
         }
 	}
+
+    public void deletePipa(String formUrl, String participantToken) throws AuthException, UnavailableTaskException {
+        try {
+            // UserRoles credentials = _authProvider.authenticate(participantToken);
+            ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+            dao.deletePipaTask(formUrl);
+            dao.commit();    
+        } catch (Exception e) {
+            throw new UnavailableTaskException(e);
+        }
+    }
+
+    public PIPATask getPipa(String formUrl, String participantToken) throws AuthException, UnavailableTaskException {
+        try {
+            ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+            return dao.fetchPipa(formUrl);
+        } catch (Exception e) {
+            throw new UnavailableTaskException(e);
+        }
+    }
+
+    public void storePipa(PIPATask task, String participantToken) throws AuthException, InvalidTaskException {
+        try {
+            ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+            dao.storePipaTask(task);
+            dao.commit();
+        } catch (Exception e) {
+            throw new InvalidTaskException(e);
+        }
+    }
 }

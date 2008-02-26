@@ -15,11 +15,7 @@
 
 package org.intalio.tempo.workflow.task.xml;
 
-import java.io.InputStream;
 import java.net.URI;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import junit.framework.TestCase;
 
@@ -46,20 +42,14 @@ public class TaskMarshallingRoundtripTest extends TestCase {
         testRoundTrip(task1);
     }
 
-    // /**
-    // * //TODO: this does nothing as we are not marshalling unmarshalling
-    // PIPATask
-    // * <ul>
-    // * <li>Retrieve the taskId</li>
-    // * <li>checking input and output</li>
-    // * </ul>
-    // * @see TMSRequestProcessor#
-    // */
-    // public void testPIPAMarshallingRoundtrip() throws Exception {
-    // Document doc = new XmlTooling().getXmlDocument("/fullPIPATask1.xml");
-    // PIPATask task1 = new PIPATask("taskID", new URI("http://localhost/URL"),
-    // new URI("http://localhost/URL1"), new URI("urn:ns"), "urn:action");
-    // }
+     /**
+         *Test round trip marshalling of PIPA task
+         */
+    public void testPIPAMarshallingRoundtrip() throws Exception {
+        PIPATask task1 = new PIPATask("taskID", new URI("http://localhost/URL"), new URI("http://localhost/URL1"),
+                new URI("urn:ns"), "urn:action");
+        testRoundTrip(task1);
+    }
 
     /**
      * Test round trip marshaling of notification task

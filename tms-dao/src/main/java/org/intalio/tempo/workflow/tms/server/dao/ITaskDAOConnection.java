@@ -16,6 +16,7 @@
 package org.intalio.tempo.workflow.tms.server.dao;
 
 import org.intalio.tempo.workflow.auth.UserRoles;
+import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
 
@@ -29,4 +30,8 @@ public interface ITaskDAOConnection {
     public void updateTask(Task task);
     public void createTask(Task task) throws TaskIDConflictException;
     public boolean deleteTask(int internalTaskId, String taskID);
+    
+    public void storePipaTask(PIPATask task);
+    public void deletePipaTask(String formUrl);
+    public PIPATask fetchPipa(String formUrl);
 }

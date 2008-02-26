@@ -17,10 +17,10 @@
 			<ref bean="wds.itemConnectionFactory"/>
 		</property>
 
-		<property name="tmsFactory">
-			<ref bean="wds.tmsConnectionFactory"/>
+		<property name="tmsEndpoint">
+			<value>http://localhost:8080/axis2/services/TaskManagementServices</value>
 		</property>
-
+		
 		<property name="wdsEndpoint">
 			<value>http://localhost:8080/wds/</value>
 		</property>
@@ -52,16 +52,4 @@
 		</constructor-arg>
 	</bean>
 
-	<bean id="wds.tmsConnectionFactory" class="org.intalio.tempo.workflow.wds.core.tms.TMSJPAConnectionFactory">
-		<constructor-arg>
-			<map>
-				<entry><key><value>openjpa.jdbc.SynchronizeMappings</value></key><value>buildSchema</value></entry>
-				<entry><key><value>openjpa.ConnectionFactoryMode</value></key><value>managed</value></entry>
-				<entry><key><value>openjpa.ConnectionDriverName</value></key><value>org.apache.derby.jdbc.EmbeddedXADataSource</value></entry>				
-				<entry><key><value>tempo.datasourceURL</value></key><value>java:comp/env/jdbc/BPMSDB</value></entry>
-				<!-- <entry><key><value>openjpa.Log</value></key><value>DefaultLevel=Trace</value></entry> -->
-				<entry><key><value>openjpa.FlushBeforeQueries</value></key><value>true</value></entry>
-			</map>
-		</constructor-arg>
-	</bean>
 </beans>

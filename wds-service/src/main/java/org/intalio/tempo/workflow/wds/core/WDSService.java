@@ -11,8 +11,11 @@
  */
 package org.intalio.tempo.workflow.wds.core;
 
+import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.task.PIPATask;
-import org.intalio.tempo.workflow.wds.core.tms.TMSConnectionInterface;
+import org.intalio.tempo.workflow.tms.ITaskManagementService;
+import org.intalio.tempo.workflow.tms.UnavailableTaskException;
+import org.intalio.tempo.workflow.tms.client.RemoteTMSFactory;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -34,24 +37,19 @@ import org.slf4j.LoggerFactory;
  */
 public class WDSService {
 
-    // TODO: check this is not needed
-    // private static final String OXF_PREFIX = "oxf://";
-    // private String _wdsEndpoint;
-    //    
     private ItemDaoConnection _dao;
-
-    private TMSConnectionInterface _tmsConnection;
+    private String _tmsEndpoint;
 
     /**
      * Package-accessible constructor. Used by {@link WDSServiceFactory}.
      */
-    WDSService(ItemDaoConnection dao, TMSConnectionInterface tmsConnection) {
+    WDSService(ItemDaoConnection dao, String tmsEndpoint) {
         if (dao == null)
             throw new NullPointerException("dao");
-        if (tmsConnection == null)
-            throw new NullPointerException("tmsConnection");
+        if (tmsEndpoint == null)
+            throw new NullPointerException("tmsEndpoint");
         _dao = dao;
-        _tmsConnection = tmsConnection;
+        _tmsEndpoint = tmsEndpoint;
     }
 
     /**
@@ -73,16 +71,11 @@ public class WDSService {
         if (participantToken == null)
             throw new NullPointerException("participantToken");
     }
-
-    // TODO: check this is not needed
-    // public void setWdsEndPoint(String wdsEndpoint) {
-    // _wdsEndpoint = wdsEndpoint;
-    // }
-
+    
     /**
      * Stores an item on WDS.
      */
-    public void storeItem(Item item, String participantToken) throws AuthenticationException, UnavailableItemException {
+    public void storeItem(Item item, String participantToken) throws UnavailableItemException {
         validateRequest(item, participantToken);
         String uri = item.getURI();
 
@@ -94,42 +87,38 @@ public class WDSService {
 
     /**
      * Creates a PIPA task in TMS.
+     * @throws AuthException 
+     * @throws UnavailableTaskException 
      */
-    public void storePipaTask(PIPATask pipaTask, String participantToken) throws AuthenticationException {
+    public void storePipaTask(PIPATask pipaTask, String participantToken) throws UnavailableTaskException, AuthException {
         if (pipaTask == null)
             throw new NullPointerException("pipaTask");
         if (participantToken == null)
             throw new NullPointerException("participantToken");
-
-        _tmsConnection.deletePipaTask(pipaTask.getFormURLAsString());
-        _tmsConnection.storePipaTask(pipaTask);
-        _tmsConnection.commit();
+        ITaskManagementService _tmsConnection = new RemoteTMSFactory(_tmsEndpoint, participantToken).getService();
+        _tmsConnection.deletePipa(pipaTask.getFormURLAsString());
+        _tmsConnection.storePipa(pipaTask);
     }
 
     /**
      * Deletes an item from WDS.
      */
-    public void deleteItem(String uri, String participantToken) throws AuthenticationException,
-            UnavailableItemException {
+    public void deleteItem(String uri, String participantToken)  throws UnavailableItemException {
         validateRequest(uri, participantToken);
         _dao.deleteItem(uri);
         _dao.commit();
     }
 
-    public void deletePIPA(String participantToken, String formUrl) {
+    public void deletePIPA(String participantToken, String formUrl) throws UnavailableTaskException, AuthException {
         validateRequest(formUrl, participantToken);
-        _tmsConnection.deletePipaTask(formUrl);
-        // TODO: check this is really not needed
-        // _tmsConnection.deletePipaTask(OXF_PREFIX + pipaTask.getFormURL());
-        // _tmsConnection.deletePipaTask(_wdsEndpoint + pipaTask.getFormURL());
-        _tmsConnection.commit();
+        ITaskManagementService _tmsConnection = new RemoteTMSFactory(_tmsEndpoint, participantToken).getService();
+        _tmsConnection.deletePipa(formUrl);
     }
 
     /**
      * Retrieves an item from WDS.
      */
-    public Item retrieveItem(String uri, String participantToken) throws AuthenticationException,
-            UnavailableItemException {
+    public Item retrieveItem(String uri, String participantToken) throws UnavailableItemException {
         validateRequest(uri, participantToken);
         return _dao.retrieveItem(uri);
     }
@@ -140,7 +129,6 @@ public class WDSService {
     public void commit() {
         LoggerFactory.getLogger(this.getClass()).info("Commit");
         _dao.commit();
-        _tmsConnection.commit();
     }
 
     /**
@@ -151,7 +139,6 @@ public class WDSService {
      */
     public void close() {
         _dao.close();
-        _tmsConnection.close();
     }
 
 }

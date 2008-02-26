@@ -24,8 +24,6 @@
     <persistence-unit
         name="org.intalio.tempo.wds"
         transaction-type="RESOURCE_LOCAL">
-        <!-- <jta-data-source>java:comp/env/jdbc/BPMSDB</jta-data-source> -->
-        <!-- <mapping-file>orm.xml</mapping-file> -->
         <class>org.intalio.tempo.workflow.wds.core.Item</class>
         <properties />
     </persistence-unit>

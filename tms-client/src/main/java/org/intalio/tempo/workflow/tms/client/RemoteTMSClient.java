@@ -29,7 +29,9 @@ import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
+import org.intalio.tempo.workflow.task.InvalidTaskException;
 import org.intalio.tempo.workflow.task.PATask;
+import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.TaskState;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
@@ -62,11 +64,9 @@ class RemoteTMSClient implements ITaskManagementService {
     private OMFactory _omFactory;
 
     private class TMSMarshaller extends OMMarshaller {
-
         protected TMSMarshaller() {
             super(_omFactory, TaskXMLConstants.TASK_OM_NAMESPACE);
         }
-
     }
 
     public RemoteTMSClient(String endpoint, String participantToken) {
@@ -329,7 +329,7 @@ class RemoteTMSClient implements ITaskManagementService {
 
         try {
             OMElement response = sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "getAttachments");
-            Iterator i = response.getChildElements();
+            Iterator<?> i = response.getChildElements();
             ArrayList<Attachment> attachments = new ArrayList<Attachment>();
             while (i.hasNext()) {
                 OMElement attachmentElement = (OMElement) i.next();
@@ -442,6 +442,54 @@ class RemoteTMSClient implements ITaskManagementService {
     	}.marshalRequest();
 
     	sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "reassign");
+    }
+    
+    public void storePipa(final PIPATask task) throws AuthException, InvalidTaskException {
+        OMElement request = new TMSMarshaller() {
+            public OMElement marshalRequest() {
+                OMElement request = createElement("storePipaRequest");
+                OMElement pipa = createElement(request, TaskXMLConstants.TASK_LOCAL_NAME);
+                new TaskMarshaller().marshalFullTask(task, pipa, null);
+                createElement(request, "participantToken", _participantToken);
+                return request;
+            }
+        }.marshalRequest();
+        sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "storePipa");
+    }
+    
+    public PIPATask getPipa(final String formUrl) throws AuthException, UnavailableTaskException {
+        OMElement request = new TMSMarshaller() {
+            public OMElement marshalRequest() {
+                OMElement request = createElement("getPipaRequest");
+                createElement(request, "pipaurl", formUrl);
+                createElement(request, "participantToken", _participantToken);
+
+                return request;
+            }
+        }.marshalRequest();
+        
+        _log.info(request.toString());
+
+        try {
+            OMElement response = sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "getPipaTask");
+            OMElement taskElement = response.getFirstElement();
+            PIPATask task = (PIPATask)new TaskUnmarshaller().unmarshalFullTask(taskElement);
+            return task;
+        } catch (InvalidInputFormatException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    public void deletePipa(final String formUrl) throws AuthException, UnavailableTaskException {
+        OMElement request = new TMSMarshaller() {
+            public OMElement marshalRequest() {
+                OMElement request = createElement("deletePipaRequest");
+                createElement(request, "pipaurl", formUrl);
+                createElement(request, "participantToken", _participantToken);
+                return request;
+            }
+        }.marshalRequest();
+        sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "deletePipa");
     }
 
 }

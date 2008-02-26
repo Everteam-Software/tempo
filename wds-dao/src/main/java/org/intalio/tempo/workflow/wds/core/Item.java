@@ -45,6 +45,10 @@ public class Item {
 	public static final String FIND_BY_URI = "find_by_uri";
     public static final String COUNT_FOR_URI = "count_for_uri";
 
+    public Item() {
+        
+    }
+    
     @Persistent
     @Column(name="uri")
     private String _uri;

@@ -10,9 +10,11 @@
 package org.intalio.tempo.workflow.tms.server.dao;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.dao.AbstractJPAConnection;
+import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
 import org.intalio.tempo.workflow.util.jpa.TaskFetcher;
@@ -56,6 +58,29 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
         if (_logger.isDebugEnabled()) _logger.debug("update task:" + task.toString());
         checkTransactionIsActive();
         entityManager.persist(task);
+    }
+    
+    public void deletePipaTask(String formUrl) {
+        _logger.info("delete task:" + formUrl);
+        try {
+            PIPATask toDelete = _fetcher.fetchPipaFromUrl(formUrl);
+            checkTransactionIsActive();
+            entityManager.remove(toDelete);
+        } catch (NoResultException nre) {
+            // this is okay, it means we did not find anything to delete, and
+            // its already deleted
+        }
+    }
+
+    public void storePipaTask(PIPATask task) {
+        _logger.info("store pipa task:" + task.getFormURL());
+        checkTransactionIsActive();
+        entityManager.persist(task);
+    }
+
+    public PIPATask fetchPipa(String formUrl) {
+        PIPATask pipa = _fetcher.fetchPipaFromUrl(formUrl);
+        return pipa;
     }
 
 }

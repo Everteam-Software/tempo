@@ -141,10 +141,8 @@
 			<xsd:element name="deleteRequest">
 				<xsd:complexType>
 					<xsd:sequence>
-						<xsd:element name="taskId" type="xsd:string" maxOccurs="unbounded" minOccurs="1">
-						</xsd:element>
-						<xsd:element name="participantToken" type="xsd:string">
-						</xsd:element>
+						<xsd:element name="taskId" type="xsd:string" maxOccurs="unbounded" minOccurs="1"/>
+						<xsd:element name="participantToken" type="xsd:string"/>
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
@@ -152,11 +150,47 @@
 				<xsd:complexType>
 					<xsd:sequence>
 						<xsd:element name="task" type="tns:task"/>
-						<xsd:element name="participantToken" type="xsd:string">
-						</xsd:element>
+						<xsd:element name="participantToken" type="xsd:string"/>
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
+			
+			<xsd:element name="storePipaRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="task" type="tns:task"/>
+						<xsd:element name="participantToken" type="xsd:string"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="deletePipaRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="pipaurl" type="xsd:string"/>
+						<xsd:element name="participantToken" type="xsd:string"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="getPipaRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="pipaurl" type="xsd:string"/>
+						<xsd:element name="participantToken" type="xsd:string"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="getPipaResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="task" type="tns:task"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			
 			<xsd:element name="initRequest">
 				<xsd:complexType>
 					<xsd:sequence>
@@ -240,6 +274,9 @@
 					<xsd:element name="failureCode" type="xsd:string" maxOccurs="1" minOccurs="0"/>
 					<xsd:element name="failureReason" type="xsd:string" maxOccurs="1" minOccurs="0"/>
 					<xsd:element name="userProcessCompleteSOAPAction" type="xsd:string" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="processEndpoint" type="xsd:anyURI" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="initMessageNamespaceURI" type="xsd:anyURI" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="initOperationSOAPAction" type="xsd:string" maxOccurs="1" minOccurs="0"/>
 					<xsd:element name="attachments">
 					 <xsd:complexType>
 					   <xsd:sequence>
@@ -312,6 +349,20 @@
 	<wsdl:message name="createRequest">
 		<wsdl:part name="createRequest" element="tns:createRequest"/>
 	</wsdl:message>
+	
+	<wsdl:message name="storePipaRequest">
+		<wsdl:part name="storePipaRequest" element="tns:storePipaRequest"/>
+	</wsdl:message>
+	<wsdl:message name="deletePipaRequest">
+		<wsdl:part name="deletePipaRequest" element="tns:deletePipaRequest"/>
+	</wsdl:message>
+	<wsdl:message name="getPipaRequest">
+		<wsdl:part name="getPipaRequest" element="tns:getPipaRequest"/>
+	</wsdl:message>
+	<wsdl:message name="getPipaResponse">
+		<wsdl:part name="getPipaResponse" element="tns:getPipaResponse"/>
+	</wsdl:message>
+	
 	<wsdl:message name="okResponse">
 		<wsdl:part name="okResponse" element="tns:okResponse"/>
 	</wsdl:message>
@@ -376,13 +427,32 @@
 			<wsdl:fault name="AccessDenied" message="tns:accessDeniedFault"/>
 			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault"/>
 		</wsdl:operation>
-		<wsdl:operation name="init">
+		<wsdl:operation name="initProcess">
 			<wsdl:input message="tns:initRequest"/>
 			<wsdl:output message="tns:okResponse"/>
 			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault"/>
 			<wsdl:fault name="UnavailableTask" message="tns:unavailableTaskFault"/>
-			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault">
-			</wsdl:fault>
+			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault"/>
+		</wsdl:operation>
+		<wsdl:operation name="storePipa">
+			<wsdl:input message="tns:storePipaRequest"/>
+			<wsdl:output message="tns:okResponse"/>
+			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault"/>
+			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault"/>
+		</wsdl:operation>
+		<wsdl:operation name="deletePipa">
+			<wsdl:input message="tns:deletePipaRequest"/>
+			<wsdl:output message="tns:okResponse"/>
+			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault"/>
+			<wsdl:fault name="UnavailableTask" message="tns:unavailableTaskFault"/>
+			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault"/>
+		</wsdl:operation>
+		<wsdl:operation name="getPipa">
+			<wsdl:input message="tns:getPipaRequest"/>
+			<wsdl:output message="tns:getPipaResponse"/>
+			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault"/>
+			<wsdl:fault name="UnavailableTask" message="tns:unavailableTaskFault"/>
+			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault"/>
 		</wsdl:operation>
 	</wsdl:portType>
 	<wsdl:binding name="TaskManagementServicesSOAP" type="tns:TaskManagementServices">
@@ -534,7 +604,7 @@
 				<soap:fault name="InvalidInputMessage" use="literal"/>
 			</wsdl:fault>
 		</wsdl:operation>
-		<wsdl:operation name="init">
+		<wsdl:operation name="initProcess">
 			<soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/init"/>
 			<wsdl:input>
 				<soap:body use="literal"/>
@@ -552,6 +622,62 @@
 				<soap:fault name="InvalidInputMessage" use="literal"/>
 			</wsdl:fault>
 		</wsdl:operation>
+		
+		<wsdl:operation name="getPipa">
+			<soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getPipa"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="UnavailableTask">
+				<soap:fault name="UnavailableTask" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="InvalidParticipantToken">
+				<soap:fault name="InvalidParticipantToken" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="InvalidInputMessage">
+				<soap:fault name="InvalidInputMessage" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="storePipa">
+			<soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/storePipa"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="InvalidParticipantToken">
+				<soap:fault name="InvalidParticipantToken" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="InvalidInputMessage">
+				<soap:fault name="InvalidInputMessage" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		
+		<wsdl:operation name="deletePipa">
+			<soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/deletePipa"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="UnavailableTask">
+				<soap:fault name="UnavailableTask" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="InvalidParticipantToken">
+				<soap:fault name="InvalidParticipantToken" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="InvalidInputMessage">
+				<soap:fault name="InvalidInputMessage" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>	
+		
 	</wsdl:binding>
 	<wsdl:service name="TaskManagementServices">
 		<wsdl:port name="TaskManagementServicesSOAP" binding="tns:TaskManagementServicesSOAP">

@@ -15,6 +15,7 @@ require "repositories.rb"
 require "tasks/openjpa"
 require "tasks/xmlbeans" 
 require "tasks/easyb"
+# require "tasks/wsdl2java"
 
 desc "Tempo Workflow"
 define "tempo" do
@@ -110,7 +111,6 @@ define "tempo" do
       package(:jar)
     end
   end
-  
 
   desc "Security Framework"
   define "security" do
@@ -239,9 +239,8 @@ define "tempo" do
     end
     test.exclude '*TestUtils*'
 
-    
     package(:aar).with :libs => 
-        [ projects("security", "security-ws-client", "security-ws-common", "tms-axis", "tms-common", "web-nutsNbolts", "dao-nutsNbolts"), APACHE_JPA, LOG4J, SLF4J, SPRING ] 
+        [ projects("security", "security-ws-client", "security-ws-common", "tms-axis", "tms-dao", "tms-common", "web-nutsNbolts", "dao-nutsNbolts"), APACHE_JPA, LOG4J, SLF4J, SPRING ] 
   end
   
   desc "User-Interface Framework"
@@ -296,10 +295,9 @@ define "tempo" do
     package(:jar)                 
   end
 
-
   desc "Workflow Deployment Service"
   define "wds-service" do
-    libs = [ projects("web-nutsNbolts", "dao-nutsNbolts", "wds-dao", "tms-common", "tms-axis"), AXIOM, APACHE_JPA, COMMONS, LOG4J, SERVLET_API, SLF4J, SPRING, XERCES ]
+    libs = [ projects("web-nutsNbolts", "dao-nutsNbolts", "wds-dao", "tms-client", "tms-common", "tms-axis"), AXIS2, AXIOM, APACHE_JPA, COMMONS, LOG4J, SERVLET_API, SLF4J, SPRING, WS_COMMONS_SCHEMA, XERCES ]
     test_libs = libs + [EASY_B, INSTINCT]
     
     compile.with test_libs
@@ -318,7 +316,7 @@ define "tempo" do
     compile.with project("web-nutsNbolts"), APACHE_JPA, SLF4J
     package :jar
   end
-  
+   
   define "dao-tools" do
     compile.with projects("security", "security-ws-client", "tms-axis", "tms-common", "tms-dao", "wds-dao", "tms-client", "web-nutsNbolts", "dao-nutsNbolts"), APACHE_JPA, AXIOM, AXIS2, COMMONS, JAXEN, SLF4J, SPRING, STAX_API, XMLBEANS
 

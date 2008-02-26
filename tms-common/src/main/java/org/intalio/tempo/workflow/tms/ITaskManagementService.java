@@ -17,13 +17,14 @@ package org.intalio.tempo.workflow.tms;
 
 import java.net.URL;
 
-import org.w3c.dom.Document;
 import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
+import org.intalio.tempo.workflow.task.InvalidTaskException;
+import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.TaskState;
-
 import org.intalio.tempo.workflow.task.attachments.Attachment;
+import org.w3c.dom.Document;
 
 public interface ITaskManagementService {
     void close();
@@ -88,4 +89,10 @@ public interface ITaskManagementService {
 			AuthIdentifierSet roles, TaskState state)
     		throws AuthException,
 			   		UnavailableTaskException;
+    
+    void storePipa(PIPATask task) throws AuthException, InvalidTaskException;
+    
+    void deletePipa(String formUrl) throws AuthException, UnavailableTaskException;
+    
+    PIPATask getPipa(String formUrl) throws AuthException, UnavailableTaskException;
 }

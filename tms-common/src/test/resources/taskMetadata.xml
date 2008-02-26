@@ -17,7 +17,6 @@
     <taskType>ACTIVITY</taskType>
     <description>task description</description>
     <processId>processId</processId>
-    <creationDate/>
     <userOwner>test.user1</userOwner>
     <userOwner>test\user2</userOwner>
     <userOwner>test/user3</userOwner>
@@ -31,9 +30,11 @@
     <taskId>myPipaTask</taskId>
     <taskType>INIT</taskType>
     <description>task description</description>
-    <creationDate/>
     <roleOwner>test.role3</roleOwner>
     <formUrl>http://localhost/form</formUrl>
+    <initMessageNamespaceURI>http://localhost/uri</initMessageNamespaceURI>
+    <initOperationSOAPAction>urn:initSOAPAction</initOperationSOAPAction>
+    <processEndpoint>http://localhost/endpoint</processEndpoint>
   </task>
   <task>
     <taskId>myPaTask1</taskId>
@@ -47,6 +48,9 @@
     <taskId>myPipaTask1</taskId>
     <taskType>INIT</taskType>
     <formUrl>http://localhost/form</formUrl>
+    <initMessageNamespaceURI>http://localhost/uri</initMessageNamespaceURI>
+    <initOperationSOAPAction>urn:initSOAPAction</initOperationSOAPAction>
+    <processEndpoint>http://localhost/endpoint</processEndpoint>
   </task>
   <task>
     <taskId>myFailedPaTask</taskId>
@@ -54,7 +58,6 @@
     <taskType>ACTIVITY</taskType>
     <description>task description</description>
     <processId>processId</processId>
-    <creationDate/>
     <userOwner>test.user1</userOwner>
     <userOwner>test\user2</userOwner>
     <userOwner>test/user3</userOwner>

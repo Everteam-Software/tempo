@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2005-2006 Intalio inc.
+ * Copyright (c) 2005-2008 Intalio inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -36,6 +36,7 @@ import org.intalio.tempo.workflow.task.traits.ITaskWithAttachments;
 import org.intalio.tempo.workflow.task.traits.ITaskWithInput;
 import org.intalio.tempo.workflow.task.traits.ITaskWithOutput;
 import org.intalio.tempo.workflow.task.traits.ITaskWithState;
+import org.intalio.tempo.workflow.task.traits.InitTask;
 import org.intalio.tempo.workflow.util.xml.XmlBeanMarshaller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,6 +72,13 @@ public class TaskMarshaller extends XmlBeanMarshaller {
 
         if (task instanceof IProcessBoundTask) {
             taskMetadataElement.setProcessId(((IProcessBoundTask) task).getProcessID());
+        }
+        
+        if (task instanceof InitTask) {
+            InitTask itask = (InitTask) task;
+            taskMetadataElement.setInitMessageNamespaceURI(itask.getInitMessageNamespaceURI().toString());
+            taskMetadataElement.setInitOperationSOAPAction(((InitTask) task).getInitOperationSOAPAction());
+            taskMetadataElement.setProcessEndpoint(((InitTask) task).getProcessEndpoint().toString());
         }
         
         Calendar cal = Calendar.getInstance();

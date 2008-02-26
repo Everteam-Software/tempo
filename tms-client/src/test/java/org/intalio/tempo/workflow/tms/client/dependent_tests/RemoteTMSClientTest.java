@@ -18,12 +18,14 @@ package org.intalio.tempo.workflow.tms.client.dependent_tests;
 import java.net.URI;
 import java.net.URL;
 import java.security.SecureRandom;
+import java.util.Random;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.apache.axiom.om.OMElement;
 import org.intalio.tempo.workflow.task.PATask;
+import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.TaskState;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
@@ -51,8 +53,7 @@ public class RemoteTMSClientTest extends TestCase {
     }
 
     public void testInput() throws Exception {
-        ITaskManagementService tms = new RemoteTMSFactory(
-                TMS_REMOTE_URL, TOKEN).getService();
+        ITaskManagementService tms = new RemoteTMSFactory(TMS_REMOTE_URL, TOKEN).getService();
         Document input1 = Utils.createXMLDocument("/absr.xml");
         String task1ID = nextRandom();
         PATask task1 = new PATask(task1ID, new URI("http://localhost/1"), "processID", "urn:completeSOAPAction", input1);
@@ -63,13 +64,13 @@ public class RemoteTMSClientTest extends TestCase {
         PATask task2 = (PATask) tms.getTask(task1ID);
         TaskEquality.areTasksEquals(task1, task2);
     }
-    
+
     private void testRoundTrip(PATask task1, Document input) throws Exception {
         TaskMarshaller marshaller = new TaskMarshaller();
         OMElement marshalledTask = marshaller.marshalFullTask(task1, null);
         TaskUnmarshaller unmarshaller = new TaskUnmarshaller();
-        PATask task2 = (PATask)unmarshaller.unmarshalFullTask(marshalledTask);
-        Assert.assertEquals(task1.getInput().toString(),task2.getInput().toString());
+        PATask task2 = (PATask) unmarshaller.unmarshalFullTask(marshalledTask);
+        Assert.assertEquals(task1.getInput().toString(), task2.getInput().toString());
     }
    
 
@@ -178,5 +179,24 @@ public class RemoteTMSClientTest extends TestCase {
         PATask task4 = (PATask) tms.getTask(task1.getID());
         Assert.assertEquals(1, task4.getAttachments().size());
         Assert.assertEquals(attachment1.getPayloadURL(), task4.getAttachments().iterator().next().getPayloadURL());
+    }
+    
+    public void testPipa() throws Exception {
+        Random rand = new Random();
+        PIPATask task1 = new PIPATask("abc","http://localhost/"+rand.nextInt());
+        task1.setInitMessageNamespaceURI(URI.create("urn:ns"));
+        task1.setProcessEndpointFromString("http://localhost/process"+rand.nextInt());
+        task1.setInitOperationSOAPAction("initProcess"+rand.nextInt());
+        
+        String[] unnormalizedRoles = {"jkl/jkl", "mno\\mno", "pqr.pqr"};
+        task1.setRoleOwners(unnormalizedRoles);
+        
+        ITaskManagementService tms = new RemoteTMSFactory(
+                TMS_REMOTE_URL, TOKEN).getService();
+        tms.storePipa(task1);
+        PIPATask task2 = tms.getPipa(task1.getFormURLAsString());
+        TaskEquality.areTasksEquals(task1, task2);
+        _logger.debug(task2.getRoleOwners().toString());
+        tms.deletePipa(task1.getFormURLAsString());
     }
 }

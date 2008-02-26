@@ -11,7 +11,6 @@
  */
 package org.intalio.tempo.workflow.wds.core;
 
-import org.intalio.tempo.workflow.wds.core.tms.TMSConnectionFactoryInterface;
 
 /**
  * This factory class is used to obtain {@link org.intalio.tempo.workflow.wds.core.WDSService} instances.
@@ -27,32 +26,27 @@ public class WDSServiceFactory {
      * The DAO connection factory to get DAO connections from.
      */
     private ItemDaoConnectionFactory _daoFactory;
-
-    /**
-     * The TMS connection factory to get TMS connections from.
-     */
-    private TMSConnectionFactoryInterface _tmsFactory;
-
+    private String _tmsEndpoint;
     private String _wdsEndpoint;
     
     public WDSServiceFactory() {
     	
     }
     
+    public String getTmsEndpoint() {
+        return _tmsEndpoint;
+    }
+
+    public void setTmsEndpoint(String endpoint) {
+        _tmsEndpoint = endpoint;
+    }
+
     public void setDaoFactory(ItemDaoConnectionFactory daoFactory) {
     	_daoFactory = daoFactory;
     }
-    
-    public void setTmsFactory(TMSConnectionFactoryInterface tmsFactory) {
-    	  _tmsFactory = tmsFactory;
-    }
-    
+
     public ItemDaoConnectionFactory getDaoFactory() {
     	return _daoFactory;
-    }
-    
-    public TMSConnectionFactoryInterface getTmsFactory() {
-    	  return _tmsFactory;
     }
 
     public void setWdsEndpoint(String wdsEndpoint) {
@@ -75,8 +69,6 @@ public class WDSServiceFactory {
      * @return A new <code>WDSService</code> instance.
      */
     public WDSService getWDSService() {
-        WDSService service = new WDSService(_daoFactory.getItemDaoConnection(), _tmsFactory.getTMSConnection());
-        //        service.setWdsEndPoint(_wdsEndpoint);
-        return service;
+        return new WDSService(_daoFactory.getItemDaoConnection(), _tmsEndpoint);
     }
 }

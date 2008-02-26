@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import org.intalio.tempo.workflow.auth.UserRoles;
+import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
@@ -93,5 +94,19 @@ public class SimpleTaskDAOConnection implements ITaskDAOConnection {
         Task removedTask = _tasks.remove(taskID);
         return removedTask != null;
     }
+
+    public void deletePipaTask(String formUrl) {
+        throw new RuntimeException("Not Implemented");
+    }
+
+    public void storePipaTask(PIPATask task) {
+        throw new RuntimeException("Not Implemented");
+    }
+    
+    public PIPATask  fetchPipa(String formUrl) {
+        throw new RuntimeException("Not Implemented");
+    }
+    
+    
 
 }

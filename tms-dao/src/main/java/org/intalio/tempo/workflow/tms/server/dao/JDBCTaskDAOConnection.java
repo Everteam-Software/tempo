@@ -95,6 +95,15 @@ public class JDBCTaskDAOConnection implements ITaskDAOConnection {
             }
         }
     }
+    
+    public void deletePipaTask(String formUrl) {
+        throw new RuntimeException("Not Implemented");
+        
+    }
+
+    public void storePipaTask(PIPATask task) {
+        throw new RuntimeException("Not Implemented");
+    }
 
     /* @disabled(alex) for performance reasons
     @Override
@@ -693,5 +702,9 @@ public class JDBCTaskDAOConnection implements ITaskDAOConnection {
                 // ignore
             }
         }
+    }
+
+    public PIPATask  fetchPipa(String formUrl) {
+        throw new RuntimeException("Not Implemented");
     }
 }

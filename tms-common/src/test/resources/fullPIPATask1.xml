@@ -15,8 +15,10 @@
     <taskId>myPipaTask</taskId>
     <taskType>INIT</taskType>
     <description>task description</description>
-    <creationDate />
     <roleOwner>test.role3</roleOwner>
     <formUrl>http://localhost/form</formUrl>
+	<initMessageNamespaceURI>http://localhost/uri</initMessageNamespaceURI>
+    <initOperationSOAPAction>urn:initSOAPAction</initOperationSOAPAction>
+    <processEndpoint>http://localhost/endpoint</processEndpoint>
   </metadata>
 </task>
