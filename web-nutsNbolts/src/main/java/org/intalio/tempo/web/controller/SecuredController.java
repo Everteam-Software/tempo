@@ -14,31 +14,53 @@
  */
 package org.intalio.tempo.web.controller;
 
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.intalio.tempo.web.ApplicationState;
-import org.intalio.tempo.web.Constants;
-import org.intalio.tempo.web.User;
-import org.springframework.validation.BindException;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.portlet.ModelAndView;
+import org.springframework.web.portlet.mvc.AbstractController;
 
-public class SecuredController extends UIController {
+import com.sf.log.Log;
+
+public class SecuredController extends AbstractController {
 
     private static final Logger LOG = LogManager.getLogger(SecuredController.class);
 
+	protected ModelAndView handleRenderRequestInternal(RenderRequest request, RenderResponse response) throws Exception {
+		Log.trace("Entering ViewController.handleRenderRequestInternal()");
+		ModelAndView modelAndView = new ModelAndView("view");
+		String uname = (String)request.getAttribute("com.intalio.tempo.user");
+		if (uname != null)
+			Log.trace("GET THE USER IN SECURED CONTROLLER!:"+uname);
+		Log.trace("Exiting ViewController.handleRenderRequestInternal() " + modelAndView);
+		return modelAndView;
+	}
+	
+	/*
     @Override
     protected final ModelAndView showForm(HttpServletRequest request, HttpServletResponse response, BindException errors)
             throws Exception {
-        ModelAndView mav = Constants.REDIRECTION_TO_LOGIN;
-        ApplicationState state = getApplicationState(request);
-        if (state != null) {
-            User currentUser = state.getCurrentUser();
-            if (currentUser != null) {
+        ModelAndView mav = null;//Constants.REDIRECTION_TO_LOGIN;
+        //ApplicationState state = getApplicationState(request);
+        //if (state != null) {
+        //    User currentUser = state.getCurrentUser();
+        //    if (currentUser != null) {
+        String uname = (String)request.getSession().getAttribute("com.intalio.tempo.user");
+        Log.trace("Secured Controller session attribue test user name:"+uname);
+       
+        
+        Enumeration en = request.getSession().getAttributeNames();
+		Log.trace("SecuredController Get all the session attribute");
+		while(en.hasMoreElements()){
+			Log.trace("Secured Controller:"+en.nextElement().toString());
+		}
+		
                 if (_defaultAction == null) {
                     mav = securedShowForm(request, response, errors);
                 } else {
@@ -51,13 +73,15 @@ public class SecuredController extends UIController {
                     mav = action.doExecution();
                 }
                 
-            }
-            fillAuthorization(request, mav);
-            state.setPreviousAction(request.getRequestURL().toString());
-        }
+            //}
+            //fillAuthorization(request, mav);
+            //state.setPreviousAction(request.getRequestURL().toString());
+        //}
         return mav;
     }
-
+	*/
+	
+    /*
     @Override
     protected final ModelAndView processFormSubmission(HttpServletRequest request, HttpServletResponse response,
             Object command, BindException errors) throws Exception {
@@ -76,7 +100,7 @@ public class SecuredController extends UIController {
             BindException errors) throws Exception {
         return null;
     }
-
+	
     public static String getCurrentUserName(HttpServletRequest request) {
         ApplicationState state = ApplicationState.getCurrentInstance(request);
         if (state == null || state.getCurrentUser() == null) {
@@ -99,4 +123,5 @@ public class SecuredController extends UIController {
         }
         return state;
     }
+    */
 }

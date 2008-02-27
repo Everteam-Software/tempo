@@ -216,7 +216,7 @@ define "tempo" do
   end
 
   define "web-nutsNbolts" do
-    compile.with project("security"), COMMONS, INTALIO_STATS, JSP_API, LOG4J, SERVLET_API, SLF4J, SPRING, AXIS2
+    compile.with project("security"), COMMONS, INTALIO_STATS, JSP_API, LOG4J, SERVLET_API, SLF4J, SPRING, AXIS2, PORTLET_API
     package :jar
   end
   

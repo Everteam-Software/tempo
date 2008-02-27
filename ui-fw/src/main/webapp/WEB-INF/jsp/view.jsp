@@ -1,3 +1,5 @@
+<%@page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8" session="false"%>
 <%@ taglib uri="http://java.sun.com/portlet" prefix="portlet" %>
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
@@ -6,6 +8,7 @@
 <%@ page session="false" %>
 
 <portlet:defineObjects/>
+
     <!--js Liblary-->
     <script type="text/javascript" src='<%=renderResponse.encodeURL(renderRequest.getContextPath() + "/script/adapter/ext/ext-base.js") %>'></script>
     <script type="text/javascript" src='<%=renderResponse.encodeURL(renderRequest.getContextPath() + "/script/ext-all.js") %>'></script>
@@ -1573,6 +1576,6 @@ body.x-masked #x-msg-box .x-dlg-bd, body.x-body-masked #x-msg-box .x-dlg-bd{
         </div></div></div>
         <div class="x-box-bl"><div class="x-box-br"><div class="x-box-bc"></div></div></div>
     </div>
-
+<b><%= (String)request.getAttribute("com.intalio.tempo.user") %></b>
     
  
