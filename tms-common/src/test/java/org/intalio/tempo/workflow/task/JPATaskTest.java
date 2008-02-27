@@ -2,6 +2,7 @@ package org.intalio.tempo.workflow.task;
 
 import java.net.URI;
 import java.net.URL;
+import java.util.Date;
 import java.util.Properties;
 
 import javax.persistence.EntityManager;
@@ -77,6 +78,7 @@ public class JPATaskTest {
 
         String id = "My id" + System.currentTimeMillis();
         PATask task1 = new PATask(id, new URI("http://hellonico.net"), "processId", "soap", getXmlSampleDocument());
+        task1.setDeadline(new Date());
 
         persist(task1);
 

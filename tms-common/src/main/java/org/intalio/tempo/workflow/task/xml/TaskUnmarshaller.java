@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2005-2006 Intalio inc.
+ * Copyright (c) 2005-2008 Intalio inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -44,8 +44,10 @@ import org.intalio.tempo.workflow.task.traits.IChainableTask;
 import org.intalio.tempo.workflow.task.traits.ICompleteReportingTask;
 import org.intalio.tempo.workflow.task.traits.IProcessBoundTask;
 import org.intalio.tempo.workflow.task.traits.ITaskWithAttachments;
+import org.intalio.tempo.workflow.task.traits.ITaskWithDeadline;
 import org.intalio.tempo.workflow.task.traits.ITaskWithInput;
 import org.intalio.tempo.workflow.task.traits.ITaskWithOutput;
+import org.intalio.tempo.workflow.task.traits.ITaskWithPriority;
 import org.intalio.tempo.workflow.task.traits.ITaskWithState;
 import org.intalio.tempo.workflow.task.traits.InitTask;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
@@ -118,7 +120,23 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
 
         AuthIdentifierSet userOwners = new AuthIdentifierSet(taskMetadata.getUserOwnerArray());
         AuthIdentifierSet roleOwners = new AuthIdentifierSet(taskMetadata.getRoleOwnerArray());
+        String deadline = null;
 
+        try {
+            if (taskMetadata.xgetDeadline() != null && taskMetadata.xgetDeadline().validate()) {
+                Calendar cal = taskMetadata.getDeadline();
+                deadline = cal.toString();
+            }
+
+        } catch (Exception e) {
+            // TODO need to confirm how to deal with it
+            _logger.error("Error in unmarshalling task from metadata", e);
+        }
+
+        Integer priority = null;
+        if (taskMetadata.xgetPriority() != null && taskMetadata.xgetPriority().validate()) {
+            priority = taskMetadata.getPriority();
+        }
         ACL claim = readACL(taskMetadata, "claim");
         ACL revoke = readACL(taskMetadata, "revoke");
         ACL save = readACL(taskMetadata, "save");
@@ -138,7 +156,7 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
 
         String failureCode = taskMetadata.getFailureCode();
         String failureReason = taskMetadata.getFailureReason();
-        expectElementValue(taskMetadata, "userProcessEndpoint"); 
+        expectElementValue(taskMetadata, "userProcessEndpoint");
         // TODO: these violate the WSDL! do something
         expectElementValue(taskMetadata, "userProcessNamespaceURI");
         String completeSOAPAction = taskMetadata.getUserProcessCompleteSOAPAction();
@@ -224,12 +242,15 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
         }
         if (InitTask.class.isAssignableFrom(taskClass)) {
             InitTask task = (InitTask) resultTask;
-            String uri1 =  taskMetadata.getInitMessageNamespaceURI();
-            if(uri1!=null) task.setInitMessageNamespaceURI(URI.create(uri1));
+            String uri1 = taskMetadata.getInitMessageNamespaceURI();
+            if (uri1 != null)
+                task.setInitMessageNamespaceURI(URI.create(uri1));
             String soap = taskMetadata.getInitOperationSOAPAction();
-            if (soap!=null) task.setInitOperationSOAPAction(soap);
+            if (soap != null)
+                task.setInitOperationSOAPAction(soap);
             String uri2 = taskMetadata.getProcessEndpoint();
-            if (uri2!=null) task.setProcessEndpoint(URI.create(uri2));
+            if (uri2 != null)
+                task.setProcessEndpoint(URI.create(uri2));
         }
         if (IProcessBoundTask.class.isAssignableFrom(taskClass)) {
             ((IProcessBoundTask) resultTask).setProcessID(processID);
@@ -310,7 +331,23 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
                 }
             }
         }
+        // / the following is added to support task deadlines
+        if (ITaskWithDeadline.class.isAssignableFrom(taskClass)) {
+            ITaskWithDeadline taskWithDeadline = (ITaskWithDeadline) resultTask;
+            if ((deadline != null) && (deadline.trim().length() > 0)) {
+                taskWithDeadline.setDeadline(new XsdDateTime(deadline).getTime());
+            } else {
+                taskWithDeadline.setDeadline(null);
+            }
+        }
+        // the following is added to support task priorities
+        if (ITaskWithPriority.class.isAssignableFrom(taskClass)) {
 
+            ITaskWithPriority taskWithDeadline = (ITaskWithPriority) resultTask;
+
+            taskWithDeadline.setPriority(priority);
+
+        }
         return resultTask;
     }
 
@@ -387,7 +424,7 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
             XmlObject xmlObject = XmlObject.Factory.parse(rootElement.getXMLStreamReader());
             return unmarshalFullTask(xmlObject);
         } catch (XmlException e) {
-            throw new RuntimeException(e.getMessage(),e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -437,20 +474,21 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
 
         return resultTask;
     }
-    
+
     /**
-     * Xmlbeans is wrapping the content with some <code>xml-fragment</code> tag
-     * Position the cursor on the data we really want.
-     * @param xmlObject 
+     * Xmlbeans is wrapping the content with some <code>xml-fragment</code>
+     * tag Position the cursor on the data we really want.
+     * 
+     * @param xmlObject
      * @return
      */
-    private String serializeXMLObject(XmlObject xmlObject){
+    private String serializeXMLObject(XmlObject xmlObject) {
         XmlCursor cursor = xmlObject.newCursor();
         cursor.toFirstChild();
         XmlOptions opts = new XmlOptions();
         opts.setSaveNoXmlDecl();
         opts.setLoadReplaceDocumentElement(cursor.getName());
-        return cursor.xmlText(opts);     
+        return cursor.xmlText(opts);
     }
 
     private void checkNS(XmlObject containerElement) throws InvalidInputFormatException {

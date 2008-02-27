@@ -33,11 +33,14 @@ import org.intalio.tempo.workflow.task.traits.IChainableTask;
 import org.intalio.tempo.workflow.task.traits.ICompleteReportingTask;
 import org.intalio.tempo.workflow.task.traits.IProcessBoundTask;
 import org.intalio.tempo.workflow.task.traits.ITaskWithAttachments;
+import org.intalio.tempo.workflow.task.traits.ITaskWithDeadline;
 import org.intalio.tempo.workflow.task.traits.ITaskWithInput;
 import org.intalio.tempo.workflow.task.traits.ITaskWithOutput;
+import org.intalio.tempo.workflow.task.traits.ITaskWithPriority;
 import org.intalio.tempo.workflow.task.traits.ITaskWithState;
 import org.intalio.tempo.workflow.task.traits.InitTask;
 import org.intalio.tempo.workflow.util.xml.XmlBeanMarshaller;
+import org.intalio.tempo.workflow.util.xml.XsdDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -48,18 +51,18 @@ import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
 
 public class TaskMarshaller extends XmlBeanMarshaller {
     final static Logger _log = LoggerFactory.getLogger(TaskMarshaller.class);
-    final static String[] ACTIONS = new String[] {"claim","revoke","save","complete"};
+    final static String[] ACTIONS = new String[] { "claim", "revoke", "save", "complete" };
 
     public TaskMarshaller() {
         super(TaskXMLConstants.TASK_NAMESPACE, TaskXMLConstants.TASK_NAMESPACE_PREFIX);
     }
 
     public OMElement marshalTaskMetadata(Task task, UserRoles roles) {
-            OMElement om = XmlTooling.convertDocument(marshalXMLTaskMetadata(task, roles));
-            om.setLocalName(TaskXMLConstants.TASK_LOCAL_NAME);
-            om.setNamespace(TaskXMLConstants.TASK_OM_NAMESPACE);
-            return om;
-        }
+        OMElement om = XmlTooling.convertDocument(marshalXMLTaskMetadata(task, roles));
+        om.setLocalName(TaskXMLConstants.TASK_LOCAL_NAME);
+        om.setNamespace(TaskXMLConstants.TASK_OM_NAMESPACE);
+        return om;
+    }
 
     private XmlObject marshalXMLTaskMetadata(Task task, UserRoles roles) {
         TaskMetadata taskMetadataElement = TaskMetadata.Factory.newInstance();
@@ -73,14 +76,14 @@ public class TaskMarshaller extends XmlBeanMarshaller {
         if (task instanceof IProcessBoundTask) {
             taskMetadataElement.setProcessId(((IProcessBoundTask) task).getProcessID());
         }
-        
+
         if (task instanceof InitTask) {
             InitTask itask = (InitTask) task;
             taskMetadataElement.setInitMessageNamespaceURI(itask.getInitMessageNamespaceURI().toString());
             taskMetadataElement.setInitOperationSOAPAction(((InitTask) task).getInitOperationSOAPAction());
             taskMetadataElement.setProcessEndpoint(((InitTask) task).getProcessEndpoint().toString());
         }
-        
+
         Calendar cal = Calendar.getInstance();
         cal.setTime(task.getCreationDate());
         taskMetadataElement.setCreationDate(cal);
@@ -94,7 +97,8 @@ public class TaskMarshaller extends XmlBeanMarshaller {
             XmlStrRoleOwner.setStringValue(roleOwner);
         }
 
-        for(String action : ACTIONS)  createACL(action, task, roles, taskMetadataElement);
+        for (String action : ACTIONS)
+            createACL(action, task, roles, taskMetadataElement);
 
         taskMetadataElement.setFormUrl(task.getFormURL().toString());
 
@@ -103,6 +107,25 @@ public class TaskMarshaller extends XmlBeanMarshaller {
             if (taskWithState.getState().equals(TaskState.FAILED)) {
                 taskMetadataElement.setFailureCode(taskWithState.getFailureCode());
                 taskMetadataElement.setFailureReason(taskWithState.getFailureReason());
+            }
+        }
+
+        if (task instanceof ITaskWithDeadline) {
+            ITaskWithDeadline crTask = (ITaskWithDeadline) task;
+
+            if (crTask.getDeadline() == null)
+                createElement(taskMetadataElement, "deadline", null);
+            else {
+                createElement(taskMetadataElement, "deadline", (new XsdDateTime(crTask.getDeadline())).toString());
+            }
+        }
+        if (task instanceof ITaskWithPriority) {
+            ITaskWithPriority crTask = (ITaskWithPriority) task;
+
+            if (crTask.getPriority() == null)
+                createElement(taskMetadataElement, "priority", null);
+            else {
+                createElement(taskMetadataElement, "priority", crTask.getPriority().toString());
             }
         }
 
@@ -173,11 +196,17 @@ public class TaskMarshaller extends XmlBeanMarshaller {
     }
 
     /**
-     * The default namespace is lost when using xmlbeans. This methods sets some xmlbeans options
-     * so we can find/restore the namespaces properly from the original document to the XmlObject 
-     * @param doc the original xml document
-     * @return an <code>XmlObject</code> instance with the default namespace restored properly
-     * @throws XmlException only if parsing fails. Other exceptions that can occured when looking for NS are hidden 
+     * The default namespace is lost when using xmlbeans. This methods sets some
+     * xmlbeans options so we can find/restore the namespaces properly from the
+     * original document to the XmlObject
+     * 
+     * @param doc
+     *            the original xml document
+     * @return an <code>XmlObject</code> instance with the default namespace
+     *         restored properly
+     * @throws XmlException
+     *             only if parsing fails. Other exceptions that can occured when
+     *             looking for NS are hidden
      */
     static XmlObject extractXmlObject(final Document doc) throws XmlException {
         XmlOptions opts = new XmlOptions();
@@ -185,7 +214,7 @@ public class TaskMarshaller extends XmlBeanMarshaller {
             Node firstChild = doc.getFirstChild();
             String nodeName = firstChild.getNodeName();
             int dot = nodeName.lastIndexOf(":");
-            String xmlns = (dot>0) ? "xmlns:"+nodeName.substring(0, dot) : "xmlns";
+            String xmlns = (dot > 0) ? "xmlns:" + nodeName.substring(0, dot) : "xmlns";
             NamedNodeMap atts = firstChild.getAttributes();
             int len = atts.getLength();
             String uri = null;
@@ -193,14 +222,15 @@ public class TaskMarshaller extends XmlBeanMarshaller {
                 String nn = atts.item(i).getNodeName();
                 if (nn.equalsIgnoreCase(xmlns)) {
                     uri = atts.item(i).getNodeValue();
-                    if(_log.isDebugEnabled()) _log.debug("Restoring NS:" + uri);
-                    HashMap<String,String> map = new HashMap<String,String>();
+                    if (_log.isDebugEnabled())
+                        _log.debug("Restoring NS:" + uri);
+                    HashMap<String, String> map = new HashMap<String, String>();
                     map.put("", uri);
                     opts.setLoadSubstituteNamespaces(map);
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException("Error while settings xml opts",e);
+            throw new RuntimeException("Error while settings xml opts", e);
         }
         XmlObject xmlTaskOutput = XmlObject.Factory.parse(doc, opts);
         return xmlTaskOutput;

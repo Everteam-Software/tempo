@@ -54,6 +54,8 @@
 	              <td width="13%"><strong>Task State</strong></td>
 	              <td width="55%"><strong>Description</strong></td>
 	              <td width="32%"><strong>Creation Date/Time</strong></td>
+				  <td width="20%"><strong>Due Date</strong></td>
+				  <td width="10%"><strong>Priority</strong></td>
 	            </tr>
 	            
 		            <c:forEach items="${activityTasks}" var="taskHolder" varStatus="status">
@@ -67,7 +69,7 @@
 	            		</c:otherwise>
 	            	</c:choose>
 		            		<td>
-		            			<a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}&user=${currentUser}" target="taskform"  >${taskHolder.task.state.name}</a>
+		            		<a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}&user=${currentUser}" target="taskform"  >${taskHolder.task.state.name}</a>
 		            		</td>
 		            		<td>
 		            			<a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}&user=${currentUser}" target="taskform"  >${taskHolder.task.description}</a>
@@ -75,6 +77,12 @@
 		            		<td>
 		            			<a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}&user=${currentUser}" target="taskform"  >${taskHolder.task.creationDate}</a>
 		            		</td>
+							<td>
+							<a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}&user=${currentUser}" target="taskform"  >${taskHolder.task.deadline}</a>
+							</td>
+							<td>
+							<a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}&user=${currentUser}" target="taskform"  >${taskHolder.task.priority}</a>
+							</td>
 		            	</tr>
 		        	</c:forEach>
 	        </table>

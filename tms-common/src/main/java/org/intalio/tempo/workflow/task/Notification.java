@@ -23,40 +23,47 @@ import javax.persistence.Table;
 
 import org.apache.openjpa.persistence.Persistent;
 import org.intalio.tempo.workflow.task.traits.ITaskWithInput;
+import org.intalio.tempo.workflow.task.traits.ITaskWithPriority;
 import org.intalio.tempo.workflow.task.traits.ITaskWithState;
 import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 import org.w3c.dom.Document;
+
 /**
  * Notification tasks
  */
 @Entity
 @Table(name = "TEMPO_NOTIFICATION")
-public class Notification extends Task implements ITaskWithState, ITaskWithInput {
-   
-    @Column(name="state")
+public class Notification extends Task implements ITaskWithState, ITaskWithInput, ITaskWithPriority {
+
+    @Column(name = "state")
     @Persistent
     private TaskState _state = TaskState.READY;
-    
-    @Column(name="failure_code")
+
+    @Column(name = "failure_code")
     @Persistent
     private String _failureCode;
-    
-    @Column(name="failure_reason")
+
+    @Column(name = "failure_reason")
     @Persistent
     private String _failureReason;
 
-    @Column(name="input_xml")
+    @Column(name = "input_xml")
     @Lob
-    private String  _input;
+    private String _input;
+
+    @Persistent
+    @Column(name = "priority")
+    private Integer _priority = 0;
 
     public Notification() {
         super();
     }
-        
+
     public Notification(String id, URI formURL, Document input) {
         super(id, formURL);
-        if(input!=null)setInput(input);
+        if (input != null)
+            setInput(input);
     }
 
     public TaskState getState() {
@@ -69,7 +76,7 @@ public class Notification extends Task implements ITaskWithState, ITaskWithInput
         }
         _state = state;
     }
-    
+
     public String getFailureCode() {
         if (_state.equals(TaskState.FAILED)) {
             return _failureCode;
@@ -122,7 +129,15 @@ public class Notification extends Task implements ITaskWithState, ITaskWithInput
         _input = XmlTooling.serializeDocument(input);
     }
 
-	public void setInput(String input) {
-	    _input = input;
-	}
+    public void setInput(String input) {
+        _input = input;
+    }
+
+    public Integer getPriority() {
+        return _priority;
+    }
+
+    public void setPriority(Integer _priority) {
+        this._priority = _priority;
+    }
 }

@@ -19,6 +19,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,19 +37,22 @@ import org.intalio.tempo.workflow.task.traits.IChainableTask;
 import org.intalio.tempo.workflow.task.traits.ICompleteReportingTask;
 import org.intalio.tempo.workflow.task.traits.IProcessBoundTask;
 import org.intalio.tempo.workflow.task.traits.ITaskWithAttachments;
+import org.intalio.tempo.workflow.task.traits.ITaskWithDeadline;
 import org.intalio.tempo.workflow.task.traits.ITaskWithInput;
 import org.intalio.tempo.workflow.task.traits.ITaskWithOutput;
+import org.intalio.tempo.workflow.task.traits.ITaskWithPriority;
 import org.intalio.tempo.workflow.task.traits.ITaskWithState;
 import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 import org.w3c.dom.Document;
+
 /**
  * Activity task
  */
 @Entity
 @Table(name = "TEMPO_PA")
 public class PATask extends Task implements ITaskWithState, IProcessBoundTask, ITaskWithInput, ITaskWithOutput,
-        ICompleteReportingTask, ITaskWithAttachments, IChainableTask {
+        ICompleteReportingTask, ITaskWithAttachments, IChainableTask, ITaskWithPriority, ITaskWithDeadline {
 
     @Persistent
     @Column(name = "process_id")
@@ -91,6 +95,14 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
     @Persistent
     @Column(name = "previous_task_id")
     private String _previousTaskID = null;
+
+    @Persistent
+    @Column(name = "deadline")
+    private Date _deadline;
+
+    @Persistent
+    @Column(name = "priority")
+    private Integer _priority;
 
     public PATask() {
         super();
@@ -262,6 +274,22 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
 
     public void setOutput(String output) {
         _output = output;
+    }
+
+    public Integer getPriority() {
+        return _priority;
+    }
+
+    public void setPriority(Integer priority) {
+        _priority = priority;
+    }
+
+    public Date getDeadline() {
+        return _deadline;
+    }
+
+    public void setDeadline(Date deadline) {
+        _deadline = deadline;
     }
 
 }
