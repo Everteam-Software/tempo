@@ -49,11 +49,11 @@
 	        <!-- Third Level Header e -->
 
 	      <div id="taskdiv">
-	        <table width="600"  cellspacing="0" cellpadding="0" id="properties_content">
+	        <table width="80%"  cellspacing="0" cellpadding="0" id="properties_content">
 	            <tr id="headertr">
-	              <td width="13%"><strong>Task State</strong></td>
-	              <td width="55%"><strong>Description</strong></td>
-	              <td width="32%"><strong>Creation Date/Time</strong></td>
+	              <td width="10%"><strong>Task State</strong></td>
+	              <td width="35%"><strong>Description</strong></td>
+	              <td width="25%"><strong>Creation Date/Time</strong></td>
 				  <td width="20%"><strong>Due Date</strong></td>
 				  <td width="10%"><strong>Priority</strong></td>
 	            </tr>
@@ -96,10 +96,11 @@
 	        <br/>
 	        <!-- Third Level Header e -->
 	        <div id="notificationdiv">
-		        <table width="600"  cellspacing="0" cellpadding="0" id="properties_content">
+		        <table width="80%"  cellspacing="0" cellpadding="0" id="properties_content">
 		            <tr id="headertr">
-		              <td width="65%"><strong>Description</strong></td>
-		              <td width="35%"><strong>Creation Date/Time</strong></td>
+		              <td width="60%"><strong>Description</strong></td>
+		              <td width="30%"><strong>Creation Date/Time</strong></td>
+				  	  <td width="10%"><strong>Priority</strong></td>
 		            </tr>
 		            
 			            <c:forEach items="${notifications}" var="taskHolder" varStatus="status">
@@ -112,11 +113,14 @@
 		            		</c:otherwise>
 		            	</c:choose>
 			            		<td>
-			            			<a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}" target="taskform"  >${taskHolder.task.description}</a>
+			            			<a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}" target="taskform"> ${taskHolder.task.description}</a>
 			            		</td>
 			            		<td>
-			            			<a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}" target="taskform"  >${taskHolder.task.creationDate}</a>
+			            			<a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}" target="taskform"> ${taskHolder.task.creationDate}</a>
 			            		</td>
+								<td>
+								    <a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}" target="taskform">${taskHolder.task.priority}</a>
+								</td>
 			            	</tr>
 			        	</c:forEach>
 		        </table>
@@ -129,7 +133,7 @@
 				<!-- Third Level Header b -->
 		        <br/>
 	        <div id="processdiv">
-		        <table width="600"  cellspacing="0" cellpadding="0" id="properties_content">
+		        <table width="80%"  cellspacing="0" cellpadding="0" id="properties_content">
 		            <tr id="headertr">
 		              <td width="65%"><strong>Description</strong></td>
 		              <td width="35%"><strong>Creation Date/Time</strong></td>
@@ -164,4 +168,3 @@
         Normally - this is placeholder for the form you are to fulfil.
     </iframe>
 </custom:workflowBody>
-    
