@@ -18,7 +18,9 @@
     xmlns:ns="http://tempo.intalio.org/security/">
     
     <wsdl:types>
-        <xsd:schema targetNamespace="http://tempo.intalio.org/security/tokenService/">
+        <xsd:schema targetNamespace="http://tempo.intalio.org/security/tokenService/"
+                    elementFormDefault="qualified"
+                    attributeFormDefault="unqualified">
             <xsd:complexType name="PropertyType">
                 <xsd:sequence>
                     <xsd:element name="name" type="xsd:string" />
@@ -35,35 +37,45 @@
             </xsd:element>
             
             <xsd:element name="authenticateUser">
-                <xsd:sequence>
-                    <xsd:element name="user" type="xsd:string"/>
-                    <xsd:element name="password" type="xsd:string"/>
-                </xsd:sequence>
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="user" type="xsd:string"/>
+                        <xsd:element name="password" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
             </xsd:element>
             
             <xsd:element name="authenticateUserWithCredentials">
-                <xsd:sequence>
-                    <xsd:element name="user" type="xsd:string"/>
-                    <xsd:element name="credentials" type="tns:PropertyType" maxOccurs="1" minOccurs="1" />
-                </xsd:sequence>
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="user" type="xsd:string"/>
+                        <xsd:element name="credentials" type="tns:PropertyType" maxOccurs="1" minOccurs="1" />
+                    </xsd:sequence>
+                </xsd:complexType>
             </xsd:element>
             
             <xsd:element name="authenticateUserResponse">
-                <xsd:sequence>
-                    <xsd:element name="token" type="xsd:string"/>
-                </xsd:sequence>
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="token" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
             </xsd:element>
 
             <xsd:element name="getTokenProperties">
-                <xsd:sequence>
-                    <xsd:element name="token" type="xsd:string"/>
-                </xsd:sequence>
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="token" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
             </xsd:element>
 
             <xsd:element name="getTokenPropertiesResponse">
-                <xsd:sequence>
-                    <xsd:element name="credentials" type="tns:PropertyType" maxOccurs="1" minOccurs="1" />
-                </xsd:sequence>
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="credentials" type="tns:PropertyType" maxOccurs="1" minOccurs="1" />
+                    </xsd:sequence>
+                </xsd:complexType>
             </xsd:element>
         </xsd:schema>
     </wsdl:types>
@@ -142,7 +154,7 @@
     
     <wsdl:service name="TokenService">
         <wsdl:port name="Service" binding="tns:TokenServiceSOAP">
-            <soap:address location="http://localhost:8080/axis2/token" />
+            <soap:address location="http://localhost:8080/axis2/services/TokenService" />
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>
