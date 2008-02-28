@@ -80,7 +80,7 @@ SLF4J = group(%w{ slf4j-api slf4j-log4j12 jcl104-over-slf4j }, :under=>"org.slf4
 
 SPRING = [ "org.springframework:spring:jar:1.2.8" ]
 
-STAX_API = [ "stax:stax-api:jar:1.0" ]
+STAX_API = [ "stax:stax-api:jar:1.0.1" ]
 
 TAGLIBS = [ "taglibs:standard:jar:1.1.2" ]
 
@@ -96,7 +96,7 @@ WOODSTOX = [ "woodstox:wstx-asl:jar:3.2.4" ]
 
 WS_COMMONS_SCHEMA = "org.apache.ws.commons.schema:XmlSchema:jar:1.3.1"
 
-WSDL4J = [ "wsdl4j:wsdl4j:jar:1.5.2" ]
+WSDL4J = [ "wsdl4j:wsdl4j:jar:1.6.1" ]
 
 XERCES = [
   "xerces:xercesImpl:jar:2.9.1",
