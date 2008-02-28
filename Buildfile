@@ -298,7 +298,7 @@ define "tempo" do
   desc "Workflow Deployment Service"
   define "wds-service" do
     libs = [ projects("web-nutsNbolts", "dao-nutsNbolts", "wds-dao", "tms-client", "tms-common", "tms-axis"), 
-      AXIS2, AXIOM, APACHE_JPA, COMMONS, LOG4J, SERVLET_API, SLF4J, SPRING, STAX, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX, XERCES, XMLBEANS ]
+      AXIS2, AXIOM, APACHE_JPA, COMMONS, LOG4J, SERVLET_API, SLF4J, SPRING, STAX_API, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX, XERCES, XMLBEANS ]
       
     test_libs = libs + [EASY_B, INSTINCT]
     
