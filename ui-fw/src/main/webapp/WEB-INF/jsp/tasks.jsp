@@ -34,9 +34,9 @@
 
 	    <table id="tabPanel" width="100%" border="0" cellspacing="0" cellpadding="0" >
 	      <tr>
-	        <td id="ActiveTab" onClick="changetab(this,'tabContainer', 'tab1')">Tasks</td>
-	        <td id="notActiveTab" onClick="changetab(this,'tabContainer','tab3')" >Notifications</td>
-	        <td id="notActiveTab" onClick="changetab(this,'tabContainer','tab2')" >Processes</td>
+	        <td id="ActiveTab" onClick="changetab(this,'tabContainer', 'tab1')"><fmt:message key="com_intalio_bpms_workflow_tab_tasks"/></td>
+	        <td id="notActiveTab" onClick="changetab(this,'tabContainer','tab3')" ><fmt:message key="com_intalio_bpms_workflow_tab_notifications"/></td>
+	        <td id="notActiveTab" onClick="changetab(this,'tabContainer','tab2')" ><fmt:message key="com_intalio_bpms_workflow_tab_processes"/></td>
 	        <td id="tabPanelEnd">&nbsp;</td>
 	      </tr>
 	    </table>
@@ -51,11 +51,11 @@
 	      <div id="taskdiv">
 	        <table width="80%"  cellspacing="0" cellpadding="0" id="properties_content">
 	            <tr id="headertr">
-	              <td width="10%"><strong>Task State</strong></td>
-	              <td width="35%"><strong>Description</strong></td>
-	              <td width="25%"><strong>Creation Date/Time</strong></td>
-				  <td width="20%"><strong>Due Date</strong></td>
-				  <td width="10%"><strong>Priority</strong></td>
+	              <td width="10%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_taskState"/></strong></td>
+	              <td width="35%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/></strong></td>
+	              <td width="25%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/></strong></td>
+				  <td width="20%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_dueDate"/></strong></td>
+				  <td width="10%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_priority"/></strong></td>
 	            </tr>
 	            
 		            <c:forEach items="${activityTasks}" var="taskHolder" varStatus="status">
@@ -98,9 +98,9 @@
 	        <div id="notificationdiv">
 		        <table width="80%"  cellspacing="0" cellpadding="0" id="properties_content">
 		            <tr id="headertr">
-		              <td width="60%"><strong>Description</strong></td>
-		              <td width="30%"><strong>Creation Date/Time</strong></td>
-				  	  <td width="10%"><strong>Priority</strong></td>
+		              <td width="60%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/></strong></td>
+		              <td width="30%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/></strong></td>
+				  	  <td width="10%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_priority"/></strong></td>
 		            </tr>
 		            
 			            <c:forEach items="${notifications}" var="taskHolder" varStatus="status">
@@ -135,8 +135,8 @@
 	        <div id="processdiv">
 		        <table width="80%"  cellspacing="0" cellpadding="0" id="properties_content">
 		            <tr id="headertr">
-		              <td width="65%"><strong>Description</strong></td>
-		              <td width="35%"><strong>Creation Date/Time</strong></td>
+		              <td width="65%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/></strong></td>
+		              <td width="35%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/></strong></td>
 		            </tr>
 			            <c:forEach items="${initTasks}" var="taskHolder" varStatus="status">
 		            	<c:choose>
@@ -164,7 +164,7 @@
 		<br />
 
     <iframe name="taskform" width="100%" height="500">
-        If you see this text then your browser does not suport HTML internal frame.
-        Normally - this is placeholder for the form you are to fulfil.
+      <fmt:message key="com_intalio_bpms_not_suport_frame_msg"/>
     </iframe>
 </custom:workflowBody>
+    

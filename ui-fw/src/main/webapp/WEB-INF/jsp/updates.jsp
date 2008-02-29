@@ -9,11 +9,11 @@ version="1.2">
 	<![CDATA[
     <table width="80%"  cellspacing="0" cellpadding="0" id="properties_content">
         <tr id="headertr">
-            <td width="10%"><strong>Task State</strong></td>
-            <td width="35%"><strong>Description</strong></td>
-            <td width="25%"><strong>Creation Date/Time</strong></td>
-			<td width="20%"><strong>Due Date</strong></td>
-			<td width="10%"><strong>Priority</strong></td>
+            <td width="10%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_taskState"/></strong></td>
+            <td width="35%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/></strong></td>
+            <td width="25%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/></strong></td>
+			<td width="20%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_dueDate"/></strong></td>
+			<td width="10%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_priority"/></strong></td>
         </tr>
 
 	]]>
@@ -70,9 +70,9 @@ version="1.2">
 	<![CDATA[
     <table width="80%"  cellspacing="0" cellpadding="0" id="properties_content">
         <tr id="headertr">
-            <td width="60%"><strong>Description</strong></td>
-            <td width="30%"><strong>Creation Date/Time</strong></td>
-		  	<td width="10%"><strong>Priority</strong></td>
+            <td width="60%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/></strong></td>
+            <td width="30%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/></strong></td>
+		  	<td width="10%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_priority"/></strong></td>
         </tr>
 	]]>
     </jsp:text>
@@ -121,8 +121,8 @@ version="1.2">
 	<![CDATA[
     <table width="80%"  cellspacing="0" cellpadding="0" id="properties_content">
         <tr id="headertr">
-          <td width="65%"><strong>Description</strong></td>
-          <td width="35%"><strong>Creation Date/Time</strong></td>
+          <td width="65%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/></strong></td>
+          <td width="35%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/></strong></td>
         </tr>
 	]]>
     </jsp:text>
