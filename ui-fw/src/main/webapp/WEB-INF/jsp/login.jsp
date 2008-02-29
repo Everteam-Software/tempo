@@ -48,7 +48,7 @@
 		type="text/javascript"></script>
 </c:set>
 
-<c:set var="subMenuHeader">Log Me</c:set>
+<c:set var="subMenuHeader"><fmt:message key="com_intalio_bpms_workflow_login"/></c:set>
 
 <intalio:loginBody subMenuHeader="${subMenuHeader}" logoPath="${logoPath}" scripts="${scripts}" pageTitle="${pageTitle}" footer="${footer}">
 	<table width="350" border="0" cellspacing="4" cellpadding="0">
