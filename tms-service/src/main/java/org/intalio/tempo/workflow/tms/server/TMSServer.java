@@ -306,11 +306,11 @@ public class TMSServer implements ITMSServer {
 		
 		OMElement omTaskOutput = omFactory.createOMElement("taskOutput",
 				omNamespace, omInitProcessRequest);
-		 OMElement omOutput = omFactory.createOMElement("output", omNamespace, omTaskOutput);
+		// OMElement omOutput = omFactory.createOMElement("output", omNamespace, omTaskOutput);
 		 
 		// omOutput.addChild(OMDOMConvertor.convertDOMToOM(input, omFactory));
 		 XmlTooling xmlTooling = new XmlTooling();
-		 omOutput.addChild(xmlTooling.convertDOMToOM(input, omFactory));
+		 omTaskOutput.addChild(xmlTooling.convertDOMToOM(input, omFactory));
 
 		Options options = new Options();
 		options.setTo(new EndpointReference(task.getProcessEndpoint()

@@ -290,10 +290,8 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             OMElement omInputContainer = requireElement(rootQueue, "input");
 
             Document domInput = null;
-            final OMElement firstElement = omInputContainer.getFirstElement();
-            if (firstElement != null) {
-                TaskUnmarshaller taskUnmarshaller = new TaskUnmarshaller();
-                domInput = taskUnmarshaller.unmarshalTaskOutput(firstElement);
+            if (omInputContainer.getFirstElement() != null) {
+                domInput = new TaskUnmarshaller().unmarshalTaskOutput(omInputContainer);
             }
             String participantToken = requireElementValue(rootQueue, "participantToken");
 
