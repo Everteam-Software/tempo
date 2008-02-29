@@ -2,12 +2,15 @@
 <jsp:root
 xmlns:jsp="http://java.sun.com/JSP/Page"
 xmlns:c="http://java.sun.com/jstl/core_rt"
+xmlns:fmt="http://java.sun.com/jstl/fmt_rt"
 version="1.2">
 	<taskdata>
 
 	<jsp:text>
 	<![CDATA[
     <table width="80%"  cellspacing="0" cellpadding="0" id="properties_content">
+
+		]]>
         <tr id="headertr">
             <td width="10%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_taskState"/></strong></td>
             <td width="35%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/></strong></td>
@@ -15,8 +18,6 @@ version="1.2">
 			<td width="20%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_dueDate"/></strong></td>
 			<td width="10%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_priority"/></strong></td>
         </tr>
-
-	]]>
     </jsp:text>
 
 	<jsp:text>
@@ -69,12 +70,12 @@ version="1.2">
 	<jsp:text>
 	<![CDATA[
     <table width="80%"  cellspacing="0" cellpadding="0" id="properties_content">
+	]]>
         <tr id="headertr">
             <td width="60%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/></strong></td>
             <td width="30%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/></strong></td>
 		  	<td width="10%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_priority"/></strong></td>
         </tr>
-	]]>
     </jsp:text>
 
 	<jsp:text>

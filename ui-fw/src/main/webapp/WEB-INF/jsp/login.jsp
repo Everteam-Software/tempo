@@ -20,6 +20,7 @@
 <%--c:set var="scripts">
 </c:set--%>
 
+<fmt:setLocale value="ja" scope="session"/>
 <c:set var="logoPath" value="images/logo.gif" />
 <c:set var="pageTitle" value="Intalio|Workflow" />
 <c:set var="footer">
@@ -47,8 +48,9 @@
 		type="text/javascript"></script>
 </c:set>
 
-<intalio:loginBody subMenuHeader="Log In" logoPath="${logoPath}"
-	scripts="${scripts}" pageTitle="${pageTitle}" footer="${footer}">
+<c:set var="subMenuHeader">Log Me</c:set>
+
+<intalio:loginBody subMenuHeader="${subMenuHeader}" logoPath="${logoPath}" scripts="${scripts}" pageTitle="${pageTitle}" footer="${footer}">
 	<table width="350" border="0" cellspacing="4" cellpadding="0">
 		<tr>
 			<spring:bind path="login.username">
