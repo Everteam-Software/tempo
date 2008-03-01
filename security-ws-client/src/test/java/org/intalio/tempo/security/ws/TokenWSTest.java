@@ -97,6 +97,17 @@ public class TokenWSTest {
             fail("invalid properties returned: " + PropertyUtils.toMap(props));
     }
 
+    @Test
+    public void testGetToken() throws AuthenticationException, RBACException, RemoteException {
+        String token = _client.getToken("exolab\\castor");
+        if (token == null || token.length() < 10)
+            fail("invalid token returned: " + token);
+
+        Property[] props = _client.getTokenProperties(token);
+        if (props == null || props.length < 1)
+            fail("invalid properties returned: " + PropertyUtils.toMap(props));
+    }
+    
     static class TokenClientMock extends TokenClient {
 
         TokenWS _tokenWS = new TokenWS();

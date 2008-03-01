@@ -147,4 +147,9 @@ public class TokenServiceImpl
         return _tokenHandler.parseToken( token );
     }
 
+	public String getToken(String user) throws AuthenticationException, RBACException,
+			RemoteException {
+		return createToken( user );
+	}
+
 }

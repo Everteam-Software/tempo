@@ -95,4 +95,13 @@ public class TokenClient implements TokenService {
         element.setText(text);
         return element;
     }
+
+	public String getToken(String user) throws AuthenticationException,
+			RBACException, RemoteException {
+        OMElement request = element(TokenConstants.GETTOKEN);
+        request.addChild( elementText(TokenConstants.USER, user) );
+        request.addChild( elementText(TokenConstants.PASSWORD, "authenticated") );
+        OMParser response = invoke(TokenConstants.GETTOKEN.getLocalPart(), request);
+        return response.getRequiredString(TokenConstants.TOKEN);
+	}
 }
