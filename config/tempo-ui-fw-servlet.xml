@@ -65,11 +65,15 @@
     </property>
   </bean>
   
-  <bean id="messageSource"
-      class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+  <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
       <property name="basenames">
           <value>/WEB-INF/classes/messages</value>
       </property>
+  </bean>
+
+  <!-- Change this value to change the locale used for the resource bundle -->
+  <bean id="localeResolver" class="org.springframework.web.servlet.i18n.FixedLocaleResolver">
+	  <property name="defaultLocale" value="en" />
   </bean>
 
   <bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">

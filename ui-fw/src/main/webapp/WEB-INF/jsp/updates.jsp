@@ -121,11 +121,11 @@ version="1.2">
 	<jsp:text>
 	<![CDATA[
     <table width="80%"  cellspacing="0" cellpadding="0" id="properties_content">
+	]]>
         <tr id="headertr">
           <td width="65%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/></strong></td>
           <td width="35%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/></strong></td>
         </tr>
-	]]>
     </jsp:text>
 
 	<jsp:text>
