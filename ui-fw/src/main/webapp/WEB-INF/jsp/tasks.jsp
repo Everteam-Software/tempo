@@ -1,3 +1,8 @@
+<%@page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8" session="false"%>
+<%@ taglib uri="http://java.sun.com/portlet" prefix="portlet" %>
+<%@ page import="javax.portlet.PortletSession" %>
+<%@ page import="javax.portlet.PortletURL" %>
 <%--
  Copyright (c) 2005-2006 Intalio inc.
 
@@ -14,21 +19,22 @@
 
 <%@ taglib prefix="custom" tagdir="/WEB-INF/tags"%>
 
+<portlet:defineObjects/>
 
 <c:set var="headerCell">
 	<%@ include file="/WEB-INF/jsp/siteHeader.jsp"%>
 </c:set>
 
 
-<script type="text/javascript" src="/ui-fw/script/prototype.js"></script>
-<script type="text/javascript" src="/ui-fw/script/tasks.js"></script>
+<script type="text/javascript" src='<%=renderResponse.encodeURL(renderRequest.getContextPath() + "/script/prototype.js") %>'></script>
+<script type="text/javascript" src='<%=renderResponse.encodeURL(renderRequest.getContextPath() + "/script/tasks.js") %>'></script>
 
 <script type="text/javascript">
 	//window.onload = startTimer(<fmt:message key="com_intalio_tempo_tasks_update_interval"/>);
 </script>
 
 
-<custom:workflowBody headerCell="${headerCell}">
+<custom:workflowBody headerCell="${headerCell}" portletPrefix="<%=renderResponse.encodeURL(renderRequest.getContextPath())%>">
 
 <div id="timer"></div>
 

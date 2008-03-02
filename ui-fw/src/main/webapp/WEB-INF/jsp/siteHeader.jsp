@@ -1,3 +1,8 @@
+<%@page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8" session="false"%>
+<%@ taglib uri="http://java.sun.com/portlet" prefix="portlet" %>
+<%@ page import="javax.portlet.PortletSession" %>
+<%@ page import="javax.portlet.PortletURL" %>
 <%--
  Copyright (c) 2005-2006 Intalio inc.
 
@@ -9,10 +14,12 @@
  Contributors:
  Intalio inc. - initial API and implementation
 --%>
+<portlet:defineObjects/>
+
 	<table style="height: 40px;" border="0" cellpadding="0" cellspacing="0" width="100%">
 	<tbody><tr>
-	  <td width="10"><img src="images/spacer.gif" alt="" height="23" width="10"></td>
-	  <td width="200" valign="bottom"><img src="images/logo.gif" alt="" height="29" width="200"></td>
+	  <td width="10"><img src='<%=renderResponse.encodeURL(renderRequest.getContextPath() + "/images/spacer.gif") %>' alt="" height="23" width="10"></td>
+	  <td width="200" valign="bottom"><img src='<%=renderResponse.encodeURL(renderRequest.getContextPath() + "/images/logo.gif") %>' alt="" height="29" width="200"></td>
 	  <td valign="bottom" align="center">&nbsp;&nbsp;
 		  <!-- Main menu b -->
 			<%-- intalio:toolbar items="${toolBarItems}" selected="${selectedToolbarItem}"/--%>
@@ -26,11 +33,11 @@
 				<table border="0" cellpadding="0" cellspacing="0" >
 					<tr>
 						<td >
-						<img src="images/icons/curent_user.gif" title="Curent user" alt="Curent user" style="vertical-align: bottom;" border="0">
+						<img src='<%=renderResponse.encodeURL(renderRequest.getContextPath() + "/images/icons/curent_user.gif") %>' title="Curent user" alt="Curent user" style="vertical-align: bottom;" border="0">
 				            ${currentUser}
 				            &nbsp;&nbsp;
 						</td>
-						<td class="menuItemSeparator"><img src="images/spacer.gif" width="1" alt="" height="30"></td>																
+						<td class="menuItemSeparator"><img src='<%=renderResponse.encodeURL(renderRequest.getContextPath() + "/images/spacer.gif") %>' width="1" alt="" height="30"></td>																
 						<td> <a href="javascript:submitActionToURL('login.htm','logOut')" class="mainMenuItem" ><fmt:message key="com_intalio_bpms_workflow_pageHeader_logout"/></a> </td>								
 					</tr>
 				</table>

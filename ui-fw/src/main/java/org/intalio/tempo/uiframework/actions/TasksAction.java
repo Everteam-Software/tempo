@@ -42,7 +42,7 @@ import org.intalio.tempo.workflow.tms.ITaskManagementService;
 import org.intalio.tempo.workflow.tms.client.RemoteTMSFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.portlet.ModelAndView;
 
 @SuppressWarnings("unchecked")
 public class TasksAction extends Action {

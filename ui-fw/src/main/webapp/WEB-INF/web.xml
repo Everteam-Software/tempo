@@ -29,6 +29,7 @@
 		<servlet-class>
 			org.springframework.web.servlet.ViewRendererServlet
 		</servlet-class>
+		
 	</servlet>
 
 	<servlet-mapping>
@@ -45,6 +46,7 @@
 			<param-name>portlet-name</param-name>
 			<param-value>UifwPortlet</param-value>
 		</init-param>
+		<load-on-startup>1</load-on-startup>
 	</servlet>
 
 	<servlet-mapping>

@@ -16,13 +16,9 @@ package org.intalio.tempo.web.controller;
 
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.intalio.tempo.web.ApplicationState;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.portlet.ModelAndView;
 import org.springframework.web.portlet.mvc.AbstractController;
 
@@ -34,7 +30,7 @@ public class SecuredController extends AbstractController {
 
 	protected ModelAndView handleRenderRequestInternal(RenderRequest request, RenderResponse response) throws Exception {
 		Log.trace("Entering ViewController.handleRenderRequestInternal()");
-		ModelAndView modelAndView = new ModelAndView("view");
+		ModelAndView modelAndView = new ModelAndView("tasks");
 		String uname = (String)request.getAttribute("com.intalio.tempo.user");
 		if (uname != null)
 			Log.trace("GET THE USER IN SECURED CONTROLLER!:"+uname);

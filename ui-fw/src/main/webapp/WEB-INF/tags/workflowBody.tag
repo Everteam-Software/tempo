@@ -14,7 +14,7 @@
 <%@ taglib prefix="intalio" uri="http://www.intalio.com/tagfiles"%>
 
 <%@ attribute name="headerCell" required="false" type="java.lang.String" %>
-
+<%@ attribute name="portletPrefix" required="false" type="java.lang.String"%>
 
 <%--c:set var="toolbar">
 	Define toolbar here
@@ -25,7 +25,7 @@
 </c:set>
 
 <c:set var="scripts">
-	<script src="script/ui-fw.js" language="javascript" type="text/javascript"></script> 
+	<script src="${headerCell}/script/ui-fw.js" language="javascript" type="text/javascript"></script> 
 </c:set>
 <c:set var="footer">
   <span>&nbsp;&nbsp;<fmt:message key="com_intalio_bpms_workflow_pageFooter_poweredBy_label" />&nbsp;&nbsp;
@@ -56,6 +56,7 @@
 	headerCell="${headerCell}"
 	title="${title}"
 	footer="${footer}"
+	portletPrefix="${portletPrefix}"
 >			                	
 	<jsp:doBody/>
 </intalio:body>
