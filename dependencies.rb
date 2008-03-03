@@ -78,7 +78,7 @@ SERVLET_API = [ "javax.servlet:servlet-api:jar:2.4" ]
 
 SLF4J = group(%w{ slf4j-api slf4j-log4j12 jcl104-over-slf4j }, :under=>"org.slf4j", :version=>"1.4.3")
 
-SPRING = [ "org.springframework:spring:jar:1.2.8" ]
+SPRING = [ "org.springframework:spring:jar:1.2.9" ]
 
 STAX_API = [ "stax:stax-api:jar:1.0.1" ]
 

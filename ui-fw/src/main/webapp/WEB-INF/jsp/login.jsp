@@ -20,7 +20,6 @@
 <%--c:set var="scripts">
 </c:set--%>
 
-<fmt:setLocale value="ja" scope="session"/>
 <c:set var="logoPath" value="images/logo.gif" />
 <c:set var="pageTitle" value="Intalio|Workflow" />
 <c:set var="footer">
@@ -60,8 +59,7 @@
 							key="com_intalio_bpms_workflow_login_username" /> </label>
 					</c:when>
 					<c:otherwise>
-						<label> <fmt:message
-							key="com_intalio_bpms_workflow_login_username" /> </label>
+						<label> <fmt:message key="com_intalio_bpms_workflow_login_username" /> </label>
 					</c:otherwise>
 				</c:choose></td>
 				<td><input type="text" name="username"
