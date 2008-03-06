@@ -45,6 +45,7 @@ limitations under the License.
   <render-config default="About Apache Pluto">
     <page name="About Apache Pluto" uri="/WEB-INF/themes/pluto-default-theme.jsp">
       <portlet context="/pluto" name="AboutPortlet"/>
+      <portlet context="/ui-fw" name="UifwPortlet"/>
     </page>
     <page name="Pluto Admin" uri="/WEB-INF/themes/pluto-default-theme.jsp">
       <portlet context="/pluto" name="PlutoPageAdmin"/>
