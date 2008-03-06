@@ -65,12 +65,12 @@ public class TasksAction extends Action {
         	_log.info(((Task)task).getID() + ":"+ task.getClass().getName());
             if (task instanceof Notification) {
                 Notification notification = (Notification) task;
-                if (!TaskState.COMPLETED.equals(notification.getState())) {
+                if (!TaskState.COMPLETED.equals(notification.getState()) ) {
                     _notifications.add(new TaskHolder<Notification>(notification, notificationURL));
                 }
             } else if (task instanceof PATask) {
                 PATask paTask = (PATask) task;
-                if (!TaskState.COMPLETED.equals(paTask.getState())) {
+                if (!TaskState.COMPLETED.equals(paTask.getState()) && !TaskState.FAILED.equals(paTask.getState())) {
                     _activityTasks.add(new TaskHolder<PATask>(paTask, peopleActivityUrl));
                 }
             } else if (task instanceof PIPATask) {

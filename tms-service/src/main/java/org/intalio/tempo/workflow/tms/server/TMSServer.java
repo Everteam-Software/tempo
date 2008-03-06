@@ -204,11 +204,13 @@ public class TMSServer implements ITMSServer {
 		Task task = null;
         boolean available = false;
 
-		UserRoles credentials = _authProvider.authenticate(participantToken);
+		//UserRoles credentials = _authProvider.authenticate(participantToken);
 		ITaskDAOConnection dao = _taskDAOFactory.openConnection();
 		try {
 			task = dao.fetchTaskIfExists(taskID);
-			available = task instanceof ITaskWithState && task.isAvailableTo(credentials);
+			available = task instanceof ITaskWithState 
+			//&& task.isAvailableTo(credentials)
+			;
 			if (available) {
 				ITaskWithState taskWithState = (ITaskWithState) task;
 				taskWithState.setState(TaskState.FAILED);
@@ -216,14 +218,17 @@ public class TMSServer implements ITMSServer {
 				taskWithState.setFailureReason(failureReason);
 				dao.updateTask(task);
 				dao.commit();
-                _logger.debug(credentials.getUserID() + " fails Workflow Task " + task +
+                _logger.debug(
+                		//credentials.getUserID() + 
+                		" fails Workflow Task " + task +
                 		" with code: " + failureCode + " and reason: " + failureReason);
             }
         } catch (Exception e) {
             _logger.error("Error to set as failed the Workflow Task " + taskID, e);
 		}
         if (!available) {
-            throw new UnavailableTaskException(credentials.getUserID() +
+            throw new UnavailableTaskException(
+            		//credentials.getUserID() +
             		" cannot set state as FAILED for Workflow Task " + task);
         }
 	}
