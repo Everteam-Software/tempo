@@ -46,7 +46,11 @@
 				<entry><key><value>openjpa.ConnectionFactoryMode</value></key><value>managed</value></entry>
 				<entry><key><value>openjpa.ConnectionDriverName</value></key><value>org.apache.derby.jdbc.EmbeddedXADataSource</value></entry>				
 				<entry><key><value>tempo.datasourceURL</value></key><value>java:comp/env/jdbc/BPMSDB</value></entry>
-				<entry><key><value>openjpa.Log</value></key><value>log4j</value></entry>
+				<!-- 
+					to get some more clever openjpa logging see:
+					http://openjpa.apache.org/builds/1.0.1/apache-openjpa-1.0.1/docs/manual/ref_guide_logging.html
+				-->
+				<entry><key><value>openjpa.Log</value></key><value>none</value></entry>
 				<entry><key><value>openjpa.FlushBeforeQueries</value></key><value>true</value></entry>
 			</map>
 		</constructor-arg>
