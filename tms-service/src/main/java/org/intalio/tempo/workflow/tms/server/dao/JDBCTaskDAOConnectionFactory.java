@@ -45,7 +45,7 @@ public class JDBCTaskDAOConnectionFactory implements ITaskDAOConnectionFactory {
         try {
             _logger.debug("Getting connection to TMS DB");
             con = _dataSource.getConnection();
-            return new JDBCTaskDAOConnection(_dataSource.getConnection());
+            return new JDBCTaskDAOConnection(con);
         } catch (Exception e) {
             close(con);
             throw new RuntimeException(e);
