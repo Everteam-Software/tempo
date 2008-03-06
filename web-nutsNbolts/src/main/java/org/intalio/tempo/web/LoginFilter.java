@@ -8,7 +8,7 @@
  *
  * Contributors:
  * Intalio inc. - initial API and implementation
- */
+ *//*
 package org.intalio.tempo.web;
 
 import java.io.IOException;
@@ -90,4 +90,4 @@ public class LoginFilter implements javax.servlet.Filter {
         // nothing
     }
 
-}
+}*/

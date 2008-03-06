@@ -9,7 +9,7 @@
 		<!--  error item b-->
 			<div class="errorListItem" <c:if test="${!empty error.details}">onClick="opencloserrormessage(this);"</c:if> >
 				<div id="errorListItemTitle">
-					<fmt:message key="com_intalio_errors"/><c:out value="${error.formattedMessage}"/>
+					<spring:message code="com_intalio_errors"/><c:out value="${error.formattedMessage}"/>
 				</div>
 				<div id="errorListItemText" style="display:none">
 					<c:out value="${error.details}"/>

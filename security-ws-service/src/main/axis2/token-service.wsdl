@@ -77,6 +77,20 @@
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
+            <xsd:element name="getToken">
+            	<xsd:complexType>
+            		<xsd:sequence>
+            			<xsd:element name="in" type="xsd:string"></xsd:element>
+            		</xsd:sequence>
+            	</xsd:complexType>
+            </xsd:element>
+            <xsd:element name="getTokenResponse">
+            	<xsd:complexType>
+            		<xsd:sequence>
+            			<xsd:element name="out" type="xsd:string"></xsd:element>
+            		</xsd:sequence>
+            	</xsd:complexType>
+            </xsd:element>
         </xsd:schema>
     </wsdl:types>
     
@@ -101,6 +115,14 @@
         <wsdl:part name="payload" element="tns:getTokenPropertiesResponse" />
     </wsdl:message>
     
+    <wsdl:message name="getTokenRequest">
+    	<wsdl:part name="payload" element="tns:getTokenProperties"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="getTokenResponse">
+    	<wsdl:part name="payload"
+    		element="tns:authenticateUserResponse">
+    	</wsdl:part>
+    </wsdl:message>
     <wsdl:portType name="TokenService">
         <wsdl:operation name="authenticateUser">
             <wsdl:input message="tns:authenticateUser" />
@@ -115,6 +137,10 @@
         <wsdl:operation name="getTokenProperties">
             <wsdl:input message="tns:getTokenProperties" />
             <wsdl:output message="tns:getTokenPropertiesResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getToken">
+        	<wsdl:input message="tns:getTokenRequest"></wsdl:input>
+        	<wsdl:output message="tns:getTokenResponse"></wsdl:output>
         </wsdl:operation>
     </wsdl:portType>
     

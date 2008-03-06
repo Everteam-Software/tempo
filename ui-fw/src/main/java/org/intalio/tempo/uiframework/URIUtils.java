@@ -17,11 +17,11 @@ package org.intalio.tempo.uiframework;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.portlet.PortletRequest;
 
 public class URIUtils {
     
-    public static String resolveURI(HttpServletRequest request, String endpoint) 
+    public static String resolveURI(PortletRequest request, String endpoint) 
         throws URISyntaxException
     {
         URI uri = new URI(endpoint);

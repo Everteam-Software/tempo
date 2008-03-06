@@ -24,6 +24,7 @@
 
 <%@ attribute name="footer" required="false"%>
 
+<%@ attribute name="portletPrefix" required="true" type="java.lang.String"%>
 
 ${toolbar}
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -35,13 +36,13 @@ ${toolbar}
 	</title>
 	<!-- link href="style/folding.css" rel="stylesheet" type="text/css" -->
 	<!-- link rel="stylesheet" href="style/tree.css" type="text/css" --> 
-	<link href="style.css" rel="stylesheet" type="text/css">
+	<link href="${portletPrefix}/style.css" rel="stylesheet" type="text/css">
 	${scripts}
-	<script src="script/folding.js" language="javascript" type="text/javascript"></script> 
-	<script type="text/javascript" language="javascript" src="script/tree.js"></script>
-	<script type="text/javascript" language="javascript" src="script/table.js"></script>
+	<script src="${portletPrefix}/script/folding.js" language="javascript" type="text/javascript"></script> 
+	<script type="text/javascript" language="javascript" src="${portletPrefix}/script/tree.js"></script>
+	<script type="text/javascript" language="javascript" src="${portletPrefix}/script/table.js"></script>
 	<c:if test="${dojoRequired}">
-		<script type="text/javascript" language="javascript" src="dojo/dojo.js"></script>
+		<script type="text/javascript" language="javascript" src="${portletPrefix}/dojo/dojo.js"></script>
 		<script type="text/javascript" language="javascript">
 			dojo.require("dojo.lang.*");
 			dojo.require("dojo.widget.EditorTree");
@@ -51,11 +52,11 @@ ${toolbar}
 		</script>
 	</c:if>
 	<c:if test="${dateTimePickerRequired}">
-		<link rel=stylesheet href="style/datetime.css" type="text/css">
-		<script type="text/javascript" language="javascript" src="script/main.js"></script>
-		<script type="text/javascript" language="javascript" src="script/datetimepopup.js"></script>
-		<script type="text/javascript" language="javascript" src="script/absolutedatetime.js"></script>
-		<script type="text/javascript" language="javascript" src="script/relativedatetime.js"></script>
+		<link rel=stylesheet href="${portletPrefix}/style/datetime.css" type="text/css">
+		<script type="text/javascript" language="javascript" src="${portletPrefix}/script/main.js"></script>
+		<script type="text/javascript" language="javascript" src="${portletPrefix}/script/datetimepopup.js"></script>
+		<script type="text/javascript" language="javascript" src="${portletPrefix}/script/absolutedatetime.js"></script>
+		<script type="text/javascript" language="javascript" src="${portletPrefix}/script/relativedatetime.js"></script>
 	</c:if>
 </head>
 <body>
@@ -110,7 +111,7 @@ ${toolbar}
 	    <td style="height:36px; "><!-- Bottom b -->
 	      <table width="100%"  border="0" cellpadding="0" cellspacing="0">
 	        <tr>
-	          <td height="2" style="background-color:#BDBDBD "><img src="images/spacer.gif" width="10" height="2" alt=""></td>
+	          <td height="2" style="background-color:#BDBDBD "><img src="${portletPrefix}/images/spacer.gif" width="10" height="2" alt=""></td>
 	        </tr>
 	        <tr>
 	          <td height="34" style="background-color:#EAEAEA ">
@@ -132,9 +133,9 @@ ${toolbar}
     <tr>
       <td style="height:12px" valign="top"><table cellspacing="0" cellpadding="0" width="100%" border="0">
       	<tr>
-	        <td id="hintBottomLeftCell" width="20"><img src="images/spacer.gif" width="20" height="12" alt=""/></td>
-            <td width="9" ><img src="images/hint_pointer.gif" alt="" width="9" height="12" /></td>
-            <td id="hintBottomRightCell"><img src="images/spacer.gif" width="20" height="12" alt=""/></td>
+	        <td id="hintBottomLeftCell" width="20"><img src="${portletPrefix}/images/spacer.gif" width="20" height="12" alt=""/></td>
+            <td width="9" ><img src="${portletPrefix}/images/hint_pointer.gif" alt="" width="9" height="12" /></td>
+            <td id="hintBottomRightCell"><img src="${portletPrefix}/images/spacer.gif" width="20" height="12" alt=""/></td>
         </tr>
         </table></td>
     </tr>

@@ -62,4 +62,12 @@ public interface TokenService
 	public Property[] getTokenProperties( String token )
 	    throws AuthenticationException, RemoteException;
 	
+	/**
+	 * Get the security token of an authenticated user
+	 * 
+	 * @param user user identifier
+	 * @return security token
+	 */
+	public String getToken(String user) 
+		throws AuthenticationException, RBACException, RemoteException;
 }

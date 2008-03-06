@@ -10,11 +10,13 @@
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
+	<!-- 
     <context-param>
         <param-name>contextClass</param-name>
         <param-value>org.intalio.tempo.web.SysPropWebApplicationContext</param-value>
     </context-param>
-
+ 	-->
+ 	
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>file:${org.intalio.tempo.configDirectory}/tempo-ui-fw.xml</param-value>
@@ -22,6 +24,37 @@
 
     <!-- servlet -->
 
+	<servlet>
+		<servlet-name>ViewRendererServlet</servlet-name>
+		<servlet-class>
+			org.springframework.web.servlet.ViewRendererServlet
+		</servlet-class>
+		
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>ViewRendererServlet</servlet-name>
+		<url-pattern>/WEB-INF/servlet/view</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>UifwPortlet</servlet-name>
+		<servlet-class>
+			org.apache.pluto.core.PortletServlet
+		</servlet-class>
+		<init-param>
+			<param-name>portlet-name</param-name>
+			<param-value>UifwPortlet</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>UifwPortlet</servlet-name>
+		<url-pattern>/PlutoInvoker/UifwPortlet</url-pattern>
+	</servlet-mapping>
+
+	<!-- 	
     <servlet>
         <servlet-name>springapp</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -45,9 +78,10 @@
         <servlet-name>versionsServlet</servlet-name>
         <url-pattern>/versions</url-pattern>
     </servlet-mapping>
-
+ 	-->
     <!-- Welcome File List -->
 
+	<!--  
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
@@ -60,13 +94,14 @@
     <jsp-config>
         <jsp-property-group>
             <url-pattern>/WEB-INF/jsp/*</url-pattern>
-            <el-ignored>false</el-ignored>
+            <el-ignored>false</el-ignored>-->
             <!-- When serveler container will suport JSP 2.1
             <trim-directive-whitespaces>true</trim-directive-whitespaces>
              -->
+             <!-- 
         </jsp-property-group>
     </jsp-config>
-
+	-->
     <locale-encoding-mapping-list>
         <locale-encoding-mapping>
             <locale>en</locale>
@@ -78,4 +113,5 @@
             <encoding>cp1251</encoding>
         </locale-encoding-mapping>
     </locale-encoding-mapping-list>
+     
 </web-app>

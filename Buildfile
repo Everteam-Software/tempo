@@ -250,7 +250,8 @@ define "tempo" do
            APACHE_JPA, 
            AXIOM, 
            AXIS2, 
-           COMMONS, 
+           COMMONS,
+           CAS_CLIENT, 
            DOM4J, 
            INTALIO_STATS, 
            JSON,
@@ -258,6 +259,7 @@ define "tempo" do
            JSTL,
            LOG4J, 
            PLUTO,
+           PORTLET_API,
            SERVLET_API, 
            SPRING, 
            SLF4J, 
@@ -280,6 +282,9 @@ define "tempo" do
   end
   
   define "ui-pluto" do
+  	libs = PLUTO, SERVLET_API, COMMONS_LOG
+  	compile.with libs
+  	package(:jar)
     package(:war)
   end
   
@@ -310,8 +315,8 @@ define "tempo" do
   end
 
   define "web-nutsNbolts" do
-    compile.with project("security"), AXIS2, COMMONS, INTALIO_STATS, JSP_API, LOG4J, SERVLET_API, SLF4J, SPRING
-    package :jar
+    compile.with projects("security", "ui-pluto"), AXIS2, COMMONS, INTALIO_STATS, JSP_API, LOG4J, SERVLET_API, SLF4J, SPRING, PORTLET_API
+    package(:jar)
   end
   
   define "dao-nutsNbolts" do
@@ -324,6 +329,12 @@ define "tempo" do
 
     test.with CASTOR, LOG4J, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES
     package :war
+  end
+  
+  define "cas-server-webapp" do
+    libs = projects("security", "security-ws-client", "security-ws-common"), AXIOM, AXIS2, CAS_LIBS, COMMONS, COMMONS_LOG, LOG4J
+    compile.with libs
+    package(:war).with :libs=>libs
   end
   
   desc "XForms Manager"

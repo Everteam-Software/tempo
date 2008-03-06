@@ -46,7 +46,7 @@ limitations under the License.
 
     <bean id="RequiredContainerServices"
           name="OptionalContainerServices"
-          class="org.apache.pluto.driver.services.container.ContainerServicesImpl"
+          class="com.intalio.tempo.pluto.ContainerServicesImpl"
           singleton="true">
       <constructor-arg><ref bean="PortalContext"/></constructor-arg>
       <constructor-arg><ref bean="DriverConfiguration"/></constructor-arg>

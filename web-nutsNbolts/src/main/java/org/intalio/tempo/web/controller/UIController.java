@@ -17,21 +17,24 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
+import javax.portlet.PortletRequest;
+import javax.portlet.RenderRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.intalio.tempo.web.ApplicationState;
 import org.intalio.tempo.web.User;
+import org.springframework.context.ApplicationContext;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.ServletRequestDataBinder;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractFormController;
+import org.springframework.web.portlet.ModelAndView;
+import org.springframework.web.portlet.mvc.AbstractFormController;
+
 
 /**
  * Controller that dispatches form submission based on "actionName" request parameter.
@@ -76,7 +79,7 @@ public abstract class UIController extends AbstractFormController {
     }
 
     @Override
-    protected ModelAndView processFormSubmission(HttpServletRequest request, HttpServletResponse response,
+    protected void processFormSubmission(ActionRequest request, ActionResponse response,
             Object command, BindException errors) throws Exception {
         ModelAndView mav = null;
 
@@ -84,10 +87,12 @@ public abstract class UIController extends AbstractFormController {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Form submission:  action="+actionName);
         }
+        /*
         if (StringUtils.isEmpty(actionName)) {
             LOG.debug("Empty action name, use default showForm()");
             mav = showForm(request, response, errors);
         }
+        */
         if (mav == null) {
             Method method = _actionMethods.get(actionName);
             if (method != null) {
@@ -115,10 +120,10 @@ public abstract class UIController extends AbstractFormController {
         fillAuthorization(request, mav);
         
         LOG.debug("Form submission:  ViewModel="+mav);
-        return mav;
+        //return mav;
     }
 
-    protected void fillAuthorization(HttpServletRequest request, ModelAndView mav) {
+    protected void fillAuthorization(PortletRequest request, ModelAndView mav) {
         ApplicationState state = ApplicationState.getCurrentInstance(request);
         if (state != null && state.getCurrentUser() != null && _actionDefs != null) {
             User user = state.getCurrentUser();
@@ -202,10 +207,11 @@ public abstract class UIController extends AbstractFormController {
         return roles.toArray(new String[ roles.size() ]);
     }
 
-    public ApplicationState getApplicationState(HttpServletRequest request) {
+    public ApplicationState getApplicationState(PortletRequest request) {
         ApplicationState state = ApplicationState.getCurrentInstance(request);
         if (state == null) {
-            WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+            //WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+        	ApplicationContext context = this.getApplicationContext();
             state = (ApplicationState) context.getBean("applicationState");
             if (state == null) {
                 throw new IllegalStateException("Missing 'applicationState' object in Spring context");

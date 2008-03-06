@@ -9,53 +9,63 @@
  Contributors:
  Intalio inc. - initial API and implementation
 --%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="intalio" uri="http://www.intalio.com/tagfiles"%>
 
-<%@ attribute name="headerCell" required="false" type="java.lang.String" %>
-
+<%@ attribute name="headerCell" required="false" type="java.lang.String"%>
+<%@ attribute name="portletPrefix" required="false"
+	type="java.lang.String"%>
 
 <%--c:set var="toolbar">
 	Define toolbar here
 </c:set --%>
 
 <c:set var="title">
-	<fmt:message key="com_intalio_bpms_workflow_pageTitle"/>
+	<spring:message code="com_intalio_bpms_workflow_pageTitle" />
 </c:set>
 
 <c:set var="scripts">
-	<script src="script/ui-fw.js" language="javascript" type="text/javascript"></script> 
+	<script src="${portletPrefix}/script/ui-fw.js" language="javascript"
+		type="text/javascript"></script>
 </c:set>
 <c:set var="footer">
-  <span>&nbsp;&nbsp;<fmt:message key="com_intalio_bpms_workflow_pageFooter_poweredBy_label" />&nbsp;&nbsp;
-  <a href="http://www.intalio.com"><span style="color: #3082A8"><fmt:message key="com_intalio_bpms_workflow_pageFooter_poweredBy_value" /></span></a>
-  <fmt:message key="com_intalio_bpms_workflow_versionInfo">
-	<c:choose>
-		<c:when test="${!empty version && !empty build}" >
-			<fmt:param value="${version}"/>
-			<fmt:param value="${build}"/>
-		</c:when> 
-		<c:otherwise>
-			<fmt:param value="unknown"/>
-			<fmt:param value="unknown"/>
-		</c:otherwise>
-	</c:choose>
-     </fmt:message>
-     <a href="http://bpms.intalio.com"><span style="color: #3082A8"><fmt:message key="com_intalio_bpms_workflow_pageFooter_featureBugRequest"/></span></a>
-   </span>
+	<span>&nbsp;&nbsp;<spring:message
+		code="com_intalio_bpms_workflow_pageFooter_poweredBy_label" />&nbsp;&nbsp;
+  <a href="http://www.intalio.com">
+	<span style="color: #3082A8">
+	<spring:message
+		code="com_intalio_bpms_workflow_pageFooter_poweredBy_value" />
+	</span>
+	</a>
+	<spring:message code="com_intalio_bpms_workflow_versionInfo"
+	arguments="${version}, ${build}" >
+		<!-- 
+		<c:choose>
+			<c:when test="${!empty version && !empty build}">
+				<c:out value="${version}" />
+				<c:out value="${build}" />
+			</c:when>
+			<c:otherwise>
+				<c:out value="unknown" />
+				<c:out value="unknown" />
+			</c:otherwise>
+		</c:choose>
+		 -->
+	</spring:message>
+	<a href="http://bpms.intalio.com">
+	<span style="color: #3082A8">
+	<spring:message
+		code="com_intalio_bpms_workflow_pageFooter_featureBugRequest" />
+	</span>
+	</a>
+	</span>
 </c:set>
-<intalio:body 
-	hideToolbar="true" 
-	selectedToolbarItem="" 
-	dojoRequired="false"
-	dateTimePickerRequired="false"
-	toolbar="${toolbar}"
-	scripts="${scripts}"
-	subMenuHeader="${subMenuHeader}"
-	headerCell="${headerCell}"
-	title="${title}"
-	footer="${footer}"
->			                	
-	<jsp:doBody/>
+<intalio:body hideToolbar="true" selectedToolbarItem=""
+	dojoRequired="false" dateTimePickerRequired="false"
+	toolbar="${toolbar}" scripts="${scripts}"
+	subMenuHeader="${subMenuHeader}" headerCell="${headerCell}"
+	title="${title}" footer="${footer}" portletPrefix="${portletPrefix}">
+	<jsp:doBody />
 </intalio:body>

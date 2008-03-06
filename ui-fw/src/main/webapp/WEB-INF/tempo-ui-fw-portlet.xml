@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+          "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<!-- Login section 
+		<bean id="loginController" class="org.intalio.tempo.web.controller.LoginController">
+		<constructor-arg index="0" ref="tokenService"/>
+		<constructor-arg index="1" value="tasks.htm"/>
+		
+		<property name="commandClass" value="org.intalio.tempo.web.controller.LoginCommand"/>
+		<property name="commandName">
+		<value>login</value>
+		</property>
+		<property name="validator">
+		<bean id="loginValidator"
+		class="org.intalio.tempo.web.controller.LoginController$LoginValidator"/>
+		</property>
+		</bean>
+	-->
+
+	<!-- Tasks section -->
+	<bean id="tasksDefaultAction"
+		class="org.intalio.tempo.web.controller.ActionDef">
+		<property name="actionName" value="default" />
+		<property name="actionClass"
+			value="org.intalio.tempo.uiframework.actions.TasksAction" />
+	</bean>
+
+	<bean id="tasksController"
+		class="org.intalio.tempo.web.controller.SecuredController">
+		<constructor-arg index="0" ref="tokenService" />
+		<property name="commandClass" value="java.lang.Object" />
+		<property name="defaultAction">
+			<ref bean="tasksDefaultAction" />
+		</property>
+		<property name="actionDefs">
+			<list>
+				<ref bean="tasksDefaultAction" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="updatesController"
+		class="org.intalio.tempo.web.controller.SecuredController">
+		<constructor-arg index="0" ref="tokenService" />
+		<property name="commandClass" value="java.lang.Object" />
+		<property name="defaultAction">
+			<ref bean="tasksDefaultAction" />
+		</property>
+		<property name="actionDefs">
+			<list>
+				<ref bean="tasksDefaultAction" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basenames">
+			<value>/WEB-INF/classes/messages</value>
+		</property>
+	</bean>
+
+	<!-- Change this value to change the locale used for the resource bundle -->
+	<bean id="localeResolver"
+		class="org.springframework.web.servlet.i18n.FixedLocaleResolver">
+		<property name="defaultLocale" value="en" />
+	</bean>
+
+	<bean id="portletModeHandlerMapping"
+		class="org.springframework.web.portlet.handler.PortletModeHandlerMapping">
+		<property name="defaultHandler" ref="updatesController" />
+
+		<property name="portletModeMap">
+			<map>
+				<entry key="view">
+					<ref bean="updatesController" />
+				</entry>
+			</map>
+		</property>
+	</bean>
+	<!-- 
+		<bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="mappings">
+		<props>
+		<prop key="/login.htm">loginController</prop>
+		<prop key="/tasks.htm">tasksController</prop>
+		<prop key="/updates.htm">updatesController</prop>
+		</props>
+		</property>
+		</bean>
+	-->
+</beans>

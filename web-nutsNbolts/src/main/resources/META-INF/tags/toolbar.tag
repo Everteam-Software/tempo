@@ -1,6 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
-
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ attribute name="items" required="true" type="java.util.Collection" %>
 <%@ attribute name="selected" required="true" %>
 
@@ -13,12 +13,12 @@
 		<c:choose>
 			<c:when test="${item.id==selected}">
 				<a href="${item.address}" class="mainMenuCurentItem">
-					<fmt:message key="${item.messageKey}"/>
+					<spring:message code="${item.messageKey}"/>
 				</a>
 			</c:when>
 			<c:otherwise>
 				<a href="${item.address}" class="mainMenuItem">
-					<fmt:message key="${item.messageKey}"/>
+					<spring:message code="${item.messageKey}"/>
 				</a>
 			</c:otherwise>
 		</c:choose>

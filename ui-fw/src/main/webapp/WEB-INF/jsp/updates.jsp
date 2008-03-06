@@ -2,7 +2,7 @@
 <jsp:root
 xmlns:jsp="http://java.sun.com/JSP/Page"
 xmlns:c="http://java.sun.com/jstl/core_rt"
-xmlns:fmt="http://java.sun.com/jstl/fmt_rt"
+xmlns:spring="http://www.springframework.org/tags"
 version="1.2">
 	<taskdata>
 
@@ -12,11 +12,11 @@ version="1.2">
 
 		]]>
         <tr id="headertr">
-            <td width="10%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_taskState"/></strong></td>
-            <td width="35%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/></strong></td>
-            <td width="25%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/></strong></td>
-			<td width="20%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_dueDate"/></strong></td>
-			<td width="10%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_priority"/></strong></td>
+            <td width="10%"><strong><spring:message code="com_intalio_bpms_workflow_taskHolder_taskState"/></strong></td>
+            <td width="35%"><strong><spring:message code="com_intalio_bpms_workflow_taskHolder_description"/></strong></td>
+            <td width="25%"><strong><spring:message code="com_intalio_bpms_workflow_taskHolder_creationDateTime"/></strong></td>
+			<td width="20%"><strong><spring:message code="com_intalio_bpms_workflow_taskHolder_dueDate"/></strong></td>
+			<td width="10%"><strong><spring:message code="com_intalio_bpms_workflow_taskHolder_priority"/></strong></td>
         </tr>
     </jsp:text>
 
@@ -72,9 +72,9 @@ version="1.2">
     <table width="80%"  cellspacing="0" cellpadding="0" id="properties_content">
 	]]>
         <tr id="headertr">
-            <td width="60%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/></strong></td>
-            <td width="30%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/></strong></td>
-		  	<td width="10%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_priority"/></strong></td>
+            <td width="60%"><strong><spring:message code="com_intalio_bpms_workflow_taskHolder_description"/></strong></td>
+            <td width="30%"><strong><spring:message code="com_intalio_bpms_workflow_taskHolder_creationDateTime"/></strong></td>
+		  	<td width="10%"><strong><spring:message code="com_intalio_bpms_workflow_taskHolder_priority"/></strong></td>
         </tr>
     </jsp:text>
 
@@ -123,8 +123,8 @@ version="1.2">
     <table width="80%"  cellspacing="0" cellpadding="0" id="properties_content">
 	]]>
         <tr id="headertr">
-          <td width="65%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/></strong></td>
-          <td width="35%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/></strong></td>
+          <td width="65%"><strong><spring:message code="com_intalio_bpms_workflow_taskHolder_description"/></strong></td>
+          <td width="35%"><strong><spring:message code="com_intalio_bpms_workflow_taskHolder_creationDateTime"/></strong></td>
         </tr>
     </jsp:text>
 

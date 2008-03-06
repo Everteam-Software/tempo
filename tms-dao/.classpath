@@ -1,6 +1,6 @@
 <classpath>
   <classpathentry path="org.eclipse.jdt.launching.JRE_CONTAINER" kind="con"/>
-  <classpathentry path="src/main/java" excluding="**/.svn/|**/CVS/" kind="src"/>
+  <classpathentry path="src/main/java" kind="src" excluding="**/.svn/|**/CVS/"/>
   <classpathentry path="target/classes" kind="output"/>
   <classpathentry path="M2_REPO/commons-codec/commons-codec/1.3/commons-codec-1.3.jar" kind="var"/>
   <classpathentry path="M2_REPO/commons-collections/commons-collections/3.2/commons-collections-3.2.jar" kind="var"/>
@@ -23,6 +23,6 @@
   <classpathentry path="M2_REPO/org/slf4j/slf4j-api/1.4.3/slf4j-api-1.4.3.jar" kind="var"/>
   <classpathentry path="M2_REPO/org/slf4j/slf4j-log4j12/1.4.3/slf4j-log4j12-1.4.3.jar" kind="var"/>
   <classpathentry path="M2_REPO/serp/serp/1.13.1/serp-1.13.1.jar" kind="var"/>
-  <classpathentry combineaccessrules="false" path="/tempo-dao-nutsNbolts" kind="src"/>
-  <classpathentry combineaccessrules="false" path="/tempo-tms-common" kind="src"/>
+  <classpathentry path="/tempo-dao-nutsNbolts" kind="src" combineaccessrules="false"/>
+  <classpathentry path="/tempo-tms-common" kind="src" combineaccessrules="false"/>
 </classpath>

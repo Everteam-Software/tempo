@@ -8,7 +8,7 @@
  *
  * $Id$
  * $Log$
- */
+ *//*
 package org.intalio.tempo.web.controller;
 
 import java.rmi.RemoteException;
@@ -421,24 +421,24 @@ public class LoginController extends UIController {
 
         private static final String PASSWORD_PARAM = "password";
 
-        /**
+        *//**
          * Minimal length of the component value
-         */
+         *//*
         private static final int USERNAME_MIN_LENGTH = 0;
 
-        /**
+        *//**
          * Maximum length of the component value
-         */
+         *//*
         private static final int USERNAME_MAX_LENGTH = 30;
 
-        /**
+        *//**
          * Minimum text length
-         */
+         *//*
         private static final int PASSWORD_MIN_LENGTH = 0;
 
-        /**
+        *//**
          * Maximum text length
-         */
+         *//*
         private static final int PASSWORD_MAX_LENGTH = 12;
 
         public void validate(Object obj, Errors errors) {
@@ -475,4 +475,4 @@ public class LoginController extends UIController {
         }
     }
 
-}
+}*/

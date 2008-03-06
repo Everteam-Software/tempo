@@ -9,18 +9,21 @@
             <type>war</type>
         </moduleId>
         <dependencies>
+             
             <dependency>
                 <groupId>xalan</groupId>
                 <artifactId>xalan</artifactId>
                 <version>2.7.0</version>
                 <type>jar</type>
             </dependency>
+             
             <dependency>
                 <groupId>xerces</groupId>
                 <artifactId>xercesImpl</artifactId>
                 <version>2.8.1</version>
                 <type>jar</type>
             </dependency>
+            
             <dependency>
                 <groupId>org.codehaus.castor</groupId>
                 <artifactId>castor</artifactId>
@@ -61,6 +64,12 @@
                 <groupId>org.apache.pluto</groupId>
                 <artifactId>pluto-taglib</artifactId>
                 <version>1.1.4</version>
+                <type>jar</type>
+            </dependency>
+			<dependency>
+                <groupId>cas</groupId>
+                <artifactId>casclient</artifactId>
+                <version>2.1.1</version>
                 <type>jar</type>
             </dependency>
         </dependencies>
