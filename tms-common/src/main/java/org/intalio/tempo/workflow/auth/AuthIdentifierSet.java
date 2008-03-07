@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -34,7 +35,9 @@ import org.intalio.tempo.workflow.util.RequiredArgumentException;
 @Table(name = "TEMPO_AUTH_SET")
 public class AuthIdentifierSet extends HashSet<String> {
 
-	@PersistentCollection(elementCascade = CascadeType.ALL)
+    private static final long serialVersionUID = -6628743014089702581L;
+    
+    @PersistentCollection(elementCascade = CascadeType.ALL)
     @ContainerTable(name="TEMPO_BACKING_SET",joinColumns=@XJoinColumn(name="SET_ID"))
     @ElementJoinColumn(name="AUTH_ID")
     private Collection<String> backingSet = new HashSet<String>();
@@ -43,6 +46,10 @@ public class AuthIdentifierSet extends HashSet<String> {
 
     }
 
+    public AuthIdentifierSet(List<String> strings) {
+        backingSet.addAll(strings);
+    }
+    
     public AuthIdentifierSet(Collection<String> strings) {
         backingSet.addAll(strings);
     }

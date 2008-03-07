@@ -81,17 +81,18 @@ public abstract class UIController extends AbstractFormController {
         ModelAndView mav = null;
 
         String actionName = request.getParameter(ACTION_ID_PARAM);
-        if (LOG.isDebugEnabled()) {
+        if (LOG.isDebugEnabled()) 
             LOG.debug("Form submission:  action="+actionName);
-        }
+        
         if (StringUtils.isEmpty(actionName)) {
-            LOG.debug("Empty action name, use default showForm()");
+            if (LOG.isDebugEnabled()) LOG.debug("Empty action name, use default showForm()");
             mav = showForm(request, response, errors);
         }
         if (mav == null) {
             Method method = _actionMethods.get(actionName);
             if (method != null) {
-                LOG.debug("Form submission:  action method="+getClass().getSimpleName()+"."+method.getName());
+                if (LOG.isDebugEnabled())
+                    LOG.debug("Form submission:  action method="+getClass().getSimpleName()+"."+method.getName());
                 mav = (ModelAndView) method.invoke(this, new Object[] { request, response, command, errors });
             }
         }
@@ -100,7 +101,7 @@ public abstract class UIController extends AbstractFormController {
             if (actionClass == null) {
                 throw new Exception("No method or action class found for action " + actionName + "on " + getClass());
             }
-            LOG.debug("Form submission:  action class="+actionClass);
+            if (LOG.isDebugEnabled()) LOG.debug("Form submission:  action class="+actionClass);
             Action action = actionClass.newInstance();
             action.setRequest(request);
             action.setResponse(response);
@@ -114,7 +115,7 @@ public abstract class UIController extends AbstractFormController {
 
         fillAuthorization(request, mav);
         
-        LOG.debug("Form submission:  ViewModel="+mav);
+        if (LOG.isDebugEnabled()) LOG.debug("Form submission:  ViewModel="+mav);
         return mav;
     }
 
@@ -125,10 +126,12 @@ public abstract class UIController extends AbstractFormController {
             Map model = mav.getModel();
             for (ActionDef def : _actionDefs) {
                 model.put(def.getActionName()+"Authorized", def.isAuthorized(user));
-                LOG.debug(def.getActionName()+"Authorized=" + def.isAuthorized(user));
+                if (LOG.isDebugEnabled())
+                    LOG.debug(def.getActionName() + "Authorized=" + def.isAuthorized(user));
             }
         } else {
-            LOG.debug("Form submission:  no available user, state or actionDefs");
+            if (LOG.isDebugEnabled())
+                LOG.debug("Form submission:  no available user, state or actionDefs");
         }
     }
 
@@ -142,7 +145,8 @@ public abstract class UIController extends AbstractFormController {
     }
 
     public void setActionDefs(Collection<ActionDef> actionDefs) {
-        LOG.debug("Set action defs on " + getClass() + " with " + actionDefs);
+        if (LOG.isDebugEnabled())
+            LOG.debug("Set action defs on " + getClass() + " with " + actionDefs);
         _actionDefs = actionDefs;
         initActionDefs();
     }

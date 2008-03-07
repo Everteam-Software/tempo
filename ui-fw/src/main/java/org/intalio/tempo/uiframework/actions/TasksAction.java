@@ -54,7 +54,7 @@ public class TasksAction extends Action {
     private final Collection<TaskHolder<PIPATask>> _initTasks = new ArrayList<TaskHolder<PIPATask>>();
 
     private void initLists() throws RemoteException, AuthException {
-        _log.info("Parsing task list for UI-FW");
+        if(_log.isDebugEnabled()) _log.debug("Parsing task list for UI-FW");
         
         FormManager fmanager = FormManagerBroker.getInstance().getFormManager();
         String peopleActivityUrl = resoleUrl(fmanager.getPeopleActivityURL());

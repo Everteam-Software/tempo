@@ -38,6 +38,10 @@ public class Attachment {
     @Column(name = "payload_url")
     private String payloadURLAsString;
 
+    public Attachment() {
+        
+    }
+    
     public Attachment(AttachmentMetadata metadata, URL payloadURL) {
         this.setMetadata(metadata);
         this.setPayloadURL(payloadURL);

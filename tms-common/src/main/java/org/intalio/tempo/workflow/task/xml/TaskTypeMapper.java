@@ -15,50 +15,46 @@
 
 package org.intalio.tempo.workflow.task.xml;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.net.URI;
 
 import org.intalio.tempo.workflow.task.Notification;
 import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
+import org.intalio.tempo.workflow.util.map.InvertibleMap;
 import org.intalio.tempo.workflow.util.xml.InvalidInputFormatException;
 
-final class TaskTypeMapper {
+public final class TaskTypeMapper {
 
-    private static final Map<Class<? extends Task>, String> _typeMap = new HashMap<Class<? extends Task>, String>();
+    private static final InvertibleMap<Class<? extends Task>, Object> _typeMap = new InvertibleMap<Class<? extends Task>, Object>();
+
+    public static enum TaskType {
+        INIT, ACTIVITY, NOTIFICATION
+    }
 
     static {
-        _typeMap.put(PIPATask.class, "INIT");
-        _typeMap.put(PATask.class, "ACTIVITY");
-        _typeMap.put(Notification.class, "NOTIFICATION");
+        _typeMap.put(PIPATask.class, TaskType.INIT.name());
+        _typeMap.put(PATask.class, TaskType.ACTIVITY.name());
+        _typeMap.put(Notification.class, TaskType.NOTIFICATION.name());
     }
 
     public static String getTypeClassName(Class<? extends Task> taskClass) {
         if (taskClass == null) {
             throw new RequiredArgumentException("taskClass");
         }
-
-        String result = _typeMap.get(taskClass);
+        Object result = _typeMap.get(taskClass);
         if (result == null) {
             throw new IllegalArgumentException("Unknown class type: " + taskClass.getName());
         }
-        return result;
+        return result.toString();
     }
 
     public static Class<? extends Task> getTypeClassByName(String name) throws InvalidInputFormatException {
         if (name == null) {
             throw new RequiredArgumentException("name");
         }
-
-        Class<? extends Task> typeClass = null;
-        for (Map.Entry<Class<? extends Task>, String> entry : _typeMap.entrySet()) {
-            if (entry.getValue().equalsIgnoreCase(name)) {
-                typeClass = entry.getKey();
-                break;
-            }
-        }
+        Class<? extends Task> typeClass = _typeMap.getInverse(name.toUpperCase());
         if (typeClass == null) {
             throw new InvalidInputFormatException("Invalid task type name: '" + name + "'");
         }
@@ -67,5 +63,13 @@ final class TaskTypeMapper {
 
     private TaskTypeMapper() {
 
+    }
+
+    public static Task getNewInstance(Class<? extends Task> taskClass, String taskID, URI formURL) {
+        try {
+            return (Task) taskClass.getConstructor(String.class, URI.class).newInstance(taskID, formURL);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Cannot instanciate class type: " + taskClass.getName());
+        }
     }
 }

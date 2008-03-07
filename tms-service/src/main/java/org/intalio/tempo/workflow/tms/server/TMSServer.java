@@ -318,8 +318,7 @@ public class TMSServer implements ITMSServer {
 		 omTaskOutput.addChild(xmlTooling.convertDOMToOM(input, omFactory));
 
 		Options options = new Options();
-		options.setTo(new EndpointReference(task.getProcessEndpoint()
-				.toString()));
+		options.setTo(new EndpointReference(task.getProcessEndpoint().toString()));
 		options.setAction(task.getInitOperationSOAPAction());
 
 		try {

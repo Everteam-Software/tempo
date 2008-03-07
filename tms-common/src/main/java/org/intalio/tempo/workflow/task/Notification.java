@@ -60,10 +60,15 @@ public class Notification extends Task implements ITaskWithState, ITaskWithInput
         super();
     }
 
+    @Deprecated
     public Notification(String id, URI formURL, Document input) {
         super(id, formURL);
         if (input != null)
             setInput(input);
+    }
+
+    public Notification(String id, URI formURL) {
+        super(id, formURL);
     }
 
     public TaskState getState() {

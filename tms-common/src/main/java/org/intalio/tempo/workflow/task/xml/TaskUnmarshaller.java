@@ -26,6 +26,7 @@ import java.util.Iterator;
 import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.xmlbeans.XmlAnySimpleType;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
@@ -33,9 +34,6 @@ import org.apache.xmlbeans.XmlOptions;
 import org.apache.xmlbeans.impl.values.XmlValueOutOfRangeException;
 import org.intalio.tempo.workflow.auth.ACL;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
-import org.intalio.tempo.workflow.task.Notification;
-import org.intalio.tempo.workflow.task.PATask;
-import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.TaskState;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
@@ -86,8 +84,7 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
         } catch (InvalidInputFormatException e) {
             throw e;
         } catch (XmlException e) {
-            _logger.error("Error in unmarshalling task from metadata", e);
-            return null;
+            throw new InvalidInputFormatException(e);
         }
 
     }
@@ -106,31 +103,14 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
         String taskTypeStr = taskMetadata.getTaskType();
         String description = taskMetadata.getDescription();
         String processID = taskMetadata.getProcessId();
-        String creationDateStr = null;
 
-        try {
-            Calendar cal = taskMetadata.getCreationDate();
-            if (cal != null) {
-                creationDateStr = cal.toString();
-            }
-        } catch (Exception e) {
-            // TODO need to confirm how to deal with it
-            _logger.error("Error in unmarshalling task from metadata", e);
-        }
-
-        AuthIdentifierSet userOwners = new AuthIdentifierSet(taskMetadata.getUserOwnerArray());
-        AuthIdentifierSet roleOwners = new AuthIdentifierSet(taskMetadata.getRoleOwnerArray());
+        AuthIdentifierSet userOwners = new AuthIdentifierSet(taskMetadata.getUserOwnerList());
+        AuthIdentifierSet roleOwners = new AuthIdentifierSet(taskMetadata.getRoleOwnerList());
         String deadline = null;
 
-        try {
-            if (taskMetadata.xgetDeadline() != null && taskMetadata.xgetDeadline().validate()) {
-                Calendar cal = taskMetadata.getDeadline();
-                deadline = cal.toString();
-            }
-
-        } catch (Exception e) {
-            // TODO need to confirm how to deal with it
-            _logger.error("Error in unmarshalling task from metadata", e);
+        if (taskMetadata.xgetDeadline() != null && taskMetadata.xgetDeadline().validate()) {
+            Calendar cal = taskMetadata.getDeadline();
+            deadline = cal.toString();
         }
 
         Integer priority = null;
@@ -199,28 +179,22 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
             forbidParameter(previousTaskID, "previous chained task ID");
         }
 
-        // TODO: the following is a loathsome if-cascade:
-        if (taskClass.equals(PIPATask.class)) {
-            resultTask = new PIPATask(taskID, formURL);
-        } else if (taskClass.equals(PATask.class)) {
-            resultTask = new PATask(taskID, formURL, processID, completeSOAPAction, null);
-        } else if (taskClass.equals(Notification.class)) {
-            resultTask = new Notification(taskID, formURL, null);
-        } else {
-            throw new RuntimeException("Unknown task class: " + taskClass);
-        }
+        resultTask = TaskTypeMapper.getNewInstance(taskClass, taskID, formURL);
 
         resultTask.getUserOwners().addAll(userOwners);
         resultTask.getRoleOwners().addAll(roleOwners);
 
         resultTask.setDescription(description == null ? "" : description);
-        _logger.debug("Setting date from " + creationDateStr);
-        if ((creationDateStr != null) && (creationDateStr.trim().length() > 0)) {
-            resultTask.setCreationDate(new XsdDateTime(creationDateStr).getTime());
-        } else {
-            resultTask.setCreationDate(new Date());
+        
+        XmlAnySimpleType calcd = taskMetadata.xgetCreationDate();
+        if (calcd != null) {
+            if (calcd.validate() && (calcd.toString().trim().length() > 0)) {
+                resultTask.setCreationDate(new XsdDateTime(calcd.getStringValue()).getTime());
+            } else
+                resultTask.setCreationDate(new Date());
         }
-        _logger.debug("Date set to " + resultTask.getCreationDate());
+        if(_logger.isDebugEnabled())
+            _logger.debug("Creation date set to " + resultTask.getCreationDate());
 
         authorize(resultTask, "claim", claim);
         authorize(resultTask, "revoke", revoke);
@@ -331,6 +305,7 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
                 }
             }
         }
+        
         // / the following is added to support task deadlines
         if (ITaskWithDeadline.class.isAssignableFrom(taskClass)) {
             ITaskWithDeadline taskWithDeadline = (ITaskWithDeadline) resultTask;
@@ -340,14 +315,13 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
                 taskWithDeadline.setDeadline(null);
             }
         }
+        
         // the following is added to support task priorities
         if (ITaskWithPriority.class.isAssignableFrom(taskClass)) {
-
             ITaskWithPriority taskWithDeadline = (ITaskWithPriority) resultTask;
-
             taskWithDeadline.setPriority(priority);
-
         }
+        
         return resultTask;
     }
 
@@ -478,9 +452,6 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
     /**
      * Xmlbeans is wrapping the content with some <code>xml-fragment</code>
      * tag Position the cursor on the data we really want.
-     * 
-     * @param xmlObject
-     * @return
      */
     private String serializeXMLObject(XmlObject xmlObject) {
         XmlCursor cursor = xmlObject.newCursor();

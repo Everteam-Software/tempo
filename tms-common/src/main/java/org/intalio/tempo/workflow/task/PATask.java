@@ -105,9 +105,13 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
     private Integer _priority;
 
     public PATask() {
-        super();
+        
     }
-
+    
+    public PATask(String id, URI formURL) {
+        super(id, formURL);
+    }
+    
     public PATask(String id, URI formURL, String processID, String completeSOAPAction, Document input) {
         super(id, formURL);
         this.setProcessID(processID);
