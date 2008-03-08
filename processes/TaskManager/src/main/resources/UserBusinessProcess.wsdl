@@ -1,14 +1,15 @@
-<?xml version="1.0" encoding="utf-8" ?><!--
-  ~ Copyright (c) 2005-2007 Intalio inc.
-  ~
-  ~ All rights reserved. This program and the accompanying materials
-  ~ are made available under the terms of the Eclipse Public License v1.0
-  ~ which accompanies this distribution, and is available at
-  ~ http://www.eclipse.org/legal/epl-v10.html
-  ~
-  ~ Contributors:
-  ~ Intalio inc. - initial API and implementation
-  -->
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+	~ Copyright (c) 2005-2007 Intalio inc.
+	~
+	~ All rights reserved. This program and the accompanying materials
+	~ are made available under the terms of the Eclipse Public License v1.0
+	~ which accompanies this distribution, and is available at
+	~ http://www.eclipse.org/legal/epl-v10.html
+	~
+	~ Contributors:
+	~ Intalio inc. - initial API and implementation
+-->
 
 
 <!--
@@ -34,8 +35,7 @@
 -->
 
 
-<wsdl:definitions
-	targetNamespace="http://www.intalio.com/bpms/ubp"
+<wsdl:definitions targetNamespace="http://www.intalio.com/bpms/ubp"
 	xmlns:ubp="http://www.intalio.com/bpms/ubp"
 	xmlns="http://schemas.xmlsoap.org/wsdl/"
 	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
@@ -44,7 +44,7 @@
 	xmlns:bpws="http://schemas.xmlsoap.org/ws/2004/03/business-process/"
 	xmlns:plnk="http://schemas.xmlsoap.org/ws/2004/03/partner-link/"
 	xmlns:b4p="http://www.intalio.com/bpms/workflow/ib4p_20051115"
-		xmlns:b4px="java:org.intalio.tempo.workflow.processes.xpath.UIDs"
+	xmlns:b4px="java:org.intalio.tempo.workflow.processes.xpath.UIDs"
 	xmlns:tms="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
 
 
@@ -52,15 +52,15 @@
 
 
 	<!-- WSDL Dependencies -->
-<wsdl:import location="b4p.xsd" namespace="http://www.intalio.com/bpms/workflow/ib4p_20051115"></wsdl:import>
+	<wsdl:import location="b4p.xsd"
+		namespace="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+	</wsdl:import>
 
 
 
 	<wsdl:types>
 
-	
-
-
+		
 	</wsdl:types>
 
 
@@ -69,7 +69,7 @@
 
 
 
-	
+
 
 
 
@@ -105,7 +105,7 @@
 
 
 
-	
+
 
 
 
@@ -140,12 +140,12 @@
 
 	</wsdl:message>
 
-
+	
 	<!-- Correlations -->
 
 
 
-	
+
 	<!-- Port Types -->
 
 
@@ -179,7 +179,7 @@
 
 			<wsdl:output message="ubp:notifyTaskCompletionResponse"
 				name="notifyTaskCompletionResponse" />
-
+			
 		</wsdl:operation>
 
 	</wsdl:portType>
@@ -256,7 +256,9 @@
 					use="literal" />
 
 			</wsdl:output>
-
+			<wsdl:fault name="taskDeadlineReached">
+				<soap:fault name="taskDeadlineReached" use="literal" />
+			</wsdl:fault>
 		</wsdl:operation>
 
 	</wsdl:binding>

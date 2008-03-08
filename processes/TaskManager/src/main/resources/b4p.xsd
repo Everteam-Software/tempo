@@ -1,275 +1,300 @@
-<xsd:schema
-xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-			targetNamespace="http://www.intalio.com/bpms/workflow/ib4p_20051115"
-			xmlns:b4p="http://www.intalio.com/bpms/workflow/ib4p_20051115"
-			elementFormDefault="qualified">
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+	xmlns:b4p="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+	elementFormDefault="qualified">
+
+	<!-- this element is necessary for Claims -->
+	<xsd:element name="usersAndRoles" type="b4p:accessControlType"/>
+		
 			
-			<!-- this element is necessary for Claims -->
-			<xsd:element name="usersAndRoles">
-				<xsd:complexType>
-					<xsd:sequence>
-						<xsd:element name="userOwner" minOccurs="0" maxOccurs="unbounded" type="xsd:string"/>
-						<xsd:element name="roleOwner" minOccurs="0" maxOccurs="unbounded" type="xsd:string"/>
-					</xsd:sequence>
-				</xsd:complexType>
-			</xsd:element>
-
-			<xsd:element name="completeTaskRequest">
-
-				<xsd:complexType>
-
-					<xsd:sequence>
-
-						<xsd:element name="taskMetaData"
-							type="b4p:taskMetaDataType" />
-
-						<xsd:element name="participantToken"
-							type="xsd:string" />
-
-						<xsd:element name="taskOutput" />
-
-					</xsd:sequence>
-
-				</xsd:complexType>
-
-			</xsd:element>
-
-			<xsd:element name="createTaskRequest">
-
-				<xsd:complexType>
-
-					<xsd:sequence>
-
-						<xsd:element name="taskMetaData"
-							type="b4p:taskMetaDataType" />
-
-						<xsd:element name="participantToken"
-							type="xsd:string" />
-
-						<xsd:element name="taskInput" />
-
-					</xsd:sequence>
-
-				</xsd:complexType>
-
-			</xsd:element>
-
-			<xsd:element name="escalateTaskRequest">
-
-				<xsd:complexType>
-
-					<xsd:sequence>
-
-						<xsd:element name="taskId" type="xsd:string" />
-
-						<xsd:element name="userOwner" type="xsd:string" />
-
-						<xsd:element name="roleOwner" type="xsd:string" />
-
-					</xsd:sequence>
-
-				</xsd:complexType>
-
-			</xsd:element>
-
-			<xsd:element name="escalateTaskResponse">
-
-				<xsd:complexType>
-
-					<xsd:sequence>
-
-						<xsd:element name="status" type="xsd:string" />
-
-					</xsd:sequence>
-
-				</xsd:complexType>
-
-			</xsd:element>
-
-			<xsd:element name="claimTaskRequest">
-
-				<xsd:complexType>
-
-					<xsd:sequence>
-
-						<xsd:element name="taskId" type="xsd:string" />
-
-						<xsd:element name="claimerUser" type="xsd:string" />
-
-						<xsd:element name="participantToken" type="xsd:string" />
-
-					</xsd:sequence>
-
-				</xsd:complexType>
-
-			</xsd:element>
-
-			<xsd:element name="claimTaskResponse">
-
-				<xsd:complexType>
-
-					<xsd:sequence>
-
-						<xsd:element name="status" type="xsd:string" />
-
-					</xsd:sequence>
-
-				</xsd:complexType>
-
-			</xsd:element>
-
-			<xsd:element name="revokeTaskRequest">
-
-				<xsd:complexType>
-
-					<xsd:sequence>
-
-						<xsd:element name="taskId" type="xsd:string" />
-
-						<xsd:element name="participantToken" type="xsd:string" />
-
-					</xsd:sequence>
-
-				</xsd:complexType>
-
-			</xsd:element>
-
-			<xsd:element name="revokeTaskResponse">
-
-				<xsd:complexType>
-
-					<xsd:sequence>
-
-						<xsd:element name="status" type="xsd:string" />
-
-					</xsd:sequence>
-
-				</xsd:complexType>
-
-			</xsd:element>
-
+		
+	
+ <xsd:complexType name="accessControlType">
+    <xsd:sequence>
+      <xsd:element name="user" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="role" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+	<xsd:complexType name="scheduledActionsDetails">
+						<xsd:choice minOccurs="0" maxOccurs="1">
+
+							<xsd:element name="until"
+								type="xsd:dateTime" maxOccurs="1" minOccurs="0" />
+							<xsd:element name="for" type="xsd:duration"
+								maxOccurs="1" minOccurs="0" />
+
+						</xsd:choice>
+					</xsd:complexType>				
 			
 
-			<xsd:element name="notifyTaskCompletionRequest">
+	
 
-				<xsd:complexType>
+	<xsd:element name="completeTaskRequest">
 
-					<xsd:sequence>
+		<xsd:complexType>
 
-						<xsd:element name="taskMetaData"
-							type="b4p:taskMetaDataType" />
+			<xsd:sequence>
 
-						<xsd:element name="taskOutput" />
-<xsd:element name="status"
-							type="xsd:string" />
-					</xsd:sequence>
+				<xsd:element name="taskMetaData"
+					type="b4p:taskMetaDataType" />
 
-				</xsd:complexType>
+				<xsd:element name="participantToken" type="xsd:string" />
 
-			</xsd:element>
+				<xsd:element name="taskOutput" />
 
-			<xsd:element name="response">
+			</xsd:sequence>
 
-				<xsd:complexType>
+		</xsd:complexType>
 
-					<xsd:sequence>
+	</xsd:element>
 
-						<xsd:element name="taskMetaData"
-							type="b4p:taskMetaDataType" />
+	<xsd:element name="createTaskRequest">
 
-						<xsd:element name="status" type="xsd:string" />
+		<xsd:complexType>
 
-						<xsd:element name="errorCode" type="xsd:string"
-							minOccurs="0" />
+			<xsd:sequence>
 
-						<xsd:element name="errorReason"
-							type="xsd:string" minOccurs="0" />
+				<xsd:element name="taskMetaData"
+					type="b4p:taskMetaDataType" />
 
-						<xsd:element name="isChainedAfter"
-							type="xsd:boolean" minOccurs="0" />
+				<xsd:element name="participantToken" type="xsd:string" />
 
-					</xsd:sequence>
-
-				</xsd:complexType>
-
-			</xsd:element>
+				<xsd:element name="taskInput" />
 
 
-			<xsd:element name="chainedExecution">
+				
 
-				<xsd:complexType>
+			</xsd:sequence>
 
-					<xsd:sequence>
+		</xsd:complexType>
 
-						<xsd:element name="previousTaskId"
-							type="xsd:string" minOccurs="0" />
+	</xsd:element>
 
-						<xsd:element name="nextTaskId" type="xsd:string"
-							minOccurs="0" />
+	<xsd:element name="escalateTaskRequest">
 
-						<xsd:element name="nextTaskURL"
-							type="xsd:string" minOccurs="0" />
+		<xsd:complexType>
 
-					</xsd:sequence>
+			<xsd:sequence>
 
-				</xsd:complexType>
+				<xsd:element name="taskId" type="xsd:string" />
 
-			</xsd:element>
+				<xsd:element name="userOwner" type="xsd:string" />
 
-			<xsd:complexType name="taskMetaDataType">
+				<xsd:element name="roleOwner" type="xsd:string" />
 
-				<xsd:sequence>
+			</xsd:sequence>
 
-					<xsd:element name="taskId" type="xsd:string" />
+		</xsd:complexType>
 
-					<xsd:element name="taskState" type="xsd:token" />
+	</xsd:element>
 
-					<xsd:element name="taskType" type="xsd:token" />
+	<xsd:element name="escalateTaskResponse">
 
-					<xsd:element name="description" type="xsd:string" />
+		<xsd:complexType>
 
-					<xsd:element name="processId" type="xsd:string" />
+			<xsd:sequence>
 
-					<xsd:element name="creationDate"
-						type="xsd:dateTime" />
+				<xsd:element name="status" type="xsd:string" />
 
-					<xsd:element name="userOwner" type="xsd:string"
-						maxOccurs="unbounded" minOccurs="0" />
+			</xsd:sequence>
 
-					<xsd:element name="roleOwner" type="xsd:string"
-						maxOccurs="unbounded" minOccurs="0" />
+		</xsd:complexType>
 
-					<xsd:element name="formUrl" type="xsd:anyURI" />
+	</xsd:element>
 
-					<xsd:element name="failureCode" type="xsd:string" />
+	<xsd:element name="claimTaskRequest">
 
-					<xsd:element name="failureReason" type="xsd:string" />
+		<xsd:complexType>
 
-					<xsd:element name="userEndpoint" type="xsd:string" />
+			<xsd:sequence>
 
-					<xsd:element name="userProcessEndpoint"
-						type="xsd:string" />
+				<xsd:element name="taskId" type="xsd:string" />
 
-					<xsd:element name="userProcessNamespaceURI"
-						type="xsd:string" />
+				<xsd:element name="claimerUser" type="xsd:string" />
 
-					<xsd:element name="userProcessCompleteSOAPAction"
-						type="xsd:string" />
+				<xsd:element name="participantToken" type="xsd:string" />
 
-					<xsd:element name="isChainedBefore"
-						type="xsd:boolean" minOccurs="0" />
+			</xsd:sequence>
 
-					<xsd:element name="previousTaskId" type="xsd:string"
-						minOccurs="0" />
+		</xsd:complexType>
 
-					<xsd:element name="nextTaskId" type="xsd:string"
-						minOccurs="0" />
-<xsd:element name="session" type="xsd:string"
-						minOccurs="0" />
-<xsd:element name="nextTaskURL"
-							type="xsd:string" minOccurs="0" />
-				</xsd:sequence>
+	</xsd:element>
 
+	<xsd:element name="claimTaskResponse">
+
+		<xsd:complexType>
+
+			<xsd:sequence>
+
+				<xsd:element name="status" type="xsd:string" />
+
+			</xsd:sequence>
+
+		</xsd:complexType>
+
+	</xsd:element>
+
+	<xsd:element name="revokeTaskRequest">
+
+		<xsd:complexType>
+
+			<xsd:sequence>
+
+				<xsd:element name="taskId" type="xsd:string" />
+
+				<xsd:element name="participantToken" type="xsd:string" />
+
+			</xsd:sequence>
+
+		</xsd:complexType>
+
+	</xsd:element>
+
+	<xsd:element name="revokeTaskResponse">
+
+		<xsd:complexType>
+
+			<xsd:sequence>
+
+				<xsd:element name="status" type="xsd:string" />
+
+			</xsd:sequence>
+
+		</xsd:complexType>
+
+	</xsd:element>
+
+
+
+	<xsd:element name="notifyTaskCompletionRequest">
+
+		<xsd:complexType>
+
+			<xsd:sequence>
+
+				<xsd:element name="taskMetaData"
+					type="b4p:taskMetaDataType" />
+
+				<xsd:element name="taskOutput" />
+				<xsd:element name="status" type="xsd:string" />
+			</xsd:sequence>
+
+		</xsd:complexType>
+
+	</xsd:element>
+
+	<xsd:element name="response">
+
+		<xsd:complexType>
+
+			<xsd:sequence>
+
+				<xsd:element name="taskMetaData"
+					type="b4p:taskMetaDataType" />
+
+				<xsd:element name="status" type="xsd:string" />
+
+				<xsd:element name="errorCode" type="xsd:string"
+					minOccurs="0" />
+
+				<xsd:element name="errorReason" type="xsd:string"
+					minOccurs="0" />
+
+				<xsd:element name="isChainedAfter" type="xsd:boolean"
+					minOccurs="0" />
+
+			</xsd:sequence>
+
+		</xsd:complexType>
+
+	</xsd:element>
+
+
+	<xsd:element name="chainedExecution">
+
+		<xsd:complexType>
+
+			<xsd:sequence>
+
+				<xsd:element name="previousTaskId" type="xsd:string"
+					minOccurs="0" />
+
+				<xsd:element name="nextTaskId" type="xsd:string"
+					minOccurs="0" />
+
+				<xsd:element name="nextTaskURL" type="xsd:string"
+					minOccurs="0" />
+
+			</xsd:sequence>
+
+		</xsd:complexType>
+
+	</xsd:element>
+
+	<xsd:complexType name="taskMetaDataType">
+
+		<xsd:sequence>
+
+			<xsd:element name="taskId" type="xsd:string" />
+
+			<xsd:element name="taskState" type="xsd:token" />
+
+			<xsd:element name="taskType" type="xsd:token" />
+
+			<xsd:element name="description" type="xsd:string" />
+
+			<xsd:element name="processId" type="xsd:string" />
+
+			<xsd:element name="creationDate" type="xsd:dateTime" />
+
+			<xsd:element name="userOwner" type="xsd:string"
+				maxOccurs="unbounded" minOccurs="0" />
+
+			<xsd:element name="roleOwner" type="xsd:string"
+				maxOccurs="unbounded" minOccurs="0" />
+<xsd:element name="claimAction" type="b4p:accessControlType" maxOccurs="1" minOccurs="0"/>
+      <xsd:element name="revokeAction" type="b4p:accessControlType" maxOccurs="1" minOccurs="0"/>
+      <xsd:element name="saveAction" type="b4p:accessControlType" maxOccurs="1" minOccurs="0"/>
+      <xsd:element name="completeAction" type="b4p:accessControlType" maxOccurs="1" minOccurs="0"/>
+      <xsd:element name="deferAction" type="b4p:accessControlType" maxOccurs="1" minOccurs="0"/>
+			<xsd:element name="formUrl" type="xsd:anyURI" />
+
+			<xsd:element name="failureCode" type="xsd:string" />
+
+			<xsd:element name="failureReason" type="xsd:string" />
+			
+			 <xsd:element name="priority" type="xsd:int"/>
+			<xsd:element name="scheduledActions">
+			<xsd:complexType>
+			<xsd:sequence>
+			<xsd:element name="expiration" type="b4p:scheduledActionsDetails"/>
+			<xsd:element name="deferActivation" type="b4p:scheduledActionsDetails"/>
+			</xsd:sequence>
 			</xsd:complexType>
+		</xsd:element>
+			<xsd:element name="userEndpoint" type="xsd:string" />
 
-		</xsd:schema>
+			<xsd:element name="userProcessEndpoint" type="xsd:string" />
+
+			<xsd:element name="userProcessNamespaceURI"
+				type="xsd:string" />
+
+			<xsd:element name="userProcessCompleteSOAPAction"
+				type="xsd:string" />
+
+			<xsd:element name="isChainedBefore" type="xsd:boolean"
+				minOccurs="0" />
+
+			<xsd:element name="previousTaskId" type="xsd:string"
+				minOccurs="0" />
+
+			<xsd:element name="nextTaskId" type="xsd:string"
+				minOccurs="0" />
+			<xsd:element name="session" type="xsd:string" minOccurs="0" />
+			<xsd:element name="nextTaskURL" type="xsd:string"
+				minOccurs="0" />
+		</xsd:sequence>
+
+	</xsd:complexType>
+
+</xsd:schema>
