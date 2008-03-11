@@ -40,7 +40,7 @@
 
 	<bean id="portletModeHandlerMapping"
 		class="org.springframework.web.portlet.handler.PortletModeHandlerMapping">
-		<property name="defaultHandler" ref="updatesController" />
+		<property name="defaultHandler" ref="tasksController" />
 
 		<property name="portletModeMap">
 			<map>

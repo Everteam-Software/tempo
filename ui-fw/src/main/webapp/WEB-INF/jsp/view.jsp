@@ -24,14 +24,12 @@
 <%= as.getCurrentUser().getName() %>
 </div>
 <script type="text/javascript" >
-var ptoken = document.getElementById("token").innerText;
-var puser = document.getElementById("user").innerText;
-alert(puser);
-
+	var ptoken = document.getElementById("token").innerText;
+	var puser = document.getElementById("user").innerText;
 //for auto update
 window.onload = function() {
+
 	<portlet:namespace/>_startTimer(10);
-	
 }
 
 //tab create
@@ -61,7 +59,8 @@ var GridEx={
 	dataurl : '/ui-fw/json/update?token=' + ptoken + '&user=' + puser,
     //initialize
     init:function(){
-
+    	ptoken = document.getElementById("token").innerText;
+		puser = document.getElementById("user").innerText;
         //create Grid
         this.gridobj=this.makeGrid();
         this.gridobj.dataSource=this.makeDataSource();
@@ -135,6 +134,8 @@ var ProcessGridEx={
 	dataurl : '/ui-fw/json/update?token=' + ptoken + '&user=' + puser,
     //initialize
     init:function(){
+    	ptoken = document.getElementById("token").innerText;
+    	puser = document.getElementById("user").innerText;
         //create Grid
         this.gridobj=this.makeGrid();
         this.gridobj.dataSource=this.makeDataSource();
