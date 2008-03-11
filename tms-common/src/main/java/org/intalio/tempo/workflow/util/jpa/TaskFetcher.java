@@ -53,7 +53,7 @@ public class TaskFetcher {
      * Fetch a PIPA task from its URL
      */
     public PIPATask fetchPipaFromUrl(String formUrl) {
-        Query q = _entityManager.createNamedQuery(PIPATask.FIND_BY_URL).setParameter(1, formUrl);
+        Query q = _entityManager.createNamedQuery(PIPATask.FIND_BY_URL).setParameter(1, "%"+formUrl);
         return (PIPATask) q.getSingleResult();
     }
 

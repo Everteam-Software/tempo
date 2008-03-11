@@ -79,8 +79,7 @@ public class WDSService {
         validateRequest(item, participantToken);
         String uri = item.getURI();
 
-        if (_dao.itemExists(uri))
-            _dao.deleteItem(uri);
+        if (_dao.itemExists(uri)) _dao.deleteItem(uri);
         _dao.storeItem(item);
         _dao.commit();
     }
@@ -96,7 +95,11 @@ public class WDSService {
         if (participantToken == null)
             throw new NullPointerException("participantToken");
         ITaskManagementService _tmsConnection = new RemoteTMSFactory(_tmsEndpoint, participantToken).getService();
-        _tmsConnection.deletePipa(pipaTask.getFormURLAsString());
+        try {
+            _tmsConnection.deletePipa(pipaTask.getFormURLAsString());    
+        } catch (Exception e) {
+            // don't bother with that here
+        }
         _tmsConnection.storePipa(pipaTask);
     }
 

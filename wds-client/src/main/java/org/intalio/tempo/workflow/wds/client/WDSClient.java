@@ -287,12 +287,16 @@ public class WDSClient {
         this.processStatusCode(storeFormStatus);
     }
 
-    public void storePipaTask(String uri, PipaTask task) throws IOException, WDSException {
-        PutMethod createPipaTaskPutMethod = new PutMethod(_wdsUrl + uri);
-
+    public void storePipaTask(PipaTask task) throws IOException, WDSException {
+        PutMethod createPipaTaskPutMethod = new PutMethod(_wdsUrl + task.getFormURL());
+        
         createPipaTaskPutMethod.addRequestHeader(new Header("Create-PIPA-Task", "True"));
         createPipaTaskPutMethod.addRequestHeader(new Header("Task-ID", task.getId()));
         createPipaTaskPutMethod.addRequestHeader(new Header("Task-Description", task.getDescription()));
+        createPipaTaskPutMethod.addRequestHeader(new Header("Form-URL", task.getFormURL()));
+        createPipaTaskPutMethod.addRequestHeader(new Header("Process-Endpoint", task.getProcessEndpoint()));
+        createPipaTaskPutMethod.addRequestHeader(new Header("Form-Namespace", task.getFormNamespace()));
+        createPipaTaskPutMethod.addRequestHeader(new Header("Process-InitSOAPAction", task.getInitSoapAction()));
 
         String taskUserOwners = WDSClient.joinAuthIdentifiers(task.getUserOwners());
         if (taskUserOwners.length() > 0) {
@@ -304,15 +308,10 @@ public class WDSClient {
             createPipaTaskPutMethod.addRequestHeader(new Header("Task-RoleOwners", taskRoleOwners));
         }
 
-        createPipaTaskPutMethod.addRequestHeader(new Header("Form-URL", task.getFormURL()));
-        createPipaTaskPutMethod.addRequestHeader(new Header("Process-Endpoint", task.getProcessEndpoint()));
-        createPipaTaskPutMethod.addRequestHeader(new Header("Form-Namespace", task.getFormNamespace()));
-        createPipaTaskPutMethod.addRequestHeader(new Header("Process-InitSOAPAction", task.getInitSoapAction()));
-
         _httpClient.executeMethod(createPipaTaskPutMethod);
 
         int createPipaTaskStatus = createPipaTaskPutMethod.getStatusCode();
-        this.processStatusCode(createPipaTaskStatus);
+        processStatusCode(createPipaTaskStatus);
     }
 
     /**
@@ -336,14 +335,8 @@ public class WDSClient {
     public void deletePIPA(PipaTask pipaTask) throws IOException, WDSException {
         DeleteMethod deleteMethod = new DeleteMethod(normalizeFormUrl(pipaTask.getFormURL()));
         deleteMethod.addRequestHeader(new Header("Delete-PIPA-Tasks", "True"));
-        deleteMethod.addRequestHeader(new Header("Delete-PIPA-Description", pipaTask.getDescription()));
-        deleteMethod.addRequestHeader(new Header("Delete-PIPA-Process-endpoint", pipaTask.getProcessEndpoint()));
-        deleteMethod.addRequestHeader(new Header("Delete-PIPA-Form-namespace", pipaTask.getFormNamespace()));
-        deleteMethod.addRequestHeader(new Header("Delete-PIPA-InitSOAP-Action", pipaTask.getInitSoapAction()));
         _httpClient.executeMethod(deleteMethod);
-
-        int status = deleteMethod.getStatusCode();
-        this.processStatusCode(status);
+        processStatusCode(deleteMethod.getStatusCode());
     }
 
     /**

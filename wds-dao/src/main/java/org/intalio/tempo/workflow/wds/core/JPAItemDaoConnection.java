@@ -10,6 +10,8 @@
 
 package org.intalio.tempo.workflow.wds.core;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
@@ -32,7 +34,7 @@ public class JPAItemDaoConnection extends AbstractJPAConnection implements ItemD
             entityManager.remove(item);	
             commit();
         } catch (Exception e) {
-//            throw new UnavailableItemException(e);
+            throw new UnavailableItemException(e);
         }
     }
 
@@ -44,10 +46,12 @@ public class JPAItemDaoConnection extends AbstractJPAConnection implements ItemD
     public Item retrieveItem(String uri) throws UnavailableItemException {
         Query q = entityManager.createNamedQuery(Item.FIND_BY_URI).setParameter(1, uri);
         try {
-            return  (Item)q.getResultList().get(0);    
+            final List<Item> resultList = q.getResultList();
+            if(resultList.size()>0) return  (Item)resultList.get(0);    
         } catch (Exception e) {
             throw new UnavailableItemException(e);
         }
+        throw new UnavailableItemException("No item found for:"+uri);
     }
 
     public void storeItem(Item item) throws UnavailableItemException {

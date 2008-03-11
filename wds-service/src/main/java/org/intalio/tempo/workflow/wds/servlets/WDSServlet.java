@@ -152,11 +152,10 @@ public class WDSServlet extends HttpServlet {
             logger.warn("Authentication error", e);
         } catch (UnavailableItemException e) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
-            logger.warn("Item not found: '" + resourceUri + "'", e);
-
+            logger.warn("Item not found: '" + resourceUri + "'");
         } catch (UnavailableTaskException e) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
-            logger.warn("PIPA not found: '" + resourceUri + "'", e);
+            logger.warn("PIPA not found: '" + resourceUri + "'");
         } finally {
             if (service != null)
                 service.close();
@@ -194,7 +193,7 @@ public class WDSServlet extends HttpServlet {
 //                logger.warn("Authentication error", e);
             } catch (UnavailableItemException e) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
-                logger.warn("Item not found: '" + resourceUri + "'", e);
+                logger.warn("Item not found: '" + resourceUri + "'");
             } finally {
                 if (service != null)
                     service.close();

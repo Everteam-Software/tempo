@@ -172,15 +172,12 @@ public class WDSCliTaskDef extends Task {
                     "' contentType='" + contentType + "' deployment_descriptor='" + handler.getDeployment_descriptor() +
                     "' force_overwrite=" + force_overwrite, e);
         }
-
     }
 
     private interface WDSCliCommandParams extends WDSCommandLineClient.CommandHandler {
-
         String getDestinationURI();
         String getSourceURI();
         String getDeployment_descriptor();
-
     }
 
     public static class StoreCommandHandlerElement

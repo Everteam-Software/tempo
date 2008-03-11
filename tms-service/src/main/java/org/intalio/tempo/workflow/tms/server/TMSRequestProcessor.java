@@ -475,7 +475,7 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             // final UserRoles user = _server.getUserRoles(participantToken);
             _server.deletePipa(taskID, participantToken);
         } catch (Exception e) {
-            throw makeFault(e);
+            //throw makeFault(e);
         }
         return createOkResponse(requestElement.getOMFactory());
     }

@@ -31,6 +31,7 @@ import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
@@ -39,6 +40,7 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.io.IOUtils;
@@ -57,7 +59,7 @@ import org.xml.sax.SAXException;
 
 /**
  * Implements the command-line interface (CLI) for REST WDS client.
- *
+ * 
  * @author Iwan Memruk
  * @version $Revision: 595 $
  */
@@ -65,17 +67,16 @@ public class WDSCommandLineClient {
 
     private static Logger _log = LoggerFactory.getLogger(WDSCommandLineClient.class);
 
-    private static final String DEPLOYMENT_DESCRIPTOR_SCHEMA =  "deployment.xsd";
+    private static final String DEPLOYMENT_DESCRIPTOR_SCHEMA = "deployment.xsd";
 
-    private static final String OXF_PREFIX =  "oxf://";
+    private static final String OXF_PREFIX = "oxf:/";
 
     /**
      * Defines the set of required methods for CLI command handling.
      */
     public interface CommandHandler {
-        void handleCommand(WDSClient client, String uri, String fileName,
-                           String contentType, String descriptorFileName, boolean force)
-                throws Exception;
+        void handleCommand(WDSClient client, String uri, String fileName, String contentType,
+                String descriptorFileName, boolean force) throws Exception;
     }
 
     /**
@@ -101,9 +102,8 @@ public class WDSCommandLineClient {
      */
     public static class StoreCommandHandler implements CommandHandler {
 
-        public void handleCommand(WDSClient client, String uri, String fileName,
-                                  String contentType, String descriptorFileName, boolean force)
-                throws Exception {
+        public void handleCommand(WDSClient client, String uri, String fileName, String contentType,
+                String descriptorFileName, boolean force) throws Exception {
 
             if (fileName == null) {
                 throw new Exception("A file name is required");
@@ -117,9 +117,8 @@ public class WDSCommandLineClient {
 
     public static class StorePipaCommandHandler implements CommandHandler {
 
-        public void handleCommand(WDSClient client, String uri, String fileName,
-                                  String contentType, String descriptorFileName, boolean force)
-                throws Exception {
+        public void handleCommand(WDSClient client, String uri, String fileName, String contentType,
+                String descriptorFileName, boolean force) throws Exception {
 
             if (fileName == null || descriptorFileName == null) {
                 throw new IllegalArgumentException("Please specify a form file and a descriptor");
@@ -128,8 +127,8 @@ public class WDSCommandLineClient {
             if (!force) {
                 try {
                     client.retrieveItem(uri).close();
-                    throw new Exception("URI '" + uri + "' is already in use. " +
-                            "Please specify --force option if you still want to overwrite it.");
+                    throw new Exception("URI '" + uri + "' is already in use. "
+                            + "Please specify --force option if you still want to overwrite it.");
                 } catch (UnavailableItemException e) {
                     // OK
                 }
@@ -138,33 +137,30 @@ public class WDSCommandLineClient {
             WDSCommandLineClient.createAndStorePipaTask(client, descriptorFileName);
 
             File formFile = new File(fileName);
-            _log.debug("Storing the form " + fileName);
+            _log.debug("Storing the form " + fileName +" to "+uri);
             client.storeXForm(uri, formFile);
             _log.debug("success");
             WDSCommandLineClient.storeSchema(client, uri, formFile);
         }
-
     }
 
     public static class CreatePipaCommandHandler implements CommandHandler {
 
-        public void handleCommand(WDSClient client, String uri, String fileName,
-                                  String contentType, String descriptorFileName, boolean force)
-                throws Exception {
+        public void handleCommand(WDSClient client, String uri, String fileName, String contentType,
+                String descriptorFileName, boolean force) throws Exception {
 
             WDSCommandLineClient.createAndStorePipaTask(client, descriptorFileName);
         }
 
     }
 
-    public static class StoreActivityCommandHandler implements CommandHandler { // FIXME: this is copy-pasted!
+    public static class StoreActivityCommandHandler implements CommandHandler { // FIXME:
+        // this
+        // is
+        // copy-pasted!
 
-        public void handleCommand(WDSClient client,
-                                  String uri,
-                                  String fileName,
-                                  String contentType,
-                                  String descriptorFileName, boolean force)
-                throws Exception {
+        public void handleCommand(WDSClient client, String uri, String fileName, String contentType,
+                String descriptorFileName, boolean force) throws Exception {
             if (fileName == null) {
                 throw new Exception("Please specify a form file");
             }
@@ -193,12 +189,8 @@ public class WDSCommandLineClient {
      */
     public static class RetrieveCommandHandler implements CommandHandler {
 
-        public void handleCommand(WDSClient client,
-                                  String uri,
-                                  String fileName,
-                                  String contentType,
-                                  String descriptorFileName, boolean force)
-                throws Exception {
+        public void handleCommand(WDSClient client, String uri, String fileName, String contentType,
+                String descriptorFileName, boolean force) throws Exception {
             if (fileName != null) {
                 File file = new File(fileName);
                 file.createNewFile();
@@ -217,9 +209,8 @@ public class WDSCommandLineClient {
      */
     public static class DeleteCommandHandler implements CommandHandler {
 
-        public void handleCommand(WDSClient client, String uri, String fileName,
-                                  String contentType, String descriptorFileName, boolean force)
-                throws Exception {
+        public void handleCommand(WDSClient client, String uri, String fileName, String contentType,
+                String descriptorFileName, boolean force) throws Exception {
 
             _log.debug("Deleting resource " + client.getWdsUrl() + uri);
             client.deleteItem(uri);
@@ -230,35 +221,24 @@ public class WDSCommandLineClient {
 
     public static class DeleteXFormCommandHandler implements CommandHandler {
 
-        public void handleCommand(WDSClient client, String uri, String fileName,
-                                  String contentType, String descriptorFileName, boolean force)
-                throws Exception {
+        public void handleCommand(WDSClient client, String uri, String fileName, String contentType,
+                String descriptorFileName, boolean force) throws Exception {
 
             InputStream formInputStream = null;
             try {
+                _log.debug("Retrieving form: '" + uri + "'");
                 formInputStream = client.retrieveItem(uri);
-                InputSource descriptorSource = new InputSource(formInputStream);
-                DocumentBuilderFactory builder = DocumentBuilderFactory.newInstance();
-                builder.setNamespaceAware(true);
-                DocumentBuilder parser = builder.newDocumentBuilder();
-                Document xform = parser.parse(descriptorSource);
 
-                XPath xpath = XPathFactory.newInstance().newXPath();
-                xpath.setNamespaceContext(new NC(new Object[] {"xforms"}, new String[] {"http://www.w3.org/2002/xforms"}));
-
-                String schemaUrl = (String) xpath.evaluate("//xforms:model/@schema", xform, XPathConstants.STRING);
-
-                client.deleteItem(uri);
+                String schemaUrl = getSchemaURLFromXForm(formInputStream);
 
                 if (schemaUrl != null) {
-                    if (schemaUrl.startsWith(OXF_PREFIX)) {
-                        schemaUrl = schemaUrl.substring(OXF_PREFIX.length());
-                    }
-
+                    _log.debug("Found schema: '" + schemaUrl + "'");
+                    schemaUrl = getSchemaURLInWDS(uri, schemaUrl);
                     _log.debug("Deleting schema: '" + schemaUrl + "'");
                     client.deleteItem(schemaUrl);
-                    _log.debug("success");
                 }
+                client.deleteItem(uri);
+
             } finally {
                 if (formInputStream != null) {
                     formInputStream.close();
@@ -270,8 +250,8 @@ public class WDSCommandLineClient {
 
     public static class DeletePIPACommandHandler implements CommandHandler {
 
-        public void handleCommand(WDSClient client, String uri, String fileName,
-                                  String contentType, String descriptorFileName, boolean force) throws Exception {
+        public void handleCommand(WDSClient client, String uri, String fileName, String contentType,
+                String descriptorFileName, boolean force) throws Exception {
 
             PipaTask pipaTask = WDSCommandLineClient.parsePIPA(descriptorFileName);
             client.deletePIPA(pipaTask);
@@ -281,7 +261,7 @@ public class WDSCommandLineClient {
 
     /**
      * Auxiliary class, serves here for XPath handling
-     *
+     * 
      * @author Oleg Zenzin
      */
     private static class NC implements NamespaceContext {
@@ -296,17 +276,16 @@ public class WDSCommandLineClient {
         NC(Object[] prefixes, String[] namespaceURIs) {
             assert prefixes != null && namespaceURIs != null;
             _prefixes = prefixes;
-            _namespaceURIs = namespaceURIs; 
+            _namespaceURIs = namespaceURIs;
         }
 
         public String getNamespaceURI(String prefix) {
             assert prefix != null;
             int n = _prefixes.length;
 
-        SEEK_THE_PREFIX:
-            while (n-- > 0) {
+            SEEK_THE_PREFIX: while (n-- > 0) {
                 if (_prefixes[n] instanceof String[]) {
-                    for(String pfx : (String[]) _prefixes[n]) {
+                    for (String pfx : (String[]) _prefixes[n]) {
                         if (prefix.equals(pfx)) {
                             break SEEK_THE_PREFIX;
                         }
@@ -329,9 +308,12 @@ public class WDSCommandLineClient {
                 }
             }
 
-            return (n < 0) ? null :// not found
-                    (_prefixes[n] instanceof String[]) ?//is there multiple prefixes for this namespace? 
-                            ((String[]) _prefixes[n])[0] : (String) _prefixes[n];
+            return (n < 0) ? null : // not found
+                    (_prefixes[n] instanceof String[]) ? // is there multiple
+                    // prefixes for this
+                    // namespace?
+                    ((String[]) _prefixes[n])[0]
+                            : (String) _prefixes[n];
         }
 
         public Iterator getPrefixes(String namespaceURI) {
@@ -353,15 +335,16 @@ public class WDSCommandLineClient {
      */
     public static void printUsage() {
         _log.info("Usage: wds-cli [-t,--token participant_token] [-d,--descr deployment_descriptor] "
-                + "[-w,--wds wds_base_url] [-c,--contentType contentType]" + " command [uri] [filename]\n" +
-                "Available commands are: " + _commandHandlers.keySet() + "\n" +
-                "Filename is only required for store and optional for retrieve (stdout implied).");
+                + "[-w,--wds wds_base_url] [-c,--contentType contentType]" + " command [uri] [filename]\n"
+                + "Available commands are: " + _commandHandlers.keySet() + "\n"
+                + "Filename is only required for store and optional for retrieve (stdout implied).");
     }
 
     /**
      * Main entry point for CLI.
-     *
-     * @param args Command-line arguments.
+     * 
+     * @param args
+     *            Command-line arguments.
      */
     public static void main(String[] args) {
         try {
@@ -422,32 +405,55 @@ public class WDSCommandLineClient {
     }
 
     private static void storeSchema(WDSClient client, String uri, File xformsFile) throws Exception {
-        InputSource formSource = new InputSource(new FileInputStream(xformsFile));
+        String wdsSchemaUri = getSchemaURLFromXForm(new FileInputStream(xformsFile));
+
+        if (wdsSchemaUri != null) {
+            _log.debug("Storing the schema: '" + wdsSchemaUri + "'");
+
+            URI localSchemaUri = xformsFile.getAbsoluteFile().toURI().resolve(wdsSchemaUri);
+            long schemaLength = new File(localSchemaUri).length();
+
+            String remoteSchemaURI = getSchemaURLInWDS(uri, wdsSchemaUri);
+
+            _log.debug("Storing to: '" + remoteSchemaURI + "'");
+            client.storeItem(remoteSchemaURI, localSchemaUri.toURL().openConnection().getInputStream(), schemaLength);
+            _log.debug("success");
+        }
+    }
+
+    /**
+     * Remove oxf prefix and add the associated xform base uri.
+     */
+    private static String getSchemaURLInWDS(String uri, String schemaRef) {
+        if (schemaRef.startsWith(OXF_PREFIX))
+            schemaRef = schemaRef.substring(OXF_PREFIX.length());
+        int slashIndex = uri.lastIndexOf('/');
+        if (slashIndex > 0) {
+            final String baseFormURI = uri.substring(0, slashIndex + 1);
+            if(!schemaRef.startsWith(baseFormURI)) 
+                schemaRef = baseFormURI + schemaRef;
+        }
+        return schemaRef;
+    }
+
+    /**
+     * Parse the schema URL from the xform, and gets the URL used to store the
+     * schema in WDS. We need the uri of the associated xform
+     */
+    private static String getSchemaURLFromXForm(InputStream formInputStream)
+            throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
+        InputSource descriptorSource = new InputSource(formInputStream);
         DocumentBuilderFactory builder = DocumentBuilderFactory.newInstance();
         builder.setNamespaceAware(true);
         DocumentBuilder parser = builder.newDocumentBuilder();
-        Document xform = parser.parse(formSource);
-
+        Document xform = parser.parse(descriptorSource);
+        
         XPath xpath = XPathFactory.newInstance().newXPath();
-        xpath.setNamespaceContext(new NC(new Object[] {"xforms"}, new String[] {"http://www.w3.org/2002/xforms"}));
+        xpath.setNamespaceContext(new NC(new Object[] { "xforms" }, new String[] { "http://www.w3.org/2002/xforms" }));
 
-        String schemaRef = (String) xpath.evaluate("//xforms:model/@schema", xform, XPathConstants.STRING);
-
-        if (schemaRef != null) {
-            _log.debug("Storing the schema: '" + schemaRef + "'");
-
-            String wdsSchemaUri = schemaRef;
-            int slashIndex = uri.lastIndexOf('/');
-            if (slashIndex > 0) {
-                wdsSchemaUri = uri.substring(0, slashIndex + 1) + wdsSchemaUri;
-            }
-            URI schemaUri = xformsFile.getAbsoluteFile().toURI().resolve(schemaRef);
-            long schemaLength = new File(schemaUri).length();
-
-            _log.debug("Storing to: '" + wdsSchemaUri + "'");
-            client.storeItem(wdsSchemaUri, schemaUri.toURL().openConnection().getInputStream(), schemaLength);
-            _log.debug("success");
-        }
+        final String evaluate = (String) xpath.evaluate("//xforms:model/@schema", xform, XPathConstants.STRING);
+        _log.info("Found :"+evaluate);
+        return evaluate;
     }
 
     public static PipaTask parsePIPA(String descriptorFileName) throws Exception {
@@ -456,9 +462,7 @@ public class WDSCommandLineClient {
         }
 
         PipaTask pipaTask = new PipaTask();
-
         String taskId = new UIDGenerator().generateUID();
-
         pipaTask.setId(taskId);
 
         InputSource descriptorSource = new InputSource(new FileInputStream(descriptorFileName));
@@ -469,13 +473,14 @@ public class WDSCommandLineClient {
 
         XPath xpath = XPathFactory.newInstance().newXPath();
 
+        pipaTask.setDescription((String) xpath.evaluate("/deployment/task-description/text()", document,
+                XPathConstants.STRING));
 
-        pipaTask.setDescription((String) xpath.evaluate("/deployment/task-description/text()", document, XPathConstants.STRING));
-
-        NodeList owners = (NodeList) xpath.evaluate("/deployment/task-user-owners/user", document, XPathConstants.NODESET);
+        NodeList owners = (NodeList) xpath.evaluate("/deployment/task-user-owners/user", document,
+                XPathConstants.NODESET);
         int n = owners.getLength();
         List<String> userOwners = new LinkedList<String>();
-        for (int i = 0; i < n; i++ ) {
+        for (int i = 0; i < n; i++) {
             Node user = owners.item(i);
             Node text = user.getFirstChild();
             if (text != null && !"".equals(text.getNodeValue().trim())) {
@@ -487,7 +492,7 @@ public class WDSCommandLineClient {
         owners = (NodeList) xpath.evaluate("/deployment/task-role-owners/role", document, XPathConstants.NODESET);
         n = owners.getLength();
         List<String> roleOwners = new LinkedList<String>();
-        for (int i = 0; i < n; i++ ) {
+        for (int i = 0; i < n; i++) {
             Node user = owners.item(i);
             Node text = user.getFirstChild();
             if (text != null && !"".equals(text.getNodeValue().trim())) {
@@ -496,19 +501,32 @@ public class WDSCommandLineClient {
         }
         pipaTask.setRoleOwners(roleOwners.toArray(new String[] {}));
 
-        pipaTask.setFormNamespace((String) xpath.evaluate("/deployment/formNamespace/text()", document, XPathConstants.STRING));
+        pipaTask.setFormNamespace((String) xpath.evaluate("/deployment/formNamespace/text()", document,
+                XPathConstants.STRING));
 
         String formURI = (String) xpath.evaluate("/deployment/formURI/text()", document, XPathConstants.STRING);
-        if (! new URI(formURI).isAbsolute()) {
-            while (formURI.startsWith("/")) formURI = formURI.substring(1);
-            formURI = OXF_PREFIX + formURI;
-        }
+        formURI = addPrefixToFormUrlIfNotAbsolute(formURI);
         pipaTask.setFormURL(formURI);
 
-        pipaTask.setProcessEndpoint((String) xpath.evaluate("/deployment/processEndpoint/text()", document, XPathConstants.STRING));
-        pipaTask.setInitSoapAction((String) xpath.evaluate("/deployment/userProcessInitSOAPAction/text()", document, XPathConstants.STRING));
+        pipaTask.setProcessEndpoint((String) xpath.evaluate("/deployment/processEndpoint/text()", document,
+                XPathConstants.STRING));
+        pipaTask.setInitSoapAction((String) xpath.evaluate("/deployment/userProcessInitSOAPAction/text()", document,
+                XPathConstants.STRING));
 
         return pipaTask;
+    }
+
+    /**
+     * As the method name suggest it, prefix the form url with the <code>OXF_PREFIX</code> 
+     * if the url is not an absolute URL.
+     */
+    private static String addPrefixToFormUrlIfNotAbsolute(String formURI) {
+        if (!URI.create(formURI).isAbsolute()) {
+            while (formURI.startsWith("/"))
+                formURI = formURI.substring(1);
+            formURI = OXF_PREFIX + formURI;
+        }
+        return formURI;
     }
 
     private static PipaTask createAndStorePipaTask(WDSClient client, String descriptorFileName) throws Exception {
@@ -519,7 +537,7 @@ public class WDSCommandLineClient {
         }
 
         _log.debug("Storing PIPA Task: " + pipaTask);
-        client.storePipaTask(null, pipaTask);
+        client.storePipaTask(pipaTask);
         _log.debug("success");
 
         return pipaTask;

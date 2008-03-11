@@ -66,9 +66,8 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
             PIPATask toDelete = _fetcher.fetchPipaFromUrl(formUrl);
             checkTransactionIsActive();
             entityManager.remove(toDelete);
-        } catch (NoResultException nre) {
-            // this is okay, it means we did not find anything to delete, and
-            // its already deleted
+        } catch (Exception nre) {
+            throw new NoResultException(nre.getMessage());
         }
     }
 

@@ -99,7 +99,6 @@ public class PIPALoader {
         } catch (URISyntaxException e) {
             throw new InvalidRequestFormatException("Invalid PIPA task:",e);
         }
-
     }
 
     /**
