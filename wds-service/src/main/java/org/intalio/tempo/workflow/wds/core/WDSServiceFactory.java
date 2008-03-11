@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2005-2006 Intalio inc.
+ * Copyright (c) 2005-2008 Intalio inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -11,15 +11,8 @@
  */
 package org.intalio.tempo.workflow.wds.core;
 
-
 /**
- * This factory class is used to obtain {@link org.intalio.tempo.workflow.wds.core.WDSService} instances.
- * <p />
- * To instantiate this class, you first need an {@link org.intalio.tempo.workflow.wds.core.ItemDaoConnectionFactory}
- * instance for this factory to get DAO connections from.
- *
- * @author Iwan Memruk
- * @version $Revision: 536 $
+ * Factory for {@link WDSService} instances.
  */
 public class WDSServiceFactory {
     /**
@@ -30,7 +23,7 @@ public class WDSServiceFactory {
     private String _wdsEndpoint;
     
     public WDSServiceFactory() {
-    	
+        // nothing
     }
     
     public String getTmsEndpoint() {
@@ -50,7 +43,7 @@ public class WDSServiceFactory {
     }
 
     public void setWdsEndpoint(String wdsEndpoint) {
-        this._wdsEndpoint = wdsEndpoint;
+        _wdsEndpoint = wdsEndpoint;
     }
 
     public String getWdsEndpoint() {
@@ -63,8 +56,7 @@ public class WDSServiceFactory {
      * The created instance will use a DAO connection provided by the DAO connection factory that was specified when
      * instantiating this factory.
      * <p />
-     * It is required for normal functioning that you use the {@link WDSService#close()} method to finalize each
-     * <code>WDSService</code> instance after you are finished with it (typically in a <code>finally</code> clause).
+     * Clients must call {@link WDSService#close()} to release resources associated with this object.
      * 
      * @return A new <code>WDSService</code> instance.
      */
