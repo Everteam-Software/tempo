@@ -2,22 +2,6 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
           "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
-	<!-- Login section 
-		<bean id="loginController" class="org.intalio.tempo.web.controller.LoginController">
-		<constructor-arg index="0" ref="tokenService"/>
-		<constructor-arg index="1" value="tasks.htm"/>
-		
-		<property name="commandClass" value="org.intalio.tempo.web.controller.LoginCommand"/>
-		<property name="commandName">
-		<value>login</value>
-		</property>
-		<property name="validator">
-		<bean id="loginValidator"
-		class="org.intalio.tempo.web.controller.LoginController$LoginValidator"/>
-		</property>
-		</bean>
-	-->
-
 	<!-- Tasks section -->
 	<bean id="tasksDefaultAction"
 		class="org.intalio.tempo.web.controller.ActionDef">
@@ -40,20 +24,7 @@
 		</property>
 	</bean>
 
-	<bean id="updatesController"
-		class="org.intalio.tempo.web.controller.SecuredController">
-		<constructor-arg index="0" ref="tokenService" />
-		<property name="commandClass" value="java.lang.Object" />
-		<property name="defaultAction">
-			<ref bean="tasksDefaultAction" />
-		</property>
-		<property name="actionDefs">
-			<list>
-				<ref bean="tasksDefaultAction" />
-			</list>
-		</property>
-	</bean>
-
+	
 	<bean id="messageSource"
 		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
 		<property name="basenames">
@@ -74,11 +45,12 @@
 		<property name="portletModeMap">
 			<map>
 				<entry key="view">
-					<ref bean="updatesController" />
+					<ref bean="tasksController" />
 				</entry>
 			</map>
 		</property>
 	</bean>
+
 	<!-- 
 		<bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
 		<property name="mappings">

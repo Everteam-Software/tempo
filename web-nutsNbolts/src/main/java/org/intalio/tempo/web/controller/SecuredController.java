@@ -62,12 +62,12 @@ public class SecuredController extends UIController {
 			ApplicationState.setCurrentInstance(request, state);
 		}
         // Do default action
-        Action<Object> action = instantiateDefaultAction();
+        /*Action<Object> action = instantiateDefaultAction();
         action.setRequest(request);
         action.setResponse(response);
         action.setCommand(getCommand(request));
-        action.setBindErrors(errors);
-        mav = action.doExecution();
+        action.setBindErrors(errors);*/
+        mav = new ModelAndView("view");
 		/*
         ApplicationState state = getApplicationState(request);
         User currentUser = state.getCurrentUser();
@@ -117,10 +117,9 @@ public class SecuredController extends UIController {
     }
 
 	@Override
-	protected ModelAndView renderFormSubmission(RenderRequest arg0,
-			RenderResponse arg1, Object arg2, BindException arg3)
+	protected ModelAndView renderFormSubmission(RenderRequest request,
+			RenderResponse response, Object arg2, BindException errors)
 			throws Exception {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

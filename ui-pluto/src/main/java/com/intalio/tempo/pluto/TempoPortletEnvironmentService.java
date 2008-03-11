@@ -17,6 +17,7 @@ import org.apache.pluto.spi.optional.PortletEnvironmentService;
 
 public class TempoPortletEnvironmentService implements
 		PortletEnvironmentService {
+
 	public InternalActionRequest createActionRequest(
 			PortletContainer container, HttpServletRequest request,
 			HttpServletResponse response,
@@ -41,6 +42,7 @@ public class TempoPortletEnvironmentService implements
 		if (rri.getAttribute(TempoPlutoConstants.TEMPO_PLUTO_USER) == null){
 			rri.setAttribute(TempoPlutoConstants.TEMPO_PLUTO_USER,uname);
 		}
+
 		return rri;
 	}
 

@@ -18,9 +18,9 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 public class Constants {
-    public static final String TASKS_VIEW = "tasks";
-
-    public static final String TASKS_URL = "tasks.htm";
+    public static final String TASKS_VIEW = "view";
+    public static final String TASKS_UPDATE = "updates";
+    public static final String TASKS_URL = "view.htm";
 
     public static final ModelAndView REDIRECTION_TO_TASKS = new ModelAndView(new RedirectView(TASKS_URL));
 

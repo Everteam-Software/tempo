@@ -20,6 +20,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.Map;
 
 import org.intalio.tempo.uiframework.Configuration;
@@ -134,8 +135,13 @@ public class TasksAction extends Action {
             _log.error("Error during TasksAction execute()", ex);
         }
 
+        Enumeration en = _request.getParameterNames();
+        while(en.hasMoreElements()){
+
+        }
         String updateFlag = _request.getParameter("update");
         // udateFlag==true -> auto update
+
         if (updateFlag != null && updateFlag.equals("true")) {
             return new ModelAndView("updates", createModel());
         } else {
@@ -156,4 +162,5 @@ public class TasksAction extends Action {
         model.put("participantToken", state.getCurrentUser().getToken());
         model.put("currentUser", state.getCurrentUser().getName());
     }
+
 }

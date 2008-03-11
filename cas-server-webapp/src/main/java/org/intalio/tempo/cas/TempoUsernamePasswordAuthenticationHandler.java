@@ -33,7 +33,7 @@ public final class TempoUsernamePasswordAuthenticationHandler extends AbstractUs
         } catch (Exception e) {
             log.debug("User [" + username +  "] failed authentication");
             //return false;
-			throw new RuntimeException(e.getMessage(),e);
+			return false;
 		}
     }
 }

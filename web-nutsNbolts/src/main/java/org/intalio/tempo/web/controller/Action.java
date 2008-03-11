@@ -145,6 +145,7 @@ public abstract class Action<T> {
         return mnv;
     }
     
+    
     public void setRequiredRoles(String[] roles) {
         if (roles == null) {
             roles = new String[0];

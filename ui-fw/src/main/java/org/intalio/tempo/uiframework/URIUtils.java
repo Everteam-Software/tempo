@@ -18,18 +18,27 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 public class URIUtils {
-    
-    public static String resolveURI(PortletRequest request, String endpoint) 
-        throws URISyntaxException
-    {
-        URI uri = new URI(endpoint);
-        if (!uri.isAbsolute()) {
-            uri = new URI(request.getScheme(), null, request.getServerName(), request.getServerPort(), 
-                          null, null, null).resolve(uri);
-        }
-        return uri.toString();
-    }
-    
+
+	public static String resolveURI(PortletRequest request, String endpoint)
+			throws URISyntaxException {
+		URI uri = new URI(endpoint);
+		if (!uri.isAbsolute()) {
+			uri = new URI(request.getScheme(), null, request.getServerName(),
+					request.getServerPort(), null, null, null).resolve(uri);
+		}
+		return uri.toString();
+	}
+
+	public static String resolveHttpURI(HttpServletRequest request, String endpoint)
+			throws URISyntaxException {
+		URI uri = new URI(endpoint);
+		if (!uri.isAbsolute()) {
+			uri = new URI(request.getScheme(), null, request.getServerName(),
+					request.getServerPort(), null, null, null).resolve(uri);
+		}
+		return uri.toString();
+	}
 }

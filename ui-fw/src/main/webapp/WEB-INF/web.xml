@@ -53,7 +53,14 @@
 		<servlet-name>UifwPortlet</servlet-name>
 		<url-pattern>/PlutoInvoker/UifwPortlet</url-pattern>
 	</servlet-mapping>
-
+	<servlet>
+		<servlet-name>JsonUpdate</servlet-name>
+		<servlet-class>org.intalio.tempo.uiframework.actions.JsonUpdate</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>JsonUpdate</servlet-name>
+		<url-pattern>/json/update</url-pattern>
+	</servlet-mapping>
 	<!-- 	
     <servlet>
         <servlet-name>springapp</servlet-name>
