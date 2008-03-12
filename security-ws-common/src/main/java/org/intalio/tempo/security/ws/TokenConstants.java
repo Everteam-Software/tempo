@@ -39,4 +39,5 @@ public class TokenConstants {
 
     public static final QName TOKEN = new QName(TOKEN_NS.getNamespaceURI(), "token");
 
+    public static final QName GETTOKEN = new QName(TOKEN_NS.getNamespaceURI(), "getToken");
 }

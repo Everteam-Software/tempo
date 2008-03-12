@@ -119,4 +119,24 @@ public class TokenWS extends BaseWS {
         response.addChild(responseProperties);
         return response;
     }
+    
+    public OMElement getToken(OMElement requestEl) throws AxisFault {
+        OMParser request = new OMParser(requestEl);
+        String user = request.getRequiredString(USER);
+
+        String token;
+        try {
+            token = _tokenService.getToken(user);
+        } catch (AuthenticationException except) {
+            if (LOG.isDebugEnabled())
+                LOG.debug("authenticateUser:\n" + requestEl, except);
+            throw AxisFault.makeFault(except);
+        } catch (Exception except) {
+            if (LOG.isDebugEnabled())
+                LOG.debug("authenticateUser:\n" + requestEl, except);
+            throw new RuntimeException(except);
+        }
+
+        return authenticateUserResponse(token);
+    }
 }
