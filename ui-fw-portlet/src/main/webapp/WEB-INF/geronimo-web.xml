@@ -4,7 +4,7 @@
 	<dep:environment xmlns:dep="http://geronimo.apache.org/xml/ns/deployment-1.1">
 		<dep:moduleId>
 		    <dep:groupId>org.intalio.tempo</dep:groupId>
-		    <dep:artifactId>ui-fw</dep:artifactId>
+		    <dep:artifactId>ui-fw-portlet</dep:artifactId>
 		    <dep:version>SNAPSHOT</dep:version>
 		    <dep:type>war</dep:type>
 		</dep:moduleId>
@@ -23,5 +23,5 @@
           <filter>META-INF/spring</filter> 
         </hidden-classes>        
 	</dep:environment>
-	<context-root>/ui-fw</context-root>
+	<context-root>/ui-fw-portlet</context-root>
 </web-app>
