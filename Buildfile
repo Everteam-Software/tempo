@@ -280,6 +280,9 @@ define "tempo" do
   end
   
   define "ui-pluto" do
+  	libs = PLUTO, SERVLET_API, COMMONS_LOG
+  	compile.with libs
+  	package(:jar)
     package(:war)
   end
   
@@ -332,5 +335,49 @@ define "tempo" do
     resources.filter.using "version" => VERSION_NUMBER
     package(:war).with :libs=> ORBEON_LIBS
   end
+
+  define "cas-server-webapp" do
+    libs = projects("security", "security-ws-client", "security-ws-common"), AXIOM, AXIS2, CAS_LIBS, COMMONS, COMMONS_LOG, LOG4J
+    compile.with libs
+    package(:war).with :libs=>libs
+  end
   
+  desc "User-Interface Framework Portlet"
+  define "ui-fw-portlet" do
+    libs = projects("security", "security-ws-client", "security-ws-common",
+                    "tms-axis", "tms-client", "tms-common", "ui-pluto"),
+           APACHE_JPA, 
+           AXIOM, 
+           AXIS2, 
+           COMMONS,
+           CAS_CLIENT, 
+           DOM4J, 
+           INTALIO_STATS, 
+           JSON,
+           JSP_API, 
+           JSTL,
+           LOG4J, 
+           PLUTO,
+           PORTLET_API,
+           SERVLET_API, 
+           SPRING, 
+           SLF4J, 
+           STAX_API, 
+           TAGLIBS, 
+           WOODSTOX, 
+           WSDL4J, 
+           WS_COMMONS_SCHEMA, 
+           XERCES, 
+           XMLBEANS
+    compile.with libs
+
+    dojo = unzip(path_to(compile.target, "dojo") => download(artifact(DOJO)=>DOJO_URL))
+    dojo.from_path(DOJO_WIDGET_BASE).include("*").exclude("demos/*", "release/*", "tests/*", "README", "*.txt")
+
+    build dojo
+    resources.filter.using "version" => VERSION_NUMBER
+    package(:war).with(:libs=>libs).
+      include("src/main/config/geronimo/1.0/*", path_to(compile.target, "dojo"))
+  end
+ 
 end
