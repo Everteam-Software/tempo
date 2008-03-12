@@ -10,6 +10,27 @@ AXIS2 = [
 
 CASTOR = "castor:castor:jar:1.0"
 
+COMMONS_LOG = [
+  "commons-logging:commons-logging:jar:1.0.4"
+  ]
+
+CAS_CLIENT = "cas:casclient:jar:2.1.1"
+
+CAS_LIBS = [
+  group("cas-server-core",
+  :under=>"org.jasig.cas", :version=>"3.1.1"),
+  "org.jasig.service:person-directory:jar:1.0.1",
+  "org.acegisecurity:acegi-security:jar:1.0.4",
+  "net.sf.ehcache:ehcache:jar:1.2.3",
+  "quartz:quartz:jar:1.5.2",
+  "org.springframework:spring-binding:jar:1.0.3",
+  "org.springframework:spring:jar:2.0.6",
+  "org.springframework:spring-webflow:jar:1.0.3",  
+  "ognl:ognl:jar:2.6.9",
+  "org.opensaml:opensaml:jar:1.1b",
+  "jdom:jdom:jar:1.0"
+  ]
+  
 COMMONS_POOL = ["commons-pool:commons-pool:jar:1.3"]
 COMMONS = [
   "commons-codec:commons-codec:jar:1.3",
@@ -78,7 +99,7 @@ SERVLET_API = [ "javax.servlet:servlet-api:jar:2.4" ]
 
 SLF4J = group(%w{ slf4j-api slf4j-log4j12 jcl104-over-slf4j }, :under=>"org.slf4j", :version=>"1.4.3")
 
-SPRING = [ "org.springframework:spring:jar:1.2.9" ]
+SPRING = [ "org.springframework:spring:jar:2.5.1","org.springframework:spring-webmvc-portlet:jar:2.5.1","org.springframework:spring-webmvc:jar:2.5.1"]
 
 STAX_API = [ "stax:stax-api:jar:1.0.1" ]
 
@@ -145,6 +166,8 @@ COMMONS_DISCOVERY = [  "commons-discovery:commons-discovery:jar:0.2"]
 PLUTO = [
   "org.apache.pluto:pluto-container:jar:1.1.4",
   "org.apache.pluto:pluto-taglib:jar:1.1.4",
+  "org.apache.pluto:pluto-portal-driver:jar:1.1.4",
+  "org.apache.pluto:pluto-portal-driver-impl:jar:1.1.4",
   PORTLET_API
 ]
 
@@ -192,5 +215,4 @@ INSTINCT = [
   JUNIT,
   ANT
 ]
-
 
