@@ -29,7 +29,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -56,9 +55,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
 
     // Constants
 
-    public static final String ASSEMBLY_FILE = "assembly.properties";
-
-    public static final String DEFAULT_DEPLOY_DIR = "${org.intalio.tempo.configDirectory}/deploy";
+    public static final String DEFAULT_DEPLOY_DIR = "${org.intalio.tempo.configDirectory}/../deploy";
 
     public static final String STATE_FILE = "assemblies.ser";
 
@@ -320,26 +317,30 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
 
         synchronized (DEPLOY_LOCK) {
             try {
-                Map<String, String> componentMappings = loadComponentMappings(assemblyDir);
+                File[] files = assemblyDir.listFiles();
 
                 // deploy each component
-                for (String ComponentId : componentMappings.keySet()) {
-                    String componentManager = componentMappings.get(ComponentId);
-                    ComponentId name = new ComponentId(aid, ComponentId);
-
-                    File componentDir = new File(assemblyDir, ComponentId);
-                    if (!componentDir.exists()) {
-                        result.add(name, componentManager, error("Missing component directory {0} in assembly {1}", ComponentId, aid));
+                for (File f : files) {
+                    if (!f.isDirectory()) {
+                        // ignore files at top-level
                         break;
                     }
+                    int dot = f.getName().lastIndexOf('.');
+                    if (dot < 0) {
+                        // ignore directories without extension (no mapping)
+                        break;
+                    }
+                    String componentManager = f.getName().substring(dot+1);
+                    String componentName = f.getName().substring(0, dot);
+                    ComponentId component = new ComponentId(aid, componentName);
 
                     ComponentManager manager = getComponentManager(componentManager);
                     try {
-                        result.addAll(name, componentManager, manager.deploy(name, componentDir));
-                        deployed.add(new DeployedComponent(name, componentDir.getAbsolutePath(), componentManager));
+                        result.addAll(component, componentManager, manager.deploy(component, f));
+                        deployed.add(new DeployedComponent(component, f.getAbsolutePath(), componentManager));
                     } catch (Exception except) {
-                        String msg = _("Exception while deploying component {0}: {1}", ComponentId, except.getLocalizedMessage());
-                        result.add(name, componentManager, error(msg));
+                        String msg = _("Exception while deploying component {0}: {1}", componentName, except.getLocalizedMessage());
+                        result.add(component, componentManager, error(msg));
                         LOG.error(msg, except);
                     }
                 }
@@ -668,33 +669,6 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
         }
     }
 
-    /**
-     * Load component mappings {ComponentId, ComponentType/ComponentManagerName}
-     * from the assembly descriptor.
-     */
-    private Map<String, String> loadComponentMappings(File assemblyDir) {
-        Map<String, String> mappings = new HashMap<String, String>();
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(new File(assemblyDir, ASSEMBLY_FILE));
-            Properties props = new Properties();
-            props.load(fis);
-
-            // convert Properties to Map
-            for (Map.Entry<Object, Object> e : props.entrySet()) {
-                String ComponentId = (String) e.getKey();
-                String managerName = (String) e.getValue();
-                mappings.put(ComponentId, managerName);
-            }
-        } catch (FileNotFoundException except) {
-            throw new RuntimeException(_("Missing assembly.properties file in assembly: {0}", assemblyDir.getName()));
-        } catch (IOException except) {
-            throw new RuntimeException(except);
-        } finally {
-            Utils.close(fis);
-        }
-        return mappings;
-    }
 
     /**
      * Load persistent deployed state
@@ -800,18 +774,23 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
         }
 
         List<DeployedComponent> components = new ArrayList<DeployedComponent>();
-        Map<String, String> componentMappings = loadComponentMappings(assemblyDir);
 
-        // read each component state
-        for (String ComponentId : componentMappings.keySet()) {
-            String managerName = componentMappings.get(ComponentId);
-            ComponentId name = new ComponentId(aid, ComponentId);
+        File[] files = assemblyDir.listFiles();
 
-            File componentDir = new File(assemblyDir, ComponentId);
-            if (!componentDir.exists()) {
-                LOG.warn("Missing component directory '" + ComponentId + "' in assembly '" + aid + "'");
+        for (File componentDir : files) {
+            if (!componentDir.isDirectory()) {
+                // ignore files at top-level
+                break;
             }
-            components.add(new DeployedComponent(name, componentDir.getAbsolutePath(), managerName));
+            int dot = componentDir.getName().lastIndexOf('.');
+            if (dot < 0) {
+                // ignore directories without extension (no mapping)
+                break;
+            }
+            String componentManager = componentDir.getName().substring(dot+1);
+            String componentName = componentDir.getName().substring(0, dot);
+            ComponentId component = new ComponentId(aid, componentName);
+            components.add(new DeployedComponent(component, componentDir.getAbsolutePath(), componentManager));
         }
         return new DeployedAssembly(aid, assemblyDir.getAbsolutePath(), components);
     }
@@ -987,7 +966,6 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
                                         LOG.error(_("Error while activating component {0}", component), except);
                                     }
                                 }
-
                             }
                         }
                     }
