@@ -45,7 +45,7 @@ public class ComponentManager implements org.intalio.tempo.deployment.spi.Compon
     // ------------------ ComponentManager implementation ------------------------
     
     public String getComponentManagerName() {
-        return "workflow";
+        return "formmanager";
     }
 
     
@@ -60,10 +60,12 @@ public class ComponentManager implements org.intalio.tempo.deployment.spi.Compon
     public List<DeploymentMessage> deploy(ComponentId name, File path) {
         List<DeploymentMessage> msgs = new ArrayList<DeploymentMessage>();
         
+        /* ALEX: Disabled until we get token propagation from deploy-impl
         if (!TokenContext.hasToken()) {
             msgs.add(new DeploymentMessage(Level.ERROR, "No security context token"));
             return msgs; 
         }
+        */
         
         String token = TokenContext.getToken();
 
