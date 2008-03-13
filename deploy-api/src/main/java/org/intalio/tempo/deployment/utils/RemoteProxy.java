@@ -66,6 +66,7 @@ public class RemoteProxy<T> implements InvocationHandler {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public T newProxyInstance() {
         return (T) Proxy.newProxyInstance(_localClassLoader, _localInterfaces, this);
     }
@@ -148,8 +149,8 @@ public class RemoteProxy<T> implements InvocationHandler {
                 && Proxy.getInvocationHandler(proxy) instanceof RemoteProxy;
     }
 
-    protected static RemoteProxy getInvocationHandler(Object proxy) {
-        return (RemoteProxy) Proxy.getInvocationHandler(proxy);
+    protected static RemoteProxy<?> getInvocationHandler(Object proxy) {
+        return (RemoteProxy<?>) Proxy.getInvocationHandler(proxy);
     }
    
     static class ConvertedObject {
