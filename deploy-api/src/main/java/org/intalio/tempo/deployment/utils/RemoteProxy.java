@@ -33,7 +33,7 @@ import java.util.List;
  * to achieve pass-by-value semantic for java.io.Serializable objects
  */
 public class RemoteProxy<T> implements InvocationHandler {
-    private final Object _remoteObject;
+    private final T _remoteObject;
     private final Class<?>[] _localInterfaces;
     private final ClassLoader _localClassLoader;
     private final ClassLoader _remoteClassLoader;
@@ -75,47 +75,49 @@ public class RemoteProxy<T> implements InvocationHandler {
      * Proxied method invocation: convert arguments to remote classes (using proxying or serialization)
      * and convert the result back into a local class. 
      */
+    @SuppressWarnings("unchecked")
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        Class<?>[] parameterTypes = method.getParameterTypes();
+        Class<Object>[] parameterTypes = (Class<Object>[]) method.getParameterTypes();
         for (int i = 0; args != null && i < args.length; i++) {
-            ConvertedObject converted = export(parameterTypes[i], args[i], _localClassLoader, _remoteClassLoader);
+            ConvertedObject<Object> converted = export(parameterTypes[i], args[i], _localClassLoader, _remoteClassLoader);
             args[i] = converted.convertedObject;
             parameterTypes[i] = converted.convertedType;
         }
         Method remoteMethod = _remoteObject.getClass().getMethod(method.getName(), parameterTypes);
         Object result = remoteMethod.invoke(_remoteObject, args);
-        return export(method.getReturnType(), result, _remoteClassLoader, _localClassLoader).convertedObject;
+        return export((Class<Object>)method.getReturnType(), result, _remoteClassLoader, _localClassLoader).convertedObject;
     }
 
     /**
      * Convert a type from one class loader to another, using proxying for remote objects or 
      * serialization for value-objects. 
      */
-    public static ConvertedObject export(Class<?> fromType, Object localObject, 
+    @SuppressWarnings("unchecked")
+    public static <T> ConvertedObject<T> export(Class<T> fromType, T localObject, 
                                          final ClassLoader fromClassLoader, final ClassLoader toClassLoader) 
         throws ClassNotFoundException 
     {
-        Object toObject;
-        Class<?> toType;
+        T toObject;
+        Class<T> toType;
         String className = fromType.getName();
         if (fromType.isPrimitive() || className.startsWith("java.")) {
             // quick passthrough for primitive/primordial objects
             toObject = localObject;
             toType = fromType;
         } else if (isDynamicProxy(localObject)) {
-            RemoteProxy proxy = getInvocationHandler(localObject);
+            RemoteProxy<T> proxy = getInvocationHandler(localObject);
             if (proxy._remoteClassLoader == toClassLoader) {
                 toObject = proxy._remoteObject;
             } else {
-                proxy = new RemoteProxy(localObject, toClassLoader, fromClassLoader);
+                proxy = new RemoteProxy<T>(localObject, toClassLoader, fromClassLoader);
                 toObject = proxy.newProxyInstance();
             }
-            toType = Class.forName(className, false, toClassLoader);
+            toType = (Class<T>) Class.forName(className, false, toClassLoader);
         } else if (Remote.class.isAssignableFrom(fromType)) {
             // remote objects are proxied (
-            RemoteProxy remote = new RemoteProxy(localObject, toClassLoader, fromClassLoader);
+            RemoteProxy<T> remote = new RemoteProxy<T>(localObject, toClassLoader, fromClassLoader);
             toObject = remote.newProxyInstance();
-            toType = Class.forName(className, false, toClassLoader);
+            toType = (Class<T>) Class.forName(className, false, toClassLoader);
         } else if (Serializable.class.isAssignableFrom(fromType)) {
             // serializable objects are passed-by-value using serialization
             try {
@@ -128,15 +130,15 @@ public class RemoteProxy<T> implements InvocationHandler {
                         return Class.forName(desc.getName(), false, toClassLoader);
                     }
                 };
-                toObject = ois.readObject();
-                toType = Class.forName(className, false, toClassLoader);
+                toObject = (T) ois.readObject();
+                toType = (Class<T>) Class.forName(className, false, toClassLoader);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         } else {
             throw new IllegalArgumentException("Unsupported argument type; proxied object arguments should either be Serializable or Remote: "+fromType);
         }
-        return new ConvertedObject(toObject, toType);
+        return new ConvertedObject<T>(toObject, toType);
     }        
 
     protected Object getProxiedObject() {
@@ -149,15 +151,16 @@ public class RemoteProxy<T> implements InvocationHandler {
                 && Proxy.getInvocationHandler(proxy) instanceof RemoteProxy;
     }
 
-    protected static RemoteProxy<?> getInvocationHandler(Object proxy) {
-        return (RemoteProxy<?>) Proxy.getInvocationHandler(proxy);
+    @SuppressWarnings("unchecked")
+    protected static <T> RemoteProxy<T> getInvocationHandler(Object proxy) {
+        return (RemoteProxy<T>) Proxy.getInvocationHandler(proxy);
     }
    
-    static class ConvertedObject {
-        Object convertedObject;
-        Class<?> convertedType;
+    static class ConvertedObject<T> {
+        T convertedObject;
+        Class<T> convertedType;
         
-        ConvertedObject(Object convertedObject, Class<?> convertedType) {
+        ConvertedObject(T convertedObject, Class<T> convertedType) {
             this.convertedObject = convertedObject;
             this.convertedType = convertedType;
         }
