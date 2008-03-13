@@ -52,7 +52,7 @@ public class PIPALoader {
 
     private static final Logger logger = LoggerFactory.getLogger(WDSServlet.class);
 
-    public PIPATask parsePipa(Properties prop) {
+    public static PIPATask parsePipa(Properties prop) {
         logger.info("Creating PIPA using the following properties:" + prop.toString());
 
         PIPATask task = new PIPATask(UUID.randomUUID().toString(), prop.getProperty(PROPERTY_FORM_URI));
@@ -75,7 +75,7 @@ public class PIPALoader {
      * Fetches PIPA task properties from HTTP request headers and builds a
      * PipaTask
      */
-    public PIPATask parsePipa(HttpServletRequest request) throws InvalidRequestFormatException {
+    public static PIPATask parsePipa(HttpServletRequest request) throws InvalidRequestFormatException {
         PIPATask task;
         try {
             task = new PIPATask(request.getHeader(HEADER_TASK_ID), new URI(request.getHeader(HEADER_FORM_URL)));
@@ -104,7 +104,7 @@ public class PIPALoader {
     /**
      * Splits comma-delimited values into array
      */
-    private String[] split(String source) {
+    private static String[] split(String source) {
         if (source == null)
             return new String[0];
         ArrayList<String> list = new ArrayList<String>();
