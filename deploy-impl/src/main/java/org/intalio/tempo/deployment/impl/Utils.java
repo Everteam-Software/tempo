@@ -50,30 +50,31 @@ public class Utils {
         ZipInputStream zis = new ZipInputStream(input);
         ZipEntry entry;
         try {
-        	while((entry = zis.getNextEntry()) != null) {
-        		if(entry.isDirectory()) {
-        			File dir = new File(dest, entry.getName());
-        			dir.mkdir();
-        			if (!dir.exists() || !dir.isDirectory()) {
-        				throw new IOException("Error creating directory: "+dir);
-        			}
-        			continue;
-        		}
-        		File destFile = new File(dest, entry.getName());
-        		File parent = destFile.getParentFile();
-        		if (!parent.exists()) parent.mkdirs();
-        		if (!parent.exists() || !parent.isDirectory()) {
-        			throw new IOException("Error creating directory: "+parent);
-        		}
-        		OutputStream out = new BufferedOutputStream(new FileOutputStream(destFile));
-        		try {
-        			copyStream(zis, out);
-        		} finally {
-        			out.close();
-        		}
-        	}
+            while ((entry = zis.getNextEntry()) != null) {
+                if (entry.isDirectory()) {
+                    File dir = new File(dest, entry.getName());
+                    dir.mkdir();
+                    if (!dir.exists() || !dir.isDirectory()) {
+                        throw new IOException("Error creating directory: " + dir);
+                    }
+                    continue;
+                }
+                File destFile = new File(dest, entry.getName());
+                File parent = destFile.getParentFile();
+                if (!parent.exists())
+                    parent.mkdirs();
+                if (!parent.exists() || !parent.isDirectory()) {
+                    throw new IOException("Error creating directory: " + parent);
+                }
+                OutputStream out = new BufferedOutputStream(new FileOutputStream(destFile));
+                try {
+                    copyStream(zis, out);
+                } finally {
+                    out.close();
+                }
+            }
         } finally {
-        	zis.close();
+            zis.close();
         }
     }
     
