@@ -27,7 +27,7 @@ define "tempo" do
 
   desc "Deployment API"
   define "deploy-api" do
-    compile.with SPRING
+    compile.with SLF4J, SPRING
     package :jar
   end
 
@@ -72,9 +72,7 @@ define "tempo" do
 
   desc "Deployment Web-Service"
   define "deploy-ws-service" do
-    compile.with projects("deploy-api", "deploy-impl", "deploy-ws-common"),
-                 AXIOM, AXIS2, SLF4J, SPRING, STAX_API  
-    package(:aar).with :libs => [ projects("deploy-api", "deploy-impl", "deploy-ws-common"), LOG4J, SLF4J, SPRING ]
+    package(:aar).with :libs => [ projects("deploy-api", "deploy-impl", "deploy-ws-common"), SLF4J, SPRING ]
   end
 
   desc "Form Dispatcher Servlet"
@@ -159,7 +157,7 @@ define "tempo" do
   define "security-ws-service" do
     compile.with projects("security", "security-ws-common"),
                  AXIOM, AXIS2, SLF4J, SPRING, STAX_API  
-    package(:aar).with :libs => [ projects("security", "security-ws-common"), CASTOR, LOG4J, SLF4J, SPRING ]
+    package(:aar).with :libs => [ projects("security", "security-ws-common"), CASTOR, SLF4J, SPRING ]
   end
   
   desc "Task Attachment Service Common"
@@ -182,7 +180,7 @@ define "tempo" do
   desc "Task Attachment Service"
   define "tas-service" do
     package(:aar).with(:libs => [ 
-        projects("security", "security-ws-client", "security-ws-common", "tas-common", "web-nutsNbolts"), AXIS2, JAXEN, LOG4J, SLF4J, SPRING])
+        projects("security", "security-ws-client", "security-ws-common", "tas-common", "web-nutsNbolts"), JAXEN, SLF4J, SPRING])
   end
 
   desc "Xml Beans generation"
@@ -240,7 +238,7 @@ define "tempo" do
     test.exclude '*TestUtils*'
 
     package(:aar).with :libs => 
-        [ projects("security", "security-ws-client", "security-ws-common", "tms-axis", "tms-dao", "tms-common", "web-nutsNbolts", "dao-nutsNbolts"), APACHE_JPA, LOG4J, SLF4J, SPRING ] 
+        [ projects("security", "security-ws-client", "security-ws-common", "tms-axis", "tms-dao", "tms-common", "web-nutsNbolts", "dao-nutsNbolts"), APACHE_JPA, SLF4J, SPRING ] 
   end
   
   desc "User-Interface Framework"
@@ -300,7 +298,7 @@ define "tempo" do
 
   desc "Workflow Deployment Service"
   define "wds-service" do
-    libs = [ projects("web-nutsNbolts", "dao-nutsNbolts", "wds-dao", "tms-client", "tms-common", "tms-axis"), 
+    libs = [ projects("dao-nutsNbolts", "deploy-api", "security", "tms-axis", "tms-client", "tms-common", "wds-dao", "web-nutsNbolts"), 
       AXIS2, AXIOM, APACHE_JPA, COMMONS, LOG4J, SERVLET_API, SLF4J, SPRING, STAX_API, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX, XERCES, XMLBEANS ]
       
     test_libs = libs + [EASY_B, INSTINCT]
