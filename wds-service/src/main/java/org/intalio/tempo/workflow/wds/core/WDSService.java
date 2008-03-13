@@ -85,9 +85,23 @@ public class WDSService {
     }
 
     /**
+     * Retrieve a PIPA task in TMS.
+     */
+    public PIPATask getPipaTask(String formURL, String participantToken) throws UnavailableTaskException, AuthException {
+        if (formURL == null)
+            throw new NullPointerException("formURL");
+        if (participantToken == null)
+            throw new NullPointerException("participantToken");
+        ITaskManagementService _tmsConnection = new RemoteTMSFactory(_tmsEndpoint, participantToken).getService();
+        try {
+            return _tmsConnection.getPipa(formURL);
+        } finally {
+            _tmsConnection.close();
+        }
+    }
+
+    /**
      * Creates a PIPA task in TMS.
-     * @throws AuthException 
-     * @throws UnavailableTaskException 
      */
     public void storePipaTask(PIPATask pipaTask, String participantToken) throws UnavailableTaskException, AuthException {
         if (pipaTask == null)
@@ -96,11 +110,15 @@ public class WDSService {
             throw new NullPointerException("participantToken");
         ITaskManagementService _tmsConnection = new RemoteTMSFactory(_tmsEndpoint, participantToken).getService();
         try {
-            _tmsConnection.deletePipa(pipaTask.getFormURLAsString());    
-        } catch (Exception e) {
-            // don't bother with that here
+            try {
+                _tmsConnection.deletePipa(pipaTask.getFormURLAsString());    
+            } catch (Exception e) {
+                // don't bother with that here
+            }
+            _tmsConnection.storePipa(pipaTask);
+        } finally {
+            _tmsConnection.close();
         }
-        _tmsConnection.storePipa(pipaTask);
     }
 
     /**
