@@ -28,7 +28,8 @@ CAS_LIBS = [
   "org.springframework:spring-webflow:jar:1.0.3",  
   "ognl:ognl:jar:2.6.9",
   "org.opensaml:opensaml:jar:1.1b",
-  "jdom:jdom:jar:1.0"
+  "jdom:jdom:jar:1.0",
+  CAS_CLIENT
   ]
   
 COMMONS_POOL = ["commons-pool:commons-pool:jar:1.3"]
