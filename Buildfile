@@ -335,7 +335,7 @@ define "tempo" do
   end
 
   define "cas-server-webapp" do
-    libs = projects("security", "security-ws-client", "security-ws-common"), AXIOM, AXIS2, CAS_LIBS, COMMONS, COMMONS_LOG, LOG4J
+    libs = projects("security", "security-ws-client", "security-ws-common"), AXIOM, AXIS2, CAS_LIBS, COMMONS, COMMONS_LOG, LOG4J, WS_COMMONS_SCHEMA
     compile.with libs
     package(:war).with :libs=>libs
   end
