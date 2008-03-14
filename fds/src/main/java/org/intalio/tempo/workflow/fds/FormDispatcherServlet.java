@@ -207,12 +207,11 @@ public class FormDispatcherServlet extends HttpServlet {
                     try {
                         Document processedRequest = dispatcher.dispatchRequest(pureRequest);
                         Document wrappedRequest = SoapTools.wrapMessage(processedRequest);
-
                         String endpoint = dispatcher.getTargetEndpoint();
                         String dispatcherSoapAction = dispatcher.getTargetSoapAction();
                         Document rawResponse = messageSender.requestAndGetReply(wrappedRequest,
                                 endpoint, dispatcherSoapAction);
-
+                       
                         Document unwrappedResponse = SoapTools.unwrapMessage(rawResponse);
                         Document processedResponse = dispatcher.dispatchResponse(unwrappedResponse);
                         responseDocument = SoapTools.wrapMessage(processedResponse);
