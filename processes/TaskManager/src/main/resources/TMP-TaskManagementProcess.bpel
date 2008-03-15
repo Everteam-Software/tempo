@@ -5,7 +5,7 @@
   <bpel:import namespace="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" location="TaskManagementSystem.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
   <bpel:import namespace="http://www.intalio.com/bpms/ubp" location="UserBusinessProcess.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
   <bpel:import namespace="http://www.intalio.com/bpms/workflow/ib4p_20051115" location="TaskManagerProcess.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
-  <bpel:import namespace="http://www.intalio.com/bpms/workflow/ib4p_20051115" location="b4p.xsd" importType="http://www.w3.org/2001/XMLSchema"></bpel:import>
+  
   <bpel:partnerLinks>
     <bpel:partnerLink name="taskManagementProcessAndTaskManagementSystemForPortTaskManagementServicesSOAPPlkVar" partnerLinkType="diag:TaskManagementProcessAndTaskManagementSystemForPortTaskManagementServicesSOAPPlk" initializePartnerRole="true" partnerRole="TaskManagementSystem_for_TaskManagementProcess"/>
     <bpel:partnerLink name="taskManagementProcessAndUIFWForUIFWPortPlkVar" partnerLinkType="diag:TaskManagementProcessAndUIFWForUIFWPortPlk" myRole="TaskManagementProcess_for_UIFW"/>
@@ -23,9 +23,9 @@
     <bpel:variable name="taskClaimed" type="xs:boolean"/>
     <bpel:variable name="taskEscalated" type="xs:boolean"/>
     <bpel:variable name="nextTaskReady" messageType="b4p:nextTaskReady"/>
-    <bpel:variable name="initialOwners" element="b4p:usersAndRoles"/>
     <bpel:variable name="createTaskRequest" messageType="b4p:createTaskRequest"/>
     <bpel:variable name="createTaskResponse" messageType="b4p:createTaskResponse"/>
+    <bpel:variable name="initialOwners" type="tns:owners"/>
   </bpel:variables>
   <bpel:sequence>
     <bpel:receive partnerLink="tMPAndUBPPlkVar" portType="b4p:UserBusinessProcessPortType" operation="createTask" variable="createTaskRequest" createInstance="yes" bpmn:label="Create Task" bpmn:id="_kh8I0KdyEdyId4P63ChZuw"></bpel:receive>
@@ -114,15 +114,6 @@
 </b4p:chainedExecution></bpel:literal>
         </bpel:from>
         <bpel:to>$nextTaskReady.root</bpel:to>
-      </bpel:copy>
-      <bpel:copy bpmn:label="$initialOwners">
-        <bpel:from>
-          <bpel:literal><b4p:usersAndRoles>
-    <b4p:userOwner/>
-    <b4p:roleOwner/>
-</b4p:usersAndRoles></bpel:literal>
-        </bpel:from>
-        <bpel:to>$initialOwners</bpel:to>
       </bpel:copy>
       <bpel:copy bpmn:label="$createTaskResponse">
         <bpel:from>
@@ -227,6 +218,18 @@
 </b4p:response></bpel:literal>
         </bpel:from>
         <bpel:to>$createTaskResponse.root</bpel:to>
+      </bpel:copy>
+      <bpel:copy bpmn:label="$initialOwners">
+        <bpel:from>
+          <bpel:literal>
+<typeWrapper>
+  <tns:userOwner>
+  </tns:userOwner>
+  <tns:roleOwner>
+  </tns:roleOwner>
+</typeWrapper></bpel:literal>
+        </bpel:from>
+        <bpel:to>$initialOwners</bpel:to>
       </bpel:copy>
     </bpel:assign>
     <bpel:assign bpmn:label="Create Task" bpmn:id="_kh8I0KdyEdyId4P63ChZuw">
@@ -1467,12 +1470,8 @@
                     <bpel:to>$tnsReassignRequestMsg.reassignRequest/tns:taskId</bpel:to>
                   </bpel:copy>
                   <bpel:copy>
-                    <bpel:from>$escalateTaskRequest.root/b4p:roleOwner</bpel:from>
-                    <bpel:to>$tnsReassignRequestMsg.reassignRequest/tns:roleOwner</bpel:to>
-                  </bpel:copy>
-                  <bpel:copy>
-                    <bpel:from>$escalateTaskRequest.root/b4p:userOwner</bpel:from>
-                    <bpel:to>$tnsReassignRequestMsg.reassignRequest/tns:userOwner</bpel:to>
+                    <bpel:from>bpel:doXslTransform("userRoleOwner.xsl", $tnsReassignRequestMsg.reassignRequest, "metadata", $escalateTaskRequest.root)</bpel:from>
+                    <bpel:to>$tnsReassignRequestMsg.reassignRequest</bpel:to>
                   </bpel:copy>
                 </bpel:assign>
                 <bpel:invoke partnerLink="taskManagementProcessAndTaskManagementSystemForPortTaskManagementServicesSOAPPlkVar" portType="tns:TaskManagementServices" operation="reassign" inputVariable="tnsReassignRequestMsg" outputVariable="tnsReassignResponseMsg" bpmn:label="Invoke TMS to reassign Task" bpmn:id="_p3IKIKhJEdyQFMjeTyvJzg"></bpel:invoke>
@@ -1778,12 +1777,8 @@
                         <bpel:to>$tnsReassignRequestMsg.reassignRequest/tns:participantToken</bpel:to>
                       </bpel:copy>
                       <bpel:copy>
-                        <bpel:from>$initialOwners/b4p:role</bpel:from>
-                        <bpel:to>$tnsReassignRequestMsg.reassignRequest/tns:roleOwner</bpel:to>
-                      </bpel:copy>
-                      <bpel:copy>
-                        <bpel:from>$initialOwners/b4p:user</bpel:from>
-                        <bpel:to>$tnsReassignRequestMsg.reassignRequest/tns:userOwner</bpel:to>
+                        <bpel:from>bpel:doXslTransform("userRoleOwner.xsl", $tnsReassignRequestMsg.reassignRequest, "metadata", $initialOwners)</bpel:from>
+                        <bpel:to>$tnsReassignRequestMsg.reassignRequest</bpel:to>
                       </bpel:copy>
                     </bpel:assign>
                     <bpel:invoke partnerLink="taskManagementProcessAndTaskManagementSystemForPortTaskManagementServicesSOAPPlkVar" portType="tns:TaskManagementServices" operation="reassign" inputVariable="tnsReassignRequestMsg" outputVariable="tnsReassignResponseMsg" bpmn:label="reassign revoked task" bpmn:id="_TtOm0KklEdyFPr8ebhWveQ"></bpel:invoke>
@@ -2086,12 +2081,8 @@
                         <bpel:sequence>
                           <bpel:assign bpmn:label="save previous owners from escalation request " bpmn:id="_wb66gKkSEdyRnIK1kDiFhA">
                             <bpel:copy>
-                              <bpel:from>$escalateTaskRequest.root/b4p:userOwner</bpel:from>
-                              <bpel:to>$initialOwners/b4p:user</bpel:to>
-                            </bpel:copy>
-                            <bpel:copy>
-                              <bpel:from>$escalateTaskRequest.root/b4p:roleOwner</bpel:from>
-                              <bpel:to>$initialOwners/b4p:role</bpel:to>
+                              <bpel:from>bpel:doXslTransform("userRoleOwner.xsl", $initialOwners, "metadata", $escalateTaskRequest.root)</bpel:from>
+                              <bpel:to>$initialOwners</bpel:to>
                             </bpel:copy>
                           </bpel:assign>
                         </bpel:sequence>
@@ -2100,12 +2091,8 @@
                           <bpel:sequence>
                             <bpel:assign bpmn:label="save previous owners from creation request" bpmn:id="_ChVnwKkTEdyRnIK1kDiFhA">
                               <bpel:copy>
-                                <bpel:from>$createTaskRequest.root/b4p:taskMetaData/b4p:userOwner</bpel:from>
-                                <bpel:to>$initialOwners/b4p:user</bpel:to>
-                              </bpel:copy>
-                              <bpel:copy>
-                                <bpel:from>$createTaskRequest.root/b4p:taskMetaData/b4p:roleOwner</bpel:from>
-                                <bpel:to>$initialOwners/b4p:role</bpel:to>
+                                <bpel:from>bpel:doXslTransform("userRoleOwner.xsl", $initialOwners, "metadata", $createTaskRequest.root/b4p:taskMetaData)</bpel:from>
+                                <bpel:to>$initialOwners</bpel:to>
                               </bpel:copy>
                             </bpel:assign>
                           </bpel:sequence>

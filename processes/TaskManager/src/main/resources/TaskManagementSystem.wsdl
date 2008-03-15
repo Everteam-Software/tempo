@@ -26,6 +26,15 @@
 		<xsd:schema elementFormDefault="qualified"
 			targetNamespace="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
 			xmlns:tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+			<xsd:complexType name="owners">
+			<xsd:sequence>
+			<xsd:element name="userOwner" type="xsd:string"
+						maxOccurs="unbounded" minOccurs="0" />
+
+					<xsd:element name="roleOwner" type="xsd:string"
+						maxOccurs="unbounded" minOccurs="0" />
+			</xsd:sequence>
+			</xsd:complexType>
 			<xsd:element name="getTaskListResponse">
 				<xsd:complexType>
 					<xsd:sequence>

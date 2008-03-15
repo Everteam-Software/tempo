@@ -22,13 +22,13 @@
 
     <xsl:template match="tms:userOwner">
         <xsl:call-template name="change">
-            <xsl:with-param name="elements" select="$metadata/b4p:userOwner"/>
+            <xsl:with-param name="elements" select="$metadata/*:userOwner"/>
         </xsl:call-template>
     </xsl:template>
 
     <xsl:template match="tms:roleOwner">
         <xsl:call-template name="change">
-            <xsl:with-param name="elements" select="$metadata/b4p:roleOwner"/>
+            <xsl:with-param name="elements" select="$metadata/*:roleOwner"/>
         </xsl:call-template>
     </xsl:template>
 
