@@ -1,0 +1,23 @@
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<dd:deploy xmlns:dd="http://ode.fivesight.com/schemas/2006/06/27/dd"><dd:process xmlns:tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:dd="http://ode.fivesight.com/schemas/2006/06/27/dd" xmlns:UIFW="http://example.com/TMP/UIFW" xmlns:b4p="http://www.intalio.com/bpms/workflow/ib4p_20051115" xmlns:PreviousProcessTaskManager="http://example.com/TMP/PreviousProcessTaskManager" xmlns:UserBusinessProcess1="http://www.intalio.com/bpms/ubp" xmlns:UserBusinessProcess="http://example.com/TMP/UserBusinessProcess" xmlns:diag="http://example.com/TMP" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:TaskManagementSystem="http://example.com/TMP/TaskManagementSystem" xmlns:NextTaskManager="http://example.com/TMP/NextTaskManager" xmlns:this="http://example.com/TMP/TaskManagementProcess" xmlns:b4px="java:org.intalio.tempo.workflow.processes.xpath.UID" name="this:TaskManagementProcess" fileName="TMP-TaskManagementProcess.bpel">
+  <dd:property name="PATH">TMP</dd:property>
+  <dd:property name="SVG">TMP.svg</dd:property>
+  <dd:invoke partnerLink="taskManagementProcessAndTaskManagementSystemForPortTaskManagementServicesSOAPPlkVar">
+    <dd:service name="tns:TaskManagementServices" port="TaskManagementServicesSOAP" />
+  </dd:invoke>
+  <dd:provide partnerLink="taskManagementProcessAndUIFWForUIFWPortPlkVar">
+    <dd:service name="b4p:UIFWService" port="UIFWPort" />
+  </dd:provide>
+  <dd:provide partnerLink="taskManagementProcessAndNextTaskManagerForTMPPortPlkVar">
+    <dd:service name="b4p:TMPService" port="TMPPort" />
+  </dd:provide>
+  <dd:invoke partnerLink="taskManagementProcessAndPreviousProcessTaskManagerForTMPPortPlkVar">
+    <dd:service name="b4p:TMPService" port="TMPPort" />
+  </dd:invoke>
+  <dd:provide partnerLink="tMPAndUBPPlkVar">
+    <dd:service name="b4p:UserBusinessProcessService" port="UserBusinessProcessPort" />
+  </dd:provide>
+  <dd:invoke partnerLink="tMPAndUBPPlkVar">
+    <dd:service name="UserBusinessProcess1:UserBusinessProcessesServices" port="userProcessPort" />
+  </dd:invoke>
+</dd:process></dd:deploy>
