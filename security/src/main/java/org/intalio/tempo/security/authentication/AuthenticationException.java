@@ -20,7 +20,8 @@ import java.io.PrintWriter;
 public class AuthenticationException
     extends Exception
 {
-
+    private static final long serialVersionUID = -5475604802250316628L;
+    
     /**
      * The underlying exception.
      */

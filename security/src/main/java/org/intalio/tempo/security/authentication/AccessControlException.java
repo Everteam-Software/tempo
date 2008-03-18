@@ -18,6 +18,8 @@ package org.intalio.tempo.security.authentication;
 public class AccessControlException
     extends AuthenticationException
 {
+    private static final long serialVersionUID = 9134519986586960459L;
+
 
     /**
      * Construct a new AccessControlException exception wrapping an underlying exception

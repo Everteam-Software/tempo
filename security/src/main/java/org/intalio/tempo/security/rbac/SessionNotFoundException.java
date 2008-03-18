@@ -17,6 +17,8 @@ package org.intalio.tempo.security.rbac;
 public class SessionNotFoundException
     extends RBACException
 {
+    private static final long serialVersionUID = 6724653992937312749L;
+
 
     /**
      * Construct a new SessionNotFoundException exception wrapping an underlying exception

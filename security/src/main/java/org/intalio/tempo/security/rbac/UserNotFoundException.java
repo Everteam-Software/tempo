@@ -17,6 +17,8 @@ package org.intalio.tempo.security.rbac;
 public class UserNotFoundException
     extends RBACException
 {
+    private static final long serialVersionUID = -5673950029436827800L;
+
 
     /**
      * Construct a new UserNotFoundException exception wrapping an underlying exception

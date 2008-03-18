@@ -17,6 +17,8 @@ package org.intalio.tempo.security.authentication;
 public class UserNotFoundException
     extends AuthenticationException
 {
+    private static final long serialVersionUID = -8666152567536290006L;
+
 
     /**
      * Construct a new UserNotFoundException exception wrapping an underlying exception

@@ -18,6 +18,8 @@ package org.intalio.tempo.security.rbac;
 public class AccessControlException 
     extends RBACException
 {
+    private static final long serialVersionUID = 2341392138588878142L;
+
 
     /**
      * Construct a new AccessControlException exception wrapping an underlying exception
