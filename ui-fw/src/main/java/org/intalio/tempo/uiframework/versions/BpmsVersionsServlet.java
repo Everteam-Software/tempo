@@ -27,6 +27,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.commons.io.IOUtils;
 
 public class BpmsVersionsServlet extends HttpServlet {
+    private static final long serialVersionUID = -76889544882620584L;
 
     private static final Log LOGGER = LogFactory.getLog(BpmsVersionsServlet.class);
 	
