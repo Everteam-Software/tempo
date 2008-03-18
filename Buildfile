@@ -25,9 +25,27 @@ define "tempo" do
   compile.options.source = "1.5"
   compile.options.target = "1.5"
 
+  define "cas-server-webapp" do
+    libs = projects("security", "security-ws-client", "security-ws-common"), AXIOM, AXIS2, CAS_LIBS, COMMONS, COMMONS_LOG, LOG4J, WS_COMMONS_SCHEMA
+    compile.with libs
+    package(:war).with :libs=>libs
+  end
+  
+  define "dao-nutsNbolts" do
+    compile.with project("web-nutsNbolts"), APACHE_JPA, SLF4J
+    package :jar
+  end
+   
+  define "dao-tools" do
+    compile.with projects("security", "security-ws-client", "tms-axis", "tms-common", "tms-dao", "wds-dao", "tms-client", "web-nutsNbolts", "dao-nutsNbolts"), APACHE_JPA, AXIOM, AXIS2, COMMONS, JAXEN, SLF4J, SPRING, STAX_API, XMLBEANS
+
+    test.with CASTOR, LOG4J, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES
+    package :war
+  end
+  
   desc "Deployment API"
   define "deploy-api" do
-    compile.with SLF4J, SPRING
+    compile.with project("registry"), SLF4J, SPRING
     package :jar
   end
 
@@ -41,7 +59,7 @@ define "tempo" do
 
   desc "Deployment Web-Service Common Library"
   define "deploy-ws-common" do
-    compile.with projects("deploy-api", "deploy-impl"), AXIOM, AXIS2, SUNMAIL, SLF4J, SPRING, STAX_API 
+    compile.with projects("deploy-api", "deploy-impl", "registry"), AXIOM, AXIS2, SUNMAIL, SLF4J, SPRING, STAX_API 
     package(:jar)
   end
   
@@ -72,7 +90,7 @@ define "tempo" do
 
   desc "Deployment Web-Service"
   define "deploy-ws-service" do
-    package(:aar).with :libs => [ projects("deploy-api", "deploy-impl", "deploy-ws-common"), SLF4J, SPRING ]
+    package(:aar).with :libs => [ projects("deploy-api", "deploy-impl", "deploy-ws-common", "registry"), SLF4J, SPRING ]
   end
 
   desc "Form Dispatcher Servlet"
@@ -86,7 +104,14 @@ define "tempo" do
     end
     package(:war).with(:libs=>[libs,JAXEN])
   end
-    
+
+  desc "Workflow Forms"
+  define "forms" do
+    define "AbsenceRequest" do
+      package(:zip).path("AbsenceRequest.formmanager").include(_("src/main/xform/*"))
+    end
+  end
+  
   desc "Workflow Processes"
   define "processes" do
     define "xpath-extensions" do
@@ -277,11 +302,35 @@ define "tempo" do
       include("src/main/config/geronimo/1.0/*", path_to(compile.target, "dojo"))
   end
   
+  desc "User-Interface Framework Portlet"
+  define "ui-fw-portlet" do
+    libs = projects("security", "security-ws-client", "security-ws-common",
+                    "tms-axis", "tms-client", "tms-common", "ui-pluto"),
+           APACHE_JPA, AXIOM, AXIS2, COMMONS, CAS_CLIENT, DOM4J, INTALIO_STATS, 
+           JSON, JSP_API, JSTL, LOG4J, PLUTO, PORTLET_API, SERVLET_API, 
+           SPRING, SLF4J, STAX_API, TAGLIBS, WOODSTOX, WSDL4J, WS_COMMONS_SCHEMA, 
+           XERCES, XMLBEANS
+    compile.with libs
+
+    dojo = unzip(path_to(compile.target, "dojo") => download(artifact(DOJO)=>DOJO_URL))
+    dojo.from_path(DOJO_WIDGET_BASE).include("*").exclude("demos/*", "release/*", "tests/*", "README", "*.txt")
+
+    build dojo
+    resources.filter.using "version" => VERSION_NUMBER
+    package(:war).with(:libs=>libs).
+      include("src/main/config/geronimo/1.0/*", path_to(compile.target, "dojo"))
+  end
+  
   define "ui-pluto" do
   	libs = PLUTO, SERVLET_API, COMMONS_LOG
   	compile.with libs
   	package(:jar)
     package(:war)
+  end
+  
+  define "registry" do
+    compile.with SLF4J
+  	package(:jar)
   end
   
   desc "Workflow Deployment Service Client"
@@ -298,7 +347,7 @@ define "tempo" do
 
   desc "Workflow Deployment Service"
   define "wds-service" do
-    libs = [ projects("dao-nutsNbolts", "deploy-api", "security", "tms-axis", "tms-client", "tms-common", "wds-dao", "web-nutsNbolts"), 
+    libs = [ projects("dao-nutsNbolts", "deploy-api", "registry", "security", "tms-axis", "tms-client", "tms-common", "wds-dao", "web-nutsNbolts"), 
       AXIS2, AXIOM, APACHE_JPA, COMMONS, LOG4J, SERVLET_API, SLF4J, SPRING, STAX_API, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX, XERCES, XMLBEANS ]
       
     test_libs = libs + [EASY_B, INSTINCT]
@@ -306,25 +355,14 @@ define "tempo" do
     compile.with test_libs
     compile { open_jpa_enhance }    
     
+    package_libs = libs - SERVLET_API
     resources.filter.using "version" => VERSION_NUMBER
-    package(:war).with :libs=>libs
+    package(:war).with :libs=>package_libs
   end
 
   define "web-nutsNbolts" do
     compile.with project("security"), AXIS2, COMMONS, INTALIO_STATS, JSP_API, LOG4J, SERVLET_API, SLF4J, SPRING
     package :jar
-  end
-  
-  define "dao-nutsNbolts" do
-    compile.with project("web-nutsNbolts"), APACHE_JPA, SLF4J
-    package :jar
-  end
-   
-  define "dao-tools" do
-    compile.with projects("security", "security-ws-client", "tms-axis", "tms-common", "tms-dao", "wds-dao", "tms-client", "web-nutsNbolts", "dao-nutsNbolts"), APACHE_JPA, AXIOM, AXIS2, COMMONS, JAXEN, SLF4J, SPRING, STAX_API, XMLBEANS
-
-    test.with CASTOR, LOG4J, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES
-    package :war
   end
   
   desc "XForms Manager"
@@ -334,48 +372,4 @@ define "tempo" do
     package(:war).with :libs=> ORBEON_LIBS
   end
 
-  define "cas-server-webapp" do
-    libs = projects("security", "security-ws-client", "security-ws-common"), AXIOM, AXIS2, CAS_LIBS, COMMONS, COMMONS_LOG, LOG4J, WS_COMMONS_SCHEMA
-    compile.with libs
-    package(:war).with :libs=>libs
-  end
-  
-  desc "User-Interface Framework Portlet"
-  define "ui-fw-portlet" do
-    libs = projects("security", "security-ws-client", "security-ws-common",
-                    "tms-axis", "tms-client", "tms-common", "ui-pluto"),
-           APACHE_JPA, 
-           AXIOM, 
-           AXIS2, 
-           COMMONS,
-           CAS_CLIENT, 
-           DOM4J, 
-           INTALIO_STATS, 
-           JSON,
-           JSP_API, 
-           JSTL,
-           LOG4J, 
-           PLUTO,
-           PORTLET_API,
-           SERVLET_API, 
-           SPRING, 
-           SLF4J, 
-           STAX_API, 
-           TAGLIBS, 
-           WOODSTOX, 
-           WSDL4J, 
-           WS_COMMONS_SCHEMA, 
-           XERCES, 
-           XMLBEANS
-    compile.with libs
-
-    dojo = unzip(path_to(compile.target, "dojo") => download(artifact(DOJO)=>DOJO_URL))
-    dojo.from_path(DOJO_WIDGET_BASE).include("*").exclude("demos/*", "release/*", "tests/*", "README", "*.txt")
-
-    build dojo
-    resources.filter.using "version" => VERSION_NUMBER
-    package(:war).with(:libs=>libs).
-      include("src/main/config/geronimo/1.0/*", path_to(compile.target, "dojo"))
-  end
- 
 end
