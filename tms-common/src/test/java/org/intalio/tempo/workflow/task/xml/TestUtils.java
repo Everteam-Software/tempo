@@ -103,7 +103,7 @@ class TestUtils {
     }
 
     public static String toPrettyXML(XmlObject element) throws Exception {
-        HashMap suggestedPrefixes = new HashMap();
+        HashMap<String, String> suggestedPrefixes = new HashMap<String, String>();
         suggestedPrefixes.put(TaskXMLConstants.TASK_NAMESPACE, TaskXMLConstants.TASK_NAMESPACE_PREFIX);
         XmlOptions opts = new XmlOptions();
         opts.setSaveSuggestedPrefixes(suggestedPrefixes);
