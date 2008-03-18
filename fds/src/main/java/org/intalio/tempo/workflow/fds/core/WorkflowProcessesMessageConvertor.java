@@ -78,11 +78,12 @@ public class WorkflowProcessesMessageConvertor {
      *             already been partly processed and therefore should be assumed
      *             to be corrupted.
      */
+    @SuppressWarnings("unchecked")
     public void convertMessage(Document message, String userProcessNamespaceUri)
             throws MessageFormatException {
     	XPath xpathSelector = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Body/soapenv:Fault");
     	xpathSelector.setNamespaceURIs(MessageConstants.get_nsMap());
-    	List fault = xpathSelector.selectNodes(message);
+    	List<Node> fault = xpathSelector.selectNodes(message);
         if(fault.size() != 0) {
             // return fault as-is
             LOG.error("Fault in response:\n"+message.asXML());
@@ -92,7 +93,7 @@ public class WorkflowProcessesMessageConvertor {
         //retrieve session
         xpathSelector = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Body/*[1]/ib4p:taskMetaData/ib4p:session");
         xpathSelector.setNamespaceURIs(MessageConstants.get_nsMap());
-        List sessionNodes = xpathSelector.selectNodes(message);
+        List<Node> sessionNodes = xpathSelector.selectNodes(message);
         if (sessionNodes.size() > 0) {
             Element sessionElement = (Element) sessionNodes.get(0);
             String session = sessionElement.getText();
@@ -100,7 +101,7 @@ public class WorkflowProcessesMessageConvertor {
             //remove callback
             xpathSelector = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Header/intalio:callback");
             xpathSelector.setNamespaceURIs(MessageConstants.get_nsMap());
-            List callbackNodes = xpathSelector.selectNodes(message);
+            List<Node> callbackNodes = xpathSelector.selectNodes(message);
             if (callbackNodes.size() != 0) {
                 Element wsaTo = (Element) callbackNodes.get(0);
                 Element header = (Element)wsaTo.getParent();
@@ -113,7 +114,7 @@ public class WorkflowProcessesMessageConvertor {
         /* fetch the user process endpoint element from the task metadata */
         xpathSelector = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Body/*[1]/ib4p:taskMetaData/ib4p:userProcessEndpoint");
         xpathSelector.setNamespaceURIs(MessageConstants.get_nsMap());
-        List userProcessEndpointNodes = xpathSelector.selectNodes(message);
+        List<Node> userProcessEndpointNodes = xpathSelector.selectNodes(message);
         if (userProcessEndpointNodes.size() > 0) {
             /* found the user process endpoint element */
             Element userProcessEndpointElement = (Element) userProcessEndpointNodes.get(0);
@@ -123,7 +124,7 @@ public class WorkflowProcessesMessageConvertor {
             /* do we have a wsa:To element? */
             xpathSelector = DocumentHelper.createXPath("//wsa:To");
             xpathSelector.setNamespaceURIs(MessageConstants.get_nsMap());
-            List wsaToNodes = xpathSelector.selectNodes(message);
+            List<Node> wsaToNodes = xpathSelector.selectNodes(message);
             if (wsaToNodes.size() != 0) {
                 /* We have the wsa:To element. Set the correct target endpoint */
                 Element wsaTo = (Element) wsaToNodes.get(0);
@@ -133,7 +134,7 @@ public class WorkflowProcessesMessageConvertor {
             /* do we have a addr:To element? */
             xpathSelector = DocumentHelper.createXPath("//addr:To");
             xpathSelector.setNamespaceURIs(MessageConstants.get_nsMap());
-            List addrToNodes = xpathSelector.selectNodes(message);
+            List<Node> addrToNodes = xpathSelector.selectNodes(message);
             if (addrToNodes.size() != 0) {
                 /* We have the wsa:To element. Set the correct target endpoint */
                 Element wsaTo = (Element) addrToNodes.get(0);
@@ -151,7 +152,7 @@ public class WorkflowProcessesMessageConvertor {
         if (userProcessNamespaceUri == null) {
         	xpathSelector = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Body/*[1]/ib4p:taskMetaData/ib4p:userProcessNamespaceURI");
         	xpathSelector.setNamespaceURIs(MessageConstants.get_nsMap());
-            List namespaceElementQueryResult = xpathSelector.selectNodes(message);
+            List<Node> namespaceElementQueryResult = xpathSelector.selectNodes(message);
             if (namespaceElementQueryResult.size() == 0) {
                 throw new MessageFormatException("No user process namespace specified "
                         + "and no ib4p:userProcessNamespaceURI element present to determine those.");
@@ -163,14 +164,14 @@ public class WorkflowProcessesMessageConvertor {
 
         xpathSelector = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Body/*[1]/ib4p:taskMetaData/ib4p:userProcessCompleteSOAPAction");
         xpathSelector.setNamespaceURIs(MessageConstants.get_nsMap());
-        List soapActionQueryResult = xpathSelector.selectNodes(message);
+        List<Node> soapActionQueryResult = xpathSelector.selectNodes(message);
         if (soapActionQueryResult.size() > 0) {
             Element soapActionElement = (Element) soapActionQueryResult.get(0);
             _soapAction = soapActionElement.getText();
             
             xpathSelector = DocumentHelper.createXPath("//addr:Action");
             xpathSelector.setNamespaceURIs(MessageConstants.get_nsMap());
-            List actionNodes = xpathSelector.selectNodes(message);
+            List<Node> actionNodes = xpathSelector.selectNodes(message);
             if (actionNodes.size() > 0) {
                 Element wsaTo = (Element) actionNodes.get(0);
                 //wsaTo.removeChildren();
@@ -184,11 +185,11 @@ public class WorkflowProcessesMessageConvertor {
         /* Select all elements inside the soap envelope body. */
         xpathSelector = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Body//*");
         xpathSelector.setNamespaceURIs(MessageConstants.get_nsMap());
-        List bodyNodes = xpathSelector.selectNodes(message);
+        List<Node> bodyNodes = xpathSelector.selectNodes(message);
         /* Select all elements inside the task output payload. */
         xpathSelector = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Body/*[1]/ib4p:taskOutput//*");
         xpathSelector.setNamespaceURIs(MessageConstants.get_nsMap());
-        List taskOutputNodes = xpathSelector.selectNodes(message);
+        List<Node> taskOutputNodes = xpathSelector.selectNodes(message);
         /*
          * Change namespace for all the elements which are inside the soap
          * envelope body but not inside the task output payload.

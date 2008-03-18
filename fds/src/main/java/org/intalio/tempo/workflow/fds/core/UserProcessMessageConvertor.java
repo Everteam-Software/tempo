@@ -76,6 +76,7 @@ public class UserProcessMessageConvertor {
      *             already been partly processed and therefore should be assumed
      *             to be corrupted.
      */
+    @SuppressWarnings("unchecked")
     public void convertMessage(Document message)
             throws MessageFormatException, AxisFault {
         FormDispatcherConfiguration config = FormDispatcherConfiguration.getInstance();
@@ -83,20 +84,20 @@ public class UserProcessMessageConvertor {
         XPath xpath = null;
 		xpath = DocumentHelper
 				.createXPath("/soapenv:Envelope/soapenv:Body/soapenv:Fault");
-		List fault = xpath.selectNodes(message);
+		List<Node> fault = xpath.selectNodes(message);
 		if (fault.size() != 0) throw new RuntimeException(fault.toString());
 		
         // Check SOAP action
         xpath = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Body");
         xpath.setNamespaceURIs(MessageConstants.get_nsMap());
-        List bodyQueryResult = xpath.selectNodes(message);
+        List<Node> bodyQueryResult = xpath.selectNodes(message);
         if(bodyQueryResult.size() != 0) {
         	Element root = (Element)bodyQueryResult.get(0);
         	if(root.asXML().indexOf("createTaskRequest") != -1) {
         		_soapAction = "createTask";
         		xpath = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Header/addr:Action");
         		xpath.setNamespaceURIs(MessageConstants.get_nsMap());
-        		List wsaActionQueryResult =xpath.selectNodes(message);
+        		List<Node> wsaActionQueryResult =xpath.selectNodes(message);
                 if (wsaActionQueryResult.size() != 0) {
                     Element wsaToElement = (Element) wsaActionQueryResult.get(0);
                     wsaToElement.setText(_soapAction);
@@ -111,7 +112,7 @@ public class UserProcessMessageConvertor {
          */
         xpath = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Header/addr:To");
         xpath.setNamespaceURIs(MessageConstants.get_nsMap());
-        List wsaToQueryResult = xpath.selectNodes(message);
+        List<Node> wsaToQueryResult = xpath.selectNodes(message);
         if (wsaToQueryResult.size() != 0) {
             Element wsaToElement = (Element) wsaToQueryResult.get(0);
             String workflowProcessesUrl = config.getPxeBaseUrl() + config.getWorkflowProcessesRelativeUrl();
@@ -124,7 +125,7 @@ public class UserProcessMessageConvertor {
          */
         xpath = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Header/intalio:callback/addr:Address");
         xpath.setNamespaceURIs(MessageConstants.get_nsMap());
-        List callbackToQueryResult = xpath.selectNodes(message);
+        List<Node> callbackToQueryResult = xpath.selectNodes(message);
         if (callbackToQueryResult.size() != 0) {
             Element wsaToElement = (Element) callbackToQueryResult.get(0);
             _userProcessEndpoint = wsaToElement.getText();
@@ -135,7 +136,7 @@ public class UserProcessMessageConvertor {
         /*
          * 1. fetch the first element of SOAP envelope body.
          */
-        List allSoapBodyElements = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Body//*").selectNodes(message);
+        List<Node> allSoapBodyElements = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Body//*").selectNodes(message);
         if (allSoapBodyElements.size() == 0) {
             throw new MessageFormatException("No elements found inside soapenv:Body.");
         }
@@ -151,7 +152,7 @@ public class UserProcessMessageConvertor {
         String messageNamespace = firstPayloadElement.getNamespaceURI();
         _userProcessNamespaceUri = messageNamespace;
 
-        Map namespaceURIs = new HashMap(MessageConstants.get_nsMap());
+        Map<String, String> namespaceURIs = new HashMap<String, String>(MessageConstants.get_nsMap());
         namespaceURIs.put(REQUEST_PREFIX, _userProcessNamespaceUri);
         
         /*
@@ -160,13 +161,13 @@ public class UserProcessMessageConvertor {
          */
         xpath = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Header/intalio:callback/intalio:session");
         xpath.setNamespaceURIs(namespaceURIs/*MessageConstants.get_nsMap()*/);
-        List sessionQueryResult = xpath.selectNodes(message);
+        List<Node> sessionQueryResult = xpath.selectNodes(message);
         if (sessionQueryResult.size() != 0) {
             Element wsaToElement = (Element) sessionQueryResult.get(0);
             String session = wsaToElement.getText();
             xpath = DocumentHelper.createXPath("//"+REQUEST_PREFIX+":taskMetaData");
             xpath.setNamespaceURIs(namespaceURIs/*MessageConstants.get_nsMap()*/);
-            List tmdQueryResult = xpath.selectNodes(message);
+            List<Node> tmdQueryResult = xpath.selectNodes(message);
             Element tmdElement = (Element) tmdQueryResult.get(0);
             Element sessionElement = tmdElement.addElement("session",MessageConstants.IB4P_NS);
             sessionElement.setText(session);
@@ -176,7 +177,7 @@ public class UserProcessMessageConvertor {
         //or put sender endpoint in task meta data if not defined
         xpath = DocumentHelper.createXPath("//"+REQUEST_PREFIX+":taskMetaData/"+REQUEST_PREFIX+":userProcessEndpoint");
         xpath.setNamespaceURIs(namespaceURIs/*MessageConstants.get_nsMap()*/);
-        List endpointQueryResult = xpath.selectNodes(message);
+        List<Node> endpointQueryResult = xpath.selectNodes(message);
         if (endpointQueryResult.size() != 0) {
             Element userProcessEndpointElement = (Element) endpointQueryResult.get(0);
             String value = userProcessEndpointElement.getText();
@@ -189,7 +190,7 @@ public class UserProcessMessageConvertor {
         	_log.info("User process endpoint is not defined in task metadata, adding " + _userProcessEndpoint);
         	xpath = DocumentHelper.createXPath("//"+REQUEST_PREFIX+":taskMetaData");
         	xpath.setNamespaceURIs(namespaceURIs/*MessageConstants.get_nsMap()*/);
-        	List tmdQueryResult = xpath.selectNodes(message);
+        	List<Node> tmdQueryResult = xpath.selectNodes(message);
         	if(tmdQueryResult.size()>0) {
 	            Element wsaToElement = (Element) tmdQueryResult.get(0);
 	            Element nsElement = wsaToElement.addElement("userProcessEndpoint", MessageConstants.IB4P_NS);
@@ -200,11 +201,11 @@ public class UserProcessMessageConvertor {
         //Add user process namespace to taskmetadata if not already defined
         xpath = DocumentHelper.createXPath("//"+REQUEST_PREFIX+":taskMetaData/"+REQUEST_PREFIX+":userProcessNamespaceURI");
         xpath.setNamespaceURIs(namespaceURIs/*MessageConstants.get_nsMap()*/);
-        List nsQueryResult = xpath.selectNodes(message);
+        List<Node> nsQueryResult = xpath.selectNodes(message);
         if (nsQueryResult.size() == 0 && _userProcessNamespaceUri != null) {
         	xpath = DocumentHelper.createXPath("//"+REQUEST_PREFIX+":taskMetaData");
         	xpath.setNamespaceURIs(namespaceURIs/*MessageConstants.get_nsMap()*/);
-        	List tmdQueryResult = xpath.selectNodes(message);
+        	List<Node> tmdQueryResult = xpath.selectNodes(message);
         	if(tmdQueryResult.size()>0) {
             	_log.info("User process namespace is not defined in task metadata, adding " + _userProcessNamespaceUri);
 	            Element wsaToElement = (Element) tmdQueryResult.get(0);
@@ -225,7 +226,7 @@ public class UserProcessMessageConvertor {
          */
         xpath = DocumentHelper.createXPath("//"+REQUEST_PREFIX+":taskInput//*");
         xpath.setNamespaceURIs(namespaceURIs/*MessageConstants.get_nsMap()*/);
-        List allTaskInputElements = xpath.selectNodes(message);
+        List<Node> allTaskInputElements = xpath.selectNodes(message);
 
         for (int i = 0; i < allSoapBodyElements.size(); ++i) {
             Node node = (Node)allSoapBodyElements.get(i);
