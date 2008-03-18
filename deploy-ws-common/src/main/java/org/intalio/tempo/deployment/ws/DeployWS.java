@@ -21,9 +21,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.Collection;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
 import org.intalio.tempo.deployment.AssemblyId;
@@ -31,6 +28,8 @@ import org.intalio.tempo.deployment.DeployedAssembly;
 import org.intalio.tempo.deployment.DeploymentResult;
 import org.intalio.tempo.deployment.impl.DeploymentServiceImpl;
 import org.intalio.tempo.deployment.utils.DeploymentServiceLookup;
+import org.intalio.tempo.registry.Registry;
+import org.intalio.tempo.registry.RegistryFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
@@ -56,9 +55,9 @@ public class DeployWS {
         this(true);
     }
 
-    public DeployWS(boolean registerJNDI) {
+    public DeployWS(boolean bindRegistry) {
     	initialize();
-    	if (registerJNDI) registerJNDI();
+    	if (bindRegistry) bindRegistry();
     }
     
     protected void initialize() {
@@ -94,19 +93,20 @@ public class DeployWS {
         }
     }
 
-    protected void registerJNDI() {
+    protected void bindRegistry() {
         try {
-        	// JNDI registration
         	DeploymentServiceLookup lookup = new DeploymentServiceLookup();
         	lookup.loadProperties();
 
-        	Context initialContext = new InitialContext();
-
+        	RegistryFactory registryFactory = new RegistryFactory();
+        	registryFactory.init();
+        	Registry registry = registryFactory.getRegistry();
+        	
         	LOG.info("Registering DeploymentService at "+lookup.deploymentServiceName);
-        	initialContext.rebind(lookup.deploymentServiceName, _deployService);
+        	registry.bind(lookup.deploymentServiceName, _deployService);
 
         	LOG.info("Registering DeploymentServiceCallback at "+lookup.deploymentCallbackName);
-        	initialContext.rebind(lookup.deploymentCallbackName, _deployService.getCallback());
+        	registry.bind(lookup.deploymentCallbackName, _deployService.getCallback());
         } catch (RuntimeException except) {
             LOG.error("Error during initialization of deployment service", except);
             throw except;
