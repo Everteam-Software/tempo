@@ -58,11 +58,8 @@ module Buildr
       def run_on_project(project)
         unless project.compile.sources.empty?
           stories = project.path_to("src/test/stories")
-          # puts stories
           instrumented = project.file(project.path_to(:target, "instrumented"))
-          # puts instrumented
           target = project.file(project.path_to(:target, "classes"))
-          # puts target
           new_path = project.compile.classpath.unshift target
           new_path.unshift instrumented
           if File.exist? stories
@@ -77,6 +74,13 @@ module Buildr
           end
         end
       end
+      
+      def run_on_projects()
+        Buildr.projects.each do |project|
+          run_on_project project
+        end
+      end
+      
     end
 
     namespace "easyb" do
@@ -88,15 +92,13 @@ module Buildr
       end
 
       desc "Run easyb code"
-      task "run" do     
+      task "run" do
         top_project = Buildr.projects[0]
         top_name = top_project.name
         current_project = Buildr.projects[0].project(@@org)
         current_name = current_project.name
         if(top_name == current_name)   
-          Buildr.projects.each do |project|
-            run_on_project project
-          end
+          run_on_projects
         else
           run_on_project current_project
         end
@@ -111,6 +113,7 @@ module Buildr
           ant.send "cobertura-merge", :datafile=>data_file do
             ant.fileset(:dir=>toppath) { ant.include :name=>"*cobertura.ser" }
           end
+          
           rm_rf toppath +"/" + "cobertura.ser"
           ant.send "cobertura-report", :destdir=>report_to(:html), :format=>"html", :datafile=>data_file do
             Buildr.projects.map(&:compile).map(&:sources).flatten.each do |src|
