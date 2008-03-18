@@ -58,7 +58,6 @@ public class DeploymentServiceRegister {
         public void run() {
             try {
                 DeploymentServiceCallback callback = _lookup.lookupDeploymentCallback();
-                LOG.debug("DeploymentServiceCallback: " + callback.getClass());
                 if (callback == null) throw new RuntimeException("DeploymentServiceCallback not yet available");
                 callback.available(_manager);
                 _timer.cancel();
