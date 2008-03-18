@@ -16,11 +16,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-
 import org.intalio.tempo.deployment.DeploymentService;
 import org.intalio.tempo.deployment.spi.DeploymentServiceCallback;
+import org.intalio.tempo.registry.Registry;
+import org.intalio.tempo.registry.RegistryFactory;
 import org.springframework.util.SystemPropertyUtils;
 
 /**
@@ -28,12 +27,14 @@ import org.springframework.util.SystemPropertyUtils;
  */
 public class DeploymentServiceLookup {
     public static final String DEFAULT_PROPERTY_FILE     = "${org.intalio.tempo.configDirectory}/tempo-deploy.properties";
-    public static final String DEFAULT_DEPLOYMENT_SERVICE_NAME  = "java:/DeploymentService";
-    public static final String DEFAULT_DEPLOYMENT_CALLBACK_NAME = "java:/DeploymentServiceCallback";
+    public static final String DEFAULT_DEPLOYMENT_SERVICE_NAME  = "DeploymentService";
+    public static final String DEFAULT_DEPLOYMENT_CALLBACK_NAME = "DeploymentServiceCallback";
 
     public String  propertyFile = DEFAULT_PROPERTY_FILE;
     public String  deploymentServiceName  = DEFAULT_DEPLOYMENT_SERVICE_NAME;
     public String  deploymentCallbackName = DEFAULT_DEPLOYMENT_CALLBACK_NAME;
+
+    private Registry _registry;
     
     /**
      * Default constructor.
@@ -45,6 +46,10 @@ public class DeploymentServiceLookup {
      * Load configuration from properties file.
      */
     public void loadProperties() {
+        RegistryFactory registryFactory = new RegistryFactory();
+        registryFactory.init();
+        _registry = registryFactory.getRegistry();
+        
         String configFile = SystemPropertyUtils.resolvePlaceholders(propertyFile);
         try {
             Properties props = new Properties();
@@ -76,14 +81,7 @@ public class DeploymentServiceLookup {
      */
     @SuppressWarnings("unchecked")
     private <T> T lookup(String name) {
-        try {
-            Context context = new InitialContext();
-            T proxiedObject = (T) context.lookup(name);
-            RemoteProxy<T> proxy = new RemoteProxy<T>(proxiedObject, getClass().getClassLoader(), proxiedObject.getClass().getClassLoader());
-            return proxy.newProxyInstance();
-        } catch (Exception except) {
-            throw new RuntimeException(except);
-        }
+        return (T) _registry.lookup(name, getClass().getClassLoader());
     }
     
 }
