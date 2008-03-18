@@ -12,12 +12,15 @@
 
 package org.intalio.tempo.deployment;
 
+import java.io.Serializable;
+
 
 /**
  * Deployment message, contains the description and detail of deployment operation.
  */
-public class DeploymentMessage {
-
+public class DeploymentMessage implements Serializable {
+    private static final long serialVersionUID = 8929159867749507536L;
+    
     private String _description;
     private Level _level;
     private String _resource;
