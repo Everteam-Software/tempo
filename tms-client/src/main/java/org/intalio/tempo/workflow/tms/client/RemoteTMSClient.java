@@ -81,7 +81,12 @@ class RemoteTMSClient implements ITaskManagementService {
 
     private OMElement sendRequest(OMElement request, String soapAction) {
         if(_log.isDebugEnabled()) _log.debug(request.toString());
+        
+        Thread currentThread = Thread.currentThread();
+        ClassLoader cl = currentThread.getContextClassLoader();
         try {
+            currentThread.setContextClassLoader(this.getClass().getClassLoader());
+
             Options options = new Options();
             options.setTo(_endpoint);
             options.setAction(soapAction);
@@ -93,6 +98,8 @@ class RemoteTMSClient implements ITaskManagementService {
             return response;
         } catch (AxisFault f) {
             throw new RemoteTMSException(f);
+        } finally {
+            currentThread.setContextClassLoader(cl);
         }
     }
 
