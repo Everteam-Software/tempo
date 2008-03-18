@@ -3,7 +3,7 @@ gem "buildr", ">=1.2.10"
 require "rubygems"
 require "buildr"
 require "buildr/cobertura"
-
+require "buildr/xmlbeans"
 
 # Keep this structure to allow the build system to update version numbers.
 VERSION_NUMBER = "5.2.0.6-SNAPSHOT"
@@ -13,7 +13,6 @@ require "dependencies.rb"
 require "repositories.rb"
 # leave this require after dependencies.rb so the same jpa version is used throughout the whole build
 require "tasks/openjpa"
-require "tasks/xmlbeans" 
 require "tasks/easyb"
 # require "tasks/wsdl2java"
 

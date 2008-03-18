@@ -17,15 +17,8 @@
 <% 
 	ApplicationState as = (ApplicationState)renderRequest.getAttribute(ApplicationState.PARAMETER_NAME);
 %>
-<div id="token" style="visibility:hidden;">
-<%= as.getCurrentUser().getToken() %>
-</div>
-<div id="user" style="visibility:hidden;">
-<%= as.getCurrentUser().getName() %>
-</div>
+
 <script type="text/javascript" >
-	var ptoken = document.getElementById("token").innerText;
-	var puser = document.getElementById("user").innerText;
 //for auto update
 window.onload = function() {
 
@@ -56,7 +49,7 @@ Ext.onReady(SimpleTabEx.init,SimpleTabEx,true);
 //TasksGrid
 var GridEx={
 	gridobj : '',
-	dataurl : '/ui-fw-portlet/json/update?token=' + ptoken + '&user=' + puser,
+	dataurl : '/ui-fw-portlet/json/update?token=' + '<%= as.getCurrentUser().getToken() %>' + '&user=' + '<%= as.getCurrentUser().getName() %>',
     //initialize
     init:function(){
         //create Grid
@@ -129,7 +122,7 @@ Ext.onReady(GridEx.init,GridEx,true);
 //ProcessGrid
 var ProcessGridEx={
 	gridobj : '',
-	dataurl : '/ui-fw-portlet/json/update?token=' + ptoken + '&user=' + puser,
+	dataurl : '/ui-fw-portlet/json/update?token=' + '<%= as.getCurrentUser().getToken() %>' + '&user=' + '<%= as.getCurrentUser().getName() %>',
     //initialize
     init:function(){
         //create Grid
@@ -213,6 +206,9 @@ function <portlet:namespace/>_startTimer(interval) {
 
 //get data and reflesh GridDatas. 
 function <portlet:namespace/>_getUpdateData(){
+	var ptoken = document.getElementById("token").innerText;
+	var puser = document.getElementById("user").innerText;
+
 	//refesh GridEx
     GridEx.gridobj.reconfigure(GridEx.makeDataSource(),GridEx.gridobj.getColumnModel());
     
