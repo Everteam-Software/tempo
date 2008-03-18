@@ -239,7 +239,7 @@ define "tempo" do
   
   desc "Task Management DAO"
   define "tms-dao" do 
-    compile.with projects("tms-common", "dao-nutsNbolts"), APACHE_JPA, SLF4J
+    compile.with projects("tms-common", "dao-nutsNbolts", "web-nutsNbolts"), APACHE_JPA, SLF4J
     package(:jar)                 
   end
   
