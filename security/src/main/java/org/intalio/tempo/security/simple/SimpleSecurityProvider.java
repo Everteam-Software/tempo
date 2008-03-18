@@ -167,12 +167,13 @@ public final class SimpleSecurityProvider
     private InputStream getConfigStream()
         throws IOException
     {
-        File file = new File( SystemPropertyUtils.resolvePlaceholders(_filename) );
+        String filename = SystemPropertyUtils.resolvePlaceholders(_filename);
+        File file = new File(filename);
         if ( !file.exists() ) {
-            ClassPathResource resource = new ClassPathResource( _filename );
+            ClassPathResource resource = new ClassPathResource( filename );
             return resource.getInputStream();
         }
-        return new FileInputStream( _filename );
+        return new FileInputStream( filename );
     }
     
     // implement SecurityProvider interface
