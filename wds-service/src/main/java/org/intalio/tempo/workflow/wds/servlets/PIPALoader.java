@@ -33,6 +33,8 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class PIPALoader {
+    private static final Logger logger = LoggerFactory.getLogger(PIPALoader.class);
+
     public static final String HEADER_TASK_ROLE_OWNERS = "Task-RoleOwners";
     public static final String HEADER_TASK_USER_OWNERS = "Task-UserOwners";
     public static final String HEADER_PROCESS_INIT_ACTION = "Process-InitSOAPAction";
@@ -50,10 +52,8 @@ public class PIPALoader {
     public static final String PROPERTY_DESCRIPTION = "task-description";
     public static final String PROPERTY_FORM_URI = "formURI";
 
-    private static final Logger logger = LoggerFactory.getLogger(WDSServlet.class);
-
     public static PIPATask parsePipa(Properties prop) {
-        logger.info("Creating PIPA using the following properties:" + prop.toString());
+        logger.info("Parse PIPA using properties: " + prop.toString());
 
         PIPATask task = new PIPATask(UUID.randomUUID().toString(), prop.getProperty(PROPERTY_FORM_URI));
         task.setDescription(prop.getProperty(PROPERTY_DESCRIPTION));
