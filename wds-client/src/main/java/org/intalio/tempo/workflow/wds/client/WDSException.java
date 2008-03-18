@@ -18,6 +18,7 @@ package org.intalio.tempo.workflow.wds.client;
  * @version $Revision: 473 $
  */
 public class WDSException extends Exception {
+    private static final long serialVersionUID = 335028427052560736L;
 
     public WDSException() { }
 

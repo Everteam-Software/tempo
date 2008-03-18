@@ -17,11 +17,9 @@ package org.intalio.tempo.workflow.wds.client;
 
 /**
  * Thrown when something wrong with data provided for deployment
- *
- * @author Oleg Zenzin
- * @version $Revision: $, $LastChangedDate: $
  */
 public class ValidationException extends WDSException {
+    private static final long serialVersionUID = -350306072749343703L;
 
     public ValidationException() {}
 
