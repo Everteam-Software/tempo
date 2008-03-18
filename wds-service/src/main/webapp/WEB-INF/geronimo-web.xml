@@ -16,6 +16,7 @@
                     </dep:dependency>
 		</dep:dependencies>
 		<dep:hidden-classes>
+			<dep:filter>org.apache.axis2</dep:filter>
 			<dep:filter>org.apache.openjpa</dep:filter>
 			<dep:filter>org.apache.cxf</dep:filter>
 			<dep:filter>org.apache.xerces.parsers</dep:filter>
