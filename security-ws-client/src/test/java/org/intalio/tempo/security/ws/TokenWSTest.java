@@ -53,11 +53,13 @@ public class TokenWSTest {
     }
 
     @Test
-    public void testAuthenticateUser() throws AuthenticationException, RBACException, RemoteException {
+    public void testAuthenticateRealUser() throws AuthenticationException, RBACException, RemoteException {
         String token = _client.authenticateUser("exolab\\castor", "castor");
-        if (token == null || token.length() < 10)
-            fail("invalid token returned: " + token);
-
+        if (token == null || token.length() < 10) fail("invalid token returned: " + token);
+    }
+    
+    @Test 
+    public void testAuthenticateInvalidUserShouldFail() throws Exception {
         try {
             // try invalid user
             _client.authenticateUser("exolab\\foo", "bar");
@@ -67,7 +69,10 @@ public class TokenWSTest {
         } catch (AxisFault except) {
             // pass
         }
-
+    }
+    
+    @Test
+    public void testAuthenticateValidUserWithInvalidPasswordShouldFail() throws Exception {
         try {
             // try invalid password
             _client.authenticateUser("exolab\\castor", "bar");

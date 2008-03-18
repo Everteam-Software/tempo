@@ -17,7 +17,7 @@ module Buildr
         Buildr.ant "easyb" do |ant|
           rake_check_options options, :classpath, :report, :storydir, :output, :format
           artifacts = Buildr.artifacts(options[:classpath]).each { |a| a.invoke }.map(&:to_s) + [options[:output].to_s]
-          fullpath = artifacts.join(File::PATH_SEPARATOR) + requires.join(File::PATH_SEPARATOR)
+          fullpath = artifacts.join(File::PATH_SEPARATOR) + File::PATH_SEPARATOR + requires.join(File::PATH_SEPARATOR)
 
           ant.taskdef :name=>"easyb", :classname=>"org.disco.easyb.ant.SpecificationRunnerTask",:classpath=>requires.join(File::PATH_SEPARATOR)
           ant.easyb :failureProperty=>"easyb.failed" do
@@ -27,11 +27,11 @@ module Buildr
               ant.include :name=>"**.groovy"
             end
           end
-          
+
           if ant.project.getProperty('easyb.failed') 
             raise "Easyb tests have failed "
           end
-          
+
         end
       end
 
@@ -55,37 +55,56 @@ module Buildr
         project.path_to("")
       end
 
+      def run_on_project(project)
+        unless project.compile.sources.empty?
+          stories = project.path_to("src/test/stories")
+          # puts stories
+          instrumented = project.file(project.path_to(:target, "instrumented"))
+          # puts instrumented
+          target = project.file(project.path_to(:target, "classes"))
+          # puts target
+          new_path = project.compile.classpath.unshift target
+          new_path.unshift instrumented
+          if File.exist? stories
+            easyb_options = { 
+              :classpath=>new_path,
+              :report=>project.file(project.path_to("target/story.txt")), 
+              :format=>"txtstory",
+              :storydir=>project.file(stories), 
+              :output=>project.compile.target
+            }
+            EasyB.easyb easyb_options
+          end
+        end
+      end
     end
 
     namespace "easyb" do
 
+      task "init" do
+        org = Rake.application.original_dir
+        org = org[org.rindex('/') + 1,org.length]
+        @@org = org
+      end
+
       desc "Run easyb code"
-      task "run" do        
-        Buildr.projects.each do |project|
-          unless project.compile.sources.empty?
-            stories = project.path_to("src/test/stories")
-            instrumented = project.file(project.path_to(:target, "instrumented"))
-            target = project.file(project.path_to(:target, "classes"))
-            new_path = project.compile.classpath.unshift target
-            new_path.unshift instrumented
-            if File.exist? stories
-              easyb_options = { 
-                :classpath=>new_path,
-                :report=>project.file(project.path_to("target/story.txt")), 
-                :format=>"txtstory",
-                :storydir=>project.file(stories), 
-                :output=>project.compile.target
-              }
-              EasyB.easyb easyb_options
-            end
+      task "run" do     
+        top_project = Buildr.projects[0]
+        top_name = top_project.name
+        current_project = Buildr.projects[0].project(@@org)
+        current_name = current_project.name
+        if(top_name == current_name)   
+          Buildr.projects.each do |project|
+            run_on_project project
           end
+        else
+          run_on_project current_project
         end
       end
 
       desc "Integrate with cobertura"
-      task "cobertura" => ["cobertura:instrument", "test", "easyb:run"] do
+      task "cobertura" => ["init", "cobertura:instrument", "test", "easyb:run"] do
         toppath = path_to_parent(Buildr.projects[0])
-
         Buildr.ant "cobertura" do |ant|
           ant.taskdef :classpath=>requires.join(File::PATH_SEPARATOR), :resource=>"tasks.properties"
           # the cobertura.ser file at the top is generated from the call to easyb, let's merge it back with the others

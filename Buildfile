@@ -245,10 +245,11 @@ define "tempo" do
   
   desc "Task Management Service"
   define "tms-service" do
-    compile.with projects("security", "security-ws-client", "tms-axis", "tms-common", "tms-dao", "tms-client", "web-nutsNbolts", "dao-nutsNbolts"),
-                 APACHE_JPA, AXIOM, AXIS2, COMMONS, JAXEN, SLF4J, SPRING, STAX_API, XMLBEANS
-
-    test.with CASTOR, LOG4J, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES
+    libs = projects("security", "security-ws-client", "tms-axis", "tms-common", "tms-dao", "tms-client", "web-nutsNbolts", "dao-nutsNbolts"),
+    APACHE_JPA, AXIOM, AXIS2, COMMONS, JAXEN, SLF4J, SPRING, STAX_API, XMLBEANS
+  
+    compile.with libs
+    test.with libs + [CASTOR, EASY_B, LOG4J, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES]
 
     test.using :properties => 
       { "org.intalio.tempo.configDirectory" => _("src/test/resources") }
@@ -320,6 +321,7 @@ define "tempo" do
       include("src/main/config/geronimo/1.0/*", path_to(compile.target, "dojo"))
   end
   
+  desc "Customized pluto webapp"
   define "ui-pluto" do
   	libs = PLUTO, SERVLET_API, COMMONS_LOG
   	compile.with libs
@@ -341,21 +343,21 @@ define "tempo" do
   desc "Workflow Deployment DAO"
   define "wds-dao" do 
     compile.with projects("dao-nutsNbolts", "tms-common"), APACHE_JPA, SLF4J
+    compile { open_jpa_enhance }   
     package(:jar)                 
   end
 
   desc "Workflow Deployment Service"
   define "wds-service" do
-    libs = [ projects("dao-nutsNbolts", "deploy-api", "registry", "security", "tms-axis", "tms-client", "tms-common", "wds-dao", "web-nutsNbolts"), 
+    libs = [ projects("dao-nutsNbolts", "deploy-api", "registry", "security", "tms-client", "tms-common", "wds-dao", "web-nutsNbolts"), 
       AXIS2, AXIOM, APACHE_JPA, COMMONS, LOG4J, SERVLET_API, SLF4J, SPRING, STAX_API, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX, XERCES, XMLBEANS ]
       
     test_libs = libs + [EASY_B, INSTINCT]
-    
     compile.with test_libs
-    compile { open_jpa_enhance }    
+ 
+    resources.filter.using "version" => VERSION_NUMBER
     
     package_libs = libs - SERVLET_API
-    resources.filter.using "version" => VERSION_NUMBER
     package(:war).with :libs=>package_libs
   end
 

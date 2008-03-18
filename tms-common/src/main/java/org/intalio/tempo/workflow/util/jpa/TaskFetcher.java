@@ -90,8 +90,7 @@ public class TaskFetcher {
     }
 
     private Task[] fetchTasks(String baseQuery) {
-        if (_logger.isDebugEnabled())
-            _logger.debug("fetchAllAvailableTasks query:" + baseQuery);
+        _logger.debug("fetchAllAvailableTasks query:" + baseQuery);
         Query q = _entityManager.createNativeQuery(baseQuery, String.class);
         List<String> listofIds = (List<String>) q.getResultList();
         if (listofIds.size() < 1)
@@ -118,8 +117,7 @@ public class TaskFetcher {
             buffer.append("'" + id + "',");
         buffer.deleteCharAt(buffer.length() - 1);
         buffer.append(" )");
-        if (_logger.isDebugEnabled())
-            _logger.debug("Query:" + buffer.toString());
+        _logger.debug("Query:" + buffer.toString());
         return buffer.toString();
     }
 
