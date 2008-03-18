@@ -52,7 +52,7 @@ public class StaticMapRegistry implements Registry {
      */
     @SuppressWarnings("unchecked")
     public <T> T lookup(String name) {
-        return MAP.lookup(name);
+        return (T) MAP.lookup(name);
     }
 
     /**
@@ -61,7 +61,7 @@ public class StaticMapRegistry implements Registry {
      */
     @SuppressWarnings("unchecked")
     public <T> T lookup(String name, ClassLoader loader) {
-        return MAP.lookup(name, loader);
+        return (T) MAP.lookup(name, loader);
     }
 
     /**
@@ -69,7 +69,7 @@ public class StaticMapRegistry implements Registry {
      */
     @SuppressWarnings("unchecked")
     public <T> T lookupNonProxied(String name) {
-        return MAP.lookupNonProxied(name);
+        return (T) MAP.lookupNonProxied(name);
     }
     
     public void init(Properties props) {

@@ -54,7 +54,7 @@ public class JNDIMapRegistry implements Registry {
             Registry registry = internalLookup(_jndiLookup, Thread.currentThread().getContextClassLoader());
             if (registry == null)
                 throw new IllegalStateException("Name not found: "+_jndiLookup);
-            return registry.lookup(name);
+            return (T) registry.lookup(name);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -70,7 +70,7 @@ public class JNDIMapRegistry implements Registry {
             Registry registry = internalLookup(_jndiLookup, loader);
             if (registry == null)
                 throw new IllegalStateException("Name not found: "+_jndiLookup);
-            return registry.lookup(name, loader);
+            return (T) registry.lookup(name, loader);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -86,7 +86,7 @@ public class JNDIMapRegistry implements Registry {
             Registry registry = (Registry) context.lookup(_jndiLookup);
             if (registry == null)
                 throw new IllegalStateException("Name not found: "+_jndiLookup);
-            return registry.lookup(name);
+            return (T) registry.lookup(name);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
