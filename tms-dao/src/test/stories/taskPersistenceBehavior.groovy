@@ -5,6 +5,7 @@ import org.intalio.tempo.workflow.tms.server.dao.JPATaskDaoConnection
 import org.intalio.tempo.workflow.tms.server.dao.JPATaskDaoConnectionFactory
 import org.intalio.tempo.workflow.task.PIPATask
 import org.intalio.tempo.workflow.auth.UserRoles
+import org.intalio.tempo.workflow.task.Notification
 import java.net.URI
 
 def getJPAProperties() {
@@ -13,6 +14,34 @@ def getJPAProperties() {
 	props.put("openjpa.ConnectionURL","jdbc:derby:tms-dao/target/JPADB;create=true")
 	props.put("openjpa.jdbc.SynchronizeMappings","buildSchema")
 	return props
+}
+
+
+scenario "testing Notification", {
+	given "a new notification and a JPA Factory", {
+		notification = new Notification("notificationId", URI.create("http://localhost/notification"))
+		factory = new JPATaskDaoConnectionFactory(getJPAProperties())
+	}
+	then "it can be persisted", {
+		jpac = factory.openConnection()
+		jpac.createTask(notification)
+		jpac.commit()
+	} 
+	then "it can be retrieved from its ID", {
+		jpac = factory.openConnection()
+		jpac.fetchTaskIfExists(notification.getID())
+	}
+	then "it can be updated", {
+		notification2 = new Notification("notificationId", URI.create("http://localhost/notification2"))
+		jpac = factory.openConnection()
+		jpac.updateTask(notification2)
+		jpac.commit()
+	}
+	then "it can be deleted", {
+		jpac = factory.openConnection()
+		jpac.deleteTask(0, notification.getID())
+		jpac.commit()
+	}
 }
 
 scenario "testing list of pipa tasks", {
@@ -33,7 +62,10 @@ scenario "testing list of pipa tasks", {
 		jpac.storePipaTask(task1)
 		jpac.commit()
 	}
-	then "The task stored can be retrieved through a list", {
+	then "The task can be loaded", {
+		jpac.fetchPipa(formUrl)
+	}
+	then "The task stored can be retrieved through a list using another connection", {
 		jpac = (JPATaskDaoConnection) factory.openConnection()
 		list = jpac.fetchAllAvailableTasks(urs)
 		ensure(list.size() >= 1)

@@ -32,15 +32,11 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
     }
 
     public void createTask(Task task) throws TaskIDConflictException {
-        if (_logger.isDebugEnabled())
-            _logger.debug("create task of class:" + task.getClass().getName());
         checkTransactionIsActive();
         entityManager.persist(task);
     }
 
     public boolean deleteTask(int internalTaskId, String taskID) {
-        if (_logger.isDebugEnabled())
-            _logger.debug("delete task with id:" + taskID);
         checkTransactionIsActive();
         entityManager.remove(_fetcher.fetchTaskIfExists(taskID));
         return true;
@@ -55,13 +51,11 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
     }
 
     public void updateTask(Task task) {
-        if (_logger.isDebugEnabled()) _logger.debug("update task:" + task.toString());
         checkTransactionIsActive();
         entityManager.persist(task);
     }
     
     public void deletePipaTask(String formUrl) {
-        _logger.info("delete task:" + formUrl);
         try {
             PIPATask toDelete = _fetcher.fetchPipaFromUrl(formUrl);
             checkTransactionIsActive();
