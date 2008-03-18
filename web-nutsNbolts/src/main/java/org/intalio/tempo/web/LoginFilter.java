@@ -12,7 +12,6 @@
 package org.intalio.tempo.web;
 
 import java.io.IOException;
-import java.security.SecureRandom;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;

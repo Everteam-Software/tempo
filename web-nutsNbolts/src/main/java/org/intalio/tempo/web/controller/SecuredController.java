@@ -23,8 +23,6 @@ import org.intalio.tempo.web.ApplicationState;
 import org.intalio.tempo.web.Constants;
 import org.intalio.tempo.web.User;
 import org.springframework.validation.BindException;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.servlet.ModelAndView;
 
 public class SecuredController extends UIController {

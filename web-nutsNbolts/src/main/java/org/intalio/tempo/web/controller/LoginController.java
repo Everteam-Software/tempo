@@ -12,11 +12,11 @@
 package org.intalio.tempo.web.controller;
 
 import java.rmi.RemoteException;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.security.SecureRandom;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -36,8 +36,6 @@ import org.intalio.tempo.web.Constants;
 import org.intalio.tempo.web.User;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
