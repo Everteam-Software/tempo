@@ -144,6 +144,14 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
         _componentTypes.remove(componentType);
     }
 
+    public List<String> getRequiredComponentManagers() {
+        return _requiredComponentManagers;
+    }
+
+    public void setRequiredComponentManagers(List<String> componentManagers) {
+        _requiredComponentManagers = componentManagers;
+    }
+
     public void addRequiredComponentManager(String componentManager) {
         _requiredComponentManagers.add(componentManager);
     }
