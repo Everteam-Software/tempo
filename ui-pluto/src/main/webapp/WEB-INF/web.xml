@@ -73,7 +73,7 @@
 
 	<filter-mapping>
 		<filter-name>CAS Filter</filter-name>
-		<url-pattern>/portal</url-pattern>
+		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
 	<context-param>

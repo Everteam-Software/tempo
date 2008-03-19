@@ -50,8 +50,12 @@ limitations under the License.
           singleton="true">
       <constructor-arg><ref bean="PortalContext"/></constructor-arg>
       <constructor-arg><ref bean="DriverConfiguration"/></constructor-arg>
+      <constructor-arg><ref bean="portletEnvironmentService"/></constructor-arg>
     </bean>
 
+	<bean id="portletEnvironmentService" class="com.intalio.tempo.pluto.TempoPortletEnvironmentService">
+		<property name="_endpoint" value="http://localhost:8080/pluto/portal"></property>
+	</bean>
     <bean id="PortalContext"
           class="org.apache.pluto.driver.services.container.PortalContextImpl">
         <constructor-arg><ref bean="DriverConfiguration"/></constructor-arg>

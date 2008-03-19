@@ -10,7 +10,7 @@
     <operation name="getTokenProperties">
         <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
     </operation>
-    <operation name="getToken">
+    <operation name="getTokenFromTicket">
         <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
     </operation>
     <parameter name="ServiceClass">org.intalio.tempo.security.ws.TokenWS</parameter>

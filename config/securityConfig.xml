@@ -1,67 +1,90 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <!--
- Copyright (c) 2005-2006 Intalio inc.
-
- All rights reserved. This program and the accompanying materials
- are made available under the terms of the Eclipse Public License v1.0
- which accompanies this distribution, and is available at
- http://www.eclipse.org/legal/epl-v10.html
-
- Contributors:
- Intalio inc. - initial API and implementation
+	Copyright (c) 2005-2006 Intalio inc.
+	
+	All rights reserved. This program and the accompanying materials
+	are made available under the terms of the Eclipse Public License v1.0
+	which accompanies this distribution, and is available at
+	http://www.eclipse.org/legal/epl-v10.html
+	
+	Contributors:
+	Intalio inc. - initial API and implementation
 -->
 <beans>
 
-    <bean id="realms" class="org.intalio.tempo.security.impl.Realms">
-		<property name="defaultRealm" value="intalio"/>
-        <property name="securityProviders">
-            <list>
-                <ref bean="securityProvider"/>
-          	</list>
+	<bean id="realms" class="org.intalio.tempo.security.impl.Realms">
+		<property name="defaultRealm" value="intalio" />
+		<property name="securityProviders">
+			<list>
+				<ref bean="securityProvider" />
+			</list>
 		</property>
-    </bean>
+	</bean>
 
-    <bean id="securityProvider" class="org.intalio.tempo.security.simple.SimpleSecurityProvider" init-method="init">
-        <property name="configFile">
-        	<value>${org.intalio.tempo.configDirectory}/security.xml</value>
-        </property>
-    </bean>
+	<bean id="securityProvider"
+		class="org.intalio.tempo.security.simple.SimpleSecurityProvider"
+		init-method="init">
+		<property name="configFile">
+			<value>
+				${org.intalio.tempo.configDirectory}/security.xml
+			</value>
+		</property>
+	</bean>
 
-<!--	<bean id="securityProvider" class="org.intalio.tempo.security.LDAPSecurityProviderConfig">-->
-<!--		<constructor-arg>-->
-<!--			<map>-->
-<!--				<entry>-->
-<!--					<key><value>java.naming.factory.initial</value></key>-->
-<!--					<value>com.sun.jndi.ldap.LdapCtxFactory</value>-->
-<!--				</entry>-->
-<!--				<entry>-->
-<!--					<key><value>java.naming.provider.url</value></key>-->
-<!--					<value>ldap://localhost</value>-->
-<!--				</entry>-->
-<!--				<entry>-->
-<!--					<key><value>java.naming.security.authentication</value></key>-->
-<!--					<value>simple</value>-->
-<!--				</entry>-->
-<!--				<entry>-->
-<!--					<key><value>java.naming.security.principal</value></key>-->
-<!--					<value>cn=admin,dc=localdomain</value>-->
-<!--				</entry>-->
-<!--				<entry>-->
-<!--					<key><value>java.naming.security.credentials</value></key>-->
-<!--					<value>password</value>-->
-<!--				</entry>-->
-<!--			</map>-->
-<!--		</constructor-arg>-->
-<!--	</bean>-->
-	
-    <bean id="tokenHandler" class="org.intalio.tempo.security.impl.TokenHandler">
-        <property name="secret"><value>mySecret</value></property>
-    </bean>
-    
-    <bean id="tokenService" class="org.intalio.tempo.security.impl.TokenServiceImpl">
-        <property name="realms"><ref bean="realms"/></property>
-        <property name="tokenHandler"><ref bean="tokenHandler"/></property>
-    </bean>
-    
+	<!--	<bean id="securityProvider" class="org.intalio.tempo.security.LDAPSecurityProviderConfig">-->
+	<!--		<constructor-arg>-->
+	<!--			<map>-->
+	<!--				<entry>-->
+	<!--					<key><value>java.naming.factory.initial</value></key>-->
+	<!--					<value>com.sun.jndi.ldap.LdapCtxFactory</value>-->
+	<!--				</entry>-->
+	<!--				<entry>-->
+	<!--					<key><value>java.naming.provider.url</value></key>-->
+	<!--					<value>ldap://localhost</value>-->
+	<!--				</entry>-->
+	<!--				<entry>-->
+	<!--					<key><value>java.naming.security.authentication</value></key>-->
+	<!--					<value>simple</value>-->
+	<!--				</entry>-->
+	<!--				<entry>-->
+	<!--					<key><value>java.naming.security.principal</value></key>-->
+	<!--					<value>cn=admin,dc=localdomain</value>-->
+	<!--				</entry>-->
+	<!--				<entry>-->
+	<!--					<key><value>java.naming.security.credentials</value></key>-->
+	<!--					<value>password</value>-->
+	<!--				</entry>-->
+	<!--			</map>-->
+	<!--		</constructor-arg>-->
+	<!--	</bean>-->
+
+	<bean id="tokenHandler"
+		class="org.intalio.tempo.security.impl.TokenHandler">
+		<property name="secret">
+			<value>mySecret</value>
+		</property>
+	</bean>
+
+	<!-- 
+		<bean id="tokenService" class="org.intalio.tempo.security.impl.TokenServiceImpl">
+		<property name="realms"><ref bean="realms"/></property>
+		<property name="tokenHandler"><ref bean="tokenHandler"/></property>
+		</bean>
+	-->
+	<bean id="tokenService"
+		class="org.intalio.tempo.security.impl.TokenServiceImpl">
+		<constructor-arg index="0" ref="realms" />
+		<constructor-arg index="1"
+			value="https://localhost:8443/cas/proxyValidate" />
+
+		<constructor-arg index="2"
+			value="http://localhost:8080/pluto/portal" />
+
+		<property name="tokenHandler">
+			<ref bean="tokenHandler" />
+		</property>
+
+	</bean>
+
 </beans>

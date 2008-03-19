@@ -28,6 +28,7 @@ import org.intalio.tempo.security.rbac.RBACException;
 public interface TokenService
     extends Remote
 {
+  public static final String CAS_PROXY_TICKET = "com.intalio.tempo.cas.proxyTicket";
 
 	/**
 	 * Authenticate a user and return a security token containing
@@ -68,6 +69,6 @@ public interface TokenService
 	 * @param user user identifier
 	 * @return security token
 	 */
-	public String getToken(String user) 
+	public String getTokenFromTicket(String ticket) 
 		throws AuthenticationException, RBACException, RemoteException;
 }

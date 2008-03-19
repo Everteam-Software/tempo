@@ -33,84 +33,71 @@ import org.intalio.tempo.security.token.TokenService;
  */
 public class TokenClient implements TokenService {
 
-	String _endpoint;
+  String _endpoint;
+  /**
+   * Create a token service client
+   * 
+   * @param endpointUrl
+   *          endpoint of the token service
+   */
+  public TokenClient(String endpointUrl) {
+    _endpoint = endpointUrl;
+  }
 
-	/**
-	 * Create a token service client
-	 * 
-	 * @param endpointUrl endpoint of the token service
-	 */
-	public TokenClient(String endpointUrl) {
-		_endpoint = endpointUrl;
-	}
+  public String authenticateUser(String user, String password) throws AuthenticationException, RBACException, RemoteException {
+    OMElement request = element(TokenConstants.AUTHENTICATE_USER);
+    request.addChild(elementText(TokenConstants.USER, user));
+    request.addChild(elementText(TokenConstants.PASSWORD, password));
+    OMParser response = invoke(TokenConstants.AUTHENTICATE_USER.getLocalPart(), request);
+    return response.getRequiredString(TokenConstants.TOKEN);
+  }
 
-	public String authenticateUser(String user, String password)
-			throws AuthenticationException, RBACException, RemoteException {
-		OMElement request = element(TokenConstants.AUTHENTICATE_USER);
-		request.addChild(elementText(TokenConstants.USER, user));
-		request.addChild(elementText(TokenConstants.PASSWORD, password));
-		OMParser response = invoke(TokenConstants.AUTHENTICATE_USER
-				.getLocalPart(), request);
-		return response.getRequiredString(TokenConstants.TOKEN);
-	}
+  public String authenticateUser(String user, Property[] credentials) throws AuthenticationException, RBACException, RemoteException {
+    OMElement request = element(TokenConstants.AUTHENTICATE_USER_WITH_CREDENTIALS);
+    request.addChild(elementText(TokenConstants.USER, user));
+    OMElement requestCred = element(TokenConstants.CREDENTIALS);
+    for (int i = 0; i < credentials.length; i++) {
+      OMElement prop = element(Constants.PROPERTY);
+      prop.addChild(elementText(Constants.NAME, credentials[i].getName()));
+      prop.addChild(elementText(Constants.VALUE, credentials[i].getValue().toString()));
+      requestCred.addChild(prop);
+    }
+    request.addChild(requestCred);
+    OMParser response = invoke(TokenConstants.AUTHENTICATE_USER_WITH_CREDENTIALS.getLocalPart(), request);
+    return response.getRequiredString(TokenConstants.TOKEN);
+  }
 
-	public String authenticateUser(String user, Property[] credentials)
-			throws AuthenticationException, RBACException, RemoteException {
-		OMElement request = element(TokenConstants.AUTHENTICATE_USER_WITH_CREDENTIALS);
-		request.addChild(elementText(TokenConstants.USER, user));
-		OMElement requestCred = element(TokenConstants.CREDENTIALS);
-		for (int i = 0; i < credentials.length; i++) {
-			OMElement prop = element(Constants.PROPERTY);
-			prop
-					.addChild(elementText(Constants.NAME, credentials[i]
-							.getName()));
-			prop.addChild(elementText(Constants.VALUE, credentials[i]
-					.getValue().toString()));
-			requestCred.addChild(prop);
-		}
-		request.addChild(requestCred);
-		OMParser response = invoke(
-				TokenConstants.AUTHENTICATE_USER_WITH_CREDENTIALS
-						.getLocalPart(), request);
-		return response.getRequiredString(TokenConstants.TOKEN);
-	}
+  public Property[] getTokenProperties(String token) throws AuthenticationException, RemoteException {
+    OMElement request = element(TokenConstants.GET_TOKEN_PROPERTIES);
+    request.addChild(elementText(TokenConstants.TOKEN, token));
+    OMParser response = invoke(TokenConstants.GET_TOKEN_PROPERTIES.getLocalPart(), request);
+    return response.getProperties(Constants.PROPERTIES);
+  }
 
-	public Property[] getTokenProperties(String token)
-			throws AuthenticationException, RemoteException {
-		OMElement request = element(TokenConstants.GET_TOKEN_PROPERTIES);
-		request.addChild(elementText(TokenConstants.TOKEN, token));
-		OMParser response = invoke(TokenConstants.GET_TOKEN_PROPERTIES
-				.getLocalPart(), request);
-		return response.getProperties(Constants.PROPERTIES);
-	}
+  protected OMParser invoke(String action, OMElement request) throws AxisFault {
+    ServiceClient serviceClient = new ServiceClient();
+    Options options = serviceClient.getOptions();
+    EndpointReference targetEPR = new EndpointReference(_endpoint);
+    options.setTo(targetEPR);
+    options.setAction(action);
+    OMElement response = serviceClient.sendReceive(request);
+    return new OMParser(response);
+  }
 
-	protected OMParser invoke(String action, OMElement request)
-			throws AxisFault {
-		ServiceClient serviceClient = new ServiceClient();
-		Options options = serviceClient.getOptions();
-		EndpointReference targetEPR = new EndpointReference(_endpoint);
-		options.setTo(targetEPR);
-		options.setAction(action);
-		OMElement response = serviceClient.sendReceive(request);
-		return new OMParser(response);
-	}
+  private static OMElement element(QName name) {
+    return OM_FACTORY.createOMElement(name);
+  }
 
-	private static OMElement element(QName name) {
-		return OM_FACTORY.createOMElement(name);
-	}
+  private static OMElement elementText(QName name, String text) {
+    OMElement element = OM_FACTORY.createOMElement(name);
+    element.setText(text);
+    return element;
+  }
 
-	private static OMElement elementText(QName name, String text) {
-		OMElement element = OM_FACTORY.createOMElement(name);
-		element.setText(text);
-		return element;
-	}
-
-	public String getToken(String user) throws AuthenticationException,
-			RBACException, RemoteException {
-		OMElement request = element(TokenConstants.GETTOKEN);
-		request.addChild(elementText(TokenConstants.USER, user));
-		OMParser response = invoke(TokenConstants.GETTOKEN.getLocalPart(),
-				request);
-		return response.getRequiredString(TokenConstants.TOKEN);
-	}
+  public String getTokenFromTicket(String ticket) throws AuthenticationException, RBACException, RemoteException {
+    OMElement request = element(TokenConstants.PROXY_TICKET);
+    request.addChild(elementText(TokenConstants.TICKET, ticket));
+    OMParser response = invoke(TokenConstants.GETTOKEN_FROMTICKET.getLocalPart(), request);
+    return response.getRequiredString(TokenConstants.TOKEN);
+  }
 }

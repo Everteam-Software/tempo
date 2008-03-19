@@ -35,136 +35,102 @@ import org.intalio.tempo.web.User;
 import org.springframework.validation.BindException;
 import org.springframework.web.portlet.ModelAndView;
 
-import com.intalio.tempo.pluto.TempoPlutoConstants;
-
-
 public class SecuredController extends UIController {
-    private static final Logger LOG = LogManager.getLogger(SecuredController.class);
-    protected final TokenService _tokenService;
-    
-	public SecuredController(TokenService tokenService) {
-		super();
-        _tokenService = tokenService;
-	}
-	
-    @Override
-    protected final ModelAndView showForm(RenderRequest request, RenderResponse response, BindException errors)
-            throws Exception {
-        ModelAndView mav = null;//Constants.REDIRECTION_TO_LOGIN;
-		String uname = (String)request.getAttribute(TempoPlutoConstants.TEMPO_PLUTO_USER);
-		ApplicationState state = getApplicationState(request);
-		if (state.getCurrentUser() == null) {
-	        
-			String token = _tokenService.getToken(uname);
-			String[] grantedRoles = new String[0];
-			User currentUser = authenticate(token, grantedRoles);
-			state.setCurrentUser(currentUser);
-			ApplicationState.setCurrentInstance(request, state);
-		}
-        // Do default action
-        /*Action<Object> action = instantiateDefaultAction();
-        action.setRequest(request);
-        action.setResponse(response);
-        action.setCommand(getCommand(request));
-        action.setBindErrors(errors);*/
-        mav = new ModelAndView("view");
-		/*
-        ApplicationState state = getApplicationState(request);
-        User currentUser = state.getCurrentUser();
-        if (currentUser != null) {
-            if (_defaultAction == null) {
-                mav = securedShowForm(request, response, errors);
-            } else {
-                // Do default action
-                Action<Object> action = instantiateDefaultAction();
-                action.setRequest(request);
-                action.setResponse(response);
-                action.setCommand(getCommand(request));
-                action.setBindErrors(errors);
-                mav = action.doExecution();
-            }
-            
-        }*/
-        fillAuthorization(request, mav);
-        //state.setPreviousAction(request.getRequestURL().toString());
-        return mav;
+  private static final Logger LOG = LogManager.getLogger(SecuredController.class);
+  protected final TokenService _tokenService;
+
+  public SecuredController(TokenService tokenService) {
+    super();
+    _tokenService = tokenService;
+  }
+
+  @Override
+  protected final ModelAndView showForm(RenderRequest request, RenderResponse response, BindException errors) throws Exception {
+    ModelAndView mav = null;
+
+    String proxyTicket = (String) request.getAttribute(TokenService.CAS_PROXY_TICKET);
+    ApplicationState state = getApplicationState(request);
+    if (state.getCurrentUser() == null) {
+
+      String token = _tokenService.getTokenFromTicket(proxyTicket);
+      String[] grantedRoles = new String[0];
+      User currentUser = authenticate(token, grantedRoles);
+      state.setCurrentUser(currentUser);
+      ApplicationState.setCurrentInstance(request, state);
+    }
+    mav = new ModelAndView("view");
+    fillAuthorization(request, mav);
+    return mav;
+  }
+
+  @Override
+  protected final void processFormSubmission(ActionRequest request, ActionResponse response, Object command, BindException errors) throws Exception {
+    ApplicationState state = getApplicationState(request);
+    User currentUser = state.getCurrentUser();
+    if (currentUser != null) {
+      super.processFormSubmission(request, response, command, errors);
     }
 
-    @Override
-    protected final void processFormSubmission(ActionRequest request, ActionResponse response,
-            Object command, BindException errors) throws Exception {
-        ApplicationState state = getApplicationState(request);
-        User currentUser = state.getCurrentUser();
-        if (currentUser != null) {
-            super.processFormSubmission(request, response, command, errors);
-        }
-        // save request position 
-        //state.setPreviousAction(request.getRequestURL().toString());
-        // redirect to login page
-    }
+  }
 
-    protected ModelAndView securedShowForm(RenderRequest request, RenderResponse response,
-            BindException errors) throws Exception {
-        return null;
-    }
+  protected ModelAndView securedShowForm(RenderRequest request, RenderResponse response, BindException errors) throws Exception {
+    return null;
+  }
 
-    public static String getCurrentUserName(PortletRequest request) {
-        ApplicationState state = ApplicationState.getCurrentInstance(request);
-        if (state == null || state.getCurrentUser() == null) {
-            return "UnknownUser";
-        }
-        return state.getCurrentUser().getName();
+  public static String getCurrentUserName(PortletRequest request) {
+    ApplicationState state = ApplicationState.getCurrentInstance(request);
+    if (state == null || state.getCurrentUser() == null) {
+      return "UnknownUser";
     }
+    return state.getCurrentUser().getName();
+  }
 
-	@Override
-	protected ModelAndView renderFormSubmission(RenderRequest request,
-			RenderResponse response, Object arg2, BindException errors)
-			throws Exception {
-		return null;
-	}
+  @Override
+  protected ModelAndView renderFormSubmission(RenderRequest request, RenderResponse response, Object arg2, BindException errors) throws Exception {
+    return null;
+  }
 
-    protected User authenticate(String token, String[] grantedRoles) throws SecurityException {
-        try {
-            Property[] props = _tokenService.getTokenProperties(token);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Token properties: " + PropertyUtils.toMap(props));
-            }
+  protected User authenticate(String token, String[] grantedRoles) throws SecurityException {
+    try {
+      Property[] props = _tokenService.getTokenProperties(token);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Token properties: " + PropertyUtils.toMap(props));
+      }
 
-            String name = extractUser(props);
-            String[] roles = extractRoles(props);
-            User user = new User(name, roles, token);
-            if (grantedRoles.length > 0 && !user.hasOneRoleOf(grantedRoles)) {
-                throw new SecurityException("User does not have one of the following role: "
-                        + StringArrayUtils.toCommaDelimited(grantedRoles));
-            }
-            LOG.debug("User: " + user);
-            return user;
-        } catch (AuthenticationException ex) {
-            throw new SecurityException(ex);
-        } catch (RemoteException ex) {
-            throw new SecurityException(ex);
-        }
+      String name = extractUser(props);
+      String[] roles = extractRoles(props);
+      User user = new User(name, roles, token);
+      if (grantedRoles.length > 0 && !user.hasOneRoleOf(grantedRoles)) {
+        throw new SecurityException("User does not have one of the following role: " + StringArrayUtils.toCommaDelimited(grantedRoles));
+      }
+      LOG.debug("User: " + user);
+      return user;
+    } catch (AuthenticationException ex) {
+      throw new SecurityException(ex);
+    } catch (RemoteException ex) {
+      throw new SecurityException(ex);
     }
-    
-    private static String extractProperty(String propName, Property[] props) {
-        for (Property prop : props) {
-            if (propName.equals(prop.getName())) {
-                return (String) prop.getValue();
-            }
-        }
-        return null;
-    }
+  }
 
-    private static String extractUser(Property[] props) {
-        return extractProperty(AuthenticationConstants.PROPERTY_USER, props);
+  private static String extractProperty(String propName, Property[] props) {
+    for (Property prop : props) {
+      if (propName.equals(prop.getName())) {
+        return (String) prop.getValue();
+      }
     }
+    return null;
+  }
 
-    private static String[] extractRoles(Property[] props) {
-        String rolesCommaList = extractProperty(AuthenticationConstants.PROPERTY_ROLES, props);
-        if (rolesCommaList != null) {
-            String[] roleStrings = StringArrayUtils.parseCommaDelimited(rolesCommaList);
-            return roleStrings;
-        }
-        return null;
+  private static String extractUser(Property[] props) {
+    return extractProperty(AuthenticationConstants.PROPERTY_USER, props);
+  }
+
+  private static String[] extractRoles(Property[] props) {
+    String rolesCommaList = extractProperty(AuthenticationConstants.PROPERTY_ROLES, props);
+    if (rolesCommaList != null) {
+      String[] roleStrings = StringArrayUtils.parseCommaDelimited(rolesCommaList);
+      return roleStrings;
     }
+    return null;
+  }
 }

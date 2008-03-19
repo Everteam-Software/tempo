@@ -136,7 +136,7 @@ define "tempo" do
 
   desc "Security Framework"
   define "security" do
-    compile.with CASTOR, COMMONS, LOG4J, SLF4J, SPRING, XERCES
+    compile.with CASTOR, COMMONS, LOG4J, SLF4J, SPRING, XERCES, CAS_CLIENT
 
     test.exclude "*BaseSuite"
     test.exclude "*FuncTestSuite"
@@ -181,7 +181,7 @@ define "tempo" do
   define "security-ws-service" do
     compile.with projects("security", "security-ws-common"),
                  AXIOM, AXIS2, SLF4J, SPRING, STAX_API  
-    package(:aar).with :libs => [ projects("security", "security-ws-common"), CASTOR, SLF4J, SPRING ]
+    package(:aar).with :libs => [ projects("security", "security-ws-common"), CASTOR, SLF4J, SPRING, CAS_CLIENT ]
   end
   
   desc "Task Attachment Service Common"
@@ -326,7 +326,7 @@ define "tempo" do
   
   desc "Customized pluto webapp"
   define "ui-pluto" do
-  	libs = PLUTO, SERVLET_API, COMMONS_LOG
+  	libs = projects("security"), PLUTO, SERVLET_API, COMMONS_LOG, CAS_CLIENT
   	compile.with libs
   	package(:jar)
     package(:war)

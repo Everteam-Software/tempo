@@ -28,15 +28,18 @@ public class ContainerServicesImpl
 
     private PortalContextImpl context;
     private DriverConfiguration driverConfig;
+    private PortletEnvironmentService portletEnvironmentService;
 
 
     /**
      * Default Constructor.
      */
     public ContainerServicesImpl(PortalContextImpl context,
-                                 DriverConfiguration driverConfig) {
+                                 DriverConfiguration driverConfig,
+                                 PortletEnvironmentService portletEnvironmentService) {
         this.context = context;
         this.driverConfig = driverConfig;
+        this.portletEnvironmentService = portletEnvironmentService;
     }
 
     /**
@@ -75,7 +78,7 @@ public class ContainerServicesImpl
     }
 
     public PortletEnvironmentService getPortletEnvironmentService() {
-        return new TempoPortletEnvironmentService();
+        return portletEnvironmentService;
     }
 
     public PortletInvokerService getPortletInvokerService() {
