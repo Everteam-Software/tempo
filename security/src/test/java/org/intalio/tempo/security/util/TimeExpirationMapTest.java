@@ -77,6 +77,11 @@ public class TimeExpirationMapTest
         }
         
         assertTrue( "Key2 not expired", map.get( key2 ) == null );
+        
+        TimeExpirationMap map2 = new TimeExpirationMap(5000, 1000, 50, 0.75F);
+        map.put("hello","3");
+        assertEquals(map.put("hello", null),"3");
+        assertNull(map.get("today"));
     }
     
     
