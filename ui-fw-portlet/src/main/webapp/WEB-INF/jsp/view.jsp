@@ -206,9 +206,6 @@ function <portlet:namespace/>_startTimer(interval) {
 
 //get data and reflesh GridDatas. 
 function <portlet:namespace/>_getUpdateData(){
-	var ptoken = document.getElementById("token").innerText;
-	var puser = document.getElementById("user").innerText;
-
 	//refesh GridEx
     GridEx.gridobj.reconfigure(GridEx.makeDataSource(),GridEx.gridobj.getColumnModel());
     
