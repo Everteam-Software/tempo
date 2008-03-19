@@ -78,6 +78,8 @@ public class RegistryFactory {
             } else {
                 clazz = (Class<Registry>) Class.forName(className);
             }
+            if (clazz == null)
+                throw new IllegalStateException("Unable to load class: "+className);
             _registry = clazz.newInstance();
             _registry.init(_props);
         } catch (Exception except) {
