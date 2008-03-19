@@ -18,14 +18,24 @@ import javax.naming.Name;
 import javax.naming.NamingException;
 import javax.naming.spi.ObjectFactory;
 
-public class JNDIMapRegistryFactory implements ObjectFactory {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-    private JNDIMapRegistry _registry = new JNDIMapRegistry();
+public class RegistryObjectFactory implements ObjectFactory {
+    private static final Logger LOG = LoggerFactory.getLogger(RegistryObjectFactory.class);
+    
+    private StaticMapRegistry _registry = new StaticMapRegistry();
+
+    public RegistryObjectFactory() {
+        // nothing
+        LOG.debug("RegistryObjectFactory constructor");
+    }
     
     @SuppressWarnings("unchecked")
     public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable environment)
         throws NamingException
     {
+        LOG.debug("RegistryObjectFactory getObjectInstance");
         return _registry;
     }
 
