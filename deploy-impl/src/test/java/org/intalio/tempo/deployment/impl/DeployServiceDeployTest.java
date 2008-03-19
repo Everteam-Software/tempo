@@ -268,15 +268,18 @@ public class DeployServiceDeployTest extends TestCase {
         File f = new File(_deployDir, "assembly1.deployed");
         assertTrue(f.exists());
 
-        // delete .deployed file, scan should now undeploy assembly
+        // delete .deployed file, scan should now undeploy assembly and redeploy it
         Utils.deleteFile(f);
         int i=0;
         while (i<10) {
             wait(1);
+            if (f.exists()) break;
+
             if (service.getDeployedAssemblies().size() == 0) break;
             i++;
         }
-        assertEquals(0, service.getDeployedAssemblies().size());
+        assertEquals(1, service.getDeployedAssemblies().size());
+        assertTrue(f.exists());
     }
     
     public void testRemoveViaFS() throws Exception {

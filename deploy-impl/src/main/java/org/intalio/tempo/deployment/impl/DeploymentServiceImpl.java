@@ -243,6 +243,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
                     try {
                         stopAndDeactivate(da.getAssemblyId());
                         DeploymentResult result = undeployAssembly(da);
+                        Utils.deleteRecursively(new File(da.getAssemblyDir()));
                         if (!result.isSuccessful()) {
                             return result;
                         }
@@ -396,7 +397,15 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
             return errorResult(aid, "Assembly directory does not exist: {0}", aid);
         DeployedAssembly assembly = loadAssemblyState(aid);
         stopAndDeactivate(aid);
-        return undeployAssembly(assembly);
+        try {
+            return undeployAssembly(assembly);
+        } finally {
+            try {
+                Utils.deleteRecursively(new File(assembly.getAssemblyDir()));
+            } catch (Exception e) {
+                LOG.warn(_("Exception while undeploying assembly {0}: {1}", assembly.getAssemblyId(), e.toString()));
+            }
+        }
     }
 
     /**
@@ -527,7 +536,6 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
                         LOG.error(msg, except);
                     }
                 }
-                Utils.deleteRecursively(new File(assembly.getAssemblyDir()));
             } catch (Exception except) {
                 String msg = _("Exception while undeploying assembly {0}: {1} ", aid, except.getLocalizedMessage());
                 result.add(null, null, error(msg));
