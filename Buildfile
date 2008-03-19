@@ -315,13 +315,9 @@ define "tempo" do
            XERCES, XMLBEANS
     compile.with libs
 
-    dojo = unzip(path_to(compile.target, "dojo") => download(artifact(DOJO)=>DOJO_URL))
-    dojo.from_path(DOJO_WIDGET_BASE).include("*").exclude("demos/*", "release/*", "tests/*", "README", "*.txt")
-
-    build dojo
     resources.filter.using "version" => VERSION_NUMBER
     package(:war).with(:libs=>libs).
-      include("src/main/config/geronimo/1.0/*", path_to(compile.target, "dojo"))
+      include("src/main/config/geronimo/1.0/*")
   end
   
   desc "Customized pluto webapp"
