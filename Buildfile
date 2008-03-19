@@ -252,7 +252,10 @@ define "tempo" do
     test.with libs + [CASTOR, EASY_B, LOG4J, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES]
 
     test.using :properties => 
-      { "org.intalio.tempo.configDirectory" => _("src/test/resources") }
+      { 
+        "org.intalio.tempo.configDirectory" => _("src/test/resources"),
+        "jpa.config.file" => "jpa.properties"
+      }
 
     # require live Axis2 instance
     unless ENV["LIVE"] == 'yes'
@@ -349,7 +352,7 @@ define "tempo" do
 
   desc "Workflow Deployment Service"
   define "wds-service" do
-    libs = [ projects("dao-nutsNbolts", "deploy-api", "registry", "security", "tms-client", "tms-common", "wds-dao", "web-nutsNbolts"), 
+    libs = [ projects("dao-nutsNbolts", "deploy-api", "registry", "security", "tms-client", "tms-axis", "tms-common", "wds-dao", "web-nutsNbolts"), 
       AXIS2, AXIOM, APACHE_JPA, COMMONS, LOG4J, SERVLET_API, SLF4J, SPRING, STAX_API, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX, XERCES, XMLBEANS ]
       
     test_libs = libs + [EASY_B, INSTINCT]
