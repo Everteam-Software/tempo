@@ -29,6 +29,8 @@ public class DeploymentServiceRegister {
     private DeploymentServiceLookup _lookup;
     private ComponentManager _manager;
 
+    private boolean _debug = System.getProperty("org.intalio.tempo.deployment.utils.DeploymentServiceRegister", "debug").equalsIgnoreCase("debug");
+    
     public DeploymentServiceRegister(ComponentManager manager) {
         _manager = manager;
     }
@@ -63,7 +65,8 @@ public class DeploymentServiceRegister {
                 _timer.cancel();
                 LOG.debug("Registered ComponentManager: "+getName());
             } catch (Exception e) {
-                LOG.debug("DeploymentServiceCallback not yet available (ComponentManager="+getName()+"): " + e.toString(), e);
+                if (_debug) 
+                    LOG.debug("DeploymentServiceCallback not yet available (ComponentManager="+getName()+"): " + e.toString(), e);
                 return;
             }
         }
