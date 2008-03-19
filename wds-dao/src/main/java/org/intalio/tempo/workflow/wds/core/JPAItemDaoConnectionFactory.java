@@ -21,6 +21,10 @@ public class JPAItemDaoConnectionFactory extends AbstractJPAConnectionFactory im
         super("org.intalio.tempo.wds", properties);
     }
 
+    public JPAItemDaoConnectionFactory() {
+        super("org.intalio.tempo.wds");
+    }
+
     @Override
 	public JPAItemDaoConnection openConnection() {
     	return new JPAItemDaoConnection(factory.createEntityManager());

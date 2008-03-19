@@ -12,14 +12,21 @@ package org.intalio.tempo.workflow.tms.server.dao;
 import java.util.Map;
 
 import org.intalio.tempo.workflow.dao.AbstractJPAConnectionFactory;
+import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
+import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnectionFactory;
+import org.intalio.tempo.workflow.tms.server.dao.JPATaskDaoConnection;
 
 /**
  * Factory for JPA-based task persistence
  */
 public class JPATaskDaoConnectionFactory extends AbstractJPAConnectionFactory implements ITaskDAOConnectionFactory {
     
-    public JPATaskDaoConnectionFactory(Map<String,Object> properties) {
+    public JPATaskDaoConnectionFactory(Map<String, Object> properties) {
         super("org.intalio.tempo.tms", properties);
+    }
+    
+    public JPATaskDaoConnectionFactory() {
+        super("org.intalio.tempo.tms");
     }
     
     public ITaskDAOConnection openConnection() {

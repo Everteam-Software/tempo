@@ -8,19 +8,10 @@ import org.intalio.tempo.workflow.auth.UserRoles
 import org.intalio.tempo.workflow.task.Notification
 import java.net.URI
 
-def getJPAProperties() {
-	props = new Properties()
-	props.put("openjpa.ConnectionDriverName","org.apache.derby.jdbc.EmbeddedDriver")
-	props.put("openjpa.ConnectionURL","jdbc:derby:tms-dao/target/JPADB;create=true")
-	props.put("openjpa.jdbc.SynchronizeMappings","buildSchema")
-	return props
-}
-
-
 scenario "testing Notification", {
 	given "a new notification and a JPA Factory", {
 		notification = new Notification("notificationId", URI.create("http://localhost/notification"))
-		factory = new JPATaskDaoConnectionFactory(getJPAProperties())
+		factory = new JPATaskDaoConnectionFactory()
 	}
 	then "it can be persisted", {
 		jpac = factory.openConnection()
@@ -46,7 +37,7 @@ scenario "testing Notification", {
 
 scenario "testing list of pipa tasks", {
 	given "a JPA Pipa connection", {
-		factory = new JPATaskDaoConnectionFactory(getJPAProperties())
+		factory = new JPATaskDaoConnectionFactory()
 		jpac = (JPATaskDaoConnection) factory.openConnection()
 		formUrl = "http://localhost/2"
 	}
@@ -78,7 +69,7 @@ scenario "testing list of pipa tasks", {
 
 scenario "storing pipa using jpa", {
 	given "a JPA Pipa connection", {
-		factory = new JPATaskDaoConnectionFactory(getJPAProperties())
+		factory = new JPATaskDaoConnectionFactory()
 		jpac = factory.openConnection()
 		formUrl = "http://localhost/1"
 	} 

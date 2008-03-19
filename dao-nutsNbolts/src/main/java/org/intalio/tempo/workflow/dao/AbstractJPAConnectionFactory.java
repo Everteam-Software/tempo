@@ -9,8 +9,10 @@
  */
 package org.intalio.tempo.workflow.dao;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -34,21 +36,45 @@ public abstract class AbstractJPAConnectionFactory {
     final static Logger log = LoggerFactory.getLogger(AbstractJPAConnectionFactory.class);
     protected EntityManagerFactory factory;
 
+    final static String JPA_FILE = "jpa.config.file";
+    final static String JPA_DEFAULT_FILE = "jpa.properties";
+
+    /**
+     * Load the factorry using properties found in a jpa config file
+     * @param entityManagerFactoryName
+     * @throws IOException
+     */
+    public AbstractJPAConnectionFactory(String entityManagerFactoryName) {
+        Properties map = new Properties();
+        String jpaFile = System.getProperty(JPA_FILE);
+        if(jpaFile==null) jpaFile =JPA_DEFAULT_FILE;
+        log.info("Using jpa config file:"+jpaFile);
+        try {
+            map.load(AbstractJPAConnectionFactory.class.getResourceAsStream("/"+jpaFile));    
+        } catch (Exception e) {
+            throw new RuntimeException("Could not load jpa properies from file:"+jpaFile);
+        }
+        initEM(entityManagerFactoryName, map);
+    }
+    
     public AbstractJPAConnectionFactory(String entityManagerFactoryName, Map<String, Object> properties) {
         try {
-            log.info("Factory:" + this.getClass().getName() + ": Using the following JPA properties:" + properties);
             checkClassLoader();
             initDatasourceIfNeeded(properties);
-            factory = Persistence.createEntityManagerFactory(entityManagerFactoryName, properties);
-
-            // the factory created can sometimes be null. Check against that
-            boolean created = factory != null;
-            if (!created)
-                throw new RuntimeException("Factory not properly created");
+            initEM(entityManagerFactoryName, properties);
         } catch (Exception e) {
             // prevent from going anywhere else without this configured properly
             throw new RuntimeException(e);
         }
+    }
+
+    private void initEM(String entityManagerFactoryName, Map properties) {
+        log.info("Factory:" + this.getClass().getName() + ": Using the following JPA properties:" + properties);
+        factory = Persistence.createEntityManagerFactory(entityManagerFactoryName, properties);
+
+        // the factory created can sometimes be null. Check against that
+        if (factory == null)
+            throw new RuntimeException("Factory not properly created");
     }
     
     public Connection getUnderlyingJDBCConnectionFromEntityManager() {

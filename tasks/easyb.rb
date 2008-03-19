@@ -16,7 +16,7 @@ module Buildr
       def easyb(options)
         Buildr.ant "easyb" do |ant|
           rake_check_options options, :classpath, :report, :storydir, :output, :format
-          artifacts = Buildr.artifacts(options[:classpath]).each { |a| a.invoke }.map(&:to_s) + [options[:output].to_s]
+          artifacts = Buildr.artifacts(options[:classpath]).each { |a| a.invoke }.map(&:to_s) + [options[:output].to_s] 
           fullpath = artifacts.join(File::PATH_SEPARATOR) + File::PATH_SEPARATOR + requires.join(File::PATH_SEPARATOR)
 
           ant.taskdef :name=>"easyb", :classname=>"org.disco.easyb.ant.SpecificationRunnerTask",:classpath=>requires.join(File::PATH_SEPARATOR)
@@ -62,6 +62,7 @@ module Buildr
           target = project.file(project.path_to(:target, "classes"))
           new_path = project.compile.classpath.unshift target
           new_path.unshift instrumented
+          new_path.unshift project.file(project.path_to("src/test/resources"))
           if File.exist? stories
             easyb_options = { 
               :classpath=>new_path,

@@ -44,7 +44,7 @@ COMMONS = [
   COMMONS_POOL
 ]
 
-DOJO_VERSION = "0.2.2"
+DOJO_VERSION = "0.3.1"
 DOJO_URL = "http://download.dojotoolkit.org/release-#{DOJO_VERSION}/dojo-#{DOJO_VERSION}-widget.zip"
 DOJO = "dojo:dojo-widget:zip:#{DOJO_VERSION}"
 DOJO_WIDGET_BASE = "dojo-#{DOJO_VERSION}-widget"
@@ -91,6 +91,9 @@ APACHE_JPA = [
   "org.apache.derby:derby:jar:10.2.2.0",
   "serp:serp:jar:1.13.1"
 ]
+
+MYSQL_CONNECTOR = "com.mysql.mysql-connector:mysql-connector-java:jar:5.0.4"
+# MYSQL_CONNECTOR = "com.mysql.mysql-connector:mysql-connector-java:jar:5.1.6"
 
 PORTLET_API = ["portlet-api:portlet-api:jar:1.0"]
 
@@ -162,14 +165,29 @@ ORBEON_CUSTOM = [
   # "orbeon:exist-optional:jar:1.1.1"
 ]
 
-COMMONS_DISCOVERY = [  "commons-discovery:commons-discovery:jar:0.2"]
+COMMONS_DISCOVERY = ["commons-discovery:commons-discovery:jar:0.2"]
 
-PLUTO = [
-  "org.apache.pluto:pluto-container:jar:1.1.4",
-  "org.apache.pluto:pluto-taglib:jar:1.1.4",
+PLUTO_CONTAINER = "org.apache.pluto:pluto-container:jar:1.1.4"
+PLUTO_TAGLIB = "org.apache.pluto:pluto-taglib:jar:1.1.4"
+PLUTO_DRIVER = [
   "org.apache.pluto:pluto-portal-driver:jar:1.1.4",
-  "org.apache.pluto:pluto-portal-driver-impl:jar:1.1.4",
+  "org.apache.pluto:pluto-portal-driver-impl:jar:1.1.4"
+]
+PLUTO_DESCRIPTORS = [
+  "org.apache.pluto:pluto-portal-descriptor-api:jar:1.1.4",
+  "org.apache.pluto:pluto-portal-descriptor-impl:jar:1.1.4"
+]
+PLUTO = [
+  PLUTO_CONTAINER,
+  PLUTO_TAGLIB,
+  PLUTO_DRIVER,
   PORTLET_API
+]
+PLUTO_DEPLOY = [
+  PLUTO_CONTAINER,
+  PLUTO_TAGLIB,
+  PLUTO_DESCRIPTORS,
+  "xalan:xalan:jar:2.7.0"
 ]
 
 ORBEON_COMMONS = [

@@ -10,8 +10,6 @@
 package org.intalio.tempo.workflow.tms.server;
 
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 import junit.framework.Assert;
@@ -50,20 +48,9 @@ public class JPAFactoriesTest {
 	static ITaskDAOConnection connection;
 	static JPATaskDaoConnectionFactory jtdcf;
 
-	public static junit.framework.Test suite() {
-		// mappings required for JPA and internal derby
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("openjpa.jdbc.SynchronizeMappings", "buildSchema");
-		map.put("openjpa.ConnectionUserName", "APP");
-		map.put("openjpa.ConnectionPassword", "APP");
-		map.put("openjpa.ConnectionPassword", "APP");
-		map.put("openjpa.ConnectionDriverName",
-				"org.apache.derby.jdbc.EmbeddedDriver");
-		map.put("openjpa.ConnectionURL", "jdbc:derby:target/JPADB;create=true");
-		map.put("openjpa.Log","DefaultLevel=TRACE");
-		
+	public static junit.framework.Test suite() throws Exception{
 		// create the factory and check no left overs from previous run.
-		jtdcf = new JPATaskDaoConnectionFactory(map);
+		jtdcf = new JPATaskDaoConnectionFactory();
 		connection = jtdcf.openConnection();
 		return new JUnit4TestAdapter(JPAFactoriesTest.class);
 	}

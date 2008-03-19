@@ -75,12 +75,12 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
     private String _completeSOAPAction;
 
     @Persistent(cascade = CascadeType.ALL)
-    @Column(name = "input_xml")
+    @Column(name = "input_xml", length=2048)
     @Lob
     private String _input;
 
     @Persistent(cascade = CascadeType.ALL)
-    @Column(name = "output_xml")
+    @Column(name = "output_xml", length=2048)
     @Lob
     private String _output;
 
@@ -88,9 +88,8 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
     @MapKey(name = "payloadURLAsString")
     private Map<String, Attachment> _attachments = new HashMap<String, Attachment>();
 
-    @Persistent
     @Column(name = "is_chained_before")
-    private boolean _isChainedBefore = false;
+    private Boolean _isChainedBefore = false;
 
     @Persistent
     @Column(name = "previous_task_id")

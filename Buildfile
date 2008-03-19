@@ -239,7 +239,7 @@ define "tempo" do
   
   desc "Task Management DAO"
   define "tms-dao" do 
-    compile.with projects("tms-common", "dao-nutsNbolts", "web-nutsNbolts"), APACHE_JPA, SLF4J
+    compile.with projects("tms-common", "dao-nutsNbolts", "web-nutsNbolts"), APACHE_JPA, SLF4J, MYSQL_CONNECTOR
     package(:jar)                 
   end
   
@@ -249,7 +249,7 @@ define "tempo" do
     APACHE_JPA, AXIOM, AXIS2, COMMONS, JAXEN, SLF4J, SPRING, STAX_API, XMLBEANS
   
     compile.with libs
-    test.with libs + [CASTOR, EASY_B, LOG4J, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES]
+    test.with libs + [CASTOR, EASY_B, LOG4J, MYSQL_CONNECTOR, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES]
 
     test.using :properties => 
       { 
@@ -345,7 +345,7 @@ define "tempo" do
 
   desc "Workflow Deployment DAO"
   define "wds-dao" do 
-    compile.with projects("dao-nutsNbolts", "tms-common"), APACHE_JPA, SLF4J
+    compile.with projects("dao-nutsNbolts", "tms-common", "web-nutsNbolts"), APACHE_JPA, SLF4J, MYSQL_CONNECTOR
     compile { open_jpa_enhance }   
     package(:jar)                 
   end
