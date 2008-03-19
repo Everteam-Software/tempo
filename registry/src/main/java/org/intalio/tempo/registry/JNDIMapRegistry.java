@@ -15,11 +15,15 @@ import java.util.Properties;
 
 import javax.naming.InitialContext;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * EmbeddedJNDIRegistry   
  */
 public class JNDIMapRegistry implements Registry {
-    public static final String DEFAULT_JNDI_LOOKUP  = "java:comp/env/registry/JNDIMapRegistry";
+
+    public static final String DEFAULT_JNDI_LOOKUP  = "java:comp/env/registry/TempoRegistry";
 
     private String _jndiLookup = DEFAULT_JNDI_LOOKUP;
     
