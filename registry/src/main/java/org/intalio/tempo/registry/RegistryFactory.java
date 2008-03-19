@@ -71,7 +71,13 @@ public class RegistryFactory {
             LOG.debug("Initializing RegistryFactory with properties: "+_props);
             
             String className = (String) _props.getProperty("org.intalio.tempo.registry.class", StaticMapRegistry.class.getName());
-            Class<Registry> clazz = (Class<Registry>) Class.forName(className);
+            boolean useContextClassLoader = _props.getProperty("org.intalio.tempo.registry.contextClassLoader", "true").equalsIgnoreCase("true");
+            Class<Registry> clazz;
+            if (useContextClassLoader) {
+                clazz = (Class<Registry>) Class.forName(className, true, Thread.currentThread().getContextClassLoader());
+            } else {
+                clazz = (Class<Registry>) Class.forName(className);
+            }
             _registry = clazz.newInstance();
             _registry.init(_props);
         } catch (Exception except) {
