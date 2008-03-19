@@ -29,7 +29,7 @@ public class DeploymentServiceRegister {
     private DeploymentServiceLookup _lookup;
     private ComponentManager _manager;
 
-    private boolean _debug = System.getProperty("org.intalio.tempo.deployment.utils.DeploymentServiceRegister", "debug").equalsIgnoreCase("debug");
+    private boolean _debug = System.getProperty("org.intalio.tempo.deployment.utils.DeploymentServiceRegister", "no_debug").equalsIgnoreCase("debug");
     
     public DeploymentServiceRegister(ComponentManager manager) {
         _manager = manager;
