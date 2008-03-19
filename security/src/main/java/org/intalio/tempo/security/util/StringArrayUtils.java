@@ -79,9 +79,10 @@ public class StringArrayUtils
 			throw new IllegalArgumentException( "Argument 'item' is null" );
 		
 		for ( int i=0; i<list.length; i++ ) {
-			if ( list[i] == null ) continue;
-			if ( list[i].equals( item ) ) return true;
+		    if ( item.equals( list[i]) ) 
+		        return true;
 		}
+		
 		return false;
 	}
 

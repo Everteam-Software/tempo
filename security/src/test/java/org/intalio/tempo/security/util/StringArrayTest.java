@@ -58,7 +58,18 @@ public class StringArrayTest
 		assertTrue( parsed.length == 2 );
 		assertTrue( parsed[0].equals( array[0] ) );
 		assertTrue( parsed[1].equals( array[1] ) );
-		    		
+		
+		assertTrue(StringArrayUtils.containsString(array,"one"));
+		assertFalse(StringArrayUtils.containsString(array,"three"));
+		
+		try {
+		    assertTrue(StringArrayUtils.containsString(array,null));
+		    fail("expected exception");
+		} catch (IllegalArgumentException e) {
+		    
+		}
+		
+		assertEquals(StringArrayUtils.addCommaDelimited("one","two"), "one,two");
     }
     
     
