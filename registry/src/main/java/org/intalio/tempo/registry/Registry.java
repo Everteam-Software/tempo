@@ -11,6 +11,7 @@
  */
 package org.intalio.tempo.registry;
 
+import java.rmi.Remote;
 import java.util.Properties;
 
 
@@ -18,7 +19,7 @@ import java.util.Properties;
  * Registry: A locator abstraction or JNDI alternative since not appservers have a global writable 
  * JNDI context.
  */
-public interface Registry {
+public interface Registry extends Remote {
 
     
     public void init(Properties props);
