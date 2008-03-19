@@ -45,7 +45,8 @@ COMMONS = [
 ]
 
 DOJO_VERSION = "0.3.1"
-DOJO_URL = "http://download.dojotoolkit.org/release-#{DOJO_VERSION}/dojo-#{DOJO_VERSION}-widget.zip"
+#DOJO_URL = "http://download.dojotoolkit.org/release-#{DOJO_VERSION}/dojo-#{DOJO_VERSION}-widget.zip"
+DOJO_URL = "http://www.intalio.org/public/maven2/dojo/#{DOJO_VERSION}/dojo-#{DOJO_VERSION}-widget.zip"
 DOJO = "dojo:dojo-widget:zip:#{DOJO_VERSION}"
 DOJO_WIDGET_BASE = "dojo-#{DOJO_VERSION}-widget"
 
