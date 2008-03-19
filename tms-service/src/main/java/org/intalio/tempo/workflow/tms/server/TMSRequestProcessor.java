@@ -51,13 +51,6 @@ import org.w3c.dom.Document;
 public class TMSRequestProcessor extends OMUnmarshaller {
     final static Logger _logger = LoggerFactory.getLogger(TMSRequestProcessor.class);
 
-    private abstract class TMSResponseMarshaller extends OMMarshaller {
-        public TMSResponseMarshaller(OMFactory omFactory) {
-            super(omFactory, omFactory.createOMNamespace(TaskXMLConstants.TASK_NAMESPACE,
-                    TaskXMLConstants.TASK_NAMESPACE_PREFIX));
-        }
-    }
-
     private ITMSServer _server = null;
 
     public TMSRequestProcessor() throws Exception {
@@ -69,6 +62,9 @@ public class TMSRequestProcessor extends OMUnmarshaller {
     }
 
     public OMElement getTaskList(final OMElement requestElement) throws AxisFault {
+        if (_server == null)
+            throw new AxisFault("TMS not ready"); 
+
         try {
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
             String participantToken = requireElementValue(rootQueue, "participantToken");
@@ -483,5 +479,12 @@ public class TMSRequestProcessor extends OMUnmarshaller {
     private AxisFault makeFault(Exception e) {
         _logger.error(e.getMessage(), e);
         return AxisFault.makeFault(e);
+    }
+
+    private abstract class TMSResponseMarshaller extends OMMarshaller {
+        public TMSResponseMarshaller(OMFactory omFactory) {
+            super(omFactory, omFactory.createOMNamespace(TaskXMLConstants.TASK_NAMESPACE,
+                    TaskXMLConstants.TASK_NAMESPACE_PREFIX));
+        }
     }
 }
