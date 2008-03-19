@@ -11,22 +11,23 @@
  */
 package org.intalio.tempo.registry;
 
+import java.lang.ref.WeakReference;
 import java.rmi.Remote;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.WeakHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * MapRegistry: registry based on a weak hash map.   
+ * MapRegistry: registry based on a map of weak references   
  */
 public class MapRegistry implements Registry, Remote {
     private static final Logger LOG = LoggerFactory.getLogger(MapRegistry.class);
 
     // weak hash map used to avoid memory retention
-    private final Map<String, Object> MAP = new WeakHashMap<String, Object>();
+    private final Map<String, WeakReference<Object>> _map = new HashMap<String, WeakReference<Object>>();
     
     private boolean _debug = false;
     
@@ -41,8 +42,8 @@ public class MapRegistry implements Registry, Remote {
      * Bind a named object into the global registry.
      */
     public <T> void bind(String name, T object) {
-        synchronized (MAP) {
-            MAP.put(name, object);
+        synchronized (_map) {
+            _map.put(name, new WeakReference<Object>(object));
         }
         if (_debug) {
             LOG.debug("bind: {}", name);
@@ -70,8 +71,11 @@ public class MapRegistry implements Registry, Remote {
             dump();
         }
         T proxiedObject = null;
-        synchronized (MAP) {
-            proxiedObject = (T) MAP.get(name);
+        synchronized (_map) {
+            WeakReference<T> weak = (WeakReference<T>) _map.get(name);
+            proxiedObject = (T) weak.get();
+            if (proxiedObject == null) 
+                _map.remove(name);
         }
         if (proxiedObject == null) return null;
         RemoteProxy<T> proxy = new RemoteProxy<T>(proxiedObject, loader, proxiedObject.getClass().getClassLoader());
@@ -83,18 +87,27 @@ public class MapRegistry implements Registry, Remote {
      */
     @SuppressWarnings("unchecked")
     public <T> T lookupNonProxied(String name) {
-        synchronized (MAP) {
-            return (T) MAP.get(name);
+        synchronized (_map) {
+            WeakReference<T> weak = (WeakReference<T>) _map.get(name);
+            T obj = (T) weak.get();
+            if (obj == null) 
+                _map.remove(name);
+            return obj;
         }
     }
     
     private void dump() {
-        StringBuffer buf = new StringBuffer("GlobalRegistry");
-        for (Map.Entry<String, Object> entry : MAP.entrySet()) {
+        StringBuffer buf = new StringBuffer("MapRegistry");
+        buf.append(" "+this.toString());
+        for (Map.Entry<String, WeakReference<Object>> entry : _map.entrySet()) {
             buf.append("\nKey: ");
             buf.append(entry.getKey());
             buf.append(" Value: ");
-            buf.append(entry.getValue() != null ? entry.getValue().getClass() : null);
+            String className = "null";
+            WeakReference<Object> weak = entry.getValue();
+            if (weak != null && weak.get() != null)
+                className = weak.get().getClass().getName();
+            buf.append(className);
         }
         LOG.debug(buf.toString());
     }
