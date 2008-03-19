@@ -61,11 +61,11 @@ public class RegistryFactory {
             _propertyFile = resolveSystemProperties(_propertyFile);
         }
         try {
+            _props = new Properties();
             if (_props == null && new File(_propertyFile).exists()) {
-                _props = new Properties();
                 _props.load(new FileInputStream(_propertyFile));
             } else {
-                LOG.debug("Registry configuration file not available: "+_propertyFile);
+                LOG.warn("Registry configuration file not available: "+_propertyFile);
             }
             
             LOG.debug("Initializing RegistryFactory with properties: "+_props);
