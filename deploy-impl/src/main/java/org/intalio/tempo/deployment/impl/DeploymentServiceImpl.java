@@ -470,7 +470,11 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
                             if (_serviceState == ServiceState.STARTED) {
                                 activateAndStart(aid);
                             }
-                            LOG.info(_("Deployed Assembly: {0}", result));
+                            if (result.isSuccessful())
+                                LOG.info(_("Deployed Assembly: {0}", result));
+                            else 
+                                LOG.warn(_("Assembly deployment failed: {0}", result));
+                            
                             setMarkedAsInvalid(aid, !result.isSuccessful());
                         } catch (Exception except) {
                             LOG.error(_("Error deploying assembly {0}. Assembly will be marked as invalid.", files[i]), except);
