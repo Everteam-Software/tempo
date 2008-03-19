@@ -6,8 +6,8 @@ require "buildr/cobertura"
 require "buildr/xmlbeans"
 
 # Keep this structure to allow the build system to update version numbers.
-VERSION_NUMBER = "5.2.0.7-SNAPSHOT"
-NEXT_VERSION = "5.2.0.8"
+VERSION_NUMBER = "5.2.0.8-SNAPSHOT"
+NEXT_VERSION = "5.2.0.9"
 
 require "dependencies.rb"
 require "repositories.rb"
