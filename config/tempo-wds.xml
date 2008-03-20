@@ -52,6 +52,15 @@
 				-->
 				<entry><key><value>openjpa.Log</value></key><value>none</value></entry>
 				<entry><key><value>openjpa.FlushBeforeQueries</value></key><value>true</value></entry>
+				
+			    <!-- 
+				    uncomment one of the following when running on a database different than derby
+				-->
+				<!--				
+					<entry><key><value>openjpa.jdbc.DBDictionary</value></key><value>oracle</value></entry>
+					<entry><key><value>openjpa.jdbc.DBDictionary</value></key><value>mysql</value></entry>
+					<entry><key><value>openjpa.jdbc.DBDictionary</value></key><value>db2</value></entry>
+				-->
 			</map>
 		</constructor-arg>
 	</bean>
