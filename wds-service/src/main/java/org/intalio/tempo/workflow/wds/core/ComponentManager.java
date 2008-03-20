@@ -156,8 +156,9 @@ public class ComponentManager implements org.intalio.tempo.deployment.spi.Compon
         try {
             Item existing = wds.retrieveItem(itemURL, token);
             if (existing != null) {
-                msg = new DeploymentMessage(Level.ERROR, "PIPA task already exists: " + itemURL);
-                msg.setResource(itemURL);
+                // ALEX: Disabled until undeploy is implemented
+                // msg = new DeploymentMessage(Level.ERROR, "Item already exists: " + itemURL);
+                // msg.setResource(itemURL);
             }
         } catch (UnavailableItemException e) {
             // doesn't exist, continue
