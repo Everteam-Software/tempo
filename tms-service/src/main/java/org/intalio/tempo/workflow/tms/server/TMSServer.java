@@ -103,17 +103,25 @@ public class TMSServer implements ITMSServer {
         UserRoles credentials = _authProvider.authenticate(participantToken);
 		ITaskDAOConnection dao = _taskDAOFactory.openConnection();
 		try {
-            task = dao.fetchTaskIfExists(taskID);
-        } catch (Exception e) {
-            _logger.error("Cannot retrieve Workflow Task " + taskID);
-        } 
-        if ((task != null) && task.isAvailableTo(credentials)) {
-            if (_logger.isDebugEnabled())
-                _logger.debug("Workflow Task " + task + " for user " + credentials.getUserID());
-        } else {
-            throw new UnavailableTaskException("Workflow Task " + task + " is not for " + credentials.getUserID());
-        }
-        return task;
+		    try {
+		        task = dao.fetchTaskIfExists(taskID);
+		    } catch (Exception e) {
+		        _logger.error("Cannot retrieve Workflow Task " + taskID);
+		    } 
+		    if ((task != null) && task.isAvailableTo(credentials)) {
+		        if (_logger.isDebugEnabled())
+		            _logger.debug("Workflow Task " + task + " for user " + credentials.getUserID());
+		    } else {
+		        throw new UnavailableTaskException("Workflow Task " + task + " is not for " + credentials.getUserID());
+		    }
+		    return task;
+        } catch (RuntimeException e) {
+            _logger.error("Exception while retriving workflow task " + taskID, e);
+            throw e;
+        } catch (UnavailableTaskException e) {
+            _logger.error("Exception while retriving workflow task " + taskID, e);
+            throw e;
+		}
     }
 
 	public void setOutput(String taskID,
