@@ -423,6 +423,11 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
             // read available assemblies
             {
                 File[] files = new File(_deployDir).listFiles();
+                if (files == null) {
+                    LOG.warn(_("Deployment directory not available: {0}", _deployDir));
+                    return;
+                }
+                
                 for (int i = 0; i < files.length; ++i) {
                     if (files[i].isDirectory()) {
                         AssemblyId aid = parseAssemblyId(files[i].getName());
