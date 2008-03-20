@@ -26,9 +26,7 @@
 		class="org.intalio.tempo.security.simple.SimpleSecurityProvider"
 		init-method="init">
 		<property name="configFile">
-			<value>
-				${org.intalio.tempo.configDirectory}/security.xml
-			</value>
+			<value>${org.intalio.tempo.configDirectory}/security.xml</value>
 		</property>
 	</bean>
 
