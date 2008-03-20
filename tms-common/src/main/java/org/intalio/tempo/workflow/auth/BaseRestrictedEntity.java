@@ -25,7 +25,6 @@ import javax.persistence.OneToOne;
 @MappedSuperclass
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class BaseRestrictedEntity implements IRestrictedEntity {
-
     
     @OneToOne(cascade=CascadeType.ALL)
     @Column(name="users")
@@ -48,7 +47,7 @@ public abstract class BaseRestrictedEntity implements IRestrictedEntity {
 
     public boolean isAvailableTo(UserRoles credentials) {
         for (String userOwner : _userOwners) {
-            if (userOwner.equals(credentials.getUserID()))
+            if (userOwner != null && userOwner.equals(credentials.getUserID()))
                 return true;
         }
         return _roleOwners.intersects(credentials.getAssignedRoles());
