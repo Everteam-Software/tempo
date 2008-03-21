@@ -15,11 +15,13 @@
 
 package org.intalio.tempo.workflow.task.xml;
 
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.HashMap;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
@@ -47,11 +49,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
+import com.intalio.bpms.workflow.taskManagementServices20051109.AccessControlType;
 import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
 
 public class TaskMarshaller extends XmlBeanMarshaller {
     final static Logger _log = LoggerFactory.getLogger(TaskMarshaller.class);
-    final static String[] ACTIONS = new String[] { "claim", "revoke", "save", "complete" };
+    final static String[] ACTIONS = new String[] { "claim", "revoke", "save", "complete", "defer" };
 
     public TaskMarshaller() {
         super(TaskXMLConstants.TASK_NAMESPACE, TaskXMLConstants.TASK_NAMESPACE_PREFIX);
@@ -97,6 +100,7 @@ public class TaskMarshaller extends XmlBeanMarshaller {
             XmlStrRoleOwner.setStringValue(roleOwner);
         }
 
+        
         for (String action : ACTIONS)
             createACL(action, task, roles, taskMetadataElement);
 
@@ -169,19 +173,25 @@ public class TaskMarshaller extends XmlBeanMarshaller {
         return taskMetadataElement;
     }
 
-    private void createACL(String action, Task task, UserRoles roles, XmlObject taskMetadata) {
+    private void createACL(String action, Task task, UserRoles roles, TaskMetadata taskMetadata) {
         if (task.getAuthorizedActions().contains(action)) {
-            XmlObject acl = createElement(taskMetadata, action + "Action");
-            for (String user : task.getAuthorizedUsers(action)) {
-                createElement(acl, "user", user);
-            }
-            for (String role : task.getAuthorizedRoles(action)) {
-                createElement(acl, "role", role);
-            }
-            if (roles != null) {
-                boolean authorized = task.isAuthorizedAction(roles, action);
-                createElement(acl, "authorized", authorized ? "true" : "false");
-            }
+            try {
+                Method m = taskMetadata.getClass().getMethod("addNew"+action.substring(0,1).toUpperCase()+action.substring(1)+"Action", (Class[])null);
+                AccessControlType ac = (AccessControlType) m.invoke(taskMetadata, (Object[])null);
+                for (String user : task.getAuthorizedUsers(action)) {
+                    ac.addUser(user);
+                }
+                for (String role : task.getAuthorizedRoles(action)) {
+                    ac.addRole(role);
+                }
+                if (roles != null) {
+                    boolean authorized = task.isAuthorizedAction(roles, action);
+                    ac.setAuthorized(authorized ? "true" : "false");
+                }
+             } catch (Exception e) {
+                 // this should only happen if the method for setting the action is not found in the taskMetadata class
+                 throw new RuntimeException(e);
+             }
         }
     }
 

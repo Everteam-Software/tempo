@@ -55,16 +55,16 @@ public abstract class XmlBeanMarshaller {
 		return newElement;
     }
 
-    protected XmlObject createElement(String name, String value) {
-		XmlObject newElement = XmlObject.Factory.newInstance();
-
-		XmlCursor newElementCursor = newElement.newCursor();
-		newElementCursor.toNextToken();
-
-		newElementCursor.beginElement(new QName(_namespace, name, _prefix));
-		newElementCursor.insertChars(value);
-		return newElement;
-    }
+//    protected XmlObject createElement(String name, String value) {
+//		XmlObject newElement = XmlObject.Factory.newInstance();
+//
+//		XmlCursor newElementCursor = newElement.newCursor();
+//		newElementCursor.toNextToken();
+//
+//		newElementCursor.beginElement(new QName(_namespace, name, _prefix));
+//		newElementCursor.insertChars(value);
+//		return newElement;
+//    }
     
     protected XmlObject createElement(XmlObject parent, String name) {
         XmlObject newElement = createElement(name);
@@ -79,15 +79,11 @@ public abstract class XmlBeanMarshaller {
     }
 
     protected XmlObject createElement(XmlObject parent, String name, String value) {
-        XmlObject newElement = createElement(name, value);
-        XmlCursor newElementCursor = newElement.newCursor();
-        newElementCursor.toStartDoc();
-        newElementCursor.toNextToken();
-		
-		XmlCursor parentCursor = parent.newCursor();
-		parentCursor.toEndToken();
-		newElementCursor.moveXml(parentCursor);
-		return newElement;    	
+        final XmlObject createElement = createElement(parent, name);
+        final XmlCursor newCursor = createElement.newCursor();
+        newCursor.toFirstContentToken();
+        newCursor.insertChars(value);
+        return createElement;    	
     }
 
 }

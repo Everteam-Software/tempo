@@ -165,6 +165,22 @@ public class JPATaskTest {
 
         TaskEquality.areAttachmentsEqual(task1, task2);
     }
+    
+    @Test
+    public void authorizeUserRoles() throws Exception {
+        String id = "pa" + System.currentTimeMillis();
+        PATask task1 = new PATask(id, new URI("http://hellonico.net"), "processId", "soap", getXmlSampleDocument());
+        task1.authorizeActionForUser("save", "examples\\manager");
+        task1.setPriority(2);
+        persist(task1);
+
+        Query q = em.createNamedQuery(Task.FIND_BY_ID).setParameter(1, id);
+        PATask task2 = (PATask) (q.getResultList()).get(0);
+        
+        TaskEquality.areTasksEquals(task1, task2);
+
+        em.close();
+    }
 
     @Test
     public void searchQuery() throws Exception {
