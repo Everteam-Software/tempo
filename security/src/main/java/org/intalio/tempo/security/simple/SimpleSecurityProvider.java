@@ -167,9 +167,7 @@ public final class SimpleSecurityProvider
     private InputStream getConfigStream()
         throws IOException
     {
-		System.out.println(">>"+_filename);
         String filename = SystemPropertyUtils.resolvePlaceholders(_filename);
-		System.out.println(">>"+filename);
         File file = new File(filename);
         if ( !file.exists() ) {
             ClassPathResource resource = new ClassPathResource( filename );
