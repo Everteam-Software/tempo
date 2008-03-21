@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Properties;
 
 import org.intalio.tempo.uiframework.Configuration;
 import org.intalio.tempo.uiframework.Constants;
@@ -29,6 +30,7 @@ import org.intalio.tempo.uiframework.URIUtils;
 import org.intalio.tempo.uiframework.forms.FormManager;
 import org.intalio.tempo.uiframework.forms.FormManagerBroker;
 import org.intalio.tempo.uiframework.model.TaskHolder;
+import org.intalio.tempo.uiframework.versions.BpmsVersionsServlet;
 import org.intalio.tempo.web.ApplicationState;
 import org.intalio.tempo.web.controller.Action;
 import org.intalio.tempo.web.controller.ActionError;
@@ -53,6 +55,9 @@ public class TasksAction extends Action {
     private final Collection<TaskHolder<Notification>> _notifications = new ArrayList<TaskHolder<Notification>>();
     private final Collection<TaskHolder<PIPATask>> _initTasks = new ArrayList<TaskHolder<PIPATask>>();
 
+    public static final String BPMS_VERSION_PROP = "bpms-version";
+    public static final String BPMS_BUILD_NUMBER_PROP = "bpms-build-number";
+    
     private void initLists() throws RemoteException, AuthException {
         if(_log.isDebugEnabled()) _log.debug("Parsing task list for UI-FW");
         
@@ -155,5 +160,11 @@ public class TasksAction extends Action {
         model.put("initTasks", _initTasks);
         model.put("participantToken", state.getCurrentUser().getToken());
         model.put("currentUser", state.getCurrentUser().getName());
+        
+        Properties buildProperties = BpmsVersionsServlet.getBPMSVersionsProperties();
+        if (buildProperties != null) {
+            model.put("version", buildProperties.getProperty(BPMS_VERSION_PROP));
+            model.put("build", buildProperties.getProperty(BPMS_BUILD_NUMBER_PROP));
+        }
     }
 }
