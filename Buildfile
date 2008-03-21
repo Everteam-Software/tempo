@@ -341,6 +341,7 @@ define "tempo" do
           
     test_libs = libs + [EASY_B, INSTINCT, MYSQL_CONNECTOR]
     compile.with test_libs
+    compile { open_jpa_enhance }
  
     resources.filter.using "version" => VERSION_NUMBER
     
