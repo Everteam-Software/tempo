@@ -6,21 +6,14 @@ import org.intalio.tempo.workflow.wds.core.JPAItemDaoConnection
 
 import java.net.URI
 
-def getJPAProperties() {
-	props = new Properties()
-	props.put("openjpa.ConnectionDriverName","org.apache.derby.jdbc.EmbeddedDriver")
-	props.put("openjpa.ConnectionURL","jdbc:derby:wds-service/target/JPADB;create=true")
-	props.put("openjpa.jdbc.SynchronizeMappings","buildSchema")
-	return props
-}
 def getSampleItem() {
 	return new Item("http://www.hellonico.net", "meta", "hello".getBytes())
 }
 
 scenario "storing items using jpa", {
 	given "a JPA Item connection ", {
-		factory = new JPAItemDaoConnectionFactory(getJPAProperties())
-		jpac = (JPAItemDaoConnection)factory.getItemDaoConnection()  	
+		factory = new JPAItemDaoConnectionFactory()
+		jpac = factory.getItemDaoConnection()  	
 	}
 	when "an item is stored", {
 		item = getSampleItem()

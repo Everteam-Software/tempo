@@ -36,7 +36,7 @@ define "tempo" do
   end
    
   define "dao-tools" do
-    compile.with projects("security", "security-ws-client", "tms-axis", "tms-common", "tms-dao", "wds-dao", "tms-client", "web-nutsNbolts", "dao-nutsNbolts"), APACHE_JPA, AXIOM, AXIS2, COMMONS, JAXEN, SLF4J, SPRING, STAX_API, XMLBEANS
+    compile.with projects("security", "security-ws-client", "tms-axis", "tms-common", "tms-service", "wds-service", "tms-client", "web-nutsNbolts", "dao-nutsNbolts"), APACHE_JPA, AXIOM, AXIS2, COMMONS, JAXEN, SLF4J, SPRING, STAX_API, XMLBEANS
 
     test.with CASTOR, LOG4J, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES
     package :war
@@ -237,16 +237,10 @@ define "tempo" do
     package(:jar)
   end
   
-  desc "Task Management DAO"
-  define "tms-dao" do 
-    compile.with projects("tms-common", "dao-nutsNbolts", "web-nutsNbolts"), APACHE_JPA, SLF4J, MYSQL_CONNECTOR
-    package(:jar)                 
-  end
-  
   desc "Task Management Service"
   define "tms-service" do
-    libs = projects("security", "security-ws-client", "tms-axis", "tms-common", "tms-dao", "tms-client", "web-nutsNbolts", "dao-nutsNbolts"),
-    APACHE_JPA, AXIOM, AXIS2, COMMONS, JAXEN, SLF4J, SPRING, STAX_API, XMLBEANS
+    libs = projects("security", "security-ws-client", "tms-axis", "tms-common", "tms-client", "web-nutsNbolts", "dao-nutsNbolts"),
+    APACHE_JPA, AXIOM, AXIS2, COMMONS, JAXEN, SLF4J, SPRING, STAX_API, XMLBEANS, MYSQL_CONNECTOR
   
     compile.with libs
     test.with libs + [CASTOR, EASY_B, LOG4J, MYSQL_CONNECTOR, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES]
@@ -265,8 +259,9 @@ define "tempo" do
     end
     test.exclude '*TestUtils*'
 
+    package(:jar)
     package(:aar).with :libs => 
-        [ projects("security", "security-ws-client", "security-ws-common", "tms-axis", "tms-dao", "tms-common", "web-nutsNbolts", "dao-nutsNbolts"), APACHE_JPA, SLF4J, SPRING ] 
+        [ projects("security", "security-ws-client", "security-ws-common", "tms-axis", "tms-common", "web-nutsNbolts", "dao-nutsNbolts"), APACHE_JPA, SLF4J, SPRING ] 
   end
   
   desc "User-Interface Framework"
@@ -338,25 +333,19 @@ define "tempo" do
     compile.with ANT, COMMONS, JARGS, JUNIT, LOG4J, SLF4J
     package(:jar) 
   end
-
-  desc "Workflow Deployment DAO"
-  define "wds-dao" do 
-    compile.with projects("dao-nutsNbolts", "tms-common", "web-nutsNbolts"), APACHE_JPA, SLF4J, MYSQL_CONNECTOR
-    compile { open_jpa_enhance }   
-    package(:jar)                 
-  end
-
+  
   desc "Workflow Deployment Service"
   define "wds-service" do
-    libs = [ projects("dao-nutsNbolts", "deploy-api", "registry", "security", "tms-client", "tms-axis", "tms-common", "wds-dao", "web-nutsNbolts"), 
+    libs = [ projects("dao-nutsNbolts", "deploy-api", "registry", "security", "tms-client", "tms-axis", "tms-common", "web-nutsNbolts"), 
       AXIS2, AXIOM, APACHE_JPA, COMMONS, LOG4J, SERVLET_API, SLF4J, SPRING, STAX_API, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX, XERCES, XMLBEANS ]
-      
-    test_libs = libs + [EASY_B, INSTINCT]
+          
+    test_libs = libs + [EASY_B, INSTINCT, MYSQL_CONNECTOR]
     compile.with test_libs
  
     resources.filter.using "version" => VERSION_NUMBER
     
     package_libs = libs - SERVLET_API
+    package(:jar)
     package(:war).with :libs=>package_libs
   end
 
