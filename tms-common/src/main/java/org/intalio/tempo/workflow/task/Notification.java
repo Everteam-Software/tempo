@@ -54,7 +54,7 @@ public class Notification extends Task implements ITaskWithState, ITaskWithInput
 
     @Persistent
     @Column(name = "priority")
-    private Integer _priority = 0;
+    private Integer _priority;
 
     public Notification() {
         super();
