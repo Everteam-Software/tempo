@@ -112,18 +112,39 @@ public class JPATaskTest {
     @Test
     public void authorizeActionForUser() throws Exception {
         String id = "id" + System.currentTimeMillis();
-        Notification task1 = new Notification(id, new URI("http://hellonico.net"), getXmlSampleDocument());
-        task1.authorizeActionForUser("play", "niko");
-        task1.authorizeActionForUser("go_home", "niko");
-        task1.authorizeActionForUser("eat", "alex");
-        task1.getRoleOwners().add("role1");
-        task1.getUserOwners().add("user1");
+        Notification task1 = null, task2 = null;
 
-        persist(task1);
+        try {
+            task1 = new Notification(id, new URI("http://hellonico.net"), getXmlSampleDocument());
+            task1.authorizeActionForUser("play", "niko");
+            task1.authorizeActionForUser("go_home", "niko");
+            task1.authorizeActionForUser("eat", "alex");
+            task1.getRoleOwners().add("role1");
+            task1.getUserOwners().add("user1");
 
-        Query q = em.createNamedQuery(Task.FIND_BY_ID).setParameter(1, id);
-        Notification task2 = (Notification) (q.getResultList()).get(0);
-        TaskEquality.areTasksEquals(task1, task2);
+            persist(task1);
+
+            Query q = em.createNamedQuery(Task.FIND_BY_ID).setParameter(1, id);
+            task2 = (Notification) (q.getResultList()).get(0);
+            TaskEquality.areTasksEquals(task1, task2);
+
+            TaskFetcher fetcher = new TaskFetcher(em);
+            Assert.assertEquals(Notification.class, fetcher.fetchTasksForUser("user1")[0].getClass());
+            Assert.assertEquals(Notification.class, fetcher.fetchTasksForRole("role1")[0].getClass());
+
+            testFecthForUserRoles("user1", new String[] { "role2" }, 1);
+            testFecthForUserRoles("user2", new String[] { "role1" }, 1);
+            testFecthForUserRoles("user2", new String[] { "role2" }, 0);
+            testFecthForUserRoles("user3", new String[] { "role3" }, 0);
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            if (task2 != null) {
+                jpa.begin();
+                em.remove(task2);
+                jpa.commit();
+            }
+        }
     }
 
     private void forceEagerFetching(Query q) {
@@ -180,18 +201,6 @@ public class JPATaskTest {
         TaskEquality.areTasksEquals(task1, task2);
 
         em.close();
-    }
-
-    @Test
-    public void searchQuery() throws Exception {
-        TaskFetcher fetcher = new TaskFetcher(em);
-        Assert.assertEquals(Notification.class, fetcher.fetchTasksForUser("user1")[0].getClass());
-        Assert.assertEquals(Notification.class, fetcher.fetchTasksForRole("role1")[0].getClass());
-
-        testFecthForUserRoles("user1", new String[] { "role2" }, 1);
-        testFecthForUserRoles("user2", new String[] { "role1" }, 1);
-        testFecthForUserRoles("user2", new String[] { "role2" }, 0);
-        testFecthForUserRoles("user3", new String[] { "role3" }, 0);
     }
 
     private void testFecthForUserRoles(String userId, String[] roles, int size) throws Exception {
