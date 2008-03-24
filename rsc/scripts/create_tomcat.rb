@@ -66,8 +66,16 @@ def download(url, unzip=true)
 end
 
 def build_tempo
-  Dir.chdir TEMPO_SVN
-  system("buildr clean package")
+  chd_and_execute(TEMPO_SVN) {
+     system("buildr clean package")  
+  }
+end
+
+def chd_and_execute new_dir
+  pwd = Dir.pwd
+  Dir.chdir new_dir
+  yield
+  Dir.chdir pwd
 end
 
 
@@ -134,13 +142,12 @@ class WarInstaller
     jar_folder = find_war_folder(jar_file)
     war_dir = to_dir + File::SEPARATOR + jar_folder
     return war_dir if File.exist? war_dir
-    pwd = Dir.pwd
     Dir.mkdir war_dir
-    Dir.chdir war_dir 
-    local_jar_file = ".." + File::SEPARATOR + "#{jar_file}"
-    puts "Extracting #{local_jar_file}" if DEBUG
-    system "jar xf #{local_jar_file}"
-    Dir.chdir pwd
+    chd_and_execute(war_dir) {
+      local_jar_file = ".." + File::SEPARATOR + "#{jar_file}"
+      puts "Extracting #{local_jar_file}" if DEBUG
+      system "jar xf #{local_jar_file}"
+    }
     return war_dir
   end
   
@@ -239,10 +246,10 @@ wi.install_tempo_war( "xforms-manager", "xFormsManager" )
 title "Install xpath extension in Ode"
 explain "Required library for Ode"
 ##
-processes_folder = "#{TEMPO_SVN}/processes/"
-ode_webinf = ode_war_folder + File::SEPARATOR + "WEB-INF"
+@processes_folder = "#{TEMPO_SVN}/processes/"
+ode_webinf = File.expand_path("#{ode_war_folder}/WEB-INF")
 @ode_processes_folder = "#{ode_webinf}/processes"
-xp_jar = finder.search( processes_folder + "xpath-extensions" + File::SEPARATOR + "target", "jar")
+xp_jar = finder.search( @processes_folder + "xpath-extensions" + File::SEPARATOR + "target", "jar")
 File.copy xp_jar, ode_webinf + "/lib", DEBUG
 ##
 
@@ -310,7 +317,8 @@ Dir.glob(config_files) {|x| File.copy(x, tomcat_config_folder, DEBUG)}
 mysql_ds_config_files = File.join("#{TEMPO_SVN}/rsc/tempo-sql","*.xml")
 Dir.glob(mysql_ds_config_files) {|x| File.copy(x, tomcat_config_folder, DEBUG)}
 
-File.copy "#{TEMPO_SVN}/rsc/tomcat/ode-axis2.properties", tomcat_config_folder
+## Don't copy this file for the moment, because it requires more libraries
+## File.copy "#{TEMPO_SVN}/rsc/tomcat/ode-axis2.properties", tomcat_config_folder
 ##
 
 title "Creating setenv file (java opts and config)"
@@ -321,11 +329,11 @@ create_mode = File::CREAT|File::TRUNC|File::RDWR
 if `uname`
   file_path = tomcat_bin_folder + "setenv.sh"
   file = File.new file_path,create_mode
-  file.puts "export JAVA_OPTS=\"-XX:MaxPermSize=256m -Xms64m -Xmx512m -Dorg.intalio.tempo.configDirectory=#{File.expand_path(tomcat_config_folder)} -Dorg.apache.ode.configDir=#{File.expand_path(tomcat_config_folder)}\""
+  file.puts "export JAVA_OPTS=\"-XX:MaxPermSize=256m -Xms64m -Xmx512m -Dorg.intalio.tempo.configDirectory=$CATALINA_HOME/var/config -Dorg.apache.ode.configDir=$CATALINA_HOME/var/config\""
 else
   file_path = tomcat_bin_folder + "setenv.bat"
   file = (File.new file_path,create_mode)
-  file.puts "set JAVA_OPTS=-XX:MaxPermSize=256m -Xms64m -Xmx512m -Dorg.intalio.tempo.configDirectory=#{File.expand_path(tomcat_config_folder)} -Dorg.apache.ode.configDir=#{File.expand_path(tomcat_config_folder)}\""
+  file.puts "set JAVA_OPTS=-XX:MaxPermSize=256m -Xms64m -Xmx512m -Dorg.intalio.tempo.configDirectory=$CATALINA_HOME\\var\\config -Dorg.apache.ode.configDir=$CATALINA_HOME\\var\\config"
 end
 ##
 
