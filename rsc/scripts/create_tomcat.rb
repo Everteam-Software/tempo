@@ -8,9 +8,9 @@ TEMPO_SVN = "/Users/niko/projects/tempo"
 DEBUG = false
 REBUILD_TEMPO = true
 
-TOMCAT_6_DOWNLOAD = "http://www.meisei-u.ac.jp/mirror/apache/dist/tomcat/tomcat-6/v6.0.16/bin/apache-tomcat-6.0.16.zip"
-TOMCAT_5_DOWNLOAD = "http://www.meisei-u.ac.jp/mirror/apache/dist/tomcat/tomcat-5/v5.5.26/bin/apache-tomcat-5.5.26.zip"
-AXIS_DOWNLOAD = "http://www.meisei-u.ac.jp/mirror/apache/dist/ws/axis2/1_3/axis2-1.3-war.zip"
+#TOMCAT_6_DOWNLOAD = "http://www.meisei-u.ac.jp/mirror/apache/dist/tomcat/tomcat-6/v6.0.16/bin/apache-tomcat-6.0.16.zip"
+TOMCAT_5_DOWNLOAD = "http://www.apache.org/dist/tomcat/tomcat-5/v5.5.26/bin/apache-tomcat-5.5.26.zip"
+AXIS_DOWNLOAD = "http://www.apache.org/dist/ws/axis2/1_3/axis2-1.3-war.zip"
 ODE_DOWNLOAD = "http://www.apache.org/dist/ode/apache-ode-war-1.1.1.zip"
 
 # Unzip a file
@@ -152,6 +152,7 @@ end
 class ServiceInstaller
   def initialize(axis_folder)
      @process_folder = axis_folder + File::SEPARATOR + "WEB-INF" + File::SEPARATOR + "services"
+     FileUtils.mkdir_p @process_folder
      @finder = Finder.new
   end
   
@@ -240,23 +241,29 @@ explain "Required library for Ode"
 ##
 processes_folder = "#{TEMPO_SVN}/processes/"
 ode_webinf = ode_war_folder + File::SEPARATOR + "WEB-INF"
-ode_processes_folder = "#{ode_webinf}/processes"
+@ode_processes_folder = "#{ode_webinf}/processes"
 xp_jar = finder.search( processes_folder + "xpath-extensions" + File::SEPARATOR + "target", "jar")
 File.copy xp_jar, ode_webinf + "/lib", DEBUG
 ##
 
+def install_tempo_process process_name
+  FileUtils.mkdir_p "#{@ode_processes_folder}/#{process_name}"
+  FileUtils.cp_r( Dir.glob("#{@processes_folder}/#{process_name}/src/main/resources/*.*"), "#{@ode_processes_folder}/#{process_name}" )  
+end
+
 title "Install TaskManager in Ode"
 explain "The task manager process is a regular process running in Ode, responsible for the management of tasks"
 ##
-FileUtils.cp_r( Dir.glob("#{processes_folder}/TaskManager/src/main/resources/*.*"), "#{ode_processes_folder}/TaskManager" )
+install_tempo_process "TaskManager"
 ##
 
 
 title "Install AbsenceRequest in Ode"
 explain "A sample process, that can be started from the UI-FW"
 ##
-FileUtils.cp_r( Dir.glob("#{processes_folder}/AbsenceRequest/src/main/resources/*.*"), "#{ode_processes_folder}/AbsenceRequest" )
+install_tempo_process "AbsenceRequest"
 ##
+
 title "Installing missing libs into Tomcat"
 explain "Some libs are missing in tomcat, so we add them here."
 ##
