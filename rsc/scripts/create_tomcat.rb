@@ -9,7 +9,7 @@ TOMCAT_5_DOWNLOAD = "http://www.meisei-u.ac.jp/mirror/apache/dist/tomcat/tomcat-
 AXIS_DOWNLOAD = "http://www.meisei-u.ac.jp/mirror/apache/dist/ws/axis2/1_3/axis2-1.3-war.zip"
 ODE_DOWNLOAD = "http://www.apache.org/dist/ode/apache-ode-war-1.1.1.zip"
 TEMPO_SVN = "/Users/niko/projects/tempo"
-REBUILD_TEMPO = false
+REBUILD_TEMPO = true
 DEBUG = false
 
 # Unzip a file
