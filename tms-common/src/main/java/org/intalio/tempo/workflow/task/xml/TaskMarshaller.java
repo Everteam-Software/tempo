@@ -21,7 +21,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
@@ -41,7 +40,6 @@ import org.intalio.tempo.workflow.task.traits.ITaskWithOutput;
 import org.intalio.tempo.workflow.task.traits.ITaskWithPriority;
 import org.intalio.tempo.workflow.task.traits.ITaskWithState;
 import org.intalio.tempo.workflow.task.traits.InitTask;
-import org.intalio.tempo.workflow.util.xml.XmlBeanMarshaller;
 import org.intalio.tempo.workflow.util.xml.XsdDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,12 +50,11 @@ import org.w3c.dom.Node;
 import com.intalio.bpms.workflow.taskManagementServices20051109.AccessControlType;
 import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
 
-public class TaskMarshaller extends XmlBeanMarshaller {
+public class TaskMarshaller {
     final static Logger _log = LoggerFactory.getLogger(TaskMarshaller.class);
-    final static String[] ACTIONS = new String[] { "claim", "revoke", "save", "complete", "defer" };
+    final static String[] ACTIONS = new String[] { "claim", "revoke", "save", "complete" };
 
     public TaskMarshaller() {
-        super(TaskXMLConstants.TASK_NAMESPACE, TaskXMLConstants.TASK_NAMESPACE_PREFIX);
     }
 
     public OMElement marshalTaskMetadata(Task task, UserRoles roles) {
@@ -116,21 +113,13 @@ public class TaskMarshaller extends XmlBeanMarshaller {
 
         if (task instanceof ITaskWithDeadline) {
             ITaskWithDeadline crTask = (ITaskWithDeadline) task;
-
-            if (crTask.getDeadline() == null)
-                createElement(taskMetadataElement, "deadline", null);
-            else {
-                createElement(taskMetadataElement, "deadline", (new XsdDateTime(crTask.getDeadline())).toString());
-            }
+            if (crTask.getDeadline() != null)
+                taskMetadataElement.setDeadline(new XsdDateTime(crTask.getDeadline()));
         }
         if (task instanceof ITaskWithPriority) {
             ITaskWithPriority crTask = (ITaskWithPriority) task;
-
-            if (crTask.getPriority() == null)
-                createElement(taskMetadataElement, "priority", null);
-            else {
-                createElement(taskMetadataElement, "priority", crTask.getPriority().toString());
-            }
+            if (crTask.getPriority() != null)
+                taskMetadataElement.setPriority(crTask.getPriority());
         }
 
         if (task instanceof ICompleteReportingTask) {
@@ -163,10 +152,10 @@ public class TaskMarshaller extends XmlBeanMarshaller {
 
         if (task instanceof IChainableTask) {
             IChainableTask chainableTask = (IChainableTask) task;
-            String isChainedBeforeStr = chainableTask.isChainedBefore() ? "true" : "false";
-            createElement(taskMetadataElement, "isChainedBefore", isChainedBeforeStr);
-            if (chainableTask.isChainedBefore()) {
-                createElement(taskMetadataElement, "previousTaskId", chainableTask.getPreviousTaskID());
+            final boolean chainedBefore = chainableTask.isChainedBefore();
+            taskMetadataElement.setIsChainedBefore(Boolean.toString(chainedBefore));
+            if (chainedBefore) {
+                taskMetadataElement.setPreviousTaskId(chainableTask.getPreviousTaskID());
             }
         }
 
@@ -186,7 +175,7 @@ public class TaskMarshaller extends XmlBeanMarshaller {
                 }
                 if (roles != null) {
                     boolean authorized = task.isAuthorizedAction(roles, action);
-                    ac.setAuthorized(authorized ? "true" : "false");
+                    ac.setAuthorized(Boolean.toString(authorized));
                 }
              } catch (Exception e) {
                  // this should only happen if the method for setting the action is not found in the taskMetadata class

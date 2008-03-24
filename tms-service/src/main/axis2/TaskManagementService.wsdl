@@ -286,12 +286,12 @@
 					<xsd:element name="processEndpoint" type="xsd:anyURI" maxOccurs="1" minOccurs="0"/>
 					<xsd:element name="initMessageNamespaceURI" type="xsd:anyURI" maxOccurs="1" minOccurs="0"/>
 					<xsd:element name="initOperationSOAPAction" type="xsd:string" maxOccurs="1" minOccurs="0"/>
-					
+					<xsd:element name="isChainedBefore" type="xsd:string" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="previousTaskId" type="xsd:string" maxOccurs="1" minOccurs="0"/>
 				    <xsd:element name="claimAction" type="tns:accessControlType" maxOccurs="1" minOccurs="0"/>
                     <xsd:element name="revokeAction" type="tns:accessControlType" maxOccurs="1" minOccurs="0"/>
                     <xsd:element name="saveAction" type="tns:accessControlType" maxOccurs="1" minOccurs="0"/>
                     <xsd:element name="completeAction" type="tns:accessControlType" maxOccurs="1" minOccurs="0"/>
-                    <xsd:element name="deferAction" type="tns:accessControlType" maxOccurs="1" minOccurs="0"/>
 					
 					<xsd:element name="attachments">
 					 <xsd:complexType>
