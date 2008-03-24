@@ -4,13 +4,14 @@ require 'net/http'
 require 'open-uri' 
 require "zip/zip"
 
+TEMPO_SVN = "/Users/niko/projects/tempo"
+DEBUG = false
+REBUILD_TEMPO = true
+
 TOMCAT_6_DOWNLOAD = "http://www.meisei-u.ac.jp/mirror/apache/dist/tomcat/tomcat-6/v6.0.16/bin/apache-tomcat-6.0.16.zip"
 TOMCAT_5_DOWNLOAD = "http://www.meisei-u.ac.jp/mirror/apache/dist/tomcat/tomcat-5/v5.5.26/bin/apache-tomcat-5.5.26.zip"
 AXIS_DOWNLOAD = "http://www.meisei-u.ac.jp/mirror/apache/dist/ws/axis2/1_3/axis2-1.3-war.zip"
 ODE_DOWNLOAD = "http://www.apache.org/dist/ode/apache-ode-war-1.1.1.zip"
-TEMPO_SVN = "/Users/niko/projects/tempo"
-REBUILD_TEMPO = true
-DEBUG = false
 
 # Unzip a file
 def unzip(x, basefolder = ".")

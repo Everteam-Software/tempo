@@ -13,6 +13,13 @@ A JVM to compile and run the different components.
 Also, be sure to have installed buildr (build tool) and svn (version control) installed.
 
 ===================
+Check out tempo
+===================
+With the following command:
+svn co http://tempo.intalio.org/tempo/trunk/ tempo
+
+
+===================
 Database setup
 ===================
 Setup a mysql database named "bpms" with user "root" and no password. This is very unsecure. Change DB as needed in the final tomcat configuration.
@@ -21,8 +28,11 @@ Start mysql engine and check user access.
 ===================
 Installation
 ===================
-Follow the steps in the scripts at:
+
+Run the ruby script:
 TEMPO_CHECKOUT/rsc/scripts/create_tomcat.rb
+Edit the install path first:
+TEMPO_SVN to the place you've checked out tempo.
 
 ===================
 Start up
