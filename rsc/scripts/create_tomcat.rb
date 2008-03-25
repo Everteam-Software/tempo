@@ -380,6 +380,9 @@ file_cp = tomcat_bin_folder + File::SEPARATOR + "setclasspath.sh"
 File.open(file_cp, File::WRONLY|File::APPEND) {|file| file << "export CLASSPATH=$CLASSPATH:$CATALINA_HOME/conf"}
 ##
 
+title "Deleting war files from webapp folder"
+Dir.glob(File.join("#{webapp_folder}", "*.war")) {|x| File.delete x}
+
 title "Almost done !"
 explain "Now create a mysql database named \"bpms\" with access to user <root> and no password"
 explain "Load the ode schema into mysql from the file #{TEMPO_SVN}/rsc/tempo-sql/ode-mysql.sql"
