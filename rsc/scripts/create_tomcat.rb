@@ -317,8 +317,7 @@ Dir.glob(config_files) {|x| File.copy(x, tomcat_config_folder, DEBUG)}
 mysql_ds_config_files = File.join("#{TEMPO_SVN}/rsc/tempo-sql","*.xml")
 Dir.glob(mysql_ds_config_files) {|x| File.copy(x, tomcat_config_folder, DEBUG)}
 
-## Don't copy this file for the moment, because it requires more libraries
-## File.copy "#{TEMPO_SVN}/rsc/tomcat/ode-axis2.properties", tomcat_config_folder
+File.copy "#{TEMPO_SVN}/rsc/tomcat/ode-axis2.properties", tomcat_config_folder
 ##
 
 title "Creating setenv file (java opts and config)"
@@ -366,8 +365,11 @@ file_cp = tomcat_bin_folder + File::SEPARATOR + "setclasspath.sh"
 File.open(file_cp, File::WRONLY|File::APPEND) {|file| file << "export CLASSPATH=$CLASSPATH:$CATALINA_HOME/conf"}
 ##
 
-title "You're done !"
+title "Almost done !"
 explain "Now create a mysql database named \"bpms\" with access to user <root> and no password"
+explain "Load the ode schema into mysql from the file #{TEMPO_SVN}/rsc/tempo-sql/ode-mysql.sql"
 explain "Once this is done, start tomcat with the following command:"
 explain "./catalina.sh run"
 explain "Now you can browse http://localhost:8080/ui-fw/ and login with user <admin> and password <changeit>"
+
+title  "Enjoy!!"
