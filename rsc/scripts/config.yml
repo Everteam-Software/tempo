@@ -1,0 +1,5 @@
+---
+tempo_svn: /Users/niko/projects/tempo
+debug: false
+rebuild: true
+apache_mirror: http://www.apache.org/dist/

@@ -3,15 +3,23 @@ require "rubygems"
 require 'net/http'
 require 'open-uri' 
 require "zip/zip"
+require 'yaml'
 
-TEMPO_SVN = "/Users/niko/projects/tempo"
-DEBUG = false
-REBUILD_TEMPO = true
+config_file = if not ARGV[0] == nil 
+  then
+    ARGV[0]
+  else
+    "./config.yml"
+  end
+config = YAML::load( File.open( config_file ) )
 
-#TOMCAT_6_DOWNLOAD = "http://www.meisei-u.ac.jp/mirror/apache/dist/tomcat/tomcat-6/v6.0.16/bin/apache-tomcat-6.0.16.zip"
-TOMCAT_5_DOWNLOAD = "http://www.apache.org/dist/tomcat/tomcat-5/v5.5.26/bin/apache-tomcat-5.5.26.zip"
-AXIS_DOWNLOAD = "http://www.apache.org/dist/ws/axis2/1_3/axis2-1.3-war.zip"
-ODE_DOWNLOAD = "http://www.apache.org/dist/ode/apache-ode-war-1.1.1.zip"
+TEMPO_SVN = config["tempo_svn"]
+DEBUG = config["debug"]
+REBUILD_TEMPO = config["rebuild"]
+APACHE_MIRROR = config["apache_mirror"]
+TOMCAT_5_DOWNLOAD = APACHE_MIRROR + "/tomcat/tomcat-5/v5.5.26/bin/apache-tomcat-5.5.26.zip"
+AXIS_DOWNLOAD = APACHE_MIRROR + "/ws/axis2/1_3/axis2-1.3-war.zip"
+ODE_DOWNLOAD = APACHE_MIRROR + "/ode/apache-ode-war-1.1.1.zip"
 
 # Unzip a file
 def unzip(x, basefolder = ".")
@@ -173,6 +181,17 @@ class ServiceInstaller
   end
 end
 
+class OdeProcessInstaller
+  def initialize(base_dir, tempo_trunk_process_folder)
+    @ode_processes_folder = base_dir
+    @processes_folder = tempo_trunk_process_folder
+  end
+  def install_process_from_tempo_trunk process_name
+    FileUtils.mkdir_p "#{@ode_processes_folder}/#{process_name}"  
+    FileUtils.cp_r( Dir.glob("#{@processes_folder}/#{process_name}/src/main/resources/*.*"), "#{@ode_processes_folder}/#{process_name}" )  
+  end
+end
+
 
 
 title "Downloading required files"
@@ -246,29 +265,25 @@ wi.install_tempo_war( "xforms-manager", "xFormsManager" )
 title "Install xpath extension in Ode"
 explain "Required library for Ode"
 ##
-@processes_folder = "#{TEMPO_SVN}/processes/"
 ode_webinf = File.expand_path("#{ode_war_folder}/WEB-INF")
-@ode_processes_folder = "#{ode_webinf}/processes"
-xp_jar = finder.search( @processes_folder + "xpath-extensions" + File::SEPARATOR + "target", "jar")
+ode_processes_folder = "#{ode_webinf}/processes"
+processes_folder = "#{TEMPO_SVN}/processes/"
+opi = OdeProcessInstaller.new ode_processes_folder, processes_folder
+xp_jar = finder.search( processes_folder + "xpath-extensions" + File::SEPARATOR + "target", "jar")
 File.copy xp_jar, ode_webinf + "/lib", DEBUG
 ##
-
-def install_tempo_process process_name
-  FileUtils.mkdir_p "#{@ode_processes_folder}/#{process_name}"
-  FileUtils.cp_r( Dir.glob("#{@processes_folder}/#{process_name}/src/main/resources/*.*"), "#{@ode_processes_folder}/#{process_name}" )  
-end
 
 title "Install TaskManager in Ode"
 explain "The task manager process is a regular process running in Ode, responsible for the management of tasks"
 ##
-install_tempo_process "TaskManager"
+opi.install_process_from_tempo_trunk "TaskManager"
 ##
 
 
 title "Install AbsenceRequest in Ode"
 explain "A sample process, that can be started from the UI-FW"
 ##
-install_tempo_process "AbsenceRequest"
+opi.install_process_from_tempo_trunk "AbsenceRequest"
 ##
 
 title "Installing missing libs into Tomcat"
