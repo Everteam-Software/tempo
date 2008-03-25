@@ -29,6 +29,7 @@ def unzip(x, basefolder = ".")
   Zip::ZipFile::open(x) { |zf|
     zf.each { |e|
       fpath = File.join(outdir, e.name)
+      return if File.exist? fpath
       FileUtils.mkdir_p(File.dirname(fpath))
       zf.extract(e, fpath)
     }
@@ -51,9 +52,11 @@ end
 # Download and unzip file
 def download_to(filename, url, unzip=true, message="Downloading #{url}") 
   puts message if DEBUG
-  open(filename, "wb") { |file|
-    file.write(fetch(url).body)
-  }
+  if(not File.exist?(filename)) then
+    open(filename, "wb") { |file|
+      file.write(fetch(url).body)
+    }
+  end
   unzip(filename) if unzip
 end
 
@@ -69,7 +72,7 @@ end
 
 def download(url, unzip=true)
   filename = filename_from_url url
-  download_to(filename,url,unzip) if not File.exist?(filename)
+  download_to(filename,url,unzip)
   return filename.slice(0,filename.rindex("."))
 end
 
@@ -260,6 +263,9 @@ wi.install_tempo_war( "fds" )
 wi.install_tempo_war( "ui-fw" )
 wi.install_tempo_war( "wds-service", "wds" )
 wi.install_tempo_war( "xforms-manager", "xFormsManager" )
+wi.install_tempo_war( "cas-server-webapp", "cas" )
+wi.install_tempo_war( "ui-pluto", "pluto" )
+wi.install_tempo_war( "ui-fw-portlet")
 ##
 
 title "Install xpath extension in Ode"
