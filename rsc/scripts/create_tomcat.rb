@@ -4,6 +4,7 @@ require 'net/http'
 require 'open-uri' 
 require "zip/zip"
 require 'yaml'
+require 'fileutils'
 
 config_file = if not ARGV[0] == nil 
   then
@@ -29,9 +30,10 @@ def unzip(x, basefolder = ".")
   Zip::ZipFile::open(x) { |zf|
     zf.each { |e|
       fpath = File.join(outdir, e.name)
-      return if File.exist? fpath
-      FileUtils.mkdir_p(File.dirname(fpath))
-      zf.extract(e, fpath)
+      if (not File.exist?(fpath)) then
+        FileUtils.mkdir_p(File.dirname(fpath))
+        zf.extract(e, fpath)
+      end
     }
   }
 end
@@ -258,6 +260,9 @@ explain "FDS is the form dispatcher service, responsible mainly for replacing na
 explain "UI-FW is the user interface, where user can handle their tasks and complete them"
 explain "WDS service, is like a Web Resources services."
 explain "XFM is responsible for displaying the forms to be filled when a user is handling a task."
+# explain "CAS is the SSO framework so we can integrate with other security services"
+# explain "Pluto, is a portlet container"
+# explain "UI-FW-PORTLET is a portlet version of UI-FW meant to be running in Pluto"
 ##
 wi.install_tempo_war( "fds" )
 wi.install_tempo_war( "ui-fw" )
@@ -297,11 +302,13 @@ explain "Some libs are missing in tomcat, so we add them here."
 ##
 lib_folder = tomcat_folder + File::SEPARATOR + "common" + File::SEPARATOR + "lib"
 MISSING_LIBS= [
+  # Mysql driver
   "http://www.intalio.org/public/maven2/com/mysql/mysql-connector/mysql-connector-java/5.1.6/mysql-connector-java-5.1.6.jar",
+  # Common libraries
   "http://www.intalio.org/public/maven2/commons-dbcp/commons-dbcp/1.2.1/commons-dbcp-1.2.1.jar",
   "http://www.intalio.org/public/maven2/commons-collections/commons-collections/3.2/commons-collections-3.2.jar",
   "http://www.intalio.org/public/maven2/commons-pool/commons-pool/1.3/commons-pool-1.3.jar",
-  
+  # Logging libraries
   "http://www.intalio.org/public/maven2/org/slf4j/slf4j-api/1.4.3/slf4j-api-1.4.3.jar",
   "http://www.intalio.org/public/maven2/org/slf4j/slf4j-log4j12/1.4.3/slf4j-log4j12-1.4.3.jar",
   "http://www.intalio.org/public/maven2/org/slf4j/slf4j-log4j12/1.4.3/slf4j-log4j12-1.4.3.jar",
@@ -346,15 +353,14 @@ explain "Settings java options, including memory settings"
 ##
 tomcat_bin_folder = tomcat_folder + File::SEPARATOR + "bin" + File::SEPARATOR
 create_mode = File::CREAT|File::TRUNC|File::RDWR
-if `uname`
-  file_path = tomcat_bin_folder + "setenv.sh"
-  file = File.new file_path,create_mode
-  file.puts "export JAVA_OPTS=\"-XX:MaxPermSize=256m -Xms64m -Xmx512m -Dorg.intalio.tempo.configDirectory=$CATALINA_HOME/var/config -Dorg.apache.ode.configDir=$CATALINA_HOME/var/config\""
-else
-  file_path = tomcat_bin_folder + "setenv.bat"
-  file = (File.new file_path,create_mode)
-  file.puts "set JAVA_OPTS=-XX:MaxPermSize=256m -Xms64m -Xmx512m -Dorg.intalio.tempo.configDirectory=$CATALINA_HOME\\var\\config -Dorg.apache.ode.configDir=$CATALINA_HOME\\var\\config"
-end
+# script for unix
+file_path = tomcat_bin_folder + "setenv.sh"
+file = File.new file_path,create_mode
+file.puts "export JAVA_OPTS=\"-XX:MaxPermSize=256m -Xms64m -Xmx512m -Dorg.intalio.tempo.configDirectory=$CATALINA_HOME/var/config -Dorg.apache.ode.configDir=$CATALINA_HOME/var/config\""
+# script for windows
+file_path = tomcat_bin_folder + "setenv.bat"
+file = (File.new file_path,create_mode)
+file.puts "set JAVA_OPTS=-XX:MaxPermSize=256m -Xms64m -Xmx512m -Dorg.intalio.tempo.configDirectory=$CATALINA_HOME\\var\\config -Dorg.apache.ode.configDir=$CATALINA_HOME\\var\\config"
 ##
 
 title "Changing file permissions (shell scripts)"
@@ -388,6 +394,9 @@ File.open(file_cp, File::WRONLY|File::APPEND) {|file| file << "export CLASSPATH=
 
 title "Deleting war files from webapp folder"
 Dir.glob(File.join("#{webapp_folder}", "*.war")) {|x| File.delete x}
+
+title "Delete servlet-api jar files"
+Dir.glob(File.join("#{webapp_folder}", "**/servlet-api-2.4.jar")) {|x| File.delete x}
 
 title "Almost done !"
 explain "Now create a mysql database named \"bpms\" with access to user <root> and no password"
