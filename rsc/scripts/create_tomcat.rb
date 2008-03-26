@@ -5,6 +5,9 @@ require 'open-uri'
 require "zip/zip"
 require 'yaml'
 require 'fileutils'
+require "buildr"
+
+repositories.remote = [ "http://www.intalio.org/public/maven2", "http://dist.codehaus.org/mule/dependencies/maven2/", "http://repo1.maven.org/maven2" ]
 
 config_file = if not ARGV[0] == nil 
   then
@@ -23,7 +26,7 @@ AXIS_DOWNLOAD = APACHE_MIRROR + "/ws/axis2/1_3/axis2-1.3-war.zip"
 ODE_DOWNLOAD = APACHE_MIRROR + "/ode/apache-ode-war-1.1.1.zip"
 
 # Unzip a file
-def unzip(x, basefolder = ".")
+def unzip2(x, basefolder = ".")
   puts "Unzipping file:#{x}" if DEBUG
   return if not basefolder == "." and File.exist? basefolder
   outdir = basefolder
@@ -59,20 +62,25 @@ def download_to(filename, url, unzip=true, message="Downloading #{url}")
       file.write(fetch(url).body)
     }
   end
-  unzip(filename) if unzip
+  unzip2(filename) if unzip
 end
 
 def download_and_copy(url, folder)
   puts "Copying #{url} to #{folder}" if DEBUG
-  download( url,false )
+  download_unzip( url,false )
   File.copy( filename_from_url(url), folder, DEBUG )
+end
+
+def locate_and_copy(lib, folder)
+  artifact(lib).invoke
+  File.cp repositories.locate(lib), folder
 end
 
 def filename_from_url (url)
   url.slice(url.rindex("/")+1, url.length)
 end
 
-def download(url, unzip=true)
+def download_unzip(url, unzip=true)
   filename = filename_from_url url
   download_to(filename,url,unzip)
   return filename.slice(0,filename.rindex("."))
@@ -202,10 +210,10 @@ end
 title "Downloading required files"
 explain "Downloading tomcat (java web application engine), ode (process engine) and axis (web service engine)"
 ##
-tomcat_folder = download( TOMCAT_5_DOWNLOAD )
-ode_folder = download( ODE_DOWNLOAD )
-axis_folder = download( AXIS_DOWNLOAD, false)
-unzip( filename_from_url( AXIS_DOWNLOAD ), axis_folder )
+tomcat_folder = download_unzip( TOMCAT_5_DOWNLOAD )
+ode_folder = download_unzip( ODE_DOWNLOAD )
+axis_folder = download_unzip( AXIS_DOWNLOAD, false)
+unzip2( filename_from_url( AXIS_DOWNLOAD ), axis_folder )
 ##
 
 title "Define install variables"
@@ -231,7 +239,7 @@ explain "We're using a different version of xbean in tempo which is incompatible
 ##
 axis_war_lib = "#{axis2_war_folder}/WEB-INF/lib"
 FileUtils.rm "#{axis_war_lib}/xbean-2.2.0.jar", :force => true
-download_and_copy "http://www.intalio.org/public/maven2/xmlbeans/xbean/2.3.0/xbean-2.3.0.jar", axis_war_lib
+locate_and_copy "xmlbeans:xbean:jar:2.3.0", axis_war_lib
 ##
 
 title "Build tempo (using svn checkout and buildr)"
@@ -303,19 +311,19 @@ explain "Some libs are missing in tomcat, so we add them here."
 lib_folder = tomcat_folder + File::SEPARATOR + "common" + File::SEPARATOR + "lib"
 MISSING_LIBS= [
   # Mysql driver
-  "http://www.intalio.org/public/maven2/com/mysql/mysql-connector/mysql-connector-java/5.1.6/mysql-connector-java-5.1.6.jar",
+  "com.mysql.mysql-connector:mysql-connector-java:jar:5.1.6",
   # Common libraries
-  "http://www.intalio.org/public/maven2/commons-dbcp/commons-dbcp/1.2.1/commons-dbcp-1.2.1.jar",
-  "http://www.intalio.org/public/maven2/commons-collections/commons-collections/3.2/commons-collections-3.2.jar",
-  "http://www.intalio.org/public/maven2/commons-pool/commons-pool/1.3/commons-pool-1.3.jar",
+  "commons-dbcp:commons-dbcp:jar:1.2.1",
+  "commons-collections:commons-collections:jar:3.2",
+  "commons-pool:commons-pool:jar:1.3",
   # Logging libraries
-  "http://www.intalio.org/public/maven2/org/slf4j/slf4j-api/1.4.3/slf4j-api-1.4.3.jar",
-  "http://www.intalio.org/public/maven2/org/slf4j/slf4j-log4j12/1.4.3/slf4j-log4j12-1.4.3.jar",
-  "http://www.intalio.org/public/maven2/org/slf4j/slf4j-log4j12/1.4.3/slf4j-log4j12-1.4.3.jar",
-  "http://www.intalio.org/public/maven2/log4j/log4j/1.2.15/log4j-1.2.15.jar"
+  "org.slf4j:slf4j-api:jar:1.4.3",
+  "org.slf4j:slf4j-log4j12:jar:1.4.3",
+  "org.slf4j:slf4j-log4j12:jar:1.4.3",
+  "log4j:log4j:jar:1.2.15"
   ]
 MISSING_LIBS.each {|lib| 
-  download_and_copy( lib, lib_folder )
+  locate_and_copy( lib, lib_folder )
 }
 ##
 
