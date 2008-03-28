@@ -15,6 +15,7 @@ require "repositories.rb"
 require "tasks/openjpa"
 require "tasks/easyb"
 # require "tasks/wsdl2java"
+require "tasks/generate_sql"
 
 desc "Tempo Workflow"
 define "tempo" do
@@ -214,10 +215,13 @@ define "tempo" do
   end
   
   desc "Task Management Services Common Library"
-  define "tms-common" do
+  define "tms-common" do |project|
     compile.with projects("security", "security-ws-client", "tms-axis"), 
                  APACHE_JPA, AXIS2, AXIOM, DOM4J, JAXEN, LOG4J, SLF4J, SPRING, STAX_API, XERCES, XMLBEANS
     compile { open_jpa_enhance }
+    
+    task "package" => generate_sql([project])
+    
     package(:jar)
     test.with WOODSTOX, LOG4J, XMLUNIT
     test.exclude '*TestUtils*'
@@ -335,7 +339,7 @@ define "tempo" do
   end
   
   desc "Workflow Deployment Service"
-  define "wds-service" do
+  define "wds-service" do |project|
     libs = [ projects("dao-nutsNbolts", "deploy-api", "registry", "security", "tms-client", "tms-axis", "tms-common", "web-nutsNbolts"), 
       AXIS2, AXIOM, APACHE_JPA, COMMONS, LOG4J, SERVLET_API, SLF4J, SPRING, STAX_API, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX, XERCES, XMLBEANS ]
           
@@ -344,6 +348,8 @@ define "tempo" do
     compile { open_jpa_enhance }
  
     resources.filter.using "version" => VERSION_NUMBER
+
+    task "package" => generate_sql([project])
     
     package_libs = libs - SERVLET_API
     package(:jar)
