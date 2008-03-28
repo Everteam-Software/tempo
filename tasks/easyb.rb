@@ -86,34 +86,35 @@ module Buildr
 
     namespace "easyb" do
 
-      task "init" do
-        org = Rake.application.original_dir
-        org = org[org.rindex('/') + 1,org.length]
-        @@org = org
-      end
-
       desc "Run easyb code"
       task "run" do
+        original_dir = Rake.application.original_dir
         top_project = Buildr.projects[0]
         top_name = top_project.name
-        current_project = Buildr.projects[0].project(@@org)
-        current_name = current_project.name
-        if(top_name == current_name)   
+
+        if(top_project.base_dir == Rake.application.original_dir)
           run_on_projects
         else
-          run_on_project current_project
+          @@org = original_dir[original_dir.rindex('/') + 1,original_dir.length]
+          current_project = Buildr.projects[0].project(@@org)
+          current_name = current_project.name
+          if(top_name == current_name)   
+            run_on_projects
+          else
+            run_on_project current_project
+          end
         end
       end
 
       desc "Integrate with cobertura"
-      task "cobertura" => ["init", "cobertura:instrument", "test", "easyb:run"] do
+      task "cobertura" => ["cobertura:instrument", "test", "easyb:run"] do
         toppath = path_to_parent(Buildr.projects[0])
         Buildr.ant "cobertura" do |ant|
           ant.taskdef :classpath=>requires.join(File::PATH_SEPARATOR), :resource=>"tasks.properties"
-          # the cobertura.ser file at the top is generated from the call to easyb, let's merge it back with the others
+          # the cobertura.ser file at the top is generated from the call to easyb, let's merge it back with the others    
           ant.send "cobertura-merge", :datafile=>data_file do
             ant.fileset(:dir=>toppath) { ant.include :name=>"*cobertura.ser" }
-          end
+          end if Dir["#{toppath}/*cobertura.ser"].size > 0 # don't merge if only one file, since ant task is failing on this
           
           rm_rf toppath +"/" + "cobertura.ser"
           ant.send "cobertura-report", :destdir=>report_to(:html), :format=>"html", :datafile=>data_file do
