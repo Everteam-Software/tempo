@@ -332,12 +332,12 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
                 for (File f : files) {
                     if (!f.isDirectory()) {
                         // ignore files at top-level
-                        break;
+                        continue;
                     }
                     int dot = f.getName().lastIndexOf('.');
                     if (dot < 0) {
                         // ignore directories without extension (no mapping)
-                        break;
+                        continue;
                     }
                     String componentManager = f.getName().substring(dot+1);
                     String componentName = f.getName().substring(0, dot);
@@ -579,6 +579,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
         for (DeployedAssembly assembly : assemblies) {
             for (DeployedComponent dc : assembly.getDeployedComponents()) {
                 try {
+                    LOG.debug(_("Activate component {0}", dc));
                     ComponentManager manager = getComponentManager(dc.getComponentManagerName());
                     manager.activate(dc.getComponentId(), new File(dc.getComponentDir()));
                     activated.add(dc);
@@ -596,6 +597,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
             for (DeployedAssembly assembly : assemblies) {
                 for (DeployedComponent dc : assembly.getDeployedComponents()) {
                     try {
+                        LOG.debug(_("Start component {0}", dc));
                         ComponentManager manager = getComponentManager(dc.getComponentManagerName());
                         manager.start(dc.getComponentId());
                     } catch (Exception except) {
@@ -631,6 +633,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
             for (DeployedComponent dc : assembly.getDeployedComponents()) {
                 ComponentManager manager = getComponentManager(dc.getComponentManagerName());
                 try {
+                    LOG.debug(_("Stop component {0}", dc));
                     manager.stop(dc.getComponentId());
                 } catch (Exception except) {
                     String msg = _("Error while stopping component {0}: {1}", dc.getComponentId(), except);
@@ -644,6 +647,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
             for (DeployedComponent dc : assembly.getDeployedComponents()) {
                 ComponentManager manager = getComponentManager(dc.getComponentManagerName());
                 try {
+                    LOG.debug(_("Deactivate component {0}", dc));
                     manager.deactivate(dc.getComponentId());
                 } catch (Exception except) {
                     String msg = _("Error while deactivating component {0}: {1}", dc.getComponentId(), except);
@@ -805,12 +809,12 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
         for (File componentDir : files) {
             if (!componentDir.isDirectory()) {
                 // ignore files at top-level
-                break;
+                continue;
             }
             int dot = componentDir.getName().lastIndexOf('.');
             if (dot < 0) {
                 // ignore directories without extension (no mapping)
-                break;
+                continue;
             }
             String componentManager = componentDir.getName().substring(dot+1);
             String componentName = componentDir.getName().substring(0, dot);
@@ -981,11 +985,13 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
                                 String type = _componentTypes.get(component.getComponentManagerName());
                                 if (name.equals(component.getComponentManagerName()) || name.equals(type)) {
                                     try {
+                                        LOG.debug(_("Activate component {0}", component));
                                         manager.activate(component.getComponentId(), new File(component.getComponentDir()));
                                     } catch (Exception except) {
                                         LOG.error(_("Error while activating component {0}", component), except);
                                     }
                                     try {
+                                        LOG.debug(_("Start component {0}", component));
                                         manager.start(component.getComponentId());
                                     } catch (Exception except) {
                                         LOG.error(_("Error while activating component {0}", component), except);
@@ -1072,11 +1078,11 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
         }
 
         public void activate(ComponentId name, File path) {
-            // nothing
+            LOG.warn(_("Missing component manager: activate {0} {1}", name, path));
         }
 
         public void deactivate(ComponentId cid) {
-            // nothing
+            LOG.warn(_("Missing component manager: deactivate {0}", cid));
         }
 
         public List<DeploymentMessage> deploy(ComponentId cid, File path) {
@@ -1089,15 +1095,15 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
         }
 
         public void start(ComponentId cid) {
-            // nothing
+            LOG.warn(_("Missing component manager: start {0}", cid));
         }
 
         public void stop(ComponentId cid) {
-            // nothing
+            LOG.warn(_("Missing component manager: stop {0}", cid));
         }
 
         public void undeploy(ComponentId cid) {
-            // nothing
+            LOG.warn(_("Missing component manager: undeploy {0}", cid));
         }
 
     }
