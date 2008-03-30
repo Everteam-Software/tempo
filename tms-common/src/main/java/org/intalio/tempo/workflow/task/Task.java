@@ -40,11 +40,18 @@ import org.intalio.tempo.workflow.util.RequiredArgumentException;
 @Entity
 @Table(name = "TEMPO_TASKS")
 @Inheritance(strategy = InheritanceType.JOINED)
-@NamedQueries( { @NamedQuery(name = Task.FIND_BY_ID, query = "select m from Task m where m._id=?1", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }) })
+@NamedQueries( { @NamedQuery(name = Task.FIND_BY_ID, query = "select m from Task m where m._id=?1", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }),
+                 @NamedQuery(name = Task.FIND_BY_ROLE_USER, query = "select m from Task m where m._userOwners.backingSet in (?1) or m._roleOwners.backingSet in (?2)", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }),
+                 @NamedQuery(name = Task.FIND_BY_USER, query = "select m from Task m where m._userOwners.backingSet in (?1)", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }),
+                 @NamedQuery(name = Task.FIND_BY_ROLE, query = "select m from Task m where m._roleOwners.backingSet in (?1)", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") })
+  })
 public abstract class Task extends BaseRestrictedEntity {
 
     public static final String FIND_BY_ID = "find_by_id";
-
+    public static final String FIND_BY_ROLE_USER = "find_by_role_user";
+    public static final String FIND_BY_USER = "find_by_user";
+    public static final String FIND_BY_ROLE = "find_by_role";
+    
     @Column(name = "internal_id")
     @Basic
     private int _internalId;

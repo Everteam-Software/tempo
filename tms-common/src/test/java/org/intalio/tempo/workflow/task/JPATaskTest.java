@@ -136,6 +136,7 @@ public class JPATaskTest {
             testFecthForUserRoles("user2", new String[] { "role1" }, 1);
             testFecthForUserRoles("user2", new String[] { "role2" }, 0);
             testFecthForUserRoles("user3", new String[] { "role3" }, 0);
+            testFetchForUserRolesWithCriteria("user1", new String[] { "role2" }, TaskType.PA);
         } catch (Exception e) {
             throw e;
         } finally {
@@ -201,6 +202,11 @@ public class JPATaskTest {
         TaskEquality.areTasksEquals(task1, task2);
 
         em.close();
+    }
+    
+    
+    public void testFetchForUserRolesWithCriteria(String userId, String[] roles, TaskType taskType) throws Exception{
+      Task[] task = new TaskFetcher(em).fetchAvailableTasks(new UserRoles(userId, roles), taskType.PA, null);
     }
 
     private void testFecthForUserRoles(String userId, String[] roles, int size) throws Exception {

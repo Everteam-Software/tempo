@@ -16,6 +16,8 @@ import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.dao.AbstractJPAConnection;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
+import org.intalio.tempo.workflow.task.TaskState;
+import org.intalio.tempo.workflow.task.TaskType;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
 import org.intalio.tempo.workflow.util.jpa.TaskFetcher;
 
@@ -74,6 +76,10 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
     public PIPATask fetchPipa(String formUrl) {
         PIPATask pipa = _fetcher.fetchPipaFromUrl(formUrl);
         return pipa;
+    }
+
+    public Task[] fetchAvailableTasks(UserRoles user, TaskType taskType, TaskState taskState) {
+      return _fetcher.fetchAvailableTasks(user, taskType, taskState);
     }
 
 }

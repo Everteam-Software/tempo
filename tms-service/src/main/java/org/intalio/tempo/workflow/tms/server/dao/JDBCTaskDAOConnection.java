@@ -39,6 +39,7 @@ import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.TaskState;
+import org.intalio.tempo.workflow.task.TaskType;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.task.attachments.AttachmentMetadata;
 import org.intalio.tempo.workflow.task.xml.XmlTooling;
@@ -714,5 +715,10 @@ private static final String _INSERT_TASK_FIELDS = " tasks.task_id, "
 
     public PIPATask  fetchPipa(String formUrl) {
         throw new RuntimeException("Not Implemented");
+    }
+
+    public Task[] fetchAvailableTasks(UserRoles user, TaskType taskType, TaskState taskState) {
+      // TODO Auto-generated method stub
+      return null;
     }
 }
