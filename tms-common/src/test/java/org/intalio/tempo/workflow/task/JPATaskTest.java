@@ -73,6 +73,18 @@ public class JPATaskTest {
         em.clear();
     }
 
+	@Test
+	public void PIPATaskSearchFromURL() throws Exception {
+		String id = "id" + System.currentTimeMillis();
+		PIPATask task1 = new PIPATask(id, new URI("http://hellonico.net"), new URI("http://hellonico.net"), new URI(
+		"http://hellonico.net"), "initOperationSOAPAction");
+		persist(task1);
+		Query q = em.createNamedQuery(PIPATask.FIND_BY_URL).setParameter(1, "http://hellonico.net");
+		PIPATask task2 = (PIPATask) (q.getSingleResult());
+		TaskEquality.isEqual(task1, task2);
+	}
+
+
     @Test
     public void PATaskPersistence() throws Exception {
 
