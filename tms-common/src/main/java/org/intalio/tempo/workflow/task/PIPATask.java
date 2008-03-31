@@ -37,10 +37,12 @@ import org.intalio.tempo.workflow.util.RequiredArgumentException;
  */
 @Entity
 @Table(name = "TEMPO_PIPA")
-@NamedQueries( { @NamedQuery(name = PIPATask.FIND_BY_URL, query = "select m from PIPATask m where m._formURL like ?1", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }) })
+@NamedQueries( { @NamedQuery(name = PIPATask.FIND_BY_URL, query = "select m from PIPATask m where m._formURL like ?1", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }),
+                 @NamedQuery(name = PIPATask.FIND_BY_PIPA_USER_ROLE, query = "select m from PIPATask m where m._userOwners.backingSet in (?1) or m._roleOwners.backingSet in (?2)", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") })})
 public class PIPATask extends Task implements InitTask {
 
     public static final String FIND_BY_URL = "find_by_url";
+    public static final String FIND_BY_PIPA_USER_ROLE = "find_by_pipa_user_role";
 
     @Persistent
     @Factory("URI.create")

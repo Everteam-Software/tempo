@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import org.intalio.tempo.workflow.auth.UserRoles;
+import org.intalio.tempo.workflow.task.Notification;
 import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
@@ -69,15 +70,24 @@ public class TaskFetcher {
   public Task[] fetchAvailableTasks(UserRoles user, TaskType taskType, TaskState taskState) {
     ArrayList userIdList = new ArrayList();
     userIdList.add(user.getUserID());
-    Query q ;
-    switch (taskType){
+    Query q;
+    switch (taskType) {
       case PA:
-        q = _entityManager.createNamedQuery(PATask.FIND_BY_ROLE_USER).setParameter(1, userIdList).setParameter(2, user.getAssignedRoles().toCollection());
+        if (taskState == null) {
+          q = _entityManager.createNamedQuery(PATask.FIND_BY_PA_USER_ROLE).setParameter(1, userIdList).setParameter(2, user.getAssignedRoles().toCollection());
+        } else {
+          q = _entityManager.createNamedQuery(PATask.FIND_BY_PA_USER_ROLE_STATE).setParameter(1, userIdList).setParameter(2,
+              user.getAssignedRoles().toCollection()).setParameter(3, taskState);
+        }
         break;
       case PIPA:
-        //TODO
+        q = _entityManager.createNamedQuery(PIPATask.FIND_BY_PIPA_USER_ROLE).setParameter(1, userIdList)
+            .setParameter(2, user.getAssignedRoles().toCollection());
+        break;
       case Notification:
-        //TODO
+        q = _entityManager.createNamedQuery(Notification.FIND_BY_NOTI_USER_ROLE).setParameter(1, userIdList).setParameter(2,
+            user.getAssignedRoles().toCollection());
+        break;
       default:
         q = _entityManager.createNamedQuery(Task.FIND_BY_ROLE_USER).setParameter(1, userIdList).setParameter(2, user.getAssignedRoles().toCollection());
         break;

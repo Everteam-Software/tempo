@@ -19,6 +19,9 @@ import java.net.URI;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.QueryHint;
 import javax.persistence.Table;
 
 import org.apache.openjpa.persistence.Persistent;
@@ -34,8 +37,13 @@ import org.w3c.dom.Document;
  */
 @Entity
 @Table(name = "TEMPO_NOTIFICATION")
+@NamedQueries( {
+    @NamedQuery(name = Notification.FIND_BY_NOTI_USER_ROLE, query = "select m from Notification m where m._userOwners.backingSet in (?1) or m._roleOwners.backingSet in (?2)", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }) })
+
 public class Notification extends Task implements ITaskWithState, ITaskWithInput, ITaskWithPriority {
 
+  public static final String FIND_BY_NOTI_USER_ROLE = "find_by_noti_user_role";
+  
     @Column(name = "state")
     @Persistent
     private TaskState _state = TaskState.READY;
