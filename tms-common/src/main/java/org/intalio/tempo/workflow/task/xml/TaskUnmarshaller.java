@@ -326,10 +326,10 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
     }
 
     private void authorize(Task resultTask, String action, ACL acl) {
-        for (String user : acl.getUsers()) {
+        for (String user : acl.getUserOwners()) {
             resultTask.authorizeActionForUser(action, user);
         }
-        for (String role : acl.getRoles()) {
+        for (String role : acl.getRoleOwners()) {
             resultTask.authorizeActionForRole(action, role);
         }
     }
@@ -338,8 +338,8 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
         ACL acl = new ACL();
         XmlObject el = expectElement(root, action + "Action");
         if (el != null) {
-            acl.setUsers(expectAuthIdentifiers(el, "user"));
-            acl.setRoles(expectAuthIdentifiers(el, "role"));
+            acl.getUserOwners().addAll(expectAuthIdentifiers(el, "user"));
+            acl.getRoleOwners().addAll(expectAuthIdentifiers(el, "role"));
         }
         return acl;
     }

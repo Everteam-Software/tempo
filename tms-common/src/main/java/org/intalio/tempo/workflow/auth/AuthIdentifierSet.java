@@ -18,84 +18,36 @@ package org.intalio.tempo.workflow.auth;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.MappedSuperclass;
 
-import org.apache.openjpa.persistence.PersistentCollection;
-import org.apache.openjpa.persistence.jdbc.ContainerTable;
-import org.apache.openjpa.persistence.jdbc.ElementJoinColumn;
-import org.apache.openjpa.persistence.jdbc.XJoinColumn;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
-@Entity
-@Table(name = "TEMPO_AUTH_SET")
+@MappedSuperclass
 public class AuthIdentifierSet extends HashSet<String> {
 
     private static final long serialVersionUID = -6628743014089702581L;
-    
-    @PersistentCollection(elementCascade = CascadeType.ALL)
-    @ContainerTable(name="TEMPO_BACKING_SET",joinColumns=@XJoinColumn(name="SET_ID"))
-    @ElementJoinColumn(name="AUTH_ID")
-    private Collection<String> backingSet = new HashSet<String>();
 
     public AuthIdentifierSet() {
 
     }
 
     public AuthIdentifierSet(List<String> strings) {
-        backingSet.addAll(strings);
+        addAll(strings);
     }
     
     public AuthIdentifierSet(Collection<String> strings) {
-        backingSet.addAll(strings);
+        addAll(strings);
     }
 
     public AuthIdentifierSet(AuthIdentifierSet instance) {
-        backingSet.addAll(instance.backingSet);
+        addAll(instance);
     }
 
     public AuthIdentifierSet(String[] idArray) {
         Collection<String> normalizedIDs = Arrays.asList(AuthIdentifierNormalizer.normalizeAuthIdentifiers(idArray));
-        backingSet.addAll(normalizedIDs);
-    }
-
-    @Override
-    public boolean equals(Object rhs) {
-        throw new RuntimeException("Do not use me for testing");
-    }
-
-    public Collection<String> toCollection() {
-        return backingSet;
-    }
-
-    @Override
-    public int hashCode() {
-        return backingSet.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        StringBuffer buffer = new StringBuffer();
-        buffer.append("(");
-        if(!backingSet.isEmpty()) {
-            for(String s : backingSet) buffer.append("'"+s+"'"+",");
-            buffer.setCharAt(buffer.length()-1, ')');    
-        } else {
-            buffer.append(")");
-        }
-        return buffer.toString();
-    }
-
-    public boolean isEmpty() {
-        return backingSet.isEmpty();
-    }
-
-    public int size() {
-        return backingSet.size();
+        addAll(normalizedIDs);
     }
 
     public boolean add(String authID) {
@@ -103,17 +55,7 @@ public class AuthIdentifierSet extends HashSet<String> {
             throw new RequiredArgumentException("authID");
         }
         String normalizedID = AuthIdentifierNormalizer.normalizeAuthIdentifier(authID);
-        return backingSet.add(normalizedID);
-    }
-
-    public void addAll(AuthIdentifierSet rhs) {
-        if (rhs == null) {
-            throw new RequiredArgumentException("rhs");
-        }
-
-        for (String id : rhs) {
-            backingSet.add(id);
-        }
+        return super.add(normalizedID);
     }
 
     public boolean contains(Object object) {
@@ -121,29 +63,15 @@ public class AuthIdentifierSet extends HashSet<String> {
 
         if (object instanceof String) {
             String normalizedID = AuthIdentifierNormalizer.normalizeAuthIdentifier((String) object);
-            result = backingSet.contains(normalizedID);
+            result = super.contains(normalizedID);
         }
 
         return result;
     }
 
-    public boolean remove(Object object) {
-        boolean result = false;
-
-        if (object instanceof String) {
+    public boolean remove(String object) {
             String normalizedID = AuthIdentifierNormalizer.normalizeAuthIdentifier((String) object);
-            result = backingSet.remove(normalizedID);
-        }
-
-        return result;
-    }
-
-    public void clear() {
-        backingSet.clear();
-    }
-
-    public Iterator<String> iterator() {
-        return backingSet.iterator();
+            return super.remove(normalizedID);
     }
 
     public boolean intersects(AuthIdentifierSet rhs) {

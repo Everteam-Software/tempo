@@ -3,6 +3,7 @@ package org.intalio.tempo.workflow.tms.server.dependent_tests;
 import java.io.File;
 import java.net.URI;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Random;
 
 import junit.framework.Assert;
@@ -125,13 +126,13 @@ public class RemoteReassginTaskTest extends TestCase {
         /*
          * Re-assign task
          */
-        AuthIdentifierSet uOwners = selectTask.getUserOwners();
+        Collection<String> uOwners = selectTask.getUserOwners();
         uOwners.clear();
         selectTask.getRoleOwners().clear();
         selectTask.getUserOwners().addAll(targetUserSet);
 
         // Now, RemoteTMSClient interface does not support task re-assign.
-        tms.reassign(selectTask.getID(), selectTask.getUserOwners(), selectTask.getRoleOwners(), selectTask.getState());
+        tms.reassign(selectTask.getID(), (AuthIdentifierSet)selectTask.getUserOwners(), (AuthIdentifierSet) selectTask.getRoleOwners(), selectTask.getState());
         _logger.debug("Reassign task[" + selectTaskId + "] to " + targetUserId);
 
         /*

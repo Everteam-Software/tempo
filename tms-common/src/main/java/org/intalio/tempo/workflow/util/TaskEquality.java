@@ -17,6 +17,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -41,17 +42,17 @@ import org.w3c.dom.Document;
 public final class TaskEquality {
 
     static final Logger _log = LoggerFactory.getLogger(TaskEquality.class);
-    
+
     /**
      * Those fields whose name is in the list are completely ignored
      */
-    static List<String> IGNORED_FIELDS = Arrays
-            .asList(new String[] { "pcStateManager", "pcDetachedState", "backingSet", "_input", "_output" });
+    static List<String> IGNORED_FIELDS = Arrays.asList(new String[] { "pcsubclass", "pcStateManager",
+            "pcDetachedState", "backingSet", "_input", "_output" });
     /**
      * Those class whose name starts with an item of this list, are ignored when
      * checking on fields
      */
-    static List<String> IGNORED_CLASS = Arrays.asList(new String[] { "org.apache.openjpa" });
+    static List<String> IGNORED_CLASS = Arrays.asList(new String[] { "org.apache.openjpa", "java.util.Date" });
 
     /**
      * JPA Transient fields won't be loaded after a load from database, so field
@@ -94,23 +95,27 @@ public final class TaskEquality {
     }
 
     /**
-     * This method uses isEqual as a base for comparing tasks
-     * We also want to do some finer tuning for testing thoroughly some fields:
+     * This method uses isEqual as a base for comparing tasks We also want to do
+     * some finer tuning for testing thoroughly some fields:
      * <ul>
      * <li>inputs</li>
-     * <li>outputs<li>
+     * <li>outputs
+     * <li>
      * <li>authorized actions</li>
-     * <li>owners<li>
+     * <li>owners
+     * <li>
      * </ul>
      * 
      */
     static public boolean areTasksEquals(Task t1, Task t2) {
         boolean b = isEqual(t1, t2);
-        // we skip the ones below because they are too complex to check when out of jpa
+        // we skip the ones below because they are too complex to check when out
+        // of jpa
         // doing them one by one
-        b&=areAuthorizedActionEqual(t1, t2);
-        b&=areOwnersEqual(t1, t2);
-        // we know they share the same class if we are here since isEqual checks for class identity
+        b &= areAuthorizedActionEqual(t1, t2);
+        b &= areOwnersEqual(t1, t2);
+        // we know they share the same class if we are here since isEqual checks
+        // for class identity
         if (t1 instanceof ITaskWithInput)
             b &= areInputsEquals((ITaskWithInput) t1, (ITaskWithInput) t2);
         if (t1 instanceof ITaskWithOutput)
@@ -194,8 +199,8 @@ public final class TaskEquality {
      * Convenience method to check that two sets are equals will not throw an
      * exception if they are not.
      */
-    static public boolean areAuthIdSetEquals(AuthIdentifierSet set1, AuthIdentifierSet set2) {
-        return set1.toCollection().equals(set2.toCollection());
+    static public boolean areAuthIdSetEquals(Collection set1, Collection set2) {
+        return set1.equals(set2);
     }
 
     /**
@@ -218,29 +223,32 @@ public final class TaskEquality {
     }
 
     /**
-     * Check whether the inputs are equals or not. We usually need this methods since 
-     * we want to check at the xml level
+     * Check whether the inputs are equals or not. We usually need this methods
+     * since we want to check at the xml level
      */
     static public boolean areInputsEquals(ITaskWithInput task1, ITaskWithInput task2) {
-        if (filterNull(task1, task2)) return true;
+        if (filterNull(task1, task2))
+            return true;
         return areDocumentsEqual(task1.getInput(), task2.getInput());
     }
 
     /**
-     * Same as above, we want to check at the xml level if the content is the same
+     * Same as above, we want to check at the xml level if the content is the
+     * same
      */
     static public boolean areOutputEquals(ITaskWithOutput task1, ITaskWithOutput task2) {
-        if (filterNull(task1, task2)) return true;
+        if (filterNull(task1, task2))
+            return true;
         return areDocumentsEqual(task1.getOutput(), task2.getOutput());
     }
-    
 
     /**
-     * Supprt method for testing equality between xml documents
-     * Can also be used standalone
+     * Supprt method for testing equality between xml documents Can also be used
+     * standalone
      */
     static public boolean areDocumentsEqual(Document doc1, Document doc2) {
-        if (filterNull(doc1, doc2)) return true;
+        if (filterNull(doc1, doc2))
+            return true;
         return XmlTooling.equals(doc1, doc2);
     }
 
@@ -264,15 +272,44 @@ public final class TaskEquality {
         try {
             for (Field f : fields) {
                 f.setAccessible(true);
+                filterDateField(o1, o2, f);
                 if (filterIgnoreField(f))
                     continue;
                 _log.debug("Checking Field:" + f.getName() + " for class:" + c.getName());
-                isEqual(f.get(o1), f.get(o2));
+                final Object a1 = f.get(o1);
+                final Object a2 = f.get(o2);
+                isEqual(a1, a2);
             }
             return true;
         } catch (IllegalAccessException e) {
             throw new NotEqualException(e.getMessage());
         }
+    }
+
+    private static void filterDateField(Object o1, Object o2, Field f) {
+        String n = f.getType().getName();
+        if (n.startsWith("java.util.Date") || n.startsWith("org.apache.openjpa.util.java$util$Date$proxy")) {
+            try {
+                final Object object = f.get(o1);
+                final Object object2 = f.get(o2);
+                boolean eq = filterNull(object, object2) || object.toString().equals(object2.toString());
+                if (!eq)  throw new NotEqualException("Dates are not equal");
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private static boolean isProxyDate(Object o1, Field f) {
+        try {
+            _log.debug(o1.toString());
+            return o1.getClass().getField(f.getName()).getClass().getName().startsWith(
+                    "org.apache.openjpa.util.java$util$Date$proxy");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Could not check for proxy date");
+        }
+
     }
 
     /**
@@ -292,7 +329,7 @@ public final class TaskEquality {
             return true;
         if (Modifier.isFinal(m))
             return true;
-        if (filterIgnore(f.getClass().getName(), IGNORED_CLASS))
+        if (filterIgnore(f.getType().getName(), IGNORED_CLASS))
             return true;
         String fieldName = f.getName();
         if (filterIgnore(fieldName, IGNORED_FIELDS))

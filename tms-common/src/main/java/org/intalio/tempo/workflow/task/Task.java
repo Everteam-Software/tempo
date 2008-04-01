@@ -13,6 +13,7 @@
 package org.intalio.tempo.workflow.task;
 
 import java.net.URI;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +23,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.MapKey;
@@ -31,6 +33,7 @@ import javax.persistence.QueryHint;
 import javax.persistence.Table;
 
 import org.apache.openjpa.persistence.PersistentMap;
+import org.apache.openjpa.persistence.jdbc.ContainerTable;
 import org.intalio.tempo.workflow.auth.ACL;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.BaseRestrictedEntity;
@@ -38,12 +41,12 @@ import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
 @Entity
-@Table(name = "TEMPO_TASKS")
+@Table(name = "tempo_task")
 @Inheritance(strategy = InheritanceType.JOINED)
 @NamedQueries( { @NamedQuery(name = Task.FIND_BY_ID, query = "select m from Task m where m._id=?1", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }),
-                 @NamedQuery(name = Task.FIND_BY_ROLE_USER, query = "select m from Task m where m._userOwners.backingSet in (?1) or m._roleOwners.backingSet in (?2)", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }),
-                 @NamedQuery(name = Task.FIND_BY_USER, query = "select m from Task m where m._userOwners.backingSet in (?1)", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }),
-                 @NamedQuery(name = Task.FIND_BY_ROLE, query = "select m from Task m where m._roleOwners.backingSet in (?1)", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") })
+                 @NamedQuery(name = Task.FIND_BY_ROLE_USER, query = "select m from Task m where m._userOwners in (?1) or m._roleOwners in (?2)", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }),
+                 @NamedQuery(name = Task.FIND_BY_USER, query = "select m from Task m where m._userOwners in (?1)", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }),
+                 @NamedQuery(name = Task.FIND_BY_ROLE, query = "select m from Task m where m._roleOwners in (?1)", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") })
   })
 public abstract class Task extends BaseRestrictedEntity {
 
@@ -72,11 +75,13 @@ public abstract class Task extends BaseRestrictedEntity {
     @Column(name = "form_url")
     private String _formURL;
 
-    @PersistentMap(keyCascade = CascadeType.ALL, elementCascade = CascadeType.ALL)
+    @PersistentMap(keyCascade = CascadeType.ALL, elementCascade = CascadeType.ALL, fetch=FetchType.EAGER)
+    @ContainerTable(name="tempo_acl_map")
     @MapKey(name = "action")
     private Map<String, ACL> _actionACLs = new HashMap<String, ACL>();
 
     public Task() {
+        super();
         _actionACLs = new HashMap<String, ACL>();
     }
 
@@ -172,22 +177,22 @@ public abstract class Task extends BaseRestrictedEntity {
 
     public void authorizeActionForUser(String action, String user) {
         ACL acl = getACLs(action);
-        acl.getUsers().add(user);
+        acl.getUserOwners().add(user);
     }
 
     public void authorizeActionForRole(String action, String role) {
         ACL acl = getACLs(action);
-        acl.getRoles().add(role);
+        acl.getRoleOwners().add(role);
     }
 
     public void authorizeActionForUsers(String action, AuthIdentifierSet users) {
         ACL acl = getACLs(action);
-        acl.getUsers().addAll(users);
+        acl.getUserOwners().addAll(users);
     }
 
     public void authorizeActionForRoles(String action, AuthIdentifierSet roles) {
         ACL acl = getACLs(action);
-        acl.getRoles().addAll(roles);
+        acl.getRoleOwners().addAll(roles);
     }
 
     private ACL getACLs(String action) {
@@ -199,32 +204,24 @@ public abstract class Task extends BaseRestrictedEntity {
         return acl;
     }
 
-    public AuthIdentifierSet getAuthorizedUsers(String action) {
+    public Collection<String> getAuthorizedUsers(String action) {
         ACL acl = _actionACLs.get(action);
         if (acl != null)
-            return acl.getUsers();
+            return acl.getUserOwners();
         return new AuthIdentifierSet();
     }
 
-    public AuthIdentifierSet getAuthorizedRoles(String action) {
+    public Collection<String> getAuthorizedRoles(String action) {
         ACL acl = _actionACLs.get(action);
         if (acl != null)
-            return acl.getRoles();
+            return acl.getRoleOwners();
         return new AuthIdentifierSet();
     }
 
     public boolean isAuthorizedAction(UserRoles user, String action) {
         // Note: Action is authorized if there's no ACL provided (default)
         ACL acl = _actionACLs.get(action);
-        if (acl == null)
-            return true;
-        if (acl.getUsers().isEmpty() && acl.getRoles().isEmpty())
-            return true;
-        if (acl.getUsers().contains(user.getUserID()))
-            return true;
-        if (acl.getRoles().intersects(user.getAssignedRoles()))
-            return true;
-        return false;
+        return acl==null ? true : acl.isAuthorizedAction(user, action);
     }
 
     public Set<String> getAuthorizedActions() {

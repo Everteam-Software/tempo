@@ -36,9 +36,9 @@ import org.w3c.dom.Document;
  * Notification tasks
  */
 @Entity
-@Table(name = "TEMPO_NOTIFICATION")
+@Table(name = "tempo_notification")
 @NamedQueries( {
-    @NamedQuery(name = Notification.FIND_BY_NOTI_USER_ROLE, query = "select m from Notification m where m._userOwners.backingSet in (?1) or m._roleOwners.backingSet in (?2)", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }) })
+    @NamedQuery(name = Notification.FIND_BY_NOTI_USER_ROLE, query = "select m from Notification m where m._userOwners in (?1) or m._roleOwners in (?2)", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }) })
 
 public class Notification extends Task implements ITaskWithState, ITaskWithInput, ITaskWithPriority {
 

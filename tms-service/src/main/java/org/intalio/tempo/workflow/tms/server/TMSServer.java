@@ -490,8 +490,8 @@ public class TMSServer implements ITMSServer {
 			available = task instanceof ITaskWithState;
 			if (available) {
 				((ITaskWithState) task).setState(state);
-                AuthIdentifierSet uOwners = task.getUserOwners();
-                AuthIdentifierSet rOwners = task.getRoleOwners();
+                AuthIdentifierSet uOwners = (AuthIdentifierSet)task.getUserOwners();
+                AuthIdentifierSet rOwners = (AuthIdentifierSet)task.getRoleOwners();
                 if(_logger.isDebugEnabled())
                 _logger.debug("For Workflow Task " + taskID + " user owners " + uOwners + " and role owners " + rOwners);
                 uOwners.clear();

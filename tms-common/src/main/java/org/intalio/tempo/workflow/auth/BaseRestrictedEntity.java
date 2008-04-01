@@ -15,33 +15,39 @@
 
 package org.intalio.tempo.workflow.auth;
 
+import java.util.Collection;
+
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
+import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.OneToOne;
+
+import org.apache.openjpa.persistence.PersistentCollection;
+import org.apache.openjpa.persistence.jdbc.ContainerTable;
 
 @MappedSuperclass
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class BaseRestrictedEntity implements IRestrictedEntity {
     
-    @OneToOne(cascade=CascadeType.ALL)
-    @Column(name="users")
-    protected AuthIdentifierSet _userOwners = new AuthIdentifierSet();
+    @PersistentCollection(elementType=String.class, elementCascade=CascadeType.ALL, elementEmbedded = false, fetch=FetchType.EAGER)
+    @ContainerTable(name="tempo_user")
+    protected Collection<String> _userOwners = new AuthIdentifierSet();
 
-    @OneToOne(cascade=CascadeType.ALL)
-    @Column(name="roles")
-    protected AuthIdentifierSet _roleOwners = new AuthIdentifierSet();
+    @PersistentCollection(elementType=String.class, elementCascade=CascadeType.ALL, elementEmbedded = false, fetch=FetchType.EAGER)
+    @ContainerTable(name="tempo_role")
+    protected Collection<String> _roleOwners = new AuthIdentifierSet();
 
-    protected BaseRestrictedEntity() {
+    public BaseRestrictedEntity() {
+        _userOwners = new AuthIdentifierSet();
+        _roleOwners = new AuthIdentifierSet();
     }
 
-    public AuthIdentifierSet getUserOwners() {
+    public Collection<String> getUserOwners() {
         return _userOwners;
     }
 
-    public AuthIdentifierSet getRoleOwners() {
+    public Collection<String> getRoleOwners() {
         return _roleOwners;
     }
 
@@ -50,6 +56,6 @@ public abstract class BaseRestrictedEntity implements IRestrictedEntity {
             if (userOwner != null && userOwner.equals(credentials.getUserID()))
                 return true;
         }
-        return _roleOwners.intersects(credentials.getAssignedRoles());
+        return ((AuthIdentifierSet)_roleOwners).intersects(credentials.getAssignedRoles());
     }
 }

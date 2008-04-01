@@ -28,7 +28,7 @@ import org.apache.openjpa.persistence.Persistent;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
 @Entity
-@Table(name = "TEMPO_ATTACHMENT")
+@Table(name="tempo_attachment")
 public class Attachment {
 
     @Persistent(cascade = { CascadeType.ALL })

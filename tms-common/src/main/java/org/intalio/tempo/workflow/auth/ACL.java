@@ -1,31 +1,25 @@
 package org.intalio.tempo.workflow.auth;
 
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import org.apache.openjpa.persistence.Persistent;
 
 @Entity
-@Table(name="TEMPO_ACL")
-public class ACL {
+@Table(name="tempo_acl")
+public class ACL extends BaseRestrictedEntity {
     
     @Persistent
     @Column(name="action")
     public String action; 
     
-    @Embedded
-    private AuthIdentifierSet users = new AuthIdentifierSet();
-    
-    @Embedded
-    private AuthIdentifierSet roles = new AuthIdentifierSet();
-    
     public ACL() {
-        
+        super();
     }
     
     public ACL(String action) {
+        this();
         this.action = action;
     }
 
@@ -37,22 +31,15 @@ public class ACL {
         this.action = action;
     }
 
-    public AuthIdentifierSet getUsers() {
-        return users;
+    public boolean isAuthorizedAction(UserRoles user, String action) {
+        // Note: Action is authorized if there's no ACL provided (default)
+        if (_userOwners.isEmpty() && _roleOwners.isEmpty())
+            return true;
+        if (_userOwners.contains(user.getUserID()))
+            return true;
+        if (((AuthIdentifierSet)_roleOwners).intersects(user.getAssignedRoles()))
+            return true;
+        return false;
     }
 
-    public void setUsers(AuthIdentifierSet users) {
-        this.users = users;
-    }
-
-    public AuthIdentifierSet getRoles() {
-        return roles;
-    }
-
-    public void setRoles(AuthIdentifierSet roles) {
-        this.roles = roles;
-    }
-    
-    
-    
 }

@@ -103,7 +103,7 @@ public class JPAFactoriesTest {
     // delete the two tasks, check they are not in the user's list anymore
     Task[] _tasks = connection.fetchAllAvailableTasks(URS);
     for (Task task : _tasks) {
-      connection.deleteTask(task.getInternalId(), task.getID());
+      connection.deleteTask(0, task.getID());
       connection.commit();
     }
     updateTasksAndCheckCount(USER, 0, "Expecting zero task left for the current user");

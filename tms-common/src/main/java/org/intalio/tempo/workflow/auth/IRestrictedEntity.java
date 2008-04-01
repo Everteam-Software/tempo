@@ -15,10 +15,10 @@
 
 package org.intalio.tempo.workflow.auth;
 
-import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
+import java.util.Collection;
 
 public interface IRestrictedEntity {
-    AuthIdentifierSet getUserOwners();
-    AuthIdentifierSet getRoleOwners();
+    Collection<String>getUserOwners();
+    Collection<String>getRoleOwners();
     boolean isAvailableTo(UserRoles credentials);
 }

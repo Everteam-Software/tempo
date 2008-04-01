@@ -35,6 +35,7 @@ import javax.persistence.Table;
 
 import org.apache.openjpa.persistence.Persistent;
 import org.apache.openjpa.persistence.PersistentMap;
+import org.apache.openjpa.persistence.jdbc.ContainerTable;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.task.traits.IChainableTask;
 import org.intalio.tempo.workflow.task.traits.ICompleteReportingTask;
@@ -53,253 +54,258 @@ import org.w3c.dom.Document;
  * Activity task
  */
 @Entity
-@Table(name = "TEMPO_PA")
+@Table(name = "tempo_pa")
 @NamedQueries( {
-    @NamedQuery(name = PATask.FIND_BY_STATES, query = "select m from PATask m where m._state=?1", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }),
-    @NamedQuery(name = PATask.FIND_BY_PA_USER_ROLE, query = "select m from PATask m where m._userOwners.backingSet in (?1) or m._roleOwners.backingSet in (?2)", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }),
-    @NamedQuery(name = PATask.FIND_BY_PA_USER_ROLE_STATE, query = "select m from PATask m where (m._userOwners.backingSet in (?1) or m._roleOwners.backingSet in (?2)) and m._state=?3", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") })})
-public class PATask extends Task implements ITaskWithState, IProcessBoundTask, ITaskWithInput, ITaskWithOutput, ICompleteReportingTask, ITaskWithAttachments,
-    IChainableTask, ITaskWithPriority, ITaskWithDeadline {
+        @NamedQuery(name = PATask.FIND_BY_STATES, query = "select m from PATask m where m._state=?1", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }),
+        @NamedQuery(name = PATask.FIND_BY_PA_USER_ROLE, query = "select m from PATask m where m._userOwners in (?1) or m._roleOwners in (?2)", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }),
+        @NamedQuery(name = PATask.FIND_BY_PA_USER_ROLE_STATE, query = "select m from PATask m where (m._userOwners in (?1) or m._roleOwners in (?2)) and m._state=?3", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }) })
+public class PATask extends Task implements ITaskWithState, IProcessBoundTask, ITaskWithInput, ITaskWithOutput,
+        ICompleteReportingTask, ITaskWithAttachments, IChainableTask, ITaskWithPriority, ITaskWithDeadline {
 
-  public static final String FIND_BY_STATES = "find_by_ps_states";
-  public static final String FIND_BY_PA_USER_ROLE = "find_by_pa_user_role";
-  public static final String FIND_BY_PA_USER_ROLE_STATE = "find_by_pa_user_role_state";
+    public static final String FIND_BY_STATES = "find_by_ps_states";
+    public static final String FIND_BY_PA_USER_ROLE = "find_by_pa_user_role";
+    public static final String FIND_BY_PA_USER_ROLE_STATE = "find_by_pa_user_role_state";
 
-  @Persistent
-  @Column(name = "process_id")
-  private String _processID;
+    @Persistent
+    @Column(name = "process_id")
+    private String _processID;
 
-  @Persistent
-  @Column(name = "state")
-  private TaskState _state = TaskState.READY;
+    @Persistent
+    @Column(name = "state")
+    private TaskState _state = TaskState.READY;
 
-  @Persistent
-  @Column(name = "failure_code")
-  private String _failureCode = "";
+    @Persistent
+    @Column(name = "failure_code")
+    private String _failureCode = "";
 
-  @Persistent
-  @Column(name = "failure_reason")
-  private String _failureReason = "";
+    @Persistent
+    @Column(name = "failure_reason")
+    private String _failureReason = "";
 
-  @Persistent
-  @Column(name = "complete_soap_action")
-  private String _completeSOAPAction;
+    @Persistent
+    @Column(name = "complete_soap_action")
+    private String _completeSOAPAction;
 
-  @Persistent(cascade = CascadeType.ALL)
-  @Column(name = "input_xml", length = 2048)
-  @Lob
-  private String _input;
+    @Persistent(cascade = CascadeType.ALL)
+    @Column(name = "input_xml", length = 2048)
+    @Lob
+    private String _input;
 
-  @Persistent(cascade = CascadeType.ALL)
-  @Column(name = "output_xml", length = 2048)
-  @Lob
-  private String _output;
+    @Persistent(cascade = CascadeType.ALL)
+    @Column(name = "output_xml", length = 2048)
+    @Lob
+    private String _output;
 
-  @PersistentMap(keyCascade = CascadeType.ALL, elementCascade = CascadeType.ALL)
-  @MapKey(name = "payloadURLAsString")
-  private Map<String, Attachment> _attachments = new HashMap<String, Attachment>();
+    @PersistentMap(keyCascade = CascadeType.ALL, elementCascade = CascadeType.ALL, keyType = String.class, elementType = Attachment.class)
+    @MapKey(name = "payloadURLAsString")
+    @ContainerTable(name = "tempo_attachment_map")
+    private Map<String, Attachment> _attachments = new HashMap<String, Attachment>();
 
-  @Column(name = "is_chained_before")
-  private Boolean _isChainedBefore = false;
+    @Column(name = "is_chained_before")
+    private Boolean _isChainedBefore = false;
 
-  @Persistent
-  @Column(name = "previous_task_id")
-  private String _previousTaskID = null;
+    @Persistent
+    @Column(name = "previous_task_id")
+    private String _previousTaskID = null;
 
-  @Persistent
-  @Column(name = "deadline")
-  private Date _deadline;
+    @Persistent
+    @Column(name = "deadline")
+    private Date _deadline;
 
-  @Persistent
-  @Column(name = "priority")
-  private Integer _priority;
+    @Persistent
+    @Column(name = "priority")
+    private Integer _priority;
 
-  public PATask() {
-
-  }
-
-  public PATask(String id, URI formURL) {
-    super(id, formURL);
-  }
-
-  public PATask(String id, URI formURL, String processID, String completeSOAPAction, Document input) {
-    super(id, formURL);
-    this.setProcessID(processID);
-    this.setCompleteSOAPAction(completeSOAPAction);
-    if (input != null)
-      this.setInput(input);
-  }
-
-  public String getProcessID() {
-    return _processID;
-  }
-
-  public void setProcessID(String processID) {
-    if (processID == null) {
-      throw new RequiredArgumentException("processID");
-    }
-    _processID = processID;
-  }
-
-  public TaskState getState() {
-    return _state;
-  }
-
-  public void setState(TaskState state) {
-    if (state == null) {
-      throw new RequiredArgumentException("state");
-    }
-    _state = state;
-  }
-
-  public String getFailureCode() {
-    if (_state.equals(TaskState.FAILED)) {
-      return _failureCode;
-    } else {
-      throw new IllegalStateException("Task ID '" + getID() + "': " + "Attempt to get the failure code at task state " + _state);
-    }
-  }
-
-  public void setFailureCode(String failureCode) {
-    if (failureCode == null) {
-      throw new RequiredArgumentException("failureCode");
+    public PATask() {
+        super();
     }
 
-    if (_state.equals(TaskState.FAILED)) {
-      _failureCode = failureCode;
-    } else {
-      throw new IllegalStateException("Task ID '" + getID() + "': " + "Attempt to set the failure code at task state " + _state);
-    }
-  }
-
-  public String getFailureReason() {
-    if (_state.equals(TaskState.FAILED)) {
-      return _failureReason;
-    } else {
-      throw new IllegalStateException("Task ID '" + getID() + "': " + "Attempt to get the failure reason at task state " + _state);
-    }
-  }
-
-  public void setFailureReason(String failureReason) {
-    if (failureReason == null) {
-      throw new RequiredArgumentException("failureReason");
+    public PATask(String id, URI formURL) {
+        super(id, formURL);
     }
 
-    if (_state.equals(TaskState.FAILED)) {
-      _failureReason = failureReason;
-    } else {
-      throw new IllegalStateException("Task ID '" + getID() + "': " + "Attempt to set the failure reason at task state " + _state);
+    public PATask(String id, URI formURL, String processID, String completeSOAPAction, Document input) {
+        super(id, formURL);
+        this.setProcessID(processID);
+        this.setCompleteSOAPAction(completeSOAPAction);
+        if (input != null)
+            this.setInput(input);
     }
-  }
 
-  public String getCompleteSOAPAction() {
-    return _completeSOAPAction;
-  }
-
-  public void setCompleteSOAPAction(String soapAction) {
-    if (soapAction == null) {
-      throw new RequiredArgumentException("soapAction");
+    public String getProcessID() {
+        return _processID;
     }
-    _completeSOAPAction = soapAction;
-  }
 
-  public boolean isInputAvailable() {
-    return _input != null;
-  }
-
-  public Document getInput() {
-    if (!this.isInputAvailable()) {
-      throw new IllegalStateException("Task input not available (e.g. was not retrieved).");
+    public void setProcessID(String processID) {
+        if (processID == null) {
+            throw new RequiredArgumentException("processID");
+        }
+        _processID = processID;
     }
-    return XmlTooling.deserializeDocument(_input);
-  }
 
-  public void setInput(Document inputDocument) {
-    if (inputDocument == null) {
-      throw new RequiredArgumentException("inputDocument");
+    public TaskState getState() {
+        return _state;
     }
-    _input = XmlTooling.serializeDocument(inputDocument);
-  }
 
-  public Document getOutput() {
-    return XmlTooling.deserializeDocument(_output);
-  }
-
-  public String getInputAsXmlString() {
-    return _input;
-  }
-
-  public String getOutputAsXmlString() {
-    return _output;
-  }
-
-  public void setOutput(Document outputDocument) {
-    if (outputDocument == null) {
-      throw new RequiredArgumentException("outputDocument");
+    public void setState(TaskState state) {
+        if (state == null) {
+            throw new RequiredArgumentException("state");
+        }
+        _state = state;
     }
-    _output = XmlTooling.serializeDocument(outputDocument);
-  }
 
-  public Attachment addAttachment(Attachment attachment) {
-    return _attachments.put(attachment.getPayloadURL().toExternalForm(), attachment);
-  }
-
-  public Attachment removeAttachment(URL attachmentURL) {
-    return _attachments.remove(attachmentURL.toExternalForm());
-  }
-
-  public Collection<Attachment> getAttachments() {
-    return Collections.unmodifiableCollection(_attachments.values());
-  }
-
-  public boolean isChainedBefore() {
-    return _isChainedBefore;
-  }
-
-  public void setChainedBefore(boolean isChainedBefore) {
-    if (!isChainedBefore) {
-      _previousTaskID = null;
-    } else {
-      if (_previousTaskID == null) {
-        throw new IllegalStateException("Set previousTaskID before setting isChainedBefore to true");
-      }
+    public String getFailureCode() {
+        if (_state.equals(TaskState.FAILED)) {
+            return _failureCode;
+        } else {
+            throw new IllegalStateException("Task ID '" + getID() + "': "
+                    + "Attempt to get the failure code at task state " + _state);
+        }
     }
-    _isChainedBefore = isChainedBefore;
-  }
 
-  public String getPreviousTaskID() {
-    return _previousTaskID;
-  }
+    public void setFailureCode(String failureCode) {
+        if (failureCode == null) {
+            throw new RequiredArgumentException("failureCode");
+        }
 
-  public void setPreviousTaskID(String previousTaskID) {
-    if (previousTaskID == null) {
-      throw new RequiredArgumentException("previousTaskID");
+        if (_state.equals(TaskState.FAILED)) {
+            _failureCode = failureCode;
+        } else {
+            throw new IllegalStateException("Task ID '" + getID() + "': "
+                    + "Attempt to set the failure code at task state " + _state);
+        }
     }
-    _previousTaskID = previousTaskID;
-  }
 
-  public void setInput(String input) {
-    _input = input;
-  }
+    public String getFailureReason() {
+        if (_state.equals(TaskState.FAILED)) {
+            return _failureReason;
+        } else {
+            throw new IllegalStateException("Task ID '" + getID() + "': "
+                    + "Attempt to get the failure reason at task state " + _state);
+        }
+    }
 
-  public void setOutput(String output) {
-    _output = output;
-  }
+    public void setFailureReason(String failureReason) {
+        if (failureReason == null) {
+            throw new RequiredArgumentException("failureReason");
+        }
 
-  public Integer getPriority() {
-    return _priority;
-  }
+        if (_state.equals(TaskState.FAILED)) {
+            _failureReason = failureReason;
+        } else {
+            throw new IllegalStateException("Task ID '" + getID() + "': "
+                    + "Attempt to set the failure reason at task state " + _state);
+        }
+    }
 
-  public void setPriority(Integer priority) {
-    _priority = priority;
-  }
+    public String getCompleteSOAPAction() {
+        return _completeSOAPAction;
+    }
 
-  public Date getDeadline() {
-    return _deadline;
-  }
+    public void setCompleteSOAPAction(String soapAction) {
+        if (soapAction == null) {
+            throw new RequiredArgumentException("soapAction");
+        }
+        _completeSOAPAction = soapAction;
+    }
 
-  public void setDeadline(Date deadline) {
-    _deadline = deadline;
-  }
+    public boolean isInputAvailable() {
+        return _input != null;
+    }
+
+    public Document getInput() {
+        if (!this.isInputAvailable()) {
+            throw new IllegalStateException("Task input not available (e.g. was not retrieved).");
+        }
+        return XmlTooling.deserializeDocument(_input);
+    }
+
+    public void setInput(Document inputDocument) {
+        if (inputDocument == null) {
+            throw new RequiredArgumentException("inputDocument");
+        }
+        _input = XmlTooling.serializeDocument(inputDocument);
+    }
+
+    public Document getOutput() {
+        return XmlTooling.deserializeDocument(_output);
+    }
+
+    public String getInputAsXmlString() {
+        return _input;
+    }
+
+    public String getOutputAsXmlString() {
+        return _output;
+    }
+
+    public void setOutput(Document outputDocument) {
+        if (outputDocument == null) {
+            throw new RequiredArgumentException("outputDocument");
+        }
+        _output = XmlTooling.serializeDocument(outputDocument);
+    }
+
+    public Attachment addAttachment(Attachment attachment) {
+        return _attachments.put(attachment.getPayloadURL().toExternalForm(), attachment);
+    }
+
+    public Attachment removeAttachment(URL attachmentURL) {
+        return _attachments.remove(attachmentURL.toExternalForm());
+    }
+
+    public Collection<Attachment> getAttachments() {
+        return Collections.unmodifiableCollection(_attachments.values());
+    }
+
+    public boolean isChainedBefore() {
+        return _isChainedBefore;
+    }
+
+    public void setChainedBefore(boolean isChainedBefore) {
+        if (!isChainedBefore) {
+            _previousTaskID = null;
+        } else {
+            if (_previousTaskID == null) {
+                throw new IllegalStateException("Set previousTaskID before setting isChainedBefore to true");
+            }
+        }
+        _isChainedBefore = isChainedBefore;
+    }
+
+    public String getPreviousTaskID() {
+        return _previousTaskID;
+    }
+
+    public void setPreviousTaskID(String previousTaskID) {
+        if (previousTaskID == null) {
+            throw new RequiredArgumentException("previousTaskID");
+        }
+        _previousTaskID = previousTaskID;
+    }
+
+    public void setInput(String input) {
+        _input = input;
+    }
+
+    public void setOutput(String output) {
+        _output = output;
+    }
+
+    public Integer getPriority() {
+        return _priority;
+    }
+
+    public void setPriority(Integer priority) {
+        _priority = priority;
+    }
+
+    public Date getDeadline() {
+        return _deadline;
+    }
+
+    public void setDeadline(Date deadline) {
+        _deadline = deadline;
+    }
 
 }
