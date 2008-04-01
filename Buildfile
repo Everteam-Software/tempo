@@ -220,7 +220,7 @@ define "tempo" do
                  APACHE_JPA, AXIS2, AXIOM, DOM4J, JAXEN, LOG4J, SLF4J, SPRING, STAX_API, XERCES, XMLBEANS
     compile { open_jpa_enhance }
     
-    task "package" => generate_sql([project])
+    task "package" => generate_sql([project], "tempo.tms")
     
     package(:jar)
     test.with WOODSTOX, LOG4J, XMLUNIT
@@ -349,7 +349,7 @@ define "tempo" do
  
     resources.filter.using "version" => VERSION_NUMBER
 
-    task "package" => generate_sql([project])
+    task "package" => generate_sql([project], "tempo.wds")
     
     package_libs = libs - SERVLET_API
     package(:jar)

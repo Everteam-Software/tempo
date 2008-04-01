@@ -20,7 +20,7 @@ def replace_text(inputFile, substitutions, outputFile)
   end
 end
 
-def generate_sql(classpath)
+def generate_sql(classpath, schemaname="db.schema")
     schemas = []
     %w{ Derby MySQL Oracle }.each do |db|
       persistence = _("src/main/resources/META-INF/persistence.xml")
@@ -36,7 +36,7 @@ END
         mkpath _("target"), :verbose=>false
         replace_text(persistence, { "<properties />" => new_properties }, task.name) 
       end
-      sql = file("target/#{db}.sql"=>persistence_db) do |task|
+      sql = file("target/#{schemaname.downcase}.#{db.downcase}.sql"=>persistence_db) do |task|
         Buildr::OpenJPA.mapping_tool :properties=>persistence_db, :action=>"build", :sql=>task.name, :classpath => classpath
       end
       schemas << sql
