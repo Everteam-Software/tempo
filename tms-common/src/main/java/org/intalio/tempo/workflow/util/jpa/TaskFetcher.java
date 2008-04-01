@@ -4,16 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import org.intalio.tempo.workflow.auth.UserRoles;
-import org.intalio.tempo.workflow.task.Notification;
-import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
-import org.intalio.tempo.workflow.task.TaskState;
-import org.intalio.tempo.workflow.task.TaskType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +26,8 @@ public class TaskFetcher {
   final static Logger _logger = LoggerFactory.getLogger(TaskFetcher.class);
   private EntityManager _entityManager;
   private Query find_by_id;
+  private static String QUERY_GENERIC1 = "select T from ";
+  private static String QUERY_GENERIC2 = " T where (T._userOwners in (?1) or T._roleOwners in (?2))";
 
   public TaskFetcher(EntityManager em) {
     this._entityManager = em;
@@ -68,30 +65,17 @@ public class TaskFetcher {
    * Core method. retrieve all the tasks for the given <code>UserRoles</code>
    * and task state, task type
    */
-  public Task[] fetchAvailableTasks(UserRoles user, TaskType taskType, TaskState taskState) {
+  public Task[] fetchAvailableTasks(UserRoles user, Class taskClass, String subQuery) {
     ArrayList userIdList = new ArrayList();
     userIdList.add(user.getUserID());
     Query q;
-    switch (taskType) {
-      case PA:
-        if (taskState == null) {
-          q = _entityManager.createNamedQuery(PATask.FIND_BY_PA_USER_ROLE).setParameter(1, userIdList).setParameter(2, user.getAssignedRoles());
-        } else {
-          q = _entityManager.createNamedQuery(PATask.FIND_BY_PA_USER_ROLE_STATE).setParameter(1, userIdList).setParameter(2,
-              user.getAssignedRoles()).setParameter(3, taskState);
-        }
-        break;
-      case PIPA:
-        q = _entityManager.createNamedQuery(PIPATask.FIND_BY_PIPA_USER_ROLE).setParameter(1, userIdList)
-            .setParameter(2, user.getAssignedRoles());
-        break;
-      case Notification:
-        q = _entityManager.createNamedQuery(Notification.FIND_BY_NOTI_USER_ROLE).setParameter(1, userIdList).setParameter(2,
-            user.getAssignedRoles());
-        break;
-      default:
-        q = _entityManager.createNamedQuery(Task.FIND_BY_ROLE_USER).setParameter(1, userIdList).setParameter(2, user.getAssignedRoles());
-        break;
+
+    if (subQuery == null) {
+      q = _entityManager.createQuery(QUERY_GENERIC1 + taskClass.getName() + QUERY_GENERIC2).setParameter(1, userIdList)
+          .setParameter(2, user.getAssignedRoles());
+    } else {
+      q = _entityManager.createQuery(QUERY_GENERIC1 + taskClass.getName() + QUERY_GENERIC2 + " and " + subQuery).setParameter(1, userIdList).setParameter(2,
+          user.getAssignedRoles());
     }
     List result = q.getResultList();
     return (Task[]) result.toArray(new Task[result.size()]);

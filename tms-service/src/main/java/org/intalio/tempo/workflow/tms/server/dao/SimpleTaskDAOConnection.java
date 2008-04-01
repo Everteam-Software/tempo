@@ -21,8 +21,6 @@ import java.util.Map;
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
-import org.intalio.tempo.workflow.task.TaskState;
-import org.intalio.tempo.workflow.task.TaskType;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 import org.slf4j.Logger;
@@ -109,7 +107,7 @@ public class SimpleTaskDAOConnection implements ITaskDAOConnection {
         throw new RuntimeException("Not Implemented");
     }
 
-    public Task[] fetchAvailableTasks(UserRoles user, TaskType taskType, TaskState taskState) {
+    public Task[] fetchAvailableTasks(UserRoles user, Class className, String subQuery) {
       // TODO Auto-generated method stub
       return null;
     }

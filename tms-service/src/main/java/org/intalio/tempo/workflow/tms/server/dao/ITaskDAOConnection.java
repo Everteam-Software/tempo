@@ -18,8 +18,6 @@ package org.intalio.tempo.workflow.tms.server.dao;
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
-import org.intalio.tempo.workflow.task.TaskState;
-import org.intalio.tempo.workflow.task.TaskType;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
 
 public interface ITaskDAOConnection {
@@ -27,7 +25,7 @@ public interface ITaskDAOConnection {
     public void close();
 
     public Task[] fetchAllAvailableTasks(UserRoles user);
-    public Task[] fetchAvailableTasks(UserRoles user, TaskType taskType, TaskState taskState);
+    public Task[] fetchAvailableTasks(UserRoles user, Class className, String subQuery);
     public Task fetchTaskIfExists(String taskID);
 
     public void updateTask(Task task);

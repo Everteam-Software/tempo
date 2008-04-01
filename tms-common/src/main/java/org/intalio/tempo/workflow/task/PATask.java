@@ -56,15 +56,13 @@ import org.w3c.dom.Document;
 @Entity
 @Table(name = "tempo_pa")
 @NamedQueries( {
-        @NamedQuery(name = PATask.FIND_BY_STATES, query = "select m from PATask m where m._state=?1", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }),
-        @NamedQuery(name = PATask.FIND_BY_PA_USER_ROLE, query = "select m from PATask m where m._userOwners in (?1) or m._roleOwners in (?2)", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }),
-        @NamedQuery(name = PATask.FIND_BY_PA_USER_ROLE_STATE, query = "select m from PATask m where (m._userOwners in (?1) or m._roleOwners in (?2)) and m._state=?3", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }) })
+        @NamedQuery(name = PATask.FIND_BY_STATES, query = "select m from PATask m where m._state=?1", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") })})
 public class PATask extends Task implements ITaskWithState, IProcessBoundTask, ITaskWithInput, ITaskWithOutput,
         ICompleteReportingTask, ITaskWithAttachments, IChainableTask, ITaskWithPriority, ITaskWithDeadline {
 
     public static final String FIND_BY_STATES = "find_by_ps_states";
     public static final String FIND_BY_PA_USER_ROLE = "find_by_pa_user_role";
-    public static final String FIND_BY_PA_USER_ROLE_STATE = "find_by_pa_user_role_state";
+    public static final String FIND_BY_PA_USER_ROLE_GENERIC = "find_by_pa_user_role_generic";
 
     @Persistent
     @Column(name = "process_id")

@@ -20,8 +20,6 @@ import org.intalio.tempo.workflow.task.Notification;
 import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
-import org.intalio.tempo.workflow.task.TaskState;
-import org.intalio.tempo.workflow.task.TaskType;
 import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
 import org.intalio.tempo.workflow.tms.server.dao.JPATaskDaoConnectionFactory;
