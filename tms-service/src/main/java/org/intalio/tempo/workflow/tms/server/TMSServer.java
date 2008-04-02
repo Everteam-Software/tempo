@@ -283,8 +283,8 @@ public class TMSServer implements ITMSServer {
       // TODO : Use credentials.getUserID() :vb
     } catch (Exception e) {
       _logger.error("Cannot create Workflow Tasks", e); // TODO :
-                                                        // TaskIDConflictException
-                                                        // must be rethrowed :vb
+      // TaskIDConflictException
+      // must be rethrowed :vb
     } finally {
       dao.close();
     }
@@ -463,14 +463,8 @@ public class TMSServer implements ITMSServer {
       available = task instanceof ITaskWithState;
       if (available) {
         ((ITaskWithState) task).setState(state);
-        AuthIdentifierSet uOwners = (AuthIdentifierSet) task.getUserOwners();
-        AuthIdentifierSet rOwners = (AuthIdentifierSet) task.getRoleOwners();
-        if (_logger.isDebugEnabled())
-          _logger.debug("For Workflow Task " + taskID + " user owners " + uOwners + " and role owners " + rOwners);
-        uOwners.clear();
-        task.getUserOwners().addAll(users);
-        rOwners.clear();
-        task.getRoleOwners().addAll(roles);
+        task.setUserOwners(users);
+        task.setRoleOwners(roles);
 
         dao.updateTask(task);
         dao.commit();
@@ -521,7 +515,7 @@ public class TMSServer implements ITMSServer {
     UserRoles credentials = _authProvider.authenticate(participantToken);
     ITaskDAOConnection dao = _taskDAOFactory.openConnection();
     try {
-      Task[] result = dao.fetchAvailableTasks(credentials, Class.forName("org.intalio.tempo.workflow.task."+taskType), subQuery);
+      Task[] result = dao.fetchAvailableTasks(credentials, Class.forName("org.intalio.tempo.workflow.task." + taskType), subQuery);
       _logger.info("Number of workflow Tasks for user " + credentials.getUserID() + ":" + result.length);
       return result;
     } catch (Exception e) {
