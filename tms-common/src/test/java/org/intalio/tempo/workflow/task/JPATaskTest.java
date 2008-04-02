@@ -217,10 +217,14 @@ public class JPATaskTest {
   }
 
   @Test
-  public void authorizeUserRoles() throws Exception {
+  public void authorizeUserRolesAndIsAvailable() throws Exception {
     String id = "pa" + System.currentTimeMillis();
     PATask task1 = new PATask(id, new URI("http://hellonico.net"), "processId", "soap", getXmlSampleDocument());
     task1.authorizeActionForUser("save", "examples\\manager");
+    task1.authorizeActionForUser("save", "user1");
+    task1.getUserOwners().add("user2");
+    task1.getRoleOwners().add("role1");
+
     task1.setPriority(2);
     persist(task1);
 
@@ -229,6 +233,17 @@ public class JPATaskTest {
 
     TaskEquality.areTasksEquals(task1, task2);
 
+	final UserRoles credentials = new UserRoles("user1", new String[]{"role1"});
+	final UserRoles credentials2 = new UserRoles("user2", new String[]{"role2"});
+	final UserRoles credentials3 = new UserRoles("user3", new String[]{"role3"});
+	
+    Assert.assertTrue(task2.isAvailableTo(credentials));
+    Assert.assertTrue(task2.isAvailableTo(credentials2));
+    Assert.assertFalse(task2.isAvailableTo(credentials3));
+    
+	Assert.assertTrue(task2.isAuthorizedAction(credentials, "save"));
+	Assert.assertTrue(task2.isAuthorizedAction(credentials, "cook"));
+	
     checkRemoved(task2);
   }
 

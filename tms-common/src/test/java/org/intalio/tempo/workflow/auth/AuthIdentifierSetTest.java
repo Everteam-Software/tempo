@@ -174,18 +174,4 @@ public class AuthIdentifierSetTest extends TestCase {
 
         Assert.assertEquals(10, i);
     }
-
-    public void testIntersects() {
-        AuthIdentifierSet set1 = new AuthIdentifierSet(new String[] { "test/user1", "test.user2", "test\\user3" });
-        AuthIdentifierSet set2 = new AuthIdentifierSet(new String[] { "test/user4", "test\\user5", "test/user2" });
-        AuthIdentifierSet set3 = new AuthIdentifierSet(new String[] { "test.user5", "test\\user4", "test//user7" });
-
-        Assert.assertTrue(set1.intersects(set2));
-        Assert.assertTrue(set2.intersects(set1));
-        Assert.assertTrue(set2.intersects(set3));
-        Assert.assertTrue(set3.intersects(set2));
-        Assert.assertFalse(set1.intersects(set3));
-        Assert.assertFalse(set3.intersects(set1));
-    }
-
 }

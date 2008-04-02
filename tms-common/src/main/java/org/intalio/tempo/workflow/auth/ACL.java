@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.openjpa.persistence.Persistent;
 
 @Entity
@@ -35,11 +36,9 @@ public class ACL extends BaseRestrictedEntity {
         // Note: Action is authorized if there's no ACL provided (default)
         if (_userOwners.isEmpty() && _roleOwners.isEmpty())
             return true;
-        if (_userOwners.contains(user.getUserID()))
+        else if (_userOwners.contains(user.getUserID()))
             return true;
-        if (((AuthIdentifierSet)_roleOwners).intersects(user.getAssignedRoles()))
-            return true;
-        return false;
+        else return (CollectionUtils.containsAny(_roleOwners,user.getAssignedRoles()));
     }
 
 }

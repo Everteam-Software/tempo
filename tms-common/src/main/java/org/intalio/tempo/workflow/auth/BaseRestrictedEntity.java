@@ -23,6 +23,9 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.MappedSuperclass;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.openjpa.persistence.ElementType;
+import org.apache.openjpa.persistence.Factory;
 import org.apache.openjpa.persistence.PersistentCollection;
 import org.apache.openjpa.persistence.jdbc.ContainerTable;
 
@@ -32,11 +35,13 @@ public abstract class BaseRestrictedEntity implements IRestrictedEntity {
     
     @PersistentCollection(elementType=String.class, elementCascade=CascadeType.ALL, elementEmbedded = false, fetch=FetchType.EAGER)
     @ContainerTable(name="tempo_user")
-    protected Collection<String> _userOwners = new AuthIdentifierSet();
+    @ElementType(value=String.class)
+    protected Collection<String> _userOwners;
 
     @PersistentCollection(elementType=String.class, elementCascade=CascadeType.ALL, elementEmbedded = false, fetch=FetchType.EAGER)
     @ContainerTable(name="tempo_role")
-    protected Collection<String> _roleOwners = new AuthIdentifierSet();
+    @ElementType(value=String.class)
+    protected Collection<String> _roleOwners;
 
     public BaseRestrictedEntity() {
         _userOwners = new AuthIdentifierSet();
@@ -50,12 +55,21 @@ public abstract class BaseRestrictedEntity implements IRestrictedEntity {
     public Collection<String> getRoleOwners() {
         return _roleOwners;
     }
+    
+    public void setUserOwners(Collection<String> owners) {
+        _userOwners = new AuthIdentifierSet(owners);
+    }
+
+    public void setRoleOwners(Collection<String> owners) {
+        _roleOwners = new AuthIdentifierSet(owners);
+    }
 
     public boolean isAvailableTo(UserRoles credentials) {
         for (String userOwner : _userOwners) {
             if (userOwner != null && userOwner.equals(credentials.getUserID()))
                 return true;
         }
-        return ((AuthIdentifierSet)_roleOwners).intersects(credentials.getAssignedRoles());
+        return CollectionUtils.containsAny(_roleOwners, credentials.getAssignedRoles());
     }
+    
 }

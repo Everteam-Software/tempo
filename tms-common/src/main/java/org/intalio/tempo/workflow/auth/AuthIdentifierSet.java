@@ -73,20 +73,4 @@ public class AuthIdentifierSet extends HashSet<String> {
             String normalizedID = AuthIdentifierNormalizer.normalizeAuthIdentifier((String) object);
             return super.remove(normalizedID);
     }
-
-    public boolean intersects(AuthIdentifierSet rhs) {
-        if (rhs == null) {
-            throw new RequiredArgumentException("rhs");
-        }
-
-        boolean intersects = false;
-        for (String authID : this) {
-            if (rhs.contains(authID)) {
-                intersects = true;
-                break;
-            }
-        }
-
-        return intersects;
-    }
 }
