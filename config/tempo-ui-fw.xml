@@ -15,6 +15,7 @@
     <bean id="configuration" class="org.intalio.tempo.uiframework.Configuration" factory-method="getInstance">
         <property name="serviceEndpoint" value="/axis2/services/TaskManagementServices"/>
         <property name="pagingLength" value="10"/>
+        <property name="refreshTime" value="5"/>
     </bean>
 
     <bean id="xFormManager" class="org.intalio.tempo.uiframework.forms.XFormsManager">

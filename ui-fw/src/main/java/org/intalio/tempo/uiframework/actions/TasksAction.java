@@ -50,6 +50,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class TasksAction extends Action {
     private static final Logger _log = LoggerFactory.getLogger(TasksAction.class);
 
+    private final Configuration conf = Configuration.getInstance();
     private final Collection<Task> _tasks = new ArrayList<Task>();
     private final Collection<TaskHolder<PATask>> _activityTasks = new ArrayList<TaskHolder<PATask>>();
     private final Collection<TaskHolder<Notification>> _notifications = new ArrayList<TaskHolder<Notification>>();
@@ -100,7 +101,7 @@ public class TasksAction extends Action {
     }
 
     protected ITaskManagementService getTMS(String participantToken) throws RemoteException {
-        String endpoint = resoleUrl(Configuration.getInstance().getServiceEndpoint());
+        String endpoint = resoleUrl(conf.getServiceEndpoint());
         return new RemoteTMSFactory(endpoint, participantToken).getService();
     }
 
@@ -160,6 +161,7 @@ public class TasksAction extends Action {
         model.put("initTasks", _initTasks);
         model.put("participantToken", state.getCurrentUser().getToken());
         model.put("currentUser", state.getCurrentUser().getName());
+        model.put("refreshTime", conf.getRefreshTime());
         
         Properties buildProperties = BpmsVersionsServlet.getBPMSVersionsProperties();
         if (buildProperties != null) {

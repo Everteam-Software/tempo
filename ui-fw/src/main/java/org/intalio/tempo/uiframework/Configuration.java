@@ -21,7 +21,9 @@ public class Configuration {
     private String _serviceEndpoint;
 
     private int _pagingLength;
-
+    
+    private int _refreshTime = 5;
+ 
     private Configuration() {
     }
 
@@ -43,5 +45,13 @@ public class Configuration {
 
     public static Configuration getInstance() {
         return INSTANCE;
+    }
+
+    public int getRefreshTime() {
+        return _refreshTime;
+    }
+
+    public void setRefreshTime(int time) {
+        _refreshTime = time;
     }
 }

@@ -24,7 +24,7 @@
 <script type="text/javascript" src="/ui-fw/script/tasks.js"></script>
 
 <script type="text/javascript">
-	window.onload = startTimer(<fmt:message key="com_intalio_tempo_tasks_update_interval"/>);
+	window.onload = startTimer("${refreshTime}");
 </script>
 
 
