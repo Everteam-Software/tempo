@@ -175,8 +175,8 @@ PLUTO_DRIVER = [
   "org.apache.pluto:pluto-portal-driver-impl:jar:1.1.4"
 ]
 PLUTO_DESCRIPTORS = [
-  "org.apache.pluto:pluto-portal-descriptor-api:jar:1.1.4",
-  "org.apache.pluto:pluto-portal-descriptor-impl:jar:1.1.4"
+  "org.apache.pluto:pluto-descriptor-api:jar:1.1.4",
+  "org.apache.pluto:pluto-descriptor-impl:jar:1.1.4"
 ]
 PLUTO = [
   PLUTO_CONTAINER,
