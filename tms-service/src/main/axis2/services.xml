@@ -99,5 +99,10 @@
             <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
             <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getPipa</actionMapping>
         </operation>
+        
+        <operation name="getAvailableTasks">
+            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+            <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getAvailableTasks</actionMapping>
+        </operation>
     </service>
 </serviceGroup>

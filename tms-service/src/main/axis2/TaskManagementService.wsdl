@@ -321,6 +321,35 @@
 					</xsd:element>
 				</xsd:sequence>
 			</xsd:complexType>
+			<xsd:element name="getAvailableTasks">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="in" type="xsd:string"></xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="getAvailableTasksResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="task" type="tns:taskMetadata" minOccurs="0" maxOccurs="unbounded"></xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="getAvailableTasksRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="participantToken"
+							type="xsd:string">
+						</xsd:element>
+						<xsd:element name="taskType"
+							type="xsd:string">
+						</xsd:element>
+						<xsd:element name="subQuery"
+							type="xsd:string">
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
 		</xsd:schema>
 	</wsdl:types>
 	<wsdl:message name="getTaskListResponse">
@@ -385,7 +414,15 @@
 	<wsdl:message name="initRequest">
 		<wsdl:part name="initRequest" element="tns:initRequest"/>
 	</wsdl:message>
-  	<wsdl:portType name="TaskManagementServices">
+	<wsdl:message name="getAvailableTasksRequest">
+		<wsdl:part name="getAvailableTasksRequest"
+			element="tns:getAvailableTasksRequest">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="getAvailableTasksResponse">
+		<wsdl:part name="getAvailableTasksResponse" element="tns:getAvailableTasksResponse"></wsdl:part>
+	</wsdl:message>
+	<wsdl:portType name="TaskManagementServices">
 		<wsdl:operation name="getTaskList">
 			<wsdl:input message="tns:getTaskListRequest"/>
 			<wsdl:output message="tns:getTaskListResponse"/>
@@ -468,6 +505,12 @@
 			<wsdl:output message="tns:getPipaResponse"/>
 			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault"/>
 			<wsdl:fault name="UnavailableTask" message="tns:unavailableTaskFault"/>
+			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault"/>
+		</wsdl:operation>
+		<wsdl:operation name="getAvailableTasks">
+			<wsdl:input message="tns:getAvailableTasksRequest"></wsdl:input>
+			<wsdl:output message="tns:getAvailableTasksResponse"></wsdl:output>
+			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault"/>
 			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault"/>
 		</wsdl:operation>
 	</wsdl:portType>

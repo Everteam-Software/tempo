@@ -31,6 +31,8 @@ import org.w3c.dom.Document;
 public interface ITMSServer {
 
     Task[] getTaskList(String participantToken) throws AuthException;
+    
+    Task[] getAvailableTasks(String participantToken, String taskType, String subQuery) throws AuthException;
 
     Task getTask(String taskID, String participantToken) throws AuthException, UnavailableTaskException;
 
