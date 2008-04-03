@@ -16,7 +16,7 @@
     <m:metadata>
       <m:taskId>002_Create_Good_Test_Task</m:taskId>
       <m:taskType>activity</m:taskType>
-      <m:description>I'm a Good Test Task</m:description>
+      <m:description>I'm a Good Test Task II</m:description>
       <m:processId>Fake_Process_ID</m:processId>
       <m:userOwner>test\user2</m:userOwner>
       <m:roleOwner>test\role1</m:roleOwner>

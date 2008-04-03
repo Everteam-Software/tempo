@@ -32,6 +32,13 @@ public class TMSRequestProcessorTest extends TestCase {
     return proc;
   }
 
+  private TMSRequestProcessor createRequestProcessorJPA() throws Exception {
+    ITMSServer server = Utils.createTMSServerJPA();
+    TMSRequestProcessor proc = new TMSRequestProcessor();
+    proc.setServer(server);
+    return proc;
+  }
+  
   public static void main(String[] args) {
     junit.textui.TestRunner.run(TMSRequestProcessorTest.class);
   }
@@ -48,6 +55,21 @@ public class TMSRequestProcessorTest extends TestCase {
     _logger.debug(Utils.toPrettyXML(getTaskListResponse));
   }
 
+  public void testGetAvailableTasks() throws Exception {
+    TMSRequestProcessor requestProcessor = this.createRequestProcessorJPA();
+
+    OMElement createTaskRequest = Utils.loadElementFromResource("/createTaskRequest1.xml");
+    OMElement createTaskResponse = requestProcessor.create(createTaskRequest);
+    OMElement createTaskRequest2 = Utils.loadElementFromResource("/createTaskRequest2.xml");
+    OMElement createTaskResponse2 = requestProcessor.create(createTaskRequest2);
+    _logger.debug(Utils.toPrettyXML(createTaskResponse));
+    _logger.debug(Utils.toPrettyXML(createTaskResponse2));
+
+    OMElement getAvailableTasksRequest = Utils.loadElementFromResource("/getAvailableTasksRequest1.xml");
+    OMElement getTaskListResponse = requestProcessor.getAvailableTasks(getAvailableTasksRequest);
+    _logger.debug(Utils.toPrettyXML(getTaskListResponse));
+  }
+  
   public void testGetTask() throws Exception {
     TMSRequestProcessor requestProcessor = this.createRequestProcessor();
 
