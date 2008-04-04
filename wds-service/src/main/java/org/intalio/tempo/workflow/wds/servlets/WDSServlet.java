@@ -170,7 +170,16 @@ public class WDSServlet extends HttpServlet {
 
         String resourceUri = getResourceUri(request);
         if ("".equals(resourceUri)) {
-            response.getWriter().println(getServletContext().getServletContextName());
+            String text = "<html xmlns=\"http://www.w3.org/1999/xhtml\">"
+                + "<head>"
+                + "<title>Workflow Deployment Service</title>"
+                + "<link rel=\"shortcut icon\" href=\"/favicon.ico\" type=\"image/vnd.microsoft.icon\" />"
+                + "</head>"
+                + "<body>"
+                + "<p>Workflow Deployment Service</p>"
+                + "</body>"
+                + "</html>";
+            response.getWriter().println(text);
         } else {
             String participantToken = getParticipantToken(request);
             WDSService service = null;
