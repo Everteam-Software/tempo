@@ -5,25 +5,30 @@ require 'open-uri'
 require "zip/zip"
 require 'yaml'
 require 'fileutils'
+require 'hpricot'
+require 'open-uri'
 require "buildr"
+require "../../dependencies"
 
 repositories.remote = [ "http://www.intalio.org/public/maven2", "http://dist.codehaus.org/mule/dependencies/maven2/", "http://repo1.maven.org/maven2" ]
 
-config_file = if not ARGV[0] == nil 
-  then
-    ARGV[0]
-  else
-    "./config.yml"
-  end
-config = YAML::load( File.open( config_file ) )
+original_dir = Dir.pwd
+config = YAML::load( File.open( "#{original_dir}/config.yml" ) )
+
+def find_apache_mirror
+  doc = Hpricot(open("http://www.apache.org/dyn/closer.cgi"))
+  doc.search("//div[@='section-content']//strong")[0].inner_html
+end
 
 TEMPO_SVN = config["tempo_svn"]
 DEBUG = config["debug"]
 REBUILD_TEMPO = config["rebuild"]
-APACHE_MIRROR = config["apache_mirror"]
-TOMCAT_5_DOWNLOAD = APACHE_MIRROR + "/tomcat/tomcat-5/v5.5.26/bin/apache-tomcat-5.5.26.zip"
-AXIS_DOWNLOAD = APACHE_MIRROR + "/ws/axis2/1_3/axis2-1.3-war.zip"
-ODE_DOWNLOAD = APACHE_MIRROR + "/ode/apache-ode-war-1.1.1.zip"
+APACHE_MIRROR = find_apache_mirror
+TOMCAT_5_DOWNLOAD = APACHE_MIRROR + "tomcat/tomcat-5/v5.5.26/bin/apache-tomcat-5.5.26.zip"
+TOMCAT_6_DOWNLOAD = APACHE_MIRROR + "tomcat/tomcat-6/v6.0.16/bin/apache-tomcat-6.0.16.zip"
+TOMCAT_ADMIN_DOWNLOAD = APACHE_MIRROR + "tomcat/tomcat-5/v5.5.26/bin/apache-tomcat-5.5.26-admin.zip"
+AXIS_DOWNLOAD = APACHE_MIRROR + "ws/axis2/1_3/axis2-1.3-war.zip"
+ODE_DOWNLOAD = APACHE_MIRROR + "ode/apache-ode-war-1.1.1.zip"
 
 # Unzip a file
 def unzip2(x, basefolder = ".")
@@ -41,27 +46,14 @@ def unzip2(x, basefolder = ".")
   }
 end
 
-# Follow redirects
-def fetch(uri_str, limit = 10)
-  # You should choose better exception.
-  raise ArgumentError, 'HTTP redirect too deep' if limit == 0
-  response = Net::HTTP.get_response(URI.parse(uri_str))
-  case response
-  when Net::HTTPSuccess     then response
-  when Net::HTTPRedirection then fetch(response['location'], limit - 1)
-  else
-    response.error!
-  end
-end
-
 # Download and unzip file
 def download_to(filename, url, unzip=true, message="Downloading #{url}") 
   puts message if DEBUG
-  if(not File.exist?(filename)) then
-    open(filename, "wb") { |file|
-      file.write(fetch(url).body)
-    }
-  end
+  spec = "org.intalio.tempo.build:#{filename}:zip:1.0"
+  ar = Buildr::artifact(spec)
+  download(ar=>url)
+  ar.invoke
+  File.cp repositories.locate(spec), filename
   unzip2(filename) if unzip
 end
 
@@ -72,8 +64,13 @@ def download_and_copy(url, folder)
 end
 
 def locate_and_copy(lib, folder)
-  artifact(lib).invoke
-  File.cp repositories.locate(lib), folder
+  puts "locating #{lib}" if DEBUG
+  if(lib.kind_of? Array) then 
+    lib.each {|l| locate_and_copy l,folder}
+  else
+    artifact(lib).invoke
+    File.cp repositories.locate(lib), folder
+  end
 end
 
 def filename_from_url (url)
@@ -179,7 +176,7 @@ end
 
 class ServiceInstaller
   def initialize(axis_folder)
-     @process_folder = axis_folder + File::SEPARATOR + "WEB-INF" + File::SEPARATOR + "services"
+     @process_folder = "#{axis_folder}/WEB-INF/services"
      FileUtils.mkdir_p @process_folder
      @finder = Finder.new
   end
@@ -190,7 +187,12 @@ class ServiceInstaller
   
   def install_tempo_aar service_name
     puts "Installing service: #{service_name}" if DEBUG
-    install @finder.find_tempo_component( service_name, "aar" )
+    service = @finder.find_tempo_component( service_name, "aar" )
+    if ( service != nil)
+      install service
+    else
+      raise "Could not find service to install. Make sure you compile tempo code first, or force rebuild"
+    end
   end
 end
 
@@ -205,7 +207,12 @@ class OdeProcessInstaller
   end
 end
 
-
+title "Changing directory"
+install_dir = config["install_dir"]
+##
+FileUtils.mkdir_p install_dir
+Dir.chdir install_dir
+##
 
 title "Downloading required files"
 explain "Downloading tomcat (java web application engine), ode (process engine) and axis (web service engine)"
@@ -268,7 +275,7 @@ explain "FDS is the form dispatcher service, responsible mainly for replacing na
 explain "UI-FW is the user interface, where user can handle their tasks and complete them"
 explain "WDS service, is like a Web Resources services."
 explain "XFM is responsible for displaying the forms to be filled when a user is handling a task."
-# explain "CAS is the SSO framework so we can integrate with other security services"
+explain "CAS is the SSO framework so we can integrate with other security services"
 # explain "Pluto, is a portlet container"
 # explain "UI-FW-PORTLET is a portlet version of UI-FW meant to be running in Pluto"
 ##
@@ -277,19 +284,20 @@ wi.install_tempo_war( "ui-fw" )
 wi.install_tempo_war( "wds-service", "wds" )
 wi.install_tempo_war( "xforms-manager", "xFormsManager" )
 wi.install_tempo_war( "cas-server-webapp", "cas" )
-wi.install_tempo_war( "ui-pluto", "pluto" )
-wi.install_tempo_war( "ui-fw-portlet")
+# wi.install_tempo_war( "ui-pluto", "pluto" )
+# wi.install_tempo_war( "ui-fw-portlet")
 ##
 
 title "Install xpath extension in Ode"
 explain "Required library for Ode"
 ##
 ode_webinf = File.expand_path("#{ode_war_folder}/WEB-INF")
-ode_processes_folder = "#{ode_webinf}/processes"
+# ode_processes_folder = "#{ode_webinf}/processes"
+ode_processes_folder = "#{tomcat_folder}/var/processes"
 processes_folder = "#{TEMPO_SVN}/processes/"
 opi = OdeProcessInstaller.new ode_processes_folder, processes_folder
-xp_jar = finder.search( processes_folder + "xpath-extensions" + File::SEPARATOR + "target", "jar")
-File.copy xp_jar, ode_webinf + "/lib", DEBUG
+xp_jar = finder.search( "#{processes_folder}/xpath-extensions/target", "jar")
+File.copy xp_jar, "#{ode_webinf}/lib", DEBUG
 ##
 
 title "Install TaskManager in Ode"
@@ -308,20 +316,31 @@ opi.install_process_from_tempo_trunk "AbsenceRequest"
 title "Installing missing libs into Tomcat"
 explain "Some libs are missing in tomcat, so we add them here."
 ##
-lib_folder = tomcat_folder + File::SEPARATOR + "common" + File::SEPARATOR + "lib"
+lib_folder = "#{tomcat_folder}/common/lib" # tomcat5
+#lib_folder = "#{tomcat_folder}/lib" # tomcat6
+FileUtils.mkdir_p lib_folder
 MISSING_LIBS= [
   # Mysql driver
-  "com.mysql.mysql-connector:mysql-connector-java:jar:5.1.6",
+  MYSQL_CONNECTOR,
   # Common libraries
   "commons-dbcp:commons-dbcp:jar:1.2.1",
   "commons-collections:commons-collections:jar:3.2",
-  "commons-pool:commons-pool:jar:1.3",
+  COMMONS_POOL,
+  COMMONS_LOG,
+  STAX_API,
+  "stax:stax:jar:1.2.0",
+  WSDL4J,
   # Logging libraries
-  "org.slf4j:slf4j-api:jar:1.4.3",
-  "org.slf4j:slf4j-log4j12:jar:1.4.3",
-  "org.slf4j:slf4j-log4j12:jar:1.4.3",
-  "log4j:log4j:jar:1.2.15"
-  ]
+  SLF4J,
+  LOG4J,
+  # Cas library
+  "javax.servlet:jstl:jar:1.1.2",
+  "taglibs:standard:jar:1.1.2",
+  # Pluto libraries
+  #PLUTO_DEPLOY,
+  #CASTOR,
+  #XERCES
+]
 MISSING_LIBS.each {|lib| 
   locate_and_copy( lib, lib_folder )
 }
@@ -339,9 +358,9 @@ explain "Tempo has a set of required config files, generally one for each compon
 explain "In this build, we focus on a mysql datasource, so we define a JNDI DS in the tomcat config files"
 explain "Also copying the ode config files"
 ##
-tomcat_config_folder = tomcat_folder + File::SEPARATOR + "var" + File::SEPARATOR + "config"
+tomcat_config_folder = "#{tomcat_folder}/var/config"
 FileUtils.mkdir_p tomcat_config_folder
-tempo_svn_config_folder = TEMPO_SVN+File::SEPARATOR+"config"
+tempo_svn_config_folder = "#{TEMPO_SVN}/config"
 # TODO:
 # Copying registry and deploy properties file result in not being able to access JNDI properly, 
 # filtering out and copying only xml files for the moment
@@ -382,7 +401,7 @@ title "Creating deploy folder and adding AbsenceRequest"
 explain "Adding the forms needed to run the AbsenceRequest example"
 ##
 ar_zip = finder.find_tempo_component( "forms" + File::SEPARATOR + "AbsenceRequest", "zip")
-deploy_folder = tomcat_folder + File::SEPARATOR + "var" + File::SEPARATOR + "deploy"
+deploy_folder = "#{tomcat_folder}/var/deploy"
 FileUtils.mkdir_p deploy_folder
 File.copy(ar_zip, deploy_folder, DEBUG )
 ##
@@ -396,15 +415,25 @@ Dir.glob(File.join("#{TEMPO_SVN}/rsc/tomcat", "*.*")) {|x| File.copy(x,"#{tomcat
 title "Expanding tomcat classpath"
 explain "Final touch, so the logging is done properly"
 ##
-file_cp = tomcat_bin_folder + File::SEPARATOR + "setclasspath.sh"
+file_cp = "#{tomcat_bin_folder}/setclasspath.sh"
 File.open(file_cp, File::WRONLY|File::APPEND) {|file| file << "export CLASSPATH=$CLASSPATH:$CATALINA_HOME/conf"}
 ##
 
 title "Deleting war files from webapp folder"
+explain "Make some space in the webapp folder by removing unused war files"
+##
 Dir.glob(File.join("#{webapp_folder}", "*.war")) {|x| File.delete x}
+##
 
-title "Delete servlet-api jar files"
+title "Delete conflicting jar files"
+explain "Delete files conflicting with tomcat common jar files"
+##
 Dir.glob(File.join("#{webapp_folder}", "**/servlet-api-2.4.jar")) {|x| File.delete x}
+Dir.glob(File.join("#{webapp_folder}", "**/jsp-api-2.0.jar")) {|x| File.delete x}
+Dir.glob(File.join("#{webapp_folder}", "**/log4j-*.jar")) {|x| File.delete x}
+Dir.glob(File.join("#{webapp_folder}", "**/slf4j*.jar")) {|x| File.delete x}
+#Dir.glob(File.join("#{webapp_folder}", "**/xerces*.jar")) {|x| File.delete x}
+##
 
 title "Almost done !"
 explain "Now create a mysql database named \"bpms\" with access to user <root> and no password"
