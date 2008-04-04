@@ -46,6 +46,7 @@
                 </tas:authCredentials>
                 <tas:attachmentMetadata>
                     <tas:mimeType>text/plain</tas:mimeType>
+                    <tas:filename><xsl:value-of select="/attachments/new/@title"/></tas:filename>
                 </tas:attachmentMetadata>
                 <tas:plaintext>
                     <xsl:value-of select="/attachments/new/plaintext"/>
@@ -57,7 +58,7 @@
 
     <!-- Call TAS.add -->
     <p:processor name="oxf:delegation">
-        <p:input name="interface" href="oxf/config/services.xml"/>
+        <p:input name="interface" href="oxf:/config/services.xml"/>
         <p:input name="call" href="#addRequest"/>
         <p:output name="data" id="addResponse"/>
     </p:processor>
