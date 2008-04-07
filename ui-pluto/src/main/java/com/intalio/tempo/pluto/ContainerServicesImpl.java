@@ -22,79 +22,72 @@ import org.apache.pluto.spi.optional.UserInfoService;
  * @version 1.0
  * @since Sep 21, 2004
  */
-public class ContainerServicesImpl
-    implements RequiredContainerServices, OptionalContainerServices {
+public class ContainerServicesImpl implements RequiredContainerServices, OptionalContainerServices {
 
+  private PortalContextImpl context;
+  private DriverConfiguration driverConfig;
+  private PortletEnvironmentService portletEnvironmentService;
 
-    private PortalContextImpl context;
-    private DriverConfiguration driverConfig;
-    private PortletEnvironmentService portletEnvironmentService;
+  /**
+   * Default Constructor.
+   */
+  public ContainerServicesImpl(PortalContextImpl context, DriverConfiguration driverConfig, PortletEnvironmentService portletEnvironmentService) {
+    this.context = context;
+    this.driverConfig = driverConfig;
+    this.portletEnvironmentService = portletEnvironmentService;
+  }
 
+  /**
+   * Standard Getter.
+   * @return the portal context for the portal which we service.
+   */
+  public PortalContext getPortalContext() {
+    return context;
+  }
 
-    /**
-     * Default Constructor.
-     */
-    public ContainerServicesImpl(PortalContextImpl context,
-                                 DriverConfiguration driverConfig,
-                                 PortletEnvironmentService portletEnvironmentService) {
-        this.context = context;
-        this.driverConfig = driverConfig;
-        this.portletEnvironmentService = portletEnvironmentService;
-    }
+  /**
+   * The PortletPreferencesService provides access to the portal's
+   * PortletPreference persistence mechanism.
+   * @return a PortletPreferencesService instance.
+   */
+  public PortletPreferencesService getPortletPreferencesService() {
+    return driverConfig.getPortletPreferencesService();
+  }
 
-    /**
-     * Standard Getter.
-     * @return the portal context for the portal which we service.
-     */
-    public PortalContext getPortalContext() {
-        return context;
-    }
+  /**
+   * The PortalCallbackService allows the container to communicate
+   * actions back to the portal.
+   * @return a PortalCallbackService implementation.
+   */
+  public PortalCallbackService getPortalCallbackService() {
+    return driverConfig.getPortalCallbackService();
+  }
 
-    /**
-     * The PortletPreferencesService provides access to the portal's
-     * PortletPreference persistence mechanism.
-     * @return a PortletPreferencesService instance.
-     */
-    public PortletPreferencesService getPortletPreferencesService() {
-        return driverConfig.getPortletPreferencesService();
-    }
+  /**
+   * Returns null to use pluto's default
+   * @return
+   */
+  public PortletRegistryService getPortletRegistryService() {
+    return null;
+  }
 
-    /**
-     * The PortalCallbackService allows the container to communicate
-     * actions back to the portal.
-     * @return a PortalCallbackService implementation.
-     */
-    public PortalCallbackService getPortalCallbackService() {
-        return driverConfig.getPortalCallbackService();
-    }
+  public PortletEnvironmentService getPortletEnvironmentService() {
+    return portletEnvironmentService;
+  }
 
+  public PortletInvokerService getPortletInvokerService() {
+    return null;
+  }
 
-    /**
-     * Returns null to use pluto's default
-     * @return
-     */
-    public PortletRegistryService getPortletRegistryService() {
-        return null;
-    }
+  public PortletInfoService getPortletInfoService() {
+    return null;
+  }
 
-    public PortletEnvironmentService getPortletEnvironmentService() {
-        return portletEnvironmentService;
-    }
+  public PortalAdministrationService getPortalAdministrationService() {
+    return null;
+  }
 
-    public PortletInvokerService getPortletInvokerService() {
-        return null;
-    }
-
-    public PortletInfoService getPortletInfoService() {
-        return null;
-    }
-
-    public PortalAdministrationService getPortalAdministrationService() {
-        return null;
-    }
-
-    public UserInfoService getUserInfoService() {
-        return null;
-    }
+  public UserInfoService getUserInfoService() {
+    return null;
+  }
 }
-

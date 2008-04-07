@@ -24,7 +24,7 @@ import edu.yale.its.tp.cas.proxy.ProxyTicketReceptor;
 
 public class TempoPortletEnvironmentService implements PortletEnvironmentService {
   String _endpoint;
-  
+
   public InternalActionRequest createActionRequest(PortletContainer container, HttpServletRequest request, HttpServletResponse response,
       InternalPortletWindow internalPortletWindow) {
     return new ActionRequestImpl(container, internalPortletWindow, request);
@@ -42,23 +42,22 @@ public class TempoPortletEnvironmentService implements PortletEnvironmentService
     if (rri.getAttribute(TempoPlutoConstants.TEMPO_PLUTO_USER) == null) {
       rri.setAttribute(TempoPlutoConstants.TEMPO_PLUTO_USER, uname);
     }
-    
-    /*Get proxy ticket*/
-    String pgtIou = null;
-    CASReceipt CASreceipt = (CASReceipt) request.getSession().getAttribute(CASFilter.CAS_FILTER_RECEIPT);
-    if (CASreceipt != null) {
-      pgtIou = CASreceipt.getPgtIou();
-    }
 
+    
+    String pgtIou = null;
+    // Get proxy ticket from the session
+    CASReceipt CASreceipt = (CASReceipt) request.getSession().getAttribute(CASFilter.CAS_FILTER_RECEIPT);
+    // get the proxy ticket form the PGT IOU if not in session 
+    if (CASreceipt != null) pgtIou = CASreceipt.getPgtIou(); 
+      
     String proxyTicket = null;
     if (pgtIou != null) {
       try {
         proxyTicket = ProxyTicketReceptor.getProxyTicket(pgtIou, _endpoint);
       } catch (IOException e) {
-        e.printStackTrace();
+        throw new RuntimeException("Could not get the proxy ticket",e);
       }
-    } else {
-    }
+    } 
     if (rri.getAttribute(TokenService.CAS_PROXY_TICKET) == null) {
       rri.setAttribute(TokenService.CAS_PROXY_TICKET, proxyTicket);
     }
