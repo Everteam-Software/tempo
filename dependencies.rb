@@ -86,7 +86,7 @@ GERONIMO_SPECS = {
 APACHE_JPA = [
   COMMONS,
   GERONIMO_SPECS.values,
-  "org.apache.openjpa:openjpa:jar:1.1.0-svn-620200",
+  "org.apache.openjpa:openjpa:jar:1.1.0-645340",
   "commons-logging:commons-logging:jar:1.0.4",
   "commons-lang:commons-lang:jar:2.1",
   "org.apache.derby:derby:jar:10.2.2.0",
@@ -94,7 +94,8 @@ APACHE_JPA = [
 ]
 
 MYSQL_CONNECTOR = "com.mysql.mysql-connector:mysql-connector-java:jar:5.0.4"
-# MYSQL_CONNECTOR = "com.mysql.mysql-connector:mysql-connector-java:jar:5.1.6"
+#DB2_CONNECTOR = "com.ibm.db2.jcc:jcc4:jar:9.2"
+#MYSQL_CONNECTOR = "com.mysql.mysql-connector:mysql-connector-java:jar:5.1.6"
 
 PORTLET_API = ["portlet-api:portlet-api:jar:1.0"]
 
