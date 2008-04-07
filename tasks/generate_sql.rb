@@ -22,7 +22,7 @@ end
 
 def generate_sql(classpath, schemaname="db.schema")
     schemas = []
-    %w{ Derby MySQL Oracle SQLServer}.each do |db|
+    %w{ Derby MySQL Oracle SQLServer Sybase DB2}.each do |db|
       persistence = _("src/main/resources/META-INF/persistence.xml")
       persistence_db = file("target/persistence-#{db}.xml" => persistence) do |task|
         new_properties = <<END
