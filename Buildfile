@@ -185,8 +185,8 @@ define "tempo" do
     package(:aar).with :libs => [ projects("security", "security-ws-common"), CASTOR, SLF4J, SPRING, CAS_CLIENT ]
   end
   
-  desc "Task Attachment Service Common"
-  define "tas-common" do
+  desc "Task Attachment Service"
+  define "tas-service" do
     compile.with projects("security", "security-ws-client"), 
                  AXIOM, AXIS2, COMMONS, JAXEN, SLF4J, STAX_API
 
@@ -200,12 +200,9 @@ define "tempo" do
     end
 
     package(:jar)
-  end
-
-  desc "Task Attachment Service"
-  define "tas-service" do
+    
     package(:aar).with(:libs => [ 
-        projects("security", "security-ws-client", "security-ws-common", "tas-common", "web-nutsNbolts"), JAXEN, SLF4J, SPRING])
+        projects("security", "security-ws-client", "security-ws-common", "web-nutsNbolts"), JAXEN, SLF4J, SPRING])
   end
 
   desc "Xml Beans generation"
