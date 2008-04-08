@@ -236,7 +236,7 @@ public class TMSServer implements ITMSServer {
 
     Task task;
     boolean available;
-    ArrayList<Task> problemTasks = new ArrayList<Task>();
+    ArrayList<String> problemTasks = new ArrayList<String>();
 
     UserRoles credentials = _authProvider.authenticate(participantToken);
     if (!credentials.hasSystemRole()) {
@@ -255,10 +255,11 @@ public class TMSServer implements ITMSServer {
             if (_logger.isDebugEnabled())
               _logger.debug(credentials.getUserID() + " has deleted Workflow Task " + task);
           } else {
-            problemTasks.add(task);
+            problemTasks.add(taskID);
           }
-        } catch (Exception e) {
-          _logger.error("Cannot retrieve Workflow Tasks", e);
+		} catch (Exception e) {
+		  _logger.error("Cannot retrieve Workflow Tasks", e);
+		  problemTasks.add(taskID);
         }
       }
     } finally {

@@ -18,6 +18,7 @@ package org.intalio.tempo.workflow.tms.server;
 import junit.framework.TestCase;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.axis2.AxisFault;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,6 +93,27 @@ public class TMSRequestProcessorTest extends TestCase {
     OMElement deleteRequest = Utils.loadElementFromResource("/deleteRequest1.xml");
     OMElement deleteResponse = requestProcessor.delete(deleteRequest);
     _logger.debug(Utils.toPrettyXML(deleteResponse));
+  }
+
+  public void testDeleteMultiple() throws Exception {
+    TMSRequestProcessor requestProcessor = this.createRequestProcessor();
+
+    OMElement createTaskRequest1 = Utils.loadElementFromResource("/createTaskRequest1.xml");
+    requestProcessor.create(createTaskRequest1);
+    OMElement createTaskRequest2 = Utils.loadElementFromResource("/createTaskRequest2.xml");
+    requestProcessor.create(createTaskRequest2);
+
+    try {
+      OMElement deleteRequest = Utils.loadElementFromResource("/deleteRequestMultiple.xml");
+      OMElement deleteResponse = requestProcessor.delete(deleteRequest);
+      _logger.debug(Utils.toPrettyXML(deleteResponse));
+      fail("Should have failed");
+    } catch (AxisFault e) {
+      _logger.debug(e.getMessage());
+    }
+    
+    
+
   }
 
   public void testSetOutput() throws Exception {

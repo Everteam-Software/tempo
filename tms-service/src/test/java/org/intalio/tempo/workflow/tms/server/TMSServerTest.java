@@ -86,6 +86,14 @@ public class TMSServerTest extends TestCase {
 
         server.delete(new String[] { "taskID" }, "system-user-token");
         Assert.assertEquals(0, server.getTaskList("token1").length);
+
+		try {
+            server.delete(new String[] { "taskID2" }, "system-user-token");
+            Assert.fail("Unavailable task expected");
+        } catch (UnavailableTaskException e) {
+
+        }
+		
     }
     
     public void testNotificationLifecycle() throws Exception {
