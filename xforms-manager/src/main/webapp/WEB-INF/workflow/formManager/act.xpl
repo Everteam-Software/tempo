@@ -245,7 +245,18 @@
                                                    action="/attachments" method="post" replace="instance"
                                                    instance="taskAttachments">
 
-                                    <xforms:message ev:event="xforms-submit-error" level="modal">Error, cannot delete attachment</xforms:message>
+
+												<xforms:action ev:event="xforms-submit-error">
+													<xforms:setvalue
+														ref="instance('taskAttachments')/action"
+														value="'show'"/>
+													<xforms:message ev:event="xforms-submit-error" level="modal">Error, cannot delete attachment</xforms:message>
+												</xforms:action>
+												<xforms:action ev:event="xforms-submit-done">
+												<xforms:setvalue ref="instance('taskAttachments')/action" value="'show'"/>
+												<xforms:setvalue ref="instance('taskAttachments')/new/@content" value="'file'"/>
+												<xforms:recalculate/>
+												</xforms:action>
                                 </xforms:submission>
 
                                 <!-- Declares the Save Task action -->
@@ -377,7 +388,7 @@
                                     <xforms:case id="viewTask" selected="true">
 
                                         <xforms:trigger appearance="xxforms:image"
-                                                        style="position : absolute; top : 7; left : 10">
+                                                        style="position : absolute; top : 1; left : 10">
                                             <xforms:label>Show/refresh attachments</xforms:label>
                                             <xxforms:img src="/images/attachments.gif"/>
                                             <xforms:action ev:event="DOMActivate">
@@ -387,7 +398,7 @@
                                             </xforms:action>
                                         </xforms:trigger>
 
-                                        <xforms:group ref="instance('taskAttachments')" style="width : 97%; border-width: 3px; border-style: outset; border-color: #CCCCCC; position : static; top : 0; left : 10; ">
+                                        <xforms:group ref="instance('taskAttachments')" style="width : 97%; border-color: #CCCCCC; position : static; top : 0; left : 10; ">
                                                 <xforms:trigger appearance="xxforms:image" style="float: right">
                                                     <xforms:label>Close attachments</xforms:label>
                                                     <xxforms:img src="/images/close.png"/>
