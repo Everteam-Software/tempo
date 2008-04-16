@@ -387,7 +387,7 @@ file.puts "export JAVA_OPTS=\"-XX:MaxPermSize=256m -Xms64m -Xmx512m -Dorg.intali
 # script for windows
 file_path = tomcat_bin_folder + "setenv.bat"
 file = (File.new file_path,create_mode)
-file.puts "set JAVA_OPTS=-XX:MaxPermSize=256m -Xms64m -Xmx512m -Dorg.intalio.tempo.configDirectory=$CATALINA_HOME\\var\\config -Dorg.apache.ode.configDir=$CATALINA_HOME\\var\\config"
+file.puts "set JAVA_OPTS=-XX:MaxPermSize=256m -Xms64m -Xmx512m -Dorg.intalio.tempo.configDirectory=%CATALINA_HOME%\\var\\config -Dorg.apache.ode.configDir=%CATALINA_HOME%\\var\\config"
 ##
 
 title "Changing file permissions (shell scripts)"
