@@ -9,12 +9,11 @@ require "buildr/xmlbeans"
 VERSION_NUMBER = "5.2.0.18-SNAPSHOT"
 NEXT_VERSION = "5.2.0.19"
 
-require "dependencies.rb"
-require "repositories.rb"
+require "rsc/build/dependencies.rb"
+require "rsc/build/repositories.rb"
 # leave this require after dependencies.rb so the same jpa version is used throughout the whole build
 require "tasks/openjpa"
 require "tasks/easyb"
-# require "tasks/wsdl2java"
 require "tasks/generate_sql"
 
 desc "Tempo Workflow"
