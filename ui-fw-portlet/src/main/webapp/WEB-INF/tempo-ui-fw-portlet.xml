@@ -2,6 +2,30 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
           "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
+	
+    <bean id="configuration" class="org.intalio.tempo.uiframework.Configuration" factory-method="getInstance">
+        <property name="serviceEndpoint" value="/axis2/services/TaskManagementServices"/>
+        <property name="pagingLength" value="10"/>
+    </bean>
+
+    <bean id="xFormManager" class="org.intalio.tempo.uiframework.forms.XFormsManager">
+        <property name="peopleInitiatedProcessURL" value="/xFormsManager/init"/>
+        <property name="peopleActivityURL" value="/xFormsManager/act"/>
+        <property name="notificationURL" value="/xFormsManager/notification"/>
+    </bean>
+
+    <bean id="formManagerBroker" class="org.intalio.tempo.uiframework.forms.FormManagerBroker"
+          factory-method="getInstance">
+        <property name="formManager">
+            <ref bean="xFormManager"/>
+        </property>
+    </bean>
+
+    <bean id="tokenService" class="org.intalio.tempo.security.ws.TokenClient">
+        <constructor-arg value="http://localhost:8080/axis2/services/TokenService"/>
+    </bean>
+
+    <bean id="applicationState" class="org.intalio.tempo.uiframework.UIFWApplicationState"/>
 	<!-- Tasks section -->
 	<bean id="tasksDefaultAction"
 		class="org.intalio.tempo.web.controller.ActionDef">
@@ -24,14 +48,6 @@
 		</property>
 	</bean>
 
-	
-	<bean id="messageSource"
-		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-		<property name="basenames">
-			<value>/WEB-INF/classes/messages</value>
-		</property>
-	</bean>
-
 	<!-- Change this value to change the locale used for the resource bundle -->
 	<bean id="localeResolver"
 		class="org.springframework.web.servlet.i18n.FixedLocaleResolver">
@@ -51,15 +67,4 @@
 		</property>
 	</bean>
 
-	<!-- 
-		<bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-		<property name="mappings">
-		<props>
-		<prop key="/login.htm">loginController</prop>
-		<prop key="/tasks.htm">tasksController</prop>
-		<prop key="/updates.htm">updatesController</prop>
-		</props>
-		</property>
-		</bean>
-	-->
 </beans>

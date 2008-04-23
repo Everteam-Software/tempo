@@ -8,20 +8,18 @@
 
 <portlet:defineObjects/>
     <!--js Liblary-->
-    <script type="text/javascript" src='<%=renderResponse.encodeURL(renderRequest.getContextPath() + "/script/adapter/ext/ext-base.js") %>'></script>
-    <script type="text/javascript" src='<%=renderResponse.encodeURL(renderRequest.getContextPath() + "/script/ext-all.js") %>'></script>
-    <script type="text/javascript" src='<%=renderResponse.encodeURL(renderRequest.getContextPath() + "/script/prototype.js") %>'></script>
-    <script type="text/javascript" src='<%=renderResponse.encodeURL(renderRequest.getContextPath() + "/script/entry.js") %>'></script>
-
-
+	<script src="/ui-fw-portlet/script/adapter/ext/ext-base.js" type="text/javascript"></script>
+	<script src="/ui-fw-portlet/script/ext-all.js" type="text/javascript"></script>
+	<script src="/ui-fw-portlet/script/prototype.js" type="text/javascript"></script>
+	<script src="/ui-fw-portlet/script/entry.js" type="text/javascript"></script>
+	
 <% 
 	ApplicationState as = (ApplicationState)renderRequest.getAttribute(ApplicationState.PARAMETER_NAME);
 %>
 
-<script type="text/javascript" >
+<script type="text/javascript">
 //for auto update
 window.onload = function() {
-
 	<portlet:namespace/>_startTimer(10);
 }
 
@@ -1578,6 +1576,5 @@ body.x-masked #x-msg-box .x-dlg-bd, body.x-body-masked #x-msg-box .x-dlg-bd{
         </div></div></div>
         <div class="x-box-bl"><div class="x-box-br"><div class="x-box-bc"></div></div></div>
     </div>
-
     
  

@@ -14,8 +14,6 @@ package org.intalio.tempo.web;
 import java.io.Serializable;
 
 import javax.portlet.PortletRequest;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 public abstract class ApplicationState implements Serializable {
     private static final long serialVersionUID = -7511327773807678214L;
@@ -80,13 +78,11 @@ public abstract class ApplicationState implements Serializable {
     
     
     public static <T extends ApplicationState> T getCurrentInstance(PortletRequest request) {
-        //HttpSession session = request.getSession();
         T state = (T) request.getAttribute(PARAMETER_NAME);
         return state;
     }
 
     public static void setCurrentInstance(PortletRequest request, ApplicationState state) {
-        //HttpSession session = request.getSession();
         request.setAttribute(PARAMETER_NAME, state);
     }
     

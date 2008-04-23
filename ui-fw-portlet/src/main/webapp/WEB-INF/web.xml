@@ -4,24 +4,15 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
-    <display-name>Intalio|BPMS User Interface Framework</display-name>
+    <display-name>Intalio_BPMS User Interface Framework</display-name>
 
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
-
-	<!-- 
-    <context-param>
-        <param-name>contextClass</param-name>
-        <param-value>org.intalio.tempo.web.SysPropWebApplicationContext</param-value>
-    </context-param>
- 	-->
- 	
-    <context-param>
-        <param-name>contextConfigLocation</param-name>
-        <param-value>/WEB-INF/tempo-ui-fw.xml</param-value>
-    </context-param>
-
+    <listener>
+        <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+    </listener>
+    
     <!-- servlet -->
 
 	<servlet>
@@ -29,7 +20,7 @@
 		<servlet-class>
 			org.springframework.web.servlet.ViewRendererServlet
 		</servlet-class>
-		
+		<load-on-startup>1</load-on-startup>
 	</servlet>
 
 	<servlet-mapping>
@@ -39,12 +30,19 @@
 
 	<servlet>
 		<servlet-name>UifwPortlet</servlet-name>
-		<servlet-class>
-			org.apache.pluto.core.PortletServlet
-		</servlet-class>
+		<servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
+		<!--  <servlet-class>com.liferay.portal.kernel.servlet.PortletServlet</servlet-class>-->
 		<init-param>
 			<param-name>portlet-name</param-name>
 			<param-value>UifwPortlet</param-value>
+		</init-param>
+		<init-param>
+            <param-name>portlet-class</param-name>
+            <param-value>org.springframework.web.portlet.DispatcherPortlet</param-value>
+        </init-param>
+        <init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/tempo-ui-fw-portlet.xml</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
@@ -53,6 +51,7 @@
 		<servlet-name>UifwPortlet</servlet-name>
 		<url-pattern>/PlutoInvoker/UifwPortlet</url-pattern>
 	</servlet-mapping>
+
 	<servlet>
 		<servlet-name>JsonUpdate</servlet-name>
 		<servlet-class>org.intalio.tempo.uiframework.actions.JsonUpdate</servlet-class>

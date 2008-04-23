@@ -14,6 +14,8 @@
  */
 package org.intalio.tempo.web.controller;
 
+import java.io.IOException;
+import java.lang.reflect.Method;
 import java.rmi.RemoteException;
 
 import javax.portlet.ActionRequest;
@@ -21,6 +23,7 @@ import javax.portlet.ActionResponse;
 import javax.portlet.PortletRequest;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -35,9 +38,15 @@ import org.intalio.tempo.web.User;
 import org.springframework.validation.BindException;
 import org.springframework.web.portlet.ModelAndView;
 
+import edu.yale.its.tp.cas.client.CASReceipt;
+import edu.yale.its.tp.cas.client.filter.CASFilter;
+import edu.yale.its.tp.cas.proxy.ProxyTicketReceptor;
+
 public class SecuredController extends UIController {
   private static final Logger LOG = LogManager.getLogger(SecuredController.class);
   protected final TokenService _tokenService;
+
+  private static final String PROXY_TICKET = "TEMPO_CAS_TICKET";
 
   public SecuredController(TokenService tokenService) {
     super();
@@ -49,6 +58,29 @@ public class SecuredController extends UIController {
     ModelAndView mav = null;
 
     String proxyTicket = (String) request.getAttribute(TokenService.CAS_PROXY_TICKET);
+    // For TokenFilter && Liferay
+    if (proxyTicket == null) {
+      proxyTicket = (String) request.getAttribute(PROXY_TICKET);
+      if (proxyTicket != null) {
+        Method getHttpServletRequest = request.getClass().getMethod("getHttpServletRequest", null);
+        HttpServletRequest hsr = (HttpServletRequest) getHttpServletRequest.invoke(request, null);
+
+        String pgtIou = null;
+        CASReceipt CASreceipt = (CASReceipt) (hsr.getSession().getAttribute(CASFilter.CAS_FILTER_RECEIPT));
+
+        if (CASreceipt != null)
+          pgtIou = CASreceipt.getPgtIou();
+
+        if (pgtIou != null) {
+          try {
+            proxyTicket = ProxyTicketReceptor.getProxyTicket(pgtIou, "http://localhost:8080/c/portal/login");
+          } catch (IOException e) {
+            throw new RuntimeException("Could not get the proxy ticket", e);
+          }
+        }
+      }
+    }
+
     ApplicationState state = getApplicationState(request);
     if (state.getCurrentUser() == null) {
 
@@ -60,6 +92,7 @@ public class SecuredController extends UIController {
     }
     mav = new ModelAndView("view");
     fillAuthorization(request, mav);
+
     return mav;
   }
 
