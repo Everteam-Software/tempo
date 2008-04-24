@@ -37,10 +37,14 @@ public class TaskUnmarshallerTest extends TestCase {
     }
 
     public void testMetadataUnmarshalling() throws Exception {
+        testMetadata("/taskMetadata.xml");
+    }
+
+    private void testMetadata(String file) throws Exception {
         TaskUnmarshaller unmarshaller = new TaskUnmarshaller();
         TaskMarshaller marshaller = new TaskMarshaller();
 
-        OMElement rootElement = TestUtils.loadElementFromResource("/taskMetadata.xml");
+        OMElement rootElement = TestUtils.loadElementFromResource(file);
 
         Iterator<OMElement> i = rootElement.getChildElements();
         while (i.hasNext()) {
@@ -87,6 +91,12 @@ public class TaskUnmarshallerTest extends TestCase {
         this.testFullTask("/fullPATask1.xml");
         this.testFullTask("/fullPATask2.xml");
         this.testFullTask("/fullPIPATask1.xml");
+    }
+    
+    public void testOracleTask() throws Exception {
+        TaskUnmarshaller unmarshaller = new TaskUnmarshaller();
+        OMElement rootElement = TestUtils.loadElementFromResource("/oracle.xml");
+        unmarshaller.unmarshalTaskFromMetadata(rootElement);
     }
 
     private void testBadFullTask(String resourceName) throws Exception {

@@ -22,8 +22,6 @@ import java.util.List;
 
 import javax.persistence.MappedSuperclass;
 
-import org.intalio.tempo.workflow.util.RequiredArgumentException;
-
 @MappedSuperclass
 public class AuthIdentifierSet extends HashSet<String> {
 
@@ -51,9 +49,8 @@ public class AuthIdentifierSet extends HashSet<String> {
     }
 
     public boolean add(String authID) {
-        if (authID == null) {
-            throw new RequiredArgumentException("authID");
-        }
+        // ignore null parameters.
+        if (authID == null) return true; 
         String normalizedID = AuthIdentifierNormalizer.normalizeAuthIdentifier(authID);
         return super.add(normalizedID);
     }

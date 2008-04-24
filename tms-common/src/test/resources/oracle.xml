@@ -1,0 +1,22 @@
+<tms:task
+	xmlns:tms="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+	<tms:taskId>
+		6d2e2e3c79b45ab0:f827129:1197c30e175:-7ecf10.7.1.4129
+	</tms:taskId>
+	<tms:taskState>READY</tms:taskState>
+	<tms:taskType>ACTIVITY</tms:taskType>
+	<tms:description>Examples - Absence Approval</tms:description>
+	<tms:processId>87201ec8-df5c-42fd-b54e-8504916a8b07</tms:processId>
+	<tms:creationDate>2008-04-23T09:55:51.000-07:00</tms:creationDate>
+	<tms:userOwner xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:nil="true" />
+	<tms:roleOwner>examples\manager</tms:roleOwner>
+	<tms:formUrl>
+		http://data1.intalio.com:8080/wds/AbsenceRequest/AbsenceApproval.xform
+	</tms:formUrl>
+	<tms:userProcessCompleteSOAPAction>
+		http://www.example.com/AbsenceRequest/Manager_To_AbsenceRequest/Manager_To_AbsenceRequest_PortType/Receive_Manager_Approval
+	</tms:userProcessCompleteSOAPAction>
+	<tms:isChainedBefore>false</tms:isChainedBefore>
+	<tms:attachments />
+</tms:task>
