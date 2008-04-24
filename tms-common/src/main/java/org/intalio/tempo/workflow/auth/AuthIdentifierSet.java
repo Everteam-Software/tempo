@@ -22,6 +22,8 @@ import java.util.List;
 
 import javax.persistence.MappedSuperclass;
 
+import org.apache.commons.lang.StringUtils;
+
 @MappedSuperclass
 public class AuthIdentifierSet extends HashSet<String> {
 
@@ -49,8 +51,8 @@ public class AuthIdentifierSet extends HashSet<String> {
     }
 
     public boolean add(String authID) {
-        // ignore null parameters.
-        if (authID == null) return true; 
+        // ignore null parameters and empty strings
+        if (StringUtils.isEmpty(authID)) return true; 
         String normalizedID = AuthIdentifierNormalizer.normalizeAuthIdentifier(authID);
         return super.add(normalizedID);
     }
