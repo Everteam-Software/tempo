@@ -203,20 +203,24 @@ ORBEON_MSV = [
   group("msv", "isorelax", "relaxng-datatype","xsdlib", :under => "msv", :version => "20070407")
 ]
 
-ORBEON_LIBS = [
-     JAVAMAIL,
-     ORBEON_AXIS,
-     ORBEON_COMMONS,
-     ORBEON_CORE,
-     ORBEON_CUSTOM,
-     ORBEON_MSV,
+ORBEON_LIBS_NO_JAXEN = [
+  JAVAMAIL,
+  ORBEON_AXIS,
+  ORBEON_COMMONS,
+  ORBEON_CORE,
+  ORBEON_CUSTOM,
+  ORBEON_MSV,
   DOM4J,
   GERONIMO_SPECS["jms"],
-  "orbeon:jaxen:jar:1.1-beta-1-dev",
   "jdom:jdom:jar:b9",
   "struts:struts:jar:1.2.9",
   "jtidy:jtidy:jar:8.0-20060801.131059-3",
   PORTLET_API
+]
+
+ORBEON_LIBS = [
+  ORBEON_LIBS_NO_JAXEN,
+  "orbeon:jaxen:jar:1.1-beta-1-dev",  
 ]
 
 # For testing
