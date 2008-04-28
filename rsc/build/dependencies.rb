@@ -215,6 +215,7 @@ ORBEON_LIBS_NO_JAXEN = [
   "jdom:jdom:jar:b9",
   "struts:struts:jar:1.2.9",
   "jtidy:jtidy:jar:8.0-20060801.131059-3",
+  "backport-util-concurrent:backport-util-concurrent:jar:2.2",
   PORTLET_API
 ]
 
