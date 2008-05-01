@@ -36,9 +36,9 @@ define "tempo" do
   end
    
   define "dao-tools" do
-    compile.with projects("security", "security-ws-client", "tms-axis", "tms-common", "tms-service", "wds-service", "tms-client", "web-nutsNbolts", "dao-nutsNbolts"), APACHE_JPA, AXIOM, AXIS2, COMMONS, JAXEN, SLF4J, SPRING, STAX_API, XMLBEANS
+    compile.with projects("security", "security-ws-client", "tms-axis", "tms-common", "tms-service", "wds-service", "tms-client", "web-nutsNbolts", "dao-nutsNbolts"), APACHE_JPA, AXIOM, AXIS2, COMMONS, JAXEN, JYAML, SLF4J, SPRING, STAX_API, XMLBEANS
 
-    test.with CASTOR, LOG4J, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES
+    test.with projects("tms-common"), CASTOR, LOG4J, MYSQL_CONNECTOR, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES
     package :war
   end
   

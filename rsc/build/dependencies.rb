@@ -77,6 +77,8 @@ LOG4J = [ "log4j:log4j:jar:1.2.15" ]
 
 JPA = [ "javax.persistence:persistence-api:jar:1.0" ]
 
+JYAML = [ "org.jyaml:jyaml:jar:1.3"]
+
 GERONIMO_SPECS = {
   "jta" => "org.apache.geronimo.specs:geronimo-jta_1.1_spec:jar:1.1",
   "jpa" => "org.apache.geronimo.specs:geronimo-jpa_3.0_spec:jar:1.0",
