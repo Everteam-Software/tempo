@@ -33,7 +33,7 @@ public class TokenServiceImpl implements TokenService {
 
     String _validateURL;
     String _serviceURL;
-    Boolean _passwordAsAProperty;
+    boolean _passwordAsAProperty;
 
     public TokenServiceImpl() {
         // nothing
