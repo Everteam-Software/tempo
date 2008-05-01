@@ -14,7 +14,7 @@ package org.intalio.tempo.workflow.tas.core;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.intalio.tempo.workflow.tas.core.AttachmentMetadata;
+import org.intalio.tempo.security.Property;
 
 /**
  * Storage strategy is responsible for storing attachment payload and removing it from storage.
@@ -34,7 +34,7 @@ public interface StorageStrategy {
      *             If the payload storage operation failed. <b>Note:</b> logicallly, there can be no high-level error
      *             at this point, thus only a low-level <code>IOException</code> may be thrown.
      */
-    String storeAttachment(AttachmentMetadata metadata, InputStream payload)
+    String storeAttachment(Property[] properties, AttachmentMetadata metadata, InputStream payload)
             throws IOException;
 
     /**
@@ -45,6 +45,6 @@ public interface StorageStrategy {
      * @throws UnavailableAttachmentException
      *             If the specified attachment payloadis not available for deletion.
      */
-    void deleteAttachment(String url)
+    void deleteAttachment(Property[] props, String url)
             throws UnavailableAttachmentException;
 }

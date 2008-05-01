@@ -11,7 +11,7 @@
  */
 package org.intalio.tempo.workflow.tas.core;
 
-import org.intalio.tempo.workflow.tas.core.AuthCredentials;
+import org.intalio.tempo.security.Property;
 
 /**
  * Defines the set of operations for the Authentication/Authorization strategy of
@@ -26,6 +26,6 @@ public interface AuthStrategy {
      * If the specified credential set does not authorize the invocation successfully, this method throws an
      * {@link AuthException}.
      */
-    void authenticate(AuthCredentials credentials)
+    Property[] authenticate(AuthCredentials credentials)
             throws AuthException;
 }

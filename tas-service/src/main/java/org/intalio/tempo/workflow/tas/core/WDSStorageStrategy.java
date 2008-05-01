@@ -25,6 +25,7 @@ import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
 import org.apache.commons.httpclient.methods.PutMethod;
+import org.intalio.tempo.security.Property;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -96,7 +97,7 @@ public class WDSStorageStrategy implements StorageStrategy {
 
     }
 
-    public String storeAttachment(AttachmentMetadata metadata, InputStream payload) throws IOException {
+    public String storeAttachment(Property[] props, AttachmentMetadata metadata, InputStream payload) throws IOException {
         // need to sanitize the filename because of some browsers (e.g. Internet Exploder)
         String filename = sanitize(metadata.getFilename());
         String uri = java.util.UUID.randomUUID().toString() + "/" + filename;
@@ -116,7 +117,7 @@ public class WDSStorageStrategy implements StorageStrategy {
         return fullUrl;
     }
 
-    public void deleteAttachment(String url) throws UnavailableAttachmentException {
+    public void deleteAttachment(Property[] props, String url) throws UnavailableAttachmentException {
         _logger.debug("Requested to delete attachment: '" + url + "'");
 
         DeleteMethod deleteMethod = new DeleteMethod(url);

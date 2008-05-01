@@ -14,6 +14,7 @@ package org.intalio.tempo.workflow.tas.axis2;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.intalio.tempo.security.Property;
 import org.intalio.tempo.workflow.tas.core.AttachmentMetadata;
 import org.intalio.tempo.workflow.tas.core.StorageStrategy;
 import org.intalio.tempo.workflow.tas.core.UnavailableAttachmentException;
@@ -27,13 +28,13 @@ import org.slf4j.LoggerFactory;
 public class DummyStorageStrategy implements StorageStrategy {
     private static final Logger _logger = LoggerFactory.getLogger(DummyStorageStrategy.class);
 
-    public String storeAttachment(AttachmentMetadata metadata, InputStream payload)
+    public String storeAttachment(Property[] props, AttachmentMetadata metadata, InputStream payload)
             throws IOException {
         _logger.debug("Dummy storage item storing OK."+metadata);
         return "http://dummy-URL";
     }
 
-    public void deleteAttachment(String url)
+    public void deleteAttachment(Property[] props, String url)
             throws UnavailableAttachmentException {
         _logger.debug("Dummy storage item deletion OK.");
         _logger.debug("URL: '" + url + "'");

@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import org.intalio.tempo.security.Property;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,20 +74,20 @@ public class TaskAttachmentServiceImpl implements TaskAttachmentService {
             throws AuthException,
                 InvalidRequestException,
                 IOException {
-        _authStrategy.authenticate(authCredentials);
+        Property[] props = _authStrategy.authenticate(authCredentials);
         URL localFileUrlObject = new URL(localFileUrl);
-        String storedUrl = _storageStrategy.storeAttachment(metadata, localFileUrlObject.openStream());
+        String storedUrl = _storageStrategy.storeAttachment(props, metadata, localFileUrlObject.openStream());
         return storedUrl;
     }
 
     public String add(AuthCredentials authCredentials, AttachmentMetadata metadata, byte[] payload)
             throws AuthException,
                 InvalidRequestException {
-        _authStrategy.authenticate(authCredentials);
+        Property[] props = _authStrategy.authenticate(authCredentials);
         InputStream inputStream = new ByteArrayInputStream(payload);
         String storedUrl = null;
         try {
-            storedUrl = _storageStrategy.storeAttachment(metadata, inputStream);
+            storedUrl = _storageStrategy.storeAttachment(props, metadata, inputStream);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -97,8 +98,8 @@ public class TaskAttachmentServiceImpl implements TaskAttachmentService {
             throws AuthException,
                 InvalidRequestException,
                 UnavailableAttachmentException {
-        _authStrategy.authenticate(authCredentials);
-        _storageStrategy.deleteAttachment(attachmentUrl);
+        Property[] props = _authStrategy.authenticate(authCredentials);
+        _storageStrategy.deleteAttachment(props, attachmentUrl);
     }
 
 }

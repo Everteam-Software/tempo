@@ -89,7 +89,7 @@ public class N3AuthStrategy implements AuthStrategy {
         return _tokenService;
     }
 
-    public void authenticate(AuthCredentials credentials)
+    public Property[] authenticate(AuthCredentials credentials)
             throws AuthException {
         String participantToken = credentials.getParticipantToken();
         try {
@@ -129,6 +129,8 @@ public class N3AuthStrategy implements AuthStrategy {
             }
             
             _logger.debug("Access granted OK.");
+            
+            return properties;
         } catch (Exception e) {
             throw new AuthException(e);
         }
