@@ -1,0 +1,6 @@
+username:intalio\admin
+fakerun:true
+queries:
+ - !org.intalio.tempo.persistence.Query 
+   klass:org.intalio.tempo.workflow.task.PATask
+   subquery:T._id > '100'

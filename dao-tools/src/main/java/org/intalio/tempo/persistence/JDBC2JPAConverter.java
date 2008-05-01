@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
+import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
 import org.intalio.tempo.workflow.tms.server.dao.JDBCTaskDAOConnection;
@@ -59,6 +61,11 @@ public class JDBC2JPAConverter implements ConverterInterface {
 
         // jpaItemConnection = JPAItemFactory.openConnection();
         jpaTaskConnection = JPATaskFactory.openConnection();
+        
+        String userName = "niko";
+        UserRoles ur = new UserRoles(userName, new AuthIdentifierSet());
+        
+        
 
         // itemConnection =
         // JPAItemFactory.getUnderlyingJDBCConnectionFromEntityManager();
