@@ -20,7 +20,6 @@ import org.intalio.tempo.deployment.DeploymentService;
 import org.intalio.tempo.deployment.spi.DeploymentServiceCallback;
 import org.intalio.tempo.registry.Registry;
 import org.intalio.tempo.registry.RegistryFactory;
-import org.springframework.util.SystemPropertyUtils;
 
 /**
  * Utility class to lookup DeploymentService.
@@ -50,7 +49,7 @@ public class DeploymentServiceLookup {
         registryFactory.init();
         _registry = registryFactory.getRegistry();
         
-        String configFile = SystemPropertyUtils.resolvePlaceholders(propertyFile);
+        String configFile = resolveSystemProperties(propertyFile);
         try {
             Properties props = new Properties();
             if (new File(configFile).exists())
@@ -82,6 +81,25 @@ public class DeploymentServiceLookup {
     @SuppressWarnings("unchecked")
     private <T> T lookup(String name) {
         return (T) _registry.lookup(name, getClass().getClassLoader());
+    }
+
+    private static String resolveSystemProperties(String str) {
+        int fromIndex = 0;
+        while (true) {
+            int start = str.indexOf("${", fromIndex);
+            if (start < 0) break;
+            int end = str.indexOf("}", start);
+            if (end < 0) break;
+            String replace = str.substring(start, end+1);
+            String key = str.substring(start+2, end);
+            String value = System.getProperty(key);
+            if (value != null) {
+                str = str.replace(replace, value);
+            } else {
+                fromIndex = start+2;
+            }
+        }
+        return str;
     }
     
 }
