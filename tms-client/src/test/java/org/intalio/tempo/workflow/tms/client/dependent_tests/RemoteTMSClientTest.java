@@ -32,6 +32,7 @@ import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.task.attachments.AttachmentMetadata;
 import org.intalio.tempo.workflow.task.xml.TaskMarshaller;
 import org.intalio.tempo.workflow.task.xml.TaskUnmarshaller;
+import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.tms.ITaskManagementService;
 import org.intalio.tempo.workflow.tms.client.RemoteTMSFactory;
 import org.intalio.tempo.workflow.util.TaskEquality;
@@ -199,4 +200,9 @@ public class RemoteTMSClientTest extends TestCase {
         _logger.debug(task2.getRoleOwners().toString());
         tms.deletePipa(task1.getFormURLAsString());
     }
+    
+//    public void testStrangeParsing() throws Exception {
+//        OMElement response = Utils.loadElementFromResource("/response.xml");
+//        new XmlTooling().convertOMToDOM(response);
+//    }
 }

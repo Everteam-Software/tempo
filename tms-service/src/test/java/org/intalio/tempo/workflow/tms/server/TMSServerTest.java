@@ -35,12 +35,10 @@ public class TMSServerTest extends TestCase {
         junit.textui.TestRunner.run(TMSServerTest.class);
     }
 
-    public void testPATaskLifecycle()
-            throws Exception {
+    public void testPATaskLifecycle() throws Exception {
         ITMSServer server = Utils.createTMSServer();
 
-        PATask paTask = new PATask("taskID", new URI("http://localhost/1"), "processID", "urn:completeSOAPAction",
-                Utils.createXMLDocument());
+        PATask paTask = new PATask("taskID", new URI("http://localhost/1"), "processID", "urn:completeSOAPAction", Utils.createXMLDocument());
         paTask.getUserOwners().add("test/user1");
         paTask.getRoleOwners().add("test/role3");
         server.create(paTask, "token1");
@@ -80,27 +78,25 @@ public class TMSServerTest extends TestCase {
         try {
             server.delete(new String[] { "taskID" }, "token1");
             Assert.fail("AuthException expected");
-        } catch (AuthException e) {
+        } catch (UnavailableTaskException e) {
 
         }
 
         server.delete(new String[] { "taskID" }, "system-user-token");
         Assert.assertEquals(0, server.getTaskList("token1").length);
 
-		try {
+        try {
             server.delete(new String[] { "taskID2" }, "system-user-token");
             Assert.fail("Unavailable task expected");
         } catch (UnavailableTaskException e) {
 
         }
-		
+
     }
-    
+
     public void testNotificationLifecycle() throws Exception {
         ITMSServer server = Utils.createTMSServer();
-
-        Notification notification = new Notification("taskID", new URI("http://localhost/1"),
-                Utils.createXMLDocument());
+        Notification notification = new Notification("taskID", new URI("http://localhost/1"), Utils.createXMLDocument());
         notification.getUserOwners().add("test/user1");
         notification.getRoleOwners().add("test/role3");
         server.create(notification, "token1");
@@ -132,11 +128,11 @@ public class TMSServerTest extends TestCase {
         try {
             server.delete(new String[] { "taskID" }, "token1");
             Assert.fail("AuthException expected");
-        } catch (AuthException e) {
+        } catch (UnavailableTaskException e) {
 
         }
 
         server.delete(new String[] { "taskID" }, "system-user-token");
-        Assert.assertEquals(0, server.getTaskList("token1").length);        
+        Assert.assertEquals(0, server.getTaskList("token1").length);
     }
 }

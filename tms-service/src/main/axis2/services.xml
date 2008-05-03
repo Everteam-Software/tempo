@@ -95,6 +95,11 @@
             <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/deletePipa</actionMapping>
         </operation>
         
+        <operation name="deleteAll">
+            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+            <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/deleteAll</actionMapping>
+        </operation>
+        
         <operation name="getPipa">
             <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
             <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getPipa</actionMapping>

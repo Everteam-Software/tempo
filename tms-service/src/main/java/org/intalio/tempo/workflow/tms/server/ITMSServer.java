@@ -73,4 +73,6 @@ public interface ITMSServer {
     void deletePipa(String formUrl, String participantToken) throws AuthException, UnavailableTaskException;
 
     PIPATask getPipa(String formUrl, String participantToken) throws AuthException, UnavailableTaskException;
+
+    void deleteAll(boolean fakeDelete, String subquery, String subqueryClass, String participantToken) throws AuthException, UnavailableTaskException;
 }

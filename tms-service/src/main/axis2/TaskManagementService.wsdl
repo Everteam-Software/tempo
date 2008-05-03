@@ -146,6 +146,16 @@
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
+			<xsd:element name="deleteAllRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="taskType" type="xsd:string" maxOccurs="1" minOccurs="0"/>
+						<xsd:element name="subQuery" type="xsd:string" maxOccurs="1" minOccurs="0"/>
+						<xsd:element name="fakeDelete" type="xsd:boolean" maxOccurs="1" minOccurs="1"/>
+						<xsd:element name="participantToken" type="xsd:string" maxOccurs="1" minOccurs="1"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
 			<xsd:element name="createRequest">
 				<xsd:complexType>
 					<xsd:sequence>
@@ -391,6 +401,9 @@
 	<wsdl:message name="deleteRequest">
 		<wsdl:part name="deleteRequest" element="tns:deleteRequest"/>
 	</wsdl:message>
+	<wsdl:message name="deleteAllRequest">
+		<wsdl:part name="deleteAllRequest" element="tns:deleteAllRequest"/>
+	</wsdl:message>
 	<wsdl:message name="createRequest">
 		<wsdl:part name="createRequest" element="tns:createRequest"/>
 	</wsdl:message>
@@ -467,6 +480,14 @@
 		</wsdl:operation>
 		<wsdl:operation name="delete">
 			<wsdl:input message="tns:deleteRequest"/>
+			<wsdl:output message="tns:okResponse"/>
+			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault"/>
+			<wsdl:fault name="AccessDenied" message="tns:accessDeniedFault"/>
+			<wsdl:fault name="UnavailableTasks" message="tns:unavailableTaskFault"/>
+			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault"/>
+		</wsdl:operation>
+		<wsdl:operation name="deleteAll">
+			<wsdl:input message="tns:deleteAllRequest"/>
 			<wsdl:output message="tns:okResponse"/>
 			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault"/>
 			<wsdl:fault name="AccessDenied" message="tns:accessDeniedFault"/>
@@ -626,6 +647,27 @@
 		</wsdl:operation>
 		<wsdl:operation name="delete">
 			<soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/delete"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="UnavailableTasks">
+				<soap:fault name="UnavailableTasks" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="AccessDenied">
+				<soap:fault name="AccessDenied" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="InvalidParticipantToken">
+				<soap:fault name="InvalidParticipantToken" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="InvalidInputMessage">
+				<soap:fault name="InvalidInputMessage" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="deleteAll">
+			<soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/deleteAll"/>
 			<wsdl:input>
 				<soap:body use="literal"/>
 			</wsdl:input>

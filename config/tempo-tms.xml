@@ -24,7 +24,17 @@
 		<property name="taskDAOFactory">
 			<ref bean="tms.daoFactory"/>
 		</property>
+		<property name="permissions">
+			<ref bean="tms.permissionsHandler"/>
+		</property>
 	</bean>
+	
+	<bean id="tms.permissionsHandler" class="org.intalio.tempo.workflow.tms.server.permissions.TaskPermissions">
+		<constructor-arg><map>
+			<entry key="delete"><set><value>intalio\\admin</value></set></entry>
+		</map></constructor-arg>
+	</bean>
+
 	<bean id="tms.authProvider" class="org.intalio.tempo.workflow.auth.n3.N3AuthProvider">
 		<property name="wsEndpoint">
 			<value>http://localhost:8080/axis2/services/TokenService</value>
