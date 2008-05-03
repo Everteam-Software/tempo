@@ -33,9 +33,11 @@ import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.intalio.tempo.workflow.wds.core.ComponentManager;
 import org.intalio.tempo.workflow.wds.core.Item;
+import org.intalio.tempo.workflow.wds.core.PIPALoader;
 import org.intalio.tempo.workflow.wds.core.UnavailableItemException;
 import org.intalio.tempo.workflow.wds.core.WDSService;
 import org.intalio.tempo.workflow.wds.core.WDSServiceFactory;
+import org.intalio.tempo.workflow.wds.core.XFormComponentManager;
 import org.intalio.tempo.workflow.wds.core.xforms.XFormsProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,7 +73,9 @@ public class WDSServlet extends HttpServlet {
 
     private WDSServiceFactory _wdsFactory;
     private ComponentManager _deployer;
+    private XFormComponentManager _xformDeployer;
     private DeploymentServiceRegister _register;
+    private DeploymentServiceRegister _registerXForm;
     
     
     @Override
@@ -93,6 +97,10 @@ public class WDSServlet extends HttpServlet {
         _deployer = new ComponentManager(_wdsFactory);
         _register = new DeploymentServiceRegister(_deployer);
         _register.init();
+
+        _xformDeployer = new XFormComponentManager(_wdsFactory);
+        _registerXForm = new DeploymentServiceRegister(_xformDeployer);
+        _registerXForm.init();
         
         LOG.debug("Servlet initialized.");
     }
@@ -100,7 +108,10 @@ public class WDSServlet extends HttpServlet {
     @Override
     public void destroy() {
         super.destroy();
-        _register.destroy();
+        if (_register != null)
+            _register.destroy();
+        if (_registerXForm != null)
+            _registerXForm.destroy();
     }
     
     /**

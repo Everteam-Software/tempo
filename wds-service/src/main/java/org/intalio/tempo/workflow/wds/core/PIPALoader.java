@@ -9,7 +9,7 @@
  * Contributors:
  * Intalio inc. - initial API and implementation
  */
-package org.intalio.tempo.workflow.wds.servlets;
+package org.intalio.tempo.workflow.wds.core;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -21,6 +21,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 
 import org.intalio.tempo.workflow.task.PIPATask;
+import org.intalio.tempo.workflow.wds.servlets.InvalidRequestFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

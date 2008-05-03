@@ -21,30 +21,28 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import org.intalio.tempo.deployment.ComponentId;
 import org.intalio.tempo.deployment.DeploymentMessage;
 import org.intalio.tempo.deployment.DeploymentMessage.Level;
 import org.intalio.tempo.security.token.TokenContext;
-import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.wds.core.xforms.XFormsProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ComponentManager implements org.intalio.tempo.deployment.spi.ComponentManager {
-    private static final Logger LOG = LoggerFactory.getLogger(ComponentManager.class);
+public class XFormComponentManager implements org.intalio.tempo.deployment.spi.ComponentManager {
+    private static final Logger LOG = LoggerFactory.getLogger(XFormComponentManager.class);
 
     private WDSServiceFactory _wdsFactory;
 
-    public ComponentManager(WDSServiceFactory wdsFactory) {
+    public XFormComponentManager(WDSServiceFactory wdsFactory) {
         _wdsFactory = wdsFactory;
     }
 
     // ------------------ ComponentManager implementation ------------------------
 
     public String getComponentManagerName() {
-        return "formmanager";
+        return "xform";
     }
 
     public void activate(ComponentId name, File path) {
@@ -88,7 +86,7 @@ public class ComponentManager implements org.intalio.tempo.deployment.spi.Compon
     }
 
     public void undeploy(ComponentId name) {
-        // TODO: We need to record which PIPAs, XForms and Items were deployed for this component.
+        // TODO: We need to record which XForms and Items were deployed for this component.
     }
 
     public void start(ComponentId name) {
@@ -101,54 +99,6 @@ public class ComponentManager implements org.intalio.tempo.deployment.spi.Compon
 
     // ------------------ Common deployment methods ------------------------
 
-    public DeploymentMessage checkPipa(String token, WDSService wds, InputStream input, String name) {
-        DeploymentMessage msg = null;
-        try {
-            PIPATask task = loadPIPADescriptor(input);
-            if (task.isValid()) {
-                /*
-                 * ALEX: Disabled until we get token propagation from deploy-impl PIPATask existing =
-                 * wds.getPipaTask(task.getFormURLAsString(), token); if (existing != null) { msg = new
-                 * DeploymentMessage(Level.ERROR, "PIPA task already exists: "+task.getFormURLAsString());
-                 * msg.setResource(name); }
-                 */
-            } else {
-                msg = new DeploymentMessage(Level.ERROR, "Invalid PIPA task descriptor: " + name);
-                msg.setResource(name);
-            }
-        } catch (Exception e) {
-            LOG.error("Error while storing item: " + name, e);
-            msg = new DeploymentMessage(Level.ERROR, e.toString());
-            msg.setResource(name);
-        }
-        return msg;
-    }
-
-    public DeploymentMessage processPipa(String token, WDSService wds, InputStream input, String name) {
-        DeploymentMessage msg = null;
-        try {
-            PIPATask task = loadPIPADescriptor(input);
-            if (task.isValid()) {
-                LOG.debug("Store PIPA {}", name);
-                wds.storePipaTask(task, token);
-            } else {
-                msg = new DeploymentMessage(Level.ERROR, "Invalid PIPA task descriptor: " + name);
-                msg.setResource(name);
-            }
-        } catch (Exception e) {
-            LOG.error("Error while storing item: " + name, e);
-            msg = new DeploymentMessage(Level.ERROR, e.toString());
-            msg.setResource(name);
-        }
-        return msg;
-    }
-
-    public PIPATask loadPIPADescriptor(InputStream input) throws IOException {
-        Properties prop = new Properties();
-        prop.load(input);
-        PIPATask task = PIPALoader.parsePipa(prop);
-        return task;
-    }
 
     public DeploymentMessage checkItem(String token, WDSService wds, InputStream input, String itemURL) {
         DeploymentMessage msg = null;
@@ -215,9 +165,7 @@ public class ComponentManager implements org.intalio.tempo.deployment.spi.Compon
                     DeploymentMessage msg = null;
                     InputStream input = new FileInputStream(f);
                     try {
-                        if (f.getName().endsWith(".pipa")) {
-                            msg = checkPipa(token, wds, input, relativePath(base, f));
-                        } else if (f.getName().endsWith(".xform")) {
+                        if (f.getName().endsWith(".xform")) {
                             msg = checkXForm(token, wds, input, relativePath(base, f));
                         } else {
                             msg = checkItem(token, wds, input, relativePath(base, f));
@@ -252,9 +200,7 @@ public class ComponentManager implements org.intalio.tempo.deployment.spi.Compon
                     DeploymentMessage msg = null;
                     InputStream input = new FileInputStream(f);
                     try {
-                        if (f.getName().endsWith(".pipa")) {
-                            msg = processPipa(token, wds, input, relativePath(base, f));
-                        } else if (f.getName().endsWith(".xform")) {
+                        if (f.getName().endsWith(".xform")) {
                             msg = processXForm(token, wds, input, relativePath(base, f));
                         } else {
                             msg = processItem(token, wds, input, relativePath(base, f));

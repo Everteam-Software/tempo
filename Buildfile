@@ -44,7 +44,7 @@ define "tempo" do
   
   desc "Deployment API"
   define "deploy-api" do
-    compile.with project("registry"), SLF4J, SPRING
+    compile.with project("registry"), SLF4J
     package :jar
   end
 
@@ -107,7 +107,8 @@ define "tempo" do
   desc "Workflow Forms"
   define "forms" do
     define "AbsenceRequest" do
-      package(:zip).path("AbsenceRequest.formmanager").include(_("src/main/xform/*"))
+      package(:zip).path("AbsenceRequest.pipa").include(_("src/main/pipa/*"))
+      package(:zip).path("AbsenceRequest.xform").include(_("src/main/xform/*"))
     end
   end
   
@@ -239,7 +240,7 @@ define "tempo" do
   
   desc "Task Management Service"
   define "tms-service" do
-    libs = projects("security", "security-ws-client", "tms-axis", "tms-common", "tms-client", "web-nutsNbolts", "dao-nutsNbolts"),
+    libs = projects("deploy-api", "security", "security-ws-client", "tms-axis", "tms-common", "tms-client", "web-nutsNbolts", "dao-nutsNbolts"),
     APACHE_JPA, AXIOM, AXIS2, COMMONS, JAXEN, SLF4J, SPRING, STAX_API, XMLBEANS, MYSQL_CONNECTOR
   
     compile.with libs
@@ -261,7 +262,7 @@ define "tempo" do
 
     package(:jar)
     package(:aar).with :libs => 
-        [ projects("security", "security-ws-client", "security-ws-common", "tms-axis", "tms-common", "web-nutsNbolts", "dao-nutsNbolts"), APACHE_JPA, SLF4J, SPRING ] 
+        [ projects("deploy-api", "registry", "security", "security-ws-client", "security-ws-common", "tms-axis", "tms-common", "web-nutsNbolts", "dao-nutsNbolts"), APACHE_JPA, SLF4J, SPRING ] 
   end
   
   desc "User-Interface Framework"

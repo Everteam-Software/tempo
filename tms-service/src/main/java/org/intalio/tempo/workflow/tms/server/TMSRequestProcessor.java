@@ -23,6 +23,7 @@ import java.util.List;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axis2.AxisFault;
+import org.intalio.tempo.deployment.utils.DeploymentServiceRegister;
 import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.UserRoles;
@@ -52,13 +53,23 @@ public class TMSRequestProcessor extends OMUnmarshaller {
   final static Logger _logger = LoggerFactory.getLogger(TMSRequestProcessor.class);
 
   private ITMSServer _server = null;
-
+  private PIPAComponentManager _pipa;
+  private DeploymentServiceRegister _registerPipa;
+  
   public TMSRequestProcessor() throws Exception {
     super(TaskXMLConstants.TASK_NAMESPACE, TaskXMLConstants.TASK_NAMESPACE_PREFIX);
+    _logger.debug("Created TMSRequestProcessor");
   }
 
   public void setServer(ITMSServer server) {
+      _logger.debug("TMSRequestProcessor.setServer");
+    if (_registerPipa != null) {
+      _registerPipa.destroy();
+    }
     _server = server;
+    _pipa = new PIPAComponentManager(_server);
+    _registerPipa = new DeploymentServiceRegister(_pipa);
+    _registerPipa.init();
   }
 
   public OMElement getTaskList(final OMElement requestElement) throws AxisFault {
@@ -516,6 +527,14 @@ public class TMSRequestProcessor extends OMUnmarshaller {
   private AxisFault makeFault(Exception e) {
     _logger.error(e.getMessage(), e);
     return AxisFault.makeFault(e);
+  }
+  
+  protected void finalize() throws Throwable {
+      if (_registerPipa != null) {
+          _registerPipa.destroy();
+          _registerPipa = null;
+      }
+      super.finalize();
   }
 
   private abstract class TMSResponseMarshaller extends OMMarshaller {
