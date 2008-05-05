@@ -25,7 +25,7 @@ define "tempo" do
   compile.options.target = "1.5"
 
   define "cas-server-webapp" do
-    libs = projects("security", "security-ws-client", "security-ws-common"), AXIOM, AXIS2, CAS_LIBS, COMMONS, COMMONS_LOG, LOG4J, WS_COMMONS_SCHEMA
+    libs = projects("security", "security-ws-client", "security-ws-common"), AXIOM, AXIS2, CAS_LIBS, APACHE_COMMONS[:logging], LOG4J, WS_COMMONS_SCHEMA
     compile.with libs
     package(:war).with :libs=>libs
   end
@@ -36,9 +36,9 @@ define "tempo" do
   end
    
   define "dao-tools" do
-    compile.with projects("security", "security-ws-client", "tms-axis", "tms-common", "tms-service", "wds-service", "tms-client", "web-nutsNbolts", "dao-nutsNbolts"), APACHE_JPA, AXIOM, AXIS2, COMMONS, JAXEN, JYAML, SLF4J, SPRING, STAX_API, XMLBEANS
+    compile.with projects("security", "security-ws-client", "tms-axis", "tms-common", "tms-service", "wds-service", "tms-client", "web-nutsNbolts", "dao-nutsNbolts"), APACHE_JPA, AXIOM, AXIS2, JAXEN, JYAML, SLF4J, SPRING[:core], STAX_API, XMLBEANS
 
-    test.with projects("tms-common"), CASTOR, LOG4J, MYSQL_CONNECTOR, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES
+    test.with projects("tms-common"), APACHE_COMMONS[:pool], CASTOR, APACHE_DERBY, LOG4J, MYSQL_CONNECTOR, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES
     package :war
   end
   
@@ -50,7 +50,7 @@ define "tempo" do
 
   desc "Deployment Service Implementation"
   define "deploy-impl" do
-    compile.with projects("deploy-api", "web-nutsNbolts"), SERVLET_API, SLF4J, SPRING
+    compile.with projects("deploy-api", "web-nutsNbolts"), SERVLET_API, SLF4J, SPRING[:core]
     test.with LOG4J, XERCES
     test.exclude '*TestUtils*'
     package :jar
@@ -58,15 +58,15 @@ define "tempo" do
 
   desc "Deployment Web-Service Common Library"
   define "deploy-ws-common" do
-    compile.with projects("deploy-api", "deploy-impl", "registry"), AXIOM, AXIS2, SUNMAIL, SLF4J, SPRING, STAX_API 
+    compile.with projects("deploy-api", "deploy-impl", "registry"), AXIOM, AXIS2, SUNMAIL, SLF4J, SPRING[:core], STAX_API 
     package(:jar)
   end
   
   desc "Deployment Web-Service Client"
   define "deploy-ws-client" do
     compile.with projects("deploy-api", "deploy-ws-common"), 
-                 AXIOM, AXIS2, SLF4J, STAX_API, SPRING
-    test.with project("deploy-impl"), COMMONS, LOG4J, SUNMAIL, XERCES, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX 
+                 AXIOM, AXIS2, SLF4J, STAX_API, SPRING[:core]
+    test.with project("deploy-impl"), LOG4J, SUNMAIL, XERCES, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX 
 
     # Remember to set JAVA_OPTIONS before starting Jetty
     # export JAVA_OPTIONS=-Dorg.intalio.tempo.configDirectory=/home/boisvert/svn/tempo/security-ws2/src/test/resources
@@ -89,12 +89,12 @@ define "tempo" do
 
   desc "Deployment Web-Service"
   define "deploy-ws-service" do
-    package(:aar).with :libs => [ projects("deploy-api", "deploy-impl", "deploy-ws-common", "registry"), SLF4J, SPRING ]
+    package(:aar).with :libs => [ projects("deploy-api", "deploy-impl", "deploy-ws-common", "registry"), SLF4J, SPRING[:core] ]
   end
 
   desc "Form Dispatcher Servlet"
   define "fds" do
-    libs = [AXIS2, COMMONS, DOM4J, LOG4J, SERVLET_API, SLF4J, STAX_API]
+    libs = [AXIS2, APACHE_COMMONS[:httpclient], DOM4J, LOG4J, SERVLET_API, SLF4J, STAX_API]
     compile.with libs 
     resources.filter.using "version" => VERSION_NUMBER
     test.with JAXEN, XMLUNIT
@@ -137,7 +137,7 @@ define "tempo" do
 
   desc "Security Framework"
   define "security" do
-    compile.with CASTOR, COMMONS, LOG4J, SLF4J, SPRING, XERCES, CAS_CLIENT
+    compile.with CAS_CLIENT, CASTOR, LOG4J, SLF4J, SPRING[:core], XERCES
 
     test.exclude "*BaseSuite"
     test.exclude "*FuncTestSuite"
@@ -148,15 +148,14 @@ define "tempo" do
   
   desc "Security Web-Service Common Library"
   define "security-ws-common" do
-    compile.with project("security"), AXIOM, AXIS2, SLF4J, SPRING, STAX_API 
+    compile.with project("security"), AXIOM, AXIS2, SLF4J, SPRING[:core], STAX_API 
     package(:jar)
   end
   
   desc "Security Web-Service Client"
   define "security-ws-client" do
-    compile.with projects("security", "security-ws-common"), 
-                 AXIOM, AXIS2, SLF4J, STAX_API, SPRING
-    test.with COMMONS, CASTOR, LOG4J, SUNMAIL, XERCES, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX 
+    compile.with projects("security", "security-ws-common"),AXIOM, AXIS2, SLF4J, STAX_API, SPRING[:core]
+    test.with CASTOR, LOG4J, SUNMAIL, XERCES, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX 
 
     # Remember to set JAVA_OPTIONS before starting Jetty
     # export JAVA_OPTIONS=-Dorg.intalio.tempo.configDirectory=/home/boisvert/svn/tempo/security-ws2/src/test/resources
@@ -180,15 +179,14 @@ define "tempo" do
   
   desc "Security Web-Service"
   define "security-ws-service" do
-    compile.with projects("security", "security-ws-common"),
-                 AXIOM, AXIS2, SLF4J, SPRING, STAX_API  
-    package(:aar).with :libs => [ projects("security", "security-ws-common"), CASTOR, SLF4J, SPRING, CAS_CLIENT ]
+    compile.with projects("security", "security-ws-common"), AXIOM, AXIS2, SLF4J, SPRING[:core], STAX_API  
+    package(:aar).with :libs => [ projects("security", "security-ws-common"), CASTOR, SLF4J, SPRING[:core], CAS_CLIENT ]
   end
   
   desc "Task Attachment Service"
   define "tas-service" do
     compile.with projects("security", "security-ws-client"), 
-                 AXIOM, AXIS2, COMMONS, JAXEN, SLF4J, STAX_API
+                 APACHE_COMMONS[:httpclient], AXIOM, AXIS2, JAXEN, SLF4J, STAX_API
 
     test.with LOG4J, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX
     test.exclude '*TestUtils*'
@@ -202,7 +200,7 @@ define "tempo" do
     package(:jar)
     
     package(:aar).with(:libs => [ 
-        projects("security", "security-ws-client", "security-ws-common", "web-nutsNbolts"), JAXEN, SLF4J, SPRING])
+        projects("security", "security-ws-client", "security-ws-common", "web-nutsNbolts"), APACHE_COMMONS[:httpclient], JAXEN, SLF4J, SPRING[:core]])
   end
 
   desc "Xml Beans generation"
@@ -214,20 +212,20 @@ define "tempo" do
   desc "Task Management Services Common Library"
   define "tms-common" do |project|
     compile.with projects("security", "security-ws-client", "tms-axis"), 
-                 APACHE_JPA, AXIS2, AXIOM, DOM4J, JAXEN, LOG4J, SLF4J, SPRING, STAX_API, XERCES, XMLBEANS
+                 APACHE_JPA, APACHE_COMMONS[:pool], APACHE_COMMONS[:collections], AXIS2, AXIOM, DOM4J, JAXEN, SLF4J, SPRING[:core], STAX_API, XERCES, XMLBEANS
     compile { open_jpa_enhance }
     
-    task "package" => generate_sql([project], "workflow.tms")
+    # task "package" => generate_sql([project], "workflow.tms")
     
     package(:jar)
-    test.with WOODSTOX, LOG4J, XMLUNIT
+    test.with APACHE_DERBY, LOG4J, XMLUNIT, WOODSTOX
     test.exclude '*TestUtils*'
   end
   
   desc "Task Management Service Client"
   define "tms-client" do
     compile.with projects("tms-axis", "tms-common"), 
-      APACHE_JPA, AXIOM, AXIS2, COMMONS, SLF4J, STAX_API, WSDL4J, WS_COMMONS_SCHEMA, XMLBEANS
+      APACHE_JPA, AXIOM, AXIS2, SLF4J, STAX_API, WSDL4J, WS_COMMONS_SCHEMA, XMLBEANS
 
     test.with LOG4J, WOODSTOX, SUNMAIL
     test.exclude '*TestUtils*'
@@ -241,10 +239,10 @@ define "tempo" do
   desc "Task Management Service"
   define "tms-service" do
     libs = projects("deploy-api", "security", "security-ws-client", "tms-axis", "tms-common", "tms-client", "web-nutsNbolts", "dao-nutsNbolts"),
-    APACHE_JPA, AXIOM, AXIS2, COMMONS, JAXEN, SLF4J, SPRING, STAX_API, XMLBEANS, MYSQL_CONNECTOR
+    APACHE_JPA, APACHE_COMMONS[:pool], AXIOM, AXIS2, JAXEN, SLF4J, SPRING[:core], STAX_API, XMLBEANS, MYSQL_CONNECTOR
   
     compile.with libs
-    test.with libs + [project("registry"), CASTOR, EASY_B, LOG4J, MYSQL_CONNECTOR, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES]
+    test.with libs + [project("registry"), APACHE_DERBY, CASTOR, EASY_B, LOG4J, MYSQL_CONNECTOR, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES]
 
     test.using :properties => 
       { 
@@ -262,7 +260,7 @@ define "tempo" do
 
     package(:jar)
     package(:aar).with :libs => 
-        [ projects("deploy-api", "registry", "security", "security-ws-client", "security-ws-common", "tms-axis", "tms-common", "web-nutsNbolts", "dao-nutsNbolts"), APACHE_JPA, SLF4J, SPRING ] 
+        [ projects("deploy-api", "registry", "security", "security-ws-client", "security-ws-common", "tms-axis", "tms-common", "web-nutsNbolts", "dao-nutsNbolts"), APACHE_JPA, SLF4J, SPRING[:core] ] 
   end
   
   desc "User-Interface Framework"
@@ -270,9 +268,9 @@ define "tempo" do
     libs = projects("security", "security-ws-client", "security-ws-common",
                     "tms-axis", "tms-client", "tms-common", "web-nutsNbolts"),
            APACHE_JPA, 
+           APACHE_COMMONS[:io],
            AXIOM, 
-           AXIS2, 
-           COMMONS, 
+           AXIS2,  
            DOM4J, 
            INTALIO_STATS, 
            JSON,
@@ -281,7 +279,8 @@ define "tempo" do
            LOG4J, 
            PLUTO,
            SERVLET_API, 
-           SPRING, 
+           SPRING[:core], 
+           SPRING[:webmvc],
            SLF4J, 
            STAX_API, 
            TAGLIBS, 
@@ -305,9 +304,9 @@ define "tempo" do
   define "ui-fw-portlet" do
     libs = projects("security", "security-ws-client", "security-ws-common",
                     "tms-axis", "tms-client", "tms-common", "ui-pluto"),
-           APACHE_JPA, AXIOM, AXIS2, COMMONS, CAS_CLIENT, DOM4J, INTALIO_STATS, 
+           APACHE_JPA, APACHE_COMMONS[:io], AXIOM, AXIS2, CAS_CLIENT, DOM4J, INTALIO_STATS, 
            JSON, JSP_API, JSTL, LOG4J, PLUTO, PORTLET_API, SERVLET_API, 
-           SPRING, SLF4J, STAX_API, TAGLIBS, WOODSTOX, WSDL4J, WS_COMMONS_SCHEMA, 
+           SPRING[:core], SPRING[:webmvc], SPRING[:webmvc_portlet], SLF4J, STAX_API, TAGLIBS, WOODSTOX, WSDL4J, WS_COMMONS_SCHEMA, 
            XERCES, XMLBEANS
     compile.with libs
 
@@ -318,7 +317,7 @@ define "tempo" do
   
   desc "Customized pluto webapp"
   define "ui-pluto" do
-  	libs = projects("security"), PLUTO, SERVLET_API, COMMONS_LOG, CAS_CLIENT
+  	libs = projects("security"), PLUTO, SERVLET_API, APACHE_COMMONS[:logging], CAS_CLIENT
   	compile.with libs
   	package(:jar)
     package(:war)
@@ -331,14 +330,14 @@ define "tempo" do
   
   desc "Workflow Deployment Service Client"
   define "wds-client" do
-    compile.with ANT, COMMONS, JARGS, JUNIT, LOG4J, SLF4J
+    compile.with ANT, APACHE_COMMONS[:httpclient], APACHE_COMMONS[:io], JARGS, JUNIT, LOG4J, SLF4J
     package(:jar) 
   end
   
   desc "Workflow Deployment Service"
   define "wds-service" do |project|
     libs = [ projects("dao-nutsNbolts", "deploy-api", "registry", "security", "tms-client", "tms-axis", "tms-common", "web-nutsNbolts"), 
-      AXIS2, AXIOM, APACHE_JPA, COMMONS, LOG4J, SERVLET_API, SLF4J, SPRING, STAX_API, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX, XERCES, XMLBEANS ]
+      AXIS2, AXIOM, APACHE_COMMONS[:io], APACHE_JPA, LOG4J, SERVLET_API, SLF4J, SPRING[:core], STAX_API, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX, XERCES, XMLBEANS ]
           
     test_libs = libs + [EASY_B, INSTINCT, MYSQL_CONNECTOR]
     compile.with test_libs
@@ -346,15 +345,15 @@ define "tempo" do
  
     resources.filter.using "version" => VERSION_NUMBER
 
-    task "package" => generate_sql([project], "workflow.deployment")
+    # task "package" => generate_sql([project], "workflow.deployment")
     
-    package_libs = libs - SERVLET_API
+    package_libs = libs + [SERVLET_API]
     package(:jar)
     package(:war).with :libs=>package_libs
   end
 
   define "web-nutsNbolts" do
-    compile.with project("security"), AXIS2, COMMONS, INTALIO_STATS, JSP_API, LOG4J, SERVLET_API, SLF4J, SPRING
+    compile.with project("security"), AXIS2, APACHE_COMMONS[:lang], INTALIO_STATS, JSP_API, LOG4J, SERVLET_API, SLF4J, SPRING[:core], SPRING[:webmvc]
     package :jar
   end
   

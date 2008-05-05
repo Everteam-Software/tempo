@@ -10,10 +10,6 @@ AXIS2 = [
 
 CASTOR = "castor:castor:jar:1.0"
 
-COMMONS_LOG = [
-  "commons-logging:commons-logging:jar:1.0.4"
-  ]
-
 CAS_CLIENT = "cas:casclient:jar:2.1.1"
 
 CAS_LIBS = [
@@ -30,19 +26,23 @@ CAS_LIBS = [
   "org.opensaml:opensaml:jar:1.1b",
   "jdom:jdom:jar:1.0",
   CAS_CLIENT
-  ]
-  
-COMMONS_POOL = ["commons-pool:commons-pool:jar:1.3"]
-COMMONS = [
-  "commons-codec:commons-codec:jar:1.3",
-  "commons-collections:commons-collections:jar:3.2", 
-  "commons-digester:commons-digester:jar:1.7",
-  "commons-fileupload:commons-fileupload:jar:1.0",
-  "commons-httpclient:commons-httpclient:jar:3.1",
-  "commons-io:commons-io:jar:1.2",
-  "commons-lang:commons-lang:jar:2.3",
-  COMMONS_POOL
 ]
+  
+APACHE_COMMONS = {
+  :beanutils => "commons-beanutils:commons-beanutils:jar:1.7.0",
+  :cli => "commons-cli:commons-cli:jar:1.1",
+  :codec => "commons-codec:commons-codec:jar:1.3",
+  :collections => "commons-collections:commons-collections:jar:3.2", 
+  :digester => "commons-digester:commons-digester:jar:1.7",
+  :discovery => "commons-discovery:commons-discovery:jar:0.2",
+  :fileupload => "commons-fileupload:commons-fileupload:jar:1.0",
+  :httpclient => "commons-httpclient:commons-httpclient:jar:3.1",
+  :io => "commons-io:commons-io:jar:1.2",
+  :lang => "commons-lang:commons-lang:jar:2.3",
+  :logging => "commons-logging:commons-logging:jar:1.0.4",
+  :pool => "commons-pool:commons-pool:jar:1.4",
+  :validator => "commons-validator:commons-validator:jar:1.2.0"
+}
 
 DOJO_VERSION = "0.3.1"
 #DOJO_URL = "http://download.dojotoolkit.org/release-#{DOJO_VERSION}/dojo-#{DOJO_VERSION}-widget.zip"
@@ -50,34 +50,34 @@ DOJO_URL = "http://www.intalio.org/public/maven2/dojo/#{DOJO_VERSION}/dojo-#{DOJ
 DOJO = "dojo:dojo-widget:zip:#{DOJO_VERSION}"
 DOJO_WIDGET_BASE = "dojo-#{DOJO_VERSION}-widget"
 
-DOM4J = [ "dom4j:dom4j:jar:1.6.1" ]
+DOM4J = "dom4j:dom4j:jar:1.6.1"
 
-FOP = [ "fop:fop:jar:0.20.5" ]
+FOP = "fop:fop:jar:0.20.5"
 
-INTALIO_STATS = [ "org.intalio.common:intalio-stats:jar:1.0.2" ]
+INTALIO_STATS = "org.intalio.common:intalio-stats:jar:1.0.2" 
 
 JAVAMAIL = "geronimo-spec:geronimo-spec-javamail:jar:1.3.1-rc5", "geronimo-spec:geronimo-spec-activation:jar:1.0.2-rc4"
 SUNMAIL = ["javax.mail:mail:jar:1.4.1", "javax.activation:activation:jar:1.1.1"]
 
-JARGS = [ "jargs:jargs:jar:1.0" ]
+JARGS = "jargs:jargs:jar:1.0"
 
-JSON = [ "json:json-taglib:jar:0.4.1" ]
+JSON = "json:json-taglib:jar:0.4.1"
 
-JAXEN = [ "jaxen:jaxen:jar:1.1.1" ]
+JAXEN = "jaxen:jaxen:jar:1.1.1"
 
-JENCKS = [ "jencks:jencks-all:jar:1.1.3" ]
+JENCKS = "jencks:jencks-all:jar:1.1.3"
 
-JSP_API = [ "javax.servlet:jsp-api:jar:2.0" ]
+JSP_API = "javax.servlet:jsp-api:jar:2.0"
 
-JSTL = [ "javax.servlet:jstl:jar:1.1.2" ]
+JSTL = "javax.servlet:jstl:jar:1.1.2"
 
 JUNIT = "junit:junit:jar:4.4"
 
-LOG4J = [ "log4j:log4j:jar:1.2.15" ]
+LOG4J = "log4j:log4j:jar:1.2.15"
 
-JPA = [ "javax.persistence:persistence-api:jar:1.0" ]
+JPA = "javax.persistence:persistence-api:jar:1.0"
 
-JYAML = [ "org.jyaml:jyaml:jar:1.3"]
+JYAML = "org.jyaml:jyaml:jar:1.3"
 
 GERONIMO_SPECS = {
   "jta" => "org.apache.geronimo.specs:geronimo-jta_1.1_spec:jar:1.1",
@@ -86,40 +86,43 @@ GERONIMO_SPECS = {
 }
 
 APACHE_JPA = [
-  COMMONS,
+  APACHE_COMMONS[:lang],
+  APACHE_COMMONS[:collections],
   GERONIMO_SPECS.values,
   "org.apache.openjpa:openjpa:jar:1.1.0-645340",
-  "commons-logging:commons-logging:jar:1.0.4",
-  "commons-lang:commons-lang:jar:2.1",
-  "org.apache.derby:derby:jar:10.2.2.0",
   "serp:serp:jar:1.13.1"
 ]
 
-MYSQL_CONNECTOR = "com.mysql.mysql-connector:mysql-connector-java:jar:5.0.4"
+APACHE_DERBY = "org.apache.derby:derby:jar:10.2.2.0"
+
 #DB2_CONNECTOR = "com.ibm.db2.jcc:jcc4:jar:9.2"
-#MYSQL_CONNECTOR = "com.mysql.mysql-connector:mysql-connector-java:jar:5.1.6"
+MYSQL_CONNECTOR = "com.mysql.mysql-connector:mysql-connector-java:jar:5.1.6"
 
-PORTLET_API = ["portlet-api:portlet-api:jar:1.0"]
+PORTLET_API = "portlet-api:portlet-api:jar:1.0"
 
-QOM = [ "net.sf.qom:qom:jar:0.1alpha3" ]
+QOM = "net.sf.qom:qom:jar:0.1alpha3"
 
-SERVLET_API = [ "javax.servlet:servlet-api:jar:2.4" ]
+SERVLET_API = "javax.servlet:servlet-api:jar:2.4" 
 
 SLF4J = group(%w{ slf4j-api slf4j-log4j12 jcl104-over-slf4j }, :under=>"org.slf4j", :version=>"1.4.3")
 
-SPRING = [ "org.springframework:spring:jar:2.5.1","org.springframework:spring-webmvc-portlet:jar:2.5.1","org.springframework:spring-webmvc:jar:2.5.1"]
+SPRING = {
+  :core => "org.springframework:spring:jar:2.5.4",
+  :webmvc_portlet => "org.springframework:spring-webmvc-portlet:jar:2.5.4",
+  :webmvc => "org.springframework:spring-webmvc:jar:2.5.4"
+}
 
 STAX_API = [ "stax:stax-api:jar:1.0.1" ]
 
 TAGLIBS = [ "taglibs:standard:jar:1.1.2" ]
 
-TEMPO_SECURITY = [ "org.intalio.tempo.security:tempo-security:jar:1.0.6-SNAPSHOT" ]
-
-TEMPO_SECURITY_WS_TOKEN_CLIENT =[ "org.intalio.tempo.security:tempo-security-ws-token-client:jar:1.1.5" ]
-
-TEMPO_WORKFLOW_TOM = [ "org.intalio.tempo.workflow:intalio-tempo-workflow-tom:jar:5.0.0.8" ]
-
-TEMPO_WORKFLOW_TMS_CLIENT = [ "org.intalio.tempo.workflow:intalio-tempo-workflow-tms-client:jar:5.0.0.3" ]
+# TEMPO_SECURITY = [ "org.intalio.tempo.security:tempo-security:jar:1.0.6-SNAPSHOT" ]
+# 
+# TEMPO_SECURITY_WS_TOKEN_CLIENT =[ "org.intalio.tempo.security:tempo-security-ws-token-client:jar:1.1.5" ]
+# 
+# TEMPO_WORKFLOW_TOM = [ "org.intalio.tempo.workflow:intalio-tempo-workflow-tom:jar:5.0.0.8" ]
+# 
+# TEMPO_WORKFLOW_TMS_CLIENT = [ "org.intalio.tempo.workflow:intalio-tempo-workflow-tms-client:jar:5.0.0.3" ]
 
 WOODSTOX = [ "woodstox:wstx-asl:jar:3.2.4" ]
 
@@ -169,8 +172,6 @@ ORBEON_CUSTOM = [
   # "orbeon:exist-optional:jar:1.1.1"
 ]
 
-COMMONS_DISCOVERY = ["commons-discovery:commons-discovery:jar:0.2"]
-
 PLUTO_CONTAINER = "org.apache.pluto:pluto-container:jar:1.1.4"
 PLUTO_TAGLIB = "org.apache.pluto:pluto-taglib:jar:1.1.4"
 PLUTO_DRIVER = [
@@ -195,10 +196,17 @@ PLUTO_DEPLOY = [
 ]
 
 ORBEON_COMMONS = [
-  COMMONS,
-  COMMONS_DISCOVERY,
-  "commons-beanutils:commons-beanutils:jar:1.7.0",
-  "commons-validator:commons-validator:jar:1.1.4"
+  APACHE_COMMONS[:beanutils],
+  APACHE_COMMONS[:codec],
+  APACHE_COMMONS[:collections],
+  APACHE_COMMONS[:digester],
+  APACHE_COMMONS[:discovery],
+  APACHE_COMMONS[:fileupload],
+  APACHE_COMMONS[:httpclient],
+  APACHE_COMMONS[:io],
+  APACHE_COMMONS[:lang],
+  APACHE_COMMONS[:pool],
+  APACHE_COMMONS[:validator],
 ]
 
 ORBEON_MSV = [
@@ -228,7 +236,7 @@ ORBEON_LIBS = [
 
 # For testing
 EASY_B = [
-  "commons-cli:commons-cli:jar:1.1",
+  APACHE_COMMONS[:cli],
   "org.codehaus.groovy:groovy-all:jar:1.5.4",
   "org.disco:easyb:jar:0.6"
 ]
