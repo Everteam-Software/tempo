@@ -260,7 +260,7 @@ define "tempo" do
 
     package(:jar)
     package(:aar).with :libs => 
-        [ projects("deploy-api", "registry", "security", "security-ws-client", "security-ws-common", "tms-axis", "tms-common", "web-nutsNbolts", "dao-nutsNbolts"), APACHE_JPA, SLF4J, SPRING[:core] ] 
+        [ projects("deploy-api", "registry", "security", "security-ws-client", "security-ws-common", "tms-axis", "tms-common", "web-nutsNbolts", "dao-nutsNbolts"), APACHE_COMMONS[:pool], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], APACHE_JPA, SLF4J, SPRING[:core] ] 
   end
   
   desc "User-Interface Framework"
@@ -339,7 +339,7 @@ define "tempo" do
   desc "Workflow Deployment Service"
   define "wds-service" do |project|
     libs = [ projects("dao-nutsNbolts", "deploy-api", "registry", "security", "tms-client", "tms-axis", "tms-common", "web-nutsNbolts"), 
-      AXIS2, AXIOM, APACHE_COMMONS[:io], APACHE_JPA, LOG4J, SERVLET_API, SLF4J, SPRING[:core], STAX_API, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX, XERCES, XMLBEANS ]
+      AXIS2, AXIOM, APACHE_COMMONS[:io], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], APACHE_COMMONS[:pool], APACHE_JPA, LOG4J, SERVLET_API, SLF4J, SPRING[:core], STAX_API, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX, XERCES, XMLBEANS ]
           
     test_libs = libs + [EASY_B, INSTINCT, MYSQL_CONNECTOR]
     compile.with test_libs
