@@ -94,7 +94,7 @@ define "tempo" do
 
   desc "Form Dispatcher Servlet"
   define "fds" do
-    libs = [AXIS2, APACHE_COMMONS[:httpclient], DOM4J, LOG4J, SERVLET_API, SLF4J, STAX_API]
+    libs = [AXIS2, APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], DOM4J, LOG4J, SERVLET_API, SLF4J, STAX_API]
     compile.with libs 
     resources.filter.using "version" => VERSION_NUMBER
     test.with JAXEN, XMLUNIT
