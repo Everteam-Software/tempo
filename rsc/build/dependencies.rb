@@ -33,6 +33,7 @@ APACHE_COMMONS = {
   :cli => "commons-cli:commons-cli:jar:1.1",
   :codec => "commons-codec:commons-codec:jar:1.3",
   :collections => "commons-collections:commons-collections:jar:3.2", 
+  :dbcp => "commons-dbcp:commons-dbcp:jar:1.2.1",
   :digester => "commons-digester:commons-digester:jar:1.7",
   :discovery => "commons-discovery:commons-discovery:jar:0.2",
   :fileupload => "commons-fileupload:commons-fileupload:jar:1.0",

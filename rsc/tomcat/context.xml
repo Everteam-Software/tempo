@@ -25,8 +25,8 @@
     <!--
     <Manager pathname="" />
     -->
-	<Resource name="jdbc/BPMSDB" auth="Container" type="javax.sql.DataSource"
-			  maxActive="100" maxIdle="30" maxWait="10000"
-			  username="root" password="" driverClassName="com.mysql.jdbc.Driver"
-			  url="jdbc:mysql://localhost:3306/bpms"/>
+	<Resource name="jdbc/BPMSDB" auth="Container" type="javax.sql.DataSource" maxActive="100" maxIdle="30" maxWait="10000" username="root" password="" driverClassName="com.mysql.jdbc.Driver" url="jdbc:mysql://localhost:3306/bpms"/>
+
+	<Resource name="registry/TempoRegistry" auth="Container" type="org.intalio.tempo.registry.Registry" factory="org.intalio.tempo.registry.RegistryObjectFactory" />
+
 </Context>

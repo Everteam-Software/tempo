@@ -8,7 +8,7 @@ require 'fileutils'
 require 'hpricot'
 require 'open-uri'
 require "buildr"
-require "../../dependencies"
+require "../build/dependencies"
 
 repositories.remote = [ "http://www.intalio.org/public/maven2", "http://dist.codehaus.org/mule/dependencies/maven2/", "http://repo1.maven.org/maven2" ]
 
@@ -16,8 +16,13 @@ original_dir = Dir.pwd
 config = YAML::load( File.open( "#{original_dir}/config.yml" ) )
 
 def find_apache_mirror
-  doc = Hpricot(open("http://www.apache.org/dyn/closer.cgi"))
-  doc.search("//div[@='section-content']//strong")[0].inner_html
+  begin
+    doc = Hpricot(open("http://www.apache.org/dyn/closer.cgi"))
+    doc.search("//div[@='section-content']//strong")[0].inner_html
+  rescue SocketError
+    puts "WARNING: Cannot find a valid apache mirror" 
+    return ""
+  end
 end
 
 TEMPO_SVN = config["tempo_svn"]
@@ -283,7 +288,7 @@ wi.install_tempo_war( "fds" )
 wi.install_tempo_war( "ui-fw" )
 wi.install_tempo_war( "wds-service", "wds" )
 wi.install_tempo_war( "xforms-manager", "xFormsManager" )
-wi.install_tempo_war( "cas-server-webapp", "cas" )
+# wi.install_tempo_war( "cas-server-webapp", "cas" )
 # wi.install_tempo_war( "ui-pluto", "pluto" )
 # wi.install_tempo_war( "ui-fw-portlet")
 ##
@@ -323,10 +328,10 @@ MISSING_LIBS= [
   # Mysql driver
   MYSQL_CONNECTOR,
   # Common libraries
-  "commons-dbcp:commons-dbcp:jar:1.2.1",
-  "commons-collections:commons-collections:jar:3.2",
-  COMMONS_POOL,
-  COMMONS_LOG,
+  APACHE_COMMONS[:dbcp],
+  APACHE_COMMONS[:collections],
+  APACHE_COMMONS[:pool],
+  APACHE_COMMONS[:logging],
   STAX_API,
   "stax:stax:jar:1.2.0",
   WSDL4J,
@@ -334,12 +339,12 @@ MISSING_LIBS= [
   SLF4J,
   LOG4J,
   # Cas library
-  "javax.servlet:jstl:jar:1.1.2",
-  "taglibs:standard:jar:1.1.2",
+  # "javax.servlet:jstl:jar:1.1.2",
+  # "taglibs:standard:jar:1.1.2",
   # Pluto libraries
-  #PLUTO_DEPLOY,
-  #CASTOR,
-  #XERCES
+  # PLUTO_DEPLOY,
+  #   CASTOR,
+  XERCES
 ]
 MISSING_LIBS.each {|lib| 
   locate_and_copy( lib, lib_folder )
@@ -366,8 +371,10 @@ tempo_svn_config_folder = "#{TEMPO_SVN}/config"
 # filtering out and copying only xml files for the moment
 # 
 # config_files = File.join(tempo_svn_config_folder,"*.*")
-config_files = File.join(tempo_svn_config_folder,"*.xml")
+config_files = File.join(tempo_svn_config_folder,"*.*")
 Dir.glob(config_files) {|x| File.copy(x, tomcat_config_folder, DEBUG)}
+# config_files = File.join(tempo_svn_config_folder,"*.properties")
+# Dir.glob(config_files) {|x| File.copy(x, tomcat_config_folder, DEBUG)}
 
 mysql_ds_config_files = File.join("#{TEMPO_SVN}/rsc/tempo-sql","*.xml")
 Dir.glob(mysql_ds_config_files) {|x| File.copy(x, tomcat_config_folder, DEBUG)}
