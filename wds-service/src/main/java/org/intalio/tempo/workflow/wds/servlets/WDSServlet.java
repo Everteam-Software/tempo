@@ -15,6 +15,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Date;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -201,6 +202,8 @@ public class WDSServlet extends HttpServlet {
                 Item item = service.retrieveItem(resourceUri, participantToken);
                 OutputStream outputStream = response.getOutputStream();
                 response.setContentType(item.getContentType());
+                Date lastmodified = item.getLastmodified();
+                if(lastmodified!=null) response.setDateHeader("Last-Modified", lastmodified.getTime());
 
                 LOG.debug("Sending the data..");
                 int length = IOUtils.copy(new ByteArrayInputStream(item.getPayload()), outputStream);

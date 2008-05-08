@@ -11,6 +11,8 @@
  */
 package org.intalio.tempo.workflow.wds.core;
 
+import java.util.Date;
+
 import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.tms.ITaskManagementService;
@@ -80,6 +82,7 @@ public class WDSService {
         String uri = item.getURI();
 
         if (_dao.itemExists(uri)) _dao.deleteItem(uri);
+        item.setLastmodified(new Date());
         _dao.storeItem(item);
         _dao.commit();
     }

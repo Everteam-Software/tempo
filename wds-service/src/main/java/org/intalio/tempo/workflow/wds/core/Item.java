@@ -12,6 +12,7 @@
 package org.intalio.tempo.workflow.wds.core;
 
 import java.util.Arrays;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -61,6 +62,10 @@ public class Item {
     @Column(name="payload")
     private byte[] _payload;
     
+    @Persistent
+    @Column(name="lastmodified")
+    private Date _lastmodified;
+    
     /**
      * Create an Item
      */
@@ -72,6 +77,19 @@ public class Item {
         _contentType = contentType;
         _payload = payload;
     }
+
+    
+    
+    public Date getLastmodified() {
+        return _lastmodified;
+    }
+
+
+    public void setLastmodified(Date _lastmodified) {
+        this._lastmodified = _lastmodified;
+    }
+
+
 
     /**
      * Returns the (relative) URI of this item.
