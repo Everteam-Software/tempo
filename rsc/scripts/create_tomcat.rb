@@ -33,7 +33,9 @@ TOMCAT_5_DOWNLOAD = APACHE_MIRROR + "tomcat/tomcat-5/v5.5.26/bin/apache-tomcat-5
 TOMCAT_6_DOWNLOAD = APACHE_MIRROR + "tomcat/tomcat-6/v6.0.16/bin/apache-tomcat-6.0.16.zip"
 TOMCAT_ADMIN_DOWNLOAD = APACHE_MIRROR + "tomcat/tomcat-5/v5.5.26/bin/apache-tomcat-5.5.26-admin.zip"
 AXIS_DOWNLOAD = APACHE_MIRROR + "ws/axis2/1_3/axis2-1.3-war.zip"
-ODE_DOWNLOAD = APACHE_MIRROR + "ode/apache-ode-war-1.1.1.zip"
+#official ode has a bug in date handling
+#ODE_DOWNLOAD = APACHE_MIRROR + "ode/apache-ode-war-1.1.1.zip"
+ODE_DOWNLOAD = "http://www.intalio.org/public/apache-ode-war-1.1.2-SNAPSHOT.zip"
 
 # Unzip a file
 def unzip2(x, basefolder = ".", forceextract = false)
