@@ -26,34 +26,45 @@ import org.intalio.tempo.web.SysPropApplicationContextLoader;
 
 public class SpringInit implements ServiceLifeCycle {
 
-	private static final Logger LOG = Logger.getLogger(SpringInit.class);
+    private static final Logger LOG = Logger.getLogger(SpringInit.class);
 
     public static SysPropApplicationContextLoader CONTEXT;
     
-	/**
-	 * Called by Axis2 during deployment
-	 */
-	public void startUp(ConfigurationContext ignore, AxisService service) {
+    /**
+     * Called by Axis2 during deployment
+     */
+    public void startUp(ConfigurationContext ignore, AxisService service) {
         String configFile = "#unspecified#";
-		try {
-	        Parameter p = service.getParameter("SpringContextFile");
-	        if (p != null) configFile = (String) p.getValue();
-	        LOG.debug("Loading configuration: "+configFile);
-	        try {
-	        	Thread.currentThread().setContextClassLoader(service.getClassLoader());
-	            CONTEXT = new SysPropApplicationContextLoader(configFile);
-	        } catch (IOException except) {
-	            throw new RuntimeException(except);
-	        }
-		} catch (Exception except) {
-			LOG.error("Error while loading Spring context file: "+configFile, except);
-		}
-	}
+        try {
+            Parameter p = service.getParameter("SpringContextFile");
+            if (p != null) configFile = (String) p.getValue();
+            LOG.debug("Loading configuration: "+configFile);
+            try {
+                Thread.currentThread().setContextClassLoader(service.getClassLoader());
+                CONTEXT = new SysPropApplicationContextLoader(configFile);
+                Parameter load = service.getParameter("LoadOnStartup");
+                if (load != null && ((String) load.getValue()).equalsIgnoreCase("true")) {
+                    Parameter bean = service.getParameter("SpringBeanName");
+                    if (bean == null) throw new IllegalArgumentException("Missing 'SpringBeanName' parameter");
+                    String beanName = (String) bean.getValue();
+                    try {
+                        CONTEXT.getBean(beanName);
+                    } catch (Exception e) {
+                        throw new IllegalArgumentException("Unable to initialize bean '"+beanName+"'", e);
+                    }
+                }
+            } catch (IOException except) {
+                throw new RuntimeException(except);
+            }
+        } catch (Exception except) {
+            LOG.error("Error while loading Spring context file: "+configFile, except);
+        }
+    }
 
-	/**
-	 * Called by Axis2 during undeployment 
-	 */
-	public void shutDown(ConfigurationContext ctxIgnore, AxisService ignore) {
-		CONTEXT = null;
-	}
+    /**
+     * Called by Axis2 during undeployment 
+     */
+    public void shutDown(ConfigurationContext ctxIgnore, AxisService ignore) {
+        CONTEXT = null;
+    }
 }
