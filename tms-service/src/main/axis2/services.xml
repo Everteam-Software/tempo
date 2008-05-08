@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
 /**
- * Copyright (c) 2005-2007 Intalio inc.
+ * Copyright (c) 2005-2008 Intalio inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -19,6 +19,11 @@
         <parameter name="SpringContextFile">file:${org.intalio.tempo.configDirectory}/tempo-tms.xml</parameter>
         <parameter name="ServiceObjectSupplier">org.intalio.tempo.workflow.ServiceObjectSupplier</parameter>
         <parameter name="SpringBeanName">tms.serviceImplementation</parameter>
+        <!-- 
+          Needed so that the deployment service starts straight on server startup. 
+          Since the code for pipa deployment is located in TMS.
+        -->
+        <parameter name="LoadOnStartup">true</parameter>
 
         <operation name="getTaskList">
             <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>

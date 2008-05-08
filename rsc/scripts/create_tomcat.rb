@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+
 require "rubygems"
 require 'net/http'
 require 'open-uri' 
@@ -9,8 +10,7 @@ require 'hpricot'
 require 'open-uri'
 require "buildr"
 require "../build/dependencies"
-
-repositories.remote = [ "http://www.intalio.org/public/maven2", "http://dist.codehaus.org/mule/dependencies/maven2/", "http://repo1.maven.org/maven2" ]
+require "../build/repositories"
 
 original_dir = Dir.pwd
 config = YAML::load( File.open( "#{original_dir}/config.yml" ) )
@@ -36,9 +36,9 @@ AXIS_DOWNLOAD = APACHE_MIRROR + "ws/axis2/1_3/axis2-1.3-war.zip"
 ODE_DOWNLOAD = APACHE_MIRROR + "ode/apache-ode-war-1.1.1.zip"
 
 # Unzip a file
-def unzip2(x, basefolder = ".")
+def unzip2(x, basefolder = ".", forceextract = false)
   puts "Unzipping file:#{x}" if DEBUG
-  return if not basefolder == "." and File.exist? basefolder
+  return if not basefolder == "." and File.exist? basefolder and !forceextract
   outdir = basefolder
   Zip::ZipFile::open(x) { |zf|
     zf.each { |e|
@@ -276,11 +276,11 @@ si.install_tempo_aar( "security-ws-service" )
 
 title "Install tempo web applications"
 explain "Now we install the different tempo war files"
-explain "FDS is the form dispatcher service, responsible mainly for replacing namespaces"
+explain "FDS is the form dispatcher service, responsible mainly for replacing xml namespaces"
 explain "UI-FW is the user interface, where user can handle their tasks and complete them"
 explain "WDS service, is like a Web Resources services."
 explain "XFM is responsible for displaying the forms to be filled when a user is handling a task."
-explain "CAS is the SSO framework so we can integrate with other security services"
+# explain "CAS is the SSO framework so we can integrate with other security services"
 # explain "Pluto, is a portlet container"
 # explain "UI-FW-PORTLET is a portlet version of UI-FW meant to be running in Pluto"
 ##
@@ -297,7 +297,6 @@ title "Install xpath extension in Ode"
 explain "Required library for Ode"
 ##
 ode_webinf = File.expand_path("#{ode_war_folder}/WEB-INF")
-# ode_processes_folder = "#{ode_webinf}/processes"
 ode_processes_folder = "#{tomcat_folder}/var/processes"
 processes_folder = "#{TEMPO_SVN}/processes/"
 opi = OdeProcessInstaller.new ode_processes_folder, processes_folder
@@ -344,6 +343,13 @@ MISSING_LIBS= [
   # Pluto libraries
   # PLUTO_DEPLOY,
   #   CASTOR,
+  
+  # "org.apache.geronimo.modules:geronimo-kernel:jar:2.0.1",
+  # "org.apache.geronimo.components:geronimo-transaction:jar:2.0.1",
+  # "org.apache.geronimo.components:geronimo-connector:jar:2.0.1",
+  # "org.apache.geronimo.specs:geronimo-j2ee-connector_1.5_spec:jar:1.1.1",
+  # "org.apache.geronimo.specs:geronimo-jta_1.1_spec:jar:1.1",
+  
   XERCES
 ]
 MISSING_LIBS.each {|lib| 
@@ -366,15 +372,8 @@ explain "Also copying the ode config files"
 tomcat_config_folder = "#{tomcat_folder}/var/config"
 FileUtils.mkdir_p tomcat_config_folder
 tempo_svn_config_folder = "#{TEMPO_SVN}/config"
-# TODO:
-# Copying registry and deploy properties file result in not being able to access JNDI properly, 
-# filtering out and copying only xml files for the moment
-# 
-# config_files = File.join(tempo_svn_config_folder,"*.*")
 config_files = File.join(tempo_svn_config_folder,"*.*")
 Dir.glob(config_files) {|x| File.copy(x, tomcat_config_folder, DEBUG)}
-# config_files = File.join(tempo_svn_config_folder,"*.properties")
-# Dir.glob(config_files) {|x| File.copy(x, tomcat_config_folder, DEBUG)}
 
 mysql_ds_config_files = File.join("#{TEMPO_SVN}/rsc/tempo-sql","*.xml")
 Dir.glob(mysql_ds_config_files) {|x| File.copy(x, tomcat_config_folder, DEBUG)}
@@ -390,11 +389,11 @@ create_mode = File::CREAT|File::TRUNC|File::RDWR
 # script for unix
 file_path = tomcat_bin_folder + "setenv.sh"
 file = File.new file_path,create_mode
-file.puts "export JAVA_OPTS=\"-XX:MaxPermSize=256m -Xms64m -Xmx512m -Dorg.intalio.tempo.configDirectory=$CATALINA_HOME/var/config -Dorg.apache.ode.configDir=$CATALINA_HOME/var/config\""
+file.puts "export JAVA_OPTS=\"-XX:MaxPermSize=256m -server -Dfile.encoding=UTF-8 -Xms64m -Xmx512m -Dorg.intalio.tempo.configDirectory=$CATALINA_HOME/var/config -Dorg.apache.ode.configDir=$CATALINA_HOME/var/config\""
 # script for windows
 file_path = tomcat_bin_folder + "setenv.bat"
 file = (File.new file_path,create_mode)
-file.puts "set JAVA_OPTS=-XX:MaxPermSize=256m -Xms64m -Xmx512m -Dorg.intalio.tempo.configDirectory=%CATALINA_HOME%\\var\\config -Dorg.apache.ode.configDir=%CATALINA_HOME%\\var\\config"
+file.puts "set JAVA_OPTS=-XX:MaxPermSize=256m -server -Dfile.encoding=UTF-8 -Xms64m -Xmx512m -Dorg.intalio.tempo.configDirectory=%CATALINA_HOME%\\var\\config -Dorg.apache.ode.configDir=%CATALINA_HOME%\\var\\config"
 ##
 
 title "Changing file permissions (shell scripts)"
@@ -408,9 +407,9 @@ title "Creating deploy folder and adding AbsenceRequest"
 explain "Adding the forms needed to run the AbsenceRequest example"
 ##
 ar_zip = finder.find_tempo_component( "forms" + File::SEPARATOR + "AbsenceRequest", "zip")
-deploy_folder = "#{tomcat_folder}/var/deploy"
+deploy_folder = "#{tomcat_folder}/var/deploy/AbsenceRequest/"
 FileUtils.mkdir_p deploy_folder
-File.copy(ar_zip, deploy_folder, DEBUG )
+unzip2(ar_zip, deploy_folder, true)
 ##
 
 title "Copying tomcat config xml files (JNDI resources)"
