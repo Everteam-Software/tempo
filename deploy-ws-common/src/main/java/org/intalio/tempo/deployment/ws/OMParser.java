@@ -77,7 +77,7 @@ public class OMParser {
     
     @SuppressWarnings("unchecked")
     public Iterator<OMElement> getElements(QName parameter) {
-        return _element.getChildElements();
+        return _element.getChildrenWithName(parameter);
     }
     
     
@@ -261,8 +261,7 @@ public class OMParser {
             AssemblyId aid = new AssemblyId(assemblyName, assemblyVersion);
             
             List<DeployedComponent> components = new ArrayList<DeployedComponent>();
-            OMParser responseComponents = new OMParser(response.getRequiredElement(DEPLOYED_COMPONENTS));
-            Iterator<OMElement> iter2 = responseComponents.getElements(DEPLOYED_COMPONENT);
+            Iterator<OMElement> iter2 = response.getElements(DEPLOYED_COMPONENT);
             while (iter2.hasNext()) {
                 OMParser component = new OMParser(iter.next());
                 
