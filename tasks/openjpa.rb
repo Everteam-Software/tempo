@@ -5,7 +5,7 @@ module Buildr
   # Provides OpenJPA bytecode enhancement and Mapping tool task. Require explicitly using <code>require "buildr/openjpa"</code>.
   module OpenJPA
 
-    REQUIRES = APACHE_JPA, "commons-dbcp:commons-dbcp:jar:1.2.1"
+    REQUIRES = APACHE_JPA, APACHE_COMMONS[:pool], APACHE_COMMONS[:dbcp], APACHE_DERBY
 
     Java.wrapper.classpath << REQUIRES
 

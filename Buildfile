@@ -208,14 +208,13 @@ define "tempo" do
     compile_xml_beans _("../tms-service/src/main/axis2")
     package(:jar)
   end
-  
+
   desc "Task Management Services Common Library"
   define "tms-common" do |project|
-    compile.with projects("security", "security-ws-client", "tms-axis"), 
-                 APACHE_JPA, APACHE_COMMONS[:pool], APACHE_COMMONS[:collections], AXIS2, AXIOM, DOM4J, JAXEN, SLF4J, SPRING[:core], STAX_API, XERCES, XMLBEANS
+    compile.with projects("security", "security-ws-client", "tms-axis"), APACHE_JPA, APACHE_COMMONS[:pool], APACHE_COMMONS[:collections], AXIS2, AXIOM, DOM4J, JAXEN, SLF4J, SPRING[:core], STAX_API, XERCES, XMLBEANS
     compile { open_jpa_enhance }
     
-    # task "package" => generate_sql([project], "workflow.tms")
+    task "package" => generate_sql([project], "workflow.tms")
     
     package(:jar)
     test.with APACHE_DERBY, LOG4J, XMLUNIT, WOODSTOX
@@ -267,19 +266,16 @@ define "tempo" do
   define "ui-fw" do
     libs = projects("security", "security-ws-client", "security-ws-common",
                     "tms-axis", "tms-client", "tms-common", "web-nutsNbolts"),
-           APACHE_JPA, 
            APACHE_COMMONS[:io],
            APACHE_COMMONS[:httpclient],
            APACHE_COMMONS[:codec],
+           APACHE_JPA,
            AXIOM, 
            AXIS2,  
-           DOM4J, 
            INTALIO_STATS, 
-           JSON,
            JSP_API, 
            JSTL,
-           LOG4J, 
-           PLUTO,
+           LOG4J,
            SERVLET_API, 
            SPRING[:core], 
            SPRING[:webmvc],
@@ -346,7 +342,7 @@ define "tempo" do
  
     resources.filter.using "version" => VERSION_NUMBER
 
-    # task "package" => generate_sql([project], "workflow.deployment")
+    task "package" => generate_sql([project], "workflow.deployment")
     
     package_libs = libs + [SERVLET_API]
     package(:jar)
