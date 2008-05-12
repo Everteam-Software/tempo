@@ -16,12 +16,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collection;
 
 import junit.framework.TestCase;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
 import org.intalio.tempo.deployment.AssemblyId;
+import org.intalio.tempo.deployment.DeployedAssembly;
+import org.intalio.tempo.deployment.DeployedComponent;
 import org.intalio.tempo.deployment.DeploymentResult;
 import org.junit.Test;
 
@@ -74,6 +77,24 @@ public class DeployWSTest extends TestCase {
     @Test
     public void testGetDeployedAssemblies() throws Exception {
         _client.getDeployedAssemblies();
+    }
+    
+    @Test
+    public void testDeployGetUndeployAssemblies() throws Exception {
+        Collection<DeployedAssembly> assemblies = _client.getDeployedAssemblies();
+        int size = assemblies.size(); 
+        this.testDeploy();
+        assemblies = _client.getDeployedAssemblies();
+        assertEquals(size+1, assemblies.size());
+        for(DeployedAssembly assembly : assemblies) {
+            Collection<DeployedComponent> components = assembly.getDeployedComponents();
+            if(assembly.getAssemblyId().equals("AbsenceRequest")) {
+                assertTrue(components.size() >= 2);
+            }
+        }
+        this.testUndeploy();
+        assemblies = _client.getDeployedAssemblies();
+        assertEquals(size, assemblies.size());
     }
 
     static class DeployClientMock extends DeployClient {

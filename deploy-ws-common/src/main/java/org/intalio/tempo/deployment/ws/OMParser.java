@@ -261,9 +261,10 @@ public class OMParser {
             AssemblyId aid = new AssemblyId(assemblyName, assemblyVersion);
             
             List<DeployedComponent> components = new ArrayList<DeployedComponent>();
-            Iterator<OMElement> iter2 = response.getElements(DEPLOYED_COMPONENT);
+			OMParser responseComponents = new OMParser(assembly.getRequiredElement(DEPLOYED_COMPONENTS));
+            Iterator<OMElement> iter2 = responseComponents.getElements(DEPLOYED_COMPONENT);
             while (iter2.hasNext()) {
-                OMParser component = new OMParser(iter.next());
+                OMParser component = new OMParser(iter2.next());
                 
                 String componentName = component.getRequiredString(COMPONENT_NAME);
                 String componentDir = component.getRequiredString(COMPONENT_DIR);
