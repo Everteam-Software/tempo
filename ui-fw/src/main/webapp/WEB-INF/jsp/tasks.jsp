@@ -59,7 +59,8 @@
 	            </tr>
 	            
 		            <c:forEach items="${activityTasks}" var="taskHolder" varStatus="status">
-		                
+						<c:set var="taskFullURL" value="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&type=${taskHolder.task.class.simpleName}&url=${taskHolder.task.formURL}&token=${participantToken}&user=${currentUser}" />
+
 	            	<c:choose>
 	            		<c:when test="${(status.index%2) == 0}">
 							<tr class="oddTr">
@@ -69,19 +70,19 @@
 	            		</c:otherwise>
 	            	</c:choose>
 		            		<td>
-		            		<a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}&user=${currentUser}" target="taskform"  >${taskHolder.task.state.name}</a>
+		            		<a href= target="taskform"  >${taskHolder.task.state.name}</a>
 		            		</td>
 		            		<td>
-		            			<a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}&user=${currentUser}" target="taskform"  >${taskHolder.task.description}</a>
+		            			<a href="${taskFullURL}" target="taskform"  >${taskHolder.task.description}</a>
 		            		</td>
 		            		<td>
-		            			<a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}&user=${currentUser}" target="taskform"  >${taskHolder.task.creationDate}</a>
+		            			<a href="${taskFullURL}" target="taskform"  >${taskHolder.task.creationDate}</a>
 		            		</td>
 							<td>
-							<a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}&user=${currentUser}" target="taskform"  >${taskHolder.task.deadline}</a>
+							<a href="${taskFullURL}" target="taskform"  >${taskHolder.task.deadline}</a>
 							</td>
 							<td>
-							<a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}&user=${currentUser}" target="taskform"  >${taskHolder.task.priority}</a>
+							<a href="${taskFullURL}" target="taskform"  >${taskHolder.task.priority}</a>
 							</td>
 		            	</tr>
 		        	</c:forEach>
@@ -104,6 +105,7 @@
 		            </tr>
 		            
 			            <c:forEach items="${notifications}" var="taskHolder" varStatus="status">
+							<c:set var="taskFullURL" value="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&type=${taskHolder.task.class.simpleName}&url=${taskHolder.task.formURL}&token=${participantToken}&user=${currentUser}" />
 		            	<c:choose>
 		            		<c:when test="${(status.index%2) == 0}">
 								<tr class="oddTr">
@@ -113,13 +115,13 @@
 		            		</c:otherwise>
 		            	</c:choose>
 			            		<td>
-			            			<a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}" target="taskform"> ${taskHolder.task.description}</a>
+			            			<a href="${taskFullURL}" target="taskform"> ${taskHolder.task.description}</a>
 			            		</td>
 			            		<td>
-			            			<a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}" target="taskform"> ${taskHolder.task.creationDate}</a>
+			            			<a href="${taskFullURL}" target="taskform"> ${taskHolder.task.creationDate}</a>
 			            		</td>
 								<td>
-								    <a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}" target="taskform">${taskHolder.task.priority}</a>
+								    <a href="${taskFullURL}" target="taskform">${taskHolder.task.priority}</a>
 								</td>
 			            	</tr>
 			        	</c:forEach>
@@ -139,6 +141,7 @@
 		              <td width="35%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/></strong></td>
 		            </tr>
 			            <c:forEach items="${initTasks}" var="taskHolder" varStatus="status">
+							<c:set var="taskFullURL" value="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&type=${taskHolder.task.class.simpleName}&url=${taskHolder.task.formURL}&token=${participantToken}&user=${currentUser}" />
 		            	<c:choose>
 		            		<c:when test="${(status.index%2) == 0}">
 								<tr class="oddTr">
@@ -148,10 +151,10 @@
 		            		</c:otherwise>
 		            	</c:choose>
 			            		<td>
-			            			<a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}&user=${currentUser}" target="taskform"  >${taskHolder.task.description}</a>
+			            			<a href="${taskFullURL}" target="taskform"  >${taskHolder.task.description}</a>
 			            		</td>
 			            		<td>
-			            			<a href="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&url=${taskHolder.task.formURL}&token=${participantToken}&user=${currentUser}" target="taskform"  >${taskHolder.task.creationDate}</a>
+			            			<a href="${taskFullURL}" target="taskform"  >${taskHolder.task.creationDate}</a>
 			            		</td>
 			            	</tr>
 			            </c:forEach>
@@ -167,4 +170,3 @@
       <fmt:message key="com_intalio_bpms_not_suport_frame_msg"/>
     </iframe>
 </custom:workflowBody>
-    
