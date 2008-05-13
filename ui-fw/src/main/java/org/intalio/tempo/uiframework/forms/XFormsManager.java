@@ -14,9 +14,9 @@
  */
 package org.intalio.tempo.uiframework.forms;
 
-import org.intalio.tempo.uiframework.forms.FormManager;
-
 import java.net.URISyntaxException;
+
+import org.intalio.tempo.workflow.task.Task;
 
 /**
  * Used to handle redirect to Form Manager component of Intalio|BPMS Workflow.
@@ -38,7 +38,7 @@ public class XFormsManager implements FormManager {
      * Responsible for url to form manager for XForms that are associated with "People Initiated Process" Tasks.
      * @return url to form manager for XForms that are associated with "People Initiated Process" Tasks.
      */
-    public String getPeopleInitiatedProcessURL() {
+    public String getPeopleInitiatedProcessURL(Task t) {
         return _peopleInitiatedProcessURL;
     }
 
@@ -54,7 +54,7 @@ public class XFormsManager implements FormManager {
      * Responsible for url to form manager for XForms that are associated with "People Activity" Tasks.
      * @return url to form manager for XForms that are associated with "People Activity" Tasks.
      */
-    public String getPeopleActivityURL() {
+    public String getPeopleActivityURL(Task t) {
         return _peopleActivityURL;
     }
 
@@ -66,7 +66,7 @@ public class XFormsManager implements FormManager {
         _peopleActivityURL = peopleActivityURL;
     }
 
-    public String getNotificationURL() {
+    public String getNotificationURL(Task t) {
         return _notificationURL;
     }
     

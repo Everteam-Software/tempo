@@ -18,16 +18,31 @@
         <property name="refreshTime" value="5"/>
     </bean>
 
-    <bean id="xFormManager" class="org.intalio.tempo.uiframework.forms.XFormsManager">
-        <property name="peopleInitiatedProcessURL" value="/xFormsManager/init"/>
-        <property name="peopleActivityURL" value="/xFormsManager/act"/>
-        <property name="notificationURL" value="/xFormsManager/notification"/>
-    </bean>
-
-    <bean id="formManagerBroker" class="org.intalio.tempo.uiframework.forms.FormManagerBroker"
-          factory-method="getInstance">
+	<bean id="formManager" class="org.intalio.tempo.uiframework.forms.GenericFormManager">
+		<property name="mappings">
+		<map>
+			<entry key="PIPATask">
+				<map>
+					<entry key="default" value="/xFormsManager/init"/>
+				</map>
+			</entry>
+			<entry key="PATask">
+				<map>
+					<entry key="default" value="/xFormsManager/act"/>
+				</map>
+			</entry>
+			<entry key="Notification">
+				<map>
+					<entry key="default" value="/xFormsManager/notification"/>
+				</map>
+			</entry>
+		</map>
+        </property>
+	</bean>
+	
+    <bean id="formManagerBroker" class="org.intalio.tempo.uiframework.forms.FormManagerBroker" factory-method="getInstance">
         <property name="formManager">
-            <ref bean="xFormManager"/>
+            <ref bean="formManager"/>
         </property>
     </bean>
 

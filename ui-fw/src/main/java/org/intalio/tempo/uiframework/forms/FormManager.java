@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2005-2006 Intalio inc.
+ * Copyright (c) 2005-2008 Intalio inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -14,6 +14,8 @@
  */
 package org.intalio.tempo.uiframework.forms;
 
+import org.intalio.tempo.workflow.task.Task;
+
 /**
  * Represents Forms Manager entity: provides its attributes required to interact
  * with Forms Manager definit implementation.
@@ -22,20 +24,7 @@ package org.intalio.tempo.uiframework.forms;
  */
 public interface FormManager {
 
-    /**
-     * Used in building the URL to Forms Manager
-     *
-     * @return URL to form manager for building forms that are associated with ""People Initiated Process" Tasks
-     * business processes.
-     */
-    String getPeopleInitiatedProcessURL();
-
-    /**
-     * Used in building the URL to Forms Manager
-     *
-     * @return URL to form manager for building forms that are associated with "People Activity" Tasks
-     */
-    String getPeopleActivityURL();
-    
-    String getNotificationURL();
+    String getPeopleInitiatedProcessURL(Task t);
+    String getPeopleActivityURL(Task t);
+    String getNotificationURL(Task t);
 }

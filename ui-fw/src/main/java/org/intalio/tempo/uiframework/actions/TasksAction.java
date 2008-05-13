@@ -63,25 +63,22 @@ public class TasksAction extends Action {
         if(_log.isDebugEnabled()) _log.debug("Parsing task list for UI-FW");
         
         FormManager fmanager = FormManagerBroker.getInstance().getFormManager();
-        String peopleActivityUrl = resoleUrl(fmanager.getPeopleActivityURL());
-        String notificationURL = resoleUrl(fmanager.getNotificationURL());
-        String peopleInitiatedProcessURL = resoleUrl(fmanager.getPeopleInitiatedProcessURL());
         
         for (Object task : _tasks) {
         	_log.info(((Task)task).getID() + ":"+ task.getClass().getName());
             if (task instanceof Notification) {
                 Notification notification = (Notification) task;
                 if (!TaskState.COMPLETED.equals(notification.getState()) ) {
-                    _notifications.add(new TaskHolder<Notification>(notification, notificationURL));
+                    _notifications.add(new TaskHolder<Notification>(notification, resoleUrl(fmanager.getNotificationURL(notification))));
                 }
             } else if (task instanceof PATask) {
                 PATask paTask = (PATask) task;
                 if (!TaskState.COMPLETED.equals(paTask.getState()) && !TaskState.FAILED.equals(paTask.getState())) {
-                    _activityTasks.add(new TaskHolder<PATask>(paTask, peopleActivityUrl));
+                    _activityTasks.add(new TaskHolder<PATask>(paTask, resoleUrl(fmanager.getPeopleActivityURL(paTask))));
                 }
             } else if (task instanceof PIPATask) {
                 PIPATask pipaTask = (PIPATask) task;
-                _initTasks.add(new TaskHolder<PIPATask>(pipaTask, peopleInitiatedProcessURL));
+                _initTasks.add(new TaskHolder<PIPATask>(pipaTask, resoleUrl(fmanager.getPeopleInitiatedProcessURL(pipaTask))));
             } else {
                 _log.info("Ignoring task of class:" + task.getClass().getName());
             }
