@@ -54,7 +54,7 @@ public class TokenWSTest {
 
     @Test
     public void testAuthenticateRealUser() throws AuthenticationException, RBACException, RemoteException {
-        String token = _client.authenticateUser("exolab\\castor", "castor");
+        String token = _client.authenticateUser("intalio\\admin", "changeit");
         if (token == null || token.length() < 10) fail("invalid token returned: " + token);
     }
     
@@ -62,7 +62,7 @@ public class TokenWSTest {
     public void testAuthenticateInvalidUserShouldFail() throws Exception {
         try {
             // try invalid user
-            _client.authenticateUser("exolab\\foo", "bar");
+            _client.authenticateUser("intalio\\foo", "bar");
             fail("Invalid user should have raised AuthenticationException");
         } catch (AuthenticationException except) {
             // pass
@@ -75,7 +75,7 @@ public class TokenWSTest {
     public void testAuthenticateValidUserWithInvalidPasswordShouldFail() throws Exception {
         try {
             // try invalid password
-            _client.authenticateUser("exolab\\castor", "bar");
+            _client.authenticateUser("intalio\\admin", "bar");
             fail("Invalid password should have raised AuthenticationException");
         } catch (AuthenticationException except) {
             // pass
@@ -87,13 +87,13 @@ public class TokenWSTest {
     @Test
     public void testAuthenticateUserWithCredentials() throws AuthenticationException, RBACException, RemoteException {
         Property[] props = new Property[1];
-        props[0] = new Property("password", "castor");
-        _client.authenticateUser("exolab\\castor", props);
+        props[0] = new Property("password", "changeit");
+        _client.authenticateUser("intalio\\admin", props);
     }
 
     @Test
     public void testGetTokenProperties() throws AuthenticationException, RBACException, RemoteException {
-        String token = _client.authenticateUser("exolab\\castor", "castor");
+        String token = _client.authenticateUser("intalio\\admin", "changeit");
         if (token == null || token.length() < 10)
             fail("invalid token returned: " + token);
 
