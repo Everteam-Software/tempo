@@ -82,9 +82,6 @@ public class TMSRequestProcessor extends OMUnmarshaller {
 
             final UserRoles user = _server.getUserRoles(participantToken);
             Task[] tasks = _server.getTaskList(participantToken);
-            for (Task t : tasks) {
-                _logger.info(t.getClass().getName() + "\n" + t.toString());
-            }
 
             OMElement response = new TMSResponseMarshaller(requestElement.getOMFactory()) {
                 public OMElement marshalResponse(Task[] tasks) {
@@ -95,7 +92,8 @@ public class TMSRequestProcessor extends OMUnmarshaller {
                 }
             }.marshalResponse(tasks);
 
-            _logger.info(response.toString());
+            if(_logger.isDebugEnabled()) 
+                _logger.debug(response.toString());
 
             return response;
         } catch (InvalidInputFormatException e) {
