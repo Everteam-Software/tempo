@@ -29,295 +29,317 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 public class JPATaskTest {
-  final static Logger _logger = LoggerFactory.getLogger(JPATaskTest.class);
+    final static Logger _logger = LoggerFactory.getLogger(JPATaskTest.class);
 
-  EntityManager em;
-  EntityManagerFactory factory;
-  EntityTransaction jpa;
-  XmlTooling xml = new XmlTooling();
+    EntityManager em;
+    EntityManagerFactory factory;
+    EntityTransaction jpa;
+    XmlTooling xml = new XmlTooling();
 
-  public static junit.framework.Test suite() {
-    return new JUnit4TestAdapter(JPATaskTest.class);
-  }
-
-  @Before
-  public void setUpEntityManager() throws Exception {
-    Properties p = new Properties();
-    p.load(this.getClass().getResourceAsStream("/jpa.properties"));
-    System.getProperties().putAll(p);
-    factory = Persistence.createEntityManagerFactory("org.intalio.tempo.tms", System.getProperties());
-    em = factory.createEntityManager();
-    jpa = em.getTransaction();
-    jpa.begin();
-  }
-
-  @After
-  public void closeFactory() throws Exception {
-    try {
-      em.close();
-    } catch (Exception e) {
-    }
-    try {
-      factory.close();
-    } catch (Exception e) {
-    }
-  }
-
-  private void persist(Object o) throws Exception {
-    em.persist(o);
-    jpa.commit();
-    // this is to prevent caching at the entity manager level
-    em.clear();
-  }
-
-  @Test
-  public void notificationOneRolePersist() throws Exception {
-      String id = "id" + System.currentTimeMillis();
-      Notification task1 = null, task2 = null;
-
-      task1 = new Notification(id, new URI("http://hellonico.net"));
-      task1.getRoleOwners().add("intalio\\manager");
-      persist(task1);
-
-      Query q = em.createNamedQuery(Task.FIND_BY_ROLE).setParameter(1, "intalio\\manager");
-      task2 = (Notification) q.getSingleResult();
-      TaskEquality.isEqual(task1, task2);
-
-      checkRemoved(task2);
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(JPATaskTest.class);
     }
 
-  private void checkRemoved(Task task2) {
-    jpa.begin();
-    em.remove(task2);
-    jpa.commit();
-
-    final TaskFetcher taskFetcher = new TaskFetcher(em);
-    try {
-      taskFetcher.fetchTaskIfExists(task2.getID());
-      Assert.fail("No task should be left here");
-    } catch (Exception expected) {
-      // this is good.
+    @Before
+    public void setUpEntityManager() throws Exception {
+        Properties p = new Properties();
+        p.load(this.getClass().getResourceAsStream("/jpa.properties"));
+        System.getProperties().putAll(p);
+        factory = Persistence.createEntityManagerFactory("org.intalio.tempo.tms", System.getProperties());
+        em = factory.createEntityManager();
+        jpa = em.getTransaction();
+        jpa.begin();
     }
-  }
 
-  private void checkRemoved(String id) throws UnavailableTaskException {
-    final TaskFetcher taskFetcher = new TaskFetcher(em);
-    checkRemoved(taskFetcher.fetchTaskIfExists(id));
-  }
+    @After
+    public void closeFactory() throws Exception {
+        try {
+            em.close();
+        } catch (Exception e) {
+        }
+        try {
+            factory.close();
+        } catch (Exception e) {
+        }
+    }
 
-  @Test
-  public void PIPATaskSearchFromURL() throws Exception {
-    String id = "id" + System.currentTimeMillis();
-    PIPATask task1 = new PIPATask(id, new URI("http://hellonico.net"), new URI("http://hellonico.net"), new URI("http://hellonico.net"),
-        "initOperationSOAPAction");
-    persist(task1);
-    Query q = em.createNamedQuery(PIPATask.FIND_BY_URL).setParameter(1, "http://hellonico.net");
-    PIPATask task2 = (PIPATask) (q.getSingleResult());
-    TaskEquality.isEqual(task1, task2);
-    checkRemoved(task2);
-  }
+    private void persist(Object o) throws Exception {
+        em.persist(o);
+        jpa.commit();
+        // this is to prevent caching at the entity manager level
+        em.clear();
+    }
 
-  @Test
-  public void PATaskPersistence() throws Exception {
+    @Test
+    public void notificationOneRolePersist() throws Exception {
+        String id = "id" + System.currentTimeMillis();
+        Notification task1 = null, task2 = null;
 
-    String id = "My id" + System.currentTimeMillis();
-    PATask task1 = new PATask(id, new URI("http://hellonico.net"), "processId", "soap", getXmlSampleDocument());
-    task1.setDeadline(new Date());
+        task1 = new Notification(id, new URI("http://hellonico.net"));
+        task1.getRoleOwners().add("intalio\\manager");
+        persist(task1);
 
-    persist(task1);
+        Query q = em.createNamedQuery(Task.FIND_BY_ROLE).setParameter(1, "intalio\\manager");
+        task2 = (Notification) q.getSingleResult();
+        TaskEquality.isEqual(task1, task2);
 
-    Query q = em.createNamedQuery(Task.FIND_BY_ID).setParameter(1, id);
-    PATask task2 = (PATask) (q.getResultList()).get(0);
+        checkRemoved(task2);
+    }
 
-    TaskEquality.isEqual(task1, task2);
+    private void checkRemoved(Task task2) {
+        jpa.begin();
+        em.remove(task2);
+        jpa.commit();
 
-    Assert.assertEquals(task1.getInputAsXmlString(), task2.getInputAsXmlString());
-    Assert.assertEquals(task1.getInputAsXmlString(), task2.getInputAsXmlString());
+        final TaskFetcher taskFetcher = new TaskFetcher(em);
+        try {
+            taskFetcher.fetchTaskIfExists(task2.getID());
+            Assert.fail("No task should be left here");
+        } catch (Exception expected) {
+            // this is good.
+        }
+    }
 
-    checkRemoved(task2);
-  }
+    private void checkRemoved(String id) throws UnavailableTaskException {
+        final TaskFetcher taskFetcher = new TaskFetcher(em);
+        checkRemoved(taskFetcher.fetchTaskIfExists(id));
+    }
 
-  @Test
-  public void PIPATaskPersistence() throws Exception {
-    String id = "id" + System.currentTimeMillis();
-    PIPATask task1 = new PIPATask(id, new URI("http://hellonico.net"), new URI("http://hellonico.net"), new URI("http://hellonico.net"),
-        "initOperationSOAPAction");
+    @Test
+    public void PIPATaskSearchFromURL() throws Exception {
+        String id = "id" + System.currentTimeMillis();
+        PIPATask task1 = new PIPATask(id, new URI("http://hellonico2.net"), new URI("http://hellonico2.net"), new URI("http://hellonico2.net"),
+                        "initOperationSOAPAction");
+        persist(task1);
+        Query q = em.createNamedQuery(PIPATask.FIND_BY_URL).setParameter(1, "http://hellonico2.net");
+        PIPATask task2 = (PIPATask) (q.getSingleResult());
+        TaskEquality.isEqual(task1, task2);
+        checkRemoved(task2);
+    }
 
-    persist(task1);
+    @Test
+    public void PATaskPersistence() throws Exception {
 
-    Query q = em.createNamedQuery(Task.FIND_BY_ID).setParameter(1, id);
+        String id = "My id" + System.currentTimeMillis();
+        PATask task1 = new PATask(id, new URI("http://hellonico.net"), "processId", "soap", getXmlSampleDocument());
+        task1.setDeadline(new Date());
 
-    PIPATask task2 = (PIPATask) (q.getResultList()).get(0);
+        persist(task1);
 
-    TaskEquality.isEqual(task1, task2);
-    checkRemoved(task2);
-  }
+        Query q = em.createNamedQuery(Task.FIND_BY_ID).setParameter(1, id);
+        PATask task2 = (PATask) (q.getResultList()).get(0);
 
-  @Test
-  public void authorizeActionForUser() throws Exception {
-    String id = "id" + System.currentTimeMillis();
-    Notification task1 = null, task2 = null;
+        TaskEquality.isEqual(task1, task2);
 
-    task1 = new Notification(id, new URI("http://hellonico.net"), getXmlSampleDocument());
-    task1.authorizeActionForUser("play", "niko");
-    task1.authorizeActionForUser("go_home", "niko");
-    task1.authorizeActionForUser("eat", "alex");
-    task1.getRoleOwners().add("role1");
-    task1.getUserOwners().add("user1");
+        Assert.assertEquals(task1.getInputAsXmlString(), task2.getInputAsXmlString());
+        Assert.assertEquals(task1.getInputAsXmlString(), task2.getInputAsXmlString());
 
-    persist(task1);
+        checkRemoved(task2);
+    }
 
-    Query q = em.createNamedQuery(Task.FIND_BY_ID).setParameter(1, id);
-    task2 = (Notification) (q.getResultList()).get(0);
-    TaskEquality.areTasksEquals(task2, task1);
+    @Test
+    public void PIPATaskPersistence() throws Exception {
+        String id = "id" + System.currentTimeMillis();
+        PIPATask task1 = new PIPATask(id, new URI("http://hellonico.net"), new URI("http://hellonico.net"), new URI("http://hellonico.net"),
+                        "initOperationSOAPAction");
 
-    TaskFetcher fetcher = new TaskFetcher(em);
-    Assert.assertEquals(Notification.class, fetcher.fetchTasksForUser("user1")[0].getClass());
-    Assert.assertEquals(Notification.class, fetcher.fetchTasksForRole("role1")[0].getClass());
+        persist(task1);
 
-    testFecthForUserRoles("user1", new String[] { "role2" }, 1);
-    testFecthForUserRoles("user2", new String[] { "role1" }, 1);
-    testFecthForUserRoles("user2", new String[] { "role2" }, 0);
-    testFecthForUserRoles("user3", new String[] { "role3" }, 0);
+        Query q = em.createNamedQuery(Task.FIND_BY_ID).setParameter(1, id);
 
-    checkRemoved(task2);
-  }
+        PIPATask task2 = (PIPATask) (q.getResultList()).get(0);
 
-  @Test
-  public void NotificationPersistence() throws Exception {
+        TaskEquality.isEqual(task1, task2);
+        checkRemoved(task2);
+    }
 
-    String id = "id" + System.currentTimeMillis();
-    Notification task1 = new Notification(id, new URI("http://hellonico.net"), getXmlSampleDocument());
+    @Test
+    public void authorizeActionForUser() throws Exception {
+        String id = "id" + System.currentTimeMillis();
+        Notification task1 = null, task2 = null;
 
-    persist(task1);
+        task1 = new Notification(id, new URI("http://hellonico.net"), getXmlSampleDocument());
+        task1.authorizeActionForUser("play", "niko");
+        task1.authorizeActionForUser("go_home", "niko");
+        task1.authorizeActionForUser("eat", "alex");
+        task1.getRoleOwners().add("role1");
+        task1.getUserOwners().add("user1");
 
-    Query q = em.createNamedQuery(Task.FIND_BY_ID).setParameter(1, id);
-    Notification task2 = (Notification) (q.getResultList()).get(0);
+        persist(task1);
 
-    TaskEquality.areTasksEquals(task1, task2);
+        Query q = em.createNamedQuery(Task.FIND_BY_ID).setParameter(1, id);
+        task2 = (Notification) (q.getResultList()).get(0);
+        TaskEquality.areTasksEquals(task2, task1);
 
-    checkRemoved(task2);
-  }
+        TaskFetcher fetcher = new TaskFetcher(em);
+        Assert.assertEquals(Notification.class, fetcher.fetchTasksForUser("user1")[0].getClass());
+        Assert.assertEquals(Notification.class, fetcher.fetchTasksForRole("role1")[0].getClass());
 
-  @Test
-  public void attachmentsPATask() throws Exception {
-    AttachmentMetadata metadata = new AttachmentMetadata();
-    Attachment att = new Attachment(metadata, new URL("http://hellonico.net"));
-    String id = "pa" + System.currentTimeMillis();
-    PATask task1 = new PATask(id, new URI("http://hellonico.net"), "processId", "soap", getXmlSampleDocument());
-    task1.addAttachment(att);
+        testFecthForUserRoles("user1", new String[] { "role2" }, 1);
+        testFecthForUserRoles("user2", new String[] { "role1" }, 1);
+        testFecthForUserRoles("user2", new String[] { "role2" }, 0);
+        testFecthForUserRoles("user3", new String[] { "role3" }, 0);
 
-    persist(task1);
+        checkRemoved(task2);
+    }
 
-    Query q = em.createNamedQuery(Task.FIND_BY_ID).setParameter(1, id);
-    PATask task2 = (PATask) (q.getResultList()).get(0);
+    @Test
+    public void NotificationPersistence() throws Exception {
 
-    TaskEquality.areAttachmentsEqual(task1, task2);
+        String id = "id" + System.currentTimeMillis();
+        Notification task1 = new Notification(id, new URI("http://hellonico.net"), getXmlSampleDocument());
 
-    checkRemoved(task2);
-  }
+        persist(task1);
 
-  @Test
-  public void authorizeUserRolesAndIsAvailable() throws Exception {
-    String id = "pa" + System.currentTimeMillis();
-    PATask task1 = new PATask(id, new URI("http://hellonico.net"), "processId", "soap", getXmlSampleDocument());
-    task1.authorizeActionForUser("save", "examples\\manager");
-    task1.authorizeActionForUser("save", "user1");
-    task1.getUserOwners().add("user2");
-    task1.getRoleOwners().add("role1");
+        Query q = em.createNamedQuery(Task.FIND_BY_ID).setParameter(1, id);
+        Notification task2 = (Notification) (q.getResultList()).get(0);
 
-    task1.setPriority(2);
-    persist(task1);
+        TaskEquality.areTasksEquals(task1, task2);
 
-    Query q = em.createNamedQuery(Task.FIND_BY_ID).setParameter(1, id);
-    PATask task2 = (PATask) (q.getResultList()).get(0);
+        checkRemoved(task2);
+    }
 
-    TaskEquality.areTasksEquals(task1, task2);
+    @Test
+    public void attachmentsPATask() throws Exception {
+        AttachmentMetadata metadata = new AttachmentMetadata();
+        Attachment att = new Attachment(metadata, new URL("http://hellonico.net"));
+        String id = "pa" + System.currentTimeMillis();
+        PATask task1 = new PATask(id, new URI("http://hellonico.net"), "processId", "soap", getXmlSampleDocument());
+        task1.addAttachment(att);
 
-	final UserRoles credentials = new UserRoles("user1", new String[]{"role1"});
-	final UserRoles credentials2 = new UserRoles("user2", new String[]{"role2"});
-	final UserRoles credentials3 = new UserRoles("user3", new String[]{"role3"});
-	
-    Assert.assertTrue(task2.isAvailableTo(credentials));
-    Assert.assertTrue(task2.isAvailableTo(credentials2));
-    Assert.assertFalse(task2.isAvailableTo(credentials3));
-    
-	Assert.assertTrue(task2.isAuthorizedAction(credentials, "save"));
-	Assert.assertTrue(task2.isAuthorizedAction(credentials, "cook"));
-	
-    checkRemoved(task2);
-  }
+        persist(task1);
 
-  @Test
-  public void testFetchAvailabeTasksWithCriteriaPA() throws Exception {
-    String id = "pa" + System.currentTimeMillis();
-    PATask task1 = new PATask(id, new URI("http://hellonico.net"), "processId", "soap", getXmlSampleDocument());
-    task1.authorizeActionForUser("save", "examples\\manager");
-    task1.setState(TaskState.FAILED);
-    task1.setPriority(2);
-    task1.getRoleOwners().add("role1");
-    task1.getUserOwners().add("user1");
+        Query q = em.createNamedQuery(Task.FIND_BY_ID).setParameter(1, id);
+        PATask task2 = (PATask) (q.getResultList()).get(0);
 
-    persist(task1);
+        TaskEquality.areAttachmentsEqual(task1, task2);
 
-    testFetchForUserRolesWithCriteria("user1", new String[] { "role1" }, PATask.class, "T._state = TaskState.FAILED", 1);
-    testFetchForUserRolesWithCriteria("user1", new String[] { "role1" }, PATask.class, "T._state = TaskState.FAILED and T._priority = 2", 1);
-    testFetchForUserRolesWithCriteria("user1", new String[] { "role1" }, PATask.class, "T._state = TaskState.FAILED and T._priority = 1", 0);
-    testFetchForUserRolesWithCriteria("user1", new String[] { "role1" }, PATask.class, "T._state = TaskState.FAILED or T._priority = 1", 1);
-    testFetchForUserRolesWithCriteria("user3", new String[] { "role3" }, PATask.class, "T._state = TaskState.FAILED", 0);
-    testFetchForUserRolesWithCriteria("user1", new String[] { "role1" }, PATask.class, "T._state = TaskState.COMPLETED", 0);
-    testFetchForUserRolesWithCriteria("user1", new String[] { "role1" }, Notification.class, null, 0);
+        checkRemoved(task2);
+    }
 
-    checkRemoved(task1.getID());
-  }
+    @Test
+    public void authorizeUserRolesAndIsAvailable() throws Exception {
+        String id = "pa" + System.currentTimeMillis();
+        PATask task1 = new PATask(id, new URI("http://hellonico.net"), "processId", "soap", getXmlSampleDocument());
+        task1.authorizeActionForUser("save", "examples\\manager");
+        task1.authorizeActionForUser("save", "user1");
+        task1.getUserOwners().add("user2");
+        task1.getRoleOwners().add("role1");
 
-  @Test
-  public void testFetchAvailabeTasksWithCriteriaNOTI() throws Exception {
-    String id = "id" + System.currentTimeMillis();
-    Notification task2 = new Notification(id, new URI("http://hellonico.net"), getXmlSampleDocument());
-    task2.getRoleOwners().add("role1");
-    task2.getUserOwners().add("user1");
+        task1.setPriority(2);
+        persist(task1);
 
-    persist(task2);
+        Query q = em.createNamedQuery(Task.FIND_BY_ID).setParameter(1, id);
+        PATask task2 = (PATask) (q.getResultList()).get(0);
 
-    testFetchForUserRolesWithCriteria("user1", new String[] { "role1" }, Notification.class, null, 1);
-    testFetchForUserRolesWithCriteria("user3", new String[] { "role3" }, Notification.class, null, 0);
-    testFetchForUserRolesWithCriteria("user1", new String[] { "role1" }, PIPATask.class, null, 0);
+        TaskEquality.areTasksEquals(task1, task2);
 
-    checkRemoved(task2.getID());
-  }
+        final UserRoles credentials = new UserRoles("user1", new String[] { "role1" });
+        final UserRoles credentials2 = new UserRoles("user2", new String[] { "role2" });
+        final UserRoles credentials3 = new UserRoles("user3", new String[] { "role3" });
 
-  @Test
-  public void testFetchAvailabeTasksWithCriteriaPIPA() throws Exception {
-    String id = "id" + System.currentTimeMillis();
-    PIPATask task1 = new PIPATask(id, new URI("http://hellonico.net"), new URI("http://hellonico.net"), new URI("http://hellonico.net"),
-        "initOperationSOAPAction");
+        Assert.assertTrue(task2.isAvailableTo(credentials));
+        Assert.assertTrue(task2.isAvailableTo(credentials2));
+        Assert.assertFalse(task2.isAvailableTo(credentials3));
 
-    task1.getRoleOwners().add("role1");
-    task1.getUserOwners().add("user1");
+        Assert.assertTrue(task2.isAuthorizedAction(credentials, "save"));
+        Assert.assertTrue(task2.isAuthorizedAction(credentials, "cook"));
 
-    persist(task1);
+        checkRemoved(task2);
+    }
 
-    testFetchForUserRolesWithCriteria("user1", new String[] { "role1" }, PIPATask.class, null, 1);
-    testFetchForUserRolesWithCriteria("user3", new String[] { "role3" }, PIPATask.class, null, 0);
+    @Test
+    public void testFetchAvailabeTasksWithCriteriaPA() throws Exception {
+        String id = "pa" + System.currentTimeMillis();
+        PATask task1 = new PATask(id, new URI("http://hellonico.net"), "processId", "soap", getXmlSampleDocument());
+        task1.authorizeActionForUser("save", "examples\\manager");
+        task1.setState(TaskState.FAILED);
+        task1.setPriority(2);
+        task1.getRoleOwners().add("role1");
+        task1.getUserOwners().add("user1");
 
-    checkRemoved(task1.getID());
+        persist(task1);
 
-  }
+        testFetchForUserRolesWithCriteria("user1", new String[] { "role1" }, PATask.class, "T._state = TaskState.FAILED", 1);
+        testFetchForUserRolesWithCriteria("user1", new String[] { "role1" }, PATask.class, "T._state = TaskState.FAILED and T._priority = 2", 1);
+        testFetchForUserRolesWithCriteria("user1", new String[] { "role1" }, PATask.class, "T._state = TaskState.FAILED and T._priority = 1", 0);
+        testFetchForUserRolesWithCriteria("user1", new String[] { "role1" }, PATask.class, "T._state = TaskState.FAILED or T._priority = 1", 1);
+        testFetchForUserRolesWithCriteria("user3", new String[] { "role3" }, PATask.class, "T._state = TaskState.FAILED", 0);
+        testFetchForUserRolesWithCriteria("user1", new String[] { "role1" }, PATask.class, "T._state = TaskState.COMPLETED", 0);
+        testFetchForUserRolesWithCriteria("user1", new String[] { "role1" }, Notification.class, null, 0);
 
-  public void testFetchForUserRolesWithCriteria(String userId, String[] roles, Class taskClass, String subQuery, int size) throws Exception {
-    final TaskFetcher taskFetcher = new TaskFetcher(em);
-    Task[] tasks = taskFetcher.fetchAvailableTasks(new UserRoles(userId, roles), taskClass, subQuery);
-    Assert.assertEquals(size, tasks.length);
-  }
+        checkRemoved(task1.getID());
+    }
 
-  private void testFecthForUserRoles(String userId, String[] roles, int size) throws Exception {
-    Task[] tasks = new TaskFetcher(em).fetchAllAvailableTasks(new UserRoles(userId, roles));
-    Assert.assertEquals(size, tasks.length);
-  }
+    @Test
+    public void testFetchAvailabeTasksWithCriteriaNOTI() throws Exception {
+        String id = "id" + System.currentTimeMillis();
+        Notification task2 = new Notification(id, new URI("http://hellonico.net"), getXmlSampleDocument());
+        task2.getRoleOwners().add("role1");
+        task2.getUserOwners().add("user1");
 
-  private Document getXmlSampleDocument() throws Exception {
-    return xml.getXmlDocument("/employees.xml");
-  }
+        persist(task2);
+
+        testFetchForUserRolesWithCriteria("user1", new String[] { "role1" }, Notification.class, null, 1);
+        testFetchForUserRolesWithCriteria("user3", new String[] { "role3" }, Notification.class, null, 0);
+        testFetchForUserRolesWithCriteria("user1", new String[] { "role1" }, PIPATask.class, null, 0);
+
+        checkRemoved(task2.getID());
+    }
+
+    @Test
+    public void testFetchAvailabeTasksWithCriteriaPIPA() throws Exception {
+        String id = "id" + System.currentTimeMillis();
+        PIPATask task1 = new PIPATask(id, new URI("http://hellonico.net"), new URI("http://hellonico.net"), new URI("http://hellonico.net"),
+                        "initOperationSOAPAction");
+
+        task1.getRoleOwners().add("role1");
+        task1.getUserOwners().add("user1");
+
+        persist(task1);
+
+        testFetchForUserRolesWithCriteria("user1", new String[] { "role1" }, PIPATask.class, null, 1);
+        testFetchForUserRolesWithCriteria("user3", new String[] { "role3" }, PIPATask.class, null, 0);
+
+        checkRemoved(task1.getID());
+
+    }
+
+    public void testFetchForUserRolesWithCriteria(String userId, String[] roles, Class taskClass, String subQuery, int size) throws Exception {
+        final TaskFetcher taskFetcher = new TaskFetcher(em);
+        Task[] tasks = taskFetcher.fetchAvailableTasks(new UserRoles(userId, roles), taskClass, subQuery);
+        Assert.assertEquals(size, tasks.length);
+    }
+
+    @Test
+    public void testDeleteTasks() throws Exception {
+        String userId = "user1";
+        String[] roles = { "role1" };
+
+        String id = "id" + System.currentTimeMillis();
+        Notification task2 = new Notification(id, new URI("http://hellonico.net"), getXmlSampleDocument());
+        task2.getRoleOwners().add("role1");
+        task2.getUserOwners().add("user1");
+
+        persist(task2);
+
+        final TaskFetcher taskFetcher = new TaskFetcher(em);
+        Task[] tasks = taskFetcher.fetchAllAvailableTasks(new UserRoles(userId, roles));
+        Assert.assertNotNull(tasks);
+
+        taskFetcher.deleteTasks(new UserRoles(userId, roles));
+        tasks = taskFetcher.fetchAllAvailableTasks(new UserRoles(userId, roles));
+        Assert.assertEquals(0, tasks.length);
+
+    }
+
+    private void testFecthForUserRoles(String userId, String[] roles, int size) throws Exception {
+        Task[] tasks = new TaskFetcher(em).fetchAllAvailableTasks(new UserRoles(userId, roles));
+        Assert.assertEquals(size, tasks.length);
+    }
+
+    private Document getXmlSampleDocument() throws Exception {
+        return xml.getXmlDocument("/employees.xml");
+    }
 
 }

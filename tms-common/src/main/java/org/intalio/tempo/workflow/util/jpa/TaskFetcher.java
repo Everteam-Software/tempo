@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
@@ -25,90 +26,106 @@ import org.slf4j.LoggerFactory;
  */
 @SuppressWarnings("unchecked")
 public class TaskFetcher {
-  final static Logger _logger = LoggerFactory.getLogger(TaskFetcher.class);
-  private EntityManager _entityManager;
-  private Query find_by_id;
-  private static String QUERY_GENERIC1 = "select T from ";
-  private static String QUERY_GENERIC2 = " T where (T._userOwners in (?1) or T._roleOwners in (?2))";
+    final static Logger _logger = LoggerFactory.getLogger(TaskFetcher.class);
+    private EntityManager _entityManager;
+    private Query find_by_id;
+    private final String QUERY_GENERIC1 = "select T from ";
+    private final String QUERY_GENERIC2 = " T where (T._userOwners in (?1) or T._roleOwners in (?2))";
+    private final String DELETE_TASKS = "delete from Task m where m._userOwners in (?1) or m._roleOwners in (?2)";
 
-  public TaskFetcher(EntityManager em) {
-    this._entityManager = em;
-    this.find_by_id = _entityManager.createNamedQuery(Task.FIND_BY_ID);
-  }
-
-  /**
-   * Retrieve and load a task if it exists
- * @throws UnavailableTaskException 
-   */
-  public Task fetchTaskIfExists(String taskID) throws UnavailableTaskException {
-      try {
-          Query q = find_by_id.setParameter(1, taskID);
-          return (Task) q.getSingleResult();      
-      } catch (NoResultException nre) {
-          throw new UnavailableTaskException("Task does not exist"+taskID);
-      }
-    
-  }
-
-  /**
-   * Fetch a PIPA task from its URL
-   */
-  public PIPATask fetchPipaFromUrl(String formUrl) {
-    Query q = _entityManager.createNamedQuery(PIPATask.FIND_BY_URL).setParameter(1, "%" + formUrl);
-    return (PIPATask) q.getSingleResult();
-  }
-
-  /**
-   * Core method. retrieve all the tasks for the given <code>UserRoles</code>
-   */
-  public Task[] fetchAllAvailableTasks(UserRoles user) {
-    ArrayList userIdList = new ArrayList();
-    userIdList.add(user.getUserID());
-    Query q = _entityManager.createNamedQuery(Task.FIND_BY_ROLE_USER).setParameter(1, userIdList).setParameter(2, user.getAssignedRoles());
-    List result = q.getResultList();
-    return (Task[]) result.toArray(new Task[result.size()]);
-  }
-
-  /**
-   * Core method. retrieve all the tasks for the given <code>UserRoles</code>
-   * and task state, task type
-   */
-  public Task[] fetchAvailableTasks(UserRoles user, Class taskClass, String subQuery) {
-    ArrayList userIdList = new ArrayList();
-    userIdList.add(user.getUserID());
-    Query q;
-
-    if (subQuery == null) {
-      q = _entityManager.createQuery(QUERY_GENERIC1 + taskClass.getName() + QUERY_GENERIC2).setParameter(1, userIdList)
-          .setParameter(2, user.getAssignedRoles());
-    } else {
-      q = _entityManager.createQuery(QUERY_GENERIC1 + taskClass.getName() + QUERY_GENERIC2 + " and " + subQuery).setParameter(1, userIdList).setParameter(2,
-          user.getAssignedRoles());
+    public TaskFetcher(EntityManager em) {
+        this._entityManager = em;
+        this.find_by_id = _entityManager.createNamedQuery(Task.FIND_BY_ID);
     }
-    List result = q.getResultList();
-    return (Task[]) result.toArray(new Task[result.size()]);
-  }
 
-  /**
-   * Fetch the tasks for a given user
-   */
-  public Task[] fetchTasksForUser(String user) {
-    List<String> params = new ArrayList<String>();
-    params.add(user);
-    Query q = _entityManager.createNamedQuery(Task.FIND_BY_USER).setParameter(1, params);
-    List result = q.getResultList();
-    return (Task[]) result.toArray(new Task[result.size()]);
-  }
+    /**
+     * Retrieve and load a task if it exists
+     * 
+     * @throws UnavailableTaskException
+     */
+    public Task fetchTaskIfExists(String taskID) throws UnavailableTaskException {
+        try {
+            Query q = find_by_id.setParameter(1, taskID);
+            return (Task) q.getSingleResult();
+        } catch (NoResultException nre) {
+            throw new UnavailableTaskException("Task does not exist" + taskID);
+        }
 
-  /**
-   * Fetch the tasks for a given role
-   */
-  public Object[] fetchTasksForRole(String role) {
-    List<String> params = new ArrayList<String>();
-    params.add(role);
-    Query q = _entityManager.createNamedQuery(Task.FIND_BY_ROLE).setParameter(1, params);
-    List result = q.getResultList();
-    return (Task[]) result.toArray(new Task[result.size()]);
-  }
+    }
+
+    /**
+     * Fetch a PIPA task from its URL
+     */
+    public PIPATask fetchPipaFromUrl(String formUrl) {
+        Query q = _entityManager.createNamedQuery(PIPATask.FIND_BY_URL).setParameter(1, "%" + formUrl);
+        return (PIPATask) q.getSingleResult();
+    }
+
+    /**
+     * Core method. retrieve all the tasks for the given <code>UserRoles</code>
+     */
+    public Task[] fetchAllAvailableTasks(UserRoles user) {
+        ArrayList userIdList = new ArrayList();
+        userIdList.add(user.getUserID());
+        Query q = _entityManager.createNamedQuery(Task.FIND_BY_ROLE_USER).setParameter(1, userIdList).setParameter(2, user.getAssignedRoles());
+        List result = q.getResultList();
+        return (Task[]) result.toArray(new Task[result.size()]);
+    }
+
+    /**
+     * Core method. retrieve all the tasks for the given <code>UserRoles</code>
+     * and task state, task type
+     */
+    public Task[] fetchAvailableTasks(UserRoles user, Class taskClass, String subQuery) {
+        ArrayList userIdList = new ArrayList();
+        userIdList.add(user.getUserID());
+        Query q;
+
+        if (subQuery == null) {
+            q = _entityManager.createQuery(QUERY_GENERIC1 + taskClass.getName() + QUERY_GENERIC2).setParameter(1, userIdList).setParameter(2,
+                            user.getAssignedRoles());
+        } else {
+            q = _entityManager.createQuery(QUERY_GENERIC1 + taskClass.getName() + QUERY_GENERIC2 + " and " + subQuery).setParameter(1, userIdList)
+                            .setParameter(2, user.getAssignedRoles());
+        }
+        List result = q.getResultList();
+        return (Task[]) result.toArray(new Task[result.size()]);
+    }
+
+    /**
+     * Fetch the tasks for a given user
+     */
+    public Task[] fetchTasksForUser(String user) {
+        List<String> params = new ArrayList<String>();
+        params.add(user);
+        Query q = _entityManager.createNamedQuery(Task.FIND_BY_USER).setParameter(1, params);
+        List result = q.getResultList();
+        return (Task[]) result.toArray(new Task[result.size()]);
+    }
+
+    /**
+     * Fetch the tasks for a given role
+     */
+    public Object[] fetchTasksForRole(String role) {
+        List<String> params = new ArrayList<String>();
+        params.add(role);
+        Query q = _entityManager.createNamedQuery(Task.FIND_BY_ROLE).setParameter(1, params);
+        List result = q.getResultList();
+        return (Task[]) result.toArray(new Task[result.size()]);
+    }
+
+    /**
+     * Core method. delete all the tasks for the given <code>UserRoles</code>
+     */
+    public void deleteTasks(UserRoles user) {
+        ArrayList userIdList = new ArrayList();
+        userIdList.add(user.getUserID());
+        EntityTransaction et = _entityManager.getTransaction();
+        et.begin();
+        Query q = _entityManager.createQuery(DELETE_TASKS).setParameter(1, userIdList)
+                        .setParameter(2, user.getAssignedRoles());
+        q.executeUpdate();
+        et.commit();
+    }
 
 }

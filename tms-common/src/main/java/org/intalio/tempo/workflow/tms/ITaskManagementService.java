@@ -32,6 +32,9 @@ public interface ITaskManagementService {
     Task[] getTaskList()
             throws AuthException;
 
+    Task[] getAvailableTasks(String taskType, String subQuery)
+            throws AuthException;
+    
     Task getTask(String taskID)
             throws AuthException,
                 UnavailableTaskException;
