@@ -18,7 +18,12 @@
     <caseSensitive>false</caseSensitive>
 
     <realm identifier="intalio">
-        
+        <user identifier="admin">
+			<name>Admininistrator</name>
+			<email>admin@example.com</email>
+			<password>changeit</password>
+		</user>        
+		
         <user identifier="prod-manager1">
             <name>Product Manager #1</name>
             <email>prod-manager1@intalio.com</email>

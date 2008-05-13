@@ -35,12 +35,10 @@ public abstract class BaseRestrictedEntity implements IRestrictedEntity {
     
     @PersistentCollection(elementType=String.class, elementCascade=CascadeType.ALL, elementEmbedded = false, fetch=FetchType.EAGER)
     @ContainerTable(name="tempo_user")
-    @ElementType(value=String.class)
     protected Collection<String> _userOwners;
 
     @PersistentCollection(elementType=String.class, elementCascade=CascadeType.ALL, elementEmbedded = false, fetch=FetchType.EAGER)
     @ContainerTable(name="tempo_role")
-    @ElementType(value=String.class)
     protected Collection<String> _roleOwners;
 
     public BaseRestrictedEntity() {

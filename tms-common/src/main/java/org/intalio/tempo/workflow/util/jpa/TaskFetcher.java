@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
+import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,10 +38,16 @@ public class TaskFetcher {
 
   /**
    * Retrieve and load a task if it exists
+ * @throws UnavailableTaskException 
    */
-  public Task fetchTaskIfExists(String taskID) {
-    Query q = find_by_id.setParameter(1, taskID);
-    return (Task) q.getSingleResult();
+  public Task fetchTaskIfExists(String taskID) throws UnavailableTaskException {
+      try {
+          Query q = find_by_id.setParameter(1, taskID);
+          return (Task) q.getSingleResult();      
+      } catch (NoResultException nre) {
+          throw new UnavailableTaskException("Task does not exist"+taskID);
+      }
+    
   }
 
   /**

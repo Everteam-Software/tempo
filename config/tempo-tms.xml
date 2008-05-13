@@ -31,7 +31,7 @@
 	
 	<bean id="tms.permissionsHandler" class="org.intalio.tempo.workflow.tms.server.permissions.TaskPermissions">
 		<constructor-arg><map>
-			<entry key="delete"><set><value>intalio\\admin</value></set></entry>
+			<entry key="delete"><set><value>intalio\admin</value></set></entry>
 		</map></constructor-arg>
 	</bean>
 

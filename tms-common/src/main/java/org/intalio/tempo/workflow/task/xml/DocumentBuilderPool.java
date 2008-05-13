@@ -13,6 +13,7 @@ public class DocumentBuilderPool extends BasePoolableObjectFactory {
         factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
         factory.setIgnoringComments(true);
+        factory.setValidating(true);
         factory.setExpandEntityReferences(false);
     }
 

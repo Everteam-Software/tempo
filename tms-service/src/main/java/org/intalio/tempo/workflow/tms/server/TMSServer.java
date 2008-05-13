@@ -70,12 +70,12 @@ public class TMSServer implements ITMSServer {
 
         setAuthProvider(authProvider);
         setTaskDAOFactory(taskDAOFactory);
-        setPermissionsHandler(permissions);
+        setPermissions(permissions);
 
         _logger.info("Finished loading");
     }
 
-    public void setPermissionsHandler(TaskPermissions permissions) {
+    public void setPermissions(TaskPermissions permissions) {
         this._permissions = permissions;
     }
 
@@ -111,11 +111,7 @@ public class TMSServer implements ITMSServer {
         UserRoles credentials = _authProvider.authenticate(participantToken);
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         try {
-            try {
-                task = dao.fetchTaskIfExists(taskID);
-            } catch (Exception e) {
-                _logger.error("Cannot retrieve Workflow Task " + taskID);
-            }
+            task = dao.fetchTaskIfExists(taskID);
             if ((task != null) && task.isAvailableTo(credentials)) {
                 if (_logger.isDebugEnabled())
                     _logger.debug("Workflow Task " + taskID + " for user " + credentials.getUserID());
@@ -127,7 +123,7 @@ public class TMSServer implements ITMSServer {
             _logger.error("Exception while retriving workflow task " + taskID, e);
             throw e;
         } catch (UnavailableTaskException e) {
-            _logger.error("Exception while retriving workflow task " + taskID, e);
+            _logger.error("Cannot retrieve Workflow Task " + taskID, e);
             throw e;
         }
     }

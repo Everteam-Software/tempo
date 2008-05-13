@@ -32,7 +32,6 @@ import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.task.attachments.AttachmentMetadata;
 import org.intalio.tempo.workflow.task.xml.TaskMarshaller;
 import org.intalio.tempo.workflow.task.xml.TaskUnmarshaller;
-import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.tms.ITaskManagementService;
 import org.intalio.tempo.workflow.tms.client.RemoteTMSFactory;
 import org.intalio.tempo.workflow.util.TaskEquality;
@@ -53,25 +52,39 @@ public class RemoteTMSClientTest extends TestCase {
         junit.textui.TestRunner.run(RemoteTMSClientTest.class);
     }
 
-    public void testInput() throws Exception {
-        ITaskManagementService tms = new RemoteTMSFactory(TMS_REMOTE_URL, TOKEN).getService();
-        Document input1 = Utils.createXMLDocument("/absr.xml");
-        String task1ID = nextRandom();
-        PATask task1 = new PATask(task1ID, new URI("http://localhost/1"), "processID", "urn:completeSOAPAction", input1);
-        task1.getUserOwners().add("intalio.admin");
-        tms.create(task1);
-        testRoundTrip(task1, input1);
+	public void testInput() throws Exception {
+		ITaskManagementService tms = new RemoteTMSFactory(TMS_REMOTE_URL, TOKEN).getService();
+		Document input1 = Utils.createXMLDocument("/absr.xml");
+		String task1ID = nextRandom();
+		PATask task1 = new PATask(task1ID, new URI("http://localhost/1"), "processID", "urn:completeSOAPAction", input1);
+		task1.getUserOwners().add("intalio.admin");
+		tms.create(task1);
+		testRoundTrip(task1, input1);
 
-        PATask task2 = (PATask) tms.getTask(task1ID);
-        TaskEquality.areTasksEquals(task1, task2);
-    }
+		PATask task2 = (PATask) tms.getTask(task1ID);
+		TaskEquality.areTasksEquals(task1, task2);
+	}
 
-    private void testRoundTrip(PATask task1, Document input) throws Exception {
-        TaskMarshaller marshaller = new TaskMarshaller();
-        OMElement marshalledTask = marshaller.marshalFullTask(task1, null);
-        TaskUnmarshaller unmarshaller = new TaskUnmarshaller();
-        PATask task2 = (PATask) unmarshaller.unmarshalFullTask(marshalledTask);
-        Assert.assertEquals(task1.getInput().toString(), task2.getInput().toString());
+	private void testRoundTrip(PATask task1, Document input) throws Exception {
+		TaskMarshaller marshaller = new TaskMarshaller();
+		OMElement marshalledTask = marshaller.marshalFullTask(task1, null);
+		TaskUnmarshaller unmarshaller = new TaskUnmarshaller();
+		PATask task2 = (PATask) unmarshaller.unmarshalFullTask(marshalledTask);
+		Assert.assertEquals(task1.getInput().toString(), task2.getInput().toString());
+	}
+    
+    public void testPIPAInit() throws Exception {
+        String pipaId = "d1f20ad2-bba4-45aa-b449-d2f147c84561";
+        Document outputForInit = Utils.createXMLDocument("/japaneseOutputForPipa.xml");
+        ITaskManagementService tms = new RemoteTMSFactory( TMS_REMOTE_URL, TOKEN).getService();
+        Task[] tasks = tms.getTaskList();
+        for(Task t : tasks) {
+	       if(t instanceof PIPATask) {
+	           pipaId = t.getID();
+	           break;
+	       }
+        }
+        tms.init(pipaId, outputForInit);
     }
    
 
@@ -102,15 +115,14 @@ public class RemoteTMSClientTest extends TestCase {
         tms.setOutput(task3ID, output1);
 
         PATask task4 = (PATask) tms.getTask(task3ID);
-        Assert.assertEquals("Hi world", task4.getOutput().getDocumentElement().getTextContent().trim());
+        Assert.assertTrue(TaskEquality.areDocumentsEqual(output1, task4.getOutput()));
         Assert.assertEquals(TaskState.READY, task4.getState());
 
         Document output2 = Utils.createXMLDocument();
-        output2.getDocumentElement().appendChild(output2.createTextNode("Hi world #2"));
         tms.setOutputAndComplete(task3ID, output2);
 
         PATask task5 = (PATask) tms.getTask(task4.getID());
-        Assert.assertEquals("Hi world #2", task5.getOutput().getDocumentElement().getTextContent().trim());
+        Assert.assertTrue(TaskEquality.areDocumentsEqual(output2, task5.getOutput()));
         Assert.assertEquals(TaskState.COMPLETED, task5.getState());
 
         String task6ID = nextRandom();
@@ -126,6 +138,7 @@ public class RemoteTMSClientTest extends TestCase {
         tms.fail(task7.getID(), "code", "reason");
 
         PATask task8 = (PATask) tms.getTask(task7.getID());
+        Assert.assertEquals(task8.getProcessID(), task7.getProcessID());
         Assert.assertEquals(TaskState.FAILED, task8.getState());
         Assert.assertEquals("code", task8.getFailureCode());
         Assert.assertEquals("reason", task8.getFailureReason());
@@ -200,9 +213,4 @@ public class RemoteTMSClientTest extends TestCase {
         _logger.debug(task2.getRoleOwners().toString());
         tms.deletePipa(task1.getFormURLAsString());
     }
-    
-//    public void testStrangeParsing() throws Exception {
-//        OMElement response = Utils.loadElementFromResource("/response.xml");
-//        new XmlTooling().convertOMToDOM(response);
-//    }
 }

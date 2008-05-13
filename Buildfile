@@ -155,7 +155,7 @@ define "tempo" do
   desc "Security Web-Service Client"
   define "security-ws-client" do
     compile.with projects("security", "security-ws-common"),AXIOM, AXIS2, SLF4J, STAX_API, SPRING[:core]
-    test.with CASTOR, LOG4J, SUNMAIL, XERCES, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX 
+    test.with APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], CASTOR, LOG4J, SUNMAIL, XERCES, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX 
 
     # Remember to set JAVA_OPTIONS before starting Jetty
     # export JAVA_OPTIONS=-Dorg.intalio.tempo.configDirectory=/home/boisvert/svn/tempo/security-ws2/src/test/resources
@@ -188,7 +188,7 @@ define "tempo" do
     compile.with projects("security", "security-ws-client"), 
                  APACHE_COMMONS[:httpclient], AXIOM, AXIS2, JAXEN, SLF4J, STAX_API
 
-    test.with LOG4J, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX
+    test.with APACHE_COMMONS[:codec], LOG4J, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX
     test.exclude '*TestUtils*'
 
     # require live Axis2 instance
@@ -226,7 +226,7 @@ define "tempo" do
     compile.with projects("tms-axis", "tms-common"), 
       APACHE_JPA, AXIOM, AXIS2, SLF4J, STAX_API, WSDL4J, WS_COMMONS_SCHEMA, XMLBEANS
 
-    test.with LOG4J, WOODSTOX, SUNMAIL
+    test.with APACHE_COMMONS[:pool], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], LOG4J, WOODSTOX, SUNMAIL
     test.exclude '*TestUtils*'
 
     unless ENV["LIVE"] == 'yes'
@@ -241,7 +241,7 @@ define "tempo" do
     APACHE_JPA, APACHE_COMMONS[:pool], AXIOM, AXIS2, JAXEN, SLF4J, SPRING[:core], STAX_API, XMLBEANS, MYSQL_CONNECTOR
   
     compile.with libs
-    test.with libs + [project("registry"), APACHE_DERBY, CASTOR, EASY_B, LOG4J, MYSQL_CONNECTOR, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES]
+    test.with libs + [project("registry"), APACHE_DERBY, APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], CASTOR, EASY_B, LOG4J, MYSQL_CONNECTOR, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES]
 
     test.using :properties => 
       { 

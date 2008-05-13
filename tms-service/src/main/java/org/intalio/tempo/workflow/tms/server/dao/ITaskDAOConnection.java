@@ -19,6 +19,7 @@ import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
+import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 
 public interface ITaskDAOConnection {
     public void commit();
@@ -26,11 +27,11 @@ public interface ITaskDAOConnection {
 
     public Task[] fetchAllAvailableTasks(UserRoles user);
     public Task[] fetchAvailableTasks(UserRoles user, Class className, String subQuery);
-    public Task fetchTaskIfExists(String taskID);
+    public Task fetchTaskIfExists(String taskID) throws UnavailableTaskException ;
 
     public void updateTask(Task task);
     public void createTask(Task task) throws TaskIDConflictException;
-    public boolean deleteTask(int internalTaskId, String taskID);
+    public boolean deleteTask(int internalTaskId, String taskID) throws UnavailableTaskException ;
     
     public void storePipaTask(PIPATask task);
     public void deletePipaTask(String formUrl);

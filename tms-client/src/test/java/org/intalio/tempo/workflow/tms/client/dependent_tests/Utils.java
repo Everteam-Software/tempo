@@ -33,8 +33,7 @@ import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
 public class Utils {
 
-    public static OMElement loadElementFromResource(String resource)
-            throws Exception {
+    public static OMElement loadElementFromResource(String resource) throws Exception {
         InputStream requestInputStream = Utils.class.getResourceAsStream(resource);
 
         XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(requestInputStream);
@@ -43,8 +42,7 @@ public class Utils {
         return builder.getDocumentElement();
     }
 
-    public static String toPrettyXML(OMElement element)
-            throws Exception {
+    public static String toPrettyXML(OMElement element) throws Exception {
         String uglyString = element.toString();
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -65,16 +63,10 @@ public class Utils {
         return new String(outputStream.toByteArray(), "UTF-8");
     }
 
-    public static Document createXMLDocument()
-            throws Exception {
-        DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = builderFactory.newDocumentBuilder();
-        Document doc = builder.newDocument();
-        doc.appendChild(doc.createElement("testDocument"));
-
-        return doc;
+    public static Document createXMLDocument() throws Exception {
+        return createXMLDocument("/japaneseOutputForPipa.xml");
     }
-    
+
     public static Document createXMLDocument(String resource) throws Exception {
         InputStream requestInputStream = Utils.class.getResourceAsStream(resource);
         DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();

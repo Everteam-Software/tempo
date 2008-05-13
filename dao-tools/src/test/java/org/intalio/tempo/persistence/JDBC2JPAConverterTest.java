@@ -33,7 +33,7 @@ public class JDBC2JPAConverterTest {
         map.put("openjpa.ConnectionURL", "jdbc:derby:target/BPMSDB;create=true");
         map.put("openjpa.Log", "DefaultLevel=TRACE");
 
-        j2j = new JDBC2JPAConverter(map);
+        // j2j = new JDBC2JPAConverter(map);
 
         return new JUnit4TestAdapter(JDBC2JPAConverterTest.class);
     }

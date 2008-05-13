@@ -15,10 +15,20 @@
 
 package org.intalio.tempo.workflow.tms.server;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import junit.framework.TestCase;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
+import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
+import org.intalio.tempo.workflow.auth.UserRoles;
+import org.intalio.tempo.workflow.task.PIPATask;
+import org.intalio.tempo.workflow.tms.server.permissions.TaskPermissions;
+import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -111,9 +121,30 @@ public class TMSRequestProcessorTest extends TestCase {
     } catch (AxisFault e) {
       _logger.debug(e.getMessage());
     }
-    
-    
-
+  }
+  
+  public void testPermissions() throws Exception {
+      Map<String, Set<String>> permissions = new HashMap<String, Set<String>>();
+      Set<String> deletePerms = new HashSet<String>();
+      deletePerms.add("intalio\\admin");
+      permissions.put("delete", deletePerms);
+      Set<String> createPerms = new HashSet<String>();
+      createPerms.add("just\\me");
+      permissions.put("create", createPerms);
+      
+      TaskPermissions tp = new TaskPermissions(permissions);
+      
+      UserRoles ur = new UserRoles("Matthieu", new AuthIdentifierSet(new String[]{"intalio\\admin", "intalio\\tester"}));
+      UserRoles ur2 = new UserRoles("Niko", new AuthIdentifierSet(new String[]{"intalio\\guru"}));
+      UserRoles ur3 = new UserRoles("just\\me", new AuthIdentifierSet(new String[]{"intalio\\guru"}));
+      
+      
+      Assert.assertFalse(tp.isAuthorized("create", new PIPATask(), ur));
+      Assert.assertTrue(tp.isAuthorized("delete", new PIPATask(), ur));
+      Assert.assertFalse(tp.isAuthorized("delete", new PIPATask(), ur2));
+      Assert.assertFalse(tp.isAuthorized("delete", new PIPATask(), ur3));
+      Assert.assertTrue(tp.isAuthorized("create", new PIPATask(), ur3));
+      
   }
 
   public void testSetOutput() throws Exception {

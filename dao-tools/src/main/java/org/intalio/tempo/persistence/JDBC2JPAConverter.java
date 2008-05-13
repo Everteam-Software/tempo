@@ -14,8 +14,10 @@
 package org.intalio.tempo.persistence;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -61,19 +63,26 @@ public class JDBC2JPAConverter implements ConverterInterface {
 
         // jpaItemConnection = JPAItemFactory.openConnection();
         jpaTaskConnection = JPATaskFactory.openConnection();
-        
+
         String userName = "niko";
         UserRoles ur = new UserRoles(userName, new AuthIdentifierSet());
-        
-        
 
         // itemConnection =
         // JPAItemFactory.getUnderlyingJDBCConnectionFromEntityManager();
         taskConnection = JPATaskFactory.getUnderlyingJDBCConnectionFromEntityManager();
 
         // jdbcItemConnection = new JdbcItemDaoConnection(itemConnection);
-        jdbcTaskConnection = new JDBCTaskDAOConnection(taskConnection);
+        // jdbcTaskConnection = new JDBCTaskDAOConnection(taskConnection);
+        jdbcTaskConnection = new JDBCTaskDAOConnection(getJDBCConnection(properties));
+        jdbcItemConnection = new JdbcItemDaoConnection(getJDBCConnection(properties));
 
+    }
+
+    private static final Connection getJDBCConnection(Map<String, Object> properties) throws SQLException {
+        return DriverManager.getConnection(
+                        (String) properties.get("jdbc.ConnectionURL"), 
+                        (String) properties.get("jdbc.ConnectionUsername"),
+                        (String) properties.get("jdbc.ConnectionPassword"));
     }
 
     /*

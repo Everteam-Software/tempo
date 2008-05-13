@@ -18,6 +18,7 @@ import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.task.attachments.AttachmentMetadata;
 import org.intalio.tempo.workflow.task.xml.XmlTooling;
+import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.intalio.tempo.workflow.util.TaskEquality;
 import org.intalio.tempo.workflow.util.jpa.TaskFetcher;
 import org.junit.After;
@@ -71,19 +72,19 @@ public class JPATaskTest {
 
   @Test
   public void notificationOneRolePersist() throws Exception {
-    String id = "id" + System.currentTimeMillis();
-    Notification task1 = null, task2 = null;
+      String id = "id" + System.currentTimeMillis();
+      Notification task1 = null, task2 = null;
 
-    task1 = new Notification(id, new URI("http://hellonico.net"));
-    task1.getRoleOwners().add("intalio\\manager");
-    persist(task1);
+      task1 = new Notification(id, new URI("http://hellonico.net"));
+      task1.getRoleOwners().add("intalio\\manager");
+      persist(task1);
 
-    Query q = em.createNamedQuery(Task.FIND_BY_ROLE).setParameter(1, "intalio\\manager");
-    task2 = (Notification) q.getSingleResult();
-    TaskEquality.isEqual(task1, task2);
+      Query q = em.createNamedQuery(Task.FIND_BY_ROLE).setParameter(1, "intalio\\manager");
+      task2 = (Notification) q.getSingleResult();
+      TaskEquality.isEqual(task1, task2);
 
-    checkRemoved(task2);
-  }
+      checkRemoved(task2);
+    }
 
   private void checkRemoved(Task task2) {
     jpa.begin();
@@ -99,7 +100,7 @@ public class JPATaskTest {
     }
   }
 
-  private void checkRemoved(String id) {
+  private void checkRemoved(String id) throws UnavailableTaskException {
     final TaskFetcher taskFetcher = new TaskFetcher(em);
     checkRemoved(taskFetcher.fetchTaskIfExists(id));
   }

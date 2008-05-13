@@ -64,6 +64,8 @@ public class TMSAxis2RemoteTest extends TestCase {
             OMElement listResponse = sendRequest(request,
                     "http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109");
             _logger.info(Utils.toPrettyXML(listResponse));
+            if(expectedAxisFault!=null) 
+                fail("Expected AxisFault["+expectedAxisFault+"] but remote call was successful");
         } catch (AxisFault f) {
             if (expectedAxisFault != null)
                 Assert.assertTrue(f.getMessage().contains(expectedAxisFault));
@@ -75,8 +77,8 @@ public class TMSAxis2RemoteTest extends TestCase {
     public void testGetTaskList() throws Exception {
         requestToServer("getTaskListRequest1.xml", null);
         requestToServer("createTaskRequest1.xml", null);
-        requestToServer("deleteRequest1.xml", "Only User with System Role");
-        requestToServer("getTaskRequest1.xml", null);
         requestToServer("setOutputRequest1.xml", null);
+        requestToServer("deleteRequest1.xml", null);
+        requestToServer("getTaskRequest1.xml", "does not exist");
     }
 }

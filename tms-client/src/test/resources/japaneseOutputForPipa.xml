@@ -1,0 +1,35 @@
+<output
+	formUrl="im://sample_script/sample/bpms/vacation/initial/initial.jssp"
+	imGroup="default" imId="5hpwwrc3hffzp2n" imUser="aoyagi"
+	participantToken="VE9LRU4mJnVzZXJpZD09YW95YWdpJiZ1c2VyPT1kZWZhdWx0XGFveWFnaSYmcm9sZXM9PWRlZmF1bHRcMGxldmVsMSxkZWZhdWx0XDB1c2VyU2V0dGluZyxkZWZhdWx0XDBsZXZlbDIsZGVmYXVsdFwwYnB3c3VwZXIsZGVmYXVsdFwwZ3Vlc3QsZGVmYXVsdFwxY29tcF9zYW1wbGVfMDEkZGVwdF9zYW1wbGVfMTEsZGVmYXVsdFwxY29tcF9zYW1wbGVfMDEkZGVwdF9zYW1wbGVfMjEsZGVmYXVsdFwxY29tcF9zYW1wbGVfMDEkZGVwdF9zYW1wbGVfMTEkMGxldmVsMSxkZWZhdWx0XDFjb21wX3NhbXBsZV8wMSRkZXB0X3NhbXBsZV8xMSQwdXNlclNldHRpbmcsZGVmYXVsdFwxY29tcF9zYW1wbGVfMDEkZGVwdF9zYW1wbGVfMTEkMGxldmVsMixkZWZhdWx0XDFjb21wX3NhbXBsZV8wMSRkZXB0X3NhbXBsZV8xMSQwYnB3c3VwZXIsZGVmYXVsdFwxY29tcF9zYW1wbGVfMDEkZGVwdF9zYW1wbGVfMTEkMGd1ZXN0LGRlZmF1bHRcMWNvbXBfc2FtcGxlXzAxJGRlcHRfc2FtcGxlXzIxJDBsZXZlbDEsZGVmYXVsdFwxY29tcF9zYW1wbGVfMDEkZGVwdF9zYW1wbGVfMjEkMHVzZXJTZXR0aW5nLGRlZmF1bHRcMWNvbXBfc2FtcGxlXzAxJGRlcHRfc2FtcGxlXzIxJDBsZXZlbDIsZGVmYXVsdFwxY29tcF9zYW1wbGVfMDEkZGVwdF9zYW1wbGVfMjEkMGJwd3N1cGVyLGRlZmF1bHRcMWNvbXBfc2FtcGxlXzAxJGRlcHRfc2FtcGxlXzIxJDBndWVzdCxkZWZhdWx0XDNzYW1wbGVfcHVibGljJHB1YmxpY19ncm91cF9hLGRlZmF1bHRcM3NhbXBsZV9wdWJsaWMkcHVibGljX2dyb3VwX2EkMGxldmVsMSxkZWZhdWx0XDNzYW1wbGVfcHVibGljJHB1YmxpY19ncm91cF9hJDB1c2VyU2V0dGluZyxkZWZhdWx0XDNzYW1wbGVfcHVibGljJHB1YmxpY19ncm91cF9hJDBsZXZlbDIsZGVmYXVsdFwzc2FtcGxlX3B1YmxpYyRwdWJsaWNfZ3JvdXBfYSQwYnB3c3VwZXIsZGVmYXVsdFwzc2FtcGxlX3B1YmxpYyRwdWJsaWNfZ3JvdXBfYSQwZ3Vlc3QmJmlzc3VlZD09MTIwODUwODE3NjQ1MyYmZnVsbE5hbWU9Pemdkuafs+i+sOW3syYmbm9uY2U9PS01MTM2NzMyNTI1OTY0MzcwNDUwJiZ0aW1lc3RhbXA9PTEyMDg1MDgxNzY1MDAmJmRpZ2VzdD09MDFZcy9jamttcS8wSnpXY1lZeGR1TnV3NVR3PSYmJiZUT0tFTg=="
+	taskId="489ffc04-4052-4a00-a66d-2e9703f14a55" user="default\aoyagi"
+	xmlns="http://script.sample.intra-mart.co.jp/forms/initial/imform">
+
+	<apply>
+
+		<applyDate>2008-04-18T08:45:54.406Z</applyDate>
+
+		<contact>&#36899;&#32097;&#20808;(&#24517;&#38920;)</contact>
+
+		<reason>&#20107;&#30001;(&#24517;&#38920;)</reason>
+
+		<types>&#26377;&#32102;</types>
+
+		<userAttach>
+			&#12469;&#12531;&#12503;&#12523;&#20250;&#31038;/&#12469;&#12531;&#12503;&#12523;&#37096;&#38272;&#65296;&#65297;/&#12469;&#12531;&#12503;&#12523;&#35506;&#65297;&#65297;
+		</userAttach>
+
+		<userCd>aoyagi</userCd>
+
+		<userName>&#38738;&#26611;&#36784;&#24051;</userName>
+
+		<vacationEndDate>2008-04-26Z</vacationEndDate>
+
+		<vacationStartDate>2008-04-05Z</vacationStartDate>
+
+	</apply>
+
+	<attachmentId>5hpwwrc39vpty2n</attachmentId>
+
+</output>
+

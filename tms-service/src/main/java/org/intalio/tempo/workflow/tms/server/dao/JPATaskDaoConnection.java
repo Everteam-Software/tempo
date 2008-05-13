@@ -17,6 +17,7 @@ import org.intalio.tempo.workflow.dao.AbstractJPAConnection;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
+import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.intalio.tempo.workflow.util.jpa.TaskFetcher;
 
 /**
@@ -36,7 +37,7 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
         entityManager.persist(task);
     }
 
-    public boolean deleteTask(int internalTaskId, String taskID) {
+    public boolean deleteTask(int internalTaskId, String taskID) throws UnavailableTaskException {
         checkTransactionIsActive();
         entityManager.remove(_fetcher.fetchTaskIfExists(taskID));
         return true;
@@ -46,7 +47,7 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
         return _fetcher.fetchAllAvailableTasks(user);
     }
 
-    public Task fetchTaskIfExists(String taskID) {
+    public Task fetchTaskIfExists(String taskID) throws UnavailableTaskException {
         return _fetcher.fetchTaskIfExists(taskID);
     }
 

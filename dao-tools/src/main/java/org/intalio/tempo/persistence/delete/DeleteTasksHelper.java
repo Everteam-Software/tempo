@@ -7,6 +7,7 @@ import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.Task;
+import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.intalio.tempo.workflow.tms.server.dao.JPATaskDaoConnection;
 import org.intalio.tempo.workflow.tms.server.dao.JPATaskDaoConnectionFactory;
 import org.slf4j.Logger;
@@ -43,7 +44,11 @@ public class DeleteTasksHelper implements Runnable {
                 log.info("Fakerun. Candidate for deletion:" + t.getClass() + ":" + t.getID());
             } else {
                 log.info("Deleting:" + t.getClass() + ":" + t.getID());
-                dao.deleteTask(t.getInternalId(), t.getID());
+                try {
+                    dao.deleteTask(t.getInternalId(), t.getID());
+                } catch (UnavailableTaskException e) {
+                    log.info("Could not delete task:"+t.getID(),e);
+                }
             }
         }
 

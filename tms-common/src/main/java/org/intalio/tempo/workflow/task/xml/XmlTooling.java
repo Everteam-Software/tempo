@@ -222,7 +222,7 @@ public class XmlTooling {
      */
     public Document convertOMToDOM(final OMElement omElement) {
         try {
-            return parseXml(new InputSource(new StringReader(omElement.toString())));
+            return parseXML(omElement.toString());
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
         }
