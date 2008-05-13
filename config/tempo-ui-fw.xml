@@ -23,17 +23,17 @@
 		<map>
 			<entry key="PIPATask">
 				<map>
-					<entry key="default" value="/xFormsManager/init"/>
+					<entry key=".*xform" value="/xFormsManager/init"/>
 				</map>
 			</entry>
 			<entry key="PATask">
 				<map>
-					<entry key="default" value="/xFormsManager/act"/>
+					<entry key=".*xform" value="/xFormsManager/act"/>
 				</map>
 			</entry>
 			<entry key="Notification">
 				<map>
-					<entry key="default" value="/xFormsManager/notification"/>
+					<entry key=".*xform" value="/xFormsManager/notification"/>
 				</map>
 			</entry>
 		</map>

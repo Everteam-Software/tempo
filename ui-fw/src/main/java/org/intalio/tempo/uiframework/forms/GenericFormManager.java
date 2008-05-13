@@ -1,10 +1,25 @@
+/**
+ * Copyright (c) 2005-2008 Intalio inc.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * Intalio inc. - initial API and implementation
+
+ */
 package org.intalio.tempo.uiframework.forms;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.management.Notification;
 
+import org.apache.commons.lang.StringUtils;
 import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
@@ -15,30 +30,55 @@ public class GenericFormManager implements FormManager {
     public static final String PA = PATask.class.getSimpleName();
     public static final String DEFAULT = "default";
 
-    Map<String, Map<String, String>> _mappings;
+    Map<String, Map<Pattern, String>> _mappings;
 
     public GenericFormManager() {
 
     }
 
     public void setMappings(Map<String, Map<String, String>> mappings) {
-        _mappings = mappings;
+        Map<String, Map<Pattern, String>> mappingsWithRegExp = new HashMap<String, Map<Pattern, String>>();
+        Iterator<String> keys = mappings.keySet().iterator();
+        while (keys.hasNext()) {
+            String key = keys.next();
+            Map<String, String> entry = mappings.get(key);
+            Map<Pattern, String> entryWithRegexp = new HashMap<Pattern, String>(entry.size());
+            Iterator<String> regexpEntries = entry.keySet().iterator();
+
+            while (regexpEntries.hasNext()) {
+                String regexp = regexpEntries.next();
+                Pattern pattern = Pattern.compile(regexp);
+                entryWithRegexp.put(pattern, entry.get(regexp));
+            }
+            
+            mappingsWithRegExp.put(key, entryWithRegexp);
+        }
+
+        _mappings = mappingsWithRegExp;
     }
 
     public String getNotificationURL(Task t) {
         return getURL(t, NOTIFICATION);
     }
+    
+    public String getURL(Task t) {
+        return getURL(t, t.getClass().getSimpleName());
+    }
 
     private String getURL(final Task t, final String staticTaskType) {
-        HashMap<String, String> map = (HashMap<String, String>) _mappings.get(staticTaskType);
+        HashMap<Pattern, String> map = (HashMap<Pattern, String>) _mappings.get(staticTaskType);
         String formURL = t.getFormURLAsString();
-        if(formURL!=null) {
-            String key = formURL.subSequence(formURL.lastIndexOf(".") + 1, formURL.length()).toString();
-            if(key!=null && map.containsKey(key)) {
-                return map.get(key);    
+        if (formURL == null) {
+            return StringUtils.EMPTY;
+        }
+        Iterator<Pattern> patterns = map.keySet().iterator();
+        while (patterns.hasNext()) {
+            Pattern pattern = patterns.next();
+            if (pattern.matcher(formURL).matches()) {
+                return map.get(pattern);
             }
         }
-        return map.get(DEFAULT);
+        return formURL;
     }
 
     public String getPeopleActivityURL(Task t) {
