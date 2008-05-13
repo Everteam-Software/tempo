@@ -27,6 +27,7 @@ import org.apache.axis2.AxisFault;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
+import org.apache.commons.lang.NotImplementedException;
 import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.task.InvalidTaskException;
@@ -58,7 +59,7 @@ import org.w3c.dom.Document;
 class RemoteTMSClient implements ITaskManagementService {
 
     private static final Logger _log = LoggerFactory.getLogger(OMUnmarshaller.class);
-    
+
     private EndpointReference _endpoint;
     private String _participantToken;
     private OMFactory _omFactory;
@@ -80,8 +81,9 @@ class RemoteTMSClient implements ITaskManagementService {
     }
 
     private OMElement sendRequest(OMElement request, String soapAction) {
-        if(_log.isDebugEnabled()) _log.debug(request.toString());
-        
+        if (_log.isDebugEnabled())
+            _log.debug(request.toString());
+
         Thread currentThread = Thread.currentThread();
         ClassLoader cl = currentThread.getContextClassLoader();
         try {
@@ -112,19 +114,20 @@ class RemoteTMSClient implements ITaskManagementService {
             }
         }.marshalRequest();
         OMElement response = sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "getTaskList");
-        
+
         List<Task> tasks = new ArrayList<Task>();
         OMElementQueue rootQueue = new OMElementQueue(response);
         while (true) {
             OMElement taskElement = expectElement(rootQueue, "task");
-            if (taskElement == null)  break;
-           
+            if (taskElement == null)
+                break;
+
             try {
                 Task task = new TaskUnmarshaller().unmarshalTaskFromMetadata(taskElement);
                 tasks.add(task);
             } catch (Exception e) {
                 _log.error("Error reading task: " + taskElement, e);
-            }   
+            }
         }
         return tasks.toArray(new Task[tasks.size()]);
     }
@@ -191,8 +194,7 @@ class RemoteTMSClient implements ITaskManagementService {
         sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + (complete ? "setOutputAndComplete" : "setOutput"));
     }
 
-    public void setOutput(final String taskID, final Document output) throws AuthException, UnavailableTaskException,
-            InvalidTaskStateException {
+    public void setOutput(final String taskID, final Document output) throws AuthException, UnavailableTaskException, InvalidTaskStateException {
         setOutputOperation(taskID, output, false);
     }
 
@@ -214,13 +216,12 @@ class RemoteTMSClient implements ITaskManagementService {
         sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "complete");
     }
 
-    public void setOutputAndComplete(String taskID, Document output) throws AuthException, UnavailableTaskException,
-            InvalidTaskStateException {
+    public void setOutputAndComplete(String taskID, Document output) throws AuthException, UnavailableTaskException, InvalidTaskStateException {
         setOutputOperation(taskID, output, true);
     }
 
-    public void fail(final String taskID, final String failureCode, final String failureReason) throws AuthException,
-            UnavailableTaskException, InvalidTaskStateException {
+    public void fail(final String taskID, final String failureCode, final String failureReason) throws AuthException, UnavailableTaskException,
+                    InvalidTaskStateException {
         if (taskID == null) {
             throw new RequiredArgumentException("taskID");
         }
@@ -297,7 +298,6 @@ class RemoteTMSClient implements ITaskManagementService {
             throw new RequiredArgumentException("input");
         }
 
-
         final XmlTooling xmlTooling = new XmlTooling();
         OMElement request = new TMSMarshaller() {
             public OMElement marshalRequest() {
@@ -350,8 +350,7 @@ class RemoteTMSClient implements ITaskManagementService {
         }
     }
 
-    public void addAttachment(final String taskID, final Attachment attachment) throws AuthException,
-            UnavailableTaskException {
+    public void addAttachment(final String taskID, final Attachment attachment) throws AuthException, UnavailableTaskException {
         if (taskID == null) {
             throw new RequiredArgumentException("taskID");
         }
@@ -373,8 +372,8 @@ class RemoteTMSClient implements ITaskManagementService {
         sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "addAttachment");
     }
 
-    public void removeAttachment(final String taskID, final URL attachmentPayloadURL) throws AuthException,
-            UnavailableTaskException, UnavailableAttachmentException {
+    public void removeAttachment(final String taskID, final URL attachmentPayloadURL) throws AuthException, UnavailableTaskException,
+                    UnavailableAttachmentException {
         if (taskID == null) {
             throw new RequiredArgumentException("taskID");
         }
@@ -395,62 +394,59 @@ class RemoteTMSClient implements ITaskManagementService {
 
         sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "removeAttachment");
     }
-    
-    public void reassign(final Task task)throws AuthException,
-	   UnavailableTaskException{
+
+    public void reassign(final Task task) throws AuthException, UnavailableTaskException {
         if (task == null) {
             throw new RequiredArgumentException("task");
         }
-        if(!(task instanceof PATask)){
-    		throw new UnavailableTaskException("Task is not PATask");
-    	}
+        if (!(task instanceof PATask)) {
+            throw new UnavailableTaskException("Task is not PATask");
+        }
 
-    	OMElement request = new TMSMarshaller() {
-    		public OMElement marshalRequest() {
-    			OMElement request = createElement("reassignRequest");
-    			createElement(request, "taskId", task.getID());
-    			for (String userOwner : task.getUserOwners()) {
-    				createElement(request, "userOwner", userOwner);
-    			}
-    			for (String roleOwner : task.getRoleOwners()) {
-    				createElement(request, "roleOwner", roleOwner);
-    			}
-    			createElement(request, "taskState", ((PATask)task).getState().toString() );
-    			createElement(request, "participantToken", _participantToken);
-    			return request;
-    		}
-    	}.marshalRequest();
+        OMElement request = new TMSMarshaller() {
+            public OMElement marshalRequest() {
+                OMElement request = createElement("reassignRequest");
+                createElement(request, "taskId", task.getID());
+                for (String userOwner : task.getUserOwners()) {
+                    createElement(request, "userOwner", userOwner);
+                }
+                for (String roleOwner : task.getRoleOwners()) {
+                    createElement(request, "roleOwner", roleOwner);
+                }
+                createElement(request, "taskState", ((PATask) task).getState().toString());
+                createElement(request, "participantToken", _participantToken);
+                return request;
+            }
+        }.marshalRequest();
 
-    	sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "reassign");
-    }    
-    
-    public void reassign(final String taskID, final AuthIdentifierSet users,
-    		final AuthIdentifierSet roles, final TaskState state)
-    		throws AuthException,
-			   		UnavailableTaskException{
-    	 if (taskID == null) {
-             throw new RequiredArgumentException("taskID");
-         }
-
-    	OMElement request = new TMSMarshaller() {
-    		public OMElement marshalRequest() {
-    			OMElement request = createElement("reassignRequest");
-    			createElement(request, "taskId", taskID);
-    			for (String userOwner : users) {
-    				createElement(request, "userOwner", userOwner);
-    			}
-    			for (String roleOwner : roles) {
-    				createElement(request, "roleOwner", roleOwner);
-    			}
-    			createElement(request, "taskState", state.toString() );
-    			createElement(request, "participantToken", _participantToken);
-    			return request;
-    		}
-    	}.marshalRequest();
-
-    	sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "reassign");
+        sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "reassign");
     }
-    
+
+    public void reassign(final String taskID, final AuthIdentifierSet users, final AuthIdentifierSet roles, final TaskState state) throws AuthException,
+                    UnavailableTaskException {
+        if (taskID == null) {
+            throw new RequiredArgumentException("taskID");
+        }
+
+        OMElement request = new TMSMarshaller() {
+            public OMElement marshalRequest() {
+                OMElement request = createElement("reassignRequest");
+                createElement(request, "taskId", taskID);
+                for (String userOwner : users) {
+                    createElement(request, "userOwner", userOwner);
+                }
+                for (String roleOwner : roles) {
+                    createElement(request, "roleOwner", roleOwner);
+                }
+                createElement(request, "taskState", state.toString());
+                createElement(request, "participantToken", _participantToken);
+                return request;
+            }
+        }.marshalRequest();
+
+        sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "reassign");
+    }
+
     public void storePipa(final PIPATask task) throws AuthException, InvalidTaskException {
         OMElement request = new TMSMarshaller() {
             public OMElement marshalRequest() {
@@ -463,7 +459,7 @@ class RemoteTMSClient implements ITaskManagementService {
         }.marshalRequest();
         sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "storePipa");
     }
-    
+
     public PIPATask getPipa(final String formUrl) throws AuthException, UnavailableTaskException {
         OMElement request = new TMSMarshaller() {
             public OMElement marshalRequest() {
@@ -474,19 +470,19 @@ class RemoteTMSClient implements ITaskManagementService {
                 return request;
             }
         }.marshalRequest();
-        
+
         _log.info(request.toString());
 
         try {
             OMElement response = sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "getPipaTask");
             OMElement taskElement = response.getFirstElement();
-            PIPATask task = (PIPATask)new TaskUnmarshaller().unmarshalFullTask(taskElement);
+            PIPATask task = (PIPATask) new TaskUnmarshaller().unmarshalFullTask(taskElement);
             return task;
         } catch (InvalidInputFormatException e) {
             throw new RuntimeException(e);
         }
     }
-    
+
     public void deletePipa(final String formUrl) throws AuthException, UnavailableTaskException {
         OMElement request = new TMSMarshaller() {
             public OMElement marshalRequest() {
@@ -497,6 +493,10 @@ class RemoteTMSClient implements ITaskManagementService {
             }
         }.marshalRequest();
         sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "deletePipa");
+    }
+
+    public Task[] getAvailableTasks(String taskType, String subQuery) throws AuthException {
+        throw new NotImplementedException();
     }
 
 }
