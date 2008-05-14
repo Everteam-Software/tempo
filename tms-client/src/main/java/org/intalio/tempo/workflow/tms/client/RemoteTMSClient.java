@@ -27,7 +27,6 @@ import org.apache.axis2.AxisFault;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
-import org.apache.commons.lang.NotImplementedException;
 import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.task.InvalidTaskException;
@@ -495,8 +494,33 @@ class RemoteTMSClient implements ITaskManagementService {
         sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "deletePipa");
     }
 
-    public Task[] getAvailableTasks(String taskType, String subQuery) throws AuthException {
-        throw new NotImplementedException();
+    public Task[] getAvailableTasks(final String taskType, final String subQuery) throws AuthException {
+        OMElement request = new TMSMarshaller() {
+            public OMElement marshalRequest() {
+                OMElement request = createElement("getTaskListRequest");
+                createElement(request, "participantToken", _participantToken);
+                createElement(request, "taskType", taskType);
+                createElement(request, "subQuery", subQuery);
+                return request;
+            }
+        }.marshalRequest();
+        OMElement response = sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "getAvailableTasks");
+
+        List<Task> tasks = new ArrayList<Task>();
+        OMElementQueue rootQueue = new OMElementQueue(response);
+        while (true) {
+            OMElement taskElement = expectElement(rootQueue, "task");
+            if (taskElement == null)
+                break;
+
+            try {
+                Task task = new TaskUnmarshaller().unmarshalTaskFromMetadata(taskElement);
+                tasks.add(task);
+            } catch (Exception e) {
+                _log.error("Error reading task: " + taskElement, e);
+            }
+        }
+        return tasks.toArray(new Task[tasks.size()]);
     }
 
 }
