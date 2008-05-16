@@ -82,11 +82,14 @@ public class TaskFetcher {
         Query q;
 
         if (subQuery == null) {
-            q = _entityManager.createQuery(QUERY_GENERIC1 + taskClass.getName() + QUERY_GENERIC2).setParameter(1, userIdList).setParameter(2,
+            q = _entityManager.createQuery(QUERY_GENERIC1 + taskClass.getSimpleName() + QUERY_GENERIC2).setParameter(1, userIdList).setParameter(2,
                             user.getAssignedRoles());
         } else {
-            q = _entityManager.createQuery(QUERY_GENERIC1 + taskClass.getName() + QUERY_GENERIC2 + " and " + subQuery).setParameter(1, userIdList)
-                            .setParameter(2, user.getAssignedRoles());
+            StringBuffer buffer = new StringBuffer();
+            buffer.append(QUERY_GENERIC1).append(taskClass.getSimpleName()).append(QUERY_GENERIC2);
+            if(!subQuery.startsWith("ORDER"))  buffer.append(" and ");
+            buffer.append(subQuery);
+            q = _entityManager.createQuery(buffer.toString()).setParameter(1, userIdList).setParameter(2, user.getAssignedRoles());
         }
         List result = q.getResultList();
         return (Task[]) result.toArray(new Task[result.size()]);

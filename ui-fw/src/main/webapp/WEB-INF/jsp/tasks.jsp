@@ -70,7 +70,7 @@
 	            		</c:otherwise>
 	            	</c:choose>
 		            		<td>
-		            		<a href= target="taskform"  >${taskHolder.task.state.name}</a>
+		            		<a href="${taskFullURL}" target="taskform"  >${taskHolder.task.state.name}</a>
 		            		</td>
 		            		<td>
 		            			<a href="${taskFullURL}" target="taskform"  >${taskHolder.task.description}</a>

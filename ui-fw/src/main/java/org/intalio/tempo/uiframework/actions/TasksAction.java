@@ -20,6 +20,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Properties;
 
@@ -48,28 +49,31 @@ import org.springframework.web.servlet.ModelAndView;
 
 @SuppressWarnings("unchecked")
 public class TasksAction extends Action {
+    private static final ArrayList<Task> EMPTY_TASK_LIST = new ArrayList<Task>(0);
+
     private static final Logger _log = LoggerFactory.getLogger(TasksAction.class);
 
     private final Configuration conf = Configuration.getInstance();
-    private final Collection<Task> _tasks = new ArrayList<Task>();
-    private final Collection<TaskHolder<PATask>> _activityTasks = new ArrayList<TaskHolder<PATask>>();
-    private final Collection<TaskHolder<Notification>> _notifications = new ArrayList<TaskHolder<Notification>>();
-    private final Collection<TaskHolder<PIPATask>> _initTasks = new ArrayList<TaskHolder<PIPATask>>();
+    private final ArrayList<TaskHolder<PATask>> _activityTasks = new ArrayList<TaskHolder<PATask>>();
+    private final ArrayList<TaskHolder<Notification>> _notifications = new ArrayList<TaskHolder<Notification>>();
+    private final ArrayList<TaskHolder<PIPATask>> _initTasks = new ArrayList<TaskHolder<PIPATask>>();
 
     public static final String BPMS_VERSION_PROP = "bpms-version";
     public static final String BPMS_BUILD_NUMBER_PROP = "bpms-build-number";
-    
-    private void initLists() throws RemoteException, AuthException {
-        if(_log.isDebugEnabled()) _log.debug("Parsing task list for UI-FW");
-        
+
+    private void initLists(Collection<Task> tasks) throws RemoteException, AuthException {
+        if (_log.isDebugEnabled())
+            _log.debug("Parsing task list for UI-FW");
+
         FormManager fmanager = FormManagerBroker.getInstance().getFormManager();
-        
-        for (Object task : _tasks) {
-        	_log.info(((Task)task).getID() + ":"+ task.getClass().getName());
+
+        for (Object task : tasks) {
+            _log.info(((Task) task).getID() + ":" + task.getClass().getName());
             if (task instanceof Notification) {
                 Notification notification = (Notification) task;
-                if (!TaskState.COMPLETED.equals(notification.getState()) ) {
+                if (!TaskState.COMPLETED.equals(notification.getState())) {
                     _notifications.add(new TaskHolder<Notification>(notification, resoleUrl(fmanager.getNotificationURL(notification))));
+                    Collections.sort(_notifications, null);
                 }
             } else if (task instanceof PATask) {
                 PATask paTask = (PATask) task;
@@ -80,7 +84,8 @@ public class TasksAction extends Action {
                 PIPATask pipaTask = (PIPATask) task;
                 _initTasks.add(new TaskHolder<PIPATask>(pipaTask, resoleUrl(fmanager.getPeopleInitiatedProcessURL(pipaTask))));
             } else {
-                _log.info("Ignoring task of class:" + task.getClass().getName());
+                if (_log.isDebugEnabled())
+                    _log.debug("Ignoring task of class:" + task.getClass().getName());
             }
 
         }
@@ -89,8 +94,6 @@ public class TasksAction extends Action {
     private String resoleUrl(String url) {
         try {
             url = URIUtils.resolveURI(_request, url);
-            if (_log.isDebugEnabled())
-                _log.debug("Found URL:" + url);
         } catch (URISyntaxException ex) {
             _log.error("Invalid URL for peopleActivityUrl", ex);
         }
@@ -107,40 +110,36 @@ public class TasksAction extends Action {
         return state.getCurrentUser().getToken();
     }
 
-    public void retrieveTasks() {
+    private Collection<Task> retrieveTasks() {
         try {
             String pToken = getParticipantToken();
             ITaskManagementService taskManager = getTMS(pToken);
             if (_log.isDebugEnabled()) {
                 _log.debug("Try to get Task List for participant token " + pToken);
             }
-            Task[] tasks = taskManager.getTaskList();
+            Task[] tasks = taskManager.getAvailableTasks("Task", "ORDER BY T._creationDate");
             if (_log.isDebugEnabled()) {
                 _log.debug("Task list of size " + tasks.length + " is retrieved for participant token " + pToken);
             }
 
-            _tasks.addAll(Arrays.asList(tasks));
+            return new ArrayList<Task>(Arrays.asList(tasks));
         } catch (Exception ex) {
-            _errors.add(new ActionError(-1, null, "com_intalio_bpms_workflow_tasks_retrieve_error", null, ActionError
-                    .getStackTrace(ex), null, null));
+            _errors.add(new ActionError(-1, null, "com_intalio_bpms_workflow_tasks_retrieve_error", null, ActionError.getStackTrace(ex), null, null));
             _log.error("Error while retrieving task list", ex);
+            return EMPTY_TASK_LIST;
         }
     }
 
     @Override
     public ModelAndView execute() {
-        retrieveTasks();
-
         try {
-            initLists();
+            initLists(retrieveTasks());
         } catch (Exception ex) {
             _log.error("Error during TasksAction execute()", ex);
         }
 
-        String updateFlag = _request.getParameter("update");
-        // udateFlag==true -> auto update
-        if (updateFlag != null && updateFlag.equals("true")) {
-            return new ModelAndView("updates", createModel());
+        if (Boolean.valueOf(_request.getParameter("update"))) {
+            return new ModelAndView(Constants.TASKS_UPDATE_VIEW, createModel());
         } else {
             return new ModelAndView(Constants.TASKS_VIEW, createModel());
         }
@@ -151,7 +150,6 @@ public class TasksAction extends Action {
     }
 
     protected void fillModel(Map model) {
-        super.fillModel(model);
         UIFWApplicationState state = ApplicationState.getCurrentInstance(_request);
         model.put("activityTasks", _activityTasks);
         model.put("notifications", _notifications);
@@ -159,7 +157,7 @@ public class TasksAction extends Action {
         model.put("participantToken", state.getCurrentUser().getToken());
         model.put("currentUser", state.getCurrentUser().getName());
         model.put("refreshTime", conf.getRefreshTime());
-        
+
         Properties buildProperties = BpmsVersionsServlet.getBPMSVersionsProperties();
         if (buildProperties != null) {
             model.put("version", buildProperties.getProperty(BPMS_VERSION_PROP));

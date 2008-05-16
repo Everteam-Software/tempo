@@ -2,7 +2,6 @@ package org.intalio.tempo.workflow.task.xml;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.HashMap;
@@ -17,6 +16,7 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axis2.util.XMLUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.pool.ObjectPool;
 import org.apache.commons.pool.impl.StackObjectPool;
 import org.apache.xmlbeans.XmlObject;
@@ -45,7 +45,7 @@ public class XmlTooling {
      * <code>Document</code>
      */
     public Document parseXML(String xml) {
-        if (xml == null || xml.equalsIgnoreCase("")) {
+        if (StringUtils.isEmpty(xml)) {
             return null;
         } else {
             try {

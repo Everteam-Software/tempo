@@ -1,6 +1,7 @@
 package org.intalio.tempo.workflow.task;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Date;
 import java.util.Properties;
@@ -48,7 +49,6 @@ public class JPATaskTest {
         factory = Persistence.createEntityManagerFactory("org.intalio.tempo.tms", System.getProperties());
         em = factory.createEntityManager();
         jpa = em.getTransaction();
-        jpa.begin();
     }
 
     @After
@@ -64,6 +64,7 @@ public class JPATaskTest {
     }
 
     private void persist(Object o) throws Exception {
+        jpa.begin();
         em.persist(o);
         jpa.commit();
         // this is to prevent caching at the entity manager level
@@ -250,13 +251,7 @@ public class JPATaskTest {
 
     @Test
     public void testFetchAvailabeTasksWithCriteriaPA() throws Exception {
-        String id = "pa" + System.currentTimeMillis();
-        PATask task1 = new PATask(id, new URI("http://hellonico.net"), "processId", "soap", getXmlSampleDocument());
-        task1.authorizeActionForUser("save", "examples\\manager");
-        task1.setState(TaskState.FAILED);
-        task1.setPriority(2);
-        task1.getRoleOwners().add("role1");
-        task1.getUserOwners().add("user1");
+        PATask task1 = getSampleTask(TaskState.FAILED);
 
         persist(task1);
 
@@ -269,6 +264,45 @@ public class JPATaskTest {
         testFetchForUserRolesWithCriteria("user1", new String[] { "role1" }, Notification.class, null, 0);
 
         checkRemoved(task1.getID());
+    }
+
+    private PATask getSampleTask(TaskState state) throws URISyntaxException, Exception {
+        String id = "pa" + System.currentTimeMillis();
+        PATask task1 = new PATask(id, new URI("http://hellonico.net"), "processId", "soap", getXmlSampleDocument());
+        task1.authorizeActionForUser("save", "examples\\manager");
+        task1.setPriority(2);
+        task1.setState(state);
+        task1.getRoleOwners().add("role1");
+        task1.getUserOwners().add("user1");
+        return task1;
+    }
+    
+    @Test
+    public void testFetchWithCriteriaAndOrder() throws Exception {
+        PATask task1 = getSampleTask(TaskState.READY);
+        task1.setDescription("Ztarting with a Z");
+        PATask task2 = getSampleTask(TaskState.CLAIMED);
+        task2.setDescription("Arting with a A");
+        PATask task3 = getSampleTask(TaskState.FAILED);
+        
+        persist(task1);
+        persist(task2);
+        persist(task3);
+
+        String PA_QUERY_READY_OR_CLAIMED_ORDERED = "T._state = TaskState.READY or T._state = TaskState.CLAIMED ORDER BY t._description ASC";
+        Task[] tasks = testFetchForUserRolesWithCriteria("user1", new String[] { "role1" }, PATask.class, PA_QUERY_READY_OR_CLAIMED_ORDERED, 2);
+        // this way we can confirm the tasks are ordered
+        Assert.assertTrue(tasks[0].getDescription().startsWith("A"));
+        
+        // check the query is working for other tasks as well
+        String QUERY_READY_OR_CLAIMED_ORDERED = "ORDER BY t._creationDate ASC";
+        testFetchForUserRolesWithCriteria("user1", new String[] { "role1" }, Task.class, QUERY_READY_OR_CLAIMED_ORDERED, 3);
+        testFetchForUserRolesWithCriteria("user1", new String[] { "role1" }, Class.forName("org.intalio.tempo.workflow.task.Task"), QUERY_READY_OR_CLAIMED_ORDERED, 3);
+        
+        
+        checkRemoved(task1.getID());
+        checkRemoved(task2.getID());
+        checkRemoved(task3.getID());
     }
 
     @Test
@@ -305,10 +339,11 @@ public class JPATaskTest {
 
     }
 
-    public void testFetchForUserRolesWithCriteria(String userId, String[] roles, Class taskClass, String subQuery, int size) throws Exception {
+    public Task[] testFetchForUserRolesWithCriteria(String userId, String[] roles, Class taskClass, String subQuery, int size) throws Exception {
         final TaskFetcher taskFetcher = new TaskFetcher(em);
         Task[] tasks = taskFetcher.fetchAvailableTasks(new UserRoles(userId, roles), taskClass, subQuery);
         Assert.assertEquals(size, tasks.length);
+        return tasks;
     }
 
     @Test
