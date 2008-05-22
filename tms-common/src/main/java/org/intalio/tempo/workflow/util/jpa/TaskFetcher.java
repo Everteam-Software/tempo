@@ -117,18 +117,4 @@ public class TaskFetcher {
         return (Task[]) result.toArray(new Task[result.size()]);
     }
 
-    /**
-     * Core method. delete all the tasks for the given <code>UserRoles</code>
-     */
-    public void deleteTasks(UserRoles user) {
-        ArrayList userIdList = new ArrayList();
-        userIdList.add(user.getUserID());
-        EntityTransaction et = _entityManager.getTransaction();
-        et.begin();
-        Query q = _entityManager.createQuery(DELETE_TASKS).setParameter(1, userIdList)
-                        .setParameter(2, user.getAssignedRoles());
-        q.executeUpdate();
-        et.commit();
-    }
-
 }

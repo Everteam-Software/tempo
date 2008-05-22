@@ -346,28 +346,6 @@ public class JPATaskTest {
         return tasks;
     }
 
-    @Test
-    public void testDeleteTasks() throws Exception {
-        String userId = "user1";
-        String[] roles = { "role1" };
-
-        String id = "id" + System.currentTimeMillis();
-        Notification task2 = new Notification(id, new URI("http://hellonico.net"), getXmlSampleDocument());
-        task2.getRoleOwners().add("role1");
-        task2.getUserOwners().add("user1");
-
-        persist(task2);
-
-        final TaskFetcher taskFetcher = new TaskFetcher(em);
-        Task[] tasks = taskFetcher.fetchAllAvailableTasks(new UserRoles(userId, roles));
-        Assert.assertNotNull(tasks);
-
-        taskFetcher.deleteTasks(new UserRoles(userId, roles));
-        tasks = taskFetcher.fetchAllAvailableTasks(new UserRoles(userId, roles));
-        Assert.assertEquals(0, tasks.length);
-
-    }
-
     private void testFecthForUserRoles(String userId, String[] roles, int size) throws Exception {
         Task[] tasks = new TaskFetcher(em).fetchAllAvailableTasks(new UserRoles(userId, roles));
         Assert.assertEquals(size, tasks.length);
