@@ -73,7 +73,6 @@ public class TasksAction extends Action {
                 Notification notification = (Notification) task;
                 if (!TaskState.COMPLETED.equals(notification.getState())) {
                     _notifications.add(new TaskHolder<Notification>(notification, resoleUrl(fmanager.getNotificationURL(notification))));
-                    Collections.sort(_notifications, null);
                 }
             } else if (task instanceof PATask) {
                 PATask paTask = (PATask) task;
