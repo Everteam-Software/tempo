@@ -7,9 +7,9 @@ def replace_text(inputFile, substitutions, outputFile)
       substitutions.keys.each do |prop|
         regex = Regexp.compile(prop)
         if regex.match(line)
-          puts "  match #{line}"
+          # puts "  match #{line}"
           line = line.gsub(prop, substitutions[prop])
-          puts "replace #{line}"
+          # puts "replace #{line}"
           subCount += 1
         end
       end
@@ -22,7 +22,7 @@ end
 
 def generate_sql(classpath, schemaname="db.schema")
     schemas = []
-    %w{ Derby MySQL Oracle SQLServer Sybase DB2}.each do |db|
+    %w{ Postgres}.each do |db|
       persistence = _("src/main/resources/META-INF/persistence.xml")
       persistence_db = file("target/persistence-#{db}.xml" => persistence) do |task|
         new_properties = <<END

@@ -217,7 +217,7 @@ define "tempo" do
     task "package" => generate_sql([project], "workflow.tms")
     
     package(:jar)
-    test.with APACHE_DERBY, LOG4J, XMLUNIT, WOODSTOX
+    test.with APACHE_DERBY, LOG4J, POSTGRE_CONNECTOR, XMLUNIT, WOODSTOX
     test.exclude '*TestUtils*'
   end
   

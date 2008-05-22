@@ -98,6 +98,7 @@ APACHE_DERBY = "org.apache.derby:derby:jar:10.2.2.0"
 
 #DB2_CONNECTOR = "com.ibm.db2.jcc:jcc4:jar:9.2"
 MYSQL_CONNECTOR = "com.mysql.mysql-connector:mysql-connector-java:jar:5.1.6"
+POSTGRE_CONNECTOR = "postgresql:postgresql:jar:8.3-603.jdbc3"
 
 PORTLET_API = "portlet-api:portlet-api:jar:1.0"
 
