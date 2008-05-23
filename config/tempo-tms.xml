@@ -40,31 +40,12 @@
 			<value>http://localhost:8080/axis2/services/TokenService</value>
 		</property>
 	</bean>
-	<!--
-		<bean id="tms.daoFactory" class="org.intalio.tempo.workflow.tms.server.dao.JDBCTaskDAOConnectionFactory">
-			<constructor-arg>
-				<value>java:comp/env/jdbc/BPMSDB</value>
-			</constructor-arg>
-		</bean>
-	-->
-
 	<bean id="tms.daoFactory" class="org.intalio.tempo.workflow.tms.server.dao.JPATaskDaoConnectionFactory">
 		<constructor-arg>
 			<map>
 				<entry><key><value>openjpa.jdbc.SynchronizeMappings</value></key><value>buildSchema</value></entry>
-				<entry><key><value>openjpa.ConnectionFactoryMode</value></key><value>managed</value></entry>
-				<entry><key><value>openjpa.ConnectionDriverName</value></key><value>org.apache.derby.jdbc.EmbeddedXADataSource</value></entry>				
+				<entry><key><value>openjpa.ConnectionFactoryMode</value></key><value>local</value></entry>
 				<entry><key><value>tempo.datasourceURL</value></key><value>java:comp/env/jdbc/BPMSDB</value></entry>
-				<entry><key><value>openjpa.Log</value></key><value>none</value></entry>
-				<entry><key><value>openjpa.FlushBeforeQueries</value></key><value>true</value></entry>
-				<!-- 
-				    uncomment one of the following when running on a database different than derby
-				-->
-				<!--				
-					<entry><key><value>openjpa.jdbc.DBDictionary</value></key><value>oracle</value></entry>
-					<entry><key><value>openjpa.jdbc.DBDictionary</value></key><value>mysql</value></entry>
-					<entry><key><value>openjpa.jdbc.DBDictionary</value></key><value>db2</value></entry>
-				-->
 			</map>
 		</constructor-arg>
 	</bean>
