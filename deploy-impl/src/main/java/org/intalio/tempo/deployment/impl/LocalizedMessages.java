@@ -29,7 +29,7 @@ public class LocalizedMessages {
     
     static {
         try {
-            _messages = ResourceBundle.getBundle("DeploymentService");
+            _messages = ResourceBundle.getBundle("DeploymentService_messages");
         } catch (MissingResourceException except) {
             Locale locale = Locale.getDefault();
             if (!locale.getLanguage().equals(Locale.US.getLanguage())) {
