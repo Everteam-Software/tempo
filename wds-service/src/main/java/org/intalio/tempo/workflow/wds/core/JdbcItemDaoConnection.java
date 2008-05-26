@@ -144,4 +144,8 @@ public class JdbcItemDaoConnection implements ItemDaoConnection {
             throw new RuntimeException(e);
         }
     }
+
+	public Connection getJDBCConnection() {
+		return _jdbcConnection;
+	}
 }

@@ -9,11 +9,11 @@
  */
 package org.intalio.tempo.persistence;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.net.URI;
+import java.util.Properties;
 
-import junit.framework.JUnit4TestAdapter;
-
+import org.intalio.tempo.workflow.task.Notification;
+import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,31 +23,15 @@ import org.slf4j.LoggerFactory;
  */
 public class JDBC2JPAConverterTest {
     final static Logger log = LoggerFactory.getLogger(JDBC2JPAConverterTest.class);
-    private static JDBC2JPAConverter j2j;
 
-    public static junit.framework.Test suite() throws Exception {
-        // mappings required for JPA and internal derby
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("openjpa.jdbc.SynchronizeMappings", "buildSchema");
-        map.put("openjpa.ConnectionDriverName", "org.apache.derby.jdbc.EmbeddedDriver");
-        map.put("openjpa.ConnectionURL", "jdbc:derby:target/BPMSDB;create=true");
-        map.put("openjpa.Log", "DefaultLevel=TRACE");
-
-        // j2j = new JDBC2JPAConverter(map);
-
-        return new JUnit4TestAdapter(JDBC2JPAConverterTest.class);
-    }
-
+   
     @Test
     public void createAndCopyTask() throws Exception {
-        final String taskId = Long.toString(System.currentTimeMillis());
-        // PATask task = new PATask(taskId,
-        // URI.create("http://hellonico.net"),"123","123",null);
-        // j2j.getJdbcTaskConnection().createTask(task);
-        // j2j.copyAllTasks();
-        // PATask task2 = (PATask)
-        // j2j.getJpaTaskConnection().fetchTaskIfExists(taskId);
-        // TaskEquality.areTasksEquals(task, task2);
+        Properties props = new Properties();
+        props.load(this.getClass().getResourceAsStream("/jpa.properties"));
+        
+        JDBC2JPAConverter converter = new JDBC2JPAConverter(props);
+        converter.copyAllTasks();
+        converter.copyAllItems();
     }
-
 }

@@ -13,6 +13,10 @@
 		<priority value="DEBUG"/>
 	</category> 	
 	
+	<category name="org.intalio.tempo.persistence">
+		<priority value="DEBUG"/>
+	</category> 	
+	
 	<root>
 		<priority value="DEBUG" />
 		<appender-ref ref="console" />
