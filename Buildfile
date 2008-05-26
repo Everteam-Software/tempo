@@ -36,9 +36,22 @@ define "tempo" do
   end
    
   define "dao-tools" do
-    compile.with projects("security", "security-ws-client", "tms-axis", "tms-common", "tms-service", "wds-service", "tms-client", "web-nutsNbolts", "dao-nutsNbolts"), APACHE_JPA, AXIOM, AXIS2, JAXEN, JYAML, SLF4J, SPRING[:core], STAX_API, XMLBEANS
+    compile.with projects("security", "security-ws-client", "tms-axis", "tms-common", "tms-service", "wds-service", "tms-client", "web-nutsNbolts", "dao-nutsNbolts"), 
+    APACHE_DERBY, 
+    APACHE_JPA, 
+    AXIOM, 
+    AXIS2, 
+    JAXEN, 
+    JYAML, 
+    LOG4J, 
+    MYSQL_CONNECTOR, 
+    SLF4J, 
+    SPRING[:core], 
+    SERVLET_API, 
+    STAX_API, 
+    XMLBEANS
 
-    test.with projects("tms-common"), APACHE_COMMONS[:pool], CASTOR, APACHE_DERBY, LOG4J, MYSQL_CONNECTOR, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES
+    test.with projects("tms-common"), APACHE_COMMONS[:pool], CASTOR, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES
     unless ENV["MIGRATE"] == 'yes'
       test.exclude '*JDBC2JPAConverterTest*'
     end
