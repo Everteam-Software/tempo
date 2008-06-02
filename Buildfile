@@ -1,4 +1,4 @@
-gem "buildr", ">=1.2.10"
+gem "buildr", ">=1.3"
 
 require "rubygems"
 require "buildr"
@@ -13,7 +13,7 @@ require "rsc/build/dependencies.rb"
 require "rsc/build/repositories.rb"
 # leave this require after dependencies.rb so the same jpa version is used throughout the whole build
 require "tasks/openjpa"
-require "tasks/easyb"
+# require "tasks/easyb"
 require "tasks/generate_sql"
 
 desc "Tempo Workflow"
@@ -222,19 +222,21 @@ define "tempo" do
   desc "Xml Beans generation"
   define "tms-axis" do
     compile_xml_beans _("../tms-service/src/main/axis2")
-    package(:jar)
+    package(:jar).include _('target/generated/xmlbeans/'), :as=>'.'
   end
 
   desc "Task Management Services Common Library"
   define "tms-common" do |project|
     compile.with projects("security", "security-ws-client", "tms-axis"), APACHE_JPA, APACHE_COMMONS[:pool], APACHE_COMMONS[:collections], AXIS2, AXIOM, DOM4J, JAXEN, SLF4J, SPRING[:core], STAX_API, XERCES, XMLBEANS
+    
     compile { open_jpa_enhance }
     
     task "package" => generate_sql([project], "workflow.tms")
     
-    package(:jar)
     test.with APACHE_DERBY, LOG4J, POSTGRE_CONNECTOR, XMLUNIT, WOODSTOX
     test.exclude '*TestUtils*'
+    
+    package(:jar)
   end
   
   desc "Task Management Service Client"

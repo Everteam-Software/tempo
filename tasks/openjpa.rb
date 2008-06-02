@@ -1,4 +1,4 @@
-require "java/java"
+require "buildr/java"
 
 module Buildr
 
@@ -7,7 +7,7 @@ module Buildr
 
     REQUIRES = APACHE_JPA, APACHE_COMMONS[:pool], APACHE_COMMONS[:dbcp], APACHE_DERBY
 
-    Java.wrapper.classpath << REQUIRES
+    Java.classpath << REQUIRES
 
     class << self
 

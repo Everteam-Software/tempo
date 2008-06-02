@@ -18,6 +18,7 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 
 import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,6 @@ import org.springframework.context.support.AbstractXmlApplicationContext;
  * @version $Revision: 603 $
  */
 public abstract class SpringTestSupport
-    extends TestCase
 {
 
     protected transient Logger _log = LoggerFactory.getLogger( getClass() );
@@ -54,7 +54,7 @@ public abstract class SpringTestSupport
         if (_context != null) {
             answer = _context.getBean(name);
         }
-        assertNotNull("Could not find object in Spring for key: " + name, answer);
+        Assert.assertNotNull("Could not find object in Spring for key: " + name, answer);
         return answer;
     }
 
@@ -62,7 +62,7 @@ public abstract class SpringTestSupport
 
     protected Source getSourceFromClassPath(String fileOnClassPath) {
         InputStream stream = getClass().getResourceAsStream(fileOnClassPath);
-        assertNotNull("Could not find file: " + fileOnClassPath + " on the classpath", stream);
+        Assert.assertNotNull("Could not find file: " + fileOnClassPath + " on the classpath", stream);
 
         Source content = new StreamSource(stream);
         return content;

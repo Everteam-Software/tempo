@@ -1,15 +1,15 @@
-require "java/java"
-require "java/ant"
 require "buildr/cobertura"
+require "buildr/java"
+require "buildr/java/ant"
 
 module Buildr
 
   # Integrate EasyB and Cobertura 
-  module EasyB
+  module Easyb
 
     COBERTURA = ["net.sourceforge.cobertura:cobertura:jar:1.9", "log4j:log4j:jar:1.2.9","asm:asm:jar:2.2.1", "asm:asm-tree:jar:2.2.1", "oro:oro:jar:2.0.8"]
     REQUIRES = [EASY_B, COBERTURA]
-    Java.wrapper.classpath << REQUIRES
+    Java.classpath << REQUIRES
 
     class << self
 
@@ -31,7 +31,6 @@ module Buildr
           if ant.project.getProperty('easyb.failed') 
             raise "Easyb tests have failed "
           end
-
         end
       end
 

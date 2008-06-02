@@ -24,8 +24,6 @@ import javax.persistence.InheritanceType;
 import javax.persistence.MappedSuperclass;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.openjpa.persistence.ElementType;
-import org.apache.openjpa.persistence.Factory;
 import org.apache.openjpa.persistence.PersistentCollection;
 import org.apache.openjpa.persistence.jdbc.ContainerTable;
 

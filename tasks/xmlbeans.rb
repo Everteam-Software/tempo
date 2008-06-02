@@ -1,5 +1,5 @@
-require "java/java"
-require "java/ant"
+require "buildr/java"
+require "buildr/java/ant"
 
 module Buildr
 
