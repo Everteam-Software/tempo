@@ -9,6 +9,7 @@
  Contributors:
  Intalio inc. - initial API and implementation
 --%>
+    <%@ page contentType="text/html; charset=UTF-8"%>
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 	
 	<table style="height: 40px;" border="0" cellpadding="0" cellspacing="0" width="100%">

@@ -19,6 +19,7 @@ body {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 9pt;
 	color: #333333;	
+	direction: lrt;
 }
 
 span, div, td, a, p, li, input, select, optgroup{
@@ -427,6 +428,7 @@ html>body .dataGridActions a:hover{
 	padding-left: 5px;
 	padding-right: 5px;
 	cursor:pointer;
+	width: 15%;
 }
 
 #ActiveTab {
@@ -436,10 +438,12 @@ html>body .dataGridActions a:hover{
 	font-weight: bold; 
 	background-color: #FFFFFF;
 	height: 20px;	
+	width: auto;
 	padding-top: 2px;
 	padding-left: 5px;
 	padding-right: 5px;
 	cursor:pointer;
+	width: 15%;
 }
 
 #tabPanelEnd {
@@ -455,7 +459,7 @@ html>body .dataGridActions a:hover{
 	display:none;
 }
 .visibletab{
-	display:inline;
+/*	display:inline;*/
 }
 .tabContainer{
 	border-bottom: 1px solid #777777;
