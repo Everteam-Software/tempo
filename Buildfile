@@ -1,9 +1,10 @@
-gem "buildr", ">=1.3"
+gem "buildr"
 
 require "rubygems"
 require "buildr"
 require "buildr/cobertura"
 require "buildr/xmlbeans"
+#require "tasks/xmlbeans"
 
 # Keep this structure to allow the build system to update version numbers.
 VERSION_NUMBER = "5.2.0.24-SNAPSHOT"
@@ -21,7 +22,7 @@ define "tempo" do
   project.version = VERSION_NUMBER
   project.group = "org.intalio.tempo"
 
-  compile.options.source = "1.5"
+  # compile.options.source = "1.5"
   compile.options.target = "1.5"
 
   define "cas-server-webapp" do
@@ -57,6 +58,12 @@ define "tempo" do
     end
     package :war
   end
+  
+  # define "dao-migration" do
+  #     compile.with projects("dao-tools", "tms-service", "tms-common"), APACHE_DERBY, LIFT, SERVLET_API
+  #     test.with JUNIT, JETTY
+  #     package :war
+  #   end
   
   desc "Deployment API"
   define "deploy-api" do

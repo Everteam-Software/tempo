@@ -19,6 +19,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -104,8 +105,8 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
         String description = taskMetadata.getDescription();
         String processID = taskMetadata.getProcessId();
 
-        AuthIdentifierSet userOwners = new AuthIdentifierSet(taskMetadata.getUserOwnerList());
-        AuthIdentifierSet roleOwners = new AuthIdentifierSet(taskMetadata.getRoleOwnerList());
+        AuthIdentifierSet userOwners = new AuthIdentifierSet(Arrays.asList(taskMetadata.getUserOwnerArray()));
+        AuthIdentifierSet roleOwners = new AuthIdentifierSet(Arrays.asList(taskMetadata.getRoleOwnerArray()));
         String deadline = null;
 
         if (taskMetadata.xgetDeadline() != null && taskMetadata.xgetDeadline().validate()) {

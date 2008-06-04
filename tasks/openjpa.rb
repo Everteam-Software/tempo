@@ -1,4 +1,4 @@
-require "buildr/java"
+require "tasks/buildr_version"
 
 module Buildr
 
@@ -7,7 +7,7 @@ module Buildr
 
     REQUIRES = APACHE_JPA, APACHE_COMMONS[:pool], APACHE_COMMONS[:dbcp], APACHE_DERBY
 
-    Java.classpath << REQUIRES
+    update_java_classpath REQUIRES
 
     class << self
 

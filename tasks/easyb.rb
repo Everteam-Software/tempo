@@ -9,6 +9,7 @@ module Buildr
 
     COBERTURA = ["net.sourceforge.cobertura:cobertura:jar:1.9", "log4j:log4j:jar:1.2.9","asm:asm:jar:2.2.1", "asm:asm-tree:jar:2.2.1", "oro:oro:jar:2.0.8"]
     REQUIRES = [EASY_B, COBERTURA]
+    
     Java.classpath << REQUIRES
 
     class << self

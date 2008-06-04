@@ -1,5 +1,4 @@
-require "buildr/java"
-require "buildr/java/ant"
+require "tasks/buildr_version"
 
 module Buildr
 
