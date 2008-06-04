@@ -9,11 +9,16 @@ require 'fileutils'
 require 'hpricot'
 require 'open-uri'
 require "buildr"
-require "../build/dependencies"
-require "../build/repositories"
+
+current_script = ENV["_"]
+script_folder = current_script[0..current_script.rindex("/")-1]
+
+load "#{script_folder}/../build/dependencies.rb"
+load "#{script_folder}/../build/repositories.rb"
 
 original_dir = Dir.pwd
-config = YAML::load( File.open( "#{original_dir}/config.yml" ) )
+
+config = YAML::load( File.open( "#{script_folder}/config.yml" ) )
 
 def find_apache_mirror
   begin
@@ -25,7 +30,7 @@ def find_apache_mirror
   end
 end
 
-TEMPO_SVN = config["tempo_svn"]
+TEMPO_SVN = "#{script_folder}/../.."
 DEBUG = config["debug"]
 REBUILD_TEMPO = config["rebuild"]
 APACHE_MIRROR = find_apache_mirror
