@@ -113,7 +113,7 @@
                                     <xforms:toggle ev:event="xforms-submit" case="submit-wait"/>
                                     <xforms:action ev:event="xforms-submit-error">
                                         <xforms:toggle case="viewTask"/>
-                                        <xforms:message level="modal">Error, cannot start process</xforms:message>
+                                        <xforms:message level="modal">Can not start process because the form is not correctly filled out</xforms:message>
                                     </xforms:action>
                                 </xforms:submission>
 

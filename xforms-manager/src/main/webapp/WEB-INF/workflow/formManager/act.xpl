@@ -279,7 +279,7 @@
                                     <xforms:toggle ev:event="xforms-submit-done" case="refresh-all"/>
                                     <xforms:action ev:event="xforms-submit-error">
                                         <xforms:toggle case="viewTask"/>
-                                        <xforms:message level="modal">Error, cannot complete task</xforms:message>
+                                        <xforms:message level="modal">Can not complete task because the form is not correctly filled out</xforms:message>
                                     </xforms:action>
                                 </xforms:submission>
 
