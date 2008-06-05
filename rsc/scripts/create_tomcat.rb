@@ -12,7 +12,7 @@ require 'open-uri'
 require "buildr"
 require "hpricot"
 
-current_script = Dir.pwd + "/#{$0}"
+current_script = File.expand_path("#{$0}")
 script_folder = File.dirname(current_script)
 
 load "#{script_folder}/../build/dependencies.rb"
