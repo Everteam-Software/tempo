@@ -6,9 +6,9 @@ require 'open-uri'
 require "zip/zip"
 require 'yaml'
 require 'fileutils'
-require 'hpricot'
 require 'open-uri'
 require "buildr"
+gem 'hpricot', '>= 0.6'
 
 current_script = Dir.pwd + "/#{$0}"
 script_folder = File.dirname(current_script)
