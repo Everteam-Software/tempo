@@ -32,6 +32,7 @@ public class TaskFetcher {
     private final String QUERY_GENERIC1 = "select T from ";
     private final String QUERY_GENERIC2 = " T where (T._userOwners in (?1) or T._roleOwners in (?2))";
     private final String DELETE_TASKS = "delete from Task m where m._userOwners in (?1) or m._roleOwners in (?2)";
+    private final String DELETE_ALL_TASK_WITH_ID = "delete from Task m where m._id = (?1)";
 
     public TaskFetcher(EntityManager em) {
         this._entityManager = em;
@@ -50,7 +51,12 @@ public class TaskFetcher {
         } catch (NoResultException nre) {
             throw new UnavailableTaskException("Task does not exist" + taskID);
         }
+    }
 
+    public int deleteTasksWithID(String taskID) {
+        Query q = _entityManager.createQuery(DELETE_ALL_TASK_WITH_ID);
+        q.setParameter(1, taskID);
+        return q.executeUpdate();
     }
 
     /**

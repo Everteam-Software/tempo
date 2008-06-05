@@ -19,7 +19,6 @@ import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.task.attachments.AttachmentMetadata;
 import org.intalio.tempo.workflow.task.xml.XmlTooling;
-import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.intalio.tempo.workflow.util.TaskEquality;
 import org.intalio.tempo.workflow.util.jpa.TaskFetcher;
 import org.junit.After;
@@ -36,9 +35,15 @@ public class JPATaskTest {
     EntityManagerFactory factory;
     EntityTransaction jpa;
     XmlTooling xml = new XmlTooling();
+    int uniqueID = 0;
 
     public static junit.framework.Test suite() {
         return new JUnit4TestAdapter(JPATaskTest.class);
+    }
+    
+    private synchronized String getUniqueTaskID() {
+        uniqueID ++;
+        return "id_"+uniqueID;
     }
 
     @Before
@@ -73,10 +78,9 @@ public class JPATaskTest {
 
     @Test
     public void notificationOneRolePersist() throws Exception {
-        String id = "id" + System.currentTimeMillis();
         Notification task1 = null, task2 = null;
 
-        task1 = new Notification(id, new URI("http://hellonico.net"));
+        task1 = new Notification(getUniqueTaskID(), new URI("http://hellonico.net"));
         task1.getRoleOwners().add("intalio\\manager");
         persist(task1);
 
@@ -88,28 +92,25 @@ public class JPATaskTest {
     }
 
     private void checkRemoved(Task task2) {
-        jpa.begin();
-        em.remove(task2);
-        jpa.commit();
+        checkRemoved(task2.getID());
+    }
 
+    private void checkRemoved(String id) {
         final TaskFetcher taskFetcher = new TaskFetcher(em);
+        jpa.begin();
+        taskFetcher.deleteTasksWithID(id);
+        jpa.commit();
         try {
-            taskFetcher.fetchTaskIfExists(task2.getID());
+            taskFetcher.fetchTaskIfExists(id);
             Assert.fail("No task should be left here");
         } catch (Exception expected) {
             // this is good.
         }
     }
 
-    private void checkRemoved(String id) throws UnavailableTaskException {
-        final TaskFetcher taskFetcher = new TaskFetcher(em);
-        checkRemoved(taskFetcher.fetchTaskIfExists(id));
-    }
-
     @Test
     public void PIPATaskSearchFromURL() throws Exception {
-        String id = "id" + System.currentTimeMillis();
-        PIPATask task1 = new PIPATask(id, new URI("http://hellonico2.net"), new URI("http://hellonico2.net"), new URI("http://hellonico2.net"),
+        PIPATask task1 = new PIPATask(getUniqueTaskID(), new URI("http://hellonico2.net"), new URI("http://hellonico2.net"), new URI("http://hellonico2.net"),
                         "initOperationSOAPAction");
         persist(task1);
         Query q = em.createNamedQuery(PIPATask.FIND_BY_URL).setParameter(1, "http://hellonico2.net");
@@ -121,7 +122,7 @@ public class JPATaskTest {
     @Test
     public void PATaskPersistence() throws Exception {
 
-        String id = "My id" + System.currentTimeMillis();
+        String id = getUniqueTaskID();
         PATask task1 = new PATask(id, new URI("http://hellonico.net"), "processId", "soap", getXmlSampleDocument());
         task1.setDeadline(new Date());
 
@@ -140,7 +141,7 @@ public class JPATaskTest {
 
     @Test
     public void PIPATaskPersistence() throws Exception {
-        String id = "id" + System.currentTimeMillis();
+        String id = getUniqueTaskID();
         PIPATask task1 = new PIPATask(id, new URI("http://hellonico.net"), new URI("http://hellonico.net"), new URI("http://hellonico.net"),
                         "initOperationSOAPAction");
 
@@ -156,7 +157,7 @@ public class JPATaskTest {
 
     @Test
     public void authorizeActionForUser() throws Exception {
-        String id = "id" + System.currentTimeMillis();
+        String id = getUniqueTaskID();
         Notification task1 = null, task2 = null;
 
         task1 = new Notification(id, new URI("http://hellonico.net"), getXmlSampleDocument());
@@ -187,7 +188,7 @@ public class JPATaskTest {
     @Test
     public void NotificationPersistence() throws Exception {
 
-        String id = "id" + System.currentTimeMillis();
+        String id = getUniqueTaskID();
         Notification task1 = new Notification(id, new URI("http://hellonico.net"), getXmlSampleDocument());
 
         persist(task1);
@@ -220,7 +221,7 @@ public class JPATaskTest {
 
     @Test
     public void authorizeUserRolesAndIsAvailable() throws Exception {
-        String id = "pa" + System.currentTimeMillis();
+        String id = getUniqueTaskID();
         PATask task1 = new PATask(id, new URI("http://hellonico.net"), "processId", "soap", getXmlSampleDocument());
         task1.authorizeActionForUser("save", "examples\\manager");
         task1.authorizeActionForUser("save", "user1");
@@ -267,7 +268,7 @@ public class JPATaskTest {
     }
 
     private PATask getSampleTask(TaskState state) throws URISyntaxException, Exception {
-        String id = "pa" + System.currentTimeMillis();
+        String id = getUniqueTaskID();
         PATask task1 = new PATask(id, new URI("http://hellonico.net"), "processId", "soap", getXmlSampleDocument());
         task1.authorizeActionForUser("save", "examples\\manager");
         task1.setPriority(2);
@@ -300,14 +301,14 @@ public class JPATaskTest {
         testFetchForUserRolesWithCriteria("user1", new String[] { "role1" }, Class.forName("org.intalio.tempo.workflow.task.Task"), QUERY_READY_OR_CLAIMED_ORDERED, 3);
         
         
-        checkRemoved(task1.getID());
-        checkRemoved(task2.getID());
-        checkRemoved(task3.getID());
+        checkRemoved(task1);
+        checkRemoved(task2);
+        checkRemoved(task3);
     }
 
     @Test
     public void testFetchAvailabeTasksWithCriteriaNOTI() throws Exception {
-        String id = "id" + System.currentTimeMillis();
+        String id = getUniqueTaskID();
         Notification task2 = new Notification(id, new URI("http://hellonico.net"), getXmlSampleDocument());
         task2.getRoleOwners().add("role1");
         task2.getUserOwners().add("user1");
@@ -323,7 +324,7 @@ public class JPATaskTest {
 
     @Test
     public void testFetchAvailabeTasksWithCriteriaPIPA() throws Exception {
-        String id = "id" + System.currentTimeMillis();
+        String id = getUniqueTaskID();
         PIPATask task1 = new PIPATask(id, new URI("http://hellonico.net"), new URI("http://hellonico.net"), new URI("http://hellonico.net"),
                         "initOperationSOAPAction");
 
