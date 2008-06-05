@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 
 require "rubygems"
+gem 'hpricot', '>= 0.6'
+
 require 'net/http'
 require 'open-uri' 
 require "zip/zip"
@@ -8,7 +10,7 @@ require 'yaml'
 require 'fileutils'
 require 'open-uri'
 require "buildr"
-gem 'hpricot', '>= 0.6'
+require "hpricot"
 
 current_script = Dir.pwd + "/#{$0}"
 script_folder = File.dirname(current_script)
