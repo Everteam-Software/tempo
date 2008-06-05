@@ -163,7 +163,8 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
             }
         }
         if (IProcessBoundTask.class.isAssignableFrom(taskClass)) {
-            requireParameter(processID, "processID");
+            if(taskMetadata.xgetProcessId()==null)
+                throw new InvalidInputFormatException("ProcessID not specified");
         } else {
             forbidParameter(processID, "processID");
         }
@@ -228,7 +229,8 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
                 task.setProcessEndpoint(URI.create(uri2));
         }
         if (IProcessBoundTask.class.isAssignableFrom(taskClass)) {
-            ((IProcessBoundTask) resultTask).setProcessID(processID);
+            if (processID != null)
+                ((IProcessBoundTask) resultTask).setProcessID(processID);
         }
         if (ICompleteReportingTask.class.isAssignableFrom(taskClass)) {
             ((ICompleteReportingTask) resultTask).setCompleteSOAPAction(completeSOAPAction);

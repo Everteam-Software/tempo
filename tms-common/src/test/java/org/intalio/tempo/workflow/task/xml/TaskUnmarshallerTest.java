@@ -97,6 +97,8 @@ public class TaskUnmarshallerTest extends TestCase {
         TaskUnmarshaller unmarshaller = new TaskUnmarshaller();
         OMElement rootElement = TestUtils.loadElementFromResource("/oracle.xml");
         unmarshaller.unmarshalTaskFromMetadata(rootElement);
+        rootElement = TestUtils.loadElementFromResource("/failInOracle.xml");
+        unmarshaller.unmarshalTaskFromMetadata(rootElement);
     }
 
     private void testBadFullTask(String resourceName) throws Exception {
