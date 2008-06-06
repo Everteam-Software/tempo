@@ -22,7 +22,7 @@ version="1.2">
 
 	<jsp:text>
 			<c:forEach items="${activityTasks}" var="taskHolder" varStatus="status">
-										<c:set var="taskFullURL" value="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&amp;type=${taskHolder.task.class.simpleName}&amp;url=${taskHolder.task.formURL}&amp;token=${participantToken}&amp;user=${currentUser}" />
+										<c:set var="taskFullURL" value="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&amp;amp;type=${taskHolder.task.class.simpleName}&amp;amp;url=${taskHolder.task.formURL}&amp;amp;token=${participantToken}&amp;amp;user=${currentUser}" />
         	<c:choose>
         		<c:when test="${(status.index%2) == 0}">
 			<![CDATA[
@@ -81,7 +81,7 @@ version="1.2">
 
 	<jsp:text>
 		<c:forEach items="${notifications}" var="taskHolder" varStatus="status">
-										<c:set var="taskFullURL" value="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&amp;type=${taskHolder.task.class.simpleName}&amp;url=${taskHolder.task.formURL}&amp;token=${participantToken}&amp;user=${currentUser}" />
+										<c:set var="taskFullURL" value="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&amp;amp;type=${taskHolder.task.class.simpleName}&amp;amp;url=${taskHolder.task.formURL}&amp;amp;token=${participantToken}&amp;amp;user=${currentUser}" />
     	<c:choose>
     		<c:when test="${(status.index%2) == 0}">
 		<![CDATA[
@@ -132,7 +132,7 @@ version="1.2">
 
 	<jsp:text>
 		<c:forEach items="${initTasks}" var="taskHolder" varStatus="status">
-										<c:set var="taskFullURL" value="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&amp;type=${taskHolder.task.class.simpleName}&amp;url=${taskHolder.task.formURL}&amp;token=${participantToken}&amp;user=${currentUser}" />
+										<c:set var="taskFullURL" value="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&amp;amp;type=${taskHolder.task.class.simpleName}&amp;amp;url=${taskHolder.task.formURL}&amp;amp;token=${participantToken}&amp;amp;user=${currentUser}" />
     	<c:choose>
     		<c:when test="${(status.index%2) == 0}">
 		<![CDATA[
