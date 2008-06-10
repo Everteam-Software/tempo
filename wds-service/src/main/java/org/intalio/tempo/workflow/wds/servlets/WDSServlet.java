@@ -70,7 +70,7 @@ import org.slf4j.LoggerFactory;
 public class WDSServlet extends HttpServlet {
     private static final Logger LOG = LoggerFactory.getLogger(WDSServlet.class);
     private static final long serialVersionUID = -5714415376114167497L;
-    private static final String DEFAULT_CONFIG_FILE = "file:${org.intalio.tempo.configDirectory}/tempo-tms.xml";
+    private static final String DEFAULT_CONFIG_FILE = "file:${org.intalio.tempo.configDirectory}/tempo-wds.xml";
 
     private WDSServiceFactory _wdsFactory;
     private ComponentManager _deployer;
