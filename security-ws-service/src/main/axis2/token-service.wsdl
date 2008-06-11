@@ -93,6 +93,9 @@
 					<xsd:sequence>
 						<xsd:element name="ticket" type="xsd:string">
 						</xsd:element>
+						<xsd:element name="serviceURL"
+							type="xsd:string">
+						</xsd:element>
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>

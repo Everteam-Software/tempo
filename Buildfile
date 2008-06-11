@@ -311,7 +311,8 @@ define "tempo" do
            WSDL4J, 
            WS_COMMONS_SCHEMA, 
            XERCES, 
-           XMLBEANS
+           XMLBEANS,
+           CAS_CLIENT
     compile.with libs
 
     dojo = unzip(path_to(compile.target, "dojo") => download(artifact(DOJO)=>DOJO_URL))

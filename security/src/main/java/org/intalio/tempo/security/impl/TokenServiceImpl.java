@@ -32,7 +32,6 @@ public class TokenServiceImpl implements TokenService {
     TokenHandler _tokenHandler;
 
     String _validateURL;
-    String _serviceURL;
     boolean _passwordAsAProperty;
 
     public TokenServiceImpl() {
@@ -47,11 +46,10 @@ public class TokenServiceImpl implements TokenService {
         _tokenHandler = new TokenHandler();
     }
 
-    public TokenServiceImpl(Realms realms, String validateURL, String serviceURL) {
+    public TokenServiceImpl(Realms realms, String validateURL) {
         _realms = realms;
         _tokenHandler = new TokenHandler();
         _validateURL = validateURL;
-        _serviceURL = serviceURL;
     }
 
     public void setPasswordAsAProperty(Boolean asAProperty) {
@@ -156,11 +154,11 @@ public class TokenServiceImpl implements TokenService {
         return _tokenHandler.parseToken(token);
     }
 
-    public String getTokenFromTicket(String proxyTicket) throws AuthenticationException, RBACException, RemoteException {
+    public String getTokenFromTicket(String proxyTicket, String serviceURL) throws AuthenticationException, RBACException, RemoteException {
 
         ProxyTicketValidator pv = new ProxyTicketValidator();
         pv.setCasValidateUrl(_validateURL);
-        pv.setService(_serviceURL);
+        pv.setService(serviceURL);
         pv.setServiceTicket(proxyTicket);
 
         try {

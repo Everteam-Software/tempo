@@ -94,9 +94,10 @@ public class TokenClient implements TokenService {
     return element;
   }
 
-  public String getTokenFromTicket(String ticket) throws AuthenticationException, RBACException, RemoteException {
+  public String getTokenFromTicket(String ticket, String serviceURL) throws AuthenticationException, RBACException, RemoteException {
     OMElement request = element(TokenConstants.PROXY_TICKET);
     request.addChild(elementText(TokenConstants.TICKET, ticket));
+    request.addChild(elementText(TokenConstants.SERVICE_URL, serviceURL));
     OMParser response = invoke(TokenConstants.GETTOKEN_FROMTICKET.getLocalPart(), request);
     return response.getRequiredString(TokenConstants.TOKEN);
   }

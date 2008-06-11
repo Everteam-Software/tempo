@@ -9,7 +9,20 @@
 			<dep:version>SNAPSHOT</dep:version>
 			<dep:type>war</dep:type>
 		</dep:moduleId>
-		<dep:dependencies></dep:dependencies>
+		<dep:dependencies>
+		<dependency>
+                <groupId>cas</groupId>
+                <artifactId>casclient</artifactId>
+                <version>2.1.1</version>
+                <type>jar</type>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.castor</groupId>
+                <artifactId>castor</artifactId>
+                <version>1.0.5</version>
+                <type>jar</type>
+            </dependency>
+		</dep:dependencies>
 		<hidden-classes>
 			<filter>org.intalio.tempo</filter>
 			<filter>org.springframework</filter>

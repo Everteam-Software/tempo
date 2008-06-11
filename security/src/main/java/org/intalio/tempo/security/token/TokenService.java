@@ -69,6 +69,6 @@ public interface TokenService
 	 * @param user user identifier
 	 * @return security token
 	 */
-	public String getTokenFromTicket(String ticket) 
+	public String getTokenFromTicket(String ticket, String serviceURL) 
 		throws AuthenticationException, RBACException, RemoteException;
 }

@@ -18,9 +18,10 @@ import static org.intalio.tempo.security.ws.TokenConstants.AUTHENTICATE_USER_RES
 import static org.intalio.tempo.security.ws.TokenConstants.CREDENTIALS;
 import static org.intalio.tempo.security.ws.TokenConstants.GET_TOKEN_PROPERTIES_RESPONSE;
 import static org.intalio.tempo.security.ws.TokenConstants.PASSWORD;
+import static org.intalio.tempo.security.ws.TokenConstants.SERVICE_URL;
+import static org.intalio.tempo.security.ws.TokenConstants.TICKET;
 import static org.intalio.tempo.security.ws.TokenConstants.TOKEN;
 import static org.intalio.tempo.security.ws.TokenConstants.USER;
-import static org.intalio.tempo.security.ws.TokenConstants.TICKET;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
@@ -124,10 +125,11 @@ public class TokenWS extends BaseWS {
     public OMElement getTokenFromTicket(OMElement requestEl) throws AxisFault {
         OMParser request = new OMParser(requestEl);
         String ticket = request.getRequiredString(TICKET);
+        String serviceURL = request.getRequiredString(SERVICE_URL);
 
         String token;
         try {
-            token = _tokenService.getTokenFromTicket(ticket);
+            token = _tokenService.getTokenFromTicket(ticket, serviceURL);
         } catch (AuthenticationException except) {
             if (LOG.isDebugEnabled())
                 LOG.debug("authenticateUser:\n" + requestEl, except);

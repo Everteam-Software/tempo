@@ -37,6 +37,7 @@
 	<bean id="tasksController"
 		class="org.intalio.tempo.web.controller.SecuredController">
 		<constructor-arg index="0" ref="tokenService" />
+		<constructor-arg index="1" value="http://localhost:8080/c/portal/login" />
 		<property name="commandClass" value="java.lang.Object" />
 		<property name="defaultAction">
 			<ref bean="tasksDefaultAction" />

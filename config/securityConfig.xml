@@ -53,7 +53,6 @@
 		class="org.intalio.tempo.security.impl.TokenServiceImpl">
 		<constructor-arg index="0" ref="realms" />
 		<constructor-arg index="1" value="https://localhost:8443/cas/proxyValidate" />
-		<constructor-arg index="2" value="http://localhost:8080/pluto/portal" />
 
 		<property name="tokenHandler"><ref bean="tokenHandler" /></property>
 

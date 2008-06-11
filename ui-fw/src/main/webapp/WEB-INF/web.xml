@@ -20,6 +20,62 @@
         <param-value>file:${org.intalio.tempo.configDirectory}/tempo-ui-fw.xml</param-value>
     </context-param>
 
+    <!-- CAS config start (Remove from here if you don't want to use CAS server for authentication)-->
+    <!--  
+    <context-param>
+		<param-name>edu.yale.its.tp.cas.proxyUrl</param-name>
+		<param-value>https://localhost:8443/cas/proxy</param-value>
+	</context-param>
+    <filter>
+        <filter-name>CAS Filter</filter-name>
+        <filter-class>edu.yale.its.tp.cas.client.filter.CASFilter</filter-class>
+        <init-param>
+            <param-name>edu.yale.its.tp.cas.client.filter.loginUrl</param-name>
+            <param-value>https://localhost:8443/cas/login</param-value>
+        </init-param>
+        <init-param>
+            <param-name>edu.yale.its.tp.cas.client.filter.validateUrl</param-name>
+            <param-value>https://localhost:8443/cas/proxyValidate</param-value>
+        </init-param>
+        <init-param>
+            <param-name>edu.yale.its.tp.cas.client.filter.serviceUrl</param-name>
+            <param-value>http://localhost:8080/ui-fw</param-value>
+        </init-param>
+        <init-param>
+			<param-name>edu.yale.its.tp.cas.client.filter.proxyCallbackUrl</param-name>
+			<param-value>https://localhost:8443/ui-fw/CasProxyServlet</param-value>
+		</init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>CAS Filter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>CASRBAC Filter</filter-name>
+        <filter-class>org.intalio.tempo.uiframework.filter.CASRBACFilter</filter-class>
+        <init-param>
+            <param-name>edu.yale.its.tp.cas.client.filter.serviceUrl</param-name>
+            <param-value>http://localhost:8080/ui-fw</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>CASRBAC Filter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    
+    <servlet>
+		<servlet-name>ProxyTicketReceptor</servlet-name>
+		<servlet-class>
+			edu.yale.its.tp.cas.proxy.ProxyTicketReceptor
+		</servlet-class>
+	</servlet>
+		<servlet-mapping>
+		<servlet-name>ProxyTicketReceptor</servlet-name>
+		<url-pattern>/CasProxyServlet</url-pattern>
+	</servlet-mapping> --> 
+    <!-- CAS config ends -->
+    
     <!-- servlet -->
 
     <servlet>

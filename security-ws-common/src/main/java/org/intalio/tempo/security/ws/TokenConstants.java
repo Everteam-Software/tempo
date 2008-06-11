@@ -44,4 +44,6 @@ public class TokenConstants {
     public static final QName TICKET = new QName(TOKEN_NS.getNamespaceURI(), "ticket");
     
     public static final QName PROXY_TICKET = new QName(TOKEN_NS.getNamespaceURI(), "proxyTicket");
+    
+    public static final QName SERVICE_URL = new QName(TOKEN_NS.getNamespaceURI(), "serviceURL");
 }

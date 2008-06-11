@@ -33,7 +33,10 @@ var EntryForm = function(){
            	var base;
 			var obj;
 			base = document.getElementById("entryUrl");
-			obj = document.createElement("iframe");
+			obj = document.getElementById("xForm");
+			if (obj == null){
+				obj = document.createElement("iframe");
+			}
 			obj.setAttribute("frameBorder", "0");
 			//obj.style.position = "relative";
 			obj.style.width = "100%";
