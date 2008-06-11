@@ -21,7 +21,7 @@
     </context-param>
 
     <!-- CAS config start (Remove from here if you don't want to use CAS server for authentication)-->
-    <!--  
+    <!--    
     <context-param>
 		<param-name>edu.yale.its.tp.cas.proxyUrl</param-name>
 		<param-value>https://localhost:8443/cas/proxy</param-value>
@@ -58,6 +58,10 @@
             <param-name>edu.yale.its.tp.cas.client.filter.serviceUrl</param-name>
             <param-value>http://localhost:8080/ui-fw</param-value>
         </init-param>
+        <init-param>
+            <param-name>edu.yale.its.tp.cas.client.filter.logoutUrl</param-name>
+            <param-value>https://localhost:8443/cas/logout</param-value>
+        </init-param>
     </filter>
     <filter-mapping>
         <filter-name>CASRBAC Filter</filter-name>
@@ -73,7 +77,7 @@
 		<servlet-mapping>
 		<servlet-name>ProxyTicketReceptor</servlet-name>
 		<url-pattern>/CasProxyServlet</url-pattern>
-	</servlet-mapping> --> 
+	</servlet-mapping> -->  
     <!-- CAS config ends -->
     
     <!-- servlet -->
