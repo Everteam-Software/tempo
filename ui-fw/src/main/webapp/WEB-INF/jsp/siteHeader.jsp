@@ -11,6 +11,10 @@
 --%>
     <%@ page contentType="text/html; charset=UTF-8"%>
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+	<!-- TODO: (niko) REMOVE THIS ASAP -->
+	<link rel="alternate" type="application/atom+xml" title="Personal Task feed" href="http://localhost:8080/feeds/atom/tasks?token=${participantToken}" />
+	<link rel="alternate" type="application/atom+xml" title="Process feed" href="http://localhost:8080/feeds/atom/processes?token=${participantToken}" />
+	<!-- TODO: (niko) REMOVE ME ASAP -->
 	
 	<table style="height: 40px;" border="0" cellpadding="0" cellspacing="0" width="100%">
 	<tbody><tr>
