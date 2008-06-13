@@ -106,6 +106,7 @@ wi.install_tempo_war( "fds" )
 wi.install_tempo_war( "ui-fw" )
 wi.install_tempo_war( "wds-service", "wds" )
 wi.install_tempo_war( "xforms-manager", "xFormsManager" )
+wi.install_tempo_war( "tms-feeds", "feeds")
 # wi.install_tempo_war( "cas-server-webapp", "cas" )
 # wi.install_tempo_war( "ui-pluto", "pluto" )
 # wi.install_tempo_war( "ui-fw-portlet")
@@ -143,7 +144,7 @@ lib_folder = "#{tomcat_folder}/common/lib" # tomcat5
 FileUtils.mkdir_p lib_folder
 MISSING_LIBS= [
   # Mysql driver
-  MYSQL_CONNECTOR,
+  DB_CONNECTOR[:mysql],
   # Common libraries
   APACHE_COMMONS[:dbcp],
   APACHE_COMMONS[:collections],

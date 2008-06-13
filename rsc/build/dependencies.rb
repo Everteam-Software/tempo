@@ -1,8 +1,23 @@
-
-LIFT = [group("lift-core", "lift-amqp", "lift-facebook", "lift-textile", "lift-webkit", "lift-widgets", "lift-xmpp", :under=>"net.liftweb",:version=>"0.8")]
-JETTY = [group("jetty", "jetty-util", :under=>"org.mortbay.jetty", :version=>"6.1.10")]
-
 ANT = [ "org.apache.ant:ant:jar:1.7.0" ]
+
+APACHE_COMMONS = {
+  :beanutils => "commons-beanutils:commons-beanutils:jar:1.7.0",
+  :cli => "commons-cli:commons-cli:jar:1.1",
+  :codec => "commons-codec:commons-codec:jar:1.3",
+  :collections => "commons-collections:commons-collections:jar:3.2", 
+  :dbcp => "commons-dbcp:commons-dbcp:jar:1.2.2",
+  :digester => "commons-digester:commons-digester:jar:1.7",
+  :discovery => "commons-discovery:commons-discovery:jar:0.2",
+  :fileupload => "commons-fileupload:commons-fileupload:jar:1.0",
+  :httpclient => "commons-httpclient:commons-httpclient:jar:3.1",
+  :io => "commons-io:commons-io:jar:1.2",
+  :lang => "commons-lang:commons-lang:jar:2.3",
+  :logging => "commons-logging:commons-logging:jar:1.0.4",
+  :pool => "commons-pool:commons-pool:jar:1.4",
+  :validator => "commons-validator:commons-validator:jar:1.2.0"
+}
+
+APACHE_DERBY = "org.apache.derby:derby:jar:10.2.2.0"
 
 AXIOM = group("axiom-api", "axiom-dom", "axiom-impl", :under=>"org.apache.ws.commons.axiom", :version=>"1.2.5")
 
@@ -30,23 +45,6 @@ CAS_LIBS = [
   "jdom:jdom:jar:1.0",
   CAS_CLIENT
 ]
-  
-APACHE_COMMONS = {
-  :beanutils => "commons-beanutils:commons-beanutils:jar:1.7.0",
-  :cli => "commons-cli:commons-cli:jar:1.1",
-  :codec => "commons-codec:commons-codec:jar:1.3",
-  :collections => "commons-collections:commons-collections:jar:3.2", 
-  :dbcp => "commons-dbcp:commons-dbcp:jar:1.2.2",
-  :digester => "commons-digester:commons-digester:jar:1.7",
-  :discovery => "commons-discovery:commons-discovery:jar:0.2",
-  :fileupload => "commons-fileupload:commons-fileupload:jar:1.0",
-  :httpclient => "commons-httpclient:commons-httpclient:jar:3.1",
-  :io => "commons-io:commons-io:jar:1.2",
-  :lang => "commons-lang:commons-lang:jar:2.3",
-  :logging => "commons-logging:commons-logging:jar:1.0.4",
-  :pool => "commons-pool:commons-pool:jar:1.4",
-  :validator => "commons-validator:commons-validator:jar:1.2.0"
-}
 
 DOJO_VERSION = "0.3.1"
 #DOJO_URL = "http://download.dojotoolkit.org/release-#{DOJO_VERSION}/dojo-#{DOJO_VERSION}-widget.zip"
@@ -61,7 +59,10 @@ FOP = "fop:fop:jar:0.20.5"
 INTALIO_STATS = "org.intalio.common:intalio-stats:jar:1.0.2" 
 
 JAVAMAIL = "geronimo-spec:geronimo-spec-javamail:jar:1.3.1-rc5", "geronimo-spec:geronimo-spec-activation:jar:1.0.2-rc4"
-SUNMAIL = ["javax.mail:mail:jar:1.4.1", "javax.activation:activation:jar:1.1.1"]
+JETTY = [group("jetty", "jetty-util", :under=>"org.mortbay.jetty", :version=>"6.1.10")]
+  
+SUNACTIVATION = ["javax.activation:activation:jar:1.1.1"]
+SUNMAIL = ["javax.mail:mail:jar:1.4.1", SUNACTIVATION]
 
 JARGS = "jargs:jargs:jar:1.0"
 
@@ -97,11 +98,15 @@ APACHE_JPA = [
   "serp:serp:jar:1.13.1"
 ]
 
-APACHE_DERBY = "org.apache.derby:derby:jar:10.2.2.0"
 
-#DB2_CONNECTOR = "com.ibm.db2.jcc:jcc4:jar:9.2"
-MYSQL_CONNECTOR = "com.mysql.mysql-connector:mysql-connector-java:jar:5.1.6"
-POSTGRE_CONNECTOR = "postgresql:postgresql:jar:8.3-603.jdbc3"
+
+LIFT = [group("lift-core", "lift-amqp", "lift-facebook", "lift-textile", "lift-webkit", "lift-widgets", "lift-xmpp", :under=>"net.liftweb",:version=>"0.8")]
+
+DB_CONNECTOR = {
+  :db2 => "com.ibm.db2.jcc:jcc4:jar:9.2",
+  :mysql => "com.mysql.mysql-connector:mysql-connector-java:jar:5.1.6",
+  :postgresql => "postgresql:postgresql:jar:8.3-603.jdbc3"
+}
 
 PORTLET_API = "portlet-api:portlet-api:jar:1.0"
 
@@ -120,14 +125,6 @@ SPRING = {
 STAX_API = [ "stax:stax-api:jar:1.0.1" ]
 
 TAGLIBS = [ "taglibs:standard:jar:1.1.2" ]
-
-# TEMPO_SECURITY = [ "org.intalio.tempo.security:tempo-security:jar:1.0.6-SNAPSHOT" ]
-# 
-# TEMPO_SECURITY_WS_TOKEN_CLIENT =[ "org.intalio.tempo.security:tempo-security-ws-token-client:jar:1.1.5" ]
-# 
-# TEMPO_WORKFLOW_TOM = [ "org.intalio.tempo.workflow:intalio-tempo-workflow-tom:jar:5.0.0.8" ]
-# 
-# TEMPO_WORKFLOW_TMS_CLIENT = [ "org.intalio.tempo.workflow:intalio-tempo-workflow-tms-client:jar:5.0.0.3" ]
 
 WOODSTOX = [ "woodstox:wstx-asl:jar:3.2.4" ]
 
@@ -193,11 +190,12 @@ PLUTO = [
   PLUTO_DRIVER,
   PORTLET_API
 ]
+XALAN = "xalan:xalan:jar:2.7.0"
 PLUTO_DEPLOY = [
   PLUTO_CONTAINER,
   PLUTO_TAGLIB,
   PLUTO_DESCRIPTORS,
-  "xalan:xalan:jar:2.7.0"
+  XALAN
 ]
 
 ORBEON_COMMONS = [
@@ -255,5 +253,26 @@ INSTINCT = [
   "org.objenesis:objenesis:jar:1.0",
   JUNIT,
   ANT
+]
+
+APACHE_ABDERA = [
+  AXIOM,
+  APACHE_COMMONS[:beanutils],
+  APACHE_COMMONS[:codec],
+  APACHE_COMMONS[:collections],
+  APACHE_COMMONS[:httpclient],
+  APACHE_COMMONS[:lang],
+  APACHE_COMMONS[:logging],
+  "net.sf.ezmorph:ezmorph:jar:1.0.4",
+  STAX_API,
+  JAVAMAIL,
+  "org.htmlparser:htmlparser:jar:1.0.5",
+  #"org.htmlparser:htmlparser:jar:.1.6",
+  JAXEN,
+  "net.sf.json-lib:json-lib:jar:2.2.1-jdk15",
+  WOODSTOX,
+  XALAN,
+  "xml-security:xmlsec:jar:1.3.0",
+  "apache.incubator:abdera:jar:0.4.0-incubating"  
 ]
 

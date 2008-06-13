@@ -55,7 +55,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
-class RemoteTMSClient implements ITaskManagementService {
+public class RemoteTMSClient implements ITaskManagementService {
 
     private static final Logger _log = LoggerFactory.getLogger(OMUnmarshaller.class);
 

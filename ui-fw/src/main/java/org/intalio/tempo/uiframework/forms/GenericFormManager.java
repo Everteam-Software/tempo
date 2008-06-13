@@ -24,18 +24,27 @@ import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 
+/**
+ * This form manager is initialized with a set of mappings.
+ * When requested a form URL for a task it returns by default the one defined in the task
+ * If it cannot find it, it returns the corresponding URL obtained from a matching regexp
+ *
+ */
 public class GenericFormManager implements FormManager {
     public static final String NOTIFICATION = Notification.class.getSimpleName();
     public static final String PIPA = PIPATask.class.getSimpleName();
     public static final String PA = PATask.class.getSimpleName();
     public static final String DEFAULT = "default";
 
-    Map<String, Map<Pattern, String>> _mappings;
+    private Map<String, Map<Pattern, String>> _mappings;
 
     public GenericFormManager() {
 
     }
 
+    /**
+     * Initialized all the regexp
+     */
     public void setMappings(Map<String, Map<String, String>> mappings) {
         Map<String, Map<Pattern, String>> mappingsWithRegExp = new HashMap<String, Map<Pattern, String>>();
         Iterator<String> keys = mappings.keySet().iterator();
@@ -44,16 +53,13 @@ public class GenericFormManager implements FormManager {
             Map<String, String> entry = mappings.get(key);
             Map<Pattern, String> entryWithRegexp = new HashMap<Pattern, String>(entry.size());
             Iterator<String> regexpEntries = entry.keySet().iterator();
-
             while (regexpEntries.hasNext()) {
                 String regexp = regexpEntries.next();
                 Pattern pattern = Pattern.compile(regexp);
                 entryWithRegexp.put(pattern, entry.get(regexp));
             }
-            
             mappingsWithRegExp.put(key, entryWithRegexp);
         }
-
         _mappings = mappingsWithRegExp;
     }
 

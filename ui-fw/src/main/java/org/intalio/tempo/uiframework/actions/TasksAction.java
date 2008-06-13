@@ -20,7 +20,6 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Properties;
 
@@ -72,16 +71,16 @@ public class TasksAction extends Action {
             if (task instanceof Notification) {
                 Notification notification = (Notification) task;
                 if (!TaskState.COMPLETED.equals(notification.getState())) {
-                    _notifications.add(new TaskHolder<Notification>(notification, resoleUrl(fmanager.getNotificationURL(notification))));
+                    _notifications.add(new TaskHolder<Notification>(notification, resolve(fmanager.getNotificationURL(notification))));
                 }
             } else if (task instanceof PATask) {
                 PATask paTask = (PATask) task;
                 if (!TaskState.COMPLETED.equals(paTask.getState()) && !TaskState.FAILED.equals(paTask.getState())) {
-                    _activityTasks.add(new TaskHolder<PATask>(paTask, resoleUrl(fmanager.getPeopleActivityURL(paTask))));
+                    _activityTasks.add(new TaskHolder<PATask>(paTask, resolve(fmanager.getPeopleActivityURL(paTask))));
                 }
             } else if (task instanceof PIPATask) {
                 PIPATask pipaTask = (PIPATask) task;
-                _initTasks.add(new TaskHolder<PIPATask>(pipaTask, resoleUrl(fmanager.getPeopleInitiatedProcessURL(pipaTask))));
+                _initTasks.add(new TaskHolder<PIPATask>(pipaTask, resolve(fmanager.getPeopleInitiatedProcessURL(pipaTask))));
             } else {
                 if (_log.isDebugEnabled())
                     _log.debug("Ignoring task of class:" + task.getClass().getName());
@@ -90,7 +89,7 @@ public class TasksAction extends Action {
         }
     }
 
-    private String resoleUrl(String url) {
+    private String resolve(String url) {
         try {
             url = URIUtils.resolveURI(_request, url);
         } catch (URISyntaxException ex) {
@@ -100,7 +99,7 @@ public class TasksAction extends Action {
     }
 
     protected ITaskManagementService getTMS(String participantToken) throws RemoteException {
-        String endpoint = resoleUrl(conf.getServiceEndpoint());
+        String endpoint = resolve(conf.getServiceEndpoint());
         return new RemoteTMSFactory(endpoint, participantToken).getService();
     }
 

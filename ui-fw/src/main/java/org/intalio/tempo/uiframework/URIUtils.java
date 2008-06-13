@@ -31,5 +31,4 @@ public class URIUtils {
         }
         return uri.toString();
     }
-    
 }

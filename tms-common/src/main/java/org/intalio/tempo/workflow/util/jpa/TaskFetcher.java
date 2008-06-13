@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
+import org.apache.commons.lang.StringUtils;
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
@@ -87,7 +87,7 @@ public class TaskFetcher {
         userIdList.add(user.getUserID());
         Query q;
 
-        if (subQuery == null) {
+        if (StringUtils.isEmpty(subQuery)) {
             q = _entityManager.createQuery(QUERY_GENERIC1 + taskClass.getSimpleName() + QUERY_GENERIC2).setParameter(1, userIdList).setParameter(2,
                             user.getAssignedRoles());
         } else {

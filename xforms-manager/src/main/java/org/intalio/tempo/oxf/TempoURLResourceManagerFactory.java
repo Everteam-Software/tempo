@@ -36,5 +36,4 @@ public class TempoURLResourceManagerFactory implements
 	public ResourceManager makeInstance() {
 		return new URLResourceManagerImpl(props);
 	}
-
 }

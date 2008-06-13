@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2005-2006 Intalio inc.
+ * Copyright (c) 2005-2008 Intalio inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -26,6 +26,11 @@ import org.intalio.tempo.workflow.task.Task;
  *
  * @version $Revision: 1124 $
  */
+
+/**
+ * @deprecated use the <code>GenericFormManager</code> instead. This code is too specific and cannot
+ * be reused easily
+ */ 
 public class XFormsManager implements FormManager {
 
     private String _peopleInitiatedProcessURL;

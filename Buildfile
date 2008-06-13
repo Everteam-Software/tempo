@@ -4,7 +4,7 @@ require "rubygems"
 require "buildr"
 require "buildr/cobertura"
 require "buildr/xmlbeans"
-#require "tasks/xmlbeans"
+# require "tasks/xmlbeans"
 
 # Keep this structure to allow the build system to update version numbers.
 VERSION_NUMBER = "5.2.0.24-SNAPSHOT"
@@ -45,7 +45,7 @@ define "tempo" do
     JAXEN, 
     JYAML, 
     LOG4J, 
-    MYSQL_CONNECTOR, 
+    DB_CONNECTOR.values, 
     SLF4J, 
     SPRING[:core], 
     SERVLET_API, 
@@ -59,11 +59,11 @@ define "tempo" do
     package :war
   end
   
-  # define "dao-migration" do
-  #     compile.with projects("dao-tools", "tms-service", "tms-common"), APACHE_DERBY, LIFT, SERVLET_API
-  #     test.with JUNIT, JETTY
-  #     package :war
-  #   end
+  define "dao-migration" do
+      compile.with projects("dao-tools", "tms-service", "tms-common"), APACHE_DERBY, LIFT, SERVLET_API
+      test.with JUNIT, JETTY
+      package :war
+    end
   
   desc "Deployment API"
   define "deploy-api" do
@@ -240,7 +240,7 @@ define "tempo" do
     
     task "package" => generate_sql([project], "workflow.tms")
     
-    test.with APACHE_DERBY, LOG4J, POSTGRE_CONNECTOR, XMLUNIT, WOODSTOX
+    test.with APACHE_DERBY, LOG4J, DB_CONNECTOR.values, XMLUNIT, WOODSTOX
     test.exclude '*TestUtils*'
     
     package(:jar)
@@ -263,10 +263,10 @@ define "tempo" do
   desc "Task Management Service"
   define "tms-service" do
     libs = projects("deploy-api", "security", "security-ws-client", "tms-axis", "tms-common", "tms-client", "web-nutsNbolts", "dao-nutsNbolts"),
-    APACHE_JPA, APACHE_COMMONS[:pool], AXIOM, AXIS2, JAXEN, SLF4J, SPRING[:core], STAX_API, XMLBEANS, MYSQL_CONNECTOR
+    APACHE_JPA, APACHE_COMMONS[:pool], AXIOM, AXIS2, JAXEN, SLF4J, SPRING[:core], STAX_API, XMLBEANS, DB_CONNECTOR.values
   
     compile.with libs
-    test.with libs + [project("registry"), APACHE_DERBY, APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], CASTOR, EASY_B, LOG4J, MYSQL_CONNECTOR, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES]
+    test.with libs + [project("registry"), APACHE_DERBY, APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], CASTOR, EASY_B, LOG4J, DB_CONNECTOR.values, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES]
 
     test.using :properties => 
       { 
@@ -286,6 +286,13 @@ define "tempo" do
     package(:aar).with :libs => 
         [ projects("deploy-api", "registry", "security", "security-ws-client", "security-ws-common", "tms-axis", "tms-common", "web-nutsNbolts", "dao-nutsNbolts"), APACHE_COMMONS[:pool], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], APACHE_JPA, SLF4J, SPRING[:core] ] 
   end
+  
+  desc "Task Management Feeds"
+  define "tms-feeds" do
+    compile.with projects("tms-common", "ui-fw", "tms-axis", "security", "security-ws-client", "security-ws-common", "tms-client", "web-nutsNbolts"), AXIOM, 
+     AXIS2, APACHE_JPA, APACHE_ABDERA, JETTY, SERVLET_API, SPRING[:core], SLF4J, LOG4J, XMLBEANS, WS_COMMONS_SCHEMA
+    package(:war)
+  end 
   
   desc "User-Interface Framework"
   define "ui-fw" do
@@ -320,6 +327,7 @@ define "tempo" do
 
     build dojo
     resources.filter.using "version" => VERSION_NUMBER
+    package(:jar)
     package(:war).with(:libs=>libs).
       include("src/main/config/geronimo/1.0/*", path_to(compile.target, "dojo"))
   end
@@ -362,7 +370,7 @@ define "tempo" do
     libs = [ projects("dao-nutsNbolts", "deploy-api", "registry", "security", "tms-client", "tms-axis", "tms-common", "web-nutsNbolts"), 
       AXIS2, AXIOM, APACHE_COMMONS[:io], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], APACHE_COMMONS[:pool], APACHE_JPA, LOG4J, SERVLET_API, SLF4J, SPRING[:core], STAX_API, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX, XERCES, XMLBEANS ]
           
-    test_libs = libs + [EASY_B, INSTINCT, MYSQL_CONNECTOR]
+    test_libs = libs + [EASY_B, INSTINCT, DB_CONNECTOR.values]
     compile.with test_libs
     compile { open_jpa_enhance }
  
