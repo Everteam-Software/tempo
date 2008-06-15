@@ -14,9 +14,23 @@
 	<script src="/ui-fw-portlet/script/entry.js" type="text/javascript"></script>
 	
 <% 
-	ApplicationState as = (ApplicationState)renderRequest.getAttribute(ApplicationState.PARAMETER_NAME);
+	ApplicationState as = (ApplicationState)renderRequest.getPortletSession().getAttribute(ApplicationState.PARAMETER_NAME);
 %>
 
+<table>
+	<td>
+		<tr>Task Type:</tr>
+		<tr><select id="taskType" size="1">
+		<option>Task</option>
+		<option>PATask</option>
+		<option>PIPATask</option>
+		<option>Notification</option>
+		</select></tr>
+		<tr>Description:</tr>
+		<tr><input id="description" type="text" /></tr>
+		<tr><button onclick="searchTask()">Search</button></tr>
+	</td>
+</table>
 <script type="text/javascript">
 //for auto update
 window.onload = function() {
@@ -71,7 +85,8 @@ var GridEx={
     makeDataSource:function(){
     
         var ds=new Ext.data.Store({
- 		     proxy: new Ext.data.HttpProxy({url: this.dataurl}),
+ 		     proxy: new Ext.data.HttpProxy({url: '/ui-fw-portlet/json/update?token=' + '<%= as.getCurrentUser().getToken() %>' + '&user=' + '<%= as.getCurrentUser().getName() %>' +
+'&taskType=' + document.getElementById("taskType").value + '&description=' + document.getElementById("description").value }),
              reader: new Ext.data.JsonReader({
             	root :"tasks"
             }, [
@@ -139,7 +154,8 @@ var ProcessGridEx={
     //create DataSource
     makeDataSource:function(){
         var ds=new Ext.data.Store({
- 		     proxy: new Ext.data.HttpProxy({url: this.dataurl}),
+ 		     proxy: new Ext.data.HttpProxy({url: '/ui-fw-portlet/json/update?token=' + '<%= as.getCurrentUser().getToken() %>' + '&user=' + '<%= as.getCurrentUser().getName() %>' +
+'&taskType=' + document.getElementById("taskType").value + '&description=' + document.getElementById("description").value}),
              reader: new Ext.data.JsonReader({
             	root :"process"
             }, [
@@ -200,6 +216,15 @@ function hideWindow() {
 //for auto update.
 function <portlet:namespace/>_startTimer(interval) {
 	var timer = new PeriodicalExecuter(<portlet:namespace/>_getUpdateData, interval);
+}
+
+function searchTask(){
+	//refesh GridEx
+	GridEx.gridobj.reconfigure(GridEx.makeDataSource(),GridEx.gridobj.getColumnModel());
+
+	//reflesh ProcessGridEx
+	ProcessGridEx.gridobj.reconfigure(ProcessGridEx.makeDataSource(),ProcessGridEx.gridobj.getColumnModel());
+
 }
 
 //get data and reflesh GridDatas. 
@@ -1576,5 +1601,14 @@ body.x-masked #x-msg-box .x-dlg-bd, body.x-body-masked #x-msg-box .x-dlg-bd{
         </div></div></div>
         <div class="x-box-bl"><div class="x-box-br"><div class="x-box-bc"></div></div></div>
     </div>
-    
+	<form method="post" action="<portlet:actionURL>
+				<portlet:param name="actionName" value="deleteAll"/>
+			</portlet:actionURL>">
+		<button type="submit">Delete all tasks</button>
+	</form>
+	<form method="post" action="<portlet:actionURL>
+				<portlet:param name="actionName" value="deletePIPA"/>
+			</portlet:actionURL>">
+		<button type="submit">Delete PIPA tasks</button>
+	</form>    
  

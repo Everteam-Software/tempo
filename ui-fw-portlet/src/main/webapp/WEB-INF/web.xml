@@ -1,76 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app id="bpms-ui-fw" version="2.4"
-    xmlns="http://java.sun.com/xml/ns/j2ee"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
-    <display-name>Intalio_BPMS User Interface Framework</display-name>
-
-    <listener>
-        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-    </listener>
-    <listener>
-        <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
-    </listener>
-    
-    <!-- servlet -->
-
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="bpms-ui-fw" version="2.4" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+	<locale-encoding-mapping-list>
+		<locale-encoding-mapping>
+			<locale>en</locale>
+			<encoding>iso-8859-1</encoding>
+		</locale-encoding-mapping>
+		<locale-encoding-mapping>
+			<locale>ua</locale>
+			<encoding>cp1251</encoding>
+		</locale-encoding-mapping>
+	</locale-encoding-mapping-list>
+	<display-name>Intalio_BPMS User Interface Framework</display-name>
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>com.liferay.portal.kernel.servlet.PortletContextListener</listener-class>
+	</listener>
 	<servlet>
 		<servlet-name>ViewRendererServlet</servlet-name>
-		<servlet-class>
-			org.springframework.web.servlet.ViewRendererServlet
-		</servlet-class>
+		<servlet-class>org.springframework.web.servlet.ViewRendererServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>ViewRendererServlet</servlet-name>
-		<url-pattern>/WEB-INF/servlet/view</url-pattern>
-	</servlet-mapping>
-
 	<servlet>
 		<servlet-name>UifwPortlet</servlet-name>
-		<servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
-		<!--  <servlet-class>com.liferay.portal.kernel.servlet.PortletServlet</servlet-class>-->
+		<servlet-class>com.liferay.portal.kernel.servlet.PortletServlet</servlet-class>
 		<init-param>
 			<param-name>portlet-name</param-name>
 			<param-value>UifwPortlet</param-value>
 		</init-param>
 		<init-param>
-            <param-name>portlet-class</param-name>
-            <param-value>org.springframework.web.portlet.DispatcherPortlet</param-value>
-        </init-param>
-        <init-param>
+			<param-name>portlet-class</param-name>
+			<param-value>org.springframework.web.portlet.DispatcherPortlet</param-value>
+		</init-param>
+		<init-param>
 			<param-name>contextConfigLocation</param-name>
 			<param-value>/WEB-INF/tempo-ui-fw-portlet.xml</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-
+	<servlet>
+		<servlet-name>JsonUpdate</servlet-name>
+		<servlet-class>org.intalio.tempo.uiframework.service.JsonUpdate</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ViewRendererServlet</servlet-name>
+		<url-pattern>/WEB-INF/servlet/view</url-pattern>
+	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>UifwPortlet</servlet-name>
 		<url-pattern>/PlutoInvoker/UifwPortlet</url-pattern>
 	</servlet-mapping>
-
-	<servlet>
-		<servlet-name>JsonUpdate</servlet-name>
-		<servlet-class>org.intalio.tempo.uiframework.actions.JsonUpdate</servlet-class>
-	</servlet>
 	<servlet-mapping>
 		<servlet-name>JsonUpdate</servlet-name>
 		<url-pattern>/json/update</url-pattern>
 	</servlet-mapping>
-
-    <locale-encoding-mapping-list>
-        <locale-encoding-mapping>
-            <locale>en</locale>
-            <encoding>iso-8859-1</encoding>
-        </locale-encoding-mapping>
-
-        <locale-encoding-mapping>
-            <locale>ua</locale>
-            <encoding>cp1251</encoding>
-        </locale-encoding-mapping>
-    </locale-encoding-mapping-list>
-     
+	<servlet-mapping>
+		<servlet-name>UifwPortlet</servlet-name>
+		<url-pattern>/UifwPortlet/*</url-pattern>
+	</servlet-mapping>
+	<jsp-config>
+		<taglib>
+			<taglib-uri>http://java.sun.com/portlet</taglib-uri>
+			<taglib-location>/WEB-INF/tld/liferay-portlet.tld</taglib-location>
+		</taglib>
+	</jsp-config>
 </web-app>

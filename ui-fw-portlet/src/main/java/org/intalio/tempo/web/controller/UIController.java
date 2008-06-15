@@ -28,18 +28,17 @@ import org.apache.commons.logging.LogFactory;
 import org.intalio.tempo.web.ApplicationState;
 import org.intalio.tempo.web.User;
 import org.springframework.context.ApplicationContext;
-import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.portlet.ModelAndView;
 import org.springframework.web.portlet.mvc.AbstractFormController;
 
-
 /**
- * Controller that dispatches form submission based on "actionName" request parameter.
+ * Controller that dispatches form submission based on "actionName" request
+ * parameter.
  * <p>
- * Uses reflection to invoke associated methods on the controller itself, or instantiates an Action
- * class to handle the request.
+ * Uses reflection to invoke associated methods on the controller itself, or
+ * instantiates an Action class to handle the request.
  */
 public abstract class UIController extends AbstractFormController {
     protected static final String ACTION_ID_PARAM = "actionName";
@@ -68,8 +67,8 @@ public abstract class UIController extends AbstractFormController {
                 int modifiers = method.getModifiers();
                 if (Modifier.isPublic(modifiers) && !Modifier.isAbstract(modifiers)) {
                     Class[] params = method.getParameterTypes();
-                    if (params.length == 4 && params[0].equals(HttpServletRequest.class)
-                            && params[1].equals(HttpServletResponse.class) && Errors.class.isAssignableFrom(params[3])) {
+                    if (params.length == 4 && params[0].equals(HttpServletRequest.class) && params[1].equals(HttpServletResponse.class)
+                                    && Errors.class.isAssignableFrom(params[3])) {
                         _actionMethods.put(method.getName(), method);
                     }
                 }
@@ -78,48 +77,32 @@ public abstract class UIController extends AbstractFormController {
     }
 
     @Override
-    protected void processFormSubmission(ActionRequest request, ActionResponse response,
-            Object command, BindException errors) throws Exception {
+    protected void handleActionRequestInternal(ActionRequest request, ActionResponse response) throws Exception {
         ModelAndView mav = null;
 
         String actionName = request.getParameter(ACTION_ID_PARAM);
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Form submission:  action="+actionName);
+            LOG.debug("Form submission:  action=" + actionName);
         }
-        /*
-        if (StringUtils.isEmpty(actionName)) {
-            LOG.debug("Empty action name, use default showForm()");
-            mav = showForm(request, response, errors);
-        }
-        */
-        if (mav == null) {
-            Method method = _actionMethods.get(actionName);
-            if (method != null) {
-                LOG.debug("Form submission:  action method="+getClass().getSimpleName()+"."+method.getName());
-                mav = (ModelAndView) method.invoke(this, new Object[] { request, response, command, errors });
-            }
-        }
+
         if (mav == null) {
             Class<Action> actionClass = _actionConstructors.get(actionName);
             if (actionClass == null) {
                 throw new Exception("No method or action class found for action " + actionName + "on " + getClass());
             }
-            LOG.debug("Form submission:  action class="+actionClass);
+            LOG.debug("Form submission:  action class=" + actionClass);
             Action action = actionClass.newInstance();
             action.setRequest(request);
             action.setResponse(response);
-            action.setBindErrors(errors);
-            action.setCommand(command);
             String[] roles = convertRoles(_actionGrantedRoles.get(actionName));
             action.setRequiredRoles(roles);
-    
+
             mav = action.doExecution();
         }
 
         fillAuthorization(request, mav);
-        
-        LOG.debug("Form submission:  ViewModel="+mav);
-        //return mav;
+
+        LOG.debug("Form submission:  ViewModel=" + mav);
     }
 
     protected void fillAuthorization(PortletRequest request, ModelAndView mav) {
@@ -128,8 +111,8 @@ public abstract class UIController extends AbstractFormController {
             User user = state.getCurrentUser();
             Map model = mav.getModel();
             for (ActionDef def : _actionDefs) {
-                model.put(def.getActionName()+"Authorized", def.isAuthorized(user));
-                LOG.debug(def.getActionName()+"Authorized=" + def.isAuthorized(user));
+                model.put(def.getActionName() + "Authorized", def.isAuthorized(user));
+                LOG.debug(def.getActionName() + "Authorized=" + def.isAuthorized(user));
             }
         } else {
             LOG.debug("Form submission:  no available user, state or actionDefs");
@@ -201,16 +184,17 @@ public abstract class UIController extends AbstractFormController {
         action.setRequiredRoles(roles);
         return action;
     }
-    
+
     public static String[] convertRoles(Collection<String> roles) {
-        return roles.toArray(new String[ roles.size() ]);
+        return roles.toArray(new String[roles.size()]);
     }
 
     public ApplicationState getApplicationState(PortletRequest request) {
         ApplicationState state = ApplicationState.getCurrentInstance(request);
         if (state == null) {
-            //WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
-        	ApplicationContext context = this.getApplicationContext();
+            // WebApplicationContext context =
+            // WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+            ApplicationContext context = this.getApplicationContext();
             state = (ApplicationState) context.getBean("applicationState");
             if (state == null) {
                 throw new IllegalStateException("Missing 'applicationState' object in Spring context");

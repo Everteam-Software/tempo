@@ -78,12 +78,12 @@ public abstract class ApplicationState implements Serializable {
     
     
     public static <T extends ApplicationState> T getCurrentInstance(PortletRequest request) {
-        T state = (T) request.getAttribute(PARAMETER_NAME);
+        T state = (T) request.getPortletSession().getAttribute(PARAMETER_NAME);
         return state;
     }
 
     public static void setCurrentInstance(PortletRequest request, ApplicationState state) {
-        request.setAttribute(PARAMETER_NAME, state);
+        request.getPortletSession().setAttribute(PARAMETER_NAME, state);
     }
     
 }

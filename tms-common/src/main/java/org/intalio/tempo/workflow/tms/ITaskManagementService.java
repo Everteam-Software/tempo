@@ -29,73 +29,43 @@ import org.w3c.dom.Document;
 public interface ITaskManagementService {
     void close();
 
-    Task[] getTaskList()
-            throws AuthException;
+    Task[] getTaskList() throws AuthException;
 
-    Task[] getAvailableTasks(final String taskType, final String subQuery)
-            throws AuthException;
-    
-    Task getTask(String taskID)
-            throws AuthException,
-                UnavailableTaskException;
+    Task[] getAvailableTasks(final String taskType, final String subQuery) throws AuthException;
 
-    void setOutput(String taskID, Document output)
-            throws AuthException,
-                UnavailableTaskException,
-                InvalidTaskStateException;
+    Task getTask(String taskID) throws AuthException, UnavailableTaskException;
 
-    void complete(String taskID)
-            throws AuthException,
-                UnavailableTaskException,
-                InvalidTaskStateException;
+    void setOutput(String taskID, Document output) throws AuthException, UnavailableTaskException, InvalidTaskStateException;
 
-    void setOutputAndComplete(String taskID, Document output)
-            throws AuthException,
-                UnavailableTaskException,
-                InvalidTaskStateException;
+    void complete(String taskID) throws AuthException, UnavailableTaskException, InvalidTaskStateException;
 
-    void fail(String taskID, String failureCode, String failureReason)
-            throws AuthException,
-                UnavailableTaskException,
-                InvalidTaskStateException;
+    void setOutputAndComplete(String taskID, Document output) throws AuthException, UnavailableTaskException, InvalidTaskStateException;
 
-    void delete(String[] taskIDs)
-            throws AuthException,
-                UnavailableTaskException;
+    void fail(String taskID, String failureCode, String failureReason) throws AuthException, UnavailableTaskException, InvalidTaskStateException;
 
-    void create(Task task)
-            throws AuthException,
-                TaskIDConflictException;
+    void delete(String[] taskIDs) throws AuthException, UnavailableTaskException;
 
-    Document init(String taskID, Document output)
-            throws AuthException,
-                UnavailableTaskException;
+    void deleteAll(String fakeDelete, String subQuery, String taskType) throws AuthException, UnavailableTaskException;
 
-    Attachment[] getAttachments(String taskID)
-            throws AuthException,
-                UnavailableTaskException;
+    void create(Task task) throws AuthException, TaskIDConflictException;
 
-    void addAttachment(String taskID, Attachment attachment)
-            throws AuthException,
-                UnavailableTaskException;
+    Document init(String taskID, Document output) throws AuthException, UnavailableTaskException;
 
-    void removeAttachment(String taskID, URL attachmentURL)
-            throws AuthException,
-                UnavailableTaskException,
-                UnavailableAttachmentException;
-    
-//    void reassign(Task task)
-//    		throws AuthException,
-//    			   UnavailableTaskException;
-    
-    void reassign(String taskID, AuthIdentifierSet users,
-			AuthIdentifierSet roles, TaskState state)
-    		throws AuthException,
-			   		UnavailableTaskException;
-    
+    Attachment[] getAttachments(String taskID) throws AuthException, UnavailableTaskException;
+
+    void addAttachment(String taskID, Attachment attachment) throws AuthException, UnavailableTaskException;
+
+    void removeAttachment(String taskID, URL attachmentURL) throws AuthException, UnavailableTaskException, UnavailableAttachmentException;
+
+    // void reassign(Task task)
+    // throws AuthException,
+    // UnavailableTaskException;
+
+    void reassign(String taskID, AuthIdentifierSet users, AuthIdentifierSet roles, TaskState state) throws AuthException, UnavailableTaskException;
+
     void storePipa(PIPATask task) throws AuthException, InvalidTaskException;
-    
+
     void deletePipa(String formUrl) throws AuthException, UnavailableTaskException;
-    
+
     PIPATask getPipa(String formUrl) throws AuthException, UnavailableTaskException;
 }

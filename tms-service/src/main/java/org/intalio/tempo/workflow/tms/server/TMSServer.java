@@ -531,7 +531,7 @@ public class TMSServer implements ITMSServer {
      */
     public void deleteAll(boolean fakeDelete, String subquery, String taskType, String participantToken) throws AuthException, UnavailableTaskException {
         Task[] tasks = null;
-        if (taskType != null && subquery != null) {
+        if (taskType != null && taskType.length() != 0 && subquery != null && subquery.length() != 0) {
             tasks = getAvailableTasks(participantToken, taskType, subquery);
         } else {
             tasks = getTaskList(participantToken);

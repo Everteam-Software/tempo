@@ -17,6 +17,7 @@ package org.intalio.tempo.web.controller;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.rmi.RemoteException;
+import java.util.Enumeration;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -48,7 +49,6 @@ public class SecuredController extends UIController {
     protected String _serviceURL;
 
     private static final String PROXY_TICKET = "TEMPO_CAS_TICKET";
-
     
     public SecuredController(TokenService tokenService) {
         super();
@@ -98,18 +98,25 @@ public class SecuredController extends UIController {
         }
         mav = new ModelAndView("view");
         fillAuthorization(request, mav);
+        Enumeration en = request.getAttributeNames();
 
         return mav;
     }
 
+    
     @Override
     protected final void processFormSubmission(ActionRequest request, ActionResponse response, Object command, BindException errors) throws Exception {
+        
+    }
+    
+    
+    @Override
+    protected void handleActionRequestInternal(ActionRequest request, ActionResponse response) throws Exception {
         ApplicationState state = getApplicationState(request);
         User currentUser = state.getCurrentUser();
         if (currentUser != null) {
-            super.processFormSubmission(request, response, command, errors);
+            super.handleActionRequestInternal(request, response);
         }
-        response.setRenderParameter("action", "deleteAll");
     }
 
     protected ModelAndView securedShowForm(RenderRequest request, RenderResponse response, BindException errors) throws Exception {

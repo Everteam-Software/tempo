@@ -271,6 +271,22 @@ public class RemoteTMSClient implements ITaskManagementService {
 
         sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "delete");
     }
+    
+    public void deleteAll(final String fakeDelete, final String subQuery, final String taskType) throws AuthException, UnavailableTaskException {
+        OMElement request = new TMSMarshaller() {
+            public OMElement marshalRequest() {
+                OMElement request = createElement("deleteAllRequest");
+                createElement(request, "participantToken", _participantToken);
+                createElement(request, "fakeDelete", fakeDelete);
+                createElement(request, "subQuery", subQuery);
+                createElement(request, "taskType", taskType);
+                
+                return request;
+            }
+        }.marshalRequest();
+
+        sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "deleteAll");
+    }
 
     public void create(final Task task) throws AuthException, TaskIDConflictException {
         if (task == null) {

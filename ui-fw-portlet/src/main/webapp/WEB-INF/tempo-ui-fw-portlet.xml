@@ -33,7 +33,21 @@
 		<property name="actionClass"
 			value="org.intalio.tempo.uiframework.actions.TasksAction" />
 	</bean>
+	
+	<bean id="deleteAllTasksAction"
+		class="org.intalio.tempo.web.controller.ActionDef">
+		<property name="actionName" value="deleteAll" />
+		<property name="actionClass"
+			value="org.intalio.tempo.uiframework.actions.DeleteAllTasksAction" />
+	</bean>
 
+	<bean id="deletePIPATasksAction"
+		class="org.intalio.tempo.web.controller.ActionDef">
+		<property name="actionName" value="deletePIPA" />
+		<property name="actionClass"
+			value="org.intalio.tempo.uiframework.actions.DeletePIPATasksAction" />
+	</bean>
+	
 	<bean id="tasksController"
 		class="org.intalio.tempo.web.controller.SecuredController">
 		<constructor-arg index="0" ref="tokenService" />
@@ -45,6 +59,8 @@
 		<property name="actionDefs">
 			<list>
 				<ref bean="tasksDefaultAction" />
+				<ref bean="deleteAllTasksAction" />
+				<ref bean="deletePIPATasksAction" />
 			</list>
 		</property>
 	</bean>
