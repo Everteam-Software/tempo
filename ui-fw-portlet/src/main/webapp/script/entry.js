@@ -42,7 +42,8 @@ var EntryForm = function(){
 			obj.style.width = "100%";
 			//obj.style.height = "400%";
 			//obj.setAttribute("height", "400")
-			obj.height="300"
+			obj.height="300";
+			obj.id="xForm";
 
 			var tempUrl = url.split("&amp;");
 			var newUrl = tempUrl.join("&");
