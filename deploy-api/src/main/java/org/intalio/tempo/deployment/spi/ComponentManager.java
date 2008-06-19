@@ -17,7 +17,6 @@ import java.rmi.Remote;
 import java.util.List;
 
 import org.intalio.tempo.deployment.ComponentId;
-import org.intalio.tempo.deployment.DeploymentMessage;
 
 
 /**
@@ -46,7 +45,7 @@ public interface ComponentManager extends Remote {
      * If the ComponentManager is unable to safely resolve conflicts, it should return ERROR-level 
      * messages with an appropriate description of the issue.  
      */
-    List<DeploymentMessage> deploy(ComponentId name, File path);
+    ComponentManagerResult deploy(ComponentId name, File path);
 
     /**
      * Undeploy an assembly component.
@@ -54,7 +53,7 @@ public interface ComponentManager extends Remote {
      * In a clustered environment, this method is called on a single node (the coordinator).
      * This method must release any persistent resources previously allocated or used by the component.
      */
-    void undeploy(ComponentId name);
+    void undeploy(ComponentId name, List<String> deployedObject);
     
     /**
      * Activate a component.

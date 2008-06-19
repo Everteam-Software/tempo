@@ -24,6 +24,7 @@ import java.util.Properties;
 import org.intalio.tempo.deployment.ComponentId;
 import org.intalio.tempo.deployment.DeploymentMessage;
 import org.intalio.tempo.deployment.DeploymentMessage.Level;
+import org.intalio.tempo.deployment.spi.ComponentManagerResult;
 import org.intalio.tempo.security.token.TokenContext;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.slf4j.Logger;
@@ -52,7 +53,7 @@ public class PIPAComponentManager implements org.intalio.tempo.deployment.spi.Co
         // nothing
     }
 
-    public List<DeploymentMessage> deploy(ComponentId name, File base) {
+    public ComponentManagerResult deploy(ComponentId name, File base) {
         List<DeploymentMessage> msgs = new ArrayList<DeploymentMessage>();
 
         /*
@@ -72,17 +73,17 @@ public class PIPAComponentManager implements org.intalio.tempo.deployment.spi.Co
             // Stop if any error during checks
             for (DeploymentMessage msg : msgs) {
                 if (Level.ERROR.equals(msg.getLevel()))
-                    return msgs;
+                    return new ComponentManagerResult(msgs);
             }
 
             // Phase 2: Actual deployment
             processDir(base, base, msgs, token);
         } finally {
         }
-        return msgs;
+        return new ComponentManagerResult(msgs);
     }
 
-    public void undeploy(ComponentId name) {
+    public void undeploy(ComponentId name, List<String> deployedObjects) {
         // TODO: We need to record which PIPAs were deployed for this component.
     }
 

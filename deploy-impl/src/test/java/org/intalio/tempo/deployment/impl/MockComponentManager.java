@@ -20,6 +20,7 @@ import java.util.Map;
 import org.intalio.tempo.deployment.ComponentId;
 import org.intalio.tempo.deployment.DeploymentMessage;
 import org.intalio.tempo.deployment.spi.ComponentManager;
+import org.intalio.tempo.deployment.spi.ComponentManagerResult;
 
 /**
  * Mock ComponentManager used for testing DeployService 
@@ -45,13 +46,13 @@ public class MockComponentManager implements ComponentManager {
         return _name;
     }
 
-    public List<DeploymentMessage> deploy(ComponentId name, File path) {
+    public ComponentManagerResult deploy(ComponentId name, File path) {
         List<DeploymentMessage> messages = new ArrayList<DeploymentMessage>();
         
         if (_failDeployment) throw new RuntimeException("Deployment force failed");
         _components.put(name, new Component(name, path));
         
-        return messages;  
+        return new ComponentManagerResult(messages);  
     }
 
     public void activate(ComponentId name, File path) {
@@ -86,7 +87,7 @@ public class MockComponentManager implements ComponentManager {
         c._started = false;
     }
 
-    public void undeploy(ComponentId name) {
+    public void undeploy(ComponentId name, List<String> deployedObjects) {
         if (_failUndeploy) throw new RuntimeException("Undeploy force failed");
         _components.remove(name);
     }

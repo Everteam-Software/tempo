@@ -42,6 +42,7 @@ import org.intalio.tempo.deployment.DeploymentResult;
 import org.intalio.tempo.deployment.DeploymentService;
 import org.intalio.tempo.deployment.DeploymentMessage.Level;
 import org.intalio.tempo.deployment.spi.ComponentManager;
+import org.intalio.tempo.deployment.spi.ComponentManagerResult;
 import org.intalio.tempo.deployment.spi.DeploymentServiceCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -345,7 +346,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
 
                     ComponentManager manager = getComponentManager(componentManager);
                     try {
-                        result.addAll(component, componentManager, manager.deploy(component, f));
+                        result.addAll(component, componentManager, manager.deploy(component, f).getMessages());
                         deployed.add(new DeployedComponent(component, f.getAbsolutePath(), componentManager));
                     } catch (Exception except) {
                         String msg = _("Exception while deploying component {0}: {1}", componentName, except.getLocalizedMessage());
@@ -372,7 +373,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
                 for (DeployedComponent dc : deployed) {
                     try {
                         ComponentManager manager = getComponentManager(dc.getComponentManagerName());
-                        manager.undeploy(dc.getComponentId());
+                        manager.undeploy(dc.getComponentId(), new ArrayList<String>());
                     } catch (Exception except) {
                         String msg = _("Exception while undeploying component {0} after failed deployment: {1}", dc.getComponentId(),
                                 except.getLocalizedMessage());
@@ -538,7 +539,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
                 for (DeployedComponent dc : assembly.getDeployedComponents()) {
                     try {
                         ComponentManager manager = getComponentManager(dc.getComponentManagerName());
-                        manager.undeploy(dc.getComponentId());
+                        manager.undeploy(dc.getComponentId(), new ArrayList<String>());
                     } catch (Exception except) {
                         String msg = _("Exception while undeploying component {0}: {1}", dc.getComponentId(), except.getLocalizedMessage());
                         result.add(dc, error(msg));
@@ -1085,9 +1086,9 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
             LOG.warn(_("Missing component manager: deactivate {0}", cid));
         }
 
-        public List<DeploymentMessage> deploy(ComponentId cid, File path) {
+        public ComponentManagerResult deploy(ComponentId cid, File path) {
             String msg = _("No component manager for component type {0}", _componentType);
-            return message(error(msg));
+            return new ComponentManagerResult(message(error(msg)));
         }
 
         public String getComponentManagerName() {
@@ -1102,7 +1103,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
             LOG.warn(_("Missing component manager: stop {0}", cid));
         }
 
-        public void undeploy(ComponentId cid) {
+        public void undeploy(ComponentId cid, List<String> deployedObjects) {
             LOG.warn(_("Missing component manager: undeploy {0}", cid));
         }
 

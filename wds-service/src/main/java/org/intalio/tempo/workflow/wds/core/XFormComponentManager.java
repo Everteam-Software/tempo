@@ -25,6 +25,7 @@ import java.util.List;
 import org.intalio.tempo.deployment.ComponentId;
 import org.intalio.tempo.deployment.DeploymentMessage;
 import org.intalio.tempo.deployment.DeploymentMessage.Level;
+import org.intalio.tempo.deployment.spi.ComponentManagerResult;
 import org.intalio.tempo.security.token.TokenContext;
 import org.intalio.tempo.workflow.wds.core.xforms.XFormsProcessor;
 import org.slf4j.Logger;
@@ -53,7 +54,7 @@ public class XFormComponentManager implements org.intalio.tempo.deployment.spi.C
         // nothing
     }
 
-    public List<DeploymentMessage> deploy(ComponentId name, File base) {
+    public ComponentManagerResult deploy(ComponentId name, File base) {
         List<DeploymentMessage> msgs = new ArrayList<DeploymentMessage>();
 
         /*
@@ -74,7 +75,7 @@ public class XFormComponentManager implements org.intalio.tempo.deployment.spi.C
             // Stop if any error during checks
             for (DeploymentMessage msg : msgs) {
                 if (Level.ERROR.equals(msg.getLevel()))
-                    return msgs;
+                    return new ComponentManagerResult(msgs);
             }
 
             // Phase 2: Actual deployment
@@ -82,10 +83,10 @@ public class XFormComponentManager implements org.intalio.tempo.deployment.spi.C
         } finally {
             wds.close();
         }
-        return msgs;
+        return new ComponentManagerResult(msgs);
     }
 
-    public void undeploy(ComponentId name) {
+    public void undeploy(ComponentId name, List<String> deployedObjects) {
         // TODO: We need to record which XForms and Items were deployed for this component.
     }
 

@@ -18,8 +18,8 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 
 import org.intalio.tempo.deployment.ComponentId;
-import org.intalio.tempo.deployment.DeploymentMessage;
 import org.intalio.tempo.deployment.spi.ComponentManager;
+import org.intalio.tempo.deployment.spi.ComponentManagerResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,12 +65,12 @@ public class RemoteComponentManager implements ComponentManager {
         }
     }
     
-    public List<DeploymentMessage> deploy(ComponentId name, File path) {
+    public ComponentManagerResult deploy(ComponentId name, File path) {
         return getComponentManager().deploy(name, path);
     }
 
-    public void undeploy(ComponentId name) {
-        getComponentManager().undeploy(name);
+    public void undeploy(ComponentId name, List<String> deployedObjects) {
+        getComponentManager().undeploy(name, deployedObjects);
     }
 
     public void activate(ComponentId name, File path) {
