@@ -12,12 +12,16 @@
 
 package org.intalio.tempo.deployment.spi;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.intalio.tempo.deployment.DeploymentMessage;
 
-public class ComponentManagerResult {
+public class ComponentManagerResult implements Serializable {
+    
+    private static final long serialVersionUID = -8809416379298699150L;
+    
     final static List<String> EMPTY_LIST = new ArrayList<String>(0); 
     private List<DeploymentMessage> messages;
     private List<String> deployedObjects;
