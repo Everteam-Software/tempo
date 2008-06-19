@@ -244,6 +244,8 @@ EASY_B = [
   "org.disco:easyb:jar:0.6"
 ]
 
+ICAL = "ical4j:ical4j:jar:0.9.20"
+
 INSTINCT = [
   "com.googlecode.instinct:instinct:jar:0.1.6",
   "org.jmock:jmock:jar:2.4.0",

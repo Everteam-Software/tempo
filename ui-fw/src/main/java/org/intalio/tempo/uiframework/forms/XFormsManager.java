@@ -16,6 +16,7 @@ package org.intalio.tempo.uiframework.forms;
 
 import java.net.URISyntaxException;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.intalio.tempo.workflow.task.Task;
 
 /**
@@ -77,5 +78,9 @@ public class XFormsManager implements FormManager {
     
     public void setNotificationURL(String url) {
         _notificationURL = url;
+    }
+
+    public String getURL(Task t) {
+        throw new NotImplementedException();
     }
 }

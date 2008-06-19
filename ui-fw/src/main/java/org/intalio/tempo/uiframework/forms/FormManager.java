@@ -27,4 +27,6 @@ public interface FormManager {
     String getPeopleInitiatedProcessURL(Task t);
     String getPeopleActivityURL(Task t);
     String getNotificationURL(Task t);
+    
+    String getURL(Task t);
 }

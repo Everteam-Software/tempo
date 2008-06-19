@@ -63,7 +63,7 @@ define "tempo" do
       compile.with projects("dao-tools", "tms-service", "tms-common"), APACHE_DERBY, LIFT, SERVLET_API
       test.with JUNIT, JETTY
       package :war
-    end
+  end
   
   desc "Deployment API"
   define "deploy-api" do
@@ -304,6 +304,7 @@ define "tempo" do
            APACHE_JPA,
            AXIOM, 
            AXIS2,  
+           ICAL,
            INTALIO_STATS, 
            JSP_API, 
            JSTL,

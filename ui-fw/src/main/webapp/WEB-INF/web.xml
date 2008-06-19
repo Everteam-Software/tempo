@@ -105,6 +105,17 @@
         <servlet-name>versionsServlet</servlet-name>
         <url-pattern>/versions</url-pattern>
     </servlet-mapping>
+    
+        <servlet>
+        <servlet-name>iCalServlet</servlet-name>
+        <servlet-class>org.intalio.tempo.uiframework.iCalServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>iCalServlet</servlet-name>
+        <url-pattern>/ical</url-pattern>
+    </servlet-mapping>
+    
 
     <!-- Welcome File List -->
 

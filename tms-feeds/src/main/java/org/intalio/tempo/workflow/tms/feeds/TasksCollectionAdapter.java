@@ -12,7 +12,6 @@
 package org.intalio.tempo.workflow.tms.feeds;
 
 import java.io.IOException;
-import java.text.MessageFormat;
 import java.util.Date;
 
 import org.apache.abdera.factory.Factory;
@@ -35,15 +34,16 @@ import org.intalio.tempo.security.Property;
 import org.intalio.tempo.security.authentication.AuthenticationConstants;
 import org.intalio.tempo.security.util.PropertyUtils;
 import org.intalio.tempo.security.ws.TokenClient;
+import org.intalio.tempo.uiframework.URIUtils;
 import org.intalio.tempo.uiframework.forms.FormManagerBroker;
 import org.intalio.tempo.uiframework.forms.GenericFormManager;
 import org.intalio.tempo.workflow.task.Notification;
 import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
-import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.tms.ITaskManagementService;
 import org.intalio.tempo.workflow.tms.client.RemoteTMSFactory;
+import org.intalio.tempo.workflow.tms.feeds.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -181,9 +181,7 @@ public class TasksCollectionAdapter extends AbstractCollectionAdapter {
     private void setLinkForTask(Task t, String ticket, RequestContext context, Entry e, String user) throws Exception {
         Factory factory = context.getAbdera().getFactory();
         Link link = factory.newLink();
-
-        Object[] params = new Object[] { _manager.getURL(t), t.getID(), t.getClass().getSimpleName(), t.getFormURLAsString(), ticket, user };
-        link.setHref(MessageFormat.format("{0}?id={1}&type={2}&url={3}&token={4}&user={5}", params));
+        link.setHref(URIUtils.getFormURLForTask(_manager, t, ticket, user));
         link.setTitle("Link to " + t.getDescription());
         link.setText("Link to " + t.getDescription());
         e.addLink(link);
