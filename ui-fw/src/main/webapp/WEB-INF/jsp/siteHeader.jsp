@@ -46,6 +46,16 @@
 			</tr>
 		</tbody></table></td>
 	</tr>
-	<tr><td><a href="ical"><img width="20" height="20" border="0" src="images/ical.jpg"/></a></td></tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td align="right">
+			<a href="ical" title="iCalendar export"><img width="20" height="20" border="0" src="images/ical.jpg"/></a>
+			<a href="/feeds/atom/tasks?token=${participantToken}" title="Personal Tasks Feed"><img width="20" height="20" border="0" src="images/rss-orange.gif"/></a>
+			<a href="/feeds/atom/processes?token=${participantToken}" title="Personal Process Feed"><img width="20" height="20" border="0" src="images/rss-green.png"/></a>
+		</td>
+		<td>&nbsp;</td>
+	</tr>
 		
 	</tbody></table>

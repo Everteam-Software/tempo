@@ -14,6 +14,8 @@
  */
 package org.intalio.tempo.uiframework;
 
+import org.intalio.tempo.security.ws.TokenClient;
+
 public class Configuration {
 
     private static Configuration INSTANCE = new Configuration();
@@ -23,6 +25,8 @@ public class Configuration {
     private int _pagingLength;
     
     private int _refreshTime = 5;
+    
+    private TokenClient _tokenClient;
  
     private Configuration() {
     }
@@ -53,5 +57,13 @@ public class Configuration {
 
     public void setRefreshTime(int time) {
         _refreshTime = time;
+    }
+    
+    public void setTokenService(TokenClient tc) {
+        _tokenClient = tc;
+    }
+    
+    public TokenClient getTokenService() {
+        return _tokenClient;
     }
 }

@@ -245,6 +245,7 @@ EASY_B = [
 ]
 
 ICAL = "ical4j:ical4j:jar:0.9.20"
+CSV = "org.ostermiller:utils:jar:1.07.00"
 
 INSTINCT = [
   "com.googlecode.instinct:instinct:jar:0.1.6",

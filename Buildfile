@@ -304,6 +304,7 @@ define "tempo" do
            APACHE_JPA,
            AXIOM, 
            AXIS2,  
+           CSV,
            ICAL,
            INTALIO_STATS, 
            JSP_API, 
@@ -316,8 +317,8 @@ define "tempo" do
            STAX_API, 
            TAGLIBS, 
            WOODSTOX, 
-           WSDL4J, 
-           WS_COMMONS_SCHEMA, 
+           WSDL4J,
+           WS_COMMONS_SCHEMA,
            XERCES, 
            XMLBEANS,
            CAS_CLIENT
