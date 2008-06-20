@@ -3,7 +3,7 @@ gem "buildr"
 require "rubygems"
 require "buildr"
 require "buildr/cobertura"
-require "buildr/xmlbeans"
+require "tasks/xmlbeans"
 # require "tasks/xmlbeans"
 
 # Keep this structure to allow the build system to update version numbers.
