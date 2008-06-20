@@ -230,6 +230,7 @@ define "tempo" do
   define "tms-axis" do
     compile_xml_beans _("../tms-service/src/main/axis2")
     package(:jar).include _('target/generated/xmlbeans/'), :as=>'.'
+    package(:jar).include _('target/classes/'), :as=>'.'
   end
 
   desc "Task Management Services Common Library"
