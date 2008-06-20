@@ -255,6 +255,7 @@
 			         </xsd:sequence>
 			     </xsd:complexType>
 			</xsd:element>
+			
   			<xsd:complexType name="attachmentMetadata">
 			 <xsd:sequence>
 			   <xsd:element name="mimeType" type="xsd:string" />
@@ -360,8 +361,20 @@
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
+			
+			
+			<xsd:element name="reassignRequest">
+			     <xsd:complexType>
+			         <xsd:sequence>
+						 <xsd:element name="taskId" type="xsd:string"/>
+			             <xsd:element name="participantToken" type="xsd:string" />
+			         </xsd:sequence>
+			     </xsd:complexType>
+			</xsd:element>
+			
 		</xsd:schema>
 	</wsdl:types>
+	
 	<wsdl:message name="getTaskListResponse">
 		<wsdl:part name="getTaskListResponse" element="tns:getTaskListResponse"/>
 	</wsdl:message>
@@ -407,7 +420,6 @@
 	<wsdl:message name="createRequest">
 		<wsdl:part name="createRequest" element="tns:createRequest"/>
 	</wsdl:message>
-	
 	<wsdl:message name="storePipaRequest">
 		<wsdl:part name="storePipaRequest" element="tns:storePipaRequest"/>
 	</wsdl:message>
@@ -420,7 +432,6 @@
 	<wsdl:message name="getPipaResponse">
 		<wsdl:part name="getPipaResponse" element="tns:getPipaResponse"/>
 	</wsdl:message>
-	
 	<wsdl:message name="okResponse">
 		<wsdl:part name="okResponse" element="tns:okResponse"/>
 	</wsdl:message>
@@ -428,14 +439,22 @@
 		<wsdl:part name="initRequest" element="tns:initRequest"/>
 	</wsdl:message>
 	<wsdl:message name="getAvailableTasksRequest">
-		<wsdl:part name="getAvailableTasksRequest"
-			element="tns:getAvailableTasksRequest">
-		</wsdl:part>
+		<wsdl:part name="getAvailableTasksRequest" element="tns:getAvailableTasksRequest"/>
 	</wsdl:message>
 	<wsdl:message name="getAvailableTasksResponse">
 		<wsdl:part name="getAvailableTasksResponse" element="tns:getAvailableTasksResponse"></wsdl:part>
 	</wsdl:message>
+	<wsdl:message name="reassignRequest">
+		<wsdl:part name="reassignRequest" element="tns:reassignRequest"></wsdl:part>
+	</wsdl:message>
+	
 	<wsdl:portType name="TaskManagementServices">
+		<!-- <wsdl:operation name="reassign">
+			<wsdl:input message="tns:reassignRequest"/>
+			<wsdl:output message="tns:okResponse"/>
+			<wsdl:fault name="UnavailableTask" message="tns:unavailableTaskFault"/>
+			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault"/>
+		</wsdl:operation> -->
 		<wsdl:operation name="getTaskList">
 			<wsdl:input message="tns:getTaskListRequest"/>
 			<wsdl:output message="tns:getTaskListResponse"/>
@@ -552,6 +571,36 @@
 				<soap:fault name="InvalidInputMessage" use="literal"/>
 			</wsdl:fault>
 		</wsdl:operation>
+		<wsdl:operation name="getAvailableTasks">
+			<soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getAvailableTasks"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="InvalidParticipantToken">
+				<soap:fault name="InvalidParticipantToken" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="InvalidInputMessage">
+				<soap:fault name="InvalidInputMessage" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<!-- <wsdl:operation name="reassign">
+			<soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/reassign"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="UnavailableTask">
+				<soap:fault name="UnavailableTask" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="InvalidParticipantToken">
+				<soap:fault name="InvalidParticipantToken" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation> -->
 		<wsdl:operation name="getTask">
 			<soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getTask"/>
 			<wsdl:input>
@@ -782,7 +831,7 @@
 	</wsdl:binding>
 	<wsdl:service name="TaskManagementServices">
 		<wsdl:port name="TaskManagementServicesSOAP" binding="tns:TaskManagementServicesSOAP">
-			<soap:address location="http://www.example.org/"/>
+			<soap:address location="http://www.example.org"/>
 		</wsdl:port>
 	</wsdl:service>
 </wsdl:definitions>
