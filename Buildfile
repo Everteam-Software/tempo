@@ -290,8 +290,8 @@ define "tempo" do
   
   desc "Task Management Feeds"
   define "tms-feeds" do
-    compile.with projects("tms-common", "ui-fw", "tms-axis", "security", "security-ws-client", "security-ws-common", "tms-client", "web-nutsNbolts"), AXIOM, 
-     AXIS2, APACHE_JPA, APACHE_ABDERA, JETTY, SERVLET_API, SPRING[:core], SLF4J, LOG4J, XMLBEANS, WS_COMMONS_SCHEMA
+    compile.with projects("tms-common", "ui-fw", "tms-axis", "security", "security-ws-client", "security-ws-common", "tms-client", "web-nutsNbolts"), 
+    AXIOM, APACHE_ABDERA, APACHE_JPA, AXIS2, JETTY, LOG4J, SERVLET_API, SLF4J, SPRING[:core], XMLBEANS, WS_COMMONS_SCHEMA, WSDL4J
     package(:war)
   end 
   
