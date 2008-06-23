@@ -29,7 +29,7 @@ public abstract class ExternalTasksServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            TokenClient tc = Configuration.getInstance().getTokenService();
+            TokenClient tc = Configuration.getInstance().getTokenClient();
             String rtoken = request.getParameter("token");
             String pToken;
             String user;

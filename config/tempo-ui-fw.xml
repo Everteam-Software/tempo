@@ -18,7 +18,7 @@
         <property name="serviceEndpoint" value="/axis2/services/TaskManagementServices"/>
         <property name="pagingLength" value="10"/>
         <property name="refreshTime" value="5"/>
-        <property name="tokenClient" ref="tokenService"/>
+        <property name="tokenClient"><ref bean="tokenService"/></property>
     </bean>
 
     <bean id="tokenService" class="org.intalio.tempo.security.ws.TokenClient">

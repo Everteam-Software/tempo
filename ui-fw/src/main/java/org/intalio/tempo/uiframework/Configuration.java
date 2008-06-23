@@ -59,11 +59,11 @@ public class Configuration {
         _refreshTime = time;
     }
     
-    public void setTokenService(TokenClient tc) {
+    public void setTokenClient(TokenClient tc) {
         _tokenClient = tc;
     }
     
-    public TokenClient getTokenService() {
+    public TokenClient getTokenClient() {
         return _tokenClient;
     }
 }
