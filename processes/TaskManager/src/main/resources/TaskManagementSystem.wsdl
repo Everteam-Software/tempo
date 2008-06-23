@@ -23,18 +23,21 @@
 	targetNamespace="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
 	name="TaskManagementServices">
 	<wsdl:types>
+	
 		<xsd:schema elementFormDefault="qualified"
 			targetNamespace="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
 			xmlns:tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+			
 			<xsd:complexType name="owners">
-			<xsd:sequence>
-			<xsd:element name="userOwner" type="xsd:string"
+				<xsd:sequence>
+					<xsd:element name="userOwner" type="xsd:string"
 						maxOccurs="unbounded" minOccurs="0" />
 
 					<xsd:element name="roleOwner" type="xsd:string"
 						maxOccurs="unbounded" minOccurs="0" />
-			</xsd:sequence>
+				</xsd:sequence>
 			</xsd:complexType>
+			
 			<xsd:element name="getTaskListResponse">
 				<xsd:complexType>
 					<xsd:sequence>
@@ -44,6 +47,7 @@
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
+			
 			<xsd:element name="getTaskListRequest">
 				<xsd:complexType>
 					<xsd:sequence>
@@ -53,6 +57,7 @@
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
+			
 			<xsd:element name="getTaskResponse">
 				<xsd:complexType>
 					<xsd:sequence>
@@ -60,6 +65,7 @@
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
+			
 			<xsd:element name="getTaskRequest">
 				<xsd:complexType>
 					<xsd:sequence>
@@ -70,6 +76,7 @@
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
+			
 			<xsd:element name="setOutputRequest">
 				<xsd:complexType>
 					<xsd:sequence>
@@ -88,6 +95,7 @@
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
+			
 			<xsd:element name="unavailableTaskFault">
 				<xsd:complexType>
 					<xsd:sequence>
@@ -98,6 +106,7 @@
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
+			
 			<xsd:element name="invalidParticipantTokenFault">
 				<xsd:complexType>
 					<xsd:sequence>
@@ -108,6 +117,7 @@
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
+			
 			<xsd:element name="accessDeniedFault">
 				<xsd:complexType>
 					<xsd:sequence>
@@ -115,6 +125,7 @@
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
+			
 			<xsd:element name="invalidInputMessageFault">
 				<xsd:complexType>
 					<xsd:sequence>
@@ -122,6 +133,7 @@
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
+			
 			<xsd:element name="completeRequest">
 				<xsd:complexType>
 					<xsd:sequence>
@@ -132,6 +144,7 @@
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
+			
 			<xsd:element name="setOutputAndCompleteRequest">
 				<xsd:complexType>
 					<xsd:sequence>
@@ -150,6 +163,7 @@
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
+			
 			<xsd:element name="failRequest">
 				<xsd:complexType>
 					<xsd:sequence>
@@ -162,6 +176,7 @@
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
+			
 			<xsd:element name="deleteRequest">
 				<xsd:complexType>
 					<xsd:sequence>
@@ -174,6 +189,7 @@
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
+			
 			<xsd:element name="createRequest">
 				<xsd:complexType>
 					<xsd:sequence>
@@ -184,6 +200,7 @@
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
+			
 			<xsd:element name="reassignRequest">
 				<xsd:complexType>
 					<xsd:sequence>
@@ -200,6 +217,7 @@
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
+			
 			<xsd:element name="initRequest">
 				<xsd:complexType>
 					<xsd:sequence>
@@ -218,17 +236,22 @@
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
-			 <xsd:complexType name="accessControlType">
-    <xsd:sequence>
-      <xsd:element name="user" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
-      <xsd:element name="role" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
-    </xsd:sequence>
-  </xsd:complexType>
+			
+			<xsd:complexType name="accessControlType">
+				<xsd:sequence>
+					<xsd:element name="user" type="xsd:string"
+						minOccurs="0" maxOccurs="unbounded" />
+					<xsd:element name="role" type="xsd:string"
+						minOccurs="0" maxOccurs="unbounded" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
 			<xsd:element name="okResponse">
 				<xsd:complexType>
 					<xsd:sequence />
 				</xsd:complexType>
 			</xsd:element>
+			
 			<xsd:element name="getAttachmentsRequest">
 				<xsd:complexType>
 					<xsd:sequence>
@@ -238,6 +261,7 @@
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
+			
 			<xsd:element name="getAttachmentsResponse">
 				<xsd:complexType>
 					<xsd:sequence>
@@ -246,6 +270,7 @@
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
+			
 			<xsd:element name="addAttachmentRequest">
 				<xsd:complexType>
 					<xsd:sequence>
@@ -257,6 +282,7 @@
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
+			
 			<xsd:element name="removeAttachmentRequest">
 				<xsd:complexType>
 					<xsd:sequence>
@@ -268,6 +294,7 @@
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
+			
 			<xsd:complexType name="attachmentMetadata">
 				<xsd:sequence>
 					<xsd:element name="mimeType" type="xsd:string" />
@@ -278,6 +305,7 @@
 						type="xsd:dateTime" />
 				</xsd:sequence>
 			</xsd:complexType>
+			
 			<xsd:complexType name="attachment">
 				<xsd:sequence>
 					<xsd:element name="attachmentMetadata"
@@ -285,6 +313,7 @@
 					<xsd:element name="payloadUrl" type="xsd:string" />
 				</xsd:sequence>
 			</xsd:complexType>
+			
 			<xsd:complexType name="taskMetadata">
 				<xsd:sequence>
 					<xsd:element name="taskId" type="xsd:string" />
@@ -297,28 +326,27 @@
 						maxOccurs="1" minOccurs="0" />
 					<xsd:element name="creationDate" type="xsd:dateTime"
 						maxOccurs="1" minOccurs="0" />
-
 					<xsd:element name="userOwner" type="xsd:string"
 						maxOccurs="unbounded" minOccurs="0" />
-
 					<xsd:element name="roleOwner" type="xsd:string"
 						maxOccurs="unbounded" minOccurs="0" />
-
 					<xsd:element name="deadline" type="xsd:dateTime"
 						maxOccurs="1" minOccurs="0" />
 					<xsd:element name="priority" type="xsd:int"
 						maxOccurs="1" minOccurs="0" />
-						<xsd:element name="claimAction" type="tns:accessControlType" maxOccurs="1" minOccurs="0"/>
-      <xsd:element name="revokeAction" type="tns:accessControlType" maxOccurs="1" minOccurs="0"/>
-      <xsd:element name="saveAction" type="tns:accessControlType" maxOccurs="1" minOccurs="0"/>
-      <xsd:element name="completeAction" type="tns:accessControlType" maxOccurs="1" minOccurs="0"/>
-      <xsd:element name="deferAction" type="tns:accessControlType" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="claimAction"
+						type="tns:accessControlType" maxOccurs="1" minOccurs="0" />
+					<xsd:element name="revokeAction"
+						type="tns:accessControlType" maxOccurs="1" minOccurs="0" />
+					<xsd:element name="saveAction"
+						type="tns:accessControlType" maxOccurs="1" minOccurs="0" />
+					<xsd:element name="completeAction"
+						type="tns:accessControlType" maxOccurs="1" minOccurs="0" />
 					<xsd:element name="formUrl" type="xsd:anyURI" />
 					<xsd:element name="failureCode" type="xsd:string"
 						maxOccurs="1" minOccurs="0" />
 					<xsd:element name="failureReason" type="xsd:string"
 						maxOccurs="1" minOccurs="0" />
-
 					<xsd:element name="userProcessCompleteSOAPAction"
 						type="xsd:string" maxOccurs="1" minOccurs="0" />
 					<xsd:element name="userProcessEndpoint"
@@ -333,9 +361,9 @@
 							</xsd:sequence>
 						</xsd:complexType>
 					</xsd:element>
-
 				</xsd:sequence>
 			</xsd:complexType>
+			
 			<xsd:complexType name="task">
 				<xsd:sequence>
 					<xsd:element name="metadata"
@@ -359,8 +387,11 @@
 					</xsd:element>
 				</xsd:sequence>
 			</xsd:complexType>
+			
 		</xsd:schema>
+		
 	</wsdl:types>
+	
 	<wsdl:message name="getTaskListResponse">
 		<wsdl:part name="getTaskListResponse"
 			element="tns:getTaskListResponse" />
