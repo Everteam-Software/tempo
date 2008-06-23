@@ -2,3 +2,4 @@
 install_dir: intalio
 debug: true
 rebuild: false
+#server: liferay_v501
