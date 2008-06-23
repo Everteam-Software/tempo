@@ -181,6 +181,7 @@ MISSING_LIBS= [
 MISSING_LIBS.each {|lib| 
   locate_and_copy( lib, lib_folder )
 }
+File.cp "#{TEMPO_SVN}/rsc/liferay501/castor-1.0.5.jar", "#{webapp_folder}/ui-fw/WEB-INF/lib"
 ##
 
 title "Install registry into common lib"
@@ -205,7 +206,6 @@ mysql_ds_config_files = File.join("#{TEMPO_SVN}/rsc/tempo-sql","*.xml")
 Dir.glob(mysql_ds_config_files) {|x| File.copy(x, tomcat_config_folder, DEBUG)}
 
 File.copy "#{TEMPO_SVN}/rsc/tomcat/ode-axis2.properties", tomcat_config_folder
-File.copy "#{TEMPO_SVN}/rsc/liferay501/tempokeystore", tomcat_config_folder if SERVER == LIFERAY
 ##
 
 title "Creating setenv file (java opts and config)"
@@ -251,7 +251,6 @@ title "Copying tomcat config xml files (JNDI resources)"
 explain "Making the deploy registry and the mysql DS available to all tomcat application"
 ##
 Dir.glob(File.join("#{TEMPO_SVN}/rsc/tomcat", "*.*")) {|x| File.copy(x,"#{server_folder}/conf", DEBUG)}
-Dir.glob(File.join("#{TEMPO_SVN}/rsc/liferay501", "server.xml")) {|x| File.copy(x,"#{server_folder}/conf", DEBUG)} if SERVER == LIFERAY
 ##
 
 title "Expanding tomcat classpath"
@@ -261,28 +260,30 @@ file_cp = "#{tomcat_bin_folder}/setclasspath.sh"
 File.open(file_cp, File::WRONLY|File::APPEND) {|file| file << "export CLASSPATH=$CLASSPATH:$CATALINA_HOME/conf"} if SERVER != LIFERAY
 ##
 
+title "Set up CAS server"
+explain "CAS server authentication integrates with tempo"
+##
+File.copy "#{TEMPO_SVN}/rsc/liferay501/tempokeystore", tomcat_config_folder
+Dir.glob(File.join("#{TEMPO_SVN}/rsc/liferay501", "server.xml")) {|x| File.copy(x,"#{server_folder}/conf", DEBUG)}
+FileUtils.cp_r "#{TEMPO_SVN}/cas-server-webapp/target/classes", "#{webapp_folder}/cas/WEB-INF"
+File.cp "#{TEMPO_SVN}/rsc/liferay501/deployerConfigContext.xml", "#{webapp_folder}/cas/WEB-INF"
+Dir.glob(File.join("#{TEMPO_SVN}/security*/target", "*.jar")) {|x| File.cp x, "#{webapp_folder}/cas/WEB-INF/lib"}
+CAS_MISSING_LIBS= [
+  AXIOM, AXIS2, LOG4J, WS_COMMONS_SCHEMA
+]
+CAS_MISSING_LIBS.each {|lib| 
+  locate_and_copy( lib, "#{webapp_folder}/cas/WEB-INF/lib" )
+} 
+##
+
 ## For liferay specific
 if SERVER == LIFERAY
   title "For liferay 5.0.1 specific configuration"
-  explain "Copy castor to ui-fw for cas authentication"
-  File.cp "#{TEMPO_SVN}/rsc/liferay501/castor-1.0.5.jar", "#{webapp_folder}/ui-fw/WEB-INF/lib"
-  
-  explain "Copy cas server authentication handler class and config"
-  FileUtils.cp_r "#{TEMPO_SVN}/cas-server-webapp/target/classes", "#{webapp_folder}/cas/WEB-INF"
-  File.cp "#{TEMPO_SVN}/rsc/liferay501/deployerConfigContext.xml", "#{webapp_folder}/cas/WEB-INF"
-  Dir.glob(File.join("#{TEMPO_SVN}/security*/target", "*.jar")) {|x| File.cp x, "#{webapp_folder}/cas/WEB-INF/lib"}
-  CAS_MISSING_LIBS= [
-    AXIOM, AXIS2, LOG4J, WS_COMMONS_SCHEMA
-  ]
-  CAS_MISSING_LIBS.each {|lib| 
-    locate_and_copy( lib, "#{webapp_folder}/cas/WEB-INF/lib" )
-  }
-  
   explain "Config liferay portal to use cas authentication"
   File.cp "#{TEMPO_SVN}/rsc/liferay501/web.xml", "#{webapp_folder}/ROOT/WEB-INF"
   File.cp "#{TEMPO_SVN}/rsc/liferay501/forliferay-ticketfilter-1.0.1.jar", "#{webapp_folder}/ROOT/WEB-INF/lib"
   File.cp "#{TEMPO_SVN}/rsc/liferay501/portal-ext.properties", "#{webapp_folder}/ROOT/WEB-INF/classes"
-  File.cp "#{webapp_folder}/ROOT/WEB-INF/lib/casclient.jar", "#{server_folder}/common/lib" 
+  File.cp "#{webapp_folder}/ROOT/WEB-INF/lib/casclient.jar", "#{server_folder}/common/lib"
   
   explain "Deploy the ui-fw-portlet"
   # deploy the ui-fw-portlet file
