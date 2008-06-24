@@ -306,6 +306,7 @@ define "tempo" do
            AXIOM, 
            AXIS2,  
            CSV,
+           CASTOR,
            ICAL,
            INTALIO_STATS, 
            JSP_API, 

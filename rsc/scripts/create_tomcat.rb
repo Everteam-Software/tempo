@@ -181,7 +181,7 @@ MISSING_LIBS= [
 MISSING_LIBS.each {|lib| 
   locate_and_copy( lib, lib_folder )
 }
-File.cp "#{TEMPO_SVN}/rsc/liferay501/castor-1.0.5.jar", "#{webapp_folder}/ui-fw/WEB-INF/lib"
+#File.cp "#{TEMPO_SVN}/rsc/liferay501/castor-1.0.5.jar", "#{webapp_folder}/ui-fw/WEB-INF/lib"
 ##
 
 title "Install registry into common lib"
@@ -292,7 +292,7 @@ if SERVER == LIFERAY
   FileUtils.mkdir_p "#{webapp_folder}/ui-fw-portlet/WEB-INF/tld"
   File.copy "#{TEMPO_SVN}/rsc/liferay501/liferay-portlet.tld", "#{webapp_folder}/ui-fw-portlet/WEB-INF/tld"
   # copy the util jars
-  Dir.glob("#{TEMPO_SVN}/rsc/liferay501/util*.jar") {|x| File.copy x, "#{webapp_folder}/ui-fw-portlet/WEB-INF/lib"}
+  Dir.glob("#{webapp_folder}/ROOT/WEB-INF/lib/util*.jar") {|x| File.copy x, "#{webapp_folder}/ui-fw-portlet/WEB-INF/lib"}
   # delete some conflict jar files
   Dir.glob(File.join("#{webapp_folder}/ui-fw-portlet/WEB-INF/lib", "portlet*.jar")) {|x| File.delete x}
   Dir.glob(File.join("#{webapp_folder}", "**/casclient*.jar")) {|x| File.delete x}
