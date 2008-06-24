@@ -113,8 +113,7 @@ wi.install_tempo_war( "ui-fw" )
 wi.install_tempo_war( "wds-service", "wds" )
 wi.install_tempo_war( "xforms-manager", "xFormsManager" )
 wi.install_tempo_war( "tms-feeds", "feeds")
-#wi.install_tempo_war( "cas-server-webapp", "cas" )
-wi.install( "#{TEMPO_SVN}/rsc/liferay501/cas-web.war", "cas.war")
+wi.install_tempo_war( "cas-server-webapp", "cas" )
 # wi.install_tempo_war( "ui-pluto", "pluto" )
 # wi.install_tempo_war( "ui-fw-portlet")
 ##
@@ -260,22 +259,6 @@ file_cp = "#{tomcat_bin_folder}/setclasspath.sh"
 File.open(file_cp, File::WRONLY|File::APPEND) {|file| file << "export CLASSPATH=$CLASSPATH:$CATALINA_HOME/conf"} if SERVER != LIFERAY
 ##
 
-title "Set up CAS server"
-explain "CAS server authentication integrates with tempo"
-##
-File.copy "#{TEMPO_SVN}/rsc/liferay501/tempokeystore", tomcat_config_folder
-Dir.glob(File.join("#{TEMPO_SVN}/rsc/liferay501", "server.xml")) {|x| File.copy(x,"#{server_folder}/conf", DEBUG)}
-FileUtils.cp_r "#{TEMPO_SVN}/cas-server-webapp/target/classes", "#{webapp_folder}/cas/WEB-INF"
-File.cp "#{TEMPO_SVN}/rsc/liferay501/deployerConfigContext.xml", "#{webapp_folder}/cas/WEB-INF"
-Dir.glob(File.join("#{TEMPO_SVN}/security*/target", "*.jar")) {|x| File.cp x, "#{webapp_folder}/cas/WEB-INF/lib"}
-CAS_MISSING_LIBS= [
-  AXIOM, AXIS2, LOG4J, WS_COMMONS_SCHEMA
-]
-CAS_MISSING_LIBS.each {|lib| 
-  locate_and_copy( lib, "#{webapp_folder}/cas/WEB-INF/lib" )
-} 
-##
-
 ## For liferay specific
 if SERVER == LIFERAY
   title "For liferay 5.0.1 specific configuration"
@@ -295,9 +278,18 @@ if SERVER == LIFERAY
   Dir.glob("#{webapp_folder}/ROOT/WEB-INF/lib/util*.jar") {|x| File.copy x, "#{webapp_folder}/ui-fw-portlet/WEB-INF/lib"}
   # delete some conflict jar files
   Dir.glob(File.join("#{webapp_folder}/ui-fw-portlet/WEB-INF/lib", "portlet*.jar")) {|x| File.delete x}
-  Dir.glob(File.join("#{webapp_folder}", "**/casclient*.jar")) {|x| File.delete x}
 end
 
+title "Set up CAS server and client"
+explain "All the webapp should use the same version of casclient"
+##
+File.copy "#{TEMPO_SVN}/rsc/liferay501/tempokeystore", tomcat_config_folder
+Dir.glob(File.join("#{TEMPO_SVN}/rsc/liferay501", "server.xml")) {|x| File.copy(x,"#{server_folder}/conf", DEBUG)}
+Dir.glob(File.join("#{webapp_folder}/cas/WEB-INF/lib", "casclient*.jar")) {|x| File.cp x, "#{server_folder}/common/lib"}
+Dir.glob(File.join("#{webapp_folder}", "**/casclient*.jar")) {|x| File.delete x}
+File.copy "#{TEMPO_SVN}/rsc/liferay501/xmldsig.jar", "#{webapp_folder}/cas/WEB-INF/lib"
+##
+  
 title "Deleting war files from webapp folder"
 explain "Make some space in the webapp folder by removing unused war files"
 ##
