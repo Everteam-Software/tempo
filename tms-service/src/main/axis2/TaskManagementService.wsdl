@@ -239,11 +239,11 @@
 			</xsd:element>
 			<xsd:element name="addAttachmentRequest">
 			    <xsd:complexType>
-			       <xsd:sequence>
-			         <xsd:element name="taskId" type="xsd:string" />
-			         <xsd:element name="attachment" type="tns:attachment" />
-			         <xsd:element name="participantToken" type="xsd:string" />
-			       </xsd:sequence>
+			        <xsd:sequence>
+			            <xsd:element name="taskId" type="xsd:string" />
+			            <xsd:element name="attachment" type="tns:attachment" />
+			            <xsd:element name="participantToken" type="xsd:string" />
+			        </xsd:sequence>
 			    </xsd:complexType>
 			</xsd:element>
 			<xsd:element name="removeAttachmentRequest">
@@ -303,7 +303,6 @@
                     <xsd:element name="revokeAction" type="tns:accessControlType" maxOccurs="1" minOccurs="0"/>
                     <xsd:element name="saveAction" type="tns:accessControlType" maxOccurs="1" minOccurs="0"/>
                     <xsd:element name="completeAction" type="tns:accessControlType" maxOccurs="1" minOccurs="0"/>
-					
 					<xsd:element name="attachments">
 					 <xsd:complexType>
 					   <xsd:sequence>
@@ -448,13 +447,49 @@
 		<wsdl:part name="reassignRequest" element="tns:reassignRequest"></wsdl:part>
 	</wsdl:message>
 	
+	<wsdl:message name="getAttachmentsRequest">
+		<wsdl:part name="getAttachmentsRequest" element="tns:getAttachmentsRequest"></wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="getAttachmentsResponse">
+		<wsdl:part name="getAttachmentsResponse" element="tns:getAttachmentsResponse"></wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="addAttachmentRequest">
+		<wsdl:part name="addAttachmentRequest" element="tns:addAttachmentRequest"></wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="removeAttachmentRequest">
+		<wsdl:part name="removeAttachmentRequest" element="tns:removeAttachmentRequest"></wsdl:part>
+	</wsdl:message>
+	
+	
 	<wsdl:portType name="TaskManagementServices">
-		<!-- <wsdl:operation name="reassign">
+        <wsdl:operation name="reassign">
 			<wsdl:input message="tns:reassignRequest"/>
 			<wsdl:output message="tns:okResponse"/>
 			<wsdl:fault name="UnavailableTask" message="tns:unavailableTaskFault"/>
+			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault"/>
 			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault"/>
-		</wsdl:operation> -->
+		</wsdl:operation>
+		<wsdl:operation name="getAttachments">
+			<wsdl:input message="tns:getAttachmentsRequest"/>
+			<wsdl:output message="tns:getAttachmentsResponse"/>
+			<wsdl:fault name="UnavailableTask" message="tns:unavailableTaskFault"/>
+			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault"/>
+			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault"/>
+		</wsdl:operation>
+		<wsdl:operation name="addAttachment">
+			<wsdl:input message="tns:addAttachmentRequest"/>
+			<wsdl:output message="tns:okResponse"/>
+			<wsdl:fault name="UnavailableTask" message="tns:unavailableTaskFault"/>		
+			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault"/>
+			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault"/>
+		</wsdl:operation>
+		<wsdl:operation name="removeAttachment">
+			<wsdl:input message="tns:removeAttachmentRequest"/>
+			<wsdl:output message="tns:okResponse"/>
+			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault"/>
+			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault"/>
+		</wsdl:operation>
+		
 		<wsdl:operation name="getTaskList">
 			<wsdl:input message="tns:getTaskListRequest"/>
 			<wsdl:output message="tns:getTaskListResponse"/>
@@ -554,6 +589,7 @@
 			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault"/>
 		</wsdl:operation>
 	</wsdl:portType>
+	
 	<wsdl:binding name="TaskManagementServicesSOAP" type="tns:TaskManagementServices">
 		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
 		<wsdl:operation name="getTaskList">
@@ -586,7 +622,7 @@
 				<soap:fault name="InvalidInputMessage" use="literal"/>
 			</wsdl:fault>
 		</wsdl:operation>
-		<!-- <wsdl:operation name="reassign">
+		<wsdl:operation name="reassign">
 			<soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/reassign"/>
 			<wsdl:input>
 				<soap:body use="literal"/>
@@ -600,7 +636,63 @@
 			<wsdl:fault name="InvalidParticipantToken">
 				<soap:fault name="InvalidParticipantToken" use="literal"/>
 			</wsdl:fault>
-		</wsdl:operation> -->
+			<wsdl:fault name="InvalidInputMessage">
+				<soap:fault name="InvalidInputMessage" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="getAttachments">
+			<soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getAttachments"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="UnavailableTask">
+				<soap:fault name="UnavailableTask" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="InvalidParticipantToken">
+				<soap:fault name="InvalidParticipantToken" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="InvalidInputMessage">
+				<soap:fault name="InvalidInputMessage" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="addAttachment">
+			<soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/addAttachment"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="UnavailableTask">
+				<soap:fault name="UnavailableTask" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="InvalidParticipantToken">
+				<soap:fault name="InvalidParticipantToken" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="InvalidInputMessage">
+				<soap:fault name="InvalidInputMessage" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="removeAttachment">
+			<soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/removeAttachment"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="InvalidParticipantToken">
+				<soap:fault name="InvalidParticipantToken" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="InvalidInputMessage">
+				<soap:fault name="InvalidInputMessage" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		
 		<wsdl:operation name="getTask">
 			<soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getTask"/>
 			<wsdl:input>
@@ -831,7 +923,7 @@
 	</wsdl:binding>
 	<wsdl:service name="TaskManagementServices">
 		<wsdl:port name="TaskManagementServicesSOAP" binding="tns:TaskManagementServicesSOAP">
-			<soap:address location="http://www.example.org"/>
+			<soap:address location="http://localhost:8080/axis2/services/TaskManagementServices"/>
 		</wsdl:port>
 	</wsdl:service>
 </wsdl:definitions>
