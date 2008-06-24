@@ -76,10 +76,20 @@ public class RegistryFactory {
             boolean useContextClassLoader = _props.getProperty("org.intalio.tempo.registry.contextClassLoader", "true").equalsIgnoreCase("true");
             Class<Registry> clazz;
             if (useContextClassLoader) {
-                clazz = (Class<Registry>) Class.forName(className, true, Thread.currentThread().getContextClassLoader());
+                try {
+                    clazz = (Class<Registry>) Class.forName(className, true, Thread.currentThread().getContextClassLoader());
+                } catch (ClassNotFoundException ex) {
+                    // fallback to current classloader
+                    clazz = (Class<Registry>) Class.forName(className);
+                }
             } else {
-                clazz = (Class<Registry>) Class.forName(className);
-            }
+                try {
+                    clazz = (Class<Registry>) Class.forName(className);
+                } catch (ClassNotFoundException ex) {
+                    // fallback to context classloader
+                    clazz = (Class<Registry>) Class.forName(className, true, Thread.currentThread().getContextClassLoader());
+                }
+            }                
             if (clazz == null)
                 throw new IllegalStateException("Unable to load class: "+className);
             _registry = clazz.newInstance();
