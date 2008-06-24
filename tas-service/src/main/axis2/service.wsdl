@@ -68,6 +68,11 @@
             type="xsd:string"
             minOccurs="1"
             maxOccurs="1" />
+          <xsd:element
+            name="filename"
+            type="xsd:string"
+            minOccurs="1"
+            maxOccurs="1" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:element name="addRequest">
