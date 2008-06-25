@@ -250,13 +250,7 @@ title "Copying tomcat config xml files (JNDI resources)"
 explain "Making the deploy registry and the mysql DS available to all tomcat application"
 ##
 Dir.glob(File.join("#{TEMPO_SVN}/rsc/tomcat", "*.*")) {|x| File.copy(x,"#{server_folder}/conf", DEBUG)}
-##
-
-title "Expanding tomcat classpath"
-explain "Final touch, so the logging is done properly"
-##
-file_cp = "#{tomcat_bin_folder}/setclasspath.sh"
-File.open(file_cp, File::WRONLY|File::APPEND) {|file| file << "export CLASSPATH=$CLASSPATH:$CATALINA_HOME/conf"} if SERVER != LIFERAY
+Dir.glob(File.join("#{server_folder}/conf", "log4j.properties")) {|x| File.move(x,"#{server_folder}/common/classes", DEBUG)}
 ##
 
 ## For liferay specific
@@ -266,7 +260,6 @@ if SERVER == LIFERAY
   File.cp "#{TEMPO_SVN}/rsc/liferay501/web.xml", "#{webapp_folder}/ROOT/WEB-INF"
   File.cp "#{TEMPO_SVN}/rsc/liferay501/forliferay-ticketfilter-1.0.1.jar", "#{webapp_folder}/ROOT/WEB-INF/lib"
   File.cp "#{TEMPO_SVN}/rsc/liferay501/portal-ext.properties", "#{webapp_folder}/ROOT/WEB-INF/classes"
-  File.cp "#{webapp_folder}/ROOT/WEB-INF/lib/casclient.jar", "#{server_folder}/common/lib"
   
   explain "Deploy the ui-fw-portlet"
   # deploy the ui-fw-portlet file
