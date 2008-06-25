@@ -229,10 +229,12 @@ define "tempo" do
   end
 
   desc "Xml Beans generation"
-  define "tms-axis" do
+  define "tms-axis" do 
+    FileUtils.mkdir_p _('target/classes/') # workaround for bug in buildr when no classes to be compiled.
     compile_xml_beans _("../tms-service/src/main/axis2")
     package(:jar).include _('target/generated/xmlbeans/'), :as=>'.'
-    package(:jar).include _('target/classes/'), :as=>'.'
+    package(:jar).include _('target/classes/'), :as=>'.' 
+
   end
 
   desc "Task Management Services Common Library"
