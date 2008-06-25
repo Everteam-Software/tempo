@@ -586,14 +586,9 @@
                                     <!-- Display after submit done, waiting for reply -->
                                     <xforms:case id="refresh-all">
                                     <xsl:if test="doc('input:xpl-input')/task/reloadTaskList">
-                                        <xhtml:html>
-                                            <xhtml:body onLoad="window.open('../../ui-fw/tasks.htm', '_parent')">
-                                                <xhtml:center>Wait for refresh please...</xhtml:center>
-                                                <xhtml:center>
-                                                    <xhtml:img src="/images/loading.gif" alt="..."/>
-                                                </xhtml:center>
-                                            </xhtml:body>
-                                        </xhtml:html>
+                                       	  <xhtml:html>
+						                        <xhtml:body onLoad="parent.window.hideWindow();"/>
+						                    </xhtml:html>
                                      </xsl:if>
                                     </xforms:case>
                                 </xforms:switch>
