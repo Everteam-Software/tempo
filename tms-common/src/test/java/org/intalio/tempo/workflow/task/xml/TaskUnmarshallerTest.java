@@ -95,10 +95,14 @@ public class TaskUnmarshallerTest extends TestCase {
     
     public void testOracleTask() throws Exception {
         TaskUnmarshaller unmarshaller = new TaskUnmarshaller();
-        OMElement rootElement = TestUtils.loadElementFromResource("/oracle.xml");
-        unmarshaller.unmarshalTaskFromMetadata(rootElement);
-        rootElement = TestUtils.loadElementFromResource("/failInOracle.xml");
-        unmarshaller.unmarshalTaskFromMetadata(rootElement);
+        String[] oracleTests = new String[] {
+                        "/oracle.xml",
+                        "/failInOracle.xml", 
+                        "/failInOracle2.xml"};
+        for(String test : oracleTests) {
+            OMElement rootElement = TestUtils.loadElementFromResource(test);
+            unmarshaller.unmarshalTaskFromMetadata(rootElement);    
+        }
     }
 
     private void testBadFullTask(String resourceName) throws Exception {
