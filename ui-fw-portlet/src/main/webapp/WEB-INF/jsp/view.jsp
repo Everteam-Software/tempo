@@ -47,13 +47,13 @@
             <div id="tabPanel">
                 <div id="tab0" style={background-color:#ffffff;height:250}>
 				    <!--tasks grid-->    
-				    <div id="pnlGrid" style="width:520px;height:200px;">
+				    <div id="pnlGrid" style="width:570px;height:200px;">
 				    <div id="grid"></div>
 				    </div>
                 </div>
                 <div id="tab1" style={background-color:#ffffff;height:250}>
 				    <!--process grid-->    
-				    <div id="processPnl" style="width:520px;height:200px;">
+				    <div id="processPnl" style="width:570px;height:200px;">
 				    <div id="processGrid"></div>
                 <div>
             </div>
