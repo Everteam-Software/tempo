@@ -1,9 +1,11 @@
 <%@ taglib uri="http://java.sun.com/portlet" prefix="portlet" %>
 <%@ page import="org.intalio.tempo.web.ApplicationState" %>
+<%@ page import="java.net.URLEncoder" %>
 
 
 <% 
 ApplicationState as = (ApplicationState)renderRequest.getPortletSession().getAttribute(ApplicationState.PARAMETER_NAME);
+String userName = URLEncoder.encode(as.getCurrentUser().getName());
 %>
 
 
@@ -37,7 +39,7 @@ Ext.onReady(SimpleTabEx.init,SimpleTabEx,true);
 //TasksGrid
 var GridEx={
 	gridobj : '',
-	dataurl : '/ui-fw-portlet/json/update?token=' + '<%= as.getCurrentUser().getToken() %>' + '&amp;user=' + '<%= as.getCurrentUser().getName() %>',
+	dataurl : '/ui-fw-portlet/json/update?token=' + '<%= as.getCurrentUser().getToken() %>' + '&amp;user=' + '<%= userName %>',
     //initialize
     init:function(){
         //create Grid
@@ -59,7 +61,7 @@ var GridEx={
     makeDataSource:function(){
     
         var ds=new Ext.data.Store({
- 		     proxy: new Ext.data.HttpProxy({url: '/ui-fw-portlet/json/update?token=' + '<%= as.getCurrentUser().getToken() %>' + '&user=' + '<%= as.getCurrentUser().getName() %>' +
+ 		     proxy: new Ext.data.HttpProxy({url: '/ui-fw-portlet/json/update?token=' + '<%= as.getCurrentUser().getToken() %>' + '&user=' + '<%= userName %>' +
 '&taskType=' + document.getElementById("taskType").value + '&description=' + document.getElementById("description").value}),
              reader: new Ext.data.JsonReader({
             	root :"tasks"
@@ -109,7 +111,7 @@ Ext.onReady(GridEx.init,GridEx,true);
 //ProcessGrid
 var ProcessGridEx={
 	gridobj : '',
-	dataurl : '/ui-fw-portlet/json/update?token=' + '<%= as.getCurrentUser().getToken() %>' + '&user=' + '<%= as.getCurrentUser().getName() %>',
+	dataurl : '/ui-fw-portlet/json/update?token=' + '<%= as.getCurrentUser().getToken() %>' + '&user=' + '<%= userName %>',
     //initialize
     init:function(){
         //create Grid
@@ -128,7 +130,7 @@ var ProcessGridEx={
     //create DataSource
     makeDataSource:function(){
         var ds=new Ext.data.Store({
- 		     proxy: new Ext.data.HttpProxy({url: '/ui-fw-portlet/json/update?token=' + '<%= as.getCurrentUser().getToken() %>' + '&user=' + '<%= as.getCurrentUser().getName() %>' +
+ 		     proxy: new Ext.data.HttpProxy({url: '/ui-fw-portlet/json/update?token=' + '<%= as.getCurrentUser().getToken() %>' + '&user=' + '<%= userName %>' +
 '&amp;taskType=' + document.getElementById("taskType").value+ '&description=' + document.getElementById("description").value}),
              reader: new Ext.data.JsonReader({
             	root :"process"
