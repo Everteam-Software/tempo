@@ -60,7 +60,7 @@ var GridEx={
     
         var ds=new Ext.data.Store({
  		     proxy: new Ext.data.HttpProxy({url: '/ui-fw-portlet/json/update?token=' + '<%= as.getCurrentUser().getToken() %>' + '&user=' + '<%= as.getCurrentUser().getName() %>' +
-'&taskType=' + document.getElementById("taskType").value }),
+'&taskType=' + document.getElementById("taskType").value + '&description=' + document.getElementById("description").value}),
              reader: new Ext.data.JsonReader({
             	root :"tasks"
             }, [
@@ -129,7 +129,7 @@ var ProcessGridEx={
     makeDataSource:function(){
         var ds=new Ext.data.Store({
  		     proxy: new Ext.data.HttpProxy({url: '/ui-fw-portlet/json/update?token=' + '<%= as.getCurrentUser().getToken() %>' + '&user=' + '<%= as.getCurrentUser().getName() %>' +
-'&amp;taskType=' + document.getElementById("taskType").value}),
+'&amp;taskType=' + document.getElementById("taskType").value+ '&description=' + document.getElementById("description").value}),
              reader: new Ext.data.JsonReader({
             	root :"process"
             }, [
@@ -191,8 +191,13 @@ function <portlet:namespace/>_startTimer(interval) {
 }
 
 //filter the tasks
-function searchTask(){
-    <portlet:namespace/>_getUpdateData()
+function <portlet:namespace/>_searchTask(){
+	//refesh GridEx
+	GridEx.gridobj.reconfigure(GridEx.makeDataSource(),GridEx.gridobj.getColumnModel());
+
+	//reflesh ProcessGridEx
+	ProcessGridEx.gridobj.reconfigure(ProcessGridEx.makeDataSource(),ProcessGridEx.gridobj.getColumnModel());
+
 }
 
 //get data and refresh GridDatas. 

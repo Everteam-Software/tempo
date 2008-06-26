@@ -8,11 +8,11 @@
 <link href="/ui-fw-portlet/portlet.css" rel="stylesheet" type="text/css"/>
 
 <portlet:defineObjects/>
-    <!--js Liblary-->
-	<script src="/ui-fw-portlet/script/adapter/ext/ext-base.js" type="text/javascript"></script>
-	<script src="/ui-fw-portlet/script/ext-all.js" type="text/javascript"></script>
-	<script src="/ui-fw-portlet/script/prototype.js" type="text/javascript"></script>
-	<script src="/ui-fw-portlet/script/entry.js" type="text/javascript"></script>
+
+<script src="/ui-fw-portlet/script/adapter/ext/ext-base.js" type="text/javascript"/>
+<script src="/ui-fw-portlet/script/ext-all.js" type="text/javascript"/>
+<script src="/ui-fw-portlet/script/prototype.js" type="text/javascript"/>
+<script src="/ui-fw-portlet/script/entry.js" type="text/javascript"/>
 
 <%@ include file="ui-fw-portlet.jsp" %>
 
@@ -20,14 +20,15 @@
 	<tr>
 		<td>Task Type:</td>
 		<td>
-		<select id="taskType" size="1" onChange="searchTask()">
+		
+		<select id="taskType" size="1" onChange="<portlet:namespace/>_searchTask()">
 		<option>Task</option>
 		<option>PATask</option>
 		<option>Notification</option>
 		</select></td>
 		<td>Description:</td>
-		<td><input id="description" type="text" /></td>
-		<td><input type="submit" onclick="searchTask()" value="Filter Tasks"/></td>
+		<td><input id="description" type="text" onChange="<portlet:namespace/>_searchTask()" /></td>
+		<td><input type="submit" onclick="<portlet:namespace/>_searchTask()" value="Filter Tasks"/></td>
 	</tr>
 </table>
 

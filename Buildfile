@@ -162,7 +162,7 @@ define "tempo" do
 
   desc "Security Framework"
   define "security" do
-    compile.with CAS_CLIENT, CASTOR, LOG4J, SLF4J, SPRING[:core], XERCES
+    compile.with CAS_CLIENT, DOM4J, CASTOR, LOG4J, SLF4J, SPRING[:core], XERCES
 
     test.exclude "*BaseSuite"
     test.exclude "*FuncTestSuite"
