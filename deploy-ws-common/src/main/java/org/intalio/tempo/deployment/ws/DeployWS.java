@@ -56,8 +56,8 @@ public class DeployWS {
     }
 
     public DeployWS(boolean bindRegistry) {
-    	initialize();
-    	if (bindRegistry) bindRegistry();
+        initialize();
+        if (bindRegistry) bindRegistry();
     }
     
     protected void initialize() {
@@ -75,17 +75,22 @@ public class DeployWS {
                     throw new RuntimeException("Configuration directory " + _configDir.getAbsolutePath()
                             + " doesn't exist.");
                 }
+                ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
                 Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-                FileSystemResource config = new FileSystemResource(new File(_configDir, "tempo-deploy.xml"));
-                XmlBeanFactory factory = new XmlBeanFactory(config);
-    
-                PropertyPlaceholderConfigurer propsCfg = new PropertyPlaceholderConfigurer();
-                propsCfg.setSearchSystemEnvironment(true);
-                propsCfg.postProcessBeanFactory(factory);
-                _deployService = (DeploymentServiceImpl) factory.getBean("deploymentService");
-                _deployService.init();
-                _deployService.start();
-                _initialized = true;
+                try {
+                    FileSystemResource config = new FileSystemResource(new File(_configDir, "tempo-deploy.xml"));
+                    XmlBeanFactory factory = new XmlBeanFactory(config);
+        
+                    PropertyPlaceholderConfigurer propsCfg = new PropertyPlaceholderConfigurer();
+                    propsCfg.setSearchSystemEnvironment(true);
+                    propsCfg.postProcessBeanFactory(factory);
+                    _deployService = (DeploymentServiceImpl) factory.getBean("deploymentService");
+                    _deployService.init();
+                    _deployService.start();
+                    _initialized = true;
+                } finally {
+                    Thread.currentThread().setContextClassLoader(oldClassLoader);
+                }
             }
         } catch (RuntimeException except) {
             LOG.error("Error during initialization of deployment service", except);
@@ -95,18 +100,18 @@ public class DeployWS {
 
     protected void bindRegistry() {
         try {
-        	DeploymentServiceLookup lookup = new DeploymentServiceLookup();
-        	lookup.loadProperties();
+            DeploymentServiceLookup lookup = new DeploymentServiceLookup();
+            lookup.loadProperties();
 
-        	RegistryFactory registryFactory = new RegistryFactory();
-        	registryFactory.init();
-        	Registry registry = registryFactory.getRegistry();
-        	
-        	LOG.info("Registering DeploymentService at "+lookup.deploymentServiceName);
-        	registry.bind(lookup.deploymentServiceName, _deployService);
+            RegistryFactory registryFactory = new RegistryFactory();
+            registryFactory.init();
+            Registry registry = registryFactory.getRegistry();
+            
+            LOG.info("Registering DeploymentService at "+lookup.deploymentServiceName);
+            registry.bind(lookup.deploymentServiceName, _deployService);
 
-        	LOG.info("Registering DeploymentServiceCallback at "+lookup.deploymentCallbackName);
-        	registry.bind(lookup.deploymentCallbackName, _deployService.getCallback());
+            LOG.info("Registering DeploymentServiceCallback at "+lookup.deploymentCallbackName);
+            registry.bind(lookup.deploymentCallbackName, _deployService.getCallback());
         } catch (RuntimeException except) {
             LOG.error("Error during initialization of deployment service", except);
             throw except;

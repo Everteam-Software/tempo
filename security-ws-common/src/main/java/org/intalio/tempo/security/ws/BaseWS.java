@@ -54,16 +54,23 @@ public class BaseWS {
                     throw new RuntimeException("Configuration directory " + _configDir.getAbsolutePath()
                             + " doesn't exist.");
                 }
-                Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-                FileSystemResource config = new FileSystemResource(new File(_configDir, "securityConfig.xml"));
-                XmlBeanFactory factory = new XmlBeanFactory(config);
-    
-                PropertyPlaceholderConfigurer propsCfg = new PropertyPlaceholderConfigurer();
-                propsCfg.setSearchSystemEnvironment(true);
-                propsCfg.postProcessBeanFactory(factory);
-                _securityProvider = (SecurityProvider) factory.getBean("securityProvider");
-                _tokenService = (org.intalio.tempo.security.token.TokenService) factory.getBean("tokenService");
-                _initialized = true;
+
+                Thread thread = Thread.currentThread();
+                ClassLoader oldClassLoader = thread.getContextClassLoader();
+                try {
+                    thread.setContextClassLoader(getClass().getClassLoader());
+                    FileSystemResource config = new FileSystemResource(new File(_configDir, "securityConfig.xml"));
+                    XmlBeanFactory factory = new XmlBeanFactory(config);
+        
+                    PropertyPlaceholderConfigurer propsCfg = new PropertyPlaceholderConfigurer();
+                    propsCfg.setSearchSystemEnvironment(true);
+                    propsCfg.postProcessBeanFactory(factory);
+                    _securityProvider = (SecurityProvider) factory.getBean("securityProvider");
+                    _tokenService = (org.intalio.tempo.security.token.TokenService) factory.getBean("tokenService");
+                    _initialized = true;
+                } finally {
+                    thread.setContextClassLoader(oldClassLoader);
+                }
             }
         } catch (RuntimeException except) {
             LOG.error("Error during initialization of security service", except);

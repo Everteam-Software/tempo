@@ -28,8 +28,9 @@ public class ServiceObjectSupplier implements org.apache.axis2.ServiceObjectSupp
 	public Object getServiceObject(AxisService service) throws AxisFault {
 	    Parameter fac = service.getParameter("SpringBeanFactory");
 	    if(fac!=null) {
+            ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
+            Thread.currentThread().setContextClassLoader(SpringInit.CONTEXT.getClass().getClassLoader());
 	        try {
-	            Thread.currentThread().setContextClassLoader(SpringInit.CONTEXT.getClass().getClassLoader());
 	            String factoryName = (String)fac.getValue();
 	            LOG.info("Using factory:"+factoryName);
 	            Object o = SpringInit.CONTEXT.getBean(factoryName);
@@ -38,7 +39,9 @@ public class ServiceObjectSupplier implements org.apache.axis2.ServiceObjectSupp
 	            return factory.getObject();    
 	        } catch (Exception e) {
 	            LOG.info("Error while using factory",e);
-	        }    
+	        } finally {
+            Thread.currentThread().setContextClassLoader(oldClassLoader);
+            }
 	    }
 				
 		String beanName = "#unspecified#";

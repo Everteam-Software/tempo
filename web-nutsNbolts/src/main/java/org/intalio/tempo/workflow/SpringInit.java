@@ -39,8 +39,11 @@ public class SpringInit implements ServiceLifeCycle {
             Parameter p = service.getParameter("SpringContextFile");
             if (p != null) configFile = (String) p.getValue();
             LOG.debug("Loading configuration: "+configFile);
+
+            Thread thread = Thread.currentThread();
+            ClassLoader oldClassLoader = thread.getContextClassLoader();
             try {
-                Thread.currentThread().setContextClassLoader(service.getClassLoader());
+                thread.setContextClassLoader(service.getClassLoader());
                 CONTEXT = new SysPropApplicationContextLoader(configFile);
                 Parameter load = service.getParameter("LoadOnStartup");
                 if (load != null && ((String) load.getValue()).equalsIgnoreCase("true")) {
@@ -55,6 +58,8 @@ public class SpringInit implements ServiceLifeCycle {
                 }
             } catch (IOException except) {
                 throw new RuntimeException(except);
+            } finally {
+                thread.setContextClassLoader(oldClassLoader);
             }
         } catch (Exception except) {
             LOG.error("Error while loading Spring context file: "+configFile, except);
