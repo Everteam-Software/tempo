@@ -44,7 +44,6 @@ public class JsonUpdate extends HttpServlet {
                 Task[] tasks;
                 if (taskType == null || taskType.length() == 0)
                     taskType = "Task";
-                // Task[] tasks = taskManager.getTaskList();
                 String subQuery = "T._description like '%'";
                 if (description != null && description.length() > 0)
                     subQuery = "T._description like '%" + description + "%'";
@@ -55,7 +54,7 @@ public class JsonUpdate extends HttpServlet {
                 String notificationURL = resoleUrl(request, fmanager.getNotificationURL());
                 String peopleInitiatedProcessURL = resoleUrl(request, fmanager.getPeopleInitiatedProcessURL());
 
-                for (Object task : tasks) {
+                for (Task task : tasks) {
                     if (task instanceof Notification) {
                         Notification notification = (Notification) task;
                         if (!TaskState.COMPLETED.equals(notification.getState())) {
@@ -64,6 +63,7 @@ public class JsonUpdate extends HttpServlet {
                                             + token + "&user=" + userName);
                             jtask.put("description", notification.getDescription());
                             jtask.put("creationDate", notification.getCreationDate());
+                            jtask.put("state", notification.getState());
                             jtasks.add(jtask);
                         }
                     } else if (task instanceof PATask) {
@@ -74,6 +74,7 @@ public class JsonUpdate extends HttpServlet {
                                             + "&user=" + userName);
                             jtask.put("description", paTask.getDescription());
                             jtask.put("creationDate", paTask.getCreationDate());
+                            jtask.put("state", paTask.getState());
                             jtasks.add(jtask);
                         }
                     } else if (task instanceof PIPATask) {
@@ -92,15 +93,11 @@ public class JsonUpdate extends HttpServlet {
                 jroot.put("tasks", jtasks);
                 jroot.put("process", jprocesses);
             } catch (AuthException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
+	            throw new ServletException(e1);
             } catch (JSONException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+	            throw new ServletException(e);
             }
-
             PrintWriter out = response.getWriter();
-
             out.print(jroot);
         }
     }
