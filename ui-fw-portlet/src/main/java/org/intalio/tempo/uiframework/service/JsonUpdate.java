@@ -10,11 +10,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.intalio.tempo.uiframework.Configuration;
 import org.intalio.tempo.uiframework.URIUtils;
 import org.intalio.tempo.uiframework.forms.FormManager;
 import org.intalio.tempo.uiframework.forms.FormManagerBroker;
-import org.intalio.tempo.workflow.SpringInit;
 import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.task.Notification;
 import org.intalio.tempo.workflow.task.PATask;
@@ -107,8 +105,7 @@ public class JsonUpdate extends HttpServlet {
     }
 
     private ITaskManagementService getTMS(HttpServletRequest request, String participantToken) throws RemoteException {
-//        String endpoint = Configuration.getInstance().getServiceEndpoint();
-        String endpoint = "http://localhost:8080/axis2/services/TaskManagementServices";
+        String endpoint = getServletConfig().getInitParameter("TaskManagementServices");
         return new RemoteTMSFactory(resoleUrl(request, endpoint), participantToken).getService();
     }
 

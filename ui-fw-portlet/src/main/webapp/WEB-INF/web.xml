@@ -46,6 +46,10 @@
 	<servlet>
 		<servlet-name>JsonUpdate</servlet-name>
 		<servlet-class>org.intalio.tempo.uiframework.service.JsonUpdate</servlet-class>
+		<init-param>
+            <param-name>TaskManagementServices</param-name>
+            <param-value>http://localhost:8080/axis2/services/TaskManagementServices</param-value>
+        </init-param>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>ViewRendererServlet</servlet-name>
