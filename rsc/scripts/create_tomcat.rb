@@ -297,6 +297,7 @@ Dir.glob(File.join("#{webapp_folder}", "**/jsp-api-2.0.jar")) {|x| File.delete x
 Dir.glob(File.join("#{webapp_folder}", "**/log4j-*.jar")) {|x| File.delete x}
 Dir.glob(File.join("#{webapp_folder}", "**/slf4j*.jar")) {|x| File.delete x}
 #Dir.glob(File.join("#{webapp_folder}", "**/xerces*.jar")) {|x| File.delete x}
+Dir.glob(File.join("#{server_folder}/common/endorsed", "*.jar")) {|x| File.delete x}
 ##
 
 title "Almost done !"
