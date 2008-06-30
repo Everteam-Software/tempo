@@ -62,7 +62,8 @@ var GridEx={
             }, [
             'taskUrl',
 			{name: 'description', mapping: 'description'},
-			{name: 'creationDate', mapping: 'creationDate'}
+			{name: 'creationDate', mapping: 'creationDate'},
+			'state'
             ])
         });
 
@@ -86,8 +87,8 @@ var GridEx={
             cm:colModel,
 			view: new Ext.grid.GridView ({
 			getRowClass : function (record, index) {
-			if(record.data.taskType == "Notification")
-			   return 'notification';
+			if(record.data.state == "CLAIMED")
+			   return 'claimed';
 			else
 			   return 'x-grid-selected-row';
 			}

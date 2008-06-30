@@ -5,7 +5,8 @@
 <%@ page import="javax.portlet.PortletURL" %>
 <%@ page session="false" %>
 
-<link href="/ui-fw-portlet/portlet.css" rel="stylesheet" type="text/css"/>
+<link href="/ui-fw-portlet/style/portlet.css" rel="stylesheet" type="text/css"/>
+<link href="/ui-fw-portlet/style/custom-rows.css" rel="stylesheet" type="text/css"/>
 
 <portlet:defineObjects/>
 

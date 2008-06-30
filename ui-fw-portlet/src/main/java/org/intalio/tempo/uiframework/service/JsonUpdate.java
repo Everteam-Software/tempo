@@ -10,9 +10,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.intalio.tempo.uiframework.Configuration;
 import org.intalio.tempo.uiframework.URIUtils;
 import org.intalio.tempo.uiframework.forms.FormManager;
 import org.intalio.tempo.uiframework.forms.FormManagerBroker;
+import org.intalio.tempo.workflow.SpringInit;
 import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.task.Notification;
 import org.intalio.tempo.workflow.task.PATask;
@@ -27,6 +29,7 @@ import atg.taglib.json.util.JSONException;
 import atg.taglib.json.util.JSONObject;
 
 public class JsonUpdate extends HttpServlet {
+    
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
         response.setContentType("application/x-json");
@@ -39,7 +42,7 @@ public class JsonUpdate extends HttpServlet {
             JSONArray jtasks = new JSONArray();
 
             JSONArray jprocesses = new JSONArray();
-            ITaskManagementService taskManager = getTMS(token);
+            ITaskManagementService taskManager = getTMS(request, token);
             try {
                 Task[] tasks;
                 if (taskType == null || taskType.length() == 0)
@@ -85,11 +88,8 @@ public class JsonUpdate extends HttpServlet {
                         jprocess.put("description", pipaTask.getDescription());
                         jprocess.put("creationDate", pipaTask.getCreationDate());
                         jprocesses.add(jprocess);
-                    } else {
-
+                    } 
                     }
-
-                }
                 jroot.put("tasks", jtasks);
                 jroot.put("process", jprocesses);
             } catch (AuthException e1) {
@@ -106,15 +106,15 @@ public class JsonUpdate extends HttpServlet {
         doGet(request, response);
     }
 
-    private ITaskManagementService getTMS(String participantToken) throws RemoteException {
+    private ITaskManagementService getTMS(HttpServletRequest request, String participantToken) throws RemoteException {
+//        String endpoint = Configuration.getInstance().getServiceEndpoint();
         String endpoint = "http://localhost:8080/axis2/services/TaskManagementServices";
-        return new RemoteTMSFactory(endpoint, participantToken).getService();
+        return new RemoteTMSFactory(resoleUrl(request, endpoint), participantToken).getService();
     }
 
     private String resoleUrl(HttpServletRequest request, String url) {
         try {
             url = URIUtils.resolveHttpURI(request, url);
-
         } catch (URISyntaxException ex) {
         }
         return url;
