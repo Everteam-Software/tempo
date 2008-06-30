@@ -29,7 +29,7 @@ TOMCAT_5_DOWNLOAD = APACHE_MIRROR + "tomcat/tomcat-5/v5.5.26/bin/apache-tomcat-5
 TOMCAT_6_DOWNLOAD = APACHE_MIRROR + "tomcat/tomcat-6/v6.0.16/bin/apache-tomcat-6.0.16.zip"
 TOMCAT_ADMIN_DOWNLOAD = APACHE_MIRROR + "tomcat/tomcat-5/v5.5.26/bin/apache-tomcat-5.5.26-admin.zip"
 AXIS_DOWNLOAD = APACHE_MIRROR + "ws/axis2/1_3/axis2-1.3-war.zip"
-ODE_DOWNLOAD = "http://www.intalio.org/public/tempo/apache-ode-war-1.1.2.3.zip"
+ODE_DOWNLOAD = "http://www.intalio.org/public/tempo/apache-ode-war-1.1.2.4.zip"
 LIFERAY_V501 = "http://internap.dl.sourceforge.net/sourceforge/lportal/liferay-portal-tomcat-5.5-5.0.1.zip"  #CA
 
 title "Changing directory"
