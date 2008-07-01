@@ -7,8 +7,8 @@ require "tasks/xmlbeans"
 # require "tasks/xmlbeans"
 
 # Keep this structure to allow the build system to update version numbers.
-VERSION_NUMBER = "5.2.0.27-SNAPSHOT"
-NEXT_VERSION = "5.2.0.28"
+VERSION_NUMBER = "5.2.0.28-SNAPSHOT"
+NEXT_VERSION = "5.2.0.29"
 
 require "rsc/build/dependencies.rb"
 require "rsc/build/repositories.rb"
