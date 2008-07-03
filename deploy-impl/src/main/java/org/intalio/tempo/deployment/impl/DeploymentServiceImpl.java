@@ -180,7 +180,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
             ensureDeploymentDirExists();
             _timer = new Timer("Deployment Service Timer", true);
             _serviceState = ServiceState.INITIALIZED;
-            LOG.debug(_("DeploymentService state is now INITIALIZED"));
+            LOG.info(_("DeploymentService state is now INITIALIZED"));
         }
     }
 
@@ -193,7 +193,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
                 throw new IllegalStateException("Service not initialized");
             }
             _serviceState = ServiceState.STARTING;
-            LOG.debug(_("DeploymentService state is now STARTING"));
+            LOG.info(_("DeploymentService state is now STARTING"));
             checkRequiredComponentManagersAvailable();
         }
     }
@@ -216,13 +216,13 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
                 _timer.cancel();
             }
             _serviceState = ServiceState.STOPPING;
-            LOG.debug(_("DeploymentService state is now STOPPING"));
+            LOG.info(_("DeploymentService state is now STOPPING"));
 
             Collection<DeployedAssembly> assemblies = getDeployedAssemblies();
             stopAndDeactivate(assemblies);
 
             _serviceState = null;
-            LOG.debug(_("DeploymentService state is now STOPPED"));
+            LOG.info(_("DeploymentService state is now STOPPED"));
         }
     }
 
@@ -675,7 +675,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
             }
         }
         if (!available)
-            LOG.debug(_("Waiting for component managers: {0}", missing));
+            LOG.info(_("Waiting for component managers: {0}", missing));
     }
 
     private void internalStart() {
@@ -691,7 +691,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
             Collection<DeployedAssembly> assemblies = getDeployedAssemblies();
             if (activateAndStart(assemblies)) {
                 _serviceState = ServiceState.STARTED;
-                LOG.debug(_("DeploymentService state is now STARTED"));
+                LOG.info(_("DeploymentService state is now STARTED"));
                 if (_coordinator) {
                     _timer.schedule(_scanTask, _scanPeriod * 1000, _scanPeriod * 1000);
                 }
@@ -974,7 +974,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
         public void available(ComponentManager manager) {
             String name = manager.getComponentManagerName();
             _componentManagers.put(name, manager);
-            LOG.debug(_("ComponentManager now available: {0}", name));
+            LOG.info(_("ComponentManager now available: {0}", name));
             
             synchronized (LIFECYCLE_LOCK) {
                 if (ServiceState.STARTED.equals(_serviceState)) {
