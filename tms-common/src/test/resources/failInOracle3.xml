@@ -1,0 +1,15 @@
+<tms:task xmlns:tms="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+    <tms:taskId>c303960c38bd6f81:-3f926c22:11adec6604b:680192.168.1.1133375144</tms:taskId>
+    <tms:taskState>READY</tms:taskState>
+    <tms:taskType>ACTIVITY</tms:taskType>
+    <tms:description />
+    <tms:processId xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+    <tms:creationDate>2008-07-02T11:53:01.000-07:00</tms:creationDate>
+    <tms:userOwner>intalio\admin</tms:userOwner>
+    <tms:formUrl>oxf://TestParalleHumanlTasks/SurveyResult.xform</tms:formUrl>
+    <tms:userProcessCompleteSOAPAction>
+        http://example.com/SurveyResult/xform/Process/notifyTaskCompletion
+    </tms:userProcessCompleteSOAPAction>
+    <tms:isChainedBefore>false</tms:isChainedBefore>
+    <tms:attachments />
+</tms:task>

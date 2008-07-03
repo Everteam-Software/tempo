@@ -98,7 +98,9 @@ public class TaskUnmarshallerTest extends TestCase {
         String[] oracleTests = new String[] {
                         "/oracle.xml",
                         "/failInOracle.xml", 
-                        "/failInOracle2.xml"};
+                        "/failInOracle2.xml",
+                        "/failInOracle3.xml"
+        };
         for(String test : oracleTests) {
             OMElement rootElement = TestUtils.loadElementFromResource(test);
             unmarshaller.unmarshalTaskFromMetadata(rootElement);    
