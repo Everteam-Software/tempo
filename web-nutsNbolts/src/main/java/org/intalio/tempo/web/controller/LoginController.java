@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +32,7 @@ import org.intalio.tempo.security.authentication.AuthenticationException;
 import org.intalio.tempo.security.token.TokenService;
 import org.intalio.tempo.security.util.PropertyUtils;
 import org.intalio.tempo.security.util.StringArrayUtils;
+import org.intalio.tempo.uiframework.versions.BpmsVersionsServlet;
 import org.intalio.tempo.web.ApplicationState;
 import org.intalio.tempo.web.Constants;
 import org.intalio.tempo.web.User;
@@ -410,6 +412,13 @@ public class LoginController extends UIController {
 
         Map model = errors.getModel();
         model.put("login", new LoginCommand());
+        
+        Properties buildProperties = BpmsVersionsServlet.getBPMSVersionsProperties();
+        if(LOG.isDebugEnabled()) LOG.debug(buildProperties.toString());
+        if (buildProperties != null) {
+            model.put("version", buildProperties.getProperty(BpmsVersionsServlet.BPMS_VERSION_PROP));
+            model.put("build", buildProperties.getProperty(BpmsVersionsServlet.BPMS_BUILD_NUMBER_PROP));
+        }
 
         return new ModelAndView(Constants.LOGIN_VIEW, model);
     }

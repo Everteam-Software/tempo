@@ -57,9 +57,6 @@ public class TasksAction extends Action {
     private final ArrayList<TaskHolder<Notification>> _notifications = new ArrayList<TaskHolder<Notification>>();
     private final ArrayList<TaskHolder<PIPATask>> _initTasks = new ArrayList<TaskHolder<PIPATask>>();
 
-    public static final String BPMS_VERSION_PROP = "bpms-version";
-    public static final String BPMS_BUILD_NUMBER_PROP = "bpms-build-number";
-
     private void initLists(Collection<Task> tasks) throws RemoteException, AuthException {
         if (_log.isDebugEnabled())
             _log.debug("Parsing task list for UI-FW");
@@ -157,9 +154,10 @@ public class TasksAction extends Action {
         model.put("refreshTime", conf.getRefreshTime());
 
         Properties buildProperties = BpmsVersionsServlet.getBPMSVersionsProperties();
+        if(_log.isDebugEnabled()) _log.debug(buildProperties.toString());
         if (buildProperties != null) {
-            model.put("version", buildProperties.getProperty(BPMS_VERSION_PROP));
-            model.put("build", buildProperties.getProperty(BPMS_BUILD_NUMBER_PROP));
+            model.put("version", buildProperties.getProperty(BpmsVersionsServlet.BPMS_VERSION_PROP));
+            model.put("build", buildProperties.getProperty(BpmsVersionsServlet.BPMS_BUILD_NUMBER_PROP));
         }
     }
 }

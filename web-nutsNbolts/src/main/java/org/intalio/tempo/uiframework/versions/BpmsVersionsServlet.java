@@ -22,17 +22,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 public class BpmsVersionsServlet extends HttpServlet {
+    private static final long serialVersionUID = -76889544882620584L;
 
-    private static final Log LOGGER = LogFactory.getLog(BpmsVersionsServlet.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BpmsVersionsServlet.class);
 	
 	private static final String UNKNOWN = "unknown";
 	
 	private static final String VERSIONS_PROPERTIES= "versions.properties";
+
+    public static final String BPMS_VERSION_PROP = "bpms-version";
+    public static final String BPMS_BUILD_NUMBER_PROP = "bpms-build-number";
 
 	private static Properties bpmsVersions = new Properties();
 	
@@ -96,7 +100,7 @@ public class BpmsVersionsServlet extends HttpServlet {
             } catch (IOException ex) {
                 throw new RuntimeException(ex.getMessage(), ex);
             } finally {
-                IOUtils.closeQuietly(is);
+                try{if (is!=null) is.close();} catch (Exception e) {}
             }
             return properties;
         } catch(Exception ex) {
