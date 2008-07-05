@@ -1,57 +1,59 @@
 Install TEMPO on tomcat 5.5 with mysql
 
-===================
-Introduction
-===================
+======================================
+ Introduction
+======================================
 
 Intalio Tempo is a set of runtime components that support human workflow within an service-oriented architecture (SOA). Our main goal is to provide a complete and extensible workflow solution with a bias towards interoperable technologies (BPEL, BPEL4People, XForms, REST, and web services) as a default implementation.
 
-===================
-Required software
-===================
+======================================
+ Required software
+======================================
 A JVM to compile and run the different components.
 Also, be sure to have installed buildr (build tool) and svn (version control) installed.
 
-===================
-Check out tempo
-===================
+======================================
+ Check out tempo
+======================================
 With the following command:
 svn co http://tempo.intalio.org/tempo/trunk/ tempo
 
-
-===================
-Database setup
-===================
+======================================
+ Database setup
+======================================
 Setup a mysql database named "bpms" with user "root" and no password. This is very unsecure. Change DB as needed in the final tomcat configuration.
-Start mysql engine and check user access.
+Start mysql engine and check user access. On the command line this would be:
 
-===================
-Installation
-===================
+    mysqladmin create bpms -u root
+    mysql -D bpms -u root < TEMPO_CHECKOUT/rsc/tempo-sql/ode-mysql.sql 
+
+======================================
+ Installation
+======================================
+
+If you haven't compiled the tempo component yet, edit: 
+TEMPO_CHECKOUT/rsc/scripts/config.yml:
+    set rebuild to "true"
+    if you want to try the liferay integration, uncomment: #server: liferay_v501
 
 Run the ruby script:
-TEMPO_CHECKOUT/rsc/scripts/create_tomcat.rb
-Edit the install path first:
-TEMPO_SVN to the place you've checked out tempo.
+    TEMPO_CHECKOUT/rsc/scripts/create_tomcat.rb
+======================================
+ Start up
+======================================
+A folder named intalio will be created in the current directory. Go to the bin folder of apache tomcat, and use the following command
+    catalina.sh run
 
-===================
-Start up
-===================
-Go to rsc/scripts/apache-*/bin/
-and use the following command
-   catalina.sh run
-
-Congrats, tempo is now running!
-
-===================
-Play with it
-===================
+Congratulation, tempo is now running!
+======================================
+ Play with it
+======================================
 The UI is at the following URL: http://localhost:8080/ui-fw/
 And you can start the sample "AbsenceRequest" process.
 
-===================
-Useful links
-===================
+======================================
+ Useful links
+======================================
 The Tempo home page: http://tempo.intalio.org
 The Intalio BPMS page: http://bpms.intalio.com
 BPEL4People: http://www.ibm.com/developerworks/webservices/library/specification/ws-bpel4people/
