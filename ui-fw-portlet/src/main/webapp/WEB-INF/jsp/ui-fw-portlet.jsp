@@ -9,8 +9,8 @@ String userName = URLEncoder.encode(as.getCurrentUser().getName());
 String token = as.getCurrentUser().getToken();
 %>
 
-
 <script type="text/javascript">
+//<![CDATA[
 window.onload = function() {
 	<portlet:namespace/>_startTimer(10);
 }
@@ -180,4 +180,5 @@ function <portlet:namespace/>_getUpdateData(){
     GridEx.gridobj.dataSource.load()
 	ProcessGridEx.gridobj.dataSource.load()
 }
+//]]>
 </script>

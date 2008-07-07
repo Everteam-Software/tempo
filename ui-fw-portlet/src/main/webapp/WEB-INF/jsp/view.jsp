@@ -3,35 +3,39 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
 <%@ page import="javax.portlet.PortletSession" %>
 <%@ page import="javax.portlet.PortletURL" %>
+<%@ page import="org.intalio.tempo.web.ApplicationState" %>
 <%@ page session="false" %>
+
+<portlet:defineObjects/>
 
 <link href="/ui-fw-portlet/style/portlet.css" rel="stylesheet" type="text/css"/>
 <link href="/ui-fw-portlet/style/custom-rows.css" rel="stylesheet" type="text/css"/>
 
-<portlet:defineObjects/>
-
-<script src="/ui-fw-portlet/script/adapter/ext/ext-base.js" type="text/javascript"/>
-<script src="/ui-fw-portlet/script/ext-all.js" type="text/javascript"/>
-<script src="/ui-fw-portlet/script/prototype.js" type="text/javascript"/>
-<script src="/ui-fw-portlet/script/entry.js" type="text/javascript"/>
+	<script src="/ui-fw-portlet/script/adapter/ext/ext-base.js" type="text/javascript"></script>
+	<script src="/ui-fw-portlet/script/ext-all.js" type="text/javascript"></script>
+	<script src="/ui-fw-portlet/script/prototype.js" type="text/javascript"></script>
+	<script src="/ui-fw-portlet/script/entry.js" type="text/javascript"></script>
 
 <%@ include file="ui-fw-portlet.jsp" %>
 
-<table>
-	<tr>
-		<td>Task Type:</td>
-		<td>
-		
-		<select id="taskType" size="1" onChange="<portlet:namespace/>_searchTask()">
-		<option>Task</option>
-		<option>PATask</option>
-		<option>Notification</option>
-		</select></td>
-		<td>Description:</td>
-		<td><input id="description" type="text" onChange="<portlet:namespace/>_searchTask()" /></td>
-		<td><input type="submit" onclick="<portlet:namespace/>_searchTask()" value="Filter Tasks"/></td>
-	</tr>
-</table>
+	<table>
+		<tr>
+			<td>Task Type:</td>
+			<td>
+
+			<select id="taskType" size="1" onChange="<portlet:namespace/>_searchTask()">
+			<option>Task</option>
+			<option>PATask</option>
+			<option>Notification</option>
+			</select></td>
+			<td>Description:</td>
+			<td><input id="description" type="text" onChange="<portlet:namespace/>_searchTask()" /></td>
+			<td><input type="submit" onclick="<portlet:namespace/>_searchTask()" value="Filter Tasks"/></td>
+		</tr>
+	</table>
+
+
+
 
    <!--dialog space-->
     <div id="entry-dlg" style="visibility:hidden;position:absolute;top:0px;">
