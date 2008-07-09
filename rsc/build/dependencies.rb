@@ -8,7 +8,7 @@ APACHE_COMMONS = {
   :dbcp => "commons-dbcp:commons-dbcp:jar:1.2.2",
   :digester => "commons-digester:commons-digester:jar:1.7",
   :discovery => "commons-discovery:commons-discovery:jar:0.2",
-  :fileupload => "commons-fileupload:commons-fileupload:jar:1.0",
+  :fileupload => "commons-fileupload:commons-fileupload:jar:1.2.1",
   :httpclient => "commons-httpclient:commons-httpclient:jar:3.1",
   :io => "commons-io:commons-io:jar:1.2",
   :lang => "commons-lang:commons-lang:jar:2.3",
@@ -143,37 +143,6 @@ XMLBEANS = [
 
 XMLUNIT = ["xmlunit:xmlunit:jar:1.1"]
 
-ORBEON_AXIS = [
- "orbeon:axis-orbeon:jar:1.2.1",
- "orbeon:axis-jaxrpc:jar:1.2.1",
- "orbeon:axis-saaj:jar:1.2.1",
- "orbeon:axis-wsdl4j:jar:1.2.1-1.5.1"
-]
-ORBEON_XERCES = [
-  group("xerces-resolver", "xerces-serializer", "xerces-xml-apis", "xerces-xercesImpl", :under => "orbeon" , :version => "2_9_orbeon_20070711")
-]
-ORBEON_CORE = [
-  group("orbeon", "orbeon-xforms-filter", "orbeon-resources-public", "orbeon-resources-private", :under=>"ops", :version=>"3.6.0.200712061930"),
-]
-ORBEON_CUSTOM = [
-  ORBEON_XERCES,
-  "orbeon:jakarta-oro-orbeon:jar:2.0.8",
-  #"orbeon:saxon-orbeon:jar:8_8_orbeon_20070817" is buggy, 
-  # the saxon-orbeon jar below is a slightly modified version
-  # that works
-  "orbeon-saxon:orbeon-saxon:jar:8.8-intalio-2",
-  "orbeon:saxpath:jar:dev_orbeon",
-  "orbeon:xsltc-orbeon:jar:2.5.1",
-  "orbeon:xalan-orbeon:jar:2.5.1",
-  
-  #  Not needed unless we want to force server caching for xforms
-  # "orbeon:xmldb-exist:jar:1_1_1",
-  # "orbeon:exist:jar:1.1.1",
-  # "orbeon:xmlrpc:jar:1.2-patched-exist_1_1_1",
-  # "orbeon:antlr:jar:antlr-2.7.6-exist_1_1_1",
-  # "orbeon:exist-optional:jar:1.1.1"
-]
-
 PLUTO_CONTAINER = "org.apache.pluto:pluto-container:jar:1.1.4"
 PLUTO_TAGLIB = "org.apache.pluto:pluto-taglib:jar:1.1.4"
 PLUTO_DRIVER = [
@@ -190,6 +159,7 @@ PLUTO = [
   PLUTO_DRIVER,
   PORTLET_API
 ]
+
 XALAN = "xalan:xalan:jar:2.7.0"
 PLUTO_DEPLOY = [
   PLUTO_CONTAINER,
@@ -200,6 +170,7 @@ PLUTO_DEPLOY = [
 
 ORBEON_COMMONS = [
   APACHE_COMMONS[:beanutils],
+  APACHE_COMMONS[:cli],
   APACHE_COMMONS[:codec],
   APACHE_COMMONS[:collections],
   APACHE_COMMONS[:digester],
@@ -216,25 +187,49 @@ ORBEON_MSV = [
   group("msv", "isorelax", "relaxng-datatype","xsdlib", :under => "msv", :version => "20070407")
 ]
 
+ORBEON_AXIS = [
+ "orbeon:axis-orbeon:jar:1.2.1",
+ "orbeon:axis-jaxrpc:jar:1.2.1",
+ "orbeon:axis-saaj:jar:1.2.1",
+ "orbeon:axis-wsdl4j:jar:1.2.1-1.5.1"
+]
+
+ORBEON_XERCES = [
+  group("xerces-resolver", "xerces-serializer", "xerces-xml-apis", "xerces-xercesImpl", :under => "orbeon" , :version => "2_9_orbeon_20070711")
+]
+
+
+ORBEON_CORE = [
+  group("orbeon-core", "orbeon-xforms-filter", "orbeon-resources-public", "orbeon-resources-private", :under=>"orbeon", :version=>"3.6.0-20080704"),
+]
+ORBEON_CUSTOM = [
+  ORBEON_XERCES,
+  "orbeon:jakarta-oro-orbeon:jar:2.0.8",
+  "orbeon:saxpath:jar:dev_orbeon",
+  "orbeon:xsltc-orbeon:jar:2.5.1",
+  "orbeon:xalan-orbeon:jar:2.5.1",
+  "orbeon:castor-xml:jar:0.9.4.3",
+  "orbeon:metadata-extractor:jar:2.1",
+  "orbeon:saxon-8_8_orbeon:jar:20080516"
+]
+
 ORBEON_LIBS_NO_JAXEN = [
   JAVAMAIL,
   ORBEON_AXIS,
   ORBEON_COMMONS,
+  ORBEON_MSV,
   ORBEON_CORE,
   ORBEON_CUSTOM,
-  ORBEON_MSV,
   DOM4J,
   GERONIMO_SPECS["jms"],
-  "jdom:jdom:jar:b9",
-  "struts:struts:jar:1.2.9",
   "jtidy:jtidy:jar:8.0-20060801.131059-3",
-  "backport-util-concurrent:backport-util-concurrent:jar:2.2",
-  PORTLET_API
+  "batik:batik-all:jar:1.6"
 ]
 
 ORBEON_LIBS = [
   ORBEON_LIBS_NO_JAXEN,
-  "orbeon:jaxen:jar:1.1-beta-1-dev",  
+  JAXEN
+  # "orbeon:jaxen:jar:1.1-beta-1-dev",  
 ]
 
 # For testing
@@ -244,8 +239,6 @@ EASY_B = [
   "org.disco:easyb:jar:0.6"
 ]
 
-ICAL = "ical4j:ical4j:jar:0.9.20"
-CSV = "org.ostermiller:utils:jar:1.07.00"
 
 INSTINCT = [
   "com.googlecode.instinct:instinct:jar:0.1.6",
@@ -270,7 +263,6 @@ APACHE_ABDERA = [
   STAX_API,
   JAVAMAIL,
   "org.htmlparser:htmlparser:jar:1.0.5",
-  #"org.htmlparser:htmlparser:jar:.1.6",
   JAXEN,
   "net.sf.json-lib:json-lib:jar:2.2.1-jdk15",
   WOODSTOX,
@@ -278,4 +270,6 @@ APACHE_ABDERA = [
   "xml-security:xmlsec:jar:1.3.0",
   "apache.incubator:abdera:jar:0.4.0-incubating"  
 ]
+ICAL = "ical4j:ical4j:jar:0.9.20"
+CSV = "org.ostermiller:utils:jar:1.07.00"
 
