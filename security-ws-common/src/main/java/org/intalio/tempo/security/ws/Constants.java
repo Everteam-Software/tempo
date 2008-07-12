@@ -25,7 +25,8 @@ public class Constants {
 
     public static final OMNamespace TOKEN_NS =
             OM_FACTORY.createOMNamespace("http://tempo.intalio.org/security/tokenService/", "token");
-
+    public static final OMNamespace RBACQUERY_NS =
+        OM_FACTORY.createOMNamespace("http://tempo.intalio.org/security/RBACQueryService/", "RBACQuery");
     protected static final QName PROPERTIES = new QName(TOKEN_NS.getNamespaceURI(), "properties");
 
     protected static final QName PROPERTY = new QName(TOKEN_NS.getNamespaceURI(), "property");

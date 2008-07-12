@@ -60,8 +60,12 @@ class SimpleRBACQuery
 
         list = simpleRole.getAscendantRoles();
         
-        // @TODO(alex) this doesn't make sense because list items are s
-        return (String[]) list.toArray( new String[ list.size() ] );
+		ArrayList response=new ArrayList<String>();
+
+		for (SimpleRole r : list) {
+			response.add(r.getIdentifier()); 
+		}
+		return (String[]) response.toArray( new String[ list.size() ] );
     }
 
     

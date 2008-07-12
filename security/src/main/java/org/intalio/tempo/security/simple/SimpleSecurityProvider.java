@@ -201,6 +201,8 @@ public final class SimpleSecurityProvider
     public RBACProvider getRBACProvider( String realm )
         throws RBACException
     {
+        if (!_rbacMap.containsKey(realm)) 
+            throw new RBACException("Realm, "+realm+", is not supported by this Security Provider!");
         return (RBACProvider) _rbacMap.get( realm.toLowerCase() );
     }
     

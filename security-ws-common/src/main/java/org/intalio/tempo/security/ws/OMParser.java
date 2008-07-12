@@ -33,7 +33,7 @@ public class OMParser {
         if (_element.getParent() != null) _element.detach();
     }
 
-    public String getRequiredString(QName parameter) {
+    public String getRequiredString(QName parameter) throws IllegalArgumentException{
         OMElement e = _element.getFirstChildWithName(parameter);
         if (e == null)
             throw new IllegalArgumentException("Missing parameter: " + parameter);
@@ -45,7 +45,7 @@ public class OMParser {
         return text;
     }
 
-    public Property[] getProperties(QName parameter) {
+    public Property[] getProperties(QName parameter) throws IllegalArgumentException{
         OMElement e = _element.getFirstChildWithName(parameter);
         if (e == null)
             throw new IllegalArgumentException("Missing properties parameter: " + parameter);
