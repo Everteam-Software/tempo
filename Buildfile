@@ -402,9 +402,4 @@ define "tempo" do
     resources.filter.using "version" => VERSION_NUMBER
     package(:war).with :libs=> ORBEON_LIBS
   end
-
-  desc "Task Management Service BPEL4Pelple"
-  define "tms-service-b4p" do
-
-  end
 end
