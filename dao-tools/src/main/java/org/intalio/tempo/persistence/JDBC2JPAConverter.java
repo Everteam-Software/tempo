@@ -100,9 +100,14 @@ public class JDBC2JPAConverter implements ConverterInterface {
 	 */
 	public void copyItem(String uri) throws Exception {
 		Item item = jdbcItemConnection.retrieveItem(uri);
-		jpaItemConnection.storeItem(item);
-		log.debug("Could not store item of type:" + item.getContentType()
-				+ " and of size:" + item.getContentLength());
+		if(item.getURI().endsWith(".xform")) {
+		    // modify xform on the fly
+		    Item item2 = new Item(item.getURI(), item.getContentType(), XFormsConverter.convert(item.getPayload()));
+	        jpaItemConnection.storeItem(item2);    
+		} else {
+		    jpaItemConnection.storeItem(item);
+		}
+		
 	}
 
 	/*
