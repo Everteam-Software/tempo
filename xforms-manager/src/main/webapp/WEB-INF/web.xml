@@ -96,7 +96,7 @@
     <!-- Determine whether logging initialization must take place -->
     <context-param>
         <param-name>oxf.initialize-logging</param-name>
-        <param-value>true</param-value>
+        <param-value>false</param-value>
     </context-param>
     <!-- Set context listener processors -->
     <!-- Uncomment this for the context listener processors -->
