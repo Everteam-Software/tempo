@@ -12,9 +12,12 @@
 package org.intalio.tempo.workflow.tms.feeds;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.URI;
 import java.util.Date;
 
 import org.apache.abdera.factory.Factory;
+import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.i18n.text.UrlEncoding;
 import org.apache.abdera.model.Document;
 import org.apache.abdera.model.Entry;
@@ -30,6 +33,7 @@ import org.apache.abdera.protocol.server.context.StreamWriterResponseContext;
 import org.apache.abdera.protocol.server.impl.AbstractCollectionAdapter;
 import org.apache.abdera.util.Constants;
 import org.apache.abdera.writer.StreamWriter;
+import org.apache.commons.lang.StringUtils;
 import org.intalio.tempo.security.Property;
 import org.intalio.tempo.security.authentication.AuthenticationConstants;
 import org.intalio.tempo.security.util.PropertyUtils;
@@ -43,7 +47,6 @@ import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.tms.ITaskManagementService;
 import org.intalio.tempo.workflow.tms.client.RemoteTMSFactory;
-import org.intalio.tempo.workflow.tms.feeds.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,6 +56,7 @@ public class TasksCollectionAdapter extends AbstractCollectionAdapter {
     private GenericFormManager _manager;
 
     public TasksCollectionAdapter() {
+        super();
         _manager = (GenericFormManager) FormManagerBroker.getInstance().getFormManager();
     }
 
@@ -127,7 +131,6 @@ public class TasksCollectionAdapter extends AbstractCollectionAdapter {
                 Property[] props = tokenClient.getTokenProperties(token);
                 user = (String) PropertyUtils.getProperty(props, AuthenticationConstants.PROPERTY_USER).getValue();
             } else if (user != null && password != null) {
-
                 token = tokenClient.authenticateUser(user, password);
             } else
                 throw new Exception("No credentials");
@@ -163,8 +166,12 @@ public class TasksCollectionAdapter extends AbstractCollectionAdapter {
             LOG.error("Feed exception", e);
             throw new ResponseContextException(500, e);
         }
-        
-        if(LOG.isDebugEnabled()) try {feed.writeTo(System.out);} catch (IOException e) {}
+
+        if (LOG.isDebugEnabled())
+            try {
+                feed.writeTo(System.out);
+            } catch (IOException e) {
+            }
         return feed.getDocument();
     }
 
@@ -181,7 +188,19 @@ public class TasksCollectionAdapter extends AbstractCollectionAdapter {
     private void setLinkForTask(Task t, String ticket, RequestContext context, Entry e, String user) throws Exception {
         Factory factory = context.getAbdera().getFactory();
         Link link = factory.newLink();
-        link.setHref(URIUtils.getFormURLForTask(_manager, t, ticket, user));
+        String formLink = URIUtils.getFormURLForTask(_manager, t, ticket, user);
+        // if the URL of the form manager are relative URLs, we want to have a proper link back to the machine.
+        // localhost won't work for most RSS readers, so using loopback ip address in this very specific case  
+        if(!formLink.toLowerCase().startsWith("http")) { // relative URL
+            IRI baseUri = context.getBaseUri();
+            String host = baseUri.getHost();
+            host = host.equals("localhost") ? "127.0.0.1" : host;
+            String base = baseUri.getScheme() + "//" + host + ":" + baseUri.getPort();
+            link.setBaseUri(base);
+        } else {
+            link.setBaseUri(StringUtils.EMPTY);
+        }
+        link.setHref(formLink);
         link.setTitle("Link to " + t.getDescription());
         link.setText("Link to " + t.getDescription());
         e.addLink(link);
