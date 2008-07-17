@@ -29,6 +29,7 @@ import org.intalio.tempo.workflow.wds.core.Item;
 import org.intalio.tempo.workflow.wds.core.JPAItemDaoConnection;
 import org.intalio.tempo.workflow.wds.core.JPAItemDaoConnectionFactory;
 import org.intalio.tempo.workflow.wds.core.JdbcItemDaoConnection;
+import org.intalio.tempo.workflow.wds.core.xforms.XFormsConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -100,14 +101,7 @@ public class JDBC2JPAConverter implements ConverterInterface {
 	 */
 	public void copyItem(String uri) throws Exception {
 		Item item = jdbcItemConnection.retrieveItem(uri);
-		if(item.getURI().endsWith(".xform")) {
-		    // modify xform on the fly
-		    Item item2 = new Item(item.getURI(), item.getContentType(), XFormsConverter.convert(item.getPayload()));
-	        jpaItemConnection.storeItem(item2);    
-		} else {
 		    jpaItemConnection.storeItem(item);
-		}
-		
 	}
 
 	/*

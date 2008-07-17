@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<xhtml:html xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:f="http://orbeon.org/oxf/xml/formatting" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fe="http://example.com/forms/schemaType/xform" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xforms="http://www.w3.org/2002/xforms">
+  <xhtml:head>
+    <xhtml:style type="text/css" id="intalio-fe-xforms" xml:space="preserve">#xforms_cntrl_input66_pasted45 {position : absolute; top : 48; left : 92; width : 238; height : 27; margin : 0; padding : 0;}
+#xforms_cntrl_input66_pasted45 input {width : 203; height : 19}
+</xhtml:style>
+    <xforms:model schema="schemaType.xform.xsd">
+      <!-- Task Input -->
+      <xforms:instance id="taskinput">
+        <fe:input>
+          <input66_pasted45 xmlns="http://example.com/forms/schemaType/xform"/>
+        </fe:input>
+      </xforms:instance>
+      <!-- Task metadata - used only for People Initiating Processes Task forms -->
+      <xforms:instance id="taskmetadata">
+        <taskmetadata/>
+      </xforms:instance>
+      <!-- Task Output -->
+      <xforms:instance id="taskoutput">
+        <fe:output>
+          <input66_pasted45 xmlns="http://example.com/forms/schemaType/xform"/>
+        </fe:output>
+      </xforms:instance>
+      <xforms:action ev:event="xforms-ready">
+        <xforms:action xforms:if="string(instance('taskoutput')/@saved) != 'true'">
+          <xforms:setvalue ref="instance('taskoutput')/fe:input66_pasted45" value="instance('taskinput')/fe:input66_pasted45"/>
+        </xforms:action>
+      </xforms:action>
+      <xforms:bind nodeset="instance('taskoutput')/fe:input66_pasted45" type="xs:date"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:input66_pasted45" type="xs:date"/>
+    </xforms:model>
+  </xhtml:head>
+  <xhtml:body>
+    <xhtml:div id="intalio-bpms-form">
+      <xhtml:div id="xforms_cntrl_input66_pasted45">
+        <xforms:input ref="instance('taskoutput')/fe:input66_pasted45">
+          <xforms:label>date:</xforms:label>
+          <xforms:help>YYYY-MM-DD</xforms:help>
+        </xforms:input>
+      </xhtml:div>
+    </xhtml:div>
+  </xhtml:body>
+</xhtml:html>

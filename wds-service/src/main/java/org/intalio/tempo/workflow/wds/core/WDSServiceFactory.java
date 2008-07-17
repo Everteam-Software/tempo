@@ -21,11 +21,11 @@ public class WDSServiceFactory {
     private ItemDaoConnectionFactory _daoFactory;
     private String _tmsEndpoint;
     private String _wdsEndpoint;
-    
+
     public WDSServiceFactory() {
         // nothing
     }
-    
+
     public String getTmsEndpoint() {
         return _tmsEndpoint;
     }
@@ -35,11 +35,11 @@ public class WDSServiceFactory {
     }
 
     public void setDaoFactory(ItemDaoConnectionFactory daoFactory) {
-    	_daoFactory = daoFactory;
+        _daoFactory = daoFactory;
     }
 
     public ItemDaoConnectionFactory getDaoFactory() {
-    	return _daoFactory;
+        return _daoFactory;
     }
 
     public void setWdsEndpoint(String wdsEndpoint) {
@@ -53,10 +53,11 @@ public class WDSServiceFactory {
     /**
      * Creates a new {@link WDSService} instance.
      * <p />
-     * The created instance will use a DAO connection provided by the DAO connection factory that was specified when
-     * instantiating this factory.
+     * The created instance will use a DAO connection provided by the DAO
+     * connection factory that was specified when instantiating this factory.
      * <p />
-     * Clients must call {@link WDSService#close()} to release resources associated with this object.
+     * Clients must call {@link WDSService#close()} to release resources
+     * associated with this object.
      * 
      * @return A new <code>WDSService</code> instance.
      */

@@ -377,7 +377,7 @@ define "tempo" do
   desc "Workflow Deployment Service"
   define "wds-service" do |project|
     libs = [ projects("dao-nutsNbolts", "deploy-api", "registry", "security", "tms-client", "tms-axis", "tms-common", "web-nutsNbolts"), 
-      AXIS2, AXIOM, APACHE_COMMONS[:io], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], APACHE_COMMONS[:pool], APACHE_JPA, LOG4J, SERVLET_API, SLF4J, SPRING[:core], STAX_API, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX, XERCES, XMLBEANS ]
+      AXIS2, AXIOM, APACHE_COMMONS[:io], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], APACHE_COMMONS[:pool], APACHE_JPA, DOM4J, JAXEN, LOG4J, SERVLET_API, SLF4J, SPRING[:core], STAX_API, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX, XERCES, XMLBEANS ]
           
     test_libs = libs + [EASY_B, INSTINCT, DB_CONNECTOR.values]
     compile.with test_libs
@@ -387,9 +387,8 @@ define "tempo" do
 
     task "package" => generate_sql([project], "workflow.deployment")
     
-    package_libs = libs + [SERVLET_API]
     package(:jar)
-    package(:war).with :libs=>package_libs
+    package(:war).with :libs=>libs
   end
 
   define "web-nutsNbolts" do

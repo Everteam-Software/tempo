@@ -16,22 +16,25 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import org.intalio.tempo.workflow.dao.AbstractJPAConnection;
+import org.intalio.tempo.workflow.wds.core.xforms.XFormsConverter;
 
 /**
  * JPA-based item persistence
  */
 public class JPAItemDaoConnection extends AbstractJPAConnection implements ItemDaoConnection {
 
+    private static final String XFORM = ".xform";
+
     public JPAItemDaoConnection(EntityManager createEntityManager) {
-    	super(createEntityManager);
+        super(createEntityManager);
     }
 
     public void deleteItem(String uri) throws UnavailableItemException {
         Query q = entityManager.createNamedQuery(Item.FIND_BY_URI).setParameter(1, uri);
         try {
-            Item item = (Item)(q.getResultList().get(0));
+            Item item = (Item) (q.getResultList().get(0));
             checkTransactionIsActive();
-            entityManager.remove(item);	
+            entityManager.remove(item);
             commit();
         } catch (Exception e) {
             throw new UnavailableItemException(e);
@@ -40,23 +43,28 @@ public class JPAItemDaoConnection extends AbstractJPAConnection implements ItemD
 
     public boolean itemExists(String uri) {
         Query q = entityManager.createNamedQuery(Item.COUNT_FOR_URI).setParameter(1, uri);
-        return ((Long)q.getSingleResult()) > 0;
+        return ((Long) q.getSingleResult()) > 0;
     }
 
     public Item retrieveItem(String uri) throws UnavailableItemException {
         Query q = entityManager.createNamedQuery(Item.FIND_BY_URI).setParameter(1, uri);
         try {
             final List<Item> resultList = q.getResultList();
-            if(resultList.size()>0) return  (Item)resultList.get(0);    
+            if (resultList.size() > 0)
+                return (Item) resultList.get(0);
         } catch (Exception e) {
             throw new UnavailableItemException(e);
         }
-        throw new UnavailableItemException("No item found for:"+uri);
+        throw new UnavailableItemException("No item found for:" + uri);
     }
 
     public void storeItem(Item item) throws UnavailableItemException {
-    	checkTransactionIsActive();
-        entityManager.persist(item);
+        checkTransactionIsActive();
+        if (item.getURI().endsWith(XFORM)) {
+            entityManager.persist(XFormsConverter.fixStyle(item));
+        } else {
+            entityManager.persist(item);
+        }
         commit();
     }
 
