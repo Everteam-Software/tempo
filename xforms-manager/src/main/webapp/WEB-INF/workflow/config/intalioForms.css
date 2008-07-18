@@ -40,19 +40,16 @@ h2 {
 }
 
 div.intalio {
-	padding-top: 20px;
-	background-color: white;
-	padding-bottom: 50px;
-    width: 95%;
-    height: 90%;
+    height: 430px;
+    width: 100%;
     overflow: auto;
 }
 
 div#intalio-bpms-form {
-	padding-top: 20px;
-	padding-bottom: 50px;
-    width: 95%;
-    height: 90%;
+    height: 430px;
+    width: 97%;
+    overflow: auto;
+    position: relative;
 }
 
 div#intalio-bpms-form .xforms-control {
