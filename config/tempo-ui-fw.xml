@@ -12,7 +12,7 @@
  -->
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
-	<import resource="tempo-formmanager.xml"/>
+    <import resource="file:${org.intalio.tempo.configDirectory}/tempo-formmanager.xml"/>
 	
     <bean id="configuration" class="org.intalio.tempo.uiframework.Configuration" factory-method="getInstance">
         <property name="serviceEndpoint" value="/axis2/services/TaskManagementServices"/>
