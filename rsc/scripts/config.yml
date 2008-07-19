@@ -1,5 +1,5 @@
 ---
 install_dir: intalio
 debug: true
-rebuild: false
+rebuild: true
 #server: liferay_v501
