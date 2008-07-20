@@ -189,12 +189,11 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
         resultTask.setDescription(description == null ? "" : description);
         
         XmlAnySimpleType calcd = taskMetadata.xgetCreationDate();
-        if (calcd != null) {
-            if (calcd.validate() && (calcd.toString().trim().length() > 0)) {
+        if (calcd != null && calcd.validate() && (calcd.toString().trim().length() > 0)) {
                 resultTask.setCreationDate(new XsdDateTime(calcd.getStringValue()).getTime());
-            } else
+        } else {
                 resultTask.setCreationDate(new Date());
-        }
+        } 
         if(_logger.isDebugEnabled())
             _logger.debug("Creation date set to " + resultTask.getCreationDate());
 
