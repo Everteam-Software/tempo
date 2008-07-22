@@ -73,9 +73,11 @@ public class MapRegistry implements Registry, Remote {
         T proxiedObject = null;
         synchronized (_map) {
             WeakReference<T> weak = (WeakReference<T>) _map.get(name);
-            proxiedObject = (T) weak.get();
-            if (proxiedObject == null) 
-                _map.remove(name);
+            if (weak != null) {
+                proxiedObject = (T) weak.get();
+                if (proxiedObject == null) 
+                    _map.remove(name);
+            }
         }
         if (proxiedObject == null) return null;
         RemoteProxy<T> proxy = new RemoteProxy<T>(proxiedObject, loader, proxiedObject.getClass().getClassLoader());
