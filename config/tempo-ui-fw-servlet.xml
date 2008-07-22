@@ -71,11 +71,6 @@
       </property>
   </bean>
 
-  <!-- Change this value to change the locale used for the resource bundle -->
-  <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
-	<property name="defaultLocale" value="en" />
-  </bean>
-
   <bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
     <property name="mappings">
       <props>
