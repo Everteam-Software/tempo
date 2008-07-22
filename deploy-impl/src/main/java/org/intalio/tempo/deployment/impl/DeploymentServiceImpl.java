@@ -87,7 +87,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
     private final Map<String, String> _componentTypes = Collections.synchronizedMap(new HashMap<String, String>());
 
     /**
-     * Mapping of [name] to [DeploymentManager] e.g. "MyApplication-1" =>
+     * Mapping of [name] to [DeploymentManager] e.g. "MyApplication" =>
      * OdeComponentManager
      */
     private final Map<String, ComponentManager> _componentManagers = Collections.synchronizedMap(new HashMap<String, ComponentManager>());
@@ -236,7 +236,13 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
     public DeploymentResult deployAssembly(String assemblyName, InputStream zip, boolean replaceExistingAssemblies) {
         assertStarted();
 
-        AssemblyId aid = parseAssemblyId(assemblyName);
+        if (assemblyName.indexOf(".") >= 0) {
+            Exception except = new Exception(_("Assembly name cannot contain dot character ('.'): {0}", assemblyName));
+            LOG.error(except.getMessage());
+            return convertToResult(except, newAssemblyId(assemblyName));
+        }
+
+        AssemblyId aid = versionAssemblyId(newAssemblyId(assemblyName));
         if (replaceExistingAssemblies) {
             Collection<DeployedAssembly> deployed = getDeployedAssemblies();
             for (DeployedAssembly da : deployed) {
@@ -249,7 +255,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
                             return result;
                         }
                     } catch (Exception except) {
-                        LOG.error(_("Error while undeploying assembly {0}", aid), except);
+                        LOG.error(_("Error while undeploying assembly {0}", da.getAssemblyId()), except);
                         return convertToResult(except, aid);
                     }
                 }
@@ -258,8 +264,6 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
 
         synchronized (DEPLOY_LOCK) {
             try {
-                aid = versionAssemblyId(aid);
-
                 setMarkedAsInvalid(aid, true);
 
                 File assemblyDir = createAssemblyDir(aid);
@@ -780,7 +784,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
     }
 
     /**
-     * Create a unique assembly id, e.g. myAssembly-1, myAssembly-2, ...
+     * Create a unique assembly id, e.g. myAssembly.1, myAssembly.2, ...
      */
     private AssemblyId versionAssemblyId(AssemblyId base) {
         AssemblyId aid = base;
@@ -858,7 +862,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
         if (aid.getAssemblyVersion() == AssemblyId.NO_VERSION)
             return aid.getAssemblyName();
         else
-            return aid.getAssemblyName() + "-" + aid.getAssemblyVersion();
+            return aid.getAssemblyName() + "." + aid.getAssemblyVersion();
     }
 
     private boolean isMarkedAsDeployed(AssemblyId aid) {
@@ -913,12 +917,16 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
             char c = dirName.charAt(pos);
             if (Character.isDigit(c))
                 continue;
-            if (c == '-') {
-                version = Integer.parseInt(dirName.substring(pos + 1));
-                assemblyName = dirName.substring(0, pos);
-            }
+            if (c != '.')
+                break;
+            version = Integer.parseInt(dirName.substring(pos + 1));
+            assemblyName = dirName.substring(0, pos);
         }
         return new AssemblyId(assemblyName, version);
+    }
+
+    private AssemblyId newAssemblyId(String assemblyName) {
+        return new AssemblyId(assemblyName, AssemblyId.NO_VERSION);
     }
 
     private void assertStarted() {

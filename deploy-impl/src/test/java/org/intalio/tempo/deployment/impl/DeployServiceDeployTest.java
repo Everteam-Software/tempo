@@ -119,7 +119,7 @@ public class DeployServiceDeployTest extends TestCase {
         assertEquals(AssemblyId.NO_VERSION, result.getAssemblyId().getAssemblyVersion());
         assertEquals(0, result.getMessages().size());
 
-        // deploy same assembly:  should result in assembly1-2
+        // deploy same assembly:  should result in assembly1.2
         DeploymentResult result2 = service.deployExplodedAssembly(assemblyDir);
 
         assertTrue(result2.isSuccessful());
@@ -230,7 +230,7 @@ public class DeployServiceDeployTest extends TestCase {
         System.out.println("testDeployZip: result3="+result3);
         assertTrue(result3.isSuccessful());
         assertEquals("assembly1", result3.getAssemblyId().getAssemblyName());
-        assertEquals(AssemblyId.NO_VERSION, result3.getAssemblyId().getAssemblyVersion());
+        assertEquals(3, result3.getAssemblyId().getAssemblyVersion());
         assertEquals(0, result3.getMessages().size());
         }
     }
@@ -250,6 +250,43 @@ public class DeployServiceDeployTest extends TestCase {
         assertFalse(new File(TestUtils.getTempDeployDir(), "assembly1").exists());
     }
 
+    public void testDeployZipWithDotFails() throws Exception {
+        start();
+
+        File assemblyZip = new File(TestUtils.getTestBase(), "assembly1.zip");
+
+        DeploymentResult result = service.deployAssembly("assembly.1", new FileInputStream(assemblyZip), false);
+        System.out.println("testDeployZipWithDot: "+result);
+        assertFalse(result.isSuccessful());
+        
+        // make sure directory was deleted
+        assertFalse(new File(TestUtils.getTempDeployDir(), "assembly1").exists());
+    }
+
+    public void testDeployWithDash() throws Exception {
+        start();
+
+        File assemblyZip = new File(TestUtils.getTestBase(), "assembly1.zip");
+
+        {
+        DeploymentResult result = service.deployAssembly("assembly1-1", new FileInputStream(assemblyZip), true);
+        System.out.println("testDeployWithDash: "+result);
+        assertTrue(result.isSuccessful());
+        assertEquals("assembly1-1", result.getAssemblyId().getAssemblyName());
+        assertEquals(AssemblyId.NO_VERSION, result.getAssemblyId().getAssemblyVersion());
+        assertEquals(0, result.getMessages().size());
+        }
+        
+        {
+        // deploy new version
+        DeploymentResult result2 = service.deployAssembly("assembly-dev1", new FileInputStream(assemblyZip), true);
+        System.out.println("testDeployZip: result2="+result2);
+        assertTrue(result2.isSuccessful());
+        assertEquals("assembly-dev1", result2.getAssemblyId().getAssemblyName());
+        assertEquals(AssemblyId.NO_VERSION, result2.getAssemblyId().getAssemblyVersion());
+        assertEquals(0, result2.getMessages().size());
+        }
+    }    
     
     public void testUndeployViaFS() throws Exception {
         LOG.info("testUndeployViaFS");
