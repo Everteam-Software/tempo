@@ -20,6 +20,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -189,4 +194,132 @@ public class Utils {
         }
     }
 
+    /**
+     * List files matching a given glob pattern
+     */
+    public static File[] listFiles(File dir, String glob) {
+        if (!dir.exists()) throw new RuntimeException(new FileNotFoundException("Directory does not exist: "+dir));
+        if (!dir.isDirectory()) throw new RuntimeException(new IOException("Not a directory: "+dir));
+        ArrayList<File> list = new ArrayList<File>();
+        Pattern p = globToRegexPattern(glob);
+        File[] files = dir.listFiles();
+        for (int i = 0; i < files.length; ++i) {
+            if (p.matcher(files[i].getName()).matches()) {
+                list.add(files[i]);
+            }
+        }
+        return (File[]) list.toArray(new File[list.size()]);
+    }
+
+    /**
+     * Return the compiled Java regex Pattern equivalent to the specified GLOB expression.
+     * 
+     * @param glob GLOB expression to be compiled
+     * @return Equivalent compiled Java regex Pattern
+     */
+    public static Pattern globToRegexPattern(final String glob) throws PatternSyntaxException {
+        /* Stack to keep track of the parser mode: */
+        /* "--" : Base mode (first on the stack) */
+        /* "[]" : Square brackets mode "[...]" */
+        /* "{}" : Curly braces mode "{...}" */
+        final LinkedList<String> parserMode = new LinkedList<String>();
+        parserMode.addFirst("--"); // base mode
+
+        final int globLength = glob.length();
+        int index = 0; // index in glob
+
+        /* equivalent REGEX expression to be compiled */
+        final StringBuilder t = new StringBuilder();
+
+        while (index < globLength) {
+            char c = glob.charAt(index++);
+
+            if (c == '\\') {
+                // (1) ESCAPE SEQUENCE
+                if (index == globLength) {
+                    /* no characters left, so treat '\' as literal char */
+                    t.append(Pattern.quote("\\"));
+                } else {
+                    /* read next character */
+                    c = glob.charAt(index);
+                    final String s = c + "";
+
+                    if (("--".equals(parserMode.peek()) && "\\[]{}?*".contains(s))
+                            || ("[]".equals(parserMode.peek()) && "\\[]{}?*!-".contains(s))
+                            || ("{}".equals(parserMode.peek()) && "\\[]{}?*,".contains(s))) {
+                        /* escape the construct char */
+                        index++;
+                        t.append(Pattern.quote(s));
+                    } else {
+                        /* treat '\' as literal char */
+                        t.append(Pattern.quote("\\"));
+                    }
+                }
+            } else if (c == '*') {
+                // (2) GLOB PATTERN
+
+                /* create non-capturing group to match zero or more characters */
+                t.append(".*");
+            } else if (c == '?') {
+                // (3) GLOB PATTERN '?'
+
+                /* create non-capturing group to match exactly one character */
+                t.append('.');
+            } else if (c == '[') {
+                // (4) GLOB PATTERN "[...]"
+
+                /* opening square bracket '[' */
+                /* create non-capturing group to match exactly one character */
+                /* inside the sequence */
+                t.append('[');
+                parserMode.addFirst("[]");
+
+                /* check for negation character '!' immediately after */
+                /* the opening bracket '[' */
+                if ((index < globLength) && (glob.charAt(index) == '!')) {
+                    index++;
+                    t.append('^');
+                }
+            } else if ((c == ']') && "[]".equals(parserMode.peek())) {
+                /* closing square bracket ']' */
+                t.append(']');
+                parserMode.removeFirst();
+            } else if ((c == '-') && "[]".equals(parserMode.peek())) {
+                /* character range '-' in "[...]" */
+                t.append('-');
+            } else if (c == '{') {
+                // (5) GLOB PATTERN "{...}" 
+
+                /* opening curly brace '{' */
+                /* create non-capturing group to match one of the */
+                /* strings inside the sequence */
+                t.append("(?:(?:");
+                parserMode.addFirst("{}");
+            } else if ((c == '}') && "{}".equals(parserMode.peek())) {
+                /* closing curly brace '}' */
+                t.append("))");
+                parserMode.removeFirst();
+            } else if ((c == ',') && "{}".equals(parserMode.peek())) {
+                /* comma between strings in "{...}" */
+                t.append(")|(?:");
+            } else {
+                // (6) LITERAL CHARACTER 
+
+                /* convert literal character to a regex string */
+                t.append(Pattern.quote(c + ""));
+            }
+        }
+        /* done parsing all chars of the source pattern string */
+
+        /* check for mismatched [...] or {...} */
+        if ("[]".equals(parserMode.peek()))
+            throw new PatternSyntaxException("Cannot find matching closing square bracket ] in GLOB expression", glob,
+                    -1);
+
+        if ("{}".equals(parserMode.peek()))
+            throw new PatternSyntaxException("Cannot find matching closing curly brace } in GLOB expression", glob, -1);
+
+        return Pattern.compile(t.toString());
+    }
+    
 }

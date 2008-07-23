@@ -242,7 +242,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
             return convertToResult(except, newAssemblyId(assemblyName));
         }
 
-        AssemblyId aid = versionAssemblyId(newAssemblyId(assemblyName));
+        AssemblyId aid = versionAssemblyId(assemblyName);
         if (replaceExistingAssemblies) {
             Collection<DeployedAssembly> deployed = getDeployedAssemblies();
             for (DeployedAssembly da : deployed) {
@@ -301,15 +301,18 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
             }
         }
 
+        AssemblyId aid;
         boolean local = assemblyDir.getParentFile().equals(new File(_deployDir));
-
-        AssemblyId aid = parseAssemblyId(assemblyDir.getName());
-        if (local && isMarkedAsDeployed(aid)) {
-            throw new RuntimeException("Assembly already deployed: " + aid);
+        if (local) {
+            aid = parseAssemblyId(assemblyDir.getName());
+            if (isMarkedAsDeployed(aid)) {
+                throw new RuntimeException("Assembly already deployed: " + aid);
+            }
+        } else {
+            if (assemblyDir.getName().indexOf(".") >= 0) 
+                throw new IllegalArgumentException("Assembly dir cannot contain dot '.' character: "+assemblyDir);
+            aid = versionAssemblyId(assemblyDir.getName());
         }
-
-        if (!local)
-            aid = versionAssemblyId(aid);
 
         // mark as invalid while we deploy to avoid concurrency issues with
         // scanner
@@ -786,16 +789,23 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
     /**
      * Create a unique assembly id, e.g. myAssembly.1, myAssembly.2, ...
      */
-    private AssemblyId versionAssemblyId(AssemblyId base) {
-        AssemblyId aid = base;
-        int version = 1;
-        while (true) {
-            if (!exist(aid) && !isMarkedAsDeployed(aid) && !isMarkedAsInvalid(aid)) {
-                return aid;
+    private AssemblyId versionAssemblyId(String assemblyName) {
+        int version = AssemblyId.NO_VERSION;
+        if (new File(_deployDir, assemblyName).exists())
+            version = 2;
+        File[] files = Utils.listFiles(new File(_deployDir), assemblyName+".*");
+        for (File f: files) {
+            String name = f.getName();
+            int pos = name.lastIndexOf(".");
+            try {
+                int v = Integer.parseInt(name.substring(pos+1));
+                if (version == AssemblyId.NO_VERSION || v >= version) 
+                    version = v+1;
+            } catch (NumberFormatException e) {
+                // ignore
             }
-            version++;
-            aid = new AssemblyId(base.getAssemblyName(), version);
         }
+        return new AssemblyId(assemblyName, version);
     }
 
     DeployedAssembly loadAssemblyState(AssemblyId aid) {

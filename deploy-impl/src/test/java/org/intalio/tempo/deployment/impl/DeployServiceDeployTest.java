@@ -107,7 +107,7 @@ public class DeployServiceDeployTest extends TestCase {
         
     }
     
-    public void testDeployTwice() throws Exception {
+    public void testDeployVersioning() throws Exception {
         start();
 
         File assemblyDir = TestUtils.getAssemblyDir("assembly1");
@@ -129,6 +129,47 @@ public class DeployServiceDeployTest extends TestCase {
         assertEquals(2, service.getDeployedAssemblies().size());
         assertTrue(manager.isDeployed(new ComponentId(result.getAssemblyId(), "component1")));
         assertTrue(manager.isDeployed(new ComponentId(result2.getAssemblyId(), "component1")));
+
+        // deploy same assembly:  should result in assembly1.3
+        DeploymentResult result3 = service.deployExplodedAssembly(assemblyDir);
+
+        assertTrue(result3.isSuccessful());
+        assertEquals("assembly1", result3.getAssemblyId().getAssemblyName());
+        assertEquals(3, result3.getAssemblyId().getAssemblyVersion());
+        assertEquals(0, result3.getMessages().size());
+        assertEquals(3, service.getDeployedAssemblies().size());
+        assertTrue(manager.isDeployed(new ComponentId(result.getAssemblyId(), "component1")));
+        assertTrue(manager.isDeployed(new ComponentId(result3.getAssemblyId(), "component1")));
+
+        // undeployed assembly1.3
+        service.undeployAssembly(result3.getAssemblyId());
+        assertEquals(2, service.getDeployedAssemblies().size());
+
+        // redeploy assembly1.3
+        result3 = service.deployExplodedAssembly(assemblyDir);
+
+        assertTrue(result3.isSuccessful());
+        assertEquals("assembly1", result3.getAssemblyId().getAssemblyName());
+        assertEquals(3, result3.getAssemblyId().getAssemblyVersion());
+        assertEquals(0, result3.getMessages().size());
+        assertEquals(3, service.getDeployedAssemblies().size());
+        assertTrue(manager.isDeployed(new ComponentId(result.getAssemblyId(), "component1")));
+        assertTrue(manager.isDeployed(new ComponentId(result3.getAssemblyId(), "component1")));
+
+        // undeployed assembly1.2
+        service.undeployAssembly(result2.getAssemblyId());
+        assertEquals(2, service.getDeployedAssemblies().size());
+
+        // deploy same assembly again:  should result in assembly1.4
+        DeploymentResult result4 = service.deployExplodedAssembly(assemblyDir);
+
+        assertTrue(result4.isSuccessful());
+        assertEquals("assembly1", result4.getAssemblyId().getAssemblyName());
+        assertEquals(4, result4.getAssemblyId().getAssemblyVersion());
+        assertEquals(0, result4.getMessages().size());
+        assertEquals(3, service.getDeployedAssemblies().size());
+        assertTrue(manager.isDeployed(new ComponentId(result.getAssemblyId(), "component1")));
+        assertTrue(manager.isDeployed(new ComponentId(result4.getAssemblyId(), "component1")));
     }
 
     public void testDeployFail() throws Exception {
