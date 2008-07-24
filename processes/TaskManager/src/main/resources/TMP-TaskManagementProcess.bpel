@@ -166,16 +166,20 @@
     </bpel:assign>
     <bpel:assign bpmn:label="Create Task" bpmn:id="_kh8I0KdyEdyId4P63ChZuw">
       <bpel:copy>
-        <bpel:from>$createTaskRequest.root/b4p:taskMetaData/b4p:processId</bpel:from>
-        <bpel:to>$createTaskResponse.root/b4p:taskMetaData/b4p:processId</bpel:to>
-      </bpel:copy>
-      <bpel:copy>
         <bpel:from xmlns:ode="http://www.apache.org/ode/type/extension">concat(b4px:create(), $ode:pid)</bpel:from>
         <bpel:to>$createTaskResponse.root/b4p:taskMetaData/b4p:taskId</bpel:to>
       </bpel:copy>
       <bpel:copy>
         <bpel:from>$createTaskRequest.root/b4p:taskMetaData/b4p:formUrl</bpel:from>
         <bpel:to>$createTaskResponse.root/b4p:taskMetaData/b4p:formUrl</bpel:to>
+      </bpel:copy>
+      <bpel:copy>
+        <bpel:from>$createTaskRequest.root/b4p:taskMetaData/b4p:processId</bpel:from>
+        <bpel:to>$createTaskResponse.root/b4p:taskMetaData/b4p:processId</bpel:to>
+      </bpel:copy>
+      <bpel:copy>
+        <bpel:from xmlns:xdt="http://www.w3.org/2003/11/xpath-datatypes">if (boolean(normalize-space($createTaskRequest.root/b4p:taskMetaData/b4p:scheduledActions/b4p:deferActivation/b4p:until))) then ($createTaskRequest.root/b4p:taskMetaData/b4p:scheduledActions/b4p:deferActivation/b4p:until) else (if (boolean(normalize-space($createTaskRequest.root/b4p:taskMetaData/b4p:scheduledActions/b4p:deferActivation/b4p:for))) then ((current-dateTime() + xdt:yearMonthDuration(xs:duration($createTaskRequest.root/b4p:taskMetaData/b4p:scheduledActions/b4p:deferActivation/b4p:for))) + xdt:dayTimeDuration(xs:duration($createTaskRequest.root/b4p:taskMetaData/b4p:scheduledActions/b4p:deferActivation/b4p:for))) else (current-dateTime()))</bpel:from>
+        <bpel:to>$createTaskResponse.root/b4p:taskMetaData/b4p:creationDate</bpel:to>
       </bpel:copy>
     </bpel:assign>
     <bpel:reply partnerLink="tMPAndUBPPlkVar" portType="b4p:UserBusinessProcessPortType" operation="createTask" variable="createTaskResponse" bpmn:label="Create Task" bpmn:id="_kh8I0KdyEdyId4P63ChZuw">
@@ -796,6 +800,20 @@
                     </bpel:assign>
                   </bpel:sequence>
                 </bpel:if>
+                <bpel:assign bpmn:label="send  Complete Task response back to UI" bpmn:id="_yEJboKhZEdyXuZws7kaYiQ">
+                  <bpel:copy>
+                    <bpel:from>$notifyTaskCompletionResponse.root/b4p:status</bpel:from>
+                    <bpel:to>$completeTaskResponse.root/b4p:status</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy>
+                    <bpel:from>$notifyTaskCompletionResponse.root/b4p:errorCode</bpel:from>
+                    <bpel:to>$completeTaskResponse.root/b4p:errorCode</bpel:to>
+                  </bpel:copy>
+                  <bpel:copy>
+                    <bpel:from>$notifyTaskCompletionResponse.root/b4p:errorReason</bpel:from>
+                    <bpel:to>$completeTaskResponse.root/b4p:errorReason</bpel:to>
+                  </bpel:copy>
+                </bpel:assign>
                 <bpel:reply partnerLink="taskManagementProcessAndUIFWForUIFWPortPlkVar" portType="b4p:UIFWPortType" operation="completeTask" variable="completeTaskResponse" bpmn:label="send  Complete Task response back to UI" bpmn:id="_yEJboKhZEdyXuZws7kaYiQ"></bpel:reply>
                 <bpel:assign bpmn:label="mark task &#13;&#10;as completed" bpmn:id="_Gri9cKhaEdyXuZws7kaYiQ">
                   <bpel:copy>
