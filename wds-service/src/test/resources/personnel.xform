@@ -1,0 +1,1318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xhtml:html xmlns:f="http://orbeon.org/oxf/xml/formatting" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fe="http://example.com/PersonnelRequisition/xform" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms">
+  <xhtml:head>
+    <xhtml:style type="text/css" id="intalio-fe-xforms" xml:space="preserve">#xforms_cntrl_tabs0 {position : absolute; top : 0; left : 0; width : 705; height : 600;}
+#xforms_cntrl_tabs0 .widget-tabs {margin : 0; padding : 0; }
+#xforms_cntrl_tabs0 .widget-tabs-panel {position : relative; width : 705; height : 600;}
+#xforms_cntrl_SupervisorTable {position : absolute; top : 442; left : 150; width : 225; height : 124; margin : 0; padding : 0; overflow : auto ; padding : 0;}
+#xforms_cntrl_SupervisorTable table {padding : 0; margin : 0}
+#xforms_cntrl_SupervisorTable table tr {padding : 0}
+#xforms_cntrl_SupervisorTable table tr td {padding : 0; vertical-align : top}
+.xforms_cntrl_table-cell1 {position : relative; width : 175; height : 25;}
+.xforms_cntrl_SupervisorName {position : absolute; top : 0; left : 0; width : 175; height : 29; margin : 0; padding : 0;}
+.xforms_cntrl_SupervisorName select {width : 163; height : 21}
+#xforms_cntrl_txtAuthorising_Supervisor {position : absolute; top : 465; left : 30; width : 120; height : 22; margin : 0; padding : 0;}
+#xforms_cntrl_RSUserTable {position : absolute; top : 405; left : 405; width : 225; height : 150; margin : 0; padding : 0; overflow : auto ; padding : 0;}
+#xforms_cntrl_RSUserTable table {padding : 0; margin : 0}
+#xforms_cntrl_RSUserTable table tr {padding : 0}
+#xforms_cntrl_RSUserTable table tr td {padding : 0; vertical-align : top}
+.xforms_cntrl_table-cell2 {position : relative; width : 175; height : 25;}
+.xforms_cntrl_RSUserName {position : absolute; top : 0; left : 0; width : 175; height : 29; margin : 0; padding : 0;}
+.xforms_cntrl_RSUserName select {width : 163; height : 21}
+#xforms_cntrl_HRUserTable {position : absolute; top : 285; left : 405; width : 225; height : 105; margin : 0; padding : 0; overflow : auto ; padding : 0;}
+#xforms_cntrl_HRUserTable table {padding : 0; margin : 0}
+#xforms_cntrl_HRUserTable table tr {padding : 0}
+#xforms_cntrl_HRUserTable table tr td {padding : 0; vertical-align : top}
+.xforms_cntrl_table-cell3 {position : relative; width : 175; height : 25;}
+.xforms_cntrl_HRUserName {position : absolute; top : 0; left : 0; width : 180; height : 29; margin : 0; padding : 0;}
+.xforms_cntrl_HRUserName select {width : 168; height : 21}
+#xforms_cntrl_BusinessCase {position : absolute; top : 405; left : 150; width : 240; height : 41; margin : 0; padding : 0;}
+#xforms_cntrl_BusinessCase upload {width : 228; height : 33}
+#xforms_cntrl_BusinessCase label.xforms-label {vertical-align : top}
+#xforms_cntrl_JobProfile {position : absolute; top : 364; left : 150; width : 240; height : 41; margin : 0; padding : 0;}
+#xforms_cntrl_JobProfile upload {width : 228; height : 33}
+#xforms_cntrl_JobProfile label.xforms-label {vertical-align : top}
+#xforms_cntrl_TariffType {position : absolute; top : 315; left : 285; width : 105; height : 29; margin : 0; padding : 0;}
+#xforms_cntrl_TariffType select {width : 93; height : 21}
+#xforms_cntrl_Tariff {position : absolute; top : 315; left : 150; width : 135; height : 27; margin : 0; padding : 0;}
+#xforms_cntrl_Tariff input {width : 123; height : 19}
+#xforms_cntrl_CostCentre {position : absolute; top : 90; left : 570; width : 105; height : 27; margin : 0; padding : 0;}
+#xforms_cntrl_CostCentre input {width : 93; height : 19}
+#xforms_cntrl_EE_Position {position : absolute; top : 30; left : 555; width : 120; height : 29; margin : 0; padding : 0;}
+#xforms_cntrl_EE_Position select {width : 108; height : 21}
+#xforms_cntrl_EDate {position : absolute; top : 210; left : 555; width : 88; height : 27; margin : 0; padding : 0;}
+#xforms_cntrl_EDate input {width : 76; height : 19}
+#xforms_cntrl_SDate {position : absolute; top : 180; left : 555; width : 88; height : 27; margin : 0; padding : 0;}
+#xforms_cntrl_SDate input {width : 76; height : 19}
+#xforms_cntrl_Location {position : absolute; top : 120; left : 435; width : 150; height : 29; margin : 0; padding : 0;}
+#xforms_cntrl_Location select {width : 138; height : 21}
+#xforms_cntrl_Purpose {position : absolute; top : 240; left : 135; width : 525; height : 45; margin : 0; padding : 0;}
+#xforms_cntrl_Purpose textarea {width : 513; height : 37}
+#xforms_cntrl_Purpose label.xforms-label {vertical-align : top}
+#xforms_cntrl_Grade {position : absolute; top : 90; left : 345; width : 105; height : 29; margin : 0; padding : 0;}
+#xforms_cntrl_Grade select {width : 93; height : 21}
+#xforms_cntrl_Vacancy {position : absolute; top : 181; left : 420; width : 60; height : 29; margin : 0; padding : 0;}
+#xforms_cntrl_Vacancy select {width : 48; height : 21}
+#xforms_cntrl_EmployeeType {position : absolute; top : 210; left : 120; width : 120; height : 29; margin : 0; padding : 0;}
+#xforms_cntrl_EmployeeType select {width : 108; height : 21}
+#xforms_cntrl_Direct {position : absolute; top : 181; left : 210; width : 60; height : 29; margin : 0; padding : 0;}
+#xforms_cntrl_Direct select {width : 48; height : 21}
+#xforms_cntrl_FixedTariff {position : absolute; top : 181; left : 75; width : 60; height : 29; margin : 0; padding : 0;}
+#xforms_cntrl_FixedTariff select {width : 48; height : 21}
+#xforms_cntrl_Division {position : absolute; top : 121; left : 90; width : 180; height : 29; margin : 0; padding : 0;}
+#xforms_cntrl_Division select {width : 168; height : 21}
+#xforms_cntrl_Dept {position : absolute; top : 150; left : 90; width : 180; height : 29; margin : 0; padding : 0;}
+#xforms_cntrl_Dept select {width : 168; height : 21}
+#xforms_cntrl_JobTitle {position : absolute; top : 90; left : 75; width : 150; height : 27; margin : 0; padding : 0;}
+#xforms_cntrl_JobTitle input {width : 138; height : 19}
+#xforms_cntrl_txtApproved_busines_case {position : absolute; top : 420; left : 30; width : 120; height : 22; margin : 0; padding : 0;}
+#xforms_cntrl_txtJob_Profile {position : absolute; top : 375; left : 30; width : 75; height : 22; margin : 0; padding : 0;}
+#xforms_cntrl_txtPlease_attach_the_following_documents {position : absolute; top : 345; left : 15; width : 210; height : 22; margin : 0; padding : 0;}
+#xforms_cntrl_txtNegotiable_salary__tariff {position : absolute; top : 315; left : 15; width : 135; height : 22; margin : 0; padding : 0;}
+#xforms_cntrl_txtRefer_to_SLA_to_identify_what_needs_to_be_done {position : absolute; top : 285; left : 150; width : 240; height : 25; margin : 0; padding : 0;}
+#xforms_cntrl_txtPurpose_of_position {position : absolute; top : 240; left : 15; width : 100; height : 22; margin : 0; padding : 0;}
+#xforms_cntrl_txtType_of_employee {position : absolute; top : 210; left : 15; width : 100; height : 22; margin : 0; padding : 0;}
+#xforms_cntrl_txtEnd_Date {position : absolute; top : 210; left : 495; width : 60; height : 22; margin : 0; padding : 0;}
+#xforms_cntrl_txtStart_Date {position : absolute; top : 180; left : 495; width : 60; height : 22; margin : 0; padding : 0;}
+#xforms_cntrl_txtVacancy_on_structure {position : absolute; top : 180; left : 300; width : 120; height : 22; margin : 0; padding : 0;}
+#xforms_cntrl_txtDirect {position : absolute; top : 180; left : 165; width : 45; height : 25; margin : 0; padding : 0;}
+#xforms_cntrl_txtFixed_Tariff {position : absolute; top : 180; left : 15; width : 75; height : 22; margin : 0; padding : 0;}
+#xforms_cntrl_txtLocation {position : absolute; top : 120; left : 300; width : 135; height : 22; margin : 0; padding : 0;}
+#xforms_cntrl_txtDivision {position : absolute; top : 120; left : 15; width : 45; height : 22; margin : 0; padding : 0;}
+#xforms_cntrl_txtCost_Centre {position : absolute; top : 90; left : 495; width : 75; height : 22; margin : 0; padding : 0;}
+#xforms_cntrl_txtGrade {position : absolute; top : 90; left : 300; width : 45; height : 22; margin : 0; padding : 0;}
+#xforms_cntrl_txtDepartment {position : absolute; top : 150; left : 15; width : 75; height : 22; margin : 0; padding : 0;}
+#xforms_cntrl_txtNB_An_approved_job_description_should_be_attached {position : absolute; top : 60; left : 150; width : 285; height : 22; margin : 0; padding : 0;}
+#xforms_cntrl_txtJob_Title {position : absolute; top : 90; left : 15; width : 60; height : 22; margin : 0; padding : 0;}
+#xforms_cntrl_txtEE_Position {position : absolute; top : 30; left : 495; width : 60; height : 22; margin : 0; padding : 0;}
+#xforms_cntrl_txtPersonnel_Requisition_One_per_vacancy {position : absolute; top : 30; left : 180; width : 225; height : 22; margin : 0; padding : 0;}
+#xforms_cntrl_txtSITA {position : absolute; top : 30; left : 45; width : 45; height : 22; margin : 0; padding : 0;}
+#xforms_cntrl_RSManagerEmail {position : absolute; top : 495; left : 375; width : 270; height : 27; margin : 0; padding : 0;}
+#xforms_cntrl_RSManagerEmail input {width : 258; height : 19}
+#xforms_cntrl_lobEmail {position : absolute; top : 465; left : 375; width : 270; height : 27; margin : 0; padding : 0;}
+#xforms_cntrl_lobEmail input {width : 258; height : 19}
+#xforms_cntrl_txtAlerts_and_delays_will_be_escalated_to_the_following_manager {position : absolute; top : 495; left : 45; width : 315; height : 22; margin : 0; padding : 0;}
+#xforms_cntrl_txtTo_receive_email_notification__please_specify_your_email_address {position : absolute; top : 465; left : 45; width : 315; height : 25; margin : 0; padding : 0;}
+#xforms_cntrl_PrevDate {position : absolute; top : 240; left : 510; width : 88; height : 27; margin : 0; padding : 0;}
+#xforms_cntrl_PrevDate input {width : 76; height : 19}
+#xforms_cntrl_txtDate_of_vacancy {position : absolute; top : 240; left : 450; width : 45; height : 22; margin : 0; padding : 0;}
+#xforms_cntrl_Classified {position : absolute; top : 420; left : 510; width : 60; height : 29; margin : 0; padding : 0;}
+#xforms_cntrl_Classified select {width : 48; height : 21}
+#xforms_cntrl_Admission_to_cassified_information__systems {position : absolute; top : 420; left : 285; width : 225; height : 22; margin : 0; padding : 0;}
+#xforms_cntrl_ClearanceType {position : absolute; top : 420; left : 150; width : 120; height : 29; margin : 0; padding : 0;}
+#xforms_cntrl_ClearanceType select {width : 108; height : 21}
+#xforms_cntrl_txtClearance_type {position : absolute; top : 420; left : 45; width : 100; height : 22; margin : 0; padding : 0;}
+#xforms_cntrl_SecurityClearanceReason {position : absolute; top : 360; left : 225; width : 360; height : 45; margin : 0; padding : 0;}
+#xforms_cntrl_SecurityClearanceReason textarea {width : 348; height : 37}
+#xforms_cntrl_SecurityClearanceReason label.xforms-label {vertical-align : top}
+#xforms_cntrl_SecurityClearance {position : absolute; top : 360; left : 150; width : 60; height : 29; margin : 0; padding : 0;}
+#xforms_cntrl_SecurityClearance select {width : 48; height : 21}
+#xforms_cntrl_txtSecurity_Clearance {position : absolute; top : 360; left : 45; width : 100; height : 22; margin : 0; padding : 0;}
+#xforms_cntrl_OtherEval {position : absolute; top : 315; left : 375; width : 120; height : 27; margin : 0; padding : 0;}
+#xforms_cntrl_OtherEval input {width : 108; height : 19}
+#xforms_cntrl_txt_4 {position : absolute; top : 315; left : 345; width : 30; height : 22; margin : 0; padding : 0;}
+#xforms_cntrl_Leadership {position : absolute; top : 315; left : 255; width : 60; height : 29; margin : 0; padding : 0;}
+#xforms_cntrl_Leadership select {width : 48; height : 21}
+#xforms_cntrl_txt_3_Leadership {position : absolute; top : 315; left : 180; width : 75; height : 22; margin : 0; padding : 0;}
+#xforms_cntrl_Competency {position : absolute; top : 286; left : 435; width : 60; height : 29; margin : 0; padding : 0;}
+#xforms_cntrl_Competency select {width : 48; height : 21}
+#xforms_cntrl_txt_2_Competency {position : absolute; top : 285; left : 345; width : 90; height : 22; margin : 0; padding : 0;}
+#xforms_cntrl_Integrity {position : absolute; top : 285; left : 255; width : 60; height : 29; margin : 0; padding : 0;}
+#xforms_cntrl_Integrity select {width : 48; height : 21}
+#xforms_cntrl_txt_1_Integrity {position : absolute; top : 285; left : 180; width : 75; height : 22; margin : 0; padding : 0;}
+#xforms_cntrl_txtAssessment_required {position : absolute; top : 285; left : 45; width : 120; height : 22; margin : 0; padding : 0;}
+#xforms_cntrl_PrevIncumbent {position : absolute; top : 240; left : 152; width : 208; height : 27; margin : 0; padding : 0;}
+#xforms_cntrl_PrevIncumbent input {width : 196; height : 19}
+#xforms_cntrl_txtInitials_and_Surname {position : absolute; top : 248; left : 45; width : 105; height : 22; margin : 0; padding : 0;}
+#xforms_cntrl_VacancyReasonOther {position : absolute; top : 210; left : 285; width : 165; height : 27; margin : 0; padding : 0;}
+#xforms_cntrl_VacancyReasonOther input {width : 153; height : 19}
+#xforms_cntrl_VacancyReason {position : absolute; top : 210; left : 150; width : 135; height : 29; margin : 0; padding : 0;}
+#xforms_cntrl_VacancyReason select {width : 123; height : 21}
+#xforms_cntrl_txtReason_for_vacancy {position : absolute; top : 210; left : 45; width : 105; height : 22; margin : 0; padding : 0;}
+#xforms_cntrl_Experience {position : absolute; top : 120; left : 180; width : 405; height : 75; margin : 0; padding : 0;}
+#xforms_cntrl_Experience textarea {width : 393; height : 67}
+#xforms_cntrl_Experience label.xforms-label {vertical-align : top}
+#xforms_cntrl_txtExperience {position : absolute; top : 135; left : 45; width : 100; height : 22; margin : 0; padding : 0;}
+#xforms_cntrl_Qualifications {position : absolute; top : 45; left : 180; width : 405; height : 75; margin : 0; padding : 0;}
+#xforms_cntrl_Qualifications textarea {width : 393; height : 67}
+#xforms_cntrl_Qualifications label.xforms-label {vertical-align : top}
+#xforms_cntrl_txtMinimum_qualifications {position : absolute; top : 45; left : 45; width : 120; height : 22; margin : 0; padding : 0;}
+</xhtml:style>
+    <xforms:model schema="PersonnelRequisition.xform.xsd">
+      <!-- Task Input -->
+      <xforms:instance id="taskinput">
+        <fe:input>
+          <fe:txtAuthorising_Supervisor/>
+          <fe:txtApproved_busines_case/>
+          <fe:txtJob_Profile/>
+          <fe:txtPlease_attach_the_following_documents/>
+          <fe:txtNegotiable_salary__tariff/>
+          <fe:txtRefer_to_SLA_to_identify_what_needs_to_be_done/>
+          <fe:txtPurpose_of_position/>
+          <fe:txtType_of_employee/>
+          <fe:txtEnd_Date/>
+          <fe:txtStart_Date/>
+          <fe:txtVacancy_on_structure/>
+          <fe:txtDirect/>
+          <fe:txtFixed_Tariff/>
+          <fe:txtLocation/>
+          <fe:txtDivision/>
+          <fe:txtCost_Centre/>
+          <fe:txtGrade/>
+          <fe:txtDepartment/>
+          <fe:txtNB_An_approved_job_description_should_be_attached/>
+          <fe:txtJob_Title/>
+          <fe:txtEE_Position/>
+          <fe:txtPersonnel_Requisition_One_per_vacancy/>
+          <fe:txtSITA/>
+          <fe:txtAlerts_and_delays_will_be_escalated_to_the_following_manager/>
+          <fe:txtTo_receive_email_notification__please_specify_your_email_address/>
+          <fe:txtDate_of_vacancy/>
+          <fe:Admission_to_cassified_information__systems/>
+          <fe:txtClearance_type/>
+          <fe:txtSecurity_Clearance/>
+          <fe:txt_3_Leadership/>
+          <fe:txt_2_Competency/>
+          <fe:txt_1_Integrity/>
+          <fe:txtAssessment_required/>
+          <fe:txtInitials_and_Surname/>
+          <fe:txtReason_for_vacancy/>
+          <fe:txtExperience/>
+          <fe:txtMinimum_qualifications/>
+        </fe:input>
+      </xforms:instance>
+      <!-- Task metadata - used only for People Initiating Processes Task forms -->
+      <xforms:instance id="taskmetadata">
+        <taskmetadata/>
+      </xforms:instance>
+      <!-- Task Output -->
+      <xforms:instance id="taskoutput">
+        <fe:output>
+          <SupervisorTables xmlns="http://example.com/PersonnelRequisition/xform">
+            <SupervisorTable>
+              <SupervisorName>sita\victoriam</SupervisorName>
+            </SupervisorTable>
+            <SupervisorTable>
+              <SupervisorName>sita\victoriam</SupervisorName>
+            </SupervisorTable>
+          </SupervisorTables>
+          <fe:txtAuthorising_Supervisor/>
+          <RSUserTables xmlns="http://example.com/PersonnelRequisition/xform">
+            <RSUserTable>
+              <RSUserName>sita/emilyn</RSUserName>
+            </RSUserTable>
+            <RSUserTable>
+              <RSUserName>sita/emilyn</RSUserName>
+            </RSUserTable>
+          </RSUserTables>
+          <HRUserTables xmlns="http://example.com/PersonnelRequisition/xform">
+            <HRUserTable>
+              <HRUserName>sita/victoriam</HRUserName>
+            </HRUserTable>
+            <HRUserTable>
+              <HRUserName>sita/victoriam</HRUserName>
+            </HRUserTable>
+          </HRUserTables>
+          <fe:BusinessCase filename="" mediatype="" upload-id="BusinessCase"/>
+          <fe:JobProfile filename="" mediatype="" upload-id="JobProfile"/>
+          <fe:TariffType>Yearly</fe:TariffType>
+          <fe:Tariff/>
+          <fe:CostCentre/>
+          <fe:EE_Position>AA_Candidate</fe:EE_Position>
+          <fe:EDate/>
+          <fe:SDate/>
+          <fe:Location>Erasmuskloof</fe:Location>
+          <fe:Purpose/>
+          <fe:Grade>A1A3.B5M2</fe:Grade>
+          <fe:Vacancy>Yes</fe:Vacancy>
+          <fe:EmployeeType>Permanent</fe:EmployeeType>
+          <fe:Direct>Yes</fe:Direct>
+          <fe:FixedTariff>Yes</fe:FixedTariff>
+          <fe:Division>Finance</fe:Division>
+          <fe:Dept>Internal_Reporting</fe:Dept>
+          <fe:JobTitle/>
+          <fe:txtApproved_busines_case/>
+          <fe:txtJob_Profile/>
+          <fe:txtPlease_attach_the_following_documents/>
+          <fe:txtNegotiable_salary__tariff/>
+          <fe:txtRefer_to_SLA_to_identify_what_needs_to_be_done/>
+          <fe:txtPurpose_of_position/>
+          <fe:txtType_of_employee/>
+          <fe:txtEnd_Date/>
+          <fe:txtStart_Date/>
+          <fe:txtVacancy_on_structure/>
+          <fe:txtDirect/>
+          <fe:txtFixed_Tariff/>
+          <fe:txtLocation/>
+          <fe:txtDivision/>
+          <fe:txtCost_Centre/>
+          <fe:txtGrade/>
+          <fe:txtDepartment/>
+          <fe:txtNB_An_approved_job_description_should_be_attached/>
+          <fe:txtJob_Title/>
+          <fe:txtEE_Position/>
+          <fe:txtPersonnel_Requisition_One_per_vacancy/>
+          <fe:txtSITA/>
+          <fe:RSManagerEmail>Silas.Bahula@Sita.co.za</fe:RSManagerEmail>
+          <fe:lobEmail/>
+          <fe:txtAlerts_and_delays_will_be_escalated_to_the_following_manager/>
+          <fe:txtTo_receive_email_notification__please_specify_your_email_address/>
+          <fe:PrevDate/>
+          <fe:txtDate_of_vacancy/>
+          <fe:Classified>Yes</fe:Classified>
+          <fe:Admission_to_cassified_information__systems/>
+          <fe:ClearanceType>Confidential</fe:ClearanceType>
+          <fe:txtClearance_type/>
+          <fe:SecurityClearanceReason>If no security clearance is required please provide a reason.</fe:SecurityClearanceReason>
+          <fe:SecurityClearance>Yes</fe:SecurityClearance>
+          <fe:txtSecurity_Clearance/>
+          <fe:OtherEval>Other - specify</fe:OtherEval>
+          <fe:txt_4/>
+          <fe:Leadership>Yes</fe:Leadership>
+          <fe:txt_3_Leadership/>
+          <fe:Competency>Yes</fe:Competency>
+          <fe:txt_2_Competency/>
+          <fe:Integrity>Yes</fe:Integrity>
+          <fe:txt_1_Integrity/>
+          <fe:txtAssessment_required/>
+          <fe:PrevIncumbent/>
+          <fe:txtInitials_and_Surname/>
+          <fe:VacancyReasonOther>Please specify "Other"</fe:VacancyReasonOther>
+          <fe:VacancyReason>New_Post</fe:VacancyReason>
+          <fe:txtReason_for_vacancy/>
+          <fe:Experience/>
+          <fe:txtExperience/>
+          <fe:Qualifications/>
+          <fe:txtMinimum_qualifications/>
+        </fe:output>
+      </xforms:instance>
+      <xforms:bind nodeset="instance('taskoutput')/fe:SupervisorTables/fe:SupervisorTable" readonly="yes" relevant="true()" required="yes" type="xs:anyURI"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:SupervisorTables/fe:SupervisorTable/fe:SupervisorName" relevant="true()" type="xs:anyURI"/>
+      <xforms:action ev:event="xforms-ready">
+        <xforms:action xforms:if="string(instance('taskoutput')/@saved) != 'true'">
+          <xforms:insert context="instance('taskoutput')" nodeset="fe:SupervisorTable" origin="instance('taskoutput')/fe:SupervisorTables/fe:SupervisorTable[index('xforms_cntrl_SupervisorTable_rpt')]"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:txtAuthorising_Supervisor" value="instance('taskinput')/fe:txtAuthorising_Supervisor"/>
+          <xforms:insert context="instance('taskoutput')" nodeset="fe:RSUserTable" origin="instance('taskoutput')/fe:RSUserTables/fe:RSUserTable[index('xforms_cntrl_RSUserTable_rpt')]"/>
+          <xforms:insert context="instance('taskoutput')" nodeset="fe:HRUserTable" origin="instance('taskoutput')/fe:HRUserTables/fe:HRUserTable[index('xforms_cntrl_HRUserTable_rpt')]"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:txtApproved_busines_case" value="instance('taskinput')/fe:txtApproved_busines_case"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:txtJob_Profile" value="instance('taskinput')/fe:txtJob_Profile"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:txtPlease_attach_the_following_documents" value="instance('taskinput')/fe:txtPlease_attach_the_following_documents"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:txtNegotiable_salary__tariff" value="instance('taskinput')/fe:txtNegotiable_salary__tariff"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:txtRefer_to_SLA_to_identify_what_needs_to_be_done" value="instance('taskinput')/fe:txtRefer_to_SLA_to_identify_what_needs_to_be_done"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:txtPurpose_of_position" value="instance('taskinput')/fe:txtPurpose_of_position"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:txtType_of_employee" value="instance('taskinput')/fe:txtType_of_employee"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:txtEnd_Date" value="instance('taskinput')/fe:txtEnd_Date"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:txtStart_Date" value="instance('taskinput')/fe:txtStart_Date"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:txtVacancy_on_structure" value="instance('taskinput')/fe:txtVacancy_on_structure"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:txtDirect" value="instance('taskinput')/fe:txtDirect"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:txtFixed_Tariff" value="instance('taskinput')/fe:txtFixed_Tariff"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:txtLocation" value="instance('taskinput')/fe:txtLocation"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:txtDivision" value="instance('taskinput')/fe:txtDivision"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:txtCost_Centre" value="instance('taskinput')/fe:txtCost_Centre"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:txtGrade" value="instance('taskinput')/fe:txtGrade"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:txtDepartment" value="instance('taskinput')/fe:txtDepartment"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:txtNB_An_approved_job_description_should_be_attached" value="instance('taskinput')/fe:txtNB_An_approved_job_description_should_be_attached"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:txtJob_Title" value="instance('taskinput')/fe:txtJob_Title"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:txtEE_Position" value="instance('taskinput')/fe:txtEE_Position"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:txtPersonnel_Requisition_One_per_vacancy" value="instance('taskinput')/fe:txtPersonnel_Requisition_One_per_vacancy"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:txtSITA" value="instance('taskinput')/fe:txtSITA"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:txtAlerts_and_delays_will_be_escalated_to_the_following_manager" value="instance('taskinput')/fe:txtAlerts_and_delays_will_be_escalated_to_the_following_manager"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:txtTo_receive_email_notification__please_specify_your_email_address" value="instance('taskinput')/fe:txtTo_receive_email_notification__please_specify_your_email_address"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:txtDate_of_vacancy" value="instance('taskinput')/fe:txtDate_of_vacancy"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:Admission_to_cassified_information__systems" value="instance('taskinput')/fe:Admission_to_cassified_information__systems"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:txtClearance_type" value="instance('taskinput')/fe:txtClearance_type"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:txtSecurity_Clearance" value="instance('taskinput')/fe:txtSecurity_Clearance"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:txt_3_Leadership" value="instance('taskinput')/fe:txt_3_Leadership"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:txt_2_Competency" value="instance('taskinput')/fe:txt_2_Competency"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:txt_1_Integrity" value="instance('taskinput')/fe:txt_1_Integrity"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:txtAssessment_required" value="instance('taskinput')/fe:txtAssessment_required"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:txtInitials_and_Surname" value="instance('taskinput')/fe:txtInitials_and_Surname"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:txtReason_for_vacancy" value="instance('taskinput')/fe:txtReason_for_vacancy"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:txtExperience" value="instance('taskinput')/fe:txtExperience"/>
+          <xforms:setvalue ref="instance('taskoutput')/fe:txtMinimum_qualifications" value="instance('taskinput')/fe:txtMinimum_qualifications"/>
+        </xforms:action>
+      </xforms:action>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txtAuthorising_Supervisor" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:txtAuthorising_Supervisor" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:RSUserTables/fe:RSUserTable" readonly="yes" relevant="true()" required="yes" type="xs:anyURI"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:RSUserTables/fe:RSUserTable/fe:RSUserName" relevant="true()" type="xs:anyURI"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:HRUserTables/fe:HRUserTable" readonly="yes" relevant="true()" required="yes" type="xs:anyURI"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:HRUserTables/fe:HRUserTable/fe:HRUserName" relevant="true()" type="xs:anyURI"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:BusinessCase" relevant="true()" type="xs:anyURI"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:JobProfile" relevant="true()" type="xs:anyURI"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:TariffType" relevant="true()" type="xs:anyURI"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:Tariff" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:CostCentre" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:EE_Position" relevant="true()" type="xs:anyURI"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:EDate" relevant="true()" type="xs:date"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:SDate" relevant="true()" type="xs:date"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:Location" relevant="true()" type="xs:anyURI"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:Purpose" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:Grade" relevant="true()" type="xs:anyURI"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:Vacancy" relevant="true()" type="xs:anyURI"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:EmployeeType" relevant="true()" type="xs:anyURI"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:Direct" relevant="true()" type="xs:anyURI"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:FixedTariff" relevant="true()" type="xs:anyURI"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:Division" relevant="true()" type="xs:anyURI"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:Dept" relevant="true()" type="xs:anyURI"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:JobTitle" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txtApproved_busines_case" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:txtApproved_busines_case" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txtJob_Profile" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:txtJob_Profile" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txtPlease_attach_the_following_documents" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:txtPlease_attach_the_following_documents" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txtNegotiable_salary__tariff" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:txtNegotiable_salary__tariff" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txtRefer_to_SLA_to_identify_what_needs_to_be_done" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:txtRefer_to_SLA_to_identify_what_needs_to_be_done" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txtPurpose_of_position" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:txtPurpose_of_position" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txtType_of_employee" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:txtType_of_employee" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txtEnd_Date" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:txtEnd_Date" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txtStart_Date" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:txtStart_Date" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txtVacancy_on_structure" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:txtVacancy_on_structure" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txtDirect" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:txtDirect" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txtFixed_Tariff" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:txtFixed_Tariff" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txtLocation" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:txtLocation" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txtDivision" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:txtDivision" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txtCost_Centre" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:txtCost_Centre" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txtGrade" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:txtGrade" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txtDepartment" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:txtDepartment" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txtNB_An_approved_job_description_should_be_attached" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:txtNB_An_approved_job_description_should_be_attached" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txtJob_Title" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:txtJob_Title" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txtEE_Position" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:txtEE_Position" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txtPersonnel_Requisition_One_per_vacancy" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:txtPersonnel_Requisition_One_per_vacancy" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txtSITA" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:txtSITA" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:RSManagerEmail" readonly="true()" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:lobEmail" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txtAlerts_and_delays_will_be_escalated_to_the_following_manager" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:txtAlerts_and_delays_will_be_escalated_to_the_following_manager" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txtTo_receive_email_notification__please_specify_your_email_address" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:txtTo_receive_email_notification__please_specify_your_email_address" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:PrevDate" relevant="true()" type="xs:date"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txtDate_of_vacancy" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:txtDate_of_vacancy" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:Classified" relevant="true()" type="xs:anyURI"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:Admission_to_cassified_information__systems" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:Admission_to_cassified_information__systems" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:ClearanceType" relevant="true()" type="xs:anyURI"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txtClearance_type" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:txtClearance_type" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:SecurityClearanceReason" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:SecurityClearance" relevant="true()" type="xs:anyURI"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txtSecurity_Clearance" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:txtSecurity_Clearance" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:OtherEval" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txt_4" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:Leadership" relevant="true()" type="xs:anyURI"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txt_3_Leadership" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:txt_3_Leadership" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:Competency" relevant="true()" type="xs:anyURI"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txt_2_Competency" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:txt_2_Competency" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:Integrity" relevant="true()" type="xs:anyURI"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txt_1_Integrity" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:txt_1_Integrity" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txtAssessment_required" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:txtAssessment_required" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:PrevIncumbent" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txtInitials_and_Surname" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:txtInitials_and_Surname" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:VacancyReasonOther" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:VacancyReason" relevant="true()" type="xs:anyURI"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txtReason_for_vacancy" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:txtReason_for_vacancy" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:Experience" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txtExperience" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:txtExperience" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:Qualifications" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskoutput')/fe:txtMinimum_qualifications" relevant="true()" type="xs:string"/>
+      <xforms:bind nodeset="instance('taskinput')/fe:txtMinimum_qualifications" relevant="true()" type="xs:string"/>
+    </xforms:model>
+  </xhtml:head>
+  <xhtml:body>
+    <xhtml:div id="intalio-bpms-form">
+      <xhtml:div id="xforms_cntrl_tabs0">
+        <widget:tabs xmlns:widget="http://orbeon.org/oxf/xml/widget">
+          <widget:tab id="xforms_cntrl_tab433">
+            <widget:label>Personnel Requisition</widget:label>
+            <xforms:group style="border : 1px solid gray">
+              <xhtml:div id="xforms_cntrl_SupervisorTable">
+                <xhtml:table>
+                  <xhtml:tr>
+                    <xhtml:th>
+                      <xforms:trigger appearance="xxforms:image">
+                        <xforms:label/>
+                        <xxforms:img src="/images/add.gif"/>
+                        <xforms:insert ev:event="DOMActivate" nodeset="instance('taskoutput')/fe:SupervisorTables/fe:SupervisorTable" at="last()" position="after"/>
+                      </xforms:trigger>
+                    </xhtml:th>
+                    <xhtml:th>Supervisor</xhtml:th>
+                  </xhtml:tr>
+                  <xforms:repeat id="xforms_cntrl_SupervisorTable_rpt" nodeset="instance('taskoutput')/fe:SupervisorTables/fe:SupervisorTable[position() &lt;= last()]">
+                    <xhtml:tr>
+                      <xhtml:td>
+                        <xforms:trigger appearance="xxforms:image">
+                          <xforms:label/>
+                          <xxforms:img src="/images/remove.gif"/>
+                          <xforms:delete ev:event="DOMActivate" nodeset="instance('taskoutput')/fe:SupervisorTables/fe:SupervisorTable" at="index('xforms_cntrl_SupervisorTable_rpt')"/>
+                        </xforms:trigger>
+                      </xhtml:td>
+                      <xhtml:td class="xforms_cntrl_table-cell1">
+                        <xforms:group style="position:relative;">
+                          <xhtml:div class="xforms_cntrl_SupervisorName">
+                            <xforms:select1 appearance="minimal" ref="fe:SupervisorName">
+                              <xforms:item>
+                                <xforms:label>Victoria Maluka</xforms:label>
+                                <xforms:value>sita\victoriam</xforms:value>
+                              </xforms:item>
+                            </xforms:select1>
+                          </xhtml:div>
+                        </xforms:group>
+                      </xhtml:td>
+                    </xhtml:tr>
+                  </xforms:repeat>
+                </xhtml:table>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txtAuthorising_Supervisor">
+                <xforms:output ref="instance('taskoutput')/fe:txtAuthorising_Supervisor">
+                  <xforms:label>Authorising Supervisor</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_RSUserTable">
+                <xhtml:table>
+                  <xhtml:tr>
+                    <xhtml:th>
+                      <xforms:trigger appearance="xxforms:image">
+                        <xforms:label/>
+                        <xxforms:img src="/images/add.gif"/>
+                        <xforms:insert ev:event="DOMActivate" nodeset="instance('taskoutput')/fe:RSUserTables/fe:RSUserTable" at="last()" position="after"/>
+                      </xforms:trigger>
+                    </xhtml:th>
+                    <xhtml:th>Recruitment Specialist</xhtml:th>
+                  </xhtml:tr>
+                  <xforms:repeat id="xforms_cntrl_RSUserTable_rpt" nodeset="instance('taskoutput')/fe:RSUserTables/fe:RSUserTable[position() &lt;= last()]">
+                    <xhtml:tr>
+                      <xhtml:td>
+                        <xforms:trigger appearance="xxforms:image">
+                          <xforms:label/>
+                          <xxforms:img src="/images/remove.gif"/>
+                          <xforms:delete ev:event="DOMActivate" nodeset="instance('taskoutput')/fe:RSUserTables/fe:RSUserTable" at="index('xforms_cntrl_RSUserTable_rpt')"/>
+                        </xforms:trigger>
+                      </xhtml:td>
+                      <xhtml:td class="xforms_cntrl_table-cell2">
+                        <xforms:group style="position:relative;">
+                          <xhtml:div class="xforms_cntrl_RSUserName">
+                            <xforms:select1 appearance="minimal" ref="fe:RSUserName">
+                              <xforms:item>
+                                <xforms:label>Emily Nthite</xforms:label>
+                                <xforms:value>sita/emilyn</xforms:value>
+                              </xforms:item>
+                              <xforms:item>
+                                <xforms:label>Nhlanhla Maname</xforms:label>
+                                <xforms:value>sita/nhlanhlam</xforms:value>
+                              </xforms:item>
+                            </xforms:select1>
+                          </xhtml:div>
+                        </xforms:group>
+                      </xhtml:td>
+                    </xhtml:tr>
+                  </xforms:repeat>
+                </xhtml:table>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_HRUserTable">
+                <xhtml:table>
+                  <xhtml:tr>
+                    <xhtml:th>
+                      <xforms:trigger appearance="xxforms:image">
+                        <xforms:label/>
+                        <xxforms:img src="/images/add.gif"/>
+                        <xforms:insert ev:event="DOMActivate" nodeset="instance('taskoutput')/fe:HRUserTables/fe:HRUserTable" at="last()" position="after"/>
+                      </xforms:trigger>
+                    </xhtml:th>
+                    <xhtml:th>HR Operations</xhtml:th>
+                  </xhtml:tr>
+                  <xforms:repeat id="xforms_cntrl_HRUserTable_rpt" nodeset="instance('taskoutput')/fe:HRUserTables/fe:HRUserTable[position() &lt;= last()]">
+                    <xhtml:tr>
+                      <xhtml:td>
+                        <xforms:trigger appearance="xxforms:image">
+                          <xforms:label/>
+                          <xxforms:img src="/images/remove.gif"/>
+                          <xforms:delete ev:event="DOMActivate" nodeset="instance('taskoutput')/fe:HRUserTables/fe:HRUserTable" at="index('xforms_cntrl_HRUserTable_rpt')"/>
+                        </xforms:trigger>
+                      </xhtml:td>
+                      <xhtml:td class="xforms_cntrl_table-cell3">
+                        <xforms:group style="position:relative;">
+                          <xhtml:div class="xforms_cntrl_HRUserName">
+                            <xforms:select1 appearance="minimal" ref="fe:HRUserName">
+                              <xforms:item>
+                                <xforms:label>Victoria Maluka</xforms:label>
+                                <xforms:value>sita/victoriam</xforms:value>
+                              </xforms:item>
+                              <xforms:item>
+                                <xforms:label>Howard Ngwenya</xforms:label>
+                                <xforms:value>sita/howardn</xforms:value>
+                              </xforms:item>
+                              <xforms:item>
+                                <xforms:label>Kea Aphane</xforms:label>
+                                <xforms:value>sita/keaa</xforms:value>
+                              </xforms:item>
+                            </xforms:select1>
+                          </xhtml:div>
+                        </xforms:group>
+                      </xhtml:td>
+                    </xhtml:tr>
+                  </xforms:repeat>
+                </xhtml:table>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_BusinessCase">
+                <xforms:upload ref="instance('taskoutput')/fe:BusinessCase">
+                  <xforms:filename ref="@filename"/>
+                  <xforms:mediatype ref="@mediatype"/>
+                </xforms:upload>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_JobProfile">
+                <xforms:upload ref="instance('taskoutput')/fe:JobProfile">
+                  <xforms:filename ref="@filename"/>
+                  <xforms:mediatype ref="@mediatype"/>
+                </xforms:upload>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_TariffType">
+                <xforms:select1 appearance="minimal" ref="instance('taskoutput')/fe:TariffType">
+                  <xforms:item>
+                    <xforms:label>Yearly</xforms:label>
+                    <xforms:value>Yearly</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>Hourly</xforms:label>
+                    <xforms:value>Hourly</xforms:value>
+                  </xforms:item>
+                </xforms:select1>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_Tariff">
+                <xforms:input ref="instance('taskoutput')/fe:Tariff"/>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_CostCentre">
+                <xforms:input ref="instance('taskoutput')/fe:CostCentre"/>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_EE_Position">
+                <xforms:select1 appearance="minimal" ref="instance('taskoutput')/fe:EE_Position">
+                  <xforms:item>
+                    <xforms:label>No</xforms:label>
+                    <xforms:value>No</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>Black Female</xforms:label>
+                    <xforms:value>Black_Female</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>White Female</xforms:label>
+                    <xforms:value>White_Female</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>Coloured Female</xforms:label>
+                    <xforms:value>Coloured_Female</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>Indian Female</xforms:label>
+                    <xforms:value>Indian_Female</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>Black Male</xforms:label>
+                    <xforms:value>Black_Male</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>Coloured Male</xforms:label>
+                    <xforms:value>Coloured_Male</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>Indian Male</xforms:label>
+                    <xforms:value>Indian_Male</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>AA Candidate</xforms:label>
+                    <xforms:value>AA_Candidate</xforms:value>
+                  </xforms:item>
+                </xforms:select1>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_EDate">
+                <xforms:input ref="instance('taskoutput')/fe:EDate"/>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_SDate">
+                <xforms:input ref="instance('taskoutput')/fe:SDate"/>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_Location">
+                <xforms:select1 appearance="minimal" ref="instance('taskoutput')/fe:Location">
+                  <xforms:item>
+                    <xforms:label>SITA Bedfordview</xforms:label>
+                    <xforms:value>Bedfordview</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>SITA Beta</xforms:label>
+                    <xforms:value>Beta</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>SITA Blenny</xforms:label>
+                    <xforms:value>Blenny</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>SITA Bloemfontein</xforms:label>
+                    <xforms:value>Bloemfontein</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>SITA Centurion</xforms:label>
+                    <xforms:value>Centurion</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>SITA Durban</xforms:label>
+                    <xforms:value>Durban</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>SITA Pietermaritzburg</xforms:label>
+                    <xforms:value>Pietermaritzburg</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>SITA Erasmuskloof</xforms:label>
+                    <xforms:value>Erasmuskloof</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>SITA Free State Data Centre</xforms:label>
+                    <xforms:value>Free_State_Data_Centre</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>SITA Gauteng</xforms:label>
+                    <xforms:value>Gauteng</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>SITA Kimberley</xforms:label>
+                    <xforms:value>Kimberley</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>SITA Mafikeng</xforms:label>
+                    <xforms:value>Mafikeng</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>SITA Middelburg</xforms:label>
+                    <xforms:value>Middelburg</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>SITA Nelspruit</xforms:label>
+                    <xforms:value>Nelspruit</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>SITA Numerus</xforms:label>
+                    <xforms:value>Numerus</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>SITA Perseus Park</xforms:label>
+                    <xforms:value>Perseus_Park</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>SITA East London</xforms:label>
+                    <xforms:value>East_London</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>SITA Polokwane</xforms:label>
+                    <xforms:value>Polokwane</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>SITA Port Elizabeth</xforms:label>
+                    <xforms:value>Port_Elizabeth</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>SITA potchefstroom</xforms:label>
+                    <xforms:value>Potchefstroom</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>SITA Roodepoort</xforms:label>
+                    <xforms:value>Roodepoort</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>SITA Rustenburg</xforms:label>
+                    <xforms:value>Rustenburg</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>SITA Western Cape</xforms:label>
+                    <xforms:value>Western_Cape</xforms:value>
+                  </xforms:item>
+                </xforms:select1>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_Purpose">
+                <xforms:textarea ref="instance('taskoutput')/fe:Purpose"/>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_Grade">
+                <xforms:select1 appearance="minimal" ref="instance('taskoutput')/fe:Grade">
+                  <xforms:item>
+                    <xforms:label>A1A3.B5M2</xforms:label>
+                    <xforms:value>A1A3.B5M2</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>B1B2.B5M1</xforms:label>
+                    <xforms:value>B1B2.B5M1</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>B3B5.B4M2</xforms:label>
+                    <xforms:value>B3B5.B4M2</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>B4B5.B4M2</xforms:label>
+                    <xforms:value>B4B5.B4M2</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>C1C2.B4M1</xforms:label>
+                    <xforms:value>C1C2.B4M1</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>C3C5.B3M2</xforms:label>
+                    <xforms:value>C3C5.B3M2</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>D1D3.B3M1</xforms:label>
+                    <xforms:value>D1D3.B3M1</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>D4D5.B2M2</xforms:label>
+                    <xforms:value>D4D4.B2M2</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>E1E3.B2M1</xforms:label>
+                    <xforms:value>E1E3.B2M1</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>F1F2.B1M2</xforms:label>
+                    <xforms:value>F1F2.B1M2</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>F3.B1M1</xforms:label>
+                    <xforms:value>F3.B1M1</xforms:value>
+                  </xforms:item>
+                </xforms:select1>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_Vacancy">
+                <xforms:select1 appearance="minimal" ref="instance('taskoutput')/fe:Vacancy">
+                  <xforms:item>
+                    <xforms:label>Yes</xforms:label>
+                    <xforms:value>Yes</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>No</xforms:label>
+                    <xforms:value>No</xforms:value>
+                  </xforms:item>
+                </xforms:select1>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_EmployeeType">
+                <xforms:select1 appearance="minimal" ref="instance('taskoutput')/fe:EmployeeType">
+                  <xforms:item>
+                    <xforms:label>Permanent</xforms:label>
+                    <xforms:value>Permanent</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>Fixed Term</xforms:label>
+                    <xforms:value>Fixed_Term</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>Independent</xforms:label>
+                    <xforms:value>Independent</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>Contingent Worker</xforms:label>
+                    <xforms:value>Contingent_Worker</xforms:value>
+                  </xforms:item>
+                </xforms:select1>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_Direct">
+                <xforms:select1 appearance="minimal" ref="instance('taskoutput')/fe:Direct">
+                  <xforms:item>
+                    <xforms:label>Yes</xforms:label>
+                    <xforms:value>Yes</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>No</xforms:label>
+                    <xforms:value>No</xforms:value>
+                  </xforms:item>
+                </xforms:select1>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_FixedTariff">
+                <xforms:select1 appearance="minimal" ref="instance('taskoutput')/fe:FixedTariff">
+                  <xforms:item>
+                    <xforms:label>Yes</xforms:label>
+                    <xforms:value>Yes</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>No</xforms:label>
+                    <xforms:value>No</xforms:value>
+                  </xforms:item>
+                </xforms:select1>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_Division">
+                <xforms:select1 appearance="minimal" ref="instance('taskoutput')/fe:Division">
+                  <xforms:item>
+                    <xforms:label>FIN: Finance Reporting</xforms:label>
+                    <xforms:value>Finance</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>BO CBU: Client Business Unit</xforms:label>
+                    <xforms:value>Client_Business_Unit</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>IMS: Information Management Systems</xforms:label>
+                    <xforms:value>Information_Management_Systems</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>SS: Shared Services</xforms:label>
+                    <xforms:value>Shared_Services</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>ST: Strategic Services</xforms:label>
+                    <xforms:value>Strategic_Services</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>RP: Regulatory Affairs and Procurement</xforms:label>
+                    <xforms:value>Regulatory_Affairs_and_Procurement</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>CE: Office of the CEO</xforms:label>
+                    <xforms:value>Office_of_the_CEO</xforms:value>
+                  </xforms:item>
+                </xforms:select1>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_Dept">
+                <xforms:select1 appearance="minimal" ref="instance('taskoutput')/fe:Dept">
+                  <xforms:item>
+                    <xforms:label>FIN: Internal Reporting</xforms:label>
+                    <xforms:value>Internal_Reporting</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>FIN External Reporting</xforms:label>
+                    <xforms:value>External_Reporting</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>BO CBU IT Consulting</xforms:label>
+                    <xforms:value>IT_Consulting</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>BO CBU Marketing</xforms:label>
+                    <xforms:value>Marketing</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>BO CBU Client Business Unit</xforms:label>
+                    <xforms:value>Client_Business_Unit</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>BO CBU Infrastructure Services</xforms:label>
+                    <xforms:value>Infrastructure_Services</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>IMS Competency_Centre</xforms:label>
+                    <xforms:value>Competency_Centre</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>SS Internal Services</xforms:label>
+                    <xforms:value>Internal_Services</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>SS Human Resource Operations</xforms:label>
+                    <xforms:value>Human_Resource_Operations</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>SS Organisational Development</xforms:label>
+                    <xforms:value>Organisational_Development</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>SS HR_Services</xforms:label>
+                    <xforms:value>HR_Services</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>SS Talent Management</xforms:label>
+                    <xforms:value>Talent_Management</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>ST Research and Development</xforms:label>
+                    <xforms:value>Research_and_Development</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>ST Business Development</xforms:label>
+                    <xforms:value>Business_Development</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>ST IFMS Programme</xforms:label>
+                    <xforms:value>IFMS_Programme</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>ST IPMO</xforms:label>
+                    <xforms:value>IPMO</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>ST Quality Management</xforms:label>
+                    <xforms:value>Quality_Management</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>RP Legal Services</xforms:label>
+                    <xforms:value>Legal_Services</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>RP Risk Office</xforms:label>
+                    <xforms:value>Risk_Office</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>RP Procurement</xforms:label>
+                    <xforms:value>Procurement</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>RP Audit</xforms:label>
+                    <xforms:value>Audit</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>RP Company Secretary</xforms:label>
+                    <xforms:value>Company_Secretary</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>CEO Office of the CEO</xforms:label>
+                    <xforms:value>Office_of_the_CEO</xforms:value>
+                  </xforms:item>
+                </xforms:select1>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_JobTitle">
+                <xforms:input ref="instance('taskoutput')/fe:JobTitle"/>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txtApproved_busines_case">
+                <xforms:output ref="instance('taskoutput')/fe:txtApproved_busines_case">
+                  <xforms:label>Approved busines case</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txtJob_Profile">
+                <xforms:output ref="instance('taskoutput')/fe:txtJob_Profile">
+                  <xforms:label>Job Profile</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txtPlease_attach_the_following_documents">
+                <xforms:output ref="instance('taskoutput')/fe:txtPlease_attach_the_following_documents">
+                  <xforms:label>Please attach the following documents</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txtNegotiable_salary__tariff">
+                <xforms:output ref="instance('taskoutput')/fe:txtNegotiable_salary__tariff">
+                  <xforms:label>Negotiable salary / tariff</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txtRefer_to_SLA_to_identify_what_needs_to_be_done">
+                <xforms:output ref="instance('taskoutput')/fe:txtRefer_to_SLA_to_identify_what_needs_to_be_done">
+                  <xforms:label>Refer to SLA to identify what needs to be done.</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txtPurpose_of_position">
+                <xforms:output ref="instance('taskoutput')/fe:txtPurpose_of_position">
+                  <xforms:label>Purpose of position</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txtType_of_employee">
+                <xforms:output ref="instance('taskoutput')/fe:txtType_of_employee">
+                  <xforms:label>Type of employee</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txtEnd_Date">
+                <xforms:output ref="instance('taskoutput')/fe:txtEnd_Date">
+                  <xforms:label>End Date</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txtStart_Date">
+                <xforms:output ref="instance('taskoutput')/fe:txtStart_Date">
+                  <xforms:label>Start Date</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txtVacancy_on_structure">
+                <xforms:output ref="instance('taskoutput')/fe:txtVacancy_on_structure">
+                  <xforms:label>Vacancy on structure</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txtDirect">
+                <xforms:output ref="instance('taskoutput')/fe:txtDirect">
+                  <xforms:label>Direct</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txtFixed_Tariff">
+                <xforms:output ref="instance('taskoutput')/fe:txtFixed_Tariff">
+                  <xforms:label>Fixed Tariff</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txtLocation">
+                <xforms:output ref="instance('taskoutput')/fe:txtLocation">
+                  <xforms:label>Location (Head Office..)</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txtDivision">
+                <xforms:output ref="instance('taskoutput')/fe:txtDivision">
+                  <xforms:label>Division</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txtCost_Centre">
+                <xforms:output ref="instance('taskoutput')/fe:txtCost_Centre">
+                  <xforms:label>Cost Centre</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txtGrade">
+                <xforms:output ref="instance('taskoutput')/fe:txtGrade">
+                  <xforms:label>Grade</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txtDepartment">
+                <xforms:output ref="instance('taskoutput')/fe:txtDepartment">
+                  <xforms:label>Department</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txtNB_An_approved_job_description_should_be_attached">
+                <xforms:output ref="instance('taskoutput')/fe:txtNB_An_approved_job_description_should_be_attached">
+                  <xforms:label>NB: An approved job description should be attached.</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txtJob_Title">
+                <xforms:output ref="instance('taskoutput')/fe:txtJob_Title">
+                  <xforms:label>Job Title</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txtEE_Position">
+                <xforms:output ref="instance('taskoutput')/fe:txtEE_Position">
+                  <xforms:label>EE Position</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txtPersonnel_Requisition_One_per_vacancy">
+                <xforms:output ref="instance('taskoutput')/fe:txtPersonnel_Requisition_One_per_vacancy">
+                  <xforms:label>Personnel Requisition (One per vacancy)</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txtSITA">
+                <xforms:output ref="instance('taskoutput')/fe:txtSITA">
+                  <xforms:label>SITA</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+            </xforms:group>
+          </widget:tab>
+          <widget:tab id="xforms_cntrl_tab434">
+            <widget:label>Organisational Details</widget:label>
+            <xforms:group style="border : 1px solid gray">
+              <xhtml:div id="xforms_cntrl_RSManagerEmail">
+                <xforms:input ref="instance('taskoutput')/fe:RSManagerEmail"/>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_lobEmail">
+                <xforms:input ref="instance('taskoutput')/fe:lobEmail"/>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txtAlerts_and_delays_will_be_escalated_to_the_following_manager">
+                <xforms:output ref="instance('taskoutput')/fe:txtAlerts_and_delays_will_be_escalated_to_the_following_manager">
+                  <xforms:label>Alerts and delays will be escalated to the following manager:</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txtTo_receive_email_notification__please_specify_your_email_address">
+                <xforms:output ref="instance('taskoutput')/fe:txtTo_receive_email_notification__please_specify_your_email_address">
+                  <xforms:label>To receive email notification - please specify your email address:</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_PrevDate">
+                <xforms:input ref="instance('taskoutput')/fe:PrevDate"/>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txtDate_of_vacancy">
+                <xforms:output ref="instance('taskoutput')/fe:txtDate_of_vacancy">
+                  <xforms:label>Date</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_Classified">
+                <xforms:select1 appearance="minimal" ref="instance('taskoutput')/fe:Classified">
+                  <xforms:item>
+                    <xforms:label>Yes</xforms:label>
+                    <xforms:value>Yes</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>No</xforms:label>
+                    <xforms:value>No</xforms:value>
+                  </xforms:item>
+                </xforms:select1>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_Admission_to_cassified_information__systems">
+                <xforms:output ref="instance('taskoutput')/fe:Admission_to_cassified_information__systems">
+                  <xforms:label>Admission to cassified information / systems?</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_ClearanceType">
+                <xforms:select1 appearance="minimal" ref="instance('taskoutput')/fe:ClearanceType">
+                  <xforms:item>
+                    <xforms:label>Confidential</xforms:label>
+                    <xforms:value>Confidential</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>Secret</xforms:label>
+                    <xforms:value>Secret</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>Top Secret</xforms:label>
+                    <xforms:value>Top_Secret</xforms:value>
+                  </xforms:item>
+                </xforms:select1>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txtClearance_type">
+                <xforms:output ref="instance('taskoutput')/fe:txtClearance_type">
+                  <xforms:label>Clearance type</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_SecurityClearanceReason">
+                <xforms:textarea ref="instance('taskoutput')/fe:SecurityClearanceReason"/>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_SecurityClearance">
+                <xforms:select1 appearance="minimal" ref="instance('taskoutput')/fe:SecurityClearance">
+                  <xforms:item>
+                    <xforms:label>Yes</xforms:label>
+                    <xforms:value>Yes</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>No</xforms:label>
+                    <xforms:value>No</xforms:value>
+                  </xforms:item>
+                </xforms:select1>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txtSecurity_Clearance">
+                <xforms:output ref="instance('taskoutput')/fe:txtSecurity_Clearance">
+                  <xforms:label>Security Clearance</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_OtherEval">
+                <xforms:input ref="instance('taskoutput')/fe:OtherEval"/>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txt_4">
+                <xforms:output ref="instance('taskoutput')/fe:txt_4">
+                  <xforms:label>4. </xforms:label>
+                </xforms:output>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_Leadership">
+                <xforms:select1 appearance="minimal" ref="instance('taskoutput')/fe:Leadership">
+                  <xforms:item>
+                    <xforms:label>Yes</xforms:label>
+                    <xforms:value>Yes</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>No</xforms:label>
+                    <xforms:value>No</xforms:value>
+                  </xforms:item>
+                </xforms:select1>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txt_3_Leadership">
+                <xforms:output ref="instance('taskoutput')/fe:txt_3_Leadership">
+                  <xforms:label>3. Leadership</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_Competency">
+                <xforms:select1 appearance="minimal" ref="instance('taskoutput')/fe:Competency">
+                  <xforms:item>
+                    <xforms:label>Yes</xforms:label>
+                    <xforms:value>Yes</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>No</xforms:label>
+                    <xforms:value>No</xforms:value>
+                  </xforms:item>
+                </xforms:select1>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txt_2_Competency">
+                <xforms:output ref="instance('taskoutput')/fe:txt_2_Competency">
+                  <xforms:label>2. Competency</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_Integrity">
+                <xforms:select1 appearance="minimal" ref="instance('taskoutput')/fe:Integrity">
+                  <xforms:item>
+                    <xforms:label>Yes</xforms:label>
+                    <xforms:value>Yes</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>No</xforms:label>
+                    <xforms:value>No</xforms:value>
+                  </xforms:item>
+                </xforms:select1>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txt_1_Integrity">
+                <xforms:output ref="instance('taskoutput')/fe:txt_1_Integrity">
+                  <xforms:label>1. Integrity</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txtAssessment_required">
+                <xforms:output ref="instance('taskoutput')/fe:txtAssessment_required">
+                  <xforms:label>Assessment required</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_PrevIncumbent">
+                <xforms:input ref="instance('taskoutput')/fe:PrevIncumbent"/>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txtInitials_and_Surname">
+                <xforms:output ref="instance('taskoutput')/fe:txtInitials_and_Surname">
+                  <xforms:label>Initials and Surname</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_VacancyReasonOther">
+                <xforms:input ref="instance('taskoutput')/fe:VacancyReasonOther"/>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_VacancyReason">
+                <xforms:select1 appearance="minimal" ref="instance('taskoutput')/fe:VacancyReason">
+                  <xforms:item>
+                    <xforms:label>New Post</xforms:label>
+                    <xforms:value>New_Post</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>Transfer</xforms:label>
+                    <xforms:value>Transfer</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>Resignation</xforms:label>
+                    <xforms:value>Resignation</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>Promotion</xforms:label>
+                    <xforms:value>Promotion</xforms:value>
+                  </xforms:item>
+                  <xforms:item>
+                    <xforms:label>Other</xforms:label>
+                    <xforms:value>Other</xforms:value>
+                  </xforms:item>
+                </xforms:select1>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txtReason_for_vacancy">
+                <xforms:output ref="instance('taskoutput')/fe:txtReason_for_vacancy">
+                  <xforms:label>Reason for vacancy</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_Experience">
+                <xforms:textarea ref="instance('taskoutput')/fe:Experience"/>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txtExperience">
+                <xforms:output ref="instance('taskoutput')/fe:txtExperience">
+                  <xforms:label>Experience</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_Qualifications">
+                <xforms:textarea ref="instance('taskoutput')/fe:Qualifications"/>
+              </xhtml:div>
+              <xhtml:div id="xforms_cntrl_txtMinimum_qualifications">
+                <xforms:output ref="instance('taskoutput')/fe:txtMinimum_qualifications">
+                  <xforms:label>Minimum qualifications</xforms:label>
+                </xforms:output>
+              </xhtml:div>
+            </xforms:group>
+          </widget:tab>
+        </widget:tabs>
+      </xhtml:div>
+    </xhtml:div>
+  </xhtml:body>
+</xhtml:html>

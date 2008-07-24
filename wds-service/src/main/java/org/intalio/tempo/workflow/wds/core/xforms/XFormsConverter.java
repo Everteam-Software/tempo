@@ -57,30 +57,13 @@ public class XFormsConverter {
             String line = null;
             StringBuffer sb = new StringBuffer();
             while ((line = sr.readLine()) != null) {
-                int start = line.indexOf("{");
-                String elem = line.substring(0, start);
-                sb.append(elem);
-                sb.append("{");
-                String stile = line.substring(start + 1, line.lastIndexOf("}"));
-                StringTokenizer st = new StringTokenizer(stile, ";");
-                while (st.hasMoreTokens()) {
-                    String att = st.nextToken();
-                    int dotdot = att.indexOf(':') + 1;
-                    if (dotdot > 1) {
-                        String left = att.substring(0, dotdot - 1).trim();
-                        String right = att.substring(dotdot).trim();
-                        if (KEYWORDSLIST.contains(left)) {
-                            if (!right.endsWith("px"))
-                                right += "px";
-                        }
-                        sb.append(left + ":" + right);
-                    } else {
-                        sb.append(att);
-                    }
-                    sb.append(";");
+                int indexOf = 0;
+                String line2 = line;
+                while((indexOf = line.indexOf("}"))>1) {
+                    line2 = line.substring(0,indexOf+1);
+                    sb.append(convertLine(line2));
+                    line = line.substring(indexOf+1);
                 }
-                sb.append("}");
-                sb.append(System.getProperty("line.separator"));
             }
             element.setText(sb.toString());
             return doc.asXML().getBytes("UTF-8");
@@ -88,6 +71,48 @@ public class XFormsConverter {
             throw new RuntimeException("Could not apply new style to xform", e);
         }
 
+    }
+
+    private static StringBuffer convertLine(String line) {
+        StringBuffer sb = new StringBuffer();
+        int start = line.indexOf("{");
+        String elem = line.substring(0, start).trim();
+        sb.append(elem);
+        sb.append("{");
+        String stile = line.substring(start + 1, line.lastIndexOf("}"));
+        StringTokenizer st = new StringTokenizer(stile, ";");
+        while (st.hasMoreTokens()) {
+            String att = st.nextToken();
+            int dotdot = att.indexOf(':') + 1;
+            if (dotdot > 1) {
+                String cssProperty = att.substring(0, dotdot - 1).trim();
+                String right = att.substring(dotdot).trim();
+                // fix size values, append px where needed
+                if (KEYWORDSLIST.contains(cssProperty)) {
+                    if (!right.endsWith("px"))
+                        right += "px";
+                }
+                
+                // fix vertical-align in tables, top behaves differently depending on the browser
+                // set to a % value, as recommended on some CSS web sites.
+                
+//                if (elem.endsWith("table") || elem.endsWith("table tr") || elem.endsWith("table tr td")) {
+                    if (cssProperty.contains("vertical-align") && (right.contains("top"))) {
+                        sb.append(cssProperty + ":40%");
+                    }
+//                } 
+            else {
+                    sb.append(cssProperty + ":" + right);
+                }
+                
+            } else {
+                sb.append(att);
+            }
+            sb.append(";");
+        }
+        sb.append("}");
+        sb.append("\n");
+        return sb;
     }
 
     public static Item fixStyle(Item item) {
