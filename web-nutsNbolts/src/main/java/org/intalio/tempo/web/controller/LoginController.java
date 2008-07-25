@@ -436,7 +436,7 @@ public class LoginController extends UIController {
         /**
          * Maximum length of the component value
          */
-        private static final int USERNAME_MAX_LENGTH = 30;
+        private static final int USERNAME_MAX_LENGTH = 100;
 
         /**
          * Minimum text length
@@ -446,7 +446,7 @@ public class LoginController extends UIController {
         /**
          * Maximum text length
          */
-        private static final int PASSWORD_MAX_LENGTH = 12;
+        private static final int PASSWORD_MAX_LENGTH = 20;
 
         public void validate(Object obj, Errors errors) {
             LOG.debug("Validate: " + obj + " " + errors);
