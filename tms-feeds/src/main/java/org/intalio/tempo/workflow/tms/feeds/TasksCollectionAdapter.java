@@ -12,8 +12,6 @@
 package org.intalio.tempo.workflow.tms.feeds;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.URI;
 import java.util.Date;
 
 import org.apache.abdera.factory.Factory;

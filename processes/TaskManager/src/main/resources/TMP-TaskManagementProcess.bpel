@@ -441,6 +441,7 @@
               <bpel:invoke partnerLink="taskManagementProcessAndTaskManagementSystemForPortTaskManagementServicesSOAPPlkVar" portType="tns:TaskManagementServices" operation="fail" inputVariable="tnsFailRequestMsg" outputVariable="tnsFailResponseMsg" bpmn:label="Change Task status to Failed" bpmn:id="_FyrywLEhEdy6MtvbqSLrQw"></bpel:invoke>
             </bpel:sequence>
           </bpel:scope>
+          <bpel:empty bpmn:label="no-activities-for-Deadline Handler" bpmn:id="_tZQ68MUjEdyOLLhtllRYzQ"/>
         </bpel:catch>
       </bpel:faultHandlers>
       <bpel:eventHandlers>
@@ -459,6 +460,7 @@
               </bpel:else>
             </bpel:if>
           </bpel:scope>
+          <bpel:empty bpmn:label="no-activities-for-EventIntermediateTimer" bpmn:id="_lFILsMSNEdyOLLhtllRYzQ"/>
         </bpel:onAlarm>
       </bpel:eventHandlers>
       <bpel:while>
@@ -496,7 +498,10 @@
         <b4p:nextTaskId></b4p:nextTaskId>
         <b4p:nextTaskURL></b4p:nextTaskURL>
     </b4p:taskMetaData>
-    <b4p:status></b4p:status>
+     <b4p:status></b4p:status>
+    <b4p:errorCode></b4p:errorCode>
+    <b4p:errorReason></b4p:errorReason>
+    <b4p:isChainedAfter></b4p:isChainedAfter>
 </b4p:response></bpel:literal>
               </bpel:from>
               <bpel:to>$completeTaskResponse.root</bpel:to>
@@ -630,7 +635,10 @@
         <b4p:nextTaskId></b4p:nextTaskId>
         <b4p:nextTaskURL></b4p:nextTaskURL>
     </b4p:taskMetaData>
-    <b4p:status></b4p:status>
+     <b4p:status></b4p:status>
+    <b4p:errorCode></b4p:errorCode>
+    <b4p:errorReason></b4p:errorReason>
+    <b4p:isChainedAfter></b4p:isChainedAfter>
 </b4p:response></bpel:literal>
                     </bpel:from>
                     <bpel:to>$completeTaskResponse.root</bpel:to>
@@ -806,11 +814,11 @@
                     <bpel:to>$completeTaskResponse.root/b4p:status</bpel:to>
                   </bpel:copy>
                   <bpel:copy>
-                    <bpel:from>$notifyTaskCompletionResponse.root/b4p:errorCode</bpel:from>
+                    <bpel:from>if (boolean($notifyTaskCompletionResponse.root/b4p:errorCode)) then ($notifyTaskCompletionResponse.root/b4p:errorCode) else ("")</bpel:from>
                     <bpel:to>$completeTaskResponse.root/b4p:errorCode</bpel:to>
                   </bpel:copy>
                   <bpel:copy>
-                    <bpel:from>$notifyTaskCompletionResponse.root/b4p:errorReason</bpel:from>
+                    <bpel:from>if (boolean($notifyTaskCompletionResponse.root/b4p:errorReason)) then ($notifyTaskCompletionResponse.root/b4p:errorReason) else ("")</bpel:from>
                     <bpel:to>$completeTaskResponse.root/b4p:errorReason</bpel:to>
                   </bpel:copy>
                 </bpel:assign>
@@ -860,7 +868,10 @@
         <b4p:nextTaskId></b4p:nextTaskId>
         <b4p:nextTaskURL></b4p:nextTaskURL>
     </b4p:taskMetaData>
-    <b4p:status></b4p:status>
+     <b4p:status></b4p:status>
+    <b4p:errorCode></b4p:errorCode>
+    <b4p:errorReason></b4p:errorReason>
+    <b4p:isChainedAfter></b4p:isChainedAfter>
 </b4p:response></bpel:literal>
                     </bpel:from>
                     <bpel:to>$completeTaskResponse.root</bpel:to>
@@ -1022,7 +1033,10 @@
         <b4p:nextTaskId></b4p:nextTaskId>
         <b4p:nextTaskURL></b4p:nextTaskURL>
     </b4p:taskMetaData>
-    <b4p:status></b4p:status>
+     <b4p:status></b4p:status>
+    <b4p:errorCode></b4p:errorCode>
+    <b4p:errorReason></b4p:errorReason>
+    <b4p:isChainedAfter></b4p:isChainedAfter>
 </b4p:response></bpel:literal>
                     </bpel:from>
                     <bpel:to>$completeTaskResponse.root</bpel:to>
@@ -1193,7 +1207,10 @@
         <b4p:nextTaskId></b4p:nextTaskId>
         <b4p:nextTaskURL></b4p:nextTaskURL>
     </b4p:taskMetaData>
-    <b4p:status></b4p:status>
+     <b4p:status></b4p:status>
+    <b4p:errorCode></b4p:errorCode>
+    <b4p:errorReason></b4p:errorReason>
+    <b4p:isChainedAfter></b4p:isChainedAfter>
 </b4p:response></bpel:literal>
                     </bpel:from>
                     <bpel:to>$completeTaskResponse.root</bpel:to>

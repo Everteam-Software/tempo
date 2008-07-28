@@ -544,7 +544,8 @@ public class TMSRequestProcessor extends OMUnmarshaller {
 
     private AxisFault makeFault(Exception e) {
         _logger.error(e.getMessage(), e);
-        return AxisFault.makeFault(e);
+        AxisFault af = AxisFault.makeFault(e);
+        return af;
     }
 
     protected void finalize() throws Throwable {

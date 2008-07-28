@@ -31,6 +31,7 @@
       <param-value>org.apache.abdera.examples.appserver.SimpleServiceContext</param-value>
     </init-param>
   </servlet>
+  
   <servlet-mapping id="abdera-mapping">
     <servlet-name>Abdera</servlet-name>
     <url-pattern>/atom/*</url-pattern>
