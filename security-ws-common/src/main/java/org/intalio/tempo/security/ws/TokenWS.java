@@ -96,29 +96,24 @@ public class TokenWS extends BaseWS {
 
     private OMElement authenticateUserResponse(String token) {
         OMElement response = OM_FACTORY.createOMElement(AUTHENTICATE_USER_RESPONSE);
-        OMElement responseToken = OM_FACTORY.createOMElement("token", TOKEN_NS);
+        OMElement responseToken = OM_FACTORY.createOMElement(TOKEN, response);
         responseToken.setText(token);
-        response.addChild(responseToken);
         return response;
     }
 
     private OMElement tokenPropertiesResponse(Property[] props) {
         OMElement response = OM_FACTORY.createOMElement(GET_TOKEN_PROPERTIES_RESPONSE);
-        OMElement responseProperties = OM_FACTORY.createOMElement(Constants.PROPERTIES);
+        OMElement responseProperties = OM_FACTORY.createOMElement(Constants.PROPERTIES, response);
         for (int i = 0; i < props.length; i++) {
-            OMElement prop = OM_FACTORY.createOMElement(Constants.PROPERTY);
+            OMElement prop = OM_FACTORY.createOMElement(Constants.PROPERTY, responseProperties);
 
-            OMElement name = OM_FACTORY.createOMElement(Constants.NAME);
+            OMElement name = OM_FACTORY.createOMElement(Constants.NAME, prop);
             name.setText(props[i].getName());
-            prop.addChild(name);
 
-            OMElement value = OM_FACTORY.createOMElement(Constants.VALUE);
+            OMElement value = OM_FACTORY.createOMElement(Constants.VALUE, prop);
             value.setText(props[i].getValue().toString());
-            prop.addChild(value);
 
-            responseProperties.addChild(prop);
         }
-        response.addChild(responseProperties);
         return response;
     }
     
