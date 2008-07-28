@@ -18,32 +18,31 @@ import javax.xml.namespace.QName;
 
 public class TokenConstants {
 
-    public static final QName AUTHENTICATE_USER = new QName(TOKEN_NS.getNamespaceURI(), "authenticateUser");
+    public static final String TOKEN_PREFIX = "tokenws";
 
-    public static final QName AUTHENTICATE_USER_WITH_CREDENTIALS =
-            new QName(TOKEN_NS.getNamespaceURI(), "authenticateUserWithCredentials");
+    public static final QName AUTHENTICATE_USER = new QName(TOKEN_NS.getNamespaceURI(), "authenticateUser", TOKEN_PREFIX);
 
-    public static final QName AUTHENTICATE_USER_RESPONSE =
-            new QName(TOKEN_NS.getNamespaceURI(), "authenticateUserResponse");
+    public static final QName AUTHENTICATE_USER_WITH_CREDENTIALS = new QName(TOKEN_NS.getNamespaceURI(), "authenticateUserWithCredentials", TOKEN_PREFIX);
 
-    public static final QName GET_TOKEN_PROPERTIES = new QName(TOKEN_NS.getNamespaceURI(), "getTokenProperties");
+    public static final QName AUTHENTICATE_USER_RESPONSE = new QName(TOKEN_NS.getNamespaceURI(), "authenticateUserResponse", TOKEN_PREFIX);
 
-    public static final QName GET_TOKEN_PROPERTIES_RESPONSE =
-            new QName(TOKEN_NS.getNamespaceURI(), "getTokenPropertiesResponse");
+    public static final QName GET_TOKEN_PROPERTIES = new QName(TOKEN_NS.getNamespaceURI(), "getTokenProperties", TOKEN_PREFIX);
 
-    public static final QName USER = new QName(TOKEN_NS.getNamespaceURI(), "user");
+    public static final QName GET_TOKEN_PROPERTIES_RESPONSE = new QName(TOKEN_NS.getNamespaceURI(), "getTokenPropertiesResponse", TOKEN_PREFIX);
 
-    public static final QName PASSWORD = new QName(TOKEN_NS.getNamespaceURI(), "password");
+    public static final QName USER = new QName(TOKEN_NS.getNamespaceURI(), "user", TOKEN_PREFIX);
 
-    public static final QName CREDENTIALS = new QName(TOKEN_NS.getNamespaceURI(), "credentials");
+    public static final QName PASSWORD = new QName(TOKEN_NS.getNamespaceURI(), "password", TOKEN_PREFIX);
 
-    public static final QName TOKEN = new QName(TOKEN_NS.getNamespaceURI(), "token");
+    public static final QName CREDENTIALS = new QName(TOKEN_NS.getNamespaceURI(), "credentials", TOKEN_PREFIX);
 
-    public static final QName GETTOKEN_FROMTICKET = new QName(TOKEN_NS.getNamespaceURI(), "getTokenFromTicket");
-    
-    public static final QName TICKET = new QName(TOKEN_NS.getNamespaceURI(), "ticket");
-    
-    public static final QName PROXY_TICKET = new QName(TOKEN_NS.getNamespaceURI(), "proxyTicket");
-    
-    public static final QName SERVICE_URL = new QName(TOKEN_NS.getNamespaceURI(), "serviceURL");
+    public static final QName TOKEN = new QName(TOKEN_NS.getNamespaceURI(), "token", TOKEN_PREFIX);
+
+    public static final QName GETTOKEN_FROMTICKET = new QName(TOKEN_NS.getNamespaceURI(), "getTokenFromTicket", TOKEN_PREFIX);
+
+    public static final QName TICKET = new QName(TOKEN_NS.getNamespaceURI(), "ticket", TOKEN_PREFIX);
+
+    public static final QName PROXY_TICKET = new QName(TOKEN_NS.getNamespaceURI(), "proxyTicket", TOKEN_PREFIX);
+
+    public static final QName SERVICE_URL = new QName(TOKEN_NS.getNamespaceURI(), "serviceURL", TOKEN_PREFIX);
 }

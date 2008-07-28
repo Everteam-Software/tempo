@@ -13,7 +13,6 @@
 package org.intalio.tempo.security.ws;
 
 import static org.intalio.tempo.security.ws.Constants.OM_FACTORY;
-import static org.intalio.tempo.security.ws.Constants.TOKEN_NS;
 import static org.intalio.tempo.security.ws.TokenConstants.AUTHENTICATE_USER_RESPONSE;
 import static org.intalio.tempo.security.ws.TokenConstants.CREDENTIALS;
 import static org.intalio.tempo.security.ws.TokenConstants.GET_TOKEN_PROPERTIES_RESPONSE;
