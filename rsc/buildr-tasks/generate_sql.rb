@@ -20,25 +20,27 @@ def replace_text(inputFile, substitutions, outputFile)
   end
 end
 
-def generate_sql(classpath, schemaname="db.schema")
+def generate_sql(classpath, schemaname="db.schema", tempDir="/tmp")
     schemas = []
     %w{ Derby MySQL Oracle SQLServer Sybase DB2 Postgres}.each do |db|
       persistence = _("src/main/resources/META-INF/persistence.xml")
       persistence_db = file("target/persistence-#{db}.xml" => persistence) do |task|
         new_properties = <<END
           <properties>
+              <property name="openjpa.Log" value="DefaultLevel=WARN"/>
               <property name="openjpa.ConnectionDriverName" value="org.apache.commons.dbcp.BasicDataSource"/>
               <property name="openjpa.jdbc.DBDictionary" value="org.apache.openjpa.jdbc.sql.#{db}Dictionary"/>
               <property name="openjpa.ConnectionProperties"
-                        value="DriverClassName=org.apache.derby.jdbc.EmbeddedDriver,Url=jdbc:derby:target/database/openjpa-test-database;create=true"/>
+                        value="DriverClassName=org.apache.derby.jdbc.EmbeddedDriver,Url=jdbc:derby:#{tempDir}/database/openjpa-test-database;create=true"/>
           </properties>
 END
-        mkpath _("target"), :verbose=>false
+        mkpath _("#{tempDir}/target"), :verbose=>false
         replace_text(persistence, { "<properties />" => new_properties }, task.name) 
       end
       
       sql = file("target/#{db.downcase}.#{schemaname.downcase}.sql"=>persistence_db) do |task|
         Buildr::OpenJPA.mapping_tool :properties=>persistence_db, :action=>"build", :sql=>task.name, :classpath => classpath
+        FileUtils.rm_f "#{Dir.pwd}/derby.log" # delete derby log file
       end
       schemas << sql
     end
