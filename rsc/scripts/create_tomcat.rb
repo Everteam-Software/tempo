@@ -155,11 +155,9 @@ MISSING_LIBS= [
   APACHE_COMMONS[:dbcp],
   APACHE_COMMONS[:collections],
   APACHE_COMMONS[:pool],
-  APACHE_COMMONS[:logging],
   STAX_API,
   "stax:stax:jar:1.2.0",
   WSDL4J,
-  # Logging libraries
   SLF4J,
   LOG4J,
   # Cas library
@@ -278,7 +276,7 @@ explain "All the webapp should use the same version of casclient"
 ##
 File.copy "#{TEMPO_SVN}/rsc/liferay501/tempokeystore", tomcat_config_folder
 Dir.glob(File.join("#{TEMPO_SVN}/rsc/liferay501", "server.xml")) {|x| File.copy(x,"#{server_folder}/conf", DEBUG)}
-Dir.glob(File.join("#{webapp_folder}/cas/WEB-INF/lib", "casclient*.jar")) {|x| File.cp x, "#{server_folder}/common/lib"}
+Dir.glob(File.join("#{webapp_folder}/cas/WEB-INF/lib", "casclient*.jar")) {|x| File.cp x, "#{lib_folder}"}
 Dir.glob(File.join("#{webapp_folder}", "**/casclient*.jar")) {|x| File.delete x}
 File.copy "#{TEMPO_SVN}/rsc/liferay501/xmldsig.jar", "#{webapp_folder}/cas/WEB-INF/lib"
 ##
@@ -292,12 +290,14 @@ Dir.glob(File.join("#{webapp_folder}", "*.war")) {|x| File.delete x}
 title "Delete conflicting jar files"
 explain "Delete files conflicting with tomcat common jar files"
 ##
+Dir.glob(File.join("#{lib_folder}", "commons-logging*.jar")) {|x| File.delete x}
+Dir.glob(File.join("#{lib_folder}", "jcl104*.jar")) {|x| File.delete x}
 Dir.glob(File.join("#{axis2_war_folder}", "**/dom4j*.jar")) {|x| File.delete x}
 Dir.glob(File.join("#{webapp_folder}", "**/servlet-api-2.4.jar")) {|x| File.delete x}
+Dir.glob(File.join("#{webapp_folder}", "**/servlet-api-2.3.jar")) {|x| File.delete x}
 Dir.glob(File.join("#{webapp_folder}", "**/jsp-api-2.0.jar")) {|x| File.delete x}
 Dir.glob(File.join("#{webapp_folder}", "**/log4j-*.jar")) {|x| File.delete x}
 Dir.glob(File.join("#{webapp_folder}", "**/slf4j*.jar")) {|x| File.delete x}
-#Dir.glob(File.join("#{webapp_folder}", "**/xerces*.jar")) {|x| File.delete x}
 Dir.glob(File.join("#{server_folder}/common/endorsed", "*.jar")) {|x| File.delete x}
 ##
 
