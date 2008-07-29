@@ -70,8 +70,8 @@ public class SecuredController extends UIController {
         if (proxyTicket == null) {
             proxyTicket = (String) request.getAttribute(PROXY_TICKET);
             if (proxyTicket == null) {
-                Method getHttpServletRequest = request.getClass().getMethod("getHttpServletRequest", null);
-                HttpServletRequest hsr = (HttpServletRequest) getHttpServletRequest.invoke(request, null);
+                Method getHttpServletRequest = request.getClass().getMethod("getHttpServletRequest");
+                HttpServletRequest hsr = (HttpServletRequest) getHttpServletRequest.invoke(request);
                 String pgtIou = null;
                 CASReceipt CASreceipt = (CASReceipt) (hsr.getSession().getAttribute(CASFilter.CAS_FILTER_RECEIPT));
 
