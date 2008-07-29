@@ -19,12 +19,11 @@ APACHE_COMMONS = {
 
 APACHE_DERBY = "org.apache.derby:derby:jar:10.2.2.0"
 
-AXIOM = group("axiom-api", "axiom-dom", "axiom-impl", :under=>"org.apache.ws.commons.axiom", :version=>"1.2.5")
+AXIOM = group("axiom-api", "axiom-dom", "axiom-impl", :under=>"org.apache.ws.commons.axiom", :version=>"1.2.7")
 
-AXIS2 = [
-  group("axis2-adb", "axis2-xmlbeans", :under=>"org.apache.axis2", :version=>"1.3"),
-  "org.apache.axis2:axis2-kernel:jar:1.3i1"
-]
+BACKPORT = "backport-util-concurrent:backport-util-concurrent:jar:3.1"
+NEETHI = "org.apache.neethi:neethi:jar:2.0.4"
+
 
 CASTOR = "castor:castor:jar:1.0"
 
@@ -273,3 +272,11 @@ APACHE_ABDERA = [
 ICAL = "ical4j:ical4j:jar:0.9.20"
 CSV = "org.ostermiller:utils:jar:1.07.00"
 
+
+
+AXIS2 = [
+  group("axis2-kernel", "axis2-adb", "axis2-xmlbeans", :under=>"org.apache.axis2", :version=>"1.4"),
+  BACKPORT,
+  NEETHI,
+  SUNMAIL
+]
