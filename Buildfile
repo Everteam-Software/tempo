@@ -62,12 +62,6 @@ define "tempo" do
     package :war
   end
   
-  # define "dao-migration" do
-  #     compile.with projects("dao-tools", "tms-service", "tms-common"), APACHE_DERBY, LIFT, SERVLET_API
-  #     test.with JUNIT, JETTY
-  #     package :war
-  # end
-  
   desc "Deployment API"
   define "deploy-api" do
     compile.with project("registry"), SLF4J
