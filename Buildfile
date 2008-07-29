@@ -1,9 +1,8 @@
-gem "buildr"
+gem "buildr", "=1.2.10"
 
 require "rubygems"
 require "buildr"
-require "buildr/cobertura"
-require "tasks/xmlbeans"
+require "rsc/buildr-tasks/xmlbeans"
 # require "tasks/xmlbeans"
 
 # Keep this structure to allow the build system to update version numbers.
@@ -13,9 +12,12 @@ NEXT_VERSION = "5.2.0.39"
 require "rsc/build/dependencies.rb"
 require "rsc/build/repositories.rb"
 # leave this require after dependencies.rb so the same jpa version is used throughout the whole build
-require "tasks/openjpa"
+require "rsc/buildr-tasks/openjpa"
+require "rsc/buildr-tasks/generate_sql"
+
+# revert to buildr tasks when we can use buildr 1.3
 # require "tasks/easyb"
-require "tasks/generate_sql"
+# require "buildr/cobertura"
 
 desc "Tempo Workflow"
 define "tempo" do
