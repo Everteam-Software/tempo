@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE liferay-portlet-app PUBLIC "-//Liferay//DTD Portlet Application 5.0.0//EN" "http://www.liferay.com/dtd/liferay-portlet-app_5_0_0.dtd">
+
+<liferay-portlet-app>
+	<portlet>
+		<portlet-name>AlfrescoClient</portlet-name>
+		<use-default-template>true</use-default-template>
+		<restore-current-view>true</restore-current-view>
+	</portlet>
+	<portlet>
+		<portlet-name>AlfrescoMyTasks</portlet-name>
+		<use-default-template>true</use-default-template>
+		<restore-current-view>true</restore-current-view>
+	</portlet>
+	<portlet>
+		<portlet-name>AlfrescoDocList</portlet-name>
+		<use-default-template>true</use-default-template>
+		<restore-current-view>true</restore-current-view>
+	</portlet>
+	<portlet>
+		<portlet-name>AlfrescoMySpaces</portlet-name>
+		<use-default-template>true</use-default-template>
+		<restore-current-view>true</restore-current-view>
+	</portlet>
+	<portlet>
+		<portlet-name>AlfrescoMyWebForms</portlet-name>
+		<use-default-template>true</use-default-template>
+		<restore-current-view>true</restore-current-view>
+	</portlet>
+	<portlet>
+		<portlet-name>AlfrescoMyWebFiles</portlet-name>
+		<use-default-template>true</use-default-template>
+		<restore-current-view>true</restore-current-view>
+	</portlet>
+</liferay-portlet-app>

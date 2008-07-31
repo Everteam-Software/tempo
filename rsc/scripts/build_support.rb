@@ -71,6 +71,17 @@ def download_unzip(url, unzip=true)
   return filename.slice(0,filename.rindex("."))
 end
 
+def download_and_unzip(arg)
+  filename = filename_from_url(arg[:url])
+  spec = "org.intalio.tempo.build:#{filename}:zip:1.0"
+  ar = Buildr::artifact(spec)
+  download(ar=>arg[:url])
+  ar.invoke
+  File.cp repositories.locate(spec), filename
+  unzip2(filename, arg[:base_folder])
+  return arg[:base_folder]
+end
+
 def build_tempo
   chd_and_execute(TEMPO_SVN) {
      system("buildr clean package")  

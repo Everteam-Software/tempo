@@ -1,0 +1,763 @@
+<?xml version="1.0"?>
+
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" version="2.4">
+	<context-param>
+		<param-name>edu.yale.its.tp.cas.proxyUrl</param-name>
+		<param-value>https://localhost:8443/cas/proxy</param-value>
+	</context-param>
+	<context-param>
+		<param-name>contextClass</param-name>
+		<param-value>com.liferay.portal.spring.context.PortalApplicationContext</param-value>
+	</context-param>
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value></param-value>
+	</context-param>
+	<filter>
+		<filter-name>Auto Login Filter</filter-name>
+		<filter-class>com.liferay.portal.servlet.filters.autologin.AutoLoginFilter</filter-class>
+	</filter>
+	<filter>
+		<filter-name>CAS Filter</filter-name>
+		<filter-class>org.intalio.tempo.web.CASFilter510</filter-class>
+		<!--<init-param>
+			<param-name>logout_url</param-name>
+			<param-value>https://localhost:8443/cas-web/logout</param-value>
+		</init-param>
+		<init-param>
+			<param-name>edu.yale.its.tp.cas.client.filter.loginUrl</param-name>
+			<param-value>https://localhost:8443/cas-web/login</param-value>
+		</init-param>
+		<init-param>
+			<param-name>edu.yale.its.tp.cas.client.filter.validateUrl</param-name>
+			<param-value>https://localhost:8443/cas-web/proxyValidate</param-value>
+		</init-param>
+		<init-param>
+			<param-name>edu.yale.its.tp.cas.client.filter.serviceUrl</param-name>
+			<param-value>http://localhost:8080/c/portal/login</param-value>
+		</init-param>-->
+	</filter>
+	<filter>
+		<filter-name>Compression Filter</filter-name>
+		<filter-class>com.liferay.portal.servlet.filters.compression.CompressionFilter</filter-class>
+	</filter>
+	<filter>
+		<filter-name>Double Click Filter</filter-name>
+		<filter-class>com.liferay.portal.servlet.filters.doubleclick.DoubleClickFilter</filter-class>
+	</filter>
+	<filter>
+		<filter-name>Header Filter</filter-name>
+		<filter-class>com.liferay.portal.servlet.filters.header.HeaderFilter</filter-class>
+		<init-param>
+			<param-name>Cache-Control</param-name>
+			<param-value>max-age=172801, public</param-value>
+		</init-param>
+		<init-param>
+			<param-name>Expires</param-name>
+			<param-value>172801</param-value>
+		</init-param>
+	</filter>
+	<filter>
+		<filter-name>Layout Cache Filter - Friendly</filter-name>
+		<filter-class>com.liferay.portal.servlet.filters.layoutcache.LayoutCacheFilter</filter-class>
+		<init-param>
+			<param-name>pattern</param-name>
+			<param-value>0</param-value>
+		</init-param>
+	</filter>
+	<filter>
+		<filter-name>Layout Cache Filter - Layout</filter-name>
+		<filter-class>com.liferay.portal.servlet.filters.layoutcache.LayoutCacheFilter</filter-class>
+		<init-param>
+			<param-name>pattern</param-name>
+			<param-value>1</param-value>
+		</init-param>
+	</filter>
+	<filter>
+		<filter-name>Layout Cache Filter - Resource</filter-name>
+		<filter-class>com.liferay.portal.servlet.filters.layoutcache.LayoutCacheFilter</filter-class>
+		<init-param>
+			<param-name>pattern</param-name>
+			<param-value>2</param-value>
+		</init-param>
+	</filter>
+	<filter>
+		<filter-name>Ntlm Filter</filter-name>
+		<filter-class>com.liferay.portal.servlet.filters.sso.ntlm.NtlmFilter</filter-class>
+	</filter>
+	<filter>
+		<filter-name>Open SSO Filter</filter-name>
+		<filter-class>com.liferay.portal.servlet.filters.sso.opensso.OpenSSOFilter</filter-class>
+	</filter>
+	<filter>
+		<filter-name>Secure MainServlet Filter</filter-name>
+		<filter-class>com.liferay.portal.servlet.filters.secure.SecureFilter</filter-class>
+		<init-param>
+			<param-name>portal_property_prefix</param-name>
+			<param-value>main.servlet.</param-value>
+		</init-param>
+	</filter>
+	<filter>
+		<filter-name>Session Id Filter</filter-name>
+		<filter-class>com.liferay.portal.servlet.filters.sessionid.SessionIdFilter</filter-class>
+	</filter>
+	<filter>
+		<filter-name>Strip Filter</filter-name>
+		<filter-class>com.liferay.portal.servlet.filters.strip.StripFilter</filter-class>
+	</filter>
+	<filter>
+		<filter-name>URL Rewrite Filter</filter-name>
+		<filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+		<init-param>
+			<param-name>logLevel</param-name>
+			<param-value>ERROR</param-value>
+		</init-param>
+		<init-param>
+			<param-name>statusEnabled</param-name>
+			<param-value>false</param-value>
+		</init-param>
+	</filter>
+	<filter>
+		<filter-name>Velocity Filter</filter-name>
+		<filter-class>com.liferay.portal.servlet.filters.velocity.VelocityFilter</filter-class>
+		<init-param>
+			<param-name>pattern</param-name>
+			<param-value>(.+)/css/main.css(.+)</param-value>
+		</init-param>
+	</filter>
+	<filter>
+		<filter-name>Virtual Host Filter</filter-name>
+		<filter-class>com.liferay.portal.servlet.filters.virtualhost.VirtualHostFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>URL Rewrite Filter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Session Id Filter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Virtual Host Filter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>CAS Filter</filter-name>
+		<url-pattern>/c/portal/login</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>CAS Filter</filter-name>
+		<url-pattern>/c/portal/logout</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Ntlm Filter</filter-name>
+		<url-pattern>/c/portal/login</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Open SSO Filter</filter-name>
+		<url-pattern>/c/portal/login</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Open SSO Filter</filter-name>
+		<url-pattern>/c/portal/logout</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Open SSO Filter</filter-name>
+		<url-pattern>/group/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Open SSO Filter</filter-name>
+		<url-pattern>/user/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Open SSO Filter</filter-name>
+		<url-pattern>/web/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Auto Login Filter</filter-name>
+		<url-pattern>/c/portal/change_password</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Auto Login Filter</filter-name>
+		<url-pattern>/c/portal/fckeditor</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Auto Login Filter</filter-name>
+		<url-pattern>/c/portal/layout</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Auto Login Filter</filter-name>
+		<url-pattern>/c/portal/login</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Auto Login Filter</filter-name>
+		<url-pattern>/c/portal/render_portlet</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Auto Login Filter</filter-name>
+		<url-pattern>/group/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Auto Login Filter</filter-name>
+		<url-pattern>/user/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Auto Login Filter</filter-name>
+		<url-pattern>/web/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Layout Cache Filter - Friendly</filter-name>
+		<url-pattern>/group/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Layout Cache Filter - Friendly</filter-name>
+		<url-pattern>/user/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Layout Cache Filter - Friendly</filter-name>
+		<url-pattern>/web/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Layout Cache Filter - Layout</filter-name>
+		<url-pattern>/c/portal/layout</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Layout Cache Filter - Resource</filter-name>
+		<url-pattern>/c/portal/css_cached</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Layout Cache Filter - Resource</filter-name>
+		<url-pattern>/c/portal/javascript_cached</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Double Click Filter</filter-name>
+		<url-pattern>/c/portal/layout</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Double Click Filter</filter-name>
+		<url-pattern>/group/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Double Click Filter</filter-name>
+		<url-pattern>/user/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Double Click Filter</filter-name>
+		<url-pattern>/web/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Secure MainServlet Filter</filter-name>
+		<url-pattern>/c/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Secure MainServlet Filter</filter-name>
+		<url-pattern>/group/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Secure MainServlet Filter</filter-name>
+		<url-pattern>/user/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Secure MainServlet Filter</filter-name>
+		<url-pattern>/web/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Header Filter</filter-name>
+		<url-pattern>/c/portal/css_cached</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Header Filter</filter-name>
+		<url-pattern>/c/portal/javascript_cached</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Header Filter</filter-name>
+		<url-pattern>/image/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Header Filter</filter-name>
+		<url-pattern>/language/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Header Filter</filter-name>
+		<url-pattern>*.css</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Header Filter</filter-name>
+		<url-pattern>*.gif</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Header Filter</filter-name>
+		<url-pattern>*.html</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Header Filter</filter-name>
+		<url-pattern>*.jpg</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Header Filter</filter-name>
+		<url-pattern>*.js</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Header Filter</filter-name>
+		<url-pattern>*.png</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Compression Filter</filter-name>
+		<url-pattern>/c/portal/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Compression Filter</filter-name>
+		<url-pattern>/group/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Compression Filter</filter-name>
+		<url-pattern>/user/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Compression Filter</filter-name>
+		<url-pattern>/web/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Compression Filter</filter-name>
+		<url-pattern>*.css</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Compression Filter</filter-name>
+		<url-pattern>*.html</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Compression Filter</filter-name>
+		<url-pattern>*.js</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Compression Filter</filter-name>
+		<url-pattern>*.jsp</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Strip Filter</filter-name>
+		<url-pattern>/c/portal/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Strip Filter</filter-name>
+		<url-pattern>/group/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Strip Filter</filter-name>
+		<url-pattern>/user/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Strip Filter</filter-name>
+		<url-pattern>/web/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Strip Filter</filter-name>
+		<url-pattern>*.css</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Strip Filter</filter-name>
+		<url-pattern>*.html</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Strip Filter</filter-name>
+		<url-pattern>*.js</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Strip Filter</filter-name>
+		<url-pattern>*.jsp</url-pattern>
+	</filter-mapping>
+	<!--<filter-mapping>
+		<filter-name>Velocity Filter</filter-name>
+		<url-pattern>*.css</url-pattern>
+	</filter-mapping>-->
+	<listener>
+		<listener-class>com.liferay.portal.spring.context.PortalContextLoaderListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>com.liferay.portal.servlet.PortalSessionListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>com.liferay.portal.kernel.servlet.PortletSessionListenerManager</listener-class>
+	</listener>
+	<listener>
+		<listener-class>com.liferay.portal.kernel.servlet.SerializableSessionAttributeListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>com.liferay.portal.servlet.SharedSessionAttributeListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>com.sun.portal.container.service.ServiceManagerContextListenerImpl</listener-class>
+	</listener>
+	<listener>
+		<listener-class>com.sun.portal.portletcontainer.impl.PortletContainerContextListenerImpl</listener-class>
+	</listener>
+	<servlet>
+		<servlet-name>ProxyTicketReceptor</servlet-name>
+		<servlet-class>
+			edu.yale.its.tp.cas.proxy.ProxyTicketReceptor
+		</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>MainServlet</servlet-name>
+		<servlet-class>com.liferay.portal.servlet.MainServlet</servlet-class>
+		<init-param>
+			<param-name>config</param-name>
+			<param-value>/WEB-INF/struts-config.xml</param-value>
+		</init-param>
+		<init-param>
+			<param-name>debug</param-name>
+			<param-value>0</param-value>
+		</init-param>
+		<init-param>
+			<param-name>detail</param-name>
+			<param-value>0</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>DisplayChart</servlet-name>
+		<servlet-class>com.liferay.portal.servlet.DisplayChartServlet</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>FacebookServlet</servlet-name>
+		<servlet-class>com.liferay.portal.servlet.FacebookServlet</servlet-class>
+		<load-on-startup>3</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>FriendlyURLPrivateGroupServlet</servlet-name>
+		<servlet-class>com.liferay.portal.servlet.FriendlyURLServlet</servlet-class>
+		<init-param>
+			<param-name>private</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>user</param-name>
+			<param-value>false</param-value>
+		</init-param>
+		<load-on-startup>4</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>FriendlyURLPrivateUserServlet</servlet-name>
+		<servlet-class>com.liferay.portal.servlet.FriendlyURLServlet</servlet-class>
+		<init-param>
+			<param-name>private</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>user</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<load-on-startup>5</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>FriendlyURLPublicServlet</servlet-name>
+		<servlet-class>com.liferay.portal.servlet.FriendlyURLServlet</servlet-class>
+		<init-param>
+			<param-name>private</param-name>
+			<param-value>false</param-value>
+		</init-param>
+		<load-on-startup>6</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>I18nServlet</servlet-name>
+		<servlet-class>com.liferay.portal.servlet.I18nServlet</servlet-class>
+		<load-on-startup>7</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>ImageServlet</servlet-name>
+		<servlet-class>com.liferay.portal.servlet.ImageServlet</servlet-class>
+		<load-on-startup>8</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>LanguageServlet</servlet-name>
+		<servlet-class>com.liferay.portal.servlet.LanguageServlet</servlet-class>
+		<load-on-startup>9</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>LuceneServlet</servlet-name>
+		<servlet-class>com.liferay.portal.servlet.LuceneServlet</servlet-class>
+		<load-on-startup>10</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>PortalDelegatorServlet</servlet-name>
+		<servlet-class>com.liferay.portal.kernel.servlet.PortalDelegatorServlet</servlet-class>
+		<load-on-startup>11</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>SitemapServlet</servlet-name>
+		<servlet-class>com.liferay.portal.servlet.SitemapServlet</servlet-class>
+		<load-on-startup>12</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>SoftwareCatalogServlet</servlet-name>
+		<servlet-class>com.liferay.portal.servlet.SoftwareCatalogServlet</servlet-class>
+		<load-on-startup>13</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>WidgetServlet</servlet-name>
+		<servlet-class>com.liferay.portal.servlet.WidgetServlet</servlet-class>
+		<load-on-startup>14</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>PortletBridgeServlet</servlet-name>
+		<servlet-class>org.portletbridge.portlet.PortletBridgeServlet</servlet-class>
+		<init-param>
+			<param-name>mementoSessionKey</param-name>
+			<param-value>mementoSessionKey</param-value>
+		</init-param>
+		<init-param>
+			<param-name>cssRegex</param-name>
+			<param-value>(?:url\((?:'|")?(.*?)(?:'|")?\))|(?:@import\s+[^url](?:'|")?(.*?)(?:'|")|;|\s+|$)</param-value>
+		</init-param>
+		<init-param>
+			<param-name>jsRegex</param-name>
+			<param-value>open\('([^']*)'|open\("([^\"]*)"</param-value>
+		</init-param>
+		<init-param>
+			<param-name>ignoreRequestHeaders</param-name>
+			<param-value>accept-encoding,connection,keep-alive</param-value>
+		</init-param>
+		<init-param>
+			<param-name>ignorePostToGetRequestHeaders</param-name>
+			<param-value>content-type,content-length</param-value>
+		</init-param>
+		<load-on-startup>15</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ProxyTicketReceptor</servlet-name>
+		<url-pattern>/c/portal/CasProxyServlet</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>MainServlet</servlet-name>
+		<url-pattern>/c/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>FacebookServlet</servlet-name>
+		<url-pattern>/facebook/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>FriendlyURLPrivateGroupServlet</servlet-name>
+		<url-pattern>/group/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>FriendlyURLPrivateUserServlet</servlet-name>
+		<url-pattern>/user/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>FriendlyURLPublicServlet</servlet-name>
+		<url-pattern>/web/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>I18nServlet</servlet-name>
+		<url-pattern>/de/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>I18nServlet</servlet-name>
+		<url-pattern>/zh_CN/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>I18nServlet</servlet-name>
+		<url-pattern>/zh_TW/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>ImageServlet</servlet-name>
+		<url-pattern>/image/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>LanguageServlet</servlet-name>
+		<url-pattern>/language/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>PortalDelegatorServlet</servlet-name>
+		<url-pattern>/delegate/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>SitemapServlet</servlet-name>
+		<url-pattern>/sitemap.xml</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>SoftwareCatalogServlet</servlet-name>
+		<url-pattern>/software_catalog/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>WidgetServlet</servlet-name>
+		<url-pattern>/widget/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>DisplayChart</servlet-name>
+		<url-pattern>/display_chart/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>PortletBridgeServlet</servlet-name>
+		<url-pattern>/pbhs/*</url-pattern>
+	</servlet-mapping>
+	<session-config>
+		<session-timeout>30</session-timeout>
+	</session-config>
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/errors/404.jsp</location>
+	</error-page>
+	<jsp-config>
+		<taglib>
+			<taglib-uri>http://displaytag.sf.net</taglib-uri>
+			<taglib-location>/WEB-INF/tld/displaytag.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>http://java.sun.com/jstl/core_rt</taglib-uri>
+			<taglib-location>/WEB-INF/tld/c-rt.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>http://java.sun.com/jstl/fmt_rt</taglib-uri>
+			<taglib-location>/WEB-INF/tld/fmt-rt.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>http://java.sun.com/jstl/sql_rt</taglib-uri>
+			<taglib-location>/WEB-INF/tld/sql-rt.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>http://java.sun.com/jstl/xml_rt</taglib-uri>
+			<taglib-location>/WEB-INF/tld/x-rt.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>http://java.sun.com/portlet_2_0</taglib-uri>
+			<taglib-location>/WEB-INF/tld/liferay-portlet.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>http://liferay.com/tld/portlet</taglib-uri>
+			<taglib-location>/WEB-INF/tld/liferay-portlet-ext.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>http://liferay.com/tld/security</taglib-uri>
+			<taglib-location>/WEB-INF/tld/liferay-security.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>http://liferay.com/tld/theme</taglib-uri>
+			<taglib-location>/WEB-INF/tld/liferay-theme.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>http://liferay.com/tld/ui</taglib-uri>
+			<taglib-location>/WEB-INF/tld/liferay-ui.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>http://liferay.com/tld/util</taglib-uri>
+			<taglib-location>/WEB-INF/tld/liferay-util.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>http://struts.apache.org/tags-bean</taglib-uri>
+			<taglib-location>/WEB-INF/tld/struts-bean.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>http://struts.apache.org/tags-bean-el</taglib-uri>
+			<taglib-location>/WEB-INF/tld/struts-bean-el.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>http://struts.apache.org/tags-html</taglib-uri>
+			<taglib-location>/WEB-INF/tld/struts-html.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>http://struts.apache.org/tags-html-el</taglib-uri>
+			<taglib-location>/WEB-INF/tld/struts-html-el.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>http://struts.apache.org/tags-logic</taglib-uri>
+			<taglib-location>/WEB-INF/tld/struts-logic.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>http://struts.apache.org/tags-logic-el</taglib-uri>
+			<taglib-location>/WEB-INF/tld/struts-logic-el.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>http://struts.apache.org/tags-nested</taglib-uri>
+			<taglib-location>/WEB-INF/tld/struts-nested.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>http://struts.apache.org/tags-tiles</taglib-uri>
+			<taglib-location>/WEB-INF/tld/struts-tiles.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>http://struts.apache.org/tags-tiles-el</taglib-uri>
+			<taglib-location>/WEB-INF/tld/struts-tiles-el.tld</taglib-location>
+		</taglib>
+	</jsp-config>
+	<resource-ref>
+		<res-ref-name>jdbc/LiferayPool</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+		<res-sharing-scope>Shareable</res-sharing-scope>
+	</resource-ref>
+	<resource-ref>
+		<res-ref-name>mail/MailSession</res-ref-name>
+		<res-type>javax.mail.Session</res-type>
+		<res-auth>Container</res-auth>
+	</resource-ref>
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>/c/portal/protected</web-resource-name>
+			<url-pattern>/c/portal/protected</url-pattern>
+			<http-method>GET</http-method>
+			<http-method>POST</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>users</role-name>
+		</auth-constraint>
+		<user-data-constraint>
+			<transport-guarantee>NONE</transport-guarantee>
+		</user-data-constraint>
+	</security-constraint>
+	<login-config>
+		<auth-method>FORM</auth-method>
+		<realm-name>PortalRealm</realm-name>
+		<form-login-config>
+			<form-login-page>/c/portal/j_login</form-login-page>
+			<form-error-page>/c/portal/j_login_error</form-error-page>
+		</form-login-config>
+	</login-config>
+	<security-role>
+		<role-name>users</role-name>
+	</security-role>
+</web-app>

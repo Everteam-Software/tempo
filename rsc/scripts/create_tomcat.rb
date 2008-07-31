@@ -23,14 +23,16 @@ TEMPO_SVN = "#{script_folder}/../.."
 DEBUG = config["debug"]
 REBUILD_TEMPO = config["rebuild"]
 SERVER = config["server"]
-LIFERAY = "liferay_v501"
+ADD_ALFRESCO = config["add_alfresco"]
+LIFERAY = "liferay_510"
 APACHE_MIRROR = find_apache_mirror
 TOMCAT_5_DOWNLOAD = APACHE_MIRROR + "tomcat/tomcat-5/v5.5.26/bin/apache-tomcat-5.5.26.zip"
 TOMCAT_6_DOWNLOAD = APACHE_MIRROR + "tomcat/tomcat-6/v6.0.16/bin/apache-tomcat-6.0.16.zip"
 TOMCAT_ADMIN_DOWNLOAD = APACHE_MIRROR + "tomcat/tomcat-5/v5.5.26/bin/apache-tomcat-5.5.26-admin.zip"
 AXIS_DOWNLOAD = APACHE_MIRROR + "ws/axis2/1_4/axis2-1.4-war.zip"
 ODE_DOWNLOAD = APACHE_MIRROR + "ode/apache-ode-war-1.2.zip"
-LIFERAY_V501 = "http://internap.dl.sourceforge.net/sourceforge/lportal/liferay-portal-tomcat-5.5-5.0.1.zip"  #CA
+LIFERAY_5 = "http://internap.dl.sourceforge.net/sourceforge/lportal/liferay-portal-tomcat-5.5-5.1.0.zip"  #CA
+ALFRESCO_2_1 = "http://internap.dl.sourceforge.net/sourceforge/alfresco/alfresco-community-war-2.1.0.zip"
 
 title "Changing directory"
 install_dir = config["install_dir"]
@@ -45,7 +47,7 @@ explain "Downloading tomcat (java web application engine), ode (process engine) 
 tomcat_folder = download_unzip( TOMCAT_5_DOWNLOAD ) if SERVER != LIFERAY
 ode_folder = download_unzip( ODE_DOWNLOAD )
 axis_folder = download_unzip( AXIS_DOWNLOAD, false)
-liferay_folder = download_unzip( LIFERAY_V501 ) if SERVER == LIFERAY
+liferay_folder = download_unzip( LIFERAY_5 ) if SERVER == LIFERAY
 unzip2( filename_from_url( AXIS_DOWNLOAD ), axis_folder )
 ##
 
@@ -255,8 +257,9 @@ Dir.glob(File.join("#{server_folder}/conf", "log4j.properties")) {|x| File.move(
 if SERVER == LIFERAY
   title "For liferay 5.0.1 specific configuration"
   explain "Config liferay portal to use cas authentication"
-  File.cp "#{TEMPO_SVN}/rsc/liferay501/web.xml", "#{webapp_folder}/ROOT/WEB-INF"
-  File.cp "#{TEMPO_SVN}/rsc/liferay501/forliferay-ticketfilter-1.0.1.jar", "#{webapp_folder}/ROOT/WEB-INF/lib"
+  File.cp "#{TEMPO_SVN}/rsc/liferay510/web.xml", "#{webapp_folder}/ROOT/WEB-INF"
+  #File.cp "#{TEMPO_SVN}/rsc/liferay501/forliferay-ticketfilter-1.0.1.jar", "#{webapp_folder}/ROOT/WEB-INF/lib"
+  File.cp "#{TEMPO_SVN}/rsc/liferay510/forliferay-ticketfilter-1.1.0.jar", "#{webapp_folder}/ROOT/WEB-INF/lib"
   File.cp "#{TEMPO_SVN}/rsc/liferay501/portal-ext.properties", "#{webapp_folder}/ROOT/WEB-INF/classes"
   
   explain "Deploy the ui-fw-portlet"
@@ -266,9 +269,31 @@ if SERVER == LIFERAY
   FileUtils.mkdir_p "#{webapp_folder}/ui-fw-portlet/WEB-INF/tld"
   File.copy "#{TEMPO_SVN}/rsc/liferay501/liferay-portlet.tld", "#{webapp_folder}/ui-fw-portlet/WEB-INF/tld"
   # copy the util jars
-  Dir.glob("#{webapp_folder}/ROOT/WEB-INF/lib/util*.jar") {|x| File.copy x, "#{webapp_folder}/ui-fw-portlet/WEB-INF/lib"}
+  Dir.glob("#{webapp_folder}/ROOT/WEB-INF/lib/util*.jar") {|x| File.copy x, "#{webapp_folder}/ui-fw-portlet/WEB-INF/lib", DEBUG}
   # delete some conflict jar files
   Dir.glob(File.join("#{webapp_folder}/ui-fw-portlet/WEB-INF/lib", "portlet*.jar")) {|x| File.delete x}
+end
+
+## Add alfresco portlet if needed
+if ADD_ALFRESCO && SERVER == LIFERAY
+  title "Installing Alfresco portlet"
+  explain "Install alfresco community 2.1 to Liferay"
+  alfresco_folder = download_and_unzip(:url => ALFRESCO_2_1, :base_folder => 'alfresco')
+  alfresco_war = finder.find_war(alfresco_folder)
+  
+  explain "Deploy the alfresco war"
+  alfresco_war_folder   = wi.install alfresco_war, "alfresco.war"
+  # copy the tld file
+  FileUtils.mkdir_p "#{webapp_folder}/alfresco/WEB-INF/tld"
+  Dir.glob("#{TEMPO_SVN}/rsc/liferay510/tld/*.*") {|x| File.copy x, "#{webapp_folder}/alfresco/WEB-INF/tld", DEBUG}
+  # copy the config files
+  Dir.glob("#{TEMPO_SVN}/rsc/alfresco/*.xml") {|x| File.copy x, "#{webapp_folder}/alfresco/WEB-INF", DEBUG}
+  # copy the portlet class
+  Dir.glob("#{TEMPO_SVN}/rsc/alfresco/forliferay*.jar") {|x| File.copy x, "#{webapp_folder}/alfresco/WEB-INF/lib", DEBUG}
+  # copy the util jars
+  Dir.glob("#{webapp_folder}/ROOT/WEB-INF/lib/util*.jar") {|x| File.copy x, "#{webapp_folder}/alfresco/WEB-INF/lib", DEBUG}
+  # delete some conflict jar files
+  Dir.glob(File.join("#{webapp_folder}/alfresco/WEB-INF/lib", "portlet*.jar")) {|x| File.delete x}
 end
 
 title "Set up CAS server and client"
@@ -303,6 +328,7 @@ Dir.glob(File.join("#{server_folder}/common/endorsed", "*.jar")) {|x| File.delet
 
 title "Almost done !"
 explain "Now \ a mysql database named \"bpms\" with access to user <root> and no password"
+explain "If you add the alfresco portlet, please create \ a mysql database named \"alfresco\" with access to user <root> and no password"
 explain "Load the ode schema into mysql from the file #{TEMPO_SVN}/rsc/tempo-sql/ode-mysql.sql"
 explain "Once this is done, start tomcat with the following command:"
 explain "./catalina.sh run"
