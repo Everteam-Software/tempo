@@ -328,8 +328,8 @@ Dir.glob(File.join("#{server_folder}/common/endorsed", "*.jar")) {|x| File.delet
 
 title "Almost done !"
 explain "Now \ a mysql database named \"bpms\" with access to user <root> and no password"
-explain "If you add the alfresco portlet, please create \ a mysql database named \"alfresco\" with access to user <root> and no password"
 explain "Load the ode schema into mysql from the file #{TEMPO_SVN}/rsc/tempo-sql/ode-mysql.sql"
+explain "If you add the alfresco portlet, please load the sql script from the file #{TEMPO_SVN}/rsc/alfresco/alfresco.sql also"
 explain "Once this is done, start tomcat with the following command:"
 explain "./catalina.sh run"
 explain "Now you can browse http://localhost:8080/ui-fw/ and login with user <admin> and password <changeit>"
