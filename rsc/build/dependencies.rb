@@ -199,7 +199,7 @@ ORBEON_XERCES = [
 
 
 ORBEON_CORE = [
-  group("orbeon-core", "orbeon-xforms-filter", "orbeon-resources-public", "orbeon-resources-private", :under=>"orbeon", :version=>"3.6.0-20080704"),
+  group("orbeon", "orbeon-xforms-filter", "orbeon-resources-public", "orbeon-resources-private", :under=>"orbeon", :version=>"3.7.0alpha.200808040709"),
 ]
 ORBEON_CUSTOM = [
   ORBEON_XERCES,
