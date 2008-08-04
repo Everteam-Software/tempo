@@ -5,9 +5,13 @@ LOCAL_KEYSTORE="#{JAVA_HOME}/lib/security/cacerts"
 #LOCAL_KEYSTORE="#{JAVA_HOME}/jre/lib/security/cacerts"
 CERTIFICATE_FILENAME="tempo.cert"
 
+# THIS IS NOT NEEDED ANYMORE, THE CERTIFICATE IS INCLUDED IN THE TOMCAT STARTUP SCRIPT
+
 # For note, keypass should be 'changeit', to comply with the configuration in tomcat, for each of the following actions.
 
 # If you need to regenerate a new certificate. Use localhost whenever you can. 
+# Added: You need to have at least first name last name identical to the hostname, otherwise the certificate might not 
+# be valid. 
 #
 # system "keytool -genkey -alias tomcat -keyalg RSA"
 
