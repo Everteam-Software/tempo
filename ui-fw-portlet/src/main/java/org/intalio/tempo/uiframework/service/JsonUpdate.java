@@ -2,14 +2,14 @@ package org.intalio.tempo.uiframework.service;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.URISyntaxException;
-import java.rmi.RemoteException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
+import org.intalio.tempo.uiframework.Configuration;
 import org.intalio.tempo.uiframework.URIUtils;
 import org.intalio.tempo.uiframework.forms.FormManager;
 import org.intalio.tempo.uiframework.forms.FormManagerBroker;
@@ -18,7 +18,6 @@ import org.intalio.tempo.workflow.task.Notification;
 import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
-import org.intalio.tempo.workflow.task.TaskState;
 import org.intalio.tempo.workflow.tms.ITaskManagementService;
 import org.intalio.tempo.workflow.tms.client.RemoteTMSFactory;
 
@@ -27,7 +26,10 @@ import atg.taglib.json.util.JSONException;
 import atg.taglib.json.util.JSONObject;
 
 public class JsonUpdate extends HttpServlet {
-    
+    private static final long serialVersionUID = -8024081532754663413L;
+
+    private final Configuration conf = Configuration.getInstance();
+
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
         response.setContentType("application/x-json");
@@ -51,49 +53,45 @@ public class JsonUpdate extends HttpServlet {
                 tasks = taskManager.getAvailableTasks(taskType, subQuery);
 
                 FormManager fmanager = FormManagerBroker.getInstance().getFormManager();
-                String peopleActivityUrl = resoleUrl(request, fmanager.getPeopleActivityURL());
-                String notificationURL = resoleUrl(request, fmanager.getNotificationURL());
-                String peopleInitiatedProcessURL = resoleUrl(request, fmanager.getPeopleInitiatedProcessURL());
 
                 for (Task task : tasks) {
                     if (task instanceof Notification) {
                         Notification notification = (Notification) task;
-                        if (!TaskState.COMPLETED.equals(notification.getState())) {
-                            JSONObject jtask = new JSONObject();
-                            jtask.put("taskUrl", notificationURL + "?id=" + notification.getID() + "&url=" + notification.getFormURLAsString() + "&token="
-                                            + token + "&user=" + userName);
-                            jtask.put("description", notification.getDescription());
-                            jtask.put("creationDate", notification.getCreationDate());
-                            jtask.put("state", notification.getState());
-                            jtasks.add(jtask);
-                        }
+                        // if
+                        // (!TaskState.COMPLETED.equals(notification.getState()))
+                        // {
+                        JSONObject jtask = new JSONObject();
+                        jtask.put("taskUrl", URIUtils.getResolvedTaskURLAsString(new HttpServletRequestWrapper(request), fmanager, task, token, userName));
+                        jtask.put("description", notification.getDescription());
+                        jtask.put("creationDate", notification.getCreationDate());
+                        jtask.put("state", notification.getState());
+                        jtasks.add(jtask);
+                        // }
                     } else if (task instanceof PATask) {
                         PATask paTask = (PATask) task;
-                        if (!TaskState.COMPLETED.equals(paTask.getState())) {
-                            JSONObject jtask = new JSONObject();
-                            jtask.put("taskUrl", peopleActivityUrl + "?id=" + paTask.getID() + "&url=" + paTask.getFormURLAsString() + "&token=" + token
-                                            + "&user=" + userName);
-                            jtask.put("description", paTask.getDescription());
-                            jtask.put("creationDate", paTask.getCreationDate());
-                            jtask.put("state", paTask.getState());
-                            jtasks.add(jtask);
-                        }
+                        // if (!TaskState.COMPLETED.equals(paTask.getState())) {
+                        JSONObject jtask = new JSONObject();
+                        jtask.put("taskUrl", URIUtils.getResolvedTaskURLAsString(new HttpServletRequestWrapper(request), fmanager, task, token, userName));
+                        jtask.put("description", paTask.getDescription());
+                        jtask.put("creationDate", paTask.getCreationDate());
+                        jtask.put("state", paTask.getState());
+                        jtasks.add(jtask);
+                        // }
                     } else if (task instanceof PIPATask) {
                         PIPATask pipaTask = (PIPATask) task;
                         JSONObject jprocess = new JSONObject();
-                        jprocess.put("taskUrl", peopleInitiatedProcessURL + "?id=" + pipaTask.getID() + "&url=" + pipaTask.getFormURLAsString() + "&token="
-                                        + token + "&user=" + userName);
+                        jprocess.put("taskUrl", URIUtils.getResolvedTaskURLAsString(new HttpServletRequestWrapper(request), fmanager, task, token, userName));
                         jprocess.put("description", pipaTask.getDescription());
                         jprocess.put("creationDate", pipaTask.getCreationDate());
                         jprocesses.add(jprocess);
-                    } 
                     }
+                }
                 jroot.put("tasks", jtasks);
                 jroot.put("process", jprocesses);
             } catch (AuthException e1) {
-	            throw new ServletException(e1);
+                throw new ServletException(e1);
             } catch (JSONException e) {
-	            throw new ServletException(e);
+                throw new ServletException(e);
             }
             PrintWriter out = response.getWriter();
             out.print(jroot);
@@ -104,16 +102,8 @@ public class JsonUpdate extends HttpServlet {
         doGet(request, response);
     }
 
-    private ITaskManagementService getTMS(HttpServletRequest request, String participantToken) throws RemoteException {
-        String endpoint = getServletConfig().getInitParameter("TaskManagementServices");
-        return new RemoteTMSFactory(resoleUrl(request, endpoint), participantToken).getService();
-    }
-
-    private String resoleUrl(HttpServletRequest request, String url) {
-        try {
-            url = URIUtils.resolveHttpURI(request, url);
-        } catch (URISyntaxException ex) {
-        }
-        return url;
+    private ITaskManagementService getTMS(HttpServletRequest request, String participantToken) {
+        String endpoint = URIUtils.resolveURI(request, conf.getServiceEndpoint());
+        return new RemoteTMSFactory(endpoint, participantToken).getService();
     }
 }

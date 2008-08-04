@@ -14,39 +14,56 @@
  */
 package org.intalio.tempo.uiframework;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.text.MessageFormat;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.intalio.tempo.uiframework.forms.FormManager;
 import org.intalio.tempo.workflow.task.Task;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class URIUtils {
-    
-    public static String resolveURI(HttpServletRequest request, String endpoint) 
-        throws URISyntaxException
-    {
-        URI uri = new URI(endpoint);
-        if (!uri.isAbsolute()) {
-            uri = new URI(request.getScheme(), null, request.getServerName(), request.getServerPort(), 
-                          null, null, null).resolve(uri);
-        }
-        return uri.toString();
-    }
-    
-    public static String getFormURLForTask(FormManager fm, Task t, String ticket, String user) {
-        Object[] params = new Object[] { fm.getURL(t), t.getID(), t.getClass().getSimpleName(), t.getFormURLAsString(), ticket, user };
-        return MessageFormat.format("{0}?id={1}&type={2}&url={3}&token={4}&user={5}", params);
-    }
-    
-    public static URI getResolvedTaskURL(HttpServletRequest request, FormManager fm, Task t, String ticket, String user)  {
+    static Logger _log = LoggerFactory.getLogger(URIUtils.class);
+
+    public static String resolveURI(HttpServletRequest request, String endpoint) {
         try {
-            return URI.create(resolveURI(request, URLEncoder.encode(getFormURLForTask(fm, t, ticket, user), "UTF-8")));    
+            URI uri = new URI(endpoint);
+            if (!uri.isAbsolute()) {
+                uri = new URI(request.getScheme(), null, request.getServerName(), request.getServerPort(), null, null, null).resolve(uri);
+            }
+            return uri.toString();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public static String getFormURLForTask(FormManager fm, Task t, String ticket, String user) {
+        try {
+            Object[] params = new Object[] { fm.getURL(t), t.getID(), t.getClass().getSimpleName(), URLEncoder.encode(t.getFormURLAsString(), "UTF-8"), ticket,
+                            URLEncoder.encode(user, "UTF-8") };
+            return MessageFormat.format("{0}?id={1}&type={2}&url={3}&token={4}&user={5}", params);
+        } catch (UnsupportedEncodingException e) {
+            // if utf-8 isnot available we're bad :)
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static URI getResolvedTaskURL(HttpServletRequestWrapper request, FormManager fm, Task t, String ticket, String user) {
+        try {
+            return URI.create(resolveURI(request, getFormURLForTask(fm, t, ticket, user)));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static String getResolvedTaskURLAsString(HttpServletRequestWrapper request, FormManager fm, Task t, String ticket, String user) {
+        return getResolvedTaskURL(request, fm, t, ticket, user).toString();
     }
 }

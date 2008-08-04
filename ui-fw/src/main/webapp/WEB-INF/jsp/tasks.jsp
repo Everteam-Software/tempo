@@ -59,7 +59,7 @@
 	            </tr>
 	            
 		            <c:forEach items="${activityTasks}" var="taskHolder" varStatus="status">
-						<c:set var="taskFullURL" value="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&type=${taskHolder.task.class.simpleName}&url=${taskHolder.task.formURL}&token=${participantToken}&user=${currentUser}" />
+						<c:set var="taskFullURL" value="${taskHolder.formManagerURL}" />
 
 	            	<c:choose>
 	            		<c:when test="${(status.index%2) == 0}">
@@ -105,7 +105,7 @@
 		            </tr>
 		            
 			            <c:forEach items="${notifications}" var="taskHolder" varStatus="status">
-							<c:set var="taskFullURL" value="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&type=${taskHolder.task.class.simpleName}&url=${taskHolder.task.formURL}&token=${participantToken}&user=${currentUser}" />
+							<c:set var="taskFullURL" value="${taskHolder.formManagerURL}" />
 		            	<c:choose>
 		            		<c:when test="${(status.index%2) == 0}">
 								<tr class="oddTr">
@@ -141,7 +141,7 @@
 		              <td width="35%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/></strong></td>
 		            </tr>
 			            <c:forEach items="${initTasks}" var="taskHolder" varStatus="status">
-							<c:set var="taskFullURL" value="${taskHolder.formManagerURL}?id=${taskHolder.task.ID}&type=${taskHolder.task.class.simpleName}&url=${taskHolder.task.formURL}&token=${participantToken}&user=${currentUser}" />
+							<c:set var="taskFullURL" value="${taskHolder.formManagerURL}" />
 		            	<c:choose>
 		            		<c:when test="${(status.index%2) == 0}">
 								<tr class="oddTr">

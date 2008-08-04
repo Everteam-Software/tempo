@@ -3,28 +3,8 @@
           "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
 	
-    <bean id="configuration" class="org.intalio.tempo.uiframework.Configuration" factory-method="getInstance">
-        <property name="serviceEndpoint" value="/axis2/services/TaskManagementServices"/>
-        <property name="pagingLength" value="10"/>
-    </bean>
-
-    <bean id="xFormManager" class="org.intalio.tempo.uiframework.forms.XFormsManager">
-        <property name="peopleInitiatedProcessURL" value="/xFormsManager/init"/>
-        <property name="peopleActivityURL" value="/xFormsManager/act"/>
-        <property name="notificationURL" value="/xFormsManager/notification"/>
-    </bean>
-
-    <bean id="formManagerBroker" class="org.intalio.tempo.uiframework.forms.FormManagerBroker"
-          factory-method="getInstance">
-        <property name="formManager">
-            <ref bean="xFormManager"/>
-        </property>
-    </bean>
-
-    <bean id="tokenService" class="org.intalio.tempo.security.ws.TokenClient">
-        <constructor-arg value="http://localhost:8080/axis2/services/TokenService"/>
-    </bean>
-
+	<import resource="file:${org.intalio.tempo.configDirectory}/tempo-ui-fw.xml"/>
+	
     <bean id="applicationState" class="org.intalio.tempo.uiframework.UIFWApplicationState"/>
 	<!-- Tasks section -->
 	<bean id="tasksDefaultAction"
@@ -63,12 +43,6 @@
 				<ref bean="deletePIPATasksAction" />
 			</list>
 		</property>
-	</bean>
-
-	<!-- Change this value to change the locale used for the resource bundle -->
-	<bean id="localeResolver"
-		class="org.springframework.web.servlet.i18n.FixedLocaleResolver">
-		<property name="defaultLocale" value="en" />
 	</bean>
 
 	<bean id="portletModeHandlerMapping"

@@ -15,13 +15,14 @@
 
 package org.intalio.tempo.uiframework.actions;
 
-import java.net.URISyntaxException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Properties;
+
+import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.intalio.tempo.uiframework.Configuration;
 import org.intalio.tempo.uiframework.Constants;
@@ -62,47 +63,47 @@ public class TasksAction extends Action {
             _log.debug("Parsing task list for UI-FW");
 
         FormManager fmanager = FormManagerBroker.getInstance().getFormManager();
+        String token = getParticipantToken();
+        String user = getUser();
 
         for (Object task : tasks) {
             _log.info(((Task) task).getID() + ":" + task.getClass().getName());
             if (task instanceof Notification) {
                 Notification notification = (Notification) task;
                 if (!TaskState.COMPLETED.equals(notification.getState())) {
-                    _notifications.add(new TaskHolder<Notification>(notification, resolve(fmanager.getNotificationURL(notification))));
+                    _notifications.add(new TaskHolder<Notification>(notification, URIUtils.getResolvedTaskURLAsString(new HttpServletRequestWrapper(_request),
+                                    fmanager, notification, token, user)));
                 }
             } else if (task instanceof PATask) {
                 PATask paTask = (PATask) task;
                 if (!TaskState.COMPLETED.equals(paTask.getState()) && !TaskState.FAILED.equals(paTask.getState())) {
-                    _activityTasks.add(new TaskHolder<PATask>(paTask, resolve(fmanager.getPeopleActivityURL(paTask))));
+                    _activityTasks.add(new TaskHolder<PATask>(paTask, URIUtils.getResolvedTaskURLAsString(new HttpServletRequestWrapper(_request), fmanager,
+                                    paTask, token, user)));
                 }
             } else if (task instanceof PIPATask) {
                 PIPATask pipaTask = (PIPATask) task;
-                _initTasks.add(new TaskHolder<PIPATask>(pipaTask, resolve(fmanager.getPeopleInitiatedProcessURL(pipaTask))));
+                _initTasks.add(new TaskHolder<PIPATask>(pipaTask, URIUtils.getResolvedTaskURLAsString(new HttpServletRequestWrapper(_request), fmanager,
+                                pipaTask, token, user)));
             } else {
                 if (_log.isDebugEnabled())
                     _log.debug("Ignoring task of class:" + task.getClass().getName());
             }
-
         }
-    }
-
-    private String resolve(String url) {
-        try {
-            url = URIUtils.resolveURI(_request, url);
-        } catch (URISyntaxException ex) {
-            _log.error("Invalid URL for peopleActivityUrl", ex);
-        }
-        return url;
     }
 
     protected ITaskManagementService getTMS(String participantToken) throws RemoteException {
-        String endpoint = resolve(conf.getServiceEndpoint());
+        String endpoint = URIUtils.resolveURI(_request, conf.getServiceEndpoint());
         return new RemoteTMSFactory(endpoint, participantToken).getService();
     }
 
     protected String getParticipantToken() {
         ApplicationState state = ApplicationState.getCurrentInstance(_request);
         return state.getCurrentUser().getToken();
+    }
+
+    protected String getUser() {
+        ApplicationState state = ApplicationState.getCurrentInstance(_request);
+        return state.getCurrentUser().getName();
     }
 
     private Collection<Task> retrieveTasks() {
@@ -154,7 +155,8 @@ public class TasksAction extends Action {
         model.put("refreshTime", conf.getRefreshTime());
 
         Properties buildProperties = BpmsVersionsServlet.getBPMSVersionsProperties();
-        if(_log.isDebugEnabled()) _log.debug(buildProperties.toString());
+        if (_log.isDebugEnabled())
+            _log.debug(buildProperties.toString());
         if (buildProperties != null) {
             model.put("version", buildProperties.getProperty(BpmsVersionsServlet.BPMS_VERSION_PROP));
             model.put("build", buildProperties.getProperty(BpmsVersionsServlet.BPMS_BUILD_NUMBER_PROP));
