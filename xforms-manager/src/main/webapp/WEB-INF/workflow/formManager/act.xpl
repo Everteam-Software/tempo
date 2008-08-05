@@ -585,7 +585,7 @@
                                     </xforms:case>
                                     <!-- Display after submit done, waiting for reply -->
                                     <xforms:case id="refresh-all">
-                                    <xsl:if test="doc('input:xpl-input')/task/reloadTaskList">
+                                    <xsl:if test="true">
                                        	  <xhtml:html>
 						                        <xhtml:body onLoad="parent.window.hideWindow();"/>
 						                    </xhtml:html>
