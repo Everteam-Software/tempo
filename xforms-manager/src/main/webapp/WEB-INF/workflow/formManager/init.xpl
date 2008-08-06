@@ -107,7 +107,7 @@
                                 <xsl:apply-templates select="@* | *"/>
 
                                 <!-- Declares the Init Task action -->
-                                <xforms:submission id="initSubmission" ref="instance('taskoutput')" validate="false"
+                                <xforms:submission id="initSubmission" ref="instance('taskoutput')" validate="true"
                                                    action="/formManager/init" method="post" replace="all">
 
                                     <xforms:toggle ev:event="xforms-submit" case="submit-wait"/>
