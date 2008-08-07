@@ -310,6 +310,7 @@ define "tempo" do
            CASTOR,
            ICAL,
            INTALIO_STATS, 
+           JSON_NAGGIT,
            JSP_API, 
            JSTL,
            LOG4J,
@@ -388,7 +389,9 @@ define "tempo" do
   end
 
   define "web-nutsNbolts" do
-    compile.with project("security"), AXIS2, APACHE_COMMONS[:lang], INTALIO_STATS, JSP_API, LOG4J, SERVLET_API, SLF4J, SPRING[:core], SPRING[:webmvc]
+    libs = project("security"), AXIS2, APACHE_COMMONS[:lang], INTALIO_STATS, JSON_NAGGIT, JSP_API, LOG4J, SERVLET_API, SLF4J, SPRING[:core], SPRING[:webmvc]
+    test_libs = libs + [JUNIT, INSTINCT]
+    compile.with test_libs
     package :jar
   end
   

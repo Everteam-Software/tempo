@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequestWrapper;
 
@@ -31,7 +30,7 @@ import org.intalio.tempo.uiframework.URIUtils;
 import org.intalio.tempo.uiframework.forms.FormManager;
 import org.intalio.tempo.uiframework.forms.FormManagerBroker;
 import org.intalio.tempo.uiframework.model.TaskHolder;
-import org.intalio.tempo.uiframework.versions.BpmsVersionsServlet;
+import org.intalio.tempo.versions.BpmsDescriptorParser;
 import org.intalio.tempo.web.ApplicationState;
 import org.intalio.tempo.web.controller.Action;
 import org.intalio.tempo.web.controller.ActionError;
@@ -49,6 +48,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @SuppressWarnings("unchecked")
 public class TasksAction extends Action {
+    private static final BpmsDescriptorParser BPMS_DESCRIPTOR_PARSER = new BpmsDescriptorParser();
     private static final ArrayList<Task> EMPTY_TASK_LIST = new ArrayList<Task>(0);
 
     private static final Logger _log = LoggerFactory.getLogger(TasksAction.class);
@@ -153,13 +153,6 @@ public class TasksAction extends Action {
         model.put("participantToken", state.getCurrentUser().getToken());
         model.put("currentUser", state.getCurrentUser().getName());
         model.put("refreshTime", conf.getRefreshTime());
-
-        Properties buildProperties = BpmsVersionsServlet.getBPMSVersionsProperties();
-        if (_log.isDebugEnabled())
-            _log.debug(buildProperties.toString());
-        if (buildProperties != null) {
-            model.put("version", buildProperties.getProperty(BpmsVersionsServlet.BPMS_VERSION_PROP));
-            model.put("build", buildProperties.getProperty(BpmsVersionsServlet.BPMS_BUILD_NUMBER_PROP));
-        }
+        BPMS_DESCRIPTOR_PARSER.addBpmsBuildVersionsPropertiesToMap(model);
     }
 }

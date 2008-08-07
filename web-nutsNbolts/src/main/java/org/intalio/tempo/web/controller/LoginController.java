@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -32,7 +31,7 @@ import org.intalio.tempo.security.authentication.AuthenticationException;
 import org.intalio.tempo.security.token.TokenService;
 import org.intalio.tempo.security.util.PropertyUtils;
 import org.intalio.tempo.security.util.StringArrayUtils;
-import org.intalio.tempo.uiframework.versions.BpmsVersionsServlet;
+import org.intalio.tempo.versions.BpmsDescriptorParser;
 import org.intalio.tempo.web.ApplicationState;
 import org.intalio.tempo.web.Constants;
 import org.intalio.tempo.web.User;
@@ -42,6 +41,8 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 public class LoginController extends UIController {
+    private static final BpmsDescriptorParser BPMS_DESCRIPTOR_PARSER = new BpmsDescriptorParser();
+
     public static final String AUTO_LOGIN_ID = "autoLogin";
 
     public static final String SINGLE_LOGIN_ID = "singleLogin";
@@ -346,6 +347,7 @@ public class LoginController extends UIController {
         }
         Map model = errors.getModel();
         model.put("login", login);
+        BPMS_DESCRIPTOR_PARSER.addBpmsBuildVersionsPropertiesToMap(model);
 
         return new ModelAndView(Constants.LOGIN_VIEW, model);
     }
@@ -364,6 +366,7 @@ public class LoginController extends UIController {
         }
         Map model = new HashMap();
         model.put("login", new LoginCommand());
+        BPMS_DESCRIPTOR_PARSER.addBpmsBuildVersionsPropertiesToMap(model);
 
         return new ModelAndView(Constants.LOGIN_VIEW, model);
     }
@@ -412,14 +415,7 @@ public class LoginController extends UIController {
 
         Map model = errors.getModel();
         model.put("login", new LoginCommand());
-        
-        Properties buildProperties = BpmsVersionsServlet.getBPMSVersionsProperties();
-        if(LOG.isDebugEnabled()) LOG.debug(buildProperties.toString());
-        if (buildProperties != null) {
-            model.put("version", buildProperties.getProperty(BpmsVersionsServlet.BPMS_VERSION_PROP));
-            model.put("build", buildProperties.getProperty(BpmsVersionsServlet.BPMS_BUILD_NUMBER_PROP));
-        }
-
+        BPMS_DESCRIPTOR_PARSER.addBpmsBuildVersionsPropertiesToMap(model);
         return new ModelAndView(Constants.LOGIN_VIEW, model);
     }
 

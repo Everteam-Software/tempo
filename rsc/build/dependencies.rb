@@ -66,6 +66,7 @@ SUNMAIL = ["javax.mail:mail:jar:1.4.1", SUNACTIVATION]
 JARGS = "jargs:jargs:jar:1.0"
 
 JSON = "json:json-taglib:jar:0.4.1"
+JSON_NAGGIT = "org.apache:naggit:jar:1.0.20080807"
 
 JAXEN = "jaxen:jaxen:jar:1.1.1"
 

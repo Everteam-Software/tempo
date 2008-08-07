@@ -1,0 +1,171 @@
+{
+  "choices": [
+    {
+      "server": [
+        {
+          "name": "geronimo",
+          "version": "2.0.1"
+        },
+        {
+          "name": "tomcat-5",
+          "kind": "server",
+          "installed": true,
+          "version": "5.5.26"
+        },
+        {
+          "name": "tomcat-6",
+          "version": "6.0.16"
+        },
+        {
+          "name": "jboss",
+          "version": "4.0.5.GA"
+        }
+      ]
+    },
+    {
+      "database": [
+        {
+          "name": "oracle",
+          "version": "10g"
+        },
+        {
+          "name": "postgresql",
+          "version": "8.3"
+        },
+        {
+          "name": "db2",
+          "version": "9.5"
+        },
+        {
+          "name": "derby",
+          "kind": "database",
+          "installed": true,
+          "version": "10.1.3.1"
+        },
+        {
+          "name": "sqlserver",
+          "version": "2005"
+        },
+        {
+          "name": "mysql",
+          "version": "5.1"
+        },
+        {
+          "name": "sybase",
+          "version": "15"
+        }
+      ]
+    }
+  ],
+  "name": "intalio-bpms-ee",
+  "components": [
+    {
+      "name": "pxe-ha",
+      "installed": true,
+      "components": [
+        {
+          "name": "database-connector",
+          "version": "5.2.0.017"
+        },
+        {
+          "name": "helloworld-process",
+          "version": "0.3"
+        },
+        {
+          "name": "workflow-processes",
+          "version": "5.2.0.38"
+        },
+        {
+          "name": "jdbc-connector",
+          "version": "5.1.0.007"
+        }
+      ],
+      "version": "5.1.48"
+    },
+    {
+      "name": "console",
+      "installed": true,
+      "version": "5.2.0.16"
+    },
+    {
+      "name": "axis2-services",
+      "installed": true,
+      "components": [
+        {
+          "name": "tempo-deploy-ws-service",
+          "version": "5.2.0.38"
+        },
+        {
+          "name": "tempo-tms-service",
+          "version": "5.2.0.38"
+        },
+        {
+          "name": "tempo-tas-service",
+          "version": "5.2.0.38"
+        },
+        {
+          "name": "tempo-security-ws-service",
+          "version": "5.2.0.38"
+        }
+      ]
+    },
+    {
+      "name": "webreport",
+      "installed": true,
+      "version": "5.2.0.9"
+    },
+    {
+      "name": "gi-webapp",
+      "installed": true,
+      "version": "5.2.0.7"
+    },
+    {
+      "name": "wsi",
+      "installed": true,
+      "version": "5.2.0.5"
+    },
+    {
+      "name": "fds",
+      "installed": true,
+      "version": "5.2.0.38"
+    },
+    {
+      "name": "tms-feeds",
+      "installed": true,
+      "version": "5.2.0.38"
+    },
+    {
+      "name": "ui-fw",
+      "installed": true,
+      "version": "5.2.0.38"
+    },
+    {
+      "name": "wds",
+      "installed": true,
+      "version": "5.2.0.38"
+    },
+    {
+      "name": "xforms-manager",
+      "installed": true,
+      "version": "5.2.0.38"
+    },
+    {
+      "name": "server-common",
+      "installed": true
+    },
+    {
+      "name": "derby",
+      "kind": "database",
+      "installed": true,
+      "version": "10.1.3.1"
+    },
+    {
+      "name": "tomcat-5",
+      "kind": "server",
+      "installed": true,
+      "version": "5.5.26"
+    }
+  ],
+  "version": "5.2.0.053",
+  "path": "intalio-bpms-ee-5.2.0.053-tomcat-5-5.5.26"
+}
