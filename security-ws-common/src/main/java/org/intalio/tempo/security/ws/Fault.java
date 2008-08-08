@@ -8,6 +8,5 @@ public class Fault extends AxisFault{
 	Fault(Throwable exception,OMElement Detail){
 		super(exception.getMessage(),exception);
 		this.setDetail(Detail);
-		
 	}
 }

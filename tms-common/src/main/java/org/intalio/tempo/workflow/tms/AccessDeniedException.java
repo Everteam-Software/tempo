@@ -12,28 +12,15 @@
  * $Id: TaskManagementServicesFacade.java 5440 2006-06-09 08:58:15Z imemruk $
  * $Log:$
  */
-
 package org.intalio.tempo.workflow.tms;
 
+public class AccessDeniedException extends TMSException {
 
-public class InvalidTaskStateException extends TMSException {
-
-    private static final long serialVersionUID = - 4058158782128861920L;
-
-    public InvalidTaskStateException() {
+    public AccessDeniedException() {
         super();
     }
 
-    public InvalidTaskStateException(String message) {
+    public AccessDeniedException(String message) {
         super(message);
     }
-
-    public InvalidTaskStateException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public InvalidTaskStateException(Throwable cause) {
-        super(cause);
-    }
-
 }

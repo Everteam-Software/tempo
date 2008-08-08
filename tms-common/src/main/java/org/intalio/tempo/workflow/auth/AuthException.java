@@ -15,9 +15,9 @@
 
 package org.intalio.tempo.workflow.auth;
 
-import org.intalio.tempo.workflow.WorkflowException;
+import org.intalio.tempo.workflow.tms.TMSException;
 
-public class AuthException extends WorkflowException {
+public class AuthException extends TMSException {
 
     private static final long serialVersionUID = - 829405988516362302L;
 

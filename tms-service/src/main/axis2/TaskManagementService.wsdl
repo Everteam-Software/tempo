@@ -70,38 +70,6 @@
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
-			<xsd:element name="unavailableTaskFault">
-				<xsd:complexType>
-					<xsd:sequence>
-						<xsd:element name="reason" type="xsd:string"/>
-						<xsd:element name="unavailableTaskId" type="xsd:string" maxOccurs="unbounded" minOccurs="1">
-						</xsd:element>
-					</xsd:sequence>
-				</xsd:complexType>
-			</xsd:element>
-			<xsd:element name="invalidParticipantTokenFault">
-				<xsd:complexType>
-					<xsd:sequence>
-						<xsd:element name="reason" type="xsd:string"/>
-						<xsd:element name="invalidToken" type="xsd:string">
-						</xsd:element>
-					</xsd:sequence>
-				</xsd:complexType>
-			</xsd:element>
-			<xsd:element name="accessDeniedFault">
-				<xsd:complexType>
-					<xsd:sequence>
-						<xsd:element name="reason" type="xsd:string"/>
-					</xsd:sequence>
-				</xsd:complexType>
-			</xsd:element>
-			<xsd:element name="invalidInputMessageFault">
-				<xsd:complexType>
-					<xsd:sequence>
-						<xsd:element name="reason" type="xsd:string"/>
-					</xsd:sequence>
-				</xsd:complexType>
-			</xsd:element>
 			<xsd:element name="completeRequest">
 				<xsd:complexType>
 					<xsd:sequence>
@@ -360,8 +328,6 @@
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
-			
-			
 			<xsd:element name="reassignRequest">
 			     <xsd:complexType>
 			         <xsd:sequence>
@@ -371,6 +337,46 @@
 			     </xsd:complexType>
 			</xsd:element>
 			
+			
+			<xsd:element name="unavailableTaskFault">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="reason" type="xsd:string"/>
+						<xsd:element name="unavailableTaskId" type="xsd:string" maxOccurs="unbounded" minOccurs="1">
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="invalidParticipantTokenFault">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="reason" type="xsd:string"/>
+						<xsd:element name="invalidToken" type="xsd:string">
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="accessDeniedFault">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="reason" type="xsd:string"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="invalidInputMessageFault">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="reason" type="xsd:string"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="unavailableAttachmentFault">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="reason" type="xsd:string"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
 		</xsd:schema>
 	</wsdl:types>
 	
@@ -488,8 +494,8 @@
 			<wsdl:output message="tns:okResponse"/>
 			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault"/>
 			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault"/>
+			<wsdl:fault name="InvalidInputMessage" message="tns:unavailableAttachmentFault"/>
 		</wsdl:operation>
-		
 		<wsdl:operation name="getTaskList">
 			<wsdl:input message="tns:getTaskListRequest"/>
 			<wsdl:output message="tns:getTaskListResponse"/>

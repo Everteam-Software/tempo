@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2005-2006 Intalio inc.
+ * Copyright (c) 2005-2008 Intalio inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -20,11 +20,11 @@ import java.net.URI;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.task.Notification;
 import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.TaskState;
 import org.intalio.tempo.workflow.task.xml.XmlTooling;
+import org.intalio.tempo.workflow.tms.AccessDeniedException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.intalio.tempo.workflow.util.TaskEquality;
 import org.w3c.dom.Document;
@@ -49,8 +49,8 @@ public class TMSServerTest extends TestCase {
         TaskEquality.areTasksEquals(paTask, server.getTaskList("token2")[0]);
         try {
             server.getTask("taskID", "token3");
-            Assert.fail("UnavailableTaskException expected");
-        } catch (UnavailableTaskException e) {
+            Assert.fail("AccessDeniedException expected");
+        } catch (AccessDeniedException e) {
 
         }
         Assert.assertEquals(0, server.getTaskList("token3").length);
@@ -107,8 +107,8 @@ public class TMSServerTest extends TestCase {
         TaskEquality.areTasksEquals(notification, server.getTaskList("token2")[0]);
         try {
             server.getTask("taskID", "token3");
-            Assert.fail("UnavailableTaskException expected");
-        } catch (UnavailableTaskException e) {
+            Assert.fail("AccessDeniedException expected");
+        } catch (AccessDeniedException e) {
 
         }
         Assert.assertEquals(0, server.getTaskList("token3").length);

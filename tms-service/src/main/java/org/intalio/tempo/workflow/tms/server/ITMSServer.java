@@ -14,65 +14,52 @@ package org.intalio.tempo.workflow.tms.server;
 
 import java.net.URL;
 
-import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.UserRoles;
-import org.intalio.tempo.workflow.task.InvalidTaskException;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.TaskState;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
-import org.intalio.tempo.workflow.tms.InvalidTaskStateException;
-import org.intalio.tempo.workflow.tms.TaskIDConflictException;
-import org.intalio.tempo.workflow.tms.UnavailableAttachmentException;
-import org.intalio.tempo.workflow.tms.UnavailableTaskException;
+import org.intalio.tempo.workflow.tms.TMSException;
 import org.w3c.dom.Document;
 
 public interface ITMSServer {
 
-    Task[] getTaskList(String participantToken) throws AuthException;
-    
-    Task[] getAvailableTasks(String participantToken, String taskType, String subQuery) throws AuthException;
+    Task[] getTaskList(String participantToken) throws TMSException;
 
-    Task getTask(String taskID, String participantToken) throws AuthException, UnavailableTaskException;
+    Task[] getAvailableTasks(String participantToken, String taskType, String subQuery) throws TMSException;
 
-    public UserRoles getUserRoles(String participantToken) throws AuthException;
+    Task getTask(String taskID, String participantToken) throws TMSException;
 
-    void setOutput(String taskID, Document output, String participantToken) throws AuthException,
-            UnavailableTaskException;
+    UserRoles getUserRoles(String participantToken) throws TMSException;
 
-    void complete(String taskID, String participantToken) throws AuthException, UnavailableTaskException,
-            InvalidTaskStateException;
+    PIPATask getPipa(String formUrl, String participantToken) throws TMSException;
 
-    void setOutputAndComplete(String taskID, Document output, String participantToken) throws AuthException,
-            UnavailableTaskException, InvalidTaskStateException;
+    Document initProcess(String taskID, Document input, String participantToken) throws TMSException;
 
-    void fail(String taskID, String failureCode, String failureReason, String participantToken) throws AuthException,
-            UnavailableTaskException;
+    Attachment[] getAttachments(String taskID, String participantToken) throws TMSException;
 
-    void delete(String[] taskIDs, String participantToken) throws AuthException, UnavailableTaskException;
+    void addAttachment(String taskID, Attachment attachment, String participantToken) throws TMSException;
 
-    void create(Task task, String participantToken) throws AuthException, TaskIDConflictException;
+    void removeAttachment(String taskID, URL attachmentURL, String participantToken) throws TMSException;
 
-    Document initProcess(String taskID, Document input, String participantToken) throws AuthException,
-            UnavailableTaskException;
+    void reassign(String taskID, AuthIdentifierSet users, AuthIdentifierSet roles, TaskState state, String participantToken) throws TMSException;
 
-    Attachment[] getAttachments(String taskID, String participantToken) throws AuthException, UnavailableTaskException;
+    void storePipa(PIPATask task, String participantToken) throws TMSException;
 
-    void addAttachment(String taskID, Attachment attachment, String participantToken) throws AuthException,
-            UnavailableTaskException;
+    void deletePipa(String formUrl, String participantToken) throws TMSException;
 
-    void removeAttachment(String taskID, URL attachmentURL, String participantToken) throws AuthException,
-            UnavailableAttachmentException, UnavailableTaskException;
+    void setOutput(String taskID, Document output, String participantToken) throws TMSException;
 
-    void reassign(String taskID, AuthIdentifierSet users, AuthIdentifierSet roles, TaskState state,
-            String participantToken) throws AuthException, UnavailableTaskException;
+    void complete(String taskID, String participantToken) throws TMSException;
 
-    void storePipa(PIPATask task, String participantToken) throws AuthException, InvalidTaskException;
+    void setOutputAndComplete(String taskID, Document output, String participantToken) throws TMSException;
 
-    void deletePipa(String formUrl, String participantToken) throws AuthException, UnavailableTaskException;
+    void fail(String taskID, String failureCode, String failureReason, String participantToken) throws TMSException;
 
-    PIPATask getPipa(String formUrl, String participantToken) throws AuthException, UnavailableTaskException;
+    void delete(String[] taskIDs, String participantToken) throws TMSException;
 
-    void deleteAll(boolean fakeDelete, String subquery, String subqueryClass, String participantToken) throws AuthException, UnavailableTaskException;
+    void create(Task task, String participantToken) throws TMSException;
+
+    void deleteAll(boolean fakeDelete, String subquery, String subqueryClass, String participantToken) throws TMSException;
 }
