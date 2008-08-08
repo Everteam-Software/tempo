@@ -365,12 +365,6 @@ define "tempo" do
   	package(:jar)
   end
   
-  desc "Workflow Deployment Service Client"
-  define "wds-client" do
-    compile.with ANT, APACHE_COMMONS[:httpclient], APACHE_COMMONS[:io], JARGS, JUNIT, LOG4J, SLF4J
-    package(:jar) 
-  end
-  
   desc "Workflow Deployment Service"
   define "wds-service" do |project|
     libs = [ projects("dao-nutsNbolts", "deploy-api", "registry", "security", "tms-client", "tms-axis", "tms-common", "web-nutsNbolts"), 
