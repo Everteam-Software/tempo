@@ -401,6 +401,9 @@
 	<wsdl:message name="invalidParticipantTokenFault">
 		<wsdl:part name="invalidParticipantTokenFault" element="tns:invalidParticipantTokenFault"/>
 	</wsdl:message>
+	<wsdl:message name="unavailableAttachmentFault">
+		<wsdl:part name="unavailableAttachmentFault" element="tns:unavailableAttachmentFault"/>
+	</wsdl:message>
 	<wsdl:message name="accessDeniedFault">
 		<wsdl:part name="accessDeniedFault" element="tns:accessDeniedFault"/>
 	</wsdl:message>
