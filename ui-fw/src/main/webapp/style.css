@@ -12,8 +12,8 @@
 body {
 	margin: 0px;
 	background-color: #FFFFFF; 
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 9pt;
+	font-family: Arial Black;
+	font-size: 8pt;
 	color: #333333;	
 	direction: lrt;
 }
@@ -123,45 +123,62 @@ a:hover {
 	font-size: 8pt;
 }
 
-.oddTr td{
+.oddTr {
 	background:#f1f5fa;
 	border-right:solid 1px #e2e2e2;
+	font-size: 17px;	
 }
 
-.evenTr td{
+.evenTr {
 	background:#ffffff;
 	border-right:solid 1px #e2e2e2;
+	font-size: 7px;
 }
 
 .tasks {
 	width:90%;
+	position: center;
 	cellspacing:0px;
 	cellpadding:0px;
-	font-family: Arial, Helvetica, sans-serif;
+	font: Arial Black;
 	font-size: 8px;
 }
 
-#tasktable {
-	width:90%;
-	border-width: 1px;
-	background: #789798;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: small;
-}
-#tasktable td {
-	font-size: small;
+.line {
+	font: Arial Black;
+	font-size: 8px;
 }
 
-th { 
+.tasks {
+	font-size: 8px;
+}
+
+#tasktable > div {
+	border-width: 0px;
+	font-size: 8pt;
+}
+#user_logged {
+	font-family: Arial Black;
+}
+
+th {
+	font-family: Arial Black; 
 	background-color: black; 
 	color: white; 
-	border-bottom: 3px solid #2B65EC;
+	border-bottom: 2px solid #2B65EC;
 	text-transform: uppercase;
 }
 
 #taskform {
-	background: url(images/tab_bottom.gif) repeat-x bottom;
+	background: url(images/water-color.png) no-repeat fixed center;
+	background-position: 50% 70%; 
 	border:0px;
 	width:100%;
 	height:70%;
+}
+
+#taskform_bottom {
+	border:0px;
+	width:100%;
+	background: url(images/tab_bottom.gif) repeat-x bottom;
 }
