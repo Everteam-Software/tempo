@@ -1,8 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
 <html>
-	<table>
-		<tbody id="padata">
+	<table class="tasks">
+		<tbody class="tasks" id="padata">
 			<c:forEach items="${activityTasks}" var="taskHolder" varStatus="status">
 				<c:set var="taskFullURL" value="${taskHolder.formManagerURL}" />
 				<c:choose>
@@ -34,7 +34,7 @@
 		</table>
 
 		<table>
-			<tbody id="notifdata">
+			<tbody class="tasks" id="notifdata">
 				<c:forEach items="${notifications}" var="taskHolder" varStatus="status">
 					<c:set var="taskFullURL" value="${taskHolder.formManagerURL}" />
 					<c:choose>
@@ -60,7 +60,7 @@
 			</table>
 
 			<table>
-				<tbody id="pipadata">
+				<tbody class="tasks" id="pipadata">
 					<c:forEach items="${initTasks}" var="taskHolder" varStatus="status">
 						<c:set var="taskFullURL" value="${taskHolder.formManagerURL}" />
 						<c:choose>

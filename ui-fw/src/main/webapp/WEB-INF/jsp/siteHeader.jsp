@@ -22,17 +22,17 @@
 						<td>
 							<div id="message"/>
 						</td>
-						<td align="right" valign="bottom" width="310" >
-							<table border="0" cellpadding="0" cellspacing="0" height="90%">
+						<td align="right" valign="bottom">
+							<table width="100%" border="0" cellpadding="0" cellspacing="0" height="90%">
 								<tr>
-									<td align="right">
+									<td>
 										<a href="ical" title="iCalendar export"><img width="20" height="20" border="0" src="images/ical.jpg"/></a>
-										<a href="/feeds/atom/tasks?token=${participantToken}" title="Personal Tasks Feed"><img width="20" height="20" border="0" src="images/rss-orange.gif"/></a>
-										<a href="/feeds/atom/processes?token=${participantToken}" title="Personal Process Feed"><img width="20" height="20" border="0" src="images/rss-green.png"/></a>
+										<a href="/feeds/atom/tasks?token=${participantToken}" title="Personal Tasks Feed"><img width="20" height="20" border="0" src="images/rss_orange.png"/></a>
+										<a href="/feeds/atom/processes?token=${participantToken}" title="Personal Process Feed"><img width="20" height="20" border="0" src="images/rss_blue.png"/></a>
 									</td>
-									<td>&nbsp;</td>
-									<td ><img src="images/curent_user.gif" title="Curent user" alt="Curent user" style="vertical-align: bottom;" border="0"/>${currentUser}&nbsp;&nbsp;</td>
-									<td class="menuItemSeparator"><img src="images/spacer.gif" width="1" alt="" height="30"/></td>																
+									<td class="menuItemSeparator"><img src="images/spacer.gif" width="10" alt="" height="30"/></td>																
+									<td ><img src="images/curent_user.gif" width="20" height="20" title="Curent user" alt="Curent user" style="vertical-align: bottom;" border="0"/>${currentUser}</td>
+									<td class="menuItemSeparator"><img src="images/spacer.gif" width="10" alt="" height="30"/></td>																
 									<td> <a href="javascript:submitActionToURL('login.htm','logOut')" class="mainMenuItem" ><img border="0px" src="https://www.scs.fsu.edu/twiki/pub/TechHelp/EGroupWare/logout_icon.png" height="30px" width="30px"/></a> </td>								
 								</tr>
 							</table>

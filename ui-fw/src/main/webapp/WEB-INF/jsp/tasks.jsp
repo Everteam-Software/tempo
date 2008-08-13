@@ -30,7 +30,6 @@
 		<script src="script/jquery.js" type="text/javascript"></script>
 		<script src="script/jquery-timer.js" type="text/javascript"></script>
 		<script src="script/ui-fw.js" type="text/javascript"></script>
-		
 		<script src="script/jtabber.js" type="text/javascript"></script>
 		
 		<script type="text/javascript">
@@ -52,8 +51,9 @@
 				   if(tbody == "#notifbody") {image_notification('http://www.neille.com/test/images/notification-icon.gif');}
 				}
 	     		} 
-				
-				$(tbody).html(newdata);
+				if($(tbody).html().length != newdata.length) {
+					$(tbody).html(newdata);
+				}
 			}
 			
 			function clearFrame() {
@@ -101,10 +101,6 @@
 
 			});
 		</script>
-		
-		<style type="text/css" media="all">
-
-		</style>
 
 	</head>
 	<body height="100%">
