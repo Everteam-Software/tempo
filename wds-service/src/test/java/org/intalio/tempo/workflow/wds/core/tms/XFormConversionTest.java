@@ -39,6 +39,12 @@ public class XFormConversionTest {
     }
 
     @Specification
+    public void runConversionOnCustomStyleForm() throws Exception {
+        String converted = convert("/selectItem.xform");
+        matchesPatterns(converted);
+    }
+
+    @Specification
     public void runXFromAndCheckForVerticalAlign() throws Exception {
         expect.that(convert("/personnel.xform").toString().contains("vertical-align:40%")).isTrue();
     }

@@ -68,7 +68,8 @@ public class XFormsConverter {
             element.setText(sb.toString());
             return doc.asXML().getBytes("UTF-8");
         } catch (Exception e) {
-            throw new RuntimeException("Could not apply new style to xform", e);
+            e.printStackTrace();
+            throw new RuntimeException("Could not apply new style to xform");
         }
 
     }
@@ -76,6 +77,9 @@ public class XFormsConverter {
     private static StringBuffer convertLine(String line) {
         StringBuffer sb = new StringBuffer();
         int start = line.indexOf("{");
+        // if we can't parse this properly, let's return silently.
+        if(start == -1) return sb.append(line);
+        
         String elem = line.substring(0, start).trim();
         sb.append(elem);
         sb.append("{");
