@@ -40,7 +40,6 @@ public class JsonUpdate extends HttpServlet {
         if (token != null && userName != null && token.length() > 0 && userName.length() > 0) {
             JSONObject jroot = new JSONObject();
             JSONArray jtasks = new JSONArray();
-
             JSONArray jprocesses = new JSONArray();
             ITaskManagementService taskManager = getTMS(request, token);
             try {

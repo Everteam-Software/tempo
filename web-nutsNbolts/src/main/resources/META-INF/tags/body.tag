@@ -37,26 +37,9 @@ ${toolbar}
 	<!-- link rel="stylesheet" href="style/tree.css" type="text/css" --> 
 	<link href="style.css" rel="stylesheet" type="text/css">
 	${scripts}
-	<script src="script/folding.js" language="javascript" type="text/javascript"></script> 
-	<script type="text/javascript" language="javascript" src="script/tree.js"></script>
-	<script type="text/javascript" language="javascript" src="script/table.js"></script>
-	<c:if test="${dojoRequired}">
-		<script type="text/javascript" language="javascript" src="dojo/dojo.js"></script>
-		<script type="text/javascript" language="javascript">
-			dojo.require("dojo.lang.*");
-			dojo.require("dojo.widget.EditorTree");
-			dojo.require("dojo.widget.EditorTreeController");
-			dojo.require("dojo.widget.EditorTreeSelector");
-			dojo.require("dojo.widget.EditorTreeNode");
-		</script>
-	</c:if>
-	<c:if test="${dateTimePickerRequired}">
-		<link rel=stylesheet href="style/datetime.css" type="text/css">
-		<script type="text/javascript" language="javascript" src="script/main.js"></script>
-		<script type="text/javascript" language="javascript" src="script/datetimepopup.js"></script>
-		<script type="text/javascript" language="javascript" src="script/absolutedatetime.js"></script>
-		<script type="text/javascript" language="javascript" src="script/relativedatetime.js"></script>
-	</c:if>
+
+
+
 </head>
 <body>
 <form id="form" name="form" method="POST" style="display:inline;">

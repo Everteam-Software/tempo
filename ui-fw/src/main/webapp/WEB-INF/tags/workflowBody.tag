@@ -1,5 +1,5 @@
 <%--
- Copyright (c) 2005-2006 Intalio inc.
+ Copyright (c) 2005-2008 Intalio inc.
 
  All rights reserved. This program and the accompanying materials
  are made available under the terms of the Eclipse Public License v1.0
@@ -14,11 +14,6 @@
 <%@ taglib prefix="intalio" uri="http://www.intalio.com/tagfiles"%>
 
 <%@ attribute name="headerCell" required="false" type="java.lang.String" %>
-
-
-<%--c:set var="toolbar">
-	Define toolbar here
-</c:set --%>
 
 <c:set var="title">
 	<fmt:message key="com_intalio_bpms_workflow_pageTitle"/>
