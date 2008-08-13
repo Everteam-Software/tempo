@@ -398,6 +398,9 @@
 	<wsdl:message name="unavailableTaskFault">
 		<wsdl:part name="unavailableTaskFault" element="tns:unavailableTaskFault"/>
 	</wsdl:message>
+	<wsdl:message name="unavailableAttachmentFault">
+		<wsdl:part name="unavailableAttachmentFault" element="tns:unavailableAttachmentFault"/>
+	</wsdl:message>
 	<wsdl:message name="invalidParticipantTokenFault">
 		<wsdl:part name="invalidParticipantTokenFault" element="tns:invalidParticipantTokenFault"/>
 	</wsdl:message>
