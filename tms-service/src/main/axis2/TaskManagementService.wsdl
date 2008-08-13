@@ -331,8 +331,11 @@
 			<xsd:element name="reassignRequest">
 			     <xsd:complexType>
 			         <xsd:sequence>
-						 <xsd:element name="taskId" type="xsd:string"/>
-			             <xsd:element name="participantToken" type="xsd:string" />
+						<xsd:element name="taskId" type="xsd:string" minOccurs="1" maxOccurs="1" />
+						<xsd:element name="userOwner" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
+						<xsd:element name="roleOwner" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
+						<xsd:element name="taskState" type="xsd:string" minOccurs="1" maxOccurs="1" />
+						<xsd:element name="participantToken" type="xsd:string" minOccurs="1" maxOccurs="1" />
 			         </xsd:sequence>
 			     </xsd:complexType>
 			</xsd:element>
