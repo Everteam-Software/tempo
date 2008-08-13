@@ -45,12 +45,6 @@ CAS_LIBS = [
   CAS_CLIENT
 ]
 
-DOJO_VERSION = "0.3.1"
-#DOJO_URL = "http://download.dojotoolkit.org/release-#{DOJO_VERSION}/dojo-#{DOJO_VERSION}-widget.zip"
-DOJO_URL = "http://www.intalio.org/public/maven2/dojo/#{DOJO_VERSION}/dojo-#{DOJO_VERSION}-widget.zip"
-DOJO = "dojo:dojo-widget:zip:#{DOJO_VERSION}"
-DOJO_WIDGET_BASE = "dojo-#{DOJO_VERSION}-widget"
-
 DOM4J = "dom4j:dom4j:jar:1.6.1"
 
 FOP = "fop:fop:jar:0.20.5"
