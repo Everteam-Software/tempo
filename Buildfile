@@ -328,10 +328,6 @@ define "tempo" do
            CAS_CLIENT
     compile.with libs
 
-    dojo = unzip(path_to(compile.target, "dojo") => download(artifact(DOJO)=>DOJO_URL))
-    dojo.from_path(DOJO_WIDGET_BASE).include("*").exclude("demos/*", "release/*", "tests/*", "README", "*.txt")
-
-    build dojo
     resources.filter.using "version" => VERSION_NUMBER
     package(:jar)
     package(:war).with(:libs=>libs).
