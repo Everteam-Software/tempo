@@ -59,15 +59,11 @@ public class TasksAction extends Action {
     private final ArrayList<TaskHolder<PIPATask>> _initTasks = new ArrayList<TaskHolder<PIPATask>>();
 
     private void initLists(Collection<Task> tasks) throws RemoteException, AuthException {
-        if (_log.isDebugEnabled())
-            _log.debug("Parsing task list for UI-FW");
-
         FormManager fmanager = FormManagerBroker.getInstance().getFormManager();
         String token = getParticipantToken();
         String user = getUser();
 
-        for (Object task : tasks) {
-            _log.info(((Task) task).getID() + ":" + task.getClass().getName());
+        for (Task task : tasks) {
             if (task instanceof Notification) {
                 Notification notification = (Notification) task;
                 if (!TaskState.COMPLETED.equals(notification.getState())) {
@@ -84,10 +80,7 @@ public class TasksAction extends Action {
                 PIPATask pipaTask = (PIPATask) task;
                 _initTasks.add(new TaskHolder<PIPATask>(pipaTask, URIUtils.getResolvedTaskURLAsString(new HttpServletRequestWrapper(_request), fmanager,
                                 pipaTask, token, user)));
-            } else {
-                if (_log.isDebugEnabled())
-                    _log.debug("Ignoring task of class:" + task.getClass().getName());
-            }
+            } 
         }
     }
 
@@ -110,14 +103,10 @@ public class TasksAction extends Action {
         try {
             String pToken = getParticipantToken();
             ITaskManagementService taskManager = getTMS(pToken);
-            if (_log.isDebugEnabled()) {
-                _log.debug("Try to get Task List for participant token " + pToken);
-            }
             Task[] tasks = taskManager.getAvailableTasks("Task", "ORDER BY T._creationDate");
             if (_log.isDebugEnabled()) {
                 _log.debug("Task list of size " + tasks.length + " is retrieved for participant token " + pToken);
             }
-
             return new ArrayList<Task>(Arrays.asList(tasks));
         } catch (Exception ex) {
             _errors.add(new ActionError(-1, null, "com_intalio_bpms_workflow_tasks_retrieve_error", null, ActionError.getStackTrace(ex), null, null));

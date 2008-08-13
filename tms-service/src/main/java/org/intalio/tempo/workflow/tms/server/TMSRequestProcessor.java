@@ -64,10 +64,10 @@ public class TMSRequestProcessor extends OMUnmarshaller {
     }
 
     public void setServer(ITMSServer server) {
-        _logger.debug("TMSRequestProcessor.setServer");
         if (_registerPipa != null) {
             _registerPipa.destroy();
         }
+        _logger.debug("TMSRequestProcessor.setServer:"+server.getClass().getSimpleName());
         _server = server;
         _pipa = new PIPAComponentManager(_server);
         _registerPipa = new DeploymentServiceRegister(_pipa);

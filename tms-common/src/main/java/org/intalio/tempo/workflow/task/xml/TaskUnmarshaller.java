@@ -72,7 +72,6 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
         try {
             XmlObject xmlObject = XmlObject.Factory.parse(rootElement.getXMLStreamReader());
             if (_logger.isDebugEnabled()) {
-                _logger.debug("Umarshalling");
                 _logger.debug(xmlObject.xmlText());
             }
             XmlCursor xmlCursor = xmlObject.newCursor();
@@ -194,8 +193,6 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
         } else {
                 resultTask.setCreationDate(new Date());
         } 
-        if(_logger.isDebugEnabled())
-            _logger.debug("Creation date set to " + resultTask.getCreationDate());
 
         authorize(resultTask, "claim", claim);
         authorize(resultTask, "revoke", revoke);
@@ -267,7 +264,7 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
                                 metadata.setCreationDate(new XsdDateTime(cal.toString()).getTime());
                             }
                         } catch (Exception e) {
-                            _logger.error("Error in unmarshalling task from metadata", e);
+                            _logger.error("Error in unmarshalling attachment from metadata", e);
                         }
 
                         String payloadURLStr = attachmentElement.getPayloadUrl();
