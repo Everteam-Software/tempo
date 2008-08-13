@@ -331,7 +331,7 @@ define "tempo" do
     resources.filter.using "version" => VERSION_NUMBER
     package(:jar)
     package(:war).with(:libs=>libs).
-      include("src/main/config/geronimo/1.0/*", path_to(compile.target, "dojo"))
+      include("src/main/config/geronimo/1.0/*")
   end
   
   desc "User-Interface Framework Portlet"
