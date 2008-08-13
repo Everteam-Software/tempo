@@ -129,7 +129,7 @@
 							<th width="10%"><fmt:message key="com_intalio_bpms_workflow_taskHolder_priority"/></th>
 						</tr>
 					</thead>
-					<tbody id="pabody">
+					<tbody class="line" id="pabody">
 
 					</tbody>
 				</table>
@@ -165,6 +165,7 @@
 		<iframe id="taskform" name="taskform">
 			<fmt:message key="com_intalio_bpms_not_suport_frame_msg"/>
 		</iframe>
+		<div id="taskform_bottom">&nbsp;</div>
 		
 		<div id="footer">&nbsp;&nbsp;<fmt:message key="com_intalio_bpms_workflow_pageFooter_poweredBy_label" />&nbsp;&nbsp;
 		<a href="http://www.intalio.com"><span style="color: #3082A8"><fmt:message key="com_intalio_bpms_workflow_pageFooter_poweredBy_value" /></span></a>

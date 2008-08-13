@@ -19,9 +19,8 @@
 			<td align="right" valign="bottom">&nbsp;
 				<table cellpadding="0" cellspacing="0" height="30%">
 					<tr>
-						<td>
-							<div id="message"/>
-						</td>
+						<td><div id="message"/></td>
+						<td class="menuItemSeparator"><img src="images/spacer.gif" width="30" alt="" height="30"/></td>																
 						<td align="right" valign="bottom">
 							<table width="100%" border="0" cellpadding="0" cellspacing="0" height="90%">
 								<tr>
@@ -31,7 +30,7 @@
 										<a href="/feeds/atom/processes?token=${participantToken}" title="Personal Process Feed"><img width="20" height="20" border="0" src="images/rss_blue.png"/></a>
 									</td>
 									<td class="menuItemSeparator"><img src="images/spacer.gif" width="10" alt="" height="30"/></td>																
-									<td ><img src="images/curent_user.gif" width="20" height="20" title="Curent user" alt="Curent user" style="vertical-align: bottom;" border="0"/>${currentUser}</td>
+									<td id="user_logged"><img src="images/curent_user.gif" width="20" height="20" title="Curent user" alt="Curent user" style="vertical-align: bottom;" border="0"/>${currentUser}</td>
 									<td class="menuItemSeparator"><img src="images/spacer.gif" width="10" alt="" height="30"/></td>																
 									<td> <a href="javascript:submitActionToURL('login.htm','logOut')" class="mainMenuItem" ><img border="0px" src="https://www.scs.fsu.edu/twiki/pub/TechHelp/EGroupWare/logout_icon.png" height="30px" width="30px"/></a> </td>								
 								</tr>
