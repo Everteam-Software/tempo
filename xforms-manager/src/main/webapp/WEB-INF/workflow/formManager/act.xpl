@@ -1,5 +1,5 @@
 <!--
-* Copyright (c) 2005-2006 Intalio inc.
+* Copyright (c) 2005-2008 Intalio inc.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License v1.0
@@ -185,7 +185,12 @@
                                                 </roleOwner>
                                             </xsl:for-each>
                                         </owners>
-                                        <action>hide</action>
+                                        <action>
+											<xsl:choose>
+												<xsl:when test="doc('input:getTaskResponse')//tms:attachments/tms:attachment/*">show</xsl:when>
+												<xsl:otherwise>hide</xsl:otherwise>
+											</xsl:choose>
+										</action>
                                     </attachments>
                                 </xforms:instance>
 
@@ -218,7 +223,6 @@
                                 <xforms:submission id="showAttachments" ref="instance('taskAttachments')"
                                                    validate="false" action="/act" method="post" replace="instance"
                                                    instance="taskAttachments">
-
                                     <xforms:message ev:event="xforms-submit-error" level="modal">Error while attachments retrieval</xforms:message>
                                 </xforms:submission>
 
@@ -245,11 +249,8 @@
                                                    action="/attachments" method="post" replace="instance"
                                                    instance="taskAttachments">
 
-
 												<xforms:action ev:event="xforms-submit-error">
-													<xforms:setvalue
-														ref="instance('taskAttachments')/action"
-														value="'show'"/>
+													<xforms:setvalue ref="instance('taskAttachments')/action" value="'show'"/>
 													<xforms:message ev:event="xforms-submit-error" level="modal">Error, cannot delete attachment</xforms:message>
 												</xforms:action>
 												<xforms:action ev:event="xforms-submit-done">
@@ -306,12 +307,6 @@
                                         <xforms:message level="modal">Error, cannot revoke task</xforms:message>
                                     </xforms:action>
                                 </xforms:submission>
-
-                                <!--<xsl:if test="doc('input:xpl-input')/task/reloadTaskList">-->
-                                    <!--<xforms:load ev:event="xforms-rebuild"-->
-                                                 <!--xxforms:target="_parent" resource="../../ui-fw/tasks.htm"-->
-                                                 <!--show="replace"/>-->
-                                <!--</xsl:if>-->
                             </xsl:copy>
                         </xsl:template>
 
@@ -322,7 +317,7 @@
 							<xsl:variable name="input" select="doc('input:getTaskResponse')/tms:task/*:input/*"/>
 							<!-- Create an input element that will basically receive all the nodes coming from the task response -->
 							<xsl:element name="input" namespace="{namespace-uri($input)}">
-								<xsl:for-each select="$input//*">
+								<xsl:for-each select="$input/*">
 									<xsl:variable name="current" select="."/>
 									<xsl:choose>
 										<!-- 
@@ -382,11 +377,11 @@
                         <!-- Adds the controls for Task Actions and handle the logic -->
                         <xsl:template match="xhtml:body">
                             <xsl:copy>
+
                                 <!-- display the proper page -->
                                 <xforms:switch>
                                     <!-- Display the form and adds task action controls-->
                                     <xforms:case id="viewTask" selected="true">
-
                                         <xforms:trigger appearance="xxforms:image" style="float: top">
                                             <xforms:label>Show/refresh attachments</xforms:label>
                                             <xxforms:img src="/images/attachments.gif"/>
@@ -418,8 +413,7 @@
                                                     </xhtml:tr>
                                                     <xforms:repeat nodeset="attachment" id="attachmentsTable">
                                                         <xhtml:tr>
-                                                            <xhtml:td
-                                                                    style="border-width: 0px; border-collapse: collapse;text-align: center">
+                                                            <xhtml:td style="border-width: 0px; border-collapse: collapse;text-align: center">
                                                                 <xforms:trigger appearance="xxforms:image">
                                                                     <xforms:label>Delete attachment</xforms:label>
                                                                     <xxforms:img src="/images/remove.gif"/>
