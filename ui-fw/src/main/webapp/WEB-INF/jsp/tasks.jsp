@@ -31,10 +31,11 @@
 		<script src="script/jquery-timer.js" type="text/javascript"></script>
 		<script src="script/ui-fw.js" type="text/javascript"></script>
 		<script src="script/jtabber.js" type="text/javascript"></script>
+		<script src="script/jquery-filter.js"></script>
 		
 		<script type="text/javascript">
 			$(document).ready(function(){ 
-			
+
  			function image_notification( image ) {
 				$("#message").append("<img src='"+image+"' height='20' widht='20'/>");
 				$.timer(10000, function(timer){
@@ -42,11 +43,16 @@
 				   timer.stop();
 				});
 			}
+			
+			function filter() {
+			    $.uiTableFilter( $('.tasks'), $('#filter').val() );
+			}
 
 			updateTable = function(tbody, data, data1, icons) {
 			    var newdata = $('<div/>').html(data).find(data1).html();
 				if($(tbody).html() != newdata) {
 					$(tbody).html(newdata);
+					filter();
 					if(icons) {
 				       if(tbody == "#pabody") {image_notification('images/task.png');}
 					   if(tbody == "#notifbody") {image_notification('images/notification-icon.gif');}
@@ -77,7 +83,13 @@
 			
 			$('#tabnav li a').click(function(){
 				clearFrame();
+				$('#filter').val("")
+				filter();
 			});
+			
+			$("#filter").keyup(function() {
+			    filter();
+			})
 			
 
 			$.jtabber({
@@ -103,11 +115,17 @@
 	<body height="100%">
 
 		<%@ include file="/WEB-INF/jsp/siteHeader.jsp"%>
+		
+		
+		<div id="data" class=".hiddencontent"/>
+		
 		<span id="container">
+			
 		<ul id="tabnav">
 			<li><a href="#" title="pa"><fmt:message key="com_intalio_bpms_workflow_tab_tasks"/></a></li>
 			<li><a href="#" title="notif"><fmt:message key="com_intalio_bpms_workflow_tab_notifications"/></a></li>
 			<li><a href="#" title="pipa"><fmt:message key="com_intalio_bpms_workflow_tab_processes"/></a></li>
+			<li><form id="filter-form">Filter: <input name="filter" id="filter" value="" maxlength="30" size="30" type="text"></form><br></li>
 		</ul>
 		</span>
 		
