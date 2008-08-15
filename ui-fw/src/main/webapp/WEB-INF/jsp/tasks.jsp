@@ -66,7 +66,7 @@
 			
 			function getTasks( icons ) {
 			$.ajax({
-			    url: 'updates.htm?update=true&amp;data='+new Date(),
+			    url: 'updates.htm?update=true',
 			    type: 'POST',
 			    timeout: 5000,
 			    error: function(xml){
@@ -97,7 +97,7 @@
 			activeLinkClass: "active", 
 			hiddenContentClass: "hiddencontent", 
 			showDefaultTab: 1, 
-			effect: 'slide', 
+			effect: 'fade', 
 			effectSpeed: 'slow' 
 			});
 
@@ -110,92 +110,107 @@
 			$.timer(timeout, update);
 			});
 		</script>
-
 	</head>
-	<body height="100%">
+	<body>
+		<table height="100%" width="100%">
+			<tr width="100%" height="10%">
+				<td width="100%">
+					<%@ include file="/WEB-INF/jsp/siteHeader.jsp"%>
+					<div id="data" class=".hiddencontent"/>
+					<div id="container">			
+						<ul id="tabnav">
+							<li><a href="#" title="pa"><fmt:message key="com_intalio_bpms_workflow_tab_tasks"/></a></li>
+							<li><a href="#" title="notif"><fmt:message key="com_intalio_bpms_workflow_tab_notifications"/></a></li>
+							<li><a href="#" title="pipa"><fmt:message key="com_intalio_bpms_workflow_tab_processes"/></a></li>
+							<li><form id="filter-form">
+								<span><fmt:message key="com_intalio_bpms_workflow_tab_filter"/>: </span><input class="filterbox" name="filter" id="filter" value="" maxlength="30" size="30" type="text">
+								<img align="bottom" height="15" width="15" src="images/loupe.png"/>
+								</form><br/>
+							</li>
+						</ul>
+					</div>
+					<div id="tasktable">
+						<div class="hiddencontent" id="pa">
 
-		<%@ include file="/WEB-INF/jsp/siteHeader.jsp"%>
-		
-		
-		<div id="data" class=".hiddencontent"/>
-		
-		<span id="container">
-			
-		<ul id="tabnav">
-			<li><a href="#" title="pa"><fmt:message key="com_intalio_bpms_workflow_tab_tasks"/></a></li>
-			<li><a href="#" title="notif"><fmt:message key="com_intalio_bpms_workflow_tab_notifications"/></a></li>
-			<li><a href="#" title="pipa"><fmt:message key="com_intalio_bpms_workflow_tab_processes"/></a></li>
-			<li><form id="filter-form">Filter: <input name="filter" id="filter" value="" maxlength="30" size="30" type="text"></form><br></li>
-		</ul>
-		</span>
-		
-		<div style="clear:both; line-height:0; height:0">&nbsp;</div>
-		
-		<div id="tasktable">
-			<div class="hiddencontent" id="pa">
+							<table class="tasks" id="table1">
+								<thead>
+									<tr id="headerTr">
+										<th width="10%"><fmt:message key="com_intalio_bpms_workflow_taskHolder_taskState"/></th>
+										<th width="30%"><fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/></th>
+										<th width="20%"><fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/></th>
+										<th width="20%"><fmt:message key="com_intalio_bpms_workflow_taskHolder_dueDate"/></th>
+										<th width="5%"><fmt:message key="com_intalio_bpms_workflow_taskHolder_priority"/></th>
+										<th width="10%"><img height="15" width="15" src="images/trombone.png"/></th>
+									</tr>
+								</thead>
+								<tbody class="line" id="pabody"/>
+							</table>
+						</div>
 
-				<table class="tasks" id="table1">
-					<thead>
-						<tr id="headerTr">
-							<th width="10%"><fmt:message key="com_intalio_bpms_workflow_taskHolder_taskState"/></th>
-							<th width="35%"><fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/></th>
-							<th width="25%"><fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/></th>
-							<th width="20%"><fmt:message key="com_intalio_bpms_workflow_taskHolder_dueDate"/></th>
-							<th width="10%"><fmt:message key="com_intalio_bpms_workflow_taskHolder_priority"/></th>
-						</tr>
-					</thead>
-					<tbody class="line" id="pabody">
+						<div class="hiddencontent" id="notif">
+							<table class="tasks" id="table3">
+								<thead>
+									<tr id="headertr">
+										<th width="60%"><fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/></th>
+										<th width="30%"><fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/></th>
+										<th width="10%"><fmt:message key="com_intalio_bpms_workflow_taskHolder_priority"/></th>
+									</tr>
+								</thead>
+								<tbody id="notifbody"/>
+							</table>
+						</div>
 
-					</tbody>
-				</table>
-			</div>
-
-			<div class="hiddencontent" id="notif">
-				<table class="tasks" id="table3">
-					<thead>
-						<tr id="headertr">
-							<th width="60%"><fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/></th>
-							<th width="30%"><fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/></th>
-							<th width="10%"><fmt:message key="com_intalio_bpms_workflow_taskHolder_priority"/></th>
-						</tr>
-					</thead>
-					<tbody id="notifbody">
-					</tbody>
-				</table>
-			</div>
-
-			<div class="hiddencontent" id="pipa">
-				<table class="tasks" id="table2">
-					<thead>
-						<tr id="headertr">
-							<th width="65%"><fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/></th>
-							<th width="35%"><fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/></th>
-						</tr>
-					</thead>
-					<tbody id="pipabody"></tbody>
-				</table>
-			</div>
-		</div>
-		
-		<iframe id="taskform" name="taskform">
-			<fmt:message key="com_intalio_bpms_not_suport_frame_msg"/>
-		</iframe>
-		<div id="taskform_bottom">&nbsp;</div>
-		
-		<div id="footer">&nbsp;&nbsp;<fmt:message key="com_intalio_bpms_workflow_pageFooter_poweredBy_label" />&nbsp;&nbsp;
-		<a href="http://www.intalio.com"><span style="color: #3082A8"><fmt:message key="com_intalio_bpms_workflow_pageFooter_poweredBy_value" /></span></a>
-		<fmt:message key="com_intalio_bpms_workflow_versionInfo">
-			<c:choose>
-				<c:when test="${!empty version && !empty build}" >
-					<fmt:param value="${version}"/>
-					<fmt:param value="${build}"/>
-				</c:when> 
-				<c:otherwise>
-					<fmt:param value="unknown"/>
-					<fmt:param value="unknown"/>
-				</c:otherwise>
-			</c:choose>
-		</fmt:message>
-		<a href="http://bpms.intalio.com"><span style="color: #3082A8"><fmt:message key="com_intalio_bpms_workflow_pageFooter_featureBugRequest"/></span></a>
+						<div class="hiddencontent" id="pipa">
+							<table class="tasks" id="table2">
+								<thead>
+									<tr id="headertr">
+										<th width="65%"><fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/></th>
+										<th width="35%"><fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/></th>
+									</tr>
+								</thead>
+								<tbody id="pipabody"/>
+							</table>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div id="taskform_bottom">&nbsp;</div>
+				</td>
+			</tr>
+			<tr height="90%">
+				<td width="100%">
+					<iframe id="taskform" id="taskform" name="taskform">
+						<fmt:message key="com_intalio_bpms_not_suport_frame_msg"/>
+					</iframe>
+				
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div id="taskform_bottom">&nbsp;</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div id="footer">&nbsp;&nbsp;<fmt:message key="com_intalio_bpms_workflow_pageFooter_poweredBy_label" />&nbsp;&nbsp;
+					<a href="http://www.intalio.com"><span style="color: #3082A8"><fmt:message key="com_intalio_bpms_workflow_pageFooter_poweredBy_value" /></span></a>
+					<fmt:message key="com_intalio_bpms_workflow_versionInfo">
+						<c:choose>
+							<c:when test="${!empty version && !empty build}" >
+								<fmt:param value="${version}"/>
+								<fmt:param value="${build}"/>
+							</c:when> 
+							<c:otherwise>
+								<fmt:param value="unknown"/>
+								<fmt:param value="unknown"/>
+							</c:otherwise>
+						</c:choose>
+					</fmt:message>
+					<a href="http://bpms.intalio.com"><span style="color: #3082A8"><fmt:message key="com_intalio_bpms_workflow_pageFooter_featureBugRequest"/></span></a>
+				</td>
+			</tr>
+		</table>
 	</body>
 </html>

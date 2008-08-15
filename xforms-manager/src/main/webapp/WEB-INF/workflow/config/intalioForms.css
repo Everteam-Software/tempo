@@ -74,3 +74,13 @@ div#intalio-bpms-form div label.xforms-label {
     width : 95%;
     margin : 0 5 0 5
 }
+
+.button {
+	margin: 10px;
+	width : 70px;
+	height: 20px;
+	font-size: 8px;
+	background-color: black;
+	color: white;
+	border: 0px;
+}

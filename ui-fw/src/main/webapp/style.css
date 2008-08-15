@@ -118,21 +118,16 @@ a:hover {
 }
 
 #headerTr th{
-	font-weight:bold;
 	cursor: pointer;
-	font-size: 8pt;
+	font-size: 7pt;
 }
 
 .oddTr {
 	background:#f1f5fa;
-	border-right:solid 1px #e2e2e2;
-	font-size: 17px;	
 }
 
 .evenTr {
 	background:#ffffff;
-	border-right:solid 1px #e2e2e2;
-	font-size: 7px;
 }
 
 .tasks {
@@ -143,19 +138,20 @@ a:hover {
 	font: Arial Black;
 	font-size: 8px;
 }
+.tasks a {
+	font: Arial Black;
+	font-size: 10px;
+}
 
 .line {
 	font: Arial Black;
 	font-size: 8px;
 }
 
-.tasks {
-	font-size: 8px;
-}
-
-#tasktable > div {
+#tasktable div table{
 	border-width: 0px;
 	font-size: 8pt;
+	position: center;
 }
 #user_logged {
 	font-family: Arial Black;
@@ -170,15 +166,26 @@ th {
 }
 
 #taskform {
-	background: url(images/water-color.png) no-repeat fixed center;
-	background-position: 50% 70%; 
+	background-image: url(images/gradient-rainbow.png);
+	
 	border:0px;
 	width:100%;
-	height:70%;
+	height:100%;
 }
 
 #taskform_bottom {
 	border:0px;
 	width:100%;
 	background: url(images/tab_bottom.gif) repeat-x bottom;
+}
+
+#footer {
+	font-family: Arial Black; 
+	font-size: 8pt;
+}
+
+#filter {
+	height: 15px;
+	font: 8px;
+	
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-* Copyright (c) 2005-2006 Intalio inc.
+* Copyright (c) 2005-2008 Intalio inc.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License v1.0
@@ -213,7 +213,7 @@
                                             <xforms:case id="viewTask">
                                                 <xsl:apply-templates select="@* | *"/>
                                                 <xhtml:div>
-                                                    <xforms:submit submission="dismissSubmission">
+                                                    <xforms:submit class="button" submission="dismissSubmission">
                                                         <xforms:label>Dismiss</xforms:label>
                                                     </xforms:submit>
                                                 </xhtml:div>

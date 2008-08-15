@@ -11,6 +11,7 @@
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <html>
 	<table class="tasks">
 		<tbody class="tasks" id="padata">
@@ -38,6 +39,13 @@
 						</td>
 						<td>
 							<a href="${taskFullURL}" target="taskform">${taskHolder.task.priority}</a>
+						</td>
+						<td>
+							<c:if test="${fn:length(taskHolder.task.attachments) > 0}">
+								<c:forEach items="${taskHolder.task.attachments}" var="attachment" varStatus="index">
+									<a href="${attachment.payloadURL}" onClick="window.open('${attachment.payloadURL}', 'newwindow'); return false;"><img height="15" width="15" src="http://www.slcc.edu/shared/shared_vcampus/images/icons/mail.jpg"/></a>
+								</c:forEach>
+							</c:if>							
 						</td>
 					</tr>
 				</c:forEach>

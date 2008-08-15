@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-* Copyright (c) 2005-2006 Intalio inc.
+* Copyright (c) 2005-2008 Intalio inc.
 *
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License v1.0
@@ -108,7 +108,7 @@
                                 <xsl:apply-templates select="@* | *"/>
 
                                 <!-- Declares the Init Task action -->
-                                <xforms:submission id="initSubmission" ref="instance('taskoutput')" validate="true"
+                                <xforms:submission id="initSubmission" ref="instance('taskoutput')" validate="false"
                                                    action="/formManager/init" method="post" replace="all">
 
                                     <xforms:toggle ev:event="xforms-submit" case="submit-wait"/>
@@ -161,7 +161,7 @@
                                         <xsl:apply-templates select="@*|*"/>
 
                                         <xhtml:div>
-                                            <xforms:submit submission="initSubmission">
+                                            <xforms:submit class="button" submission="initSubmission">
                                                 <xforms:label>Start process</xforms:label>
                                             </xforms:submit>
                                         </xhtml:div>
