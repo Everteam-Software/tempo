@@ -479,7 +479,6 @@ public class TMSServer implements ITMSServer {
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         try {
             Task[] result = dao.fetchAvailableTasks(credentials, Class.forName("org.intalio.tempo.workflow.task." + taskType), subQuery);
-            _logger.info("Number of workflow Tasks for user " + credentials.getUserID() + ":" + result.length);
             return result;
         } catch (Exception e) {
             _logger.error("Error while tasks list retrieval for user " + credentials.getUserID(), e);
