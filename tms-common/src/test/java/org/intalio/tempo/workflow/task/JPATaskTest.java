@@ -80,12 +80,12 @@ public class JPATaskTest {
     public void notificationOneRolePersist() throws Exception {
         Notification task1 = null, task2 = null;
 
-        task1 = new Notification(getUniqueTaskID(), new URI("http://hellonico.net"));
+        task1 = new Notification(getUniqueTaskID(), new URI("http://hellonico.net"), getXmlSampleDocument());
         task1.getRoleOwners().add("intalio\\manager");
         persist(task1);
 
-        Query q = em.createNamedQuery(Task.FIND_BY_ROLE).setParameter(1, "intalio\\manager");
-        task2 = (Notification) q.getSingleResult();
+        final TaskFetcher taskFetcher = new TaskFetcher(em);
+        task2 = (Notification) taskFetcher.fetchTasksForRole("intalio\\manager")[0];
         TaskEquality.isEqual(task1, task2);
 
         checkRemoved(task2);

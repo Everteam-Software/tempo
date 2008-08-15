@@ -16,6 +16,7 @@ package org.intalio.tempo.workflow.task;
 
 import java.net.URI;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
@@ -34,11 +35,8 @@ import org.w3c.dom.Document;
  */
 @Entity
 @Table(name = "tempo_notification")
-
 public class Notification extends Task implements ITaskWithState, ITaskWithInput, ITaskWithPriority {
 
-  public static final String FIND_BY_NOTI_USER_ROLE = "find_by_noti_user_role";
-  
     @Column(name = "state")
     @Persistent
     private TaskState _state = TaskState.READY;
@@ -51,7 +49,8 @@ public class Notification extends Task implements ITaskWithState, ITaskWithInput
     @Persistent
     private String _failureReason;
 
-    @Column(name = "input_xml")
+    @Persistent(cascade = CascadeType.ALL)
+    @Column(name = "input_xml", length = 2048)
     @Lob
     private String _input;
 
