@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!--
 * Copyright (c) 2005-2006 Intalio inc.
 *
@@ -388,8 +387,7 @@
                                     <!-- Display the form and adds task action controls-->
                                     <xforms:case id="viewTask" selected="true">
 
-                                        <xforms:trigger appearance="xxforms:image"
-                                                        style="position : absolute; top : 1; left : 10">
+                                        <xforms:trigger appearance="xxforms:image" style="float: top">
                                             <xforms:label>Show/refresh attachments</xforms:label>
                                             <xxforms:img src="/images/attachments.gif"/>
                                             <xforms:action ev:event="DOMActivate">
@@ -399,13 +397,11 @@
                                             </xforms:action>
                                         </xforms:trigger>
 
-                                        <xforms:group ref="instance('taskAttachments')" style="width : 97%; border-color: #CCCCCC; position : static; top : 0; left : 10; ">
+                                        <xforms:group ref="instance('taskAttachments')" style="width : 97%; border-color: #CCCCCC; float: top">
                                                 <xforms:trigger appearance="xxforms:image" style="float: right">
                                                     <xforms:label>Close attachments</xforms:label>
                                                     <xxforms:img src="/images/close.png"/>
-                                                    <xforms:setvalue ev:event="DOMActivate"
-                                                                     ref="instance('taskAttachments')/action"
-                                                                     value="'hide'"/>
+                                                    <xforms:setvalue ev:event="DOMActivate" ref="instance('taskAttachments')/action" value="'hide'"/>
                                                 </xforms:trigger>
                                                 <xhtml:table
                                                         style="width: 100%; cell-padding: 4px; cell-spacing: 0px; border-collapse: collapse;"
@@ -487,8 +483,7 @@
                                                     <xhtml:tr>
                                                         <xhtml:td
                                                                 style="border-width: 0px; border-collapse: collapse;text-align: center">
-                                                            <xforms:trigger ref="new/file/@attachFile"
-                                                                            appearance="xxforms:image">
+                                                            <xforms:trigger ref="new/file/@attachFile" appearance="xxforms:image">
                                                                 <xforms:label>click to attach file</xforms:label>
                                                                 <xxforms:img src="/images/add.gif"/>
                                                                 <xforms:action ev:event="DOMActivate"
