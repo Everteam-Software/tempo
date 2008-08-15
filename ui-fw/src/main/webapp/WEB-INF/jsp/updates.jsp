@@ -26,7 +26,14 @@
 							</c:otherwise>
 						</c:choose>
 						<td>
-							<a href="${taskFullURL}" target="taskform">${taskHolder.task.state.name}</a>
+							<a href="${taskFullURL}" target="taskform">
+							<c:if test="${(taskHolder.task.state.name) == 'READY'}">
+								<img height="15" width="15" src="images/ledblue.png"/>
+							</c:if>
+							<c:if test="${(taskHolder.task.state.name) == 'CLAIMED'}">
+								<img height="15" width="15" src="images/lock.png"/>
+							</c:if>
+							</a>
 						</td>
 						<td>
 							<a href="${taskFullURL}" target="taskform">${taskHolder.task.description}</a>

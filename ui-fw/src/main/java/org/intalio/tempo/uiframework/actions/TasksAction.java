@@ -60,9 +60,9 @@ public class TasksAction extends Action {
             final String endpoint = URIUtils.resolveURI(_request, conf.getServiceEndpoint());
             final ITaskManagementService taskManager = new RemoteTMSFactory(endpoint, token).getService();
 
-            collectTasks(token, user, fmanager, taskManager, "Notification", "T._state != TaskState.COMPLETED ORDER BY T._creationDate", _notifications);
+            collectTasks(token, user, fmanager, taskManager, "Notification", "NOT T._state = TaskState.COMPLETED ORDER BY T._creationDate", _notifications);
             collectTasks(token, user, fmanager, taskManager, "PIPATask", "ORDER BY T._creationDate", _initTasks);
-            collectTasks(token, user, fmanager, taskManager, "PATask", "T._state != TaskState.COMPLETED ORDER BY T._creationDate", _activityTasks); 
+            collectTasks(token, user, fmanager, taskManager, "PATask", "NOT T._state = TaskState.COMPLETED ORDER BY T._creationDate", _activityTasks); 
 
             if (_log.isDebugEnabled()) {
                 _log.debug("(" + _notifications.size() + ") notifications, (" + _initTasks.size() + ") init tasks, (" + _activityTasks.size()
