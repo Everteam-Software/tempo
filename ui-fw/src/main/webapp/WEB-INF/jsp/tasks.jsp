@@ -45,14 +45,12 @@
 
 			updateTable = function(tbody, data, data1, icons) {
 			    var newdata = $('<div/>').html(data).find(data1).html();
-			    if(icons) {
-				   if($(tbody).html().length < newdata.length) {
-			       if(tbody == "#pabody") {image_notification('images/task.png');}
-				   if(tbody == "#notifbody") {image_notification('http://www.neille.com/test/images/notification-icon.gif');}
-				}
-	     		} 
-				if($(tbody).html().length != newdata.length) {
+				if($(tbody).html() != newdata) {
 					$(tbody).html(newdata);
+					if(icons) {
+				       if(tbody == "#pabody") {image_notification('images/task.png');}
+					   if(tbody == "#notifbody") {image_notification('images/notification-icon.gif');}
+		     		}
 				}
 			}
 			
@@ -62,11 +60,11 @@
 			
 			function getTasks( icons ) {
 			$.ajax({
-			    url: 'updates.htm?update=true',
+			    url: 'updates.htm?update=true&amp;data='+new Date(),
 			    type: 'POST',
 			    timeout: 5000,
 			    error: function(xml){
-			        image_notification('http://www.clker.com/cliparts/7/d/b/0/11954453151817762013molumen_red_square_error_warning_icon.svg.med.png');
+			        image_notification('images/error.png');
 			    },
 			    success: function(data){
 				    updateTable("#pabody", data, "#padata",icons);
@@ -98,7 +96,6 @@
 			var timeout = <c:out value="${refreshTime}"/> * 1000;
 			if(timeout < 1000) timeout = 1000;
 			$.timer(timeout, update);
-
 			});
 		</script>
 
