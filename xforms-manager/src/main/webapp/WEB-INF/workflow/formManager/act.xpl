@@ -167,7 +167,27 @@
                                         <xsl:attribute name="user">
                                             <xsl:value-of select="doc('input:xpl-input')/task/user"/>
                                         </xsl:attribute>
-                                        <attachment/>
+
+						                <xsl:for-each select="doc('input:getTaskResponse')//tms:attachments/tms:attachment">
+						                    <attachment>
+						                        <mime-type>
+						                            <xsl:value-of select="tms:attachmentMetadata/tms:mimeType"/>
+						                        </mime-type>
+						                        <title>
+						                            <xsl:value-of select="tms:attachmentMetadata/tms:title"/>
+						                        </title>
+						                        <hint>
+						                            <xsl:value-of select="tms:attachmentMetadata/tms:description"/>
+						                        </hint>
+						                        <create-date>
+						                            <xsl:value-of select="tms:attachmentMetadata/tms:creationDate"/>
+						                        </create-date>
+						                        <url>
+						                            <xsl:value-of select="tms:payloadUrl"/>
+						                        </url>
+						                    </attachment>
+						                </xsl:for-each>                                        
+
                                         <new title="" content="file">
                                             <file filename="" mediatype="" size="" attachFile=""/>
                                             <plaintext attachText="">type your text here</plaintext>
@@ -310,7 +330,7 @@
                             </xsl:copy>
                         </xsl:template>
 
-
+						
 						<!-- Copy the input of the task while preserving some input that was coded in the form -->
 						<xsl:template match="xforms:instance[@id = 'taskinput']/*:input">
 							<xsl:variable name="xinput" select="."/>
@@ -377,11 +397,12 @@
                         <!-- Adds the controls for Task Actions and handle the logic -->
                         <xsl:template match="xhtml:body">
                             <xsl:copy>
-
+	
                                 <!-- display the proper page -->
                                 <xforms:switch>
                                     <!-- Display the form and adds task action controls-->
                                     <xforms:case id="viewTask" selected="true">
+	
                                         <xforms:trigger appearance="xxforms:image" style="float: top">
                                             <xforms:label>Show/refresh attachments</xforms:label>
                                             <xxforms:img src="/images/attachments.gif"/>
@@ -482,9 +503,7 @@
                                                                 <xxforms:img src="/images/add.gif"/>
                                                                 <xforms:action ev:event="DOMActivate"
                                                                                xforms:if="not(string-length(normalize-space(instance('taskAttachments')/new/@title)) = 0)">
-                                                                    <xforms:setvalue
-                                                                            ref="instance('taskAttachments')/action"
-                                                                            value="'new'"/>
+                                                                    <xforms:setvalue ref="instance('taskAttachments')/action" value="'new'"/>
                                                                     <xforms:recalculate/>
                                                                     <xforms:insert
                                                                             nodeset="instance('taskAttachments')/action"
