@@ -17,11 +17,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.BaseRestrictedEntity;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.attachments.Attachment;

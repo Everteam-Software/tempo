@@ -4,7 +4,7 @@ module Buildr
   module XMLBeans
 
     STAX = "stax:stax-api:jar:1.0"
-    XMLBEANS = "org.apache.xmlbeans:xmlbeans:jar:2.3.0"
+    XMLBEANS = "org.apache.xmlbeans:xmlbeans:jar:2.4.0"
     REQUIRES = [ STAX, XMLBEANS ]
 
     class << self

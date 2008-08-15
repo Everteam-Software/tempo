@@ -1,4 +1,4 @@
-gem "buildr", "=1.2.10"
+gem "buildr"
 
 require "rubygems"
 require "buildr"

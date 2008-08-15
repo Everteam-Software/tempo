@@ -131,10 +131,8 @@ XERCES = [
   "xerces:xercesImpl:jar:2.9.1",
   "xerces:xmlParserAPIs:jar:2.9.0" ]
 
-XMLBEANS = [
-  "xmlbeans:xbean:jar:2.3.0",
-  "xmlbeans:xbean_xpath:jar:2.3.0",
-  "xmlbeans:xmlpublic:jar:2.3.0" ]
+#XMLBEANS = group("xbean", "xbean_xpath", "xmlpublic", "xmlbeans-qname", :under => "xmlbeans", :version =>"2.4.0")
+XMLBEANS = "org.apache.xmlbeans:xmlbeans:jar:2.4.0"
 
 XMLUNIT = ["xmlunit:xmlunit:jar:1.1"]
 

@@ -13,6 +13,10 @@
 		<priority value="DEBUG"/>
 	</category> 	
 	
+	<category name="org.intalio.tempo.workflow.util">
+		<priority value="WARN"/>
+	</category>
+	
 	<root>
 		<priority value="DEBUG" />
 		<appender-ref ref="console" />

@@ -19,11 +19,9 @@ import java.net.URI;
 import java.util.Calendar;
 import java.util.Date;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.apache.axiom.om.OMElement;
-import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.Notification;
 import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.PIPATask;
