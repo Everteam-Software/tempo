@@ -5,6 +5,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Date;
 import java.util.Properties;
+import java.util.List;
+import java.util.ArrayList;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -40,10 +42,10 @@ public class JPATaskTest {
     public static junit.framework.Test suite() {
         return new JUnit4TestAdapter(JPATaskTest.class);
     }
-    
+
     private synchronized String getUniqueTaskID() {
-        uniqueID ++;
-        return "id_"+uniqueID;
+        uniqueID++;
+        return "id_" + uniqueID;
     }
 
     @Before
@@ -77,6 +79,21 @@ public class JPATaskTest {
     }
 
     @Test
+    public void faultyQueryWithOpenJPA1_2() throws Exception {
+
+        String user = "niko";
+        List<String> params = new ArrayList<String>();
+        params.add(user);
+
+        Task task1 = new Notification(getUniqueTaskID(), new URI("http://hellonico.net"), getXmlSampleDocument());
+        task1.getUserOwners().add(user);
+        persist(task1);
+        em.clear(); // <--- this was causing problems as getSingleResult is optimized in openjpa12 and clear the entity manager somehow
+        final TaskFetcher taskFetcher = new TaskFetcher(em);
+        Notification task3 = (Notification) taskFetcher.fetchTaskIfExists(task1.getID());
+    }
+
+    @Test
     public void notificationOneRolePersist() throws Exception {
         Notification task1 = null, task2 = null;
 
@@ -90,8 +107,8 @@ public class JPATaskTest {
 
         checkRemoved(task2);
     }
-    
-    @Test 
+
+    @Test
     public void notificationOneUserPersiste() throws Exception {
         Notification task1 = null, task2 = null;
 
@@ -215,14 +232,14 @@ public class JPATaskTest {
 
         checkRemoved(task2);
     }
-    
+
     @Test
     public void PAWithInputOutput() throws Exception {
         PATask task2;
         PATask task1 = new PATask(getUniqueTaskID(), new URI("http://hellonico.net"), "processId", "soap", getXmlSampleDocument());
         task1.setInput(xml.getXmlDocument("/pa_input.xml"));
         task1.setOutput(xml.getXmlDocument("/pa_output.xml"));
-        
+
         task1.getUserOwners().add("intalio\\admin");
         persist(task1);
 
@@ -232,7 +249,7 @@ public class JPATaskTest {
         TaskEquality.isEqual(task1, task2);
 
         checkRemoved(task2);
-        
+
     }
 
     @Test
@@ -311,7 +328,7 @@ public class JPATaskTest {
         task1.getUserOwners().add("user1");
         return task1;
     }
-    
+
     @Test
     public void testFetchWithCriteriaAndOrder() throws Exception {
         PATask task1 = getSampleTask(TaskState.READY);
@@ -319,7 +336,7 @@ public class JPATaskTest {
         PATask task2 = getSampleTask(TaskState.CLAIMED);
         task2.setDescription("Arting with a A");
         PATask task3 = getSampleTask(TaskState.FAILED);
-        
+
         persist(task1);
         persist(task2);
         persist(task3);
@@ -328,13 +345,13 @@ public class JPATaskTest {
         Task[] tasks = testFetchForUserRolesWithCriteria("user1", new String[] { "role1" }, PATask.class, PA_QUERY_READY_OR_CLAIMED_ORDERED, 2);
         // this way we can confirm the tasks are ordered
         Assert.assertTrue(tasks[0].getDescription().startsWith("A"));
-        
+
         // check the query is working for other tasks as well
         String QUERY_READY_OR_CLAIMED_ORDERED = "ORDER BY t._creationDate ASC";
         testFetchForUserRolesWithCriteria("user1", new String[] { "role1" }, Task.class, QUERY_READY_OR_CLAIMED_ORDERED, 3);
-        testFetchForUserRolesWithCriteria("user1", new String[] { "role1" }, Class.forName("org.intalio.tempo.workflow.task.Task"), QUERY_READY_OR_CLAIMED_ORDERED, 3);
-        
-        
+        testFetchForUserRolesWithCriteria("user1", new String[] { "role1" }, Class.forName("org.intalio.tempo.workflow.task.Task"),
+                        QUERY_READY_OR_CLAIMED_ORDERED, 3);
+
         checkRemoved(task1);
         checkRemoved(task2);
         checkRemoved(task3);

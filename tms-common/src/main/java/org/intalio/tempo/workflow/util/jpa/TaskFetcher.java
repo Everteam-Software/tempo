@@ -8,6 +8,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.openjpa.kernel.QueryImpl;
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
@@ -47,7 +48,7 @@ public class TaskFetcher {
     public Task fetchTaskIfExists(String taskID) throws UnavailableTaskException {
         try {
             Query q = find_by_id.setParameter(1, taskID);
-            return (Task) q.getSingleResult();
+            return (Task) q.getResultList().get(0);
         } catch (NoResultException nre) {
             throw new UnavailableTaskException("Task does not exist" + taskID);
         }
@@ -64,7 +65,7 @@ public class TaskFetcher {
      */
     public PIPATask fetchPipaFromUrl(String formUrl) {
         Query q = _entityManager.createNamedQuery(PIPATask.FIND_BY_URL).setParameter(1, "%" + formUrl);
-        return (PIPATask) q.getSingleResult();
+        return (PIPATask) q.getResultList().get(0);
     }
 
     /**
@@ -93,7 +94,8 @@ public class TaskFetcher {
         } else {
             StringBuffer buffer = new StringBuffer();
             buffer.append(QUERY_GENERIC1).append(taskClass.getSimpleName()).append(QUERY_GENERIC2);
-            if(!subQuery.startsWith("ORDER"))  buffer.append(" and ");
+            if (!subQuery.startsWith("ORDER"))
+                buffer.append(" and ");
             buffer.append(subQuery);
             q = _entityManager.createQuery(buffer.toString()).setParameter(1, userIdList).setParameter(2, user.getAssignedRoles());
         }
