@@ -17,7 +17,7 @@ require "rsc/buildr-tasks/generate_sql"
 
 # revert to buildr tasks when we can use buildr 1.3
 # require "tasks/easyb"
-# require "buildr/cobertura"
+require "buildr/cobertura"
 
 desc "Tempo Workflow"
 define "tempo" do
