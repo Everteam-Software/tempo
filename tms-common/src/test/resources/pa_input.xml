@@ -1,0 +1,7 @@
+<input xmlns="http://example.com/Form1/xform"
+	xmlns:Form1="http://example.com/Form1/xform"
+	xmlns:tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+	\n
+	<input0 />
+	\n
+</input>

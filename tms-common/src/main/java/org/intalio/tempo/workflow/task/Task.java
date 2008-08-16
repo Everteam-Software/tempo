@@ -44,9 +44,9 @@ import org.intalio.tempo.workflow.util.RequiredArgumentException;
 @Table(name = "tempo_task")
 @Inheritance(strategy = InheritanceType.JOINED)
 @NamedQueries( { @NamedQuery(name = Task.FIND_BY_ID, query = "select m from Task m where m._id=?1", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }),
-                 @NamedQuery(name = Task.FIND_BY_ROLE_USER, query = "select m from Task m where m._userOwners in (?1) or m._roleOwners in (?2)", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }),
-                 @NamedQuery(name = Task.FIND_BY_USER, query = "select m from Task m where m._userOwners in (?1)", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }),
-                 @NamedQuery(name = Task.FIND_BY_ROLE, query = "select m from Task m where m._roleOwners in (?1)", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") })
+                 @NamedQuery(name = Task.FIND_BY_ROLE_USER, query = "select m from Task m where m._userOwners in (?1) or m._roleOwners in (?2)"),
+                 @NamedQuery(name = Task.FIND_BY_USER, query = "select m from Task m where m._userOwners in (?1)"),
+                 @NamedQuery(name = Task.FIND_BY_ROLE, query = "select m from Task m where m._roleOwners in (?1)")
   })
 public abstract class Task extends BaseRestrictedEntity {
 

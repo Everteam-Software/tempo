@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<output xmlns="http://example.com/Form1/xform"
+	xmlns:f="http://orbeon.org/oxf/xml/formatting"
+	xmlns:fe="http://example.com/Form1/xform"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
+	participantToken="VE9LRU4mJnVzZXI9PWludGFsaW9cYWRtaW4mJmlzc3VlZD09MTIxODczMjk3Mjg1OSYmcm9sZXM9PWV4YW1wbGVzXG1hbmFnZXIsZXhhbXBsZXNcZW1wbG95ZWUsaW50YWxpb1xwcm9jZXNzYWRtaW5pc3RyYXRvcixpbnRhbGlvXHByb2Nlc3NtYW5hZ2VyJiZmdWxsTmFtZT09QWRtaW5pbmlzdHJhdG9yJiZlbWFpbD09YWRtaW5AZXhhbXBsZS5jb20mJm5vbmNlPT0tMzY5ODYyNDUzMTE5ODcxMjEwOCYmdGltZXN0YW1wPT0xMjE4NzMyOTcyODU5JiZkaWdlc3Q9PVVuMzA1SGJiK0VYRjQwWFJFZ2dVWE4xTU9abz0mJiYmVE9LRU4"
+	taskId="0f2dad1e103331b9:48a28180:11bc869281b:-7fca192.168.1.138163841"
+	user="intalio\admin">
+	<input0 />
+</output>

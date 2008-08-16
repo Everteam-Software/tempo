@@ -90,6 +90,21 @@ public class JPATaskTest {
 
         checkRemoved(task2);
     }
+    
+    @Test 
+    public void notificationOneUserPersiste() throws Exception {
+        Notification task1 = null, task2 = null;
+
+        task1 = new Notification(getUniqueTaskID(), new URI("http://hellonico.net"), getXmlSampleDocument());
+        task1.getUserOwners().add("intalio\\admin");
+        persist(task1);
+
+        final TaskFetcher taskFetcher = new TaskFetcher(em);
+        task2 = (Notification) taskFetcher.fetchTasksForUser("intalio\\admin")[0];
+        TaskEquality.isEqual(task1, task2);
+
+        checkRemoved(task2);
+    }
 
     private void checkRemoved(Task task2) {
         checkRemoved(task2.getID());
@@ -199,6 +214,24 @@ public class JPATaskTest {
         TaskEquality.areTasksEquals(task1, task2);
 
         checkRemoved(task2);
+    }
+    
+    @Test
+    public void PAWithInputOutput() throws Exception {
+        PATask task2;
+        PATask task1 = new PATask(getUniqueTaskID(), new URI("http://hellonico.net"), "processId", "soap", getXmlSampleDocument());
+        task1.setInput(xml.getXmlDocument("/pa_input.xml"));
+        task1.setOutput(xml.getXmlDocument("/pa_output.xml"));
+        
+        task1.getUserOwners().add("intalio\\admin");
+        persist(task1);
+
+        final TaskFetcher taskFetcher = new TaskFetcher(em);
+        task2 = (PATask) taskFetcher.fetchTasksForUser("intalio\\admin")[0];
+        TaskEquality.isEqual(task1, task2);
+
+        checkRemoved(task2);
+        
     }
 
     @Test
@@ -353,7 +386,7 @@ public class JPATaskTest {
     }
 
     private Document getXmlSampleDocument() throws Exception {
-        return xml.getXmlDocument("/employees.xml");
+        return xml.getXmlDocument("/inputWithNamespace.xml");
     }
 
 }
