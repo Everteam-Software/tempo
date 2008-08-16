@@ -29,19 +29,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class URIUtils {
+    private static final String LOCALHOST_LOCAL = "hostname.intalio";
     static Logger _log = LoggerFactory.getLogger(URIUtils.class);
 
     public static String resolveURI(HttpServletRequest request, String endpoint) {
+        return resolveURI(request.getScheme(), request.getServerName(), request.getServerPort(), endpoint);
+    }
+
+    public static String resolveURI(String scheme, String serverName, int serverPort, String endpoint) {
         try {
             URI uri = new URI(endpoint);
             if (!uri.isAbsolute()) {
-                uri = new URI(request.getScheme(), null, request.getServerName(), request.getServerPort(), null, null, null).resolve(uri);
+                uri = new URI(scheme, null, LOCALHOST_LOCAL, serverPort, null, null, null).resolve(uri);
             }
-            return uri.toString();
+            return uri.toString().replaceAll(LOCALHOST_LOCAL, serverName);
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     public static String getFormURLForTask(FormManager fm, Task t, String ticket, String user) {
