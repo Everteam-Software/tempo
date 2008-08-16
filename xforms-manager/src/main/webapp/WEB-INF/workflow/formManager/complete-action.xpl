@@ -205,35 +205,67 @@
 		<p:input name="call" href="#completeTaskInput"/>
 		<p:output name="data" id="completeResponse"/>
 	</p:processor>
-
+	
 	<p:processor name="oxf:exception-catcher">
-		<p:input name="data" href="#completeResponse"/>
-		<p:output name="data" id="ws_call_output"/>
-	</p:processor>
+        <p:input name="data" href="#completeResponse"/>
+        <p:output name="data" id="ws_call_output"/>
+    </p:processor>
 
-	<p:choose href="#ws_call_output">
-		<p:when test="/exceptions">
-			<p:processor name="oxf:pipeline">
-				<p:input name="config" href="exception-handler.xpl"/>
-				<p:input name="data" href="#ws_call_output"/>
-				<p:input name="ws-request" href="#completeTaskInput"/>
-				<p:input name="header">
-					<b>Complete Task</b>
-				</p:input>
-				<p:output name="data" ref="data"/>
-			</p:processor>
-		</p:when>
-		<p:otherwise>
-			<p:processor name="oxf:identity">
-				<p:input name="data" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-					<xhtml:html>
-						<xhtml:body onLoad="parent.window.hideWindow();">
-							<xhtml:center>Complete</xhtml:center>
-						</xhtml:body>
-					</xhtml:html>
-				</p:input>
-				<p:output name="data" ref="data"/>
-			</p:processor>
-		</p:otherwise>
-	</p:choose>
+    <p:choose href="#ws_call_output">
+        <p:when test="/exceptions">
+            <p:processor name="oxf:pipeline">
+                <p:input name="config" href="exception-handler.xpl"/>
+                <p:input name="data" href="#ws_call_output"/>
+                <p:input name="ws-request" href="#completeTaskInput"/>
+                <p:input name="header">
+                    <b>Complete Task Failed</b>
+                </p:input>
+                <p:output name="data" ref="data"/>
+            </p:processor>
+        </p:when>
+        <p:otherwise>
+            <p:choose href="#completeResponse">
+                <p:when test="string-length(normalize-space(//b4p:nextTaskId))">
+                    <p:processor name="oxf:xslt">
+                        <p:input name="data" href="#instance2"/>
+                        <p:input name="completeResponse" href="#completeResponse"/>
+                        <p:input name="config">
+                            <task xsl:version="2.0">
+                                <id>
+                                    <xsl:value-of select="doc('input:completeResponse')//b4p:nextTaskId"/>
+                                </id>
+                                <url>
+                                    <xsl:value-of select="doc('input:completeResponse')//b4p:nextTaskURL"/>
+                                </url>
+                                <token>
+                                    <xsl:value-of select="/*:output/@participantToken"/>
+                                </token>
+                                <user>
+                                    <xsl:value-of select="/*:output/@user"/>
+                                </user>
+                            </task>
+                        </p:input>
+                        <p:output name="data" id="nextShownTask"/>
+                    </p:processor>
+					<p:processor name="oxf:pipeline">
+						<p:input name="config" href="act.xpl"/>
+						<p:input name="data" href="#nextShownTask"/>
+						<p:output name="data" ref="data"/>
+					</p:processor>
+                </p:when>
+                <p:otherwise>
+                    <p:processor name="oxf:identity">
+						<p:input name="data" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+							<xhtml:html>
+								<xhtml:body onLoad="parent.window.hideWindow();">
+									<xhtml:center>Complete</xhtml:center>
+								</xhtml:body>
+							</xhtml:html>
+						</p:input>
+						<p:output name="data" ref="data"/>
+					</p:processor>
+                </p:otherwise>
+            </p:choose>
+        </p:otherwise>
+    </p:choose>
 </p:config>

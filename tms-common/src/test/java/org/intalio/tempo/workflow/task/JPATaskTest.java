@@ -227,7 +227,8 @@ public class JPATaskTest {
         persist(task1);
 
         final TaskFetcher taskFetcher = new TaskFetcher(em);
-        task2 = (PATask) taskFetcher.fetchTasksForUser("intalio\\admin")[0];
+        final UserRoles user = new UserRoles("intalio\\admin", new String[] { "examples\\manager", "examples\\employee" });
+        task2 = (PATask) taskFetcher.fetchAllAvailableTasks(user)[0];
         TaskEquality.isEqual(task1, task2);
 
         checkRemoved(task2);
