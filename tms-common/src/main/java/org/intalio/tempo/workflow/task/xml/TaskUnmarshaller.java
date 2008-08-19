@@ -124,14 +124,14 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
 
         String formURLStr = taskMetadata.getFormUrl();
         URI formURL = null;
-        try {
-            if (formURLStr != null) {
+        if (formURLStr != null) {
+            try {
                 formURL = new URI(formURLStr);
-            } else {
-                throw new InvalidInputFormatException("No formURL specified");
+            } catch (URISyntaxException e) {
+                throw new InvalidInputFormatException(e);
             }
-        } catch (URISyntaxException e) {
-            throw new InvalidInputFormatException(e);
+        } else {
+            throw new InvalidInputFormatException("No URL found for form");
         }
 
         String failureCode = taskMetadata.getFailureCode();

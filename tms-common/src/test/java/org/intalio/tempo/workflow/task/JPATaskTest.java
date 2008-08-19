@@ -91,6 +91,21 @@ public class JPATaskTest {
         em.clear(); // <--- this was causing problems as getSingleResult is optimized in openjpa12 and clear the entity manager somehow
         final TaskFetcher taskFetcher = new TaskFetcher(em);
         Notification task3 = (Notification) taskFetcher.fetchTaskIfExists(task1.getID());
+        
+        checkRemoved(task1);
+    }
+    
+    @Test
+    public void checkForDoubles() throws Exception {
+        Task task1 = new Notification(getUniqueTaskID(), new URI("http://hellonico.net"), getXmlSampleDocument());
+        task1.getRoleOwners().add("examples\\employee");
+        task1.getRoleOwners().add("examples\\manager");
+        persist(task1);
+        
+        final TaskFetcher taskFetcher = new TaskFetcher(em);
+        UserRoles ur = new UserRoles("niko", new String[] {"examples\\employee", "examples\\manager" });
+        Task[] list = taskFetcher.fetchAllAvailableTasks(ur);
+        Assert.assertEquals(1, list.length);
     }
 
     @Test
