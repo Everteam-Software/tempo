@@ -14,6 +14,7 @@ package org.intalio.tempo.workflow.tms.server;
 
 import java.net.URL;
 
+import org.apache.axis2.AxisFault;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.PIPATask;
@@ -35,7 +36,7 @@ public interface ITMSServer {
 
     PIPATask getPipa(String formUrl, String participantToken) throws TMSException;
 
-    Document initProcess(String taskID, Document input, String participantToken) throws TMSException;
+    Document initProcess(String taskID, Document input, String participantToken) throws TMSException, AxisFault;
 
     Attachment[] getAttachments(String taskID, String participantToken) throws TMSException;
 

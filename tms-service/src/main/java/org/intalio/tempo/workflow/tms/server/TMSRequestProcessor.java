@@ -67,7 +67,7 @@ public class TMSRequestProcessor extends OMUnmarshaller {
         if (_registerPipa != null) {
             _registerPipa.destroy();
         }
-        _logger.debug("TMSRequestProcessor.setServer:"+server.getClass().getSimpleName());
+        _logger.debug("TMSRequestProcessor.setServer:" + server.getClass().getSimpleName());
         _server = server;
         _pipa = new PIPAComponentManager(_server);
         _registerPipa = new DeploymentServiceRegister(_pipa);
@@ -147,7 +147,10 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             List<String> taskIDs = new ArrayList<String>();
             while (true) {
                 String taskID = expectElementValue(rootQueue, "taskId");
-                if (taskID != null) taskIDs.add(taskID); else break;
+                if (taskID != null)
+                    taskIDs.add(taskID);
+                else
+                    break;
             }
             if (taskIDs.isEmpty()) {
                 throw new InvalidInputFormatException("At least one taskId element must be present");
@@ -245,6 +248,8 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             }
             String participantToken = requireElementValue(rootQueue, "participantToken");
             Document userProcessResponse = _server.initProcess(taskID, domInput, participantToken);
+            if (userProcessResponse == null)
+                throw new RuntimeException("TMP did not return a correct message while calling init");
             OMElement response = new TMSResponseMarshaller(OM_FACTORY) {
                 public OMElement marshalResponse(Document userProcessResponse) {
                     OMElement response = createElement("initProcessResponse");
@@ -403,13 +408,19 @@ public class TMSRequestProcessor extends OMUnmarshaller {
 
     private AxisFault makeFault(Exception e) {
         if (e instanceof TMSException) {
-            if(_logger.isDebugEnabled()) _logger.debug(e.getMessage(), e);
+            if (_logger.isDebugEnabled())
+                _logger.debug(e.getMessage(), e);
             OMElement response = null;
-            if (e instanceof InvalidInputFormatException) response = OM_FACTORY.createOMElement(TMSConstants.INVALID_INPUT_FORMAT);
-            else if (e instanceof AccessDeniedException) response = OM_FACTORY.createOMElement(TMSConstants.ACCESS_DENIED);
-            else if (e instanceof UnavailableTaskException) response = OM_FACTORY.createOMElement(TMSConstants.UNAVAILABLE_TASK);
-            else if (e instanceof UnavailableAttachmentException) response = OM_FACTORY.createOMElement(TMSConstants.UNAVAILABLE_ATTACHMENT);
-            else if (e instanceof AuthException) response = OM_FACTORY.createOMElement(TMSConstants.INVALID_TOKEN);
+            if (e instanceof InvalidInputFormatException)
+                response = OM_FACTORY.createOMElement(TMSConstants.INVALID_INPUT_FORMAT);
+            else if (e instanceof AccessDeniedException)
+                response = OM_FACTORY.createOMElement(TMSConstants.ACCESS_DENIED);
+            else if (e instanceof UnavailableTaskException)
+                response = OM_FACTORY.createOMElement(TMSConstants.UNAVAILABLE_TASK);
+            else if (e instanceof UnavailableAttachmentException)
+                response = OM_FACTORY.createOMElement(TMSConstants.UNAVAILABLE_ATTACHMENT);
+            else if (e instanceof AuthException)
+                response = OM_FACTORY.createOMElement(TMSConstants.INVALID_TOKEN);
 
             else
                 return AxisFault.makeFault(e);
@@ -418,6 +429,10 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             AxisFault axisFault = new AxisFault(e.getMessage(), e);
             axisFault.setDetail(response);
             return axisFault;
+        }
+        else if (e instanceof AxisFault) {
+            _logger.error(e.getMessage(), e);
+            return (AxisFault) e;
         } else {
             _logger.error(e.getMessage(), e);
             return AxisFault.makeFault(e);
