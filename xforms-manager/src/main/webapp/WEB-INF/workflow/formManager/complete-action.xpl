@@ -223,6 +223,18 @@
                 <p:output name="data" ref="data"/>
             </p:processor>
         </p:when>
+		<p:when test="string-length(normalize-space(//faultstring))">
+			<p:processor name="oxf:identity">
+				<p:input name="data" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+					<xhtml:html>
+						<xhtml:body onLoad="parent.window.hideWindow();">
+							<xhtml:center>Failed</xhtml:center>
+						</xhtml:body>
+					</xhtml:html>
+				</p:input>
+				<p:output name="data" ref="data"/>
+			</p:processor>
+		</p:when>
         <p:otherwise>
             <p:choose href="#completeResponse">
                 <p:when test="string-length(normalize-space(//b4p:nextTaskId))">

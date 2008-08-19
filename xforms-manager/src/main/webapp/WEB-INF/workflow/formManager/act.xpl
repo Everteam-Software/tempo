@@ -236,7 +236,7 @@
                                              relevant="instance('taskAttachments')/action != 'hide'"/>
 
                                 <!-- Completed task shown as read-only fulfilled form -->
-                                <xsl:if test="doc('input:getTaskResponse')/tms:task//tms:taskState = 'COMPLETED'">
+                                <xsl:if test="doc('input:getTaskResponse')/tms:task/tms:taskState = 'COMPLETED'">
                                     <xforms:bind nodeset="instance('taskinput')" readonly="true()"/>
                                     <xforms:bind nodeset="instance('taskoutput')" readonly="true()"/>
                                 </xsl:if>

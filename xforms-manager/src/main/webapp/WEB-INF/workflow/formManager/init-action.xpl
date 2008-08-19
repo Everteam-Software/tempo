@@ -182,50 +182,61 @@
                 <p:output name="data" ref="data"/>
             </p:processor>
         </p:when>
+		<p:when test="string-length(normalize-space(//faultstring))">
+			<p:processor name="oxf:identity">
+				<p:input name="data" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+					<xhtml:html>
+						<xhtml:body onLoad="parent.window.hideWindow();">
+							<xhtml:center>Failed</xhtml:center>
+						</xhtml:body>
+					</xhtml:html>
+				</p:input>
+				<p:output name="data" ref="data"/>
+			</p:processor>
+		</p:when>
         <p:otherwise>
-    <p:choose href="#initOutput">
-        <p:when test="string-length(normalize-space(//*:nextTaskId))">
-            <p:processor name="oxf:xslt">
-                <p:input name="data" href="#instance2"/>
-                <p:input name="initResponse" href="#initOutput"/>
-                <p:input name="config">
-                    <task xsl:version="2.0">
-                        <id>
-                            <xsl:value-of select="doc('input:initResponse')//*:nextTaskId"/>
-                        </id>
-                        <url>
-                            <xsl:value-of select="doc('input:initResponse')//*:nextTaskURL"/>
-                        </url>
-                        <token>
-                            <xsl:value-of select="/*:output/@participantToken"/>
-                        </token>
-                        <user>
-                            <xsl:value-of select="/*:output/@user"/>
-                        </user>
-                    </task>
-                </p:input>
-                <p:output name="data" id="nextShownTask"/>
-            </p:processor>
-
-            <p:processor name="oxf:pipeline">
-                <p:input name="config" href="act.xpl"/>
-                <p:input name="data" href="#nextShownTask"/>
-                <p:output name="data" ref="data"/>
-            </p:processor>
-        </p:when>
-        <p:otherwise>
-            <p:processor name="oxf:identity">
-                <p:input name="data" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-                    <xhtml:html>
-                        <xhtml:body onLoad="parent.window.hideWindow();">
-                            <xhtml:center>The process successfully started.</xhtml:center>
-                        </xhtml:body>
-                    </xhtml:html>
-                </p:input>
-                <p:output name="data" ref="data"/>
-            </p:processor>
-        </p:otherwise>
-    </p:choose>
+    	  <p:choose href="#initOutput">
+		        <p:when test="string-length(normalize-space(//*:nextTaskId))">
+		            <p:processor name="oxf:xslt">
+		                <p:input name="data" href="#instance2"/>
+		                <p:input name="initResponse" href="#initOutput"/>
+		                <p:input name="config">
+		                    <task xsl:version="2.0">
+		                        <id>
+		                            <xsl:value-of select="doc('input:initResponse')//*:nextTaskId"/>
+		                        </id>
+		                        <url>
+		                            <xsl:value-of select="doc('input:initResponse')//*:nextTaskURL"/>
+		                        </url>
+		                        <token>
+		                            <xsl:value-of select="/*:output/@participantToken"/>
+		                        </token>
+		                        <user>
+		                            <xsl:value-of select="/*:output/@user"/>
+		                        </user>
+		                    </task>
+		                </p:input>
+		                <p:output name="data" id="nextShownTask"/>
+		            </p:processor>
+		            <p:processor name="oxf:pipeline">
+		                <p:input name="config" href="act.xpl"/>
+		                <p:input name="data" href="#nextShownTask"/>
+		                <p:output name="data" ref="data"/>
+		            </p:processor>
+		        </p:when>
+		        <p:otherwise>
+		            <p:processor name="oxf:identity">
+		                <p:input name="data" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+		                    <xhtml:html>
+		                        <xhtml:body onLoad="parent.window.hideWindow();">
+		                            <xhtml:center>The process successfully started.</xhtml:center>
+		                        </xhtml:body>
+		                    </xhtml:html>
+		                </p:input>
+		                <p:output name="data" ref="data"/>
+		            </p:processor>
+		        </p:otherwise>
+		    </p:choose>
 </p:otherwise>
 </p:choose>
 

@@ -53,15 +53,14 @@ div#intalio-bpms-form {
 }
 
 div#intalio-bpms-form .xforms-control {
-	
     font-family: Arial;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: normal;
 }
 
 div#intalio-bpms-form div label.xforms-label {
     font-family: Arial;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: normal;
 }
 

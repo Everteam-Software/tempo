@@ -44,16 +44,18 @@
 
                         <xsl:template match="/exceptions">
                             <xhtml:html>
+								<xhtml:head>
+									<xhtml:link type="text/css" rel="stylesheet" href="/config/errors.css"/>
+								</xhtml:head>
                                 <xhtml:body>
                                     <xhtml:center>
-                                        <xhtml:h1>Error when tried to request Web Service</xhtml:h1>
-                                        <xhtml:h2><xsl:copy-of select="doc('input:header')/*"/></xhtml:h2>
+                                        <xhtml:h1>Error when calling Web Service:<xsl:copy-of select="doc('input:header')/*"/></xhtml:h1>
                                     </xhtml:center>
                                         <xhtml:div>
                                             <xhtml:b>Delegation in XPL to Web-Service:</xhtml:b><xhtml:br/>
                                             <xsl:copy-of select="saxon:serialize(doc('input:ws-request'), 'ws-request-output')"/>
                                         </xhtml:div>
-                                    <xhtml:h3>Exception details:</xhtml:h3>
+                                    <xhtml:h1>Exception details:</xhtml:h1>
                                     <xhtml:p>
                                         <xsl:apply-templates select="*"/>
                                     </xhtml:p>
@@ -62,15 +64,12 @@
                         </xsl:template>
 
                         <xsl:template match="exception">
-                            <xhtml:h4>
+                            <xhtml:h3>
                                 <xsl:value-of select="type"/>
-                            </xhtml:h4>
-                            <xhtml:b><xhtml:u>Message:</xhtml:u></xhtml:b>
-                            <xhtml:h2>
-                                <xhtml:i>
+                            </xhtml:h3>
+                            <xhtml:h3>
                                     <xsl:value-of select="message"/>
-                                </xhtml:i>
-                            </xhtml:h2>
+                            </xhtml:h3>
                             <xhtml:p>
                                 <xsl:apply-templates select="location"/>
                                 <xsl:apply-templates select="stack-trace-elements"/>
