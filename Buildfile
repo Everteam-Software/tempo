@@ -310,6 +310,7 @@ define "tempo" do
            CASTOR,
            ICAL,
            INTALIO_STATS, 
+           JSON,
            JSON_NAGGIT,
            JSP_API, 
            JSTL,

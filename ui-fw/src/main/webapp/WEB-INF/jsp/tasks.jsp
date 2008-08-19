@@ -23,7 +23,6 @@
 		<link href="style.css" rel="stylesheet" type="text/css"/>
 		<link href="style/tabs.css" rel="stylesheet" type="text/css"/>
 
-		
 		<link rel="alternate" type="application/atom+xml" title="Personal Task feed" href="/feeds/atom/tasks?token=${participantToken}"/>
 		<link rel="alternate" type="application/atom+xml" title="Process feed" href="/feeds/atom/processes?token=${participantToken}"/>
 		
@@ -32,84 +31,9 @@
 		<script src="script/ui-fw.js" type="text/javascript"></script>
 		<script src="script/jtabber.js" type="text/javascript"></script>
 		<script src="script/jquery-filter.js"></script>
+		<script src="script/jquery-ui-fw.js" type="text/javascript"></script>
+		<script type="text/javascript">var timeout = <c:out value="${refreshTime}"/> * 1000;</script>
 		
-		<script type="text/javascript">
-			$(document).ready(function(){ 
-
- 			function image_notification( image ) {
-				$("#message").append("<img src='"+image+"' height='20' widht='20'/>");
-				$.timer(10000, function(timer){
-				   $("#message").html("");
-				   timer.stop();
-				});
-			}
-			
-			function filter() {
-			    $.uiTableFilter( $('.tasks'), $('#filter').val() );
-			}
-
-			updateTable = function(tbody, data, data1, icons) {
-			    var newdata = $('<div/>').html(data).find(data1).html();
-				if($(tbody).html() != newdata) {
-					$(tbody).html(newdata);
-					filter();
-					if(icons) {
-				       if(tbody == "#pabody") {image_notification('images/task.png');}
-					   if(tbody == "#notifbody") {image_notification('images/notification-icon.gif');}
-		     		}
-				}
-			}
-			
-			function clearFrame() {
-				window.open("about:blank", "taskform");
-			}
-			
-			function getTasks( icons ) {
-			$.ajax({
-			    url: 'updates.htm?update=true',
-			    type: 'POST',
-			    timeout: 5000,
-			    error: function(xml){
-			        image_notification('images/error.png');
-			    },
-			    success: function(data){
-				    updateTable("#pabody", data, "#padata",icons);
-				    updateTable("#notifbody", data, "#notifdata", icons);
-				    updateTable("#pipabody", data, "#pipadata", icons);
-			    }
-			});
-			
-			};
-			
-			$('#tabnav li a').click(function(){
-				clearFrame();
-				$('#filter').val("")
-				filter();
-			});
-			
-			$("#filter").keyup(function() {
-			    filter();
-			})
-			
-
-			$.jtabber({
-			mainLinkTag: "#container li a", 
-			activeLinkClass: "active", 
-			hiddenContentClass: "hiddencontent", 
-			showDefaultTab: 1, 
-			effect: 'fade', 
-			effectSpeed: 'slow' 
-			});
-
-            getTasks(false);
-			clearFrame();
-
-            function update() {getTasks(true);}
-			var timeout = <c:out value="${refreshTime}"/> * 1000;
-			if(timeout < 1000) timeout = 1000;
-			$.timer(timeout, update);
-			});
-		</script>
 	</head>
 	<body>
 		<table height="100%" width="100%">

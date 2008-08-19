@@ -31,7 +31,6 @@ public class JsonUpdate extends HttpServlet {
     private final Configuration conf = Configuration.getInstance();
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-
         response.setContentType("application/x-json");
         String token = request.getParameter("token");
         String userName = request.getParameter("user");

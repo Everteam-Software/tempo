@@ -269,7 +269,7 @@ CSV = "org.ostermiller:utils:jar:1.07.00"
 
 
 AXIS2 = [
-  group("axis2-kernel", "axis2-adb", "axis2-xmlbeans", :under=>"org.apache.axis2", :version=>"1.4"),
+  group("axis2-kernel", "axis2-adb", "axis2-xmlbeans", "axis2-json", :under=>"org.apache.axis2", :version=>"1.4"),
   BACKPORT,
   NEETHI,
   SUNMAIL
