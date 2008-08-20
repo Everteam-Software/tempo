@@ -47,7 +47,10 @@ public class TaskFetcher {
     public Task fetchTaskIfExists(String taskID) throws UnavailableTaskException {
         try {
             Query q = find_by_id.setParameter(1, taskID);
-            return (Task) q.getResultList().get(0);
+            List resultList = q.getResultList();
+            if (resultList.size() < 1)
+                throw new UnavailableTaskException("Task does not exist" + taskID);
+            return (Task) resultList.get(0);
         } catch (NoResultException nre) {
             throw new UnavailableTaskException("Task does not exist" + taskID);
         }
