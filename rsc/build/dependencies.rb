@@ -88,8 +88,8 @@ APACHE_JPA = [
   APACHE_COMMONS[:lang],
   APACHE_COMMONS[:collections],
   GERONIMO_SPECS.values,
-  # "org.apache.openjpa:openjpa:jar:1.1.0-645340",
-  "org.apache.openjpa:openjpa:jar:1.2",
+  "org.apache.openjpa:openjpa:jar:1.1.0-645340",
+  # "org.apache.openjpa:openjpa:jar:1.2",
   "serp:serp:jar:1.13.1"
 ]
 
@@ -131,7 +131,6 @@ XERCES = [
   "xerces:xercesImpl:jar:2.9.1",
   "xerces:xmlParserAPIs:jar:2.9.0" ]
 
-#XMLBEANS = group("xbean", "xbean_xpath", "xmlpublic", "xmlbeans-qname", :under => "xmlbeans", :version =>"2.4.0")
 XMLBEANS = "org.apache.xmlbeans:xmlbeans:jar:2.4.0"
 
 XMLUNIT = ["xmlunit:xmlunit:jar:1.1"]
