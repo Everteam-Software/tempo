@@ -28,10 +28,10 @@
 						<td>
 							<a href="${taskFullURL}" target="taskform">
 							<c:if test="${(taskHolder.task.state.name) == 'READY'}">
-								<img height="15" width="15" src="images/ledblue.png"/>
+								<img height="15" width="15" border="0px" src="images/ledblue.png"/>
 							</c:if>
 							<c:if test="${(taskHolder.task.state.name) == 'CLAIMED'}">
-								<img height="15" width="15" src="images/lock.png"/>
+								<img height="15" width="15" border="0px" src="images/lock.png"/>
 							</c:if>
 							</a>
 						</td>
