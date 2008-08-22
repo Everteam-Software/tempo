@@ -1,110 +1,169 @@
-<%--
-	Copyright (c) 2005-2008 Intalio inc.
+<?xml version="1.0" encoding="UTF-8"?>
+<jsp:root
+xmlns:jsp="http://java.sun.com/JSP/Page"
+xmlns:c="http://java.sun.com/jstl/core_rt"
+xmlns:fmt="http://java.sun.com/jstl/fmt_rt"
+version="1.2">
+	<taskdata>
 
-	All rights reserved. This program and the accompanying materials
-	are made available under the terms of the Eclipse Public License v1.0
-	which accompanies this distribution, and is available at
-	http://www.eclipse.org/legal/epl-v10.html
+	<jsp:text>
+	<![CDATA[
+    <table width="80%"  cellspacing="0" cellpadding="0" id="properties_content">
 
-	Contributors:
-	Intalio inc. - initial API and implementation
---%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<html>
-	<table class="tasks">
-		<tbody class="tasks" id="padata">
+		]]>
+        <tr id="headertr">
+            <td width="10%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_taskState"/></strong></td>
+            <td width="35%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/></strong></td>
+            <td width="25%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/></strong></td>
+			<td width="20%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_dueDate"/></strong></td>
+			<td width="10%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_priority"/></strong></td>
+        </tr>
+    </jsp:text>
+
+	<jsp:text>
 			<c:forEach items="${activityTasks}" var="taskHolder" varStatus="status">
-				<c:set var="taskFullURL" value="${taskHolder.formManagerURL}" />
-				<c:choose>
-					<c:when test="${(status.index%2) == 0}">
-						<tr class="oddTr">
-						</c:when>
-						<c:otherwise>
-							<tr class="evenTr">
-							</c:otherwise>
-						</c:choose>
-						<td>
-							<a href="${taskFullURL}" target="taskform">
-							<c:if test="${(taskHolder.task.state.name) == 'READY'}">
-								<img height="15" width="15" border="0px" src="images/ledblue.png"/>
-							</c:if>
-							<c:if test="${(taskHolder.task.state.name) == 'CLAIMED'}">
-								<img height="15" width="15" border="0px" src="images/lock.png"/>
-							</c:if>
-							</a>
-						</td>
-						<td>
-							<a href="${taskFullURL}" target="taskform">${taskHolder.task.description}</a>
-						</td>
-						<td>
-							<a href="${taskFullURL}" target="taskform">${taskHolder.task.creationDate}</a>
-						</td>
-						<td>
-							<a href="${taskFullURL}" target="taskform">${taskHolder.task.deadline}</a>
-						</td>
-						<td>
-							<a href="${taskFullURL}" target="taskform">${taskHolder.task.priority}</a>
-						</td>
-						<td>
-							<c:if test="${fn:length(taskHolder.task.attachments) > 0}">
-								<c:forEach items="${taskHolder.task.attachments}" var="attachment" varStatus="index">
-									<a href="${attachment.payloadURL}" onClick="window.open('${attachment.payloadURL}', 'newwindow'); return false;"><img height="15" width="15" src="http://www.slcc.edu/shared/shared_vcampus/images/icons/mail.jpg"/></a>
-								</c:forEach>
-							</c:if>							
-						</td>
-					</tr>
-				</c:forEach>
-			</tbody>
-		</table>
+										<c:set var="taskFullURL" value="${taskHolder.formManagerURL}" />
+        	<c:choose>
+        		<c:when test="${(status.index%2) == 0}">
+			<![CDATA[
+					<tr class="oddTr">
+			]]>
+        		</c:when>
+        		<c:otherwise>
+			<![CDATA[
+					<tr class="evenTr">
+			]]>
+        		</c:otherwise>
+        	</c:choose>
 
-		<table>
-			<tbody class="tasks" id="notifdata">
-				<c:forEach items="${notifications}" var="taskHolder" varStatus="status">
-					<c:set var="taskFullURL" value="${taskHolder.formManagerURL}" />
-					<c:choose>
-						<c:when test="${(status.index%2) == 0}">
-							<tr class="oddTr">
-							</c:when>
-							<c:otherwise>
-								<tr class="evenTr">
-								</c:otherwise>
-							</c:choose>
-							<td>
-								<a href="${taskFullURL}" target="taskform"> ${taskHolder.task.description}</a>
-							</td>
-							<td>
-								<a href="${taskFullURL}" target="taskform"> ${taskHolder.task.creationDate}</a>
-							</td>
-							<td>
-								<a href="${taskFullURL}" target="taskform">${taskHolder.task.priority}</a>
-							</td>
-						</tr>
-					</c:forEach>
-				</tbody>
-			</table>
+			<![CDATA[
+					<td>
+						<a href="${taskFullURL}" target="taskform"  >${taskHolder.task.state.name}</a>
+					</td>
+					<td>
+						<a href="${taskFullURL}" target="taskform"  >${taskHolder.task.description}</a>
+					</td>
+					<td>
+						<a href="${taskFullURL}" target="taskform"  >${taskHolder.task.creationDate}</a>
+					</td>
+					<td>
+					    <a href="${taskFullURL}" target="taskform"  >${taskHolder.task.deadline}</a>
+					</td>
+					<td>
+					    <a href="${taskFullURL}" target="taskform"  >${taskHolder.task.priority}</a>
+					</td>
+				</tr>
+			]]>
+			</c:forEach>
+		</jsp:text>
 
-			<table>
-				<tbody class="tasks" id="pipadata">
-					<c:forEach items="${initTasks}" var="taskHolder" varStatus="status">
-						<c:set var="taskFullURL" value="${taskHolder.formManagerURL}" />
-						<c:choose>
-							<c:when test="${(status.index%2) == 0}">
-								<tr class="oddTr">
-								</c:when>
-								<c:otherwise>
-									<tr class="evenTr">
-									</c:otherwise>
-								</c:choose>
-								<td>
-									<a href="${taskFullURL}" target="taskform">${taskHolder.task.description}</a>
-								</td>
-								<td>
-									<a href="${taskFullURL}" target="taskform">${taskHolder.task.creationDate}</a>
-								</td>
-							</tr>
-						</c:forEach>
-					</tbody>
-				</table>
-			</html>
+	<jsp:text>
+	<![CDATA[
+	</table>
+	]]>
+	</jsp:text>
+
+	</taskdata>
+
+<notificationdata>
+
+
+	<jsp:text>
+	<![CDATA[
+    <table width="80%"  cellspacing="0" cellpadding="0" id="properties_content">
+	]]>
+        <tr id="headertr">
+            <td width="60%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/></strong></td>
+            <td width="30%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/></strong></td>
+		  	<td width="10%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_priority"/></strong></td>
+        </tr>
+    </jsp:text>
+
+	<jsp:text>
+		<c:forEach items="${notifications}" var="taskHolder" varStatus="status">
+										<c:set var="taskFullURL" value="${taskHolder.formManagerURL}" />
+    	<c:choose>
+    		<c:when test="${(status.index%2) == 0}">
+		<![CDATA[
+				<tr class="oddTr">
+		]]>
+    		</c:when>
+    		<c:otherwise>
+		<![CDATA[
+				<tr class="evenTr">
+		]]>
+    		</c:otherwise>
+    	</c:choose>
+
+		<![CDATA[
+				<td>
+					<a href="${taskFullURL}" target="taskform">${taskHolder.task.description}</a>
+				</td>
+				<td>
+					<a href="${taskFullURL}" target="taskform">${taskHolder.task.creationDate}</a>
+				</td>
+				<td>
+					<a href="${taskFullURL}" target="taskform">${taskHolder.task.priority}</a>
+				</td>
+			</tr>
+		]]>
+		</c:forEach>
+	</jsp:text>
+
+	<jsp:text>
+	<![CDATA[
+	</table>
+	]]>
+	</jsp:text>
+
+</notificationdata>
+
+<processdata>
+
+	<jsp:text>
+	<![CDATA[
+    <table width="80%"  cellspacing="0" cellpadding="0" id="properties_content">
+	]]>
+        <tr id="headertr">
+          <td width="65%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/></strong></td>
+          <td width="35%"><strong><fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/></strong></td>
+        </tr>
+    </jsp:text>
+
+	<jsp:text>
+		<c:forEach items="${initTasks}" var="taskHolder" varStatus="status">
+										<c:set var="taskFullURL" value="${taskHolder.formManagerURL}" />
+    	<c:choose>
+    		<c:when test="${(status.index%2) == 0}">
+		<![CDATA[
+				<tr class="oddTr">
+		]]>
+    		</c:when>
+    		<c:otherwise>
+		<![CDATA[
+				<tr class="evenTr">
+		]]>
+    		</c:otherwise>
+    	</c:choose>
+
+		<![CDATA[
+				<td>
+					<a href="${taskFullURL}" target="taskform">${taskHolder.task.description}</a>
+				</td>
+				<td>
+					<a href="${taskFullURL}" target="taskform">${taskHolder.task.creationDate}</a>
+				</td>
+			</tr>
+		]]>
+		</c:forEach>
+	</jsp:text>
+
+	<jsp:text>
+	<![CDATA[
+	</table>
+	]]>
+	</jsp:text>
+
+
+</processdata>
+</jsp:root>
