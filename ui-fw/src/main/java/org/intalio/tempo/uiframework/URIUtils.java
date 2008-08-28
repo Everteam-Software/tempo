@@ -8,9 +8,6 @@
  *
  * Contributors:
  * Intalio inc. - initial API and implementation
- *
- * $Id: XFormsManager.java 2764 2006-03-16 18:34:41Z ozenzin $
- * $Log:$
  */
 package org.intalio.tempo.uiframework;
 

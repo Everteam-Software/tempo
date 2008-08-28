@@ -5,33 +5,30 @@
 	
 	<import resource="file:${org.intalio.tempo.configDirectory}/tempo-ui-fw.xml"/>
 	
-    <bean id="applicationState" class="org.intalio.tempo.uiframework.UIFWApplicationState"/>
+    <bean id="applicationState" class="org.intalio.tempo.portlet.UIFWApplicationState"/>
 	<!-- Tasks section -->
 	<bean id="tasksDefaultAction"
 		class="org.intalio.tempo.web.controller.ActionDef">
 		<property name="actionName" value="default" />
-		<property name="actionClass"
-			value="org.intalio.tempo.uiframework.actions.TasksAction" />
+		<property name="actionClass" value="org.intalio.tempo.portlet.TasksAction" />
 	</bean>
 	
 	<bean id="deleteAllTasksAction"
 		class="org.intalio.tempo.web.controller.ActionDef">
 		<property name="actionName" value="deleteAll" />
-		<property name="actionClass"
-			value="org.intalio.tempo.uiframework.actions.DeleteAllTasksAction" />
+		<property name="actionClass" value="org.intalio.tempo.portlet.DeleteAllTasksAction" />
 	</bean>
 
 	<bean id="deletePIPATasksAction"
 		class="org.intalio.tempo.web.controller.ActionDef">
 		<property name="actionName" value="deletePIPA" />
-		<property name="actionClass"
-			value="org.intalio.tempo.uiframework.actions.DeletePIPATasksAction" />
+		<property name="actionClass" value="org.intalio.tempo.portlet.DeletePIPATasksAction" />
 	</bean>
 	
 	<bean id="tasksController"
-		class="org.intalio.tempo.web.controller.SecuredController">
+		class="org.intalio.tempo.portlet.SecuredController">
 		<constructor-arg index="0" ref="tokenService" />
-		<constructor-arg index="1" value="http://localhost:8080/c/portal/login" />
+		<constructor-arg index="1" value="/c/portal/login" />
 		<property name="commandClass" value="java.lang.Object" />
 		<property name="defaultAction">
 			<ref bean="tasksDefaultAction" />

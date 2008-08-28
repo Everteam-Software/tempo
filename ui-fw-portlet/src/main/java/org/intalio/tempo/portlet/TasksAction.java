@@ -8,28 +8,26 @@
  *
  * Contributors:
  * Intalio inc. - initial API and implementation
+ *
+ * $Id: XFormsManager.java 2764 2006-03-16 18:34:41Z ozenzin $
+ * $Log:$
  */
 
-package org.intalio.tempo.uiframework.actions;
+package org.intalio.tempo.portlet;
 
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequestWrapper;
-
+import org.apache.pluto.wrappers.PortletRequestWrapper;
 import org.intalio.tempo.uiframework.Configuration;
 import org.intalio.tempo.uiframework.Constants;
-import org.intalio.tempo.uiframework.UIFWApplicationState;
-import org.intalio.tempo.versions.BpmsDescriptorParser;
-import org.intalio.tempo.web.ApplicationState;
-import org.intalio.tempo.web.controller.Action;
+import org.intalio.tempo.uiframework.actions.TasksCollector;
 import org.intalio.tempo.web.controller.ActionError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.portlet.ModelAndView;
 
 @SuppressWarnings("unchecked")
 public class TasksAction extends Action {
-    private static final BpmsDescriptorParser BPMS_DESCRIPTOR_PARSER = new BpmsDescriptorParser();
     private static final Logger _log = LoggerFactory.getLogger(TasksAction.class);
 
     @Override
@@ -50,7 +48,7 @@ public class TasksAction extends Action {
         final String token = state.getCurrentUser().getToken();
         final String user = state.getCurrentUser().getName();
         try {
-            TasksCollector collector = new TasksCollector(new HttpServletRequestWrapper(_request), user, token);
+            TasksCollector collector = new TasksCollector(new PortletRequestWrapper(_request), user, token);
             model.put("activityTasks", collector.get_activityTasks());
             model.put("notifications", collector.get_notifications());
             model.put("initTasks", collector.get_initTasks());
@@ -62,6 +60,6 @@ public class TasksAction extends Action {
         model.put("participantToken", token);
         model.put("currentUser", user);
         model.put("refreshTime", Configuration.getInstance().getRefreshTime());
-        BPMS_DESCRIPTOR_PARSER.addBpmsBuildVersionsPropertiesToMap(model);
     }
+
 }

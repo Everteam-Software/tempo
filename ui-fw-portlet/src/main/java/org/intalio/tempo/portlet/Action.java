@@ -9,23 +9,24 @@
  * Contributors:
  * Intalio inc. - initial API and implementation
  */
-package org.intalio.tempo.web.controller;
+package org.intalio.tempo.portlet;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
 
+import org.intalio.tempo.web.controller.ActionError;
 import org.springframework.validation.BindException;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.portlet.ModelAndView;
 
 public abstract class Action<T> {
 
-    protected HttpServletRequest _request;
+    protected PortletRequest _request;
 
-    protected HttpServletResponse _response;
+    protected PortletResponse _response;
 
     protected BindException _bindErrors;
 
@@ -51,14 +52,14 @@ public abstract class Action<T> {
     /**
      * Returns the request.
      */
-    public HttpServletRequest getRequest() {
+    public PortletRequest getRequest() {
         return _request;
     }
 
     /**
      * Returns the response.
      */
-    public HttpServletResponse getResponse() {
+    public PortletResponse getResponse() {
         return _response;
     }
 
@@ -100,14 +101,14 @@ public abstract class Action<T> {
     /**
      * Set the request
      */
-    public void setRequest(HttpServletRequest request) {
+    public void setRequest(PortletRequest request) {
         _request = request;
     }
 
     /**
      * Set the response
      */
-    public void setResponse(HttpServletResponse response) {
+    public void setResponse(PortletResponse response) {
         _response = response;
     }
 
@@ -128,10 +129,12 @@ public abstract class Action<T> {
         return _errors;
     }
 
+    /*
     public boolean isGetRequest() {
         return "GET".equals(_request.getMethod());
     }
-
+	*/
+    
     public final ModelAndView doExecution() {
         beforeValidation();
         boolean valid = validate();
@@ -146,6 +149,7 @@ public abstract class Action<T> {
         afterExecute();
         return mnv;
     }
+    
     
     public void setRequiredRoles(String[] roles) {
         if (roles == null) {

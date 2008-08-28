@@ -337,7 +337,7 @@ define "tempo" do
   
   desc "User-Interface Framework Portlet"
   define "ui-fw-portlet" do
-    libs = projects("security", "security-ws-client", "security-ws-common", "tms-axis", "tms-client", "tms-common", "ui-pluto", "ui-fw"),
+    libs = projects("security", "security-ws-client", "security-ws-common", "tms-axis", "tms-client", "tms-common", "ui-pluto", "ui-fw", "web-nutsNbolts"),
            APACHE_JPA, APACHE_COMMONS[:io], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], AXIOM, AXIS2, CAS_CLIENT, DOM4J, INTALIO_STATS, 
            JSON, JSP_API, JSTL, LOG4J, PLUTO, PORTLET_API, SERVLET_API, 
            SPRING[:core], SPRING[:webmvc], SPRING[:webmvc_portlet], SLF4J, STAX_API, TAGLIBS, WOODSTOX, WSDL4J, WS_COMMONS_SCHEMA, 

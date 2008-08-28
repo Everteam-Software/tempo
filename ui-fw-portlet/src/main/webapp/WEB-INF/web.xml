@@ -11,7 +11,7 @@
 			<encoding>cp1251</encoding>
 		</locale-encoding-mapping>
 	</locale-encoding-mapping-list>
-	<display-name>Intalio_BPMS User Interface Framework</display-name>
+	<display-name>Intalio|BPMS User Interface Framework - Portlet</display-name>
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>

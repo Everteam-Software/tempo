@@ -3,7 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
 <%@ page import="javax.portlet.PortletSession" %>
 <%@ page import="javax.portlet.PortletURL" %>
-<%@ page import="org.intalio.tempo.web.ApplicationState" %>
+<%@ page import="org.intalio.tempo.portlet.ApplicationState" %>
 <%@ page session="false" %>
 
 <portlet:defineObjects/>
@@ -22,7 +22,6 @@
 		<tr>
 			<td>Task Type:</td>
 			<td>
-
 			<select id="taskType" size="1" onChange="<portlet:namespace/>_searchTask()">
 			<option>Task</option>
 			<option>PATask</option>

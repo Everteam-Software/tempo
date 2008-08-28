@@ -1,7 +1,6 @@
 <%@ taglib uri="http://java.sun.com/portlet" prefix="portlet" %>
-<%@ page import="org.intalio.tempo.web.ApplicationState" %>
+<%@ page import="org.intalio.tempo.portlet.ApplicationState" %>
 <%@ page import="java.net.URLEncoder" %>
-
 
 <% 
 ApplicationState as = (ApplicationState)renderRequest.getPortletSession().getAttribute(ApplicationState.PARAMETER_NAME);
