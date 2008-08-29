@@ -24,6 +24,7 @@ DEBUG = config["debug"]
 REBUILD_TEMPO = config["rebuild"]
 SERVER = config["server"]
 ADD_ALFRESCO = config["add_alfresco"]
+ADD_LDAP = config["add_ldap"]
 LIFERAY = "liferay_510"
 APACHE_MIRROR = find_apache_mirror
 TOMCAT_5_DOWNLOAD = APACHE_MIRROR + "tomcat/tomcat-5/v5.5.26/bin/apache-tomcat-5.5.26.zip"
@@ -297,6 +298,22 @@ if ADD_ALFRESCO && SERVER == LIFERAY
   # delete some conflict jar files
   Dir.glob(File.join("#{webapp_folder}/alfresco/WEB-INF/lib", "portlet*.jar")) {|x| File.delete x}
 end
+
+## Add LDAP embbeded server and config liferay & alfresco to use that
+if ADD_LDAP
+  title "Install ApacheDS embbeded server"
+  explain "Install ApacheDS 1.5.1"
+  apacheds_war = finder.find_war("#{script_folder}/../LDAP")
+  
+  explain "Deploy the apache ds war"
+  apacheds_war_folder = wi.install apacheds_war, "apacheds_webapp-apacheds_webapp-1.0.1.war"
+  if SERVER == LIFERAY
+    explain "Server is Liferay, config it to use Apache DS as LDAP server"
+    # copy the config files
+    Dir.glob("#{TEMPO_SVN}/rsc/LDAP/portal-ext.properties") {|x| File.copy x, "#{webapp_folder}/ROOT/WEB-INF/classes", DEBUG}
+  end
+end
+
 
 title "Set up CAS server and client"
 explain "All the webapp should use the same version of casclient"

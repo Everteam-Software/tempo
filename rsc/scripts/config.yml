@@ -4,3 +4,4 @@ install_dir: ../intalio
 debug: true
 server: liferay_510
 add_alfresco: true
+add_ldap: true
