@@ -270,16 +270,8 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             String taskID = requireElementValue(rootQueue, "taskId");
             String participantToken = requireElementValue(rootQueue, "participantToken");
             Attachment[] attachments = _server.getAttachments(taskID, participantToken);
-            OMElement response = new TMSResponseMarshaller(OM_FACTORY) {
-                public OMElement marshalResponse(Attachment[] attachments) {
-                    OMElement response = createElement("getAttachmentsResponse");
-                    for (Attachment attachment : attachments) {
-                        new AttachmentMarshaller(getOMFactory()).marshalAttachment(attachment, response);
-                    }
-                    return response;
-                }
-            }.marshalResponse(attachments);
-            return response;
+            
+            return AttachmentMarshaller.marshalAttachments(attachments);
         } catch (Exception e) {
             throw makeFault(e);
         }

@@ -220,23 +220,27 @@ public class UserProcessMessageConvertor {
         	}
         }
         
-        /*
-         * Now, change the namespace of all soapenv:Body elements, except the
-         * task input, to ib4p.
-         */
-        xpath = DocumentHelper.createXPath("//"+REQUEST_PREFIX+":taskInput//*");
-        xpath.setNamespaceURIs(namespaceURIs/*MessageConstants.get_nsMap()*/);
-        List<Node> allTaskInputElements = xpath.selectNodes(message);
 
-        for (int i = 0; i < allSoapBodyElements.size(); ++i) {
-            Node node = (Node)allSoapBodyElements.get(i);
-            if (! allTaskInputElements.contains(node)) {
-                Element element = (Element) node;
-                element.remove(element.getNamespace());
-                element.setQName(QName.get(element.getName(),"ib4p", MessageConstants.IB4P_NS));
-            }
-        }
-    }
+		/*
+		* Now, change the namespace of all soapenv:Body elements, except the
+		* task input and the attachments, to ib4p.
+		*/
+		xpath = DocumentHelper.createXPath("//"+REQUEST_PREFIX+":taskInput//*");
+		xpath.setNamespaceURIs(namespaceURIs/*MessageConstants.get_nsMap()*/);
+		List<Node> allTaskInputElements = xpath.selectNodes(message);
+		xpath = DocumentHelper.createXPath("//"+REQUEST_PREFIX+":attachments//*");
+		xpath.setNamespaceURIs(namespaceURIs/*MessageConstants.get_nsMap()*/);
+		List<Node> allAttachmentsElements = xpath.selectNodes(message);
+		for (int i = 0; i < allSoapBodyElements.size(); ++i) {
+			Node node = (Node)allSoapBodyElements.get(i);
+			if (! allTaskInputElements.contains(node) && ! allAttachmentsElements.contains(node)) {
+
+				Element element = (Element) node;
+				element.remove(element.getNamespace());
+				element.setQName(QName.get(element.getName(),"ib4p", MessageConstants.IB4P_NS));
+			}
+		}
+	}
 
     /**
      * The XML namespace URI of the user process which has been the source of

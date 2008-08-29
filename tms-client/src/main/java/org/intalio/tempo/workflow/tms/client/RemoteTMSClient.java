@@ -377,7 +377,7 @@ public class RemoteTMSClient implements ITaskManagementService {
             public OMElement marshalRequest() {
                 OMElement request = createElement("addAttachmentRequest");
                 createElement(request, "taskId", taskID);
-                new AttachmentMarshaller(getOMFactory()).marshalAttachment(attachment, request);
+                request = AttachmentMarshaller.marshalAttachment(attachment);
                 createElement(request, "participantToken", _participantToken);
 
                 return request;

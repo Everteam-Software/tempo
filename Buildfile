@@ -23,8 +23,7 @@ desc "Tempo Workflow"
 define "tempo" do
   project.version = VERSION_NUMBER
   project.group = "org.intalio.tempo"
-
-  # compile.options.source = "1.5"
+  
   compile.options.target = "1.5"
 
   define "cas-server-webapp" do

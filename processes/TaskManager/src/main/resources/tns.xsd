@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema 
+	xmlns:tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" elementFormDefault="qualified">
+<xsd:complexType name="owners">
+				<xsd:sequence>
+					<xsd:element name="userOwner" type="xsd:string"
+						maxOccurs="unbounded" minOccurs="0" />
+
+					<xsd:element name="roleOwner" type="xsd:string"
+						maxOccurs="unbounded" minOccurs="0" />
+				</xsd:sequence>
+			</xsd:complexType>
+		
+</xsd:schema>
