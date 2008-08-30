@@ -45,6 +45,11 @@ def download_to(filename, url, unzip=true, message="Downloading #{url}")
   unzip2(filename) if unzip
 end
 
+def download_and_return_path_to_local_repo(spec)
+  Buildr::artifact(spec).invoke
+  repositories.locate(spec)
+end
+
 def download_and_copy(url, folder)
   puts "Copying #{url} to #{folder}" if DEBUG
   download_unzip( url,false )
