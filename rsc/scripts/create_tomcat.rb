@@ -307,7 +307,7 @@ if ADD_LDAP
   # finder.find_war("#{script_folder}/../LDAP")
   
   explain "Deploy the apache ds war"
-  apacheds_war_folder = wi.install apacheds_war, "apacheds_webapp-apacheds_webapp-1.0.1.war"
+  apacheds_war_folder = wi.install apacheds_war, "apacheds.war"
   if SERVER == LIFERAY
     explain "Server is Liferay, config it to use Apache DS as LDAP server"
     # copy the config files
