@@ -1,0 +1,1422 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE beans PUBLIC '-//SPRING//DTD BEAN//EN' 'http://www.springframework.org/dtd/spring-beans.dtd'>
+
+<beans>
+    <import resource="classpath:alfresco/public-services-security-context.xml"/>
+
+    <!-- Service Registry -->
+
+    <bean id="ServiceRegistry" class="org.alfresco.repo.service.ServiceDescriptorRegistry" />
+
+    <!-- Exception Translation -->
+
+    <bean id="exceptionTranslator" class="org.alfresco.repo.security.permissions.impl.ExceptionTranslatorMethodInterceptor"/>
+
+    <!-- Descriptor Service -->
+
+    <bean id="DescriptorService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>org.alfresco.service.descriptor.DescriptorService</value>
+        </property>
+        <property name="target">
+            <ref bean="descriptorComponent"/>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref local="exceptionTranslator"/>
+            </list>
+        </property>
+    </bean>
+
+    <!-- AuditMethodInterceptor -->
+
+    <bean id="AuditMethodInterceptor" class="org.alfresco.repo.audit.AuditMethodInterceptor">
+        <property name="auditComponent">
+            <ref bean="auditComponent"/>
+        </property>
+        <property name="disabled">
+            <value>false</value>
+        </property>
+    </bean>
+
+
+    <!-- Namespace Service -->
+
+    <alias name="namespaceService" alias="NamespaceService"/>
+
+    <!-- Transaction Service -->
+
+    <alias alias="TransactionService" name="transactionComponent"/>
+
+    <!-- Dictionary Service -->
+
+    <alias name="dictionaryService" alias="DictionaryService"/>
+
+    <!-- Node Service -->
+
+    <bean id="NodeService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <list>
+                <value>org.alfresco.service.cmr.repository.NodeService</value>
+            </list>
+        </property>
+        <property name="target">
+            <ref bean="nodeService"/>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref local="NodeService_transaction"/>
+                <idref local="AuditMethodInterceptor"/>
+                <idref local="exceptionTranslator"/>
+                <idref bean="NodeService_security"/>
+                <!-- Bug prevents use.
+                     Also, the interception of this sort will lead to issues with other clients
+                <idref bean="mlTranslationInterceptor"/>
+                -->
+            </list>
+        </property>
+    </bean>
+
+    <bean id="NodeService_transaction" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager">
+            <ref bean="transactionManager"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="exist*">${server.transaction.mode.readOnly}</prop>
+                <prop key="get*">${server.transaction.mode.readOnly}</prop>
+                <prop key="has*">${server.transaction.mode.readOnly}</prop>
+                <prop key="*">${server.transaction.mode.default}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- Content Service -->
+
+    <bean id="ContentService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>org.alfresco.service.cmr.repository.ContentService</value>
+        </property>
+        <property name="target">
+            <ref bean="contentService"/>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref local="ContentService_transaction"/>
+                <idref local="AuditMethodInterceptor"/>
+                <idref local="exceptionTranslator"/>
+                <idref bean="mlContentInterceptor"/>
+                <idref bean="ContentService_security"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="ContentService_transaction" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager">
+            <ref bean="transactionManager"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">${server.transaction.mode.readOnly}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- Mime Type Service -->
+
+    <alias name="mimetypeService" alias="MimetypeService"/>
+
+    <!-- Content Filter Languages Service -->
+
+    <alias name="contentFilterLanguagesService" alias="ContentFilterLanguagesService"/>
+
+    <!-- Search Service -->
+
+    <bean id="SearchService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>org.alfresco.service.cmr.search.SearchService</value>
+        </property>
+        <property name="target">
+            <ref bean="searchService"/>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref local="SearchService_transaction"/>
+                <idref local="AuditMethodInterceptor"/>
+                <idref local="exceptionTranslator"/>
+                <idref bean="SearchService_security"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="ADMSearchService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>org.alfresco.service.cmr.search.SearchService</value>
+        </property>
+        <property name="target">
+            <ref bean="admSearchService"/>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref local="SearchService_transaction"/>
+                <idref local="AuditMethodInterceptor"/>
+                <idref local="exceptionTranslator"/>
+                <idref bean="SearchService_security"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="SearchService_transaction" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager">
+            <ref bean="transactionManager"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">${server.transaction.mode.default}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- Category Service -->
+
+    <bean id="CategoryService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>org.alfresco.service.cmr.search.CategoryService</value>
+        </property>
+        <property name="target">
+            <ref bean="categoryService"/>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref local="CategoryService_transaction"/>
+                <idref local="AuditMethodInterceptor"/>
+                <idref local="exceptionTranslator"/>
+                <idref bean="CategoryService_security"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="CategoryService_transaction" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager">
+            <ref bean="transactionManager"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">${server.transaction.mode.default}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- Copy Service -->
+
+    <bean id="CopyService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>org.alfresco.service.cmr.repository.CopyService</value>
+        </property>
+        <property name="target">
+            <ref bean="copyService"/>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref local="CopyService_transaction"/>
+                <idref local="AuditMethodInterceptor"/>
+                <idref local="exceptionTranslator"/>
+                <idref bean="CopyService_security"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="CopyService_transaction" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager">
+            <ref bean="transactionManager"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">${server.transaction.mode.default}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- Lock Service -->
+
+    <bean id="LockService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>org.alfresco.service.cmr.lock.LockService</value>
+        </property>
+        <property name="target">
+            <ref bean="lockService"/>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref local="LockService_transaction"/>
+                <idref local="AuditMethodInterceptor"/>
+                <idref local="exceptionTranslator"/>
+                <idref bean="LockService_security"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="LockService_transaction" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager">
+            <ref bean="transactionManager"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">${server.transaction.mode.default}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- Version Service -->
+
+    <bean id="VersionService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>org.alfresco.service.cmr.version.VersionService</value>
+        </property>
+        <property name="target">
+            <ref bean="versionService"/>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref local="VersionService_transaction"/>
+                <idref local="AuditMethodInterceptor"/>
+                <idref local="exceptionTranslator"/>
+                <idref bean="VersionService_security"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="VersionService_transaction" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager">
+            <ref bean="transactionManager"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">${server.transaction.mode.default}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- COCI Service -->
+
+    <bean id="CheckoutCheckinService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>org.alfresco.service.cmr.coci.CheckOutCheckInService</value>
+        </property>
+        <property name="target">
+            <ref bean="checkOutCheckInService"/>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref local="CheckoutCheckinService_transaction"/>
+                <idref local="AuditMethodInterceptor"/>
+                <idref local="exceptionTranslator"/>
+                <idref bean="CheckoutCheckinService_security"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="CheckoutCheckinService_transaction" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager">
+            <ref bean="transactionManager"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">${server.transaction.mode.default}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- Rule Service -->
+
+    <bean id="RuleService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>org.alfresco.service.cmr.rule.RuleService</value>
+        </property>
+        <property name="target">
+            <ref bean="ruleService"/>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref local="RuleService_transaction"/>
+                <idref local="AuditMethodInterceptor"/>
+                <idref local="exceptionTranslator"/>
+                <idref bean="RuleService_security"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="RuleService_transaction" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager">
+            <ref bean="transactionManager"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">${server.transaction.mode.default}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- Importer Service -->
+
+    <bean id="ImporterService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>org.alfresco.service.cmr.view.ImporterService</value>
+        </property>
+        <property name="target">
+            <ref bean="importerComponent"/>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref local="ImporterService_transaction"/>
+                <idref local="AuditMethodInterceptor"/>
+                <idref local="exceptionTranslator"/>
+                <idref bean="ImporterService_security"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="ImporterService_transaction" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager">
+            <ref bean="transactionManager"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">${server.transaction.mode.default}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- Exporter Service -->
+
+    <bean id="ExporterService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>org.alfresco.service.cmr.view.ExporterService</value>
+        </property>
+        <property name="target">
+            <ref bean="exporterComponent"/>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref local="ExporterService_transaction"/>
+                <idref local="AuditMethodInterceptor"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="ExporterService_transaction" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager">
+            <ref bean="transactionManager"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">${server.transaction.mode.default}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- Action Service -->
+
+    <bean id="ActionService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>org.alfresco.service.cmr.action.ActionService</value>
+        </property>
+        <property name="target">
+            <ref bean="actionService"/>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref local="ActionService_transaction"/>
+                <idref local="AuditMethodInterceptor"/>
+                <idref local="exceptionTranslator"/>
+                <idref bean="ActionService_security"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="ActionService_transaction" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager">
+            <ref bean="transactionManager"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">${server.transaction.mode.default}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- Permission Service -->
+
+    <bean id="PermissionService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>org.alfresco.service.cmr.security.PermissionService</value>
+        </property>
+        <property name="target">
+            <ref bean="permissionService"/>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref local="PermissionService_transaction"/>
+                <idref local="AuditMethodInterceptor"/>
+                <idref local="exceptionTranslator"/>
+                <idref bean="PermissionService_security"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="PermissionService_transaction" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager">
+            <ref bean="transactionManager"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">${server.transaction.mode.default}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- Authority Service -->
+
+    <bean id="AuthorityService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>org.alfresco.service.cmr.security.AuthorityService</value>
+        </property>
+        <property name="target">
+            <ref bean="authorityService"/>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref local="AuthorityService_transaction"/>
+                <idref local="AuditMethodInterceptor"/>
+                <idref local="exceptionTranslator"/>
+                <idref bean="AuthorityService_security"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="AuthorityService_transaction" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager">
+            <ref bean="transactionManager"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">${server.transaction.mode.default}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- Ownable Service -->
+
+    <bean id="OwnableService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>org.alfresco.service.cmr.security.OwnableService</value>
+        </property>
+        <property name="target">
+            <ref bean="ownableService"/>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref local="OwnableService_transaction"/>
+                <idref local="AuditMethodInterceptor"/>
+                <idref local="exceptionTranslator"/>
+                <idref bean="OwnableService_security"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="OwnableService_transaction" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager">
+            <ref bean="transactionManager"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">${server.transaction.mode.default}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- Person Service -->
+
+    <bean id="PersonService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>org.alfresco.service.cmr.security.PersonService</value>
+        </property>
+        <property name="target">
+            <ref bean="personService"/>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref local="PersonService_transaction"/>
+                <idref local="AuditMethodInterceptor"/>
+                <idref local="exceptionTranslator"/>
+                <idref bean="PersonService_security"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="PersonService_transaction" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager">
+            <ref bean="transactionManager"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">${server.transaction.mode.default}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- Authentication Service -->
+
+    <bean id="AuthenticationService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>org.alfresco.service.cmr.security.AuthenticationService</value>
+        </property>
+        <property name="target">
+            <ref bean="authenticationServiceImplLDAP"/>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref local="AuthenticationService_transaction"/>
+                <idref local="AuditMethodInterceptor"/>
+                <idref local="exceptionTranslator"/>
+                <idref bean="AuthenticationService_security"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="AuthenticationService_transaction" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager">
+            <ref bean="transactionManager"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="getCurrentUserName">PROPAGATION_NOT_SUPPORTED, readOnly</prop>
+                <prop key="invalidateUserSession">PROPAGATION_NOT_SUPPORTED, readOnly</prop>
+                <prop key="invalidateTicket">PROPAGATION_NOT_SUPPORTED, readOnly</prop>
+                <prop key="getCurrentTicket">PROPAGATION_NOT_SUPPORTED, readOnly</prop>
+                <prop key="clearCurrentSecurityContext">PROPAGATION_NOT_SUPPORTED, readOnly</prop>
+                <prop key="isCurrentUserTheSystemUser">PROPAGATION_NOT_SUPPORTED, readOnly</prop>
+                <prop key="*">${server.transaction.mode.default}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- Template Service -->
+
+    <bean id="TemplateService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>org.alfresco.service.cmr.repository.TemplateService</value>
+        </property>
+        <property name="target">
+            <ref bean="templateService"/>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref local="TemplateService_transaction"/>
+                <idref local="AuditMethodInterceptor"/>
+                <idref local="exceptionTranslator"/>
+                <idref bean="TemplateService_security"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="TemplateService_transaction" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager">
+            <ref bean="transactionManager"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">${server.transaction.mode.default}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- Script Service -->
+
+    <bean id="ScriptService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>org.alfresco.service.cmr.repository.ScriptService</value>
+        </property>
+        <property name="target">
+            <ref bean="scriptService"/>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref local="ScriptService_transaction"/>
+                <idref local="AuditMethodInterceptor"/>
+                <idref local="exceptionTranslator"/>
+                <idref bean="ScriptService_security"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="ScriptService_transaction" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager">
+            <ref bean="transactionManager"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">${server.transaction.mode.default}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- File/Folder Service -->
+
+    <bean id="FileFolderService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>org.alfresco.service.cmr.model.FileFolderService</value>
+        </property>
+        <property name="target">
+            <ref bean="fileFolderService"/>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref local="FileFolderService_transaction"/>
+                <idref local="AuditMethodInterceptor"/>
+                <idref local="exceptionTranslator"/>
+                <idref bean="FileFolderService_security"/>
+                <idref bean="mlTranslationInterceptor"/>
+                <idref bean="mlContentInterceptor"/>
+                <idref bean="tempFileMarkerInterceptor"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="FileFolderService_transaction" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager">
+            <ref bean="transactionManager"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="list*">${server.transaction.mode.readOnly}</prop>
+                <prop key="search*">${server.transaction.mode.readOnly}</prop>
+                <prop key="get*">${server.transaction.mode.readOnly}</prop>
+                <prop key="resolve*">${server.transaction.mode.readOnly}</prop>
+                <prop key="*">${server.transaction.mode.default}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- The CrossRepositoryCopyService -->
+
+    <bean id="crossRepositoryCopyService" class="org.alfresco.repo.copy.CrossRepositoryCopyServiceImpl">
+        <property name="avmService">
+            <ref bean="indexingAVMService"/>
+        </property>
+        <property name="nodeService">
+            <ref bean="nodeService"/>
+        </property>
+        <property name="fileFolderService">
+            <ref bean="fileFolderService"/>
+        </property>
+        <property name="contentService">
+            <ref bean="contentService"/>
+        </property>
+        <property name="copyService">
+            <ref bean="copyService"/>
+        </property>
+        <property name="dictionaryService">
+            <ref bean="dictionaryService"/>
+        </property>
+    </bean>
+
+    <bean id="crossRepositoryCopyServiceWriteTxnAdvisor" class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+        <property name="advice">
+            <ref bean="retryingWriteTxnAdvice"/>
+        </property>
+        <property name="mappedNames">
+            <list>
+                <value>copy</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="CrossRepositoryCopyService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <list>
+                <value>org.alfresco.service.cmr.repository.CrossRepositoryCopyService</value>
+            </list>
+        </property>
+        <property name="targetName">
+            <value>crossRepositoryCopyService</value>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>crossRepositoryCopyServiceWriteTxnAdvisor</value>
+            </list>
+        </property>
+    </bean>
+
+	<!-- The AVMLockingAwareService -->
+	
+	<bean id="avmLockingAwareService" class="org.alfresco.repo.avm.AVMLockingAwareService">
+		<!-- Because of circular dependendencies, this bean's dependencies
+		     are grabbed at bootstrap time.x -->
+	</bean>
+
+    <bean id="AVMLockingAwareService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <list>
+                <value>org.alfresco.service.cmr.avm.AVMService</value>
+            </list>
+        </property>
+        <property name="targetName">
+            <value>avmLockingAwareService</value>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>avmServiceWriteTxnAdvisor</value>
+                <value>avmServiceReadTxnAdvisor</value>
+                <value>avmSnapShotTriggeredIndexingMethodInterceptor</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="indexingAVMLockingAwareService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <list>
+                <value>org.alfresco.service.cmr.avm.AVMService</value>
+            </list>
+        </property>
+        <property name="targetName">
+            <value>avmLockingAwareService</value>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>avmSnapShotTriggeredIndexingMethodInterceptor</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- The AVMService -->
+
+    <bean id="avmService" class="org.alfresco.repo.avm.AVMServiceImpl">
+        <property name="avmRepository">
+            <ref bean="avmRepository"/>
+        </property>
+        <property name="transactionListener">
+            <ref bean="lookupCacheListener"/>
+        </property>
+    </bean>
+
+    <bean id="avmServiceReadTxnAdvisor" class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+        <property name="advice">
+            <ref bean="retryingReadTxnAdvice"/>
+        </property>
+        <property name="mappedNames">
+            <list>
+                <value>getFileInputStream</value>
+                <value>getContentReader</value>
+                <value>getDirectoryListing</value>
+                <value>getDirectoryListingDirect</value>
+                <value>getDirectoryListingArray</value>
+                <value>getDeleted</value>
+                <value>getNextVersionID</value>
+                <value>getLatestSnapshotID</value>
+                <value>getStoreVersions</value>
+                <value>getStores</value>
+                <value>getStore</value>
+                <value>getStoreRoot</value>
+                <value>lookup</value>
+                <value>getPaths</value>
+                <value>getHeadPaths</value>
+                <value>getPathsInStoreHead</value>
+                <value>getIndirectionPath</value>
+                <value>getHistory</value>
+                <value>getCommonAncestor</value>
+                <value>getLayereingInfo</value>
+                <value>getNodeProperty</value>
+                <value>getNodeProperties</value>
+                <value>getStoreProperty</value>
+                <value>getStoreProperties</value>
+                <value>queryStorePropertyKey</value>
+                <value>queryStoresPropertyKeys</value>
+                <value>getContentDataForRead</value>
+                <value>getAspects</value>
+                <value>hasAspect</value>
+                <value>getAPath</value>
+                <value>getGuid</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="avmServiceWriteTxnAdvisor" class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+        <property name="advice">
+            <ref bean="retryingWriteTxnAdvice"/>
+        </property>
+        <property name="mappedNames">
+            <list>
+                <value>getFileOutputStream</value>
+                <value>getContentWriter</value>
+                <value>createFile</value>
+                <value>createDirectory</value>
+                <value>createLayeredFile</value>
+                <value>createLayeredDirectory</value>
+                <value>retargetLayeredDirectory</value>
+                <value>createStore</value>
+                <value>createBranch</value>
+                <value>removeNode</value>
+                <value>rename</value>
+                <value>uncover</value>
+                <value>makeTransparent</value>
+                <value>createSnapshot</value>
+                <value>purgeStore</value>
+                <value>purgeVersion</value>
+                <value>makePrimary</value>
+                <value>setOpacity</value>
+                <value>setNodeProperty</value>
+                <value>setNodeProperties</value>
+                <value>deleteNodeProperty</value>
+                <value>deleteNodeProperties</value>
+                <value>setStoreProperty</value>
+                <value>setStoreProperties</value>
+                <value>deleteStoreProperty</value>
+                <value>getContentDataForWrite</value>
+                <value>setContentData</value>
+                <value>setMetaDataFrom</value>
+                <value>addAspect</value>
+                <value>removeAspect</value>
+                <value>link</value>
+                <value>forceCopy</value>
+                <value>copy</value>
+                <value>renameStore</value>
+                <value>getSystemStore</value>
+                <value>revert</value>
+                <value>setGuid</value>
+                <value>setEncoding</value>
+                <value>setMimeType</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="AVMService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <list>
+                <value>org.alfresco.service.cmr.avm.AVMService</value>
+            </list>
+        </property>
+        <property name="targetName">
+            <value>avmService</value>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>avmServiceWriteTxnAdvisor</value>
+                <value>avmServiceReadTxnAdvisor</value>
+                <value>avmSnapShotTriggeredIndexingMethodInterceptor</value>
+            </list>
+        </property>
+    </bean>
+    <bean id="indexingAVMService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <list>
+                <value>org.alfresco.service.cmr.avm.AVMService</value>
+            </list>
+        </property>
+        <property name="targetName">
+            <value>avmService</value>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>avmSnapShotTriggeredIndexingMethodInterceptor</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="avmSnapShotTriggeredIndexingMethodInterceptor" class="org.alfresco.repo.search.AVMSnapShotTriggeredIndexingMethodInterceptor">
+        <property name="avmService">
+            <ref bean="avmService" />
+        </property>
+        <property name="indexerAndSearcher">
+            <ref bean="avmLuceneIndexerAndSearcherFactory" />
+        </property>
+        <property name="enableIndexing">
+            <value>true</value>
+        </property>
+        <property name="defaultMode">
+            <value>SYNCHRONOUS</value>
+        </property>
+        <property name="indexingDefinitions">
+            <list>
+                <value>ASYNCHRONOUS:TYPE:STAGING</value>
+                <value>UNINDEXED:TYPE:STAGING_PREVIEW</value>
+                <value>UNINDEXED:TYPE:AUTHOR</value>
+                <value>UNINDEXED:TYPE:AUTHOR_PREVIEW</value>
+                <value>UNINDEXED:TYPE:WORKFLOW</value>
+                <value>UNINDEXED:TYPE:WORKFLOW_PREVIEW</value>
+                <value>UNINDEXED:TYPE:AUTHOR_WORKFLOW</value>
+                <value>UNINDEXED:TYPE:AUTHOR_WORKFLOW_PREVIEW</value>
+                <value>ASYNCHRONOUS:NAME:avmAsynchronousTest</value>
+                <value>SYNCHRONOUS:NAME:.*</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- The AVMSyncService -->
+
+    <bean id="avmSyncService" class="org.alfresco.repo.avm.AVMSyncServiceImpl">
+        <property name="avmService">
+            <ref bean="indexingAVMService"/>
+        </property>
+        <property name="avmRepository">
+            <ref bean="avmRepository"/>
+        </property>
+    </bean>
+
+    <!-- Read transaction advisor for sync service. -->
+    <bean id="avmSyncServiceReadTxnAdvisor" class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+        <property name="advice">
+            <ref bean="retryingReadTxnAdvice"/>
+        </property>
+        <property name="mappedNames">
+            <list>
+                <value>compare</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- Write transaction advisor for sync service. -->
+    <bean id="avmSyncServiceWriteTxnAdvisor" class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+        <property name="advice">
+            <ref bean="retryingWriteTxnAdvice"/>
+        </property>
+        <property name="mappedNames">
+            <list>
+                <value>update</value>
+                <value>flatten</value>
+                <value>resetLayer</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="AVMSyncService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <list>
+                <value>org.alfresco.service.cmr.avmsync.AVMSyncService</value>
+            </list>
+        </property>
+        <property name="targetName">
+            <value>avmSyncService</value>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>avmSyncServiceWriteTxnAdvisor</value>
+                <value>avmSyncServiceReadTxnAdvisor</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- Attribute Service -->
+
+    <!-- Read transaction advisor for attribute service. -->
+    <bean id="attributeServiceReadTxnAdvisor" class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+        <property name="advice">
+            <ref bean="retryingReadTxnAdvice"/>
+        </property>
+        <property name="mappedNames">
+            <list>
+                <value>getAttributes</value>
+                <value>query</value>
+                <value>getKeys</value>
+                <value>exists</value>
+                <value>getCount</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- Write transaction advisor for attribute service. -->
+    <bean id="attributeServiceWriteTxnAdvisor" class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+        <property name="advice">
+            <ref bean="retryingWriteTxnAdvice"/>
+        </property>
+        <property name="mappedNames">
+            <list>
+                <value>setAttribute</value>
+                <value>setAttributes</value>
+                <value>removeAttribute</value>
+                <value>addAttribute</value>
+                <value>addAttributes</value>
+                <value>removeEntries</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="AttributeService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <list>
+                <value>org.alfresco.service.cmr.attributes.AttributeService</value>
+            </list>
+        </property>
+        <property name="targetName">
+            <value>attributeService</value>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>attributeServiceWriteTxnAdvisor</value>
+                <value>attributeServiceReadTxnAdvisor</value>
+            </list>
+        </property>
+    </bean>
+
+     <!-- Deployment Service. -->
+
+     <bean id="deploymentService" class="org.alfresco.repo.deploy.DeploymentServiceImpl">
+        <property name="avmService">
+            <ref bean="indexingAVMService"/>
+        </property>
+     </bean>
+
+    <!--
+    <bean id="deploymentServiceReadTxnAdvisor" class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+        <property name="advice">
+            <ref bean="retryingReadTxnAdvice"/>
+        </property>
+        <property name="mappedNames">
+            <list>
+                <value>deployDifference</value>
+            </list>
+        </property>
+    </bean>
+    -->
+
+    <bean id="deploymentServiceWriteTxnAdvisor" class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+        <property name="advice">
+            <ref bean="retryingWriteTxnAdvice"/>
+        </property>
+        <property name="mappedNames">
+            <list>
+                <value>deployDifferenceFS</value>
+                <value>deployDifference</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="DeploymentService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <list>
+                <value>org.alfresco.service.cmr.avm.deploy.DeploymentService</value>
+            </list>
+        </property>
+        <property name="targetName">
+            <value>deploymentService</value>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>deploymentServiceWriteTxnAdvisor</value>
+            </list>
+        </property>
+    </bean>
+
+
+    <!-- AVM Locking Service. -->
+
+    <bean id="avmLockingServiceReadTxnAdvisor" class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+        <property name="advice">
+            <ref bean="retryingReadTxnAdvice"/>
+        </property>
+        <property name="mappedNames">
+            <list>
+                <value>getLock</value>
+                <value>getUserLocks</value>
+                <value>getWebProjectLocks</value>
+                <value>getWebProjects</value>
+                <value>getStoreLocks</value>
+                <value>hasAccess</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="avmLockingServiceWriteTxnAdvisor" class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+        <property name="advice">
+            <ref bean="retryingWriteTxnAdvice"/>
+        </property>
+        <property name="mappedNames">
+            <list>
+                <value>addWebProject</value>
+                <value>lockPath</value>
+                <value>removeLock</value>
+                <value>removeWebProject</value>
+                <value>modifyLock</value>
+                <value>removeStoreLocks</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="AVMLockingService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <list>
+                <value>org.alfresco.service.cmr.avm.locking.AVMLockingService</value>
+            </list>
+        </property>
+        <property name="targetName">
+            <value>avmLockingService</value>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>avmLockingServiceWriteTxnAdvisor</value>
+                <value>avmLockingServiceReadTxnAdvisor</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- Workflow Service -->
+
+    <bean id="WorkflowService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>org.alfresco.service.cmr.workflow.WorkflowService</value>
+        </property>
+        <property name="target">
+            <ref bean="workflowServiceImpl"/>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref local="WorkflowService_transaction"/>
+                <idref local="AuditMethodInterceptor"/>
+                <idref local="exceptionTranslator"/>
+                 <idref bean="WorkflowService_security"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="WorkflowService_transaction" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager">
+            <ref bean="transactionManager"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">${server.transaction.mode.default}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- Audit Service -->
+
+    <bean id="AuditService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>org.alfresco.service.cmr.audit.AuditService</value>
+        </property>
+        <property name="target">
+            <ref bean="auditService"/>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref local="AuditService_transaction"/>
+                <idref local="AuditMethodInterceptor"/>
+                <idref local="exceptionTranslator"/>
+                 <idref bean="AuditService_security"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="AuditService_transaction" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager">
+            <ref bean="transactionManager"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">${server.transaction.mode.default}</prop>
+            </props>
+        </property>
+    </bean>
+
+
+    <!-- MultilingualContentService -->
+
+    <bean id="MultilingualContentService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>org.alfresco.service.cmr.ml.MultilingualContentService</value>
+        </property>
+        <property name="target">
+            <ref bean="multilingualContentService"/>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref local="MultilingualContentService_transaction"/>
+                <idref local="exceptionTranslator"/>
+                <idref bean="MultilingualContentService_security"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="MultilingualContentService_transaction" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager">
+            <ref bean="transactionManager"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="is*">${server.transaction.mode.readOnly}</prop>
+                <prop key="get*">${server.transaction.mode.readOnly}</prop>
+                <prop key="*">${server.transaction.mode.default}</prop>
+            </props>
+        </property>
+    </bean>
+
+
+    <!-- EditionService -->
+
+    <bean id="EditionService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>org.alfresco.service.cmr.ml.EditionService</value>
+        </property>
+        <property name="target">
+            <ref bean="editionService"/>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref local="EditionService_transaction"/>
+                <idref bean="EditionService_security"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="EditionService_transaction" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager">
+            <ref bean="transactionManager"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">${server.transaction.mode.default}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- ConfigurableService -->
+
+    <bean id="ConfigurableService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>org.alfresco.repo.configuration.ConfigurableService</value>
+        </property>
+        <property name="target">
+            <ref bean="configurableService"/>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref local="ConfigurableService_transaction"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="ConfigurableService_transaction" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager">
+            <ref bean="transactionManager"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="is*">${server.transaction.mode.readOnly}</prop>
+                <prop key="get*">${server.transaction.mode.readOnly}</prop>
+                <prop key="*">${server.transaction.mode.default}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- RegistryService -->
+
+    <bean id="RegistryService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>org.alfresco.repo.admin.registry.RegistryService</value>
+        </property>
+        <property name="target">
+            <ref bean="registryService"/>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref local="RegistryService_transaction"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="RegistryService_transaction" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager">
+            <ref bean="transactionManager"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="get*">${server.transaction.mode.readOnly}</prop>
+                <prop key="*">${server.transaction.mode.default}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- ModuleService -->
+
+    <bean id="ModuleService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>org.alfresco.service.cmr.module.ModuleService</value>
+        </property>
+        <property name="target">
+            <ref bean="moduleService"/>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref local="ModuleService_transaction"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="ModuleService_transaction" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager">
+            <ref bean="transactionManager"/>
+        </property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="get*">${server.transaction.mode.readOnly}</prop>
+                <prop key="*">${server.transaction.mode.default}</prop>
+            </props>
+        </property>
+    </bean>
+
+
+
+
+    <!-- LinkValidationService -->
+    <!-- Read transaction advisor for link validation service. -->
+    <bean id="linkValidationServiceReadTxnAdvisor" 
+          class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+        <property name="advice">
+            <ref bean="retryingReadTxnAdvice"/>
+        </property>
+        <property name="mappedNames">
+            <list>
+                    <value>getHrefManifest</value>
+                    <value>getBrokenHrefManifest</value>
+                    <value>getHrefDifference</value>
+                    <value>getHrefManifestBrokenByDelete</value>
+                    <value>getHrefManifestBrokenByNewOrMod</value>
+                    <value>getHrefsDependentUponFile</value>
+            </list>
+        </property>
+    </bean>
+
+ <!-- Write transaction advisor for link validation service. -->
+    <bean id="linkValidationServiceWriteTxnAdvisor" 
+          class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+        <property name="advice">
+            <ref bean="retryingWriteTxnAdvice"/>
+        </property>
+        <property name="mappedNames">
+            <list>
+                    <value>updateHrefInfo</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="LinkValidationService" 
+          class="org.springframework.aop.framework.ProxyFactoryBean"
+          lazy-init="true">
+        <property name="proxyInterfaces">
+            <list>
+                <value>org.alfresco.linkvalidation.LinkValidationService</value>
+            </list>
+        </property>
+        <property name="targetName">
+            <value>linkValidationService</value>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>linkValidationServiceWriteTxnAdvisor</value>
+                <value>linkValidationServiceReadTxnAdvisor</value>
+            </list>
+        </property>
+    </bean>
+
+</beans>

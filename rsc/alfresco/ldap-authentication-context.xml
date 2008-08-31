@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE beans PUBLIC '-//SPRING//DTD BEAN//EN' 'http://www.springframework.org/dtd/spring-beans.dtd'>
+
+<beans>
+
+    <bean id="ldapInitialDirContextFactory" class="org.alfresco.repo.security.authentication.ldap.LDAPInitialDirContextFactoryImpl">
+        <property name="initialDirContextEnvironment">
+            <map>
+                <!-- The LDAP provider -->
+                <entry key="java.naming.factory.initial">
+                    <value>com.sun.jndi.ldap.LdapCtxFactory</value>
+                </entry>
+
+                <!-- The url to the LDAP server -->
+                <entry key="java.naming.provider.url">
+                    <value>ldap://localhost:10389</value>
+                </entry>
+
+                <!-- The authentication mechanism to use      -->
+                <!-- Some sasl authentication mechanisms may require a realm to be set -->
+                <!--                java.naming.security.sasl.realm -->
+                <!-- The available options will depend on your LDAP provider -->
+                <entry key="java.naming.security.authentication">
+                    <value>simple</value>
+                </entry>
+
+                <!-- The id of a user who can read group and user information -->
+                <!-- This does not go through the pattern substitution defined above and is used "as is" -->
+                <entry key="java.naming.security.principal">
+                    <value>uid=admin,ou=system</value>
+                </entry>
+
+                <!-- The password for the user defined above -->
+                <entry key="java.naming.security.credentials">
+                    <value>secret</value>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+</beans>
