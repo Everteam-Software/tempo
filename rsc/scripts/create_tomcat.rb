@@ -290,7 +290,10 @@ if ADD_ALFRESCO && SERVER == LIFERAY
   FileUtils.mkdir_p "#{webapp_folder}/alfresco/WEB-INF/tld"
   Dir.glob("#{TEMPO_SVN}/rsc/liferay510/tld/*.*") {|x| File.copy x, "#{webapp_folder}/alfresco/WEB-INF/tld", DEBUG}
   # copy the config files
-  Dir.glob("#{TEMPO_SVN}/rsc/alfresco/*.xml") {|x| File.copy x, "#{webapp_folder}/alfresco/WEB-INF", DEBUG}
+  Dir.glob("#{TEMPO_SVN}/rsc/alfresco/f*.xml") {|x| File.copy x, "#{webapp_folder}/alfresco/WEB-INF", DEBUG}
+  Dir.glob("#{TEMPO_SVN}/rsc/alfresco/l*.xml") {|x| File.copy x, "#{webapp_folder}/alfresco/WEB-INF", DEBUG}
+  Dir.glob("#{TEMPO_SVN}/rsc/alfresco/portlet.xml") {|x| File.copy x, "#{webapp_folder}/alfresco/WEB-INF", DEBUG}
+  Dir.glob("#{TEMPO_SVN}/rsc/alfresco/web.xml") {|x| File.copy x, "#{webapp_folder}/alfresco/WEB-INF", DEBUG}
   # copy the portlet class
   Dir.glob("#{TEMPO_SVN}/rsc/alfresco/forliferay*.jar") {|x| File.copy x, "#{webapp_folder}/alfresco/WEB-INF/lib", DEBUG}
   # copy the util jars
@@ -307,10 +310,17 @@ if ADD_LDAP
   
   explain "Deploy the apache ds war"
   apacheds_war_folder = wi.install apacheds_war, "apacheds_webapp-apacheds_webapp-1.0.1.war"
+  File.rename("#{webapp_folder}/apacheds_webapp-apacheds_webapp-1.0.1", "#{webapp_folder}/_apacheds")
   if SERVER == LIFERAY
     explain "Server is Liferay, config it to use Apache DS as LDAP server"
     # copy the config files
     Dir.glob("#{TEMPO_SVN}/rsc/LDAP/portal-ext.properties") {|x| File.copy x, "#{webapp_folder}/ROOT/WEB-INF/classes", DEBUG}
+  end
+  
+  if ADD_ALFRESCO
+    explain "Also need to config Alfresco to use apacheds"
+    Dir.glob("#{TEMPO_SVN}/rsc/alfresco/public*.xml") {|x| File.copy x, "#{webapp_folder}/alfresco/WEB-INF/classes/alfresco", DEBUG}
+    Dir.glob("#{TEMPO_SVN}/rsc/alfresco/extension/*.xml") {|x| File.copy x, "#{webapp_folder}/alfresco/WEB-INF/classes/alfresco/extension", DEBUG}
   end
 end
 

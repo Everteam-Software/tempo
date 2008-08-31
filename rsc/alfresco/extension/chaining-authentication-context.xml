@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE beans PUBLIC '-//SPRING//DTD BEAN//EN' 'http://www.springframework.org/dtd/spring-beans.dtd'>
+
+<beans>
+
+    <!-- Chaining -->
+    <bean id="chainingAuthenticationServiceImpl" class="org.alfresco.repo.security.authentication.ChainingAuthenticationServiceImpl">
+        <property name="authenticationServices">
+            <list>
+                <ref bean="authenticationServiceImplLDAP"/>
+            </list>
+        </property>
+        <property name="mutableAuthenticationService">
+            <ref bean="authenticationServiceImplAlfresco"/>
+        </property>
+    </bean>
+
+    <!-- Alfresco Auth -->
+    <bean id="authenticationServiceImplAlfresco" class="org.alfresco.repo.security.authentication.AuthenticationServiceImpl">
+        <property name="authenticationDao">
+            <ref bean="authenticationDaoAlfresco"/>
+        </property>
+        <property name="ticketComponent">
+            <ref bean="ticketComponent"/>
+        </property>
+        <property name="authenticationComponent">
+            <ref bean="authenticationComponentImplAlfresco"/>
+        </property> 
+    </bean>
+         
+    <bean id="authenticationDaoAlfresco" class="org.alfresco.repo.security.authentication.RepositoryAuthenticationDao">
+        <property name="nodeService">
+            <ref bean="nodeService"/>
+        </property>
+        <property name="dictionaryService"> 
+            <ref bean="dictionaryService"/>
+        </property>
+        <property name="namespaceService">
+            <ref bean="namespaceService"/>
+        </property> 
+        <property name="searchService"> 
+            <ref bean="searchService"/>
+        </property> 
+        <property name="userNamesAreCaseSensitive">
+            <value>${user.name.caseSensitive}</value>
+        </property>
+        <property name="passwordEncoder">
+            <ref bean="passwordEncoder"/>
+        </property>
+    </bean>
+
+    <bean id="authenticationComponentImplAlfresco" class="org.alfresco.repo.security.authentication.AuthenticationComponentImpl">
+        <property name="authenticationDao">
+            <ref bean="authenticationDaoAlfresco"/>
+        </property>
+        <property name="authenticationManager">
+            <ref bean="authenticationManager"/>
+        </property>
+        <property name="allowGuestLogin">
+            <value>true</value>
+        </property>
+    </bean>
+
+   <!-- LDAP Auth -->
+    <bean id="authenticationServiceImplLDAP" class="org.alfresco.repo.security.authentication.AuthenticationServiceImpl">
+        <property name="authenticationDao">
+            <ref bean="authenticationDaoLDAP" />
+        </property>
+        <property name="ticketComponent">
+            <ref bean="ticketComponent" />
+        </property>
+        <property name="authenticationComponent">
+            <ref bean="authenticationComponentImplLDAP" />
+        </property>
+    </bean>
+
+    <bean id="authenticationComponentImplLDAP" class="org.alfresco.repo.security.authentication.ldap.LDAPAuthenticationComponentImpl">
+        <property name="LDAPInitialDirContextFactory">
+            <ref bean="ldapInitialDirContextFactory"/>
+        </property>
+        <property name="userNameFormat">
+            <value>cn=%s,ou=People,dc=intalio,dc=com</value>
+        </property>
+    </bean>
+
+    <bean id="authenticationDaoLDAP" class="org.alfresco.repo.security.authentication.ntlm.NullMutableAuthenticationDao"/>
+
+</beans>
