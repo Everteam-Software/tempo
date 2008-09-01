@@ -306,11 +306,10 @@ end
 if ADD_LDAP
   title "Install ApacheDS embbeded server"
   explain "Install ApacheDS 1.5.1"
-  apacheds_war = finder.find_war("#{script_folder}/../LDAP")
+  apacheds_war = download_and_return_path_to_local_repo("org.apache:apacheds-webapp:war:1.0.1")
   
   explain "Deploy the apache ds war"
-  apacheds_war_folder = wi.install apacheds_war, "apacheds_webapp-apacheds_webapp-1.0.1.war"
-  File.rename("#{webapp_folder}/apacheds_webapp-apacheds_webapp-1.0.1", "#{webapp_folder}/_apacheds")
+  apacheds_war_folder = wi.install apacheds_war, "apacheds.war"
   if SERVER == LIFERAY
     explain "Server is Liferay, config it to use Apache DS as LDAP server"
     # copy the config files
@@ -332,7 +331,8 @@ File.copy "#{TEMPO_SVN}/rsc/liferay501/tempokeystore", tomcat_config_folder
 Dir.glob(File.join("#{TEMPO_SVN}/rsc/liferay501", "server.xml")) {|x| File.copy(x,"#{server_folder}/conf", DEBUG)}
 Dir.glob(File.join("#{webapp_folder}/cas/WEB-INF/lib", "casclient*.jar")) {|x| File.cp x, "#{lib_folder}"}
 Dir.glob(File.join("#{webapp_folder}", "**/casclient*.jar")) {|x| File.delete x}
-File.copy "#{TEMPO_SVN}/rsc/liferay501/xmldsig.jar", "#{webapp_folder}/cas/WEB-INF/lib"
+locate_and_copy( "javax.xml.xmldsig:xmldsig:jar:1.0", "#{webapp_folder}/cas/WEB-INF/lib" )
+
 ##
   
 title "Deleting war files from webapp folder"
