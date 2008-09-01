@@ -317,6 +317,7 @@ if ADD_LDAP
     explain "Server is Liferay, config it to use Apache DS as LDAP server"
     # copy the config files
     Dir.glob("#{TEMPO_SVN}/rsc/LDAP/portal-ext.properties") {|x| File.copy x, "#{webapp_folder}/ROOT/WEB-INF/classes", DEBUG}
+    File.copy "#{TEMPO_SVN}/rsc/LDAP/intalio-apacheds.ldif", "#{apacheds_war_folder}/WEB-INF/classes", DEBUG
   end
   
   if ADD_ALFRESCO
