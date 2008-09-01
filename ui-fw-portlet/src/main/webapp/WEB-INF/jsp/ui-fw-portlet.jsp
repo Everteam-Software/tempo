@@ -11,7 +11,7 @@ String token = as.getCurrentUser().getToken();
 <script type="text/javascript">
 //<![CDATA[
 window.onload = function() {
-	<portlet:namespace/>_startTimer(10);
+	_startTimer(10);
 }
 
 SimpleTabEx=function(){
@@ -42,7 +42,7 @@ var GridEx={
             }
         }, 'pnlGrid');
 
-		this.gridobj.on('rowclick',<portlet:namespace/>_openWindow);
+		this.gridobj.on('rowclick',_openWindow);
         this.gridobj.render();
     },
     makeDataSource:function(){
@@ -113,7 +113,7 @@ var ProcessGridEx={
                 panels :[new Ext.GridPanel(this.gridobj)]
             }
         }, 'processPnl');
-		this.gridobj.on('rowclick',<portlet:namespace/>_openWindow);
+		this.gridobj.on('rowclick',_openWindow);
         this.gridobj.render();
     },
     makeDataSource:function(){
@@ -161,21 +161,21 @@ function hideWindow() {
 	EntryForm.hideWindow();
 }
 
-function <portlet:namespace/>_openWindow(grid,rowIndex) {
+function _openWindow(grid,rowIndex) {
 	var url = grid.getDataSource().getAt(rowIndex).data['taskUrl'];
     EntryForm.showDialog(url);
 }
 
-function <portlet:namespace/>_startTimer(interval) {
-	var timer = new PeriodicalExecuter(<portlet:namespace/>_getUpdateData, interval);
+function _startTimer(interval) {
+	var timer = new PeriodicalExecuter(_getUpdateData, interval);
 }
 
-function <portlet:namespace/>_searchTask(){
+function _searchTask(){
 	GridEx.gridobj.reconfigure(GridEx.makeDataSource(),GridEx.gridobj.getColumnModel());
 	ProcessGridEx.gridobj.reconfigure(ProcessGridEx.makeDataSource(),ProcessGridEx.gridobj.getColumnModel());
 }
 
-function <portlet:namespace/>_getUpdateData(){
+function _getUpdateData(){
     GridEx.gridobj.dataSource.load()
 	ProcessGridEx.gridobj.dataSource.load()
 }

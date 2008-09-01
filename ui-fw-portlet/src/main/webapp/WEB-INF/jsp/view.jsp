@@ -22,14 +22,14 @@
 		<tr>
 			<td>Task Type:</td>
 			<td>
-			<select id="taskType" size="1" onChange="<portlet:namespace/>_searchTask()">
+			<select id="taskType" size="1" onChange="_searchTask()">
 			<option>Task</option>
 			<option>PATask</option>
 			<option>Notification</option>
 			</select></td>
 			<td>Description:</td>
-			<td><input id="description" type="text" onChange="<portlet:namespace/>_searchTask()" /></td>
-			<td><input type="submit" onclick="<portlet:namespace/>_searchTask()" value="Filter Tasks"/></td>
+			<td><input id="description" type="text" onChange="_searchTask()" /></td>
+			<td><input type="submit" onclick="_searchTask()" value="Filter Tasks"/></td>
 		</tr>
 	</table>
 
