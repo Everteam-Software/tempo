@@ -52,17 +52,15 @@
 
 
 	<!-- WSDL Dependencies -->
+	<wsdl:import location="b4p.xsd"
+		namespace="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+	</wsdl:import>
 
 
 
 	<wsdl:types>
 
-		<xsd:schema targetNamespace="http://www.intalio.com/bpms/ubp">
-			<xsd:import schemaLocation="b4p.xsd"
-				namespace="http://www.intalio.com/bpms/workflow/ib4p_20051115">
-			</xsd:import>
-
-		</xsd:schema>
+		
 	</wsdl:types>
 
 
@@ -142,7 +140,7 @@
 
 	</wsdl:message>
 
-
+	
 	<!-- Correlations -->
 
 
@@ -181,7 +179,7 @@
 
 			<wsdl:output message="ubp:notifyTaskCompletionResponse"
 				name="notifyTaskCompletionResponse" />
-
+			
 		</wsdl:operation>
 
 	</wsdl:portType>
@@ -203,13 +201,16 @@
 
 			<wsdl:input>
 
-				<soap:body use="literal" />
+				<soap:body use="literal"
+					namespace="http://www.intalio.com/bpms/workflow/taskManager_20051124" />
 
 			</wsdl:input>
 
 			<wsdl:output>
 
-				<soap:body use="literal" />
+				<soap:body
+					namespace="http://www.intalio.com/bpms/workflow/taskManager_20051124"
+					use="literal" />
 
 			</wsdl:output>
 
@@ -221,13 +222,16 @@
 
 			<wsdl:input>
 
-				<soap:body use="literal" />
+				<soap:body use="literal"
+					namespace="http://www.intalio.com/bpms/workflow/taskManager_20051124" />
 
 			</wsdl:input>
 
 			<wsdl:output>
 
-				<soap:body use="literal" />
+				<soap:body
+					namespace="http://www.intalio.com/bpms/workflow/taskManager_20051124"
+					use="literal" />
 
 			</wsdl:output>
 
@@ -240,13 +244,16 @@
 
 			<wsdl:input>
 
-				<soap:body use="literal" />
+				<soap:body use="literal"
+					namespace="http://www.intalio.com/bpms/workflow/taskManager_20051124" />
 
 			</wsdl:input>
 
 			<wsdl:output>
 
-				<soap:body use="literal" />
+				<soap:body
+					namespace="http://www.intalio.com/bpms/workflow/taskManager_20051124"
+					use="literal" />
 
 			</wsdl:output>
 			<wsdl:fault name="taskDeadlineReached">
