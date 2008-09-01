@@ -300,6 +300,8 @@ if ADD_ALFRESCO && SERVER == LIFERAY
   Dir.glob("#{webapp_folder}/ROOT/WEB-INF/lib/util*.jar") {|x| File.copy x, "#{webapp_folder}/alfresco/WEB-INF/lib", DEBUG}
   # delete some conflict jar files
   Dir.glob(File.join("#{webapp_folder}/alfresco/WEB-INF/lib", "portlet*.jar")) {|x| File.delete x}
+  # copy alfresco repository location
+  File.copy "#{TEMPO_SVN}/rsc/alfresco/repository.properties", "#{webapp_folder}/alfresco/WEB-INF/classes/alfresco"
 end
 
 ## Add LDAP embbeded server and config liferay & alfresco to use that
@@ -309,7 +311,7 @@ if ADD_LDAP
   apacheds_war = download_and_return_path_to_local_repo("org.apache:apacheds-webapp:war:1.0.1")
   
   explain "Deploy the apache ds war"
-  apacheds_war_folder = wi.install apacheds_war, "apacheds.war"
+  apacheds_war_folder = wi.install apacheds_war, "_apacheds.war" # ensure the apacheds war loads frst, by using the dirty _ trick
   if SERVER == LIFERAY
     explain "Server is Liferay, config it to use Apache DS as LDAP server"
     # copy the config files
