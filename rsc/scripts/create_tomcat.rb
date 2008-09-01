@@ -264,6 +264,7 @@ if SERVER == LIFERAY
   #File.cp "#{TEMPO_SVN}/rsc/liferay501/forliferay-ticketfilter-1.0.1.jar", "#{webapp_folder}/ROOT/WEB-INF/lib"
   File.cp "#{TEMPO_SVN}/rsc/liferay510/forliferay-ticketfilter-1.1.0.jar", "#{webapp_folder}/ROOT/WEB-INF/lib"
   File.cp "#{TEMPO_SVN}/rsc/liferay501/portal-ext.properties", "#{webapp_folder}/ROOT/WEB-INF/classes"
+  File.cp "#{TEMPO_SVN}/rsc/liferay501/ROOT.xml", "#{webapp_folder}/../conf/Catalina/localhost/"
   
   explain "Deploy the ui-fw-portlet"
   # deploy the ui-fw-portlet file
