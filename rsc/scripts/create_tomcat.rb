@@ -137,7 +137,6 @@ explain "The task manager process is a regular process running in Ode, responsib
 opi.install_process_from_tempo_trunk "TaskManager"
 ##
 
-
 title "Install AbsenceRequest in Ode"
 explain "A sample process, that can be started from the UI-FW"
 ##
@@ -302,6 +301,8 @@ if ADD_ALFRESCO && SERVER == LIFERAY
   Dir.glob(File.join("#{webapp_folder}/alfresco/WEB-INF/lib", "portlet*.jar")) {|x| File.delete x}
   # copy alfresco repository location
   File.copy "#{TEMPO_SVN}/rsc/alfresco/repository.properties", "#{webapp_folder}/alfresco/WEB-INF/classes/alfresco"
+  # disable open office and imagemagick, probably not installed on the server
+  Dir.glob("#{TEMPO_SVN}/rsc/alfresco/custom/*.xml") {|x| File.copy x, "#{webapp_folder}/alfresco/WEB-INF/classes/alfresco", DEBUG}
 end
 
 ## Add LDAP embbeded server and config liferay & alfresco to use that
@@ -348,11 +349,11 @@ title "Delete conflicting jar files"
 explain "Delete files conflicting with tomcat common jar files"
 ##
 Dir.glob(File.join("#{lib_folder}", "commons-logging*.jar")) {|x| File.delete x}
+Dir.glob(File.join("#{webapp_folder}", "commons-logging*.jar")) {|x| File.delete x}
 Dir.glob(File.join("#{lib_folder}", "jcl104*.jar")) {|x| File.delete x}
 Dir.glob(File.join("#{axis2_war_folder}", "**/dom4j*.jar")) {|x| File.delete x}
-Dir.glob(File.join("#{webapp_folder}", "**/servlet-api-2.4.jar")) {|x| File.delete x}
-Dir.glob(File.join("#{webapp_folder}", "**/servlet-api-2.3.jar")) {|x| File.delete x}
-Dir.glob(File.join("#{webapp_folder}", "**/jsp-api-2.0.jar")) {|x| File.delete x}
+Dir.glob(File.join("#{webapp_folder}", "**/servlet-api-*")) {|x| File.delete x}
+Dir.glob(File.join("#{webapp_folder}", "**/jsp-api-*")) {|x| File.delete x}
 Dir.glob(File.join("#{webapp_folder}", "**/log4j-*.jar")) {|x| File.delete x}
 Dir.glob(File.join("#{webapp_folder}", "**/slf4j*.jar")) {|x| File.delete x}
 Dir.glob(File.join("#{server_folder}/common/endorsed", "*.jar")) {|x| File.delete x}
