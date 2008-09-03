@@ -22,10 +22,9 @@ import org.intalio.tempo.security.rbac.RBACException;
 import org.intalio.tempo.security.token.TokenService;
 import org.intalio.tempo.security.util.PropertyUtils;
 import org.intalio.tempo.security.util.StringArrayUtils;
+import org.intalio.tempo.uiframework.Configuration;
 import org.intalio.tempo.web.ApplicationState;
 import org.intalio.tempo.web.User;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -81,11 +80,8 @@ public class CASRBACFilter implements Filter {
     private void doSignIn(HttpServletRequest httpServletRequest, HttpSession session) throws RemoteException {
         LOG.info("signing in with CAS....");
         String serviceURL = _filterConfig.getInitParameter(SERVICE_URL);
-        String tempoConfigPath = System.getProperty(TEMPO_CONFIG_DIRECTORY);
-        ApplicationContext appContext = new FileSystemXmlApplicationContext((new StringBuilder("/")).append(tempoConfigPath).append("/").append(
-                        SECURITY_CONFIG_XML).toString());
 
-        TokenService tokenService = (TokenService) appContext.getBean(TOKEN_SERVICE);
+        TokenService tokenService = Configuration.getInstance().getTokenClient();
         String pgtIou = null;
         CASReceipt CASreceipt = (CASReceipt) session.getAttribute(CAS_RECEIPT);
         if (CASreceipt != null)
