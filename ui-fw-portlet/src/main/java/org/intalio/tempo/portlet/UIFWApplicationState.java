@@ -11,6 +11,8 @@
  */
 package org.intalio.tempo.portlet;
 
-public class UIFWApplicationState extends ApplicationState {
+import java.io.Serializable;
+
+public class UIFWApplicationState extends ApplicationState  implements Serializable {
 	private static final long serialVersionUID = -7511327773807678214L;
 }
