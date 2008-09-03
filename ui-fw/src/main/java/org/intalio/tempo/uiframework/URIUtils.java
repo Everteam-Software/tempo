@@ -39,6 +39,7 @@ public class URIUtils {
             if (!uri.isAbsolute()) {
                 uri = new URI(scheme, null, LOCALHOST_LOCAL, serverPort, null, null, null).resolve(uri);
             }
+//            if(serverName.equals("localhost")) serverName = "127.0.0.1"; 
             return uri.toString().replaceAll(LOCALHOST_LOCAL, serverName);
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);

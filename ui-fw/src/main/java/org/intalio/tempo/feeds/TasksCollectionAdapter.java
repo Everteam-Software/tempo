@@ -9,11 +9,9 @@
  * Contributors:
  * Intalio inc. - initial API and implementation
  */
-package org.intalio.tempo.workflow.tms.feeds;
+package org.intalio.tempo.feeds;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.URI;
 import java.util.Date;
 
 import org.apache.abdera.factory.Factory;
@@ -38,6 +36,7 @@ import org.intalio.tempo.security.Property;
 import org.intalio.tempo.security.authentication.AuthenticationConstants;
 import org.intalio.tempo.security.util.PropertyUtils;
 import org.intalio.tempo.security.ws.TokenClient;
+import org.intalio.tempo.uiframework.Configuration;
 import org.intalio.tempo.uiframework.URIUtils;
 import org.intalio.tempo.uiframework.forms.FormManagerBroker;
 import org.intalio.tempo.uiframework.forms.GenericFormManager;
@@ -146,7 +145,7 @@ public class TasksCollectionAdapter extends AbstractCollectionAdapter {
         feed.setMustPreserveWhitespace(true);
         feed.setUpdated(new Date());
         try {
-            ITaskManagementService client = new RemoteTMSFactory(Configuration.getInstance().getTmsService(), token).getService();
+            ITaskManagementService client = new RemoteTMSFactory(Configuration.getInstance().getServiceEndpoint(), token).getService();
             if (collection.equalsIgnoreCase(IntalioFeeds.PROCESSES.name())) {
                 feed.setTitle("Intalio Processes");
                 addTasksToFeed(context, feed, client.getAvailableTasks(PIPATask.class.getSimpleName(), null), token, user);

@@ -288,12 +288,12 @@ define "tempo" do
         [ projects("deploy-api", "registry", "security", "security-ws-client", "security-ws-common", "tms-axis", "tms-common", "web-nutsNbolts", "dao-nutsNbolts"), APACHE_COMMONS[:pool], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], APACHE_JPA, SLF4J, SPRING[:core] ] 
   end
   
-  desc "Task Management Feeds"
-  define "tms-feeds" do
-    compile.with projects("tms-common", "ui-fw", "tms-axis", "security", "security-ws-client", "security-ws-common", "tms-client", "web-nutsNbolts"), 
-    AXIOM, APACHE_ABDERA, APACHE_JPA, AXIS2, JETTY, LOG4J, SERVLET_API, SLF4J, SPRING[:core], XMLBEANS, WS_COMMONS_SCHEMA, WSDL4J
-    package(:war)
-  end 
+  # desc "Task Management Feeds"
+  # define "tms-feeds" do
+  #   compile.with projects("tms-common", "ui-fw", "tms-axis", "security", "security-ws-client", "security-ws-common", "tms-client", "web-nutsNbolts"), 
+  #   AXIOM, , APACHE_JPA, AXIS2, JETTY, LOG4J, SERVLET_API, SLF4J, SPRING[:core], XMLBEANS, WS_COMMONS_SCHEMA, WSDL4J
+  #   package(:war)
+  # end 
   
   desc "User-Interface Framework"
   define "ui-fw" do
@@ -325,7 +325,8 @@ define "tempo" do
            WS_COMMONS_SCHEMA,
            XERCES, 
            XMLBEANS,
-           CAS_CLIENT
+           CAS_CLIENT,
+           APACHE_ABDERA
     compile.with libs
 
     resources.filter.using "version" => VERSION_NUMBER

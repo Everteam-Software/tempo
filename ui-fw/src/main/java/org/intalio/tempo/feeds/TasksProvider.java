@@ -9,7 +9,7 @@
  * Contributors:
  * Intalio inc. - initial API and implementation
  */
-package org.intalio.tempo.workflow.tms.feeds;
+package org.intalio.tempo.feeds;
 
 import org.apache.abdera.protocol.server.CollectionAdapter;
 import org.apache.abdera.protocol.server.Filter;

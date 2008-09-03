@@ -20,6 +20,23 @@
         <param-value>file:${org.intalio.tempo.configDirectory}/tempo-ui-fw.xml</param-value>
     </context-param>
 
+	<servlet id="abdera">
+		<servlet-name>Abdera</servlet-name>  
+		<servlet-class>org.apache.abdera.protocol.server.servlet.AbderaServlet</servlet-class>
+		<init-param>
+			<param-name>org.apache.abdera.protocol.server.Provider</param-name>
+			<param-value>org.intalio.tempo.feeds.TasksProvider</param-value>
+		</init-param>
+		<init-param>
+			<param-name>org.apache.abdera.protocol.server.ServiceContext</param-name>
+			<param-value>org.apache.abdera.examples.appserver.SimpleServiceContext</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping id="abdera-mapping">
+		<servlet-name>Abdera</servlet-name>
+		<url-pattern>/atom/*</url-pattern>
+	</servlet-mapping>
+
     <!-- CAS config start (Remove from here if you don't want to use CAS server for authentication)-->
     <!--    
     <context-param>

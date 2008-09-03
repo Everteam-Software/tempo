@@ -14,8 +14,8 @@
 								<tr>
 									<td>
 										<a href="ical" title="iCalendar export"><img width="20" height="20" border="0" src="images/ical.jpg"/></a>
-										<a href="/feeds/atom/tasks?token=${participantToken}" title="Personal Tasks Feed"><img width="20" height="20" border="0" src="images/rss.orange.png"/></a>
-										<a href="/feeds/atom/processes?token=${participantToken}" title="Personal Process Feed"><img width="20" height="20" border="0" src="images/rss.green.png"/></a>
+										<a href="atom/tasks?token=${participantToken}" title="Personal Tasks Feed"><img width="20" height="20" border="0" src="images/rss.orange.png"/></a>
+										<a href="atom/processes?token=${participantToken}" title="Personal Process Feed"><img width="20" height="20" border="0" src="images/rss.green.png"/></a>
 									</td>
 									<td class="menuItemSeparator"><img src="images/spacer.gif" width="10" alt="" height="1"/></td>																
 									<td id="user_logged"><img src="images/curent_user.gif" width="20" height="20" title="Curent user" alt="Curent user" style="vertical-align: bottom;" border="0"/>${currentUser}</td>
