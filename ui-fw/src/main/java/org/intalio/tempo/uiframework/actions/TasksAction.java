@@ -51,6 +51,7 @@ public class TasksAction extends Action {
         final String user = state.getCurrentUser().getName();
         try {
             TasksCollector collector = new TasksCollector(new HttpServletRequestWrapper(_request), user, token);
+            collector.retrieveTasks();
             model.put("activityTasks", collector.get_activityTasks());
             model.put("notifications", collector.get_notifications());
             model.put("initTasks", collector.get_initTasks());
