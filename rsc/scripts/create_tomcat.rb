@@ -312,7 +312,7 @@ if ADD_LDAP
   apacheds_war = download_and_return_path_to_local_repo("org.apache:apacheds-webapp:war:1.0.1")
   
   explain "Deploy the apache ds war"
-  apacheds_war_folder = wi.install apacheds_war, "_apacheds.war" # ensure the apacheds war loads frst, by using the dirty _ trick
+  apacheds_war_folder = wi.install apacheds_war, "0apacheds.war" # ensure the apacheds war loads first, by using the dirty 0 trick
   if SERVER == LIFERAY
     explain "Server is Liferay, config it to use Apache DS as LDAP server"
     # copy the config files
