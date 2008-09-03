@@ -392,4 +392,10 @@ define "tempo" do
     resources.filter.using "version" => VERSION_NUMBER
     package(:war).with :libs=> ORBEON_LIBS
   end
+  desc "Apache Directory Service"
+  define "apacheds_webapp" do
+	  libs = APACHE_DS, SERVLET_API
+  	compile.with(libs)
+	  package(:war).with :libs => [APACHE_DS]
+  end
 end
