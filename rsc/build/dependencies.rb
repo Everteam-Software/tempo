@@ -274,3 +274,23 @@ AXIS2 = [
   NEETHI,
   SUNMAIL
 ]
+
+LIFERAY = [
+  "com.liferay:portal-impl:jar:5.1.0",
+  "com.liferay:portal-kernel:jar:5.1.0",
+  "com.liferay:util-java:jar:5.1.0",
+  "com.liferay:portal-service:jar:5.1.0"
+  ]
+  
+ALFRESCO = [
+  "com.alfresco:alfresco-web-client:jar:2.1.0",
+  "com.alfresco:alfresco-core:jar:2.1.0",
+  "com.alfresco:jta:jar:2.1.0",
+  "com.alfresco:acegi-security-0.8.2_patched:jar:2.1.0",
+  "com.alfresco:alfresco-repository:jar:2.1.0"
+  ]
+  
+MY_FACES = [
+  "org.apache.myfaces.core:myfaces-api:jar:1.1.5",
+  "org.apache.myfaces.core:myfaces-impl:jar:1.1.5"
+]

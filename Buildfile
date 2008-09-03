@@ -392,10 +392,25 @@ define "tempo" do
     resources.filter.using "version" => VERSION_NUMBER
     package(:war).with :libs=> ORBEON_LIBS
   end
+  
   desc "Apache Directory Service"
   define "apacheds_webapp" do
 	  libs = APACHE_DS, SERVLET_API
   	compile.with(libs)
 	  package(:war).with :libs => [APACHE_DS]
+  end
+  
+  desc "Liferay CAS ticket filter"
+  define "liferay-ticket-filter" do
+	  libs = LIFERAY, SERVLET_API, PORTLET_API, CAS_CLIENT
+  	compile.with(libs)
+	package :jar
+  end
+
+  desc "Liferay alfresco CAS portlet class"
+  define "liferay-alfresco-sso" do
+	  libs = ALFRESCO, APACHE_COMMONS[:logging], APACHE_COMMONS[:fileupload], SERVLET_API, CAS_CLIENT, SPRING[:core], MY_FACES, PORTLET_API, LIFERAY
+	  compile.with(libs)
+	package :jar
   end
 end
