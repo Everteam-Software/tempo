@@ -5,7 +5,7 @@
 	
 	<import resource="file:${org.intalio.tempo.configDirectory}/tempo-ui-fw.xml"/>
 	
-    <bean id="applicationState" class="org.intalio.tempo.portlet.UIFWApplicationState"/>
+    <bean id="applicationState" class="org.intalio.tempo.uiframework.UIFWApplicationState"/>
 	<!-- Tasks section -->
 	<bean id="tasksDefaultAction"
 		class="org.intalio.tempo.web.controller.ActionDef">

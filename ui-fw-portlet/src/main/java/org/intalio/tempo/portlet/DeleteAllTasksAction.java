@@ -2,11 +2,9 @@ package org.intalio.tempo.portlet;
 
 import java.rmi.RemoteException;
 
-import org.apache.pluto.wrappers.PortletRequestWrapper;
 import org.intalio.tempo.uiframework.Configuration;
 import org.intalio.tempo.uiframework.URIUtils;
-import org.intalio.tempo.portlet.ApplicationState;
-import org.intalio.tempo.portlet.Action;
+import org.intalio.tempo.web.ApplicationState;
 import org.intalio.tempo.workflow.tms.ITaskManagementService;
 import org.intalio.tempo.workflow.tms.client.RemoteTMSFactory;
 import org.slf4j.Logger;
@@ -30,7 +28,7 @@ public class DeleteAllTasksAction extends Action {
     }
 
     protected ITaskManagementService getTMS(String participantToken) throws RemoteException {
-        String endpoint = URIUtils.resolveURI(new PortletRequestWrapper(_request), conf.getServiceEndpoint());
+        String endpoint = URIUtils.resolveURI(_request, conf.getServiceEndpoint());
         return new RemoteTMSFactory(endpoint, participantToken).getService();
     }
 

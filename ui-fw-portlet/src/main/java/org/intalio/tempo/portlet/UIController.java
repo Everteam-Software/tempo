@@ -19,13 +19,14 @@ import java.util.Map;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
-import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.intalio.tempo.portlet.ApplicationState;
+import org.apache.pluto.wrappers.PortletRequestWrapper;
+import org.intalio.tempo.web.ApplicationState;
 import org.intalio.tempo.web.User;
 import org.intalio.tempo.web.controller.ActionDef;
 import org.springframework.context.ApplicationContext;
@@ -101,12 +102,12 @@ public abstract class UIController extends AbstractFormController {
             mav = action.doExecution();
         }
 
-        fillAuthorization(request, mav);
+        fillAuthorization(new PortletRequestWrapper(request), mav);
 
         LOG.debug("Form submission:  ViewModel=" + mav);
     }
 
-    protected void fillAuthorization(PortletRequest request, ModelAndView mav) {
+    protected void fillAuthorization(HttpServletRequestWrapper request, ModelAndView mav) {
         ApplicationState state = ApplicationState.getCurrentInstance(request);
         if (state != null && state.getCurrentUser() != null && _actionDefs != null) {
             User user = state.getCurrentUser();
@@ -190,7 +191,7 @@ public abstract class UIController extends AbstractFormController {
         return roles.toArray(new String[roles.size()]);
     }
 
-    public ApplicationState getApplicationState(PortletRequest request) {
+    public ApplicationState getApplicationState(HttpServletRequestWrapper request) {
         ApplicationState state = ApplicationState.getCurrentInstance(request);
         if (state == null) {
             // WebApplicationContext context =

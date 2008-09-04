@@ -17,14 +17,17 @@ import java.util.Map;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 
+import org.apache.pluto.wrappers.PortletRequestWrapper;
 import org.intalio.tempo.web.controller.ActionError;
 import org.springframework.validation.BindException;
 import org.springframework.web.portlet.ModelAndView;
 
 public abstract class Action<T> {
 
-    protected PortletRequest _request;
+    protected HttpServletRequestWrapper _request;
 
     protected PortletResponse _response;
 
@@ -52,8 +55,8 @@ public abstract class Action<T> {
     /**
      * Returns the request.
      */
-    public PortletRequest getRequest() {
-        return _request;
+    public ServletRequest getRequest() {
+        return _request.getRequest();
     }
 
     /**
@@ -102,7 +105,7 @@ public abstract class Action<T> {
      * Set the request
      */
     public void setRequest(PortletRequest request) {
-        _request = request;
+        _request = new PortletRequestWrapper(request);
     }
 
     /**

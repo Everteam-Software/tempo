@@ -28,13 +28,14 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.apache.pluto.wrappers.PortletRequestWrapper;
 import org.intalio.tempo.security.Property;
 import org.intalio.tempo.security.authentication.AuthenticationConstants;
 import org.intalio.tempo.security.authentication.AuthenticationException;
 import org.intalio.tempo.security.token.TokenService;
 import org.intalio.tempo.security.util.PropertyUtils;
 import org.intalio.tempo.security.util.StringArrayUtils;
-import org.intalio.tempo.portlet.ApplicationState;
+import org.intalio.tempo.web.ApplicationState;
 import org.intalio.tempo.web.User;
 import org.springframework.validation.BindException;
 import org.springframework.web.portlet.ModelAndView;
@@ -49,7 +50,7 @@ public class SecuredController extends UIController {
     protected String _serviceURL;
 
     private static final String PROXY_TICKET = "TEMPO_CAS_TICKET";
-    
+
     public SecuredController(TokenService tokenService) {
         super();
         _tokenService = tokenService;
@@ -60,7 +61,7 @@ public class SecuredController extends UIController {
         _tokenService = tokenService;
         _serviceURL = serviceURL;
     }
-    
+
     @Override
     protected final ModelAndView showForm(RenderRequest request, RenderResponse response, BindException errors) throws Exception {
         ModelAndView mav = null;
@@ -87,32 +88,32 @@ public class SecuredController extends UIController {
             }
         }
 
-        ApplicationState state = getApplicationState(request);
+        PortletRequestWrapper requestWrapper = new PortletRequestWrapper(request);
+        ApplicationState state = getApplicationState(requestWrapper);
         if (state.getCurrentUser() == null) {
 
             String token = _tokenService.getTokenFromTicket(proxyTicket, _serviceURL);
             String[] grantedRoles = new String[0];
             User currentUser = authenticate(token, grantedRoles);
             state.setCurrentUser(currentUser);
-            ApplicationState.setCurrentInstance(request, state);
+            ApplicationState.setCurrentInstance(requestWrapper, state);
         }
         mav = new ModelAndView("view");
-        fillAuthorization(request, mav);
+        fillAuthorization(requestWrapper, mav);
         Enumeration en = request.getAttributeNames();
 
         return mav;
     }
 
-    
     @Override
     protected final void processFormSubmission(ActionRequest request, ActionResponse response, Object command, BindException errors) throws Exception {
-        
+
     }
-    
-    
+
     @Override
     protected void handleActionRequestInternal(ActionRequest request, ActionResponse response) throws Exception {
-        ApplicationState state = getApplicationState(request);
+        PortletRequestWrapper requestWrapper = new PortletRequestWrapper(request);
+        ApplicationState state = getApplicationState(requestWrapper);
         User currentUser = state.getCurrentUser();
         if (currentUser != null) {
             super.handleActionRequestInternal(request, response);
@@ -124,7 +125,8 @@ public class SecuredController extends UIController {
     }
 
     public static String getCurrentUserName(PortletRequest request) {
-        ApplicationState state = ApplicationState.getCurrentInstance(request);
+        PortletRequestWrapper requestWrapper = new PortletRequestWrapper(request);
+        ApplicationState state = ApplicationState.getCurrentInstance(requestWrapper);
         if (state == null || state.getCurrentUser() == null) {
             return "UnknownUser";
         }

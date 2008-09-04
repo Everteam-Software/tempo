@@ -20,7 +20,9 @@ import java.util.Map;
 import org.apache.pluto.wrappers.PortletRequestWrapper;
 import org.intalio.tempo.uiframework.Configuration;
 import org.intalio.tempo.uiframework.Constants;
+import org.intalio.tempo.uiframework.UIFWApplicationState;
 import org.intalio.tempo.uiframework.actions.TasksCollector;
+import org.intalio.tempo.web.ApplicationState;
 import org.intalio.tempo.web.controller.ActionError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +50,7 @@ public class TasksAction extends Action {
         final String token = state.getCurrentUser().getToken();
         final String user = state.getCurrentUser().getName();
         try {
-            TasksCollector collector = new TasksCollector(new PortletRequestWrapper(_request), user, token);
+            TasksCollector collector = new TasksCollector(_request, user, token);
             model.put("activityTasks", collector.get_activityTasks());
             model.put("notifications", collector.get_notifications());
             model.put("initTasks", collector.get_initTasks());
