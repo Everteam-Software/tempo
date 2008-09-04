@@ -33,7 +33,8 @@ TOMCAT_ADMIN_DOWNLOAD = APACHE_MIRROR + "tomcat/tomcat-5/v5.5.26/bin/apache-tomc
 AXIS_DOWNLOAD = APACHE_MIRROR + "ws/axis2/1_4/axis2-1.4-war.zip"
 ODE_DOWNLOAD = APACHE_MIRROR + "ode/apache-ode-war-1.2.zip"
 LIFERAY_5 = "http://internap.dl.sourceforge.net/sourceforge/lportal/liferay-portal-tomcat-5.5-5.1.1.zip"  #CA
-ALFRESCO_2_1 = "http://internap.dl.sourceforge.net/sourceforge/alfresco/alfresco-community-war-2.1.0.zip"
+# ALFRESCO_2_1 = "http://internap.dl.sourceforge.net/sourceforge/alfresco/alfresco-community-war-2.2.0.zip"
+ALFRESCO_3_0 = "http://internap.dl.sourceforge.net/sourceforge/alfresco/alfresco-labs-war-3a.1032.zip"
 
 title "Changing directory"
 install_dir = config["install_dir"]
@@ -279,8 +280,8 @@ end
 ## Add alfresco portlet if needed
 if ADD_ALFRESCO && SERVER == LIFERAY
   title "Installing Alfresco portlet"
-  explain "Install alfresco community 2.1 to Liferay"
-  alfresco_folder = download_and_unzip(:url => ALFRESCO_2_1, :base_folder => 'alfresco')
+  explain "Install alfresco community to Liferay"
+  alfresco_folder = download_and_unzip(:url => ALFRESCO_3_0, :base_folder => 'alfresco')
   alfresco_war = finder.find_war(alfresco_folder)
   
   explain "Deploy the alfresco war"
