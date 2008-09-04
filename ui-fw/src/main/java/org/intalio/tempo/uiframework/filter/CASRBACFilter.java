@@ -10,6 +10,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -36,11 +37,6 @@ import edu.yale.its.tp.cas.proxy.ProxyTicketReceptor;
  */
 public class CASRBACFilter implements Filter {
     private static final Logger LOG = LogManager.getLogger("tempo.security");
-
-    private static final String TEMPO_CONFIG_DIRECTORY = "org.intalio.tempo.configDirectory";
-    private static final String SECURITY_CONFIG_XML = "securityConfig.xml";
-
-    private static final String TOKEN_SERVICE = "tokenService";
 
     private static final String CAS_RECEIPT = "edu.yale.its.tp.cas.client.filter.receipt";
     private static final String SERVICE_URL = "edu.yale.its.tp.cas.client.filter.serviceUrl";
@@ -80,7 +76,6 @@ public class CASRBACFilter implements Filter {
     private void doSignIn(HttpServletRequest httpServletRequest, HttpSession session) throws RemoteException {
         LOG.info("signing in with CAS....");
         String serviceURL = _filterConfig.getInitParameter(SERVICE_URL);
-
         TokenService tokenService = Configuration.getInstance().getTokenClient();
         String pgtIou = null;
         CASReceipt CASreceipt = (CASReceipt) session.getAttribute(CAS_RECEIPT);
@@ -89,7 +84,8 @@ public class CASRBACFilter implements Filter {
         if (pgtIou != null) {
             try {
                 String proxyTicket = ProxyTicketReceptor.getProxyTicket(pgtIou, serviceURL);
-                ApplicationState state = ApplicationState.getCurrentInstance(httpServletRequest);
+                HttpServletRequestWrapper requestWrapper = new HttpServletRequestWrapper(httpServletRequest);
+                ApplicationState state = ApplicationState.getCurrentInstance(requestWrapper);
                 if (state == null) {
                     WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(session.getServletContext());
                     state = (ApplicationState) context.getBean(APPLICATION_STATE);
@@ -112,7 +108,7 @@ public class CASRBACFilter implements Filter {
                     User currentUser = authenticate(tokenService, token, grantedRoles);
                     state.setCurrentUser(currentUser);
                 }
-                ApplicationState.setCurrentInstance(httpServletRequest, state);
+                ApplicationState.setCurrentInstance(requestWrapper, state);
             } catch (IOException e) {
                 throw new RuntimeException("Could not get the proxy ticket!", e);
             }

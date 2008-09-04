@@ -13,7 +13,7 @@ package org.intalio.tempo.web;
 
 import java.io.Serializable;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpSession;
 
 public abstract class ApplicationState implements Serializable {
@@ -78,13 +78,13 @@ public abstract class ApplicationState implements Serializable {
     }
     
     
-    public static <T extends ApplicationState> T getCurrentInstance(HttpServletRequest request) {
+    public static <T extends ApplicationState> T getCurrentInstance(HttpServletRequestWrapper request) {
         HttpSession session = request.getSession();
         T state = (T) session.getAttribute(PARAMETER_NAME);
         return state;
     }
 
-    public static void setCurrentInstance(HttpServletRequest request, ApplicationState state) {
+    public static void setCurrentInstance(HttpServletRequestWrapper request, ApplicationState state) {
         HttpSession session = request.getSession();
         session.setAttribute(PARAMETER_NAME, state);
     }

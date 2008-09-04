@@ -337,12 +337,14 @@ define "tempo" do
   
   desc "User-Interface Framework Portlet"
   define "ui-fw-portlet" do
-    libs = projects("security", "security-ws-client", "security-ws-common", "tms-axis", "tms-client", "tms-common", "ui-pluto", "ui-fw", "web-nutsNbolts"),
+    libs = projects("security", "security-ws-client", "security-ws-common", "tms-axis", "tms-client", "tms-common", "web-nutsNbolts"),
+           project('ui-fw').package(:jar),
            APACHE_JPA, APACHE_COMMONS[:io], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], AXIOM, AXIS2, CAS_CLIENT, DOM4J, INTALIO_STATS, 
-           JSON, JSP_API, JSTL, LOG4J, PLUTO, PORTLET_API, SERVLET_API, 
+           JSON, JSTL, LOG4J, PLUTO, 
            SPRING[:core], SPRING[:webmvc], SPRING[:webmvc_portlet], SLF4J, STAX_API, TAGLIBS, WOODSTOX, WSDL4J, WS_COMMONS_SCHEMA, 
            XERCES, XMLBEANS
-    compile.with libs
+    full_libs = JSP_API, PORTLET_API, SERVLET_API, libs
+    compile.with full_libs
 
     resources.filter.using "version" => VERSION_NUMBER
     package(:war).with(:libs=>libs).

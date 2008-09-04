@@ -15,6 +15,7 @@
 package org.intalio.tempo.web.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.LogManager;
@@ -73,7 +74,7 @@ public class SecuredController extends UIController {
     }
 
     public static String getCurrentUserName(HttpServletRequest request) {
-        ApplicationState state = ApplicationState.getCurrentInstance(request);
+        ApplicationState state = ApplicationState.getCurrentInstance(new HttpServletRequestWrapper(request));
         if (state == null || state.getCurrentUser() == null) {
             return "UnknownUser";
         }

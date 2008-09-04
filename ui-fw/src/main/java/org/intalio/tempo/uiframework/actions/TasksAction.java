@@ -46,7 +46,7 @@ public class TasksAction extends Action {
     }
 
     protected void fillModel(Map model) {
-        final UIFWApplicationState state = ApplicationState.getCurrentInstance(_request);
+        final UIFWApplicationState state = ApplicationState.getCurrentInstance(new HttpServletRequestWrapper(_request));
         final String token = state.getCurrentUser().getToken();
         final String user = state.getCurrentUser().getName();
         try {
