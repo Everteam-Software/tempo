@@ -353,10 +353,10 @@ define "tempo" do
   
   desc "Customized pluto webapp"
   define "ui-pluto" do
-  	libs = projects("security"), PLUTO, SERVLET_API, APACHE_COMMONS[:logging], CAS_CLIENT
+  	libs = projects("security"), PLUTO, SERVLET_API, APACHE_COMMONS[:logging], CAS_CLIENT, PORTLET_API
   	compile.with libs
   	package(:jar)
-    package(:war)
+    package(:war).with(:libs=>[projects("security"), PLUTO, APACHE_COMMONS[:logging]])
   end
   
   define "registry" do
