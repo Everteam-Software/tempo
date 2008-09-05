@@ -25,7 +25,7 @@ REBUILD_TEMPO = config["rebuild"]
 SERVER = config["server"]
 ADD_ALFRESCO = config["add_alfresco"]
 ADD_LDAP = config["add_ldap"]
-LIFERAY = "liferay_510"
+ADD_LIFERAY = "liferay_510"
 APACHE_MIRROR = find_apache_mirror
 TOMCAT_5_DOWNLOAD = APACHE_MIRROR + "tomcat/tomcat-5/v5.5.26/bin/apache-tomcat-5.5.26.zip"
 TOMCAT_6_DOWNLOAD = APACHE_MIRROR + "tomcat/tomcat-6/v6.0.16/bin/apache-tomcat-6.0.16.zip"
@@ -46,17 +46,17 @@ Dir.chdir install_dir
 title "Downloading required files"
 explain "Downloading tomcat (java web application engine), ode (process engine) and axis (web service engine)"
 ##
-tomcat_folder = download_unzip( TOMCAT_5_DOWNLOAD ) if SERVER != LIFERAY
+tomcat_folder = download_unzip( TOMCAT_5_DOWNLOAD ) if SERVER != ADD_LIFERAY
 ode_folder = download_unzip( ODE_DOWNLOAD )
 axis_folder = download_unzip( AXIS_DOWNLOAD, false)
-liferay_folder = download_unzip( LIFERAY_5 ) if SERVER == LIFERAY
+liferay_folder = download_unzip( LIFERAY_5 ) if SERVER == ADD_LIFERAY
 unzip2( filename_from_url( AXIS_DOWNLOAD ), axis_folder )
 ##
 
 title "Define install variables"
 explain "Defining variables for webapp folders and services folders"
 server_folder = tomcat_folder
-server_folder = liferay_folder if SERVER == LIFERAY
+server_folder = liferay_folder if SERVER == ADD_LIFERAY
 ##
 finder = Finder.new
 webapp_folder = server_folder + File::SEPARATOR + "webapps"
@@ -180,7 +180,7 @@ MISSING_LIBS= [
 MISSING_LIBS.each {|lib| 
   locate_and_copy( lib, lib_folder )
 }
-#File.cp "#{TEMPO_SVN}/rsc/liferay501/castor-1.0.5.jar", "#{webapp_folder}/ui-fw/WEB-INF/lib"
+#File.cp "#{TEMPO_SVN}/rsc/liferay510/castor-1.0.5.jar", "#{webapp_folder}/ui-fw/WEB-INF/lib"
 ##
 
 title "Install registry into common lib"
@@ -217,7 +217,7 @@ create_mode = File::CREAT|File::TRUNC|File::RDWR
 # script for unix
 file_path = tomcat_bin_folder + "setenv.sh"
 file = File.new file_path,create_mode
-if SERVER == LIFERAY
+if SERVER == ADD_LIFERAY
   file.puts "export JAVA_OPTS=\"-XX:MaxPermSize=256m -server -Djavax.net.ssl.trustStore=$CATALINA_HOME/var/config/tempokeystore -Dfile.encoding=UTF-8 -Xms128m -Xmx1024m -Dorg.intalio.tempo.configDirectory=$CATALINA_HOME/var/config -Dorg.apache.ode.configDir=$CATALINA_HOME/var/config -Djava.security.auth.login.config=$CATALINA_HOME/conf/jaas.config\""
 else
   file.puts "export JAVA_OPTS=\"-XX:MaxPermSize=256m -server -Djavax.net.ssl.trustStore=$CATALINA_HOME/var/config/tempokeystore -Dfile.encoding=UTF-8 -Xms128m -Xmx1024m -Dorg.intalio.tempo.configDirectory=$CATALINA_HOME/var/config -Dorg.apache.ode.configDir=$CATALINA_HOME/var/config\""
@@ -225,7 +225,7 @@ end
 # script for windows
 file_path = tomcat_bin_folder + "setenv.bat"
 file = (File.new file_path,create_mode)
-if SERVER == LIFERAY
+if SERVER == ADD_LIFERAY
   file.puts "set JAVA_OPTS=-XX:MaxPermSize=256m -server -Djavax.net.ssl.trustStore=%CATALINA_HOME%/var/config/tempokeystore -Dfile.encoding=UTF-8 -Xms128m -Xmx1024m -Dorg.intalio.tempo.configDirectory=%CATALINA_HOME%\\var\\config -Dorg.apache.ode.configDir=%CATALINA_HOME%\\var\\config -Djava.security.auth.login.config=%CATALINA_HOME%\\conf\\jaas.config"
 else
   file.puts "set JAVA_OPTS=-XX:MaxPermSize=256m -server -Djavax.net.ssl.trustStore=%CATALINA_HOME%/var/config/tempokeystore -Dfile.encoding=UTF-8 -Xms128m -Xmx1024m -Dorg.intalio.tempo.configDirectory=%CATALINA_HOME%\\var\\config -Dorg.apache.ode.configDir=%CATALINA_HOME%\\var\\config"
@@ -256,21 +256,20 @@ Dir.glob(File.join("#{server_folder}/conf", "log4j.properties")) {|x| File.move(
 ##
 
 ## For liferay specific
-if SERVER == LIFERAY
+if SERVER == ADD_LIFERAY
   title "For liferay 5.0.1 specific configuration"
   explain "Config liferay portal to use cas authentication"
   File.cp "#{TEMPO_SVN}/rsc/liferay510/web.xml", "#{webapp_folder}/ROOT/WEB-INF"
-  #File.cp "#{TEMPO_SVN}/rsc/liferay501/forliferay-ticketfilter-1.0.1.jar", "#{webapp_folder}/ROOT/WEB-INF/lib"
-  File.cp "#{TEMPO_SVN}/rsc/liferay510/forliferay-ticketfilter-1.1.0.jar", "#{webapp_folder}/ROOT/WEB-INF/lib"
-  File.cp "#{TEMPO_SVN}/rsc/liferay501/portal-ext.properties", "#{webapp_folder}/ROOT/WEB-INF/classes"
-  File.cp "#{TEMPO_SVN}/rsc/liferay501/ROOT.xml", "#{webapp_folder}/../conf/Catalina/localhost/"
+  Dir.glob("#{TEMPO_SVN}/liferay-ticket-filter/target/*.jar") {|x| File.copy x, "#{webapp_folder}/ROOT/WEB-INF/lib", DEBUG}
+  File.cp "#{TEMPO_SVN}/rsc/liferay510/portal-ext.properties", "#{webapp_folder}/ROOT/WEB-INF/classes"
+  File.cp "#{TEMPO_SVN}/rsc/liferay510/ROOT.xml", "#{webapp_folder}/../conf/Catalina/localhost/"
   
   explain "Deploy the ui-fw-portlet"
   # deploy the ui-fw-portlet file
   wi.install_tempo_war( "ui-fw-portlet" )
   # copy the tld file
   FileUtils.mkdir_p "#{webapp_folder}/ui-fw-portlet/WEB-INF/tld"
-  File.copy "#{TEMPO_SVN}/rsc/liferay501/liferay-portlet.tld", "#{webapp_folder}/ui-fw-portlet/WEB-INF/tld"
+  File.copy "#{TEMPO_SVN}/rsc/liferay510/liferay-portlet.tld", "#{webapp_folder}/ui-fw-portlet/WEB-INF/tld"
   # copy the util jars
   Dir.glob("#{webapp_folder}/ROOT/WEB-INF/lib/util*.jar") {|x| File.copy x, "#{webapp_folder}/ui-fw-portlet/WEB-INF/lib", DEBUG}
   # delete some conflict jar files
@@ -278,7 +277,7 @@ if SERVER == LIFERAY
 end
 
 ## Add alfresco portlet if needed
-if ADD_ALFRESCO && SERVER == LIFERAY
+if ADD_ALFRESCO && SERVER == ADD_LIFERAY
   title "Installing Alfresco portlet"
   explain "Install alfresco community to Liferay"
   alfresco_folder = download_and_unzip(:url => ALFRESCO_3_0, :base_folder => 'alfresco')
@@ -295,7 +294,7 @@ if ADD_ALFRESCO && SERVER == LIFERAY
   Dir.glob("#{TEMPO_SVN}/rsc/alfresco/portlet.xml") {|x| File.copy x, "#{webapp_folder}/alfresco/WEB-INF", DEBUG}
   Dir.glob("#{TEMPO_SVN}/rsc/alfresco/web.xml") {|x| File.copy x, "#{webapp_folder}/alfresco/WEB-INF", DEBUG}
   # copy the portlet class
-  Dir.glob("#{TEMPO_SVN}/rsc/alfresco/forliferay*.jar") {|x| File.copy x, "#{webapp_folder}/alfresco/WEB-INF/lib", DEBUG}
+  Dir.glob("#{TEMPO_SVN}/liferay-alfresco-sso/target/*.jar") {|x| File.copy x, "#{webapp_folder}/alfresco/WEB-INF/lib", DEBUG}
   # copy the util jars
   Dir.glob("#{webapp_folder}/ROOT/WEB-INF/lib/util*.jar") {|x| File.copy x, "#{webapp_folder}/alfresco/WEB-INF/lib", DEBUG}
   # delete some conflict jar files
@@ -310,11 +309,10 @@ end
 if ADD_LDAP
   title "Install ApacheDS embbeded server"
   explain "Install ApacheDS 1.5.1"
-  apacheds_war = download_and_return_path_to_local_repo("org.apache:apacheds-webapp:war:1.0.1")
   
   explain "Deploy the apache ds war"
-  apacheds_war_folder = wi.install apacheds_war, "0apacheds.war" # ensure the apacheds war loads first, by using the dirty 0 trick
-  if SERVER == LIFERAY
+  apacheds_war_folder = wi.install_tempo_war('apacheds-webapp', '0apacheds')
+  if SERVER == ADD_LIFERAY
     explain "Server is Liferay, config it to use Apache DS as LDAP server"
     # copy the config files
     Dir.glob("#{TEMPO_SVN}/rsc/LDAP/portal-ext.properties") {|x| File.copy x, "#{webapp_folder}/ROOT/WEB-INF/classes", DEBUG}
@@ -332,8 +330,8 @@ end
 title "Set up CAS server and client"
 explain "All the webapp should use the same version of casclient"
 ##
-File.copy "#{TEMPO_SVN}/rsc/liferay501/tempokeystore", tomcat_config_folder
-Dir.glob(File.join("#{TEMPO_SVN}/rsc/liferay501", "server.xml")) {|x| File.copy(x,"#{server_folder}/conf", DEBUG)}
+File.copy "#{TEMPO_SVN}/rsc/liferay510/tempokeystore", tomcat_config_folder
+Dir.glob(File.join("#{TEMPO_SVN}/rsc/liferay510", "server.xml")) {|x| File.copy(x,"#{server_folder}/conf", DEBUG)}
 Dir.glob(File.join("#{webapp_folder}/cas/WEB-INF/lib", "casclient*.jar")) {|x| File.cp x, "#{lib_folder}"}
 Dir.glob(File.join("#{webapp_folder}", "**/casclient*.jar")) {|x| File.delete x}
 locate_and_copy( "javax.xml.xmldsig:xmldsig:jar:1.0", "#{webapp_folder}/cas/WEB-INF/lib" )
