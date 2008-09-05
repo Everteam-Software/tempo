@@ -396,7 +396,7 @@ define "tempo" do
   end
   
   desc "Apache Directory Service"
-  define "apacheds_webapp" do
+  define "apacheds-webapp" do
 	  libs = APACHE_DS, SERVLET_API
   	compile.with(libs)
 	  package(:war).with :libs => [APACHE_DS]
