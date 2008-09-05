@@ -180,7 +180,6 @@ MISSING_LIBS= [
 MISSING_LIBS.each {|lib| 
   locate_and_copy( lib, lib_folder )
 }
-#File.cp "#{TEMPO_SVN}/rsc/liferay510/castor-1.0.5.jar", "#{webapp_folder}/ui-fw/WEB-INF/lib"
 ##
 
 title "Install registry into common lib"
@@ -264,16 +263,17 @@ if SERVER == ADD_LIFERAY
   File.cp "#{TEMPO_SVN}/rsc/liferay510/portal-ext.properties", "#{webapp_folder}/ROOT/WEB-INF/classes"
   File.cp "#{TEMPO_SVN}/rsc/liferay510/ROOT.xml", "#{webapp_folder}/../conf/Catalina/localhost/"
   
-  explain "Deploy the ui-fw-portlet"
+  explain "Deploy the ui-fw portlet"
   # deploy the ui-fw-portlet file
-  wi.install_tempo_war( "ui-fw-portlet" )
+  # already deployed with ui-fw
+  # wi.install_tempo_war( "ui-fw-portlet" )
   # copy the tld file
-  FileUtils.mkdir_p "#{webapp_folder}/ui-fw-portlet/WEB-INF/tld"
-  File.copy "#{TEMPO_SVN}/rsc/liferay510/liferay-portlet.tld", "#{webapp_folder}/ui-fw-portlet/WEB-INF/tld"
+  FileUtils.mkdir_p "#{webapp_folder}/ui-fw/WEB-INF/tld"
+  File.copy "#{TEMPO_SVN}/rsc/liferay510/liferay-portlet.tld", "#{webapp_folder}/ui-fw/WEB-INF/tld"
   # copy the util jars
-  Dir.glob("#{webapp_folder}/ROOT/WEB-INF/lib/util*.jar") {|x| File.copy x, "#{webapp_folder}/ui-fw-portlet/WEB-INF/lib", DEBUG}
+  Dir.glob("#{webapp_folder}/ROOT/WEB-INF/lib/util*.jar") {|x| File.copy x, "#{webapp_folder}/ui-fw/WEB-INF/lib", DEBUG}
   # delete some conflict jar files
-  Dir.glob(File.join("#{webapp_folder}/ui-fw-portlet/WEB-INF/lib", "portlet*.jar")) {|x| File.delete x}
+  Dir.glob(File.join("#{webapp_folder}/ui-fw/WEB-INF/lib", "portlet*.jar")) {|x| File.delete x}
 end
 
 ## Add alfresco portlet if needed
