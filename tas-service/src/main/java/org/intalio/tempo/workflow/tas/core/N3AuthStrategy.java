@@ -49,14 +49,18 @@ public class N3AuthStrategy implements AuthStrategy {
     private String _wsEndpoint;
 
     /**
-     * Normalizes all allowed security indentifier delimiters (<code>'/'</code>, <code>'\'</code> and <code>'.'</code>) and
+     * Normalizes all allowed security indentifier delimiters ("/", "\", ":", "|") and
      * replaces them with the default <code>'\'</code> delimiter.
      * 
      * @param sourceId A possibly non-normalized security ID.
      * @return The idempotent normalized security ID.
      */
     private static String normalizeAuthIdentifier(String sourceId) {
-        return sourceId.replace('/', '\\').replace('.', '\\');
+        for (int i=0; i<sourceId.length(); i++) {
+            if ("/|:".indexOf(sourceId.charAt(i)) >=0 )
+                sourceId = sourceId.substring(0,i) + '\\' + sourceId.substring(i+1);
+        }
+        return sourceId;
     }
     
 
