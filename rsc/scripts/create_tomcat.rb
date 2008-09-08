@@ -34,7 +34,8 @@ AXIS_DOWNLOAD = APACHE_MIRROR + "ws/axis2/1_4/axis2-1.4-war.zip"
 ODE_DOWNLOAD = APACHE_MIRROR + "ode/apache-ode-war-1.2.zip"
 LIFERAY_5 = "http://internap.dl.sourceforge.net/sourceforge/lportal/liferay-portal-tomcat-5.5-5.1.1.zip"  #CA
 # ALFRESCO_2_1 = "http://internap.dl.sourceforge.net/sourceforge/alfresco/alfresco-community-war-2.2.0.zip"
-ALFRESCO_3_0 = "http://internap.dl.sourceforge.net/sourceforge/alfresco/alfresco-labs-war-3a.1032.zip"
+# ALFRESCO_3_0 = "http://internap.dl.sourceforge.net/sourceforge/alfresco/alfresco-labs-war-3a.1032.zip"
+ALFRESCO_2_9 = "http://nchc.dl.sourceforge.net/sourceforge/alfresco/alfresco-community-war-2.9.0B.zip"
 
 title "Changing directory"
 install_dir = config["install_dir"]
@@ -116,9 +117,7 @@ wi.install_tempo_war( "fds" )
 wi.install_tempo_war( "ui-fw" )
 wi.install_tempo_war( "wds-service", "wds" )
 wi.install_tempo_war( "xforms-manager", "xFormsManager" )
-wi.install_tempo_war( "cas-server-webapp", "cas" )
-# wi.install_tempo_war( "ui-pluto", "pluto" )
-# wi.install_tempo_war( "ui-fw-portlet")
+wi.install_tempo_war( "cas-webapp", "cas" )
 ##
 
 title "Install xpath extension in Ode"
@@ -280,7 +279,7 @@ end
 if ADD_ALFRESCO && SERVER == ADD_LIFERAY
   title "Installing Alfresco portlet"
   explain "Install alfresco community to Liferay"
-  alfresco_folder = download_and_unzip(:url => ALFRESCO_3_0, :base_folder => 'alfresco')
+  alfresco_folder = download_and_unzip(:url => ALFRESCO_2_9, :base_folder => 'alfresco')
   alfresco_war = finder.find_war(alfresco_folder)
   
   explain "Deploy the alfresco war"
@@ -302,7 +301,7 @@ if ADD_ALFRESCO && SERVER == ADD_LIFERAY
   # copy alfresco repository location
   File.copy "#{TEMPO_SVN}/rsc/alfresco/repository.properties", "#{webapp_folder}/alfresco/WEB-INF/classes/alfresco"
   # disable open office and imagemagick, probably not installed on the server
-  Dir.glob("#{TEMPO_SVN}/rsc/alfresco/custom/*.xml") {|x| File.copy x, "#{webapp_folder}/alfresco/WEB-INF/classes/alfresco", DEBUG}
+  # Dir.glob("#{TEMPO_SVN}/rsc/alfresco/custom/*.xml") {|x| File.copy x, "#{webapp_folder}/alfresco/WEB-INF/classes/alfresco", DEBUG}
 end
 
 ## Add LDAP embbeded server and config liferay & alfresco to use that
