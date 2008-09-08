@@ -26,7 +26,7 @@ define "tempo" do
   
   compile.options.target = "1.5"
 
-  define "cas-server-webapp" do
+  define "cas-webapp" do
     libs = projects("security", "security-ws-client", "security-ws-common"), AXIOM, AXIS2, CAS_LIBS, 
     	APACHE_COMMONS[:beanutils], APACHE_COMMONS[:codec], APACHE_COMMONS[:discovery], APACHE_COMMONS[:httpclient], 
     	APACHE_COMMONS[:logging], APACHE_COMMONS[:lang], LOG4J, WS_COMMONS_SCHEMA, JSTL, TAGLIBS

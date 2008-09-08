@@ -323,6 +323,10 @@ if ADD_LDAP
     explain "Also need to config Alfresco to use apacheds"
     Dir.glob("#{TEMPO_SVN}/rsc/alfresco/public*.xml") {|x| File.copy x, "#{webapp_folder}/alfresco/WEB-INF/classes/alfresco", DEBUG}
     Dir.glob("#{TEMPO_SVN}/rsc/alfresco/extension/*.xml") {|x| File.copy x, "#{webapp_folder}/alfresco/WEB-INF/classes/alfresco/extension", DEBUG}
+    
+    # those are 32 bits specific, may need to add the 64bits one depending on the machine.
+    download_and_copy("http://svn.alfresco.com/repos/alfresco-open-mirror/alfresco/HEAD/root/projects/alfresco-jlan/jni/Win32NetBIOS.dll", "#{server_folder}/bin")
+    download_and_copy("http://svn.alfresco.com/repos/alfresco-open-mirror/alfresco/HEAD/root/projects/alfresco-jlan/jni/Win32Utils.dll", "#{server_folder}/bin")
   end
 end
 
@@ -334,7 +338,7 @@ File.copy "#{TEMPO_SVN}/rsc/liferay510/tempokeystore", tomcat_config_folder
 Dir.glob(File.join("#{TEMPO_SVN}/rsc/liferay510", "server.xml")) {|x| File.copy(x,"#{server_folder}/conf", DEBUG)}
 Dir.glob(File.join("#{webapp_folder}/cas/WEB-INF/lib", "casclient*.jar")) {|x| File.cp x, "#{lib_folder}"}
 Dir.glob(File.join("#{webapp_folder}", "**/casclient*.jar")) {|x| File.delete x}
-locate_and_copy( "javax.xml.xmldsig:xmldsig:jar:1.0", "#{webapp_folder}/cas/WEB-INF/lib" )
+locate_and_copy( DSIG , "#{webapp_folder}/cas/WEB-INF/lib" )
 
 ##
   
