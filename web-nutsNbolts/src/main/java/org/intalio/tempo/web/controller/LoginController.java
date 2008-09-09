@@ -135,7 +135,6 @@ public class LoginController extends UIController {
     }
     
     public static String generateSecureRandom() {
-        StringBuffer str = new StringBuffer();
         byte[] buf = new byte[40];
         _random.nextBytes(buf);
         return bytesToHex(buf);
