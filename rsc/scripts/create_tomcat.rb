@@ -280,7 +280,7 @@ end
 if ADD_ALFRESCO && SERVER == ADD_LIFERAY
   title "Installing Alfresco portlet"
   explain "Install alfresco community to Liferay"
-  alfresco_folder = download_and_unzip(:url => ALFRESCO[:v2_1], :base_folder => 'alfresco')
+  alfresco_folder = download_and_unzip(:url => ALFRESCO[:v3_0], :base_folder => 'alfresco')
   alfresco_war = finder.find_war(alfresco_folder)
   
   explain "Deploy the alfresco war"
@@ -321,8 +321,8 @@ if ADD_LDAP
   
   if ADD_ALFRESCO
     explain "Also need to config Alfresco to use apacheds"
-    Dir.glob("#{TEMPO_SVN}/rsc/alfresco/public*.xml") {|x| File.copy x, "#{webapp_folder}/alfresco/WEB-INF/classes/alfresco", DEBUG}
-    Dir.glob("#{TEMPO_SVN}/rsc/alfresco/extension/*.xml") {|x| File.copy x, "#{webapp_folder}/alfresco/WEB-INF/classes/alfresco/extension", DEBUG}
+    #Dir.glob("#{TEMPO_SVN}/rsc/alfresco/public*.xml") {|x| File.copy x, "#{webapp_folder}/alfresco/WEB-INF/classes/alfresco", DEBUG}
+    Dir.glob("#{TEMPO_SVN}/rsc/alfresco/extension/*.*") {|x| File.copy x, "#{webapp_folder}/alfresco/WEB-INF/classes/alfresco/extension", DEBUG}
     
     # those are 32 bits specific, may need to add the 64bits one depending on the machine.
     download_and_copy("http://svn.alfresco.com/repos/alfresco-open-mirror/alfresco/HEAD/root/projects/alfresco-jlan/jni/Win32NetBIOS.dll", "#{server_folder}/bin")

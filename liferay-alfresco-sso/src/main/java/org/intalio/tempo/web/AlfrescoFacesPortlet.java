@@ -277,6 +277,7 @@ public class AlfrescoFacesPortlet extends MyFacesGenericPortlet {
             // use the viewId to check that we are not already on the login page
             PortletSession session = request.getPortletSession();
             String viewId = request.getParameter(VIEW_ID);
+            logger.debug("View ID is:" + viewId);
             // keep track of last view id so we can use it as return page from
             // multi-part requests
             request.getPortletSession().setAttribute(SESSION_LAST_VIEW_ID, viewId);
@@ -335,7 +336,7 @@ public class AlfrescoFacesPortlet extends MyFacesGenericPortlet {
                     // do the normal JSF processing
                     String loggedin = (String) getPortletContext().getAttribute("loggedin");
                     logger.debug("logged in?:" + loggedin);
-                    if (loggedin != null && loggedin.equalsIgnoreCase("true")) {
+                    if (loggedin != null && loggedin.equalsIgnoreCase("true") && viewId != null) {
                         super.facesRender(request, response);
                     } else {
                         getPortletContext().setAttribute("loggedin", "true");
@@ -468,8 +469,8 @@ public class AlfrescoFacesPortlet extends MyFacesGenericPortlet {
         TransactionService transactionService = serviceRegistry.getTransactionService();
         NodeService nodeService = serviceRegistry.getNodeService();
 
-        AuthenticationComponent authComponent = (AuthenticationComponent) ctx.getBean("authenticationComponentImplLDAP");
-        AuthenticationService authService = (AuthenticationService) ctx.getBean("authenticationServiceImplLDAP");
+        AuthenticationComponent authComponent = (AuthenticationComponent) ctx.getBean("authenticationComponent");
+        AuthenticationService authService = (AuthenticationService) ctx.getBean("authenticationService");
         PersonService personService = (PersonService) ctx.getBean("personService");
 
         // Get a list of the available locales
