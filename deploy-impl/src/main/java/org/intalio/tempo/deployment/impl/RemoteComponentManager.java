@@ -89,4 +89,12 @@ public class RemoteComponentManager implements ComponentManager {
         getComponentManager().stop(name);
     }
 
+    public void deployed(ComponentId name, File path) {
+        getComponentManager().deployed(name, path);
+    }
+
+    public void undeployed(ComponentId name) {
+        getComponentManager().undeployed(name);
+    }
+
 }

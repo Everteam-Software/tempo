@@ -1,18 +1,23 @@
 /**
- * Copyright (C) 2003, Intalio Inc.
+ * Copyright (c) 2005-2008 Intalio inc.
  *
- * The program(s) herein may be used and/or copied only with
- * the written permission of Intalio Inc. or in accordance with
- * the terms and conditions stipulated in the agreement/contract
- * under which the program(s) have been supplied.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * $Id: SimpleSpringTest.java,v 1.5 2005/03/29 22:09:07 ssahuc Exp $
+ * Contributors:
+ * Intalio inc. - initial API and implementation
  */
 
 package org.intalio.tempo.deployment.impl;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.sql.Connection;
+
+import javax.sql.DataSource;
 
 import junit.framework.TestCase;
 
@@ -41,12 +46,27 @@ public class DeployServiceDeployTest extends TestCase {
         PropertyConfigurator.configure(new File(TestUtils.getTestBase(), "log4j.properties").getAbsolutePath());
         
         Utils.deleteRecursively(_deployDir);
-
+        
         manager = new MockComponentManager("MockEngine");
 
         service = loadDeploymentService("test1.xml");
         service.setDeployDirectory(_deployDir.getAbsolutePath());
         service.init();
+        
+        DataSource ds = service.getDataSource();
+
+        ClassPathResource script = new ClassPathResource("deploy.derby.sql");
+        if (script == null) throw new IOException("Unable to find file: deploy.derby.sql");
+        SQLScript sql = new SQLScript(script.getInputStream(), ds);
+        sql.setIgnoreErrors(true);
+        sql.setInteractive(false);
+        sql.executeScript();
+        
+        Connection c = ds.getConnection();
+        EasyStatement.execute(c, "DELETE FROM DEPLOY_RESOURCES");
+        EasyStatement.execute(c, "DELETE FROM DEPLOY_COMPONENTS");
+        EasyStatement.execute(c, "DELETE FROM DEPLOY_ASSEMBLIES");
+        c.close();
     }
 
     public void tearDown() throws Exception {
@@ -63,7 +83,7 @@ public class DeployServiceDeployTest extends TestCase {
             if (service.isStarted()) break;
             wait(1);
             i++;
-            if (i>60) break;
+            if (i>5) break;
         }
 
         if (!service.isStarted()) throw new RuntimeException("DeploymentService cannot start?");
@@ -106,7 +126,7 @@ public class DeployServiceDeployTest extends TestCase {
         assertFalse(manager.isDeployed(new ComponentId(result.getAssemblyId(), "component1")));
         
     }
-    
+
     public void testDeployVersioning() throws Exception {
         start();
 
