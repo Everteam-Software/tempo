@@ -7,7 +7,7 @@
 		<use-default-template>true</use-default-template>
 		<restore-current-view>true</restore-current-view>
 	</portlet>
-	<portlet>
+	<!-- <portlet>
 		<portlet-name>AlfrescoMyTasks</portlet-name>
 		<use-default-template>true</use-default-template>
 		<restore-current-view>true</restore-current-view>
@@ -31,5 +31,5 @@
 		<portlet-name>AlfrescoMyWebFiles</portlet-name>
 		<use-default-template>true</use-default-template>
 		<restore-current-view>true</restore-current-view>
-	</portlet>
+	</portlet> -->
 </liferay-portlet-app>

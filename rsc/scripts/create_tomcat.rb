@@ -33,9 +33,11 @@ TOMCAT_ADMIN_DOWNLOAD = APACHE_MIRROR + "tomcat/tomcat-5/v5.5.26/bin/apache-tomc
 AXIS_DOWNLOAD = APACHE_MIRROR + "ws/axis2/1_4/axis2-1.4-war.zip"
 ODE_DOWNLOAD = APACHE_MIRROR + "ode/apache-ode-war-1.2.zip"
 LIFERAY_5 = "http://internap.dl.sourceforge.net/sourceforge/lportal/liferay-portal-tomcat-5.5-5.1.1.zip"  #CA
-# ALFRESCO_2_1 = "http://internap.dl.sourceforge.net/sourceforge/alfresco/alfresco-community-war-2.2.0.zip"
-# ALFRESCO_3_0 = "http://internap.dl.sourceforge.net/sourceforge/alfresco/alfresco-labs-war-3a.1032.zip"
-ALFRESCO_2_9 = "http://nchc.dl.sourceforge.net/sourceforge/alfresco/alfresco-community-war-2.9.0B.zip"
+ALFRESCO = {
+  :v2_1 => "http://nchc.dl.sourceforge.net/sourceforge/alfresco/alfresco-community-war-2.1.0.zip",
+  :v2_9 => "http://nchc.dl.sourceforge.net/sourceforge/alfresco/alfresco-community-war-2.9.0B.zip",
+  :v3_0 => "http://internap.dl.sourceforge.net/sourceforge/alfresco/alfresco-labs-war-3a.1032.zip"
+}
 
 title "Changing directory"
 install_dir = config["install_dir"]
@@ -265,7 +267,6 @@ if SERVER == ADD_LIFERAY
   explain "Deploy the ui-fw portlet"
   # deploy the ui-fw-portlet file
   # already deployed with ui-fw
-  # wi.install_tempo_war( "ui-fw-portlet" )
   # copy the tld file
   FileUtils.mkdir_p "#{webapp_folder}/ui-fw/WEB-INF/tld"
   File.copy "#{TEMPO_SVN}/rsc/liferay510/liferay-portlet.tld", "#{webapp_folder}/ui-fw/WEB-INF/tld"
@@ -279,7 +280,7 @@ end
 if ADD_ALFRESCO && SERVER == ADD_LIFERAY
   title "Installing Alfresco portlet"
   explain "Install alfresco community to Liferay"
-  alfresco_folder = download_and_unzip(:url => ALFRESCO_2_9, :base_folder => 'alfresco')
+  alfresco_folder = download_and_unzip(:url => ALFRESCO[:v2_1], :base_folder => 'alfresco')
   alfresco_war = finder.find_war(alfresco_folder)
   
   explain "Deploy the alfresco war"
@@ -301,7 +302,7 @@ if ADD_ALFRESCO && SERVER == ADD_LIFERAY
   # copy alfresco repository location
   File.copy "#{TEMPO_SVN}/rsc/alfresco/repository.properties", "#{webapp_folder}/alfresco/WEB-INF/classes/alfresco"
   # disable open office and imagemagick, probably not installed on the server
-  # Dir.glob("#{TEMPO_SVN}/rsc/alfresco/custom/*.xml") {|x| File.copy x, "#{webapp_folder}/alfresco/WEB-INF/classes/alfresco", DEBUG}
+  Dir.glob("#{TEMPO_SVN}/rsc/alfresco/custom/*.xml") {|x| File.copy x, "#{webapp_folder}/alfresco/WEB-INF/classes/alfresco", DEBUG}
 end
 
 ## Add LDAP embbeded server and config liferay & alfresco to use that

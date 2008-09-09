@@ -4,10 +4,10 @@
 <display>
 	<category name="category.alfresco">
 		<portlet id="AlfrescoClient"></portlet>
-		<portlet id="AlfrescoMyTasks"></portlet>
+		<!-- <portlet id="AlfrescoMyTasks"></portlet>
 		<portlet id="AlfrescoDocList"></portlet>
 		<portlet id="AlfrescoMySpaces"></portlet>
 		<portlet id="AlfrescoMyWebForms"></portlet>
-		<portlet id="AlfrescoMyWebFiles"></portlet>
+		<portlet id="AlfrescoMyWebFiles"></portlet> -->
 	</category>
 </display>
