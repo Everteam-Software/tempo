@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2005-2007 Intalio inc.
+ * Copyright (c) 2007-2008 Intalio inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -21,17 +21,19 @@ import java.util.List;
  * This is an immutable data object returned when querying {@link DeploymentService#getDeployedAssemblies()} 
  */
 public class DeployedAssembly implements Serializable {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
     
     final AssemblyId _aid;
     final String _assemblyDir;
     final List<DeployedComponent> _components;
+    final boolean _active;
 
-    public DeployedAssembly(AssemblyId assemblyId, String assemblyDir, List<DeployedComponent> components)
+    public DeployedAssembly(AssemblyId assemblyId, String assemblyDir, List<DeployedComponent> components, boolean active)
     {
         _aid = assemblyId;
         _assemblyDir = assemblyDir;
         _components = components;
+        _active = active;
     }
     
     public AssemblyId getAssemblyId() {
@@ -46,6 +48,10 @@ public class DeployedAssembly implements Serializable {
         return _components;
     }
 
+    public boolean isActive() {
+        return _active;
+    }
+    
     public String toString() {
         return _aid.toString();
     }

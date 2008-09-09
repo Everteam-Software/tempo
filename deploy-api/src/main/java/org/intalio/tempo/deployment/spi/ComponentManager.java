@@ -33,16 +33,10 @@ public interface ComponentManager extends Remote {
      * Deploy a new assembly component
      * <p>
      * In a clustered environment, this method is called on a single node (the coordinator).
-     * The ComponentManager must validate the component for consistency and must make any necessary 
-     * internal state change(s) to existing components in order to successfully deploy this component.
-     * This might entail retiring or disabling previously deployed components that may conflict or be 
-     * superceeded with this new component.
+     * The ComponentManager must validate the component for consistency and must take any necessary 
+     * step in order to successfully deploy this component.
      * <p>
-     * The notions of conflict or superceedance are specific to the component type, and may apply 
-     * to component interface, endpoint(s), or rely on naming convention to determine the replacement
-     * behavior.
-     * <p>
-     * If the ComponentManager is unable to safely resolve conflicts, it should return ERROR-level 
+     * If the ComponentManager is unable to deploy the component, it should return ERROR-level 
      * messages with an appropriate description of the issue.  
      */
     ComponentManagerResult deploy(ComponentId name, File path);
@@ -53,8 +47,31 @@ public interface ComponentManager extends Remote {
      * In a clustered environment, this method is called on a single node (the coordinator).
      * This method must release any persistent resources previously allocated or used by the component.
      */
-    void undeploy(ComponentId name, List<String> deployedObject);
-    
+    void undeploy(ComponentId name, List<String> deployedResources);
+
+    /**
+     * Notification of deployed component.
+     * <p>
+     * In a clustered environment, called on every node after deployment of a new component, or during 
+     * system startup to notify the ComponentManager about existing deployed component. 
+     * 
+     * @param name Component identifier
+     * @param path Component root directory
+     */
+    void deployed(ComponentId name, File path);
+
+    /**
+     * Notification of undeployed component.
+     * <p>
+     * In a clustered environment, called on every node when a component is undeployed.
+     * <p>
+     * The component artifacts may not be available anymore, hence the component directory is not 
+     * provided to the ComponentManager. 
+     * 
+     * @param name Component identifier
+     */
+    void undeployed(ComponentId name);
+
     /**
      * Activate a component.
      * <p>
@@ -65,6 +82,7 @@ public interface ComponentManager extends Remote {
      * after the start() method is called. 
      * 
      * @param name Component identifier
+     * @param path Component root directory
      */
     void activate(ComponentId name, File path);
 
@@ -72,8 +90,8 @@ public interface ComponentManager extends Remote {
      * Deactivate a component.
      * <p/>
      * In a clustered environment, called on every node before undeployment.  This method effectively renders
-     * the component unavailable for processing and should release any transient resources allocated for the 
-     * purpose of the component.
+     * the component unavailable for processing new requests.  The ComponentManager should release any 
+     * transient resources allocated for the purpose of making the component active.
      */
     void deactivate(ComponentId name);
 
