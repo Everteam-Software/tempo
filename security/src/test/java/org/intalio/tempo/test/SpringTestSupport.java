@@ -17,7 +17,6 @@ import java.io.InputStream;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 
-import junit.framework.TestCase;
 import junit.framework.Assert;
 
 import org.slf4j.Logger;
