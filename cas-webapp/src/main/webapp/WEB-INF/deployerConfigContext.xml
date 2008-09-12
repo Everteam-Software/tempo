@@ -13,9 +13,9 @@
 	| one implementing your approach for authenticating usernames and passwords.
 	+-->
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:p="http://www.springframework.org/schema/p"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 	<!--
 		| This bean declares our AuthenticationManager.  The CentralAuthenticationService service bean
 		| declared in applicationContext.xml picks up this AuthenticationManager by reference to its id, 
@@ -78,8 +78,7 @@
 					| This is the authentication handler that authenticates services by means of callback via SSL, thereby validating
 					| a server side SSL certificate.
 					+-->
-				<bean
-					class="org.jasig.cas.authentication.handler.support.HttpBasedServiceCredentialsAuthenticationHandler"
+				<bean class="org.jasig.cas.authentication.handler.support.HttpBasedServiceCredentialsAuthenticationHandler"
 					p:httpClient-ref="httpClient" />
 				<!--
 					| This is the authentication handler declaration that every CAS deployer will need to change before deploying CAS 
@@ -88,11 +87,25 @@
 					| local authentication strategy.  You might accomplish this by coding a new such handler and declaring
 					| edu.someschool.its.cas.MySpecialHandler here, or you might use one of the handlers provided in the adaptors modules.
 					+-->
-				<bean
-					class="org.intalio.tempo.cas.TempoUsernamePasswordAuthenticationHandler">
-					<property name="_tokenService">
-						<ref bean="tokenService" />
-					</property>
+				<!--<bean
+					class="org.jasig.cas.authentication.handler.support.SimpleTestUsernamePasswordAuthenticationHandler" />-->
+				<bean class="org.jasig.cas.adaptors.ldap.BindLdapAuthenticationHandler">
+					<property name="filter" value="cn=%u" />
+					<property name="searchBase" value="dc=example,dc=com" /> 
+					<property name="contextSource" ref="contextSource" />
+					<property name="ignorePartialResultException" value="yes" />
+				</bean>
+				<bean class="org.jasig.cas.adaptors.ldap.BindLdapAuthenticationHandler">
+					<property name="filter" value="mail=%u" />
+					<property name="searchBase" value="dc=intalio,dc=com" /> 
+					<property name="contextSource" ref="contextSource" />
+					<property name="ignorePartialResultException" value="yes" />
+				</bean>
+				<bean class="org.jasig.cas.adaptors.ldap.BindLdapAuthenticationHandler">
+					<property name="filter" value="cn=%u" />
+					<property name="searchBase" value="dc=intalio,dc=com" /> 
+					<property name="contextSource" ref="contextSource" />
+					<property name="ignorePartialResultException" value="yes" />
 				</bean>
 			</list>
 		</property>
@@ -100,50 +113,65 @@
 
 
 	<!--
-		This bean defines the security roles for the Services Management application.  Simple deployments can use the in-memory version.
-		More robust deployments will want to use another option, such as the Jdbc version.
-		
-		The name of this should remain "userDetailsService" in order for Acegi to find it. 
-		
-		To use this, you should add an entry similar to the following between the two value tags:
-		battags=notused,ROLE_ADMIN
-		
-		where battags is the username you want to grant access to.  You can put one entry per line.
-	-->
-	<bean id="userDetailsService"
-		class="org.acegisecurity.userdetails.memory.InMemoryDaoImpl">
+	This bean defines the security roles for the Services Management application.  Simple deployments can use the in-memory version.
+	More robust deployments will want to use another option, such as the Jdbc version.
+	
+	The name of this should remain "userDetailsService" in order for Acegi to find it. 
+	
+	To use this, you should add an entry similar to the following between the two value tags:
+	battags=notused,ROLE_ADMIN
+	
+	where battags is the username you want to grant access to.  You can put one entry per line.
+	 -->	
+	<bean id="userDetailsService" class="org.acegisecurity.userdetails.memory.InMemoryDaoImpl">
 		<property name="userMap">
-			<value></value>
+			<value>
+			
+		    </value>
 		</property>
-	</bean>
-
+	</bean> 
+	
 	<!-- 
-		Bean that defines the attributes that a service may return.  This example uses the Stub/Mock version.  A real implementation
-		may go against a database or LDAP server.  The id should remain "attributeRepository" though.
-	-->
+	Bean that defines the attributes that a service may return.  This example uses the Stub/Mock version.  A real implementation
+	may go against a database or LDAP server.  The id should remain "attributeRepository" though.
+	 -->
 	<bean id="attributeRepository"
 		class="org.jasig.services.persondir.support.StubPersonAttributeDao">
 		<property name="backingMap">
 			<map>
+				<entry key="cn" value="cn" />
 				<entry key="uid" value="uid" />
-				<entry key="eduPersonAffiliation"
-					value="eduPersonAffiliation" />
+				<entry key="eduPersonAffiliation" value="eduPersonAffiliation" /> 
 				<entry key="groupMembership" value="groupMembership" />
 			</map>
 		</property>
 	</bean>
-
+	
+	<bean id="contextSource" class="org.jasig.cas.adaptors.ldap.util.AuthenticatedLdapContextSource">
+		<property name="anonymousReadOnly" value="false" />
+		<property name="pooled" value="true" />
+		<property name="urls">
+			<list>
+				<value>ldap://localhost:10389</value>
+			</list>
+		</property>
+		<property name="userName" value="uid=admin,ou=system"/>
+		<property name="password" value="secret"/>
+		<property name="baseEnvironmentProperties">
+			<map>
+				<entry>
+			        <key><value>java.naming.security.authentication</value></key>
+        			<value>simple</value>
+        		</entry>
+        	</map>
+		</property>
+	</bean>				
 	<!-- 
-		Sample, in-memory data store for the ServiceRegistry. A real implementation
-		would probably want to replace this with the JPA-backed ServiceRegistry DAO
-		The name of this bean should remain "serviceRegistryDao".
-	-->
-	<bean id="serviceRegistryDao"
+	Sample, in-memory data store for the ServiceRegistry. A real implementation
+	would probably want to replace this with the JPA-backed ServiceRegistry DAO
+	The name of this bean should remain "serviceRegistryDao".
+	 -->
+	<bean
+		id="serviceRegistryDao"
 		class="org.jasig.cas.services.InMemoryServiceRegistryDaoImpl" />
-
-	<bean id="tokenService"
-		class="org.intalio.tempo.security.ws.TokenClient">
-		<constructor-arg
-			value="http://localhost:8080/axis2/services/TokenService" />
-	</bean>
 </beans>
