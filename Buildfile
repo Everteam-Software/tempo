@@ -15,8 +15,6 @@ require "rsc/build/repositories.rb"
 require "rsc/buildr-tasks/openjpa"
 require "rsc/buildr-tasks/generate_sql"
 
-# revert to buildr tasks when we can use buildr 1.3
-# require "tasks/easyb"
 require "buildr/cobertura"
 
 desc "Tempo Workflow"
