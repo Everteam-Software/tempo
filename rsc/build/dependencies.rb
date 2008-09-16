@@ -189,11 +189,11 @@ EASY_B = [
 
 INSTINCT = [
   "com.googlecode.instinct:instinct:jar:0.1.6",
-  "org.jmock:jmock:jar:2.4.0",
-  "org.jmock:jmock-legacy:jar:2.4.0",
+  "org.jmock:jmock:jar:2.5.0",
+  "org.jmock:jmock-legacy:jar:2.5.0",
   "cglib:cglib-nodep:jar:2.1_3",
   "org.hamcrest:hamcrest-all:jar:1.1",
-  "org.objenesis:objenesis:jar:1.0",
+  "org.objenesis:objenesis:jar:1.1",
   JUNIT,
   ANT
 ]
