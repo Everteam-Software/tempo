@@ -249,6 +249,7 @@ APACHE_JPA = [
 
 CAS_LIBS = [
   group("cas-server-core",:under=>"org.jasig.cas", :version=>"3.2.1.1"),
+  group("cas-server-support-ldap",:under=>"org.jasig.cas", :version=>"3.2.1.1"),
   "org.acegisecurity:acegi-security:jar:1.0.6",
   "aopalliance:aopalliance:jar:1.0",
   "aspectj:aspectjrt:jar:1.5.3",
