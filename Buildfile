@@ -25,6 +25,7 @@ define "tempo" do
   # compile.options.source = "1.5"
   compile.options.target = "1.5"
 
+=begin
   define "cas-server-webapp" do
     libs = projects("security", "security-ws-client", "security-ws-common"), AXIOM, AXIS2, CAS_LIBS, 
     	APACHE_COMMONS[:beanutils], APACHE_COMMONS[:codec], APACHE_COMMONS[:discovery], APACHE_COMMONS[:httpclient], 
@@ -32,15 +33,17 @@ define "tempo" do
     compile.with libs
     package(:war).with :libs=>libs
   end
-  
+=end
+
   define "dao-nutsNbolts" do
     compile.with project("web-nutsNbolts"), APACHE_JPA, SLF4J
     package :jar
   end
    
+=begin
   define "dao-tools" do
-    compile.with projects("security", "security-ws-client", "tms-axis", "tms-common", "tms-service", "wds-service", "tms-client", "web-nutsNbolts", "dao-nutsNbolts"), 
-    APACHE_DERBY, 
+    compile.with projects("security", "security-ws-client", "tms-axis", "tms-common", "tms-service", "wds-service", "tms-client", "web-nutsNbolts", "dao-nutsNbolts"),
+    APACHE_DERBY,
     APACHE_JPA, 
     AXIOM, 
     AXIS2, 
@@ -55,12 +58,13 @@ define "tempo" do
     STAX_API, 
     XMLBEANS
 
-    test.with projects("tms-common"), APACHE_COMMONS[:pool], CASTOR, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES
+    test.with APACHE_COMMONS[:pool], CASTOR, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES
     unless ENV["MIGRATE"] == 'yes'
       test.exclude '*JDBC2JPAConverterTest*'
     end
     package :war
   end
+=end
   
   # define "dao-migration" do
   #     compile.with projects("dao-tools", "tms-service", "tms-common"), APACHE_DERBY, LIFT, SERVLET_API
@@ -76,8 +80,8 @@ define "tempo" do
 
   desc "Deployment Service Implementation"
   define "deploy-impl" do
-    compile.with projects("deploy-api", "web-nutsNbolts"), SERVLET_API, SLF4J, SPRING[:core]
-    test.with LOG4J, XERCES
+    compile.with projects("deploy-api", "web-nutsNbolts"), SERVLET_API, SHOAL, SLF4J, SPRING[:core]
+    test.with AXIS2, APACHE_COMMONS[:dbcp],  APACHE_COMMONS[:pool],  APACHE_DERBY, LOG4J, XERCES
     test.exclude '*TestUtils*'
     package :jar
   end
@@ -92,7 +96,12 @@ define "tempo" do
   define "deploy-ws-client" do
     compile.with projects("deploy-api", "deploy-ws-common"), 
                  AXIOM, AXIS2, SLF4J, STAX_API, SPRING[:core]
-    test.with project("deploy-impl"), APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], LOG4J, SUNMAIL, XERCES, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX 
+    test.with project("deploy-impl"),
+              project("deploy-impl").test.compile.target,
+              project("deploy-impl").test.resources,
+              APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], 
+              APACHE_COMMONS[:dbcp],  APACHE_COMMONS[:pool], APACHE_DERBY,
+              LOG4J, SUNMAIL, XERCES, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX 
 
     # Remember to set JAVA_OPTIONS before starting Jetty
     # export JAVA_OPTIONS=-Dorg.intalio.tempo.configDirectory=/home/boisvert/svn/tempo/security-ws2/src/test/resources
@@ -115,9 +124,11 @@ define "tempo" do
 
   desc "Deployment Web-Service"
   define "deploy-ws-service" do
-    package(:aar).with :libs => [ projects("deploy-api", "deploy-impl", "deploy-ws-common", "registry"), SLF4J, SPRING[:core] ]
+    package(:aar).with :libs => [ projects("deploy-api", "deploy-impl", "deploy-ws-common", "registry"), SHOAL, SLF4J, SPRING[:core] ]
   end
 
+=begin
+  
   desc "Form Dispatcher Servlet"
   define "fds" do
     libs = [AXIS2, APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], DOM4J, LOG4J, SERVLET_API, SLF4J, STAX_API]
@@ -160,6 +171,7 @@ define "tempo" do
       package(:jar)
     end
   end
+=end
 
   desc "Security Framework"
   define "security" do
@@ -229,6 +241,7 @@ define "tempo" do
         projects("security", "security-ws-client", "security-ws-common", "web-nutsNbolts"), APACHE_COMMONS[:httpclient], JAXEN, SLF4J, SPRING[:core]])
   end
 
+=begin  
   desc "Xml Beans generation"
   define "tms-axis" do 
     FileUtils.mkdir_p _('target/classes/') # workaround for bug in buildr when no classes to be compiled.
@@ -362,12 +375,14 @@ define "tempo" do
   	package(:jar)
     package(:war)
   end
-  
+=end
+
   define "registry" do
     compile.with SLF4J
   	package(:jar)
   end
-  
+
+=begin  
   desc "Workflow Deployment Service Client"
   define "wds-client" do
     compile.with ANT, APACHE_COMMONS[:httpclient], APACHE_COMMONS[:io], JARGS, JUNIT, LOG4J, SLF4J
@@ -390,16 +405,20 @@ define "tempo" do
     package(:jar)
     package(:war).with :libs=>libs
   end
+=end
 
   define "web-nutsNbolts" do
     compile.with project("security"), AXIS2, APACHE_COMMONS[:lang], INTALIO_STATS, JSP_API, LOG4J, SERVLET_API, SLF4J, SPRING[:core], SPRING[:webmvc]
     package :jar
   end
-  
+
+=begin  
   desc "XForms Manager"
   define "xforms-manager" do
 	compile.with ORBEON_LIBS
     resources.filter.using "version" => VERSION_NUMBER
     package(:war).with :libs=> ORBEON_LIBS
   end
+=end
+
 end
