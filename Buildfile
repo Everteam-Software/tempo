@@ -370,6 +370,8 @@ define "tempo" do
     test_libs = libs + [EASY_B, INSTINCT, DB_CONNECTOR.values]
     compile.with test_libs
     compile { open_jpa_enhance }
+    
+    test.with APACHE_DERBY
  
     resources.filter.using "version" => VERSION_NUMBER
 
