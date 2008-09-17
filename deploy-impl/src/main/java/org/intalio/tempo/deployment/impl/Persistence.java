@@ -29,14 +29,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Maintain persistent state of deployed assemblies, components and resources
+ * Maintain persistent state of deployed assemblies, components and resources.
+ * <p>
+ * Thread-safe
  */
 public class Persistence {
     private static final Logger LOG = LoggerFactory.getLogger(Persistence.class);
 
     private final File _deployDir;
+    
     private final DataSource _ds;
-    private Connection _connection;
+    
+    // Connection held during transaction, if any.
+    private ThreadLocal<Connection> _connection = new ThreadLocal<Connection>();
     
     public Persistence(File deployDir, DataSource ds) {
         _deployDir = deployDir;
@@ -44,14 +49,14 @@ public class Persistence {
     }
    
     public void startTransaction() {
-        if (_connection != null) {
-            rollback();
+        if (_connection.get() != null) {
+            rollback("Connection was already open");
             release();
             throw new IllegalStateException("Transaction already started");
         }
         try {
-            _connection = _ds.getConnection();
-            _connection.setAutoCommit(false);
+            _connection.set(_ds.getConnection());
+            _connection.get().setAutoCommit(false);
         } catch (Exception e) {
             release();
             throw new PersistenceException(e);
@@ -61,17 +66,17 @@ public class Persistence {
     public void commitTransaction() {
         ensureTransaction();
         try {
-            _connection.commit();
+            _connection.get().commit();
         } catch (Exception e) {
-            rollback();
+            rollback("Error during commit");
             throw new PersistenceException(e);
         } finally {
             release();
         }
     }
 
-    public void rollbackTransaction() {
-        rollback();
+    public void rollbackTransaction(String reason) {
+        rollback(reason);
         release();
     }
     
@@ -236,16 +241,18 @@ public class Persistence {
     }
 
     private Connection getConnection() throws SQLException {
-        if (_connection != null) return _connection;
+        Connection c = _connection.get();
+        if (c != null) return c;
         else return _ds.getConnection();
     }
     
     private void ensureTransaction() {
-        if (_connection == null) throw new IllegalStateException("No active transaction");
+        if (_connection.get() == null) 
+            throw new IllegalStateException("No active transaction");
     }
 
     private void close(Connection c) {
-        if (c != null && c != _connection) {
+        if (c != null && c != _connection.get()) {
             try {
                 c.close();
             } catch (SQLException e) {
@@ -254,30 +261,32 @@ public class Persistence {
         }
     }
 
-    private void release() {
-        if (_connection != null) {
+    private void rollback(String reason) {
+        Connection c = _connection.get();
+        if (c != null) {
+            LOG.warn("Deployment transaction rolled back: "+reason);
             try {
-                _connection.setAutoCommit(true);
+                c.rollback();
             } catch (SQLException e) {
                 // ignore
             }
-            try {
-                _connection.close();
-            } catch (SQLException e) {
-                // ignore
-            }
-            _connection = null;
         }
     }
 
-    private void rollback() {
-        if (_connection != null) {
-            LOG.warn("Deployment transaction rolled back");
+    private void release() {
+        Connection c = _connection.get();
+        if (c != null) {
             try {
-                _connection.rollback();
+                c.setAutoCommit(true);
             } catch (SQLException e) {
                 // ignore
             }
+            try {
+                c.close();
+            } catch (SQLException e) {
+                // ignore
+            }
+            _connection.set(null);
         }
     }
     

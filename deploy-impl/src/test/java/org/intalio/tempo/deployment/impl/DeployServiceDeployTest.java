@@ -98,7 +98,7 @@ public class DeployServiceDeployTest extends TestCase {
         DeploymentServiceImpl deployService = (DeploymentServiceImpl) factory.getBean("deploymentService");
 		return deployService;
     }
-    
+
     public void testAccessors() throws Exception {
         // check accessors
         assertEquals(_deployDir.getAbsolutePath(), service.getDeployDirectory());
@@ -409,7 +409,7 @@ public class DeployServiceDeployTest extends TestCase {
         assertEquals(0, service.getDeployedAssemblies().size());
         assertFalse(new File(_deployDir, "assembly1.deployed").exists());
     }
-    
+
     void wait(int seconds) {
         try {
             Thread.sleep(seconds*1000);
