@@ -25,7 +25,6 @@ define "tempo" do
   # compile.options.source = "1.5"
   compile.options.target = "1.5"
 
-=begin
   define "cas-server-webapp" do
     libs = projects("security", "security-ws-client", "security-ws-common"), AXIOM, AXIS2, CAS_LIBS, 
     	APACHE_COMMONS[:beanutils], APACHE_COMMONS[:codec], APACHE_COMMONS[:discovery], APACHE_COMMONS[:httpclient], 
@@ -33,14 +32,12 @@ define "tempo" do
     compile.with libs
     package(:war).with :libs=>libs
   end
-=end
 
   define "dao-nutsNbolts" do
     compile.with project("web-nutsNbolts"), APACHE_JPA, SLF4J
     package :jar
   end
    
-=begin
   define "dao-tools" do
     compile.with projects("security", "security-ws-client", "tms-axis", "tms-common", "tms-service", "wds-service", "tms-client", "web-nutsNbolts", "dao-nutsNbolts"),
     APACHE_DERBY,
@@ -64,7 +61,6 @@ define "tempo" do
     end
     package :war
   end
-=end
   
   # define "dao-migration" do
   #     compile.with projects("dao-tools", "tms-service", "tms-common"), APACHE_DERBY, LIFT, SERVLET_API
@@ -127,8 +123,6 @@ define "tempo" do
     package(:aar).with :libs => [ projects("deploy-api", "deploy-impl", "deploy-ws-common", "registry"), SHOAL, SLF4J, SPRING[:core] ]
   end
 
-=begin
-  
   desc "Form Dispatcher Servlet"
   define "fds" do
     libs = [AXIS2, APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], DOM4J, LOG4J, SERVLET_API, SLF4J, STAX_API]
@@ -171,7 +165,6 @@ define "tempo" do
       package(:jar)
     end
   end
-=end
 
   desc "Security Framework"
   define "security" do
@@ -241,7 +234,6 @@ define "tempo" do
         projects("security", "security-ws-client", "security-ws-common", "web-nutsNbolts"), APACHE_COMMONS[:httpclient], JAXEN, SLF4J, SPRING[:core]])
   end
 
-=begin  
   desc "Xml Beans generation"
   define "tms-axis" do 
     FileUtils.mkdir_p _('target/classes/') # workaround for bug in buildr when no classes to be compiled.
@@ -375,14 +367,12 @@ define "tempo" do
   	package(:jar)
     package(:war)
   end
-=end
 
   define "registry" do
     compile.with SLF4J
   	package(:jar)
   end
 
-=begin  
   desc "Workflow Deployment Service Client"
   define "wds-client" do
     compile.with ANT, APACHE_COMMONS[:httpclient], APACHE_COMMONS[:io], JARGS, JUNIT, LOG4J, SLF4J
@@ -405,20 +395,17 @@ define "tempo" do
     package(:jar)
     package(:war).with :libs=>libs
   end
-=end
 
   define "web-nutsNbolts" do
     compile.with project("security"), AXIS2, APACHE_COMMONS[:lang], INTALIO_STATS, JSP_API, LOG4J, SERVLET_API, SLF4J, SPRING[:core], SPRING[:webmvc]
     package :jar
   end
 
-=begin  
   desc "XForms Manager"
   define "xforms-manager" do
 	compile.with ORBEON_LIBS
     resources.filter.using "version" => VERSION_NUMBER
     package(:war).with :libs=> ORBEON_LIBS
   end
-=end
 
 end
