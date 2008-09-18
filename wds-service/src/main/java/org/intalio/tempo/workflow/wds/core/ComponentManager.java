@@ -81,15 +81,25 @@ public class ComponentManager implements org.intalio.tempo.deployment.spi.Compon
             }
 
             // Phase 2: Actual deployment
-            processDir(base, base, msgs, token, wds);
+            // Record which XForms and Items were deployed for this component
+            ArrayList<String> urls = new ArrayList<String>();
+            processDir(base, base, urls, msgs, token, wds);
+            return new ComponentManagerResult(msgs, urls);
         } finally {
             wds.close();
         }
-        return new ComponentManagerResult(msgs);
     }
 
     public void undeploy(ComponentId name, List<String> deployedObjects) {
-        // TODO: We need to record which PIPAs, XForms and Items were deployed for this component.
+        WDSService wds = _wdsFactory.getWDSService();
+        for (String url: deployedObjects) {
+            String token = "x"; // TODO
+            try {
+                wds.deleteItem(url, token);
+            } catch (UnavailableItemException e) {
+                LOG.warn("Undeploy - Item not found: "+url);
+            }
+        }
     }
 
     public void start(ComponentId name) {
@@ -98,6 +108,14 @@ public class ComponentManager implements org.intalio.tempo.deployment.spi.Compon
 
     public void stop(ComponentId name) {
         // nothing
+    }
+
+    public void deployed(ComponentId name, File path) {
+        // nothing to do; services go directly to database to know what's deployed
+    }
+
+    public void undeployed(ComponentId name) {
+        // nothing to do
     }
 
     // ------------------ Common deployment methods ------------------------
@@ -156,9 +174,9 @@ public class ComponentManager implements org.intalio.tempo.deployment.spi.Compon
         try {
             Item existing = wds.retrieveItem(itemURL, token);
             if (existing != null) {
-                // ALEX: Disabled until undeploy is implemented
-                // msg = new DeploymentMessage(Level.ERROR, "Item already exists: " + itemURL);
-                // msg.setResource(itemURL);
+                // ALEX: Make this an error when undeploy is fully implemented
+                msg = new DeploymentMessage(Level.WARNING, "Deploy - Item already exists: " + itemURL);
+                msg.setResource(itemURL);
             }
         } catch (UnavailableItemException e) {
             // doesn't exist, continue
@@ -209,6 +227,7 @@ public class ComponentManager implements org.intalio.tempo.deployment.spi.Compon
         File[] files = dir.listFiles();
         for (File f : files) {
             LOG.debug("Check: {}", f);
+            String itemURL = relativePath(base, f);
             if (f.isDirectory()) {
                 checkDir(base, f, msgs, token, wds);
             } else if (f.isFile()) {
@@ -217,11 +236,11 @@ public class ComponentManager implements org.intalio.tempo.deployment.spi.Compon
                     InputStream input = new FileInputStream(f);
                     try {
                         if (f.getName().endsWith(".pipa")) {
-                            msg = checkPipa(token, wds, input, relativePath(base, f));
+                            msg = checkPipa(token, wds, input, itemURL);
                         } else if (f.getName().endsWith(".xform")) {
-                            msg = checkXForm(token, wds, input, relativePath(base, f));
+                            msg = checkXForm(token, wds, input, itemURL);
                         } else {
-                            msg = checkItem(token, wds, input, relativePath(base, f));
+                            msg = checkItem(token, wds, input, itemURL);
                         }
                         if (msg != null)
                             msgs.add(msg);
@@ -231,35 +250,37 @@ public class ComponentManager implements org.intalio.tempo.deployment.spi.Compon
                 } catch (Exception e) {
                     LOG.error("Error while checking item: " + f, e);
                     DeploymentMessage msg = new DeploymentMessage(Level.ERROR, e.toString());
-                    msg.setResource(relativePath(base, f));
+                    msg.setResource(itemURL);
                     msgs.add(msg);
                 }
             } else {
                 DeploymentMessage msg = new DeploymentMessage(Level.WARNING, "Unknown file type: " + f);
-                msg.setResource(relativePath(base, f));
+                msg.setResource(itemURL);
                 msgs.add(msg);
             }
         }
     }
 
-    private void processDir(File base, File dir, List<DeploymentMessage> msgs, String token, WDSService wds) {
+    private void processDir(File base, File dir, ArrayList<String> urls, List<DeploymentMessage> msgs, String token, WDSService wds) {
         File[] files = dir.listFiles();
         for (File f : files) {
             LOG.debug("Process: {}", f);
+            String itemURL = relativePath(base, f);
             if (f.isDirectory()) {
-                processDir(base, f, msgs, token, wds);
+                processDir(base, f, urls, msgs, token, wds);
             } else if (f.isFile()) {
                 try {
                     DeploymentMessage msg = null;
                     InputStream input = new FileInputStream(f);
                     try {
                         if (f.getName().endsWith(".pipa")) {
-                            msg = processPipa(token, wds, input, relativePath(base, f));
+                            msg = processPipa(token, wds, input, itemURL);
                         } else if (f.getName().endsWith(".xform")) {
-                            msg = processXForm(token, wds, input, relativePath(base, f));
+                            msg = processXForm(token, wds, input, itemURL);
                         } else {
-                            msg = processItem(token, wds, input, relativePath(base, f));
+                            msg = processItem(token, wds, input, itemURL);
                         }
+                        urls.add(itemURL);
                         if (msg != null)
                             msgs.add(msg);
                     } finally {
@@ -269,13 +290,13 @@ public class ComponentManager implements org.intalio.tempo.deployment.spi.Compon
                     // this shouldn't happen but if it does, fail fast
                     LOG.error("Error while processing item: " + f, e);
                     DeploymentMessage msg = new DeploymentMessage(Level.ERROR, e.toString());
-                    msg.setResource(relativePath(base, f));
+                    msg.setResource(itemURL);
                     msgs.add(msg);
                     break;
                 }
             } else {
                 DeploymentMessage msg = new DeploymentMessage(Level.WARNING, "Unknown file type: " + f);
-                msg.setResource(relativePath(base, f));
+                msg.setResource(itemURL);
                 msgs.add(msg);
             }
         }
@@ -307,4 +328,5 @@ public class ComponentManager implements org.intalio.tempo.deployment.spi.Compon
             // ignore
         }
     }
+
 }
