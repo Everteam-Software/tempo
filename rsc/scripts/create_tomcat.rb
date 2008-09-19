@@ -201,11 +201,7 @@ tempo_svn_config_folder = "#{TEMPO_SVN}/config"
 config_files = File.join(tempo_svn_config_folder,"*.*")
 Dir.glob(config_files) {|x| File.copy(x, tomcat_config_folder, DEBUG)}
 
-mysql_ds_config_files = File.join("#{TEMPO_SVN}/rsc/tempo-sql","*.xml")
-Dir.glob(mysql_ds_config_files) {|x| File.copy(x, tomcat_config_folder, DEBUG)}
-
 File.copy "#{TEMPO_SVN}/rsc/tomcat/ode-axis2.properties", tomcat_config_folder
-
 File.copy "#{TEMPO_SVN}/rsc/tomcat/axis2.xml", "#{webapp_folder}/axis2/WEB-INF/conf"
 ##
 

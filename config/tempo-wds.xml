@@ -31,10 +31,8 @@
 			<map>
 				<entry><key><value>openjpa.jdbc.SynchronizeMappings</value></key><value>buildSchema</value></entry>
 				<entry><key><value>openjpa.ConnectionFactoryMode</value></key><value>local</value></entry>
-				<entry><key><value>openjpa.ConnectionDriverName</value></key><value>org.apache.derby.jdbc.EmbeddedXADataSource</value></entry>				
 				<entry><key><value>tempo.datasourceURL</value></key><value>java:comp/env/jdbc/BPMSDB</value></entry>
 				<entry><key><value>openjpa.Log</value></key><value>none</value></entry>
-				<entry><key><value>openjpa.FlushBeforeQueries</value></key><value>true</value></entry>
 			</map>
 		</constructor-arg>
 	</bean>
