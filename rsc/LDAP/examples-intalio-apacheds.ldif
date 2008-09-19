@@ -1,0 +1,170 @@
+
+dn: ou=People, dc=example, dc=com
+objectclass: top
+objectclass: organizationalUnit
+ou: People
+description: People
+
+
+dn: cn=adminx, ou=People, dc=example, dc=com
+cn: adminx
+sn: adminxistrator
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+ou: People
+givenName: adminx
+mail: adminx@example.org
+userPassword: changeit
+
+dn: cn=msmith, ou=People, dc=example, dc=com
+cn: msmith
+sn: Smith
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+ou: employee
+givenName: Michael
+mail: msmith@example.org
+l: Foster City
+userPassword: password
+
+dn: cn=ewilliams, ou=People, dc=example, dc=com
+cn: ewilliams
+sn: Williams
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+ou: employee
+givenName: Emily
+mail: ewilliams@example.org
+l: Foster City
+userPassword: password
+
+dn: cn=s1x, ou=People, dc=example, dc=com
+cn: s1x
+sn: Sales 1
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+ou: People
+givenName: Sales1x
+mail: s1x@example.org
+l: Foster City
+userPassword: password
+
+dn: cn=s2x, ou=People, dc=example, dc=com
+cn: s2x
+sn: Sales 2
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+ou: People
+givenName: Sales2x
+mail: s2x@example.org
+l: Foster City
+userPassword: password
+
+dn: cn=m1x, ou=People, dc=example, dc=com
+cn: m1x
+sn: Manager 1
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+ou: People
+givenName: Manager1
+mail: m1x@example.org
+l: Foster City
+userPassword: password
+
+dn: cn=m2x, ou=People, dc=example, dc=com
+cn: m2x
+sn: Manager 2
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+ou: People
+givenName: Manager2
+mail: m2x@example.org
+l: Foster City
+userPassword: password
+
+dn: cn=cfo, ou=People, dc=example, dc=com
+cn: cfo
+sn: Mr. CFO
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+ou: People
+givenName: CFO
+mail: cfo@example.org
+l: Foster City
+userPassword: password
+
+dn: ou=Roles,dc=example,dc=com
+objectclass: top
+objectclass: organizationalUnit
+ou: Roles
+description: Roles
+
+dn: cn=ProcessManager, ou=Roles, dc=example, dc=com
+objectclass: top
+objectclass: groupOfUniqueNames
+cn: ProcessManager
+ou: Roles
+uniquemember: cn=adminx,ou=People,dc=example,dc=com
+uniquemember: cn=cfo,ou=People,dc=example,dc=com
+uniquemember: cn=m1x,ou=People,dc=example,dc=com
+uniquemember: cn=msmith,ou=People,dc=example,dc=com
+
+dn: cn=ProcessAdministrator, ou=Roles, dc=example, dc=com
+objectclass: top
+objectclass: groupOfUniqueNames
+cn: ProcessAdministrator
+ou: Roles
+uniquemember: cn=adminx,ou=People,dc=example,dc=com
+uniquemember: cn=cfo,ou=People,dc=example,dc=com
+uniquemember: cn=m1x,ou=People,dc=example,dc=com
+uniquemember: cn=ewilliams,ou=People,dc=example,dc=com
+
+dn: cn=Sales, ou=Roles, dc=example, dc=com
+objectclass: top
+objectclass: groupOfUniqueNames
+cn: Sales
+ou: Roles
+uniquemember: cn=s1x,ou=People,dc=example,dc=com
+uniquemember: cn=s2x,ou=People,dc=example,dc=com
+
+dn: cn=Manager,ou=Roles,dc=example,dc=com
+objectclass: top
+objectclass: groupOfUniqueNames
+cn: Manager
+ou: Roles
+uniquemember: cn=m1x,ou=People,dc=example,dc=com
+uniquemember: cn=m2x,ou=People,dc=example,dc=com
+
+dn: cn=employee,ou=Roles,dc=example,dc=com
+objectclass: top
+objectclass: groupOfUniqueNames
+cn: employee
+ou: Roles
+uniquemember: cn=m1x,ou=People,dc=example,dc=com
+uniquemember: cn=m2x,ou=People,dc=example,dc=com
+uniquemember: cn=ewilliams,ou=People,dc=example,dc=com
+uniquemember: cn=msmith,ou=People,dc=example,dc=com
+uniquemember: cn=cfo,ou=People,dc=example,dc=com
+
+dn: cn=CFO,ou=Roles,dc=example,dc=com
+objectclass: top
+objectclass: groupOfUniqueNames
+cn: CFO
+ou: Roles
+uniquemember: cn=cfo,ou=People,dc=example,dc=com

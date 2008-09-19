@@ -316,7 +316,7 @@ if ADD_LDAP
     explain "Server is Liferay, config it to use Apache DS as LDAP server"
     # copy the config files
     Dir.glob("#{TEMPO_SVN}/rsc/LDAP/portal-ext.properties") {|x| File.copy x, "#{webapp_folder}/ROOT/WEB-INF/classes", DEBUG}
-    File.copy "#{TEMPO_SVN}/rsc/LDAP/intalio-apacheds.ldif", "#{apacheds_war_folder}/WEB-INF/classes", DEBUG
+    File.copy "#{TEMPO_SVN}/rsc/LDAP/examples-intalio-apacheds.ldif", "#{apacheds_war_folder}/WEB-INF/classes", DEBUG
   end
   
   if ADD_ALFRESCO
@@ -357,7 +357,9 @@ Dir.glob(File.join("#{lib_folder}", "jcl104*.jar")) {|x| File.delete x}
 Dir.glob(File.join("#{axis2_war_folder}", "**/dom4j*.jar")) {|x| File.delete x}
 Dir.glob(File.join("#{webapp_folder}", "**/servlet-api-*")) {|x| File.delete x}
 Dir.glob(File.join("#{webapp_folder}", "**/jsp-api-*")) {|x| File.delete x}
+Dir.glob(File.join("#{webapp_folder}", "**/casclient")) {|x| File.delete x}
 Dir.glob(File.join("#{webapp_folder}", "**/log4j-*.jar")) {|x| File.delete x}
+Dir.glob(File.join("#{webapp_folder}", "**/log4j.properties")) {|x| File.delete x}
 Dir.glob(File.join("#{webapp_folder}", "**/slf4j*.jar")) {|x| File.delete x}
 Dir.glob(File.join("#{server_folder}/common/endorsed", "*.jar")) {|x| File.delete x}
 ##
