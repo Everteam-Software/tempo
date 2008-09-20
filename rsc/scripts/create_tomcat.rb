@@ -11,6 +11,7 @@ require 'fileutils'
 require 'open-uri'
 require "buildr"
 
+
 script_folder = File.dirname(File.expand_path("#{$0}"))
 
 load "#{script_folder}/../build/dependencies.rb"
@@ -253,7 +254,7 @@ Dir.glob(File.join("#{server_folder}/conf", "log4j.properties")) {|x| File.move(
 
 ## For liferay specific
 if SERVER == ADD_LIFERAY
-  title "For liferay 5.0.1 specific configuration"
+  title "Liferay configuration"
   explain "Config liferay portal to use cas authentication"
   File.cp "#{TEMPO_SVN}/rsc/liferay510/web.xml", "#{webapp_folder}/ROOT/WEB-INF"
   Dir.glob("#{TEMPO_SVN}/liferay-ticket-filter/target/*.jar") {|x| File.copy x, "#{webapp_folder}/ROOT/WEB-INF/lib", DEBUG}
@@ -312,7 +313,7 @@ if ADD_LDAP
     explain "Server is Liferay, config it to use Apache DS as LDAP server"
     # copy the config files
     Dir.glob("#{TEMPO_SVN}/rsc/LDAP/portal-ext.properties") {|x| File.copy x, "#{webapp_folder}/ROOT/WEB-INF/classes", DEBUG}
-    File.copy "#{TEMPO_SVN}/rsc/LDAP/examples-intalio-apacheds.ldif", "#{apacheds_war_folder}/WEB-INF/classes", DEBUG
+    File.copy "#{TEMPO_SVN}/rsc/LDAP/examples-intalio-apacheds.ldif", "#{apacheds_war_folder}/WEB-INF/classes/intalio-apacheds.ldif", DEBUG
   end
   
   if ADD_ALFRESCO
@@ -342,6 +343,9 @@ title "Deleting war files from webapp folder"
 explain "Make some space in the webapp folder by removing unused war files"
 ##
 Dir.glob(File.join("#{webapp_folder}", "*.war")) {|x| File.delete x}
+["temp", "work", "LICENSE", "RELEASE-NOTES", "NOTICE", "RUNNING.txt"].each do |x| 
+FileUtils.rm_r "#{server_folder}/#{x}", :force => true
+end
 ##
 
 title "Delete conflicting jar files"
@@ -353,19 +357,31 @@ Dir.glob(File.join("#{lib_folder}", "jcl104*.jar")) {|x| File.delete x}
 Dir.glob(File.join("#{axis2_war_folder}", "**/dom4j*.jar")) {|x| File.delete x}
 Dir.glob(File.join("#{webapp_folder}", "**/servlet-api-*")) {|x| File.delete x}
 Dir.glob(File.join("#{webapp_folder}", "**/jsp-api-*")) {|x| File.delete x}
-Dir.glob(File.join("#{webapp_folder}", "**/casclient")) {|x| File.delete x}
+Dir.glob(File.join("#{webapp_folder}", "**/casclient*")) {|x| File.delete x}
 Dir.glob(File.join("#{webapp_folder}", "**/log4j-*.jar")) {|x| File.delete x}
 Dir.glob(File.join("#{webapp_folder}", "**/log4j.properties")) {|x| File.delete x}
 Dir.glob(File.join("#{webapp_folder}", "**/slf4j*.jar")) {|x| File.delete x}
 Dir.glob(File.join("#{server_folder}/common/endorsed", "*.jar")) {|x| File.delete x}
 ##
 
+title "Generating concatenated sql file"
+explain "Generating a single sql file containing the necessary "
+f = File.new("#{server_folder}/bpms.sql",  "w")
+Dir.glob(File.join("#{TEMPO_SVN}/db-schema/mysql",'*.sql')) {|x| 
+  f.write("-- file:#{x}\n")
+  f.write(File.open(x).read)
+}
+ode_mysql = "#{TEMPO_SVN}/rsc/tempo-sql/ode-mysql.sql"
+f.write("-- file:#{ode_mysql}\n")
+f.write(File.open(ode_mysql).read)
+f.close
+
 title "Almost done !"
-explain "Now \ a mysql database named \"bpms\" with access to user <root> and no password"
-explain "Load the ode schema into mysql from the file #{TEMPO_SVN}/rsc/tempo-sql/ode-mysql.sql"
-explain "If you add the alfresco portlet, please load the sql script from the file #{TEMPO_SVN}/rsc/alfresco/alfresco.sql also"
+explain "Now create \ a mysql database named \"bpms\" with access to user <root> and no password"
+explain "Load the bpms.sql script into this database. The file can be found at the root of the generated server folder"
 explain "Once this is done, start tomcat with the following command:"
 explain "./catalina.sh run"
+explain "windows users can just use the startup.bat script to start the server"
 explain "Now you can browse http://localhost:8080/ui-fw/ and login with user <admin> and password <changeit>"
 
 title  "Enjoy!!"

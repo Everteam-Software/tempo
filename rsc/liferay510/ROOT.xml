@@ -4,7 +4,7 @@
 		auth="Container"
 		type="javax.sql.DataSource"
 		driverClassName="com.mysql.jdbc.Driver"
-		url="jdbc:mysql://localhost/liferay?useUnicode=true&amp;characterEncoding=UTF-8&amp;useFastDateParsing=false"
+		url="jdbc:mysql://localhost/bpms?useUnicode=true&amp;characterEncoding=UTF-8&amp;useFastDateParsing=false"
 		username="root"
 		password=""
 		maxActive="20"
