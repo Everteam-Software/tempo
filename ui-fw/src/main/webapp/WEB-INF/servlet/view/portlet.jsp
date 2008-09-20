@@ -4,17 +4,18 @@
 <%@ page import="javax.portlet.PortletSession" %>
 <%@ page import="javax.portlet.PortletURL" %>
 <%@ page import="org.intalio.tempo.web.ApplicationState" %>
-<%@ page session="false" %>
 
 <portlet:defineObjects/>
 
-<link href="/ui-fw/style/portlet.css" rel="stylesheet" type="text/css"/>
-<link href="/ui-fw/style/custom-rows.css" rel="stylesheet" type="text/css"/>
-
-	<script src="/ui-fw/script/portlet/adapter/ext/ext-base.js" type="text/javascript"></script>
+	<script src="/ui-fw/script/portlet/adapter/ext/ui-fw.js" type="text/javascript"></script>
+      <script src="/ui-fw/script/portlet/adapter/ext/ext-base.js" type="text/javascript"></script>
+      
 	<script src="/ui-fw/script/portlet/ext-all.js" type="text/javascript"></script>
 	<script src="/ui-fw/script/portlet/prototype.js" type="text/javascript"></script>
 	<script src="/ui-fw/script/portlet/entry.js" type="text/javascript"></script>
+
+      <link href="/ui-fw/style/portlet.css" rel="stylesheet" type="text/css"/>
+      <link href="/ui-fw/style/custom-rows.css" rel="stylesheet" type="text/css"/>
 
 <%@ include file="ui-fw-portlet.jsp" %>
 

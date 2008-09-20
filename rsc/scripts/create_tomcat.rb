@@ -313,12 +313,11 @@ if ADD_LDAP
     explain "Server is Liferay, config it to use Apache DS as LDAP server"
     # copy the config files
     Dir.glob("#{TEMPO_SVN}/rsc/LDAP/portal-ext.properties") {|x| File.copy x, "#{webapp_folder}/ROOT/WEB-INF/classes", DEBUG}
-    File.copy "#{TEMPO_SVN}/rsc/LDAP/examples-intalio-apacheds.ldif", "#{apacheds_war_folder}/WEB-INF/classes/intalio-apacheds.ldif", DEBUG
+    File.copy "#{TEMPO_SVN}/rsc/LDAP/"+config["ldif"], "#{apacheds_war_folder}/WEB-INF/classes/intalio-apacheds.ldif", DEBUG
   end
   
   if ADD_ALFRESCO
     explain "Also need to config Alfresco to use apacheds"
-    #Dir.glob("#{TEMPO_SVN}/rsc/alfresco/public*.xml") {|x| File.copy x, "#{webapp_folder}/alfresco/WEB-INF/classes/alfresco", DEBUG}
     Dir.glob("#{TEMPO_SVN}/rsc/alfresco/extension/*.*") {|x| File.copy x, "#{webapp_folder}/alfresco/WEB-INF/classes/alfresco/extension", DEBUG}
     
     # those are 32 bits specific, may need to add the 64bits one depending on the machine.
