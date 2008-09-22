@@ -1,6 +1,6 @@
 # AbsenceRequest PIPA Task Descriptor
 task-description=Examples - Absence Request
-task-role-owners=examples\\employee,intalio\\ProcessManager
+task-role-owners=examples\\employee
 formURI=/AbsenceRequest/AbsenceRequest.xform
 formNamespace=http://www.intalio.com/workflow/forms/AbsenceRequest/AbsenceRequest
 processEndpoint=http://localhost:8080/ode/processes/AbsenceRequest/Employee_To_AbsenceRequest

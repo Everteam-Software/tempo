@@ -367,8 +367,8 @@ title "Adapt absence request to LDAP if needed"
 explain "Replace the user/role assignment in bpel files, and in pipa"
 ##
 if ADD_LDAP then
-  replace_all_with_map({"examples\\employee" => "intalio\\Sales","examples\\manager" => "intalio\\Manager"}, "#{processes_folder}/AbsenceRequest/AbsenceRequest-AbsenceRequest.bpel")
-  replace_all("examples\\employee", "intalio\\Sales", "#{deploy_folder}/AbsenceRequest/AbsenceRequest.pipa/AbsenceRequest/AbsenceRequest.pipa")
+  replace_all_with_map({"examples\\employee" => "intalio\\Sales","examples\\manager" => "intalio\\Manager"}, "#{ode_processes_folder}/AbsenceRequest/AbsenceRequest-AbsenceRequest.bpel")
+  replace_all("examples\\\\employee", "intalio\\\\Sales", "#{deploy_folder}/AbsenceRequest.pipa/AbsenceRequest/AbsenceRequest.pipa")
 end
 ##
 

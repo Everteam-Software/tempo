@@ -1,3 +1,17 @@
+/**
+ * Copyright (c) 2005-2008 Intalio inc.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * Intalio inc. - initial API and implementation
+ *
+ * $Id: TaskManagementServicesFacade.java 5440 2006-06-09 08:58:15Z imemruk $
+ * $Log:$
+ */
 package org.intalio.tempo.uiframework.service;
 
 import java.io.IOException;
@@ -20,6 +34,7 @@ import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.tms.ITaskManagementService;
 import org.intalio.tempo.workflow.tms.client.RemoteTMSFactory;
+import org.intalio.tempo.workflow.task.TaskState;
 
 import atg.taglib.json.util.JSONArray;
 import atg.taglib.json.util.JSONException;
@@ -53,36 +68,35 @@ public class JsonUpdate extends HttpServlet {
                 FormManager fmanager = FormManagerBroker.getInstance().getFormManager();
 
                 for (Task task : tasks) {
-                    if (task instanceof Notification) {
-                        Notification notification = (Notification) task;
-                        // if
-                        // (!TaskState.COMPLETED.equals(notification.getState()))
-                        // {
-                        JSONObject jtask = new JSONObject();
-                        jtask.put("taskUrl", URIUtils.getResolvedTaskURLAsString(new HttpServletRequestWrapper(request), fmanager, task, token, userName));
-                        jtask.put("description", notification.getDescription());
-                        jtask.put("creationDate", notification.getCreationDate());
-                        jtask.put("state", notification.getState());
-                        jtasks.add(jtask);
-                        // }
-                    } else if (task instanceof PATask) {
-                        PATask paTask = (PATask) task;
-                        // if (!TaskState.COMPLETED.equals(paTask.getState())) {
-                        JSONObject jtask = new JSONObject();
-                        jtask.put("taskUrl", URIUtils.getResolvedTaskURLAsString(new HttpServletRequestWrapper(request), fmanager, task, token, userName));
-                        jtask.put("description", paTask.getDescription());
-                        jtask.put("creationDate", paTask.getCreationDate());
-                        jtask.put("state", paTask.getState());
-                        jtasks.add(jtask);
-                        // }
-                    } else if (task instanceof PIPATask) {
-                        PIPATask pipaTask = (PIPATask) task;
-                        JSONObject jprocess = new JSONObject();
-                        jprocess.put("taskUrl", URIUtils.getResolvedTaskURLAsString(new HttpServletRequestWrapper(request), fmanager, task, token, userName));
-                        jprocess.put("description", pipaTask.getDescription());
-                        jprocess.put("creationDate", pipaTask.getCreationDate());
-                        jprocesses.add(jprocess);
-                    }
+					if (task instanceof Notification) {
+						Notification notification = (Notification) task;
+						if (!TaskState.COMPLETED.equals(notification.getState()))
+						{
+							JSONObject jtask = new JSONObject();
+							jtask.put("taskUrl", URIUtils.getResolvedTaskURLAsString(new HttpServletRequestWrapper(request), fmanager, task, token, userName));
+							jtask.put("description", notification.getDescription());
+							jtask.put("creationDate", notification.getCreationDate());
+							jtask.put("state", notification.getState());
+							jtasks.add(jtask);
+						}
+					} else if (task instanceof PATask) {
+						PATask paTask = (PATask) task;
+						if (!TaskState.COMPLETED.equals(paTask.getState())) {
+							JSONObject jtask = new JSONObject();
+							jtask.put("taskUrl", URIUtils.getResolvedTaskURLAsString(new HttpServletRequestWrapper(request), fmanager, task, token, userName));
+							jtask.put("description", paTask.getDescription());
+							jtask.put("creationDate", paTask.getCreationDate());
+							jtask.put("state", paTask.getState());
+							jtasks.add(jtask);
+						}
+					} else if (task instanceof PIPATask) {
+						PIPATask pipaTask = (PIPATask) task;
+						JSONObject jprocess = new JSONObject();
+						jprocess.put("taskUrl", URIUtils.getResolvedTaskURLAsString(new HttpServletRequestWrapper(request), fmanager, task, token, userName));
+						jprocess.put("description", pipaTask.getDescription());
+						jprocess.put("creationDate", pipaTask.getCreationDate());
+						jprocesses.add(jprocess);
+					}
                 }
                 jroot.put("tasks", jtasks);
                 jroot.put("process", jprocesses);
