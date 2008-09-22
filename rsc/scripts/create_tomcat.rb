@@ -363,6 +363,15 @@ Dir.glob(File.join("#{webapp_folder}", "**/slf4j*.jar")) {|x| File.delete x}
 Dir.glob(File.join("#{server_folder}/common/endorsed", "*.jar")) {|x| File.delete x}
 ##
 
+title "Adapt absence request to LDAP if needed"
+explain "Replace the user/role assignment in bpel files, and in pipa"
+##
+if ADD_LDAP then
+  replace_all_with_map({"examples\\employee" => "intalio\\Sales","examples\\manager" => "intalio\\Manager"}, "#{processes_folder}/AbsenceRequest/AbsenceRequest-AbsenceRequest.bpel")
+  replace_all("examples\\employee", "intalio\\Sales", "#{deploy_folder}/AbsenceRequest/AbsenceRequest.pipa/AbsenceRequest/AbsenceRequest.pipa")
+end
+##
+
 title "Generating concatenated sql file"
 explain "Generating a single sql file containing the necessary "
 f = File.new("#{server_folder}/bpms.sql",  "w")

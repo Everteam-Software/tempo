@@ -7,6 +7,22 @@ require 'open-uri'
 require "buildr"
 require "hpricot"
 
+# Replace all the strings in a file
+def replace_all(src_string, target_string, src_file, target_file=src_file) 
+  f = IO.read(src_file)
+  File.open(target_file, "w") { |io| 
+    io << f.gsub(src_string, target_string)
+  }   
+end
+
+# use the above to apply replace on a multiple string on the same file
+def replace_all_with_map(map, src_file, target_file=src_file)
+  map.each { |key,value|
+    replace_all(key,value, src_file, target_file)
+  }
+end
+
+# Find the fastest apache mirror
 def find_apache_mirror
   begin
     doc = Hpricot(open("http://www.apache.org/dyn/closer.cgi"))
@@ -16,7 +32,6 @@ def find_apache_mirror
     return ""
   end
 end
-
 
 # Unzip a file
 def unzip2(x, basefolder = ".", forceextract = false)
