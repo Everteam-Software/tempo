@@ -77,7 +77,8 @@ def locate_and_copy(lib, folder)
     lib.each {|l| locate_and_copy l,folder}
   else
     artifact(lib).invoke
-    File.cp repositories.locate(lib), folder
+    libfile = repositories.locate(lib)
+    File.cp libfile, folder if not File.exist?(folder+"/"+File.basename(libfile))
   end
 end
 
@@ -87,8 +88,9 @@ end
 
 def download_unzip(url, unzip=true)
   filename = filename_from_url url
-  download_to(filename,url,unzip)
-  return filename.slice(0,filename.rindex("."))
+  ret = filename.slice(0,filename.rindex("."))
+  download_to(filename,url,unzip) if not File.exist?(filename.gsub(".zip",""))
+  ret
 end
 
 def download_and_unzip(arg)

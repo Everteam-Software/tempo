@@ -1,25 +1,25 @@
 #!/usr/bin/env ruby
 
 require "rubygems"
-gem 'hpricot', '>= 0.6'
-
+require "hpricot"
 require 'net/http'
 require 'open-uri' 
 require "zip/zip"
 require 'yaml'
 require 'fileutils'
 require 'open-uri'
+# require 'cucumber'
 require "buildr"
 
-
 script_folder = File.dirname(File.expand_path("#{$0}"))
-
 load "#{script_folder}/../build/dependencies.rb"
 load "#{script_folder}/../build/repositories.rb"
 load "#{script_folder}/../scripts/build_support.rb"
 
+title "Loading build configuration"
+explain "Loading the build variables"
+##
 config = YAML::load( File.open( "#{script_folder}/config.yml" ) )
-
 TEMPO_SVN = "#{script_folder}/../.."
 DEBUG = config["debug"]
 REBUILD_TEMPO = config["rebuild"]
@@ -32,19 +32,24 @@ TOMCAT_5_DOWNLOAD = APACHE_MIRROR + "tomcat/tomcat-5/v5.5.26/bin/apache-tomcat-5
 TOMCAT_6_DOWNLOAD = APACHE_MIRROR + "tomcat/tomcat-6/v6.0.16/bin/apache-tomcat-6.0.16.zip"
 TOMCAT_ADMIN_DOWNLOAD = APACHE_MIRROR + "tomcat/tomcat-5/v5.5.26/bin/apache-tomcat-5.5.26-admin.zip"
 AXIS_DOWNLOAD = APACHE_MIRROR + "ws/axis2/1_4/axis2-1.4-war.zip"
-ODE_DOWNLOAD = APACHE_MIRROR + "ode/apache-ode-war-1.2.zip"
+ODE_RELEASES = {
+  :v1_2 => APACHE_MIRROR + "ode/apache-ode-war-1.2.zip",
+  :v1_3_snapshot => "http://www.intalio.org/public/ode/apache-ode-war-1.3-snapshot-20080924-152626.zip"
+}
+ODE_DOWNLOAD = ODE_RELEASES[:v1_3_snapshot]
 LIFERAY_5 = "http://downloads.sourceforge.net/sourceforge/lportal/liferay-portal-tomcat-5.5-5.1.1.zip"  #CA
 ALFRESCO = {
   :v2_1 => "http://downloads.sourceforge.net/sourceforge/alfresco/alfresco-community-war-2.1.0.zip",
   :v2_9 => "http://downloads.sourceforge.net/sourceforge/alfresco/alfresco-community-war-2.9.0B.zip",
   :v3_0 => "http://downloads.sourceforge.net/sourceforge/alfresco/alfresco-labs-war-3a.1032.zip"
 }
+INSTALL_DIR = config["install_dir"]
+##
 
 title "Changing directory"
-install_dir = config["install_dir"]
 ##
-FileUtils.mkdir_p install_dir
-Dir.chdir install_dir
+FileUtils.mkdir_p INSTALL_DIR
+Dir.chdir INSTALL_DIR
 ##
 
 title "Downloading required files"
@@ -59,12 +64,11 @@ unzip2( filename_from_url( AXIS_DOWNLOAD ), axis_folder )
 
 title "Define install variables"
 explain "Defining variables for webapp folders and services folders"
+##
 server_folder = tomcat_folder
 server_folder = liferay_folder if SERVER == ADD_LIFERAY
-##
 finder = Finder.new
 webapp_folder = server_folder + File::SEPARATOR + "webapps"
-
 ode_war = finder.find_war( ode_folder )
 axis_war = finder.find_war( axis_folder )
 ##
@@ -112,9 +116,7 @@ explain "FDS is the form dispatcher service, responsible mainly for replacing xm
 explain "UI-FW is the user interface, where user can handle their tasks and complete them"
 explain "WDS service, is like a Web Resources services."
 explain "XFM is responsible for displaying the forms to be filled when a user is handling a task."
-# explain "CAS is the SSO framework so we can integrate with other security services"
-# explain "Pluto, is a portlet container"
-# explain "UI-FW-PORTLET is a portlet version of UI-FW meant to be running in Pluto"
+explain "CAS is the SSO framework so we can integrate with other security services"
 ##
 wi.install_tempo_war( "fds" )
 wi.install_tempo_war( "ui-fw" )
@@ -152,10 +154,8 @@ explain "Some libs are missing in tomcat, so we add them here."
 lib_folder = "#{server_folder}/common/lib" # tomcat5
 #lib_folder = "#{server_folder}/lib" # tomcat6
 FileUtils.mkdir_p lib_folder
-MISSING_LIBS= [
-  # Mysql driver
+[
   DB_CONNECTOR[:mysql],
-  # Common libraries
   APACHE_COMMONS[:dbcp],
   APACHE_COMMONS[:collections],
   APACHE_COMMONS[:pool],
@@ -164,22 +164,8 @@ MISSING_LIBS= [
   WSDL4J,
   SLF4J,
   LOG4J,
-  # Cas library
-  # "javax.servlet:jstl:jar:1.1.2",
-  # "taglibs:standard:jar:1.1.2",
-  # Pluto libraries
-  # PLUTO_DEPLOY,
-  #   CASTOR,
-  
-  # "org.apache.geronimo.modules:geronimo-kernel:jar:2.0.1",
-  # "org.apache.geronimo.components:geronimo-transaction:jar:2.0.1",
-  # "org.apache.geronimo.components:geronimo-connector:jar:2.0.1",
-  # "org.apache.geronimo.specs:geronimo-j2ee-connector_1.5_spec:jar:1.1.1",
-  # "org.apache.geronimo.specs:geronimo-jta_1.1_spec:jar:1.1",
-  
   XERCES
-]
-MISSING_LIBS.each {|lib| 
+].each {|lib| 
   locate_and_copy( lib, lib_folder )
 }
 ##
@@ -201,7 +187,6 @@ FileUtils.mkdir_p tomcat_config_folder
 tempo_svn_config_folder = "#{TEMPO_SVN}/config"
 config_files = File.join(tempo_svn_config_folder,"*.*")
 Dir.glob(config_files) {|x| File.copy(x, tomcat_config_folder, DEBUG)}
-
 File.copy "#{TEMPO_SVN}/rsc/tomcat/ode-axis2.properties", tomcat_config_folder
 File.copy "#{TEMPO_SVN}/rsc/tomcat/axis2.xml", "#{webapp_folder}/axis2/WEB-INF/conf"
 ##
@@ -326,7 +311,6 @@ if ADD_LDAP
   end
 end
 
-
 title "Set up CAS server and client"
 explain "All the webapp should use the same version of casclient"
 ##
@@ -335,11 +319,10 @@ Dir.glob(File.join("#{TEMPO_SVN}/rsc/liferay510", "server.xml")) {|x| File.copy(
 Dir.glob(File.join("#{webapp_folder}/cas/WEB-INF/lib", "casclient*.jar")) {|x| File.cp x, "#{lib_folder}"}
 Dir.glob(File.join("#{webapp_folder}", "**/casclient*.jar")) {|x| File.delete x}
 locate_and_copy( DSIG , "#{webapp_folder}/cas/WEB-INF/lib" )
-
 ##
   
-title "Deleting war files from webapp folder"
-explain "Make some space in the webapp folder by removing unused war files"
+title "Deleting unused files"
+explain "Make some space in the server folder by removing unused files"
 ##
 Dir.glob(File.join("#{webapp_folder}", "*.war")) {|x| File.delete x}
 ["temp", "work", "LICENSE", "RELEASE-NOTES", "NOTICE", "RUNNING.txt"].each do |x| 
@@ -373,7 +356,8 @@ end
 ##
 
 title "Generating concatenated sql file"
-explain "Generating a single sql file containing the necessary "
+explain "Generating a single sql file containing the necessary"
+##
 f = File.new("#{server_folder}/bpms.sql",  "w")
 Dir.glob(File.join("#{TEMPO_SVN}/db-schema/mysql",'*.sql')) {|x| 
   f.write("-- file:#{x}\n")
@@ -383,6 +367,16 @@ ode_mysql = "#{TEMPO_SVN}/rsc/tempo-sql/ode-mysql.sql"
 f.write("-- file:#{ode_mysql}\n")
 f.write(File.open(ode_mysql).read)
 f.close
+##
+
+if config["sanity_check"] then
+  title "Build sanity check"
+  explain "Running a set of BDD checks to assume build is not completely broken"
+  Dir.chdir TEMPO_SVN
+  system "cucumber rsc/cucumber"
+  explain "Include the build report in the build itself"
+  system "cucumber rsc/cucumber -f html > #{INSTALL_DIR}/#{server_folder}/report.html"
+end
 
 title "Almost done !"
 explain "Now create \ a mysql database named \"bpms\" with access to user <root> and no password"
