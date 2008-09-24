@@ -18,6 +18,8 @@ package org.intalio.tempo.workflow.auth;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+import org.intalio.tempo.workflow.util.RequiredArgumentException;
+
 public class SimpleAuthProviderTest extends TestCase {
 
     public static void main(String[] args) {
@@ -26,7 +28,7 @@ public class SimpleAuthProviderTest extends TestCase {
 
     public void testSimpleAuthProvider() throws Exception {
         String token = "token";
-        UserRoles credentials = new UserRoles("test/user", new String[]{});
+        UserRoles credentials = new UserRoles("test/user", new String[] {});
 
         SimpleAuthProvider provider = new SimpleAuthProvider();
         try {
@@ -38,5 +40,38 @@ public class SimpleAuthProviderTest extends TestCase {
 
         provider.addUserToken(token, credentials);
         Assert.assertEquals(credentials, provider.authenticate(token));
+    }
+
+    public void testSimpleAuthProviderTokenNull() throws Exception {
+        String token = null;
+        UserRoles credentials = new UserRoles("test/user", new String[] {});
+
+        SimpleAuthProvider provider = new SimpleAuthProvider();
+        try {
+            provider.authenticate(token);
+            Assert.fail("AuthException expected");
+        } catch (RequiredArgumentException e) {
+
+        }
+
+        try {
+            provider.addUserToken(token, credentials);
+            Assert.fail("RequiredArgumentException expected");
+        } catch (RequiredArgumentException e) {
+
+        }
+    }
+
+    public void testSimpleAuthProviderCredentialNull() throws Exception {
+        String token = "token";
+        UserRoles credentials = null;
+
+        SimpleAuthProvider provider = new SimpleAuthProvider();
+        try {
+            provider.addUserToken(token, credentials);
+            Assert.fail("RequiredArgumentException expected");
+        } catch (RequiredArgumentException e) {
+
+        }
     }
 }

@@ -15,6 +15,10 @@
 
 package org.intalio.tempo.workflow.auth;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
@@ -37,6 +41,24 @@ public class AuthIdentifierSetTest extends TestCase {
         Assert.assertTrue(set.size() == 0);
     }
 
+    public void testAuthIdentifierSetCons() throws Exception {
+        Collection<String> collection = new ArrayList<String>();
+        collection.add("test/user1");
+        collection.add("test\\user2");
+        collection.add("test.user3");
+        List<String> list = (List<String>)collection;
+        AuthIdentifierSet set1 = new AuthIdentifierSet(collection);
+        AuthIdentifierSet set3 = new AuthIdentifierSet(list);
+        
+        AuthIdentifierSet set2 = new AuthIdentifierSet();
+        set2.add("test/user1");
+        set2.add("test\\user2");
+        set2.add("test.user3");
+        
+        TaskEquality.areAuthIdSetEquals(set1, set2);
+        TaskEquality.areAuthIdSetEquals(set3, set2);
+    }
+    
     public void testAuthIdentifierSetAuthIdentifierSet() throws Exception {
         AuthIdentifierSet set1 = new AuthIdentifierSet();
         set1.add("test/user1");
