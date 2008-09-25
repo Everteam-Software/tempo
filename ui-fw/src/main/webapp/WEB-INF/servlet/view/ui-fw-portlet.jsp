@@ -80,6 +80,11 @@ var GridEx={
                 header   :"Creation Date/Time",
                 sortable :true,
                 dataIndex:'creationDate'
+            },
+			{
+                header   :"State",
+                sortable :true,
+                dataIndex:'state'
             }
         ]);
          this.gridobj=new Ext.grid.Grid('grid',{
