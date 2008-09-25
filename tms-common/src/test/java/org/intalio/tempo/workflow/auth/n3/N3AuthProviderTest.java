@@ -15,24 +15,29 @@
 
 package org.intalio.tempo.workflow.auth.n3;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
+
+import org.intalio.tempo.workflow.auth.IAuthProvider;
+import org.intalio.tempo.workflow.auth.UserRoles;
 
 public class N3AuthProviderTest extends TestCase {
 
-    // TODO: this test needs update! The old token doesn't work any more.
-    @SuppressWarnings("unused")
-    private final static String SYSTEM_TEST_TOKEN = "VE9LRU4mJnVzZXI9PXRlc3Rcc3lzdGVtLXRlc3QmJmlzc3VlZD09MTEzNzQxOTg"
-        + "xNTAwMyYmcm9sZXM9PXN5c3RlbVxzeXN0ZW0mJmZ1bGxOYW1lPT1Qcm9kdWN0IE1hbmFnZXIgIzEmJmVtYWlsPT1wcm9kL"
-        + "W1hbmFnZXIxQGludGFsaW8uY29tJiZub25jZT09LTI4OTY1NDQxODc3OTI0MjY0MDUmJnRpbWVzdGFtcD09MTEzNzQxOTg"
-        + "xNTAwMyYmZGlnZXN0PT1wVVc0aXFiMWd1ZnV5TEwxYXNZcit4MS8rRW89JiYmJlRPS0VO";
+    private final static String SYSTEM_TEST_TOKEN = "VE9LRU4mJnVzZXI9PWV4b2xhYlxjYXN0b3ImJmlzc3VlZD09MTIyMj"
+        + "MzMDc1MzYwNSYmcm9sZXM9PWV4b2xhYlxjb21taXR0ZXIsZXhvbGFiXHBhcnRpY2lwYW50JiZmdWxsTmFtZT09Q2FzdG9yIFd"
+        + "vcmthaG9saWMmJmVtYWlsPT1jYXN0b3JAZXhvbGFiLm9yZyYmbm9uY2U9PTE1Njg3MTk3NzMzMDYxNzkwNDQmJnRpbWVzdGFt"
+        + "cD09MTIyMjMzMDc1MzYwOCYmZGlnZXN0PT1BQWlmemVLYnE3czl0UTJ5NVp5N3dWUW5OaU09JiYmJlRPS0VO";
         
     public static void main(String[] args) {
         junit.textui.TestRunner.run(N3AuthProviderTest.class);
     }
 
     public void testN3AuthProvider() throws Exception {
-//        IAuthProvider provider = new N3AuthProvider("/spring-beans.xml"); 
-//        UserCredentials user = provider.authenticate(SYSTEM_TEST_TOKEN);
-//        Assert.assertEquals("test\\system-test", user.getUserID());
+        N3AuthProvider n3 = new N3AuthProvider();
+        n3.setWsEndpoint("http://localhost:8080/axis2/services/TokenService");
+        
+        IAuthProvider provider = n3;
+        UserRoles user = provider.authenticate(SYSTEM_TEST_TOKEN);
+        Assert.assertEquals("exolab\\castor", user.getUserID());
     }
 }

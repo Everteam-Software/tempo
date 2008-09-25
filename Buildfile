@@ -241,6 +241,9 @@ define "tempo" do
     
     test.with APACHE_DERBY, LOG4J, DB_CONNECTOR.values, XMLUNIT, WOODSTOX
     test.exclude '*TestUtils*'
+    unless ENV["LIVE"] == 'yes'
+      test.exclude '*N3AuthProviderTest*'
+    end
     
     package(:jar)
   end
