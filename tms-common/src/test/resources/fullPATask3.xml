@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		To test the deadline, priority, attachments, processID, failed state
+	-->
+<task xmlns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+	<metadata>
+		<taskId>id</taskId>
+		<taskState>FAILED</taskState>
+		<taskType>ACTIVITY</taskType>
+		<description />
+		<processId>processID1</processId>
+		<creationDate>2008-09-25T20:48:29.622+08:00</creationDate>
+		<deadline>2008-09-25T20:48:29.625+08:00</deadline>
+		<priority>1</priority>
+		<userOwner>test\user1</userOwner>
+		<roleOwner>test\role1</roleOwner>
+		<roleOwner>test\role2</roleOwner>
+		<formUrl>http://localhost/form</formUrl>
+		<failureCode>FATAL</failureCode>
+		<failureReason>Don't really know</failureReason>
+		<userProcessCompleteSOAPAction>urn:completeSoapAction</userProcessCompleteSOAPAction>
+		<isChainedBefore>false</isChainedBefore>
+		<claimAction>
+			<user>test\user1</user>
+		</claimAction>
+		<revokeAction>
+			<role>test\role1</role>
+		</revokeAction>
+		<attachments>
+			<attachment>
+				<attachmentMetadata>
+					<mimeType>application/octet-stream</mimeType>
+					<fileName>attachment</fileName>
+					<title>att1</title>
+					<description />
+					<creationDate>2008-09-25T20:48:29.626+08:00</creationDate>
+				</attachmentMetadata>
+				<payloadUrl>http://localhost/url1</payloadUrl>
+			</attachment>
+			<attachment>
+				<attachmentMetadata>
+					<mimeType>image/jpeg</mimeType>
+					<fileName>attachment</fileName>
+					<title>att2jpg</title>
+					<description />
+					<creationDate>2008-09-25T20:48:29.626+08:00</creationDate>
+				</attachmentMetadata>
+				<payloadUrl>http://localhost/url2</payloadUrl>
+			</attachment>
+		</attachments>
+	</metadata>
+	<input>
+		<testDocument />
+	</input>
+	<output>
+		<testDocument />
+	</output>
+</task>

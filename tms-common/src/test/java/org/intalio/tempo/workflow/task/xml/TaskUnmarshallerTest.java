@@ -67,11 +67,11 @@ public class TaskUnmarshallerTest extends TestCase {
         }
     }
 
-//    public void testBadTasksMetadata() throws Exception {
-//        for (int i = 1; i <= 14; ++i) {
-//            this.testBadTaskMetadata("/badTask" + i + ".xml");
-//        }
-//    }
+    public void testBadTasksMetadata() throws Exception {
+        for (int i = 1; i <= 14; ++i) {
+            this.testBadTaskMetadata("/badTask" + i + ".xml");
+        }
+    }
 
     private void testFullTask(String resourceName) throws Exception {
         TaskUnmarshaller unmarshaller = new TaskUnmarshaller();
@@ -90,6 +90,8 @@ public class TaskUnmarshallerTest extends TestCase {
     public void testFullTasks() throws Exception {
         this.testFullTask("/fullPATask1.xml");
         this.testFullTask("/fullPATask2.xml");
+        this.testFullTask("/fullPATask3.xml");
+        this.testFullTask("/fullPATask4.xml");
         this.testFullTask("/fullPIPATask1.xml");
     }
     
