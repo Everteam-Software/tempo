@@ -72,6 +72,9 @@ public class Attachment {
     }
 
     public void setPayloadURLFromString(String url) {
+        if (url == null){
+            throw new RequiredArgumentException("url");
+        }
         payloadURLAsString = url;
         getPayloadURL(); // check URL is valid
     }

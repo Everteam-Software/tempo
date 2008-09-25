@@ -30,8 +30,6 @@ public class N3AuthProvider implements IAuthProvider {
 
     private static final Logger _logger = LoggerFactory.getLogger(N3AuthProvider.class);
 
-    private static final String TOKEN_SERVICE_BEAN_NAME = "tokenService";
-
     private TokenService _tokenService;
 
     private String _wsEndpoint;
