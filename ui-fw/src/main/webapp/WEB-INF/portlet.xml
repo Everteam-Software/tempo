@@ -7,7 +7,7 @@
 	version="1.0">
 	<portlet>
 		<portlet-name>UifwPortlet</portlet-name>
-		<display-name>Intalio|UI</display-name>
+		<display-name>Intalio|Workflow</display-name>
 		<portlet-class>
 			org.springframework.web.portlet.DispatcherPortlet
 		</portlet-class>
@@ -20,7 +20,7 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Intalio|UI</title>
+			<title>Intalio|Workflow</title>
 		</portlet-info>
 		<portlet-preferences>
 			<preference>

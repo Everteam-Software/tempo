@@ -47,13 +47,13 @@
         <div class="x-box-tl"><div class="x-box-tr"><div class="x-box-tc"></div></div></div>
         <div class="x-box-ml"><div class="x-box-mr"><div class="x-box-mc">
             <div id="tabPanel">
-                <div id="tab0" style={background-color:#ffffff;height:250}>
+                <div id="tab0" style="background-color:#ffffff;height:250">
 				    <!--tasks grid-->    
 				    <div id="pnlGrid" style="width:570px;height:200px;">
 				    <div id="grid"></div>
 				    </div>
                 </div>
-                <div id="tab1" style={background-color:#ffffff;height:250}>
+                <div id="tab1" style="background-color:#ffffff;height:250">
 				    <!--process grid-->    
 				    <div id="processPnl" style="width:570px;height:200px;">
 				    <div id="processGrid"></div>
@@ -62,7 +62,9 @@
             
         </div></div></div>
         <div class="x-box-bl"><div class="x-box-br"><div class="x-box-bc"></div></div></div>
-    </div>
+    </div></div></div>
+
+
     <table>
 	<tr><td>
 	<form method="post" action="<portlet:actionURL>

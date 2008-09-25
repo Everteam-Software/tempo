@@ -88,7 +88,7 @@ Feature: Check Tempo Preview Build
 	Scenario: Check the UIFW portlet
 	Given the ui-fw portlet
 	Then it should contain the necessary portlet files
-	Then the portlet id should be UifwPortlet and displays in liferay as Intalio|UI in category Intalio
+	Then the portlet id should be UifwPortlet and displays in liferay as Intalio|Workflow in category Intalio
 	
 	Scenario: Check the alfresco portlet
 	Given the alfresco portlet
