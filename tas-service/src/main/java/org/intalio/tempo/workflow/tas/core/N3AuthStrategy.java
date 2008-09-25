@@ -13,6 +13,7 @@ package org.intalio.tempo.workflow.tas.core;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.ArrayList;
 
 import org.intalio.tempo.security.Property;
 import org.intalio.tempo.security.authentication.AuthenticationConstants;
@@ -56,7 +57,7 @@ public class N3AuthStrategy implements AuthStrategy {
      * @return The idempotent normalized security ID.
      */
     private static String normalizeAuthIdentifier(String sourceId) {
-        return sourceId.replace('/', '\\').replace('.', '\\');
+        return sourceId.replace('/', '\\').replace('.', '\\').toLowerCase();
     }
     
 
@@ -98,9 +99,18 @@ public class N3AuthStrategy implements AuthStrategy {
             String invokerUser = (String) PropertyUtils.getProperty(properties, AuthenticationConstants.PROPERTY_USER)
                     .getValue();
             invokerUser = N3AuthStrategy.normalizeAuthIdentifier(invokerUser);
-            _logger.debug("Invoker user id: " + invokerUser);
+            
             Property roleProperty = PropertyUtils.getProperty(properties, AuthenticationConstants.PROPERTY_ROLES);
-            List<String> invokerRoles = Arrays.asList(StringArrayUtils.parseCommaDelimited((String) roleProperty.getValue()));
+            List<String> invokerRoles = new ArrayList<String>();
+			for(String role: Arrays.asList(StringArrayUtils.parseCommaDelimited((String) roleProperty.getValue()))) {
+				invokerRoles.add(normalizeAuthIdentifier(role));
+			}
+			if(_logger.isDebugEnabled()) {
+				_logger.debug("Invoker user id: " + invokerUser);
+				_logger.debug("Invoker roles: " + invokerRoles);
+				_logger.debug("auth users: " + credentials.getAuthorizedUsers());
+				_logger.debug("auth roles: " + credentials.getAuthorizedRoles());				
+			}
                         
             boolean userAuthorized = false;
             
@@ -122,13 +132,8 @@ public class N3AuthStrategy implements AuthStrategy {
                     }
                 }
                 
-                if (! roleAuthorized) {
-                    _logger.warn("Access denied for user " + invokerUser);
-                    throw new AuthException("Access denied.");
-                }
+                if (! roleAuthorized) throw new AuthException("Access denied.");
             }
-            
-            _logger.debug("Access granted OK.");
             
             return properties;
         } catch (Exception e) {
