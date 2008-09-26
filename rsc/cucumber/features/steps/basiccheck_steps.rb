@@ -131,3 +131,15 @@ Then /check the (.*) portlet is disabled/ do |portlet|
     'a:http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd')
   remove_element_from_xml(@liferay_portlet_xml, '//liferay-portlet-app/portlet', "struts-path", "login")
 end
+
+Then /url rewrites requests for (.*)/ do |rewrite|
+  url_rewrite_xml = "#{@webinf}/urlrewrite.xml"
+  File.exist?(url_rewrite_xml).should == true
+  root = XML::Document.file(url_rewrite_xml)
+  nodes = root.find("/urlrewrite/rule/from")
+  found = false
+    nodes.each do |el| 
+      found = true if not el.content.index("#{rewrite}") == nil
+    end
+    found.should == true
+end

@@ -17,13 +17,20 @@
         <to type="redirect">%{context-path}/rewrite-status</to>
     </rule>
 
-    <rule match-type="regexp">
-	    <note>
-			This is to avoid to go through CAS login when accessing the feeds.
+	<rule match-type="regexp">
+        <note>
+        This is to avoid to go through CAS login when accessing the feeds.
 		</note>
         <from>/atom/processes.*</from>
-		<to>/atom/processes</to>		
-    </rule>
+        <to>/atom/processes</to>		
+	</rule>
+	<rule match-type="regexp">
+		<note>
+        This is to avoid to go through CAS login when accessing the feeds.
+		</note>
+        <from>/atom/tasks.*</from>
+        <to>/atom/tasks</to>		
+	</rule>
 
     <outbound-rule>
         <note>

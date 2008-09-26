@@ -93,3 +93,9 @@ Feature: Check Tempo Preview Build
 	Scenario: Check the alfresco portlet
 	Given the alfresco portlet
 	Then it should contain the necessary portlet files
+	
+	Scenario: Check url rewriting for feeds
+	Given the ui-fw portlet
+	Then url rewrites requests for /atom/processes
+	Then url rewrites requests for /atom/tasks
+	
