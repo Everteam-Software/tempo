@@ -141,7 +141,6 @@
 	   <param-name>bypass</param-name>
 	   <param-value>/feeds/.*</param-value>
 	</init-param>
-	<init-param>
     <init-param>
       <param-name>edu.yale.its.tp.cas.client.filter.logoutUrl</param-name>
       <param-value>https://localhost:8443/cas/logout</param-value>
