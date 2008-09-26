@@ -336,6 +336,7 @@ explain "Delete files conflicting with tomcat common jar files"
 Dir.glob(File.join("#{lib_folder}", "commons-logging*.jar")) {|x| File.delete x}
 Dir.glob(File.join("#{webapp_folder}", "commons-logging*.jar")) {|x| File.delete x}
 Dir.glob(File.join("#{lib_folder}", "jcl104*.jar")) {|x| File.delete x}
+Dir.glob(File.join("#{webapp_folder}", "jcl104*.jar")) {|x| File.delete x}
 Dir.glob(File.join("#{axis2_war_folder}", "**/dom4j*.jar")) {|x| File.delete x}
 Dir.glob(File.join("#{webapp_folder}", "**/servlet-api-*")) {|x| File.delete x}
 Dir.glob(File.join("#{webapp_folder}", "**/jsp-api-*")) {|x| File.delete x}

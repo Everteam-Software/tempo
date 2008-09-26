@@ -15,16 +15,17 @@ DEBUG = true
 REGEXP = /localhost/
 
 script_folder = File.dirname(File.expand_path("#{$0}"))
-
 load "#{script_folder}/../scripts/build_support.rb"
 
 puts "Please input the target domain name (such as: www.cas.com) : "
 target_domain = gets.strip
+puts "Please input the path to the server you need to modify : "
+server_home = gets.strip
 
 # Change liferay config file
 properties = ["cas.login.url", "cas.logout.url", "cas.validate.url"]
 
-liferay_conf_file = "#{script_folder}/../intalio/liferay-portal-tomcat-5.5-5.1.1/webapps/ROOT/WEB-INF/classes/portal-ext.properties"
+liferay_conf_file = "#{server_home}/webapps/ROOT/WEB-INF/classes/portal-ext.properties"
 liferay_cas_properties = JavaProps.new(liferay_conf_file)
 properties.each do |property|
   value = liferay_cas_properties.read_property(property)
@@ -34,7 +35,7 @@ liferay_cas_properties.save()
 
 
 # Change ui-fw web.xml
-ui_fw_web_file = "#{script_folder}/../intalio/liferay-portal-tomcat-5.5-5.1.1/webapps/ui-fw/WEB-INF/web.xml"
+ui_fw_web_file = "#{server_home}/webapps/ui-fw/WEB-INF/web.xml"
 doc = Hpricot.XML(File.new(ui_fw_web_file))
 param_name = doc.search("//param-name/text()")
 param_value = doc.search("//param-value")
@@ -53,5 +54,5 @@ File.open(ui_fw_web_file, 'w') do |f|
 end
 
 # Change the security configuration
-security_config_file = "#{script_folder}/../intalio/liferay-portal-tomcat-5.5-5.1.1/var/config/securityConfig.xml"
+security_config_file = "#{server_home}/var/config/securityConfig.xml"
 replace_all("localhost", target_domain, security_config_file)

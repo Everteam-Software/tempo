@@ -300,6 +300,7 @@ define "tempo" do
   define "ui-fw" do
     libs = projects("security", "security-ws-client", "security-ws-common",
                     "tms-axis", "tms-client", "tms-common", "web-nutsNbolts"),
+           APACHE_ABDERA,
            APACHE_COMMONS[:io],
            APACHE_COMMONS[:httpclient],
            APACHE_COMMONS[:codec],
@@ -322,12 +323,13 @@ define "tempo" do
            SLF4J, 
            STAX_API, 
            TAGLIBS, 
+           URLREWRITE,
            WOODSTOX, 
            WSDL4J,
            WS_COMMONS_SCHEMA,
            XERCES, 
-           XMLBEANS,
-           APACHE_ABDERA
+           XMLBEANS
+           
     compile.with libs, JSP_API, PORTLET_API, SERVLET_API, CAS_CLIENT
 
     resources.filter.using "version" => VERSION_NUMBER
@@ -335,23 +337,7 @@ define "tempo" do
     package(:war).with(:libs=>libs).
       include("src/main/config/geronimo/1.0/*")
   end
-  
-  # desc "User-Interface Framework Portlet"
-  # define "ui-fw-portlet" do
-  #   libs = projects("security", "security-ws-client", "security-ws-common", "tms-axis", "tms-client", "tms-common", "web-nutsNbolts"),
-  #          project('ui-fw').package(:jar),
-  #          APACHE_JPA, APACHE_COMMONS[:io], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], AXIOM, AXIS2, , INTALIO_STATS, 
-  #          JSON, JSTL, LOG4J, PLUTO, 
-  #          SPRING[:core], SPRING[:webmvc], SPRING[:webmvc_portlet], SLF4J, STAX_API, TAGLIBS, WOODSTOX, WSDL4J, WS_COMMONS_SCHEMA, 
-  #          XERCES, XMLBEANS
-  #   full_libs = JSP_API, PORTLET_API, SERVLET_API, CAS_CLIENT, libs
-  #   compile.with full_libs
-  # 
-  #   resources.filter.using "version" => VERSION_NUMBER
-  #   package(:war).with(:libs=>libs).
-  #     include("src/main/config/geronimo/1.0/*")
-  # end
-  
+
   desc "Customized pluto webapp"
   define "ui-pluto" do
   	libs = projects("security"), PLUTO, SERVLET_API, APACHE_COMMONS[:logging], CAS_CLIENT, PORTLET_API
