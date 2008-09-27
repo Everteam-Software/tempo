@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<attachment
+	xmlns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+	<attachmentMetadata>
+		<mimeType>application/octet-stream</mimeType>
+		<fileName>attachment</fileName>
+		<title>(untitled)</title>
+		<description />
+		<creationDate>2008-09-26T19:23:25.138+08:00</creationDate>
+	</attachmentMetadata>
+	<payloadUrl>http://localhost/a1</payloadUrl>
+</attachment>

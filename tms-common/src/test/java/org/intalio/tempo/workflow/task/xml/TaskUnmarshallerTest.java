@@ -27,6 +27,7 @@ import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.util.xml.InvalidInputFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
 
 public class TaskUnmarshallerTest extends TestCase {
 
@@ -125,5 +126,12 @@ public class TaskUnmarshallerTest extends TestCase {
         this.testBadFullTask("/badFullPATask1.xml");
         this.testBadFullTask("/badFullPIPATask1.xml");
         this.testBadFullTask("/multiElementPayloadPATask1.xml");
+    }
+    
+    public void testUnmarshalTaskOutput() throws Exception {
+        OMElement rootElement = TestUtils.loadElementFromResource("/taskOutput.xml");
+        TaskUnmarshaller unmarshaller = new TaskUnmarshaller();
+        Document op = unmarshaller.unmarshalTaskOutput(rootElement);
+        _logger.debug(new XmlTooling().serializeXML(op));
     }
 }
