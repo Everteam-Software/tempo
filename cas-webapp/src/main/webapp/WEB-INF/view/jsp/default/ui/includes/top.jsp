@@ -17,7 +17,7 @@
 
 	<body id="cas" onload="init();">
 	    <div id="header">
-	        <h1 id="app-name">Central Authentication Service (CAS)</h1>
+	        <h1 id="app-name">Authentication Service</h1>
 	    </div>
-
+		<div id="footer"></div>
 	    <div id="content">

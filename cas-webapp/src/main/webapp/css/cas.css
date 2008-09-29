@@ -1,12 +1,12 @@
-#cas form {display:block; margin:18px 0 0; padding:0; width:100%; background:#fff;}
+#cas form {display:block; margin:18px 0 0; padding:0; width:auto; background:#fff; padding-left: 300px; }
     #cas fieldset {border:0; margin:0; padding:0; float:left; clear:none; width:auto;}
         #cas fieldset legend {display:none;}
 
-        #cas #login {float:left; margin:0 -296px 0 0; padding:15px; width:258px; min-height:15em; background:#eee; position:relative; border:0;}
-        #cas #login:before {line-height:0.1; font-size:1px; background:transparent url("../images/key-point_tr.gif") no-repeat top right; margin:-15px -15px 0 -15px; height:15px; display:block; content:url("../images/key-point_tl.gif");}
-        #cas #login:after {display:block; clear:both; padding-top:15px; line-height:0.1; font-size:1px; content:url("../images/key-point_bl.gif"); margin:-15px; height:8px; background:transparent url("../images/key-point_br.gif") scroll no-repeat bottom right;}
-            #cas #login h2 {border-bottom:1px solid #ddd; padding:3px 0; font:normal 400 17px Georgia, "Times New Roman", Times, serif; color:#333;}
-            #cas #login label {font-size:11px;}
+        #cas #login {float:left; margin:0 -296px 0 0; padding:15px; width:258px; min-height:15em; background:#CCCCFF; position:relative; border:0; }
+        #cas #login:before {line-height:0.1; font-size:1px; background:transparent url("../images/key-point_tr.gif") no-repeat top right; margin:-15px -15px 0 -15px; height:15px; display:block; content:url("../images/key-point_tl.gif");}*/
+/*        #cas #login:after {display:block; clear:both; padding-top:15px; line-height:0.1; font-size:1px; margin:-15px; height:8px; background:transparent url("../images/key-point_br.gif") scroll no-repeat bottom right;}*/
+/*            #cas #login h2 {border-bottom:1px solid #ddd; padding:3px 0; font:normal 400 17px Georgia, "Times New Roman", Times, serif; color:#333;}*/
+            #cas #login label {font-size:10px;}
             #cas #login label span.accesskey {text-decoration:underline;}
             #cas #login input {letter-spacing:1px;}
             #cas #login .check input {position:relative; left:-4px; height:auto;}
@@ -35,7 +35,7 @@ html,body,div,span,h1,h2,h3,p,a,img,ul,li,fieldset,form,label,legend {margin:0; 
 ul {list-style:none; font-size:1.1em; padding:0 0 18px 40px;}
 
 /* browser default font-size is 16px which is too big so we make it 16px x 62.5% = 10px */
-    body {font:normal 400 62.5%/1.0 Verdana, sans-serif; min-width:960px; background:#fff; color:#333;}
+    body {font:normal 400 62.5%/1.0 Verdana, sans-serif; width: auto; background:#fff; color:#333;}
 
 /*
  - used to clear or contain floats within a non-floated container
@@ -45,8 +45,8 @@ http://www.positioniseverything.net/easyclearing.html and http://www.ejeliot.com
 
 
 /* HEADER --------------------------------- */
-#header {position:relative; top:0; left:0; padding-top:52px; background:#fff url(../images/intalio-logo.jpg) no-repeat scroll 25px 10px;}
-    #header h1#app-name {clear:both; padding:0 0 0 25px; background:#210f7a; color:#fff; font:normal 400 2.8em/2.5em Georgia,"Times New Roman", serif;} /* d21033 */
+#header {:center; top:0; left:0; padding-top:52px; background:#fff no-repeat scroll 25px 10px;}
+    #header h1#app-name {clear:both; :center; padding:0 0 0 25px; background:white; color:black; font:normal 400 2.8em/2.5em Georgia,"Times New Roman", serif;} /* d21033 */
 
 /* CONTENT --------------------------------- */
 #content {clear:both; padding:1px 0; margin:0 25px 2em;}
@@ -61,7 +61,7 @@ http://www.positioniseverything.net/easyclearing.html and http://www.ejeliot.com
     #footer div {clear:left; margin:1em 5px .5em; overflow:hidden;}
 
 /* MESSAGES --------------------------------- */
-.info, .errors, .success {clear:both; margin:18px 0; padding:20px 20px 20px 100px; font-size:10px; line-height:1.5;}
+.info, .errors, .success {clear:both; float:bottom; margin:18px 0; padding:20px 20px 20px 100px; font-size:10px; line-height:1.5; width: 400px;}
 .info {border:1px dotted 008;    background:#eff url(../images/info.gif) no-repeat 20px 18px; color:#008;}
 .errors {border:1px dotted #d21033; background:#fed url(../images/error.gif) no-repeat 20px 18px; color:#d21033; padding-bottom: 40px;}
 .success {border:1px dotted #390; background:#dfa url(../images/confirm.gif) no-repeat 20px 18px; color:#390;}
