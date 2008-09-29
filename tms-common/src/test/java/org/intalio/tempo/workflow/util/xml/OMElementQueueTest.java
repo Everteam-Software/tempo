@@ -15,9 +15,12 @@
 
 package org.intalio.tempo.workflow.util.xml;
 
+import javax.xml.namespace.QName;
+
 import junit.framework.TestCase;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMFactory;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
 public class OMElementQueueTest extends TestCase {
@@ -29,10 +32,21 @@ public class OMElementQueueTest extends TestCase {
     public void testConstructor() throws Exception {
         Exception rae = null;
         try {
-            OMElementQueue queue = new OMElementQueue(null);
+            new OMElementQueue(null);
         } catch (Exception e) {
             rae = e;
         }
         assertEquals(rae.getClass(), RequiredArgumentException.class);
+    }
+
+    public void testGetNext() throws Exception {
+        OMFactory factory = org.apache.axiom.om.OMAbstractFactory.getOMFactory();
+        QName name = new QName("localPart");
+        OMElement element = factory.createOMElement(name);
+        OMElement element2 = factory.createOMElement(name);
+        OMElementQueue queue = new OMElementQueue(element);
+        queue.pushElementBack(element2);
+        OMElement next = queue.getNextElement();
+        assertEquals(next, element2);
     }
 }
