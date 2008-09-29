@@ -36,7 +36,7 @@ ODE_RELEASES = {
   :v1_2 => APACHE_MIRROR + "ode/apache-ode-war-1.2.zip",
   :v1_3_snapshot => "http://www.intalio.org/public/ode/apache-ode-war-1.3-snapshot-20080924-152626.zip"
 }
-ODE_DOWNLOAD = ODE_RELEASES[:v1_3_snapshot]
+ODE_DOWNLOAD = ODE_RELEASES[:v1_2]
 LIFERAY_5 = "http://downloads.sourceforge.net/sourceforge/lportal/liferay-portal-tomcat-5.5-5.1.1.zip"  #CA
 ALFRESCO = {
   :v2_1 => "http://downloads.sourceforge.net/sourceforge/alfresco/alfresco-community-war-2.1.0.zip",
