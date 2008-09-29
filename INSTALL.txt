@@ -19,15 +19,6 @@ With the following command:
 svn co http://tempo.intalio.org/tempo/trunk/ tempo
 
 ======================================
- Database setup
-======================================
-Setup a mysql database named "bpms" with user "root" and no password. This is very unsecure. Change DB as needed in the final tomcat configuration.
-Start mysql engine and check user access. On the command line this would be:
-
-    mysqladmin create bpms -u root
-    mysql -D bpms -u root < TEMPO_CHECKOUT/rsc/tempo-sql/ode-mysql.sql 
-
-======================================
  Installation
 ======================================
 
@@ -39,10 +30,22 @@ TEMPO_CHECKOUT/rsc/scripts/config.yml:
 Run the ruby script:
     TEMPO_CHECKOUT/rsc/scripts/create_tomcat.rb
 ======================================
+ Database setup
+======================================
+Setup a mysql database named "bpms" with user "root" and no password. This is very unsecure. Change DB as needed in the final tomcat configuration.
+Start mysql engine and check user access. On the command line this would be something like:
+
+    mysqladmin create bpms -u root
+    mysql -D bpms -u root < TEMPO_CHECKOUT/../intalio/bpms.sql
+
+======================================
  Start up
 ======================================
 A folder named intalio will be created in the current directory. Go to the bin folder of apache tomcat, and use the following command
     catalina.sh run
+
+or on WINDOWS, double click on the icon named:
+    startup.bat
 
 Congratulation, tempo is now running!
 ======================================
