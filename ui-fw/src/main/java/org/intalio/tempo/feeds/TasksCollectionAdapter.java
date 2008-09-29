@@ -194,7 +194,7 @@ public class TasksCollectionAdapter extends AbstractCollectionAdapter {
             IRI baseUri = context.getBaseUri();
             String host = baseUri.getHost();
             host = host.equals("localhost") ? "127.0.0.1" : host;
-            String base = baseUri.getScheme() + "//" + host + ":" + baseUri.getPort();
+            String base = baseUri.getScheme() + "://" + host + ":" + baseUri.getPort();
             link.setBaseUri(base);
         } else {
             link.setBaseUri(StringUtils.EMPTY);
