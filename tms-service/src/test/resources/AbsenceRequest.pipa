@@ -1,0 +1,10 @@
+# AbsenceRequest PIPA Task Descriptor, 
+# (copy from \forms\AbsenceRequest\src\main\pipa\AbsenceRequest, 
+#  this file should be symbol link, but on windowns symbol link is not supported)
+task-description=Examples - Absence Request
+task-role-owners=examples\\employee
+task-user-owners=examples\\Alex
+formURI=http://www.intalio.com/AbsenceRequest/AbsenceRequest.xform
+formNamespace=http://www.intalio.com/workflow/forms/AbsenceRequest/AbsenceRequest
+processEndpoint=http://localhost:8080/ode/processes/AbsenceRequest/Employee_To_AbsenceRequest
+userProcessInitSOAPAction=http://www.example.com/AbsenceRequest/Employee_To_AbsenceRequest/Employee_To_AbsenceRequest_PortType/Receive_Absence_Request
