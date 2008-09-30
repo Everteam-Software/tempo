@@ -99,3 +99,7 @@ Feature: Check Tempo Preview Build
 	Then url rewrites requests for /atom/processes
 	Then url rewrites requests for /atom/tasks
 	
+	Scenario: Check we won't know it's been made on OSX
+	Given the / folder
+	Then it does not contain any .DS_Store file
+	

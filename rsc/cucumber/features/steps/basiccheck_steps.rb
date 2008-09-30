@@ -143,3 +143,8 @@ Then /url rewrites requests for (.*)/ do |rewrite|
     end
     found.should == true
 end
+
+Then /it does not contain any (.*) file/ do |file|
+  glob = "#{@liferay}/**/#{file}"
+  Dir.glob(glob).size.should == 0
+end

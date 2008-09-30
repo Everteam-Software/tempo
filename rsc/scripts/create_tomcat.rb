@@ -345,6 +345,7 @@ Dir.glob(File.join("#{webapp_folder}", "**/log4j-*.jar")) {|x| File.delete x}
 Dir.glob(File.join("#{webapp_folder}", "**/log4j.properties")) {|x| File.delete x}
 Dir.glob(File.join("#{webapp_folder}", "**/slf4j*.jar")) {|x| File.delete x}
 Dir.glob(File.join("#{server_folder}/common/endorsed", "*.jar")) {|x| File.delete x}
+Dir.glob(File.join("#{server_folder}/", "**/.DS_Store")) {|x| File.delete x}
 ##
 
 title "Adapt absence request to LDAP if needed"
