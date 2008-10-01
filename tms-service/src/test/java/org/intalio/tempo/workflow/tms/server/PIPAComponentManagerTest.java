@@ -27,7 +27,7 @@ public class PIPAComponentManagerTest extends TestCase {
     }
 
     public void testProcessPipa() throws Exception {
-        PIPAComponentManager pcm = new PIPAComponentManager(Utils.createTMSServer());
+        PIPAComponentManager pcm = new PIPAComponentManager(Utils.createTMSServerJPA());
         InputStream is = this.getClass().getResourceAsStream("/AbsenceRequest.pipa");
         DeploymentMessage dm = pcm.processPipa("token2", is, "pipatest");
         Assert.assertNull(dm);
