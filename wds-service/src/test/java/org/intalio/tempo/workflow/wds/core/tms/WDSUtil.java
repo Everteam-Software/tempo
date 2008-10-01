@@ -47,7 +47,7 @@ public class WDSUtil {
     }
 
     public static Item getSampleItem() {
-        return new Item("http://www.hellonico.net", "meta" + rand.nextInt(), new byte[] { 1, 2, 3 });
+        return new Item("AbscentRequest", "meta" + rand.nextInt(), new byte[] { 1, 2, 3 });
     }
     
     public static Item getXformItem() {
