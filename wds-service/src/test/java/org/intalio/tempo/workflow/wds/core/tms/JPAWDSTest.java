@@ -15,31 +15,52 @@ import com.googlecode.instinct.marker.annotate.Subject;
 @RunWith(InstinctRunner.class)
 public class JPAWDSTest {
 
-	final static ExpectThat expect = new ExpectThatImpl();
+    final static ExpectThat expect = new ExpectThatImpl();
 
-	Item item;
-	@Subject
-	JPAItemDaoConnectionFactory factory;
-	@Subject
-	ItemDaoConnection jpac;
+    Item item;
+    Item xformItem;
+    @Subject
+    JPAItemDaoConnectionFactory factory;
+    @Subject
+    ItemDaoConnection jpac;
 
-	@BeforeSpecification
-	void before() {
-		item = WDSUtil.getSampleItem();
-		factory = new JPAItemDaoConnectionFactory();
-		jpac = factory.getItemDaoConnection();
-	}
+    @BeforeSpecification
+    void before() {
+        item = WDSUtil.getSampleItem();
+        xformItem = WDSUtil.getXformItem();
+        factory = new JPAItemDaoConnectionFactory();
+        jpac = factory.getItemDaoConnection();
+    }
 
-	@Specification
-	public void canStoreItems() throws Exception {
-		jpac.storeItem(item);
-		expect.that(item.equals(jpac.retrieveItem(item.getURI())));
-		jpac.deleteItem(item.getURI());
-		try {
-			jpac.retrieveItem(item.getURI());
-			expect.that(false);
-		} catch (Exception e) {
-			expect.that(true);
-		}
-	}
+    @Specification
+    public void canStoreItems() throws Exception {
+        jpac.storeItem(item);
+        expect.that(item.equals(jpac.retrieveItem(item.getURI())));
+        jpac.deleteItem(item.getURI());
+        try {
+            jpac.retrieveItem(item.getURI());
+            expect.that(false);
+        } catch (Exception e) {
+            expect.that(true);
+        }
+    }
+
+    @Specification
+    public void checkItemExist() throws Exception {
+        jpac.storeItem(item);
+        expect.that(jpac.itemExists(item.getURI()));
+    }
+
+    @Specification
+    public void canStoreXformItems() throws Exception {
+        jpac.storeItem(item);
+        expect.that(item.equals(jpac.retrieveItem(item.getURI())));
+        jpac.deleteItem(item.getURI());
+        try {
+            jpac.retrieveItem(item.getURI());
+            expect.that(false);
+        } catch (Exception e) {
+            expect.that(true);
+        }
+    }
 }

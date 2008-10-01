@@ -1,4 +1,4 @@
-package org.intalio.tempo.workflow.wds.core.tms;
+package org.intalio.tempo.workflow.wds.core.xforms;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

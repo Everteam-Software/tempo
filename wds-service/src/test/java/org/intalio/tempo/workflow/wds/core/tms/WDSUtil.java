@@ -23,31 +23,34 @@ import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.wds.core.Item;
 
 public class WDSUtil {
-	static final Random rand = new Random();
-	
-	public static Properties convertBundleToProperties(ResourceBundle rb) {
-		Properties props = new Properties();
-		for (Enumeration<String> keys = rb.getKeys(); keys.hasMoreElements();) {
-			String key = (String) keys.nextElement();
-			props.put(key, rb.getString(key));
-		}
-		return props;
-	}
+    static final Random rand = new Random();
 
-	public static Map<?,?> getJpaProperties() {
-		return convertBundleToProperties(ResourceBundle
-				.getBundle("jpa"));
-	}
-	
-	public static PIPATask getSamplePipa() {
-		PIPATask task1 = new PIPATask("abc","http://localhost/"+rand.nextInt());
-		task1.setInitMessageNamespaceURI(URI.create("urn:ns"));
-        task1.setProcessEndpointFromString("http://localhost/process"+rand.nextInt());
-        task1.setInitOperationSOAPAction("initProcess"+rand.nextInt());
-		return task1;
-	}
-	
-	public static Item getSampleItem() {
-		return new Item("http://www.hellonico.net", "meta"+rand.nextInt(), new byte[]{1,2,3});
-	}
+    public static Properties convertBundleToProperties(ResourceBundle rb) {
+        Properties props = new Properties();
+        for (Enumeration<String> keys = rb.getKeys(); keys.hasMoreElements();) {
+            String key = (String) keys.nextElement();
+            props.put(key, rb.getString(key));
+        }
+        return props;
+    }
+
+    public static Map<?, ?> getJpaProperties() {
+        return convertBundleToProperties(ResourceBundle.getBundle("jpa"));
+    }
+
+    public static PIPATask getSamplePipa() {
+        PIPATask task1 = new PIPATask("abc", "http://localhost/" + rand.nextInt());
+        task1.setInitMessageNamespaceURI(URI.create("urn:ns"));
+        task1.setProcessEndpointFromString("http://localhost/process" + rand.nextInt());
+        task1.setInitOperationSOAPAction("initProcess" + rand.nextInt());
+        return task1;
+    }
+
+    public static Item getSampleItem() {
+        return new Item("http://www.hellonico.net", "meta" + rand.nextInt(), new byte[] { 1, 2, 3 });
+    }
+    
+    public static Item getXformItem() {
+        return new Item("http://www.task.xform", "meta" + rand.nextInt(), new byte[] { 1, 2, 3 });
+    }
 }
