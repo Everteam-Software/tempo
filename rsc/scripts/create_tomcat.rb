@@ -8,7 +8,6 @@ require "zip/zip"
 require 'yaml'
 require 'fileutils'
 require 'open-uri'
-# require 'cucumber'
 require "buildr"
 
 script_folder = File.dirname(File.expand_path("#{$0}"))
@@ -34,9 +33,10 @@ TOMCAT_ADMIN_DOWNLOAD = APACHE_MIRROR + "tomcat/tomcat-5/v5.5.26/bin/apache-tomc
 AXIS_DOWNLOAD = APACHE_MIRROR + "ws/axis2/1_4/axis2-1.4-war.zip"
 ODE_RELEASES = {
   :v1_2 => APACHE_MIRROR + "ode/apache-ode-war-1.2.zip",
+  :v1_2_snapshot => "http://www.intalio.org/public/ode/apache-ode-1.2-SNAPSHOT-700632.zip",
   :v1_3_snapshot => "http://www.intalio.org/public/ode/apache-ode-war-1.3-snapshot-20080924-152626.zip"
 }
-ODE_DOWNLOAD = ODE_RELEASES[:v1_2]
+ODE_DOWNLOAD = ODE_RELEASES[:v1_2_snapshot]
 LIFERAY_5 = "http://downloads.sourceforge.net/sourceforge/lportal/liferay-portal-tomcat-5.5-5.1.1.zip"  #CA
 ALFRESCO = {
   :v2_1 => "http://downloads.sourceforge.net/sourceforge/alfresco/alfresco-community-war-2.1.0.zip",
@@ -365,7 +365,8 @@ Dir.glob(File.join("#{TEMPO_SVN}/db-schema/mysql",'*.sql')) {|x|
   f.write("-- file:#{x}\n")
   f.write(File.open(x).read)
 }
-ode_mysql = "#{TEMPO_SVN}/rsc/tempo-sql/ode-mysql.sql"
+ode_release = ODE_RELEASES.index(ODE_DOWNLOAD)
+ode_mysql = "#{TEMPO_SVN}/rsc/tempo-sql/#{ode_release}/ode-mysql.sql"
 f.write("-- file:#{ode_mysql}\n")
 f.write(File.open(ode_mysql).read)
 f.close
