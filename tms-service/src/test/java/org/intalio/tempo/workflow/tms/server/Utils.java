@@ -29,6 +29,8 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
+import org.apache.axis2.AxisFault;
+import org.apache.axis2.client.ServiceClient;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.SimpleAuthProvider;
 import org.intalio.tempo.workflow.auth.UserRoles;
@@ -85,8 +87,13 @@ public class Utils {
         return new TMSServer(getMeASimpleAuthProvider(), new SimpleTaskDAOConnectionFactory(), getMeADefaultPermissionHandler());
     }
 
+
     public static ITMSServer createTMSServerJPA() throws Exception {
-        return new TMSServer(getMeASimpleAuthProvider(), new JPATaskDaoConnectionFactory(), getMeADefaultPermissionHandler());
+        return new TMSServer(getMeASimpleAuthProvider(), new JPATaskDaoConnectionFactory(), getMeADefaultPermissionHandler()){
+            protected ServiceClient getServiceClient()throws AxisFault{           
+                return new MockServiceClient();
+            };
+        };
     }
 
     private static TaskPermissions getMeADefaultPermissionHandler() {
@@ -101,7 +108,7 @@ public class Utils {
         UserRoles user1 = new UserRoles("test/user1", new String[] { "test/role1", "test/role2" });
         UserRoles user2 = new UserRoles("test/user2", new String[] { "test/role2", "test/role3" });
         UserRoles user3 = new UserRoles("test/user3", new String[] { "test/role4", "test/role5" });
-        UserRoles systemUser = new UserRoles("test/system-user", new String[] {});
+        UserRoles systemUser = new UserRoles("test/system-user", new String[] { "test/role1", "test/role2","test/role3", "examples/employee", "*/*"});
 
         SimpleAuthProvider authProvider = new SimpleAuthProvider();
         authProvider.addUserToken("token1", user1);

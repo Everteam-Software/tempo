@@ -54,12 +54,17 @@ public class TMSServerTest extends TestCase {
 
         }
         Assert.assertEquals(0, server.getTaskList("token3").length);
-
+        
         Document newOutput1 = Utils.createXMLDocument();
         server.setOutput("taskID", newOutput1, "token1");
         PATask taskWithSetOutput = (PATask) server.getTask("taskID", "token2");
         Assert.assertTrue(XmlTooling.equals(newOutput1, taskWithSetOutput.getOutput()));
         Assert.assertEquals(TaskState.READY, taskWithSetOutput.getState());
+        
+        // test reassign
+        org.intalio.tempo.workflow.auth.AuthIdentifierSet newUsers = new org.intalio.tempo.workflow.auth.AuthIdentifierSet(new String[]{"test/user1", "test/user2"});
+        org.intalio.tempo.workflow.auth.AuthIdentifierSet newRoles = new org.intalio.tempo.workflow.auth.AuthIdentifierSet(new String[]{"test/role2", "test/role3"});
+        server.reassign("taskID", newUsers, newRoles, TaskState.READY, "token1");
 
         Document newOutput2 = Utils.createXMLDocument();
         server.setOutputAndComplete("taskID", newOutput2, "token2");
@@ -135,4 +140,34 @@ public class TMSServerTest extends TestCase {
         server.delete(new String[] { "taskID" }, "system-user-token");
         Assert.assertEquals(0, server.getTaskList("token1").length);
     }
+    
+//    public void testXX() throws Exception{
+//    	 ITMSServer server = Utils.createTMSServer();
+//    	 
+//        try {
+//        	OMElement createTaskRequest = Utils.loadElementFromResource("/createTaskRequest1.xml");
+//            OMElementQueue rootQueue = new OMElementQueue(createTaskRequest);
+//            String taskID = requireElementValue(rootQueue, "taskId");
+//            OMElement omInputContainer = requireElement(rootQueue, "input");
+//            Document domInput = null;
+//            if (omInputContainer.getFirstElement() != null) {
+//                domInput = new TaskUnmarshaller().unmarshalTaskOutput(omInputContainer);
+//            }
+//            String participantToken = requireElementValue(rootQueue, "participantToken");
+//            Document userProcessResponse = _server.initProcess(taskID, domInput, participantToken);
+//            if (userProcessResponse == null)
+//                throw new RuntimeException("TMP did not return a correct message while calling init");
+//            OMElement response = new TMSResponseMarshaller(OM_FACTORY) {
+//                public OMElement marshalResponse(Document userProcessResponse) {
+//                    OMElement response = createElement("initProcessResponse");
+//                    OMElement userProcessResponseWrapper = createElement(response, "userProcessResponse");
+//                    userProcessResponseWrapper.addChild(new XmlTooling().convertDOMToOM(userProcessResponse, this.getOMFactory()));
+//                    return response;
+//                }
+//            }.marshalResponse(userProcessResponse);
+//            return response;
+//        } catch (Exception e) {
+//            throw makeFault(e);
+//        }
+//    }
 }

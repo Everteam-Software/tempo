@@ -238,6 +238,10 @@ public class TMSServer implements ITMSServer {
         }
     }
 
+    protected ServiceClient getServiceClient() throws AxisFault{
+        return new ServiceClient();
+    }
+    
     private Document sendInitMessage(PIPATask task, String participantToken, Document input) throws AxisFault {
 
         OMFactory omFactory = OMAbstractFactory.getOMFactory();
@@ -266,7 +270,8 @@ public class TMSServer implements ITMSServer {
             _logger.debug("Request to Ode:\n" + omInitProcessRequest.toString());
         }
 
-        ServiceClient client = new ServiceClient();
+        //ServiceClient client = new ServiceClient();
+        ServiceClient client = getServiceClient();
         client.setOptions(options);
         try {
             OMElement response = client.sendReceive(omInitProcessRequest);
@@ -275,9 +280,6 @@ public class TMSServer implements ITMSServer {
             _logger.error("This should be there:"+e.getClass(),e);
             throw AxisFault.makeFault(e);
         }
-        
-
-        
 
     }
 
