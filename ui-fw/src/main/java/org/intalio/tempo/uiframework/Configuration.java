@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2005-2006 Intalio inc.
+ * Copyright (c) 2005-2008 Intalio inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -21,18 +21,33 @@ public class Configuration {
     private static Configuration INSTANCE = new Configuration();
 
     private String _serviceEndpoint;
-
     private int _pagingLength;
-    
     private int _refreshTime = 5;
-    
     private TokenClient _tokenClient;
+    private String _baseUrl;
+    private String _feedUrl;
  
+    public String getFeedUrl() {
+        return _feedUrl;
+    }
+
+    public void setFeedUrl(String url) {
+        _feedUrl = url;
+    }
+
     private Configuration() {
     }
 
     public String getServiceEndpoint() {
         return _serviceEndpoint;
+    }
+    
+    public String getFeedItemBaseUrl() {
+        return _baseUrl;
+    }
+    
+    public void setFeedItemBaseUrl(String baseUrl) {
+        this._baseUrl = baseUrl;
     }
 
     public void setServiceEndpoint(String serviceEndpoint) {

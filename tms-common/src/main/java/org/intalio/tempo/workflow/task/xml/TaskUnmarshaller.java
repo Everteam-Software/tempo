@@ -57,6 +57,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
+import com.intalio.bpms.workflow.taskManagementServices20051109.Attachments;
 import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
 
 public class TaskUnmarshaller extends XmlBeanUnmarshaller {
@@ -140,8 +141,7 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
         // TODO: these violate the WSDL! do something
         expectElementValue(taskMetadata, "userProcessNamespaceURI");
         String completeSOAPAction = taskMetadata.getUserProcessCompleteSOAPAction();
-        com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata.Attachments attachmentsElement = taskMetadata
-                .getAttachments();
+        Attachments attachmentsElement = taskMetadata.getAttachments();
         String isChainedBeforeStr = expectElementValue(taskMetadata, "isChainedBefore");
         String previousTaskID = expectElementValue(taskMetadata, "previousTaskId");
 
@@ -233,38 +233,44 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
         }
         if (ITaskWithAttachments.class.isAssignableFrom(taskClass)) {
             ITaskWithAttachments taskWithAttachments = (ITaskWithAttachments) resultTask;
+            
             if (attachmentsElement != null) {
-
                 for (int i = 0; i < attachmentsElement.sizeOfAttachmentArray(); i++) {
-                    com.intalio.bpms.workflow.taskManagementServices20051109.Attachment attachmentElement = attachmentsElement
-                            .getAttachmentArray(i);
-                    if (attachmentElement != null) {
-                        com.intalio.bpms.workflow.taskManagementServices20051109.AttachmentMetadata attachmentMetadata = attachmentElement
-                                .getAttachmentMetadata();
+                    com.intalio.bpms.workflow.taskManagementServices20051109.Attachment attachmentElement = attachmentsElement.getAttachmentArray(i);
+                    
+                    if (attachmentElement != null
+
+                    	    //The following line has been added to handle the case where an attachment element is present
+                    		// but do not contain any data: no title, nodescription , ect...
+                    		//The reason why is this is added is to handle the initial initialization on Designer
+                    		//In which designer generates by default an attachment element as a part of the initialization of  the message
+                    		//even if no attachment is used
+                    		
+                    		//TODO: When Designer and Server will support "lazy initialization", this line can be omitted
+                    		
+                    		&& attachmentElement.newCursor().getTextValue().trim().length()!=0		
+                    ) {
+                        com.intalio.bpms.workflow.taskManagementServices20051109.AttachmentMetadata attachmentMetadata = attachmentElement.getAttachmentMetadata();
                         AttachmentMetadata metadata = new AttachmentMetadata();
                         String mimeType = attachmentMetadata.getMimeType();
                         if (mimeType != null) {
                             metadata.setMimeType(mimeType);
                         }
                         String fileName = attachmentMetadata.getFileName();
-                        if (fileName != null) {
-                            metadata.setFileName(fileName);
-                        }
+                        if (fileName != null) metadata.setFileName(fileName);
                         String title = attachmentMetadata.getTitle();
-                        if (title != null) {
-                            metadata.setTitle(title);
-                        }
+                        if (title != null) metadata.setTitle(title);
                         String description2 = attachmentMetadata.getDescription();
-                        if (description2 != null) {
-                            metadata.setDescription(description2);
-                        }
+                        if (description2 != null) metadata.setDescription(description2);
+                        
                         try {
                             Calendar cal = attachmentMetadata.getCreationDate();
                             if ((cal != null)) {
                                 metadata.setCreationDate(new XsdDateTime(cal.toString()).getTime());
                             }
                         } catch (Exception e) {
-                            _logger.error("Error in unmarshalling attachment from metadata", e);
+                            _logger.warn("Error in unmarshalling creation date in attachment from metadata");
+                            metadata.setCreationDate(new Date());
                         }
 
                         String payloadURLStr = attachmentElement.getPayloadUrl();
@@ -277,7 +283,7 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
 
                         Attachment attachment = new Attachment(metadata, payloadURL);
                         taskWithAttachments.addAttachment(attachment);
-                    }
+                    } 
                 }
             }
         }

@@ -18,6 +18,11 @@
 	padding: 0;
 	display: inline;
 	list-style-type: none;
+	font: 9px;
+}
+#filter-form span 
+{
+	font-size: 9px;
 }
 
 #tabnav a:link, #tabnav a:visited

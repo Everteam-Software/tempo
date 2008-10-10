@@ -15,6 +15,10 @@
 
 package org.intalio.tempo.workflow.auth;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
@@ -37,6 +41,24 @@ public class AuthIdentifierSetTest extends TestCase {
         Assert.assertTrue(set.size() == 0);
     }
 
+    public void testAuthIdentifierSetCons() throws Exception {
+        Collection<String> collection = new ArrayList<String>();
+        collection.add("test/user1");
+        collection.add("test\\user2");
+        collection.add("test.user3");
+        List<String> list = (List<String>)collection;
+        AuthIdentifierSet set1 = new AuthIdentifierSet(collection);
+        AuthIdentifierSet set3 = new AuthIdentifierSet(list);
+        
+        AuthIdentifierSet set2 = new AuthIdentifierSet();
+        set2.add("test/user1");
+        set2.add("test\\user2");
+        set2.add("test.user3");
+        
+        TaskEquality.areAuthIdSetEquals(set1, set2);
+        TaskEquality.areAuthIdSetEquals(set3, set2);
+    }
+    
     public void testAuthIdentifierSetAuthIdentifierSet() throws Exception {
         AuthIdentifierSet set1 = new AuthIdentifierSet();
         set1.add("test/user1");
@@ -73,9 +95,13 @@ public class AuthIdentifierSetTest extends TestCase {
 
     public void testHashCode() throws Exception {
         AuthIdentifierSet set1 = new AuthIdentifierSet(new String[] { "test/user1", "test.user2", "test\\user3" });
-        AuthIdentifierSet set2 = new AuthIdentifierSet(new String[] { "test\\user1", "test.user2", "test\\user3" });
+        AuthIdentifierSet set2 = new AuthIdentifierSet(new String[] { "test\\user1", "test/user2", "test.user3" });
 
         Assert.assertEquals(set1.hashCode(), set2.hashCode());
+
+        set2.remove("test/user3");
+
+        Assert.assertFalse(set2.hashCode() == set1.hashCode());
     }
 
     public void testToString() throws Exception {
@@ -114,12 +140,11 @@ public class AuthIdentifierSetTest extends TestCase {
 
         set.add("test/user1");
         set.add("test\\user1");
-        set.add("test|user1");
         set.add("test.user1");
-        Assert.assertEquals(2, set.size());
+        Assert.assertEquals(1, set.size());
 
         set.add("test/user2");
-        Assert.assertEquals(3, set.size());
+        Assert.assertEquals(2, set.size());
     }
 
     public void testContains() {
@@ -128,7 +153,7 @@ public class AuthIdentifierSetTest extends TestCase {
         set.add("test/user1");
         set.add("test\\user2");
 
-        Assert.assertFalse(set.contains("test.user1"));
+        Assert.assertTrue(set.contains("test.user1"));
         Assert.assertTrue(set.contains("test/user2"));
         Assert.assertFalse(set.contains("test/user3"));
     }
@@ -137,7 +162,7 @@ public class AuthIdentifierSetTest extends TestCase {
         AuthIdentifierSet set = new AuthIdentifierSet();
 
         set.add("test/user1");
-        Assert.assertTrue(set.remove("test\\user1"));
+        Assert.assertTrue(set.remove("test.user1"));
         Assert.assertTrue(set.isEmpty());
     }
 

@@ -30,8 +30,7 @@ public class SimpleAuthProvider implements IAuthProvider {
 
     }
 
-    public UserRoles authenticate(String participantToken)
-            throws AuthException {
+    public UserRoles authenticate(String participantToken) throws AuthException {
         if (participantToken == null) {
             throw new RequiredArgumentException("participantToken");
         }

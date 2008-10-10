@@ -19,7 +19,7 @@ import javax.servlet.http.HttpSession;
 public abstract class ApplicationState implements Serializable {
     private static final long serialVersionUID = -7511327773807678214L;
 
-    private static final String PARAMETER_NAME = "APPLICATION_STATE";
+    public static final String PARAMETER_NAME = "APPLICATION_STATE";
 
     /**
      * User currently logged in.
@@ -79,8 +79,7 @@ public abstract class ApplicationState implements Serializable {
     
     
     public static <T extends ApplicationState> T getCurrentInstance(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        T state = (T) session.getAttribute(PARAMETER_NAME);
+        T state = (T) request.getSession().getAttribute(PARAMETER_NAME);
         return state;
     }
 

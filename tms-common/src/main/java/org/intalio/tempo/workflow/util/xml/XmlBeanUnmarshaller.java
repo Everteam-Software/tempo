@@ -47,7 +47,7 @@ public abstract class XmlBeanUnmarshaller {
 		QName qName = new QName(_namespaceURI, name);
 		while (hasNext) {
 			elementCursor.toNextToken();
-			if (elementCursor.getName() != null && elementCursor.getName().equals(qName)) {
+			if (elementCursor.getName() != null && elementCursor.getName().getLocalPart().equals(qName.getLocalPart())) {
 				result = elementCursor.getObject();
 				break;
 			}

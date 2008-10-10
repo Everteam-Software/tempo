@@ -29,7 +29,6 @@ import org.intalio.tempo.workflow.task.attachments.AttachmentMetadata;
 import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
-import org.intalio.tempo.workflow.tms.server.dao.JDBCTaskDAOConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -39,7 +38,7 @@ public class JDBCTaskDaoConnection51 implements ITaskDAOConnection {
 	private XmlTooling xmltooling = new XmlTooling();
 
 	private static final Logger _logger = LoggerFactory
-			.getLogger(JDBCTaskDAOConnection.class);
+			.getLogger(JDBCTaskDaoConnection51.class);
 
 	private static final String _SELECT_TASK_FIELDS = " tasks.id, tasks.task_id, "
 			+ "tasks.process_id, task_types.code, task_states.code, tasks.description, "

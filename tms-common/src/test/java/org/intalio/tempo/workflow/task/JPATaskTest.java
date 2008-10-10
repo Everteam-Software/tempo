@@ -203,6 +203,31 @@ public class JPATaskTest {
     }
 
     @Test
+    public void userWithStrangeLogin() throws Exception {
+    	String users[] = new String[] {
+    			"overdating\\pdv017@es\\japanesemaster\\com",
+    			"overdating\\pdv017@es.japanesemaster.com",
+    			"overdating\\pdv017@es\\japanesemaster\\com ",
+    			"overdating\\pdv017@es.japanesemaster.com ",
+    	};
+    	for(String user : users) testLogins(user);
+    }
+
+	private void testLogins(String user) throws URISyntaxException, Exception {
+		String id = getUniqueTaskID();
+    	Notification task1 = null, task2 = null;
+        task1 = new Notification(id, new URI("http://hellonico.net"), getXmlSampleDocument());
+        task1.getUserOwners().add(user);
+        persist(task1);
+        Task[] tasks1 = testFecthForUserRoles(user, new String[] { }, 1);
+        Task[] tasks2 = testFetchForUserRolesWithCriteria(user, new String[] {}, Notification.class, "", 1);
+        UserRoles ur = new UserRoles(user, new String[] { });
+        Assert.assertTrue(tasks1[0].isAvailableTo(ur));
+        Assert.assertTrue(tasks2[0].isAvailableTo(ur));
+        checkRemoved(task1);
+	}
+    
+    @Test
     public void authorizeActionForUser() throws Exception {
         String id = getUniqueTaskID();
         Notification task1 = null, task2 = null;
@@ -406,16 +431,16 @@ public class JPATaskTest {
 
     }
 
-    public Task[] testFetchForUserRolesWithCriteria(String userId, String[] roles, Class taskClass, String subQuery, int size) throws Exception {
-        final TaskFetcher taskFetcher = new TaskFetcher(em);
-        Task[] tasks = taskFetcher.fetchAvailableTasks(new UserRoles(userId, roles), taskClass, subQuery);
+    private Task[] testFetchForUserRolesWithCriteria(String userId, String[] roles, Class taskClass, String subQuery, int size) throws Exception {
+        Task[] tasks = new TaskFetcher(em).fetchAvailableTasks(new UserRoles(userId, roles), taskClass, subQuery);
         Assert.assertEquals(size, tasks.length);
         return tasks;
     }
 
-    private void testFecthForUserRoles(String userId, String[] roles, int size) throws Exception {
+    private Task[] testFecthForUserRoles(String userId, String[] roles, int size) throws Exception {
         Task[] tasks = new TaskFetcher(em).fetchAllAvailableTasks(new UserRoles(userId, roles));
         Assert.assertEquals(size, tasks.length);
+        return tasks;
     }
 
     private Document getXmlSampleDocument() throws Exception {

@@ -154,9 +154,12 @@ public class TokenServiceImpl implements TokenService {
         return _tokenHandler.parseToken(token);
     }
 
+    public ProxyTicketValidator getProxyTicketValidator(){
+        return new ProxyTicketValidator();
+    }
+    
     public String getTokenFromTicket(String proxyTicket, String serviceURL) throws AuthenticationException, RBACException, RemoteException {
-
-        ProxyTicketValidator pv = new ProxyTicketValidator();
+        ProxyTicketValidator pv = getProxyTicketValidator();
         pv.setCasValidateUrl(_validateURL);
         pv.setService(serviceURL);
         pv.setServiceTicket(proxyTicket);

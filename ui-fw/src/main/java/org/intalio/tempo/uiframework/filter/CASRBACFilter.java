@@ -6,10 +6,12 @@ import java.rmi.RemoteException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -22,10 +24,9 @@ import org.intalio.tempo.security.rbac.RBACException;
 import org.intalio.tempo.security.token.TokenService;
 import org.intalio.tempo.security.util.PropertyUtils;
 import org.intalio.tempo.security.util.StringArrayUtils;
+import org.intalio.tempo.uiframework.Configuration;
 import org.intalio.tempo.web.ApplicationState;
 import org.intalio.tempo.web.User;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -37,11 +38,6 @@ import edu.yale.its.tp.cas.proxy.ProxyTicketReceptor;
  */
 public class CASRBACFilter implements Filter {
     private static final Logger LOG = LogManager.getLogger("tempo.security");
-
-    private static final String TEMPO_CONFIG_DIRECTORY = "org.intalio.tempo.configDirectory";
-    private static final String SECURITY_CONFIG_XML = "securityConfig.xml";
-
-    private static final String TOKEN_SERVICE = "tokenService";
 
     private static final String CAS_RECEIPT = "edu.yale.its.tp.cas.client.filter.receipt";
     private static final String SERVICE_URL = "edu.yale.its.tp.cas.client.filter.serviceUrl";
@@ -81,11 +77,7 @@ public class CASRBACFilter implements Filter {
     private void doSignIn(HttpServletRequest httpServletRequest, HttpSession session) throws RemoteException {
         LOG.info("signing in with CAS....");
         String serviceURL = _filterConfig.getInitParameter(SERVICE_URL);
-        String tempoConfigPath = System.getProperty(TEMPO_CONFIG_DIRECTORY);
-        ApplicationContext appContext = new FileSystemXmlApplicationContext((new StringBuilder("/")).append(tempoConfigPath).append("/").append(
-                        SECURITY_CONFIG_XML).toString());
-
-        TokenService tokenService = (TokenService) appContext.getBean(TOKEN_SERVICE);
+        TokenService tokenService = Configuration.getInstance().getTokenClient();
         String pgtIou = null;
         CASReceipt CASreceipt = (CASReceipt) session.getAttribute(CAS_RECEIPT);
         if (CASreceipt != null)
@@ -93,9 +85,10 @@ public class CASRBACFilter implements Filter {
         if (pgtIou != null) {
             try {
                 String proxyTicket = ProxyTicketReceptor.getProxyTicket(pgtIou, serviceURL);
-                ApplicationState state = ApplicationState.getCurrentInstance(httpServletRequest);
+                HttpServletRequestWrapper requestWrapper = new HttpServletRequestWrapper(httpServletRequest);
+                ApplicationState state = ApplicationState.getCurrentInstance(requestWrapper);
                 if (state == null) {
-                    WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(session.getServletContext());
+                    WebApplicationContext context = getWebApplicationState(session);
                     state = (ApplicationState) context.getBean(APPLICATION_STATE);
                     try {
                         state = state.getClass().newInstance();
@@ -116,11 +109,15 @@ public class CASRBACFilter implements Filter {
                     User currentUser = authenticate(tokenService, token, grantedRoles);
                     state.setCurrentUser(currentUser);
                 }
-                ApplicationState.setCurrentInstance(httpServletRequest, state);
+                ApplicationState.setCurrentInstance(requestWrapper, state);
             } catch (IOException e) {
                 throw new RuntimeException("Could not get the proxy ticket!", e);
             }
         }
+    }
+    
+    protected WebApplicationContext getWebApplicationState(HttpSession session){
+        return WebApplicationContextUtils.getRequiredWebApplicationContext(session.getServletContext());
     }
 
     private void doSignOut(HttpSession session, HttpServletResponse httpServletResponse) throws IOException {

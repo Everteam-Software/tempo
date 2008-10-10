@@ -1,5 +1,5 @@
 <%--
- Copyright (c) 2005-2006 Intalio inc.
+ Copyright (c) 2005-2008 Intalio inc.
 
  All rights reserved. This program and the accompanying materials
  are made available under the terms of the Eclipse Public License v1.0
@@ -17,9 +17,6 @@
 <%@ taglib prefix="intalio" uri="http://www.intalio.com/tagfiles"%>
 
 <%@ taglib prefix="intalio" uri="http://www.intalio.com/tagfiles"%>
-
-<%--c:set var="scripts">
-</c:set--%>
 
 <c:set var="logoPath" value="images/logo.gif" />
 <c:set var="pageTitle" value="Intalio|Workflow" />

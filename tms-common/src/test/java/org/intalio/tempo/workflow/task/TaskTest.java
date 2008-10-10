@@ -15,11 +15,13 @@
 package org.intalio.tempo.workflow.task;
 
 import java.net.URI;
+import java.util.Collection;
 import java.util.Date;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
 public class TaskTest extends TestCase {
@@ -27,6 +29,10 @@ public class TaskTest extends TestCase {
     private class TestTask extends Task {
 
         public TestTask(String id, URI formURL) {
+            super(id, formURL);
+        }
+        
+        public TestTask(String id, String formURL){
             super(id, formURL);
         }
 
@@ -59,7 +65,7 @@ public class TaskTest extends TestCase {
         }
 
         try {
-            new TestTask(id, null);
+            new TestTask(id, (URI)null);
             Assert.fail("RequiredArgumentException expected");
         } catch (RequiredArgumentException e) {
 
@@ -135,5 +141,48 @@ public class TaskTest extends TestCase {
 
         }
     }
+    
+    public void testSetAndGetInternalID() throws Exception {
+        Task task1 = new TestTask("id1", "http://localhost");
+        
+        task1.setInternalID(13);
+        assertEquals(13, task1.getInternalId());
+    }
+    
+    public void testGetFormURLAsString() throws Exception {
+        Task task = new TestTask("id1", new URI("http://localhost"));
+        assertEquals("http://localhost", task.getFormURLAsString());
+    }
+    
+    public void testAuthorizeActionForUsers() throws Exception {
+        Task task = new TestTask("id1", new URI("http://localhost"));
+        AuthIdentifierSet ais = new AuthIdentifierSet();
+        ais.add("test/user1");
+        
+        task.authorizeActionForUsers("retrieve", ais);
+        
+        assertEquals((Collection)ais, task.getAuthorizedUsers("retrieve"));
+    }
+    
+    public void testAuthorizeActionForRoles() throws Exception {
+        Task task = new TestTask("id1", new URI("http://localhost"));
+        AuthIdentifierSet ais = new AuthIdentifierSet();
+        ais.add("test/role1");
+        
+        task.authorizeActionForRoles("retrieve", ais);
+        
+        assertEquals((Collection)ais, task.getAuthorizedRoles("retrieve"));
+    }
 
+    public void testEquals() throws Exception {
+        Task task1 = new TestTask("id1", new URI("http://localhost"));
+        Task task2 = new TestTask("id1", new URI("http://localhost"));
+        
+        assertTrue(task1.equals(task2));
+    }
+    
+    public void testToString() throws Exception {
+        Task task1 = new TestTask("id1", new URI("http://localhost"));
+        assertEquals("Workflow Task id1", task1.toString());
+    }
 }

@@ -31,6 +31,7 @@ import org.intalio.tempo.workflow.tms.server.permissions.TaskPermissions;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.intalio.tempo.workflow.task.TaskState;
 
 public class TMSRequestProcessorTest extends TestCase {
 
@@ -64,6 +65,8 @@ public class TMSRequestProcessorTest extends TestCase {
     OMElement getTaskListRequest = Utils.loadElementFromResource("/getTaskListRequest1.xml");
     OMElement getTaskListResponse = requestProcessor.getTaskList(getTaskListRequest);
     _logger.debug(Utils.toPrettyXML(getTaskListResponse));
+    
+
   }
 
   public void testGetAvailableTasks() throws Exception {
@@ -244,4 +247,96 @@ public class TMSRequestProcessorTest extends TestCase {
     OMElement getAttachmentsResponse1 = requestProcessor.getAttachments(getAttachmentsRequest1);
     _logger.debug(Utils.toPrettyXML(getAttachmentsResponse1));
   }
+  
+  public void testInitProcess() throws Exception{
+	    TMSRequestProcessor requestProcessor = this.createRequestProcessorJPA();
+	    _logger.info("================================");
+	    OMElement createTaskRequest = Utils.loadElementFromResource("/createPipaRequest.xml");
+	    OMElement createTaskResponse = requestProcessor.storePipa(createTaskRequest);
+	    _logger.debug(Utils.toPrettyXML(createTaskResponse));
+	    _logger.info("================================");
+	  
+	    //requestProcessor = this.createRequestProcessor();
+	  //OMElement createTaskRequest = Utils.loadElementFromResource("/createTaskRequest1.xml");
+	   createTaskRequest = Utils.loadElementFromResource("/initProcess.xml");
+	  _logger.debug(createTaskRequest.getText());
+	  //createTaskRequest = (OMElement)createTaskRequest.getChildrenWithLocalName("taskId").next();
+	  //createTaskRequest = createTaskRequest.getFirstElement().getFirstElement();
+	  _logger.debug("ele="+createTaskRequest.getLocalName());
+	  OMElement ret = requestProcessor.initProcess(createTaskRequest);
+	  _logger.debug(ret.getText());
+  }
+  
+  public void testGetAndDeletePipa() throws Exception{
+      TMSRequestProcessor requestProcessor = this.createRequestProcessorJPA();
+      System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+      OMElement deleteAllRequest = Utils.loadElementFromResource("/deleteAll.xml");
+      OMElement deleteAllResponse = requestProcessor.deleteAll(deleteAllRequest);
+      _logger.debug(Utils.toPrettyXML(deleteAllResponse));
+      
+//      OMElement getPipaequest = Utils.loadElementFromResource("/getPipa.xml");
+//      OMElement getPipaResponse = requestProcessor.getPipa(getPipaequest);
+//      System.out.println(Utils.toPrettyXML(getPipaResponse));
+      
+      OMElement getAvailableTasksRequest = Utils.loadElementFromResource("/getAvailableTasksRequest1.xml");
+      OMElement getTaskListResponse = requestProcessor.getAvailableTasks(getAvailableTasksRequest);
+      _logger.debug(Utils.toPrettyXML(getTaskListResponse));
+      
+      OMElement createTaskRequest = Utils.loadElementFromResource("/createPipaRequest.xml");
+      OMElement createTaskResponse = requestProcessor.storePipa(createTaskRequest);
+      
+      OMElement getPipaequest = Utils.loadElementFromResource("/getPipa.xml");
+      OMElement getPipaResponse = requestProcessor.getPipa(getPipaequest);
+      _logger.debug(Utils.toPrettyXML(getPipaResponse));
+      
+      OMElement deletePipaRequest = Utils.loadElementFromResource("/deletePipa.xml");
+      OMElement deletePipaResponse = requestProcessor.deletePipa(deletePipaRequest);
+      _logger.debug(Utils.toPrettyXML(deletePipaResponse));
+      
+      
+      try{
+          getPipaResponse = null;
+          getPipaResponse = requestProcessor.getPipa(getPipaequest);
+          _logger.debug(Utils.toPrettyXML(getPipaResponse));
+          throw new Exception("expect an IndexOutOfBoundsException, because pipa task is deleted ");
+      }catch (AxisFault e){
+          // here should assert receiving IndexOutOfBoundsException, but cannot do it with AxisFault
+          //TestCase.assertTrue(e.getCause() instanceof java.lang.IndexOutOfBoundsException);
+      }
+
+      //_logger.debug(Utils.toPrettyXML(getPipaResponse));
+  }
+  
+  public void testException()throws Exception{
+      TMSRequestProcessor requestProcessor = this.createRequestProcessor();
+      try{
+          requestProcessor.getTask(null);
+      }catch(Exception e){
+          _logger.info("get exception from requestProcessor.getTask():"+ e.getMessage());
+      }
+      
+      requestProcessor = this.createRequestProcessor();
+      OMElement createTaskRequest = Utils.loadElementFromResource("/createTaskRequest1.xml");
+      try{
+          OMElement createTaskResponse = requestProcessor.create(createTaskRequest);
+      }catch(Exception e){
+          _logger.info("get exception from requestProcessor.create():"+ e.getMessage());
+      }
+      return;
+  }
+  
+  public void testReassign()throws Exception{
+      TMSRequestProcessor r = this.createRequestProcessor();
+      
+      OMElement createTaskRequest = Utils.loadElementFromResource("/createTaskRequest1.xml");
+      OMElement createTaskResponse = r.create(createTaskRequest);
+      _logger.debug(Utils.toPrettyXML(createTaskResponse));
+      
+      OMElement  requestElement = Utils.loadElementFromResource("/reassignRequest.xml");
+      OMElement  responseElement = r.reassign(requestElement);
+      _logger.debug(Utils.toPrettyXML(responseElement));
+      
+  }
+  
+ 
 }

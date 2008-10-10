@@ -59,15 +59,15 @@ import org.slf4j.LoggerFactory;
  * Processes or from a user process based on the request URI. If the URI is
  * <code>/workflow/ib4p</code>, then the request is perceived as a Workflow
  * Processes request. Otherwise, if the URI starts with <code>/workflow/</code>
- * but is not <code>/workflow/ib4p</code>, it is understood to be a request
- * from a user process.
+ * but is not <code>/workflow/ib4p</code>, it is understood to be a request from
+ * a user process.
  * <p>
  * Other request URI's (not starting with <code>/workflow/</code>) are not
  * handled by this servlet.
  * <p>
  * The method of incoming requests is <code>HTTP POST</code>, the format is
  * SOAP-adherent.
- *
+ * 
  * @author Iwan Memruk
  * @version $Revision: 1172 $
  * @see <a href="http://www.w3.org/TR/soap/">The SOAP specification.</a>
@@ -79,7 +79,8 @@ public class FormDispatcherServlet extends HttpServlet {
 
     /**
      * The common prefix for all handled request URI's. <br>
-     * This must comply to the servlet mapping specified in <code>web.xml</code>.
+     * This must comply to the servlet mapping specified in <code>web.xml</code>
+     * .
      */
     private static final String _URI_PREFIX = "/fds/workflow";
 
@@ -107,7 +108,7 @@ public class FormDispatcherServlet extends HttpServlet {
 
     /**
      * Processes an incoming request.
-     *
+     * 
      * @param request
      *            The HTTP request incoming from the client.
      * @param response
@@ -123,19 +124,20 @@ public class FormDispatcherServlet extends HttpServlet {
         String soapAction = request.getHeader("SOAPAction");
         _log.debug("SOAPAction: " + soapAction);
 
-        // We need both convertors in each case (since we need to convert replies as well
+        // We need both convertors in each case (since we need to convert
+        // replies as well
         WorkflowProcessesMessageConvertor wf2up = new WorkflowProcessesMessageConvertor();
         UserProcessMessageConvertor up2wf = new UserProcessMessageConvertor();
 
         SAXReader reader = new SAXReader();
-        MessageSender messageSender = new MessageSender();
+        MessageSender messageSender = getMessageSender();
         FormDispatcherConfiguration config = FormDispatcherConfiguration.getInstance();
 
         // the XML document to return as the HTTP response payload
         Document responseDocument = null;
         try {
             if (fdsUri.equals(_IB4P_URI)) {
-                // it is a request from the Workflow Processes 
+                // it is a request from the Workflow Processes
                 _log.info("Workflow Processes -> User Process");
 
                 _log.debug("Parsing the request from the Workflow Processes.");
@@ -144,7 +146,7 @@ public class FormDispatcherServlet extends HttpServlet {
                     _log.debug("Workflow process request:\n" + workflowProcessesRequest.asXML() + "\n");
                     _log.debug("Converting the request to the user process format.");
                 }
-                
+
                 // null means that the convertor will figure out the user
                 // process namespace itself
                 wf2up.convertMessage(workflowProcessesRequest, null);
@@ -166,8 +168,7 @@ public class FormDispatcherServlet extends HttpServlet {
 
                 String userProcessEndpoint = wf2up.getUserProcessEndpoint();
                 _log.debug("Sending the request to the user process and getting the response");
-                Document userProcessResponse = messageSender.requestAndGetReply(workflowProcessesRequest,
-                        userProcessEndpoint, soapAction);
+                Document userProcessResponse = messageSender.requestAndGetReply(workflowProcessesRequest, userProcessEndpoint, soapAction);
                 if (_log.isDebugEnabled()) {
                     _log.debug("User process response:\n" + userProcessResponse.asXML() + "\n");
                     _log.debug("Converting the response to the Workflow Processes format.");
@@ -179,7 +180,7 @@ public class FormDispatcherServlet extends HttpServlet {
                 }
                 responseDocument = userProcessResponse;
             } else {
-                // it is a request from a user process 
+                // it is a request from a user process
                 _log.debug("User Process -> Workflow Processes");
 
                 // get the full URL of the workflow process endpoint
@@ -202,16 +203,15 @@ public class FormDispatcherServlet extends HttpServlet {
                     _log.debug("No custom dispatcher, using the default processing");
                 }
 
-                if (dispatcher != null) { 
+                if (dispatcher != null) {
                     // TODO: convert the default processing to an IDispatcher
                     try {
                         Document processedRequest = dispatcher.dispatchRequest(pureRequest);
                         Document wrappedRequest = SoapTools.wrapMessage(processedRequest);
                         String endpoint = dispatcher.getTargetEndpoint();
                         String dispatcherSoapAction = dispatcher.getTargetSoapAction();
-                        Document rawResponse = messageSender.requestAndGetReply(wrappedRequest,
-                                endpoint, dispatcherSoapAction);
-                       
+                        Document rawResponse = messageSender.requestAndGetReply(wrappedRequest, endpoint, dispatcherSoapAction);
+
                         Document unwrappedResponse = SoapTools.unwrapMessage(rawResponse);
                         Document processedResponse = dispatcher.dispatchResponse(unwrappedResponse);
                         responseDocument = SoapTools.wrapMessage(processedResponse);
@@ -220,7 +220,7 @@ public class FormDispatcherServlet extends HttpServlet {
                         // TODO: return a SOAP fault
                         throw new RuntimeException(e);
                     }
-                }  else {
+                } else {
                     _log.debug("Converting the request to the Workflow Processes format.");
                     up2wf.convertMessage(userProcessRequest);
                     if (_log.isDebugEnabled()) {
@@ -229,12 +229,12 @@ public class FormDispatcherServlet extends HttpServlet {
                     String userProcessNamespaceUri = up2wf.getUserProcessNamespaceUri();
                     _log.debug("Sending the converted request to the Workflow Processes and getting the response.");
 
-
-                    if(up2wf.getSoapAction() != null) soapAction = up2wf.getSoapAction();
+                    if (up2wf.getSoapAction() != null){
+                        soapAction = up2wf.getSoapAction();
+                    }
                     _log.debug("SOAP Action:" + soapAction);
 
-                    Document workflowProcessesResponse = messageSender.requestAndGetReply(userProcessRequest,
-                            workflowProcessesEndpoint, soapAction);
+                    Document workflowProcessesResponse = messageSender.requestAndGetReply(userProcessRequest, workflowProcessesEndpoint, soapAction);
                     if (_log.isDebugEnabled()) {
                         _log.debug("\n" + workflowProcessesResponse.asXML() + "\n");
                     }
@@ -247,13 +247,16 @@ public class FormDispatcherServlet extends HttpServlet {
                     responseDocument = workflowProcessesResponse;
                 }
             }
-            
-            // for interoperability, try to reuse character-set from request if our platform supports it;
-            // otherwise we use UTF-8 as the W3C recommendation. http://www.w3.org/International/O-HTTP-charset
+
+            // for interoperability, try to reuse character-set from request if
+            // our platform supports it;
+            // otherwise we use UTF-8 as the W3C recommendation.
+            // http://www.w3.org/International/O-HTTP-charset
             String charset = request.getCharacterEncoding();
-            if (charset == null || !Charset.isSupported(charset)) charset = "UTF-8";
+            if (charset == null || !Charset.isSupported(charset))
+                charset = "UTF-8";
             response.setCharacterEncoding(charset);
-            response.setContentType("text/xml; charset="+charset);
+            response.setContentType("text/xml; charset=" + charset);
             response.getWriter().write(responseDocument.asXML());
 
             _log.info("Request processed OK.");
@@ -261,13 +264,17 @@ public class FormDispatcherServlet extends HttpServlet {
             _log.warn("Input/output error: " + e.getMessage(), e);
         } catch (DocumentException e) {
             _log.warn("Invalid XML in message: " + e.getMessage(), e);
-        //} catch (ParsingException e) {
-           // _log.warn("Malformed XML in message: " + e.getMessage(), e);
+            // } catch (ParsingException e) {
+            // _log.warn("Malformed XML in message: " + e.getMessage(), e);
         } catch (MessageFormatException e) {
             _log.warn("Invalid message format: " + e.getMessage(), e);
         } catch (InvalidInputFormatException e) {
             _log.warn("Invalid message format: " + e.getMessage(), e);
         }
+    }
+
+    protected MessageSender getMessageSender() {
+        return new MessageSender();
     }
 
     @Override

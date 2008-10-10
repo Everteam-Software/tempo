@@ -95,7 +95,7 @@ public class WDSService {
             throw new NullPointerException("formURL");
         if (participantToken == null)
             throw new NullPointerException("participantToken");
-        ITaskManagementService _tmsConnection = new RemoteTMSFactory(_tmsEndpoint, participantToken).getService();
+        ITaskManagementService _tmsConnection = getTMSService(participantToken);
         try {
             return _tmsConnection.getPipa(formURL);
         } finally {
@@ -111,7 +111,7 @@ public class WDSService {
             throw new NullPointerException("pipaTask");
         if (participantToken == null)
             throw new NullPointerException("participantToken");
-        ITaskManagementService _tmsConnection = new RemoteTMSFactory(_tmsEndpoint, participantToken).getService();
+        ITaskManagementService _tmsConnection = getTMSService(participantToken);
         try {
             try {
                 _tmsConnection.deletePipa(pipaTask.getFormURLAsString());    
@@ -135,8 +135,12 @@ public class WDSService {
 
     public void deletePIPA(String participantToken, String formUrl) throws UnavailableTaskException, AuthException {
         validateRequest(formUrl, participantToken);
-        ITaskManagementService _tmsConnection = new RemoteTMSFactory(_tmsEndpoint, participantToken).getService();
-        _tmsConnection.deletePipa(formUrl);
+        ITaskManagementService _tmsConnection = getTMSService(participantToken);
+        try {
+            _tmsConnection.deletePipa(formUrl);
+        } finally {
+            _tmsConnection.close();
+        }
     }
 
     /**
@@ -163,6 +167,10 @@ public class WDSService {
      */
     public void close() {
         _dao.close();
+    }
+    
+    protected ITaskManagementService getTMSService(String participantToken){
+        return new RemoteTMSFactory(_tmsEndpoint, participantToken).getService();
     }
 
 }

@@ -6,6 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 import org.intalio.tempo.security.Property;
@@ -39,7 +40,7 @@ public abstract class ExternalTasksServlet extends HttpServlet {
                 user = PropertyUtils.getProperty(properties, AuthenticationConstants.PROPERTY_USER).getValue().toString();
                 pToken = rtoken;
             } else {
-                ApplicationState state = ApplicationState.getCurrentInstance(request);
+                ApplicationState state = ApplicationState.getCurrentInstance(new HttpServletRequestWrapper(request));
                 User currentUser = state.getCurrentUser();
                 pToken = currentUser.getToken();
                 user = currentUser.getName();

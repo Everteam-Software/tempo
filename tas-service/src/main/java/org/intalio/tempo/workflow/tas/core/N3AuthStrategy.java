@@ -11,6 +11,7 @@
  */
 package org.intalio.tempo.workflow.tas.core;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class N3AuthStrategy implements AuthStrategy {
     /**
      * An n3-security token service instance used to process security credentials.
      */
-    private TokenService _tokenService;
+    protected TokenService _tokenService;
 
     /**
      * Endpoint for Security WS. Initiated from config file with Spring Framework XMLBeans technology.
@@ -49,18 +50,14 @@ public class N3AuthStrategy implements AuthStrategy {
     private String _wsEndpoint;
 
     /**
-     * Normalizes all allowed security indentifier delimiters ("/", "\", ":", "|") and
+     * Normalizes all allowed security indentifier delimiters (<code>'/'</code>, <code>'\'</code> and <code>'.'</code>) and
      * replaces them with the default <code>'\'</code> delimiter.
      * 
      * @param sourceId A possibly non-normalized security ID.
      * @return The idempotent normalized security ID.
      */
     private static String normalizeAuthIdentifier(String sourceId) {
-        for (int i=0; i<sourceId.length(); i++) {
-            if ("/|:".indexOf(sourceId.charAt(i)) >=0 )
-                sourceId = sourceId.substring(0,i) + '\\' + sourceId.substring(i+1);
-        }
-        return sourceId;
+        return sourceId.replace('/', '\\').replace('.', '\\').toLowerCase();
     }
     
 
@@ -86,13 +83,14 @@ public class N3AuthStrategy implements AuthStrategy {
         this._wsEndpoint = wsEndpoint;
     }
 
-    private TokenService connect2tokenService() throws Exception {
+    protected TokenService connect2tokenService() throws Exception {
         if (_tokenService == null) {
             _tokenService = new TokenClient(_wsEndpoint);
         }
         return _tokenService;
     }
 
+    
     public Property[] authenticate(AuthCredentials credentials)
             throws AuthException {
         String participantToken = credentials.getParticipantToken();
@@ -102,9 +100,18 @@ public class N3AuthStrategy implements AuthStrategy {
             String invokerUser = (String) PropertyUtils.getProperty(properties, AuthenticationConstants.PROPERTY_USER)
                     .getValue();
             invokerUser = N3AuthStrategy.normalizeAuthIdentifier(invokerUser);
-            _logger.debug("Invoker user id: " + invokerUser);
+            
             Property roleProperty = PropertyUtils.getProperty(properties, AuthenticationConstants.PROPERTY_ROLES);
-            List<String> invokerRoles = Arrays.asList(StringArrayUtils.parseCommaDelimited((String) roleProperty.getValue()));
+            List<String> invokerRoles = new ArrayList<String>();
+			for(String role: Arrays.asList(StringArrayUtils.parseCommaDelimited((String) roleProperty.getValue()))) {
+				invokerRoles.add(normalizeAuthIdentifier(role));
+			}
+			if(_logger.isDebugEnabled()) {
+				_logger.debug("Invoker user id: " + invokerUser);
+				_logger.debug("Invoker roles: " + invokerRoles);
+				_logger.debug("auth users: " + credentials.getAuthorizedUsers());
+				_logger.debug("auth roles: " + credentials.getAuthorizedRoles());				
+			}
                         
             boolean userAuthorized = false;
             
@@ -126,13 +133,8 @@ public class N3AuthStrategy implements AuthStrategy {
                     }
                 }
                 
-                if (! roleAuthorized) {
-                    _logger.warn("Access denied for user " + invokerUser);
-                    throw new AuthException("Access denied.");
-                }
+                if (! roleAuthorized) throw new AuthException("Access denied.");
             }
-            
-            _logger.debug("Access granted OK.");
             
             return properties;
         } catch (Exception e) {

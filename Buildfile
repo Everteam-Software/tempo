@@ -2,12 +2,12 @@ gem "buildr"
 
 require "rubygems"
 require "buildr"
-require "rsc/buildr-tasks/xmlbeans"
-# require "tasks/xmlbeans"
+require "buildr/xmlbeans"
+require "buildr/cobertura"
 
 # Keep this structure to allow the build system to update version numbers.
-VERSION_NUMBER = "5.2.1.4-SNAPSHOT"
-NEXT_VERSION = "5.2.1.5"
+VERSION_NUMBER = "5.3.0.1-SNAPSHOT"
+NEXT_VERSION = "5.3.0.2"
 
 require "rsc/build/dependencies.rb"
 require "rsc/build/repositories.rb"
@@ -15,19 +15,14 @@ require "rsc/build/repositories.rb"
 require "rsc/buildr-tasks/openjpa"
 require "rsc/buildr-tasks/generate_sql"
 
-# revert to buildr tasks when we can use buildr 1.3
-# require "tasks/easyb"
-require "buildr/cobertura"
-
 desc "Tempo Workflow"
 define "tempo" do
   project.version = VERSION_NUMBER
   project.group = "org.intalio.tempo"
-
-  # compile.options.source = "1.5"
+  
   compile.options.target = "1.5"
 
-  define "cas-server-webapp" do
+  define "cas-webapp" do
     libs = projects("security", "security-ws-client", "security-ws-common"), AXIOM, AXIS2, CAS_LIBS, 
     	APACHE_COMMONS[:beanutils], APACHE_COMMONS[:codec], APACHE_COMMONS[:discovery], APACHE_COMMONS[:httpclient], 
     	APACHE_COMMONS[:logging], APACHE_COMMONS[:lang], LOG4J, WS_COMMONS_SCHEMA, JSTL, TAGLIBS
@@ -119,7 +114,7 @@ define "tempo" do
     libs = [AXIS2, APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], DOM4J, LOG4J, SERVLET_API, SLF4J, STAX_API]
     compile.with libs 
     resources.filter.using "version" => VERSION_NUMBER
-    test.with JAXEN, XMLUNIT
+    test.with JAXEN, XMLUNIT, INSTINCT
     unless ENV["LIVE"] == 'yes'
       test.exclude '*RemoteFDSTest*'
     end
@@ -164,7 +159,8 @@ define "tempo" do
     test.exclude "*BaseSuite"
     test.exclude "*FuncTestSuite"
     test.exclude "*ldap*"
-
+    test.with JAXEN, XMLUNIT, INSTINCT
+    
     package :jar
   end
   
@@ -177,7 +173,7 @@ define "tempo" do
   desc "Security Web-Service Client"
   define "security-ws-client" do
     compile.with projects("security", "security-ws-common"),AXIOM, AXIS2, SLF4J, STAX_API, SPRING[:core]
-    test.with APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], CASTOR, LOG4J, SUNMAIL, XERCES, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX 
+    test.with APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], CASTOR, LOG4J, SUNMAIL, XERCES, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX, CAS_CLIENT
 
     # Remember to set JAVA_OPTIONS before starting Jetty
     # export JAVA_OPTIONS=-Dorg.intalio.tempo.configDirectory=/home/boisvert/svn/tempo/security-ws2/src/test/resources
@@ -210,7 +206,7 @@ define "tempo" do
     compile.with projects("security", "security-ws-client"), 
                  APACHE_COMMONS[:httpclient], AXIOM, AXIS2, JAXEN, SLF4J, STAX_API
 
-    test.with APACHE_COMMONS[:codec], LOG4J, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX
+    test.with projects("security-ws-common", "security-ws-client"), APACHE_COMMONS[:codec], LOG4J, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, INSTINCT
     test.exclude '*TestUtils*'
 
     # require live Axis2 instance
@@ -244,6 +240,9 @@ define "tempo" do
     
     test.with APACHE_DERBY, LOG4J, DB_CONNECTOR.values, XMLUNIT, WOODSTOX
     test.exclude '*TestUtils*'
+    unless ENV["LIVE"] == 'yes'
+      test.exclude '*N3AuthProviderTest*'
+    end
     
     package(:jar)
   end
@@ -268,7 +267,7 @@ define "tempo" do
     APACHE_JPA, APACHE_COMMONS[:pool], AXIOM, AXIS2, JAXEN, SLF4J, SPRING[:core], STAX_API, XMLBEANS, DB_CONNECTOR.values
   
     compile.with libs
-    test.with libs + [project("registry"), APACHE_DERBY, APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], CASTOR, EASY_B, LOG4J, DB_CONNECTOR.values, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES]
+    test.with libs + [project("registry"), APACHE_DERBY, APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], CASTOR, EASY_B, LOG4J, DB_CONNECTOR.values, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES, XMLUNIT, INSTINCT]
 
     test.using :properties => 
       { 
@@ -289,17 +288,11 @@ define "tempo" do
         [ projects("deploy-api", "registry", "security", "security-ws-client", "security-ws-common", "tms-axis", "tms-common", "web-nutsNbolts", "dao-nutsNbolts"), APACHE_COMMONS[:pool], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], APACHE_JPA, SLF4J, SPRING[:core] ] 
   end
   
-  desc "Task Management Feeds"
-  define "tms-feeds" do
-    compile.with projects("tms-common", "ui-fw", "tms-axis", "security", "security-ws-client", "security-ws-common", "tms-client", "web-nutsNbolts"), 
-    AXIOM, APACHE_ABDERA, APACHE_JPA, AXIS2, JETTY, LOG4J, SERVLET_API, SLF4J, SPRING[:core], XMLBEANS, WS_COMMONS_SCHEMA, WSDL4J
-    package(:war)
-  end 
-  
   desc "User-Interface Framework"
   define "ui-fw" do
     libs = projects("security", "security-ws-client", "security-ws-common",
                     "tms-axis", "tms-client", "tms-common", "web-nutsNbolts"),
+           APACHE_ABDERA,
            APACHE_COMMONS[:io],
            APACHE_COMMONS[:httpclient],
            APACHE_COMMONS[:codec],
@@ -308,55 +301,37 @@ define "tempo" do
            AXIS2,  
            CSV,
            CASTOR,
+           DOM4J,
            ICAL,
            INTALIO_STATS, 
+           JODATIME,
            JSON,
            JSON_NAGGIT,
-           JSP_API, 
            JSTL,
            LOG4J,
-           SERVLET_API, 
+           PLUTO,
            SPRING[:core], 
            SPRING[:webmvc],
+           SPRING[:webmvc_portlet],
            SLF4J, 
            STAX_API, 
            TAGLIBS, 
+           URLREWRITE,
            WOODSTOX, 
            WSDL4J,
            WS_COMMONS_SCHEMA,
            XERCES, 
-           XMLBEANS,
-           CAS_CLIENT
-    compile.with libs
+           XMLBEANS
+           
+    compile.with libs, JSP_API, PORTLET_API, SERVLET_API, CAS_CLIENT
 
     resources.filter.using "version" => VERSION_NUMBER
-    package(:jar)
+    test.with JAXEN, XMLUNIT, INSTINCT
+    # package(:jar)
     package(:war).with(:libs=>libs).
       include("src/main/config/geronimo/1.0/*")
   end
-  
-  desc "User-Interface Framework Portlet"
-  define "ui-fw-portlet" do
-    libs = projects("security", "security-ws-client", "security-ws-common", "tms-axis", "tms-client", "tms-common", "ui-pluto", "ui-fw"),
-           APACHE_JPA, APACHE_COMMONS[:io], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], AXIOM, AXIS2, CAS_CLIENT, DOM4J, INTALIO_STATS, 
-           JSON, JSP_API, JSTL, LOG4J, PLUTO, PORTLET_API, SERVLET_API, 
-           SPRING[:core], SPRING[:webmvc], SPRING[:webmvc_portlet], SLF4J, STAX_API, TAGLIBS, WOODSTOX, WSDL4J, WS_COMMONS_SCHEMA, 
-           XERCES, XMLBEANS
-    compile.with libs
 
-    resources.filter.using "version" => VERSION_NUMBER
-    package(:war).with(:libs=>libs).
-      include("src/main/config/geronimo/1.0/*")
-  end
-  
-  desc "Customized pluto webapp"
-  define "ui-pluto" do
-  	libs = projects("security"), PLUTO, SERVLET_API, APACHE_COMMONS[:logging], CAS_CLIENT
-  	compile.with libs
-  	package(:jar)
-    package(:war)
-  end
-  
   define "registry" do
     compile.with SLF4J
   	package(:jar)
@@ -370,6 +345,8 @@ define "tempo" do
     test_libs = libs + [EASY_B, INSTINCT, DB_CONNECTOR.values]
     compile.with test_libs
     compile { open_jpa_enhance }
+    
+    test.with APACHE_DERBY
  
     resources.filter.using "version" => VERSION_NUMBER
 
@@ -391,5 +368,26 @@ define "tempo" do
 	compile.with ORBEON_LIBS
     resources.filter.using "version" => VERSION_NUMBER
     package(:war).with :libs=> ORBEON_LIBS
+  end
+  
+  desc "Apache Directory Service"
+  define "apacheds-webapp" do
+	  libs = APACHE_DS, SERVLET_API
+  	compile.with(libs)
+	  package(:war).with :libs => [APACHE_DS]
+  end
+  
+  desc "Liferay CAS ticket filter"
+  define "liferay-ticket-filter" do
+	  libs = LIFERAY, SERVLET_API, PORTLET_API, CAS_CLIENT
+  	compile.with(libs)
+	package :jar
+  end
+
+  desc "Liferay alfresco CAS portlet class"
+  define "liferay-alfresco-sso" do
+	  libs = ALFRESCO, APACHE_COMMONS[:logging], APACHE_COMMONS[:fileupload], SERVLET_API, CAS_CLIENT, SPRING[:core], MY_FACES, PORTLET_API, LIFERAY
+	  compile.with(libs)
+	package :jar
   end
 end

@@ -26,8 +26,7 @@ import org.intalio.tempo.workflow.util.TaskEquality;
 public class PIPATaskTest extends TestCase {
 
     private PIPATask createPIPATask() throws Exception {
-        return new PIPATask("taskID", new URI("http://localhost/form"), new URI("http://localhost/process"),
-                new URI("urn:initNS"), "urn:initSOAPAction");
+        return new PIPATask("taskID", new URI("http://localhost/form"), new URI("http://localhost/process"), new URI("urn:initNS"), "urn:initSOAPAction");
     }
 
     public static void main(String[] args) {
@@ -108,17 +107,37 @@ public class PIPATaskTest extends TestCase {
         }
     }
     
+    public void testGetAndSetRoleOwners() throws Exception {
+        PIPATask task = this.createPIPATask();
+        
+        task.setRoleOwners(new String[]{"test/role1", "test/role2"});
+
+        assertTrue(task.getRoleOwners().contains("test/role1"));
+        assertTrue(task.getRoleOwners().contains("test/role2"));
+        assertFalse(task.getRoleOwners().contains("test/role3"));
+    }
+
+    public void testGetAndSetUserOwners() throws Exception {
+        PIPATask task = this.createPIPATask();
+        
+        task.setUserOwners(new String[]{"test/user1", "test/user2"});
+        
+        assertTrue(task.getUserOwners().contains("test/user1"));
+        assertTrue(task.getUserOwners().contains("test/user2"));
+        assertFalse(task.getRoleOwners().contains("test/user3"));
+    }
+    
     public void testPIPAEquality() throws Exception {
-            PIPATask task1 = createPIPATask();
-            TaskEquality.isEqual(task1, task1);
-            
-            PIPATask task2 = createPIPATask();
-            task2.setCreationDate(new Date());
-            try {
-                TaskEquality.isEqual(task1, task2);
-            } catch (Exception NotEqualException) {
-                
-            }
-                
+        PIPATask task1 = createPIPATask();
+        TaskEquality.isEqual(task1, task1);
+
+        PIPATask task2 = createPIPATask();
+        task2.setCreationDate(new Date());
+        try {
+            TaskEquality.isEqual(task1, task2);
+        } catch (Exception NotEqualException) {
+
+        }
+
     }
 }

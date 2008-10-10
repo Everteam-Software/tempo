@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<portlet-app
+	xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:portlet="http://java.sun.com/xml/ns/portlet"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
+	version="1.0">
+	<portlet>
+		<portlet-name>UifwPortlet</portlet-name>
+		<display-name>Intalio|Workflow</display-name>
+		<portlet-class>
+			org.springframework.web.portlet.DispatcherPortlet
+		</portlet-class>
+		<init-param>
+			<name>contextConfigLocation</name>
+			<value>/WEB-INF/tempo-ui-fw-portlet.xml</value>
+		</init-param>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Intalio|Workflow</title>
+		</portlet-info>
+		<portlet-preferences>
+			<preference>
+				<name>uifw</name>
+			</preference>
+		</portlet-preferences>
+	</portlet>
+</portlet-app>

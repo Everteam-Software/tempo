@@ -345,7 +345,7 @@ public class Realms
     public void deassignUser( String user, String role )
         throws RBACException, RemoteException
     {
-        getRBACAdmin( user ).deassignUser( role, role );
+        getRBACAdmin( user ).deassignUser( user, role );
     }
 
 

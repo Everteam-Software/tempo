@@ -276,11 +276,10 @@ public class RemoteTMSClient implements ITaskManagementService {
         OMElement request = new TMSMarshaller() {
             public OMElement marshalRequest() {
                 OMElement request = createElement("deleteAllRequest");
-                createElement(request, "participantToken", _participantToken);
-                createElement(request, "fakeDelete", fakeDelete);
-                createElement(request, "subQuery", subQuery);
                 createElement(request, "taskType", taskType);
-                
+                createElement(request, "subQuery", subQuery);
+                createElement(request, "fakeDelete", fakeDelete);                
+                createElement(request, "participantToken", _participantToken);              
                 return request;
             }
         }.marshalRequest();
@@ -377,7 +376,7 @@ public class RemoteTMSClient implements ITaskManagementService {
             public OMElement marshalRequest() {
                 OMElement request = createElement("addAttachmentRequest");
                 createElement(request, "taskId", taskID);
-                new AttachmentMarshaller(getOMFactory()).marshalAttachment(attachment, request);
+                request = AttachmentMarshaller.marshalAttachment(attachment);
                 createElement(request, "participantToken", _participantToken);
 
                 return request;

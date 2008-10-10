@@ -1,9 +1,13 @@
 /**
- * Copyright (C) 2006, Intalio Inc.
- * 
- * The program(s) herein may be used and/or copied only with the written permission of Intalio Inc. 
- * or in accordance with the terms and conditions stipulated in the agreement/contract under which
- * the program(s) have been supplied.
+ * Copyright (c) 2005-2008 Intalio inc.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * Intalio inc. - initial API and implementation
  */
 package org.intalio.tempo.web.controller;
 

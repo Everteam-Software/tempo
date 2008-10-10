@@ -73,6 +73,9 @@ public final class TaskEquality {
         if (filterNull(a1, a2))
             return true;
         Class<?> klass = filterClass(a1, a2);
+        if(null == klass){
+            throw new NotEqualException("Classes are not the same");
+        }
         String className = klass.getName();
         if (!className.startsWith("org.intalio.tempo")) {
             if (!(a1.equals(a2)))

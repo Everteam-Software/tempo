@@ -115,6 +115,7 @@ cn: Sales
 ou: Roles
 uniquemember: cn=s1,ou=People,dc=intalio,dc=com
 uniquemember: cn=s2,ou=People,dc=intalio,dc=com
+uniquemember: cn=m1,ou=People,dc=intalio,dc=com
 
 dn: cn=Manager,ou=Roles,dc=intalio,dc=com
 objectclass: top

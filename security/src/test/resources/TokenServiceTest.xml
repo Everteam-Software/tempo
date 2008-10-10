@@ -19,7 +19,7 @@
         <property name="secret"><value>mySecret</value></property>
     </bean>
     
-    <bean id="tokenService" class="org.intalio.tempo.security.impl.TokenServiceImpl">
+    <bean id="tokenService" class="org.intalio.tempo.security.impl.MockTokenServiceImpl">
         <property name="realms"><ref bean="realms"/></property>
         <property name="tokenHandler"><ref bean="tokenHandler"/></property>
     </bean>

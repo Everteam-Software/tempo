@@ -27,6 +27,7 @@ import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.util.xml.InvalidInputFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
 
 public class TaskUnmarshallerTest extends TestCase {
 
@@ -35,10 +36,10 @@ public class TaskUnmarshallerTest extends TestCase {
     public static void main(String[] args) {
         junit.textui.TestRunner.run(TaskUnmarshallerTest.class);
     }
-
-    public void testMetadataUnmarshalling() throws Exception {
-        testMetadata("/taskMetadata.xml");
-    }
+//
+//    public void testMetadataUnmarshalling() throws Exception {
+//        testMetadata("/taskMetadata.xml");
+//    }
 
     private void testMetadata(String file) throws Exception {
         TaskUnmarshaller unmarshaller = new TaskUnmarshaller();
@@ -61,7 +62,7 @@ public class TaskUnmarshallerTest extends TestCase {
         OMElement rootElement = TestUtils.loadElementFromResource(resourceName);
         try {
             unmarshaller.unmarshalTaskFromMetadata(rootElement);
-            Assert.fail("InvalidInputFormatException expected");
+            Assert.fail("InvalidInputFormatException expected:"+resourceName);
         } catch (InvalidInputFormatException e){
             _logger.debug("Expected exception OK.\nMessage: " + e.getMessage());
         }
@@ -90,6 +91,8 @@ public class TaskUnmarshallerTest extends TestCase {
     public void testFullTasks() throws Exception {
         this.testFullTask("/fullPATask1.xml");
         this.testFullTask("/fullPATask2.xml");
+        this.testFullTask("/fullPATask3.xml");
+        this.testFullTask("/fullPATask4.xml");
         this.testFullTask("/fullPIPATask1.xml");
     }
     
@@ -123,5 +126,12 @@ public class TaskUnmarshallerTest extends TestCase {
         this.testBadFullTask("/badFullPATask1.xml");
         this.testBadFullTask("/badFullPIPATask1.xml");
         this.testBadFullTask("/multiElementPayloadPATask1.xml");
+    }
+    
+    public void testUnmarshalTaskOutput() throws Exception {
+        OMElement rootElement = TestUtils.loadElementFromResource("/taskOutput.xml");
+        TaskUnmarshaller unmarshaller = new TaskUnmarshaller();
+        Document op = unmarshaller.unmarshalTaskOutput(rootElement);
+        _logger.debug(new XmlTooling().serializeXML(op));
     }
 }

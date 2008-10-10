@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- To test the chain and description -->
+<task xmlns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+    <metadata>
+      <taskId>id</taskId>
+      <taskState>READY</taskState>
+      <taskType>ACTIVITY</taskType>
+      <description>Testing task</description>
+      <processId>processID</processId>
+      <creationDate>2008-09-25T20:54:12.722+08:00</creationDate>
+      <userOwner>test\user1</userOwner>
+      <roleOwner>test\role1</roleOwner>
+      <formUrl>http://localhost/form</formUrl>
+      <userProcessCompleteSOAPAction>urn:completeSoapAction</userProcessCompleteSOAPAction>
+      <isChainedBefore>true</isChainedBefore>
+      <previousTaskId>p1</previousTaskId>
+      <attachments/>
+    </metadata>
+    <input>
+      <testDocument/>
+    </input>
+</task>

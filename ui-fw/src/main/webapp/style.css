@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2005-2006 Intalio inc.
+ Copyright (c) 2005-2008 Intalio inc.
 
  All rights reserved. This program and the accompanying materials
  are made available under the terms of the Eclipse Public License v1.0
@@ -9,15 +9,11 @@
  Contributors:
  Intalio inc. - initial API and implementation
 */
-
-
-/* CSS Document */
-
 body {
 	margin: 0px;
 	background-color: #FFFFFF; 
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 9pt;
+	font-family: Arial Black;
+	font-size: 8pt;
 	color: #333333;	
 	direction: lrt;
 }
@@ -64,40 +60,6 @@ a:hover {
 	height: 20px;
 }
 
-.centerField {
-	height: 100%;
-	background-color: #ffffff;
-}
-
-a.mainMenuItem {
-	width: 98px; 
-	height: 30px;	
-	line-height: 30px;
-	text-align: center; 
-	text-decoration: none; 
-	color: #333333;
-	display: table-cell;
-	vertical-align:middle;
-	text-transform:uppercase;
-	font-size: 8pt;
-}
-
-a.mainMenuItem:hover, a.mainMenuCurentItem {
-	width: 98px; 
-	height: 30px;	
-	line-height: 30px;	
-	text-align: center; 
-	text-decoration: none; 
-	color: #3082A8;
-	display: table-cell;
-	vertical-align:middle;
-	text-transform:uppercase;
-	font-size: 8pt;	
-}
-.menuItemSeparator{
-	background-color: #CECECE;
-}
-
 .subHeader {
 	height: 30px;
 	color:#333333;
@@ -120,9 +82,7 @@ a.mainMenuItem:hover, a.mainMenuCurentItem {
 	background-color: #EAEAEA;
 	height: 30px;
 	text-transform: uppercase;
-
 }
-
 
 .contentBox {
 	background-color: #FFFFFF;
@@ -157,588 +117,70 @@ a.mainMenuItem:hover, a.mainMenuCurentItem {
 	width: 7px;
 }
 
-
-a.tabItem {
-	color:#333333;
-	font-weight: bold;
-	background-color:#E7E7E7;
-	width: 92px; 
-	height: 22px; 
-	font-weight: bold; 
-	text-align: center; 
-	text-decoration: none;
-	line-height: 22px; 
-	vertical-align: middle; 
-	display: table-cell;
-}
-
-a.tabItem:hover, a.tabCurentItem{
-	color: #B22438;
-	font-weight: bold;
-	background-color:#FFFFFF;
-	width: 92px; 
-	height: 22px; 
-	font-weight: bold; 
-	text-align: center; 
-	text-decoration: none;
-	line-height: 22px; 
-	vertical-align: middle; 
-	display: table-cell;
-}
-
-a.gridHeader {
-	background-color: #D7D7D7; 
-	display: table-cell; 
-	text-decoration: none; 
-	width:100%;
-	color: #333333;
-	padding-left: 10px; 
-	padding-right: 10px;
-	white-space: nowrap;
-}
-
-a.gridHeader:hover {
-	background-color: #999999; 
-	display: table-cell; 
-	text-decoration: none; 
-	width:100%;
-	color: #FFFFFF;
-	padding-left: 10px; 
-	padding-right: 10px;
-}
-
-.dataGrid {
-	width:100%;
-}
-
-.dataGridActionsContainer{
-	border-bottom: 1px solid #777777;
-	height: 35px;
-	background-color: #D7D7D7;
-}
-.dataGridActionsContainer #firstCell{
-	background-color: #777777;
-	width:3px;
-}
-.dataGridActionsContainer #separateCell{
-	background-color: #777777;
-	width:1px;
-}
-
-.dataGridActions a{
-	width: 85px; 
-	height: 28px; 
-	text-align: center; 
-	display: table-cell;
-	text-decoration: none;
-	color: #333333;
-	padding-top: 7px;
-	border: 1px solid #BDBDBD;
-	background-color: #ECECEC;
-
-}
-
-html>body .dataGridActions a{
-	padding-top: 0px;
-	vertical-align: middle;
-}
-
-.dataGridActions a img{
-	vertical-align: middle; 
-}
-.dataGridActions a:hover {
-	background-color: #BDBDBD; 
-	width: 85px; 
-	height: 28px; 
-	text-align: center; 
-	text-decoration: none;
-	color: #3082A8;
-	display: table-cell;
-	padding-top: 7px;
-	background-color: #FFFFFF;
-	border: 1px solid #333333;
-}
-
-html>body .dataGridActions a:hover{
-	padding-top: 0px;
-	vertical-align: middle;	
-}
-
-.dataGrid #dataGridBody{
-	border-left: 1px solid #BDBDBD; 
-	border-right: 1px solid #BDBDBD; 
-	margin-top: 1px; 
-	margin-bottom: 1px; 
-	background-color: #FFFFFF; 
-}
-
-.dataGrid #dataGridBody td {
-	line-height: 18px; 
-	height: 18px; 
-	border-bottom: 1px solid #D7D7D7;
-	border-left: 1px solid #D7D7D7;
-	padding-left: 5px;
-}
-
-.dataGridCustomRow #dataGridBody td {
-	border: 0px;
-}
-.dataGridCustomRow #firstCell{
-	background-color: #94BE23;
-	width: 3px;
-	padding-left: 0px;
-}
-.dataGridCustomRow #textCell{
-	background-color: #CCCCCC;
-}
-.dataGridCustomRow{
-	padding: 0px;
-	margin:0px;
-	border:0px;
-}
-
-.dataGrid #dataGridHeader{
-	background-color: #D7D7D7;
-}
-#dataGridHeader td{
-	border-right: 1px solid #FFFFFF;
-}
-
-.dataGrid #dataGridCustomHeader{
-	background-color: #D7D7D7;
-}
-#dataGridCustomHeader td{
-	border: 0px;
-	padding: 0px;
-	margin: 0px;
-}
-
-.dataGridTopPager {
-	height: 35px;
-}
-.dataGridTopPager span, .dataGridTopPager a,  .dataGridTopPager td {
-	font-size: 8pt;
-}
-
-.dataGridBottomPager {
-	height: 35px;
-}
-.dataGridBottomPager span, .dataGridBottomPager a,  .dataGridBottomPager td {
-	font-size: 8pt;
-}
-
-.dataGrid #dataGridHeaderStats{
-	background-color: #D7D7D7;
-	border-right: 1px solid #FFFFFF;	
-}
-
-.dataGrid #dataGridHeaderStats td{
-	background-color: #D7D7D7;
-	border-right: 1px solid #FFFFFF;	
-	border-bottom: 1px solid #FFFFFF;		
-}
-
-.dataGridPager{
-	border-top: 1px solid #777777;
-	height: 40px;
-	background-color: #D7D7D7;
-}
-
-
-.dataGridPager #firstCell{
-	background-color: #777777; 
-	width:3px;
-}
-
-.dataGridPager #separateCell{
-	background-color: #777777; 
-	width:1px;
-}
-
-.helpList {
-	list-style-type: none; 
-	line-height: 20px;
-	color: #102A00; 
-	padding-top: 0px;
-	margin-top: 5px;
-}
-
-.instanceTasks { 
-	color: #006699; 
-	margin: 0px; 
-	padding: 0px;
-	font-weight: bold; 
-	font-size: 8pt;
-	padding-left: 20px;
-}
-.instanceTasks li{ 
-	list-style-type:disc;
-}
-
-.instanceTasks td {
-	font-size: 8pt;
-}
-.instanceTasks table{
-	border: 1px solid #777777;
-	border-left: 0px;
-
-}
-.instanceTasks #tasksheader{
-	border-left: 1px solid #777777;
-	background-color: #ECECEC;
-	
-}
-.instancesCustom {
-	color: #006699; 
-	margin: 0px; 
-	padding: 5px;
-	font-weight: bold; 
-	font-size: 8pt;
-}
-.instancesCustom li #filterslistitem{ 
-	list-style-type:none;
-}
-.instancesCustom div{ 
-	color: #333333;
-	font-weight: normal;
-}
-.instancesCustom li { 
-	list-style-type:none;
-}
-
-.tasksList {
-	color: #333333;
-	margin: 0px;
-	padding: 0px;
-	list-style-type:disc;
-	
-}
-.tasksList a {
-	color: #333333;
-}
-.tasksList a:hover {
-	color: #3082A8;
-}
-
-/* Tab panel  */
-#notActiveTab {
-	border-bottom: 1px solid #777777; font-weight: bold;
-	height: 20px;
-	padding-top: 4px;
-	padding-left: 5px;
-	padding-right: 5px;
-	cursor:pointer;
-	width: 15%;
-}
-
-#ActiveTab {
-	border-top: 1px solid #777777; 
-	border-left: 1px solid #777777; 	
-	border-right: 1px solid #777777; 	
-	font-weight: bold; 
-	background-color: #FFFFFF;
-	height: 20px;	
-	width: auto;
-	padding-top: 2px;
-	padding-left: 5px;
-	padding-right: 5px;
-	cursor:pointer;
-	width: 15%;
-}
-
-#tabPanelEnd {
-	border-bottom: 1px solid #777777;
-	width: 100%;
-	height: 20px;	
-	padding-top: 2px;
-	padding-left: 5px;
-	padding-right: 5px;
-	
-}
-.notvisibletab{
-	display:none;
-}
-.visibletab{
-/*	display:inline;*/
-}
-.tabContainer{
-	border-bottom: 1px solid #777777;
-	border-left: 1px solid #777777; 	
-	border-right: 1px solid #777777; 
-	background-color: #FFFFFF;
-	width: inherit;
-}
-.menuActionButton {
-	border: 1px solid #BDBDBD;
-	border-bottom: 0px;	
-	background-color: #EAEAEA;	
-}
-.menuActionButtonRefresh {
-	border: 1px solid #BDBDBD;
-	border-bottom: 0px;	
-	color:#94BE23;
-	background-color: #EAEAEA;	
-}
-/* filter properties */
-#propertytable tr td{
-	text-align: left;
-	height: 25px;
-}
-#propertytable #propertycheckbox{
-	width: 25px;
-}
-#propertytable #properyinput{
-	width: 200px;
-}
-
-/* Hint Styles */
-.hint {
-	position:absolute;
-	z-index: 2; 
-	display: none;
-	left: 0px;
-	top: 0px;
-}
-.hint firstRow{
-	width: 200px;
-	height: 100px;
-}
-.hint #hintMessageCell{
-	border-top: 1px solid #777777; 
-	border-left: 1px solid #777777; 
-	border-right: 1px solid #777777; 
-	background-color: #FEFFA9;
-}
-
-.hint #hintBottomLeftCell{
-	border-top: 1px solid #777777;
-	height: 12px;
-	width: 20px;
-}
-.hint #hintBottomRightCell{
-	border-top: 1px solid #777777;
-	height: 12px;
-}
-
-.hint #hintMessage{
-	height:80px;
-	padding: 10px;
-	vertical-align:top;
-}
-/* Process actions bar */
-.processActionsBarContainer{
-	background-color: #ECECEC;
-	width: 100%;
-}
-
-.processActionsBar{
-	background-color: #ECECEC;
-	vertical-align: middle; 	
-}
-.processActionsBar a{
-	width: 85px; 
-	height: 25px; 
-	text-align: center; 
-	text-decoration: none;
-	line-height: 25px; 
-	vertical-align: middle; 
-	color: #333333;
-	display: table-cell;
-	padding-top: 4px;
-	background-color: #ECECEC;
-	border: 1px solid #BDBDBD;
-}
-html>body .processActionsBar a{
-	padding-top: 0px;
-	vertical-align: middle;	
-}
-.processActionsBar a img{
-	vertical-align: middle; 
-}
-
-
-.processActionsBar a:hover {
-	width: 85px; 
-	height: 25px; 
-	text-align: center; 
-	text-decoration: none;
-	line-height: 25px; 
-	vertical-align: middle; 
-	color: #333333;
-	display: table-cell;
-	padding-top: 4px;
-	background-color: #FFFFFF;
-	border: 1px solid #333333;	
-}
-html>body .processActionsBar a:hover{
-	padding-top: 0px;
-	vertical-align: middle;
-}
-
-.navaigationBar, .navaigationBar a{
-	padding-bottom: 5px;
-	color: #3082A8;
-}
-
-.navaigationBar #separator{
-	color:#333333;
-}
-
-.processSelectList{
-	border: 1px solid #777777;
-	padding: 2px;
-}
-
-.processSelectList div{
+#headerTr th{
 	cursor: pointer;
-	border-bottom: 1px solid #EAEAEA;
-}
-.processSelectList  #processSelectListGroup{
-	background-color: #EAEAEA;
-}
-/* filter properties */
-#propertytable tr td{
-	text-align: left;
-	height: 25px;
-}
-#propertytable #propertycheckbox{
-	width: 25px;
-}
-#propertytable #properyinput{
-	width: 200px;
+	font-family: Verdana; 
+	background-color: black; 
+	color: white; 
+	font-size: 10px;
+	border-bottom: 1px solid #2B65EC;
 }
 
-/* time line styles*/
-.timelinebg{
-	background-color: #ECECEC;
-	border-left: 1px solid #BDBDBD;
-	border-right: 1px solid #BDBDBD;
-}
-.time-line2{
-	font-size: 6pt;
-	line-height: 8px;
-	background-color: #FFFFFF;
-	border: 1px solid #CCCCCC;
-	border-top: 4px solid #CCCCCC;	
-	height: 10px;      
-	cursor: pointer;
-}
-.time-line2 td{
-	font-size: 6pt;
-	line-height: 8px;
-	padding: 0px;
-	margin: 0px;
-}
-
-.time-line2 #curentScrollCell{
-	background-color: #ECECEC;
-	border: 1px solid #777777;
-	height: 10px;
-	padding: 0px;
-	margin: 0px;
-}
-a.time-line2 #arrow{
-	background-color: #ECECEC;
-	border: 1px solid #777777;
-	height: 10px;
-	padding: 0px;
-	margin: 0px;
-	text-decoration: none;
-}
-.propertiesContainer{
-	border: 1px solid #CCCCCC;
-	border-bottom: 4px solid #CCCCCC;	
-}
-.propertiesContainer #propertiesText{
-	background-color: #FFFFFF;
-	padding: 5px;
-}
-.propertiesContainer #propertiesHeader{
-	background-color: #CCCCCC;
-	padding-left: 5px;
-}
-/* error massages*/
-.errorList{
-	border: 1px solid #CC9999;
-	height: 100px;
-	cursor: pointer;	
-	overflow: auto;
-}
-.errorListItem{
-	padding-left: 5px;
-	cursor: pointer;
-	background-color:#ECECEC;
-	border-bottom: 1px solid #CCCCCC;
-	overflow: auto;	
-}
-
-.errorListItem #errorListItemTitle{
-	color: #ff0000;
-
-}
-
-.errorListItem #errorListItemText{
-	display: none;
-	margin-left:5px;
-	background-color: #FFFFFF;
-	border: 1px solid #CC9999;
-}
-
-.messagediv{
-	width: 100%;
-	height: 100%;
-	visibility: hidden;
-	position:absolute;
-	top: 0px;
-	left: 0px;
-	background: transparent;
-	opacity: 9.99; 
-}
-
-.messageiframe{
-	position: relative;
-	background-color:#FFFFFF;
-	border: none;
-	top: 0px;
-	left: 0px;
-	width: 100%;
-	height: 100%;
-	
-}
-
-.messageDivContent {
-	position: relative;
-}
-
-.eventPropertyText{
-	color:#000066;
-}
-
-#properties_content{
-	border:1px solid #404040;
-	font-size:12px;
-	margin-left: 20px;
-}
-
-#properties_content tr td{
-	padding:0 0 0 2px;
-	height:16px;
-}
-
-#headerTr td{
-	font-weight:bold;
-	border-bottom:solid 1px #404040;
-	border-right:solid 1px #a1a1a1;
-	border-left:solid 1px #e2e2e2;
-	background:#bbbbbb url(images/headerTr_bg.png) repeat-x;
-}
-
-.oddTr td{
+.oddTr {
 	background:#f1f5fa;
-	border-right:solid 1px #e2e2e2;
 }
 
-.evenTr td{
+.evenTr {
 	background:#ffffff;
-	border-right:solid 1px #e2e2e2;
+}
+
+.tasks {
+	width:95%;
+	position: center;
+	cellspacing:0px;
+	cellpadding:0px;
+	font: Arial Black;
+	font-size: 8px;
+}
+.tasks a {
+	font: Arial Black;
+	font-size: 10px;
+}
+
+.line {
+	font: Arial Black;
+	font-size: 8px;
+}
+
+#tasktable div table{
+	border-width: 0px;
+	font-size: 8pt;
+	position: center;
+}
+#user_logged {
+	font-family: Arial Black;
+}
+
+#taskform {
+	background-image: url(images/gradient-rainbow.png);
+	border:0px;
+	width:100%;
+	height:100%;
+}
+
+#taskform_bottom {
+	border:0px;
+	width:100%;
+	background: url(images/tab_bottom.gif) repeat-x bottom;
+}
+
+#footer {
+	font-family: Arial Black; 
+	font-size: 8pt;
+}
+
+#filter {
+	height: 15px;
+	font: 8px;
+	
 }

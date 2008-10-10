@@ -23,15 +23,12 @@ public final class AuthIdentifierNormalizer {
 
     }
 
-    public static String normalizeAuthIdentifier(String sourceId) {
-        if (sourceId == null) {
-            throw new RequiredArgumentException("sourceId");
+    public static String normalizeAuthIdentifier(String sourceID) {
+        if (sourceID == null) {
+            throw new RequiredArgumentException("sourceID");
         }
-        for (int i=0; i<sourceId.length(); i++) {
-            if ("/|:".indexOf(sourceId.charAt(i)) >=0 )
-                sourceId = sourceId.substring(0,i) + '\\' + sourceId.substring(i+1);
-        }
-        return sourceId.toLowerCase();
+        
+        return sourceID.replace('/', '\\').replace('.', '\\').toLowerCase();
     }
 
     public static String[] normalizeAuthIdentifiers(String[] sourceIDs) {

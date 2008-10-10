@@ -25,15 +25,10 @@ import org.intalio.tempo.workflow.auth.IAuthProvider;
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.xml.XmlBeanFactory;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 
 public class N3AuthProvider implements IAuthProvider {
 
     private static final Logger _logger = LoggerFactory.getLogger(N3AuthProvider.class);
-
-    private static final String TOKEN_SERVICE_BEAN_NAME = "tokenService";
 
     private TokenService _tokenService;
 
@@ -41,35 +36,6 @@ public class N3AuthProvider implements IAuthProvider {
 
     public N3AuthProvider() {
         // empty constructor for Spring
-    }
-
-    /**
-     * This constructor is left for temporary campatibility with UI-FW not
-     * migrated to Security WS
-     * 
-     * @param resourceName
-     * @param resourceClassLoader
-     * @throws Exception
-     */
-    public N3AuthProvider(String resourceName, ClassLoader resourceClassLoader) throws Exception {
-        assert resourceName != null : "No file to read TOM authenticatio configuration!";
-
-        ClassLoader previousClassLoader = Thread.currentThread().getContextClassLoader();
-        try {
-            Thread.currentThread().setContextClassLoader(resourceClassLoader);
-
-            Resource beanConfig = new ClassPathResource(resourceName);
-            XmlBeanFactory beanFactory = new XmlBeanFactory(beanConfig);
-
-            _tokenService = (TokenService) beanFactory.getBean(TOKEN_SERVICE_BEAN_NAME);
-            _logger.debug("Spring Bean '" + TOKEN_SERVICE_BEAN_NAME + "' is read from file " + resourceName + " as "
-                    + _tokenService);
-
-        } catch (Exception e) {
-            _logger.error("Cannot properly read Spring Bean " + TOKEN_SERVICE_BEAN_NAME, e);
-        } finally {
-            Thread.currentThread().setContextClassLoader(previousClassLoader);
-        }
     }
 
     public void setWsEndpoint(String wsEndpoint) {

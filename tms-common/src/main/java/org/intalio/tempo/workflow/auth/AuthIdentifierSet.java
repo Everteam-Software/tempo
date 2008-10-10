@@ -69,7 +69,7 @@ public class AuthIdentifierSet extends HashSet<String> {
     }
 
     public boolean remove(String object) {
-        String normalizedID = AuthIdentifierNormalizer.normalizeAuthIdentifier((String) object);
-        return super.remove(normalizedID);
+            String normalizedID = AuthIdentifierNormalizer.normalizeAuthIdentifier((String) object);
+            return super.remove(normalizedID);
     }
 }

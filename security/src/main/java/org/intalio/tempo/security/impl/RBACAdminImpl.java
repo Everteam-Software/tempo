@@ -79,7 +79,7 @@ public class RBACAdminImpl
 	public void deassignUser( String user, String role )
 		throws RBACException, RemoteException
 	{
-        _providers.getRBACAdmin( user ).deassignUser( role, role );
+        _providers.getRBACAdmin( user ).deassignUser( user, role );
 	}
 
 

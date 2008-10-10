@@ -14,23 +14,24 @@
 
 <beans>
 
-    <bean id="realms" class="com.intalio.n3.security.impl.Realms">
-        <property name="securityProviders">
-            <list>
-                <ref bean="simpleSecurity"/>
-          	</list>
+    <bean id="realms" class="org.intalio.tempo.security.impl.Realms">
+		<property name="defaultRealm" value="intalio"/>
+		<property name="securityProviders">
+			<list>
+				<ref bean="securityProvider"/>
+			</list>
 		</property>
     </bean>
 
-    <bean id="simpleSecurity" class="com.intalio.n3.security.simple.SimpleSecurityProvider" init-method="init">
+    <bean id="simpleSecurity" class="org.intalio.tempo.security.simple.SimpleSecurityProvider" init-method="init">
         <property name="configFile"><value>/n3-security.xml</value></property>
     </bean>
 
-    <bean id="tokenHandler" class="com.intalio.n3.security.impl.TokenHandler">
+    <bean id="tokenHandler" class="org.intalio.tempo.security.impl.TokenHandler">
         <property name="secret"><value>mySecret</value></property>
     </bean>
     
-    <bean id="tokenService" class="com.intalio.n3.security.impl.TokenServiceImpl">
+    <bean id="tokenService" class="org.intalio.tempo.security.impl.TokenServiceImpl">
         <property name="realms"><ref bean="realms"/></property>
         <property name="tokenHandler"><ref bean="tokenHandler"/></property>
     </bean>

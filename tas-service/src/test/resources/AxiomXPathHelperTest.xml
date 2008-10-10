@@ -1,0 +1,17 @@
+<tas:addRequest xmlns:tas="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/">
+  <tas:authCredentials attr="attr">
+    <tas:participantToken>token</tas:participantToken>
+    <tas:authorizedUsers>
+      <tas:user>examples/msmith</tas:user>
+      <tas:user>examples/ewilliams</tas:user>
+    </tas:authorizedUsers>
+    <tas:authorizedRoles>
+      <tas:role>examples/employee</tas:role>
+    </tas:authorizedRoles>
+  </tas:authCredentials>
+  <tas:attachmentMetadata>
+    <tas:mimeType>image/jpeg</tas:mimeType>
+    <tas:filename>foo.txt</tas:filename>
+  </tas:attachmentMetadata>
+  <tas:payload>SGVsbG8gd29ybGQh</tas:payload>
+</tas:addRequest>

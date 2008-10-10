@@ -61,25 +61,25 @@
                     <xsl:value-of select="doc('input:instance')//@user"/>
                 </xsl:attribute>
 
-                <xsl:for-each select="/tms:attachment">
-                    <attachment>
-                        <mime-type>
-                            <xsl:value-of select="tms:attachmentMetadata/tms:mimeType"/>
-                        </mime-type>
-                        <title>
-                            <xsl:value-of select="tms:attachmentMetadata/tms:title"/>
-                        </title>
-                        <hint>
-                            <xsl:value-of select="tms:attachmentMetadata/tms:description"/>
-                        </hint>
-                        <create-date>
-                            <xsl:value-of select="tms:attachmentMetadata/tms:creationDate"/>
-                        </create-date>
-                        <url>
-                            <xsl:value-of select="tms:payloadUrl"/>
-                        </url>
-                    </attachment>
-                </xsl:for-each>
+				<xsl:for-each select="/attachment">
+					<attachment>
+						<mime-type>
+							<xsl:value-of select="attachmentMetadata/mimeType"/>
+						</mime-type>
+						<title>
+							<xsl:value-of select="attachmentMetadata/title"/>
+						</title>
+						<hint>
+							<xsl:value-of select="attachmentMetadata/description"/>
+						</hint>
+						<create-date>
+							<xsl:value-of select="attachmentMetadata/creationDate"/>
+						</create-date>
+						<url>
+							<xsl:value-of select="payloadUrl"/>
+						</url>
+					</attachment>
+				</xsl:for-each>
                 <new>
                     <xsl:attribute name="title">
                         <xsl:value-of select="doc('input:instance')//new/@title"/>

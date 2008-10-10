@@ -18,7 +18,7 @@ package org.intalio.tempo.workflow.auth;
 import java.util.Collection;
 
 public interface IRestrictedEntity {
-    Collection<String>getUserOwners();
-    Collection<String>getRoleOwners();
+    Collection<String> getUserOwners();
+    Collection<String> getRoleOwners();
     boolean isAvailableTo(UserRoles credentials);
 }

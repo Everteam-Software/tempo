@@ -1,13 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <!DOCTYPE display PUBLIC "-//Liferay//DTD Display 5.1.0//EN" "http://www.liferay.com/dtd/liferay-display_5_1_0.dtd">
 
 <display>
 	<category name="category.alfresco">
-		<portlet id="AlfrescoClient"></portlet>
-		<portlet id="AlfrescoMyTasks"></portlet>
-		<portlet id="AlfrescoDocList"></portlet>
-		<portlet id="AlfrescoMySpaces"></portlet>
-		<portlet id="AlfrescoMyWebForms"></portlet>
-		<portlet id="AlfrescoMyWebFiles"></portlet>
+		<portlet id="alfresco"></portlet>
 	</category>
 </display>

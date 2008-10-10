@@ -82,7 +82,7 @@ public class WDSServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         SysPropApplicationContextLoader loader;
-        String configFile = getServletConfig().getInitParameter("contextConfigLocation");
+        String configFile = getConfigFile();
         if (configFile == null) {
             configFile = DEFAULT_CONFIG_FILE;
         }
@@ -210,6 +210,7 @@ public class WDSServlet extends HttpServlet {
                 response.setContentLength(length);
 
                 LOG.debug("Item retrieved & sent OK.");
+                
             } catch (UnavailableItemException e) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
                 LOG.warn("Item not found: '" + resourceUri + "'");
@@ -341,6 +342,10 @@ public class WDSServlet extends HttpServlet {
         } finally {
             zstream.close();
         }
+    }
+    
+    protected String getConfigFile(){
+        return getServletConfig().getInitParameter("contextConfigLocation");
     }
 
 }

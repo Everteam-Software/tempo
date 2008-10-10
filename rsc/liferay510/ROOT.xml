@@ -1,0 +1,30 @@
+<Context path="" crossContext="true">
+	<Resource
+		name="jdbc/LiferayPool"
+		auth="Container"
+		type="javax.sql.DataSource"
+		driverClassName="com.mysql.jdbc.Driver"
+		url="jdbc:mysql://localhost/bpms?useUnicode=true&amp;characterEncoding=UTF-8&amp;useFastDateParsing=false"
+		username="root"
+		password=""
+		maxActive="20"
+	/>
+
+	<Resource
+		name="mail/MailSession"
+		auth="Container"
+		type="javax.mail.Session"
+		mail.imap.host="localhost"
+		mail.pop3.host="localhost"
+		mail.smtp.host="localhost"
+		mail.store.protocol="imap"
+		mail.transport.protocol="smtp"
+	/>
+	
+	<Realm
+		className="org.apache.catalina.realm.JAASRealm"
+		appName="PortalRealm"
+		userClassNames="com.liferay.portal.kernel.security.jaas.PortalPrincipal"
+		roleClassNames="com.liferay.portal.kernel.security.jaas.PortalRole"
+	/>
+</Context>

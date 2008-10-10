@@ -48,6 +48,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 import com.intalio.bpms.workflow.taskManagementServices20051109.AccessControlType;
+import com.intalio.bpms.workflow.taskManagementServices20051109.Attachments;
 import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
 
 public class TaskMarshaller {
@@ -129,7 +130,7 @@ public class TaskMarshaller {
 
         if (task instanceof ITaskWithAttachments) {
             ITaskWithAttachments taskWithAttachments = (ITaskWithAttachments) task;
-            TaskMetadata.Attachments xmlAttachments = taskMetadataElement.addNewAttachments();
+            Attachments xmlAttachments = taskMetadataElement.addNewAttachments();
             for (Attachment attachment : taskWithAttachments.getAttachments()) {
                 com.intalio.bpms.workflow.taskManagementServices20051109.Attachment xmlAttachment = xmlAttachments
                         .addNewAttachment();

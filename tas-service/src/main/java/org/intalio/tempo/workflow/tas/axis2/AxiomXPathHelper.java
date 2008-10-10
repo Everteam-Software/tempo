@@ -104,6 +104,9 @@ class AxiomXPathHelper {
 
     /**
      * Evaluates an XPath query to a string.
+     * If result is en element, return its text value
+     * If result is an attribute, return its text value
+     * if result is a set of node, return text value of first set element.
      * In case the result is empty, <code>null</code> is returned.
      */
     public String getString(OMElement root, String query) {

@@ -190,6 +190,11 @@ public class WorkflowProcessesMessageConvertor {
         xpathSelector = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Body/*[1]/ib4p:taskOutput//*");
         xpathSelector.setNamespaceURIs(MessageConstants.get_nsMap());
         List<Node> taskOutputNodes = xpathSelector.selectNodes(message);
+		/* Select all the attachments. */
+		xpathSelector = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Body//ib4p:attachments//*");
+		xpathSelector.setNamespaceURIs(MessageConstants.get_nsMap());
+		List<Node> attachementsNode = xpathSelector.selectNodes(message);
+		
         /*
          * Change namespace for all the elements which are inside the soap
          * envelope body but not inside the task output payload.
@@ -197,7 +202,7 @@ public class WorkflowProcessesMessageConvertor {
         for (int i = 0; i < bodyNodes.size(); ++i) {
             Node node = (Node)bodyNodes.get(i);
 
-            if (! taskOutputNodes.contains(node)) {
+            if (! taskOutputNodes.contains(node) && ! attachementsNode.contains(node)) {
                 Element element = (Element) node;
                 element.remove(element.getNamespace());
                 element.setQName(QName.get(element.getName(),userProcessNamespace, userProcessNamespaceUri));
