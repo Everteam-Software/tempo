@@ -24,17 +24,15 @@
 			xmlns:tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
 			<xsd:element name="getTaskListResponse">
 				<xsd:complexType>
-					<xsd:sequence>
-						<xsd:element name="task" type="tns:taskMetadata" maxOccurs="unbounded" minOccurs="0">
-						</xsd:element>
+					<xsd:sequence maxOccurs="unbounded">
+						<xsd:element name="task" type="tns:task" maxOccurs="unbounded"/>
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
 			<xsd:element name="getTaskListRequest">
 				<xsd:complexType>
 					<xsd:sequence>
-						<xsd:element name="participantToken" type="xsd:string">
-						</xsd:element>
+						<xsd:element name="participantToken" type="xsd:string"/>
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
@@ -292,17 +290,10 @@
 					</xsd:element>
 				</xsd:sequence>
 			</xsd:complexType>
-			<xsd:element name="getAvailableTasks">
-				<xsd:complexType>
-					<xsd:sequence>
-						<xsd:element name="in" type="xsd:string"></xsd:element>
-					</xsd:sequence>
-				</xsd:complexType>
-			</xsd:element>
 			<xsd:element name="getAvailableTasksResponse">
 				<xsd:complexType>
 					<xsd:sequence>
-						<xsd:element name="task" type="tns:taskMetadata" minOccurs="0" maxOccurs="unbounded"></xsd:element>
+						<xsd:element name="task" type="tns:task" minOccurs="0" maxOccurs="unbounded"></xsd:element>
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
