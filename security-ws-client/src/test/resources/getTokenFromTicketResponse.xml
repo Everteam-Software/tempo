@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tokenws:authenticateUserResponse xmlns:tokenws="http://tempo.intalio.org/security/tokenService/">
+	<tokenws:token>TOKENBACK</tokenws:token>
+</tokenws:authenticateUserResponse>

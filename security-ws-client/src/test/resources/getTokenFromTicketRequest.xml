@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tokenws:proxyTicket xmlns:tokenws="http://tempo.intalio.org/security/tokenService/"><tokenws:ticket>TICKET</tokenws:ticket><tokenws:serviceURL>https://localhost:8443/cas/proxyValidate</tokenws:serviceURL></tokenws:proxyTicket>
