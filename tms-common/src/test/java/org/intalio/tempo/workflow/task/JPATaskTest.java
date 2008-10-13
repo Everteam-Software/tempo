@@ -88,22 +88,24 @@ public class JPATaskTest {
         Task task1 = new Notification(getUniqueTaskID(), new URI("http://hellonico.net"), getXmlSampleDocument());
         task1.getUserOwners().add(user);
         persist(task1);
-        em.clear(); // <--- this was causing problems as getSingleResult is optimized in openjpa12 and clear the entity manager somehow
+        em.clear(); // <--- this was causing problems as getSingleResult is
+                    // optimized in openjpa12 and clear the entity manager
+                    // somehow
         final TaskFetcher taskFetcher = new TaskFetcher(em);
         Notification task3 = (Notification) taskFetcher.fetchTaskIfExists(task1.getID());
-        
+
         checkRemoved(task1);
     }
-    
+
     @Test
     public void checkForDoubles() throws Exception {
         Task task1 = new Notification(getUniqueTaskID(), new URI("http://hellonico.net"), getXmlSampleDocument());
         task1.getRoleOwners().add("examples\\employee");
         task1.getRoleOwners().add("examples\\manager");
         persist(task1);
-        
+
         final TaskFetcher taskFetcher = new TaskFetcher(em);
-        UserRoles ur = new UserRoles("niko", new String[] {"examples\\employee", "examples\\manager" });
+        UserRoles ur = new UserRoles("niko", new String[] { "examples\\employee", "examples\\manager" });
         Task[] list = taskFetcher.fetchAllAvailableTasks(ur);
         Assert.assertEquals(1, list.length);
     }
@@ -136,23 +138,6 @@ public class JPATaskTest {
         TaskEquality.isEqual(task1, task2);
 
         checkRemoved(task2);
-    }
-
-    private void checkRemoved(Task task2) {
-        checkRemoved(task2.getID());
-    }
-
-    private void checkRemoved(String id) {
-        final TaskFetcher taskFetcher = new TaskFetcher(em);
-        jpa.begin();
-        taskFetcher.deleteTasksWithID(id);
-        jpa.commit();
-        try {
-            taskFetcher.fetchTaskIfExists(id);
-            Assert.fail("No task should be left here");
-        } catch (Exception expected) {
-            // this is good.
-        }
     }
 
     @Test
@@ -202,31 +187,37 @@ public class JPATaskTest {
         checkRemoved(task2);
     }
 
+    /**
+     * This tests that a user cannot get a task in his task list that is not
+     * available to him use the  <code>isAvailableTo</code> method in the <code>Task</code> class.
+     */
     @Test
     public void userWithStrangeLogin() throws Exception {
-    	String users[] = new String[] {
-    			"overdating\\pdv017@es\\japanesemaster\\com",
-    			"overdating\\pdv017@es.japanesemaster.com",
-    			"overdating\\pdv017@es\\japanesemaster\\com ",
-    			"overdating\\pdv017@es.japanesemaster.com ",
-    	};
-    	for(String user : users) testLogins(user);
+        String users[] = new String[] { "overdating\\pdv017@es\\japanesemaster\\com", "overdating\\pdv017@es.japanesemaster.com",
+                        "overdating\\pdv017@es\\japanesemaster\\com ", "overdating\\pdv017@es.japanesemaster.com ", "nico", "alex", "assaf", "matthieu",
+                        "nico " };
+        for (String user : users)
+            testLogins(user, users);
     }
 
-	private void testLogins(String user) throws URISyntaxException, Exception {
-		String id = getUniqueTaskID();
-    	Notification task1 = null, task2 = null;
+    private void testLogins(String user, String[] users) throws URISyntaxException, Exception {
+        String id = getUniqueTaskID();
+        Notification task1 = null, task2 = null;
         task1 = new Notification(id, new URI("http://hellonico.net"), getXmlSampleDocument());
         task1.getUserOwners().add(user);
         persist(task1);
-        Task[] tasks1 = testFecthForUserRoles(user, new String[] { }, 1);
-        Task[] tasks2 = testFetchForUserRolesWithCriteria(user, new String[] {}, Notification.class, "", 1);
-        UserRoles ur = new UserRoles(user, new String[] { });
-        Assert.assertTrue(tasks1[0].isAvailableTo(ur));
-        Assert.assertTrue(tasks2[0].isAvailableTo(ur));
+
+        for (String us : users) {
+            _logger.info(user + ":" + us + ":");
+            UserRoles ur = new UserRoles(us, new String[] {});
+            Task[] tasks = new TaskFetcher(em).fetchAllAvailableTasks(ur);
+            if (tasks.length > 0)
+                Assert.assertEquals(tasks[0].isAvailableTo(ur), true);
+        }
+
         checkRemoved(task1);
-	}
-    
+    }
+
     @Test
     public void authorizeActionForUser() throws Exception {
         String id = getUniqueTaskID();
@@ -445,6 +436,23 @@ public class JPATaskTest {
 
     private Document getXmlSampleDocument() throws Exception {
         return xml.getXmlDocument("/inputWithNamespace.xml");
+    }
+
+    private void checkRemoved(Task task2) {
+        checkRemoved(task2.getID());
+    }
+
+    private void checkRemoved(String id) {
+        final TaskFetcher taskFetcher = new TaskFetcher(em);
+        jpa.begin();
+        taskFetcher.deleteTasksWithID(id);
+        jpa.commit();
+        try {
+            taskFetcher.fetchTaskIfExists(id);
+            Assert.fail("No task should be left here");
+        } catch (Exception expected) {
+            // this is good.
+        }
     }
 
 }

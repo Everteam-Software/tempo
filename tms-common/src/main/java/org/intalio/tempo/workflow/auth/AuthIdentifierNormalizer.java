@@ -25,10 +25,10 @@ public final class AuthIdentifierNormalizer {
 
     public static String normalizeAuthIdentifier(String sourceID) {
         if (sourceID == null) {
-            throw new RequiredArgumentException("sourceID");
+            throw new RequiredArgumentException("Invalid user id");
         }
         
-        return sourceID.replace('/', '\\').replace('.', '\\').toLowerCase();
+        return sourceID.trim().replace('/', '\\').replace('.', '\\').toLowerCase();
     }
 
     public static String[] normalizeAuthIdentifiers(String[] sourceIDs) {
