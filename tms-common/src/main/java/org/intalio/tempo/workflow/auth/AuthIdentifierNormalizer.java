@@ -23,11 +23,11 @@ public final class AuthIdentifierNormalizer {
 
     }
 
-    public static String normalizeAuthIdentifier(String sourceID) {
-        if (sourceID == null) {
+    public static String normalizeAuthIdentifier(String sourceId) {
+        if (sourceId == null) {
             throw new RequiredArgumentException("Invalid user id");
         }
-        sourceID = sourceID.trim()
+        sourceId = sourceId.trim();
         for (int i=0; i<sourceId.length(); i++) {
             if ("/|:".indexOf(sourceId.charAt(i)) >=0 )
                 sourceId = sourceId.substring(0,i) + '\\' + sourceId.substring(i+1);
