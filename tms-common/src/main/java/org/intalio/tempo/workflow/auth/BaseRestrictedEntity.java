@@ -61,10 +61,8 @@ public abstract class BaseRestrictedEntity implements IRestrictedEntity {
     }
 
     public boolean isAvailableTo(UserRoles credentials) {
-        for (String userOwner : _userOwners) {
-            if (userOwner != null && userOwner.equals(credentials.getUserID()))
-                return true;
-        }
+		String userId = credentials.getUserID();
+        for (String userOwner : _userOwners) if (userId.equals(userOwner)) return true;
         return CollectionUtils.containsAny(_roleOwners, credentials.getAssignedRoles());
     }
     
