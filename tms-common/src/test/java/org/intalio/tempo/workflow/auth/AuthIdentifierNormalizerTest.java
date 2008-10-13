@@ -28,15 +28,19 @@ public class AuthIdentifierNormalizerTest extends TestCase {
     }
 
     public void testAuthIdentifierNormalizer() throws Exception {
+        String idWithBackslash = "test\\test";
+        String idWithBar = "test|test";
+        String idWithColon = "test:test";
         String idWithForwardSlash = "test/test";
         String idWithDot = "test.test";
-        String idWithBackslash = "test\\test";
 
-        Assert.assertEquals(idWithBackslash, AuthIdentifierNormalizer.normalizeAuthIdentifier(idWithForwardSlash));
-        Assert.assertEquals(idWithBackslash, AuthIdentifierNormalizer.normalizeAuthIdentifier(idWithDot));
         Assert.assertEquals(idWithBackslash, AuthIdentifierNormalizer.normalizeAuthIdentifier(idWithBackslash));
+        Assert.assertEquals(idWithBackslash, AuthIdentifierNormalizer.normalizeAuthIdentifier(idWithBar));
+        Assert.assertEquals(idWithBackslash, AuthIdentifierNormalizer.normalizeAuthIdentifier(idWithColon));
+        Assert.assertEquals(idWithBackslash, AuthIdentifierNormalizer.normalizeAuthIdentifier(idWithForwardSlash));
+        Assert.assertEquals(idWithDot, AuthIdentifierNormalizer.normalizeAuthIdentifier(idWithDot));
 
-        String[] multipleIDs = {idWithForwardSlash, idWithDot, idWithBackslash};
+        String[] multipleIDs = {idWithForwardSlash, idWithBar, idWithColon, idWithBackslash};
         String[] normalizedIDs = AuthIdentifierNormalizer.normalizeAuthIdentifiers(multipleIDs);
 
         for (String normalizedID : normalizedIDs) {

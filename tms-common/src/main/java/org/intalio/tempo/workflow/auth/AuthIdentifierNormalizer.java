@@ -27,8 +27,12 @@ public final class AuthIdentifierNormalizer {
         if (sourceID == null) {
             throw new RequiredArgumentException("Invalid user id");
         }
-        
-        return sourceID.trim().replace('/', '\\').replace('.', '\\').toLowerCase();
+        sourceID = sourceID.trim()
+        for (int i=0; i<sourceId.length(); i++) {
+            if ("/|:".indexOf(sourceId.charAt(i)) >=0 )
+                sourceId = sourceId.substring(0,i) + '\\' + sourceId.substring(i+1);
+        }
+        return sourceId.toLowerCase();
     }
 
     public static String[] normalizeAuthIdentifiers(String[] sourceIDs) {
