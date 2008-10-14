@@ -136,7 +136,7 @@ public class RealmsTest extends TestCase {
         assertTrue(realms.assignedRoles("test/user1").length>0);
         realms.deassignUser("test/user1", "test/role1");
         assertTrue(realms.authorizedUsers("test/role1").length>0);
-        assertTrue(realms.topRoles("test/").length >0);
+        assertTrue(realms.topRoles("test").length >0);
       
         
         
