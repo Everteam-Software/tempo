@@ -97,6 +97,9 @@ public class WDSStorageStrategy implements StorageStrategy {
 
     }
 
+    protected HttpClient getClient(){
+    	return new HttpClient();
+    }
     public String storeAttachment(Property[] props, AttachmentMetadata metadata, InputStream payload) throws IOException {
         // need to sanitize the filename because of some browsers (e.g. Internet Exploder)
         String filename = sanitize(metadata.getFilename());
@@ -108,7 +111,8 @@ public class WDSStorageStrategy implements StorageStrategy {
         putMethod.setRequestEntity(new InputStreamRequestEntity(payload));
         putMethod.setRequestHeader("Content-type", metadata.getMimeType());
 
-        HttpClient httpClient = new HttpClient();
+        //HttpClient httpClient = new HttpClient();
+        HttpClient httpClient = getClient();
         int code = httpClient.executeMethod(putMethod);
         if (code != 200) {
             throw new RuntimeException("Error code: " + code);
@@ -122,7 +126,8 @@ public class WDSStorageStrategy implements StorageStrategy {
 
         DeleteMethod deleteMethod = new DeleteMethod(url);
         setUpMethod(deleteMethod);
-        HttpClient httpClient = new HttpClient();
+//        HttpClient httpClient = new HttpClient();
+        HttpClient httpClient = getClient();
         try {
             int code = httpClient.executeMethod(deleteMethod);
             if (code != 200) {
