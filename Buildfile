@@ -216,7 +216,6 @@ define "tempo" do
       test.exclude '*Axis2TASService*'
       test.exclude '*WDSStorageTest*'
     end
-    cobertura.include '/*'
 
     package :jar
     package(:aar).with(:libs => [ 
@@ -227,7 +226,6 @@ define "tempo" do
   define "tms-axis" do 
     FileUtils.mkdir_p _('target/classes/') # workaround for bug in buildr when no classes to be compiled.
     compile_xml_beans _("../tms-service/src/main/axis2")
-    cobertura.exclude '/*'
     package(:jar).include _('target/generated/xmlbeans/'), :as=>'.'
     package(:jar).include _('target/classes/'), :as=>'.' 
   end
