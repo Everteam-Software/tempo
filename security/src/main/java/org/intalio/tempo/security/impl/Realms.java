@@ -472,7 +472,8 @@ public class Realms
     public String[] topRoles( String realm )
         throws RBACException, RemoteException
     {
-        return getRBACQuery( realm ).topRoles( realm );
+    	
+        return getRBACProvider( realm ).getQuery().topRoles( realm );
     }
 
     
