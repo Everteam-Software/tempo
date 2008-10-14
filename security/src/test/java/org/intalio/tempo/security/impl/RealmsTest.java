@@ -91,7 +91,7 @@ public class RealmsTest extends TestCase {
             atLeast(1).of(rbacAdmin).deleteRole("test/role1");
             atLeast(1).of(rbacAdmin).deleteUser("test/user1");
             atLeast(1).of(rbacQuery).authorizedUsers("test/role1");will(returnValue(new String[]{"test/user1"}));
-            atLeast(1).of(rbacQuery).topRoles("test/");will(returnValue(new String[]{"test/role2"}));
+            atLeast(1).of(rbacQuery).topRoles("test");will(returnValue(new String[]{"test/role2"}));
             atLeast(1).of(rbacAdmin).addInheritance("test/role2", "test/role1");
             atLeast(1).of(rbacAdmin).deleteInheritance("test/role2", "test/role1");
             atLeast(1).of(rbacAdmin).revokePermission("test/role1", "read", "secret doc");
