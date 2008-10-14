@@ -6,8 +6,8 @@ require "buildr/xmlbeans"
 require "buildr/cobertura"
 
 # Keep this structure to allow the build system to update version numbers.
-VERSION_NUMBER = "5.3.0.1-SNAPSHOT"
-NEXT_VERSION = "5.3.0.2"
+VERSION_NUMBER = "6.0.0.0-SNAPSHOT"
+NEXT_VERSION = "6.0.0.1"
 
 require "rsc/build/dependencies.rb"
 require "rsc/build/repositories.rb"
@@ -36,7 +36,9 @@ define "tempo" do
   end
    
   define "dao-tools" do
-    compile.with projects("security", "security-ws-client", "tms-axis", "tms-common", "tms-service", "wds-service", "tms-client", "web-nutsNbolts", "dao-nutsNbolts"), 
+    compile.with projects("security", "security-ws-client", "tms-axis", "tms-common", "tms-client", "web-nutsNbolts", "dao-nutsNbolts"), 
+    project("wds-service").package(:jar),
+    project("tms-service").package(:jar),
     APACHE_DERBY, 
     APACHE_JPA, 
     AXIOM, 
