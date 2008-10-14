@@ -27,7 +27,7 @@ define "tempo" do
     	APACHE_COMMONS[:beanutils], APACHE_COMMONS[:codec], APACHE_COMMONS[:discovery], APACHE_COMMONS[:httpclient], 
     	APACHE_COMMONS[:logging], APACHE_COMMONS[:lang], LOG4J, WS_COMMONS_SCHEMA, JSTL, TAGLIBS
     compile.with libs
-    package(:war).with :libs=>libs
+    package :war
   end
   
   define "dao-nutsNbolts" do
@@ -78,7 +78,7 @@ define "tempo" do
   desc "Deployment Web-Service Common Library"
   define "deploy-ws-common" do
     compile.with projects("deploy-api", "deploy-impl", "registry"), AXIOM, AXIS2, SUNMAIL, SLF4J, SPRING[:core], STAX_API 
-    package(:jar)
+    package :jar
   end
   
   desc "Deployment Web-Service Client"
@@ -113,14 +113,14 @@ define "tempo" do
 
   desc "Form Dispatcher Servlet"
   define "fds" do
-    libs = [AXIS2, APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], DOM4J, LOG4J, SERVLET_API, SLF4J, STAX_API]
+    libs = [AXIS2, APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], DOM4J, JAXEN, LOG4J, SERVLET_API, SLF4J, STAX_API]
     compile.with libs 
     resources.filter.using "version" => VERSION_NUMBER
-    test.with JAXEN, XMLUNIT, INSTINCT
+    test.with XMLUNIT, INSTINCT
     unless ENV["LIVE"] == 'yes'
       test.exclude '*RemoteFDSTest*'
     end
-    package(:war).with(:libs=>[libs,JAXEN])
+    package :war
   end
 
   desc "Workflow Forms"
@@ -134,23 +134,23 @@ define "tempo" do
   desc "Workflow Processes"
   define "processes" do
     define "xpath-extensions" do
-      package(:jar)
+      package :jar
     end
     
     define "AbsenceRequest" do
-      package(:jar)
+      package :jar
     end
     
     define "TaskManager" do
-      package(:jar)
+      package :jar
     end
     
     define "Store" do
-      package(:jar)
+      package :jar
     end
     
     define "peopleActivity" do
-      package(:jar)
+      package :jar
     end
   end
 
@@ -169,7 +169,7 @@ define "tempo" do
   desc "Security Web-Service Common Library"
   define "security-ws-common" do
     compile.with project("security"), AXIOM, AXIS2, SLF4J, SPRING[:core], STAX_API 
-    package(:jar)
+    package :jar
   end
   
   desc "Security Web-Service Client"
@@ -216,9 +216,9 @@ define "tempo" do
       test.exclude '*Axis2TASService*'
       test.exclude '*WDSStorageTest*'
     end
+    cobertura.include '/*'
 
-    package(:jar)
-    
+    package :jar
     package(:aar).with(:libs => [ 
         projects("security", "security-ws-client", "security-ws-common", "web-nutsNbolts"), APACHE_COMMONS[:httpclient], JAXEN, SLF4J, SPRING[:core]])
   end
@@ -227,9 +227,9 @@ define "tempo" do
   define "tms-axis" do 
     FileUtils.mkdir_p _('target/classes/') # workaround for bug in buildr when no classes to be compiled.
     compile_xml_beans _("../tms-service/src/main/axis2")
+    cobertura.exclude '/*'
     package(:jar).include _('target/generated/xmlbeans/'), :as=>'.'
     package(:jar).include _('target/classes/'), :as=>'.' 
-
   end
 
   desc "Task Management Services Common Library"
@@ -237,7 +237,6 @@ define "tempo" do
     compile.with projects("security", "security-ws-client", "tms-axis"), APACHE_JPA, APACHE_COMMONS[:pool], APACHE_COMMONS[:collections], AXIS2, AXIOM, DOM4J, JAXEN, SLF4J, SPRING[:core], STAX_API, XERCES, XMLBEANS
     
     compile { open_jpa_enhance }
-    
     task "package" => generate_sql([project], "workflow.tms")
     
     test.with APACHE_DERBY, LOG4J, DB_CONNECTOR.values, XMLUNIT, WOODSTOX
@@ -246,7 +245,7 @@ define "tempo" do
       test.exclude '*N3AuthProviderTest*'
     end
     
-    package(:jar)
+    package :jar
   end
   
   desc "Task Management Service Client"
@@ -260,7 +259,7 @@ define "tempo" do
     unless ENV["LIVE"] == 'yes'
       test.exclude '*RemoteTMSClientTest*'
     end
-    package(:jar)
+    package :jar 
   end
   
   desc "Task Management Service"
@@ -285,7 +284,7 @@ define "tempo" do
     end
     test.exclude '*TestUtils*'
 
-    package(:jar)
+    package :jar
     package(:aar).with :libs => 
         [ projects("deploy-api", "registry", "security", "security-ws-client", "security-ws-common", "tms-axis", "tms-common", "web-nutsNbolts", "dao-nutsNbolts"), APACHE_COMMONS[:pool], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], APACHE_JPA, SLF4J, SPRING[:core] ] 
   end
@@ -329,35 +328,30 @@ define "tempo" do
 
     resources.filter.using "version" => VERSION_NUMBER
     test.with JAXEN, XMLUNIT, INSTINCT
-    # package(:jar)
-    package(:war).with(:libs=>libs).
-      include("src/main/config/geronimo/1.0/*")
+    package(:war).with(:libs=>libs)
   end
 
   define "registry" do
     compile.with SLF4J
-  	package(:jar)
+  	package :jar
   end
   
   desc "Workflow Deployment Service"
   define "wds-service" do |project|
     libs = [ projects("dao-nutsNbolts", "deploy-api", "registry", "security", "tms-client", "tms-axis", "tms-common", "web-nutsNbolts"), 
       AXIS2, AXIOM, APACHE_COMMONS[:io], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], APACHE_COMMONS[:pool], APACHE_JPA, DOM4J, JAXEN, LOG4J, SERVLET_API, SLF4J, SPRING[:core], STAX_API, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX, XERCES, XMLBEANS ]
-          
     test_libs = libs + [EASY_B, INSTINCT, DB_CONNECTOR.values]
     compile.with test_libs
     compile { open_jpa_enhance }
-    
     test.with APACHE_DERBY
- 
     resources.filter.using "version" => VERSION_NUMBER
-
     task "package" => generate_sql([project], "workflow.deployment")
     
-    package(:jar)
-    package(:war).with :libs=>libs
+    package :jar
+    package :war
   end
 
+  desc "Common spring and web related classes"
   define "web-nutsNbolts" do
     libs = project("security"), AXIS2, APACHE_COMMONS[:lang], INTALIO_STATS, JSON_NAGGIT, JSP_API, LOG4J, SERVLET_API, SLF4J, SPRING[:core], SPRING[:webmvc]
     test_libs = libs + [JUNIT, INSTINCT]
@@ -369,7 +363,8 @@ define "tempo" do
   define "xforms-manager" do
 	compile.with ORBEON_LIBS
     resources.filter.using "version" => VERSION_NUMBER
-    package(:war).with :libs=> ORBEON_LIBS
+    package :jar
+    package :war
   end
   
   desc "Apache Directory Service"
@@ -381,15 +376,13 @@ define "tempo" do
   
   desc "Liferay CAS ticket filter"
   define "liferay-ticket-filter" do
-	  libs = LIFERAY, SERVLET_API, PORTLET_API, CAS_CLIENT
-  	compile.with(libs)
+  	compile.with(LIFERAY, SERVLET_API, PORTLET_API, CAS_CLIENT)
 	package :jar
   end
 
   desc "Liferay alfresco CAS portlet class"
   define "liferay-alfresco-sso" do
-	  libs = ALFRESCO, APACHE_COMMONS[:logging], APACHE_COMMONS[:fileupload], SERVLET_API, CAS_CLIENT, SPRING[:core], MY_FACES, PORTLET_API, LIFERAY
-	  compile.with(libs)
-	package :jar
+	  compile.with(ALFRESCO, APACHE_COMMONS[:logging], APACHE_COMMONS[:fileupload], SERVLET_API, CAS_CLIENT, SPRING[:core], MY_FACES, PORTLET_API, LIFERAY)
+    package :jar
   end
 end
