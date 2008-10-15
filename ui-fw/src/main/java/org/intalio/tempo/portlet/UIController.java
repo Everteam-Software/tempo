@@ -30,6 +30,7 @@ import org.intalio.tempo.web.ApplicationState;
 import org.intalio.tempo.web.User;
 import org.intalio.tempo.web.controller.ActionDef;
 import org.springframework.context.ApplicationContext;
+import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.portlet.ModelAndView;
@@ -98,6 +99,7 @@ public abstract class UIController extends AbstractFormController {
             action.setResponse(response);
             String[] roles = convertRoles(_actionGrantedRoles.get(actionName));
             action.setRequiredRoles(roles);
+            action.setBindErrors(new BindException(new Object(), ""));
 
             mav = action.doExecution();
         }
