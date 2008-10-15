@@ -1,16 +1,24 @@
 package org.intalio.tempo.uiframework.actions;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpSession;
 
 import junit.framework.TestCase;
 
 import org.intalio.tempo.portlet.MockHttpServletRequest;
 import org.intalio.tempo.portlet.MockHttpServletResponse;
+import org.intalio.tempo.uiframework.Configuration;
 import org.intalio.tempo.uiframework.UIFWApplicationState;
+import org.intalio.tempo.uiframework.forms.FormManager;
+import org.intalio.tempo.uiframework.forms.FormManagerBroker;
 import org.intalio.tempo.web.User;
+import org.intalio.tempo.workflow.task.PATask;
+import org.intalio.tempo.workflow.task.Task;
+import org.intalio.tempo.workflow.tms.ITaskManagementService;
 import org.jmock.Expectations;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -40,13 +48,28 @@ public class TasksActionTest extends TestCase {
 	    @Mock Map<String, Object> model;
 	    @Mock User user;
 	    @Stub HashMap<String, Object> m;
-	    
+	    @Mock FormManager fm;
+	    @Mock ITaskManagementService tm;
 	    @Specification
 	    public void testExecute() throws Exception{
+	    	FormManagerBroker.getInstance().setFormManager(fm);
+	    	Configuration.getInstance().setServiceEndpoint("http://www.intaili.org");
+	    	
 	    	//model = new HashMap<String, Object>();
-	    	ta = new TasksAction();
+	    	ta = new TasksAction(){
+	    		protected TasksCollector getTaskCollector(String user, String token){
+	    		    	return new TasksCollector(new HttpServletRequestWrapper(_request), user, token){
+	    		    		protected ITaskManagementService getTaskManager(String endpoint, String token){
+	    		    	    	return tm;
+	    		    	    }	
+	    		    	};
+	    		 }
+	    		
+	    	};
 	    	final String token = "token1";
 	    	final String user1 = "user1";
+	    	final Task[] tasks= new Task[1];
+	    	tasks[0]= new PATask("taskid1", new URI("http://www.intalio.org/task"));
 	    	m = new HashMap<String, Object>();
 	    	m.put("errors", ta.getErrors());
 	    	m.put("participantToken", token);
@@ -64,14 +87,22 @@ public class TasksActionTest extends TestCase {
 	            atLeast(1).of(req).getScheme();will(returnValue("schema"));
 	            atLeast(1).of(req).getServerName();will(returnValue("www.intalio.com"));
 	            atLeast(1).of(req).getServerPort();will(returnValue(80));
-	            atLeast(1).of(model).put("participantToken", token);
-	            atLeast(1).of(model).put("currentUser", user1);
-	            atLeast(1).of(model).put("refreshTime", 5);
-	            atLeast(1).of(model).size();will(returnValue(4));
-	            atLeast(1).of(model).entrySet();will(returnValue(m.entrySet()));
-	            one(req).getParameter("update");will(returnValue("false"));
+	            atLeast(1).of(tm).getAvailableTasks("Notification", "NOT T._state = TaskState.COMPLETED ORDER BY T._creationDate");
+	            will(returnValue(tasks));
+	            atLeast(1).of(fm).getURL(tasks[0]);will(returnValue("http://www.intalio.org"));
+//	            atLeast(1).of(model).put("participantToken", token);
+//	            atLeast(1).of(model).put("currentUser", user1);
+//	            atLeast(1).of(model).put("refreshTime", 5);
+//	            atLeast(1).of(model).size();will(returnValue(4));
+//	            atLeast(1).of(model).entrySet();will(returnValue(m.entrySet()));
 	            
+	            atLeast(1).of(tm).getAvailableTasks("PIPATask", "ORDER BY T._creationDate");will(returnValue(tasks));
+//	            tm.getAvailableTasks("PIPATask", "ORDER BY T._creationDate");will(returnValue(tasks));
+	            atLeast(1).of(tm).getAvailableTasks("PATask", "NOT T._state = TaskState.COMPLETED ORDER BY T._creationDate");
+	            ignoring(model);
+	            one(req).getParameter("update");will(returnValue("false"));
 	    	}});
+	    	
 	    	
 	    	ta.setRequest(req);
 	    	ta.setResponse(res);

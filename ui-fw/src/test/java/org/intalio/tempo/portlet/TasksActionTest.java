@@ -9,8 +9,11 @@ import javax.servlet.http.HttpSession;
 import junit.framework.TestCase;
 
 import org.apache.pluto.wrappers.PortletRequestWrapper;
+import org.intalio.tempo.uiframework.Configuration;
 import org.intalio.tempo.uiframework.UIFWApplicationState;
 import org.intalio.tempo.uiframework.actions.TasksCollector;
+import org.intalio.tempo.uiframework.forms.FormManager;
+import org.intalio.tempo.uiframework.forms.FormManagerBroker;
 import org.intalio.tempo.web.User;
 import org.jmock.Expectations;
 import org.junit.runner.RunWith;
@@ -42,11 +45,17 @@ public class TasksActionTest extends TestCase {
 	    @Mock Map<String, Object> model;
 	    @Mock User user;
 	    @Stub HashMap<String, Object> m;
+	    @Mock FormManager formManager;
 	    
 	    @Specification
 	    public void testExecute() throws Exception{
+	    	
+	    	FormManagerBroker.getInstance().setFormManager(formManager);
+	    	
 	    	//model = new HashMap<String, Object>();
 	    	ta = new TasksAction();
+	    	
+	    	
 	    	
 	    	final String token = "token1";
 	    	final String user1 = "user1";
@@ -80,7 +89,7 @@ public class TasksActionTest extends TestCase {
 	            one(req).getParameter("update");will(returnValue("false"));
 	            
 	    	}});
-	    	
+	    	Configuration.getInstance().setServiceEndpoint("http://www.intalio.org");
 	    	ta.setRequest(req);
 	    	ta.setResponse(res);
 	    	ta.setBindErrors(be);

@@ -48,10 +48,15 @@ public class TasksCollector {
         this._endpoint = conf.getServiceEndpoint();
     }
 
+    protected ITaskManagementService getTaskManager(String endpoint, String token){
+    	return new RemoteTMSFactory(endpoint, token).getService();
+    }
+
     public void retrieveTasks() throws Exception {
         final FormManager fmanager = FormManagerBroker.getInstance().getFormManager();
         final String endpoint = URIUtils.resolveURI(_request, _endpoint);
-        final ITaskManagementService taskManager = new RemoteTMSFactory(endpoint, _token).getService();
+       // final ITaskManagementService taskManager = new RemoteTMSFactory(endpoint, _token).getService();
+        final ITaskManagementService taskManager = getTaskManager(endpoint, _token);
 
         collectTasks(_token, _user, fmanager, taskManager, "Notification", "NOT T._state = TaskState.COMPLETED ORDER BY T._creationDate", _notifications);
         collectTasks(_token, _user, fmanager, taskManager, "PIPATask", "ORDER BY T._creationDate", _initTasks);

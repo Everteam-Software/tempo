@@ -109,6 +109,10 @@ public class TasksCollectionAdapter extends AbstractCollectionAdapter {
         PROCESSES, TASKS, ALL
     }
 
+    protected ITaskManagementService getClient(String token){
+    	return new RemoteTMSFactory(Configuration.getInstance().getServiceEndpoint(), token).getService();
+    }
+    
     private Document<Feed> getFeedDocument(RequestContext context) throws ResponseContextException {
 
         Target target = context.getTarget();
@@ -146,7 +150,8 @@ public class TasksCollectionAdapter extends AbstractCollectionAdapter {
         feed.setMustPreserveWhitespace(true);
         feed.setUpdated(new Date());
         try {
-            ITaskManagementService client = new RemoteTMSFactory(Configuration.getInstance().getServiceEndpoint(), token).getService();
+//            ITaskManagementService client = new RemoteTMSFactory(Configuration.getInstance().getServiceEndpoint(), token).getService();
+        	ITaskManagementService client = getClient(token);
             if (collection.equalsIgnoreCase(IntalioFeeds.PROCESSES.name())) {
                 feed.setTitle("Intalio Processes");
                 addTasksToFeed(context, feed, client.getAvailableTasks(PIPATask.class.getSimpleName(), null), token, user);
