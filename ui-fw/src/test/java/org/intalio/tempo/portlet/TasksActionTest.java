@@ -78,9 +78,6 @@ public class TasksActionTest extends TestCase {
 	            atLeast(1).of(model).put("activityTasks", tc.get_activityTasks());
 	            atLeast(1).of(model).put("notifications", tc.get_notifications());
 	            atLeast(1).of(model).put("initTasks", tc.get_initTasks());	            
-//	            atLeast(1).of(req).getScheme();will(returnValue("schema"));
-//	            atLeast(1).of(req).getServerName();will(returnValue("www.intalio.com"));
-//	            atLeast(1).of(req).getServerPort();will(returnValue(80));
 	            atLeast(1).of(model).put("participantToken", token);
 	            atLeast(1).of(model).put("currentUser", user1);
 	            atLeast(1).of(model).put("refreshTime", 5);
@@ -93,8 +90,15 @@ public class TasksActionTest extends TestCase {
 	    	ta.setRequest(req);
 	    	ta.setResponse(res);
 	    	ta.setBindErrors(be);
-	    	assertNotNull(ta.execute());
-	    	assertNotNull(ta.execute());
+	    	ta.setCommand("command");
+	    	ta.setRequiredRoles(new String[]{"role1"});
+	    	assertTrue(ta.getBindErrors().equals(be));
+	    	assertTrue(ta.getRequest().equals(req));
+	    	assertTrue(ta.getResponse().equals(res));
+	    	assertTrue(ta.getCommand().equals("command"));
+	    	assertTrue(ta.getRequiredRoles()[0].equals("role1"));
+	    	assertNotNull(ta.doExecution());
+	    	assertNotNull(ta.doExecution());
 	    	assertNotNull(ta.getErrorView());
 	    	
 	    }
