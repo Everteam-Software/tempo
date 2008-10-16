@@ -105,7 +105,7 @@
 			</tr>
 			<tr height="90%">
 				<td width="100%">
-					<iframe id="taskform" id="taskform" name="taskform">
+					<iframe id="taskform" name="taskform">
 						<fmt:message key="com_intalio_bpms_not_suport_frame_msg"/>
 					</iframe>
 				

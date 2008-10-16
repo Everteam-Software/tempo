@@ -43,7 +43,7 @@ var EntryForm = function(){
 			//obj.style.height = "400%";
 			//obj.setAttribute("height", "400")
 			obj.height="300";
-			obj.id="xForm";
+			obj.id="taskform";
 
 			var tempUrl = url.split("&amp;");
 			var newUrl = tempUrl.join("&");
