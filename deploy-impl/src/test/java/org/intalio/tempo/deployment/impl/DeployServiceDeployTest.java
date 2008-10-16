@@ -390,6 +390,27 @@ public class DeployServiceDeployTest extends TestCase {
         assertFalse(new File(_deployDir, "assembly1.deployed").exists());
     }
     
+     public void testStartup() throws Exception {
+        LOG.info("testStartup");
+        File assemblyDir = TestUtils.getAssemblyDir("assembly1");
+        
+        // pretend assembly is already deployed
+        Utils.createFile(new File(_deployDir, "assembly1.deployed"));
+        
+        Utils.copyRecursively(assemblyDir, new File(_deployDir, "assembly1"));
+        
+        service.setScanPeriod(1);
+        start();
+
+        AssemblyId aid = new AssemblyId("assembly1");
+        ComponentId cid = new ComponentId(aid, "component1");
+        
+        assertTrue(manager.isActivated(cid));
+        assertTrue(manager.isStarted(cid));
+        
+        service.stop();
+    }
+
     void wait(int seconds) {
         try {
             Thread.sleep(seconds*1000);

@@ -96,6 +96,18 @@ public class MockComponentManager implements ComponentManager {
         return _components.containsKey(name);
     }
     
+    public boolean isActivated(ComponentId name) {
+        Component c = _components.get(name);
+        if (c == null) throw new RuntimeException("Component "+name+" not deployed");
+        return c._activated;
+    }
+
+    public boolean isStarted(ComponentId name) {
+        Component c = _components.get(name);
+        if (c == null) throw new RuntimeException("Component "+name+" not deployed");
+        return c._started;
+    }
+
     class Component {
         ComponentId _name;
         File _path;
