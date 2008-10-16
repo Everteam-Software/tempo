@@ -91,6 +91,8 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
      * OdeComponentManager
      */
     private final Map<String, ComponentManager> _componentManagers = Collections.synchronizedMap(new HashMap<String, ComponentManager>());
+    
+    private final Set<AssemblyId> _started = new HashSet<AssemblyId>();
 
     private final Object LIFECYCLE_LOCK = new Object();
 
@@ -477,12 +479,12 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
             for (int i = 0; i < files.length; ++i) {
                 if (files[i].isDirectory()) {
                     AssemblyId aid = parseAssemblyId(files[i].getName());
+                    if (isMarkedAsDeployed(aid) && !deployedMap.containsKey(aid)) {
+                        setMarkedAsDeployed(aid, false);
+                    }
                     if (!isMarkedAsDeployed(aid) && !isMarkedAsInvalid(aid)) {
                         try {
                             DeploymentResult result = deployExplodedAssembly(files[i]);
-                            if (_serviceState == ServiceState.STARTED) {
-                                activateAndStart(aid);
-                            }
                             if (result.isSuccessful())
                                 LOG.info(_("Deployed Assembly: {0}", result));
                             else 
@@ -495,6 +497,18 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
                         }
                     }
                 }
+            }
+            
+            // phase 3: start all assemblies not started yet
+            if (_serviceState == ServiceState.STARTED) {
+                List<DeployedAssembly> start = new ArrayList<DeployedAssembly>();
+                deployedMap = loadDeployedState();
+                for (DeployedAssembly assembly : deployedMap.values()) {
+                    if (!_started.contains(assembly.getAssemblyId())) {
+                        start.add(assembly);
+                    }
+                }
+                activateAndStart(start);
             }
         }
     }
@@ -585,6 +599,9 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
         // Phase 1: Activate all components of all assemblies
         List<DeployedComponent> activated = new ArrayList<DeployedComponent>();
         for (DeployedAssembly assembly : assemblies) {
+            if (_started.contains(assembly)) {
+                continue;
+            }
             for (DeployedComponent dc : assembly.getDeployedComponents()) {
                 try {
                     LOG.debug(_("Activate component {0}", dc));
@@ -603,6 +620,10 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
         if (success) {
             // Phase 2: Startup all components
             for (DeployedAssembly assembly : assemblies) {
+                if (_started.contains(assembly)) {
+                    LOG.error(_("Assembly already started: {0}"));
+                    continue;
+                }
                 for (DeployedComponent dc : assembly.getDeployedComponents()) {
                     try {
                         LOG.debug(_("Start component {0}", dc));
@@ -613,6 +634,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
                         LOG.error(msg, except);
                     }
                 }
+                _started.add(assembly.getAssemblyId());
             }
         } else {
             for (DeployedComponent dc : activated) {
@@ -623,6 +645,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
                     String msg = _("Error during deactivation of component {0} after startup failure: {1}", dc.getComponentId(), except);
                     LOG.error(msg, except);
                 }
+                _started.remove(dc.getComponentId().getAssemblyId());
             }
         }
         return success;
@@ -648,6 +671,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
                     LOG.error(msg, except);
                 }
             }
+            _started.remove(assembly);
         }
 
         // Phase 2: Deactivate all components
