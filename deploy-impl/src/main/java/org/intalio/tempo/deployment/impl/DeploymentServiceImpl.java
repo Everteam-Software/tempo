@@ -91,6 +91,8 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
      * OdeComponentManager
      */
     private final Map<String, ComponentManager> _componentManagers = Collections.synchronizedMap(new HashMap<String, ComponentManager>());
+    
+    private final Set<AssemblyId> _started = new HashSet<AssemblyId>();
 
     private final Object LIFECYCLE_LOCK = new Object();
 
@@ -218,8 +220,10 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
             _serviceState = ServiceState.STOPPING;
             LOG.info(_("DeploymentService state is now STOPPING"));
 
-            Collection<DeployedAssembly> assemblies = getDeployedAssemblies();
-            stopAndDeactivate(assemblies);
+            synchronized (DEPLOY_LOCK) {
+                Collection<DeployedAssembly> assemblies = getDeployedAssemblies();
+                stopAndDeactivate(assemblies);
+            }
 
             _serviceState = null;
             LOG.info(_("DeploymentService state is now STOPPED"));
@@ -242,27 +246,27 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
             return convertToResult(except, newAssemblyId(assemblyName));
         }
 
-        AssemblyId aid = versionAssemblyId(assemblyName);
-        if (replaceExistingAssemblies) {
-            Collection<DeployedAssembly> deployed = getDeployedAssemblies();
-            for (DeployedAssembly da : deployed) {
-                if (da.getAssemblyId().getAssemblyName().equals(aid.getAssemblyName())) {
-                    try {
-                        stopAndDeactivate(da.getAssemblyId());
-                        DeploymentResult result = undeployAssembly(da);
-                        Utils.deleteRecursively(new File(da.getAssemblyDir()));
-                        if (!result.isSuccessful()) {
-                            return result;
+        synchronized (DEPLOY_LOCK) {
+            AssemblyId aid = versionAssemblyId(assemblyName);
+            if (replaceExistingAssemblies) {
+                Collection<DeployedAssembly> deployed = getDeployedAssemblies();
+                for (DeployedAssembly da : deployed) {
+                    if (da.getAssemblyId().getAssemblyName().equals(aid.getAssemblyName())) {
+                        try {
+                            stopAndDeactivate(da.getAssemblyId());
+                            DeploymentResult result = undeployAssembly(da);
+                            Utils.deleteRecursively(new File(da.getAssemblyDir()));
+                            if (!result.isSuccessful()) {
+                                return result;
+                            }
+                        } catch (Exception except) {
+                            LOG.error(_("Error while undeploying assembly {0}", da.getAssemblyId()), except);
+                            return convertToResult(except, aid);
                         }
-                    } catch (Exception except) {
-                        LOG.error(_("Error while undeploying assembly {0}", da.getAssemblyId()), except);
-                        return convertToResult(except, aid);
                     }
                 }
             }
-        }
 
-        synchronized (DEPLOY_LOCK) {
             try {
                 setMarkedAsInvalid(aid, true);
 
@@ -403,15 +407,17 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
         assertStarted();
         if (!exist(aid))
             return errorResult(aid, "Assembly directory does not exist: {0}", aid);
-        DeployedAssembly assembly = loadAssemblyState(aid);
-        stopAndDeactivate(aid);
-        try {
-            return undeployAssembly(assembly);
-        } finally {
+        synchronized (DEPLOY_LOCK) {
+            DeployedAssembly assembly = loadAssemblyState(aid);
+            stopAndDeactivate(aid);
             try {
-                Utils.deleteRecursively(new File(assembly.getAssemblyDir()));
-            } catch (Exception e) {
-                LOG.warn(_("Exception while undeploying assembly {0}: {1}", assembly.getAssemblyId(), e.toString()));
+                return undeployAssembly(assembly);
+            } finally {
+                try {
+                    Utils.deleteRecursively(new File(assembly.getAssemblyDir()));
+                } catch (Exception e) {
+                    LOG.warn(_("Exception while undeploying assembly {0}: {1}", assembly.getAssemblyId(), e.toString()));
+                }
             }
         }
     }
@@ -477,12 +483,12 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
             for (int i = 0; i < files.length; ++i) {
                 if (files[i].isDirectory()) {
                     AssemblyId aid = parseAssemblyId(files[i].getName());
+                    if (isMarkedAsDeployed(aid) && !deployedMap.containsKey(aid)) {
+                        setMarkedAsDeployed(aid, false);
+                    }
                     if (!isMarkedAsDeployed(aid) && !isMarkedAsInvalid(aid)) {
                         try {
                             DeploymentResult result = deployExplodedAssembly(files[i]);
-                            if (_serviceState == ServiceState.STARTED) {
-                                activateAndStart(aid);
-                            }
                             if (result.isSuccessful())
                                 LOG.info(_("Deployed Assembly: {0}", result));
                             else 
@@ -495,6 +501,18 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
                         }
                     }
                 }
+            }
+            
+            // phase 3: start all assemblies not started yet
+            if (_serviceState == ServiceState.STARTED) {
+                List<DeployedAssembly> start = new ArrayList<DeployedAssembly>();
+                deployedMap = loadDeployedState();
+                for (DeployedAssembly assembly : deployedMap.values()) {
+                    if (!_started.contains(assembly.getAssemblyId())) {
+                        start.add(assembly);
+                    }
+                }
+                activateAndStart(start);
             }
         }
     }
@@ -585,6 +603,9 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
         // Phase 1: Activate all components of all assemblies
         List<DeployedComponent> activated = new ArrayList<DeployedComponent>();
         for (DeployedAssembly assembly : assemblies) {
+            if (_started.contains(assembly)) {
+                continue;
+            }
             for (DeployedComponent dc : assembly.getDeployedComponents()) {
                 try {
                     LOG.debug(_("Activate component {0}", dc));
@@ -603,6 +624,10 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
         if (success) {
             // Phase 2: Startup all components
             for (DeployedAssembly assembly : assemblies) {
+                if (_started.contains(assembly)) {
+                    LOG.error(_("Assembly already started: {0}"));
+                    continue;
+                }
                 for (DeployedComponent dc : assembly.getDeployedComponents()) {
                     try {
                         LOG.debug(_("Start component {0}", dc));
@@ -613,6 +638,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
                         LOG.error(msg, except);
                     }
                 }
+                _started.add(assembly.getAssemblyId());
             }
         } else {
             for (DeployedComponent dc : activated) {
@@ -623,6 +649,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
                     String msg = _("Error during deactivation of component {0} after startup failure: {1}", dc.getComponentId(), except);
                     LOG.error(msg, except);
                 }
+                _started.remove(dc.getComponentId().getAssemblyId());
             }
         }
         return success;
@@ -648,6 +675,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
                     LOG.error(msg, except);
                 }
             }
+            _started.remove(assembly);
         }
 
         // Phase 2: Deactivate all components
