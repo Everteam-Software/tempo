@@ -220,8 +220,10 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
             _serviceState = ServiceState.STOPPING;
             LOG.info(_("DeploymentService state is now STOPPING"));
 
-            Collection<DeployedAssembly> assemblies = getDeployedAssemblies();
-            stopAndDeactivate(assemblies);
+            synchronized (DEPLOY_LOCK) {
+                Collection<DeployedAssembly> assemblies = getDeployedAssemblies();
+                stopAndDeactivate(assemblies);
+            }
 
             _serviceState = null;
             LOG.info(_("DeploymentService state is now STOPPED"));
@@ -244,27 +246,27 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
             return convertToResult(except, newAssemblyId(assemblyName));
         }
 
-        AssemblyId aid = versionAssemblyId(assemblyName);
-        if (replaceExistingAssemblies) {
-            Collection<DeployedAssembly> deployed = getDeployedAssemblies();
-            for (DeployedAssembly da : deployed) {
-                if (da.getAssemblyId().getAssemblyName().equals(aid.getAssemblyName())) {
-                    try {
-                        stopAndDeactivate(da.getAssemblyId());
-                        DeploymentResult result = undeployAssembly(da);
-                        Utils.deleteRecursively(new File(da.getAssemblyDir()));
-                        if (!result.isSuccessful()) {
-                            return result;
+        synchronized (DEPLOY_LOCK) {
+            AssemblyId aid = versionAssemblyId(assemblyName);
+            if (replaceExistingAssemblies) {
+                Collection<DeployedAssembly> deployed = getDeployedAssemblies();
+                for (DeployedAssembly da : deployed) {
+                    if (da.getAssemblyId().getAssemblyName().equals(aid.getAssemblyName())) {
+                        try {
+                            stopAndDeactivate(da.getAssemblyId());
+                            DeploymentResult result = undeployAssembly(da);
+                            Utils.deleteRecursively(new File(da.getAssemblyDir()));
+                            if (!result.isSuccessful()) {
+                                return result;
+                            }
+                        } catch (Exception except) {
+                            LOG.error(_("Error while undeploying assembly {0}", da.getAssemblyId()), except);
+                            return convertToResult(except, aid);
                         }
-                    } catch (Exception except) {
-                        LOG.error(_("Error while undeploying assembly {0}", da.getAssemblyId()), except);
-                        return convertToResult(except, aid);
                     }
                 }
             }
-        }
 
-        synchronized (DEPLOY_LOCK) {
             try {
                 setMarkedAsInvalid(aid, true);
 
@@ -405,15 +407,17 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
         assertStarted();
         if (!exist(aid))
             return errorResult(aid, "Assembly directory does not exist: {0}", aid);
-        DeployedAssembly assembly = loadAssemblyState(aid);
-        stopAndDeactivate(aid);
-        try {
-            return undeployAssembly(assembly);
-        } finally {
+        synchronized (DEPLOY_LOCK) {
+            DeployedAssembly assembly = loadAssemblyState(aid);
+            stopAndDeactivate(aid);
             try {
-                Utils.deleteRecursively(new File(assembly.getAssemblyDir()));
-            } catch (Exception e) {
-                LOG.warn(_("Exception while undeploying assembly {0}: {1}", assembly.getAssemblyId(), e.toString()));
+                return undeployAssembly(assembly);
+            } finally {
+                try {
+                    Utils.deleteRecursively(new File(assembly.getAssemblyDir()));
+                } catch (Exception e) {
+                    LOG.warn(_("Exception while undeploying assembly {0}: {1}", assembly.getAssemblyId(), e.toString()));
+                }
             }
         }
     }
