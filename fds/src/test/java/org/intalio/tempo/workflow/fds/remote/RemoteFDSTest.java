@@ -19,7 +19,8 @@ public class RemoteFDSTest extends TestCase {
     public void testDispathToOde() throws Exception {
         String[] files = new String[] {
                         "/createMessageToOde.xml",
-                        "/createMessageNoSessionToOde.xml"
+                        "/createMessageNoSessionToOde.xml",
+						"/createMessageNoSessionToOde2.xml"
         };
         for(String filename : files) makeSoapRequestToFDS(filename);
     }
