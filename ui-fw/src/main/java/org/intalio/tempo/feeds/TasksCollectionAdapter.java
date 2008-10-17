@@ -81,6 +81,8 @@ public class TasksCollectionAdapter extends AbstractCollectionAdapter {
         try {
             return getFeedDocument(request).getRoot().getEntry(getEntryID(request));
         } catch (Exception e) {
+            LOG.error(e.getMessage());
+            e.printStackTrace();
         }
         return null;
     }
@@ -89,7 +91,8 @@ public class TasksCollectionAdapter extends AbstractCollectionAdapter {
         if (request.getTarget().getType() != TargetType.TYPE_ENTRY)
             return null;
         String[] segments = request.getUri().toString().split("/");
-        return UrlEncoding.decode(segments[segments.length - 1]);
+        String ret = UrlEncoding.decode(segments[segments.length - 1]);
+        return ret;
     }
 
     public ResponseContext getEntry(RequestContext requestcontext) {
