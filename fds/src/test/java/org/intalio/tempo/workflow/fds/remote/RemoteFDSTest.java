@@ -1,8 +1,12 @@
 package org.intalio.tempo.workflow.fds.remote;
 
+import java.io.IOException;
+
 import junit.framework.TestCase;
 
+import org.apache.commons.httpclient.HttpException;
 import org.dom4j.Document;
+import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
 import org.intalio.tempo.workflow.fds.core.MessageSender;
 
@@ -13,7 +17,15 @@ public class RemoteFDSTest extends TestCase {
     }
 
     public void testDispathToOde() throws Exception {
-        Document doc = createDocument("/createMessageToOde.xml");
+        String[] files = new String[] {
+                        "/createMessageToOde.xml",
+                        "/createMessageNoSessionToOde.xml"
+        };
+        for(String filename : files) makeSoapRequestToFDS(filename);
+    }
+
+    private void makeSoapRequestToFDS(String filename) throws Exception, HttpException, IOException, DocumentException {
+        Document doc = createDocument(filename);
         String endpoint = "http://localhost:8080/ode/processes/workflow/ib4p";
         String soapAction = "createTask";
 

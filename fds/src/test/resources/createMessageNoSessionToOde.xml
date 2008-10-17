@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope
+	xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+	<soapenv:Header>
+		<addr:To xmlns:addr="http://www.w3.org/2005/08/addressing">
+			http://localhost:8080/ode/processes/workflow/ib4p
+		</addr:To>
+		<addr:Action
+			xmlns:addr="http://www.w3.org/2005/08/addressing">
+			createTask
+		</addr:Action>
+		<addr:ReplyTo
+			xmlns:addr="http://www.w3.org/2005/08/addressing">
+			<addr:Address>
+				http://www.w3.org/2005/08/addressing/anonymous
+			</addr:Address>
+		</addr:ReplyTo>
+		<addr:MessageID
+			xmlns:addr="http://www.w3.org/2005/08/addressing">
+			uuid:f12e3f25-7292-49f9-96c7-450fdccf8d45-3
+		</addr:MessageID>
+		<intalio:callback
+			xmlns:intalio="http://www.intalio.com/type/session">
+			<addr:Address
+				xmlns:addr="http://www.w3.org/2005/08/addressing">
+				http://localhost:8080/fds/workflow/ib4p
+			</addr:Address>
+			<intalio:session>
+				f12e3f25-7292-49f9-96c7-450fdccf8d45-1
+			</intalio:session>
+		</intalio:callback>
+	</soapenv:Header>
+	<soapenv:Body>
+		<ib4p:createTaskRequest
+            xmlns:ib4p="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+            xmlns:AbsenceRequest="http://www.intalio.com/workflow/forms/AbsenceRequest/AbsenceRequest"
+            xmlns="http://www.intalio.com/workflow/forms/AbsenceRequest/AbsenceRequest">
+            <ib4p:taskMetaData>
+				<ib4p:taskId>_whFawHm9Ed2JirUo4NhTAw</ib4p:taskId> 
+				<ib4p:taskState /> 
+				<ib4p:taskType /> 
+				<ib4p:description>callcenter-WholesalerReservationProblem</ib4p:description> 
+				<ib4p:processId /> 
+				<ib4p:creationDate /> 
+				<ib4p:userOwner /> 
+				<ib4p:roleOwner>tyredating\callcenter</ib4p:roleOwner> 
+				<ib4p:claimAction> 
+					<ib4p:user /> 
+					<ib4p:role /> 
+				</ib4p:claimAction> 
+				<ib4p:revokeAction> 
+					<ib4p:user /> 
+					<ib4p:role /> 
+				</ib4p:revokeAction> 
+				<ib4p:saveAction> 
+					<ib4p:user /> 
+					<ib4p:role /> 
+				</ib4p:saveAction> 
+				<ib4p:completeAction> 
+					<ib4p:user /> 
+					<ib4p:role /> 
+				</ib4p:completeAction> 
+				<ib4p:formUrl>oxf://TyreCommandDev2/forms/ib4p/ib4p.xform</ib4p:formUrl> 
+				<ib4p:failureCode /> 
+				<ib4p:failureReason /> 
+				<ib4p:priority /> 
+				<ib4p:scheduledActions> 
+					<ib4p:expiration> 
+						<ib4p:until /> 
+						<ib4p:for /> 
+					</ib4p:expiration> 
+					<ib4p:deferActivation> 
+						<ib4p:until /> 
+						<ib4p:for /> 
+					</ib4p:deferActivation> 
+				</ib4p:scheduledActions> 
+				<ib4p:attachments> 
+					<attachment xmlns=""> 
+						<attachmentMetadata> 
+							<mimeType /> 
+							<fileName /> 
+							<title /> 
+							<description>callcenter-WholesalerReservationProblem</description> 
+							<creationDate /> 
+						</attachmentMetadata> 
+						<payloadUrl /> 
+					</attachment> 
+				</ib4p:attachments> 
+
+				<ib4p:userProcessCompleteSOAPAction>http://ws.tyredating.com/forms/ib4p/ib4p/xform/Process/notifyTaskCompletion</ib4p:userProcessCompleteSOAPAction> 
+
+				<ib4p:isChainedBefore /> 
+				<ib4p:previousTaskId /> 
+
+				<ib4p:userProcessEndpoint>http://INTALIO:8080/ode/processes/TyreCommandDev2/processes/CommandeCasPassant/GestionCommande/Call_Center/WFmagic_whFawHm9Ed2JirUo4NhTAw</ib4p:userProcessEndpoint>
+
+
+				<ib4p:userProcessNamespaceURI>http://ws.tyredating.com/forms/ib4p/ib4p/xform</ib4p:userProcessNamespaceURI> 
+
+			</ib4p:taskMetaData> 
+			<ib4p:participantToken xmlns:ib4p="http://ws.tyredating.com/forms/ib4p/ib4p/xform" /> 
+
+			<ib4p:taskInput xmlns:ib4p="http://ws.tyredating.com/forms/ib4p/ib4p/xform"> 
+				<ib4p:input> 
+					<ib4p:orderId /> 
+					<ib4p:processusUuid /> 
+					<ib4p:consumed /> 
+					<ib4p:receivedResponse /> 
+				</ib4p:input> 
+			</ib4p:taskInput> 
+		</ib4p:createTaskRequest>
+	</soapenv:Body>
+</soapenv:Envelope>
