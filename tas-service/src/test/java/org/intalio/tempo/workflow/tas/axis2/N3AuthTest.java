@@ -88,6 +88,18 @@ public class N3AuthTest extends TestCase {
            one(ts).getTokenProperties(SYSTEM_TEST_TOKEN);will(returnValue(p));
         }});       
         n3auth.authenticate(credentials);       
+        
+        final AuthCredentials credentials2 = new AuthCredentials(SYSTEM_TEST_TOKEN);
+        credentials2.getAuthorizedUsers().add("intalio\\jan.lategahn@db.com ");
+        credentials2.getAuthorizedRoles().add("test/testrole23");
+        expect.that(new Expectations(){{
+            Property[] p = new Property[2];
+            p[0] = new Property( AuthenticationConstants.PROPERTY_USER, "intalio\\jan.lategahn@db.com");
+            p[1] = new Property(AuthenticationConstants.PROPERTY_ROLES, "test/testrole23");
+           one(ts).getTokenProperties(SYSTEM_TEST_TOKEN);will(returnValue(p));
+        }});       
+        Property[] p = n3auth.authenticate(credentials2);
+        expect.that(p!=null);
     }
     
     public void testUnauthorized() throws Exception {
