@@ -78,6 +78,10 @@ SPRING = {
   :webmvc_portlet => "org.springframework:spring-webmvc-portlet:jar:2.5.5",
   :webmvc => "org.springframework:spring-webmvc:jar:2.5.5"
 }
+SPRING_MOCK = [
+  "org.springframework:spring-test:jar:2.5.5"
+]
+
 STAX_API = [ "stax:stax-api:jar:1.0.1" ]
 
 TAGLIBS = [ "taglibs:standard:jar:1.1.2" ]
