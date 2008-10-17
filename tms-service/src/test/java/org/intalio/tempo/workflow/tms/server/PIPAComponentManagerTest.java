@@ -37,6 +37,10 @@ public class PIPAComponentManagerTest extends TestCase {
         InputStream is = this.getClass().getResourceAsStream("/AbsenceRequest.pipa");
         DeploymentMessage dm = pcm.checkPipa("token2", is, "pipatest");
         Assert.assertNull(dm);
+        
+        InputStream is2 = this.getClass().getResourceAsStream("/errorPIPARequest.pipa");
+        DeploymentMessage dm2 = pcm.checkPipa("token2", is2, "pipatest");
+        Assert.assertNotNull(dm2);
     }
     @Subject PIPAComponentManager pcm;
     @Mock ComponentId cid;
@@ -76,7 +80,22 @@ public class PIPAComponentManagerTest extends TestCase {
              
          }});
          //InputStream is = this.getClass().getResourceAsStream("/AbsenceRequest.pipa");
-         ComponentManagerResult dm = pcm.deploy(cid, new File("./"));
+         ComponentManagerResult dm = pcm.deploy(cid, new File("./target/test-classes/PIPARequest/"));
          logger.info(dm.toString());
+         dm = pcm.deploy(cid, new File("./target/test-classes/errorPIPARequest/"));
+         logger.info(dm.toString());
+    }
+    
+    @Specification
+    public void testOthers() throws Exception { 
+         PIPAComponentManager pcm = new PIPAComponentManager(Utils.createTMSServerJPA());
+         expect.that(new Expectations(){{
+             
+         }});
+         pcm.activate(cid, new File("./"));
+         pcm.deactivate(cid);
+         pcm.undeploy(cid, null);
+         pcm.start(cid);
+         pcm.stop(cid);
     }
 }
