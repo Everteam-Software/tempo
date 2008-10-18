@@ -23,10 +23,9 @@
         <property name="refreshTime" value="5"/>
         <property name="tokenClient"><ref bean="tokenService"/></property>
     </bean> -->
-
-    <bean id="tokenService" class="org.intalio.tempo.security.ws.TokenClient">
-        <constructor-arg value="http://localhost:8080/axis2/services/TokenService"/>
-    </bean>
+		<bean id="tokenService" class="org.intalio.tempo.web.controller.FakeTokenClient">
+	      <constructor-arg value="http://localhost:8080/axis2/services/TokenService"/>
+	  </bean>
 
   <bean id="applicationState" class="org.intalio.tempo.web.controller.FakeUIFWApplicationState"/>
 </beans>
