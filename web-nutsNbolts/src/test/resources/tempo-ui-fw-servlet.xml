@@ -30,6 +30,7 @@
 			<bean id="loginValidator"
 				class="org.intalio.tempo.web.controller.LoginController$LoginValidator" />
 		</property>
+		<property name="loginPageURL" value="/login.htm" />
 	</bean>
 
 	<!-- Tasks section -->
