@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import junit.framework.TestCase;
 
+import org.intalio.tempo.web.Constants;
 import org.intalio.tempo.web.User;
 import org.junit.Assert;
 import org.junit.Test;
@@ -37,7 +38,7 @@ public class SecuredControllerTest extends TestCase {
     public void testShowFormWithoutUser() throws Exception {
         securedController = (SecuredController) context.getBean("tasksController");
         ModelAndView mav = securedController.showForm(request, response, null);
-        Assert.assertTrue(mav.getView().toString().contains("login.htm"));
+        Assert.assertTrue(mav.getView().toString().contains(Constants.LOGIN_URL));
     }
 
     @Test
@@ -55,7 +56,7 @@ public class SecuredControllerTest extends TestCase {
     public void testProcessFormSubmissionWithoutUser() throws Exception {
         securedController = (SecuredController) context.getBean("tasksController");
         ModelAndView mav = securedController.processFormSubmission(request, response, null, null);
-        Assert.assertTrue(mav.getView().toString().contains("login.htm"));
+        Assert.assertTrue(mav.getView().toString().contains(Constants.LOGIN_URL));
     }
 
     @Test

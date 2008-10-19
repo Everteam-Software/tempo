@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import junit.framework.TestCase;
 
+import org.intalio.tempo.web.Constants;
 import org.intalio.tempo.web.User;
 import org.junit.Assert;
 import org.junit.Test;
@@ -13,11 +14,11 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.validation.BindException;
-import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 import org.springframework.web.servlet.ModelAndView;
+
 
 public class LoginControllerTest extends TestCase {
     private HttpServletRequest request = new MockHttpServletRequest();
@@ -55,7 +56,7 @@ public class LoginControllerTest extends TestCase {
         loginCom.setPassword("no");
         loginController = (LoginController) context.getBean("loginController");
         ModelAndView mav = loginController.logIn(request, response, loginCom, new BindException(loginCom, "test"));
-        Assert.assertEquals(mav.getViewName(), "login");
+        Assert.assertEquals(mav.getViewName(), Constants.LOGIN_VIEW);
     }
 
     @Test
@@ -76,7 +77,7 @@ public class LoginControllerTest extends TestCase {
         loginController = (LoginController) context.getBean("loginController");
         loginController.logIn(request, response, loginCom, new BindException(loginCom, "test"));
         ModelAndView mav = loginController.logOut(request, response, loginCom, new BindException(loginCom, "test"));
-        Assert.assertEquals(mav.getViewName(), "login");
+        Assert.assertEquals(mav.getViewName(), Constants.LOGIN_VIEW);
     }
 
     @Test
@@ -168,7 +169,7 @@ public class LoginControllerTest extends TestCase {
         loginController = (LoginController) context.getBean("loginController");
         loginController.logIn(request, response, loginCom, new BindException(loginCom, "test"));
         ModelAndView mav = loginController.showForm(request, response, new BindException(loginCom, "test"));
-        Assert.assertEquals(mav.getViewName(), "login");
+        Assert.assertEquals(mav.getViewName(), Constants.LOGIN_VIEW);
     }
 
     @Test
@@ -176,7 +177,7 @@ public class LoginControllerTest extends TestCase {
         LoginCommand loginCom = new LoginCommand();
         loginController = (LoginController) context.getBean("loginController");
         ModelAndView mav = loginController.showForm(request, response, new BindException(loginCom, "test"));
-        Assert.assertEquals(mav.getViewName(), "login");
+        Assert.assertEquals(mav.getViewName(), Constants.LOGIN_VIEW);
     }
 
     @Test
@@ -191,21 +192,21 @@ public class LoginControllerTest extends TestCase {
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
         loginController = (LoginController) context.getBean("loginController");
-        loginController.generateSecureRandom(req, res);
+        LoginController.generateSecureRandom(req, res);
         Cookie[] cookies = res.getCookies();
         boolean contains = false;
         for (Cookie cookie : cookies) {
             if (cookie.getName().equalsIgnoreCase("SECURE_RANDOM") && cookie.getValue().length() > 0) {
                 contains = true;
-                loginController.setSecureRandomSession(req, cookie.getValue());
+                LoginController.setSecureRandomSession(req, cookie.getValue());
             }
         }
         assertTrue(contains);
 
-        String random = loginController.getSecureRandomCookie(request);
+        String random = LoginController.getSecureRandomCookie(request);
         assertNull(random);
 
-        assertTrue(loginController.getSecureRandomSession(req).length() > 0);
+        assertTrue(LoginController.getSecureRandomSession(req).length() > 0);
     }
     
     @Test
