@@ -68,9 +68,13 @@ public class N3AuthProvider implements IAuthProvider {
     private TokenService connect2tokenService() throws Exception {
         if (_tokenService == null) {
             _logger.debug("Initialize connect to " + _wsEndpoint);
-            _tokenService = new TokenClient(_wsEndpoint);
+            _tokenService = getTokenClient();
         }
         return _tokenService;
+    }
+    
+    protected TokenClient getTokenClient(){
+        return new TokenClient(_wsEndpoint);
     }
 
 }
