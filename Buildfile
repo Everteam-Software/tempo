@@ -160,7 +160,8 @@ define "tempo" do
 
     test.exclude "*BaseSuite"
     test.exclude "*FuncTestSuite"
-    test.exclude "*ldap*"
+    test.exclude "*LDAPAuthenticationTest*"
+    test.exclude "*LDAPRBACProviderTest*"
     test.with JAXEN, XMLUNIT, INSTINCT
     
     package :jar
