@@ -87,18 +87,18 @@ public class TasksActionTest extends TestCase {
 	            atLeast(1).of(req).getScheme();will(returnValue("schema"));
 	            atLeast(1).of(req).getServerName();will(returnValue("www.intalio.com"));
 	            atLeast(1).of(req).getServerPort();will(returnValue(80));
-	            atLeast(1).of(tm).getAvailableTasks("Notification", "NOT T._state = TaskState.COMPLETED ORDER BY T._creationDate");
+/*	            atLeast(1).of(tm).getAvailableTasks("Notification", "NOT T._state = TaskState.COMPLETED ORDER BY T._creationDate");*/
 	            will(returnValue(tasks));
-	            atLeast(1).of(fm).getURL(tasks[0]);will(returnValue("http://www.intalio.org"));
-//	            atLeast(1).of(model).put("participantToken", token);
-//	            atLeast(1).of(model).put("currentUser", user1);
-//	            atLeast(1).of(model).put("refreshTime", 5);
+/*	            atLeast(1).of(fm).getURL(tasks[0]);will(returnValue("http://www.intalio.org"));*/
+	            atLeast(1).of(model).put("participantToken", token);
+	            atLeast(1).of(model).put("currentUser", user1);
+	            atLeast(1).of(model).put("refreshTime", 5);
 //	            atLeast(1).of(model).size();will(returnValue(4));
-//	            atLeast(1).of(model).entrySet();will(returnValue(m.entrySet()));
+/*	            atLeast(1).of(model).entrySet();will(returnValue(m.entrySet()));*/
 	            
-	            atLeast(1).of(tm).getAvailableTasks("PIPATask", "ORDER BY T._creationDate");will(returnValue(tasks));
+/*	            atLeast(1).of(tm).getAvailableTasks("PIPATask", "ORDER BY T._creationDate");will(returnValue(tasks));*/
 //	            tm.getAvailableTasks("PIPATask", "ORDER BY T._creationDate");will(returnValue(tasks));
-	            atLeast(1).of(tm).getAvailableTasks("PATask", "NOT T._state = TaskState.COMPLETED ORDER BY T._creationDate");
+/*	            atLeast(1).of(tm).getAvailableTasks("PATask", "NOT T._state = TaskState.COMPLETED ORDER BY T._creationDate");*/
 	            ignoring(model);
 	            one(req).getParameter("update");will(returnValue("false"));
 	    	}});

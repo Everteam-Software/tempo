@@ -75,13 +75,11 @@ public class TasksActionTest extends TestCase {
 	            atLeast(1).of(st).getCurrentUser();will(returnValue(user));
 	            atLeast(1).of(user).getToken();will(returnValue(token));
 	            atLeast(1).of(user).getName();will(returnValue(user1));
-	            atLeast(1).of(model).put("activityTasks", tc.get_activityTasks());
-	            atLeast(1).of(model).put("notifications", tc.get_notifications());
-	            atLeast(1).of(model).put("initTasks", tc.get_initTasks());	            
+	            atLeast(1).of(model).put("tasks", tc.getTasks());
 	            atLeast(1).of(model).put("participantToken", token);
 	            atLeast(1).of(model).put("currentUser", user1);
 	            atLeast(1).of(model).put("refreshTime", 5);
-	            atLeast(1).of(model).size();will(returnValue(7));
+	            atLeast(1).of(model).size();will(returnValue(5));
 	            atLeast(1).of(model).entrySet();will(returnValue(m.entrySet()));
 	            one(req).getParameter("update");will(returnValue("false"));
 	            
