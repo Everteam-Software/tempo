@@ -257,6 +257,8 @@ if SERVER == ADD_LIFERAY
   Dir.glob("#{webapp_folder}/ROOT/WEB-INF/lib/util*.jar") {|x| File.copy x, "#{webapp_folder}/ui-fw/WEB-INF/lib", DEBUG}
   # delete some conflict jar files
   Dir.glob(File.join("#{webapp_folder}/ui-fw/WEB-INF/lib", "portlet*.jar")) {|x| File.delete x}
+  # special web.xml with configuration for liferay.
+  File.cp "#{webapp_folder}/ui-fw/WEB-INF/web-cas.xml", "#{webapp_folder}/ui-fw/WEB-INF/web.xml" 
 end
 
 ## Add alfresco portlet if needed
