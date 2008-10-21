@@ -81,7 +81,11 @@
 	t2.parent().parent().hide();
 	t3.parent().parent().hide();
 	}
-	else if(current=='pa') {
+	else {
+	t1.flexReload();
+    t2.flexReload();
+
+	if(current=='pa') {
 		t1.parent().parent().show();
 		t2.parent().parent().hide();
 		t3.parent().parent().hide();
@@ -95,7 +99,9 @@
 		t1.parent().parent().hide();
 		t2.parent().parent().hide();
 		t3.parent().parent().show();
-	} 
+	}
+	}
+	
 	}
 
 	//
