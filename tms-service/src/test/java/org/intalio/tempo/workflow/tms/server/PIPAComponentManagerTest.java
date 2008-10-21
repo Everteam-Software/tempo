@@ -80,10 +80,13 @@ public class PIPAComponentManagerTest extends TestCase {
              
          }});
          //InputStream is = this.getClass().getResourceAsStream("/AbsenceRequest.pipa");
-         ComponentManagerResult dm = pcm.deploy(cid, new File("./target/test-classes/PIPARequest/"));
+         ComponentManagerResult dm = pcm.deploy(cid, getComponentToDeploy("/PIPARequest"));
          logger.info(dm.toString());
-         dm = pcm.deploy(cid, new File("./target/test-classes/errorPIPARequest/"));
+         dm = pcm.deploy(cid, getComponentToDeploy("/errorPIPARequest/"));
          logger.info(dm.toString());
+    }
+    private File getComponentToDeploy(String component) {
+        return new File(this.getClass().getResource(component).getFile());
     }
     
     @Specification
