@@ -56,9 +56,7 @@ public class TasksAction extends Action {
 //            TasksCollector collector = new TasksCollector(new HttpServletRequestWrapper(_request), user, token);
         	 TasksCollector collector = getTaskCollector(user, token);
             collector.retrieveTasks();
-            model.put("activityTasks", collector.get_activityTasks());
-            model.put("notifications", collector.get_notifications());
-            model.put("initTasks", collector.get_initTasks());
+            model.put("tasks", collector.getTasks());
         } catch (Exception ex) {
             _errors.add(new ActionError(-1, null, "com_intalio_bpms_workflow_tasks_retrieve_error", null, ActionError.getStackTrace(ex), null, null));
             _log.error("Error while retrieving task list", ex);

@@ -12,6 +12,7 @@
 package org.intalio.tempo.uiframework.actions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequestWrapper;
@@ -22,19 +23,50 @@ import org.intalio.tempo.uiframework.forms.FormManager;
 import org.intalio.tempo.uiframework.forms.FormManagerBroker;
 import org.intalio.tempo.uiframework.model.TaskHolder;
 import org.intalio.tempo.workflow.auth.AuthException;
+import org.intalio.tempo.workflow.task.Notification;
+import org.intalio.tempo.workflow.task.PATask;
+import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.tms.ITaskManagementService;
 import org.intalio.tempo.workflow.tms.client.RemoteTMSFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import edu.emory.mathcs.backport.java.util.Arrays;
+
 public class TasksCollector {
+
+    final String[] parameters = new String[] { "page", "rp", "sortname", "sortorder", "query", "qtype", "type" };
+
+    final class ParameterMap extends HashMap<String, String> {
+        public ParameterMap() {
+            super(parameters.length);
+            put("page", "1");
+            put("page", "3");
+            put("sortname", "_creationDate");
+            put("sortorder", "DESC");
+            put("query", null);
+            put("qtype", null);
+            put("type", "PATask");
+            init();
+        }
+
+        public void init() {
+            for (String param : parameters) {
+                String value = _request.getParameter(param);
+                if (value != null && !value.equalsIgnoreCase("undefined"))
+                    put(param, value);
+            }
+        }
+
+        public boolean isSet(String param) {
+            return this.containsKey(param) && this.get(param) != null;
+        }
+    }
 
     private static final Logger _log = LoggerFactory.getLogger(TasksCollector.class);
     private final Configuration conf = Configuration.getInstance();
-    private final ArrayList<TaskHolder<Task>> _activityTasks = new ArrayList<TaskHolder<Task>>();
-    private final ArrayList<TaskHolder<Task>> _notifications = new ArrayList<TaskHolder<Task>>();
-    private final ArrayList<TaskHolder<Task>> _initTasks = new ArrayList<TaskHolder<Task>>();
+    private final ArrayList<TaskHolder<Task>> _tasks = new ArrayList<TaskHolder<Task>>();
 
     private HttpServletRequestWrapper _request;
     private String _user;
@@ -58,34 +90,75 @@ public class TasksCollector {
        // final ITaskManagementService taskManager = new RemoteTMSFactory(endpoint, _token).getService();
         final ITaskManagementService taskManager = getTaskManager(endpoint, _token);
 
-        collectTasks(_token, _user, fmanager, taskManager, "Notification", "NOT T._state = TaskState.COMPLETED ORDER BY T._creationDate", _notifications);
-        collectTasks(_token, _user, fmanager, taskManager, "PIPATask", "ORDER BY T._creationDate", _initTasks);
-        collectTasks(_token, _user, fmanager, taskManager, "PATask", "NOT T._state = TaskState.COMPLETED ORDER BY T._creationDate", _activityTasks);
+        ParameterMap params = new ParameterMap();
 
-        if (_log.isDebugEnabled()) {
-            _log.debug("(" + _notifications.size() + ") notifications, (" + _initTasks.size() + ") init tasks, (" + _activityTasks.size()
-                            + ") activities were retrieved for participant token " + _token);
+        String type = params.get("type");
+        if (type.equals(PATask.class.getSimpleName())) {
+            StringBuffer query = new StringBuffer("NOT T._state = TaskState.COMPLETED ");
+            if (params.isSet("qtype"))
+                query.append(" AND T." + params.get("qtype") + " like '%" + params.get("query") + "%'");
+            if (params.isSet("sortname"))
+                query.append(" ORDER BY T." + params.get("sortname"));
+            if (params.isSet("sortorder"))
+                query.append(" " + params.get("sortorder"));
+            collectTasks(_token, _user, fmanager, taskManager, "PATask", query.toString(), _tasks, params.get("rp"), params.get("page"));
+        } else if (type.equals(Notification.class.getSimpleName())) {
+            StringBuffer query = new StringBuffer("NOT T._state = TaskState.COMPLETED ");
+            if (params.isSet("qtype"))
+                query.append(" AND T." + params.get("qtype") + " like '%" + params.get("query") + "%'");
+            if (params.isSet("sortname"))
+                query.append(" ORDER BY T." + params.get("sortname"));
+            if (params.isSet("sortorder"))
+                query.append(" " + params.get("sortorder"));
+            collectTasks(_token, _user, fmanager, taskManager, "Notification", query.toString(), _tasks, params.get("rp"), params.get("page"));
+        } else if (type.equals(PIPATask.class.getSimpleName())) {
+            StringBuffer query = new StringBuffer("");
+            if (params.isSet("qtype"))
+                query.append("T." + params.get("qtype") + " like '%" + params.get("query") + "%'");
+            if (params.isSet("sortname"))
+                query.append(" ORDER BY T." + params.get("sortname"));
+            if (params.isSet("sortorder"))
+                query.append(" " + params.get("sortorder"));
+            collectTasks(_token, _user, fmanager, taskManager, "PIPATask", query.toString(), _tasks, params.get("rp"), params.get("page"));
         }
     }
 
     private void collectTasks(final String token, final String user, FormManager fmanager, ITaskManagementService taskManager, String taskType, String query,
-                    List<TaskHolder<Task>> tasksHolder) throws AuthException {
+                    List<TaskHolder<Task>> tasksHolder, final String taskPerPage, final String page) throws AuthException {
         Task[] tasks = taskManager.getAvailableTasks(taskType, query);
-        for (Task task : tasks) {
+        ArrayList<Task> list = new ArrayList<Task>(Arrays.asList(tasks));
+
+        int total = tasks.length;
+        int itasksPerPage = 0;
+        try {
+            itasksPerPage = Integer.parseInt(taskPerPage);
+        } catch (Exception e) {
+        }
+        int ipage = 1;
+        try {
+            ipage = Integer.parseInt(page);
+        } catch (Exception e) {
+        }
+        int index = (ipage - 1) * itasksPerPage;
+        int toIndex = index + itasksPerPage;
+        if (toIndex > total)
+            toIndex = total;
+        List<Task> list2 = (itasksPerPage == 0 ? list : list.subList(index, toIndex));
+        _request.setAttribute("totalPage", total);
+        _request.setAttribute("currentPage", page);
+
+        for (Task task : list2) {
             tasksHolder.add(new TaskHolder<Task>(task, URIUtils.getResolvedTaskURLAsString(_request, fmanager, task, token, user)));
+        }
+
+        if (_log.isDebugEnabled()) {
+            _log.debug("DEBUG\n" + taskType + "\n" + query + "\n" + list.size());
+            _log.debug("(" + _tasks.size() + ") tasks were retrieved for participant token " + _token);
         }
     }
 
-    public ArrayList<TaskHolder<Task>> get_activityTasks() {
-        return _activityTasks;
-    }
-
-    public ArrayList<TaskHolder<Task>> get_notifications() {
-        return _notifications;
-    }
-
-    public ArrayList<TaskHolder<Task>> get_initTasks() {
-        return _initTasks;
+    public ArrayList<TaskHolder<Task>> getTasks() {
+        return _tasks;
     }
 
 }

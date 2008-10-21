@@ -12,99 +12,60 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<html>
-	<table class="tasks">
-		<tbody class="tasks" id="padata">
-			<c:forEach items="${activityTasks}" var="taskHolder" varStatus="status">
+<%@ page contentType="text/xml" %>
+<c:set var="iconSize" value="12"/>
+<rows>
+	<page><%= request.getAttribute("currentPage") %></page>
+	<total><%= request.getAttribute("totalPage") %></total>
+	<c:choose>
+		<c:when test="${param.type == 'Notification'}">
+			<c:forEach items="${tasks}" var="taskHolder" varStatus="status">
 				<c:set var="taskFullURL" value="${taskHolder.formManagerURL}" />
-				<c:choose>
-					<c:when test="${(status.index%2) == 0}">
-						<tr class="oddTr">
-						</c:when>
-						<c:otherwise>
-							<tr class="evenTr">
-							</c:otherwise>
-						</c:choose>
-						<td>
-							<a href="${taskFullURL}" target="taskform">
-							<c:if test="${(taskHolder.task.state.name) == 'READY'}">
-								<img height="15" width="15" border="0px" src="images/ledblue.png"/>
-							</c:if>
-							<c:if test="${(taskHolder.task.state.name) == 'CLAIMED'}">
-								<img height="15" width="15" border="0px" src="images/lock.png"/>
-							</c:if>
-							</a>
-						</td>
-						<td>
-							<a href="${taskFullURL}" target="taskform">${taskHolder.task.description}</a>
-						</td>
-						<td>
-							<a href="${taskFullURL}" target="taskform">${taskHolder.task.creationDate}</a>
-						</td>
-						<td>
-							<a href="${taskFullURL}" target="taskform">${taskHolder.task.deadline}</a>
-						</td>
-						<td>
-							<a href="${taskFullURL}" target="taskform">${taskHolder.task.priority}</a>
-						</td>
-						<td>
-							<c:if test="${fn:length(taskHolder.task.attachments) > 0}">
-								<c:forEach items="${taskHolder.task.attachments}" var="attachment" varStatus="index">
-									<a href="${attachment.payloadURL}" onClick="window.open('${attachment.payloadURL}', 'newwindow'); return false;"><img height="15" width="15" src="http://www.slcc.edu/shared/shared_vcampus/images/icons/mail.jpg"/></a>
-								</c:forEach>
-							</c:if>							
-						</td>
-					</tr>
-				</c:forEach>
-			</tbody>
-		</table>
-
-		<table>
-			<tbody class="tasks" id="notifdata">
-				<c:forEach items="${notifications}" var="taskHolder" varStatus="status">
-					<c:set var="taskFullURL" value="${taskHolder.formManagerURL}" />
-					<c:choose>
-						<c:when test="${(status.index%2) == 0}">
-							<tr class="oddTr">
+				<row id="${status.index}">
+					<cell><![CDATA[<a href="${taskFullURL}" target="taskform">${taskHolder.task.description}</a>]]></cell>
+					<cell>${taskHolder.task.creationDate}</cell>
+				</row>
+			</c:forEach>
+		</c:when>
+		<c:when test="${param.type == 'PIPATask'}">
+			<c:forEach items="${tasks}" var="taskHolder" varStatus="status">
+				<c:set var="taskFullURL" value="${taskHolder.formManagerURL}" />
+				<row id="${status.index}">
+					<cell><![CDATA[<a href="${taskFullURL}" target="taskform">${taskHolder.task.description}</a>]]></cell>
+					<cell>${taskHolder.task.creationDate}</cell>
+				</row>
+			</c:forEach>
+		</c:when>
+		<c:otherwise>
+			<c:forEach items="${tasks}" var="taskHolder" varStatus="status">
+				<c:set var="taskFullURL" value="${taskHolder.formManagerURL}" />
+				<row id="${status.index}">
+					<cell><![CDATA[<a href="${taskFullURL}" target="taskform">${taskHolder.task.description}</a>]]></cell>
+					<cell>
+						<![CDATA[
+							<c:choose>
+							<c:when test="${(taskHolder.task.state.name) == 'READY'}">
+								<img height="${iconSize}" width="${iconSize}" border="0px" src="images/green-on-48.png"/>
 							</c:when>
-							<c:otherwise>
-								<tr class="evenTr">
-								</c:otherwise>
+							<c:when test="${(taskHolder.task.state.name) == 'CLAIMED'}">
+								<img height="${iconSize}" width="${iconSize}" border="0px" src="images/amber-on-48.png"/>
+							</c:when>
 							</c:choose>
-							<td>
-								<a href="${taskFullURL}" target="taskform"> ${taskHolder.task.description}</a>
-							</td>
-							<td>
-								<a href="${taskFullURL}" target="taskform"> ${taskHolder.task.creationDate}</a>
-							</td>
-							<td>
-								<a href="${taskFullURL}" target="taskform">${taskHolder.task.priority}</a>
-							</td>
-						</tr>
-					</c:forEach>
-				</tbody>
-			</table>
-
-			<table>
-				<tbody class="tasks" id="pipadata">
-					<c:forEach items="${initTasks}" var="taskHolder" varStatus="status">
-						<c:set var="taskFullURL" value="${taskHolder.formManagerURL}" />
-						<c:choose>
-							<c:when test="${(status.index%2) == 0}">
-								<tr class="oddTr">
-								</c:when>
-								<c:otherwise>
-									<tr class="evenTr">
-									</c:otherwise>
-								</c:choose>
-								<td>
-									<a href="${taskFullURL}" target="taskform">${taskHolder.task.description}</a>
-								</td>
-								<td>
-									<a href="${taskFullURL}" target="taskform">${taskHolder.task.creationDate}</a>
-								</td>
-							</tr>
-						</c:forEach>
-					</tbody>
-				</table>
-			</html>
+						]]>
+					</cell>
+					<cell>${taskHolder.task.creationDate}</cell>
+					<cell>${taskHolder.task.deadline}</cell>
+					<cell>${taskHolder.task.priority}</cell>
+					<cell><![CDATA[
+						<c:if test="${fn:length(taskHolder.task.attachments) > 0}">
+							<c:forEach items="${taskHolder.task.attachments}" var="attachment" varStatus="index">
+								<a href="${attachment.payloadURL}" onClick="window.open('${attachment.payloadURL}', 'newwindow'); return false;"><img border="0" height="${iconSize}" width="${iconSize}" src="http://www.slcc.edu/shared/shared_vcampus/images/icons/mail.jpg"/></a>
+							</c:forEach>
+						</c:if>	
+						]]>
+					</cell>
+				</row>
+			</c:forEach>
+		</c:otherwise>
+	</c:choose>
+</rows>

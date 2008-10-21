@@ -126,30 +126,27 @@ a:hover {
 	border-bottom: 1px solid #2B65EC;
 }
 
-.oddTr {
-	background:#f1f5fa;
-}
-
-.evenTr {
-	background:#ffffff;
-}
-
 .tasks {
 	width:95%;
 	position: center;
 	cellspacing:0px;
 	cellpadding:0px;
 	font: Arial Black;
-	font-size: 8px;
+	font-size: 9px;
 }
 .tasks a {
 	font: Arial Black;
-	font-size: 10px;
+	font-size: 12px;
 }
+.tasks .odd {
+	background:#f1f5fa;
+}
+
 
 .line {
 	font: Arial Black;
 	font-size: 8px;
+	height: 30%;
 }
 
 #tasktable div table{
@@ -157,12 +154,16 @@ a:hover {
 	font-size: 8pt;
 	position: center;
 }
+
 #user_logged {
 	font-family: Arial Black;
 }
 
 #taskform {
-	background-image: url(images/gradient-rainbow.png);
+	background-image: url(images/gradient.jpg);
+	background-repeat: repeat-x;
+	background-attachment:fixed;
+	background-position: 0% 100%;
 	border:0px;
 	width:100%;
 	height:100%;
@@ -182,5 +183,18 @@ a:hover {
 #filter {
 	height: 15px;
 	font: 8px;
-	
+}
+
+.pagedisplay {
+	height: 15px;
+	font: 8px;	
+	width: 50px;
+}
+
+#intro {
+	width: 80%;
+	background: #99ccFF;
+	padding:50px;
+	margin: 50px auto;
+	text-align: center;
 }

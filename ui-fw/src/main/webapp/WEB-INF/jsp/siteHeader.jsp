@@ -1,4 +1,4 @@
-<form id="form" name="form" method="POST">
+<form id="form" name="form" method="POST" border="0" cellpadding="0" cellspacing="0" >
 	<input type="hidden" id="actionName" name="actionName" value=""/>
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
 		<tr>

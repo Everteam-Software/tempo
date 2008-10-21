@@ -31,6 +31,13 @@
         <from>/atom/tasks.*</from>
         <to>/atom/tasks</to>		
 	</rule>
+	<rule match-type="regexp">
+		<note>
+        This is to avoid to go through CAS login when accessing the updates
+		</note>
+        <from>/json/update.*</from>
+        <to>/json/update</to>
+	</rule>
 
     <outbound-rule>
         <note>

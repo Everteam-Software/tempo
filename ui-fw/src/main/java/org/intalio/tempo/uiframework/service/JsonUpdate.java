@@ -51,6 +51,7 @@ public class JsonUpdate extends HttpServlet {
         String userName = request.getParameter("user");
         String taskType = request.getParameter("taskType");
         String description = request.getParameter("description");
+        
         if (token != null && userName != null && token.length() > 0 && userName.length() > 0) {
             JSONObject jroot = new JSONObject();
             JSONArray jtasks = new JSONArray();
@@ -63,8 +64,6 @@ public class JsonUpdate extends HttpServlet {
                 String subQuery = "T._description like '%'";
                 if (description != null && description.length() > 0)
                     subQuery = "T._description like '%" + description + "%'";
-//                ITaskManagementService taskManager = getTMS(request, token);
-//                tasks = taskManager.getAvailableTasks(taskType, subQuery);
                 tasks = getTasks(request, token, taskType, subQuery);
 
                 FormManager fmanager = FormManagerBroker.getInstance().getFormManager();
