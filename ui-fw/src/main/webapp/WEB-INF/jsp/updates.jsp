@@ -1,14 +1,3 @@
-<%--
-	Copyright (c) 2005-2008 Intalio inc.
-
-	All rights reserved. This program and the accompanying materials
-	are made available under the terms of the Eclipse Public License v1.0
-	which accompanies this distribution, and is available at
-	http://www.eclipse.org/legal/epl-v10.html
-
-	Contributors:
-	Intalio inc. - initial API and implementation
---%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -42,16 +31,7 @@
 				<row id="${status.index}">
 					<cell><![CDATA[<a href="${taskFullURL}" target="taskform">${taskHolder.task.description}</a>]]></cell>
 					<cell>
-						<![CDATA[
-							<c:choose>
-							<c:when test="${(taskHolder.task.state.name) == 'READY'}">
-								<img height="${iconSize}" width="${iconSize}" border="0px" src="images/green-on-48.png"/>
-							</c:when>
-							<c:when test="${(taskHolder.task.state.name) == 'CLAIMED'}">
-								<img height="${iconSize}" width="${iconSize}" border="0px" src="images/amber-on-48.png"/>
-							</c:when>
-							</c:choose>
-						]]>
+						<img height="${iconSize}" width="${iconSize}" border="0px" src="images/green-on-48.png"/>
 					</cell>
 					<cell>${taskHolder.task.creationDate}</cell>
 					<cell>${taskHolder.task.deadline}</cell>

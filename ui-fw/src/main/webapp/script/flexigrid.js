@@ -17,7 +17,7 @@
 		
 		// apply default properties
 		p = $.extend({
-			 height: '100%', //default height
+			 height: '80', //default height
 			 width: '100%', //auto width
 			 striped: true, //apply odd even stripes
 			 novstripe: false,
@@ -30,6 +30,8 @@
 			 errormsg: 'Connection Error',
 			 usepager: true, //
 			 nowrap: true, //
+			 query: '',
+			 qtype: '',
 			 page: 1, //current page
 			 total: 1, //total pages
 			 useRp: true, //use the results per page select box
@@ -38,8 +40,6 @@
 			 title: false,
 			 pagestat: 'Displaying {from} to {to} of {total} items',
 			 procmsg: 'Processing, please wait ...',
-			 query: '',
-			 qtype: '',
 			 nomsg: 'No items',
 			 minColToggle: 1, //minimum allowed column to be hidden
 			 showToggleBtn: true, //show or hide column toggle popup

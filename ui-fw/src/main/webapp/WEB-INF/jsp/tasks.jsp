@@ -22,7 +22,7 @@
 		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
 		<link rel="stylesheet" type="text/css" href="style.css" />
 		<link rel="stylesheet" type="text/css" href="style/tabs.css"/>
-		<link rel="stylesheet" type="text/css" href="style/flexigrid.css">
+		<link rel="stylesheet" type="text/css" href="/ui-fw/style/flexigrid.css">
 		
 		<link rel="alternate" type="application/atom+xml" title="Personal Task feed" href="/feeds/atom/tasks?token=${participantToken}"/>
 		<link rel="alternate" type="application/atom+xml" title="Process feed" href="/feeds/atom/processes?token=${participantToken}"/>
@@ -30,12 +30,12 @@
 		<script type="text/javascript" src="script/ui-fw.js"></script>
 		<script type="text/javascript" src="script/jquery.js"></script>
 		<script type="text/javascript" src="script/jtabber.js"></script>
-		<script type="text/javascript" src="script/jquery-timer.js"></script>
 		<script type="text/javascript" src="script/flexigrid.js"></script>
 		<script type="text/javascript" src="script/jquery.jcorners.js"></script>
 		<script type="text/javascript" src="script/jquery.demensions.js"></script>
-		
-		<%@ include file="/script/flexigrid.jsp"%>
+	
+		<%@ include file="/script/grids.jsp"%>
+			
 	</head>
 	<body>
 		<table height="100%" width="100%">
@@ -50,30 +50,14 @@
 							<li class="intro"><img src="images/bouncing.gif"/></li>
 						</ul>
 					</div>
-					
-					<div id="intro" class="intro">
-						<h3>Welcome to TEMPO</h3>
-						<p>
-							Start your session by clicking on the tab you want to start working with.
-							<br/>
-							You can find more information on the <a href="http://tempo.intalio.org" target="_new">tempo website</a>.
-							<br/>
-							And of course, find your best samples and tutorials at the <a target="_new" href="http://bpms.intalio.com">Intalio Library</a>.
-							<br />
-						</p>
-						<p>
-						</p>
-					</div>
 						
 					<div id="tasktable">
-						<div id="pa">
+						<div class="hiddencontent" id="pa">
 							<table id="table1" style="display:none"></table>
 						</div>
-
 						<div class="hiddencontent" id="notif">
 							<table id="table2" style="display:none"></table>
 						</div>
-						
 						<div class="hiddencontent" id="pipa">
 							<table id="table3" style="display:none"></table>
 						</div>
@@ -82,9 +66,22 @@
 			</tr>
 			<tr height="95%">
 				<td width="100%">
-					<iframe id="taskform" name="taskform">
-						<fmt:message key="com_intalio_bpms_not_suport_frame_msg"/>
-					</iframe>
+					<div class="intro">
+						<div id="intro">
+							<h3>Welcome to TEMPO</h3>
+							<p>
+								Start your session by clicking on the tab you want to start working with.
+								<br/>
+								You can find more information on the <a href="http://tempo.intalio.org" target="_new">tempo website</a>.
+								<br/>
+								And of course, find your best samples and tutorials at the <a target="_new" href="http://bpms.intalio.com">Intalio Library</a>.
+								<br />
+							</p>
+							<p>
+							</p>
+						</div>
+					</div>
+					<iframe name="taskform" height="auto" width="auto" FRAMEBORDER="0" id="taskform" SCROLLING="auto"></iframe>
 				</td>
 			</tr>
 			<tr>
