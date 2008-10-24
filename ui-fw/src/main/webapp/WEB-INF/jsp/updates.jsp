@@ -12,7 +12,7 @@
 				<c:set var="taskFullURL" value="${taskHolder.formManagerURL}" />
 				<row id="${status.index}">
 					<cell><![CDATA[<a href="${taskFullURL}" target="taskform">${taskHolder.task.description}</a>]]></cell>
-					<cell>${taskHolder.task.creationDate}</cell>
+					<cell><![CDATA[<a href="${taskFullURL}" target="taskform">${taskHolder.task.creationDate}</a>]]></cell>
 				</row>
 			</c:forEach>
 		</c:when>
@@ -21,7 +21,7 @@
 				<c:set var="taskFullURL" value="${taskHolder.formManagerURL}" />
 				<row id="${status.index}">
 					<cell><![CDATA[<a href="${taskFullURL}" target="taskform">${taskHolder.task.description}</a>]]></cell>
-					<cell>${taskHolder.task.creationDate}</cell>
+					<cell><![CDATA[<a href="${taskFullURL}" target="taskform">${taskHolder.task.creationDate}</a>]]></cell>
 				</row>
 			</c:forEach>
 		</c:when>
@@ -33,7 +33,7 @@
 					<cell>
 						<img height="${iconSize}" width="${iconSize}" border="0px" src="images/green-on-48.png"/>
 					</cell>
-					<cell>${taskHolder.task.creationDate}</cell>
+					<cell><![CDATA[<a href="${taskFullURL}" target="taskform">${taskHolder.task.creationDate}</a>]]></cell>
 					<cell>${taskHolder.task.deadline}</cell>
 					<cell>${taskHolder.task.priority}</cell>
 					<cell><![CDATA[
