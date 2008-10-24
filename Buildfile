@@ -6,7 +6,7 @@ require "buildr/xmlbeans"
 require "buildr/cobertura"
 
 # Keep this structure to allow the build system to update version numbers.
-VERSION_NUMBER = "6.0.0.3-SNAPSHOT"
+VERSION_NUMBER = "6.0.0.3"
 NEXT_VERSION = "6.0.0.4"
 
 require "rsc/build/dependencies.rb"
@@ -310,6 +310,7 @@ define "tempo" do
            JSTL,
            LOG4J,
            PLUTO,
+           PORTLET_API, 
            SPRING[:core], 
            SPRING[:webmvc],
            SPRING[:webmvc_portlet],
@@ -323,7 +324,7 @@ define "tempo" do
            XERCES, 
            XMLBEANS
            
-    compile.with libs, JSP_API, PORTLET_API, SERVLET_API, CAS_CLIENT
+    compile.with libs, JSP_API, SERVLET_API, CAS_CLIENT
 
     resources.filter.using "version" => VERSION_NUMBER
     test.with JAXEN, XMLUNIT, INSTINCT
