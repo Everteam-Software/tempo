@@ -30,8 +30,16 @@
 				<c:set var="taskFullURL" value="${taskHolder.formManagerURL}" />
 				<row id="${status.index}">
 					<cell><![CDATA[<a href="${taskFullURL}" target="taskform">${taskHolder.task.description}</a>]]></cell>
-					<cell>
-						<img height="${iconSize}" width="${iconSize}" border="0px" src="images/green-on-48.png"/>
+					<cell><![CDATA[
+						<a href="${taskFullURL}" target="taskform">
+						<c:if test="${taskHolder.task.state =='CLAIMED'}">
+     						<img height="${iconSize}" width="${iconSize}" border="0px" src="images/amber-on-48.png"/>
+						</c:if>
+						<c:if test="${taskHolder.task.state =='READY'}">
+	    					<img height="${iconSize}" width="${iconSize}" border="0px" src="images/green-on-48.png"/>
+						</c:if>
+						</a>
+						]]>
 					</cell>
 					<cell><![CDATA[<a href="${taskFullURL}" target="taskform">${taskHolder.task.creationDate}</a>]]></cell>
 					<cell>${taskHolder.task.deadline}</cell>

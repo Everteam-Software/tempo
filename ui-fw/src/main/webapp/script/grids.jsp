@@ -85,6 +85,8 @@
 			t3.parent().parent().hide(speed);
 		}
 		else {
+		    t1.flexReload();
+		    t2.flexReload();
 		if(current==null) {
 			t1.parent().parent().hide(speed);
 			t2.parent().parent().hide(speed);
@@ -138,7 +140,7 @@
 		if(timeout == null || timeout < 1000) timeout = 1000;
 		$.timer(timeout,function(timer) {
 			t1.flexReload();
-			t2.flexReload();
+	    	t2.flexReload();
 		});
 		
 		refresh(false);

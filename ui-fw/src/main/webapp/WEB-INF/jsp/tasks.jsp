@@ -30,12 +30,12 @@
 		<script type="text/javascript" src="script/ui-fw.js"></script>
 		<script type="text/javascript" src="script/jquery.js"></script>
 		<script type="text/javascript" src="script/jtabber.js"></script>
+		<script type="text/javascript" src="script/jquery-timer.js"></script>
 		<script type="text/javascript" src="script/flexigrid.js"></script>
 		<script type="text/javascript" src="script/jquery.jcorners.js"></script>
 		<script type="text/javascript" src="script/jquery.demensions.js"></script>
 	
 		<%@ include file="/script/grids.jsp"%>
-			
 	</head>
 	<body>
 		<table height="100%" width="100%">
