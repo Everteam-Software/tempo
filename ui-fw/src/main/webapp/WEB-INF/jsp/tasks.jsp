@@ -66,7 +66,7 @@
 			</tr>
 			<tr height="95%">
 				<td width="100%">
-					<div class="intro">
+					<div class="intro" id="introhelp">
 						<div id="intro">
 							<h3>Welcome to TEMPO</h3>
 							<p>

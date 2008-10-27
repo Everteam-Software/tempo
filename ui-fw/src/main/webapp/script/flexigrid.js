@@ -17,8 +17,8 @@
 		
 		// apply default properties
 		p = $.extend({
-			 height: 'auto', //default height
-			 width: 'auto', //auto width
+			 height: '250', //default height
+			 width: '100%', //auto width
 			 striped: true, //apply odd even stripes
 			 novstripe: false,
 			 minwidth: 30, //min width of columns

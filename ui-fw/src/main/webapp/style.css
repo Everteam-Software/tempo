@@ -191,11 +191,16 @@ a:hover {
 }
 
 #intro {
-	width: 300px;
-	position: center;
+	width: 400px;
 	height: 150px;
 	background: #99ccFF;
 	padding:20px;
 	margin: 50px auto;
 	text-align: center;
+}
+
+#introhelp {
+	position: absolute;
+	left:200px;
+	top: 200px;
 }

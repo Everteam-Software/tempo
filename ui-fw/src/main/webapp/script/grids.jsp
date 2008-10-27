@@ -142,8 +142,6 @@
 			t1.flexReload();
 	    	t2.flexReload();
 		});
-		
-		refresh(false);
 
 		});
 	</script>
