@@ -34,8 +34,6 @@
 		],	
 		usepager: true,
 		searchitems : [{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description'}],
-		useRp: true,
-		rp: 15,
 		showTableToggleBtn: true,
 		width: width
 		}
@@ -53,8 +51,6 @@
 		],
 		usepager: true,
 		searchitems : [{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description'}],
-		useRp: true,
-		rp: 15,
 		showTableToggleBtn: true,
 		width: width
 		}
@@ -69,8 +65,6 @@
 		],	
 		usepager: true,
 		searchitems : [{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description'}],
-		useRp: true,
-		rp: 15,
 		showTableToggleBtn: true,
 		width: width
 		}
