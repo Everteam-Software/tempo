@@ -119,7 +119,7 @@
 
 		$('#taskform').load(function(){
 			var elo = $('html', window.frames['taskform'].document);
-			var content = elo.html().substring(0,6) == '<head>' // we have some content from xforms-manager
+			var content = elo.html().substring(0,6) == '<head>' && elo.html().length > 500 // we have some content from xforms-manager
 			var visible = $('#taskform').height() != 0;
 			if(visible) {
 				if(!content) {
