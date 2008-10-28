@@ -50,18 +50,12 @@
 							<li class="intro"><img src="images/bouncing.gif"/></li>
 						</ul>
 					</div>
-						
-					<div id="tasktable">
-						<div class="hiddencontent" id="pa">
-							<table id="table1" style="display:none"></table>
-						</div>
-						<div class="hiddencontent" id="notif">
-							<table id="table2" style="display:none"></table>
-						</div>
-						<div class="hiddencontent" id="pipa">
-							<table id="table3" style="display:none"></table>
-						</div>
-					</div>
+				</td>
+			<tr>
+				<td width="100%">
+						<div class="hiddencontent" id="pa"><table id="table1" style="display:none"></table></div>
+						<div class="hiddencontent" id="notif"><table id="table2" style="display:none"></table></div>
+						<div class="hiddencontent" id="pipa"><table id="table3" style="display:none"></table></div>
 				</td>
 			</tr>
 			<tr height="95%">

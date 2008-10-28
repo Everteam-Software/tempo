@@ -23,7 +23,7 @@
 			 novstripe: false,
 			 minwidth: 30, //min width of columns
 			 minheight: 80, //min height of columns
-			 resizable: true, //resizable table
+			 resizable: false, //resizable table
 			 url: false, //ajax url
 			 method: 'POST', // data sending method
 			 dataType: 'xml', // type of data loaded

@@ -149,10 +149,13 @@ a:hover {
 	height: 30%;
 }
 
+#tasktable {
+	float: left;
+}
+
 #tasktable div table{
 	border-width: 0px;
-	font-size: 8pt;
-	position: center;
+	float: left;
 }
 
 #user_logged {
@@ -196,7 +199,6 @@ a:hover {
 	background: #99ccFF;
 	padding:20px;
 	margin: 50px auto;
-	text-align: center;
 }
 
 #introhelp {

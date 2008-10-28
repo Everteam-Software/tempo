@@ -21,10 +21,25 @@
 			mainLinkTag: "#container li a", 
 			activeLinkClass: "active", 
 			hiddenContentClass: "hiddencontent", 
-			showDefaultTab: 1, 
+			showDefaultTab: 0, 
 			effect: 'fade', 
 			effectSpeed: speed 
 		});
+		
+		var t2 = $("#table2").flexigrid({
+		url: "updates.htm?update=true&type=Notification",
+		colModel : [
+		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description', width : width*0.4, sortable : true, align: 'left'},
+		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/>', name : '_creationDate', width : width*0.2, sortable : true, align: 'left'}
+		],	
+		usepager: true,
+		searchitems : [{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description'}],
+		useRp: true,
+		rp: 15,
+		showTableToggleBtn: true,
+		width: width
+		}
+		);
 		
 		var t1 = $("#table1").flexigrid({
 		url: 'updates.htm?update=true&type=PATask',
@@ -45,20 +60,6 @@
 		}
 		);
 		
-		var t2 = $("#table2").flexigrid({
-		url: "updates.htm?update=true&type=Notification",
-		colModel : [
-		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description', width : width*0.4, sortable : true, align: 'left'},
-		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/>', name : '_creationDate', width : width*0.2, sortable : true, align: 'left'}
-		],	
-		usepager: true,
-		searchitems : [{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description'}],
-		useRp: true,
-		rp: 15,
-		showTableToggleBtn: true,
-		width: width
-		}
-		);
 		
 		var t3 = $("#table3").flexigrid({
 		url: "updates.htm?update=true&type=PIPATask",
@@ -98,9 +99,9 @@
 			t3.parent().parent().hide(speed);
 		}
 		else if(current=='notif') {
-			t2.parent().parent().show(speed);
-			t1.parent().parent().hide(speed);
+		    t1.parent().parent().hide(speed);
 			t3.parent().parent().hide(speed);
+			t2.parent().parent().show(speed);
 		}
 		else if(current=='pipa') {
 			t1.parent().parent().hide(speed);
@@ -123,6 +124,7 @@
 
 
 		$('#taskform').load(function(){
+			// TODO: find something clever so that it only refresh the frame when needed.
 			var visible = $('#taskform').height() != 0;
 			if(visible) {
 			    $('#taskform').animate({height:"0px"},speed);
