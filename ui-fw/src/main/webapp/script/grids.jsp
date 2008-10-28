@@ -118,15 +118,19 @@
 
 
 		$('#taskform').load(function(){
-			// TODO: find something clever so that it only refresh the frame when needed.
+			var elo = $('html', window.frames['taskform'].document);
+			var content = elo.html().substring(0,6) == '<head>' // we have some content from xforms-manager
 			var visible = $('#taskform').height() != 0;
 			if(visible) {
+				if(!content) {
 			    $('#taskform').animate({height:"0px"},speed);
 				refresh(true);
+				}
 			} else {
 			    $('#taskform').animate({height:"100%"},speed);
 				refresh(false);
 			}
+
 		});
 		
 		$.jcorners("#intro",{radius:10});
