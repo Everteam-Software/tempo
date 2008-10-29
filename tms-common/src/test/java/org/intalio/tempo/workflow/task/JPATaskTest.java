@@ -77,7 +77,42 @@ public class JPATaskTest {
         // this is to prevent caching at the entity manager level
         em.clear();
     }
-
+    
+    @Test
+    public void avoidClaimComingBack() throws Exception {
+        PATask task1 = new PATask(getUniqueTaskID(), new URI("http://hellonico.net"));
+        task1.setState(TaskState.CLAIMED);
+        task1.getRoleOwners().add("examples\\employee");
+        task1.getUserOwners().add("niko");
+        PATask task2 = new PATask(getUniqueTaskID(), new URI("http://hellonico.net"));
+        task2.setState(TaskState.FAILED);
+        task2.getRoleOwners().add("examples\\employee");
+        task2.getUserOwners().add("niko");
+        PATask task3 = new PATask(getUniqueTaskID(), new URI("http://hellonico.net"));
+        task3.setState(TaskState.READY);
+        task3.getRoleOwners().add("examples\\employee");
+        task3.getUserOwners().add("niko");
+        persist(task1);
+        persist(task2);
+        persist(task3);
+        
+        final TaskFetcher taskFetcher = new TaskFetcher(em);
+        UserRoles ur = new UserRoles("niko", new String[] { "examples\\employee" });
+        Task[] t1 = taskFetcher.fetchAvailableTasks(ur, PATask.class, "");
+        Task[] t2 = taskFetcher.fetchAvailableTasks(ur, PATask.class, "T._state = TaskState.READY OR T._state = TaskState.CLAIMED");
+        UserRoles ur2 = new UserRoles("alex", new String[] { "examples\\employee2" });
+        Task[] t3 = taskFetcher.fetchAvailableTasks(ur2, PATask.class, "T._state = TaskState.READY OR T._state = TaskState.CLAIMED");
+        
+        Assert.assertEquals(3, t1.length);
+        Assert.assertEquals(2, t2.length);
+        Assert.assertEquals(0, t3.length);
+        checkRemoved(new Task[]{task1,task2,task3});
+    }
+    
+    private void checkRemoved(Task[] tasks) {
+        for(Task t : tasks) checkRemoved(t);
+    }
+    
     @Test
     public void faultyQueryWithOpenJPA1_2() throws Exception {
 
