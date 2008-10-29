@@ -98,12 +98,12 @@ public class TaskFetcher {
             buffer.append(QUERY_GENERIC1).append(taskClass.getSimpleName()).append(QUERY_GENERIC2);
             
             String trim = subQuery.toLowerCase().trim();
-            int orderIndex = trim.toLowerCase().indexOf("order");
+            int orderIndex = trim.indexOf("order");
             if(orderIndex==-1) {
                 buffer.append(" and ").append(" ( ").append(subQuery).append(" ) ");    
             } else {
                 if (!trim.startsWith("order"))
-                    buffer.append("and (").append(subQuery.substring(0, orderIndex)).append(")").append(subQuery.substring(orderIndex));
+                    buffer.append("and (").append(subQuery.substring(0, orderIndex)).append(") ").append(subQuery.substring(orderIndex));
                 else {
                     buffer.append(subQuery);
                 }
