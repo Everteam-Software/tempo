@@ -119,7 +119,9 @@
 
 		$('#taskform').load(function(){
 			var elo = $('html', window.frames['taskform'].document);
-			var content = elo.html().substring(0,6) == '<head>' && elo.html().length > 500 // we have some content from xforms-manager
+			var loc = window.frames['taskform'].location;
+			// TODO: let's find a clever way of checking for content independent of the form manager
+			var content = (loc.toString().indexOf('type=PATask')) || (elo.html().substring(0,6) == '<head>' && elo.html().length > 500) 
 			var visible = $('#taskform').height() != 0;
 			if(visible) {
 				if(!content) {
