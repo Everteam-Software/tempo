@@ -75,7 +75,10 @@
 		],	
 		usepager: true,
 		preProcess: preProcess,
-		searchitems : [{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description'}],
+		searchitems : [
+		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description'},
+		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/>', name : '_creationDate'}
+		],
 		showTableToggleBtn: true,
 		width: width
 		}
@@ -123,6 +126,7 @@
 		//
 		$('#tabnav li a').click(function(){
 			clearFrame();
+			$("#filter").val("");
 			if(current==null)  {
 				$(".intro").each(function(){ $(this).hide();});
 				$("#filterdiv").show();
@@ -139,11 +143,10 @@
 		$('#taskform').load(function(){
 			var elo = $('html', window.frames['taskform'].document);
 			var loc = window.frames['taskform'].location;
-
-			// TODO: let's find a clever way of checking for content independent of the form manager
-			var content = (loc.toString().indexOf('type=PATask')!=-1) || (elo.html().substring(0,6) == '<head>' && elo.html().length > 500)
 			var visible = $('#taskform').height() != 0;
 			if(visible) {
+     			// TODO: let's find a clever way of checking for content independent of the form manager
+	    		var content = (loc.toString().indexOf('type=PATask')!=-1) || (elo.html().substring(0,6) == '<head>' && elo.html().length > 500)
 				if(!content) {
 			    $('#taskform').animate({height:"0px"},speed);
 				refresh(true);
