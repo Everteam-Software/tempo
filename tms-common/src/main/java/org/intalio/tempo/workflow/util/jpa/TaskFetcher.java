@@ -96,9 +96,19 @@ public class TaskFetcher {
         } else {
             StringBuffer buffer = new StringBuffer();
             buffer.append(QUERY_GENERIC1).append(taskClass.getSimpleName()).append(QUERY_GENERIC2);
-            if (!subQuery.startsWith("ORDER"))
-                buffer.append(" and ");
-            buffer.append(subQuery);
+            
+            String trim = subQuery.toLowerCase().trim();
+            int orderIndex = trim.toLowerCase().indexOf("order");
+            if(orderIndex==-1) {
+                buffer.append(" and ").append(" ( ").append(subQuery).append(" ) ");    
+            } else {
+                if (!trim.startsWith("order"))
+                    buffer.append("and (").append(subQuery.substring(0, orderIndex)).append(")").append(subQuery.substring(orderIndex));
+                else {
+                    buffer.append(subQuery);
+                }
+            }
+            _logger.error(buffer.toString());
             q = _entityManager.createQuery(buffer.toString()).setParameter(1, userIdList).setParameter(2, user.getAssignedRoles());
         }
         List result = q.getResultList();
