@@ -182,6 +182,11 @@ a:hover {
 	font-size: 8pt;
 }
 
+#filter {
+	height: 15px;
+	font: 8px;
+}
+
 .pagedisplay {
 	height: 15px;
 	font: 8px;	
@@ -200,4 +205,15 @@ a:hover {
 	position: absolute;
 	left:200px;
 	top: 200px;
+}
+
+#filter {
+	font-size: 8px;
+}
+
+#filterdiv {
+	font-size: 8px;
+	font-color: grey;
+	float:left;
+	width: auto;
 }

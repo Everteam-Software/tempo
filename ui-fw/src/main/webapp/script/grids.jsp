@@ -9,6 +9,15 @@
 		window.open("about:blank", "taskform");
 		var width = $(window).width() - 150;
 
+		function preProcess(data) {
+		$("rows row",data).each(function () {
+			if($(this).text().indexOf($("#filter").val())==-1) {
+			  $(this).remove();
+			}
+		});
+		return data;
+		}
+
 		function clearFrame() {
 			$('#taskform').animate({height:"0px"},speed);
 		}
@@ -32,6 +41,7 @@
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description', width : width*0.4, sortable : true, align: 'left'},
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/>', name : '_creationDate', width : width*0.2, sortable : true, align: 'left'}
 		],	
+		preProcess: preProcess,
 		usepager: true,
 		searchitems : [{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description'}],
 		showTableToggleBtn: true,
@@ -50,12 +60,12 @@
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_priority"/>', name : '_priority', width : width*0.1, sortable : true, align: 'center'}
 		],
 		usepager: true,
+		preProcess: preProcess,
 		searchitems : [{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description'}],
 		showTableToggleBtn: true,
 		width: width
 		}
 		);
-		
 		
 		var t3 = $("#table3").flexigrid({
 		url: "updates.htm?update=true&type=PIPATask",
@@ -64,6 +74,7 @@
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/>', name : '_creationDate', width : width*0.2, sortable : true, align: 'left'}
 		],	
 		usepager: true,
+		preProcess: preProcess,
 		searchitems : [{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description'}],
 		showTableToggleBtn: true,
 		width: width
@@ -80,24 +91,25 @@
 			t3.parent().parent().hide(speed);
 		}
 		else {
-		    t1.flexReload();
-		    t2.flexReload();
 		if(current==null) {
 			t1.parent().parent().hide(speed);
 			t2.parent().parent().hide(speed);
 			t3.parent().parent().hide(speed);
 		}
 		else if(current=='pa') {
+			t1.flexReload();
 			t1.parent().parent().show(speed);
 			t2.parent().parent().hide(speed);
 			t3.parent().parent().hide(speed);
 		}
 		else if(current=='notif') {
+			t2.flexReload();
 		    t1.parent().parent().hide(speed);
 			t3.parent().parent().hide(speed);
 			t2.parent().parent().show(speed);
 		}
 		else if(current=='pipa') {
+			t3.flexReload();
 			t1.parent().parent().hide(speed);
 			t2.parent().parent().hide(speed);
 			t3.parent().parent().show(speed);
@@ -111,15 +123,23 @@
 		//
 		$('#tabnav li a').click(function(){
 			clearFrame();
-			if(current==null)  $(".intro").each(function(){ $(this).hide();});
+			if(current==null)  {
+				$(".intro").each(function(){ $(this).hide();});
+				$("#filterdiv").show();
+			}
 			current = $(this).attr("title");
 			refresh(true);
 		});
 
+		$("#filter").change(function() {
+			refresh(true);
+			return false;
+		});
 
 		$('#taskform').load(function(){
 			var elo = $('html', window.frames['taskform'].document);
 			var loc = window.frames['taskform'].location;
+
 			// TODO: let's find a clever way of checking for content independent of the form manager
 			var content = (loc.toString().indexOf('type=PATask')!=-1) || (elo.html().substring(0,6) == '<head>' && elo.html().length > 500)
 			var visible = $('#taskform').height() != 0;
@@ -136,6 +156,7 @@
 		});
 		
 		$.jcorners("#intro",{radius:10});
+		$("#filterdiv").hide();
 		
 		var timeout = <c:out value="${refreshTime}"/> * 1000;
 

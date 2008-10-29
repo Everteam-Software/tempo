@@ -39,6 +39,7 @@
 	</head>
 	<body>
 		<table height="100%" width="100%">
+				
 			<tr width="100%" height="10%">
 				<td width="100%">
 					<%@ include file="/WEB-INF/jsp/siteHeader.jsp"%>
@@ -47,6 +48,7 @@
 							<li><a href="#" title="pa"><fmt:message key="com_intalio_bpms_workflow_tab_tasks"/></a></li>
 							<li><a href="#" title="notif"><fmt:message key="com_intalio_bpms_workflow_tab_notifications"/></a></li>
 							<li><a href="#" title="pipa"><fmt:message key="com_intalio_bpms_workflow_tab_processes"/></a></li>
+							<li><div id="filterdiv" class="filtertext">Quick filtering on showing items<input type="text" id="filter"/></div></li>
 							<li class="intro"><img src="images/bouncing.gif"/></li>
 						</ul>
 					</div>
