@@ -453,9 +453,10 @@
 
 				$("rows row",data).each
 				(
-				 
 				 	function ()
 						{
+							// Added by Niko, because ajax data manipulation is badly supported by IE6
+							if($(this).attr("flexi") == "ignore" ) {return;	}
 							
 							i++;
 							

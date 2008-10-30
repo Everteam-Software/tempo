@@ -10,17 +10,20 @@
 		var width = $(window).width() - 150;
 
 		function preProcess(data) {
-		$("rows row",data).each(function () {
-			if($(this).text().indexOf($("#filter").val())==-1) {
-			  $(this).remove();
-			}
-		});
-		return data;
+    		$("rows row", data).each(function () {
+				var elem = $(this);
+	    		if(elem.text().indexOf($("#filter").val())==-1) {
+					// This has a friend in flexigrid.js (line 456)
+					elem.attr("flexi","ignore");
+				}
+		    });
+			return data;
 		}
 
 		function clearFrame() {
 			$('#taskform').animate({height:"0px"},speed);
 		}
+		
 		clearFrame();
 
 		//
@@ -135,10 +138,14 @@
 			refresh(true);
 		});
 
+		// not supported by IE
 		$("#filter").change(function() {
 			refresh(true);
-			return false;
 		});
+		$("#filterbutt").click(function() {
+			refresh(true);
+		});
+		
 
 		$('#taskform').load(function(){
 			var elo = $('html', window.frames['taskform'].document);

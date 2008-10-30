@@ -22,7 +22,7 @@
 		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
 		<link rel="stylesheet" type="text/css" href="style.css" />
 		<link rel="stylesheet" type="text/css" href="style/tabs.css"/>
-		<link rel="stylesheet" type="text/css" href="/ui-fw/style/flexigrid.css">
+		<link rel="stylesheet" type="text/css" href="style/flexigrid.css">
 		
 		<link rel="alternate" type="application/atom+xml" title="Personal Task feed" href="/feeds/atom/tasks?token=${participantToken}"/>
 		<link rel="alternate" type="application/atom+xml" title="Process feed" href="/feeds/atom/processes?token=${participantToken}"/>
@@ -39,7 +39,6 @@
 	</head>
 	<body>
 		<table height="100%" width="100%">
-				
 			<tr width="100%" height="10%">
 				<td width="100%">
 					<%@ include file="/WEB-INF/jsp/siteHeader.jsp"%>
@@ -48,7 +47,7 @@
 							<li><a href="#" title="pa"><fmt:message key="com_intalio_bpms_workflow_tab_tasks"/></a></li>
 							<li><a href="#" title="notif"><fmt:message key="com_intalio_bpms_workflow_tab_notifications"/></a></li>
 							<li><a href="#" title="pipa"><fmt:message key="com_intalio_bpms_workflow_tab_processes"/></a></li>
-							<li><div id="filterdiv" class="filtertext">Quick filtering on showing items<input type="text" id="filter"/></div></li>
+							<li><div id="filterdiv" class="filtertext">Quick filtering on showing items &nbsp;<input type="text" id="filter"/><input id="filterbutt" type="button" value="Filter"/></div></li>
 							<li class="intro"><img src="images/bouncing.gif"/></li>
 						</ul>
 					</div>

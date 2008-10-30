@@ -1,3 +1,4 @@
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
 <form id="form" name="form" method="POST" border="0" cellpadding="0" cellspacing="0" >
 	<input type="hidden" id="actionName" name="actionName" value=""/>
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -14,9 +15,9 @@
 								<tr>
 									<%@ include file="icons.jsp" %>
 									<td class="menuItemSeparator"><img src="images/spacer.gif" width="10" alt="" height="1"/></td>																
-									<td id="user_logged"><img src="images/curent_user.gif" width="20" height="20" title="Curent user" alt="Curent user" style="vertical-align: bottom;" border="0"/>${currentUser}</td>
+									<td id="user_logged"><img src="images/curent_user.gif" width="20" height="20" title="<fmt:message key="org_intalio_uifw_siteHeader_currentUser"/>" alt="org_intalio_uifw_siteHeader_currentUser" style="vertical-align: bottom;" border="0"/>${currentUser}</td>
 									<td class="menuItemSeparator"><img src="images/spacer.gif" width="10" alt="" height="1"/></td>																
-									<td> <a href="javascript:submitActionToURL('login.htm','logOut')" class="mainMenuItem" ><img border="0px" src="images/logout_icon.png" height="30px" width="30px"/></a> </td>								
+									<td> <a href="javascript:submitActionToURL('login.htm','logOut')" class="mainMenuItem" ><img border="0px" alt="<fmt:message key="org_intalio_uifw_siteHeader_tooltip_logout"/>" title="<fmt:message key="org_intalio_uifw_siteHeader_tooltip_logout"/>"  src="images/logout_icon.png" height="30px" width="30px"/></a> </td>								
 								</tr>
 							</table>
 						</td>
