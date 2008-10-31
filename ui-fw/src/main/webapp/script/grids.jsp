@@ -174,6 +174,7 @@
 		$.timer(timeout,function(timer) {
 			t1.flexReload();
 	    	t2.flexReload();
+			t3.flexReload();
 		});
 
 		});

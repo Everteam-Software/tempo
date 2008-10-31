@@ -208,18 +208,18 @@ a:hover {
 }
 
 #filter {
-	font-size: 8px;
+	font-size: 9px;
 }
 
 #filterbutt {
 	font-family: Verdana, sans-serif;
-	font-size: 8px;
+	font-size: 9px;
 	width: 50px;
 }
 
 #filterdiv {
 	font-family: Verdana, sans-serif;
-	font-size: 8px;
+	font-size: 9px;
 	font-color: grey;
 	float:left;
 	width: auto;
