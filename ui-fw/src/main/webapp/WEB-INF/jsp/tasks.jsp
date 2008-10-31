@@ -38,8 +38,8 @@
 			<%@ include file="/script/grids.jsp"%>
 		</head>
 		<body>
-			<table height="100%" width="100%">
-				<tr width="100%" height="10%">
+			<table height="97%" width="100%">
+				<tr width="100%" height="5%">
 					<td width="100%">
 						<%@ include file="/WEB-INF/jsp/siteHeader.jsp"%>
 						<div id="container">			
