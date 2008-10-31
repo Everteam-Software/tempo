@@ -38,7 +38,7 @@
 			<%@ include file="/script/grids.jsp"%>
 		</head>
 		<body>
-			<table height="97%" width="100%">
+			<table height="100%" width="100%">
 				<tr width="100%" height="5%">
 					<td width="100%">
 						<%@ include file="/WEB-INF/jsp/siteHeader.jsp"%>
@@ -48,8 +48,13 @@
 								<li><a href="#" title="notif"><fmt:message key="com_intalio_bpms_workflow_tab_notifications"/></a></li>
 								<li><a href="#" title="pipa"><fmt:message key="com_intalio_bpms_workflow_tab_processes"/></a></li>
 								<li>
-									<div id="filterdiv" class="filtertext"><fmt:message key="org_intalio_uifw_tasks_filtertext"/> &nbsp;
-									<input type="text" id="filter"/><input title="<fmt:message key="org_intalio_uifw_tasks_filtertext"/>" id="filterbutt" type="button" value="<fmt:message key="org_intalio_uifw_tasks_filterbutton"/>"/>
+									<div id="filterdiv" class="filtertext">
+										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<fmt:message key="org_intalio_uifw_tasks_filtertext"/> 
+										&nbsp;&nbsp;
+									<input type="text" id="filter"/>
+									    &nbsp;&nbsp;
+									<input title="<fmt:message key="org_intalio_uifw_tasks_filtertext"/>" id="filterbutt" type="button" value="<fmt:message key="org_intalio_uifw_tasks_filterbutton"/>"/>
 								</div>
 							</li>
 							<li class="intro"><img src="images/bouncing.gif"/></li>
@@ -99,4 +104,4 @@
 				</tr>
 			</table>
 		</body>
-	</html>.
+	</html>

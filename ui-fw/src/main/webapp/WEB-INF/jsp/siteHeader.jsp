@@ -15,9 +15,9 @@
 								<tr>
 									<%@ include file="icons.jsp" %>
 									<td class="menuItemSeparator"><img src="images/spacer.gif" width="10" alt="" height="1"/></td>																
-									<td id="user_logged"><img src="images/curent_user.gif" width="20" height="20" title="<fmt:message key="org_intalio_uifw_siteHeader_currentUser"/>" alt="org_intalio_uifw_siteHeader_currentUser" style="vertical-align: bottom;" border="0"/>${currentUser}</td>
+									<td id="user_logged"><img src="images/curent_user_icon.gif" title="<fmt:message key="org_intalio_uifw_siteHeader_currentUser"/>" alt="org_intalio_uifw_siteHeader_currentUser" border="0"/>${currentUser}</td>
 									<td class="menuItemSeparator"><img src="images/spacer.gif" width="10" alt="" height="1"/></td>																
-									<td> <a href="javascript:submitActionToURL('login.htm','logOut')" class="mainMenuItem" ><img border="0px" alt="<fmt:message key="org_intalio_uifw_siteHeader_tooltip_logout"/>" title="<fmt:message key="org_intalio_uifw_siteHeader_tooltip_logout"/>"  src="images/logout_icon.png" height="30px" width="30px"/></a> </td>								
+									<td> <a href="javascript:submitActionToURL('login.htm','logOut')" class="mainMenuItem" ><img border="0px" alt="<fmt:message key="org_intalio_uifw_siteHeader_tooltip_logout"/>" title="<fmt:message key="org_intalio_uifw_siteHeader_tooltip_logout"/>"  src="images/logout_icon.png"/></a> </td>								
 								</tr>
 							</table>
 						</td>
