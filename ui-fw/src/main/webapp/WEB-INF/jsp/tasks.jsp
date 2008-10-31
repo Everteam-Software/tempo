@@ -49,7 +49,7 @@
 								<li><a href="#" title="pipa"><fmt:message key="com_intalio_bpms_workflow_tab_processes"/></a></li>
 								<li>
 									<div id="filterdiv" class="filtertext"><fmt:message key="org_intalio_uifw_tasks_filtertext"/> &nbsp;
-									<input type="text" id="filter"/><input title="<fmt:message key="org_intalio_uifw_tasks_filtertext"/>" id="filterbutt" type="button" value="Filter"/>
+									<input type="text" id="filter"/><input title="<fmt:message key="org_intalio_uifw_tasks_filtertext"/>" id="filterbutt" type="button" value="<fmt:message key="org_intalio_uifw_tasks_filterbutton"/>"/>
 								</div>
 							</li>
 							<li class="intro"><img src="images/bouncing.gif"/></li>
