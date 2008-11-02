@@ -161,8 +161,8 @@
                                         <xsl:apply-templates select="@*|*"/>
 
                                         <xhtml:div>
-                                            <xforms:submit class="button" submission="initSubmission">
-                                                <xforms:label>Start process</xforms:label>
+                                            <xforms:submit class="button4" submission="initSubmission">
+                                                <xforms:label>Start</xforms:label>
                                             </xforms:submit>
                                         </xhtml:div>
                                     </xforms:case>

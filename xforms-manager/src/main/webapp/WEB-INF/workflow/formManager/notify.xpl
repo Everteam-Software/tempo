@@ -213,7 +213,7 @@
                                             <xforms:case id="viewTask">
                                                 <xsl:apply-templates select="@* | *"/>
                                                 <xhtml:div>
-                                                    <xforms:submit class="button" submission="dismissSubmission">
+                                                    <xforms:submit class="button4" submission="dismissSubmission">
                                                         <xforms:label>Dismiss</xforms:label>
                                                     </xforms:submit>
                                                 </xhtml:div>
