@@ -213,9 +213,11 @@
                                             <xforms:case id="viewTask">
                                                 <xsl:apply-templates select="@* | *"/>
                                                 <xhtml:div>
-                                                    <xforms:submit class="button4" submission="dismissSubmission">
+												<span class="button">
+                                                    <xforms:submit submission="dismissSubmission">
                                                         <xforms:label>Dismiss</xforms:label>
                                                     </xforms:submit>
+												</span>
                                                 </xhtml:div>
                                             </xforms:case>
                                             <!-- Display while submission - wait page -->

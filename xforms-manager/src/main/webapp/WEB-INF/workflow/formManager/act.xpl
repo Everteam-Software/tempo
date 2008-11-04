@@ -561,27 +561,35 @@
 
                                             <xsl:if test="$metadata/tms:taskState = 'READY' and
  (count($metadata/tms:claimAction/tms:authorized) = 0 or $metadata/tms:claimAction/tms:authorized/text() != 'false')">
+												<span class="button">
                                                 <xforms:submit class="button4" submission="claimSubmission">
                                                     <xforms:label><span>Claim      </span></xforms:label>
                                                 </xforms:submit>
+											    </span>
                                             </xsl:if>
                                             <xsl:if test="$metadata/tms:taskState = 'CLAIMED' and
  (count($metadata/tms:revokeAction/tms:authorized) = 0 or $metadata/tms:revokeAction/tms:authorized/text() != 'false')">
+												<span class="button">
                                                 <xforms:submit class="button4" submission="revokeSubmission">
                                                     <xforms:label><span>Revoke</span></xforms:label>
                                                 </xforms:submit>
+                                                </span>
                                             </xsl:if>
                                             <xsl:if test="$metadata/tms:taskState != 'COMPLETED' and
  (count($metadata/tms:saveAction/tms:authorized) = 0 or $metadata/tms:saveAction/tms:authorized/text() != 'false')">
-                                                <xforms:submit class="button4" submission="saveSubmission">
-                                                    <xforms:label><span>Save      </span></xforms:label>
+												<span class="button">
+                                                <xforms:submit submission="saveSubmission">
+                                                    <xforms:label>Save</xforms:label>
                                                 </xforms:submit>
+     											</span>
                                             </xsl:if>
                                             <xsl:if test="$metadata/tms:taskState != 'COMPLETED' and
  (count($metadata/tms:completeAction/tms:authorized) = 0 or $metadata/tms:completeAction/tms:authorized/text() != 'false')">
-                                                <xforms:submit class="button4" submission="completeSubmission">
-                                                    <xforms:label><span>Complete</span></xforms:label>
+												<span class="button">
+                                                <xforms:submit submission="completeSubmission">
+                                                    <xforms:label>Complete</xforms:label>
                                                 </xforms:submit>
+											    </span>
                                             </xsl:if>
                                         </xhtml:div>
 
