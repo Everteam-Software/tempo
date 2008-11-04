@@ -45,11 +45,9 @@
 					<cell>${taskHolder.task.deadline}</cell>
 					<cell>${taskHolder.task.priority}</cell>
 					<cell><![CDATA[
-						<c:if test="${fn:length(taskHolder.task.attachments) > 0}">
 							<c:forEach items="${taskHolder.task.attachments}" var="attachment" varStatus="index">
-								<a href="${attachment.payloadURL}" onClick="window.open('${attachment.payloadURL}', 'newwindow'); return false;"><img border="0" height="${iconSize}" width="${iconSize}" src="http://www.slcc.edu/shared/shared_vcampus/images/icons/mail.jpg"/></a>
+								<a href="${attachment.payloadURL}" onClick="window.open('${attachment.payloadURL}', 'newwindow'); return false;"><img border="0" height="${iconSize}" width="${iconSize}" title="${attachment.payloadURL}" src="images/mail.jpg"/></a>
 							</c:forEach>
-						</c:if>	
 						]]>
 					</cell>
 				</row>
