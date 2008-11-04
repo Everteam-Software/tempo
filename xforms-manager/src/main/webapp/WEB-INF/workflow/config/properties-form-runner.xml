@@ -1,0 +1,69 @@
+<!--
+    Copyright (C) 2008 Orbeon, Inc.
+
+    This program is free software; you can redistribute it and/or modify it under the terms of the
+    GNU Lesser General Public License as published by the Free Software Foundation; either version
+    2.1 of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+    without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+    See the GNU Lesser General Public License for more details.
+
+    The full text of the license is available at http://www.gnu.org/copyleft/lesser.html
+-->
+<properties xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            xmlns:oxf="http://www.orbeon.com/oxf/processors"
+            xmlns:xi="http://www.w3.org/2001/XInclude">
+
+    <!-- Form Runner properties -->
+    <property as="xs:anyURI"  name="oxf.fr.persistence.app.uri.*.*.*"                           value="/fr/service/exist"/>
+    <property as="xs:anyURI"  name="oxf.fr.persistence.app.uri.orbeon.builder.form"             value="/fr/service/resource"/>
+    <property as="xs:anyURI"  name="oxf.fr.persistence.app.uri.orbeon.bookcast.form"            value="/fr/service/resource"/>
+    <property as="xs:anyURI"  name="oxf.fr.persistence.app.uri.orbeon.provinces.form"           value="/fr/service/resource"/>
+
+    <property as="xs:anyURI"  name="oxf.fr.persistence.service.exist.uri"                       value="/exist/rest/db"/>
+    <property as="xs:anyURI " name="oxf.fr.persistence.service.oracle.datasource"               value="oracle"/>
+
+    <property as="xs:anyURI"  name="oxf.fr.appserver.uri"                                       value=""/>
+    <property as="xs:string"  name="oxf.fr.default-language.*.*"                                value="en"/>
+    <property as="xs:anyURI"  name="oxf.fr.default-logo.uri.*.*"                                value="/apps/fr/style/orbeon-logo-trimmed-transparent-42.png"/>
+    <property as="xs:string"  name="oxf.fr.css.uri.*.*"                                         value="/ops/css/yui/reset-fonts-grids.css
+                                                                                                       /apps/fr/style/form-runner-base.css
+                                                                                                       /apps/fr/style/form-runner-orbeon.css"/>
+    <property as="xs:string"  name="oxf.fr.css.uri.orbeon.*"                                    value="/ops/css/yui/reset-fonts-grids.css
+                                                                                                       /apps/fr/style/form-runner-base.css
+                                                                                                       /apps/fr/style/form-runner-orbeon.css"/>
+    <property as="xs:string"  name="oxf.fr.authentication.method"                               value="header"/> <!-- "container", "header", or empty -->
+    <property as="xs:string"  name="oxf.fr.authentication.header.username"                      value="My-Username-Header"/>
+    <property as="xs:string"  name="oxf.fr.authentication.header.roles"                         value="My-Roles-Header"/>
+    <property as="xs:string"  name="oxf.fr.authentication.header.roles.property-name"           value=""/>
+    <property as="xs:string"  name="oxf.fr.authentication.container.roles"                      value="orbeon admin user"/>
+
+    <property as="xs:boolean" name="oxf.fr.version.*.*"                                         value="true"/>
+    <property as="xs:boolean" name="oxf.fr.noscript-link.*.*"                                   value="true"/>
+
+    <property as="xs:integer" name="oxf.fr.summary.page-size.*.*"                               value="10"/>
+
+    <property as="xs:boolean" name="oxf.fr.detail.noscript.table.*.*"                           value="true"/>
+    <property as="xs:boolean" name="oxf.fr.detail.noscript.section.collapse.*.*"                value="true"/>
+    <property as="xs:integer" name="oxf.fr.detail.toc.*.*"                                      value="3"/>
+    <property as="xs:string"  name="oxf.fr.detail.error-summary.*.*"                            value="bottom"/>
+    <property as="xs:boolean" name="oxf.fr.detail.new.accept-post.*.*"                          value="false"/>
+    <property as="xs:boolean" name="oxf.fr.detail.new.service.enable.*.*"                       value="false"/>
+    <property as="xs:string"  name="oxf.fr.detail.new.service.uri.*.*"                          value="/fr/service/custom/my-app/new"/>
+    <property as="xs:string"  name="oxf.fr.detail.new.service.passing-request-parameters.*.*"   value=""/>
+    <property as="xs:string"  name="oxf.fr.detail.buttons.*.*"                                  value="refresh back clear print pdf email save collapse-all expand-all"/>
+    <property as="xs:boolean" name="oxf.fr.detail.submit.content-from-persistence.*.*"          value="false"/>
+    <property as="xs:string"  name="oxf.fr.detail.submit.buttons.*.*"                           value="clear keep go close-window"/>
+    <property as="xs:string"  name="oxf.fr.detail.submit.go.uri-xpath.*.*"                      value="/book/details/link"/>
+
+    <!-- Email configuration -->
+    <property as="xs:string"  name="oxf.fr.email.smtp.host.*.*"                                 value=""/>
+    <property as="xs:string"  name="oxf.fr.email.smtp.username.*.*"                             value=""/>
+    <property as="xs:string"  name="oxf.fr.email.smtp.credentials.*.*"                          value=""/>
+    <property as="xs:string"  name="oxf.fr.email.from.*.*"                                      value=""/>
+    <property as="xs:string"  name="oxf.fr.email.to.*.*"                                        value=""/>
+    <property as="xs:boolean" name="oxf.fr.email.attach-pdf.*.*"                                value="true"/>
+    <property as="xs:boolean" name="oxf.fr.email.attach-xml.*.*"                                value="true"/>
+
+</properties>
