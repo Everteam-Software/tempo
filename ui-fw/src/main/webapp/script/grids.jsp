@@ -103,19 +103,19 @@
 			t2.parent().parent().hide(speed);
 			t3.parent().parent().hide(speed);
 		}
-		else if(current=='pa') {
+		else if(current=='<fmt:message key="com_intalio_bpms_workflow_tab_tasks"/>') {
 			t1.flexReload();
 			t1.parent().parent().show(speed);
 			t2.parent().parent().hide(speed);
 			t3.parent().parent().hide(speed);
 		}
-		else if(current=='notif') {
+		else if(current=='<fmt:message key="com_intalio_bpms_workflow_tab_notifications"/>') {
 			t2.flexReload();
 		    t1.parent().parent().hide(speed);
 			t3.parent().parent().hide(speed);
 			t2.parent().parent().show(speed);
 		}
-		else if(current=='pipa') {
+		else if(current=='<fmt:message key="com_intalio_bpms_workflow_tab_processes"/>') {
 			t3.flexReload();
 			t1.parent().parent().hide(speed);
 			t2.parent().parent().hide(speed);

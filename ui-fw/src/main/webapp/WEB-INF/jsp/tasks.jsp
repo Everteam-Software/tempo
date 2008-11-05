@@ -44,9 +44,9 @@
 						<%@ include file="/WEB-INF/jsp/siteHeader.jsp"%>
 						<div id="container">			
 							<ul id="tabnav">
-								<li><a href="#" title="pa"><fmt:message key="com_intalio_bpms_workflow_tab_tasks"/></a></li>
-								<li><a href="#" title="notif"><fmt:message key="com_intalio_bpms_workflow_tab_notifications"/></a></li>
-								<li><a href="#" title="pipa"><fmt:message key="com_intalio_bpms_workflow_tab_processes"/></a></li>
+								<li><a href="#" title="<fmt:message key="com_intalio_bpms_workflow_tab_tasks"/>"><fmt:message key="com_intalio_bpms_workflow_tab_tasks"/></a></li>
+								<li><a href="#" title="<fmt:message key="com_intalio_bpms_workflow_tab_notifications"/>"><fmt:message key="com_intalio_bpms_workflow_tab_notifications"/></a></li>
+								<li><a href="#" title="<fmt:message key="com_intalio_bpms_workflow_tab_processes"/>"><fmt:message key="com_intalio_bpms_workflow_tab_processes"/></a></li>
 								<li>
 									<div id="filterdiv" class="filtertext">
 										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -63,9 +63,9 @@
 				</td>
 				<tr>
 					<td width="100%">
-						<div class="hiddencontent" id="pa"><table id="table1" style="display:none"></table></div>
-						<div class="hiddencontent" id="notif"><table id="table2" style="display:none"></table></div>
-						<div class="hiddencontent" id="pipa"><table id="table3" style="display:none"></table></div>
+						<div class="hiddencontent" id="<fmt:message key="com_intalio_bpms_workflow_tab_tasks"/>"><table id="table1" style="display:none"></table></div>
+						<div class="hiddencontent" id="<fmt:message key="com_intalio_bpms_workflow_tab_notifications"/>"><table id="table2" style="display:none"></table></div>
+						<div class="hiddencontent" id="<fmt:message key="com_intalio_bpms_workflow_tab_processes"/>"><table id="table3" style="display:none"></table></div>
 					</td>
 				</tr>
 				<tr height="95%">
