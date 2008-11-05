@@ -63,11 +63,11 @@
        <p:input name="data" href="#deleteResponse"/>
     </p:processor>
 
-    <!-- Call TMS WS for TMS.add operation to add new attachment -->
+   <!-- Call TMS WS for TMS.delete operation to delete attachment -->
     <p:processor name="oxf:xslt">
         <p:input name="data" href="#instance"/>
         <p:input name="config">
-            <delegation:execute service="tms" operation="removeAttachmentTMS" xsl:version="2.0">
+            <delegation:execute service="tms" operation="removeAttachment" xsl:version="2.0">
                 <tms:taskId>
                     <xsl:value-of select="/*/@taskId"/>
                 </tms:taskId>
@@ -79,12 +79,12 @@
                 </tms:participantToken>
             </delegation:execute>
         </p:input>
-        <p:output name="data" id="removeAttachmentTMS"/>
+        <p:output name="data" id="removeAttachment"/>
     </p:processor>
 
     <p:processor name="oxf:delegation">
         <p:input name="interface" href="oxf:/config/services.xml"/>
-        <p:input name="call" href="#removeAttachmentTMS"/>
+        <p:input name="call" href="#removeAttachment"/>
         <p:output name="data" ref="data"/>
     </p:processor>
 

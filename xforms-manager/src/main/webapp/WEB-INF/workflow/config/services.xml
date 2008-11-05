@@ -2,7 +2,7 @@
 	<service id="tms" type="webservice" style="rpc" endpoint="http://localhost:8080/axis2/services/TaskManagementServices">
 		<operation nsuri="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" name="getTaskRequest" soap-action="getTask"/>
 		<operation nsuri="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" name="addAttachmentRequest" soap-action="addAttachment"/>
-		<operation nsuri="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" name="removeAttachmentTMS" soap-action="removeAttachment"/>
+		<operation nsuri="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" name="removeAttachment" soap-action="removeAttachment"/>
 		<operation nsuri="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" name="getAttachmentsRequest" soap-action="getAttachments"/>
 		<operation nsuri="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" name="setOutput"  soap-action="setOutput" select="/*:Envelope/*:Body/text() | /*:Envelope/*:Body/*"/>
 		<operation nsuri="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" name="completeRequest" soap-action="complete" />
