@@ -1,17 +1,17 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<wsdl:definitions xmlns:TaskManagementProcess="http://example.com/TMP/TaskManagementProcess" xmlns:UserBusinessProcess="http://www.intalio.com/bpms/ubp" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:b4px="java:org.intalio.tempo.workflow.processes.xpath.UID" xmlns:b4px1="http://oracle.com/the/custom/functions" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:b4p="http://www.intalio.com/bpms/workflow/ib4p_20051115" xmlns:bpdm="http://www.intalio/designer/business-process-data-modeling" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:diag="http://example.com/TMP" xmlns:tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:PreviousProcessTaskManager="http://example.com/TMP/PreviousProcessTaskManager" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="http://example.com/TMP">
+<wsdl:definitions xmlns:tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:bpdm="http://www.intalio/designer/business-process-data-modeling" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:b4p="http://www.intalio.com/bpms/workflow/ib4p_20051115" xmlns:PreviousProcessTaskManager="http://example.com/TMP/PreviousProcessTaskManager" xmlns:TaskManagementProcess="http://example.com/TMP/TaskManagementProcess" xmlns:b4px1="http://oracle.com/the/custom/functions" xmlns:UserBusinessProcess="http://www.intalio.com/bpms/ubp" xmlns:diag="http://example.com/TMP" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:b4px="java:org.intalio.tempo.workflow.processes.xpath.UID" targetNamespace="http://example.com/TMP">
     <wsdl:import namespace="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" location="TaskManagementSystem.wsdl"/>
     <wsdl:import namespace="http://www.intalio.com/bpms/ubp" location="UserBusinessProcess.wsdl"/>
     <wsdl:import namespace="http://www.intalio.com/bpms/workflow/ib4p_20051115" location="TaskManagerProcess.wsdl"/>
+    <pnlk:partnerLinkType name="TMPAndUBP">
+        <pnlk:role name="TaskManagementProcess_for_UserBusinessProcessForUserBusinessProcessPort" portType="b4p:UserBusinessProcessPortType"/>
+        <pnlk:role name="UserBusinessProcess_for_TaskManagementProcessForUserProcessPort" portType="UserBusinessProcess:userProcessPortType"/>
+    </pnlk:partnerLinkType>
     <pnlk:partnerLinkType name="TaskManagementProcessAndNextTaskManagerForTMPPortPlk">
         <pnlk:role name="TaskManagementProcess_for_NextTaskManager" portType="b4p:TMPPortType"/>
     </pnlk:partnerLinkType>
     <pnlk:partnerLinkType name="TaskManagementProcessAndTaskManagementSystemForPortTaskManagementServicesSOAPPlk">
         <pnlk:role name="TaskManagementSystem_for_TaskManagementProcess" portType="tns:TaskManagementServices"/>
-    </pnlk:partnerLinkType>
-    <pnlk:partnerLinkType name="TMPAndUBP">
-        <pnlk:role name="TaskManagementProcess_for_UserBusinessProcessForUserBusinessProcessPort" portType="b4p:UserBusinessProcessPortType"/>
-        <pnlk:role name="UserBusinessProcess_for_TaskManagementProcessForUserProcessPort" portType="UserBusinessProcess:userProcessPortType"/>
     </pnlk:partnerLinkType>
     <pnlk:partnerLinkType name="TaskManagementProcessAndUIFWForUIFWPortPlk">
         <pnlk:role name="TaskManagementProcess_for_UIFW" portType="b4p:UIFWPortType"/>

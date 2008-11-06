@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<bpel:process xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:diag="http://example.com/TMP" xmlns:b4px="java:org.intalio.tempo.workflow.processes.xpath.UID" xmlns:TaskManagementSystem="http://example.com/TMP/TaskManagementSystem" xmlns:UIFW="http://example.com/TMP/UIFW" xmlns:PreviousProcessTaskManager="http://example.com/TMP/PreviousProcessTaskManager" xmlns:this="http://example.com/TMP/TaskManagementProcess" xmlns:b4p="http://www.intalio.com/bpms/workflow/ib4p_20051115" xmlns:UserBusinessProcess1="http://www.intalio.com/bpms/ubp" xmlns:UserBusinessProcess="http://example.com/TMP/UserBusinessProcess" xmlns:NextTaskManager="http://example.com/TMP/NextTaskManager" xmlns:bpmn="http://www.intalio.com/bpms" xmlns:atomic="http://ode.apache.org/atomicScope" queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0" bpmn:label="TaskManagementProcess" bpmn:id="_opUVQKdvEdyId4P63ChZuw" name="TaskManagementProcess" targetNamespace="http://example.com/TMP/TaskManagementProcess">
+<bpel:process xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:b4p="http://www.intalio.com/bpms/workflow/ib4p_20051115" xmlns:PreviousProcessTaskManager="http://example.com/TMP/PreviousProcessTaskManager" xmlns:UIFW="http://example.com/TMP/UIFW" xmlns:diag="http://example.com/TMP" xmlns:b4px="java:org.intalio.tempo.workflow.processes.xpath.UID" xmlns:UserBusinessProcess="http://example.com/TMP/UserBusinessProcess" xmlns:NextTaskManager="http://example.com/TMP/NextTaskManager" xmlns:this="http://example.com/TMP/TaskManagementProcess" xmlns:tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:UserBusinessProcess1="http://www.intalio.com/bpms/ubp" xmlns:TaskManagementSystem="http://example.com/TMP/TaskManagementSystem" xmlns:bpmn="http://www.intalio.com/bpms" xmlns:atomic="http://ode.apache.org/atomicScope" queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0" bpmn:label="TaskManagementProcess" bpmn:id="_opUVQKdvEdyId4P63ChZuw" name="TaskManagementProcess" targetNamespace="http://example.com/TMP/TaskManagementProcess">
   <bpel:import namespace="http://example.com/TMP/TaskManagementProcess" location="TMP-TaskManagementProcess.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
   <bpel:import namespace="http://example.com/TMP" location="TMP.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
   <bpel:import namespace="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" location="TaskManagementSystem.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
@@ -437,30 +437,38 @@
                   <bpel:from>$createTaskResponse.root/b4p:taskMetaData/b4p:taskId</bpel:from>
                   <bpel:to>$tnsFailRequestMsg.failRequest/tns:taskId</bpel:to>
                 </bpel:copy>
+                <bpel:copy>
+                  <bpel:from>"0"</bpel:from>
+                  <bpel:to>$tnsFailRequestMsg.failRequest/tns:code</bpel:to>
+                </bpel:copy>
+                <bpel:copy>
+                  <bpel:from>"TMP has set me to fail state"</bpel:from>
+                  <bpel:to>$tnsFailRequestMsg.failRequest/tns:message</bpel:to>
+                </bpel:copy>
+                <bpel:copy>
+                  <bpel:from>"0"</bpel:from>
+                  <bpel:to>$tnsFailRequestMsg.failRequest/tns:participantToken</bpel:to>
+                </bpel:copy>
               </bpel:assign>
               <bpel:invoke partnerLink="taskManagementProcessAndTaskManagementSystemForPortTaskManagementServicesSOAPPlkVar" portType="tns:TaskManagementServices" operation="fail" inputVariable="tnsFailRequestMsg" outputVariable="tnsFailResponseMsg" bpmn:label="Change Task status to Failed" bpmn:id="_FyrywLEhEdy6MtvbqSLrQw"></bpel:invoke>
             </bpel:sequence>
           </bpel:scope>
-          <bpel:empty bpmn:label="no-activities-for-Deadline Handler" bpmn:id="_tZQ68MUjEdyOLLhtllRYzQ"/>
         </bpel:catch>
       </bpel:faultHandlers>
       <bpel:eventHandlers>
         <bpel:onAlarm>
           <bpel:until>if (boolean(normalize-space($createTMSTaskRequest.createRequest/tns:task/tns:metadata/tns:deadline))) then ($createTMSTaskRequest.createRequest/tns:task/tns:metadata/tns:deadline) else (current-dateTime())</bpel:until>
-          <bpel:scope name="SubProcess_cjyWIMUkEdyOLLhtllRYzQ" bpmn:label="SubProcess" bpmn:id="_cjyWIMUkEdyOLLhtllRYzQ">
-            <bpel:if>
-              <bpel:condition>boolean(normalize-space($createTMSTaskRequest.createRequest/tns:task/tns:metadata/tns:deadline))</bpel:condition>
+          <bpel:if>
+            <bpel:condition>boolean(normalize-space($createTMSTaskRequest.createRequest/tns:task/tns:metadata/tns:deadline))</bpel:condition>
+            <bpel:sequence>
+              <bpel:throw faultName="this:DeadlineReached"/>
+            </bpel:sequence>
+            <bpel:else>
               <bpel:sequence>
-                <bpel:throw faultName="this:DeadlineReached"/>
+                <bpel:empty bpmn:label="No deadline &#13;&#10;is specified" bpmn:id="_i_UPIMUkEdyOLLhtllRYzQ"/>
               </bpel:sequence>
-              <bpel:else>
-                <bpel:sequence>
-                  <bpel:empty bpmn:label="No deadline &#13;&#10;is specified" bpmn:id="_i_UPIMUkEdyOLLhtllRYzQ"/>
-                </bpel:sequence>
-              </bpel:else>
-            </bpel:if>
-          </bpel:scope>
-          <bpel:empty bpmn:label="no-activities-for-EventIntermediateTimer" bpmn:id="_lFILsMSNEdyOLLhtllRYzQ"/>
+            </bpel:else>
+          </bpel:if>
         </bpel:onAlarm>
       </bpel:eventHandlers>
       <bpel:while>
