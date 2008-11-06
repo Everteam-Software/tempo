@@ -94,7 +94,7 @@ public class TasksCollector {
 
         String type = params.get("type");
         if (type.equals(PATask.class.getSimpleName())) {
-            StringBuffer query = new StringBuffer("NOT T._state = TaskState.COMPLETED ");
+            StringBuffer query = new StringBuffer("NOT T._state = TaskState.COMPLETED AND NOT T._state = TaskState.FAILED ");
             if (params.isSet("qtype"))
                 query.append(" AND T." + params.get("qtype") + " like '%" + params.get("query") + "%'");
             if (params.isSet("sortname"))
@@ -103,7 +103,7 @@ public class TasksCollector {
                 query.append(" " + params.get("sortorder"));
             collectTasks(_token, _user, fmanager, taskManager, "PATask", query.toString(), _tasks, params.get("rp"), params.get("page"));
         } else if (type.equals(Notification.class.getSimpleName())) {
-            StringBuffer query = new StringBuffer("NOT T._state = TaskState.COMPLETED ");
+            StringBuffer query = new StringBuffer("NOT T._state = TaskState.COMPLETED AND NOT T._state = TaskState.FAILED ");
             if (params.isSet("qtype"))
                 query.append(" AND T." + params.get("qtype") + " like '%" + params.get("query") + "%'");
             if (params.isSet("sortname"))

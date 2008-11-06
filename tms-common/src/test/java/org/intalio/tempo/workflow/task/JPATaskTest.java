@@ -379,6 +379,7 @@ public class JPATaskTest {
         testFetchForUserRolesWithCriteria("user1", new String[] { "role1" }, PATask.class, "T._state = TaskState.FAILED or T._priority = 1", 1);
         testFetchForUserRolesWithCriteria("user3", new String[] { "role3" }, PATask.class, "T._state = TaskState.FAILED", 0);
         testFetchForUserRolesWithCriteria("user1", new String[] { "role1" }, PATask.class, "T._state = TaskState.COMPLETED", 0);
+        testFetchForUserRolesWithCriteria("user1", new String[] { "role1" }, PATask.class, "NOT T._state = TaskState.COMPLETED and NOT T._state = TaskState.READY  AND T._description like '%%' ", 1);
         testFetchForUserRolesWithCriteria("user1", new String[] { "role1" }, Notification.class, null, 0);
 
         checkRemoved(task1.getID());

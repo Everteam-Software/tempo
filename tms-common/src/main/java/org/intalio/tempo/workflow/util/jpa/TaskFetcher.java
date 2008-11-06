@@ -30,9 +30,9 @@ public class TaskFetcher {
     private EntityManager _entityManager;
     private Query find_by_id;
     private final String QUERY_GENERIC1 = "select DISTINCT T from ";
-    private final String QUERY_GENERIC2 = " T where (T._userOwners in (?1) or T._roleOwners in (?2))";
-    private final String DELETE_TASKS = "delete from Task m where m._userOwners in (?1) or m._roleOwners in (?2)";
-    private final String DELETE_ALL_TASK_WITH_ID = "delete from Task m where m._id = (?1)";
+    private final String QUERY_GENERIC2 = " T where (T._userOwners in (?1) or T._roleOwners in (?2)) ";
+    private final String DELETE_TASKS = "delete from Task m where m._userOwners in (?1) or m._roleOwners in (?2) ";
+    private final String DELETE_ALL_TASK_WITH_ID = "delete from Task m where m._id = (?1) ";
 
     public TaskFetcher(EntityManager em) {
         this._entityManager = em;
@@ -103,12 +103,12 @@ public class TaskFetcher {
                 buffer.append(" and ").append(" ( ").append(subQuery).append(" ) ");    
             } else {
                 if (!trim.startsWith("order"))
-                    buffer.append("and (").append(subQuery.substring(0, orderIndex)).append(") ").append(subQuery.substring(orderIndex));
+                    buffer.append(" and (").append(subQuery.substring(0, orderIndex)).append(") ").append(subQuery.substring(orderIndex));
                 else {
                     buffer.append(subQuery);
                 }
             }
-            _logger.error(buffer.toString());
+            if(_logger.isDebugEnabled()) _logger.debug(buffer.toString());
             q = _entityManager.createQuery(buffer.toString()).setParameter(1, userIdList).setParameter(2, user.getAssignedRoles());
         }
         List result = q.getResultList();
