@@ -33,9 +33,11 @@ import javax.persistence.NamedQuery;
 import javax.persistence.QueryHint;
 import javax.persistence.Table;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.openjpa.persistence.Persistent;
 import org.apache.openjpa.persistence.PersistentMap;
 import org.apache.openjpa.persistence.jdbc.ContainerTable;
+import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.task.traits.IChainableTask;
 import org.intalio.tempo.workflow.task.traits.ICompleteReportingTask;
@@ -304,6 +306,15 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
 
     public void setDeadline(Date deadline) {
         _deadline = deadline;
+    }
+    
+    public boolean isAvailableTo(UserRoles credentials) {
+		if(_state.equals(TaskState.CLAIMED)) {
+			for (String userOwner : _userOwners) if (credentials.getUserID().equals(userOwner)) return true;
+			return false;
+		} else {
+			return super.isAvailableTo(credentials);
+		}
     }
 
 }

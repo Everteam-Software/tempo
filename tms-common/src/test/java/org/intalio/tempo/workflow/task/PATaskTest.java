@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2005-2006 Intalio inc.
+ * Copyright (c) 2005-2008 Intalio inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -23,6 +23,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.task.attachments.AttachmentMetadata;
 import org.intalio.tempo.workflow.task.xml.XmlTooling;
@@ -219,6 +220,20 @@ public class PATaskTest extends TestCase {
         } catch (RequiredArgumentException e) {
 
         }
+    }
+    
+    public void testAssignClaimAndAvailable() throws Exception {
+    	PATask task = this.createPATask();
+    	task.setState(TaskState.READY);
+    	task.getRoleOwners().add("group");
+    	task.getUserOwners().add("gregor");
+    	UserRoles gregor = new UserRoles("gregor", new String[]{"group"});
+    	UserRoles niko = new UserRoles("niko", new String[]{"group"});
+    	Assert.assertTrue(task.isAvailableTo(gregor));
+    	Assert.assertTrue(task.isAvailableTo(niko));
+    	task.setState(TaskState.CLAIMED);
+    	Assert.assertTrue(task.isAvailableTo(gregor));
+    	Assert.assertFalse(task.isAvailableTo(niko));
     }
 
     public void testAttachments() throws Exception {
