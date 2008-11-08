@@ -12,6 +12,12 @@
  */
 package org.intalio.tempo.workflow.tms.client.dependent_tests;
 
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import junit.framework.TestCase;
 
 import org.apache.axiom.om.OMAbstractFactory;
@@ -31,6 +37,13 @@ import org.intalio.tempo.workflow.tms.client.RemoteTMSClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import freemarker.cache.ClassTemplateLoader;
+import freemarker.cache.TemplateLoader;
+import freemarker.template.Configuration;
+import freemarker.template.DefaultObjectWrapper;
+import freemarker.template.Template;
+
+
 /**
  * This supports a fully absence request samples through code and soap requests only
  */
@@ -42,6 +55,52 @@ public class RemoteAbsenceRequestTest extends TestCase {
 	private static final String TMS_SERVICE = "http://localhost:8080/axis2/services/TaskManagementServices";
 	private static final String TASK_MANAGEMENT_PROCESS = "http://localhost:8080/ode/processes/completeTask";
 	final XmlTooling xmlTooling = new XmlTooling();
+	private Configuration cfg;
+	
+	public void setUp() {
+		TemplateLoader loader = new ClassTemplateLoader(this.getClass(),"/");
+		cfg = new Configuration();
+		cfg.setTemplateLoader(loader);
+		cfg.setObjectWrapper(new DefaultObjectWrapper());
+	}
+	
+	private String getSomewhatDynamicPipaInput() throws Exception {
+		Map<String,Object> root = new HashMap<String,Object>();
+		
+		Map<String,String> employee = new HashMap<String,String>();
+		employee.put("name", "Nicolas");
+		employee.put("phone", "+1(650)596-1801");
+		employee.put("email", "nico@examples.intalio.com");
+		
+		Map<String,String> contact = new HashMap<String,String>();
+		contact.put("name", "George Michael");
+		contact.put("phone", "+1(650)596-1802");
+		contact.put("email", "george@examples.intalio.com");
+		
+		root.put("notes", "Those are some comments");
+		root.put("employee", employee);
+		root.put("contact", contact);
+		
+		List<HashMap<String,String>> list = new ArrayList<HashMap<String,String>>();
+		for(int i = 0 ; i <3 ; i ++) {
+			HashMap<String,String> request = new HashMap<String,String>();
+			request.put("from", "2008-12-04");
+			request.put("to", "2008-12-28");
+			request.put("type", "holidays");
+			request.put("hours", "200");
+			list.add(request);	
+		}
+		root.put("requests", list);
+		
+		return templateMe("initPipa.ftl", root);
+	}
+	
+	private String templateMe(String template, Map params) throws Exception {
+		Template temp = cfg.getTemplate(template);
+		StringWriter writer = new StringWriter();
+		temp.process(params, writer);
+		return writer.toString();
+	}
 	
 	public void testAbsenceRequest() throws Exception {
 		_log.info("Instanciate token service client");
@@ -65,8 +124,7 @@ public class RemoteAbsenceRequestTest extends TestCase {
 		
 		String pipaID = ts[0].getID();
 		_log.info("We have found the task to instanciate the process. This task has the following ID:"+pipaID);
-		tms.init(pipaID, Utils.createXMLDocument("/initPipa.xml"));
-		
+		tms.init(pipaID, xmlTooling.parseXML(getSomewhatDynamicPipaInput()));
 		_log.info("wait for the task to be initiated. Hopefully 2s is enough");
 		Thread.sleep(2000);
 		
@@ -94,9 +152,9 @@ public class RemoteAbsenceRequestTest extends TestCase {
 		_log.info("Let's claim the task: no one else can access this task apart from user:"+user);
         sendSoapToTMP(claim(token,id, user), "claimTask");
         _log.info("Let's revoke the task:every one can access this task again");
-        sendSoapToTMP(revoke(token,id),"revokeTask");
+        sendSoapToTMP(revoke(token,id).toString(),"revokeTask");
         _log.info("complete the PA task with some output");
-        sendSoapToTMP(complete(token, id),"completeTask");
+        sendSoapToTMP(complete(token, id).toString(),"completeTask");
         
         _log.info("sleep again to wait for the notification");
         Thread.sleep(2000);
@@ -118,63 +176,53 @@ public class RemoteAbsenceRequestTest extends TestCase {
 	/**
 	 * Send the SOAP request to TMP.
 	 */
-	private void sendSoapToTMP(StringBuffer request, String soapAction) throws Exception {
+	private void sendSoapToTMP(String request, String soapAction) throws Exception {
 		ServiceClient serviceClient = new ServiceClient();
 		OMFactory factory = OMAbstractFactory.getOMFactory();
 		Options options = new Options();
         options.setTo(new EndpointReference(TASK_MANAGEMENT_PROCESS));
         serviceClient.setOptions(options);
         options.setAction(soapAction);
-        serviceClient.sendReceive(xmlTooling.convertDOMToOM(xmlTooling.parseXML(request.toString()), factory));
+        serviceClient.sendReceive(xmlTooling.convertDOMToOM(xmlTooling.parseXML(request), factory));
 	}
 	
 	/**
 	 * Generate a complete request.
 	 * This also adds some static output to the task. 
 	 */
-	private StringBuffer complete(String token, String taskId) throws Exception {
-		StringBuffer complete = new StringBuffer();
-		complete.append("<b4p:taskMetaData><b4p:taskId>").append(taskId).append("</b4p:taskId></b4p:taskMetaData>");
-		complete.append("<b4p:participantToken>").append(token).append("</b4p:participantToken>");
-		complete.append("<b4p:taskOutput>");
+	private String complete(String token, String taskId) throws Exception {
+		HashMap root = new HashMap();
+		root.put("taskId", taskId);
+		root.put("token", token);
+		root.put("comment", "It is a great day for some comments");
+		root.put("approved", "true");
 		
-		complete.append("<output xmlns=\"http://www.intalio.com/workflow/forms/AbsenceRequest/AbsenceRequest\">");
-		complete.append("<approved>true</approved><comment/><contactWhileAway><name>Emily Williams</name><phone>+1(650)596-1800</phone><email>ewilliams@examples.intalio.com</email></contactWhileAway>");
-		complete.append("</output>");
-		
-        complete.append("</b4p:taskOutput>");
-        return parseTMPRequest(token, taskId, "completeTaskRequest", complete);
+		Map<String,String> contact = new HashMap<String,String>();
+		contact.put("name", "George Michael");
+		contact.put("phone", "+1(650)596-1802");
+		contact.put("email", "george@examples.intalio.com");
+		root.put("contact", contact);
+		return templateMe("complete.ftl", root);
 	}
 	
 	/**
 	 * Generate a revoke request
 	 */
-	private StringBuffer revoke(String token, String taskId) throws Exception {
-		StringBuffer revoke = new StringBuffer();
-		revoke.append("<b4p:taskId>").append(taskId).append("</b4p:taskId>");
-		revoke.append("<b4p:participantToken>").append(token).append("</b4p:participantToken>");
-		return parseTMPRequest(token, taskId, "revokeTaskRequest", revoke);
+	private String revoke(String token, String taskId) throws Exception {
+		HashMap<String,String> root = new HashMap<String,String>();
+		root.put("taskId",taskId);
+		root.put("token",token);
+		return templateMe("revoke.ftl", root);
 	}
 	
 	/**
 	 * Generate a claim request, for the given user
 	 */
-	private StringBuffer claim(String token, String taskId, String user) throws Exception {
-		StringBuffer claim = new StringBuffer();
-		claim.append("<b4p:taskId>").append(taskId).append("</b4p:taskId>");
-		claim.append("<b4p:claimerUser>").append(user).append("</b4p:claimerUser>");
-		claim.append("<b4p:participantToken>").append(token).append("</b4p:participantToken>");
-		return parseTMPRequest(token, taskId, "claimTaskRequest", claim);
-	}
-
-	/**
-	 * Template for a generic request to TMP
-	 */
-	private StringBuffer parseTMPRequest(String token, String taskId, String requestType, StringBuffer xml){
-		StringBuffer request = new StringBuffer();
-		request.append("<b4p:").append(requestType).append(" xmlns:b4p=\"http://www.intalio.com/bpms/workflow/ib4p_20051115\">");
-		request.append(xml);
-		request.append("</b4p:").append(requestType).append(">");
-		return request;
+	private String claim(String token, String taskId, String user) throws Exception {
+		HashMap<String,String> root = new HashMap<String,String>();
+		root.put("taskId",taskId);
+		root.put("user",user);
+		root.put("token",token);
+		return templateMe("claim.ftl", root);
 	}
 }

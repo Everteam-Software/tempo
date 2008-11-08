@@ -253,6 +253,8 @@ APACHE_JPA = [
   "serp:serp:jar:1.13.1"
 ]
 
+FREEMARKER = "org.freemarker:freemarker:jar:2.3.14"
+
 CAS_LIBS = [
   group("cas-server-core",:under=>"org.jasig.cas", :version=>"3.2.1.1"),
   group("cas-server-support-ldap",:under=>"org.jasig.cas", :version=>"3.2.1.1"),
