@@ -48,14 +48,12 @@ import freemarker.template.Template;
  * This supports a fully absence request samples through code and soap requests only
  */
 public class RemoteAbsenceRequestTest extends TestCase {
-	
 	static final Logger _log = LoggerFactory.getLogger(RemoteAbsenceRequestTest.class);
-
-	private static final String TOKEN_SERVICE = "http://localhost:8080/axis2/services/TokenService";
-	private static final String TMS_SERVICE = "http://localhost:8080/axis2/services/TaskManagementServices";
-	private static final String TASK_MANAGEMENT_PROCESS = "http://localhost:8080/ode/processes/completeTask";
-	final XmlTooling xmlTooling = new XmlTooling();
-	private Configuration cfg;
+	static final String TOKEN_SERVICE = "http://localhost:8080/axis2/services/TokenService";
+	static final String TMS_SERVICE = "http://localhost:8080/axis2/services/TaskManagementServices";
+	static final String TASK_MANAGEMENT_PROCESS = "http://localhost:8080/ode/processes/completeTask";
+	static final XmlTooling xmlTooling = new XmlTooling();
+	Configuration cfg;
 	
 	public void setUp() {
 		TemplateLoader loader = new ClassTemplateLoader(this.getClass(),"/");
@@ -64,23 +62,28 @@ public class RemoteAbsenceRequestTest extends TestCase {
 		cfg.setObjectWrapper(new DefaultObjectWrapper());
 	}
 	
-	private String getSomewhatDynamicPipaInput() throws Exception {
-		Map<String,Object> root = new HashMap<String,Object>();
+	/**
+	 * This sets the different parameters we'll use through this test
+	 * @throws Exception
+	 */
+	public void testAbsenceRequest() throws Exception {
+		// We'll use those parameters for login
+		String paramUser = "examples\\ewilliams";
+		String paramPassword = "password";
 		
+		// We'll use those parameters for initiating the process
+		HashMap<String,Object> pipa = new HashMap<String,Object>();
 		Map<String,String> employee = new HashMap<String,String>();
 		employee.put("name", "Nicolas");
 		employee.put("phone", "+1(650)596-1801");
 		employee.put("email", "nico@examples.intalio.com");
-		
 		Map<String,String> contact = new HashMap<String,String>();
 		contact.put("name", "George Michael");
 		contact.put("phone", "+1(650)596-1802");
 		contact.put("email", "george@examples.intalio.com");
-		
-		root.put("notes", "Those are some comments");
-		root.put("employee", employee);
-		root.put("contact", contact);
-		
+		pipa.put("notes", "Those are some comments");
+		pipa.put("employee", employee);
+		pipa.put("contact", contact);
 		List<HashMap<String,String>> list = new ArrayList<HashMap<String,String>>();
 		for(int i = 0 ; i <3 ; i ++) {
 			HashMap<String,String> request = new HashMap<String,String>();
@@ -90,24 +93,28 @@ public class RemoteAbsenceRequestTest extends TestCase {
 			request.put("hours", "200");
 			list.add(request);	
 		}
-		root.put("requests", list);
+		pipa.put("requests", list);
 		
-		return templateMe("initPipa.ftl", root);
+		// We'll use those parameters to complete the task
+		HashMap complete = new HashMap();
+		complete.put("comment", "It is a great day for some comments");
+		complete.put("approved", "false");
+		Map<String,String> person = new HashMap<String,String>();
+		person.put("name", "George Michael");
+		person.put("phone", "+1(650)596-1802");
+		person.put("email", "george@examples.intalio.com");
+		complete.put("contact", person);
+		
+		runAbsenceRequest(paramUser, paramPassword, pipa, complete);
 	}
-	
-	private String templateMe(String template, Map params) throws Exception {
-		Template temp = cfg.getTemplate(template);
-		StringWriter writer = new StringWriter();
-		temp.process(params, writer);
-		return writer.toString();
-	}
-	
-	public void testAbsenceRequest() throws Exception {
+
+	/**
+	 * Run the examples with the given parameters
+	 */
+	private void runAbsenceRequest(String paramUser, String paramPassword, HashMap pipa, HashMap complete) throws Exception {
 		_log.info("Instanciate token service client");
 		TokenClient client = new TokenClient(TOKEN_SERVICE);
 
-		String paramUser = "examples\\ewilliams";
-		String paramPassword = "password";
 		_log.info("We are trying to authenticate as user:"+paramUser+" with password:"+paramPassword);
 		String token = client.authenticateUser(paramUser, paramPassword);
 		_log.info("We have gained a token from the token service. We can use it to call authenticated tempo services");
@@ -124,7 +131,7 @@ public class RemoteAbsenceRequestTest extends TestCase {
 		
 		String pipaID = ts[0].getID();
 		_log.info("We have found the task to instanciate the process. This task has the following ID:"+pipaID);
-		tms.init(pipaID, xmlTooling.parseXML(getSomewhatDynamicPipaInput()));
+		tms.init(pipaID, xmlTooling.parseXML(pipa(pipa)));
 		_log.info("wait for the task to be initiated. Hopefully 2s is enough");
 		Thread.sleep(2000);
 		
@@ -137,7 +144,6 @@ public class RemoteAbsenceRequestTest extends TestCase {
 		_log.info("We cannot get input and output of a task on a get task list call (see WSDL)");
 		_log.info("Let's call TMS again to get the full input and output data of this PATask");
 		PATask task = (PATask)tms.getTask(id);
-		
 		_log.info("" +
 				"\nChecking the task metadata..." +
 				"\nThe task has been created on:"+task.getCreationDate() +
@@ -154,7 +160,7 @@ public class RemoteAbsenceRequestTest extends TestCase {
         _log.info("Let's revoke the task:every one can access this task again");
         sendSoapToTMP(revoke(token,id).toString(),"revokeTask");
         _log.info("complete the PA task with some output");
-        sendSoapToTMP(complete(token, id).toString(),"completeTask");
+        sendSoapToTMP(complete(token, id, complete).toString(),"completeTask");
         
         _log.info("sleep again to wait for the notification");
         Thread.sleep(2000);
@@ -174,7 +180,7 @@ public class RemoteAbsenceRequestTest extends TestCase {
 	}
 	
 	/**
-	 * Send the SOAP request to TMP.
+	 * Send the WS request to TMP.
 	 */
 	private void sendSoapToTMP(String request, String soapAction) throws Exception {
 		ServiceClient serviceClient = new ServiceClient();
@@ -188,21 +194,12 @@ public class RemoteAbsenceRequestTest extends TestCase {
 	
 	/**
 	 * Generate a complete request.
-	 * This also adds some static output to the task. 
+	 * This also adds some output to the task. 
 	 */
-	private String complete(String token, String taskId) throws Exception {
-		HashMap root = new HashMap();
-		root.put("taskId", taskId);
-		root.put("token", token);
-		root.put("comment", "It is a great day for some comments");
-		root.put("approved", "true");
-		
-		Map<String,String> contact = new HashMap<String,String>();
-		contact.put("name", "George Michael");
-		contact.put("phone", "+1(650)596-1802");
-		contact.put("email", "george@examples.intalio.com");
-		root.put("contact", contact);
-		return templateMe("complete.ftl", root);
+	private String complete(String token, String taskId, HashMap complete) throws Exception {
+		complete.put("taskId", taskId);
+		complete.put("token", token);
+		return templateMe("complete.ftl", complete);
 	}
 	
 	/**
@@ -224,5 +221,23 @@ public class RemoteAbsenceRequestTest extends TestCase {
 		root.put("user",user);
 		root.put("token",token);
 		return templateMe("claim.ftl", root);
+	}
+	
+	/**
+	 * Couldn't get a better name :)
+	 * Prepare some parameters for a dynamic pipa input.
+	 */
+	private String pipa(HashMap pipa) throws Exception {
+		return templateMe("initPipa.ftl", pipa);
+	}
+
+	/**
+	 * Get the Result from templating operation
+	 */
+	private String templateMe(String template, Map params) throws Exception {
+		Template temp = cfg.getTemplate(template);
+		StringWriter writer = new StringWriter();
+		temp.process(params, writer);
+		return writer.toString();
 	}
 }
