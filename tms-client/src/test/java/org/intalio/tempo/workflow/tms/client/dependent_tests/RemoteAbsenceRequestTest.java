@@ -67,14 +67,19 @@ public class RemoteAbsenceRequestTest extends TestCase {
 		Thread.sleep(2000);
 		
 		_log.info("get our full activity task list");
-		Task[] pa = tms.getAvailableTasks("PATask", "ORDER BY T._creationDate DESC");
+		Task[] paList = tms.getAvailableTasks("PATask", "ORDER BY T._creationDate DESC");
 		_log.info("get the task we want");
-		String id = pa[0].getID();
+		Task pa = paList[0];
+		String id = pa.getID();
 		_log.info("We're about to start using PATask with id:"+id);
 		
 		_log.info("We cannot get input and output of a task on a get task list call (see WSDL)");
 		_log.info("Let's call TMS again to get the full data of this PATask");
 		PATask task = (PATask)tms.getTask(id);
+		_log.info("Checking the task metadata." +
+				"\nThe task has been created on:"+task.getCreationDate() +
+				"\nIt has the following description:"+task.getDescription() +
+				"\nIt is attached to the process with id:"+task.getProcessID());
 		_log.info("Task has the following input:\n"+task.getInputAsXmlString());
 
 		_log.info("Let's claim the task: no one else can access this task apart from user:"+user);
