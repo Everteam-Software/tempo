@@ -252,7 +252,7 @@ define "tempo" do
     compile.with projects("tms-axis", "tms-common"), 
       APACHE_JPA, AXIOM, AXIS2, SLF4J, STAX_API, WSDL4J, WS_COMMONS_SCHEMA, XMLBEANS
 
-    test.with APACHE_COMMONS[:pool], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], LOG4J, WOODSTOX, SUNMAIL
+    test.with APACHE_COMMONS[:pool], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], LOG4J, WOODSTOX, SUNMAIL, projects("security", "security-ws-client", "security-ws-common")
     test.exclude '*TestUtils*'
 
     unless ENV["LIVE"] == 'yes'

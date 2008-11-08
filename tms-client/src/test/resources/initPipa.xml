@@ -1,0 +1,34 @@
+<output
+	xmlns="http://www.intalio.com/workflow/forms/AbsenceRequest/AbsenceRequest"
+	xmlns:f="http://orbeon.org/oxf/xml/formatting" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:fe="http://www.intalio.com/workflow/forms/AbsenceRequest/AbsenceRequest">
+	<request>
+		<employee>
+			<name>Michael Smith</name>
+			<phone>+1(650)596-1800</phone>
+			<email>msmith@examples.intalio.com</email>
+		</employee>
+		<details>
+			<request>
+				<from>2005-12-05</from>
+				<to>2005-12-09</to>
+				<type />
+				<hours>40</hours>
+			</request>
+			<request>
+				<from>2006-02-06</from>
+				<to>2006-02-10</to>
+				<type />
+				<hours>40</hours>
+			</request>
+		</details>
+		<contactWhileAway>
+			<name>Emily Williams</name>
+			<phone>+1(650)596-1800</phone>
+			<email>ewilliams@examples.intalio.com
+			</email>
+		</contactWhileAway>
+		<notes>This is sample data for this form.</notes>
+	</request>
+</output>
