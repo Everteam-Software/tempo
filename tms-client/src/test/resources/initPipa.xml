@@ -1,8 +1,4 @@
-<output
-	xmlns="http://www.intalio.com/workflow/forms/AbsenceRequest/AbsenceRequest"
-	xmlns:f="http://orbeon.org/oxf/xml/formatting" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:fe="http://www.intalio.com/workflow/forms/AbsenceRequest/AbsenceRequest">
+<output xmlns="http://www.intalio.com/workflow/forms/AbsenceRequest/AbsenceRequest">
 	<request>
 		<employee>
 			<name>Michael Smith</name>
