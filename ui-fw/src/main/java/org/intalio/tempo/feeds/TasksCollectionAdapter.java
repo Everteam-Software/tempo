@@ -12,11 +12,9 @@
 package org.intalio.tempo.feeds;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.Date;
 
 import org.apache.abdera.factory.Factory;
-import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.i18n.text.UrlEncoding;
 import org.apache.abdera.model.Document;
 import org.apache.abdera.model.Entry;
@@ -32,7 +30,6 @@ import org.apache.abdera.protocol.server.context.StreamWriterResponseContext;
 import org.apache.abdera.protocol.server.impl.AbstractCollectionAdapter;
 import org.apache.abdera.util.Constants;
 import org.apache.abdera.writer.StreamWriter;
-import org.apache.commons.lang.StringUtils;
 import org.intalio.tempo.security.Property;
 import org.intalio.tempo.security.authentication.AuthenticationConstants;
 import org.intalio.tempo.security.util.PropertyUtils;
@@ -81,8 +78,7 @@ public class TasksCollectionAdapter extends AbstractCollectionAdapter {
         try {
             return getFeedDocument(request).getRoot().getEntry(getEntryID(request));
         } catch (Exception e) {
-            LOG.error(e.getMessage());
-            e.printStackTrace();
+            LOG.error(e.getMessage(),e);
         }
         return null;
     }
@@ -131,6 +127,8 @@ public class TasksCollectionAdapter extends AbstractCollectionAdapter {
         String token = target.getParameter("token");
 
         Feed feed = createFeedBase(context);
+        
+        
 
         TokenClient tokenClient = Configuration.getInstance().getTokenClient();
         try {
@@ -153,7 +151,6 @@ public class TasksCollectionAdapter extends AbstractCollectionAdapter {
         feed.setMustPreserveWhitespace(true);
         feed.setUpdated(new Date());
         try {
-//            ITaskManagementService client = new RemoteTMSFactory(Configuration.getInstance().getServiceEndpoint(), token).getService();
         	ITaskManagementService client = getClient(token);
             if (collection.equalsIgnoreCase(IntalioFeeds.PROCESSES.name())) {
                 feed.setTitle("Intalio Processes");
@@ -170,7 +167,8 @@ public class TasksCollectionAdapter extends AbstractCollectionAdapter {
 
             feed.addCategory(collection);
             feed.addLink(Configuration.getInstance().getFeedUrl());
-            feed.setBaseUri(Configuration.getInstance().getFeedUrl());
+            // Niko:This includes not supported namespaces. Leave this commented out
+            // feed.setBaseUri(Configuration.getInstance().getFeedUrl());
             
         } catch (Exception e) {
             LOG.error("Feed exception", e);
@@ -182,7 +180,8 @@ public class TasksCollectionAdapter extends AbstractCollectionAdapter {
                 feed.writeTo(System.out);
             } catch (IOException e) {
             }
-        return feed.getDocument();
+        Document<Feed> document = feed.getDocument();
+		return document;
     }
 
     private void addTasksToFeed(RequestContext context, Feed feed, Task[] tasks, String token, String user) throws Exception {
