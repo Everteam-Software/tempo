@@ -21,7 +21,7 @@
 						</c:choose>
 						</a>
 						]]></cell>
-					<cell><![CDATA[<a href="${taskFullURL}" target="taskform">aa${taskHolder.task.creationDate}</a>]]></cell>
+					<cell><![CDATA[<a href="${taskFullURL}" target="taskform">${taskHolder.task.creationDate}</a>]]></cell>
 				</row>
 			</c:forEach>
 		</c:when>
