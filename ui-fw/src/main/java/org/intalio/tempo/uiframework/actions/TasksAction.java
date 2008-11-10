@@ -48,12 +48,12 @@ public class TasksAction extends Action {
     protected TasksCollector getTaskCollector(String user, String token){
     	return new TasksCollector(new HttpServletRequestWrapper(_request), user, token);
     }
+    
     protected void fillModel(Map model) {
         final UIFWApplicationState state = ApplicationState.getCurrentInstance(new HttpServletRequestWrapper(_request));
         final String token = state.getCurrentUser().getToken();
         final String user = state.getCurrentUser().getName();
         try {
-//            TasksCollector collector = new TasksCollector(new HttpServletRequestWrapper(_request), user, token);
         	 TasksCollector collector = getTaskCollector(user, token);
             collector.retrieveTasks();
             model.put("tasks", collector.getTasks());

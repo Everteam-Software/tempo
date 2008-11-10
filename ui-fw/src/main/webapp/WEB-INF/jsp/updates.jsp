@@ -11,8 +11,17 @@
 			<c:forEach items="${tasks}" var="taskHolder" varStatus="status">
 				<c:set var="taskFullURL" value="${taskHolder.formManagerURL}" />
 				<row id="no${status.index}">
-					<cell><![CDATA[<a href="${taskFullURL}" target="taskform">${taskHolder.task.description}</a>]]></cell>
-					<cell><![CDATA[<a href="${taskFullURL}" target="taskform">${taskHolder.task.creationDate}</a>]]></cell>
+					<cell><![CDATA[
+						<a href="${taskFullURL}" target="taskform">
+						<c:choose>
+							<c:when test="${taskHolder.task.description == ''}">
+								<i><fmt:message key="org_intalio_uifw_tasks_notitle"/></i>
+							</c:when>
+							<c:otherwise>${taskHolder.task.description}</c:otherwise>
+						</c:choose>
+						</a>
+						]]></cell>
+					<cell><![CDATA[<a href="${taskFullURL}" target="taskform">aa${taskHolder.task.creationDate}</a>]]></cell>
 				</row>
 			</c:forEach>
 		</c:when>
@@ -20,7 +29,16 @@
 			<c:forEach items="${tasks}" var="taskHolder" varStatus="status">
 				<c:set var="taskFullURL" value="${taskHolder.formManagerURL}" />
 				<row id="pi${status.index}">
-					<cell><![CDATA[<a href="${taskFullURL}" target="taskform">${taskHolder.task.description}</a>]]></cell>
+					<cell><![CDATA[
+						<a href="${taskFullURL}" target="taskform">
+						<c:choose>
+							<c:when test="${taskHolder.task.description == ''}">
+								<i><fmt:message key="org_intalio_uifw_tasks_notitle"/></i>
+							</c:when>
+							<c:otherwise>${taskHolder.task.description}</c:otherwise>
+						</c:choose>
+						</a>
+						]]></cell>
 					<cell><![CDATA[<a href="${taskFullURL}" target="taskform">${taskHolder.task.creationDate}</a>]]></cell>
 				</row>
 			</c:forEach>
@@ -29,7 +47,16 @@
 			<c:forEach items="${tasks}" var="taskHolder" varStatus="status">
 				<c:set var="taskFullURL" value="${taskHolder.formManagerURL}" />
 				<row id="pa${status.index}">
-					<cell><![CDATA[<a href="${taskFullURL}" target="taskform">${taskHolder.task.description}</a>]]></cell>
+						<cell><![CDATA[
+							<a href="${taskFullURL}" target="taskform">
+							<c:choose>
+								<c:when test="${taskHolder.task.description == ''}">
+									<i><fmt:message key="org_intalio_uifw_tasks_notitle"/></i>
+								</c:when>
+								<c:otherwise>${taskHolder.task.description}</c:otherwise>
+							</c:choose>
+							</a>
+							]]></cell>
 					<cell><![CDATA[
 						<a href="${taskFullURL}" target="taskform">
 						<c:if test="${taskHolder.task.state =='CLAIMED'}">
