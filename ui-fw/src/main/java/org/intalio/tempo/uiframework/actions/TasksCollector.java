@@ -34,10 +34,18 @@ import org.slf4j.LoggerFactory;
 
 import edu.emory.mathcs.backport.java.util.Arrays;
 
+/**
+ * This class is responsible for collecting task and sending them back to the user interface
+ * @author niko
+ *
+ */
 public class TasksCollector {
 
     final String[] parameters = new String[] { "page", "rp", "sortname", "sortorder", "query", "qtype", "type" };
 
+    /**
+     * Parameters that can come from the user interface
+     */
     final class ParameterMap extends HashMap<String, String> {
         public ParameterMap() {
             super(parameters.length);
@@ -51,14 +59,20 @@ public class TasksCollector {
             init();
         }
 
+        /**
+         * Do not copy over null values and empty values for parameters
+         */
         public void init() {
             for (String param : parameters) {
                 String value = _request.getParameter(param);
-                if (value != null && !value.equalsIgnoreCase("undefined"))
+                if (value != null && !value.trim().equalsIgnoreCase("") && !value.equalsIgnoreCase("undefined"))
                     put(param, value);
             }
         }
 
+        /**
+         * Tells whether a parameter is defined and has a non-null value
+         */
         public boolean isSet(String param) {
             return this.containsKey(param) && this.get(param) != null;
         }
@@ -87,39 +101,33 @@ public class TasksCollector {
     public void retrieveTasks() throws Exception {
         final FormManager fmanager = FormManagerBroker.getInstance().getFormManager();
         final String endpoint = URIUtils.resolveURI(_request, _endpoint);
-       // final ITaskManagementService taskManager = new RemoteTMSFactory(endpoint, _token).getService();
         final ITaskManagementService taskManager = getTaskManager(endpoint, _token);
 
         ParameterMap params = new ParameterMap();
 
         String type = params.get("type");
-        if (type.equals(PATask.class.getSimpleName())) {
+        boolean validQuery = params.isSet("qtype") && params.isSet("query"); // we reuse this a few times, so let's factor this here
+		if (type.equals(PATask.class.getSimpleName())) {
             StringBuffer query = new StringBuffer("NOT T._state = TaskState.COMPLETED AND NOT T._state = TaskState.FAILED ");
-            if (params.isSet("qtype"))
-                query.append(" AND T." + params.get("qtype") + " like '%" + params.get("query") + "%'");
+            if (validQuery) query.append(" AND T." + params.get("qtype") + " like '%" + params.get("query") + "%'");
             if (params.isSet("sortname"))
                 query.append(" ORDER BY T." + params.get("sortname"));
-            if (params.isSet("sortorder"))
-                query.append(" " + params.get("sortorder"));
+            if (params.isSet("sortorder")) query.append(" " + params.get("sortorder"));
             collectTasks(_token, _user, fmanager, taskManager, "PATask", query.toString(), _tasks, params.get("rp"), params.get("page"));
         } else if (type.equals(Notification.class.getSimpleName())) {
             StringBuffer query = new StringBuffer("NOT T._state = TaskState.COMPLETED AND NOT T._state = TaskState.FAILED ");
-            if (params.isSet("qtype"))
-                query.append(" AND T." + params.get("qtype") + " like '%" + params.get("query") + "%'");
-            if (params.isSet("sortname"))
-                query.append(" ORDER BY T." + params.get("sortname"));
-            if (params.isSet("sortorder"))
-                query.append(" " + params.get("sortorder"));
+            if (validQuery) query.append(" AND T." + params.get("qtype") + " like '%" + params.get("query") + "%'");
+            if (params.isSet("sortname")) query.append(" ORDER BY T." + params.get("sortname"));
+            if (params.isSet("sortorder")) query.append(" " + params.get("sortorder"));
             collectTasks(_token, _user, fmanager, taskManager, "Notification", query.toString(), _tasks, params.get("rp"), params.get("page"));
         } else if (type.equals(PIPATask.class.getSimpleName())) {
             StringBuffer query = new StringBuffer("");
-            if (params.isSet("qtype"))
-                query.append("T." + params.get("qtype") + " like '%" + params.get("query") + "%'");
-            if (params.isSet("sortname"))
-                query.append(" ORDER BY T." + params.get("sortname"));
-            if (params.isSet("sortorder"))
-                query.append(" " + params.get("sortorder"));
+            if (validQuery) query.append("T." + params.get("qtype") + " like '%" + params.get("query") + "%'");
+            if (params.isSet("sortname")) query.append(" ORDER BY T." + params.get("sortname"));
+            if (params.isSet("sortorder")) query.append(" " + params.get("sortorder"));
             collectTasks(_token, _user, fmanager, taskManager, "PIPATask", query.toString(), _tasks, params.get("rp"), params.get("page"));
+        } else {
+        	_log.error("Cannot collect task of type:"+type);
         }
     }
 
