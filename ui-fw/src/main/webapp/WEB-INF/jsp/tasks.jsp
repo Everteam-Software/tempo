@@ -52,7 +52,7 @@
 			</script>
 
 		</head>
-		<body width="100%" height="98%">
+		<body width="95%" height="98%">
 			
 			<%@ include file="/WEB-INF/jsp/siteHeader.jsp"%>
 						<div id="container">			
@@ -73,8 +73,8 @@
 							<li class="intro" style="position: relative;top:0px"><img height="20px" width="20px" src="images/bouncing.gif"/></li>
 						</ul>
 					</div>
-					
-					<div style="clear: both ; float:left;">
+
+					<div style="clear: both ; float:left; position:relative; top:0px">
 						<div class="hiddencontent" id="<fmt:message key="com_intalio_bpms_workflow_tab_tasks"/>">
 						<table id="table1" style="display:none"></table>
 						</div>
@@ -86,13 +86,13 @@
 						</div>
 					</div>
 					
-					<iframe name="taskform" FRAMEBORDER="0" id="taskform" SCROLLING="auto"></iframe>
-					
 					<div class="intro" id="introhelp">
 						<div id="intro">
 							<%@ include file="/customize/intro.jsp"%>	
 						</div>
 					</div>
+					
+					<iframe name="taskform" FRAMEBORDER="0" id="taskform" SCROLLING="auto"></iframe>
 					
 						<div id="footer">&nbsp;&nbsp;<fmt:message key="com_intalio_bpms_workflow_pageFooter_poweredBy_label" />&nbsp;&nbsp;
 							<a href="http://www.intalio.com"><span style="color: #3082A8"><fmt:message key="com_intalio_bpms_workflow_pageFooter_poweredBy_value" /></span></a>

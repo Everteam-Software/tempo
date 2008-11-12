@@ -215,22 +215,23 @@ table {
 }
 
 #intro {
-	width: 400px;
-	height: 150px;
+	width: 300px;
+	height: 100px;
 	background: #99ccFF;
 	padding:20px;
-	margin: 50px auto;
 }
 
 #introhelp {
-	position: absolute;
-	left:200px;
-	top: 200px;
+	position: relative;
+	width:90%;
+	left:40px;
+	top: 50px;
+	padding:20px;
 }
 
 #filter {
 	vertical-align:top;
-	font-size: 9px;
+	font-size: 10px;
 	height: 16px;
 	width: 150px;
 	background-color: #FFFFFF;

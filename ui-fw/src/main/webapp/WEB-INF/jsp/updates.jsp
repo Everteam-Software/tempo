@@ -2,7 +2,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ page contentType="text/xml" %>
-<c:set var="iconSize" value="12"/>
+<c:set var="iconSize" value="14"/>
 <rows>
 	<page><%= request.getAttribute("currentPage") %></page>
 	<total><%= request.getAttribute("totalPage") %></total>
@@ -60,10 +60,10 @@
 					<cell><![CDATA[
 						<a href="${taskFullURL}" target="taskform">
 						<c:if test="${taskHolder.task.state =='CLAIMED'}">
-     						<img height="${iconSize}" width="${iconSize}" title="<fmt:message key="org_intalio_uifw_tasks_claimed"/>" border="0px" src="images/amber-on-48.png"/>
+     						<img height="${iconSize}" width="${iconSize}" title="<fmt:message key="org_intalio_uifw_tasks_claimed"/>" border="0px" src="images/orange.jpg"/>
 						</c:if>
 						<c:if test="${taskHolder.task.state =='READY'}">
-	    					<img height="${iconSize}" width="${iconSize}" title="<fmt:message key="org_intalio_uifw_tasks_ready"/>" border="0px" src="images/green-on-48.png"/>
+	    					<img height="${iconSize}" width="${iconSize}" title="<fmt:message key="org_intalio_uifw_tasks_ready"/>" border="0px" src="images/green.jpg"/>
 						</c:if>
 						</a>
 						]]>
