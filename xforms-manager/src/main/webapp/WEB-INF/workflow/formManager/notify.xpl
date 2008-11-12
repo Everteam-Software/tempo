@@ -114,7 +114,7 @@
             <p:processor name="oxf:delegation">
                 <p:input name="interface" href="oxf:/config/services.xml"/>
                 <p:input name="call" href="#getTaskRequest"/>
-                <p:output name="data" id="getTaskResponse" debug="taskResponse"/>
+                <p:output name="data" id="getTaskResponse"/>
             </p:processor>
 
             <p:processor name="oxf:exception-catcher">
@@ -137,7 +137,7 @@
                 <p:otherwise>
                     <!-- Wraps the form with everything that is required to handle task actions -->
                     <p:processor name="oxf:xslt">
-                        <p:input name="data" href="#form" debug="form"/>
+                        <p:input name="data" href="#form"/>
                         <p:input name="getTaskResponse" href="#getTaskResponse"/>
                         <p:input name="xpl-input" href="#data"/>
                         <p:input name="config">
