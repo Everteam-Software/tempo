@@ -60,10 +60,10 @@
 					<cell><![CDATA[
 						<a href="${taskFullURL}" target="taskform">
 						<c:if test="${taskHolder.task.state =='CLAIMED'}">
-     						<img height="${iconSize}" width="${iconSize}" border="0px" src="images/amber-on-48.png"/>
+     						<img height="${iconSize}" width="${iconSize}" title="<fmt:message key="org_intalio_uifw_tasks_claimed"/>" border="0px" src="images/amber-on-48.png"/>
 						</c:if>
 						<c:if test="${taskHolder.task.state =='READY'}">
-	    					<img height="${iconSize}" width="${iconSize}" border="0px" src="images/green-on-48.png"/>
+	    					<img height="${iconSize}" width="${iconSize}" title="<fmt:message key="org_intalio_uifw_tasks_ready"/>" border="0px" src="images/green-on-48.png"/>
 						</c:if>
 						</a>
 						]]>
