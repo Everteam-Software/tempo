@@ -7,7 +7,14 @@
 
 		var speed = "fast";
 		window.open("about:blank", "taskform");
-		var width = $(window).width() - 150;
+		var width = $(window).width() - 100;
+		var height = 0;
+		if($.browser.msie){
+		     height = $(window).height() - 140;
+		  }else{
+		     height = $(window).height() - 100;
+		  }
+		var height2 = height - 50;
 
 		function preProcess(data) {
     		$("rows row", data).each(function () {
@@ -24,7 +31,6 @@
 			$('#taskform').animate({height:"0px"},speed);
 		}
 		
-		clearFrame();
 
 		//
 		// tab definition
@@ -48,7 +54,8 @@
 		usepager: true,
 		searchitems : [{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description'}],
 		showTableToggleBtn: true,
-		width: width
+		width: width,
+		height: height2
 		}
 		);
 		
@@ -61,13 +68,14 @@
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/>', name : '_creationDate', width : width*0.2, sortable : true, align: 'left'},
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_dueDate"/>', name : '_deadline', width : width*0.1, sortable : true, align: 'left'},
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_priority"/>', name : '_priority', width : width*0.1, sortable : true, align: 'center'},
-		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_attachments"/>', name : '_attachments', width : width*0.1, sortable : true, align: 'center'}
+		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_attachments"/>', name : '_attachments', width : width*0.087, sortable : true, align: 'center'}
 		],
 		usepager: true,
 		preProcess: preProcess,
 		searchitems : [{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description'}],
 		showTableToggleBtn: true,
-		width: width
+		width: width,
+		height: height2
 		}
 		);
 		
@@ -84,7 +92,8 @@
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/>', name : '_creationDate'}
 		],
 		showTableToggleBtn: true,
-		width: width
+		width: width,
+		height: height2
 		}
 		);
 		
@@ -160,7 +169,7 @@
 				refresh(true);
 				}
 			} else {
-			    $('#taskform').animate({height:"100%"},speed);
+			    $('#taskform').animate({height:height},speed);
 				refresh(false);
 			}
 

@@ -11,18 +11,25 @@
 */
 body {
 	margin: 0px;
+	font-size: 9px;
+	font-family: Verdana; 
 	background-color: #FFFFFF; 
-	font-family: Arial Black;
-	font-size: 8pt;
 	color: #333333;	
 	direction: lrt;
 }
 
-span, div, td, a, p, li, input, select, optgroup{
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 9pt;
+.siteHeader {
+	clear:both;
+	position: relative;
+	left:0px;
+	top:5px;
+	margin-bottom:20px;
 }
-
+.siteHeaderIcons{
+	position:absolute;
+	top:5px;
+	right:10px;	
+}
 select	{
 	border: 1px solid #555555;
 }
@@ -70,33 +77,47 @@ a:hover {
 .subHeader #headerText{
 	background-color: #ffffff;
 	height: 30px;
+	font-size:9px;
 	text-transform: uppercase;
 }
 .subHeader_login {
 	height: 30px;
+	font-size:9px;
 	color:#333333;
 	background-color: #EAEAEA;
+}
+.textinput {
+	font-size:9px;
 }
 
 .subHeader_login #headerText{
 	background-color: #EAEAEA;
 	height: 30px;
+	font-size:9px;
 	text-transform: uppercase;
 }
 
 .contentBox {
+	font-size:9px;
 	background-color: #FFFFFF;
 	width: 100%;
+}
+table {
+	font-family:Verdana;
+	font-size:11px;
 }
 .contentBox_login{
 	background-color: #FFFFFF;
 	width: 300px;
+	font-family:Verdana;
+	font-size:10px;
 	border: 1px solid #777777;
 }
 
 .thirdLevelHeader {
 	cursor: pointer;
 	height: 18px; 
+	font-family:Verdana;
 	width: 200px; 
 	border: 1px solid #D7D7D7;
 }
@@ -172,14 +193,19 @@ a:hover {
 }
 
 #taskform_bottom {
-	border:0px;
 	width:100%;
 	background: url(images/tab_bottom.gif) repeat-x bottom;
+	position: bottom;
 }
 
 #footer {
+	clear:both;
+	float:left;
 	font-family: Arial Black; 
 	font-size: 8pt;
+	position: absolute;
+	bottom: 4px;
+	left:0px;
 }
 
 #filter {

@@ -9,11 +9,10 @@
 	Contributors:
 	Intalio inc. - initial API and implementation
 --%>
-<?xml version="1.0" encoding="UTF-8"?>
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en" xml:lang="en">
 	<head>
 		<title>
 			<fmt:message key="com_intalio_bpms_workflow_pageTitle"/>
@@ -36,12 +35,26 @@
 			<script type="text/javascript" src="script/jquery.demensions.js"></script>
 
 			<%@ include file="/script/grids.jsp"%>
+			
+			<script type="text/javascript">
+			function resizeIframe() {
+			    var height = document.documentElement.clientHeight;
+			    height -= document.getElementById('taskform').offsetTop;
+
+			    // not sure how to get this dynamically
+			    height -= 20; /* whatever you set your body bottom margin/padding to be */
+
+			    document.getElementById('frame').style.height = height +"px";
+
+			};
+			document.getElementById('taskform').onload = resizeIframe;
+			window.onresize = resizeIframe;
+			</script>
+
 		</head>
-		<body>
-			<table height="100%" width="100%">
-				<tr width="100%" height="5%">
-					<td width="100%">
-						<%@ include file="/WEB-INF/jsp/siteHeader.jsp"%>
+		<body width="100%" height="98%">
+			
+			<%@ include file="/WEB-INF/jsp/siteHeader.jsp"%>
 						<div id="container">			
 							<ul id="tabnav">
 								<li><a href="#" title="<fmt:message key="com_intalio_bpms_workflow_tab_tasks"/>"><fmt:message key="com_intalio_bpms_workflow_tab_tasks"/></a></li>
@@ -57,51 +70,46 @@
 									<input title="<fmt:message key="org_intalio_uifw_tasks_filtertext"/>" id="filterbutt" type="button" value="<fmt:message key="org_intalio_uifw_tasks_filterbutton"/>"/>
 								</div>
 							</li>
-							<li class="intro"><img src="images/bouncing.gif"/></li>
+							<li class="intro" style="position: relative;top:0px"><img height="20px" width="20px" src="images/bouncing.gif"/></li>
 						</ul>
 					</div>
-				</td>
-				<tr>
-					<td width="100%">
-						<div class="hiddencontent" id="<fmt:message key="com_intalio_bpms_workflow_tab_tasks"/>"><table id="table1" style="display:none"></table></div>
-						<div class="hiddencontent" id="<fmt:message key="com_intalio_bpms_workflow_tab_notifications"/>"><table id="table2" style="display:none"></table></div>
-						<div class="hiddencontent" id="<fmt:message key="com_intalio_bpms_workflow_tab_processes"/>"><table id="table3" style="display:none"></table></div>
-					</td>
-				</tr>
-				<tr height="95%">
-					<td width="100%">
-						<div class="intro" id="introhelp">
-							<div id="intro">
-								<%@ include file="/customize/intro.jsp"%>	
-							</div>
+					
+					<div style="clear: both ; float:left;">
+						<div class="hiddencontent" id="<fmt:message key="com_intalio_bpms_workflow_tab_tasks"/>">
+						<table id="table1" style="display:none"></table>
 						</div>
-						<iframe name="taskform" height="auto" width="auto" FRAMEBORDER="0" id="taskform" SCROLLING="auto"></iframe>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<div id="taskform_bottom">&nbsp;</div>
-					</td>
-				</tr>
-				<tr>
-					<td>
+						<div class="hiddencontent" id="<fmt:message key="com_intalio_bpms_workflow_tab_notifications"/>">
+						<table id="table2" style="display:none"></table>
+						</div>
+						<div class="hiddencontent" id="<fmt:message key="com_intalio_bpms_workflow_tab_processes"/>">
+						<table id="table3" style="display:none"></table>
+						</div>
+					</div>
+					
+					<iframe name="taskform" FRAMEBORDER="0" id="taskform" SCROLLING="auto"></iframe>
+					
+					<div class="intro" id="introhelp">
+						<div id="intro">
+							<%@ include file="/customize/intro.jsp"%>	
+						</div>
+					</div>
+					
 						<div id="footer">&nbsp;&nbsp;<fmt:message key="com_intalio_bpms_workflow_pageFooter_poweredBy_label" />&nbsp;&nbsp;
-						<a href="http://www.intalio.com"><span style="color: #3082A8"><fmt:message key="com_intalio_bpms_workflow_pageFooter_poweredBy_value" /></span></a>
-						<fmt:message key="com_intalio_bpms_workflow_versionInfo">
-							<c:choose>
-								<c:when test="${!empty version && !empty build}" >
-									<fmt:param value="${version}"/>
-									<fmt:param value="${build}"/>
-								</c:when> 
-								<c:otherwise>
-									<fmt:param value="unknown"/>
-									<fmt:param value="unknown"/>
-								</c:otherwise>
-							</c:choose>
-						</fmt:message>
-						<a href="http://bpms.intalio.com"><span style="color: #3082A8"><fmt:message key="com_intalio_bpms_workflow_pageFooter_featureBugRequest"/></span></a>
-					</td>
-				</tr>
-			</table>
+							<a href="http://www.intalio.com"><span style="color: #3082A8"><fmt:message key="com_intalio_bpms_workflow_pageFooter_poweredBy_value" /></span></a>
+							<fmt:message key="com_intalio_bpms_workflow_versionInfo">
+								<c:choose>
+									<c:when test="${!empty version && !empty build}" >
+										<fmt:param value="${version}"/>
+										<fmt:param value="${build}"/>
+									</c:when> 
+									<c:otherwise>
+										<fmt:param value="unknown"/>
+										<fmt:param value="unknown"/>
+									</c:otherwise>
+								</c:choose>
+							</fmt:message>
+							<a href="http://bpms.intalio.com"><span style="color: #3082A8"><fmt:message key="com_intalio_bpms_workflow_pageFooter_featureBugRequest"/></span></a>
+						</div>
+			
 		</body>
 	</html>
