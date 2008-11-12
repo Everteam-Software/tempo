@@ -21,7 +21,7 @@
 						</c:choose>
 						</a>
 						]]></cell>
-					<cell><![CDATA[<a href="${taskFullURL}" target="taskform">${taskHolder.task.creationDate}</a>]]></cell>
+						<cell><![CDATA[<a href="${taskFullURL}" title="${taskHolder.task.creationDate}" target="taskform"><fmt:formatDate value="${taskHolder.task.creationDate}" type="both" timeStyle="short" dateStyle="short" /></a>]]></cell>
 				</row>
 			</c:forEach>
 		</c:when>
@@ -39,7 +39,7 @@
 						</c:choose>
 						</a>
 						]]></cell>
-					<cell><![CDATA[<a href="${taskFullURL}" target="taskform">${taskHolder.task.creationDate}</a>]]></cell>
+						<cell><![CDATA[<a href="${taskFullURL}" title="${taskHolder.task.creationDate}" target="taskform"><fmt:formatDate value="${taskHolder.task.creationDate}" type="both" timeStyle="short" dateStyle="short" /></a>]]></cell>
 				</row>
 			</c:forEach>
 		</c:when>
@@ -68,8 +68,8 @@
 						</a>
 						]]>
 					</cell>
-					<cell><![CDATA[<a href="${taskFullURL}" target="taskform">${taskHolder.task.creationDate}</a>]]></cell>
-					<cell>${taskHolder.task.deadline}</cell>
+					<cell><![CDATA[<a href="${taskFullURL}" title="${taskHolder.task.creationDate}" target="taskform"><fmt:formatDate value="${taskHolder.task.creationDate}" type="both" timeStyle="short" dateStyle="short" /></a>]]></cell>
+						<cell><![CDATA[<a href="${taskFullURL}" title="${taskHolder.task.deadline}" target="taskform"><fmt:formatDate value="${taskHolder.task.deadline}" type="both" timeStyle="short" dateStyle="short" /></a>]]></cell>
 					<cell>${taskHolder.task.priority}</cell>
 					<cell><![CDATA[
 							<c:forEach items="${taskHolder.task.attachments}" var="attachment" varStatus="index">
