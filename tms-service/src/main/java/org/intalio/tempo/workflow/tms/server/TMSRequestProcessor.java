@@ -63,6 +63,7 @@ public class TMSRequestProcessor extends OMUnmarshaller {
         _logger.debug("Created TMSRequestProcessor");
     }
 
+
     public void setServer(ITMSServer server) {
         if (_registerPipa != null) {
             _registerPipa.destroy();
@@ -80,17 +81,7 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             String participantToken = requireElementValue(rootQueue, "participantToken");
             final UserRoles user = _server.getUserRoles(participantToken);
             Task[] tasks = _server.getTaskList(participantToken);
-            OMElement response = new TMSResponseMarshaller(OM_FACTORY) {
-                public OMElement marshalResponse(Task[] tasks) {
-                    OMElement response = createElement("getTaskListResponse");
-                    for (Task task : tasks)
-                        response.addChild(new TaskMarshaller().marshalTaskMetadata(task, user));
-                    return response;
-                }
-            }.marshalResponse(tasks);
-            if (_logger.isDebugEnabled())
-                _logger.debug(response.toString());
-            return response;
+            return marshalTasksList(user, tasks, "getTaskListResponse");
         } catch (Exception e) {
             throw makeFault(e);
         }
@@ -166,6 +157,9 @@ public class TMSRequestProcessor extends OMUnmarshaller {
     public OMElement deleteAll(OMElement requestElement) throws AxisFault {
         try {
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
+            String taskType = expectElementValue(rootQueue, "taskType");
+            String subquery = expectElementValue(rootQueue, "subQuery");
+            boolean fakeDelete = Boolean.valueOf(requireElementValue(rootQueue, "fakeDelete"));
             String participantToken = requireElementValue(rootQueue, "participantToken");
             boolean fakeDelete = Boolean.valueOf(requireElementValue(rootQueue, "fakeDelete"));
             String subquery = expectElementValue(rootQueue, "subQuery");
@@ -392,18 +386,35 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             String subQuery = requireElementValue(rootQueue, "subQuery");
             final UserRoles user = _server.getUserRoles(participantToken);
             Task[] tasks = _server.getAvailableTasks(participantToken, taskType, subQuery);
-            OMElement response = new TMSResponseMarshaller(OM_FACTORY) {
-                public OMElement marshalResponse(Task[] tasks) {
-                    OMElement response = createElement("getTaskListResponse");
-                    for (Task task : tasks)
-                        response.addChild(new TaskMarshaller().marshalTaskMetadata(task, user));
-                    return response;
-                }
-            }.marshalResponse(tasks);
-            return response;
+            return marshalTasksList(user, tasks, "getAvailableTasksResponse");
         } catch (Exception e) {
             throw makeFault(e);
         }
+    }
+
+    /**
+     * This is used in both <code>getAvailableTasks</code> and
+     * <code>getTaskList</code>
+     */
+    private OMElement marshalTasksList(final UserRoles user, final Task[] tasks, final String responseTag) {
+        OMElement response = new TMSResponseMarshaller(OM_FACTORY) {
+            public OMElement marshalResponse(Task[] tasks) {
+                OMElement response = createElement(responseTag);
+                for (Task task : tasks) {
+                    try {
+                        response.addChild(new TaskMarshaller().marshalTaskMetadata(task, user));
+                    } catch (Exception e) {
+                        // marshalling of that task failed.
+                        // let's not fail fast, but provide info in the logs.
+                        _logger.error(task.getID() + "could not be serialized to xml", e);
+                    }
+                }
+                return response;
+            }
+        }.marshalResponse(tasks);
+        if (_logger.isDebugEnabled())
+            _logger.debug(response.toString());
+        return response;
     }
 
     private AxisFault makeFault(Exception e) {
@@ -429,8 +440,7 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             AxisFault axisFault = new AxisFault(e.getMessage(), e);
             axisFault.setDetail(response);
             return axisFault;
-        }
-        else if (e instanceof AxisFault) {
+        } else if (e instanceof AxisFault) {
             _logger.error(e.getMessage(), e);
             return (AxisFault) e;
         } else {
