@@ -406,7 +406,7 @@
 	
                                         <xforms:trigger appearance="xxforms:image" style="float: top">
                                             <xforms:label>Show/refresh attachments</xforms:label>
-                                            <xxforms:img src="/images/attachments.gif"/>
+                                            <xxforms:img title="Add Attachments to Task" src="/images/attachments.gif"/>
                                             <xforms:action ev:event="DOMActivate">
                                                 <xforms:setvalue ref="instance('taskAttachments')/action" value="'show'"/>
                                                 <xforms:recalculate/>
@@ -416,8 +416,8 @@
 
                                         <xforms:group ref="instance('taskAttachments')" style="width : 97%; border-color: #CCCCCC; float: top">
                                                 <xforms:trigger appearance="xxforms:image" style="float: right">
-                                                    <xforms:label>Close attachments</xforms:label>
-                                                    <xxforms:img src="/images/close.png"/>
+                                                    <xforms:label>Close Attachments Section</xforms:label>
+                                                    <xxforms:img title="Close attachments" src="/images/close.png"/>
                                                     <xforms:setvalue ev:event="DOMActivate" ref="instance('taskAttachments')/action" value="'hide'"/>
                                                 </xforms:trigger>
                                                 <xhtml:table
@@ -438,7 +438,7 @@
                                                             <xhtml:td style="border-width: 0px; border-collapse: collapse;text-align: center">
                                                                 <xforms:trigger appearance="xxforms:image">
                                                                     <xforms:label>Delete attachment</xforms:label>
-                                                                    <xxforms:img src="/images/remove.gif"/>
+                                                                    <xxforms:img title="Remove" src="/images/remove.gif"/>
                                                                     <xforms:action ev:event="DOMActivate">
                                                                         <xforms:setvalue
                                                                                 ref="instance('taskAttachments')/delete"
@@ -482,7 +482,7 @@
                                                     </xforms:repeat>
 
                                                     <xhtml:tr>
-                                                        <xhtml:th colspan="5" style="text-align: center">
+                                                        <xhtml:th colspan="5" title="Select Attachment Type" style="text-align: center">
                                                             <xforms:select1 appearance="minimal" ref="new/@content">
                                                                 <xforms:label>Add new attachment as </xforms:label>
                                                                 <xforms:item>
@@ -501,7 +501,7 @@
                                                                 style="border-width: 0px; border-collapse: collapse;text-align: center">
                                                             <xforms:trigger ref="new/file/@attachFile" appearance="xxforms:image">
                                                                 <xforms:label>click to attach file</xforms:label>
-                                                                <xxforms:img src="/images/add.gif"/>
+                                                                <xxforms:img title="Attach File" src="/images/add.gif"/>
                                                                 <xforms:action ev:event="DOMActivate"
                                                                                xforms:if="not(string-length(normalize-space(instance('taskAttachments')/new/@title)) = 0)">
                                                                     <xforms:setvalue ref="instance('taskAttachments')/action" value="'new'"/>
@@ -520,7 +520,7 @@
                                                             <xforms:trigger ref="new/plaintext/@attachText"
                                                                             appearance="xxforms:image">
                                                                 <xforms:label>click to attach text</xforms:label>
-                                                                <xxforms:img src="/images/add.gif"/>
+                                                                <xxforms:img title="Attache text" src="/images/add.gif"/>
                                                                 <xforms:action ev:event="DOMActivate"
                                                                         if="not(string-length(normalize-space(instance('taskAttachments')/new/@title)) = 0 or string-length(normalize-space(instance('taskAttachments')/new/plaintext)) = 0)">
                                                                     <xforms:setvalue
@@ -536,7 +536,7 @@
                                                                           id="new-attachment-title" xxforms:maxlength="512">
                                                               </xforms:input>
                                                         </xhtml:td>
-                                                        <xhtml:td colspan="2">
+                                                        <xhtml:td colspan="2" title="Browse for Files" >
                                                             <xforms:upload ref="instance('taskAttachments')/new/file" id="new-attachment-file">
                                                                 <xforms:filename ref="@filename"/>
                                                                 <xforms:mediatype ref="@mediatype"/>
@@ -561,23 +561,23 @@
 
                                             <xsl:if test="$metadata/tms:taskState = 'READY' and
  (count($metadata/tms:claimAction/tms:authorized) = 0 or $metadata/tms:claimAction/tms:authorized/text() != 'false')">
-												<span class="button">
+												<span class="button" title="Claim Task for Processing">
                                                 <xforms:submit class="button4" submission="claimSubmission">
-                                                    <xforms:label><span>Claim      </span></xforms:label>
+                                                    <xforms:label><span>Claim</span></xforms:label>
                                                 </xforms:submit>
 											    </span>
                                             </xsl:if>
                                             <xsl:if test="$metadata/tms:taskState = 'CLAIMED' and
  (count($metadata/tms:revokeAction/tms:authorized) = 0 or $metadata/tms:revokeAction/tms:authorized/text() != 'false')">
-												<span class="button">
+												<span class="button" title="Revoke Claim on Task ">
                                                 <xforms:submit class="button4" submission="revokeSubmission">
-                                                    <xforms:label><span>Revoke</span></xforms:label>
+                                                    <xforms:label ><span>Revoke</span></xforms:label>
                                                 </xforms:submit>
                                                 </span>
                                             </xsl:if>
                                             <xsl:if test="$metadata/tms:taskState != 'COMPLETED' and
  (count($metadata/tms:saveAction/tms:authorized) = 0 or $metadata/tms:saveAction/tms:authorized/text() != 'false')">
-												<span class="button">
+												<span class="button" title="Save Task">
                                                 <xforms:submit submission="saveSubmission">
                                                     <xforms:label>Save</xforms:label>
                                                 </xforms:submit>
@@ -585,7 +585,7 @@
                                             </xsl:if>
                                             <xsl:if test="$metadata/tms:taskState != 'COMPLETED' and
  (count($metadata/tms:completeAction/tms:authorized) = 0 or $metadata/tms:completeAction/tms:authorized/text() != 'false')">
-												<span class="button">
+												<span class="button" title="Complete Task and Continue Workflow ">
                                                 <xforms:submit submission="completeSubmission">
                                                     <xforms:label>Complete</xforms:label>
                                                 </xforms:submit>
