@@ -73,7 +73,7 @@
 					<cell>${taskHolder.task.priority}</cell>
 					<cell><![CDATA[
 							<c:forEach items="${taskHolder.task.attachments}" var="attachment" varStatus="index">
-								<a href="${attachment.payloadURL}" onClick="window.open('${attachment.payloadURL}', 'newwindow'); return false;"><img border="0" height="${iconSize}" width="${iconSize}" title="${attachment.payloadURL}" src="images/mail.jpg"/></a>
+								<a href="${attachment.payloadURL}" onClick="window.open('${attachment.payloadURL}', 'newwindow'); return false;"><img border="0" height="${iconSize}" width="${iconSize}" title="${attachment.payloadURL}" src="images/mail.gif"/></a>
 							</c:forEach>
 						]]>
 					</cell>
