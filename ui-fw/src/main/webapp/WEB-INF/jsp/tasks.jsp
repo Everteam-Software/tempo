@@ -96,6 +96,7 @@
 					
 						<div id="footer">&nbsp;&nbsp;<fmt:message key="com_intalio_bpms_workflow_pageFooter_poweredBy_label" />&nbsp;&nbsp;
 							<a href="http://www.intalio.com"><span style="color: #3082A8"><fmt:message key="com_intalio_bpms_workflow_pageFooter_poweredBy_value" /></span></a>
+							<a href="versions">
 							<fmt:message key="com_intalio_bpms_workflow_versionInfo">
 								<c:choose>
 									<c:when test="${!empty version && !empty build}" >
@@ -108,6 +109,7 @@
 									</c:otherwise>
 								</c:choose>
 							</fmt:message>
+							</a>&nbsp;
 							<a href="http://bpms.intalio.com"><span style="color: #3082A8"><fmt:message key="com_intalio_bpms_workflow_pageFooter_featureBugRequest"/></span></a>
 						</div>
 			
