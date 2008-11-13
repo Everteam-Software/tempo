@@ -1,0 +1,36 @@
+<xhtml:html xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xsl:version="2.0">
+	<xhtml:head>
+		<xhtml:title>Can not display form</xhtml:title>
+		<xhtml:style type="text/css">
+			body {
+			text-align:center;
+			}
+			#container {
+			margin:0px auto 0px auto;
+			width:400px;
+			border:1px solid #000000;
+			}
+			#notes {
+			font-size: 9px;
+			}
+		</xhtml:style>
+	</xhtml:head>
+	<xhtml:body>
+		<xhtml:h3>
+			<xsl:text>Could not retrieve form</xsl:text>
+		</xhtml:h3>
+		<xhtml:div id="container">
+			<xhtml:img style="float:left" src="/images/warning_load.gif"/>
+			<xhtml:p>
+				Please check that the form for the url: <br/>
+				<b><xsl:value-of select="/task/url"/></b><br/>
+				has been properly deployed properly on the server.
+			</xhtml:p>
+		</xhtml:div>
+		<xhtml:div id="notes">
+			<xhtml:p>
+				Using this <a href="/wds/AbsenceRequest/AbsenceRequest.xform">link</a>, you can check it is deployed on the server deployment service.
+			</xhtml:p>	
+		</xhtml:div>
+	</xhtml:body>
+</xhtml:html>

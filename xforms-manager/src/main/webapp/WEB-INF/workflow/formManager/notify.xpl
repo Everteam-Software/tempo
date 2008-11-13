@@ -70,28 +70,7 @@
         <p:when test="/exceptions">
             <p:processor name="oxf:xslt">
                 <p:input name="data" href="#data"/>
-                <p:input name="config">
-                    <xhtml:html xsl:version="2.0">
-                        <xhtml:head>
-                            <xhtml:title>Error to retrieve form</xhtml:title>
-                        </xhtml:head>
-                        <xhtml:body>
-                            <xhtml:h3>
-                                <xsl:text>Error to retrieve form</xsl:text>
-                            </xhtml:h3>
-                            <xhtml:p>
-                                <xsl:text>Cannot find form on address</xsl:text>
-                                <b> <xsl:value-of select="/task/url"/></b>
-                            </xhtml:p>
-                            <xhtml:p>
-                                You need to deploy it from Intalio|BPMS Designer or use the WDS-CLI command line
-                                tool
-                                with command like
-                                <xhtml:code>wds-cli store-activity URL_to_form path_to_form_file</xhtml:code>
-                            </xhtml:p>
-                        </xhtml:body>
-                    </xhtml:html>
-                </p:input>
+                <p:input name="config" href="oxf:/config/formNotFound.xml"/>
                 <p:output name="data" ref="data"/>
             </p:processor>
         </p:when>

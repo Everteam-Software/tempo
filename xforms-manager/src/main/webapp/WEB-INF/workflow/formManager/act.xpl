@@ -67,27 +67,7 @@
         <p:when test="/exceptions">
             <p:processor name="oxf:xslt">
                 <p:input name="data" href="#data"/>
-                <p:input name="config">
-                        <xhtml:html xsl:version="2.0">
-                            <xhtml:head>
-                                <xhtml:title>Error to retrieve form</xhtml:title>
-                            </xhtml:head>
-                            <xhtml:body>
-                                <xhtml:h3>
-                                    <xsl:text>Error to retrieve form</xsl:text>
-                                </xhtml:h3>
-                                <xhtml:p>
-                                    <xsl:text>Cannot find form on address </xsl:text>
-                                    <b><xsl:value-of select="/task/url"/></b>
-                                </xhtml:p>
-                                <xhtml:p>
-                                    You need to deploy it from Intalio|BPMS Designer or use the WDS-CLI command line
-                                    tool with command like
-                                    <xhtml:code>wds-cli store-activity URL_to_form path_to_form_file</xhtml:code>
-                                </xhtml:p>
-                            </xhtml:body>
-                        </xhtml:html>
-                </p:input>
+                <p:input name="config" href="oxf:/config/formNotFound.xml"/>
                 <p:output name="data" ref="data"/>
             </p:processor>
         </p:when>
@@ -417,7 +397,7 @@
                                         <xforms:group ref="instance('taskAttachments')" style="width : 97%; border-color: #CCCCCC; float: top">
                                                 <xforms:trigger appearance="xxforms:image" style="float: right">
                                                     <xforms:label>Close Attachments Section</xforms:label>
-                                                    <xxforms:img title="Close Attachments" src="/images/close.png"/>
+                                                    <xxforms:img title="Close attachments" src="/images/close.png"/>
                                                     <xforms:setvalue ev:event="DOMActivate" ref="instance('taskAttachments')/action" value="'hide'"/>
                                                 </xforms:trigger>
                                                 <xhtml:table
@@ -430,8 +410,8 @@
                                                     <xhtml:tr>
                                                         <xhtml:th/>
                                                         <xhtml:th>Title</xhtml:th>
-                                                        <xhtml:th>MIME Type</xhtml:th>
-                                                        <xhtml:th>Created</xhtml:th>
+                                                        <xhtml:th>MIME type</xhtml:th>
+                                                        <xhtml:th>Create Date</xhtml:th>
                                                     </xhtml:tr>
                                                     <xforms:repeat nodeset="attachment" id="attachmentsTable">
                                                         <xhtml:tr>
@@ -497,7 +477,8 @@
                                                         </xhtml:th>
                                                     </xhtml:tr>
                                                     <xhtml:tr>
-                                                        <xhtml:td style="border-width: 0px; border-collapse: collapse;text-align: center">
+                                                        <xhtml:td
+                                                                style="border-width: 0px; border-collapse: collapse;text-align: center">
                                                             <xforms:trigger ref="new/file/@attachFile" appearance="xxforms:image">
                                                                 <xforms:label>click to attach file</xforms:label>
                                                                 <xxforms:img title="Attach File" src="/images/add.gif"/>
@@ -519,7 +500,7 @@
                                                             <xforms:trigger ref="new/plaintext/@attachText"
                                                                             appearance="xxforms:image">
                                                                 <xforms:label>click to attach text</xforms:label>
-                                                                <xxforms:img title="Attach Text" src="/images/add.gif"/>
+                                                                <xxforms:img title="Attache text" src="/images/add.gif"/>
                                                                 <xforms:action ev:event="DOMActivate"
                                                                         if="not(string-length(normalize-space(instance('taskAttachments')/new/@title)) = 0 or string-length(normalize-space(instance('taskAttachments')/new/plaintext)) = 0)">
                                                                     <xforms:setvalue
