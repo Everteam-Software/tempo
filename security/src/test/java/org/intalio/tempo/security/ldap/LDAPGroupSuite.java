@@ -45,7 +45,8 @@ public class LDAPGroupSuite extends AbstractSuite {
      * @see org.intalio.tempo.security.ldap.AbstractSuite#getConfigurationPath()
      */
     protected String getConfigurationPath() {
-        return "org/intalio/tempo/security/ldap/test.groups.properties";
+//        return "org/intalio/tempo/security/ldap/test.groups.properties";
+    	return "test.groups.properties";
     }
 
 }
