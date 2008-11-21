@@ -38,6 +38,8 @@ import org.apache.directory.server.core.configuration.ShutdownConfiguration;
 import org.apache.directory.server.ldap.LdapConfiguration;
 import org.apache.directory.shared.ldap.constants.SchemaConstants;
 import org.apache.directory.shared.ldap.message.AttributesImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A Servlet context listener to start and stop ApacheDS.
@@ -46,6 +48,8 @@ import org.apache.directory.shared.ldap.message.AttributesImpl;
  *         Project</a>
  */
 public class StartStopListener implements ServletContextListener {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(StartStopListener.class);
 
     /**
      * Startup ApacheDS embedded.
@@ -78,7 +82,14 @@ public class StartStopListener implements ServletContextListener {
 
             // Set LDAP port to 10389
             LdapConfiguration ldapCfg = pcfg.getLdapConfiguration();
-            ldapCfg.setIpPort(10389);
+			int port = 10389;
+			try {
+			   String value = evt.getServletContext().getInitParameter("ldap.port");
+			   port = Integer.parseInt(value);	
+			} catch(Exception e) {
+				LOG.error("Could not parse the port properly",e);
+			}
+            ldapCfg.setIpPort(port);
 
             // Start the Server
             Hashtable env = EnvHelper.createEnv();

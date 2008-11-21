@@ -7,6 +7,11 @@
 	<description>
 		Intalio ApacheDS server within a servlet container
 	</description>
+	
+	<context-param>
+      <param-name>ldap.port</param-name>
+      <param-value>10389</param-value>
+    </context-param>
 
 	<listener>
 		<listener-class>
