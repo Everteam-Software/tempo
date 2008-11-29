@@ -24,7 +24,7 @@ import org.intalio.tempo.security.rbac.RBACQuery;
 
 
 
-public class LDAPRBACProviderMockTest extends TestCase {
+public class L_D_A_P_RBACProviderMockTest extends TestCase {
 	class MockNamingEnumeration implements NamingEnumeration{
 		private int _size;
 		private int _count;
@@ -451,7 +451,7 @@ public class LDAPRBACProviderMockTest extends TestCase {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		junit.textui.TestRunner.run(LDAPRBACProviderMockTest.class);
+		junit.textui.TestRunner.run(L_D_A_P_RBACProviderMockTest.class);
 	}
 	
 	public void testGetter()throws Exception{
