@@ -312,7 +312,6 @@ define "tempo" do
            JSTL,
            LOG4J,
            PLUTO,
-           PORTLET_API, 
            SPRING[:core], 
            SPRING[:webmvc],
            SPRING[:webmvc_portlet],
@@ -325,12 +324,19 @@ define "tempo" do
            WS_COMMONS_SCHEMA,
            XERCES, 
            XMLBEANS
-           
-    compile.with libs, JSP_API, SERVLET_API, CAS_CLIENT
+    
+    compile.with libs, JSP_API, SERVLET_API, CAS_CLIENT, PORTLET_API
 
+    # use the following command to build the prepared portlet version
+    # buildr install -e portlet
+    #
+    # this just copies over the configured web.xml for portlet 
+    web_xml = (ENV['BUILDR_ENV'] == 'portlet' ? 'web-cas.xml' : 'web.xml')
+    web_xml = _("src/main/webapp/WEB-INF/"+web_xml) 
+    
     resources.filter.using "version" => VERSION_NUMBER
     test.with JAXEN, XMLUNIT, INSTINCT
-    package(:war).with(:libs=>libs)
+    package(:war).include(web_xml, :as=>'WEB-INF/web.xml').with(:libs=>libs)
   end
 
   define "registry" do
