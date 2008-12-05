@@ -26,8 +26,8 @@ import javax.portlet.RenderResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.pluto.wrappers.PortletRequestWrapper;
 import org.intalio.tempo.security.Property;
 import org.intalio.tempo.security.authentication.AuthenticationConstants;
@@ -45,7 +45,7 @@ import edu.yale.its.tp.cas.client.filter.CASFilter;
 import edu.yale.its.tp.cas.proxy.ProxyTicketReceptor;
 
 public class SecuredController extends UIController {
-    private static final Logger LOG = LogManager.getLogger(SecuredController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SecuredController.class);
     protected final TokenService _tokenService;
     protected String _serviceURL;
 
@@ -76,17 +76,12 @@ public class SecuredController extends UIController {
             if (proxyTicket == null) {
                 // LOG.error(requestWrapper.getSession().getAttribute(CASFilter.
                 // CAS_FILTER_RECEIPT));
-                
                 String pgtIou = null;
                 try {
-                    CASReceipt CASreceipt = (CASReceipt) hsr.getSession().getAttribute(CASFilter.CAS_FILTER_RECEIPT);
-
-                    if (CASreceipt != null)
-                        pgtIou = CASreceipt.getPgtIou();
-                    if (pgtIou != null) {
-                        proxyTicket = ProxyTicketReceptor.getProxyTicket(pgtIou, _serviceURL);
-
-                    }
+                    CASReceipt casReceipt = (CASReceipt) hsr.getSession().getAttribute(CASFilter.CAS_FILTER_RECEIPT);
+                    if (casReceipt != null) pgtIou = casReceipt.getPgtIou();
+                    if (pgtIou != null) proxyTicket = ProxyTicketReceptor.getProxyTicket(pgtIou, _serviceURL);
+                    if(proxyTicket == null) throw new IOException("Null proxy ticket");
                 } catch (IOException e) {
                     throw new RuntimeException("Could not get the proxy ticket", e);
                 }

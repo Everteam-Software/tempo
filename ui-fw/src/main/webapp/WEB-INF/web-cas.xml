@@ -227,10 +227,10 @@
 			<trim-directive-whitespaces>true</trim-directive-whitespaces>
 		</jsp-property-group>
 
-		<taglib>
+<!-- 		<taglib>
 			<taglib-uri>http://java.sun.com/portlet</taglib-uri>
 			<taglib-location>/WEB-INF/tld/liferay-portlet.tld</taglib-location>
-		</taglib>
+		</taglib> -->
 
 	</jsp-config>
 
