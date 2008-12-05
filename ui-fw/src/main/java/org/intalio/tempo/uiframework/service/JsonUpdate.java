@@ -40,8 +40,14 @@ import atg.taglib.json.util.JSONArray;
 import atg.taglib.json.util.JSONException;
 import atg.taglib.json.util.JSONObject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.text.MessageFormat;
+
 public class JsonUpdate extends HttpServlet {
     private static final long serialVersionUID = -8024081532754663413L;
+	private static final Logger LOG = LoggerFactory.getLogger(JsonUpdate.class);	
 
     private final Configuration conf = Configuration.getInstance();
 
@@ -117,11 +123,8 @@ public class JsonUpdate extends HttpServlet {
     
     protected Task[] getTasks(HttpServletRequest request, String participantToken, String taskType, String subQuery)throws AuthException{
         //to enable unit test using mock object to test
-        return getTMS(request, participantToken).getAvailableTasks(taskType, subQuery);
-    }
-
-    private ITaskManagementService getTMS(HttpServletRequest request, String participantToken) {
-        String endpoint = URIUtils.resolveURI(request, conf.getServiceEndpoint());
-        return new RemoteTMSFactory(endpoint, participantToken).getService();
+		String endpoint = URIUtils.resolveURI(request, conf.getServiceEndpoint());
+		LOG.error(MessageFormat.format("Getting tasks: type {1} query {2} for endpoint {3}", new Object[]{taskType, subQuery, endpoint}));
+        return new RemoteTMSFactory(endpoint, participantToken).getService().getAvailableTasks(taskType, subQuery);
     }
 }

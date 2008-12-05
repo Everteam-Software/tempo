@@ -37,10 +37,15 @@ public class GenericFormManager implements FormManager {
     public static final String DEFAULT = "default";
 
     private Map<String, Map<Pattern, String>> _mappings;
+	private String _base;
 
     public GenericFormManager() {
 
     }
+
+	public void setBaseURL(String base) {
+		this._base = base;
+	}
 
     /**
      * Initialized all the regexp
@@ -81,7 +86,9 @@ public class GenericFormManager implements FormManager {
         while (patterns.hasNext()) {
             Pattern pattern = patterns.next();
             if (pattern.matcher(formURL).matches()) {
-                return map.get(pattern);
+				String url = map.get(pattern);
+				if(_base==null) return url;
+				else return _base+url;
             }
         }
         return formURL;
