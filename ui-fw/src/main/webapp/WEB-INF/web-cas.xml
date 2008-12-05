@@ -119,11 +119,11 @@
     </init-param>
     <init-param>
       <param-name>edu.yale.its.tp.cas.client.filter.serviceUrl</param-name>
-      <param-value>http://localhost:8080/ui-fw</param-value>
+      <param-value>http://localhost:8280/ui-fw</param-value>
     </init-param>
     <init-param>
       <param-name>edu.yale.its.tp.cas.client.filter.proxyCallbackUrl</param-name>
-      <param-value>https://localhost:8443/ui-fw/CasProxyServlet</param-value>
+      <param-value>https://localhost:8643/ui-fw/CasProxyServlet</param-value>
     </init-param>
   </filter>
   <filter-mapping>
@@ -135,12 +135,8 @@
     <filter-class>org.intalio.tempo.uiframework.filter.CASRBACFilter</filter-class>
     <init-param>
       <param-name>edu.yale.its.tp.cas.client.filter.serviceUrl</param-name>
-      <param-value>http://localhost:8080/ui-fw</param-value>
+      <param-value>http://localhost:8280/ui-fw</param-value>
     </init-param>
-    <init-param>
-	   <param-name>bypass</param-name>
-	   <param-value>/feeds/.*</param-value>
-	</init-param>
     <init-param>
       <param-name>edu.yale.its.tp.cas.client.filter.logoutUrl</param-name>
       <param-value>https://localhost:8443/cas/logout</param-value>
@@ -150,16 +146,16 @@
     <filter-name>CASRBAC Filter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
-  <servlet>
+  <!-- <servlet>
     <servlet-name>ProxyTicketReceptor</servlet-name>
     <servlet-class>
 			edu.yale.its.tp.cas.proxy.ProxyTicketReceptor
 		</servlet-class>
-  </servlet>
-  <servlet-mapping>
+  </servlet> -->
+  <!-- <servlet-mapping>
     <servlet-name>ProxyTicketReceptor</servlet-name>
     <url-pattern>/CasProxyServlet</url-pattern>
-  </servlet-mapping>
+  </servlet-mapping> -->
 <!-- CAS config ends -->
     
     <!-- servlet -->
