@@ -214,7 +214,7 @@ class LDAPRBACProvider implements RBACProvider, LDAPProperties {
                 sb.append(SECURITY_LDAP_USER_ROLES);
                 sb.append(" cannot be both null!");
                 throw new IllegalArgumentException(sb.toString());
-            } else if (_userRoles==null && _roleUsers==null) {
+            } else if (_userRoles!=null && _roleUsers!=null) {
                 StringBuffer sb = new StringBuffer();
                 sb.append(SECURITY_LDAP_ROLE_USERS);
                 sb.append(" and ");
