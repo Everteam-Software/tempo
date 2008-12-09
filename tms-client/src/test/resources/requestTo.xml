@@ -1,0 +1,15 @@
+<user:initProcessRequest xmlns:user="http://example.com/RussianTestForm/xform">
+	<user:taskId>575d14b0-9f62-4450-a991-ebf575092fe3
+	</user:taskId>
+	<user:participantToken>
+		VE9LRU4mJnVzZXI9PWludGFsaW9cYWRtaW4mJmlzc3VlZD09MTIyODUwODkyMDgwNiYmcm9sZXM9PWludGFsaW9ccHJvY2Vzc2FkbWluaXN0cmF0b3IsZXhhbXBsZXNcZW1wbG95ZWUsaW50YWxpb1xwcm9jZXNzbWFuYWdlcixleGFtcGxlc1xtYW5hZ2VyJiZmdWxsTmFtZT09QWRtaW5pbmlzdHJhdG9yJiZlbWFpbD09YWRtaW5AZXhhbXBsZS5jb20mJm5vbmNlPT0tNTI4NTg3Nzk0ODk4MTA2ODc5OSYmdGltZXN0YW1wPT0xMjI4NTA4OTIwODA4JiZkaWdlc3Q9PU1ZOW1CaGtPM2pkeDFob1k1cm55U25rTFlwWT0mJiYmVE9LRU4
+	</user:participantToken>
+	<user:taskOutput>
+		<fe:output xmlns:fe="http://example.com/RussianTestForm/xform"
+			xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
+			xmlns:f="http://orbeon.org/oxf/xml/formatting" user="intalio\admin">
+			<fe:russTextInput xmlns="http://example.com/RussianTestForm/xform">aaa</fe:russTextInput>
+			<fe:label1 xmlns="http://example.com/RussianTestForm/xform" />
+		</fe:output>
+	</user:taskOutput>
+</user:initProcessRequest>

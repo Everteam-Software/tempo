@@ -1,0 +1,9 @@
+#
+#Fri Dec 05 11:45:13 PST 2008
+formURI=oxf\://RussianSample/RussianTestForm.xform
+userProcessInitSOAPAction=http\://example.com/RussianTestForm/xform/Process/initProcess
+processEndpoint=http\://localhost\:8080/ode/processes/RussianSample/RussianLangSample/Business_Process/\u041F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044C/\u041F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044CAndBusiness_ProcessForPortTypeProcessPlk
+task-description=\u0420\u0443\u0441\u0441\u043A\u0430\u044F \u0444\u043E\u0440\u043C\u0430 \u0438\u043D\u0438\u0446\u0438\u0430\u043B\u0438\u0437\u0430\u0446\u0438\u0438 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u0430
+task-role-owners=
+task-user-owners=intalio\\admin
+formNamespace=http\://example.com/RussianTestForm/xform

@@ -260,6 +260,9 @@ define "tempo" do
       test.exclude '*RemoteTMSClientTest*'
       test.exclude '*RemoteAbsenceRequestTest*'
     end
+    unless ENV["DESIGNER"] == 'yes'
+      test.exclude '*UTFURLTest*'
+    end
     package :jar 
   end
   
