@@ -81,7 +81,7 @@ public class SecuredController extends UIController {
                     CASReceipt casReceipt = (CASReceipt) hsr.getSession().getAttribute(CASFilter.CAS_FILTER_RECEIPT);
                     if (casReceipt != null) pgtIou = casReceipt.getPgtIou();
                     if (pgtIou != null) proxyTicket = ProxyTicketReceptor.getProxyTicket(pgtIou, _serviceURL);
-                    if(proxyTicket == null) throw new IOException("Null proxy ticket");
+                    //if(proxyTicket == null) throw new IOException("Null proxy ticket");
                 } catch (IOException e) {
                     throw new RuntimeException("Could not get the proxy ticket", e);
                 }
