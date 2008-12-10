@@ -113,3 +113,5 @@ Dir.chdir "#{TEMPO_SVN}/ui-fw"
 system "buildr -e portlet clean install" if config['rebuild']
 Dir.chdir INSTALL_DIR
 Dir.glob("#{TEMPO_SVN}/ui-fw/target/*.war") {|x|  File.copy x, "#{webapp_folder}/ui-fw.war", DEBUG}
+
+title "The liferay package is finished"
