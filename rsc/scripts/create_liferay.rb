@@ -51,8 +51,11 @@ file.puts "set JAVA_OPTS=-XX:MaxPermSize=256m -server -Djavax.net.ssl.trustStore
 # copy server.xml
 File.copy "#{liferay_config_folder}/server-liferay-standalone.xml", "#{server_folder}/conf/server.xml", DEBUG
 
-# copy ROOT.xml
+# copy web.xml
 File.copy "#{liferay_config_folder}/web.xml", "#{webapp_folder}/ROOT/WEB-INF/web.xml"
+
+# copy ROOT.xml
+File.copy "#{liferay_config_folder}/ROOT-liferay-standalone.xml", "#{server_folder}/conf/Catalina/localhost/ROOT.xml", DEBUG
 
 # add tempo liferay filter
 Dir.glob("#{TEMPO_SVN}/liferay-ticket-filter/target/*.jar") {|x| File.copy x, "#{webapp_folder}/ROOT/WEB-INF/lib", DEBUG}
@@ -65,7 +68,7 @@ rescue
 end
 
 # copy portal-ext.properties
-File.copy "#{liferay_config_folder}/portal-ext.properties", "#{webapp_folder}/ROOT/WEB-INF/classes", DEBUG
+File.copy "#{liferay_config_folder}/../LDAP/portal-ext.properties", "#{webapp_folder}/ROOT/WEB-INF/classes", DEBUG
 
 # copy files in var/config folder
 File.copy "#{tempo_svn_config_folder}/tempo-formmanager.xml", tomcat_config_folder

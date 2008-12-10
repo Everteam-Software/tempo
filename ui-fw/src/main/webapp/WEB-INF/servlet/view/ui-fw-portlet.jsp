@@ -1,3 +1,4 @@
+<%@ page contentType="text/html;charset=UTF-8"%>
 <%@ taglib uri="http://java.sun.com/portlet" prefix="portlet" %>
 <%@ page import="org.intalio.tempo.web.ApplicationState" %>
 <%@ page import="java.net.URLEncoder" %>

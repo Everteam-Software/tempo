@@ -1,0 +1,154 @@
+<Context path="" crossContext="true">
+
+	<!-- DB2 -->
+
+	<!--<Resource
+		name="jdbc/LiferayPool"
+        auth="Container"
+        type="javax.sql.DataSource"
+        driverClassName="com.ibm.db2.jcc.DB2Driver"
+        url="jdbc:db2:lportal"
+        username="db2admin"
+        password="lportal"
+        maxActive="20"
+	/>-->
+
+	<!-- Derby -->
+
+	<!--<Resource
+		name="jdbc/LiferayPool"
+		auth="Container"
+		type="javax.sql.DataSource"
+		driverClassName="org.apache.derby.jdbc.EmbeddedDriver"
+		url="jdbc:derby:lportal"
+		username=""
+		password=""
+		maxActive="20"
+	/>-->
+
+	<!-- Hypersonic -->
+
+	<Resource
+		name="jdbc/LiferayPool"
+		auth="Container"
+		type="javax.sql.DataSource"
+		driverClassName="org.hsqldb.jdbcDriver"
+		url="jdbc:hsqldb:lportal"
+		username="sa"
+		password=""
+		maxActive="20"
+	/>
+
+	<!-- MySQL -->
+
+	<!--<Resource
+		name="jdbc/LiferayPool"
+		auth="Container"
+		type="javax.sql.DataSource"
+		driverClassName="com.mysql.jdbc.Driver"
+		url="jdbc:mysql://localhost/lportal?useUnicode=true&amp;characterEncoding=UTF-8&amp;useFastDateParsing=false"
+		username=""
+		password=""
+		maxActive="20"
+	/>-->
+
+	<!-- Oracle -->
+
+	<!--<Resource
+		name="jdbc/LiferayPool"
+		auth="Container"
+		type="javax.sql.DataSource"
+		driverClassName="oracle.jdbc.driver.OracleDriver"
+		url="jdbc:oracle:thin:@localhost:1521:xe"
+		username="lportal"
+		password="lportal"
+		maxActive="20"
+	/>-->
+
+	<!-- P6Spy -->
+
+	<!--<Resource
+		name="jdbc/LiferayPool"
+		auth="Container"
+		type="javax.sql.DataSource"
+		driverClassName="com.p6spy.engine.spy.P6SpyDriver"
+		url="jdbc:mysql://localhost/lportal?useUnicode=true&amp;characterEncoding=UTF-8&amp;useFastDateParsing=false"
+		username=""
+		password=""
+		maxActive="20"
+	/>-->
+
+	<!-- PostgreSQL -->
+
+	<!--<Resource
+		name="jdbc/LiferayPool"
+		auth="Container"
+		type="javax.sql.DataSource"
+		driverClassName="org.postgresql.Driver"
+		url="jdbc:postgresql://localhost:5432/lportal"
+		username="sa"
+		password=""
+		maxActive="20"
+	/>-->
+
+	<!-- SQL Server -->
+
+	<!--<Resource
+		name="jdbc/LiferayPool"
+		auth="Container"
+		type="javax.sql.DataSource"
+		driverClassName="net.sourceforge.jtds.jdbc.Driver"
+		url="jdbc:jtds:sqlserver://localhost/lportal"
+		username="sa"
+		password=""
+		maxActive="20"
+	/>-->
+
+	<!-- Sybase -->
+
+	<!--<Resource
+		name="jdbc/LiferayPool"
+		auth="Container"
+		type="javax.sql.DataSource"
+		driverClassName="net.sourceforge.jtds.jdbc.Driver"
+		url="jdbc:jtds:sybase://localhost:5000/lportal"
+		username="sa"
+		password=""
+		maxActive="20"
+	/>-->
+
+	<!-- Mail -->
+
+	<Resource
+		name="mail/MailSession"
+		auth="Container"
+		type="javax.mail.Session"
+		mail.imap.host="localhost"
+		mail.pop3.host="localhost"
+		mail.smtp.host="localhost"
+		mail.store.protocol="imap"
+		mail.transport.protocol="smtp"
+	/>
+
+	<!-- JAAS -->
+
+	<Realm
+		className="org.apache.catalina.realm.JAASRealm"
+		appName="PortalRealm"
+		userClassNames="com.liferay.portal.kernel.security.jaas.PortalPrincipal"
+		roleClassNames="com.liferay.portal.kernel.security.jaas.PortalRole"
+	/>
+
+	<!--
+	Uncomment the following to disable persistent sessions across reboots.
+	-->
+
+	<!--<Manager pathname="" />-->
+
+	<!--
+	Uncomment the following to not use sessions. See the property
+	"session.disabled" in portal.properties.
+	-->
+
+	<!--<Manager className="com.liferay.support.tomcat.session.SessionLessManagerBase" />-->
+</Context>
