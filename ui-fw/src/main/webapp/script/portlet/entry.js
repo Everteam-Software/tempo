@@ -20,7 +20,7 @@ var EntryForm = function(){
                 dialog = new Ext.BasicDialog("entry-dlg", { 
                         //autoTabs:true,
                         width:600,
-                        height:380,
+                        height:600,
                         proxyDrag: true,
 						shadow: true
                 });
@@ -30,25 +30,23 @@ var EntryForm = function(){
             }
 
             //create iframe
-           	var base;
-			var obj;
-			base = document.getElementById("entryUrl");
-			obj = document.getElementById("xForm");
+           	var base = document.getElementById("entryUrl");
+			var obj = document.getElementById("taskform");
 			if (obj == null){
 				obj = document.createElement("iframe");
+				base.appendChild(obj);
 			}
 			obj.setAttribute("frameBorder", "0");
 			//obj.style.position = "relative";
 			obj.style.width = "100%";
 			//obj.style.height = "400%";
 			//obj.setAttribute("height", "400")
-			obj.height="300";
+			obj.height="520";
 			obj.id="taskform";
 
 			var tempUrl = url.split("&amp;");
 			var newUrl = tempUrl.join("&");
 			obj.src = newUrl;
-			base.appendChild(obj);
 
 			//show dialog
             dialog.show();
