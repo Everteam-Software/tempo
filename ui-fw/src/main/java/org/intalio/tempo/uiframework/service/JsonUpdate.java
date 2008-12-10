@@ -124,7 +124,7 @@ public class JsonUpdate extends HttpServlet {
     protected Task[] getTasks(HttpServletRequest request, String participantToken, String taskType, String subQuery)throws AuthException{
         //to enable unit test using mock object to test
 		String endpoint = URIUtils.resolveURI(request, conf.getServiceEndpoint());
-		LOG.error(MessageFormat.format("Getting tasks: type {1} query {2} for endpoint {3}", new Object[]{taskType, subQuery, endpoint}));
+		LOG.debug(MessageFormat.format("Getting tasks: type {1} query {2} for endpoint {3}", new Object[]{taskType, subQuery, endpoint}));
         return new RemoteTMSFactory(endpoint, participantToken).getService().getAvailableTasks(taskType, subQuery);
     }
 }
