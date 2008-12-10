@@ -20,22 +20,6 @@
 	<filter>
 		<filter-name>CAS Filter</filter-name>
 		<filter-class>org.intalio.tempo.web.CASFilter510</filter-class>
-		<!--<init-param>
-			<param-name>logout_url</param-name>
-			<param-value>https://localhost:8443/cas-web/logout</param-value>
-		</init-param>
-		<init-param>
-			<param-name>edu.yale.its.tp.cas.client.filter.loginUrl</param-name>
-			<param-value>https://localhost:8443/cas-web/login</param-value>
-		</init-param>
-		<init-param>
-			<param-name>edu.yale.its.tp.cas.client.filter.validateUrl</param-name>
-			<param-value>https://localhost:8443/cas-web/proxyValidate</param-value>
-		</init-param>
-		<init-param>
-			<param-name>edu.yale.its.tp.cas.client.filter.serviceUrl</param-name>
-			<param-value>http://localhost:8080/c/portal/login</param-value>
-		</init-param>-->
 	</filter>
 	<filter>
 		<filter-name>Compression Filter</filter-name>

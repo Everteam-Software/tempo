@@ -38,7 +38,7 @@ ODE_RELEASES = {
 }
 ODE_DOWNLOAD = ODE_RELEASES[:v1_2_snapshot]
 # LIFERAY_5 = "http://downloads.sourceforge.net/sourceforge/lportal/liferay-portal-tomcat-5.5-5.1.1.zip"  #CA
-LIFERAY_5 = "http://nchc.dl.sourceforge.net/sourceforge/lportal/liferay-portal-tomcat-5.5-5.1.0.zip"
+LIFERAY_5 = "http://downloads.sourceforge.net/sourceforge/lportal/liferay-portal-tomcat-5.5-5.1.0.zip"
 ALFRESCO = {
   :v2_1 => "http://downloads.sourceforge.net/sourceforge/alfresco/alfresco-community-war-2.1.0.zip",
   :v2_9 => "http://downloads.sourceforge.net/sourceforge/alfresco/alfresco-community-war-2.9.0B.zip",
@@ -255,8 +255,6 @@ if SERVER == ADD_LIFERAY
   File.copy "#{TEMPO_SVN}/rsc/liferay510/liferay-portlet.tld", "#{webapp_folder}/ui-fw/WEB-INF/tld"
   # copy the util jars
   Dir.glob("#{webapp_folder}/ROOT/WEB-INF/lib/util*.jar") {|x| File.copy x, "#{webapp_folder}/ui-fw/WEB-INF/lib", DEBUG}
-  # delete some conflict jar files
-  Dir.glob(File.join("#{webapp_folder}/ui-fw/WEB-INF/lib", "portlet*.jar")) {|x| File.delete x}
   # special web.xml with configuration for liferay.
   File.cp "#{webapp_folder}/ui-fw/WEB-INF/web-cas.xml", "#{webapp_folder}/ui-fw/WEB-INF/web.xml" 
 end
