@@ -22,19 +22,20 @@
 
 	<table>
 		<tr>
-			<td align="center">Task Type:
+			<td>Task Type:
 			<select id="taskType" size="1" onChange="_searchTask()">
 			<option>Task</option>
 			<option>PATask</option>
 			<option>Notification</option>
 			</select>
 			</td>
-			<td style="width:50%">
-				Description:
+			<td>Description:
 			<input id="description" type="text" onChange="_searchTask()" />
 			<input type="submit" onclick="_searchTask()" value="Filter Tasks"/>
 		    </td>
+			<td>
 			<%@ include file="../../jsp/icons.jsp" %>
+     		</td>
 		</tr>
 	</table>
 
@@ -47,19 +48,19 @@
 	    </div>
     </div>
    <!--tab space-->
-    <div style="width:600px;">
+    <div style="width:100%">
         <div class="x-box-tl"><div class="x-box-tr"><div class="x-box-tc"></div></div></div>
         <div class="x-box-ml"><div class="x-box-mr"><div class="x-box-mc">
             <div id="tabPanel">
-                <div id="tab0" style="background-color:#ffffff;height:250">
+                <div id="tab0" style="width:100%;background-color:#ffffff;height:250">
 				    <!--tasks grid-->    
-				    <div id="pnlGrid" style="width:570px;height:200px;">
+				    <div id="pnlGrid" style="width:100%;height:200px;">
 				    <div id="grid"></div>
 				    </div>
                 </div>
-                <div id="tab1" style="background-color:#ffffff;height:250">
+                <div id="tab1" style="width:100%;background-color:#ffffff;height:250">
 				    <!--process grid-->    
-				    <div id="processPnl" style="width:570px;height:200px;">
+				    <div id="processPnl" style="width:100%;height:200px;">
 				    <div id="processGrid"></div>
                 <div>
             </div>
@@ -68,8 +69,7 @@
         <div class="x-box-bl"><div class="x-box-br"><div class="x-box-bc"></div></div></div>
     </div></div></div>
 
-
-    <table>
+    <!-- <table>
 	<tr><td>
 	<form method="post" action="<portlet:actionURL>
 				<portlet:param name="actionName" value="deleteAll"/>
@@ -85,4 +85,4 @@
 	</form>    
 </td>
 </tr>
-</table>
+</table> -->

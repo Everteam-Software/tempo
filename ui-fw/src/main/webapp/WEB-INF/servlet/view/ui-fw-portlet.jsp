@@ -20,7 +20,7 @@ SimpleTabEx=function(){
     var tabPanel;
     return {
         init:function(){
-            tabPanel=new TabPanel('tabPanel',{width:600,height:200});
+            tabPanel=new TabPanel('tabPanel',{width:'100%',height:200});
             tabPanel.addTab('tab0','Tasks/Notifications');
             tabPanel.addTab('tab1','Processes');
             tabPanel.activate('tab0');
