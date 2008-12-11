@@ -23,9 +23,9 @@ DEBUG = config["debug"]
 
 title "Creating Liferay release"
 
-#
-# Create and init folders variables
-#
+###
+# 
+###
 title "Create and init folders variables"
 FileUtils.mkdir_p INSTALL_DIR
 Dir.chdir INSTALL_DIR
@@ -48,7 +48,7 @@ file = File.new file_path,create_mode
 file.puts "export JAVA_OPTS=\"-XX:MaxPermSize=256m -server -Djavax.net.ssl.trustStore=$CATALINA_HOME/var/config/tempokeystore -Dfile.encoding=UTF-8 -Xms128m -Xmx1024m -Dorg.intalio.tempo.configDirectory=$CATALINA_HOME/var/config -Dorg.apache.ode.configDir=$CATALINA_HOME/var/config -Djava.security.auth.login.config=$CATALINA_HOME/conf/jaas.config\""
 file_path = tomcat_bin_folder + "setenv.bat"
 file = (File.new file_path,create_mode)
-file.puts "set JAVA_OPTS=-XX:MaxPermSize=256m -server -Djavax.net.ssl.trustStore=%CATALINA_HOME%\\var\\config\\tempokeystore -Dfile.encoding=UTF-8 -Xms128m -Xmx1024m -Dorg.intalio.tempo.configDirectory=%CATALINA_HOME%\\var\\config -Dorg.apache.ode.configDir=%CATALINA_HOME%\\var\\config -Djava.security.auth.login.config=%CATALINA_HOME%\\conf\\jaas.config\""
+file.puts "set JAVA_OPTS=-XX:MaxPermSize=256m -server -Djavax.net.ssl.trustStore=%CATALINA_HOME%\\var\\config\\tempokeystore -Dfile.encoding=UTF-8 -Xms128m -Xmx1024m -Dorg.intalio.tempo.configDirectory=%CATALINA_HOME%\\var\\config -Dorg.apache.ode.configDir=%CATALINA_HOME%\\var\\config -Djava.security.auth.login.config=%CATALINA_HOME%\\conf\\jaas.config"
 Dir.glob("#{server_folder}/bin/*.sh") {|x| File.chmod 0755, x, DEBUG}
 
 ###
@@ -85,9 +85,10 @@ Dir.glob("#{TEMPO_SVN}/liferay-ticket-filter/target/*.jar") {|x| File.copy x, "#
 title "move casclient jar file"
 explain "casclient should not be in a single webapp, otherwise it ends up being loaded by the wrong classlooader, and ends up in a ClassCastException"
 begin
-File.mv "#{webapp_folder}/ROOT/WEB-INF/lib/casclient.jar", "#{server_folder}/common/lib"
+File.mv "#{webapp_folder}/ROOT/WEB-INF/lib/casclient.jar", "#{server_folder}/common/lib", DEBUG
 rescue
-  # must have been moved already, ignore
+  # must have been moved already, ignore unless file is not there
+  throw "Missing casclient.jar file" if not File.exist? "#{server_folder}/common/lib/casclient.jar"
 end
 
 ###
@@ -102,11 +103,14 @@ File.copy "#{liferay_config_folder}/../LDAP/portal-ext.properties", "#{webapp_fo
 ###
 title "copy files in var/config folder"
 explain "Those are required tempo files. We load them from the tempo config folder defined in setenv.sh/.bat"
-File.copy "#{tempo_svn_config_folder}/tempo-formmanager.xml", tomcat_config_folder
-File.copy "#{tempo_svn_config_folder}/tempo-ui-fw-servlet.xml", tomcat_config_folder
-File.copy "#{tempo_svn_config_folder}/tempo-ui-fw.xml", tomcat_config_folder
-File.copy "#{liferay_config_folder}/tempokeystore", tomcat_config_folder
+File.copy "#{tempo_svn_config_folder}/tempo-formmanager.xml", tomcat_config_folder, DEBUG
+File.copy "#{tempo_svn_config_folder}/tempo-ui-fw-servlet.xml", tomcat_config_folder, DEBUG
+File.copy "#{tempo_svn_config_folder}/tempo-ui-fw.xml", tomcat_config_folder, DEBUG
+File.copy "#{liferay_config_folder}/tempokeystore", tomcat_config_folder, DEBUG
 
+###
+#
+###
 title "add portlet version of ui-fw"
 explain "This is just the same as the standard, except we replace the web.xml file."
 Dir.chdir "#{TEMPO_SVN}/ui-fw"
@@ -114,4 +118,4 @@ system "buildr -e portlet clean install" if config['rebuild']
 Dir.chdir INSTALL_DIR
 Dir.glob("#{TEMPO_SVN}/ui-fw/target/*.war") {|x|  File.copy x, "#{webapp_folder}/ui-fw.war", DEBUG}
 
-title "The liferay package is finished"
+title "The customized liferay build is ready"
