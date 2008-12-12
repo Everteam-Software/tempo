@@ -1,7 +1,7 @@
 <%@ page import="org.intalio.tempo.web.ApplicationState" %>
 <% 
 ApplicationState state = (ApplicationState)request.getSession().getAttribute(ApplicationState.PARAMETER_NAME);
-String mytoken = as.getCurrentUser().getToken();
+String mytoken = state.getCurrentUser().getToken();
 %>
 
 <td>
