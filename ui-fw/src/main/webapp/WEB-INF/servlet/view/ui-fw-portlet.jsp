@@ -98,7 +98,7 @@ var GridEx={
 			   return 'x-grid-selected-row';
 			}
 			}),
-	        autoSizeColumns: true,
+	        autoSizeColumns: true
         });
                 return this.gridobj;
         }
@@ -152,7 +152,7 @@ var ProcessGridEx={
         ]);
          this.gridobj=new Ext.grid.Grid('processGrid',{
             cm:colModel,
-	        autoSizeColumns:true,
+	        autoSizeColumns:true
         });
         	return this.gridobj;
         }
@@ -182,8 +182,8 @@ function _searchTask(){
 }
 
 function _getUpdateData(){
-    GridEx.gridobj.dataSource.load()
-	ProcessGridEx.gridobj.dataSource.load()
+    GridEx.gridobj.dataSource.load();
+    ProcessGridEx.gridobj.dataSource.load();
 }
 //]]>
 </script>
