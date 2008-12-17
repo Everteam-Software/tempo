@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
+<web-app>
+    <display-name>Orbeon Forms 3.6.0</display-name>
+    <description>
+                Orbeon Forms is an open source forms solution that handles the complexity of forms typical of the
+                enterprise or government. It is delivered to standard web browsers (including Internet Explorer,
+                Firefox, Safari and Opera) thanks to XForms and Ajax technology, with no need for client-side software
+                or plugins. Orbeon Forms allows you to build fully interactive forms with features that include
+                as-you-type validation, optional and repeated sections, always up-to-date error summaries, PDF output,
+                full internationalization, and controls like auto-completion, tabs, dialogs, trees and menus.
+            </description>
+    <!-- Initialize main resource manager -->
+   <context-param>
+        <param-name>oxf.resources.factory</param-name>
+        <param-value>org.orbeon.oxf.resources.PriorityResourceManagerFactory</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>oxf.resources.priority.2</param-name>
+        <param-value>org.orbeon.oxf.resources.WebAppResourceManagerFactory</param-value>
+    </context-param>
+    <context-param>
+        <param-name>oxf.resources.priority.2.oxf.resources.webapp.rootdir</param-name>
+        <param-value>/WEB-INF/workflow</param-value>
+    </context-param>
+    <context-param>
+        <param-name>oxf.resources.priority.1</param-name>
+        <param-value>org.orbeon.oxf.resources.ClassLoaderResourceManagerFactory</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>oxf.resources.priority.3</param-name>
+        <param-value>org.intalio.tempo.oxf.TempoURLResourceManagerFactory</param-value>
+    </context-param>
+
+    <!-- Uncomment this for the filesystem resource manager -->
+    <!--
+    <context-param>
+        <param-name>oxf.resources.priority.1</param-name>
+        <param-value>org.orbeon.oxf.resources.FilesystemResourceManagerFactory</param-value>
+    </context-param>
+    <context-param>
+        <param-name>oxf.resources.priority.1.oxf.resources.filesystem.sandbox-directory</param-name>
+        <param-value>/usr/local/anthill/work/orbeon/src/resources</param-value>
+    </context-param>
+    <context-param>
+        <param-name>oxf.resources.priority.2</param-name>
+        <param-value>org.orbeon.oxf.resources.FilesystemResourceManagerFactory</param-value>
+    </context-param>
+    <context-param>
+        <param-name>oxf.resources.priority.2.oxf.resources.filesystem.sandbox-directory</param-name>
+        <param-value>/usr/local/anthill/work/orbeon/src/resources-packaged</param-value>
+    </context-param>
+    <context-param>
+        <param-name>oxf.resources.priority.3</param-name>
+        <param-value>org.orbeon.oxf.resources.WebAppResourceManagerFactory</param-value>
+    </context-param>
+    <context-param>
+        <param-name>oxf.resources.priority.3.oxf.resources.webapp.rootdir</param-name>
+        <param-value>/WEB-INF/resources</param-value>
+    </context-param>
+    <context-param>
+        <param-name>oxf.resources.priority.4</param-name>
+        <param-value>org.orbeon.oxf.resources.ClassLoaderResourceManagerFactory</param-value>
+    </context-param>-->
+    <!-- End filesystem resource manager -->
+    <!-- Uncomment this for the webapp resource manager -->
+    <!-- <context-param>
+        <param-name>oxf.resources.priority.1</param-name>
+        <param-value>org.orbeon.oxf.resources.WebAppResourceManagerFactory</param-value>
+    </context-param>
+    <context-param>
+        <param-name>oxf.resources.priority.1.oxf.resources.webapp.rootdir</param-name>
+        <param-value>/WEB-INF/resources</param-value>
+    </context-param>
+    <context-param>
+        <param-name>oxf.resources.priority.2</param-name>
+        <param-value>org.orbeon.oxf.resources.ClassLoaderResourceManagerFactory</param-value>
+    </context-param> -->
+    <!-- End webapp resource manager -->
+    <!-- OPS Class Loader -->
+    <context-param>
+        <param-name>oxf.classloader.enable</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <param-name>oxf.classloader.ignore-packages</param-name>
+        <param-value>java. javax. org.apache.log4j. org.xml. org.w3c.</param-value>
+    </context-param>
+    <!-- Set location of properties.xml (read by resource manager) -->
+    <context-param>
+        <param-name>oxf.properties</param-name>
+        <param-value>oxf:/config/properties.xml</param-value>
+    </context-param>
+    <!-- Determine whether logging initialization must take place -->
+    <context-param>
+        <param-name>oxf.initialize-logging</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <!-- Set context listener processors -->
+    <!-- Uncomment this for the context listener processors -->
+    <!--
+    <context-param>
+        <param-name>oxf.context-initialized-processor.name</param-name>
+        <param-value>{http://www.orbeon.com/oxf/processors}pipeline</param-value>
+    </context-param>
+    <context-param>
+        <param-name>oxf.context-initialized-processor.input.config</param-name>
+        <param-value>oxf:/apps/context/context-initialized.xpl</param-value>
+    </context-param>
+    <context-param>
+        <param-name>oxf.context-destroyed-processor.name</param-name>
+        <param-value>{http://www.orbeon.com/oxf/processors}pipeline</param-value>
+    </context-param>
+    <context-param>
+        <param-name>oxf.context-destroyed-processor.input.config</param-name>
+        <param-value>oxf:/apps/context/context-destroyed.xpl</param-value>
+    </context-param>-->
+    <!-- End context listener processors -->
+    <!-- Set session listener processors -->
+    <!-- Uncomment this for the session listener processors -->
+    <!--
+    <context-param>
+        <param-name>oxf.session-created-processor.name</param-name>
+        <param-value>{http://www.orbeon.com/oxf/processors}pipeline</param-value>
+    </context-param>
+    <context-param>
+        <param-name>oxf.session-created-processor.input.config</param-name>
+        <param-value>oxf:/apps/context/session-created.xpl</param-value>
+    </context-param>
+    <context-param>
+        <param-name>oxf.session-destroyed-processor.name</param-name>
+        <param-value>{http://www.orbeon.com/oxf/processors}pipeline</param-value>
+    </context-param>
+    <context-param>
+        <param-name>oxf.session-destroyed-processor.input.config</param-name>
+        <param-value>oxf:/apps/context/session-destroyed.xpl</param-value>
+    </context-param>-->
+    <!-- End session listener processors -->
+    <!-- All JSP files under /xforms-jsp go through the XForms filter -->
+    <filter>
+        <filter-name>ops-xforms-filter</filter-name>
+        <filter-class>org.orbeon.oxf.servlet.OPSXFormsFilter</filter-class>
+        <!-- Uncomment this for the separate WAR deployment -->
+        <!--
+    <init-param>
+        <param-name>oxf.xforms.renderer.context</param-name>
+        <param-value>/ops</param-value>
+    </init-param>-->
+        <!-- End separate WAR deployment -->
+    </filter>
+    <filter-mapping>
+        <filter-name>ops-xforms-filter</filter-name>
+        <url-pattern>/xforms-jsp/*</url-pattern>
+    </filter-mapping>
+    <!-- Set listeners -->
+    <!-- Uncomment this for the listeners -->
+    <!--
+    <listener>
+        <listener-class>org.orbeon.oxf.webapp.OPSServletContextListenerDelegate</listener-class>
+    </listener>
+    <listener>
+        <listener-class>org.orbeon.oxf.webapp.OPSSessionListenerDelegate</listener-class>
+    </listener>-->
+    <!-- End listeners -->
+    <!-- This is the main Orbeon Forms servlet -->
+    <servlet>
+        <servlet-name>ops-main-servlet</servlet-name>
+        <servlet-class>org.orbeon.oxf.servlet.OPSServletDelegate</servlet-class>
+        <!-- Set main processor -->
+        <init-param>
+            <param-name>oxf.main-processor.name</param-name>
+            <param-value>{http://www.orbeon.com/oxf/processors}page-flow</param-value>
+        </init-param>
+        <init-param>
+            <param-name>oxf.main-processor.input.controller</param-name>
+            <param-value>oxf:/page-flow.xml</param-value>
+        </init-param>
+        <!-- Set error processor -->
+        <init-param>
+            <param-name>oxf.error-processor.name</param-name>
+            <param-value>{http://www.orbeon.com/oxf/processors}pipeline</param-value>
+        </init-param>
+        <init-param>
+            <param-name>oxf.error-processor.input.config</param-name>
+            <param-value>oxf:/config/error.xpl</param-value>
+        </init-param>
+        <!-- Set supported methods -->
+        <init-param>
+            <param-name>oxf.http.accept-methods</param-name>
+            <param-value>get,post,head,put,delete</param-value>
+        </init-param>
+        <!-- Set servlet initialization and destruction listeners -->
+        <!-- Uncomment this for the servlet listener processors -->
+        <!--
+    <init-param>
+        <param-name>oxf.servlet-initialized-processor.name</param-name>
+        <param-value>{http://www.orbeon.com/oxf/processors}pipeline</param-value>
+    </init-param>
+    <init-param>
+        <param-name>oxf.servlet-initialized-processor.input.config</param-name>
+        <param-value>oxf:/apps/context/servlet-initialized.xpl</param-value>
+    </init-param>
+    <init-param>
+        <param-name>oxf.servlet-destroyed-processor.name</param-name>
+        <param-value>{http://www.orbeon.com/oxf/processors}pipeline</param-value>
+    </init-param>
+    <init-param>
+        <param-name>oxf.servlet-destroyed-processor.input.config</param-name>
+        <param-value>oxf:/apps/context/servlet-destroyed.xpl</param-value>
+    </init-param>-->
+        <!-- End servlet listener processors -->
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <!-- This is the XForms Server servlet -->
+    <servlet>
+        <servlet-name>ops-xforms-server-servlet</servlet-name>
+        <servlet-class>org.orbeon.oxf.servlet.OPSServletDelegate</servlet-class>
+        <!-- Set main processor -->
+        <init-param>
+            <param-name>oxf.main-processor.name</param-name>
+            <param-value>{http://www.orbeon.com/oxf/processors}pipeline</param-value>
+        </init-param>
+        <init-param>
+            <param-name>oxf.main-processor.input.config</param-name>
+            <param-value>oxf:/ops/xforms/xforms-server.xpl</param-value>
+        </init-param>
+        <!-- Set error processor -->
+        <init-param>
+            <param-name>oxf.error-processor.name</param-name>
+            <param-value>{http://www.orbeon.com/oxf/processors}pipeline</param-value>
+        </init-param>
+        <init-param>
+            <param-name>oxf.error-processor.input.config</param-name>
+            <param-value>oxf:/ops/xforms/xforms-server-error.xpl</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <!-- This is the XForms Renderer servlet, used to deploy Orbeon Forms as a separate WAR -->
+    <servlet>
+        <servlet-name>ops-renderer-servlet</servlet-name>
+        <servlet-class>org.orbeon.oxf.servlet.OPSServletDelegate</servlet-class>
+        <!-- Set main processor -->
+        <init-param>
+            <param-name>oxf.main-processor.name</param-name>
+            <param-value>{http://www.orbeon.com/oxf/processors}pipeline</param-value>
+        </init-param>
+        <init-param>
+            <param-name>oxf.main-processor.input.config</param-name>
+            <param-value>oxf:/ops/xforms/xforms-renderer.xpl</param-value>
+        </init-param>
+        <!-- Set error processor -->
+        <init-param>
+            <param-name>oxf.error-processor.name</param-name>
+            <param-value>{http://www.orbeon.com/oxf/processors}pipeline</param-value>
+        </init-param>
+        <init-param>
+            <param-name>oxf.error-processor.input.config</param-name>
+            <param-value>oxf:/config/error.xpl</param-value>
+        </init-param>
+    </servlet>
+    <!-- <servlet>
+         <servlet-name>display-chart-servlet</servlet-name>
+         <servlet-class>org.jfree.chart.servlet.DisplayChart</servlet-class>
+         <load-on-startup>2</load-on-startup>
+     </servlet>
+     <servlet>
+         <servlet-name>exist-xmlrpc-servlet</servlet-name>
+         <servlet-class>org.exist.xmlrpc.RpcServlet</servlet-class>
+     </servlet>
+     <servlet>
+         <servlet-name>exist-rest-servlet</servlet-name>
+         <servlet-class>org.exist.http.servlets.EXistServlet</servlet-class>
+         <init-param>
+             <param-name>basedir</param-name>
+             <param-value>WEB-INF/</param-value>
+         </init-param>
+         <init-param>
+             <param-name>configuration</param-name>
+             <param-value>exist-conf.xml</param-value>
+         </init-param>
+         <init-param>
+             <param-name>start</param-name>
+             <param-value>true</param-value>
+         </init-param>
+         <load-on-startup>2</load-on-startup>
+     </servlet>
+     <servlet>
+         <servlet-name>exist-webdav-servlet</servlet-name>
+         <servlet-class>org.exist.http.servlets.WebDAVServlet</servlet-class>
+         <init-param>
+             <param-name>authentication</param-name>
+             <param-value>basic</param-value>
+         </init-param>
+     </servlet>
+     <servlet>
+         <servlet-name>exist-atom-servlet</servlet-name>
+         <servlet-class>org.exist.atom.http.AtomServlet</servlet-class>
+         <init-param>
+             <param-name>authentication</param-name>
+             <param-value>basic</param-value>
+         </init-param>
+     </servlet> -->
+    <!-- Uncomment this for the SQL examples -->
+    <!--
+    <servlet>
+        <servlet-name>hsqldb-servlet</servlet-name>
+        <servlet-class>org.hsqldb.Servlet</servlet-class>
+        <init-param>
+            <param-name>hsqldb.server.database</param-name>
+            <param-value>orbeondb</param-value>
+        </init-param>
+        <load-on-startup>4</load-on-startup>
+    </servlet>-->
+    <!-- End SQL examples -->
+    <servlet-mapping>
+        <servlet-name>ops-main-servlet</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ops-xforms-server-servlet</servlet-name>
+        <url-pattern>/xforms-server/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ops-renderer-servlet</servlet-name>
+        <url-pattern>/xforms-renderer</url-pattern>
+    </servlet-mapping>
+    <!-- <servlet-mapping>
+         <servlet-name>exist-xmlrpc-servlet</servlet-name>
+         <url-pattern>/exist/xmlrpc</url-pattern>
+     </servlet-mapping>
+     <servlet-mapping>
+         <servlet-name>exist-rest-servlet</servlet-name>
+         <url-pattern>/exist/rest/*</url-pattern>
+     </servlet-mapping>
+     <servlet-mapping>
+         <servlet-name>exist-webdav-servlet</servlet-name>
+         <url-pattern>/exist/webdav/*</url-pattern>
+     </servlet-mapping>
+     <servlet-mapping>
+         <servlet-name>exist-atom-servlet</servlet-name>
+         <url-pattern>/exist/atom/*</url-pattern>
+     </servlet-mapping> -->
+    <!-- Uncomment this for the SQL examples -->
+    <!--
+    <servlet-mapping>
+        <servlet-name>hsqldb-servlet</servlet-name>
+        <url-pattern>/db</url-pattern>
+    </servlet-mapping>-->
+    <!-- End SQL examples -->
+    <!-- <servlet-mapping>
+        <servlet-name>display-chart-servlet</servlet-name>
+        <url-pattern>/chartDisplay</url-pattern>
+    </servlet-mapping> -->
+    <!-- Uncomment this for the SQL examples -->
+    <!--
+    <resource-ref>
+        <description>DataSource</description>
+        <res-ref-name>jdbc/db</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+    </resource-ref>-->
+    <!-- End SQL examples -->
+    <!-- Uncomment this for the authentication example -->
+    <!--
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Authentication example</web-resource-name>
+            <url-pattern>/java-authentication/</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>orbeon-admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+    <login-config>
+        <auth-method>FORM</auth-method>
+        <form-login-config>
+            <form-login-page>/java-authentication/login</form-login-page>
+            <form-error-page>/java-authentication/login-error</form-error-page>
+        </form-login-config>
+    </login-config>
+    <security-role>
+        <role-name>orbeon-admin</role-name>
+    </security-role>-->
+    <!-- End authentication example -->
+    <session-config>
+        <session-timeout>720</session-timeout>
+    </session-config>
+</web-app>

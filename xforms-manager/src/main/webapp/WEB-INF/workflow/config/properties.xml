@@ -1,0 +1,102 @@
+<!--
+    Notes: This file is the same as the original orbeon properties.xml file, apart from two changes:
+    - using "theme-plain.xsl",
+    - cache on the client side, because requires all exist lib files to run on the server
+-->
+<properties xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            xmlns:oxf="http://www.orbeon.com/oxf/processors">
+
+    <!-- Global properties -->
+    <property as="xs:anyURI"  name="oxf.log4j-config"                                value="oxf:/config/log4j.xml"/>
+    <property as="xs:integer" name="oxf.cache.size"                                  value="500"/>
+    <property as="xs:integer" name="oxf.cache.xpath.size"                            value="600"/>
+    <property as="xs:boolean" name="oxf.sax.inspection"                              value="false"/>
+    <property as="xs:boolean" name="oxf.resources.versioned"                         value="false"/>
+    <property as="xs:string"  name="oxf.resources.version-number"                    value="3.1415"/>
+
+    <!-- Epilogue configuration -->
+    <property as="xs:anyURI"  name="oxf.epilogue.theme"                              value="oxf:/config/theme-plain.xsl"/>
+    <property as="xs:boolean" name="oxf.epilogue.use-theme"                          value="true"/>
+    <property as="xs:boolean" name="oxf.epilogue.output-xhtml"                       value="false"/>
+    <property as="xs:boolean" name="oxf.epilogue.renderer-rewrite"                   value="true"/>
+    <property as="xs:boolean" name="oxf.epilogue.process-svg"                        value="true"/>
+    <property as="xs:boolean" name="oxf.epilogue.xforms.widgets"                     value="true"/>
+
+    <!-- Processor-specific properties -->
+    <property as="xs:integer" processor-name="oxf:request"   name="max-upload-size"          value="100000000"/>
+    <property as="xs:integer" processor-name="oxf:request"   name="max-upload-memory-size"   value="10240"/>
+    <property as="xs:string"  processor-name="oxf:page-flow" name="instance-passing"         value="redirect"/>
+    <property as="xs:string"  processor-name="oxf:page-flow" name="xforms-submission-path"   value="/xforms-server-submit"/>
+    <property as="xs:anyURI"  processor-name="oxf:page-flow" name="xforms-submission-model"  value="oxf:/ops/xforms/xforms-server-submit.xpl"/>
+    <property as="xs:boolean" processor-name="oxf:saxon8"    name="generate-source-location" value="false"/>
+    <property as="xs:boolean" processor-name="oxf:sql"       name="legacy-implicit-prefixes" value="false"/>
+
+    <!--<property as="xs:boolean" processor-name="oxf:xml-converter"       name="serialize-xml-11" value="true"/>-->
+
+    <!-- Encryption of XForms hidden fields and field names -->
+    <property as="xs:string"  name="oxf.xforms.password"                             value="CHANGE THIS PASSWORD"/>
+    <property as="xs:boolean" name="oxf.xforms.encrypt-item-values"                  value="true"/>
+    <property as="xs:boolean" name="oxf.xforms.encrypt-hidden"                       value="true"/>
+    <property as="xs:boolean" name="oxf.xforms.encrypt-names"                        value="true"/>
+
+    <!-- Default formatting of XForms types -->
+    <property as="xs:string"  name="oxf.xforms.format.date"                          value="if (. castable as xs:date) then format-date(xs:date(.), '[FNn] [MNn] [D], [Y] [ZN]', 'en', (), ()) else ."/>
+    <property as="xs:string"  name="oxf.xforms.format.dateTime"                      value="if (. castable as xs:dateTime) then format-dateTime(xs:dateTime(.), '[FNn] [MNn] [D], [Y] [H01]:[m01]:[s01] [ZN]', 'en', (), ()) else ."/>
+    <property as="xs:string"  name="oxf.xforms.format.time"                          value="if (. castable as xs:time) then format-time(xs:time(.), '[H01]:[m01]:[s01] [ZN]', 'en', (), ()) else ."/>
+    <property as="xs:string"  name="oxf.xforms.format.decimal"                       value="if (. castable as xs:decimal) then format-number(xs:decimal(.),'###,###,###,##0.00') else ."/>
+    <property as="xs:string"  name="oxf.xforms.format.integer"                       value="if (. castable as xs:integer) then format-number(xs:integer(.),'###,###,###,##0') else ."/>
+    <property as="xs:string"  name="oxf.xforms.format.float"                         value="if (. castable as xs:float) then format-number(xs:float(.),'#,##0.000') else ."/>
+    <property as="xs:string"  name="oxf.xforms.format.double"                        value="if (. castable as xs:double) then format-number(xs:double(.),'#,##0.000') else ."/>
+
+    <!-- XForms cache configuration -->
+    <property as="xs:string"  name="oxf.xforms.state-handling"                       value="client"/>
+    <property as="xs:boolean" name="oxf.xforms.cache.document"                       value="true"/>
+    <property as="xs:integer" name="oxf.xforms.cache.session.size"                   value="500000"/>
+    <property as="xs:integer" name="oxf.xforms.cache.application.size"               value="2000000"/>
+
+    <!-- Other XForms options -->
+    <property as="xs:string"  name="oxf.xforms.order"                                value="label control help alert hint"/>
+    <property as="xs:boolean" name="oxf.xforms.optimize-get-all"                     value="true"/>
+    <property as="xs:boolean" name="oxf.xforms.optimize-local-submission"            value="true"/>
+    <property as="xs:string"  name="oxf.xforms.forward-submission-headers"           value="Authorization"/>
+    <property as="xs:boolean" name="oxf.xforms.ajax.show-loading-icon"               value="true"/>
+    <property as="xs:boolean" name="oxf.xforms.ajax.show-errors"                     value="true"/>
+    <property as="xs:boolean" name="oxf.xforms.gzip-state"                           value="true"/>
+    <property as="xs:boolean" name="oxf.xforms.minimal-resources"                    value="true"/>
+    <property as="xs:boolean" name="oxf.xforms.combine-resources"                    value="true"/>
+    <property as="xs:boolean" name="oxf.xforms.cache-combined-resources"             value="false"/>
+    <property as="xs:boolean" name="oxf.xforms.optimize-relevance"                   value="false"/>
+    <property as="xs:boolean" name="oxf.xforms.session-heartbeat"                    value="true"/>
+    <property as="xs:boolean" name="oxf.xforms.host-language-avts"                   value="true"/>
+    <property as="xs:integer" name="oxf.xforms.offline-repeat-count"                 value="4"/>
+    <property as="xs:integer" name="oxf.xforms.request-retries"                      value="1"/>
+
+    <!-- Form Runner / Form Builder properties -->
+    <property as="xs:anyURI"  name="oxf.fr.persistence.app.*.uri"                    value="/fr/service/exist"/>
+    <property as="xs:anyURI"  name="oxf.fr.persistence.app.orbeon.builder.form.uri"  value="/fr/service/resource"/>
+    <property as="xs:anyURI"  name="oxf.fr.persistence.app.orbeon.bookcast.form.uri" value="/fr/service/resource"/>
+
+    <property as="xs:anyURI"  name="oxf.fr.persistence.service.exist.uri"            value="/exist/rest/db"/>
+
+    <!-- Deprecated XForms cache configuration -->
+    <property as="xs:integer" name="oxf.xforms.cache.session.size"                   value="500000"/>
+    <property as="xs:integer" name="oxf.xforms.cache.application.size"               value="2000000"/>
+
+    <!-- Rarely used global properties -->
+    <property as="xs:string"  name="oxf.servlet.externalize-form-values-prefix"      value="$extnode^"/>
+
+    <!-- Test properties -->
+    <!--<property as="xs:string"  name="oxf.cache.display-statistics"                    value="cache.main cache.xpath xforms.cache.documents xforms.cache.shared-instances"/>-->
+    <!--<property as="xs:boolean" name="oxf.xforms.test.ajax"                            value="false"/>-->
+
+    <!-- XPL profiling support -->
+    <!-- Currently one of org.orbeon.oxf.processor.NetworkTrace,
+                          org.orbeon.oxf.processor.StdOutTrace,
+                          org.orbeon.oxf.processor.SessionTrace -->
+    <!--<property as="xs:NCName"    name="processor.trace"    value="org.orbeon.oxf.processor.SessionTrace"/>-->
+    <!-- Host for NetworkTrace. Default is localhost. -->
+    <!--<property as="xs:NMTOKEN"    name="processor.trace.host"    value="localhost"/>-->
+    <!-- Port for NetworkTrace. Default is 9191 -->
+    <!--<property as="xs:nonNegativeInteger"    name="processor.trace.port"    value="9999"/>-->
+
+</properties>

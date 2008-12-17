@@ -1,0 +1,137 @@
+<!--
+* Copyright (c) 2005-2006 Intalio inc.
+*
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License v1.0
+* which accompanies this distribution, and is available at
+* http://www.eclipse.org/legal/epl-v10.html
+*
+* Contributors:
+* Intalio inc. - initial API and implementation
+-->
+<!--
+    Description: This page defines the pages for the Form Manager application,
+    which is responsible for interacting with the task list and custom forms that
+    support user tasks.
+    Author: Jacques-Alexandre Gerber [gerber@intalio.com]
+    Creation Date: October, 10th, 2005
+    Copyright Intalio,Inc. All rights reserved.
+-->
+<config xmlns="http://www.orbeon.com/oxf/controller"
+        xmlns:xu="http://www.xmldb.org/xupdate"
+        xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+        xmlns:oxf="http://www.orbeon.com/oxf/processors">
+
+    <!-- Files to serve directly -->
+
+    <files path-info="*.gif"/>
+    <files path-info="*.css"/>
+    <files path-info="*.pdf"/>
+    <files path-info="*.js"/>
+    <files path-info="*.png"/>
+    <files path-info="*.jpg"/>
+    <files path-info="*.wsdl"/>
+    <files path-info="*.xsd"/>
+    <files path-info="*.jsf"/>
+    <files path-info="*.html" mime-type="text/html"/>
+    <files path-info="*.java" mime-type="text/plain"/>
+    <files path-info="*.txt" mime-type="text/plain"/>
+    <files path-info="*.xq" mime-type="text/plain"/>
+
+    <!--
+    	The forms directory is where all user forms should be deployed.
+    	All forms should be marked to be served directly since they are
+    	dynamically loaded by the Form Manager
+    -->
+
+    <files path-info="/forms/*" mime-type="application/xml"/>
+
+
+    <!--/////////////////////////////////////////////////////////////////////////////////
+
+    Form Manager
+
+    //////////////////////////////////////////////////////////////////////////////////-->
+
+    <!--
+    	Defines the path to the Form Manager
+    	The Form Manager basically wraps XForms to handle task actions and integration with task list
+    	The default-submission defines a dummy XML document that maps the HTTP request parameters
+    	that are passed from the task list. This is part of the solution to retrieve parameters from
+    	the task list as XForms does not have direct access to request parameters.
+    -->
+    <page path-info="/act" model="formManager/model4task.xpl" view="formManager/act.xpl">
+        <action when="/attachments/action = 'show'" >
+            <result page="attachments" transform="oxf:xslt" instance-passing="forward">
+                <attachments xsl:version="2.0">
+                    <xsl:attribute name="taskId">
+                        <xsl:value-of select="/attachments/@taskId"/>
+                    </xsl:attribute>
+                    <xsl:attribute name="participantToken">
+                        <xsl:value-of select="/attachments/@participantToken"/>
+                    </xsl:attribute>
+                    <xsl:attribute name="formURL">
+                        <xsl:value-of select="/attachments/@formURL"/>
+                    </xsl:attribute>
+                    <xsl:copy-of select="/attachments/*"/>
+                </attachments>
+            </result>
+        </action>
+    </page>
+
+
+    <page path-info="/init" model="formManager/model4task.xpl" view="formManager/init.xpl"/>
+
+    <page path-info="/notification" model="formManager/model4task.xpl" view="formManager/notify.xpl" />
+
+
+    <!--/////////////////////////////////////////////////////////////////////////////////
+
+    Task Actions
+
+    //////////////////////////////////////////////////////////////////////////////////-->
+
+    <!--
+    	Defines the path to the Task actions.
+    	For the moment only the Complete Task action is supported.
+    	In the future, more pages will need to be defined here to support each Task Action
+    -->
+    <!-- Page that implements the Save Task action -->
+    <page path-info="/formManager/save" view="formManager/save-action.xpl"/>
+
+    <!-- Page that implements the Complete Task action -->
+    <page path-info="/formManager/complete" view="formManager/complete-action.xpl"/>
+
+    <!-- Page that implements the Complete Task action -->
+    <page path-info="/formManager/dismissNotification" view="formManager/dismiss-notification-action.xpl"/>
+
+    <!-- Page that implements the Claim Task action -->
+    <page path-info="/formManager/claim" view="formManager/claim-action.xpl"/>
+
+    <!-- Page that implements the Revoke Task action -->
+    <page path-info="/formManager/revoke" view="formManager/revoke-action.xpl"/>
+
+    <!-- Page that implements the Init Task action -->
+    <page path-info="/formManager/init" view="formManager/init-action.xpl"/>
+
+    <page path-info="/new-attachment" model="formManager/add-attachment-model.xpl" view="formManager/add-attachment-view.xpl"/>
+
+    <!-- Implements calling web-servise for adding attachment -->
+    <page id="attachments" path-info="/attachments" view="formManager/retrieve-attachments.xpl">
+        <action when="/attachments/action = 'new'" action="formManager/add-plaintext-attachment.xpl"/>
+        <action when="/attachments/action = 'delete'" action="formManager/delete-attachment.xpl"/>
+    </page>
+
+    <!--/////////////////////////////////////////////////////////////////////////////////
+
+    Orbeon
+
+    //////////////////////////////////////////////////////////////////////////////////-->
+
+    <!-- "Not Found" page displayed when no page matches the request URL -->
+    <page id="not-found" path-info="/not-found" view="config/not-found.xhtml"/>
+
+    <epilogue url="/config/epilogue.xpl"/>
+    <not-found-handler page="not-found"/>
+
+</config>

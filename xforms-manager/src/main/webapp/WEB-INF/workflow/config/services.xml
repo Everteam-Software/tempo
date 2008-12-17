@@ -1,0 +1,20 @@
+<config>
+	<service id="tms" type="webservice" style="rpc" endpoint="http://localhost:8080/axis2/services/TaskManagementServices">
+		<operation nsuri="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" name="getTaskRequest" soap-action="getTask"/>
+		<operation nsuri="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" name="addAttachmentRequest" soap-action="addAttachment"/>
+		<operation nsuri="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" name="removeAttachment" soap-action="removeAttachment"/>
+		<operation nsuri="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" name="getAttachmentsRequest" soap-action="getAttachments"/>
+		<operation nsuri="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" name="setOutput"  soap-action="setOutput" select="/*:Envelope/*:Body/text() | /*:Envelope/*:Body/*"/>
+		<operation nsuri="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" name="completeRequest" soap-action="complete" />
+		<operation nsuri="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" name="initRequest" soap-action="initProcess" select="/*:Envelope/*:Body/text() | /*:Envelope/*:Body/*"/>
+	</service>
+	<service id="tas" type="webservice" endpoint="http://localhost:8080/axis2/services/tas">
+		<operation nsuri="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/" name="addRequest" soap-action="add"/>
+		<operation nsuri="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/" name="deleteRequest" soap-action="delete"/>
+	</service>
+	<service id="tmp" type="webservice" endpoint="http://localhost:8080/ode/processes/completeTask">
+		<operation nsuri="http://www.intalio.com/bpms/workflow/ib4p_20051115" name="claimTaskRequest" soap-action="claimTask" select="/*:Envelope/*:Body/text() | /*:Envelope/*:Body/*"/>
+		<operation nsuri="http://www.intalio.com/bpms/workflow/ib4p_20051115" name="completeTaskRequest" soap-action="completeTask" select="/*:Envelope/*:Body/text() | /*:Envelope/*:Body/*"/>
+		<operation nsuri="http://www.intalio.com/bpms/workflow/ib4p_20051115" name="revokeTaskRequest" soap-action="revokeTask" select="/*:Envelope/*:Body/text() | /*:Envelope/*:Body/*"/>
+	</service>
+</config>
