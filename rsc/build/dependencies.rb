@@ -24,6 +24,7 @@ AXIOM = group("axiom-api", "axiom-dom", "axiom-impl", :under=>"org.apache.ws.com
 BACKPORT = "backport-util-concurrent:backport-util-concurrent:jar:3.1"
 NEETHI = "org.apache.neethi:neethi:jar:2.0.4"
 
+URLREWRITE = "org.tuckey:urlrewrite:jar:3.1.0"
 
 CASTOR = "castor:castor:jar:1.0"
 
@@ -192,7 +193,7 @@ ORBEON_XERCES = [
 
 
 ORBEON_CORE = [
-  group("orbeon", "orbeon-xforms-filter", "orbeon-resources-public", "orbeon-resources-private", :under=>"orbeon", :version=>"3.7.0alpha.200808130010"),
+  group("orbeon", "orbeon-xforms-filter", "orbeon-resources-public", "orbeon-resources-private", :under=>"orbeon", :version=>"3.7.0beta1.200811030320")
 ]
 ORBEON_CUSTOM = [
   ORBEON_XERCES,
@@ -223,6 +224,7 @@ ORBEON_LIBS = [
   JAXEN
   # "orbeon:jaxen:jar:1.1-beta-1-dev",  
 ]
+
 
 # For testing
 EASY_B = [

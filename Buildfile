@@ -289,51 +289,53 @@ define "tempo" do
         [ projects("deploy-api", "registry", "security", "security-ws-client", "security-ws-common", "tms-axis", "tms-common", "web-nutsNbolts", "dao-nutsNbolts"), APACHE_COMMONS[:pool], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], APACHE_JPA, SLF4J, SPRING[:core] ] 
   end
   
-  desc "Task Management Feeds"
-  define "tms-feeds" do
-    compile.with projects("tms-common", "ui-fw", "tms-axis", "security", "security-ws-client", "security-ws-common", "tms-client", "web-nutsNbolts"), 
-    AXIOM, APACHE_ABDERA, APACHE_JPA, AXIS2, JETTY, LOG4J, SERVLET_API, SLF4J, SPRING[:core], XMLBEANS, WS_COMMONS_SCHEMA, WSDL4J
-    package(:war)
-  end 
-  
   desc "User-Interface Framework"
-  define "ui-fw" do
-    libs = projects("security", "security-ws-client", "security-ws-common",
-                    "tms-axis", "tms-client", "tms-common", "web-nutsNbolts"),
-           APACHE_COMMONS[:io],
-           APACHE_COMMONS[:httpclient],
-           APACHE_COMMONS[:codec],
-           APACHE_JPA,
-           AXIOM, 
-           AXIS2,  
-           CSV,
-           CASTOR,
-           ICAL,
-           INTALIO_STATS, 
-           JSON,
-           JSON_NAGGIT,
-           JSP_API, 
-           JSTL,
-           LOG4J,
-           SERVLET_API, 
-           SPRING[:core], 
-           SPRING[:webmvc],
-           SLF4J, 
-           STAX_API, 
-           TAGLIBS, 
-           WOODSTOX, 
-           WSDL4J,
-           WS_COMMONS_SCHEMA,
-           XERCES, 
-           XMLBEANS,
-           CAS_CLIENT
-    compile.with libs
+   define "ui-fw" do
+     libs = projects("security", "security-ws-client", "security-ws-common",
+                     "tms-axis", "tms-client", "tms-common", "web-nutsNbolts"),
+            APACHE_ABDERA,
+            APACHE_COMMONS[:io],
+            APACHE_COMMONS[:httpclient],
+            APACHE_COMMONS[:codec],
+            APACHE_JPA,
+            AXIOM, 
+            AXIS2, 
+            CSV,
+            CASTOR,
+            DOM4J,
+            ICAL,
+            INTALIO_STATS, 
+            JSON,
+            JSON_NAGGIT,
+            JSTL,
+            LOG4J,
+            PLUTO,
+            SPRING[:core], 
+            SPRING[:webmvc],
+            SPRING[:webmvc_portlet],
+            SLF4J, 
+            STAX_API, 
+            TAGLIBS, 
+            URLREWRITE,
+            WOODSTOX, 
+            WSDL4J,
+            WS_COMMONS_SCHEMA,
+            XERCES, 
+            XMLBEANS
 
-    resources.filter.using "version" => VERSION_NUMBER
-    package(:jar)
-    package(:war).with(:libs=>libs).
-      include("src/main/config/geronimo/1.0/*")
-  end
+     compile.with libs, JSP_API, SERVLET_API, CAS_CLIENT, PORTLET_API
+
+     # use the following command to build the prepared portlet version
+     # buildr install -e portlet
+     #
+     # this just copies over the configured web.xml for portlet 
+     web_xml = (ENV['BUILDR_ENV'] == 'portlet' ? 'web-cas.xml' : 'web.xml')
+     web_xml = _("src/main/webapp/WEB-INF/"+web_xml) 
+
+     resources.filter.using "version" => VERSION_NUMBER
+     test.with JAXEN, XMLUNIT, INSTINCT
+     package(:war).include(web_xml, :as=>'WEB-INF/web.xml').with(:libs=>libs)
+   end
   
   desc "User-Interface Framework Portlet"
   define "ui-fw-portlet" do

@@ -81,6 +81,8 @@ public class JsonUpdateTest {
             {
                 atLeast(1).of(response).setContentType("application/x-json");
 
+				atLeast(1).of(response).setCharacterEncoding("UTF-8");
+
                 atLeast(1).of(request).getParameter("token");
                 will(returnValue(token));
 

@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<%@ page contentType="text/xml" %>
+<%@ page contentType="text/xml;charset=UTF-8"%>
 <c:set var="iconSize" value="14"/>
 <rows>
 	<page><%= request.getAttribute("currentPage") %></page>
