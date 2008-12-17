@@ -5,6 +5,7 @@ APACHE_COMMONS = {
   :cli => "commons-cli:commons-cli:jar:1.1",
   :codec => "commons-codec:commons-codec:jar:1.3",
   :collections => "commons-collections:commons-collections:jar:3.2", 
+  :daemon => "commons-daemon:commons-daemon:jar:1.0.1", 
   :dbcp => "commons-dbcp:commons-dbcp:jar:1.2.2",
   :digester => "commons-digester:commons-digester:jar:1.7",
   :discovery => "commons-discovery:commons-discovery:jar:0.2",
@@ -17,7 +18,7 @@ APACHE_COMMONS = {
   :validator => "commons-validator:commons-validator:jar:1.2.0"
 }
 APACHE_DERBY = "org.apache.derby:derby:jar:10.2.2.0"
-APACHE_DS = "org.apache.apacheds:noarch-installer:jar:1.5.1"
+APACHE_DS = "org.apache.apacheds:noarch-installer:jar:1.5.1a"
 AXIOM = group("axiom-api", "axiom-dom", "axiom-impl", :under=>"org.apache.ws.commons.axiom", :version=>"1.2.7")
 
 BACKPORT = "backport-util-concurrent:backport-util-concurrent:jar:3.1"
