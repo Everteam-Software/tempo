@@ -22,18 +22,21 @@
 		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
 		<link rel="stylesheet" type="text/css" href="style.css" />
 		<link rel="stylesheet" type="text/css" href="style/tabs.css"/>
-		<link rel="stylesheet" type="text/css" href="style/flexigrid.css">
+		<link rel="stylesheet" type="text/css" href="style/flexigrid.css"/>
+		<link rel="stylesheet" type="text/css" href="style/modal.css"/>
 
-			<link rel="alternate" type="application/atom+xml" title="Personal Task feed" href="/feeds/atom/tasks?token=${participantToken}"/>
-			<link rel="alternate" type="application/atom+xml" title="Process feed" href="/feeds/atom/processes?token=${participantToken}"/>
+		<link rel="alternate" type="application/atom+xml" title="Personal Task feed" href="/feeds/atom/tasks?token=${participantToken}"/>
+		<link rel="alternate" type="application/atom+xml" title="Process feed" href="/feeds/atom/processes?token=${participantToken}"/>
 
-			<script type="text/javascript" src="script/ui-fw.js"></script>
-			<script type="text/javascript" src="script/jquery.js"></script>
-			<script type="text/javascript" src="script/jtabber.js"></script>
-			<script type="text/javascript" src="script/jquery-timer.js"></script>
-			<script type="text/javascript" src="script/flexigrid.js"></script>
-			<script type="text/javascript" src="script/jquery.jcorners.js"></script>
-			<script type="text/javascript" src="script/jquery.demensions.js"></script>
+		<script type="text/javascript" src="script/ui-fw.js"></script>
+		<script type="text/javascript" src="script/jquery.js"></script>
+		<script type="text/javascript" src="script/jtabber.js"></script>
+		<script type="text/javascript" src="script/jquery-timer.js"></script>
+		<script type="text/javascript" src="script/flexigrid.js"></script>
+		<script type="text/javascript" src="script/jquery.jcorners.js"></script>
+		<script type="text/javascript" src="script/jquery.demensions.js"></script>
+		<script src="script/jquery.smartmodal.js" type="text/javascript" charset="utf-8"></script>
+
 
 			<%@ include file="/script/grids.jsp"%>
 			
@@ -54,7 +57,6 @@
 
 		</head>
 		<body width="95%" height="98%">
-			
 			<%@ include file="/WEB-INF/jsp/siteHeader.jsp"%>
 						<div id="container">			
 							<ul id="tabnav">
@@ -113,6 +115,12 @@
 							</a>&nbsp;
 							<a href="http://bpms.intalio.com"><span style="color: #3082A8"><fmt:message key="com_intalio_bpms_workflow_pageFooter_featureBugRequest"/></span></a>
 						</div>
-			
+						
+						<a href="#" rel="rel_modal_content" id="modal" class="hiddencontent">Click me</a>
+						<div id="rel_modal_content" class="hiddencontent">
+							<p>Your session has expired.</p>
+							<p><a href="/ui-fw">Please click here to log in again</a></p>
+						    <!-- Note we can add any kind of HTML code in here for the session timeout -->
+						</div>
 		</body>
 	</html>

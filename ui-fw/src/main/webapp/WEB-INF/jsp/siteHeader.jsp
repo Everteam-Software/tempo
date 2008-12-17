@@ -4,8 +4,8 @@
 	<input type="hidden" id="actionName" name="actionName" value=""/>
 	<img src="images/logo.gif" alt="" width="200"/>
 	<div class="siteHeaderIcons">
+	<span id="timer"></span>
 	<%@ include file="icons.jsp" %>
-    
 	<img src="images/curent_user_icon.gif" title="<fmt:message key="org_intalio_uifw_siteHeader_currentUser"/>" alt="org_intalio_uifw_siteHeader_currentUser" border="0"></img>
 	${currentUser}
 	<a href="javascript:submitActionToURL('login.htm','logOut')">

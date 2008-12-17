@@ -31,6 +31,22 @@
 			$('#taskform').animate({height:"0px"},speed);
 		}
 		
+		//
+		// Session timeout management
+		//
+		var time = 0;
+		var sessionTimeout = 10; // 10 minutes 
+		var timeCount = 60000; // 1 minute 
+		$.timer(timeCount,function(timer) {
+			$("#timer").text("You have been logged in for "+ time +" minute(s)");
+			time = time + 1;
+			if(time > sessionTimeout) {
+				$.post("login.htm?actionName=logOut");		
+				$("#modal").click();
+			}
+		});
+		$(this).click(function() {time = 0;});
+		$('#modal').modal({modal_styles: {width:"30%", "height":"30%"}});
 
 		//
 		// tab definition
@@ -138,6 +154,7 @@
 		// change tab on click, refresh frame, refresh task list
 		//
 		$('#tabnav li a').click(function(){
+            time = 0;
 			clearFrame();
 			$("#filter").val("");
 			if(current==null)  {
@@ -156,7 +173,6 @@
 			refresh(true);
 		});
 		
-
 		$('#taskform').load(function(){
 			var elo = $('html', window.frames['taskform'].document);
 			var loc = window.frames['taskform'].location;
@@ -186,6 +202,7 @@
 	    	t2.flexReload();
 			t3.flexReload();
 		});
+		
 
 		});
 	</script>
