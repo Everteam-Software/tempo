@@ -35,6 +35,7 @@
 		<script type="text/javascript" src="script/flexigrid.js"></script>
 		<script type="text/javascript" src="script/jquery.jcorners.js"></script>
 		<script type="text/javascript" src="script/jquery.demensions.js"></script>
+		<script type="text/javascript" src="script/jquery.string.1.0.js"></script>
 		<script src="script/jquery.smartmodal.js" type="text/javascript" charset="utf-8"></script>
 
 
