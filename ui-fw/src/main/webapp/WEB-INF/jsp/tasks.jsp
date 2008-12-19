@@ -27,13 +27,15 @@
 			<link rel="alternate" type="application/atom+xml" title="Personal Task feed" href="/feeds/atom/tasks?token=${participantToken}"/>
 			<link rel="alternate" type="application/atom+xml" title="Process feed" href="/feeds/atom/processes?token=${participantToken}"/>
 
-			<script type="text/javascript" src="script/ui-fw.js"></script>
-			<script type="text/javascript" src="script/jquery.js"></script>
-			<script type="text/javascript" src="script/jtabber.js"></script>
-			<script type="text/javascript" src="script/jquery-timer.js"></script>
-			<script type="text/javascript" src="script/flexigrid.js"></script>
-			<script type="text/javascript" src="script/jquery.jcorners.js"></script>
-			<script type="text/javascript" src="script/jquery.demensions.js"></script>
+		<script type="text/javascript" src="script/ui-fw.js"></script>
+		<script type="text/javascript" src="script/jquery.js"></script>
+		<script type="text/javascript" src="script/jtabber.js"></script>
+		<script type="text/javascript" src="script/jquery-timer.js"></script>
+		<script type="text/javascript" src="script/flexigrid.js"></script>
+		<script type="text/javascript" src="script/jquery.jcorners.js"></script>
+		<script type="text/javascript" src="script/jquery.demensions.js"></script>
+		<script type="text/javascript" src="script/jquery.string.1.0.js"></script>
+		<script src="script/jquery.smartmodal.js" type="text/javascript" charset="utf-8"></script>
 
 			<%@ include file="/script/grids.jsp"%>
 			
@@ -45,7 +47,7 @@
 			    // not sure how to get this dynamically
 			    height -= 20; /* whatever you set your body bottom margin/padding to be */
 
-			    document.getElementById('frame').style.height = height +"px";
+			    document.getElementById('taskform').style.height = height +"px";
 
 			};
 			document.getElementById('taskform').onload = resizeIframe;

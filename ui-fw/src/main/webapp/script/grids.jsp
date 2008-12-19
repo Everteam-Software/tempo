@@ -18,10 +18,11 @@
 
 		function preProcess(data) {
     		$("rows row", data).each(function () {
-				var elem = $(this);
-	    		if(elem.text().indexOf($("#filter").val())==-1) {
-					// This has a friend in flexigrid.js (line 456)
-					elem.attr("flexi","ignore");
+                var elem = $(this);
+                var str = $.string(elem.text()).stripTags().strip().str
+                if(str.indexOf($("#filter").val())==-1) {
+                    // This has a friend in flexigrid.js (line 456)
+                    elem.attr("flexi","ignore");
 				}
 		    });
 			return data;
