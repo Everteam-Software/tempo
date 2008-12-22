@@ -129,19 +129,19 @@
 			t2.parent().parent().hide(speed);
 			t3.parent().parent().hide(speed);
 		}
-		else if(current=='<fmt:message key="com_intalio_bpms_workflow_tab_tasks"/>') {
+		else if(current=='tabTasks') {
 			t1.flexReload();
 			t1.parent().parent().show(speed);
 			t2.parent().parent().hide(speed);
 			t3.parent().parent().hide(speed);
 		}
-		else if(current=='<fmt:message key="com_intalio_bpms_workflow_tab_notifications"/>') {
+		else if(current=='tabNotif') {
 			t2.flexReload();
 		    t1.parent().parent().hide(speed);
 			t3.parent().parent().hide(speed);
 			t2.parent().parent().show(speed);
 		}
-		else if(current=='<fmt:message key="com_intalio_bpms_workflow_tab_processes"/>') {
+		else if(current=='tabPipa') {
 			t3.flexReload();
 			t1.parent().parent().hide(speed);
 			t2.parent().parent().hide(speed);
@@ -162,7 +162,7 @@
 				$(".intro").each(function(){ $(this).hide();});
 				$("#filterdiv").show();
 			}
-			current = $(this).attr("title");
+			current = $(this).attr("id");
 			refresh(true);
 		});
 
@@ -199,12 +199,12 @@
 
 		if(timeout == null || timeout < 1000) timeout = 1000;
 		$.timer(timeout,function(timer) {
-			t1.flexReload();
-	    	t2.flexReload();
-			t3.flexReload();
+		    if(current=='tabTasks') t1.flexReload();
+	    	if(current=='tabNotif') t2.flexReload();
+			if(current=='tabPipa') t3.flexReload();
 		});
 		
-		$("#tabnav1").click();
-
+		$("#tabTasks").click();
+		
 		});
 	</script>
