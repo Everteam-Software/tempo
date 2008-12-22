@@ -204,6 +204,7 @@
 			t3.flexReload();
 		});
 		
+		$("#tabnav1").click();
 
 		});
 	</script>

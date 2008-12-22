@@ -61,9 +61,9 @@
 			<%@ include file="/WEB-INF/jsp/siteHeader.jsp"%>
 						<div id="container">			
 							<ul id="tabnav">
-								<li><a href="#" title="<fmt:message key="com_intalio_bpms_workflow_tab_tasks"/>"><fmt:message key="com_intalio_bpms_workflow_tab_tasks"/></a></li>
-								<li><a href="#" title="<fmt:message key="com_intalio_bpms_workflow_tab_notifications"/>"><fmt:message key="com_intalio_bpms_workflow_tab_notifications"/></a></li>
-								<li><a href="#" title="<fmt:message key="com_intalio_bpms_workflow_tab_processes"/>"><fmt:message key="com_intalio_bpms_workflow_tab_processes"/></a></li>
+								<li><a href="#" id="tabnav1" title="<fmt:message key="com_intalio_bpms_workflow_tab_tasks"/>"><fmt:message key="com_intalio_bpms_workflow_tab_tasks"/></a></li>
+								<li><a href="#" id="tabnav2" title="<fmt:message key="com_intalio_bpms_workflow_tab_notifications"/>"><fmt:message key="com_intalio_bpms_workflow_tab_notifications"/></a></li>
+								<li><a href="#" id="tabnav3" title="<fmt:message key="com_intalio_bpms_workflow_tab_processes"/>"><fmt:message key="com_intalio_bpms_workflow_tab_processes"/></a></li>
 								<li>
 									<div id="filterdiv" class="filtertext">
 										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
