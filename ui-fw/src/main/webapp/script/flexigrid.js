@@ -1417,10 +1417,21 @@
 	}; //end flexigrid
 
 	$.fn.flexReload = function(p) { // function to reload grid
-
-		return this.each( function() {
-				if (this.grid&&this.p.url) this.grid.populate();
+		
+		// added by nico
+		// this forces a refresh of the page in case, 
+		// the ajax connection gets screwed up
+		var active = false;
+		var obj = this.each( function() {
+			active = true;
+			$.timer(10000,function(timer) {
+				timer.stop();
+				if(active) location.reload(true);
 			});
+			if (this.grid&&this.p.url) this.grid.populate();
+			active = false;
+		});
+		return obj;
 
 	}; //end flexReload
 

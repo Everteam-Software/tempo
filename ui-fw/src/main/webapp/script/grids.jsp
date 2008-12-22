@@ -7,14 +7,17 @@
 
 		var speed = "fast";
 		window.open("about:blank", "taskform");
-		var width = $(window).width() - 100;
+		var width = $(window).width()-($(window).width()/30);
 		var height = 0;
 		if($.browser.msie){
 		     height = $(window).height() - 140;
 		  }else{
 		     height = $(window).height() - 100;
 		  }
-		var height2 = height - 50;
+		var height2 = height - 80;
+		$(window).resize(function() {
+			location.reload(true);
+		});
 
 		function preProcess(data) {
     		$("rows row", data).each(function () {
@@ -64,7 +67,7 @@
 		var t2 = $("#table2").flexigrid({
 		url: "updates.htm?update=true&type=Notification",
 		colModel : [
-		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description', width : width*0.4, sortable : true, align: 'left'},
+		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description', width : width*0.6, sortable : true, align: 'left'},
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/>', name : '_creationDate', width : width*0.2, sortable : true, align: 'left'}
 		],	
 		preProcess: preProcess,
@@ -80,12 +83,12 @@
 		url: 'updates.htm?update=true&type=PATask',
         dataType: 'xml',
 		colModel : [
-		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description', width : width*0.4, sortable : true, align: 'left'},
+		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description', width : width*0.39, sortable : true, align: 'left'},
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_taskState"/>', name : '_state', width : width*0.035, resize : true, sortable : true, align: 'center'},
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/>', name : '_creationDate', width : width*0.15, sortable : true, align: 'left'},
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_dueDate"/>', name : '_deadline', width : width*0.15, sortable : true, align: 'left'},
-		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_priority"/>', name : '_priority', width : width*0.08, sortable : true, align: 'center'},
-		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_attachments"/>', name : '_attachments', width : width*0.1, sortable : false, align: 'center'}
+		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_priority"/>', name : '_priority', width : width*0.070, sortable : true, align: 'center'},
+		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_attachments"/>', name : '_attachments', width : width*0.09, sortable : false, align: 'center'}
 		],
 		usepager: true,
 		preProcess: preProcess,
@@ -99,7 +102,7 @@
 		var t3 = $("#table3").flexigrid({
 		url: "updates.htm?update=true&type=PIPATask",
 		colModel : [
-		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description', width : width*0.4, sortable : true, align: 'left'},
+		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description', width : width*0.6, sortable : true, align: 'left'},
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/>', name : '_creationDate', width : width*0.2, sortable : true, align: 'left'}
 		],	
 		usepager: true,

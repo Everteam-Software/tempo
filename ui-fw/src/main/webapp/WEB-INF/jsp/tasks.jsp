@@ -39,22 +39,24 @@
 		<script src="script/jquery.smartmodal.js" type="text/javascript" charset="utf-8"></script>
 
 
+		<script type="text/javascript">
+		function resizeIframe() {
+		    var height = document.documentElement.clientHeight;
+		    height -= document.getElementById('taskform').offsetTop;
+
+		    // not sure how to get this dynamically
+		    height -= 20; /* whatever you set your body bottom margin/padding to be */
+
+		    document.getElementById('taskform').style.height = height +"px";
+
+		};
+		document.getElementById('taskform').onload = resizeIframe;
+		window.onresize = resizeIframe;
+		</script>
+
 			<%@ include file="/script/grids.jsp"%>
 			
-			<script type="text/javascript">
-			function resizeIframe() {
-			    var height = document.documentElement.clientHeight;
-			    height -= document.getElementById('taskform').offsetTop;
 
-			    // not sure how to get this dynamically
-			    height -= 20; /* whatever you set your body bottom margin/padding to be */
-
-			    document.getElementById('frame').style.height = height +"px";
-
-			};
-			document.getElementById('taskform').onload = resizeIframe;
-			window.onresize = resizeIframe;
-			</script>
 
 		</head>
 		<body width="95%" height="98%">
