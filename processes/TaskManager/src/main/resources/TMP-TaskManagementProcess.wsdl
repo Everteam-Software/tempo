@@ -20,4 +20,7 @@
     <vprop:propertyAlias propertyName="this:taskId" messageType="b4p:nextTaskReady" part="root">
         <vprop:query>b4p:previousTaskId/text()</vprop:query>
     </vprop:propertyAlias>
+    <vprop:propertyAlias propertyName="this:taskId" messageType="b4p:skipTaskRequest" part="root">
+        <vprop:query>b4p:taskId/text()</vprop:query>
+    </vprop:propertyAlias>
 </wsdl:definitions>

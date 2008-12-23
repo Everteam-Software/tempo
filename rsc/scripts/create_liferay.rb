@@ -114,7 +114,7 @@ File.copy "#{liferay_config_folder}/tempokeystore", tomcat_config_folder, DEBUG
 title "add portlet version of ui-fw"
 explain "This is just the same as the standard, except we replace the web.xml file."
 Dir.chdir "#{TEMPO_SVN}/ui-fw"
-system "buildr -e portlet clean install" if config['rebuild']
+system "buildr -e portlet clean test=no install" if config['rebuild']
 Dir.chdir INSTALL_DIR
 Dir.glob("#{TEMPO_SVN}/ui-fw/target/*.war") {|x|  File.copy x, "#{webapp_folder}/ui-fw.war", DEBUG}
 

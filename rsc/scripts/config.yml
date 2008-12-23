@@ -1,6 +1,6 @@
 ---
-install_dir: ../intalio
-#rebuild: true
+install_dir: ../intalio2
+rebuild: true
 debug: true
 server: liferay_510
 # add_alfresco: true

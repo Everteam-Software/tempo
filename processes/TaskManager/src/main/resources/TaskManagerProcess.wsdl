@@ -227,7 +227,19 @@
 
 	</wsdl:message>
 
+	<wsdl:message name="skipTaskRequest">
 
+		<wsdl:part name="root" element="b4p:skipTaskRequest" />
+
+	</wsdl:message>
+
+
+
+	<wsdl:message name="skipTaskResponse">
+
+		<wsdl:part name="root" element="b4p:response" />
+
+	</wsdl:message>
 
 	<wsdl:message name="notifyTaskCompletionRequest">
 
@@ -285,6 +297,16 @@
 				name="escalateTaskResponse" />
 
 		</wsdl:operation>
+		
+				<wsdl:operation name="skipTask">
+
+			<wsdl:input message="b4p:skipTaskRequest"
+				name="skipTaskRequest" />
+
+			<wsdl:output message="b4p:skipTaskResponse"
+				name="skipTaskResponse" />
+
+		</wsdl:operation>
 
 
 	</wsdl:portType>
@@ -302,6 +324,17 @@
 				name="completeTaskResponse" />
 
 		</wsdl:operation>
+		
+			<wsdl:operation name="skipTask">
+
+			<wsdl:input message="b4p:skipTaskRequest"
+				name="skipTaskRequest" />
+
+			<wsdl:output message="b4p:skipTaskResponse"
+				name="skipTaskResponse" />
+
+		</wsdl:operation>
+
 
 		<wsdl:operation name="claimTask">
 
@@ -384,7 +417,23 @@
 			</wsdl:output>
 
 		</wsdl:operation>
+		<wsdl:operation name="skipTask">
 
+			<soap:operation soapAction="skipTask" style="document" />
+
+			<wsdl:input>
+
+				<soap:body use="literal" />
+
+			</wsdl:input>
+
+			<wsdl:output>
+
+				<soap:body use="literal" />
+
+			</wsdl:output>
+
+		</wsdl:operation>
 
 	</wsdl:binding>
 
@@ -424,6 +473,15 @@
 		</wsdl:operation>
 		<wsdl:operation name="revokeTask">
 			<soap:operation soapAction="revokeTask" style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+				<wsdl:operation name="skipTask">
+			<soap:operation soapAction="skipTask" style="document" />
 			<wsdl:input>
 				<soap:body use="literal" />
 			</wsdl:input>

@@ -42,7 +42,7 @@
 		var sessionTimeout = 10; // 10 minutes 
 		var timeCount = 60000; // 1 minute 
 		$.timer(timeCount,function(timer) {
-			$("#timer").text("You have been logged in for "+ time +" minute(s)");
+			$("#timer").text("You have been inactive for "+ time +" minute(s)");
 			time = time + 1;
 			if(time > sessionTimeout) {
 				$.post("login.htm?actionName=logOut");		
