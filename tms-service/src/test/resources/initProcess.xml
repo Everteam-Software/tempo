@@ -17,4 +17,5 @@
       <test-input>test</test-input>
   </m:input>
   <m:participantToken>token1</m:participantToken>
+  <m:user>admin</m:user>
 </m:initRequest>

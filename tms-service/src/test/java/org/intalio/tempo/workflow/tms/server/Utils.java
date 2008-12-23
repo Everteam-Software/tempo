@@ -91,7 +91,7 @@ public class Utils {
 
     public static ITMSServer createTMSServerJPA() throws Exception {
         return new TMSServer(getMeASimpleAuthProvider(), new JPATaskDaoConnectionFactory(), getMeADefaultPermissionHandler()){
-            protected ServiceClient getServiceClient()throws AxisFault{           
+            protected ServiceClient getServiceClient() throws AxisFault{           
                 return new MockServiceClient();
             };
         };

@@ -109,6 +109,10 @@ public class TMSServer implements ITMSServer {
         }
     }
 
+    protected ServiceClient getServiceClient() throws AxisFault {
+        return new ServiceClient();
+    }
+
     private void checkIsAvailable(String taskID, Task task, UserRoles credentials) throws AccessDeniedException {
         if (!task.isAvailableTo(credentials))
             throw new AccessDeniedException(credentials.getUserID() + " cannot access task:" + taskID);
@@ -238,11 +242,7 @@ public class TMSServer implements ITMSServer {
         }
     }
 
-    protected ServiceClient getServiceClient() throws AxisFault{
-        return new ServiceClient();
-    }
-    
-    private Document sendInitMessage(PIPATask task, String participantToken, Document input) throws AxisFault {
+    private Document sendInitMessage(PIPATask task, String user, String formUrl, String participantToken, Document input) throws AxisFault {
 
         OMFactory omFactory = OMAbstractFactory.getOMFactory();
         OMNamespace omNamespace = omFactory.createOMNamespace(task.getInitMessageNamespaceURI().toString(), "user");
@@ -253,6 +253,12 @@ public class TMSServer implements ITMSServer {
         OMElement omParticipantToken = omFactory.createOMElement("participantToken", omNamespace, omInitProcessRequest);
         omParticipantToken.setText(participantToken);
 
+        OMElement omUser = omFactory.createOMElement("user", omNamespace, omInitProcessRequest);
+        omUser.setText(user);
+
+        OMElement omFormUrl = omFactory.createOMElement("formUrl", omNamespace, omInitProcessRequest);
+        omFormUrl.setText(formUrl);
+
         OMElement omTaskOutput = omFactory.createOMElement("taskOutput", omNamespace, omInitProcessRequest);
         // OMElement omOutput = omFactory.createOMElement("output", omNamespace,
         // omTaskOutput);
@@ -262,35 +268,36 @@ public class TMSServer implements ITMSServer {
         omTaskOutput.addChild(xmlTooling.convertDOMToOM(input, omFactory));
 
         Options options = new Options();
-        options.setTo(new EndpointReference(task.getProcessEndpoint().toString()));
+        EndpointReference endpointReference = new EndpointReference(task.getProcessEndpoint().toString());
+        options.setTo(endpointReference);
         options.setAction(task.getInitOperationSOAPAction());
 
         if (_logger.isDebugEnabled()) {
-            _logger.debug(task + " was used to start the process " + task.getProcessEndpoint());
+            _logger.debug(task + " was used to start the process with endpoint:" + task.getProcessEndpoint());
             _logger.debug("Request to Ode:\n" + omInitProcessRequest.toString());
         }
 
-        //ServiceClient client = new ServiceClient();
         ServiceClient client = getServiceClient();
         client.setOptions(options);
         try {
             OMElement response = client.sendReceive(omInitProcessRequest);
             return xmlTooling.convertOMToDOM(response);
-        } catch(Exception e) {
-            _logger.error("This should be there:"+e.getClass(),e);
+        } catch (Exception e) {
+            _logger.error("Error while sending initProcessRequest:" + e.getClass(), e);
             throw AxisFault.makeFault(e);
         }
 
     }
 
-    public Document initProcess(String taskID, Document input, String participantToken) throws AuthException, UnavailableTaskException, AccessDeniedException, AxisFault {
+    public Document initProcess(String taskID, String user, String formUrl, Document input, String participantToken) throws AuthException,
+                    UnavailableTaskException, AccessDeniedException, AxisFault {
         UserRoles credentials = _authProvider.authenticate(participantToken);
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         Task task = dao.fetchTaskIfExists(taskID);
         checkIsAvailable(taskID, task, credentials);
         if (task instanceof PIPATask) {
             PIPATask pipaTask = (PIPATask) task;
-            Document document = sendInitMessage(pipaTask, participantToken, input);
+            Document document = sendInitMessage(pipaTask, user, formUrl, participantToken, input);
             if (_logger.isDebugEnabled())
                 _logger.debug(credentials.getUserID() + " has initialized process " + pipaTask.getProcessEndpoint() + " with Workflow PIPA Task " + task);
             return document;
@@ -465,6 +472,23 @@ public class TMSServer implements ITMSServer {
             _logger.info("Fake delete enabled. Not deleting any tasks");
         } else {
             delete(ids, participantToken);
+        }
+    }
+
+    public void skip(String taskID, String participantToken) throws AuthException, UnavailableTaskException, InvalidTaskStateException, AccessDeniedException {
+        UserRoles credentials = _authProvider.authenticate(participantToken);
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        Task task = dao.fetchTaskIfExists(taskID);
+        checkIsAvailable(taskID, task, credentials);
+        if (task instanceof ITaskWithState) {
+            ITaskWithState taskWithState = (ITaskWithState) task;
+            taskWithState.setState(TaskState.OBSOLETE);
+            dao.updateTask(task);
+            dao.commit();
+            if (_logger.isDebugEnabled())
+                _logger.debug(credentials.getUserID() + " has skiped the Workflow Task " + task);
+        } else {
+            throw new UnavailableTaskException(credentials.getUserID() + " cannot skip Workflow Task " + task);
         }
     }
 }

@@ -30,13 +30,15 @@ public interface ITMSServer {
 
     Task[] getAvailableTasks(String participantToken, String taskType, String subQuery) throws TMSException;
 
+    void skip(String taskID, String participantToken) throws TMSException;
+    
     Task getTask(String taskID, String participantToken) throws TMSException;
 
     UserRoles getUserRoles(String participantToken) throws TMSException;
 
     PIPATask getPipa(String formUrl, String participantToken) throws TMSException;
 
-    Document initProcess(String taskID, Document input, String participantToken) throws TMSException, AxisFault;
+    Document initProcess(String taskID, String user, String formUrl, Document input, String participantToken) throws TMSException, AxisFault;
 
     Attachment[] getAttachments(String taskID, String participantToken) throws TMSException;
 

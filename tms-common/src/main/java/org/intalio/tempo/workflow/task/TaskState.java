@@ -19,7 +19,8 @@ public enum TaskState {
     READY,
     COMPLETED,
     FAILED,
-    CLAIMED;
+    CLAIMED,
+    OBSOLETE;
     
     public String getName() {
         return this.name();

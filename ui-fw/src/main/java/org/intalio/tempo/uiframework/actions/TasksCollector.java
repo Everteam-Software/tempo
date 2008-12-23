@@ -108,14 +108,14 @@ public class TasksCollector {
         String type = params.get("type");
         boolean validQuery = params.isSet("qtype") && params.isSet("query"); // we reuse this a few times, so let's factor this here
 		if (type.equals(PATask.class.getSimpleName())) {
-            StringBuffer query = new StringBuffer("NOT T._state = TaskState.COMPLETED AND NOT T._state = TaskState.FAILED ");
+            StringBuffer query = new StringBuffer("T._state = TaskState.READY OR T._state = TaskState.CLAIMED ");
             if (validQuery) query.append(" AND T." + params.get("qtype") + " like '%" + params.get("query") + "%'");
             if (params.isSet("sortname"))
                 query.append(" ORDER BY T." + params.get("sortname"));
             if (params.isSet("sortorder")) query.append(" " + params.get("sortorder"));
             collectTasks(_token, _user, fmanager, taskManager, "PATask", query.toString(), _tasks, params.get("rp"), params.get("page"));
         } else if (type.equals(Notification.class.getSimpleName())) {
-            StringBuffer query = new StringBuffer("NOT T._state = TaskState.COMPLETED AND NOT T._state = TaskState.FAILED ");
+            StringBuffer query = new StringBuffer("T._state = TaskState.READY OR T._state = TaskState.CLAIMED ");
             if (validQuery) query.append(" AND T." + params.get("qtype") + " like '%" + params.get("query") + "%'");
             if (params.isSet("sortname")) query.append(" ORDER BY T." + params.get("sortname"));
             if (params.isSet("sortorder")) query.append(" " + params.get("sortorder"));

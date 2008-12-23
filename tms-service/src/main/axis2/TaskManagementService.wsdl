@@ -68,6 +68,15 @@
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
+			<xsd:element name="skipRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="taskId" type="xsd:string"/>
+						<xsd:element name="participantToken" type="xsd:string">
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
 			<xsd:element name="completeRequest">
 				<xsd:complexType>
 					<xsd:sequence>
@@ -178,8 +187,9 @@
 								</xsd:sequence>
 							</xsd:complexType>
 						</xsd:element>
-						<xsd:element name="participantToken" type="xsd:string">
-						</xsd:element>
+						<xsd:element name="participantToken" type="xsd:string"/>
+						<xsd:element name="user" type="xsd:string" minOccurs="0" />
+						<xsd:element name="formUrl" type="xsd:string" minOccurs="0" />
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
@@ -400,6 +410,9 @@
 	<wsdl:message name="completeRequest">
 		<wsdl:part name="completeRequest" element="tns:completeRequest"/>
 	</wsdl:message>
+	<wsdl:message name="skipRequest">
+        <wsdl:part name="skipRequest" element="tns:skipRequest"/>
+	</wsdl:message>
 	<wsdl:message name="setOutputAndCompleteRequest">
 		<wsdl:part name="setOutputAndCompleteRequest" element="tns:setOutputAndCompleteRequest"/>
 	</wsdl:message>
@@ -470,6 +483,13 @@
 			<wsdl:output message="tns:getAttachmentsResponse"/>
 			<wsdl:fault name="UnavailableTask" message="tns:unavailableTaskFault"/>
 			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault"/>
+			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault"/>
+		</wsdl:operation>
+		<wsdl:operation name="skip">
+			<wsdl:input message="tns:skipRequest"/>
+			<wsdl:output message="tns:okResponse"/>
+			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault"/>
+			<wsdl:fault name="UnavailableTask" message="tns:unavailableTaskFault"/>
 			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault"/>
 		</wsdl:operation>
 		<wsdl:operation name="addAttachment">
@@ -598,6 +618,24 @@
 			</wsdl:output>
 			<wsdl:fault name="InvalidParticipantToken">
 				<soap:fault name="InvalidParticipantToken" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="InvalidInputMessage">
+				<soap:fault name="InvalidInputMessage" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="skip">
+			<soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/skip"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="InvalidParticipantToken">
+				<soap:fault name="InvalidParticipantToken" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="UnavailableTask">
+				<soap:fault name="UnavailableTask" use="literal"/>
 			</wsdl:fault>
 			<wsdl:fault name="InvalidInputMessage">
 				<soap:fault name="InvalidInputMessage" use="literal"/>

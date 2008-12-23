@@ -246,7 +246,10 @@ public class TMSRequestProcessor extends OMUnmarshaller {
                 domInput = new TaskUnmarshaller().unmarshalTaskOutput(omInputContainer);
             }
             String participantToken = requireElementValue(rootQueue, "participantToken");
-            Document userProcessResponse = _server.initProcess(taskID, domInput, participantToken);
+            String user = expectElementValue(rootQueue, "user");
+            String formUrl = expectElementValue(rootQueue, "formUrl");
+
+            Document userProcessResponse = _server.initProcess(taskID, user, formUrl, domInput, participantToken);
             if (userProcessResponse == null)
                 throw new RuntimeException("TMP did not return a correct message while calling init");
             OMElement response = new TMSResponseMarshaller(OM_FACTORY) {
@@ -443,6 +446,18 @@ public class TMSRequestProcessor extends OMUnmarshaller {
         } else {
             _logger.error(e.getMessage(), e);
             return AxisFault.makeFault(e);
+        }
+    }
+
+    public OMElement skip(OMElement requestElement) throws AxisFault {
+        try {
+            OMElementQueue rootQueue = new OMElementQueue(requestElement);
+            String taskID = requireElementValue(rootQueue, "taskId");
+            String participantToken = requireElementValue(rootQueue, "participantToken");
+            _server.skip(taskID, participantToken);
+            return createOkResponse();
+        } catch (Exception e) {
+            throw makeFault(e);
         }
     }
 

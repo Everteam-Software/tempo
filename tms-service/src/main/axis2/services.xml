@@ -34,6 +34,11 @@
             <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
             <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getTask</actionMapping>
         </operation>
+        
+        <operation name="skip">
+            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+            <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/skip</actionMapping>
+        </operation>
 
         <operation name="setOutput">
             <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
