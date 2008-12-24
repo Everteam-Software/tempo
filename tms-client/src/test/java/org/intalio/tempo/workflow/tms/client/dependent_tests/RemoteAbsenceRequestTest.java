@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMFactory;
@@ -54,6 +55,7 @@ public class RemoteAbsenceRequestTest extends TestCase {
 	static final String TASK_MANAGEMENT_PROCESS = "http://localhost:8080/ode/processes/completeTask";
 	static final XmlTooling xmlTooling = new XmlTooling();
 	Configuration cfg;
+	static final int SLEEP_TIME = 2000;
 	
 	public void setUp() {
 		TemplateLoader loader = new ClassTemplateLoader(this.getClass(),"/");
@@ -105,7 +107,71 @@ public class RemoteAbsenceRequestTest extends TestCase {
 		person.put("email", "george@examples.intalio.com");
 		complete.put("contact", person);
 		
-		runAbsenceRequest(paramUser, paramPassword, pipa, complete);
+		// Standard absence request
+		runAbsenceRequest(paramUser, paramPassword, pipa, complete);		
+		// Provoke a fail by calling TMS.fail while the task has been created
+		runAbsenceRequestWithOptionalCall(paramUser, paramPassword, pipa, complete,"fail");
+		// Provoke a skip by calling TMP.skip while the task has been created
+		runAbsenceRequestWithOptionalCall(paramUser, paramPassword, pipa, complete,"skip");
+		// Provoke a delete by calling TMS.delete while the task has been created.
+		runAbsenceRequestWithOptionalCall("admin", "changeit", pipa, complete,"delete");
+		// Provoke a deleteAll by calling TMS.deleteAll while the task has been created.
+		runAbsenceRequestWithOptionalCall("admin", "changeit", pipa, complete,"deleteAll");
+	}
+
+    /**
+	* Quite a few different call to check that the release is in good shape.
+    */
+	private void runAbsenceRequestWithOptionalCall(String paramUser, String paramPassword, HashMap pipa, HashMap complete, String optionalCall) throws Exception {
+		_log.info("Running absence request with optional call to:"+optionalCall);
+		
+		_log.info("Get the token client and authenticate");
+		TokenClient client = new TokenClient(TOKEN_SERVICE);
+		String token = client.authenticateUser(paramUser, paramPassword);
+		
+		_log.info("get the tms client");
+		RemoteTMSClient tms = new RemoteTMSClient(TMS_SERVICE, token);
+		
+		_log.info("get the absence request PIPA");
+		Task[] ts = tms.getAvailableTasks("PIPATask", "T._description like '%Examples%'");
+		String pipaID = ts[0].getID();
+		
+		_log.info("Init the process and wait");
+		tms.init(pipaID, xmlTooling.parseXML(pipa(pipa)));
+		Thread.sleep(SLEEP_TIME);
+		
+		_log.info("check the new task has appeared");
+		Task[] paList = tms.getAvailableTasks("PATask", "T._state = TaskState.READY ORDER BY T._creationDate DESC");
+		String id = paList[0].getID();
+		
+		_log.info("keep track of the current time");
+		long currentTime = System.currentTimeMillis();
+		
+		_log.info("do the optional call.");
+		
+		// skip needs to be called on TMP first.
+		if(optionalCall.equals("skip")) sendSoapToTMP(skip(token,id), "skipTask");
+		// while the other ones call TMS straight. Note that those should rarely be called directly 
+		// from a user process in a real life system. More like administration methods
+		else if(optionalCall.equals("fail")) tms.fail(id,"0","Error message");
+		else if(optionalCall.equals("delete")) tms.delete(new String[]{id});
+		else if(optionalCall.equals("deleteAll")) tms.deleteAll("false", "T._state = TaskState.READY","PATask");
+		else throw new Exception("invalid optional call:"+optionalCall);
+		
+		_log.info("wait some more so that we process the optional call");
+		Thread.sleep(SLEEP_TIME);
+		
+		_log.info("check the task has disappeared. All the call we've done make the task not showing the user task list anymore");
+        Task[] ts2 = tms.getAvailableTasks("PATask", "T._state = TaskState.READY ORDER BY T._creationDate DESC");
+		Assert.assertEquals(0, ts2.length);
+		
+		if(optionalCall.equals("skip")) {
+			_log.info("for skip, we're doing one extra check to see if the state of the task is appropriately OBSOLETE");
+			Task[] ts3 = tms.getAvailableTasks("PATask", "T._state = TaskState.OBSOLETE ORDER BY T._creationDate DESC");
+			long time = currentTime - ts3[0].getCreationDate().getTime();
+			Assert.assertTrue( time > 0);
+			Assert.assertTrue( time < 5000); // 2*SLEEP_TIME + 1s of computer work margin
+		}
 	}
 
 	/**
@@ -133,7 +199,7 @@ public class RemoteAbsenceRequestTest extends TestCase {
 		_log.info("We have found the task to instanciate the process. This task has the following ID:"+pipaID);
 		tms.init(pipaID, xmlTooling.parseXML(pipa(pipa)));
 		_log.info("wait for the task to be initiated. Hopefully 2s is enough");
-		Thread.sleep(2000);
+		Thread.sleep(SLEEP_TIME);
 		
 		_log.info("get our full activity task list");
 		Task[] paList = tms.getAvailableTasks("PATask", "ORDER BY T._creationDate DESC");
@@ -163,7 +229,7 @@ public class RemoteAbsenceRequestTest extends TestCase {
         sendSoapToTMP(complete(token, id, complete).toString(),"completeTask");
         
         _log.info("sleep again to wait for the notification");
-        Thread.sleep(2000);
+        Thread.sleep(SLEEP_TIME);
         Task[] ts2 = tms.getAvailableTasks("Notification", "ORDER BY T._creationDate DESC");
         String notificationId = ts2[0].getID();
         _log.info("We want to retrieve some more data on the notification with id:"+notificationId);
@@ -190,6 +256,13 @@ public class RemoteAbsenceRequestTest extends TestCase {
         serviceClient.setOptions(options);
         options.setAction(soapAction);
         serviceClient.sendReceive(xmlTooling.convertDOMToOM(xmlTooling.parseXML(request), factory));
+	}
+	
+	private String skip(String token, String taskId) throws Exception {
+		HashMap<String,String> skip = new HashMap<String,String>();
+		skip.put("taskId", taskId);
+		skip.put("token", token);
+		return templateMe("skip.ftl", skip);
 	}
 	
 	/**
