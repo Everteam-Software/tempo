@@ -41,15 +41,21 @@
 		var time = 0;
 		var sessionTimeout = 10; // 10 minutes 
 		var timeCount = 60000; // 1 minute 
+		
+		function resetTimer() {
+		    time = 0;
+            $("#timer").text("");
+		}
+		
 		$.timer(timeCount,function(timer) {
-			$("#timer").text("You have been inactive for "+ time +" minute(s)");
+			if(time>=1) $("#timer").text("You have been inactive for "+ time +" minute(s)");
 			time = time + 1;
 			if(time > sessionTimeout) {
 				$.post("login.htm?actionName=logOut");		
 				$("#modal").click();
 			}
 		});
-		$(this).click(function() {time = 0;});
+		$(this).click(function() {resetTimer();});
 		$('#modal').modal({modal_styles: {width:"30%", "height":"30%"}});
 
 		//
@@ -158,7 +164,7 @@
 		// change tab on click, refresh frame, refresh task list
 		//
 		$('#tabnav li a').click(function(){
-            time = 0;
+            resetTimer();
 			clearFrame();
 			$("#filter").val("");
 			if(current==null)  {
