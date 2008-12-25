@@ -39,8 +39,8 @@
 		// Session timeout management
 		//
 		var time = 0;
-		var sessionTimeout = 4; // 10 minutes 
-		var timeCount = 1000; // 1 minute 
+		var sessionTimeout = 10; // 10 minutes 
+		var timeCount = 60000; // 1 minute 
 		
 		function resetTimer() {
 		    time = 0;
