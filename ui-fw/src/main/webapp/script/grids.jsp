@@ -39,8 +39,8 @@
 		// Session timeout management
 		//
 		var time = 0;
-		var sessionTimeout = 10; // 10 minutes 
-		var timeCount = 60000; // 1 minute 
+		var sessionTimeout = 4; // 10 minutes 
+		var timeCount = 1000; // 1 minute 
 		
 		function resetTimer() {
 		    time = 0;
@@ -56,7 +56,7 @@
 			}
 		});
 		$(this).click(function() {resetTimer();});
-		$('#modal').modal({modal_styles: {width:"30%", "height":"30%"}});
+		$('#modal').modal({modal_styles: {width:"30%", "height":"30%"}, hide:"location.reload(true);"});
 
 		//
 		// tab definition
