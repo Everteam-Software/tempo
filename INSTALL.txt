@@ -48,6 +48,7 @@ or on WINDOWS, double click on the icon named:
     startup.bat
 
 Congratulation, tempo is now running!
+
 ======================================
  Play with it
 ======================================
