@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
 	Copyright (c) 2005-2007 Intalio inc.
 
@@ -28,7 +28,26 @@
 			<ref bean="tms.permissionsHandler"/>
 		</property>
 	</bean>
-	
+	<bean id="tmsb4p.HTOServiceImplementation" class="org.intalio.tempo.workflow.tmsb4p.server.TMSRequestProcessor">
+	<!--
+		<property name="server">
+			<ref bean="tmsb4p.server"/>
+		</property>
+	-->
+	</bean>
+	<bean id="tmsb4p.server" class="org.intalio.tempo.workflow.tmsb4p.server.TMSServer">
+		<!--
+		<property name="authProvider">
+			<ref bean="tms.authProvider"/>
+		</property>
+		<property name="taskDAOFactory">
+			<ref bean="tms.daoFactory"/>
+		</property>
+		<property name="permissions">
+			<ref bean="tms.permissionsHandler"/>
+		</property>
+		-->
+	</bean>
 	<bean id="tms.permissionsHandler" class="org.intalio.tempo.workflow.tms.server.permissions.TaskPermissions">
 		<constructor-arg><map>
 			<entry key="delete"><set><value>intalio\admin</value></set></entry>

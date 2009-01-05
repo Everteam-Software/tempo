@@ -115,4 +115,20 @@
             <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getAvailableTasks</actionMapping>
         </operation>
     </service>
+    
+    <service name="HumanTaskOperationServices" class="org.intalio.tempo.workflow.SpringInit">
+        <description>Intalio|BPMS Human Task Operation Services</description>
+
+        <parameter name="SpringContextFile">file:${org.intalio.tempo.configDirectory}/tempo-tms.xml</parameter>
+        <parameter name="ServiceObjectSupplier">org.intalio.tempo.workflow.ServiceObjectSupplier</parameter>
+        <parameter name="SpringBeanName">tmsb4p.HTOServiceImplementation</parameter>
+     	<parameter name="LoadOnStartup">true</parameter>
+    
+     <operation name="getMyTasks">
+            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+            <actionMapping>http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/getMyTasks</actionMapping>
+     </operation>
+    
+     </service>
+    
 </serviceGroup>
