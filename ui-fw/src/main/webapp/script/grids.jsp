@@ -16,7 +16,9 @@
 		  }
 		var height2 = height - 80;
 		$(window).resize(function() {
-			location.reload(true);
+			if(navigator.appName != "Microsoft Internet Explorer") {
+				location.href=location.href;
+		    }
 		});
 
 		function preProcess(data) {
