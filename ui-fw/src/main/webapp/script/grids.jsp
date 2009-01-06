@@ -41,7 +41,7 @@
 		// Session timeout management
 		//
 		var time = 0;
-		var sessionTimeout = 10; // 10 minutes 
+		var sessionTimeout = <c:out value="${sessionTimeout}"/>; // in minutes 
 		var timeCount = 60000; // 1 minute 
 		
 		function resetTimer() {

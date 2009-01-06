@@ -23,6 +23,7 @@ public class Configuration {
     private String _serviceEndpoint;
     private int _pagingLength;
     private int _refreshTime = 5;
+    private int _sessionTimeout = 10;
     private TokenClient _tokenClient;
     private String _baseUrl;
     private String _feedUrl;
@@ -72,6 +73,14 @@ public class Configuration {
 
     public void setRefreshTime(int time) {
         _refreshTime = time;
+    }
+
+	public int getSessionTimeout() {
+        return _sessionTimeout;
+    }
+
+    public void setSessionTimeout(int time) {
+        _sessionTimeout = time;
     }
     
     public void setTokenClient(TokenClient tc) {

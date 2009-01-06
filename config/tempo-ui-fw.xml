@@ -20,6 +20,7 @@
         <property name="serviceEndpoint" value="http://localhost:8080/axis2/services/TaskManagementServices"/>
         <property name="pagingLength" value="10"/>
         <property name="refreshTime" value="20"/>
+        <property name="sessionTimeout" value="10"/>
         <property name="tokenClient"><ref bean="tokenService"/></property>
     </bean>
 
