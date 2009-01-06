@@ -6,7 +6,7 @@ require "buildr/xmlbeans"
 require "buildr/cobertura"
 
 # Keep this structure to allow the build system to update version numbers.
-VERSION_NUMBER = "6.0.0.23-SNAPSHOT"
+VERSION_NUMBER = "6.0.0.24-SNAPSHOT"
 NEXT_VERSION = "6.0.0.24"
 
 require "rsc/build/dependencies.rb"
