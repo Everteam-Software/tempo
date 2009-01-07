@@ -3,10 +3,10 @@ package org.intalio.tempo.workflow.task;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Date;
-import java.util.Properties;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Properties;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -76,6 +76,25 @@ public class JPATaskTest {
         jpa.commit();
         // this is to prevent caching at the entity manager level
         em.clear();
+    }
+    
+    @Test
+    public void plentyOfRoles() throws Exception {
+    	PATask task1 = new PATask(getUniqueTaskID(), new URI("http://hellonico.net"));
+    	ArrayList<String> list = new ArrayList<String>();
+    	for(int i = 0 ; i < 200 ; i++) list.add(new String("proto\\PARIS_MEDI_Liquidateur_"+i));
+    	list.add(new String("proto\\RoleNotFound"));
+    	String[] assignedRoles = list.toArray(new String[list.size()]);
+    	for(String role : assignedRoles)  task1.getRoleOwners().add(role);
+    	task1.getUserOwners().add("niko");
+    	persist(task1);
+    	
+    	UserRoles ur = new UserRoles("niko", assignedRoles);
+    	final TaskFetcher taskFetcher = new TaskFetcher(em);
+    	Task[] t1 = taskFetcher.fetchAvailableTasks(ur, PATask.class, "");
+    	
+    	Assert.assertEquals(1, t1.length);
+    	checkRemoved(new Task[]{task1});
     }
     
     @Test
