@@ -61,4 +61,3 @@ And you can start the sample "AbsenceRequest" process.
 The Tempo home page: http://tempo.intalio.org
 The Intalio BPMS page: http://bpms.intalio.com
 BPEL4People: http://www.ibm.com/developerworks/webservices/library/specification/ws-bpel4people/
-
