@@ -23,6 +23,7 @@
     <bean id="tokenService" class="org.intalio.tempo.security.impl.MockTokenServiceImpl">
         <property name="realms"><ref bean="realms"/></property>
         <property name="tokenHandler"><ref bean="tokenHandler"/></property>
+        <property name="cacheRoles"><value>true</value></property>
     </bean>
 
 </beans>

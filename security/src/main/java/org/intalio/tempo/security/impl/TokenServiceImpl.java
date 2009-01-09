@@ -10,6 +10,9 @@
 package org.intalio.tempo.security.impl;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import org.intalio.tempo.security.Property;
 import org.intalio.tempo.security.authentication.AuthenticationConstants;
@@ -17,7 +20,9 @@ import org.intalio.tempo.security.authentication.AuthenticationException;
 import org.intalio.tempo.security.rbac.RBACException;
 import org.intalio.tempo.security.token.TokenService;
 import org.intalio.tempo.security.util.IdentifierUtils;
+import org.intalio.tempo.security.util.PropertyUtils;
 import org.intalio.tempo.security.util.StringArrayUtils;
+import org.intalio.tempo.security.util.TimeExpirationMap;
 
 import edu.yale.its.tp.cas.client.ProxyTicketValidator;
 
@@ -32,7 +37,13 @@ public class TokenServiceImpl implements TokenService {
     TokenHandler _tokenHandler;
 
     String _validateURL;
+    // should we try to put the password in the token itself
     boolean _passwordAsAProperty;
+    // should we NOT put the roles in the token, and cache them in memory instead
+    boolean cacheRoles = false;
+
+    // check every minute, expire after one hour
+    TimeExpirationMap userAndRoles = new TimeExpirationMap(1000 * 60 * 30, 1000 * 60);
 
     public TokenServiceImpl() {
         // nothing
@@ -50,6 +61,14 @@ public class TokenServiceImpl implements TokenService {
         _realms = realms;
         _tokenHandler = new TokenHandler();
         _validateURL = validateURL;
+    }
+
+    public final boolean isCacheRoles() {
+        return cacheRoles;
+    }
+
+    public final void setCacheRoles(boolean cacheRoles) {
+        this.cacheRoles = cacheRoles;
     }
 
     public void setPasswordAsAProperty(Boolean asAProperty) {
@@ -80,25 +99,24 @@ public class TokenServiceImpl implements TokenService {
         // TODO we should use _realms to normalize
         user = IdentifierUtils.normalize(user, _realms.getDefaultRealm(), false, '\\');
 
-        String[] roles = _realms.authorizedRoles(user);
-
         // place session information in token
         Property userProp = new Property(AuthenticationConstants.PROPERTY_USER, user);
         Property issueProp = new Property(AuthenticationConstants.PROPERTY_ISSUED, Long.toString(System.currentTimeMillis()));
-        Property rolesProp = new Property(AuthenticationConstants.PROPERTY_ROLES, StringArrayUtils.toCommaDelimited(roles));
 
         // add all user properties to token properties
         Property[] userProps = _realms.userProperties(user);
-        boolean pap = (password != null && _passwordAsAProperty);
-        int length = pap? 4 : 3;
-        Property[] props = new Property[userProps.length + length];
-        props[0] = userProp;
-        props[1] = issueProp;
-        props[2] = rolesProp;
-        if (pap)
-            props[3] = new Property(AuthenticationConstants.PROPERTY_PASSWORD, password);
-        System.arraycopy(userProps, 0, props, length, userProps.length);
-        return _tokenHandler.createToken(props);
+        List<Property> props = new ArrayList<Property>();
+        
+        props.add(userProp);
+        props.add(issueProp);
+        if(!cacheRoles) {
+            String[] roles = _realms.authorizedRoles(user);
+            props.add(new Property(AuthenticationConstants.PROPERTY_ROLES, StringArrayUtils.toCommaDelimited(roles)));
+        }
+        if((password != null && _passwordAsAProperty)) 
+            props.add(new Property(AuthenticationConstants.PROPERTY_PASSWORD, password));
+        for(Property p : userProps) props.add(p);
+        return _tokenHandler.createToken(props.toArray(new Property[props.size()]));
     }
 
     /**
@@ -151,13 +169,34 @@ public class TokenServiceImpl implements TokenService {
      * @return properties encoded in token
      */
     public Property[] getTokenProperties(String token) throws AuthenticationException, RemoteException {
-        return _tokenHandler.parseToken(token);
+        Property[] props = _tokenHandler.parseToken(token);
+        Map<String, Object> map = PropertyUtils.toMap(props);
+        String user = ((Property) map.get(AuthenticationConstants.PROPERTY_USER)).getValue().toString();
+        Property rolesForUser = null;
+        if(this.cacheRoles) rolesForUser = (Property) userAndRoles.get(user);
+        if(rolesForUser!=null) {
+            // if we have the roles in cache
+            map.put(AuthenticationConstants.PROPERTY_ROLES, rolesForUser);
+        } else {
+            try {
+                String[] roles = _realms.authorizedRoles(user);
+                rolesForUser = new Property(AuthenticationConstants.PROPERTY_ROLES, StringArrayUtils.toCommaDelimited(roles));
+            } catch (RBACException e) {
+                throw new AuthenticationException("Could not get roles for user:"+user);
+            }    
+        }
+
+        // cache only if needed
+        if(this.cacheRoles) userAndRoles.put(user, rolesForUser);
+        
+        map.put(AuthenticationConstants.PROPERTY_ROLES, rolesForUser);
+        return map.values().toArray(new Property[map.size()]);
     }
 
-    public ProxyTicketValidator getProxyTicketValidator(){
+    public ProxyTicketValidator getProxyTicketValidator() {
         return new ProxyTicketValidator();
     }
-    
+
     public String getTokenFromTicket(String proxyTicket, String serviceURL) throws AuthenticationException, RBACException, RemoteException {
         ProxyTicketValidator pv = getProxyTicketValidator();
         pv.setCasValidateUrl(_validateURL);
