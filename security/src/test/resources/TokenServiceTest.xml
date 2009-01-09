@@ -17,6 +17,7 @@
 
     <bean id="tokenHandler" class="org.intalio.tempo.security.impl.TokenHandler">
         <property name="secret"><value>mySecret</value></property>
+        <property name="compressToken"><value>true</value></property>
     </bean>
     
     <bean id="tokenService" class="org.intalio.tempo.security.impl.MockTokenServiceImpl">
