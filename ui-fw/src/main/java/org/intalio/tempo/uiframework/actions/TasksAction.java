@@ -54,7 +54,7 @@ public class TasksAction extends Action {
         final String token = state.getCurrentUser().getToken();
         final String user = state.getCurrentUser().getName();
         try {
-        	TasksCollector collector = getTaskCollector(user, token);
+        	 TasksCollector collector = getTaskCollector(user, token);
             collector.retrieveTasks();
             model.put("tasks", collector.getTasks());
         } catch (Exception ex) {

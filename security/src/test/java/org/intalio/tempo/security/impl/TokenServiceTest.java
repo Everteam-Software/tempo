@@ -11,7 +11,8 @@
 
 package org.intalio.tempo.security.impl;
 
-import java.net.URI;
+import static com.googlecode.instinct.expect.behaviour.Mocker.mock;
+
 import java.rmi.RemoteException;
 
 import junit.framework.TestCase;
@@ -33,6 +34,7 @@ import org.springframework.core.io.ClassPathResource;
 import com.googlecode.instinct.expect.ExpectThat;
 import com.googlecode.instinct.expect.ExpectThatImpl;
 import com.googlecode.instinct.integrate.junit4.InstinctRunner;
+import com.googlecode.instinct.marker.annotate.Mock;
 import com.googlecode.instinct.marker.annotate.Specification;
 import com.googlecode.instinct.marker.annotate.Subject;
 
@@ -78,23 +80,6 @@ public class TokenServiceTest extends TestCase {
         Property user2 = PropertyUtils.getProperty(props, AuthenticationConstants.PROPERTY_USER);
         _log.debug("Got back user:" + user2.toString());
         Assert.assertEquals(user, user2.getValue());
-    }
-
-    @Specification
-    public void testTokenServiceWithManyRoles() throws Exception {
-        TokenService service = getTokenService();
-
-        String token = service.authenticateUser("proto\\ADK", "ADK");
-        System.out.println(token.length());
-        assertNotNull(token);
-
-        System.out.println(token);
-
-        assertTrue(token.length() > 0);
-        assertTrue(token.length() < 1000);
-        // check we can create a valid URI with this token
-        URI uri = URI.create("http://localhost:8080/init.xpl?token=" + token);
-        assertNotNull(uri);
     }
 
     /**
@@ -149,7 +134,7 @@ public class TokenServiceTest extends TestCase {
 
     @Subject
     TokenServiceImpl serviceImpl;
-
+    
     ProxyTicketValidator pv;
 
     final static ExpectThat expect = new ExpectThatImpl();
@@ -157,7 +142,7 @@ public class TokenServiceTest extends TestCase {
     @Specification
     public void testGetTokenFromTicket() throws Exception {
         // final ProxyTicketValidator pv;
-        serviceImpl = (TokenServiceImpl) getTokenService();
+        serviceImpl = (TokenServiceImpl)getTokenService();
         pv = serviceImpl.getProxyTicketValidator();
         expect.that(new Expectations() {
             {
@@ -165,16 +150,15 @@ public class TokenServiceTest extends TestCase {
                 one(pv).setService("serviceURL");
                 one(pv).setServiceTicket("dummyServiceTicket");
                 one(pv).validate();
-                one(pv).isAuthenticationSuccesful();
-                will(returnValue(true));
-                one(pv).getUser();
-                will(returnValue("exolab\\castor"));
+                one(pv).isAuthenticationSuccesful();will( returnValue(true));
+                one(pv).getUser();will(returnValue("exolab\\castor"));
             }
         });
 
         String token;
         token = serviceImpl.getTokenFromTicket("dummyServiceTicket", "serviceURL");
         assertTrue(token.length() > 0);
+
     }
 
 }

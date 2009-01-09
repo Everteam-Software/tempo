@@ -85,7 +85,7 @@ public class SimpleTest
 		
 		provider = getProvider();
 		realms = provider.getRealms();
-		assertSameValues( new String[] { "intalio", "exolab", "proto", "" },
+		assertSameValues( new String[] { "intalio", "exolab", "" },
 						  realms );
 						      	
 						      	

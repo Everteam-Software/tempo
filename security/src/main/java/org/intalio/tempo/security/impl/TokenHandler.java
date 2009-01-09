@@ -17,169 +17,167 @@ import java.util.HashMap;
 import java.util.Properties;
 import java.util.Random;
 
+import org.castor.util.Base64Decoder;
+import org.castor.util.Base64Encoder;
 import org.intalio.tempo.security.Property;
 import org.intalio.tempo.security.authentication.AuthenticationConstants;
 import org.intalio.tempo.security.authentication.AuthenticationException;
-import org.intalio.tempo.security.util.Base64;
 import org.intalio.tempo.security.util.SHA1;
 import org.intalio.tempo.security.util.TimeExpirationMap;
 
 /**
  * Handler to manipulate cryptographic token.
  */
-public class TokenHandler implements AuthenticationConstants {
+public class TokenHandler
+    implements AuthenticationConstants
+{
     // final static Logger LOG = Logger.getLogger("tempo.security");
 
     /**
      * Token name/value separator
      */
-    private static final String VALUE_SEPARATOR = "==";
+	private static final String VALUE_SEPARATOR = "==";
 
     /**
      * Token property separator
      */
-    private static final String PROP_SEPARATOR = "&&";
+	private static final String PROP_SEPARATOR = "&&";
 
     /**
      * Token prefix
      */
-    private static final String PREFIX = "TOKEN&&";
-
+	private static final String PREFIX = "TOKEN&&";
+    
     /**
      * Token suffix.
      */
-    private static final String SUFFIX = "&&TOKEN";
+	private static final String SUFFIX = "&&TOKEN";
 
+    
     /**
      * Property name for custom secret
      */
     private static final String PROPERTY_SECRET = "tempo.security.TokenHandler.secret";
-
+    
     /**
      * Default value for secret shared between all token handlers
      */
     private static final String DEFAULT_SECRET = "secret";
-
+    
     /**
-     * Secret key shared by all token handlers. Used to "sign" the token and
-     * prevent replay attacks.
+     * Secret key shared by all token handlers.  Used to "sign" the token
+     * and prevent replay attacks.
      */
     private String _secret;
     
     /**
-     * Should we use compression for the generated token
+     * Cache of nonce (unique identifiers).  Basically limits unauthorized 
+     * replay attacks by insuring that any given nonce is only used once 
+     * in a specified period of time (default: 5 minutes)
      */
-    private Boolean _compressToken = false;
-
-    /**
-     * Cache of nonce (unique identifiers). Basically limits unauthorized replay
-     * attacks by insuring that any given nonce is only used once in a specified
-     * period of time (default: 5 minutes)
-     */
-    private static final TimeExpirationMap NONCE_CACHE = new TimeExpirationMap(5 * 60 * 1000, 30 * 1000);
+    private static final TimeExpirationMap NONCE_CACHE = new TimeExpirationMap( 5 * 60 * 1000, 30 * 1000 );
 
     /**
      * Random number generator for nonce.
      */
     private static Random RANDOM = new Random();
-
-    /**
-     * Construct a token handler.
-     */
-    public TokenHandler() {
+    
+	/**
+	 * Construct a token handler.
+	 */	
+	public TokenHandler()
+	{
         Properties props;
-
+        
         _secret = DEFAULT_SECRET;
-
+        
+        
         props = System.getProperties();
-        if (props.get(PROPERTY_SECRET) != null) {
-            _secret = (String) props.get(PROPERTY_SECRET);
+        if ( props.get( PROPERTY_SECRET ) != null ) {
+            _secret = (String) props.get( PROPERTY_SECRET ); 
         }
-    }
+	}
+	
 
     /**
      * Get secret shared between all token handlers
      */
-    public String getSecret() {
+    public String getSecret()
+    {
         return _secret;
     }
-
+    
+    
     /**
      * Set secret shared between all token handlers
      */
-    public void setSecret(String secret) {
+    public void setSecret( String secret )
+    {
         _secret = secret;
     }
-
-    public final Boolean getCompressToken() {
-        return _compressToken;
-    }
-
-    public final void setCompressToken(Boolean token) {
-        _compressToken = token;
-    }
-
-    /**
-     * Parse the properties contained in a token.
-     * 
-     * @param props
-     *            Properties
-     * @return cryptographic token
-     */
-    public String createToken(Property[] props) {
-        StringBuffer buf;
-        String result;
-        long timestamp;
-        Long nonce;
-
+    
+    
+	/**
+	 * Parse the properties contained in a token.
+	 *
+	 * @param props Properties
+	 * @return cryptographic token
+	 */
+	public String createToken( Property[] props )
+	{
+		StringBuffer  buf;
+		String        result;
+        long          timestamp;
+        Long          nonce;
+       
         timestamp = System.currentTimeMillis();
-
-        while (true) {
+        
+        while ( true ) {
             // use current time random and initial random to prevent guessing
-            Random random = new Random(timestamp + RANDOM.nextLong());
-            nonce = new Long(random.nextLong());
-            if (NONCE_CACHE.put(nonce, nonce) == null) {
+            Random random = new Random( timestamp + RANDOM.nextLong() );
+            nonce = new Long( random.nextLong() );
+            if ( NONCE_CACHE.put( nonce, nonce ) == null ) {
                 break;
             }
             // collision, try a different random; also prevents guessing
-            RANDOM = new Random(timestamp);
+            RANDOM = new Random( timestamp );
         }
+        
+		buf = new StringBuffer();
+		for ( int i=0; i<props.length; i++ ) {
+			buf.append( props[i].getName() );
+			buf.append( VALUE_SEPARATOR );
+			buf.append( (String) props[i].getValue() );
+			buf.append( PROP_SEPARATOR );
+		}
+        
+        buf.append( "nonce" );
+        buf.append( VALUE_SEPARATOR );
+        buf.append( nonce.toString() );
+        buf.append( PROP_SEPARATOR );
+        
+        buf.append( "timestamp" );
+        buf.append( VALUE_SEPARATOR );
+        buf.append( Long.toString( timestamp ) );
+        buf.append( PROP_SEPARATOR );
 
-        buf = new StringBuffer();
-        for (int i = 0; i < props.length; i++) {
-            buf.append(props[i].getName());
-            buf.append(VALUE_SEPARATOR);
-            buf.append((String) props[i].getValue());
-            buf.append(PROP_SEPARATOR);
-        }
-
-        buf.append("nonce");
-        buf.append(VALUE_SEPARATOR);
-        buf.append(nonce.toString());
-        buf.append(PROP_SEPARATOR);
-
-        buf.append("timestamp");
-        buf.append(VALUE_SEPARATOR);
-        buf.append(Long.toString(timestamp));
-        buf.append(PROP_SEPARATOR);
-
-        String digest = digest(timestamp, nonce.longValue(), _secret, props);
-        buf.append("digest");
-        buf.append(VALUE_SEPARATOR);
-        buf.append(digest);
-        buf.append(PROP_SEPARATOR);
-        result = encode(buf.toString());
-        return result;
-    }
+        String digest = digest( timestamp, nonce.longValue(), _secret, props );
+        buf.append( "digest" );
+        buf.append( VALUE_SEPARATOR );
+        buf.append( digest );
+        buf.append( PROP_SEPARATOR );
+		result = encode( buf.toString() );
+		return result;		
+	}
+	
 
     /**
-     * Return a Based64 encoded hash of the given timestamp, nonce and password
-     * (or password equivalent).
-     * 
-     * @param properties
-     *            TODO
+     * Return a Based64 encoded hash of the given timestamp, nonce 
+     * and password (or password equivalent).
+     * @param properties TODO
      */
-    private String digest(long timestamp, long nonce, String password, Property[] properties) {
+    private String digest( long timestamp, long nonce, String password, Property[] properties )
+    {
         Property[] orderedCopy = new Property[properties.length];
         System.arraycopy(properties, 0, orderedCopy, 0, properties.length);
         Arrays.sort(orderedCopy, new Comparator<Property>() {
@@ -193,135 +191,143 @@ public class TokenHandler implements AuthenticationConstants {
                 return order;
             }
         });
-
+        
         /*
-         * LOG.debug( "timestamp: " + timestamp ); LOG.debug( "nonce: " + nonce
-         * ); LOG.debug( "password: " + password ); LOG.debug( "props: " +
-         * PropertyUtils.toMap(properties) );
-         */
-
+        LOG.debug( "timestamp: " + timestamp );
+        LOG.debug( "nonce: " + nonce );
+        LOG.debug( "password: " + password );
+        LOG.debug( "props: " + PropertyUtils.toMap(properties) );
+        */
+        
         StringBuffer buf = new StringBuffer();
-        buf.append(Long.toString(timestamp));
-        buf.append(Long.toString(nonce));
-        buf.append(password);
+        buf.append( Long.toString( timestamp ) );
+        buf.append( Long.toString( nonce ) );
+        buf.append( password );
         for (Property prop : orderedCopy) {
             buf.append(prop.getName());
             buf.append(prop.getValue());
         }
         /*
-         * LOG.debug( "pre-encode: " + buf.toString() ); LOG.debug( "digest: " +
-         * SHA1.encode( buf.toString() ) );
-         */
-        return SHA1.encode(buf.toString());
+        LOG.debug( "pre-encode: " + buf.toString() );
+        LOG.debug( "digest: " +  SHA1.encode( buf.toString() ) );
+        */
+        return SHA1.encode( buf.toString() );
     }
+    
+	/**
+	 * Parse the cryptographic token and return its properties.
+     *
+	 * @param token Token
+	 * @return properties
+	 */
+	public Property[] parseToken( String token )
+	    throws AuthenticationException, RemoteException
+    {
+		int                      pos1, pos2;
+		HashMap<String,Object>   props;
+		String                   buf;
+		Property                 prop;
+		String                   name, value;
+		
+		if ( token == null ) {
+			throw new IllegalArgumentException( "Token is null" );
+		}
 
-    /**
-     * Parse the cryptographic token and return its properties.
-     * 
-     * @param token
-     *            Token
-     * @return properties
-     */
-    public Property[] parseToken(String token) throws AuthenticationException, RemoteException {
-        int pos1, pos2;
-        HashMap<String, Object> props;
-        String buf;
-        Property prop;
-        String name, value;
+		buf = decode( token );
+		
+		props = new HashMap<String,Object>();
+		while ( buf.length() > 0 ) {
+			pos1 = buf.indexOf( VALUE_SEPARATOR );
+			if ( pos1 == -1 ) {
+				throw new IllegalArgumentException( "Token is corrupted" );
+			}
+			pos2 = buf.indexOf( PROP_SEPARATOR );
+			if ( pos2 == -1 ) {
+				pos2 = buf.length();
+			}
+			
+			// parse property
+			name = buf.substring( 0, pos1 );
+			value = buf.substring( pos1 + VALUE_SEPARATOR.length(), pos2 );
+			prop = new Property( name, value );
+			props.put( name, prop );
+			
+			// remove property name,value
+			if ( pos2 < buf.length() ) {
+				buf = buf.substring( pos2 + PROP_SEPARATOR.length() );
+			} else {
+				buf = "";
+			}
+		}
 
-        if (token == null) {
-            throw new IllegalArgumentException("Token is null");
+        prop = (Property) props.remove( PROPERTY_NONCE );
+        if ( prop == null ) {
+            throw new IllegalArgumentException( "Missing '" + PROPERTY_NONCE + "' property" );
         }
+        long nonce = Long.parseLong( (String) prop.getValue() );
 
-        buf = decode(token);
-
-        props = new HashMap<String, Object>();
-        while (buf.length() > 0) {
-            pos1 = buf.indexOf(VALUE_SEPARATOR);
-            if (pos1 == -1) {
-                throw new IllegalArgumentException("Token is corrupted");
-            }
-            pos2 = buf.indexOf(PROP_SEPARATOR);
-            if (pos2 == -1) {
-                pos2 = buf.length();
-            }
-
-            // parse property
-            name = buf.substring(0, pos1);
-            value = buf.substring(pos1 + VALUE_SEPARATOR.length(), pos2);
-            prop = new Property(name, value);
-            props.put(name, prop);
-
-            // remove property name,value
-            if (pos2 < buf.length()) {
-                buf = buf.substring(pos2 + PROP_SEPARATOR.length());
-            } else {
-                buf = "";
-            }
+        prop = (Property) props.remove( PROPERTY_TIMESTAMP );
+        if ( prop == null ) {
+            throw new IllegalArgumentException( "Missing '" + PROPERTY_TIMESTAMP + "' property" );
         }
-
-        prop = (Property) props.remove(PROPERTY_NONCE);
-        if (prop == null) {
-            throw new IllegalArgumentException("Missing '" + PROPERTY_NONCE + "' property");
-        }
-        long nonce = Long.parseLong((String) prop.getValue());
-
-        prop = (Property) props.remove(PROPERTY_TIMESTAMP);
-        if (prop == null) {
-            throw new IllegalArgumentException("Missing '" + PROPERTY_TIMESTAMP + "' property");
-        }
-        long timestamp = Long.parseLong((String) prop.getValue());
-
-        prop = (Property) props.remove(PROPERTY_DIGEST);
-        if (prop == null) {
-            throw new IllegalArgumentException("Missing '" + PROPERTY_DIGEST + "' property");
+        long timestamp = Long.parseLong( (String) prop.getValue() );
+        
+        prop = (Property) props.remove( PROPERTY_DIGEST );
+        if ( prop == null ) {
+            throw new IllegalArgumentException( "Missing '" + PROPERTY_DIGEST + "' property" );
         }
         String digest = (String) prop.getValue();
 
-        Property[] propsArray = props.values().toArray(new Property[props.size()]);
+        Property[] propsArray = props.values().toArray( new Property[ props.size() ] );
+        
+        String localDigest = digest( timestamp, nonce, _secret, propsArray );
 
-        String localDigest = digest(timestamp, nonce, _secret, propsArray);
-
-        if (!localDigest.equals(digest)) {
-            throw new AuthenticationException("Incorrect digest");
+        if ( ! localDigest.equals( digest ) ) {
+            throw new AuthenticationException( "Incorrect digest" );
         }
+        
+		return propsArray;
+	} 
 
-        return propsArray;
-    }
 
-    /**
+	/**
      * Encode token into non-human readable format
-     */
-    protected String encode(String token) {
-        token = PREFIX + token + SUFFIX;
-        try {
-            int compressionOption = (_compressToken) ? Base64.GZIP : Base64.NO_OPTIONS;
-            compressionOption |= Base64.DONT_BREAK_LINES;
-            return Base64.encodeBytes(token.getBytes("UTF-8"), compressionOption);
-        } catch (UnsupportedEncodingException except) {
-            throw new RuntimeException(except.toString());
-        }
-    }
+	 */
+	protected String encode( String token )
+	{
+		Base64Encoder encoder = new Base64Encoder();
+		token = PREFIX + token + SUFFIX;
+		try {
+			encoder.translate( token.getBytes( "UTF-8" ) );
+		} catch ( UnsupportedEncodingException except ) {
+			throw new RuntimeException( except.toString() );
+		}
+		return new String( encoder.getCharArray() );
+	}
 
-    /**
-     * Decode token from non-human readable format
-     */
-    protected String decode(String token) {
-        try {
-            token = new String(Base64.decode(token), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalArgumentException("Token is corrupted");
-        }
 
-        if (!token.startsWith(PREFIX)) {
-            throw new IllegalArgumentException("Token is corrupted");
-        }
-        token = token.substring(PREFIX.length());
-        if (!token.endsWith(SUFFIX)) {
-            throw new IllegalArgumentException("Token is corrupted");
-        }
-        token = token.substring(0, token.length() - SUFFIX.length());
-        return token;
-    }
-
+	/**
+	 * Decode token from non-human readable format
+	 */
+	protected String decode( String token )
+	{
+		Base64Decoder decoder = new Base64Decoder();
+		decoder.translate( token );
+		try {
+			token = new String( decoder.getByteArray(), "UTF-8" );
+		} catch ( UnsupportedEncodingException except ) {
+			throw new RuntimeException( except.toString() );
+		}
+				
+		if ( ! token.startsWith( PREFIX ) ) {
+			throw new IllegalArgumentException( "Token is corrupted" );
+		}
+		token = token.substring( PREFIX.length() );		
+		if ( ! token.endsWith( SUFFIX ) ) {
+			throw new IllegalArgumentException( "Token is corrupted" );
+		}
+		token = token.substring( 0, token.length()-SUFFIX.length() );		
+		return token;
+	}
+	
 }
