@@ -275,3 +275,5 @@ AXIS2 = [
   NEETHI,
   SUNMAIL
 ]
+
+OPENSSO_CLIENT_SDK = "com.sun:openssoclientsdk:jar:3.0"

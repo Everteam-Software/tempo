@@ -159,7 +159,7 @@ define "tempo" do
 
   desc "Security Framework"
   define "security" do
-    compile.with CAS_CLIENT, DOM4J, CASTOR, LOG4J, SLF4J, SPRING[:core], XERCES
+    compile.with CAS_CLIENT, DOM4J, CASTOR, LOG4J, SLF4J, SPRING[:core], XERCES, OPENSSO_CLIENT_SDK, SERVLET_API
 
     test.exclude "*BaseSuite"
     test.exclude "*FuncTestSuite"
@@ -170,14 +170,14 @@ define "tempo" do
   
   desc "Security Web-Service Common Library"
   define "security-ws-common" do
-    compile.with project("security"), AXIOM, AXIS2, SLF4J, SPRING[:core], STAX_API 
+    compile.with project("security"), AXIOM, AXIS2, SLF4J, SPRING[:core], STAX_API
     package(:jar)
   end
   
   desc "Security Web-Service Client"
   define "security-ws-client" do
     compile.with projects("security", "security-ws-common"),AXIOM, AXIS2, SLF4J, STAX_API, SPRING[:core]
-    test.with APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], CASTOR, LOG4J, SUNMAIL, XERCES, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX 
+    test.with APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], CASTOR, LOG4J, SUNMAIL, XERCES, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX, CAS_CLIENT, OPENSSO_CLIENT_SDK
 
     # Remember to set JAVA_OPTIONS before starting Jetty
     # export JAVA_OPTIONS=-Dorg.intalio.tempo.configDirectory=/home/boisvert/svn/tempo/security-ws2/src/test/resources
@@ -321,7 +321,8 @@ define "tempo" do
             WSDL4J,
             WS_COMMONS_SCHEMA,
             XERCES, 
-            XMLBEANS
+            XMLBEANS,
+            OPENSSO_CLIENT_SDK
 
      compile.with libs, JSP_API, SERVLET_API, CAS_CLIENT, PORTLET_API
 
@@ -336,20 +337,6 @@ define "tempo" do
      test.with JAXEN, XMLUNIT, INSTINCT
      package(:war).include(web_xml, :as=>'WEB-INF/web.xml').with(:libs=>libs)
    end
-  
-  desc "User-Interface Framework Portlet"
-  define "ui-fw-portlet" do
-    libs = projects("security", "security-ws-client", "security-ws-common", "tms-axis", "tms-client", "tms-common", "ui-pluto", "ui-fw"),
-           APACHE_JPA, APACHE_COMMONS[:io], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], AXIOM, AXIS2, CAS_CLIENT, DOM4J, INTALIO_STATS, 
-           JSON, JSP_API, JSTL, LOG4J, PLUTO, PORTLET_API, SERVLET_API, 
-           SPRING[:core], SPRING[:webmvc], SPRING[:webmvc_portlet], SLF4J, STAX_API, TAGLIBS, WOODSTOX, WSDL4J, WS_COMMONS_SCHEMA, 
-           XERCES, XMLBEANS
-    compile.with libs
-
-    resources.filter.using "version" => VERSION_NUMBER
-    package(:war).with(:libs=>libs).
-      include("src/main/config/geronimo/1.0/*")
-  end
   
   desc "Customized pluto webapp"
   define "ui-pluto" do

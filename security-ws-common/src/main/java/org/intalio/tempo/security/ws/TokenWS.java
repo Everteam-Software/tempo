@@ -21,6 +21,7 @@ import static org.intalio.tempo.security.ws.TokenConstants.SERVICE_URL;
 import static org.intalio.tempo.security.ws.TokenConstants.TICKET;
 import static org.intalio.tempo.security.ws.TokenConstants.TOKEN;
 import static org.intalio.tempo.security.ws.TokenConstants.USER;
+import static org.intalio.tempo.security.ws.TokenConstants.OPENSSO_TOKEN;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
@@ -135,5 +136,26 @@ public class TokenWS extends BaseWS {
         }
 
         return authenticateUserResponse(token);
+    }
+    
+    public OMElement getTokenFromOpenSSOToken(OMElement requestEl) throws AxisFault {
+        OMParser request = new OMParser(requestEl);
+        String openssoToken = request.getRequiredString(OPENSSO_TOKEN);
+
+        String token = null;
+        try {
+            token = _tokenService.getTokenFromOpenSSOToken(openssoToken);
+        } catch (AuthenticationException except) {
+            if (LOG.isDebugEnabled())
+                LOG.debug("getTokenFromOpenSSOToken:\n" + requestEl, except);
+            throw AxisFault.makeFault(except);
+        } catch (Exception except) {
+            if (LOG.isDebugEnabled())
+                LOG.debug("getTokenFromOpenSSOToken:\n" + requestEl, except);
+            throw new RuntimeException(except);
+        }
+
+        return authenticateUserResponse(token);
+        
     }
 }

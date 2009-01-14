@@ -16,7 +16,7 @@
 <beans>
 
 	<bean id="realms" class="org.intalio.tempo.security.impl.Realms">
-		<property name="defaultRealm" value="intalio"/>
+		<property name="defaultRealm" value="opensso"/>
 		<property name="securityProviders">
 			<list>
 				<ref bean="securityProvider"/>
@@ -24,20 +24,18 @@
 		</property>
 	</bean>
 
-	<bean id="securityProvider" class="org.intalio.tempo.security.simple.SimpleSecurityProvider" init-method="init">
+	<!-- Uncomment this section to enable Simple support -->
+	<!-- <bean id="securityProvider" class="org.intalio.tempo.security.simple.SimpleSecurityProvider" init-method="init">
 		<property name="configFile">
 			<value>${org.intalio.tempo.configDirectory}/security.xml</value>
 		</property>
-	</bean>
+	</bean> -->
 
-	<!-- Uncomment this section (and comment the above SimpleSecurityProvider) to enable LDAP support -->
-	<!-- 
-		<bean id="securityProvider" class="org.intalio.tempo.security.ldap.LDAPSecurityProvider">
-			<property name="propertiesFile">
-				<value>${org.intalio.tempo.configDirectory}/ldap.properties</value>
-			</property>
-			</bean 
-	 -->
+	<bean id="securityProvider" class="org.intalio.tempo.security.ldap.LDAPSecurityProvider">
+		<property name="propertiesFile">
+			<value>${org.intalio.tempo.configDirectory}/opensso-ldap.properties</value>
+		</property>
+	</bean> 
 
 	<bean id="tokenHandler" class="org.intalio.tempo.security.impl.TokenHandler">
 		<property name="secret"><value>mySecret</value></property>

@@ -9,6 +9,9 @@
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
+	<listener>
+		<listener-class>com.liferay.portal.kernel.servlet.PortletContextListener</listener-class>
+	</listener>
 
     <context-param>
         <param-name>contextClass</param-name>
@@ -55,7 +58,23 @@
 		<servlet-class>org.springframework.web.servlet.ViewRendererServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-
+	<servlet>
+		<servlet-name>UifwPortlet</servlet-name>
+		<servlet-class>com.liferay.portal.kernel.servlet.PortletServlet</servlet-class>
+		<init-param>
+			<param-name>portlet-name</param-name>
+			<param-value>UifwPortlet</param-value>
+		</init-param>
+		<init-param>
+			<param-name>portlet-class</param-name>
+			<param-value>org.springframework.web.portlet.DispatcherPortlet</param-value>
+		</init-param>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/tempo-ui-fw-portlet.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
 	<servlet>
 		<servlet-name>JsonUpdate</servlet-name>
 		<servlet-class>org.intalio.tempo.uiframework.service.JsonUpdate</servlet-class>
@@ -69,11 +88,116 @@
 		<servlet-name>ViewRendererServlet</servlet-name>
 		<url-pattern>/WEB-INF/servlet/view</url-pattern>
 	</servlet-mapping>
-
+	<servlet-mapping>
+		<servlet-name>UifwPortlet</servlet-name>
+		<url-pattern>/PlutoInvoker/UifwPortlet</url-pattern>
+	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>JsonUpdate</servlet-name>
 		<url-pattern>/json/update</url-pattern>
 	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>UifwPortlet</servlet-name>
+		<url-pattern>/UifwPortlet/*</url-pattern>
+	</servlet-mapping>
+
+    <!-- CAS config start (Remove from here if you don't want to use CAS server for authentication)-->
+    <!--
+  <context-param>
+    <param-name>edu.yale.its.tp.cas.proxyUrl</param-name>
+    <param-value>https://localhost:8443/cas/proxy</param-value>
+  </context-param>
+  <filter>
+    <filter-name>CAS Filter</filter-name>
+    <filter-class>edu.yale.its.tp.cas.client.filter.CASFilter</filter-class>
+    <init-param>
+      <param-name>edu.yale.its.tp.cas.client.filter.loginUrl</param-name>
+      <param-value>https://localhost:8443/cas/login</param-value>
+    </init-param>
+    <init-param>
+      <param-name>edu.yale.its.tp.cas.client.filter.validateUrl</param-name>
+      <param-value>https://localhost:8443/cas/proxyValidate</param-value>
+    </init-param>
+    <init-param>
+      <param-name>edu.yale.its.tp.cas.client.filter.serviceUrl</param-name>
+      <param-value>http://localhost:8080/ui-fw</param-value>
+    </init-param>
+    <init-param>
+      <param-name>edu.yale.its.tp.cas.client.filter.proxyCallbackUrl</param-name>
+      <param-value>https://localhost:8443/ui-fw/CasProxyServlet</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>CAS Filter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <filter>
+    <filter-name>CASRBAC Filter</filter-name>
+    <filter-class>org.intalio.tempo.uiframework.filter.CASRBACFilter</filter-class>
+    <init-param>
+      <param-name>edu.yale.its.tp.cas.client.filter.serviceUrl</param-name>
+      <param-value>http://localhost:8080/ui-fw</param-value>
+    </init-param>
+    <init-param>
+	   <param-name>bypass</param-name>
+	   <param-value>/feeds/.*</param-value>
+	</init-param>
+    <init-param>
+      <param-name>edu.yale.its.tp.cas.client.filter.logoutUrl</param-name>
+      <param-value>https://localhost:8443/cas/logout</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>CASRBAC Filter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <servlet>
+    <servlet-name>ProxyTicketReceptor</servlet-name>
+    <servlet-class>
+			edu.yale.its.tp.cas.proxy.ProxyTicketReceptor
+		</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ProxyTicketReceptor</servlet-name>
+    <url-pattern>/CasProxyServlet</url-pattern>
+  </servlet-mapping> -->
+<!-- CAS config ends -->
+
+    <!-- opensso config start (Remove from here if you don't want to use opensso server for authentication)-->
+    <filter>
+    	<filter-name>Agent</filter-name>
+	    <display-name>Agent</display-name>
+	    <description>SJS Access Manager Tomcat Policy Agent Filter</description>
+	    <filter-class>com.sun.identity.agents.filter.AmAgentFilter</filter-class>
+     </filter>
+
+	 <filter-mapping>
+	    <filter-name>Agent</filter-name>
+	    <url-pattern>/*</url-pattern>
+	    <dispatcher>REQUEST</dispatcher>
+	    <dispatcher>INCLUDE</dispatcher>
+	    <dispatcher>FORWARD</dispatcher>
+	    <dispatcher>ERROR</dispatcher>
+	 </filter-mapping>
+
+  <filter>
+    <filter-name>OpenSSORBAC Filter</filter-name>
+    <filter-class>org.intalio.tempo.uiframework.filter.OpenSSORBACFilter</filter-class>
+    <init-param>
+      <param-name>com.instalo.ui-fw.logout.url</param-name>
+      <param-value>/ui-fw/logout</param-value>
+    </init-param>    
+  </filter>
+  <filter-mapping>
+    <filter-name>OpenSSORBAC Filter</filter-name>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>INCLUDE</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+    <dispatcher>ERROR</dispatcher>    
+  </filter-mapping>
+     
+    <!-- opensso config ends -->
     <!-- servlet -->
 
     <servlet>
@@ -138,6 +262,12 @@
 			<el-ignored>false</el-ignored>
 			<trim-directive-whitespaces>true</trim-directive-whitespaces>
 		</jsp-property-group>
+
+		<taglib>
+			<taglib-uri>http://java.sun.com/portlet</taglib-uri>
+			<taglib-location>/WEB-INF/tld/liferay-portlet.tld</taglib-location>
+		</taglib>
+
 	</jsp-config>
 
     <locale-encoding-mapping-list>

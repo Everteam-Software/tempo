@@ -28,7 +28,7 @@ ADD_LDAP = config["add_ldap"]
 LIFERAY = "liferay_510"
 APACHE_MIRROR = find_apache_mirror
 TOMCAT_5_DOWNLOAD = APACHE_MIRROR + "tomcat/tomcat-5/v5.5.26/bin/apache-tomcat-5.5.26.zip"
-TOMCAT_6_DOWNLOAD = APACHE_MIRROR + "tomcat/tomcat-6/v6.0.16/bin/apache-tomcat-6.0.16.zip"
+TOMCAT_6_DOWNLOAD = APACHE_MIRROR + "tomcat/tomcat-6/v6.0.18/bin/apache-tomcat-6.0.18.zip"
 TOMCAT_ADMIN_DOWNLOAD = APACHE_MIRROR + "tomcat/tomcat-5/v5.5.26/bin/apache-tomcat-5.5.26-admin.zip"
 AXIS_DOWNLOAD = APACHE_MIRROR + "ws/axis2/1_4/axis2-1.4-war.zip"
 ODE_DOWNLOAD = APACHE_MIRROR + "ode/apache-ode-war-1.2.zip"
@@ -45,7 +45,7 @@ Dir.chdir install_dir
 title "Downloading required files"
 explain "Downloading tomcat (java web application engine), ode (process engine) and axis (web service engine)"
 ##
-tomcat_folder = download_unzip( TOMCAT_5_DOWNLOAD ) if SERVER != LIFERAY
+tomcat_folder = download_unzip( TOMCAT_6_DOWNLOAD ) if SERVER != LIFERAY
 ode_folder = download_unzip( ODE_DOWNLOAD )
 axis_folder = download_unzip( AXIS_DOWNLOAD, false)
 liferay_folder = download_unzip( LIFERAY_5 ) if SERVER == LIFERAY
@@ -115,7 +115,7 @@ wi.install_tempo_war( "fds" )
 wi.install_tempo_war( "ui-fw" )
 wi.install_tempo_war( "wds-service", "wds" )
 wi.install_tempo_war( "xforms-manager", "xFormsManager" )
-wi.install_tempo_war( "tms-feeds", "feeds")
+#wi.install_tempo_war( "tms-feeds", "feeds")
 wi.install_tempo_war( "cas-server-webapp", "cas" )
 # wi.install_tempo_war( "ui-pluto", "pluto" )
 # wi.install_tempo_war( "ui-fw-portlet")
@@ -148,8 +148,8 @@ opi.install_process_from_tempo_trunk "AbsenceRequest"
 title "Installing missing libs into Tomcat"
 explain "Some libs are missing in tomcat, so we add them here."
 ##
-lib_folder = "#{server_folder}/common/lib" # tomcat5
-#lib_folder = "#{server_folder}/lib" # tomcat6
+#lib_folder = "#{server_folder}/common/lib" # tomcat5
+lib_folder = "#{server_folder}/lib" # tomcat6
 FileUtils.mkdir_p lib_folder
 MISSING_LIBS= [
   # Mysql driver
@@ -253,7 +253,8 @@ title "Copying tomcat config xml files (JNDI resources)"
 explain "Making the deploy registry and the mysql DS available to all tomcat application"
 ##
 Dir.glob(File.join("#{TEMPO_SVN}/rsc/tomcat", "*.*")) {|x| File.copy(x,"#{server_folder}/conf", DEBUG)}
-Dir.glob(File.join("#{server_folder}/conf", "log4j.properties")) {|x| File.move(x,"#{server_folder}/common/classes", DEBUG)}
+#Dir.glob(File.join("#{server_folder}/conf", "log4j.properties")) {|x| File.move(x,"#{server_folder}/common/classes", DEBUG)}
+Dir.glob(File.join("#{server_folder}/conf", "log4j.properties")) {|x| File.move(x,"#{server_folder}/lib", DEBUG)}   #tomcat 6
 ##
 
 ## For liferay specific
@@ -317,7 +318,7 @@ if ADD_LDAP
     Dir.glob("#{TEMPO_SVN}/rsc/LDAP/portal-ext.properties") {|x| File.copy x, "#{webapp_folder}/ROOT/WEB-INF/classes", DEBUG}
   end
   
-  if ADD_ALFRESCO
+  if ADD_ALFRESCO && SERVER == LIFERAY
     explain "Also need to config Alfresco to use apacheds"
     Dir.glob("#{TEMPO_SVN}/rsc/alfresco/public*.xml") {|x| File.copy x, "#{webapp_folder}/alfresco/WEB-INF/classes/alfresco", DEBUG}
     Dir.glob("#{TEMPO_SVN}/rsc/alfresco/extension/*.xml") {|x| File.copy x, "#{webapp_folder}/alfresco/WEB-INF/classes/alfresco/extension", DEBUG}
