@@ -126,6 +126,9 @@
                                 <xsl:attribute name="user">
                                     <xsl:value-of select="doc('input:xpl-input')/task/user"/>
                                 </xsl:attribute>
+                                <xsl:attribute name="url">
+                                    <xsl:value-of select="doc('input:xpl-input')/task/url"/>
+                                </xsl:attribute>
                                 <xsl:apply-templates select="*"/>
                             </xsl:copy>
                         </xsl:template>
