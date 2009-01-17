@@ -45,7 +45,7 @@ public class WDSStorageStrategyTest extends TestCase {
     
     void assertSanitize(String filename, String expected) throws Exception {
         System.out.println("original: " + filename);
-        String sanitized = WDSStorageStrategy.sanitize(filename);
+        String sanitized = TASUtil.sanitize(filename);
         System.out.println("sanitized: " + sanitized);
         if (sanitized.trim().length() < 1) throw new Exception("Filename is empty: " + sanitized);
         if (sanitized.contains(" ")) throw new Exception("Filename still contains spaces: " + sanitized);

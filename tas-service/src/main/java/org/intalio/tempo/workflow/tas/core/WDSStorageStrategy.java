@@ -15,9 +15,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
@@ -102,7 +99,7 @@ public class WDSStorageStrategy implements StorageStrategy {
     }
     public String storeAttachment(Property[] props, AttachmentMetadata metadata, InputStream payload) throws IOException {
         // need to sanitize the filename because of some browsers (e.g. Internet Exploder)
-        String filename = sanitize(metadata.getFilename());
+        String filename = TASUtil.sanitize(metadata.getFilename());
         String uri = java.util.UUID.randomUUID().toString() + "/" + filename;
         String fullUrl = _wdsEndpoint + ATTACHMENT_URI_PREFIX + uri;
 
@@ -126,7 +123,6 @@ public class WDSStorageStrategy implements StorageStrategy {
 
         DeleteMethod deleteMethod = new DeleteMethod(url);
         setUpMethod(deleteMethod);
-//        HttpClient httpClient = new HttpClient();
         HttpClient httpClient = getClient();
         try {
             int code = httpClient.executeMethod(deleteMethod);
@@ -138,24 +134,5 @@ public class WDSStorageStrategy implements StorageStrategy {
             throw new UnavailableAttachmentException(e);
         }
         _logger.debug("Deleted attachment: '" + url + "'");
-    }
-
-    /**
-     * Sanitize filename for inclusion into URL.
-     * e.g.  C:\Foo -> Foo
-     *       My Document.doc -> My+Document.doc
-     */
-    static String sanitize(String filename) {
-        // find the local name: the last portion of the filename that does not contain ":", "/" or "\"
-        Pattern regex = Pattern.compile("(.*?)([^:/\\\\]+)$");
-        Matcher match = regex.matcher(filename);
-        if (match.find()) {
-            try {
-                String localname = match.group(2);
-                return URLEncoder.encode(localname, "UTF-8");
-            } catch (Exception e) {
-                throw new IllegalStateException(e);
-            }
-        } else throw new IllegalArgumentException("Invalid filename: " + filename);
     }
 }

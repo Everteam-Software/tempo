@@ -83,8 +83,6 @@
                                 <tms:mimeType><xsl:value-of select="/attachments/new/file/@mediatype"/></tms:mimeType>
                                 <tms:fileName><xsl:value-of select="/attachments/new/file/@filename"/></tms:fileName>
                                 <tms:title><xsl:value-of select="/attachments/new/@title"/></tms:title>
-                                <!--<tms:description>Deprecated</tms:description>-->
-                                <!--<tms:creationDate>2001-12-17T09:30:47.0Z</tms:creationDate>-->
                             </tms:attachmentMetadata>
                             <tms:payloadUrl><xsl:value-of select="doc('input:tasResponse')/tas:url"/></tms:payloadUrl>
                         </tms:attachment>
