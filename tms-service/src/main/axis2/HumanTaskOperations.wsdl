@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
-	xmlns="http://www.example.org/WS-HT/api/wsdl" xmlns:htd="http://www.example.org/WS-HT"
-	xmlns:htda="http://www.example.org/WS-HT/api" xmlns:htdt="http://www.example.org/WS-HT/api/xsd"
-	xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.example.org/WS-HT/api/wsdl"
-	targetNamespace="http://www.example.org/WS-HT/api/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+	xmlns="http://www.intalio.com/WS-HT/api/wsdl" xmlns:htd="http://www.intalio.com/WS-HT"
+	xmlns:htda="http://www.intalio.com/WS-HT/api" xmlns:htdt="http://www.intalio.com/WS-HT/api/xsd"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.intalio.com/WS-HT/api/wsdl"
+	targetNamespace="http://www.intalio.com/WS-HT/api/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
 	<wsdl:types>
 		<!--
 			<xsd:schema> <xsd:import namespace="http://www.example.org/WS-HT"
@@ -15,11 +15,13 @@
 		-->
 
 		<!--  modify by jackie -->
-		<xsd:schema xmlns="http://www.example.org/WS-HT" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-			targetNamespace="http://www.example.org/WS-HT" elementFormDefault="qualified"
+		<xsd:schema xmlns="http://www.intalio.com/WS-HT" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			targetNamespace="http://www.intalio.com/WS-HT" elementFormDefault="qualified"
 			blockDefault="#all">
+			
 			<xsd:import namespace="http://www.w3.org/XML/1998/namespace"
-				schemaLocation="http://www.w3.org/2001/xml.xsd" />
+				schemaLocation="xml.xsd" />
+			
 			<!-- base types for extensible elements -->
 			<xsd:complexType name="tExtensibleElements">
 				<xsd:sequence>
@@ -537,10 +539,10 @@
 			</xsd:simpleType>
 		</xsd:schema>
 
-<xsd:schema xmlns="http://www.example.org/WS-HT/api"
-xmlns:htd="http://www.example.org/WS-HT"
+<xsd:schema xmlns="http://www.intalio.com/WS-HT/api"
+xmlns:htd="http://www.intalio.com/WS-HT"
 xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-targetNamespace="http://www.example.org/WS-HT/api"
+targetNamespace="http://www.intalio.com/WS-HT/api"
 elementFormDefault="qualified" blockDefault="#all">
 
 		<!-- data types for attachment operations -->
@@ -750,9 +752,9 @@ elementFormDefault="qualified" blockDefault="#all">
 			</xsd:choice>
 		</xsd:complexType>
 	</xsd:schema>
-		<xsd:schema xmlns="http://www.example.org/WS-HT/api/xsd"
-			xmlns:htd="http://www.example.org/WS-HT" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-			targetNamespace="http://www.example.org/WS-HT/api/xsd" xmlns:api="http://www.example.org/WS-HT/api"
+		<xsd:schema xmlns="http://www.intalio.com/WS-HT/api/xsd"
+			xmlns:htd="http://www.intalio.com/WS-HT" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			targetNamespace="http://www.intalio.com/WS-HT/api/xsd" xmlns:api="http://www.intalio.com/WS-HT/api"
 			elementFormDefault="qualified" blockDefault="#all">
 			<!--
 				<xsd:import namespace="http://www.example.org/WS-HT/api"
