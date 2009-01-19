@@ -1,5 +1,5 @@
 <xsd:schema xmlns="http://www.intalio.com/WS-HT/api/xsd"
-			xmlns:htd="http://www.intalio.com/WS-HT" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			xmlns:htd="http://www.intalio.com/WS-HT" xmlns:xsd="http://www.w3.org/2001/XMLSchema" 	xmlns:htpt="http://www.intalio.com/WS-HT/protocol"
 			targetNamespace="http://www.intalio.com/WS-HT/api/xsd" xmlns:api="http://www.intalio.com/WS-HT/api"
 			elementFormDefault="qualified" blockDefault="#all">
 
@@ -7,7 +7,23 @@
 				schemaLocation="ws-humantask-api.xsd" />
 			<xsd:import namespace="http://www.intalio.com/WS-HT"
 				schemaLocation="ws-humantask.xsd" />
-
+			<xsd:import namespace="http://www.intalio.com/WS-HT/protocol"
+				schemaLocation="taskcontext.xsd" />
+			<xsd:element name="create">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="in" type="xsd:string"></xsd:element>
+						<xsd:element ref="htpt:humanTaskContext"  minOccurs="1" maxOccurs="unbounded" />					
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="createResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="out" type="xsd:string"></xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
 			<xsd:element name="claim">
 				<xsd:complexType>
 					<xsd:sequence>

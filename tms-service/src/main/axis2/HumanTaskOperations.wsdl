@@ -12,27 +12,8 @@
 				schemaLocation="ws-humantask-api.xsd" />
 			<xsd:import namespace="http://www.intalio.com/WS-HT/api/xsd"
 				schemaLocation="ws-humantask-api-wsdl.xsd" />
-			<xsd:import namespace="http://www.intalio.com/WS-HT/protocol"
-				schemaLocation="taskcontext.xsd" />
+			
 		</xsd:schema>
-	        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.intalio.com/WS-HT/api/wsdl">
-        	<xsd:element name="create">
-        		<xsd:complexType>
-        			<xsd:sequence>
-
-        				<xsd:element name="in" type="xsd:string"></xsd:element>
-        			</xsd:sequence>
-        		</xsd:complexType>
-        	</xsd:element>
-        	<xsd:element name="createResponse">
-        		<xsd:complexType>
-        			<xsd:sequence>
-
-        				<xsd:element name="out" type="xsd:string"></xsd:element>
-        			</xsd:sequence>
-        		</xsd:complexType>
-        	</xsd:element>
-      </xsd:schema>	
 	</wsdl:types>
 	<!-- Declaration of messages -->
 	<wsdl:message name="claim">
