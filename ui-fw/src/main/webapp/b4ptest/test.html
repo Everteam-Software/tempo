@@ -15,8 +15,8 @@ img {border-width:0px;}
 -->
 <link rel="stylesheet" href="http://ui.jquery.com/latest/themes/flora/flora.all.css" type="text/css" media="screen" title="Flora (Default)">
 
-<script src="http://code.jquery.com/jquery-latest.js"></script>
-<script type="text/javascript" src="http://ui.jquery.com/latest/ui/ui.core.js"></script>
+<script src="jquery-latest.js"></script>
+<script type="text/javascript" src="ui.core.js"></script>
 
 <!--
 <script src="jquery.js"></script>
@@ -47,22 +47,27 @@ $(document).ready(function(){
 </script>
 
 <!-- for dialog -->
-<script type="text/javascript" src="http://ui.jquery.com/latest/ui/ui.dialog.js"></script>
-<script type="text/javascript" src="http://ui.jquery.com/latest/ui/ui.resizable.js"></script>
-<script type="text/javascript" src="http://ui.jquery.com/latest/ui/ui.draggable.js"></script>
+<script type="text/javascript" src="ui.dialog.js"></script>
+<script type="text/javascript" src="ui.resizable.js"></script>
+<script type="text/javascript" src="ui.draggable.js"></script>
 <script>
 function test(str){
-//alert();
-var obj = $("#"+str);
-obj.css("display", "block")
-$("#"+str+" #input").css("display", "block");
-$("#"+str+" #output").css("display", "none");
-$("#"+str+" #output").empty().append("<img src='ajax_load.gif'/>");
+$("#"+str).dialog("destroy").remove();
+var html='<div id="'+str+'" class="flora" title="'+str+'" style="display:none;" ><div id="'+str+'_input" style="display:block;" ><span style="font-weight:500;">Request:</span><br/><textArea rows=10 cols=52></textArea><br/><button id="upload" onclick="alert(\'not supported\');" >read from file</button><button id="submit" onclick="callws(\''+str+'\', \'\');">submit</button></div><div id="'+str+'_output" style="display:none;"><img src="ajax_load.gif"/></div></div>';
+  // alert(html);
+//var obj = $("#"+str);
+var obj = $(html);
+obj.css("display", "block");
+//$("#"+str+" #input").css("display", "block");
+//$("#"+str+" #output").css("display", "none");
+//$("#"+str+" #output").empty().append("<img src='ajax_load.gif'/>");
   obj.dialog({ 
       modal: true,  // 模态
       width: 500,
       height:309,
-      overlay: { opacity: 0.5, background: "black" },   // 半透明背景
+      open:	function (Event, ui){alert("open");},
+      close:	function (Event, ui){alert("destroy");$(this).dialog("destroy").remove();;},
+      overlay: { opacity: 0.5, background: "black" }// 半透明背景
      // title: "Dialog Title",   // 对话框标题
    //   buttons: { "Close": function(){ $(this).dialog("destory").remove(); } }  // 对话框按钮
 });
@@ -92,7 +97,7 @@ $("#"+str+" #output").empty().append("<img src='ajax_load.gif'/>");
         //    调用webservice(如例子中的webservicedemo.asmx)
         //           HelloTo(String name)   针对name参数必xu写成name=wqj ,还有更多参数一样写,使用&符号分隔(name=11&age=20&.....),使用名称匹配
         //           传入的参数数量可以不等于(多于或少于)方法要求的参数
-        
+     // alert(m);  
         
         var para = p;
            
@@ -107,19 +112,20 @@ $("#"+str+" #output").empty().append("<img src='ajax_load.gif'/>");
       
          service.request();
        
+    //alert($("#"+method +" #input").size());
    
-       $("#"+method+" #input" ).css("display", "none");
-       $("#"+method+" #output").empty().append("<img src='ajax_load.gif'/>");
-       $("#"+method+" #output" ).css("display", "block");
+       $("#"+m+" #"+m+"_input" ).css("display", "none");
+       $("#"+m+" #"+m+"_output").empty().append("<img src='ajax_load.gif'/>");
+       $("#"+m+" #"+m+"_output").css("display", "block");
       
         return false;
     }
     function showError(obj)
     {
 		//obj 是一个xmlHttpRequest对象
-		alert("error="+obj.responseText+","+obj.statusText);
-		error= true;
-		$("#"+m+" #output" ).empty().append("<textArea id=outputtext  rows=10 cols=50>"+obj.responseText+"</textArea>");
+	//	alert("error="+obj.responseText+","+obj.statusText);
+		error= true;		
+		$("#"+m+" #"+m+"_output").empty().append("<textArea id=outputtext  rows=10 cols=50>"+obj.responseText+"</textArea>");
 		
     }
     function showResponse(requestText,requestXML)
@@ -131,7 +137,7 @@ $("#"+str+" #output").empty().append("<img src='ajax_load.gif'/>");
 		    
 		if (error)
 		return;
-              $("#"+m+" #output" ).empty().append("<pre><textArea id=outputtext rows=10 cols=50>"+requestText.responseText+"</textArea></pre>");
+        $("#"+m+" #"+m+"_output").empty().append("<pre><textArea id=outputtext rows=10 cols=50>"+requestText.responseText+"</textArea></pre>");
     }
 
 
@@ -158,29 +164,20 @@ $("#"+str+" #output").empty().append("<img src='ajax_load.gif'/>");
     <td width="51"  align="center"><h5>Operation</h5></td>
     <td width="272"  bgcolor="#d1ffc1" align="center"><h5>Description</h5></td>
     <td width="126"  align="center"><h5>Action</h5></td>
-    <td width="296"  align="center"><h5>d</h5></td>
+    <td width="296"  align="center"><h5>Status</h5></td>
   </tr>
   <tr>
     <td width="51"  align="center">Create</td>
     <td width="272"  bgcolor="#d1ffc1" align="center">Create a Human Task</td>
-    <td width="126"  align="center"><a href="#" onclick="test('create');" ><img width=30 src="test.png"></a>
-    <div id="create" class="flora" title="create" style="display:none;" >
-    	<div id="input" style="display:none;" >
-    	<span style="font-weight:500;">Request:</span><br/>
-    	<textArea rows=10 cols=52>
-    	</textArea><br/>
-    	<button id="upload">read from file</button>
-    	<button id="submit" onclick="callws('create', '');">submit</button>
-    	</div>
-    	<div id="output" style="display:none;"><img src='ajax_load.gif'/></div>
-    </div>
+    <td width="126"  align="center">
+    <a href="#" onclick="test('create');" ><img width=30 src="test.png" alt="test it"/></a>
     </td>
     <td width="296"  align="center">d</td>
   </tr>
   <tr>
-    <td width="51"  align="center">a</td>
-    <td width="272" bgcolor="#d1ffc1" align="center">b</td>
-    <td width="126"  align="center">c</td>
+    <td width="51"  align="center">getMyTasks</td>
+    <td width="272" bgcolor="#d1ffc1" align="center">getMyTasks</td>
+    <td width="126"  align="center"> <a href="#" onclick="test('getMyTasks');" ><img width=30 src="test.png" alt="test it"/></a></td>
     <td width="296"  align="center">d</td>
   </tr>
   <tr>
@@ -193,7 +190,7 @@ $("#"+str+" #output").empty().append("<img src='ajax_load.gif'/>");
     <td width="51"  align="center">a</td>
     <td width="272" align="center">b</td>
     <td width="126"  align="center">c</td>
-    <td width="296"  align="center">d</td>
+     <td width="296"  align="center">d</td>
   </tr>
   <tr>
     <td width="51"  align="center">a</td>

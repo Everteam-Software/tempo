@@ -1,4 +1,4 @@
-﻿/*
+/*
  * jQuery UI 1.5.3
  *
  * Copyright (c) 2008 Paul Bakaus (ui.jquery.com)
