@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!-- 
 /**
  * Copyright (c) 2005-2008 Intalio inc.
@@ -124,11 +124,14 @@
         <parameter name="SpringBeanName">tmsb4p.HTOServiceImplementation</parameter>
      	<parameter name="LoadOnStartup">true</parameter>
     
-     <operation name="getMyTasks">
-            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
-            <actionMapping>http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/getMyTasks</actionMapping>
-     </operation>
-    
+	     <operation name="getMyTasks">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+	            <actionMapping>http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/getMyTasks</actionMapping>
+	     </operation>
+	     <operation name="create">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+	            <actionMapping>http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/create</actionMapping>
+	     </operation>
      </service>
     
 </serviceGroup>

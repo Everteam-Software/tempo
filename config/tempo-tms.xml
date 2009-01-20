@@ -29,11 +29,9 @@
 		</property>
 	</bean>
 	<bean id="tmsb4p.HTOServiceImplementation" class="org.intalio.tempo.workflow.tmsb4p.server.TMSRequestProcessor">
-	<!--
 		<property name="server">
 			<ref bean="tmsb4p.server"/>
-		</property>
-	-->
+		</property>	
 	</bean>
 	<bean id="tmsb4p.server" class="org.intalio.tempo.workflow.tmsb4p.server.TMSServer">
 		<!--
