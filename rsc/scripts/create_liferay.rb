@@ -8,6 +8,7 @@ require "zip/zip"
 require 'yaml'
 require 'fileutils'
 require 'open-uri'
+gem 'buildr', '1.2.10'
 require "buildr"
 
 script_folder = File.dirname(File.expand_path("#{$0}"))
