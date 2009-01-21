@@ -182,6 +182,9 @@
 							<b4p:participantToken>
 								<xsl:value-of select="/*:output/@participantToken"/>
 							</b4p:participantToken>
+							<b4p:user>
+								<xsl:value-of select="/*:output/@user"/>
+							</b4p:user>
 							<b4p:taskOutput>
 								<xsl:apply-templates select="*"/>
 							</b4p:taskOutput>
