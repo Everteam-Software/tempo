@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2005-2006 Intalio inc.
+ * Copyright (c) 2005-2009 Intalio inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -15,8 +15,9 @@
 package org.intalio.tempo.uiframework;
 
 import org.intalio.tempo.web.ApplicationState;
+import java.io.Serializable;
 
-public class UIFWApplicationState extends ApplicationState {
+public class UIFWApplicationState extends ApplicationState implements Serializable{
     private static final long serialVersionUID = -7511327773807678214L;
 
 }
