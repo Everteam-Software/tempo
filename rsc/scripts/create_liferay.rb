@@ -46,10 +46,10 @@ title "create setenv files"
 explain "This is needed because we need a keystore for SSL and we need the tempo configuration folder"
 file_path = tomcat_bin_folder + "setenv.sh"
 file = File.new file_path,create_mode
-file.puts "export JAVA_OPTS=\"-XX:MaxPermSize=256m -server -Djavax.net.ssl.trustStore=$CATALINA_HOME/var/config/tempokeystore -Dfile.encoding=UTF-8 -Xms128m -Xmx1024m -Dorg.intalio.tempo.configDirectory=$CATALINA_HOME/var/config -Dorg.apache.ode.configDir=$CATALINA_HOME/var/config -Djava.security.auth.login.config=$CATALINA_HOME/conf/jaas.config\""
+file.puts "export JAVA_OPTS=\"-XX:MaxPermSize=256m -server -Djavax.net.ssl.trustStore=$CATALINA_HOME/var/config/intalio-keystore.jks -Dfile.encoding=UTF-8 -Xms128m -Xmx1024m -Dorg.intalio.tempo.configDirectory=$CATALINA_HOME/var/config -Dorg.apache.ode.configDir=$CATALINA_HOME/var/config -Djava.security.auth.login.config=$CATALINA_HOME/conf/jaas.config\""
 file_path = tomcat_bin_folder + "setenv.bat"
 file = (File.new file_path,create_mode)
-file.puts "set JAVA_OPTS=-XX:MaxPermSize=256m -server -Djavax.net.ssl.trustStore=%CATALINA_HOME%\\var\\config\\tempokeystore -Dfile.encoding=UTF-8 -Xms128m -Xmx1024m -Dorg.intalio.tempo.configDirectory=%CATALINA_HOME%\\var\\config -Dorg.apache.ode.configDir=%CATALINA_HOME%\\var\\config -Djava.security.auth.login.config=%CATALINA_HOME%\\conf\\jaas.config"
+file.puts "set JAVA_OPTS=-XX:MaxPermSize=256m -server -Djavax.net.ssl.trustStore=%CATALINA_HOME%\\var\\config\\intalio-keystore.jks -Dfile.encoding=UTF-8 -Xms128m -Xmx1024m -Dorg.intalio.tempo.configDirectory=%CATALINA_HOME%\\var\\config -Dorg.apache.ode.configDir=%CATALINA_HOME%\\var\\config -Djava.security.auth.login.config=%CATALINA_HOME%\\conf\\jaas.config"
 Dir.glob("#{server_folder}/bin/*.sh") {|x| File.chmod 0755, x, DEBUG}
 
 ###
@@ -107,7 +107,7 @@ explain "Those are required tempo files. We load them from the tempo config fold
 File.copy "#{tempo_svn_config_folder}/tempo-formmanager.xml", tomcat_config_folder, DEBUG
 File.copy "#{tempo_svn_config_folder}/tempo-ui-fw-servlet.xml", tomcat_config_folder, DEBUG
 File.copy "#{tempo_svn_config_folder}/tempo-ui-fw.xml", tomcat_config_folder, DEBUG
-File.copy "#{liferay_config_folder}/tempokeystore", tomcat_config_folder, DEBUG
+File.copy "#{liferay_config_folder}/intalio-keystore.jks", tomcat_config_folder, DEBUG
 
 ###
 #
