@@ -126,12 +126,156 @@
     
 	     <operation name="getMyTasks">
 	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
-	            <actionMapping>http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/getMyTasks</actionMapping>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/getMyTasks</actionMapping>
 	     </operation>
 	     <operation name="create">
 	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
-	            <actionMapping>http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/create</actionMapping>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/create</actionMapping>
 	     </operation>
-     </service>
+	     <operation name="remove">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/remove</actionMapping>
+	     </operation>
+	     <operation name="start">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/start</actionMapping>
+	     </operation>
+	     <operation name="stop">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/stop</actionMapping>
+	     </operation>
+	     <operation name="claim">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/claim</actionMapping>
+	     </operation>
+	     <operation name="release">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/release</actionMapping>
+	     </operation>
+	     <operation name="suspend">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"></messageReceiver>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/suspend</actionMapping>
+	     </operation>
+	     <operation name="suspendUntil">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/suspendUntil</actionMapping>
+	     </operation>
+	     <operation name="resume">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/resume</actionMapping>
+	     </operation>
+	     <operation name="complete">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"></messageReceiver>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/complete</actionMapping>
+	     </operation>
+	     <operation name="fail">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/fail</actionMapping>
+	     </operation>
+	     <operation name="setPriority">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/setPriority</actionMapping>
+	     </operation>
+	     <operation name="addAttachment">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/addAttachment</actionMapping>
+	     </operation>
+	     <operation name="getAttachmentInfos">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/getAttachmentInfos</actionMapping>
+	     </operation>
+	     <operation name="getAttachments">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/getAttachments</actionMapping>
+	     </operation>
+	     <operation name="Attachments">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/Attachments</actionMapping>
+	     </operation>
+	     <operation name="addComment">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/addComment</actionMapping>
+	     </operation>
+	     <operation name="getComments">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/getComments</actionMapping>
+	     </operation>
+	     <operation name="skip">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/skip</actionMapping>
+	     </operation>
+	     <operation name="forward">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/forward</actionMapping>
+	     </operation>
+	     <operation name="delegate">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/delegate</actionMapping>
+	     </operation>
+	     <operation name="getRendering">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/getRendering</actionMapping>
+	     </operation>
+	     <operation name="getRenderingTypes">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/getRenderingTypes</actionMapping>
+	     </operation>
+	     <operation name="getTaskInfo">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+	      	     <actionMapping>http://www.intalio.com/WS-HT/api/xsd/getTaskInfo</actionMapping>
+	     </operation>	     
+	     <operation name="getTaskDescription">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/getTaskDescription</actionMapping>
+	     </operation>
+	     <operation name="setOutput">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/setOutput</actionMapping>
+	     </operation>
+	     <operation name="deleteOutput">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"></messageReceiver>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/deleteOutput</actionMapping>
+	     </operation>
+	     <operation name="setFault">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/setFault</actionMapping>
+	     </operation>
+	     <operation name="deleteFault">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/deleteFault</actionMapping>
+	     </operation>
+	     <operation name="getInput">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"></messageReceiver>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/getInput</actionMapping>
+	     </operation>
+	     <operation name="getOutput">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/getOutput</actionMapping>
+	     </operation>
+	     <operation name="getFault">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/getFault</actionMapping>
+	     </operation>
+	     <operation name="getMyTaskAbstracts">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/getMyTaskAbstracts</actionMapping>
+	     </operation>
+	     <operation name="query">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/query</actionMapping>
+	     </operation>
+	     <operation name="activate">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/activate</actionMapping>
+	     </operation>
+	     <operation name="nominate">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/nominate</actionMapping>
+	     </operation>
+ 	     <operation name="setGenericHumanRole">
+	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/setGenericHumanRole</actionMapping>
+	     </operation>
+ 	</service>
     
 </serviceGroup>

@@ -12,7 +12,7 @@
 				schemaLocation="ws-humantask-api.xsd" />
 			<xsd:import namespace="http://www.intalio.com/WS-HT/api/xsd"
 				schemaLocation="ws-humantask-api-wsdl.xsd" />
-			
+
 		</xsd:schema>
 	</wsdl:types>
 	<!-- Declaration of messages -->
@@ -360,7 +360,7 @@
 			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
 			<wsdl:fault name="illegalAccessFault" message="illegalAccessFault" />
 		</wsdl:operation>
-		<wsdl:operation name="deleteAttachments">
+		<wsdl:operation name="Attachments">
 			<wsdl:input message="deleteAttachments" />
 			<wsdl:output message="deleteAttachmentsResponse" />
 			<wsdl:fault name="illegalStateFault" message="illegalStateFault" />
@@ -542,10 +542,606 @@
 				<soap:fault name="illegalArgumentFault" use="literal" />
 			</wsdl:fault>
 		</wsdl:operation>
-		
+
 		<wsdl:operation name="create">
 			<soap:operation
 				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/create" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="claim">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/claim" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="start">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/start" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="stop">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/stop" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="release">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/release" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="suspend">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/suspend" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="suspendUntil">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/suspendUntil" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="resume">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/resume" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="complete">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/complete" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="remove">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/remove" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="fail">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/fail" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="addAttachment">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/addAttachment" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="getAttachmentInfos">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/getAttachmentInfos" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="getAttachments">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/getAttachments" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="deleteAttachment">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/deleteAttachments" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="addComment">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/addComment" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="getComments">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/getComments" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="skip">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/skip" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="forward">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/forward" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="delegate">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/delegate" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="getRendering">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/getRendering" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="getRenderingTypes">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/getRenderingTypes" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="getTaskInfo">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/getTaskInfo" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="getTaskDescription">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/getTaskDescription" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="setOutput">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/setOutput" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="deleteOutput">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/deleteOutput" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="setFault">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/setFault" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="deleteFault">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/deleteFault">
+				<soap:documentation></soap:documentation>
+			</soap:operation>
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="getInput">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/getInput">
+				<soap:documentation></soap:documentation>
+			</soap:operation>
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="getOutput">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/getOutput">
+				<soap:documentation></soap:documentation>
+			</soap:operation>
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="getFault">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/getFault">
+				<soap:documentation></soap:documentation>
+			</soap:operation>
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="getMyTaskAbstracts">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/getMyTaskAbstracts">
+				<soap:documentation></soap:documentation>
+			</soap:operation>
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="query">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/query">
+				<soap:documentation></soap:documentation>
+			</soap:operation>
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="activate">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/activate">
+				<soap:documentation></soap:documentation>
+			</soap:operation>
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="dominate">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/dominate">
+				<soap:documentation></soap:documentation>
+			</soap:operation>
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="setGenericHumanRole">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/setGenericHumanRole">
+				<soap:documentation></soap:documentation>
+			</soap:operation>
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+				<wsdl:operation name="setPriority">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/setPriority">
+				<soap:documentation></soap:documentation>
+			</soap:operation>
 			<wsdl:input>
 				<soap:body use="literal" />
 			</wsdl:input>
