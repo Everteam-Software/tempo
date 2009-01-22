@@ -53,6 +53,8 @@ public class RemoteAbsenceRequestTest extends TestCase {
 	static final String TOKEN_SERVICE = "http://localhost:8080/axis2/services/TokenService";
 	static final String TMS_SERVICE = "http://localhost:8080/axis2/services/TaskManagementServices";
 	static final String TASK_MANAGEMENT_PROCESS = "http://localhost:8080/ode/processes/completeTask";
+	static final String TASK_MANAGEMENT_PROCESS_WORKFLOW = "http://localhost:8080/fds/workflow/xform";
+	
 	static final XmlTooling xmlTooling = new XmlTooling();
 	Configuration cfg;
 	static final int SLEEP_TIME = 2000;
@@ -117,6 +119,8 @@ public class RemoteAbsenceRequestTest extends TestCase {
 		runAbsenceRequestWithOptionalCall("admin", "changeit", pipa, complete,"delete");
 		// Provoke a deleteAll by calling TMS.deleteAll while the task has been created.
 		runAbsenceRequestWithOptionalCall("admin", "changeit", pipa, complete,"deleteAll");
+		// Provoke a reassign to a new user. If we reassign to a new user, it will disappear from the list, so we're good. (hint: hack!)
+		runAbsenceRequestWithOptionalCall("admin", "changeit", pipa, complete,"reassign");
 	}
 
     /**
@@ -156,6 +160,7 @@ public class RemoteAbsenceRequestTest extends TestCase {
 		else if(optionalCall.equals("fail")) tms.fail(id,"0","Error message");
 		else if(optionalCall.equals("delete")) tms.delete(new String[]{id});
 		else if(optionalCall.equals("deleteAll")) tms.deleteAll("false", "T._state = TaskState.READY","PATask");
+		else if(optionalCall.equals("reassign")) sendSoapToWorkflow(reassign(token,id, "examples/msmith"), "escalate");
 		else throw new Exception("invalid optional call:"+optionalCall);
 		
 		_log.info("wait some more so that we process the optional call");
@@ -248,11 +253,19 @@ public class RemoteAbsenceRequestTest extends TestCase {
 	/**
 	 * Send the WS request to TMP.
 	 */
+	private void sendSoapToWorkflow(String request, String soapAction) throws Exception {
+		sendSoapTo(request, soapAction, TASK_MANAGEMENT_PROCESS_WORKFLOW);
+	}
+	
 	private void sendSoapToTMP(String request, String soapAction) throws Exception {
+		sendSoapTo(request, soapAction, TASK_MANAGEMENT_PROCESS);
+	}
+	
+	private void sendSoapTo(String request, String soapAction, String endpoint) throws Exception {
 		ServiceClient serviceClient = new ServiceClient();
 		OMFactory factory = OMAbstractFactory.getOMFactory();
 		Options options = new Options();
-        options.setTo(new EndpointReference(TASK_MANAGEMENT_PROCESS));
+        options.setTo(new EndpointReference(endpoint));
         serviceClient.setOptions(options);
         options.setAction(soapAction);
         serviceClient.sendReceive(xmlTooling.convertDOMToOM(xmlTooling.parseXML(request), factory));
@@ -264,6 +277,14 @@ public class RemoteAbsenceRequestTest extends TestCase {
 		skip.put("token", token);
 		return templateMe("skip.ftl", skip);
 	}
+
+	private String reassign(String token, String taskId, String user) throws Exception {
+		HashMap<String,String> escalate = new HashMap<String,String>();
+		escalate.put("taskId", taskId);
+		escalate.put("token", token);
+		escalate.put("user", user);
+		return templateMe("escalate.ftl", escalate);
+	}	
 	
 	/**
 	 * Generate a complete request.
