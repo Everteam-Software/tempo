@@ -11,7 +11,6 @@
  */
 package org.intalio.tempo.workflow.tas.core;
 
-import static org.intalio.tempo.workflow.tas.core.WDSStorageStrategy.filterLocalhost;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
@@ -24,10 +23,10 @@ public class WDSStorageStrategyTest extends TestCase {
     
     
     public void testFilter() throws Exception {
-    	Assert.assertNotSame("http://localhost:8080/wds",WDSStorageStrategy.filterLocalhost("http://localhost:8080/wds"));
-    	Assert.assertSame("http://127.0.0.1:8080/wds",filterLocalhost("http://127.0.0.1:8080/wds"));
-    	try { filterLocalhost("httll:asfdv"); Assert.fail(); } catch (Exception e) { }
-    	try { filterLocalhost("htp:localhost"); Assert.fail(); } catch (Exception e) { }
+    	Assert.assertNotSame("http://localhost:8080/wds",TASUtil.filterLocalhost("http://localhost:8080/wds"));
+    	Assert.assertSame("http://127.0.0.1:8080/wds",TASUtil.filterLocalhost("http://127.0.0.1:8080/wds"));
+    	try { TASUtil.filterLocalhost("httll:asfdv"); Assert.fail(); } catch (Exception e) { }
+    	try { TASUtil.filterLocalhost("htp:localhost"); Assert.fail(); } catch (Exception e) { }
     }
 
     public void testSanitize() throws Exception {

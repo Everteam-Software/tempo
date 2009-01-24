@@ -206,7 +206,7 @@ define "tempo" do
   desc "Task Attachment Service"
   define "tas-service" do
     compile.with projects("security", "security-ws-client"), 
-                 APACHE_COMMONS[:httpclient], AXIOM, AXIS2, JAXEN, SLF4J, STAX_API
+                 APACHE_COMMONS[:httpclient], AXIOM, AXIS2, JAXEN, SLF4J, STAX_API, WEBDAV
 
     test.with projects("security-ws-common", "security-ws-client"), APACHE_COMMONS[:codec], LOG4J, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, INSTINCT
     test.exclude '*TestUtils*'
@@ -215,11 +215,12 @@ define "tempo" do
     unless ENV["LIVE"] == 'yes'
       test.exclude '*Axis2TASService*'
       test.exclude '*WDSStorageTest*'
+      test.exclude '*SlingStorage*'
     end
 
     package :jar
     package(:aar).with(:libs => [ 
-        projects("security", "security-ws-client", "security-ws-common", "web-nutsNbolts"), APACHE_COMMONS[:httpclient], JAXEN, SLF4J, SPRING[:core]])
+        projects("security", "security-ws-client", "security-ws-common", "web-nutsNbolts"), APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], JAXEN, SLF4J, SPRING[:core], WEBDAV])
   end
 
   desc "Xml Beans generation"

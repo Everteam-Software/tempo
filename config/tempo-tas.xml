@@ -38,4 +38,11 @@
 			<value>http://localhost:8080/wds/</value>
 		</property>
 	</bean>
+	
+	<!-- <bean id="tas.storageStrategy" class="org.intalio.tempo.workflow.tas.sling.SlingStorageStrategy">
+			<property name="baseFolder" value="/tempo"/>
+			<property name="userName" value="admin"/>
+			<property name="password" value="admin"/>
+			<property name="slingUrl" value="http://localhost:8080/sling"/>
+		</bean> -->
 </beans>

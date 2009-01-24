@@ -122,6 +122,8 @@ PLUTO_DEPLOY = [
   XALAN
 ]
 
+WEBDAV = "org.apache.jackrabbit:webdav:jar:1.4"
+
 ORBEON_COMMONS = [
   APACHE_COMMONS[:beanutils],
   APACHE_COMMONS[:cli],
