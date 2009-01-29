@@ -9,9 +9,6 @@
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
-	<listener>
-		<listener-class>com.liferay.portal.kernel.servlet.PortletContextListener</listener-class>
-	</listener>
 
     <context-param>
         <param-name>contextClass</param-name>
@@ -59,23 +56,6 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet>
-		<servlet-name>UifwPortlet</servlet-name>
-		<servlet-class>com.liferay.portal.kernel.servlet.PortletServlet</servlet-class>
-		<init-param>
-			<param-name>portlet-name</param-name>
-			<param-value>UifwPortlet</param-value>
-		</init-param>
-		<init-param>
-			<param-name>portlet-class</param-name>
-			<param-value>org.springframework.web.portlet.DispatcherPortlet</param-value>
-		</init-param>
-		<init-param>
-			<param-name>contextConfigLocation</param-name>
-			<param-value>/WEB-INF/tempo-ui-fw-portlet.xml</param-value>
-		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-	<servlet>
 		<servlet-name>JsonUpdate</servlet-name>
 		<servlet-class>org.intalio.tempo.uiframework.service.JsonUpdate</servlet-class>
 		<init-param>
@@ -89,16 +69,8 @@
 		<url-pattern>/WEB-INF/servlet/view</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
-		<servlet-name>UifwPortlet</servlet-name>
-		<url-pattern>/PlutoInvoker/UifwPortlet</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
 		<servlet-name>JsonUpdate</servlet-name>
 		<url-pattern>/json/update</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>UifwPortlet</servlet-name>
-		<url-pattern>/UifwPortlet/*</url-pattern>
 	</servlet-mapping>
 
     <!-- CAS config start (Remove from here if you don't want to use CAS server for authentication)-->
@@ -262,11 +234,6 @@
 			<el-ignored>false</el-ignored>
 			<trim-directive-whitespaces>true</trim-directive-whitespaces>
 		</jsp-property-group>
-
-		<taglib>
-			<taglib-uri>http://java.sun.com/portlet</taglib-uri>
-			<taglib-location>/WEB-INF/tld/liferay-portlet.tld</taglib-location>
-		</taglib>
 
 	</jsp-config>
 
