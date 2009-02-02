@@ -385,7 +385,7 @@
                                     <xforms:case id="viewTask" selected="true">
 	
                                         <xforms:trigger appearance="xxforms:image" style="float: top">
-                                            <xforms:label>Show/refresh attachments</xforms:label>
+                                            <xforms:label>Show/Refresh Attachments</xforms:label>
                                             <xxforms:img title="Add Attachments to Task" src="/images/attachments.gif"/>
                                             <xforms:action ev:event="DOMActivate">
                                                 <xforms:setvalue ref="instance('taskAttachments')/action" value="'show'"/>
@@ -397,7 +397,7 @@
                                         <xforms:group ref="instance('taskAttachments')" style="width : 97%; border-color: #CCCCCC; float: top">
                                                 <xforms:trigger appearance="xxforms:image" style="float: right">
                                                     <xforms:label>Close Attachments Section</xforms:label>
-                                                    <xxforms:img title="Close attachments" src="/images/close.png"/>
+                                                    <xxforms:img title="Close Attachments" src="/images/close.png"/>
                                                     <xforms:setvalue ev:event="DOMActivate" ref="instance('taskAttachments')/action" value="'hide'"/>
                                                 </xforms:trigger>
                                                 <xhtml:table
@@ -410,14 +410,14 @@
                                                     <xhtml:tr>
                                                         <xhtml:th/>
                                                         <xhtml:th>Title</xhtml:th>
-                                                        <xhtml:th>MIME type</xhtml:th>
-                                                        <xhtml:th>Create Date</xhtml:th>
+                                                        <xhtml:th>Mime Type</xhtml:th>
+                                                        <xhtml:th>Creation Date</xhtml:th>
                                                     </xhtml:tr>
                                                     <xforms:repeat nodeset="attachment" id="attachmentsTable">
                                                         <xhtml:tr>
                                                             <xhtml:td style="border-width: 0px; border-collapse: collapse;text-align: center">
                                                                 <xforms:trigger appearance="xxforms:image">
-                                                                    <xforms:label>Delete attachment</xforms:label>
+                                                                    <xforms:label>Delete Attachment</xforms:label>
                                                                     <xxforms:img title="Remove" src="/images/remove.gif"/>
                                                                     <xforms:action ev:event="DOMActivate">
                                                                         <xforms:setvalue
@@ -464,13 +464,13 @@
                                                     <xhtml:tr>
                                                         <xhtml:th colspan="5" title="Select Attachment Type" style="text-align: center">
                                                             <xforms:select1 appearance="minimal" ref="new/@content">
-                                                                <xforms:label>Add new attachment as </xforms:label>
+                                                                <xforms:label>Add New Attachment</xforms:label>
                                                                 <xforms:item>
-                                                                    <xforms:label>file &lt; 1Mb</xforms:label><!-- See oxf:/config/properties.xml#max-upload-size -->
+                                                                    <xforms:label>File &lt; 1Mb</xforms:label><!-- See oxf:/config/properties.xml#max-upload-size -->
                                                                     <xforms:value>file</xforms:value>
                                                                 </xforms:item>
                                                                 <xforms:item>
-                                                                    <xforms:label>text note</xforms:label>
+                                                                    <xforms:label>Text Note</xforms:label>
                                                                     <xforms:value>text</xforms:value>
                                                                 </xforms:item>
                                                             </xforms:select1>
@@ -480,7 +480,7 @@
                                                         <xhtml:td
                                                                 style="border-width: 0px; border-collapse: collapse;text-align: center">
                                                             <xforms:trigger ref="new/file/@attachFile" appearance="xxforms:image">
-                                                                <xforms:label>click to attach file</xforms:label>
+                                                                <xforms:label>Click to Attach File</xforms:label>
                                                                 <xxforms:img title="Attach File" src="/images/add.gif"/>
                                                                 <xforms:action ev:event="DOMActivate"
                                                                                xforms:if="not(string-length(normalize-space(instance('taskAttachments')/new/@title)) = 0)">
@@ -499,7 +499,7 @@
                                                             </xforms:trigger>
                                                             <xforms:trigger ref="new/plaintext/@attachText"
                                                                             appearance="xxforms:image">
-                                                                <xforms:label>click to attach text</xforms:label>
+                                                                <xforms:label>Click to Attach Text</xforms:label>
                                                                 <xxforms:img title="Attache text" src="/images/add.gif"/>
                                                                 <xforms:action ev:event="DOMActivate"
                                                                         if="not(string-length(normalize-space(instance('taskAttachments')/new/@title)) = 0 or string-length(normalize-space(instance('taskAttachments')/new/plaintext)) = 0)">
