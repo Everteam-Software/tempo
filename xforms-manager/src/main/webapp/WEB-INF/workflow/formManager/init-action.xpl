@@ -144,9 +144,6 @@
                             <tms:participantToken>
                                 <xsl:value-of select="/*:output/@participantToken"/>
                             </tms:participantToken>
-							<tms:user>
-                                <xsl:value-of select="/*:output/@user"/>
-							</tms:user>
 							<tms:formUrl>
                                 <xsl:value-of select="/*:output/@url"/>
 							</tms:formUrl>

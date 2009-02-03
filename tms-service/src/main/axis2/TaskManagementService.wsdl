@@ -188,7 +188,6 @@
 							</xsd:complexType>
 						</xsd:element>
 						<xsd:element name="participantToken" type="xsd:string"/>
-						<xsd:element name="user" type="xsd:string" minOccurs="0" />
 						<xsd:element name="formUrl" type="xsd:string" minOccurs="0" />
 					</xsd:sequence>
 				</xsd:complexType>

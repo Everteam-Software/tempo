@@ -236,7 +236,7 @@ public class TMSRequestProcessor extends OMUnmarshaller {
         }
     }
 
-    public OMElement initProcess(OMElement requestElement) throws AxisFault {
+    public OMElement initProcess(final OMElement requestElement) throws AxisFault {
         try {
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
             String taskID = requireElementValue(rootQueue, "taskId");
@@ -245,9 +245,10 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             if (omInputContainer.getFirstElement() != null) {
                 domInput = new TaskUnmarshaller().unmarshalTaskOutput(omInputContainer);
             }
-            String participantToken = requireElementValue(rootQueue, "participantToken");
-            String user = expectElementValue(rootQueue, "user");
-            String formUrl = expectElementValue(rootQueue, "formUrl");
+            final String participantToken = requireElementValue(rootQueue, "participantToken");
+            final UserRoles ur = _server.getUserRoles(participantToken);
+            final String user = ur.getUserID();            
+            final String formUrl = expectElementValue(rootQueue, "formUrl");
 
             Document userProcessResponse = _server.initProcess(taskID, user, formUrl, domInput, participantToken);
             if (userProcessResponse == null)
