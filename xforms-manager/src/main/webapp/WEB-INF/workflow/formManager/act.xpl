@@ -464,7 +464,7 @@
                                                     <xhtml:tr>
                                                         <xhtml:th colspan="5" title="Select Attachment Type" style="text-align: center">
                                                             <xforms:select1 appearance="minimal" ref="new/@content">
-                                                                <xforms:label>Add New Attachment</xforms:label>
+                                                                <xforms:label>Add New Attachment  </xforms:label>
                                                                 <xforms:item>
                                                                     <xforms:label>File &lt; 1Mb</xforms:label><!-- See oxf:/config/properties.xml#max-upload-size -->
                                                                     <xforms:value>file</xforms:value>
