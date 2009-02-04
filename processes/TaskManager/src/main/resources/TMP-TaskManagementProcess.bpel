@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<bpel:process xmlns:ode="http://www.apache.org/ode/type/extension" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:b4p="http://www.intalio.com/bpms/workflow/ib4p_20051115" xmlns:PreviousProcessTaskManager="http://example.com/TMP/PreviousProcessTaskManager" xmlns:UIFW="http://example.com/TMP/UIFW" xmlns:diag="http://example.com/TMP" xmlns:b4px="java:org.intalio.tempo.workflow.processes.xpath.UID" xmlns:UserBusinessProcess="http://example.com/TMP/UserBusinessProcess" xmlns:NextTaskManager="http://example.com/TMP/NextTaskManager" xmlns:this="http://example.com/TMP/TaskManagementProcess" xmlns:tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:UserBusinessProcess1="http://www.intalio.com/bpms/ubp" xmlns:TaskManagementSystem="http://example.com/TMP/TaskManagementSystem" xmlns:bpmn="http://www.intalio.com/bpms" xmlns:atomic="http://ode.apache.org/atomicScope" queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0" bpmn:label="TaskManagementProcess" bpmn:id="_opUVQKdvEdyId4P63ChZuw" name="TaskManagementProcess" targetNamespace="http://example.com/TMP/TaskManagementProcess">
+<bpel:process xmlns:ode="http://www.apache.org/ode/type/extension" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:b4p="http://www.intalio.com/bpms/workflow/ib4p_20051115" xmlns:PreviousProcessTaskManager="http://example.com/TMP/PreviousProcessTaskManager" xmlns:UIFW="http://example.com/TMP/UIFW" xmlns:diag="http://example.com/TMP" xmlns:b4px="java:org.intalio.tempo.workflow.processes.xpath.UID" xmlns:UserBusinessProcess="http://example.com/TMP/UserBusinessProcess" xmlns:NextTaskManager="http://example.com/TMP/NextTaskManager" xmlns:this="http://example.com/TMP/TaskManagementProcess" xmlns:tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:UserBusinessProcess1="http://www.intalio.com/bpms/ubp" xmlns:TaskManagementSystem="http://example.com/TMP/TaskManagementSystem" xmlns:bpmn="http://www.intalio.com/bpms" xmlns:atomic="http://ode.apache.org/atomicScope" queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0" bpmn:label="TaskManagementProcess" name="TaskManagementProcess" bpmn:id="_opUVQKdvEdyId4P63ChZuw" targetNamespace="http://example.com/TMP/TaskManagementProcess">
   <bpel:import namespace="http://example.com/TMP/TaskManagementProcess" location="TMP-TaskManagementProcess.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
   <bpel:import namespace="http://example.com/TMP" location="TMP.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
   <bpel:import namespace="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" location="TaskManagementSystem.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
   <bpel:import namespace="http://www.intalio.com/bpms/ubp" location="UserBusinessProcess.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
   <bpel:import namespace="http://www.intalio.com/bpms/workflow/ib4p_20051115" location="TaskManagerProcess.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
   <bpel:partnerLinks>
-    <bpel:partnerLink name="tMPAndUBPPlkVar" partnerLinkType="diag:TMPAndUBP" initializePartnerRole="true" myRole="TaskManagementProcess_for_UserBusinessProcessForUserBusinessProcessPort" partnerRole="UserBusinessProcess_for_TaskManagementProcessForUserProcessPort"/>
-    <bpel:partnerLink name="taskManagementProcessAndTaskManagementSystemPlkVar" partnerLinkType="diag:TaskManagementProcessAndTaskManagementSystem" initializePartnerRole="true" partnerRole="TaskManagementSystem_for_TaskManagementProcess"/>
-    <bpel:partnerLink name="taskManagementProcessAndPreviousProcessTaskManagerPlkVar" partnerLinkType="diag:TaskManagementProcessAndPreviousProcessTaskManager" initializePartnerRole="true" partnerRole="PreviousProcessTaskManager_for_TaskManagementProcess"/>
+    <bpel:partnerLink name="tMPAndUBPPlkVar" partnerLinkType="diag:TMPAndUBP" initializePartnerRole="yes" myRole="TaskManagementProcess_for_UserBusinessProcessForUserBusinessProcessPort" partnerRole="UserBusinessProcess_for_TaskManagementProcessForUserProcessPort"/>
+    <bpel:partnerLink name="taskManagementProcessAndTaskManagementSystemPlkVar" partnerLinkType="diag:TaskManagementProcessAndTaskManagementSystem" initializePartnerRole="yes" partnerRole="TaskManagementSystem_for_TaskManagementProcess"/>
+    <bpel:partnerLink name="taskManagementProcessAndPreviousProcessTaskManagerPlkVar" partnerLinkType="diag:TaskManagementProcessAndPreviousProcessTaskManager" initializePartnerRole="yes" partnerRole="PreviousProcessTaskManager_for_TaskManagementProcess"/>
     <bpel:partnerLink name="taskManagementProcessAndNextTaskManagerPlkVar" partnerLinkType="diag:TaskManagementProcessAndNextTaskManager" myRole="TaskManagementProcess_for_NextTaskManager"/>
     <bpel:partnerLink name="taskManagementProcessAndUIFWPlkVar" partnerLinkType="diag:TaskManagementProcessAndUIFW" myRole="TaskManagementProcess_for_UIFW"/>
   </bpel:partnerLinks>
@@ -177,7 +177,7 @@
         <bpel:to>$b4pNextTaskReadyMsg.root</bpel:to>
       </bpel:copy>
     </bpel:assign>
-    <bpel:assign bpmn:label="Create Task" name="Create_Task" bpmn:id="_kh8I0KdyEdyId4P63ChZuw">
+    <bpel:assign bpmn:label="Create Task" name="Create_Task-1" bpmn:id="_kh8I0KdyEdyId4P63ChZuw">
       <bpel:copy>
         <bpel:from>concat(b4px:create(), $ode:pid)</bpel:from>
         <bpel:to>$createTaskResponse.root/b4p:taskMetaData/b4p:taskId</bpel:to>
@@ -195,7 +195,7 @@
         <bpel:to>$createTaskResponse.root/b4p:taskMetaData/b4p:creationDate</bpel:to>
       </bpel:copy>
     </bpel:assign>
-    <bpel:reply partnerLink="tMPAndUBPPlkVar" portType="b4p:UserBusinessProcessPortType" operation="createTask" variable="createTaskResponse" bpmn:label="Create Task" name="Create_Task" bpmn:id="_kh8I0KdyEdyId4P63ChZuw">
+    <bpel:reply partnerLink="tMPAndUBPPlkVar" portType="b4p:UserBusinessProcessPortType" operation="createTask" variable="createTaskResponse" bpmn:label="Create Task" name="Create_Task-2" bpmn:id="_kh8I0KdyEdyId4P63ChZuw">
       <bpel:correlations>
         <bpel:correlation set="task" initiate="yes"></bpel:correlation>
       </bpel:correlations>
@@ -260,7 +260,7 @@
         </bpel:sequence>
       </bpel:elseif>
     </bpel:if>
-    <bpel:scope name="SubProcess_qCKssG7fEd2I0ZzPPBs2Wg" bpmn:label="SubProcess" bpmn:id="_qCKssG7fEd2I0ZzPPBs2Wg">
+    <bpel:scope bpmn:label="SubProcess" name="SubProcess" bpmn:id="_qCKssG7fEd2I0ZzPPBs2Wg">
       <bpel:faultHandlers>
         <bpel:catchAll>
           <bpel:empty bpmn:label="Empty_End_Event" name="Empty_End_Event" bpmn:id="_uIRmcG7fEd2I0ZzPPBs2Wg"/>
@@ -305,7 +305,7 @@
         <bpel:to>$createTMSTaskRequest.createRequest/tns:task/tns:metadata/tns:priority</bpel:to>
       </bpel:copy>
     </bpel:assign>
-    <bpel:invoke partnerLink="taskManagementProcessAndTaskManagementSystemPlkVar" portType="tns:TaskManagementServices" operation="create" inputVariable="createTMSTaskRequest" outputVariable="createTMSTaskResponse" bpmn:label="Create Task in Database" name="Create_Task_in_Database" bpmn:id="_jiUMsKgTEdylDI4yblkdQQ"></bpel:invoke>
+    <bpel:invoke partnerLink="taskManagementProcessAndTaskManagementSystemPlkVar" portType="tns:TaskManagementServices" operation="create" inputVariable="createTMSTaskRequest" outputVariable="createTMSTaskResponse" bpmn:label="Create Task in Database" name="Create_Task_in_Database-1" bpmn:id="_jiUMsKgTEdylDI4yblkdQQ"></bpel:invoke>
     <bpel:if>
       <bpel:condition>$createTaskRequest.root/b4p:taskMetaData/b4p:isChainedBefore/text() = "true"</bpel:condition>
       <bpel:sequence>
@@ -323,10 +323,10 @@
             <bpel:to>$b4pNextTaskReadyMsg.root/b4p:nextTaskId</bpel:to>
           </bpel:copy>
         </bpel:assign>
-        <bpel:invoke partnerLink="taskManagementProcessAndPreviousProcessTaskManagerPlkVar" portType="b4p:TMPPortType" operation="nextTaskReady" inputVariable="b4pNextTaskReadyMsg" bpmn:label="Notify previous Task Manager" name="Notify_previous_Task_Manager" bpmn:id="_DkaEoKgeEdylDI4yblkdQQ"></bpel:invoke>
+        <bpel:invoke partnerLink="taskManagementProcessAndPreviousProcessTaskManagerPlkVar" portType="b4p:TMPPortType" operation="nextTaskReady" inputVariable="b4pNextTaskReadyMsg" bpmn:label="Notify previous Task Manager" name="Notify_previous_Task_Manager-1" bpmn:id="_DkaEoKgeEdylDI4yblkdQQ"></bpel:invoke>
       </bpel:sequence>
     </bpel:if>
-    <bpel:scope name="SubProcess_TbKiIKhDEdyQFMjeTyvJzg" bpmn:label="SubProcess" bpmn:id="_TbKiIKhDEdyQFMjeTyvJzg">
+    <bpel:scope bpmn:label="SubProcess" name="SubProcess-1" bpmn:id="_TbKiIKhDEdyQFMjeTyvJzg">
       <bpel:variables>
         <bpel:variable name="tnsReassignRequestMsg" messageType="tns:reassignRequest"/>
         <bpel:variable name="tnsReassignResponseMsg" messageType="tns:okResponse"/>
@@ -352,7 +352,7 @@
       </bpel:variables>
       <bpel:faultHandlers>
         <bpel:catch faultName="this:DeadlineReached">
-          <bpel:scope name="SubProcess_3Ct-YLEgEdy6MtvbqSLrQw" bpmn:label="SubProcess" bpmn:id="_3Ct-YLEgEdy6MtvbqSLrQw">
+          <bpel:scope bpmn:label="SubProcess" name="SubProcess-2" bpmn:id="_3Ct-YLEgEdy6MtvbqSLrQw">
             <bpel:variables>
               <bpel:variable name="tnsFailResponseMsg" messageType="tns:okResponse"/>
               <bpel:variable name="tnsFailRequestMsg" messageType="tns:failRequest"/>
@@ -468,14 +468,14 @@
                   <bpel:to>$userBusinessProcess1NotifyTaskCompletionRequestMsg.root/b4p:status</bpel:to>
                 </bpel:copy>
               </bpel:assign>
-              <bpel:invoke partnerLink="tMPAndUBPPlkVar" portType="UserBusinessProcess1:userProcessPortType" operation="notifyTaskCompletion" inputVariable="userBusinessProcess1NotifyTaskCompletionRequestMsg" outputVariable="userBusinessProcess1NotifyTaskCompletionResponseMsg" bpmn:label="Notify Process Deadline Reached" name="Notify_Process_Deadline_Reached" bpmn:id="_UM9-sMK_EdyR9_IVnPh8Pg"></bpel:invoke>
+              <bpel:invoke partnerLink="tMPAndUBPPlkVar" portType="UserBusinessProcess1:userProcessPortType" operation="notifyTaskCompletion" inputVariable="userBusinessProcess1NotifyTaskCompletionRequestMsg" outputVariable="userBusinessProcess1NotifyTaskCompletionResponseMsg" bpmn:label="Notify Process Deadline Reached" name="Notify_Process_Deadline_Reached-1" bpmn:id="_UM9-sMK_EdyR9_IVnPh8Pg"></bpel:invoke>
               <bpel:assign bpmn:label="Change Task status to Failed" name="Change_Task_status_to_Failed" bpmn:id="_FyrywLEhEdy6MtvbqSLrQw">
                 <bpel:copy>
                   <bpel:from>$createTaskResponse.root/b4p:taskMetaData/b4p:taskId</bpel:from>
                   <bpel:to>$tnsFailRequestMsg.failRequest/tns:taskId</bpel:to>
                 </bpel:copy>
               </bpel:assign>
-              <bpel:invoke partnerLink="taskManagementProcessAndTaskManagementSystemPlkVar" portType="tns:TaskManagementServices" operation="fail" inputVariable="tnsFailRequestMsg" outputVariable="tnsFailResponseMsg" bpmn:label="Change Task status to Failed" name="Change_Task_status_to_Failed" bpmn:id="_FyrywLEhEdy6MtvbqSLrQw"></bpel:invoke>
+              <bpel:invoke partnerLink="taskManagementProcessAndTaskManagementSystemPlkVar" portType="tns:TaskManagementServices" operation="fail" inputVariable="tnsFailRequestMsg" outputVariable="tnsFailResponseMsg" bpmn:label="Change Task status to Failed" name="Change_Task_status_to_Failed-1" bpmn:id="_FyrywLEhEdy6MtvbqSLrQw"></bpel:invoke>
             </bpel:sequence>
           </bpel:scope>
         </bpel:catch>
@@ -496,7 +496,7 @@
           </bpel:if>
         </bpel:onAlarm>
       </bpel:eventHandlers>
-      <bpel:while name="SubProcess">
+      <bpel:while bpmn:label="SubProcess" name="SubProcess-3">
         <bpel:condition>not($taskCompleted)</bpel:condition>
         <bpel:sequence>
           <bpel:assign name="init-variables-SubProcess">
@@ -997,7 +997,7 @@
                     <bpel:to>$completeTMSTaskRequest.setOutputAndCompleteRequest/tns:participantToken</bpel:to>
                   </bpel:copy>
                 </bpel:assign>
-                <bpel:invoke partnerLink="taskManagementProcessAndTaskManagementSystemPlkVar" portType="tns:TaskManagementServices" operation="setOutputAndComplete" inputVariable="completeTMSTaskRequest" outputVariable="completeTMSTaskResponse" bpmn:label="Invoke TMS to mark Task as completed" name="Invoke_TMS_to_mark_Task_as_completed" bpmn:id="_wSyCIKhNEdyQFMjeTyvJzg"></bpel:invoke>
+                <bpel:invoke partnerLink="taskManagementProcessAndTaskManagementSystemPlkVar" portType="tns:TaskManagementServices" operation="setOutputAndComplete" inputVariable="completeTMSTaskRequest" outputVariable="completeTMSTaskResponse" bpmn:label="Invoke TMS to mark Task as completed" name="Invoke_TMS_to_mark_Task_as_completed-1" bpmn:id="_wSyCIKhNEdyQFMjeTyvJzg"></bpel:invoke>
                 <bpel:assign bpmn:label="getAttachements" name="getAttachements" bpmn:id="_6-GHIGmhEd2FXpqqOgbHYQ">
                   <bpel:copy>
                     <bpel:from>$completeTaskRequest.root/b4p:participantToken</bpel:from>
@@ -1008,7 +1008,7 @@
                     <bpel:to>$tnsGetAttachmentsRequestMsg.getAttachmentsRequest/tns:taskId</bpel:to>
                   </bpel:copy>
                 </bpel:assign>
-                <bpel:invoke partnerLink="taskManagementProcessAndTaskManagementSystemPlkVar" portType="tns:TaskManagementServices" operation="getAttachments" inputVariable="tnsGetAttachmentsRequestMsg" outputVariable="tnsGetAttachmentsResponseMsg" bpmn:label="getAttachements" name="getAttachements" bpmn:id="_6-GHIGmhEd2FXpqqOgbHYQ"></bpel:invoke>
+                <bpel:invoke partnerLink="taskManagementProcessAndTaskManagementSystemPlkVar" portType="tns:TaskManagementServices" operation="getAttachments" inputVariable="tnsGetAttachmentsRequestMsg" outputVariable="tnsGetAttachmentsResponseMsg" bpmn:label="getAttachements" name="getAttachements-1" bpmn:id="_6-GHIGmhEd2FXpqqOgbHYQ"></bpel:invoke>
                 <bpel:assign bpmn:label="notify Task Completion Request" name="notify_Task_Completion_Request" bpmn:id="_JP7KQKhQEdyQFMjeTyvJzg">
                   <bpel:copy>
                     <bpel:from>$createTaskResponse.root/b4p:taskMetaData/b4p:taskId</bpel:from>
@@ -1046,12 +1046,12 @@
                     <bpel:from>$tnsGetAttachmentsResponseMsg.getAttachmentsResponse</bpel:from>
                     <bpel:to>$notifyTaskCompletionRequest.root/b4p:taskMetaData/b4p:attachments</bpel:to>
                   </bpel:copy>
-                  <bpel:copy>
-                    <bpel:from>"niko"</bpel:from>
+                  <bpel:copy ignoreUninitializedFromVariable="yes" ignoreMissingFromData="yes">
+                    <bpel:from>$completeTaskRequest.root/b4p:user</bpel:from>
                     <bpel:to>$notifyTaskCompletionRequest.root/b4p:user</bpel:to>
                   </bpel:copy>
                 </bpel:assign>
-                <bpel:invoke partnerLink="tMPAndUBPPlkVar" portType="UserBusinessProcess1:userProcessPortType" operation="notifyTaskCompletion" inputVariable="notifyTaskCompletionRequest" outputVariable="notifyTaskCompletionResponse" bpmn:label="notify Task Completion Request" name="notify_Task_Completion_Request" bpmn:id="_JP7KQKhQEdyQFMjeTyvJzg"></bpel:invoke>
+                <bpel:invoke partnerLink="tMPAndUBPPlkVar" portType="UserBusinessProcess1:userProcessPortType" operation="notifyTaskCompletion" inputVariable="notifyTaskCompletionRequest" outputVariable="notifyTaskCompletionResponse" bpmn:label="notify Task Completion Request" name="notify_Task_Completion_Request-1" bpmn:id="_JP7KQKhQEdyQFMjeTyvJzg"></bpel:invoke>
                 <bpel:if>
                   <bpel:condition>$notifyTaskCompletionResponse.root/b4p:isChainedAfter/text() = "true"</bpel:condition>
                   <bpel:sequence>
@@ -1090,7 +1090,7 @@
                     <bpel:to>$completeTaskResponse.root/b4p:errorReason</bpel:to>
                   </bpel:copy>
                 </bpel:assign>
-                <bpel:reply partnerLink="taskManagementProcessAndUIFWPlkVar" portType="b4p:UIFWPortType" operation="completeTask" variable="completeTaskResponse" bpmn:label="send  Complete Task&#13;&#10; response back to UI" name="send__Complete_Task___response_back_to_UI" bpmn:id="_yEJboKhZEdyXuZws7kaYiQ"></bpel:reply>
+                <bpel:reply partnerLink="taskManagementProcessAndUIFWPlkVar" portType="b4p:UIFWPortType" operation="completeTask" variable="completeTaskResponse" bpmn:label="send  Complete Task&#13;&#10; response back to UI" name="send__Complete_Task___response_back_to_UI-1" bpmn:id="_yEJboKhZEdyXuZws7kaYiQ"></bpel:reply>
                 <bpel:assign bpmn:label="mark task &#13;&#10;as completed" name="mark_task___as_completed" bpmn:id="_Gri9cKhaEdyXuZws7kaYiQ">
                   <bpel:copy>
                     <bpel:from>true()</bpel:from>
@@ -1357,7 +1357,7 @@
                     <bpel:to>$tnsReassignRequestMsg.reassignRequest</bpel:to>
                   </bpel:copy>
                 </bpel:assign>
-                <bpel:invoke partnerLink="taskManagementProcessAndTaskManagementSystemPlkVar" portType="tns:TaskManagementServices" operation="reassign" inputVariable="tnsReassignRequestMsg" outputVariable="tnsReassignResponseMsg" bpmn:label="Invoke TMS to reassign Task" name="Invoke_TMS_to_reassign_Task" bpmn:id="_p3IKIKhJEdyQFMjeTyvJzg"></bpel:invoke>
+                <bpel:invoke partnerLink="taskManagementProcessAndTaskManagementSystemPlkVar" portType="tns:TaskManagementServices" operation="reassign" inputVariable="tnsReassignRequestMsg" outputVariable="tnsReassignResponseMsg" bpmn:label="Invoke TMS to reassign Task" name="Invoke_TMS_to_reassign_Task-1" bpmn:id="_p3IKIKhJEdyQFMjeTyvJzg"></bpel:invoke>
                 <bpel:assign bpmn:label="Send response back to UBP" name="Send_response_back_to_UBP" bpmn:id="_NRL9EKhMEdyQFMjeTyvJzg">
                   <bpel:copy>
                     <bpel:from>false()</bpel:from>
@@ -1368,7 +1368,7 @@
                     <bpel:to>$escalateTaskResponse.root/b4p:status</bpel:to>
                   </bpel:copy>
                 </bpel:assign>
-                <bpel:reply partnerLink="tMPAndUBPPlkVar" portType="b4p:UserBusinessProcessPortType" operation="escalateTask" variable="escalateTaskResponse" bpmn:label="Send response back to UBP" name="Send_response_back_to_UBP" bpmn:id="_NRL9EKhMEdyQFMjeTyvJzg"></bpel:reply>
+                <bpel:reply partnerLink="tMPAndUBPPlkVar" portType="b4p:UserBusinessProcessPortType" operation="escalateTask" variable="escalateTaskResponse" bpmn:label="Send response back to UBP" name="Send_response_back_to_UBP-1" bpmn:id="_NRL9EKhMEdyQFMjeTyvJzg"></bpel:reply>
                 <bpel:empty bpmn:label="Mark task &#13;&#10;as escalated" name="Mark_task___as_escalated" bpmn:id="_9BJAkKhMEdyQFMjeTyvJzg"/>
               </bpel:sequence>
             </bpel:onMessage>
@@ -1637,7 +1637,7 @@
                         <bpel:to>$tnsReassignRequestMsg.reassignRequest</bpel:to>
                       </bpel:copy>
                     </bpel:assign>
-                    <bpel:invoke partnerLink="taskManagementProcessAndTaskManagementSystemPlkVar" portType="tns:TaskManagementServices" operation="reassign" inputVariable="tnsReassignRequestMsg" outputVariable="tnsReassignResponseMsg" bpmn:label="reassign revoked task" name="reassign_revoked_task" bpmn:id="_TtOm0KklEdyFPr8ebhWveQ"></bpel:invoke>
+                    <bpel:invoke partnerLink="taskManagementProcessAndTaskManagementSystemPlkVar" portType="tns:TaskManagementServices" operation="reassign" inputVariable="tnsReassignRequestMsg" outputVariable="tnsReassignResponseMsg" bpmn:label="reassign revoked task" name="reassign_revoked_task-1" bpmn:id="_TtOm0KklEdyFPr8ebhWveQ"></bpel:invoke>
                     <bpel:reply partnerLink="taskManagementProcessAndUIFWPlkVar" portType="b4p:UIFWPortType" operation="revokeTask" variable="revokeTaskResponse" bpmn:label="send revoke Task &#13;&#10;response to UIFW" name="send_revoke_Task___response_to_UIFW" bpmn:id="_FpfJ0KkmEdyFPr8ebhWveQ"></bpel:reply>
                     <bpel:assign bpmn:label="mark task as &#13;&#10;not claimed" name="mark_task_as___not_claimed" bpmn:id="_KlyrwKkmEdyFPr8ebhWveQ">
                       <bpel:copy>
@@ -1648,7 +1648,7 @@
                   </bpel:sequence>
                   <bpel:else>
                     <bpel:sequence>
-                      <bpel:empty bpmn:label="Empty_End_Event" name="Empty_End_Event" bpmn:id="_AFhncKklEdyFPr8ebhWveQ"/>
+                      <bpel:empty bpmn:label="Empty_End_Event" name="Empty_End_Event-1" bpmn:id="_AFhncKklEdyFPr8ebhWveQ"/>
                     </bpel:sequence>
                   </bpel:else>
                 </bpel:if>
@@ -1901,14 +1901,14 @@
                 <bpel:if>
                   <bpel:condition>true() = $taskClaimed</bpel:condition>
                   <bpel:sequence>
-                    <bpel:empty bpmn:label="Empty_End_Event" name="Empty_End_Event" bpmn:id="_6ESDQKkPEdyRnIK1kDiFhA"/>
+                    <bpel:empty bpmn:label="Empty_End_Event" name="Empty_End_Event-2" bpmn:id="_6ESDQKkPEdyRnIK1kDiFhA"/>
                   </bpel:sequence>
                   <bpel:else>
                     <bpel:sequence>
                       <bpel:if>
                         <bpel:condition>$taskEscalated</bpel:condition>
                         <bpel:sequence>
-                          <bpel:assign bpmn:label="save previous owners from escalation request " name="save_previous_owners_from_escalation_request_" bpmn:id="_wb66gKkSEdyRnIK1kDiFhA">
+                          <bpel:assign bpmn:label="save previous owners from escalation request " name="save_previous_owners_from_escalation_request" bpmn:id="_wb66gKkSEdyRnIK1kDiFhA">
                             <bpel:copy>
                               <bpel:from>bpel:doXslTransform("userRoleOwner.xsl", $initialOwners, "metadata", $escalateTaskRequest.root)</bpel:from>
                               <bpel:to>$initialOwners</bpel:to>
@@ -1949,14 +1949,14 @@
                           <bpel:to>$tnsReassignRequestMsg.reassignRequest/tns:taskState</bpel:to>
                         </bpel:copy>
                       </bpel:assign>
-                      <bpel:invoke partnerLink="taskManagementProcessAndTaskManagementSystemPlkVar" portType="tns:TaskManagementServices" operation="reassign" inputVariable="tnsReassignRequestMsg" outputVariable="tnsReassignResponseMsg" bpmn:label="Invoke TMS to reassign claimed Task" name="Invoke_TMS_to_reassign_claimed_Task" bpmn:id="_D1muMKkiEdyFPr8ebhWveQ"></bpel:invoke>
+                      <bpel:invoke partnerLink="taskManagementProcessAndTaskManagementSystemPlkVar" portType="tns:TaskManagementServices" operation="reassign" inputVariable="tnsReassignRequestMsg" outputVariable="tnsReassignResponseMsg" bpmn:label="Invoke TMS to reassign claimed Task" name="Invoke_TMS_to_reassign_claimed_Task-1" bpmn:id="_D1muMKkiEdyFPr8ebhWveQ"></bpel:invoke>
                       <bpel:assign bpmn:label="send claim Task &#13;&#10;response to UIFW" name="send_claim_Task___response_to_UIFW" bpmn:id="_Vv8-cKkjEdyFPr8ebhWveQ">
                         <bpel:copy>
                           <bpel:from>true()</bpel:from>
                           <bpel:to>$taskClaimed</bpel:to>
                         </bpel:copy>
                       </bpel:assign>
-                      <bpel:reply partnerLink="taskManagementProcessAndUIFWPlkVar" portType="b4p:UIFWPortType" operation="claimTask" variable="claimTaskResponse" bpmn:label="send claim Task &#13;&#10;response to UIFW" name="send_claim_Task___response_to_UIFW" bpmn:id="_Vv8-cKkjEdyFPr8ebhWveQ"></bpel:reply>
+                      <bpel:reply partnerLink="taskManagementProcessAndUIFWPlkVar" portType="b4p:UIFWPortType" operation="claimTask" variable="claimTaskResponse" bpmn:label="send claim Task &#13;&#10;response to UIFW" name="send_claim_Task___response_to_UIFW-1" bpmn:id="_Vv8-cKkjEdyFPr8ebhWveQ"></bpel:reply>
                       <bpel:empty bpmn:label="mark task &#13;&#10;as claimed" name="mark_task___as_claimed" bpmn:id="_qcCL8KkjEdyFPr8ebhWveQ"/>
                     </bpel:sequence>
                   </bpel:else>
@@ -2217,7 +2217,7 @@
                     <bpel:to>$TMSskipRequest.skipRequest/tns:participantToken</bpel:to>
                   </bpel:copy>
                 </bpel:assign>
-                <bpel:invoke partnerLink="taskManagementProcessAndTaskManagementSystemPlkVar" portType="tns:TaskManagementServices" operation="skip" inputVariable="TMSskipRequest" outputVariable="TMSskipResponse" bpmn:label="Invoke TMS to skip Task" name="Invoke_TMS_to_skip_Task" bpmn:id="_H8BBcHB5Ed2pTYDSDTVx7Q"></bpel:invoke>
+                <bpel:invoke partnerLink="taskManagementProcessAndTaskManagementSystemPlkVar" portType="tns:TaskManagementServices" operation="skip" inputVariable="TMSskipRequest" outputVariable="TMSskipResponse" bpmn:label="Invoke TMS to skip Task" name="Invoke_TMS_to_skip_Task-1" bpmn:id="_H8BBcHB5Ed2pTYDSDTVx7Q"></bpel:invoke>
                 <bpel:reply partnerLink="taskManagementProcessAndUIFWPlkVar" portType="b4p:UIFWPortType" operation="skipTask" variable="b4pSkipTaskResponseMsg" bpmn:label="Message_Intermediate_Event" name="Message_Intermediate_Event" bpmn:id="_M8ajwHB6Ed2pTYDSDTVx7Q"></bpel:reply>
                 <bpel:assign bpmn:label="Mark Task as skipped" name="Mark_Task_as_skipped" bpmn:id="_ROAUwHB6Ed2pTYDSDTVx7Q">
                   <bpel:copy>
