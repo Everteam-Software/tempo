@@ -2,8 +2,8 @@
 install_dir: ../intalio
 #rebuild: true
 debug: true
-server: liferay_510
+# server: liferay_510
 # add_alfresco: true
-add_ldap: true
+add_ldap: false
 ldif: intalio-apacheds.ldif
 sanity_check: true

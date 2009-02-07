@@ -9,7 +9,7 @@
         error=false;
         m=method;
     	//var url = "http://localhost:8080/axis2/services/TaskManagementServices";
-    	var url = "http://localhost:8080/axis2/services/HumanTaskOperationServices";
+    	var url = "/axis2/services/HumanTaskOperationServices";
         //设置webService传入参数
         //
         //注意:

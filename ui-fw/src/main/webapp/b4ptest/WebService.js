@@ -222,26 +222,6 @@ function WebService(URL1, method1, options1){
 
 };
 
-Array.extend({
-	
-	toHash : function (splitChar)
-	{
-		var hash = new Hash({});
-		for(var i=0;i<this.length;i++)
-		{
-			
-			if(this[i].split(splitChar).length == 1) contrnue;
-
-			var key = this[i].split(splitChar)[0].trim();
-			var value = this[i].split(splitChar)[1].trim();
-			
-			hash.set(key, value);
-		}
-		
-		return hash;
-	}
-});
-
 function xmlscc(strData)
 {
 
