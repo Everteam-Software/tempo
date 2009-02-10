@@ -293,16 +293,16 @@
         <bpel:to>$createTMSTaskRequest.createRequest/tns:task/tns:metadata/tns:userProcessCompleteSOAPAction</bpel:to>
       </bpel:copy>
       <bpel:copy>
-        <bpel:from>current-dateTime()</bpel:from>
-        <bpel:to>$createTMSTaskRequest.createRequest/tns:task/tns:metadata/tns:creationDate</bpel:to>
-      </bpel:copy>
-      <bpel:copy>
         <bpel:from>"activity"</bpel:from>
         <bpel:to>$createTMSTaskRequest.createRequest/tns:task/tns:metadata/tns:taskType</bpel:to>
       </bpel:copy>
       <bpel:copy>
         <bpel:from>if (boolean(normalize-space($createTaskRequest.root/b4p:taskMetaData/b4p:priority))) then ($createTaskRequest.root/b4p:taskMetaData/b4p:priority) else ("")</bpel:from>
         <bpel:to>$createTMSTaskRequest.createRequest/tns:task/tns:metadata/tns:priority</bpel:to>
+      </bpel:copy>
+      <bpel:copy>
+        <bpel:from>$createTaskRequest.root/b4p:taskMetaData/b4p:creationDate</bpel:from>
+        <bpel:to>$createTMSTaskRequest.createRequest/tns:task/tns:metadata/tns:creationDate</bpel:to>
       </bpel:copy>
     </bpel:assign>
     <bpel:invoke partnerLink="taskManagementProcessAndTaskManagementSystemPlkVar" portType="tns:TaskManagementServices" operation="create" inputVariable="createTMSTaskRequest" outputVariable="createTMSTaskResponse" bpmn:label="Create Task in Database" name="Create_Task_in_Database-1" bpmn:id="_jiUMsKgTEdylDI4yblkdQQ"></bpel:invoke>
