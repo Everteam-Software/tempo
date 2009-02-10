@@ -300,7 +300,7 @@
         <bpel:from>if (boolean(normalize-space($createTaskRequest.root/b4p:taskMetaData/b4p:priority))) then ($createTaskRequest.root/b4p:taskMetaData/b4p:priority) else ("")</bpel:from>
         <bpel:to>$createTMSTaskRequest.createRequest/tns:task/tns:metadata/tns:priority</bpel:to>
       </bpel:copy>
-      <bpel:copy>
+      <bpel:copy ignoreUninitializedFromVariable="yes" ignoreMissingFromData="yes">
         <bpel:from>$createTaskRequest.root/b4p:taskMetaData/b4p:creationDate</bpel:from>
         <bpel:to>$createTMSTaskRequest.createRequest/tns:task/tns:metadata/tns:creationDate</bpel:to>
       </bpel:copy>
