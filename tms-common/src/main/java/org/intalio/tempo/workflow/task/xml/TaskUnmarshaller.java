@@ -181,11 +181,16 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
         resultTask.setDescription(description == null ? "" : description);
         
         
-        Calendar creationDate = taskMetadata.getCreationDate();
-		if (creationDate != null)
-			resultTask.setCreationDate(creationDate.getTime());
-		else
-			resultTask.setCreationDate(new Date()); 
+        try{
+            Calendar creationDate = taskMetadata.getCreationDate();
+            if (creationDate != null)
+                resultTask.setCreationDate(creationDate.getTime());
+            else
+                resultTask.setCreationDate(new Date());
+        } catch (XmlValueOutOfRangeException e) {
+            resultTask.setCreationDate(new Date());
+        }
+		 
 				
         authorize(resultTask, "claim", claim);
         authorize(resultTask, "revoke", revoke);
@@ -307,13 +312,18 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
         // / the following is added to support task deadlines
         if (ITaskWithDeadline.class.isAssignableFrom(taskClass)) {
             ITaskWithDeadline taskWithDeadline = (ITaskWithDeadline) resultTask;
-            Calendar deadline = taskMetadata.getDeadline();
-			if (deadline!=null) {
-                taskWithDeadline.setDeadline(deadline.getTime());
+            try{
+                Calendar deadline = taskMetadata.getDeadline();
+                if (deadline!=null) {
+                    taskWithDeadline.setDeadline(deadline.getTime());
+                }
+                else { 
+                    // do nothing, deadline is null by default
+                }
+            } catch (XmlValueOutOfRangeException e) {
+                // do nothing, not a valid xml date
             }
-			else { 
-                taskWithDeadline.setDeadline(null);
-            }
+            
         }
         
         // the following is added to support task priorities
