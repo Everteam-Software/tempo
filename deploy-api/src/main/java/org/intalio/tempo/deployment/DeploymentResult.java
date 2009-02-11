@@ -12,19 +12,21 @@
 
 package org.intalio.tempo.deployment;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Deployment result, encapsultates the result of deployment operations.
  */
-public class DeploymentResult {
-
-    private boolean _success;
-    private List<DeploymentMessage> _messages;
-    private AssemblyId _aid;
+public class DeploymentResult implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
+	private final boolean _success;
+    private final List<DeploymentMessage> _messages;
+    private final AssemblyId _aid;
     
-    public DeploymentResult(AssemblyId aid, boolean success, List<DeploymentMessage> messages) {
+	public DeploymentResult(AssemblyId aid, boolean success, List<DeploymentMessage> messages) {
         _aid = aid;
         _success = success;
         _messages = messages;

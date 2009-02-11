@@ -36,11 +36,18 @@ public class MockComponentManager implements ComponentManager {
     boolean _failDeactivate;
     boolean _failUndeploy;
 
+    public MockComponentManager() {
+    }
+
     public MockComponentManager(String name) {
         _name = name;
     }
     
-    public String getComponentManagerName() {
+    public void setName(String name) {
+		this._name = name;
+	}
+
+	public String getComponentManagerName() {
         return _name;
     }
 
@@ -98,6 +105,11 @@ public class MockComponentManager implements ComponentManager {
         _components.remove(name);
     }
 
+    public boolean isActivated(ComponentId name) {
+        Component c = _components.get(name);
+        if (c == null) throw new RuntimeException("Component "+name+" not deployed");
+        return c._activated;
+    }
     
     class Component {
         ComponentId _name;

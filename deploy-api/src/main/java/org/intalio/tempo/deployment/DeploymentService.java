@@ -38,5 +38,4 @@ public interface DeploymentService extends Remote {
      * Obtain the current list of deployed assemblies
      */
     Collection<DeployedAssembly> getDeployedAssemblies() throws RemoteException;
-    
 }

@@ -13,13 +13,9 @@ package org.intalio.tempo.deployment.impl;
 
 import static org.intalio.tempo.deployment.impl.LocalizedMessages._;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.rmi.Remote;
 import java.util.ArrayList;
@@ -29,7 +25,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -46,28 +41,16 @@ import org.intalio.tempo.deployment.DeploymentService;
 import org.intalio.tempo.deployment.DeploymentMessage.Level;
 import org.intalio.tempo.deployment.spi.ComponentManager;
 import org.intalio.tempo.deployment.spi.ComponentManagerResult;
-import org.intalio.tempo.deployment.spi.DeploymentServiceCallback;
+import org.intalio.tempo.deployment.spi.DeploymentServiceCallback;    
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.SystemPropertyUtils;
 
-import com.sun.enterprise.ee.cms.core.CallBack;
-import com.sun.enterprise.ee.cms.core.GMSConstants;
-import com.sun.enterprise.ee.cms.core.GMSFactory;
-import com.sun.enterprise.ee.cms.core.GroupHandle;
-import com.sun.enterprise.ee.cms.core.GroupManagementService;
-import com.sun.enterprise.ee.cms.core.MessageSignal;
-import com.sun.enterprise.ee.cms.core.Signal;
-import com.sun.enterprise.ee.cms.impl.client.FailureNotificationActionFactoryImpl;
-import com.sun.enterprise.ee.cms.impl.client.FailureSuspectedActionFactoryImpl;
-import com.sun.enterprise.ee.cms.impl.client.JoinNotificationActionFactoryImpl;
-import com.sun.enterprise.ee.cms.impl.client.MessageActionFactoryImpl;
-import com.sun.enterprise.ee.cms.impl.client.PlannedShutdownActionFactoryImpl;
-
 /**
  * Deployment service
  */
-public class DeploymentServiceImpl implements DeploymentService, Remote {
+public class DeploymentServiceImpl implements DeploymentService, Remote, ClusterListener {
     private static final Logger LOG = LoggerFactory.getLogger(DeploymentServiceImpl.class);
 
     // Constants
@@ -86,18 +69,12 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
 
     private List<String> _requiredComponentManagers = new ArrayList<String>();
 
-    private String _clusterServerId = "server-"+System.currentTimeMillis();
-    
-    private String _clusterGroupName = null;
-    
-    private Properties _clusterProperties = new Properties();
-
     //
     // Internal state
     //
 
     enum ServiceState {
-        INITIALIZED, STARTING, STARTED, STOPPING
+        INITIALIZED, CLUSTERIZING, STARTING, STARTED, STOPPING
     }
 
     private ServiceState _serviceState;
@@ -120,7 +97,6 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
 
     private Callback _callback = new Callback();
 
-    private boolean _coordinator = false;
 
     //
     // Services
@@ -130,13 +106,24 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
 
     private final StartTask _startTask = new StartTask();
 
+    private final TimerTask clusterizeTask = new TimerTask() {
+    	public void run() {
+    		try {
+    			cluster.start();
+    			onClustered();
+    		} catch( Exception e ) {
+    			e.printStackTrace();
+    		}
+    	}
+    };
+
     private final ScanTask _scanTask = new ScanTask();
 
     private DataSource _dataSource;
 
     private Persistence _persist;
 
-    private ClusterListener _cluster;
+    private Cluster cluster = new SingleNodeCluster();
     
     //
     // Constructor
@@ -149,7 +136,15 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
     // Accessors / Setters
     //
 
-    public String getDeployDirectory() {
+    public Cluster getCluster() {
+		return cluster;
+	}
+
+	public void setCluster(Cluster cluster) {
+		this.cluster = cluster;
+	}
+
+	public String getDeployDirectory() {
         return _deployDir;
     }
 
@@ -163,29 +158,6 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
 
     public void setScanPeriod(int scanPeriod) {
         _scanPeriod = scanPeriod;
-    }
-
-    public String getClusterServerId() {
-        return _clusterServerId;
-    }
-    
-    public void setClusterServerId(String serverId) {
-        _clusterServerId = serverId;
-    }
-
-    public String getClusterGroupName() {
-        return _clusterGroupName;
-    }
-    
-    public void setClusterGroupName(String groupName) {
-        _clusterGroupName = groupName;
-    }
-    public Properties getClusterProperties() {
-        return _clusterProperties;
-    }
-    
-    public void setClusterProperties(Properties props) {
-        _clusterProperties = props;
     }
 
     public void addComponentTypeMapping(String componentType, String componentManager) {
@@ -254,6 +226,17 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
             if (_serviceState != ServiceState.INITIALIZED) {
                 throw new IllegalStateException("Service not initialized");
             }
+            _serviceState = ServiceState.CLUSTERIZING;
+            LOG.info(_("DeploymentService state is now CLUSTERIZING"));
+            _timer.schedule(clusterizeTask, 0);
+        }
+    }
+
+    public void onClustered() {
+        synchronized (LIFECYCLE_LOCK) {
+            if (_serviceState != ServiceState.CLUSTERIZING) {
+                throw new IllegalStateException("Service not in clusterizing mode.");
+            }
             _serviceState = ServiceState.STARTING;
             LOG.info(_("DeploymentService state is now STARTING"));
             checkRequiredComponentManagersAvailable();
@@ -276,7 +259,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
         synchronized (LIFECYCLE_LOCK) {
             if (_serviceState == ServiceState.STARTED) {
                 _timer.cancel();
-                if (_cluster != null) _cluster.shutdown();
+                cluster.shutdown();
             }
             _serviceState = ServiceState.STOPPING;
             LOG.info(_("DeploymentService state is now STOPPING"));
@@ -442,8 +425,10 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
                     _persist.commitTransaction();
                     
                     deployed(assembly);
+                    
+                    cluster.sendMessage(new DeployedMessage(assembly));
+                    
                     activateAndStart(aid);
-
                 } else {
                     // in case of failure, we undeploy already deployed components
                     for (DeployedComponent dc : deployed) {
@@ -466,6 +451,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
                 _persist.rollbackTransaction("Unknown reason"); 
             }
         }
+        
         return result.finalResult();
     }
 
@@ -480,7 +466,10 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
         
         DeployedAssembly assembly = loadAssemblyState(aid);
         stopAndDeactivate(aid);
-        undeployed(assembly);
+        if (cluster.isCoordinator()) {
+            cluster.sendMessage(new UndeployedMessage(assembly));
+        }
+        onUndeployed(assembly);
         
         try {
             return undeployAssembly(assembly);
@@ -498,6 +487,10 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
      * start newly deployed assemblies.
      */
     public void scan() {
+    	if( !cluster.isCoordinator() ) {
+    		return;
+    	}
+    	
         LOG.debug(_("Scanning deployment directory {0}", _deployDir));
         LOG.debug(_("Component managers: {0}", _componentManagers));
         synchronized (DEPLOY_LOCK) {
@@ -647,11 +640,13 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
         return result.finalResult();
     }
 
-    private void deployed(DeployedAssembly assembly) {
-        if (_coordinator && _cluster != null) {
-            _cluster.sendMessage(new DeployedMessage(assembly));
-        }
+    public void onDeployed(DeployedAssembly assembly) {
+        deployed(assembly);
 
+        activateAndStart(assembly.getAssemblyId());
+    }
+    
+    private void deployed(DeployedAssembly assembly) {
         for (DeployedComponent dc : assembly.getDeployedComponents()) {
             try {
                 LOG.debug(_("Deployed component {0}", dc));
@@ -664,12 +659,8 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
             }
         }
     }
-    
-    private void undeployed(DeployedAssembly assembly) {
-        if (_coordinator && _cluster != null) {
-            _cluster.sendMessage(new UndeployedMessage(assembly));
-        }
 
+    public void onUndeployed(DeployedAssembly assembly) {
         for (DeployedComponent dc : assembly.getDeployedComponents()) {
             try {
                 LOG.debug(_("Undeployed component {0}", dc));
@@ -683,11 +674,13 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
         }
     }
     
-    private void activateAndStart(AssemblyId aid) {
+    private DeployedAssembly activateAndStart(AssemblyId aid) {
         DeployedAssembly assembly = loadAssemblyState(aid);
         List<DeployedAssembly> assemblies = new ArrayList<DeployedAssembly>();
         assemblies.add(assembly);
         activateAndStart(assemblies);
+        
+        return assembly;
     }
 
     private boolean activateAndStart(Collection<DeployedAssembly> assemblies) {
@@ -736,6 +729,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
                 }
             }
         }
+        
         return success;
     }
 
@@ -797,35 +791,37 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
                 }
             }
         }
+
         if (!available)
             LOG.info(_("Waiting for component managers: {0}", missing));
     }
 
+    public void sayHello() throws Exception {
+    	cluster.sayHello();
+    }
+    
     private void internalStart() {
         synchronized (DEPLOY_LOCK) {
-            if (_clusterGroupName != null) {
-                _cluster = new ClusterListener();
-                _cluster.start();
-            } else {
-                _coordinator = true;
-            }
-
-            if (_coordinator) {
-                try {
-                    scan();
-                } catch (Exception e) {
-                    LOG.error(_("Error while scanning deployment repository"), e);
-                }
+            try {
+                scan();
+            } catch (Exception e) {
+                LOG.error(_("Error while scanning deployment repository"), e);
             }
 
             Collection<DeployedAssembly> assemblies = getDeployedAssemblies();
+            // let the runtime ComponentManagers be aware of the deployed components
+            for( DeployedAssembly assembly : assemblies ) {
+            	for( DeployedComponent component : assembly.getDeployedComponents() ) {
+            		ComponentManager manager = _componentManagers.get(component.getComponentManagerName());
+            		manager.deployed(component.getComponentId(), new File(component.getComponentDir()));
+            	}
+            }
+            
             if (activateAndStart(assemblies)) {
-                
                 _serviceState = ServiceState.STARTED;
                 LOG.info(_("DeploymentService state is now STARTED"));
-                if (_coordinator) {
-                    _timer.schedule(_scanTask, _scanPeriod * 1000, _scanPeriod * 1000);
-                }
+
+                _timer.schedule(_scanTask, _scanPeriod * 1000, _scanPeriod * 1000);
             }
         }
     }
@@ -1021,6 +1017,15 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
 
     private void assertStarted() {
         synchronized (LIFECYCLE_LOCK) {
+        	int secs = 10;
+            while (secs-- > 0 && _serviceState != ServiceState.STARTED) {
+                try {
+                	LOG.info("Deployment has been requested. However, the service is still starting up(retrying in 1 sec).");
+					LIFECYCLE_LOCK.wait(1000);
+				} catch (InterruptedException e) {
+					throw new RuntimeException(e);
+				}
+            }
             if (_serviceState != ServiceState.STARTED) {
                 throw new IllegalStateException(_("Service not started.  Current state is {0}", _serviceState));
             }
@@ -1220,99 +1225,6 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
 
     }
     
-    public class ClusterListener implements CallBack {
-        GroupManagementService _gms;
-        
-        public void start() {
-            try {
-                LOG.info(_("Starting cluster lifecycle manager: serverId={0} groupName={1}", _clusterServerId, _clusterGroupName));
-                _gms = (GroupManagementService) GMSFactory.startGMSModule(_clusterServerId, _clusterGroupName, 
-                        GroupManagementService.MemberType.CORE, _clusterProperties);
-                _gms.addActionFactory(new JoinNotificationActionFactoryImpl(this));
-                _gms.addActionFactory(new FailureSuspectedActionFactoryImpl(this));
-                _gms.addActionFactory(new FailureNotificationActionFactoryImpl(this));
-                _gms.addActionFactory(new PlannedShutdownActionFactoryImpl(this));
-                _gms.addActionFactory(new MessageActionFactoryImpl(this), DEPLOY_COMPONENT);
-                _gms.join();
-                updateCoordinatorStatus();
-            } catch (Exception e) {
-                LOG.error("Error while starting cluster lifecycle manager", e);
-            }
-        }
-        
-        public void shutdown() {
-            _gms.shutdown(GMSConstants.shutdownType.INSTANCE_SHUTDOWN);
-        }
-        
-        public void processNotification(Signal signal) {
-            try {
-                signal.acquire();
-                try {
-                    if (signal instanceof MessageSignal) {
-                        if (signal.getMemberToken() != null)
-                            LOG.info(_("Cluster message received from {0}: {1}", signal.getMemberToken(), signal.toString()));
-                        else 
-                            LOG.info(_("Cluster message received: {0}", signal.toString()));
-
-                        Object obj = deserialize(((MessageSignal) signal).getMessage());
-                        if (obj instanceof DeployedMessage) {
-                            DeployedMessage msg = (DeployedMessage) obj;
-                            deployed(msg.assembly);
-                        } else if (obj instanceof UndeployedMessage) {
-                            UndeployedMessage msg = (UndeployedMessage) obj;
-                            undeployed(msg.assembly);
-                        } else {
-                            LOG.error(_("Unknown cluster message received: {0}", obj.toString()));
-                        }
-                    } else {
-                        LOG.info(_("Notification received from {0}: {1}", signal.getMemberToken(), signal.toString()));
-                        updateCoordinatorStatus();
-                    }
-                } finally {
-                    try {
-                        signal.release();
-                    } catch (Exception e) {
-                        LOG.error("Error releasing cluster notification", e);
-                    }
-                }
-            } catch (Exception e) {
-                LOG.error("Error processing cluster notification", e);
-            }
-        }
-
-        void sendMessage(Serializable obj) {
-            String msgName = obj.getClass().getSimpleName();
-            LOG.debug(_("Sending cluster message: {0}", msgName));
-            try {
-                GroupHandle gh = _gms.getGroupHandle();
-                gh.sendMessage(DEPLOY_COMPONENT, serialize(obj));
-            } catch (Exception e) {
-                LOG.error(_("Error while sending cluster message: {0}", msgName), e);
-            }
-        }
-
-        byte[] serialize(Serializable obj) throws IOException {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream() ;
-            ObjectOutputStream out = new ObjectOutputStream(bos) ;
-            out.writeObject(obj);
-            out.close();
-            return bos.toByteArray();
-        }
-        
-        Object deserialize(byte[] bytes) throws IOException, ClassNotFoundException {
-            ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(bytes));
-            Object obj = in.readObject();
-            in.close();
-            return obj;
-        }
-
-        void updateCoordinatorStatus() {
-            _coordinator = _clusterServerId.equals(_gms.getGroupHandle().getGroupLeader());
-            LOG.info(_("Coordinator: {0}", _coordinator));
-        }
-
-    }
-    
     static class DeployedMessage implements Serializable {
         private static final long serialVersionUID = 1L;
         
@@ -1332,7 +1244,6 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
             this.assembly = assembly;
         }
     }
-
 }
 
 /**
