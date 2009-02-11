@@ -27,7 +27,6 @@ import java.util.Iterator;
 import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.xmlbeans.XmlAnySimpleType;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
@@ -107,12 +106,6 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
 
         AuthIdentifierSet userOwners = new AuthIdentifierSet(Arrays.asList(taskMetadata.getUserOwnerArray()));
         AuthIdentifierSet roleOwners = new AuthIdentifierSet(Arrays.asList(taskMetadata.getRoleOwnerArray()));
-        String deadline = null;
-
-        if (taskMetadata.xgetDeadline() != null && taskMetadata.xgetDeadline().validate()) {
-            Calendar cal = taskMetadata.getDeadline();
-            deadline = cal.toString();
-        }
 
         Integer priority = null;
         if (taskMetadata.xgetPriority() != null && taskMetadata.xgetPriority().validate()) {
@@ -187,13 +180,13 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
 
         resultTask.setDescription(description == null ? "" : description);
         
-        XmlAnySimpleType calcd = taskMetadata.xgetCreationDate();
-        if (calcd != null && calcd.validate() && (calcd.toString().trim().length() > 0)) {
-                resultTask.setCreationDate(new XsdDateTime(calcd.getStringValue()).getTime());
-        } else {
-                resultTask.setCreationDate(new Date());
-        } 
-
+        
+        Calendar creationDate = taskMetadata.getCreationDate();
+		if (creationDate != null)
+			resultTask.setCreationDate(creationDate.getTime());
+		else
+			resultTask.setCreationDate(new Date()); 
+				
         authorize(resultTask, "claim", claim);
         authorize(resultTask, "revoke", revoke);
         authorize(resultTask, "save", save);
@@ -314,9 +307,11 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
         // / the following is added to support task deadlines
         if (ITaskWithDeadline.class.isAssignableFrom(taskClass)) {
             ITaskWithDeadline taskWithDeadline = (ITaskWithDeadline) resultTask;
-            if ((deadline != null) && (deadline.trim().length() > 0)) {
-                taskWithDeadline.setDeadline(new XsdDateTime(deadline).getTime());
-            } else {
+            Calendar deadline = taskMetadata.getDeadline();
+			if (deadline!=null) {
+                taskWithDeadline.setDeadline(deadline.getTime());
+            }
+			else { 
                 taskWithDeadline.setDeadline(null);
             }
         }

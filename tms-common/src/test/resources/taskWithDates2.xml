@@ -18,6 +18,7 @@
     <description>task description</description>
     <processId>processId</processId>
     <creationDate>2008-09-25T20:48:29.622+08:00</creationDate>
+    <deadline>2008-09-25T20:48:29.622+08:00</deadline>
     <userOwner>test.user1</userOwner>
     <userOwner>test\user2</userOwner>
     <userOwner>test/user3</userOwner>

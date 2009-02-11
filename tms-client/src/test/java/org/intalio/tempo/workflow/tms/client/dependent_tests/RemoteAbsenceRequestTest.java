@@ -239,9 +239,9 @@ public class RemoteAbsenceRequestTest extends TestCase {
         _log.info("Let's claim the task: no one else can access this task apart from user:" + user);
         sendSoapToTMP(claim(token, id, user), "claimTask");
         _log.info("Let's revoke the task:every one can access this task again");
-        sendSoapToTMP(revoke(token, id).toString(), "revokeTask");
+        sendSoapToTMP(revoke(token, id), "revokeTask");
         _log.info("complete the PA task with some output");
-        sendSoapToTMP(complete(token, id, complete).toString(), "completeTask");
+        sendSoapToTMP(complete(token, id, complete), "completeTask");
 
         _log.info("sleep again to wait for the notification");
         Thread.sleep(SLEEP_TIME);
