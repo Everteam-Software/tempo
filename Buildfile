@@ -1,5 +1,3 @@
-gem "buildr"
-
 require "rubygems"
 require "buildr"
 require "buildr/xmlbeans"
