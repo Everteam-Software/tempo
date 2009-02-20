@@ -1,12 +1,10 @@
 /**
- * Copyright (C) 2003, Intalio Inc.
+ * Copyright (C) 2008, Intalio Inc.
  *
  * The program(s) herein may be used and/or copied only with
  * the written permission of Intalio Inc. or in accordance with
  * the terms and conditions stipulated in the agreement/contract
  * under which the program(s) have been supplied.
- *
- * $Id: SimpleSpringTest.java,v 1.5 2005/03/29 22:09:07 ssahuc Exp $
  */
 
 package org.intalio.tempo.deployment.impl;
@@ -37,25 +35,30 @@ public class MockComponentManager implements ComponentManager {
     boolean _failStop;
     boolean _failDeactivate;
     boolean _failUndeploy;
+    boolean _failReserve;
+
+    public MockComponentManager() {
+    }
 
     public MockComponentManager(String name) {
         _name = name;
     }
     
-    public String getComponentManagerName() {
+    public void setName(String name) {
+		this._name = name;
+	}
+
+	public String getComponentManagerName() {
         return _name;
     }
 
-    public ComponentManagerResult deploy(ComponentId name, File path) {
+    public ComponentManagerResult deploy(ComponentId name, File path, boolean activate) {
         List<DeploymentMessage> messages = new ArrayList<DeploymentMessage>();
-        
-        if (_failDeployment) throw new RuntimeException("Deployment force failed");
-        _components.put(name, new Component(name, path));
-        
+        if (_failDeployment) throw new RuntimeException("Deployment force-failed");
         return new ComponentManagerResult(messages);  
     }
 
-    public void activate(ComponentId name, File path) {
+    public void initialize(ComponentId name, File path) {
         if (_failActivate) throw new RuntimeException("Activate force failed");
 
         Component c = _components.get(name);
@@ -63,8 +66,8 @@ public class MockComponentManager implements ComponentManager {
         c._activated = true;
     }
 
-    public void deactivate(ComponentId name) {
-        if (_failDeactivate) throw new RuntimeException("Deactivate force failed");
+    public void dispose(ComponentId name) {
+        if (_failDeactivate) throw new RuntimeException("Deactivate force-failed");
 
         Component c = _components.get(name);
         if (c == null) throw new RuntimeException("Component "+name+" not deployed");
@@ -89,25 +92,26 @@ public class MockComponentManager implements ComponentManager {
 
     public void undeploy(ComponentId name, List<String> deployedObjects) {
         if (_failUndeploy) throw new RuntimeException("Undeploy force failed");
-        _components.remove(name);
     }
 
     public boolean isDeployed(ComponentId name) {
         return _components.containsKey(name);
     }
     
+    public void deployed(ComponentId name, File path) {
+        _components.put(name, new Component(name, path));
+    }
+
+    public void undeployed(ComponentId name) {
+        _components.remove(name);
+    }
+
     public boolean isActivated(ComponentId name) {
         Component c = _components.get(name);
         if (c == null) throw new RuntimeException("Component "+name+" not deployed");
         return c._activated;
     }
-
-    public boolean isStarted(ComponentId name) {
-        Component c = _components.get(name);
-        if (c == null) throw new RuntimeException("Component "+name+" not deployed");
-        return c._started;
-    }
-
+    
     class Component {
         ComponentId _name;
         File _path;
@@ -119,4 +123,12 @@ public class MockComponentManager implements ComponentManager {
             _path = path;
         }
     }
+
+	public void activate(ComponentId name) {
+        if (_failActivate) throw new RuntimeException("Activate force-failed");
+	}
+
+	public void retire(ComponentId name) {
+        if (_failReserve) throw new RuntimeException("Reserve force-failed");
+	}
 }

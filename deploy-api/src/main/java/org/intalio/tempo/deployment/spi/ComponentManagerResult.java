@@ -24,23 +24,23 @@ public class ComponentManagerResult implements Serializable {
     
     final static List<String> EMPTY_LIST = new ArrayList<String>(0); 
     private List<DeploymentMessage> messages;
-    private List<String> deployedObjects;
+    private List<String> deployedResources;
 
-    public ComponentManagerResult(List<DeploymentMessage> messages, List<String> deployedObjects) {
+    public ComponentManagerResult(List<DeploymentMessage> messages, List<String> deployedResources) {
         this.messages = messages;
-        this.deployedObjects = deployedObjects;
+        this.deployedResources = deployedResources;
     }
     
     public ComponentManagerResult(List<DeploymentMessage> messages) {
         this.messages = messages;
-        this.deployedObjects = EMPTY_LIST;
+        this.deployedResources = EMPTY_LIST;
     }
 
     public List<DeploymentMessage> getMessages() {
         return messages;
     }
 
-    public List<String> getDeployedObjects() {
-        return deployedObjects;
+    public List<String> getDeployedResources() {
+        return deployedResources;
     }
 }

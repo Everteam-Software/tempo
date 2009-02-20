@@ -65,20 +65,16 @@ public class RemoteComponentManager implements ComponentManager {
         }
     }
     
-    public ComponentManagerResult deploy(ComponentId name, File path) {
-        return getComponentManager().deploy(name, path);
-    }
-
     public void undeploy(ComponentId name, List<String> deployedObjects) {
         getComponentManager().undeploy(name, deployedObjects);
     }
 
-    public void activate(ComponentId name, File path) {
-        getComponentManager().activate(name, path);
+    public void initialize(ComponentId name, File path) {
+        getComponentManager().initialize(name, path);
     }
 
-    public void deactivate(ComponentId name) {
-        getComponentManager().deactivate(name);
+    public void dispose(ComponentId name) {
+        getComponentManager().dispose(name);
     }
 
     public void start(ComponentId name) {
@@ -89,4 +85,23 @@ public class RemoteComponentManager implements ComponentManager {
         getComponentManager().stop(name);
     }
 
+    public void deployed(ComponentId name, File path) {
+        getComponentManager().deployed(name, path);
+    }
+
+    public void undeployed(ComponentId name) {
+        getComponentManager().undeployed(name);
+    }
+
+	public void activate(ComponentId name) {
+		getComponentManager().activate(name);
+	}
+
+	public ComponentManagerResult deploy(ComponentId name, File path, boolean activate) {
+		return getComponentManager().deploy(name, path, activate);
+	}
+
+	public void retire(ComponentId name) {
+		getComponentManager().retire(name);
+	}
 }

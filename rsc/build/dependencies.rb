@@ -73,6 +73,7 @@ QOM = "net.sf.qom:qom:jar:0.1alpha3"
 SUNACTIVATION = ["javax.activation:activation:jar:1.1.1"]
 SUNMAIL = ["javax.mail:mail:jar:1.4.1", SUNACTIVATION]
 SERVLET_API = "javax.servlet:servlet-api:jar:2.4" 
+SHOAL = [ "net.java.dev.shoal:shoal-jxta:jar:1.0.20071114", "net.java.dev.shoal:shoal-gms:jar:1.0.20071114" ]
 SLF4J = group(%w{ slf4j-api slf4j-log4j12 jcl104-over-slf4j }, :under=>"org.slf4j", :version=>"1.4.3")
 SPRING = {
   :core => "org.springframework:spring:jar:2.5.5",

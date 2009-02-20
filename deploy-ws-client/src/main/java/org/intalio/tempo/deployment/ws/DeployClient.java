@@ -162,4 +162,13 @@ public class DeployClient implements DeploymentService {
         return element;
     }
 
+	public void activate(AssemblyId assemblyId) {
+		// TODO implement this
+		throw new RuntimeException("Not implemented yet!!!");
+	}
+
+	public void retire(AssemblyId assemblyId) {
+		// TODO implement this
+		throw new RuntimeException("Not implemented yet!!!");
+	}
 }

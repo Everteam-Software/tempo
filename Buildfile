@@ -68,7 +68,7 @@ define "tempo" do
 
   desc "Deployment Service Implementation"
   define "deploy-impl" do
-    compile.with projects("deploy-api", "web-nutsNbolts"), SERVLET_API, SLF4J, SPRING[:core]
+    compile.with projects("deploy-api", "web-nutsNbolts"), SERVLET_API, SHOAL, SLF4J, SPRING[:core]
     test.with LOG4J, XERCES
     test.exclude '*TestUtils*'
     package :jar

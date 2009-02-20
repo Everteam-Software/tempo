@@ -26,6 +26,8 @@ import org.intalio.tempo.deployment.AssemblyId;
 import org.intalio.tempo.deployment.DeployedAssembly;
 import org.intalio.tempo.deployment.DeployedComponent;
 import org.intalio.tempo.deployment.DeploymentResult;
+import org.intalio.tempo.deployment.impl.DeployServiceDeployTest;
+import org.intalio.tempo.deployment.impl.MockComponentManager;
 import org.junit.Test;
 
 /**
@@ -48,6 +50,15 @@ public class DeployWSTest extends TestCase {
         String user = System.getProperty("org.intalio.tempo.deploy.ws.user");
         String password = System.getProperty("org.intalio.tempo.deploy.ws.password");
         String token = System.getProperty("org.intalio.tempo.deploy.ws.token");
+
+        DeployServiceDeployTest test = new DeployServiceDeployTest();
+        try {
+            test.setUp();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IllegalStateException(e);
+        }
+
         if (endpoint != null) {
             System.out.println("Using LIVE ENDPOINT "+endpoint);
             _client = new DeployClient();
@@ -57,6 +68,8 @@ public class DeployWSTest extends TestCase {
             _client.setToken(token);
         } else {
             _client = new DeployClientMock();
+            MockComponentManager mock = new MockComponentManager("MockEngine");
+            ((DeployClientMock)_client)._deployWS._deployService.getCallback().available(mock);
         }
     }
 
@@ -65,7 +78,11 @@ public class DeployWSTest extends TestCase {
         String file = DeployWSTest.class.getClassLoader().getResource("assembly1.zip").getFile();
         FileInputStream zip = new FileInputStream(file);
         DeploymentResult result = _client.deployAssembly("assembly1", zip, true);
+        if (!result.isSuccessful())
+            System.out.println(result);
+        assertTrue(result.isSuccessful());
         assertEquals("assembly1", result.getAssemblyId().getAssemblyName());
+        
     }
 
     @Test
@@ -82,20 +99,43 @@ public class DeployWSTest extends TestCase {
     @Test
     public void testDeployGetUndeployAssemblies() throws Exception {
         Collection<DeployedAssembly> assemblies = _client.getDeployedAssemblies();
-        int size = assemblies.size(); 
-        this.testDeploy();
+        for (DeployedAssembly assembly : assemblies) {
+            System.out.println("already deployed: "+assembly);
+            if (assembly.getAssemblyId().getAssemblyName().equals("assembly1")) {
+                testUndeploy();
+            }
+        }   
         assemblies = _client.getDeployedAssemblies();
-        assertEquals(size+1, assemblies.size());
-        for(DeployedAssembly assembly : assemblies) {
+        for (DeployedAssembly assembly : assemblies) {
+            System.out.println("already deployed after: "+assembly);
+            assertFalse("assembly1 not undeployed", assembly.getAssemblyId().getAssemblyName().equals("assembly1"));
+        }
+
+        this.testDeploy();
+
+        assemblies = _client.getDeployedAssemblies();
+        boolean deployed = false;
+        for (DeployedAssembly assembly : assemblies) {
+            System.out.println("deployed: "+assembly);
             Collection<DeployedComponent> components = assembly.getDeployedComponents();
-            if(assembly.getAssemblyId().equals("AbsenceRequest")) {
+            if (assembly.getAssemblyId().equals("AbsenceRequest")) {
                 assertTrue(components.size() >= 2);
             }
+            if (assembly.getAssemblyId().getAssemblyName().equals("assembly1")) {
+                deployed = true;
+                break;
+            }
         }
+        assertTrue("assembly1 deployed", deployed);
+        
         this.testUndeploy();
+
         assemblies = _client.getDeployedAssemblies();
-        assertEquals(size, assemblies.size());
+        for (DeployedAssembly assembly : assemblies) {
+            assertFalse("assembly1 not undeployed", assembly.getAssemblyId().getAssemblyName().equals("assembly1"));
+        }
     }
+
 
     static class DeployClientMock extends DeployClient {
 

@@ -39,4 +39,20 @@ public interface DeploymentService extends Remote {
      */
     Collection<DeployedAssembly> getDeployedAssemblies() throws RemoteException;
     
+    /**
+     * Activates the version of the assembly specified by the given assembly id. To activate a version is to
+     * set the version as the default one. This method retires any pre-activated versions if they are
+     * different from the specified version.
+     * 
+     * @param name
+     */
+    void activate(AssemblyId assemblyId);
+    
+    /**
+     * Retires the version of the assembly specified by the given assembly id. This method does nothing if the 
+     * given version is already retired.
+     * 
+     * @param name
+     */
+    void retire(AssemblyId assemblyId);
 }

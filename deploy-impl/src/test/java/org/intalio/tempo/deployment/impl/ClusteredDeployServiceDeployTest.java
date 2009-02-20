@@ -16,6 +16,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -25,35 +29,47 @@ import org.apache.log4j.PropertyConfigurator;
 import org.intalio.tempo.deployment.AssemblyId;
 import org.intalio.tempo.deployment.ComponentId;
 import org.intalio.tempo.deployment.DeploymentResult;
+import org.intalio.tempo.deployment.DeploymentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.remoting.rmi.RmiServiceExporter;
 
 /**
  * Deployment Service implementation test
  */
-public class DeployServiceDeployTest extends TestCase {
+public class ClusteredDeployServiceDeployTest extends TestCase {
     
-    static final Logger LOG = LoggerFactory.getLogger(DeployServiceDeployTest.class);
+    static final Logger LOG = LoggerFactory.getLogger(ClusteredDeployServiceDeployTest.class);
 
     File _deployDir = TestUtils.getTempDeployDir();
+    
+    ClusteredNode coordinator;
 
-    DeploymentServiceImpl service;
-    MockComponentManager manager;
+//    DeploymentServiceImpl service;
+//    MockComponentManager manager;
+//    
+//    DeploymentServiceImpl service2;
+//    DeploymentServiceImpl service3;
+//    MockComponentManager manager2;
+//    MockComponentManager manager3;
+    
+    ClusterProxy cluster;
     
     public void setUp() throws Exception {
         PropertyConfigurator.configure(new File(TestUtils.getTestBase(), "log4j.properties").getAbsolutePath());
-        
         Utils.deleteRecursively(_deployDir);
-        
-        manager = new MockComponentManager("MockEngine");
 
-        service = loadDeploymentService("test1.xml");
-        service.setDeployDirectory(_deployDir.getAbsolutePath());
-        service.init();
-        
-        DataSource ds = service.getDataSource();
+        XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource("clustered-test.xml"));
+		cluster = (ClusterProxy)factory.getBean("cluster");
+		cluster.startUpProcesses();
+		Thread.sleep(6000);
+		
+		cluster.setNodes((List<ClusteredNode>) factory.getBean("nodes"));
+
+		// setup database
+        DataSource ds = cluster.getDataSource();
 
         ClassPathResource script = new ClassPathResource("deploy.derby.sql");
         if (script == null) throw new IOException("Unable to find file: deploy.derby.sql");
@@ -70,24 +86,7 @@ public class DeployServiceDeployTest extends TestCase {
     }
 
     public void tearDown() throws Exception {
-        service.stop();
-    }
-
-    private void start() {
-        service.getCallback().available(manager);
-
-        service.start();
-
-        int i=0;
-        while (true) {
-            if (service.isStarted()) break;
-            wait(1);
-            i++;
-            if (i>5) break;
-        }
-
-        if (!service.isStarted()) throw new RuntimeException("DeploymentService cannot start?");
-
+    	cluster.shutDownProcesses();
     }
 
     public DeploymentServiceImpl loadDeploymentService(String xmlConfigFile)
@@ -96,133 +95,60 @@ public class DeployServiceDeployTest extends TestCase {
         ClassPathResource config = new ClassPathResource(xmlConfigFile);
         XmlBeanFactory factory = new XmlBeanFactory( config );
         DeploymentServiceImpl deployService = (DeploymentServiceImpl) factory.getBean("deploymentService");
+        
 		return deployService;
     }
 
-    public void testAccessors() throws Exception {
-        // check accessors
-        assertEquals(_deployDir.getAbsolutePath(), service.getDeployDirectory());
-
-        service.setScanPeriod(10);
-        assertEquals(10, service.getScanPeriod());
-    }
-
     public void testDeployBasic1() throws Exception {
-        start();
+        cluster.startDeploymentService();
+        coordinator = cluster.findCoordinator();
         
-        File assemblyDir = TestUtils.getAssemblyDir("assembly1");
-        DeploymentResult result = service.deployExplodedAssembly(assemblyDir);
-
+        final DeploymentResult result = coordinator.deployExplodedAssembly("assembly1");
+        
         assertTrue(result.isSuccessful());
         assertEquals("assembly1", result.getAssemblyId().getAssemblyName());
         assertEquals(AssemblyId.NO_VERSION, result.getAssemblyId().getAssemblyVersion());
         assertEquals(0, result.getMessages().size());
 
-        assertEquals(1, service.getDeployedAssemblies().size());
+        assertEquals(3, waitForCompletion(new Condition() {
+			public boolean doesSatisfy(ClusteredNode node) {
+				return node.isDeployed(new ComponentId(result.getAssemblyId(), "component1"));
+			}
+        }));
         
-        assertTrue(manager.isDeployed(new ComponentId(result.getAssemblyId(), "component1")));
-        
-        service.undeployAssembly(result.getAssemblyId());
-        assertFalse(manager.isDeployed(new ComponentId(result.getAssemblyId(), "component1")));
-        
-    }
+        assertEquals(3, waitForCompletion(new Condition() {
+			public boolean doesSatisfy(ClusteredNode node) {
+				return node.isActivated(new ComponentId(result.getAssemblyId(), "component1"));
+			}
+        }));
 
-    public void testDeployVersioning() throws Exception {
-        start();
-
-        File assemblyDir = TestUtils.getAssemblyDir("assembly1");
-
-        // deploy assembly1
-        DeploymentResult result = service.deployExplodedAssembly(assemblyDir);
-        assertTrue(result.isSuccessful());
-        assertEquals("assembly1", result.getAssemblyId().getAssemblyName());
-        assertEquals(AssemblyId.NO_VERSION, result.getAssemblyId().getAssemblyVersion());
-        assertEquals(0, result.getMessages().size());
-
-        // deploy same assembly:  should result in assembly1.2
-        DeploymentResult result2 = service.deployExplodedAssembly(assemblyDir);
-
-        assertTrue(result2.isSuccessful());
-        assertEquals("assembly1", result2.getAssemblyId().getAssemblyName());
-        assertEquals(2, result2.getAssemblyId().getAssemblyVersion());
-        assertEquals(0, result2.getMessages().size());
-        assertEquals(2, service.getDeployedAssemblies().size());
-        assertTrue(manager.isDeployed(new ComponentId(result.getAssemblyId(), "component1")));
-        assertTrue(manager.isDeployed(new ComponentId(result2.getAssemblyId(), "component1")));
-
-        // deploy same assembly:  should result in assembly1.3
-        DeploymentResult result3 = service.deployExplodedAssembly(assemblyDir);
-
-        assertTrue(result3.isSuccessful());
-        assertEquals("assembly1", result3.getAssemblyId().getAssemblyName());
-        assertEquals(3, result3.getAssemblyId().getAssemblyVersion());
-        assertEquals(0, result3.getMessages().size());
-        assertEquals(3, service.getDeployedAssemblies().size());
-        assertTrue(manager.isDeployed(new ComponentId(result.getAssemblyId(), "component1")));
-        assertTrue(manager.isDeployed(new ComponentId(result3.getAssemblyId(), "component1")));
-
-        // undeployed assembly1.3
-        service.undeployAssembly(result3.getAssemblyId());
-        assertEquals(2, service.getDeployedAssemblies().size());
-
-        // redeploy assembly1.3
-        result3 = service.deployExplodedAssembly(assemblyDir);
-
-        assertTrue(result3.isSuccessful());
-        assertEquals("assembly1", result3.getAssemblyId().getAssemblyName());
-        assertEquals(3, result3.getAssemblyId().getAssemblyVersion());
-        assertEquals(0, result3.getMessages().size());
-        assertEquals(3, service.getDeployedAssemblies().size());
-        assertTrue(manager.isDeployed(new ComponentId(result.getAssemblyId(), "component1")));
-        assertTrue(manager.isDeployed(new ComponentId(result3.getAssemblyId(), "component1")));
-
-        // undeployed assembly1.2
-        service.undeployAssembly(result2.getAssemblyId());
-        assertEquals(2, service.getDeployedAssemblies().size());
-
-        // deploy same assembly again:  should result in assembly1.4
-        DeploymentResult result4 = service.deployExplodedAssembly(assemblyDir);
-
-        assertTrue(result4.isSuccessful());
-        assertEquals("assembly1", result4.getAssemblyId().getAssemblyName());
-        assertEquals(4, result4.getAssemblyId().getAssemblyVersion());
-        assertEquals(0, result4.getMessages().size());
-        assertEquals(3, service.getDeployedAssemblies().size());
-        assertTrue(manager.isDeployed(new ComponentId(result.getAssemblyId(), "component1")));
-        assertTrue(manager.isDeployed(new ComponentId(result4.getAssemblyId(), "component1")));
+        coordinator.undeployAssembly(result.getAssemblyId());
+        assertEquals(3, waitForCompletion(new Condition() {
+			public boolean doesSatisfy(ClusteredNode node) {
+				return !node.isDeployed(new ComponentId(result.getAssemblyId(), "component1"));
+			}
+        }));
     }
 
     public void testDeployFail() throws Exception {
-        manager._failDeployment = true;
-
-        start();
+        cluster.startDeploymentService();
+        coordinator = cluster.findCoordinator();
         
-        File assemblyDir = TestUtils.getAssemblyDir("assembly1");
-        DeploymentResult result = service.deployExplodedAssembly(assemblyDir);
+        coordinator.failDeployment();
 
+        final DeploymentResult result = coordinator.deployExplodedAssembly("assembly1");
         assertFalse(result.isSuccessful());
         assertEquals("assembly1", result.getAssemblyId().getAssemblyName());
         assertEquals(AssemblyId.NO_VERSION, result.getAssemblyId().getAssemblyVersion());
         assertEquals(1, result.getMessages().size());
-        assertEquals(0, service.getDeployedAssemblies().size());
-        assertFalse(manager.isDeployed(new ComponentId(result.getAssemblyId(), "component1")));
-    }
+        assertEquals(0, coordinator.getDeployedAssemblies().size());
+        assertFalse(coordinator.isDeployed(new ComponentId(result.getAssemblyId(), "component1")));
 
-    public void testComponentMapping() throws Exception {
-        service.addComponentTypeMapping("MappedEngine", "MockEngine");
-
-        start();
-
-        File assemblyDir = TestUtils.getAssemblyDir("assembly_mapping");
-        DeploymentResult result = service.deployExplodedAssembly(assemblyDir);
-
-        assertTrue(result.isSuccessful());
-
-        // test removal of component mapping
-        service.removeComponentTypeMapping("MappedEngine");
-        DeploymentResult remove = service.deployExplodedAssembly(assemblyDir);
-
-        assertFalse(remove.isSuccessful());
+        assertEquals(3, waitForCompletion(new Condition() {
+			public boolean doesSatisfy(ClusteredNode node) {
+				return !node.isDeployed(new ComponentId(result.getAssemblyId(), "component1"));
+			}
+        }));
     }
 
     public void testStart() throws Exception {
@@ -230,11 +156,15 @@ public class DeployServiceDeployTest extends TestCase {
         Utils.copyRecursively(assemblyDir, new File(_deployDir, "assembly1"));
 
         LOG.info("testStart()");
-        start();
+        cluster.startDeploymentService();
         LOG.info("testStart() started");
-        LOG.info("testStart() "+service.getDeployedAssemblies());
         
-        assertEquals(1, service.getDeployedAssemblies().size());
+        assertEquals(3, waitForCompletion(new Condition() {
+			public boolean doesSatisfy(ClusteredNode node) {
+				return node.getDeployedAssemblies().size() == 1;
+			}
+        }));
+        coordinator = cluster.findCoordinator();
     }
 
     public void testScan() throws Exception {
@@ -245,29 +175,41 @@ public class DeployServiceDeployTest extends TestCase {
         
         Utils.copyRecursively(assemblyDir, new File(_deployDir, "assembly1"));
         
-        service.setScanPeriod(1);
-        start();
+        cluster.startDeploymentService();
+        coordinator = cluster.findCoordinator();
+        coordinator.setScanPeriod(1);
         
         // scan should not deployed assembly yet
         wait(2);
-        assertEquals(0, service.getDeployedAssemblies().size());
+        assertEquals(3, waitForCompletion(new Condition() {
+			public boolean doesSatisfy(ClusteredNode node) {
+				return node.getDeployedAssemblies().size() == 0;
+			}
+        }));
 
         // delete invalid file, scan should now deploy assembly
         Utils.deleteFile(new File(_deployDir, "assembly1.invalid"));
         wait(2);
-        assertEquals(1, service.getDeployedAssemblies().size());
-        manager.isDeployed(new ComponentId(new AssemblyId("assembly1"), "component1"));
-        
-        service.stop();
+        assertEquals(3, waitForCompletion(new Condition() {
+			public boolean doesSatisfy(ClusteredNode node) {
+				return node.getDeployedAssemblies().size() == 1;
+			}
+        }));
+        assertEquals(3, waitForCompletion(new Condition() {
+			public boolean doesSatisfy(ClusteredNode node) {
+				return node.isDeployed(new ComponentId(new AssemblyId("assembly1"), "component1"));
+			}
+        }));
     }
-
+    
     public void testDeployZip() throws Exception {
-        start();
-
+        cluster.startDeploymentService();
+        coordinator = cluster.findCoordinator();
+        
         File assemblyZip = new File(TestUtils.getTestBase(), "assembly1.zip");
 
         {
-        DeploymentResult result = service.deployAssembly("assembly1", new FileInputStream(assemblyZip), false);
+        DeploymentResult result = coordinator.deployAssembly("assembly1", assemblyZip.getAbsolutePath(), false);
         System.out.println("testDeployZip: "+result);
         assertTrue(result.isSuccessful());
         assertEquals("assembly1", result.getAssemblyId().getAssemblyName());
@@ -277,7 +219,7 @@ public class DeployServiceDeployTest extends TestCase {
         
         {
         // deploy new version
-        DeploymentResult result2 = service.deployAssembly("assembly1", new FileInputStream(assemblyZip), false);
+        DeploymentResult result2 = coordinator.deployAssembly("assembly1", assemblyZip.getAbsolutePath(), false);
         System.out.println("testDeployZip: result2="+result2);
         assertTrue(result2.isSuccessful());
         assertEquals("assembly1", result2.getAssemblyId().getAssemblyName());
@@ -287,7 +229,7 @@ public class DeployServiceDeployTest extends TestCase {
         
         {
         // deploy and replace all existing versions
-        DeploymentResult result3 = service.deployAssembly("assembly1", new FileInputStream(assemblyZip), true);
+        DeploymentResult result3 = coordinator.deployAssembly("assembly1", assemblyZip.getAbsolutePath(), true);
         System.out.println("testDeployZip: result3="+result3);
         assertTrue(result3.isSuccessful());
         assertEquals("assembly1", result3.getAssemblyId().getAssemblyName());
@@ -297,13 +239,14 @@ public class DeployServiceDeployTest extends TestCase {
     }
 
     public void testDeployZipFail() throws Exception {
-        start();
-
+    	cluster.startDeploymentService();
+    	ClusteredNode coordinator = cluster.findCoordinator();
+    	
         File assemblyZip = new File(TestUtils.getTestBase(), "assembly1.zip");
 
-        manager._failDeployment = true;
+        coordinator.failDeployment();
         
-        DeploymentResult result = service.deployAssembly("assembly1", new FileInputStream(assemblyZip), false);
+        DeploymentResult result = coordinator.deployAssembly("assembly1", assemblyZip.getAbsolutePath(), false);
         System.out.println("testDeployZipFail: "+result);
         assertFalse(result.isSuccessful());
         
@@ -312,11 +255,12 @@ public class DeployServiceDeployTest extends TestCase {
     }
 
     public void testDeployZipWithDotFails() throws Exception {
-        start();
+    	cluster.startDeploymentService();
+    	ClusteredNode coordinator = cluster.findCoordinator();
 
         File assemblyZip = new File(TestUtils.getTestBase(), "assembly1.zip");
 
-        DeploymentResult result = service.deployAssembly("assembly.1", new FileInputStream(assemblyZip), false);
+        DeploymentResult result = coordinator.deployAssembly("assembly.1", assemblyZip.getAbsolutePath(), false);
         System.out.println("testDeployZipWithDot: "+result);
         assertFalse(result.isSuccessful());
         
@@ -325,12 +269,13 @@ public class DeployServiceDeployTest extends TestCase {
     }
 
     public void testDeployWithDash() throws Exception {
-        start();
+    	cluster.startDeploymentService();
+    	ClusteredNode coordinator = cluster.findCoordinator();
 
         File assemblyZip = new File(TestUtils.getTestBase(), "assembly1.zip");
 
         {
-        DeploymentResult result = service.deployAssembly("assembly1-1", new FileInputStream(assemblyZip), true);
+        DeploymentResult result = coordinator.deployAssembly("assembly1-1", assemblyZip.getAbsolutePath(), true);
         System.out.println("testDeployWithDash: "+result);
         assertTrue(result.isSuccessful());
         assertEquals("assembly1-1", result.getAssemblyId().getAssemblyName());
@@ -340,7 +285,7 @@ public class DeployServiceDeployTest extends TestCase {
         
         {
         // deploy new version
-        DeploymentResult result2 = service.deployAssembly("assembly-dev1", new FileInputStream(assemblyZip), true);
+        DeploymentResult result2 = coordinator.deployAssembly("assembly-dev1", assemblyZip.getAbsolutePath(), true);
         System.out.println("testDeployZip: result2="+result2);
         assertTrue(result2.isSuccessful());
         assertEquals("assembly-dev1", result2.getAssemblyId().getAssemblyName());
@@ -348,20 +293,21 @@ public class DeployServiceDeployTest extends TestCase {
         assertEquals(0, result2.getMessages().size());
         }
     }    
-    
+
     public void testUndeployViaFS() throws Exception {
         LOG.info("testUndeployViaFS");
-        service.setScanPeriod(1);
-        start();
+        cluster.startDeploymentService();
+        ClusteredNode coordinator = cluster.findCoordinator();
+        coordinator.setScanPeriod(1);
 
         File assemblyZip = new File(TestUtils.getTestBase(), "assembly1.zip");
 
         {
-        DeploymentResult result = service.deployAssembly("assembly1", new FileInputStream(assemblyZip), false);
+        DeploymentResult result = coordinator.deployAssembly("assembly1", assemblyZip.getAbsolutePath(), false);
         assertTrue(result.isSuccessful());
         }
 
-        assertEquals(1, service.getDeployedAssemblies().size());
+        assertEquals(1, coordinator.getDeployedAssemblies().size());
 
         File f = new File(_deployDir, "assembly1.deployed");
         assertTrue(f.exists());
@@ -373,27 +319,32 @@ public class DeployServiceDeployTest extends TestCase {
             wait(1);
             if (f.exists()) break;
 
-            if (service.getDeployedAssemblies().size() == 0) break;
+            if (coordinator.getDeployedAssemblies().size() == 0) break;
             i++;
         }
-        assertEquals(1, service.getDeployedAssemblies().size());
+        assertEquals(3, waitForCompletion(new Condition() {
+			public boolean doesSatisfy(ClusteredNode node) {
+				return node.getDeployedAssemblies().size() == 1;
+			}
+        }));
         assertTrue(f.exists());
     }
-    
+
     public void testRemoveViaFS() throws Exception {
         LOG.info("testRemoveViaFS");
+        cluster.startDeploymentService();
+        ClusteredNode coordinator = cluster.findCoordinator();
         
-        service.setScanPeriod(1);
-        start();
+        coordinator.setScanPeriod(1);
 
         File assemblyZip = new File(TestUtils.getTestBase(), "assembly1.zip");
 
         {
-        DeploymentResult result = service.deployAssembly("assembly1", new FileInputStream(assemblyZip), false);
+        DeploymentResult result = coordinator.deployAssembly("assembly1", assemblyZip.getAbsolutePath(), false);
         assertTrue(result.isSuccessful());
         }
 
-        assertEquals(1, service.getDeployedAssemblies().size());
+        assertEquals(1, coordinator.getDeployedAssemblies().size());
 
         File f = new File(_deployDir, "assembly1");
         assertTrue(f.exists() && f.isDirectory());
@@ -403,10 +354,14 @@ public class DeployServiceDeployTest extends TestCase {
         int i=0;
         while (i<5) {
             wait(1);
-            if (service.getDeployedAssemblies().size() == 0) break;
+            if (coordinator.getDeployedAssemblies().size() == 0) break;
             i++;
         }
-        assertEquals(0, service.getDeployedAssemblies().size());
+        assertEquals(3, waitForCompletion(new Condition() {
+			public boolean doesSatisfy(ClusteredNode node) {
+				return node.getDeployedAssemblies().size() == 0;
+			}
+        }));
         assertFalse(new File(_deployDir, "assembly1.deployed").exists());
     }
 
@@ -416,5 +371,27 @@ public class DeployServiceDeployTest extends TestCase {
         } catch (InterruptedException except) {
             // ignore
         }
+    }
+    
+    interface Condition {
+    	public boolean doesSatisfy(ClusteredNode node);
+    }
+    
+    int waitForCompletion(Condition condition) throws Exception {
+        int completedNodeCnt = 0;
+        
+        for( int i = 0; i < 5 && completedNodeCnt < 2; i++ ) {
+        	if( completedNodeCnt < 2 ) {
+        		completedNodeCnt = 0;
+        	}
+        	for(ClusteredNode node : cluster.getNodes()) {
+		        if( condition.doesSatisfy(node) ) {
+		        	completedNodeCnt++;
+		        }
+        	}
+        	Thread.sleep(1000);
+        }
+        
+        return completedNodeCnt;
     }
 }

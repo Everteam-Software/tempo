@@ -275,7 +275,7 @@ public class OMParser {
                 components.add(dc);
             }
             
-            DeployedAssembly da = new DeployedAssembly(aid, assemblyDir, components);
+            DeployedAssembly da = new DeployedAssembly(aid, assemblyDir, components, false);
             assemblies.add(da);
         }
         

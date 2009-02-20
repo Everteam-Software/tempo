@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2005-2007 Intalio inc.
+ * Copyright (c) 2005-2008 Intalio inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -14,13 +14,9 @@ package org.intalio.tempo.deployment.impl;
 import static org.intalio.tempo.deployment.impl.LocalizedMessages._;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.rmi.Remote;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,6 +29,8 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.sql.DataSource;
+
 import org.intalio.tempo.deployment.AssemblyId;
 import org.intalio.tempo.deployment.ComponentId;
 import org.intalio.tempo.deployment.DeployedAssembly;
@@ -43,7 +41,8 @@ import org.intalio.tempo.deployment.DeploymentService;
 import org.intalio.tempo.deployment.DeploymentMessage.Level;
 import org.intalio.tempo.deployment.spi.ComponentManager;
 import org.intalio.tempo.deployment.spi.ComponentManagerResult;
-import org.intalio.tempo.deployment.spi.DeploymentServiceCallback;
+import org.intalio.tempo.deployment.spi.DeploymentServiceCallback;    
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.SystemPropertyUtils;
@@ -51,15 +50,15 @@ import org.springframework.util.SystemPropertyUtils;
 /**
  * Deployment service
  */
-public class DeploymentServiceImpl implements DeploymentService, Remote {
+public class DeploymentServiceImpl implements DeploymentService, Remote, ClusterListener {
     private static final Logger LOG = LoggerFactory.getLogger(DeploymentServiceImpl.class);
 
     // Constants
 
     public static final String DEFAULT_DEPLOY_DIR = "${org.intalio.tempo.configDirectory}/../deploy";
 
-    public static final String STATE_FILE = "assemblies.ser";
-
+    public static final String DEPLOY_COMPONENT = "TempoDeploymentService";
+    
     //
     // Configuration
     //
@@ -75,24 +74,22 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
     //
 
     enum ServiceState {
-        INITIALIZED, STARTING, STARTED, STOPPING
+        INITIALIZED, CLUSTERIZING, STARTING, STARTED, STOPPING
     }
 
     private ServiceState _serviceState;
 
     /**
-     * Mapping of [componentType] to [ComponentManager name] e.g. "BPEL" =>
-     * "ApacheOde"
+     * Mapping of [componentType] to [ComponentManager name] e.g. "BPEL" => "ApacheOde"
      */
-    private final Map<String, String> _componentTypes = Collections.synchronizedMap(new HashMap<String, String>());
+    private final Map<String, String> _componentTypes = 
+        Collections.synchronizedMap(new HashMap<String, String>());
 
     /**
-     * Mapping of [name] to [DeploymentManager] e.g. "MyApplication" =>
-     * OdeComponentManager
+     * Mapping of [name] to [DeploymentManager] e.g. "MyApplication" => OdeComponentManager
      */
-    private final Map<String, ComponentManager> _componentManagers = Collections.synchronizedMap(new HashMap<String, ComponentManager>());
-    
-    private final Set<AssemblyId> _started = new HashSet<AssemblyId>();
+    private final Map<String, ComponentManager> _componentManagers = 
+        Collections.synchronizedMap(new HashMap<String, ComponentManager>());
 
     private final Object LIFECYCLE_LOCK = new Object();
 
@@ -100,7 +97,6 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
 
     private Callback _callback = new Callback();
 
-    private boolean _coordinator = true;
 
     //
     // Services
@@ -110,8 +106,25 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
 
     private final StartTask _startTask = new StartTask();
 
+    private final TimerTask clusterizeTask = new TimerTask() {
+    	public void run() {
+    		try {
+    			cluster.start();
+    			onClustered();
+    		} catch( Exception e ) {
+    			e.printStackTrace();
+    		}
+    	}
+    };
+
     private final ScanTask _scanTask = new ScanTask();
 
+    private DataSource _dataSource;
+
+    private Persistence _persist;
+
+    private Cluster cluster = new SingleNodeCluster();
+    
     //
     // Constructor
     //
@@ -123,7 +136,15 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
     // Accessors / Setters
     //
 
-    public String getDeployDirectory() {
+    public Cluster getCluster() {
+		return cluster;
+	}
+
+	public void setCluster(Cluster cluster) {
+		this.cluster = cluster;
+	}
+
+	public String getDeployDirectory() {
         return _deployDir;
     }
 
@@ -167,6 +188,14 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
         return _callback;
     }
 
+    public DataSource getDataSource() {
+        return _dataSource;
+    }
+
+    public void setDataSource(DataSource dataSource) {
+        _dataSource = dataSource;
+    }
+    
     //
     // Lifecycle Methods
     //
@@ -180,6 +209,9 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
                 throw new IllegalStateException("Service already initialized");
             }
             ensureDeploymentDirExists();
+            if (_dataSource == null) throw new IllegalStateException("Datasource not set");
+            
+            _persist = new Persistence(new File(_deployDir), _dataSource);
             _timer = new Timer("Deployment Service Timer", true);
             _serviceState = ServiceState.INITIALIZED;
             LOG.info(_("DeploymentService state is now INITIALIZED"));
@@ -193,6 +225,17 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
         synchronized (LIFECYCLE_LOCK) {
             if (_serviceState != ServiceState.INITIALIZED) {
                 throw new IllegalStateException("Service not initialized");
+            }
+            _serviceState = ServiceState.CLUSTERIZING;
+            LOG.info(_("DeploymentService state is now CLUSTERIZING"));
+            _timer.schedule(clusterizeTask, 0);
+        }
+    }
+
+    public void onClustered() {
+        synchronized (LIFECYCLE_LOCK) {
+            if (_serviceState != ServiceState.CLUSTERIZING) {
+                throw new IllegalStateException("Service not in clusterizing mode.");
             }
             _serviceState = ServiceState.STARTING;
             LOG.info(_("DeploymentService state is now STARTING"));
@@ -216,14 +259,13 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
         synchronized (LIFECYCLE_LOCK) {
             if (_serviceState == ServiceState.STARTED) {
                 _timer.cancel();
+                cluster.shutdown();
             }
             _serviceState = ServiceState.STOPPING;
             LOG.info(_("DeploymentService state is now STOPPING"));
 
-            synchronized (DEPLOY_LOCK) {
-                Collection<DeployedAssembly> assemblies = getDeployedAssemblies();
-                stopAndDeactivate(assemblies);
-            }
+            Collection<DeployedAssembly> assemblies = getDeployedAssemblies();
+            stopAndDispose(assemblies);
 
             _serviceState = null;
             LOG.info(_("DeploymentService state is now STOPPED"));
@@ -246,27 +288,27 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
             return convertToResult(except, newAssemblyId(assemblyName));
         }
 
-        synchronized (DEPLOY_LOCK) {
-            AssemblyId aid = versionAssemblyId(assemblyName);
-            if (replaceExistingAssemblies) {
-                Collection<DeployedAssembly> deployed = getDeployedAssemblies();
-                for (DeployedAssembly da : deployed) {
-                    if (da.getAssemblyId().getAssemblyName().equals(aid.getAssemblyName())) {
-                        try {
-                            stopAndDeactivate(da.getAssemblyId());
-                            DeploymentResult result = undeployAssembly(da);
-                            Utils.deleteRecursively(new File(da.getAssemblyDir()));
-                            if (!result.isSuccessful()) {
-                                return result;
-                            }
-                        } catch (Exception except) {
-                            LOG.error(_("Error while undeploying assembly {0}", da.getAssemblyId()), except);
-                            return convertToResult(except, aid);
+        AssemblyId aid = versionAssemblyId(assemblyName);
+        if (replaceExistingAssemblies) {
+            Collection<DeployedAssembly> deployed = getDeployedAssemblies();
+            for (DeployedAssembly da : deployed) {
+                if (da.getAssemblyId().getAssemblyName().equals(aid.getAssemblyName())) {
+                    try {
+                        stopAndDispose(da.getAssemblyId());
+                        DeploymentResult result = undeployAssembly(da);
+                        Utils.deleteRecursively(new File(da.getAssemblyDir()));
+                        if (!result.isSuccessful()) {
+                            return result;
                         }
+                    } catch (Exception except) {
+                        LOG.error(_("Error while undeploying assembly {0}", da.getAssemblyId()), except);
+                        return convertToResult(except, aid);
                     }
                 }
             }
+        }
 
+        synchronized (DEPLOY_LOCK) {
             try {
                 setMarkedAsInvalid(aid, true);
 
@@ -318,8 +360,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
             aid = versionAssemblyId(assemblyDir.getName());
         }
 
-        // mark as invalid while we deploy to avoid concurrency issues with
-        // scanner
+        // mark as invalid while we deploy to avoid concurrency issues with scanner
         setMarkedAsInvalid(aid, true);
 
         // if assemblyDir is outside deployDir, copy files into deployDir
@@ -338,65 +379,79 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
 
         synchronized (DEPLOY_LOCK) {
             try {
-                File[] files = assemblyDir.listFiles();
+                _persist.startTransaction();
 
-                // deploy each component
-                for (File f : files) {
-                    if (!f.isDirectory()) {
-                        // ignore files at top-level
-                        continue;
-                    }
-                    int dot = f.getName().lastIndexOf('.');
-                    if (dot < 0) {
-                        // ignore directories without extension (no mapping)
-                        continue;
-                    }
-                    String componentManager = f.getName().substring(dot+1);
-                    String componentName = f.getName().substring(0, dot);
-                    ComponentId component = new ComponentId(aid, componentName);
+                try {
+                    File[] files = assemblyDir.listFiles();
 
-                    ComponentManager manager = getComponentManager(componentManager);
-                    try {
-                        result.addAll(component, componentManager, manager.deploy(component, f).getMessages());
-                        deployed.add(new DeployedComponent(component, f.getAbsolutePath(), componentManager));
-                    } catch (Exception except) {
-                        String msg = _("Exception while deploying component {0}: {1}", componentName, except.getLocalizedMessage());
-                        result.add(component, componentManager, error(msg));
-                        LOG.error(msg, except);
+                    // deploy each component
+                    for (File f : files) {
+                        if (!f.isDirectory()) {
+                            // ignore files at top-level
+                            continue;
+                        }
+                        int dot = f.getName().lastIndexOf('.');
+                        if (dot < 0) {
+                            // ignore directories without extension (no mapping)
+                            continue;
+                        }
+                        String componentManager = f.getName().substring(dot+1);
+                        String componentName = f.getName().substring(0, dot);
+                        ComponentId component = new ComponentId(aid, componentName);
+
+                        ComponentManager manager = getComponentManager(componentManager);
+                        try {
+                            result.addAll(component, componentManager, manager.deploy(component, f, false).getMessages());
+                            deployed.add(new DeployedComponent(component, f.getAbsolutePath(), componentManager));
+                        } catch (Exception except) {
+                            String msg = _("Exception while deploying component {0}: {1}", componentName, except.getLocalizedMessage());
+                            result.add(component, componentManager, error(msg));
+                            LOG.error(msg, except);
+                        }
                     }
+                } catch (Exception except) {
+                    String msg = _("Exception while deploying assembly {0}: {1}", aid, except.getLocalizedMessage());
+                    result.add(null, null, error(msg));
+                    LOG.error(msg, except);
                 }
-            } catch (Exception except) {
-                String msg = _("Exception while deploying assembly {0}: {1}", aid, except.getLocalizedMessage());
-                result.add(null, null, error(msg));
-                LOG.error(msg, except);
-            }
 
-            if (result.isSuccessful()) {
-                // update persistent state
-                DeployedAssembly assembly = loadAssemblyState(aid);
-                Map<AssemblyId, DeployedAssembly> assemblies = loadDeployedState();
-                assemblies.put(aid, assembly);
-                saveDeployedState(assemblies);
+                if (result.isSuccessful()) {
+                    // update persistent state
+                    DeployedAssembly assembly = loadAssemblyState(aid);
+                    
+                    _persist.retire(aid.getAssemblyName());
+                    _persist.add(assembly);
 
-                activateAndStart(aid);
-            } else {
-                // in case of failure, we undeploy already deployed components
-                for (DeployedComponent dc : deployed) {
-                    try {
-                        ComponentManager manager = getComponentManager(dc.getComponentManagerName());
-                        manager.undeploy(dc.getComponentId(), new ArrayList<String>());
-                    } catch (Exception except) {
-                        String msg = _("Exception while undeploying component {0} after failed deployment: {1}", dc.getComponentId(),
-                                except.getLocalizedMessage());
-                        result.add(dc, error(msg));
-                        LOG.error(msg, except);
+                    _persist.commitTransaction();
+                    
+                    deployed(assembly);
+                    
+                    cluster.sendMessage(new DeployedMessage(assembly));
+                    
+                    initializeAndStart(aid);
+                } else {
+                    // in case of failure, we undeploy already deployed components
+                    for (DeployedComponent dc : deployed) {
+                        try {
+                            ComponentManager manager = getComponentManager(dc.getComponentManagerName());
+                            manager.undeploy(dc.getComponentId(), new ArrayList<String>());
+                        } catch (Exception except) {
+                            String msg = _("Exception while undeploying component {0} after failed deployment: {1}", dc.getComponentId(),
+                                    except.getLocalizedMessage());
+                            result.add(dc, error(msg));
+                            LOG.error(msg, except);
+                        }
                     }
+                    _persist.rollbackTransaction("Deployment errors");
                 }
-            }
 
-            setMarkedAsDeployed(aid, result.isSuccessful());
-            setMarkedAsInvalid(aid, false);
+                setMarkedAsDeployed(aid, result.isSuccessful());
+                setMarkedAsInvalid(aid, false);
+            } finally {
+                _persist.rollbackTransaction("Unknown reason"); 
+            }
         }
+        
         return result.finalResult();
     }
 
@@ -405,19 +460,24 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
      */
     public DeploymentResult undeployAssembly(AssemblyId aid) {
         assertStarted();
+        
         if (!exist(aid))
             return errorResult(aid, "Assembly directory does not exist: {0}", aid);
-        synchronized (DEPLOY_LOCK) {
-            DeployedAssembly assembly = loadAssemblyState(aid);
-            stopAndDeactivate(aid);
+        
+        DeployedAssembly assembly = loadAssemblyState(aid);
+        stopAndDispose(aid);
+        if (cluster.isCoordinator()) {
+            cluster.sendMessage(new UndeployedMessage(assembly));
+        }
+        onUndeployed(assembly);
+        
+        try {
+            return undeployAssembly(assembly);
+        } finally {
             try {
-                return undeployAssembly(assembly);
-            } finally {
-                try {
-                    Utils.deleteRecursively(new File(assembly.getAssemblyDir()));
-                } catch (Exception e) {
-                    LOG.warn(_("Exception while undeploying assembly {0}: {1}", assembly.getAssemblyId(), e.toString()));
-                }
+                Utils.deleteRecursively(new File(assembly.getAssemblyDir()));
+            } catch (Exception e) {
+                LOG.warn(_("Exception while undeploying assembly {0}: {1}", assembly.getAssemblyId(), e.toString()));
             }
         }
     }
@@ -427,10 +487,14 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
      * start newly deployed assemblies.
      */
     public void scan() {
+    	if( !cluster.isCoordinator() ) {
+    		return;
+    	}
+    	
         LOG.debug(_("Scanning deployment directory {0}", _deployDir));
         LOG.debug(_("Component managers: {0}", _componentManagers));
         synchronized (DEPLOY_LOCK) {
-            Map<AssemblyId, DeployedAssembly> deployedMap = loadDeployedState();
+            Map<AssemblyId, DeployedAssembly> deployedMap = _persist.load();
             LOG.debug(_("Deployed assemblies: {0}", deployedMap.keySet()));
 
             Set<AssemblyId> available = new HashSet<AssemblyId>();
@@ -466,8 +530,8 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
                     undeploy.add(assembly);
             }
 
-            // stop and deactivate all at once
-            stopAndDeactivate(undeploy);
+            // stop and dispose all at once
+            stopAndDispose(undeploy);
 
             for (DeployedAssembly assembly : undeploy) {
                 DeploymentResult result = undeployAssembly(assembly);
@@ -483,12 +547,12 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
             for (int i = 0; i < files.length; ++i) {
                 if (files[i].isDirectory()) {
                     AssemblyId aid = parseAssemblyId(files[i].getName());
-                    if (isMarkedAsDeployed(aid) && !deployedMap.containsKey(aid)) {
-                        setMarkedAsDeployed(aid, false);
-                    }
                     if (!isMarkedAsDeployed(aid) && !isMarkedAsInvalid(aid)) {
                         try {
                             DeploymentResult result = deployExplodedAssembly(files[i]);
+                            if (_serviceState == ServiceState.STARTED) {
+                                initializeAndStart(aid);
+                            }
                             if (result.isSuccessful())
                                 LOG.info(_("Deployed Assembly: {0}", result));
                             else 
@@ -502,18 +566,6 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
                     }
                 }
             }
-            
-            // phase 3: start all assemblies not started yet
-            if (_serviceState == ServiceState.STARTED) {
-                List<DeployedAssembly> start = new ArrayList<DeployedAssembly>();
-                deployedMap = loadDeployedState();
-                for (DeployedAssembly assembly : deployedMap.values()) {
-                    if (!_started.contains(assembly.getAssemblyId())) {
-                        start.add(assembly);
-                    }
-                }
-                activateAndStart(start);
-            }
         }
     }
 
@@ -522,7 +574,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
      */
     public Collection<DeployedAssembly> getDeployedAssemblies() {
         synchronized (DEPLOY_LOCK) {
-            Map<AssemblyId, DeployedAssembly> assemblies = loadDeployedState();
+            Map<AssemblyId, DeployedAssembly> assemblies = _persist.load();
             return assemblies.values();
         }
     }
@@ -577,9 +629,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
                 LOG.error(msg, except);
             } finally {
                 // update persistent state
-                Map<AssemblyId, DeployedAssembly> assemblies = loadDeployedState();
-                assemblies.remove(aid);
-                saveDeployedState(assemblies);
+                _persist.remove(aid);
 
                 if (!result.isSuccessful() && exist(aid)) {
                     setMarkedAsInvalid(aid, true);
@@ -590,28 +640,61 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
         return result.finalResult();
     }
 
-    private void activateAndStart(AssemblyId aid) {
+    public void onDeployed(DeployedAssembly assembly) {
+        deployed(assembly);
+
+        initializeAndStart(assembly.getAssemblyId());
+    }
+    
+    private void deployed(DeployedAssembly assembly) {
+        for (DeployedComponent dc : assembly.getDeployedComponents()) {
+            try {
+                LOG.debug(_("Deployed component {0}", dc));
+                ComponentManager manager = getComponentManager(dc.getComponentManagerName());
+                manager.deployed(dc.getComponentId(), new File(dc.getComponentDir()));
+            } catch (Exception except) {
+                String msg = _("Error during deployment notification of component {0}: {1}", dc.getComponentId(), except);
+                LOG.error(msg, except);
+                break;
+            }
+        }
+    }
+
+    public void onUndeployed(DeployedAssembly assembly) {
+        for (DeployedComponent dc : assembly.getDeployedComponents()) {
+            try {
+                LOG.debug(_("Undeployed component {0}", dc));
+                ComponentManager manager = getComponentManager(dc.getComponentManagerName());
+                manager.undeployed(dc.getComponentId());
+            } catch (Exception except) {
+                String msg = _("Error during undeployment notification of component {0}: {1}", dc.getComponentId(), except);
+                LOG.error(msg, except);
+                break;
+            }
+        }
+    }
+    
+    private DeployedAssembly initializeAndStart(AssemblyId aid) {
         DeployedAssembly assembly = loadAssemblyState(aid);
         List<DeployedAssembly> assemblies = new ArrayList<DeployedAssembly>();
         assemblies.add(assembly);
-        activateAndStart(assemblies);
+        initializeAndStart(assemblies);
+        
+        return assembly;
     }
 
-    private boolean activateAndStart(Collection<DeployedAssembly> assemblies) {
+    private boolean initializeAndStart(Collection<DeployedAssembly> assemblies) {
         boolean success = true;
 
-        // Phase 1: Activate all components of all assemblies
-        List<DeployedComponent> activated = new ArrayList<DeployedComponent>();
+        // Phase 1: Initialize all components of all assemblies
+        List<DeployedComponent> initialized = new ArrayList<DeployedComponent>();
         for (DeployedAssembly assembly : assemblies) {
-            if (_started.contains(assembly)) {
-                continue;
-            }
             for (DeployedComponent dc : assembly.getDeployedComponents()) {
                 try {
-                    LOG.debug(_("Activate component {0}", dc));
+                    LOG.debug(_("Initialize component {0}", dc));
                     ComponentManager manager = getComponentManager(dc.getComponentManagerName());
-                    manager.activate(dc.getComponentId(), new File(dc.getComponentDir()));
-                    activated.add(dc);
+                    manager.initialize(dc.getComponentId(), new File(dc.getComponentDir()));
+                    initialized.add(dc);
                 } catch (Exception except) {
                     success = false;
                     String msg = _("Error during activation of component {0}: {1}", dc.getComponentId(), except);
@@ -624,10 +707,6 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
         if (success) {
             // Phase 2: Startup all components
             for (DeployedAssembly assembly : assemblies) {
-                if (_started.contains(assembly)) {
-                    LOG.error(_("Assembly already started: {0}"));
-                    continue;
-                }
                 for (DeployedComponent dc : assembly.getDeployedComponents()) {
                     try {
                         LOG.debug(_("Start component {0}", dc));
@@ -638,31 +717,30 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
                         LOG.error(msg, except);
                     }
                 }
-                _started.add(assembly.getAssemblyId());
             }
         } else {
-            for (DeployedComponent dc : activated) {
+            for (DeployedComponent dc : initialized) {
                 try {
                     ComponentManager manager = getComponentManager(dc.getComponentManagerName());
-                    manager.deactivate(dc.getComponentId());
+                    manager.dispose(dc.getComponentId());
                 } catch (Exception except) {
                     String msg = _("Error during deactivation of component {0} after startup failure: {1}", dc.getComponentId(), except);
                     LOG.error(msg, except);
                 }
-                _started.remove(dc.getComponentId().getAssemblyId());
             }
         }
+        
         return success;
     }
 
-    private void stopAndDeactivate(AssemblyId aid) {
+    private void stopAndDispose(AssemblyId aid) {
         DeployedAssembly assembly = loadAssemblyState(aid);
         List<DeployedAssembly> assemblies = new ArrayList<DeployedAssembly>();
         assemblies.add(assembly);
-        stopAndDeactivate(assemblies);
+        stopAndDispose(assemblies);
     }
 
-    private void stopAndDeactivate(Collection<DeployedAssembly> assemblies) {
+    private void stopAndDispose(Collection<DeployedAssembly> assemblies) {
         // Phase 1: Stop all components
         for (DeployedAssembly assembly : assemblies) {
             for (DeployedComponent dc : assembly.getDeployedComponents()) {
@@ -675,16 +753,15 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
                     LOG.error(msg, except);
                 }
             }
-            _started.remove(assembly);
         }
 
-        // Phase 2: Deactivate all components
+        // Phase 2: Dispose all components
         for (DeployedAssembly assembly : assemblies) {
             for (DeployedComponent dc : assembly.getDeployedComponents()) {
                 ComponentManager manager = getComponentManager(dc.getComponentManagerName());
                 try {
-                    LOG.debug(_("Deactivate component {0}", dc));
-                    manager.deactivate(dc.getComponentId());
+                    LOG.debug(_("Dispose component {0}", dc));
+                    manager.dispose(dc.getComponentId());
                 } catch (Exception except) {
                     String msg = _("Error while deactivating component {0}: {1}", dc.getComponentId(), except);
                     LOG.error(msg, except);
@@ -693,7 +770,17 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
         }
     }
 
-    private void checkRequiredComponentManagersAvailable() {
+	public void activate(AssemblyId assemblyId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void retire(AssemblyId assemblyId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void checkRequiredComponentManagersAvailable() {
         boolean available = true;
         StringBuffer missing = new StringBuffer();
         for (String cm : _requiredComponentManagers) {
@@ -706,78 +793,49 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
         }
         synchronized (LIFECYCLE_LOCK) {
             if (ServiceState.STARTING.equals(_serviceState) && available) {
-                _timer.schedule(_startTask, 0);
+                synchronized (_startTask) {
+                    if (!_startTask.scheduled) {
+                        _startTask.scheduled = true;
+                        _timer.schedule(_startTask, 0);
+                    }
+                }
             }
         }
+
         if (!available)
             LOG.info(_("Waiting for component managers: {0}", missing));
     }
 
+    public void sayHello() throws Exception {
+    	cluster.sayHello();
+    }
+    
     private void internalStart() {
         synchronized (DEPLOY_LOCK) {
-            if (_coordinator) {
-                try {
-                    scan();
-                } catch (Exception e) {
-                    LOG.error(_("Error while scanning deployment repository"), e);
-                }
+            try {
+                scan();
+            } catch (Exception e) {
+                LOG.error(_("Error while scanning deployment repository"), e);
             }
 
             Collection<DeployedAssembly> assemblies = getDeployedAssemblies();
-            if (activateAndStart(assemblies)) {
+            // let the runtime ComponentManagers be aware of the deployed components
+            for( DeployedAssembly assembly : assemblies ) {
+            	for( DeployedComponent component : assembly.getDeployedComponents() ) {
+            		ComponentManager manager = _componentManagers.get(component.getComponentManagerName());
+            		manager.deployed(component.getComponentId(), new File(component.getComponentDir()));
+            	}
+            }
+            
+            if (initializeAndStart(assemblies)) {
                 _serviceState = ServiceState.STARTED;
                 LOG.info(_("DeploymentService state is now STARTED"));
-                if (_coordinator) {
-                    _timer.schedule(_scanTask, _scanPeriod * 1000, _scanPeriod * 1000);
-                }
+
+                _timer.schedule(_scanTask, _scanPeriod * 1000, _scanPeriod * 1000);
             }
         }
     }
 
-
-    /**
-     * Load persistent deployed state
-     */
-    @SuppressWarnings("unchecked")
-    private Map<AssemblyId, DeployedAssembly> loadDeployedState() {
-        Map<AssemblyId, DeployedAssembly> assemblies = new HashMap<AssemblyId, DeployedAssembly>();
-        FileInputStream fis = null;
-        File state = new File(_deployDir, STATE_FILE);
-        try {
-            fis = new FileInputStream(state);
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            assemblies = (Map<AssemblyId, DeployedAssembly>) ois.readObject();
-        } catch (FileNotFoundException except) {
-            LOG.info(_("Assembly state file {0} not found; will be created.", state.getAbsolutePath()));
-            saveDeployedState(assemblies);
-        } catch (Exception except) {
-            LOG.error(_("Error loading assembly state file {0}; will be recreated", state.getAbsolutePath()), except);
-            Utils.close(fis);
-            state.renameTo(new File(_deployDir, STATE_FILE + ".bad"));
-            saveDeployedState(assemblies);
-        } finally {
-            Utils.close(fis);
-        }
-        return assemblies;
-    }
-
-    /**
-     * Save persistent deployed state
-     */
-    private void saveDeployedState(Map<AssemblyId, DeployedAssembly> assemblies) {
-        FileOutputStream fos = null;
-        File state = new File(_deployDir, STATE_FILE);
-        try {
-            fos = new FileOutputStream(state);
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(assemblies);
-            oos.flush();
-        } catch (IOException except) {
-            LOG.error(_("Error writing to assembly state file {0}.", state.getAbsolutePath()), except);
-        } finally {
-            Utils.close(fos);
-        }
-    }
 
     /**
      * Ensure deployment directory exists
@@ -864,7 +922,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
             ComponentId component = new ComponentId(aid, componentName);
             components.add(new DeployedComponent(component, componentDir.getAbsolutePath(), componentManager));
         }
-        return new DeployedAssembly(aid, assemblyDir.getAbsolutePath(), components);
+        return new DeployedAssembly(aid, assemblyDir.getAbsolutePath(), components, false);
     }
 
     private ComponentManager getComponentManager(String componentType) {
@@ -969,6 +1027,15 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
 
     private void assertStarted() {
         synchronized (LIFECYCLE_LOCK) {
+        	int secs = 10;
+            while (secs-- > 0 && _serviceState != ServiceState.STARTED) {
+                try {
+                	LOG.info("Deployment has been requested. However, the service is still starting up(retrying in 1 sec).");
+					LIFECYCLE_LOCK.wait(1000);
+				} catch (InterruptedException e) {
+					throw new RuntimeException(e);
+				}
+            }
             if (_serviceState != ServiceState.STARTED) {
                 throw new IllegalStateException(_("Service not started.  Current state is {0}", _serviceState));
             }
@@ -984,8 +1051,13 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
      * milliseconds
      */
     class StartTask extends TimerTask {
+        boolean scheduled = false;
+        
         public void run() {
             internalStart();
+            synchronized (this) {
+                scheduled = false;
+            }
         }
     }
 
@@ -1033,7 +1105,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
                                 if (name.equals(component.getComponentManagerName()) || name.equals(type)) {
                                     try {
                                         LOG.debug(_("Activate component {0}", component));
-                                        manager.activate(component.getComponentId(), new File(component.getComponentDir()));
+                                        manager.initialize(component.getComponentId(), new File(component.getComponentDir()));
                                     } catch (Exception except) {
                                         LOG.error(_("Error while activating component {0}", component), except);
                                     }
@@ -1124,17 +1196,16 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
             return msgs;
         }
 
-        public void activate(ComponentId name, File path) {
+        public void initialize(ComponentId name, File path) {
             LOG.warn(_("Missing component manager: activate {0} {1}", name, path));
         }
 
-        public void deactivate(ComponentId cid) {
+        public void dispose(ComponentId cid) {
             LOG.warn(_("Missing component manager: deactivate {0}", cid));
         }
 
-        public ComponentManagerResult deploy(ComponentId cid, File path) {
-            String msg = _("No component manager for component type {0}", _componentType);
-            return new ComponentManagerResult(message(error(msg)));
+        public void deployed(ComponentId cid, File path) {
+            LOG.warn(_("Missing component manager: deployed {0}", cid));
         }
 
         public String getComponentManagerName() {
@@ -1153,8 +1224,44 @@ public class DeploymentServiceImpl implements DeploymentService, Remote {
             LOG.warn(_("Missing component manager: undeploy {0}", cid));
         }
 
-    }
+        public void undeployed(ComponentId cid) {
+            LOG.warn(_("Missing component manager: undeploy {0}", cid));
+        }
 
+		public void activate(ComponentId cid) {
+            LOG.warn(_("Missing component manager: undeploy {0}", cid));
+		}
+
+		public ComponentManagerResult deploy(ComponentId name, File path,
+				boolean activate) {
+            String msg = _("No component manager for component type {0}", _componentType);
+            return new ComponentManagerResult(message(error(msg)));
+		}
+
+		public void retire(ComponentId cid) {
+            LOG.warn(_("Missing component manager: undeploy {0}", cid));
+		}
+    }
+    
+    static class DeployedMessage implements Serializable {
+        private static final long serialVersionUID = 1L;
+        
+        public DeployedAssembly assembly;
+
+        DeployedMessage(DeployedAssembly assembly) {
+            this.assembly = assembly;
+        }
+}
+    
+    static class UndeployedMessage implements Serializable {
+        private static final long serialVersionUID = 1L;
+
+        public DeployedAssembly assembly;
+
+        UndeployedMessage(DeployedAssembly assembly) {
+            this.assembly = assembly;
+        }
+    }
 }
 
 /**
