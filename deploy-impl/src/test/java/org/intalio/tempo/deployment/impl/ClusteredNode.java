@@ -1,6 +1,5 @@
 package org.intalio.tempo.deployment.impl;
 
-import java.io.InputStream;
 import java.util.Collection;
 
 import org.intalio.tempo.deployment.AssemblyId;

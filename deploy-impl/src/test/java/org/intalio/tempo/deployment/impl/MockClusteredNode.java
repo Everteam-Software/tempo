@@ -3,7 +3,6 @@ package org.intalio.tempo.deployment.impl;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -78,7 +77,7 @@ public class MockClusteredNode implements ClusteredNode, ApplicationContextAware
     
     public DeploymentResult deployExplodedAssembly(String assemblyDirPath) {
         File assemblyDir = TestUtils.getAssemblyDir(assemblyDirPath);
-        return service.deployExplodedAssembly(assemblyDir);
+        return service.deployExplodedAssembly(assemblyDir, true);
     }
     
     public DeploymentResult deployAssembly(String assemblyName, String zipPath, boolean replaceExistingAssemblies) {

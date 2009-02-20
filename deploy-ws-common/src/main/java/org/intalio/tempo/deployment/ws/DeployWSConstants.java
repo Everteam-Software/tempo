@@ -41,6 +41,18 @@ public class DeployWSConstants {
     public static final QName REPLACE_EXISTING_ASSEMBLIES =
         new QName(DEPLOY_NS.getNamespaceURI(), "replaceExistingAssemblies", DEPLOY_NS_PREFIX);
 
+    public static final QName DEPLOY_CONTROL_PARAM =
+        new QName(DEPLOY_NS.getNamespaceURI(), "deployControlParam", DEPLOY_NS_PREFIX);
+
+    public static final String DEPLOY_CONTROL_PARAM_DO_NOT_ACTIVATE =
+        "deployControlParamDoNotActivate";
+
+    public static final String DEPLOY_CONTROL_PARAM_ACTIVATE =
+        "deployControlParamActivate";
+
+    public static final String DEPLOY_CONTROL_PARAM_REPLACE_EXISTING_ASSEMBLIES_AND_ACTIVATE =
+        "deployControlParamReplaceExistingAssembliesAndActivate";
+
     public static final QName ZIP = new QName(DEPLOY_NS.getNamespaceURI(), "zip", DEPLOY_NS_PREFIX);
 
     /* Deploy Response */

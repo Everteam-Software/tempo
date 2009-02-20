@@ -13,12 +13,8 @@
 package org.intalio.tempo.deployment.impl;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -29,12 +25,10 @@ import org.apache.log4j.PropertyConfigurator;
 import org.intalio.tempo.deployment.AssemblyId;
 import org.intalio.tempo.deployment.ComponentId;
 import org.intalio.tempo.deployment.DeploymentResult;
-import org.intalio.tempo.deployment.DeploymentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.remoting.rmi.RmiServiceExporter;
 
 /**
  * Deployment Service implementation test

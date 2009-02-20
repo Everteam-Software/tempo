@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.rmi.Remote;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -275,11 +276,25 @@ public class DeploymentServiceImpl implements DeploymentService, Remote, Cluster
     //
     // Operations
     //
+    public DeploymentResult deployAssembly(String assemblyName, InputStream zip, 
+            DeployControlParam param ) throws RemoteException {
+    	if( DeployControlParam.REPLACE_EXISTING_ASSEMBLIES_AND_ACTIVATE.equals(param) ) {
+    		return deployAssembly(assemblyName, zip, true, true);
+    	} else if( DeployControlParam.DO_NOT_ACTIVATE.equals(param) ) {
+    		return deployAssembly(assemblyName, zip, false, false);
+    	} else {
+    		return deployAssembly(assemblyName, zip, false, true);
+    	}
+    }
+
+    public DeploymentResult deployAssembly(String assemblyName, InputStream zip, boolean replaceExistingAssemblies) {
+    	return deployAssembly(assemblyName, zip, replaceExistingAssemblies, true);
+    }
 
     /**
      * Deploy a packaged (zipped) assembly
      */
-    public DeploymentResult deployAssembly(String assemblyName, InputStream zip, boolean replaceExistingAssemblies) {
+    DeploymentResult deployAssembly(String assemblyName, InputStream zip, boolean replaceExistingAssemblies, boolean activate) {
         assertStarted();
 
         if (assemblyName.indexOf(".") >= 0) {
@@ -316,7 +331,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote, Cluster
                 DeploymentResult result = null;
                 try {
                     Utils.unzip(zip, assemblyDir);
-                    result = deployExplodedAssembly(assemblyDir);
+                    result = deployExplodedAssembly(assemblyDir, activate);
                 } finally {
                     if (result == null || !result.isSuccessful()) {
                         Utils.deleteRecursively(assemblyDir);
@@ -334,7 +349,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote, Cluster
     /**
      * Deploy an exploded assembly
      */
-    public DeploymentResult deployExplodedAssembly(File assemblyDir) {
+    public DeploymentResult deployExplodedAssembly(File assemblyDir, boolean activate) {
         File parent = assemblyDir.getParentFile();
         while (true) {
             if (parent == null)
@@ -401,7 +416,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote, Cluster
 
                         ComponentManager manager = getComponentManager(componentManager);
                         try {
-                            result.addAll(component, componentManager, manager.deploy(component, f, false).getMessages());
+                            result.addAll(component, componentManager, manager.deploy(component, f, activate).getMessages());
                             deployed.add(new DeployedComponent(component, f.getAbsolutePath(), componentManager));
                         } catch (Exception except) {
                             String msg = _("Exception while deploying component {0}: {1}", componentName, except.getLocalizedMessage());
@@ -549,7 +564,8 @@ public class DeploymentServiceImpl implements DeploymentService, Remote, Cluster
                     AssemblyId aid = parseAssemblyId(files[i].getName());
                     if (!isMarkedAsDeployed(aid) && !isMarkedAsInvalid(aid)) {
                         try {
-                            DeploymentResult result = deployExplodedAssembly(files[i]);
+                        	// auto-detected assemblies are always activated after deployment
+                            DeploymentResult result = deployExplodedAssembly(files[i], true);
                             if (_serviceState == ServiceState.STARTED) {
                                 initializeAndStart(aid);
                             }
@@ -1104,7 +1120,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote, Cluster
                                 String type = _componentTypes.get(component.getComponentManagerName());
                                 if (name.equals(component.getComponentManagerName()) || name.equals(type)) {
                                     try {
-                                        LOG.debug(_("Activate component {0}", component));
+                                        LOG.debug(_("Initialize component {0}", component));
                                         manager.initialize(component.getComponentId(), new File(component.getComponentDir()));
                                     } catch (Exception except) {
                                         LOG.error(_("Error while activating component {0}", component), except);

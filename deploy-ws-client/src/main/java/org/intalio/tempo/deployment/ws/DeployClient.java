@@ -86,7 +86,6 @@ public class DeployClient implements DeploymentService {
         OMElement request = element(DEPLOY_REQUEST);
         setAuthentication(request);
         request.addChild( elementText(ASSEMBLY_NAME, assemblyName) );
-        request.addChild( elementText(ASSEMBLY_NAME, assemblyName) );
         request.addChild( elementBinary(ZIP, zip) );
         request.addChild( elementBoolean(REPLACE_EXISTING_ASSEMBLIES, replaceExistingAssemblies) );
         OMParser response = invoke(DEPLOY_REQUEST.getLocalPart(), request);
@@ -170,5 +169,18 @@ public class DeployClient implements DeploymentService {
 	public void retire(AssemblyId assemblyId) {
 		// TODO implement this
 		throw new RuntimeException("Not implemented yet!!!");
+	}
+
+	public DeploymentResult deployAssembly(String assemblyName,
+			InputStream zip, DeployControlParam param) throws RemoteException {
+        OMElement request = element(DEPLOY_REQUEST);
+        setAuthentication(request);
+        request.addChild( elementText(ASSEMBLY_NAME, assemblyName) );
+        request.addChild( elementBinary(ZIP, zip) );
+        request.addChild( elementText(DEPLOY_CONTROL_PARAM, 
+        		DeployControlParam.REPLACE_EXISTING_ASSEMBLIES_AND_ACTIVATE.equals(param) ? DEPLOY_CONTROL_PARAM_REPLACE_EXISTING_ASSEMBLIES_AND_ACTIVATE :
+        			(DeployControlParam.DO_NOT_ACTIVATE.equals(param) ? DEPLOY_CONTROL_PARAM_DO_NOT_ACTIVATE : DEPLOY_CONTROL_PARAM_ACTIVATE)) );
+        OMParser response = invoke(DEPLOY_REQUEST.getLocalPart(), request);
+        return OMParser.parseDeploymentResult(response);
 	}
 }

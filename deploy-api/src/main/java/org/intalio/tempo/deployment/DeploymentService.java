@@ -27,7 +27,13 @@ public interface DeploymentService extends Remote {
      * Deploy a packaged (zipped) assembly
      */
     DeploymentResult deployAssembly(String assemblyName, InputStream zip, 
-                                    boolean replaceExistingAssemblies) throws RemoteException;
+        DeployControlParam param ) throws RemoteException;
+
+    /**
+     * Deploy a packaged (zipped) assembly and activate the version; this one stays here for backward-compatibility
+     */
+    DeploymentResult deployAssembly(String assemblyName, InputStream zip, 
+        boolean replaceExistingAssemblies) throws RemoteException;
 
     /**
      * Undeploy an assembly 
@@ -55,4 +61,8 @@ public interface DeploymentService extends Remote {
      * @param name
      */
     void retire(AssemblyId assemblyId);
+    
+    public enum DeployControlParam {
+    	DO_NOT_ACTIVATE, ACTIVATE, REPLACE_EXISTING_ASSEMBLIES_AND_ACTIVATE;
+    }
 }

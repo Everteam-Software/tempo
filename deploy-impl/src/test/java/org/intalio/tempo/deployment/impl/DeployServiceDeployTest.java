@@ -111,7 +111,7 @@ public class DeployServiceDeployTest extends TestCase {
         start();
         
         File assemblyDir = TestUtils.getAssemblyDir("assembly1");
-        DeploymentResult result = service.deployExplodedAssembly(assemblyDir);
+        DeploymentResult result = service.deployExplodedAssembly(assemblyDir, false);
 
         assertTrue(result.isSuccessful());
         assertEquals("assembly1", result.getAssemblyId().getAssemblyName());
@@ -133,14 +133,14 @@ public class DeployServiceDeployTest extends TestCase {
         File assemblyDir = TestUtils.getAssemblyDir("assembly1");
 
         // deploy assembly1
-        DeploymentResult result = service.deployExplodedAssembly(assemblyDir);
+        DeploymentResult result = service.deployExplodedAssembly(assemblyDir, false);
         assertTrue(result.isSuccessful());
         assertEquals("assembly1", result.getAssemblyId().getAssemblyName());
         assertEquals(AssemblyId.NO_VERSION, result.getAssemblyId().getAssemblyVersion());
         assertEquals(0, result.getMessages().size());
 
         // deploy same assembly:  should result in assembly1.2
-        DeploymentResult result2 = service.deployExplodedAssembly(assemblyDir);
+        DeploymentResult result2 = service.deployExplodedAssembly(assemblyDir, false);
 
         assertTrue(result2.isSuccessful());
         assertEquals("assembly1", result2.getAssemblyId().getAssemblyName());
@@ -151,7 +151,7 @@ public class DeployServiceDeployTest extends TestCase {
         assertTrue(manager.isDeployed(new ComponentId(result2.getAssemblyId(), "component1")));
 
         // deploy same assembly:  should result in assembly1.3
-        DeploymentResult result3 = service.deployExplodedAssembly(assemblyDir);
+        DeploymentResult result3 = service.deployExplodedAssembly(assemblyDir, false);
 
         assertTrue(result3.isSuccessful());
         assertEquals("assembly1", result3.getAssemblyId().getAssemblyName());
@@ -166,7 +166,7 @@ public class DeployServiceDeployTest extends TestCase {
         assertEquals(2, service.getDeployedAssemblies().size());
 
         // redeploy assembly1.3
-        result3 = service.deployExplodedAssembly(assemblyDir);
+        result3 = service.deployExplodedAssembly(assemblyDir, false);
 
         assertTrue(result3.isSuccessful());
         assertEquals("assembly1", result3.getAssemblyId().getAssemblyName());
@@ -181,7 +181,7 @@ public class DeployServiceDeployTest extends TestCase {
         assertEquals(2, service.getDeployedAssemblies().size());
 
         // deploy same assembly again:  should result in assembly1.4
-        DeploymentResult result4 = service.deployExplodedAssembly(assemblyDir);
+        DeploymentResult result4 = service.deployExplodedAssembly(assemblyDir, false);
 
         assertTrue(result4.isSuccessful());
         assertEquals("assembly1", result4.getAssemblyId().getAssemblyName());
@@ -198,7 +198,7 @@ public class DeployServiceDeployTest extends TestCase {
         start();
         
         File assemblyDir = TestUtils.getAssemblyDir("assembly1");
-        DeploymentResult result = service.deployExplodedAssembly(assemblyDir);
+        DeploymentResult result = service.deployExplodedAssembly(assemblyDir, false);
 
         assertFalse(result.isSuccessful());
         assertEquals("assembly1", result.getAssemblyId().getAssemblyName());
@@ -214,13 +214,13 @@ public class DeployServiceDeployTest extends TestCase {
         start();
 
         File assemblyDir = TestUtils.getAssemblyDir("assembly_mapping");
-        DeploymentResult result = service.deployExplodedAssembly(assemblyDir);
+        DeploymentResult result = service.deployExplodedAssembly(assemblyDir, false);
 
         assertTrue(result.isSuccessful());
 
         // test removal of component mapping
         service.removeComponentTypeMapping("MappedEngine");
-        DeploymentResult remove = service.deployExplodedAssembly(assemblyDir);
+        DeploymentResult remove = service.deployExplodedAssembly(assemblyDir, false);
 
         assertFalse(remove.isSuccessful());
     }
@@ -267,7 +267,7 @@ public class DeployServiceDeployTest extends TestCase {
         File assemblyZip = new File(TestUtils.getTestBase(), "assembly1.zip");
 
         {
-        DeploymentResult result = service.deployAssembly("assembly1", new FileInputStream(assemblyZip), false);
+        DeploymentResult result = service.deployAssembly("assembly1", new FileInputStream(assemblyZip), false, false);
         System.out.println("testDeployZip: "+result);
         assertTrue(result.isSuccessful());
         assertEquals("assembly1", result.getAssemblyId().getAssemblyName());
@@ -277,7 +277,7 @@ public class DeployServiceDeployTest extends TestCase {
         
         {
         // deploy new version
-        DeploymentResult result2 = service.deployAssembly("assembly1", new FileInputStream(assemblyZip), false);
+        DeploymentResult result2 = service.deployAssembly("assembly1", new FileInputStream(assemblyZip), false, false);
         System.out.println("testDeployZip: result2="+result2);
         assertTrue(result2.isSuccessful());
         assertEquals("assembly1", result2.getAssemblyId().getAssemblyName());
@@ -287,7 +287,7 @@ public class DeployServiceDeployTest extends TestCase {
         
         {
         // deploy and replace all existing versions
-        DeploymentResult result3 = service.deployAssembly("assembly1", new FileInputStream(assemblyZip), true);
+        DeploymentResult result3 = service.deployAssembly("assembly1", new FileInputStream(assemblyZip), true, false);
         System.out.println("testDeployZip: result3="+result3);
         assertTrue(result3.isSuccessful());
         assertEquals("assembly1", result3.getAssemblyId().getAssemblyName());
@@ -389,7 +389,7 @@ public class DeployServiceDeployTest extends TestCase {
         File assemblyZip = new File(TestUtils.getTestBase(), "assembly1.zip");
 
         {
-        DeploymentResult result = service.deployAssembly("assembly1", new FileInputStream(assemblyZip), false);
+        DeploymentResult result = service.deployAssembly("assembly1", new FileInputStream(assemblyZip), false, false);
         assertTrue(result.isSuccessful());
         }
 
