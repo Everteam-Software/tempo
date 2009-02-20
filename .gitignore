@@ -3,3 +3,4 @@ reports
 derby.log
 .classpath
 .project
+.DS_Store
