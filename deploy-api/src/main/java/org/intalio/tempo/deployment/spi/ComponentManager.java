@@ -144,8 +144,9 @@ public interface ComponentManager extends Remote {
      * 
      * @param name Component identifier
      * @param path Component root directory
+     * @param activate when set to true, the version is also activated
      */
-    void deployed(ComponentId name, File path);
+    void deployed(ComponentId name, File path, boolean activate);
 
     /**
      * Notification of undeployed component.
@@ -158,4 +159,18 @@ public interface ComponentManager extends Remote {
      * @param name Component identifier
      */
     void undeployed(ComponentId name);
- }
+    
+    /**
+     * Notification of activated component
+     * 
+     * @param name
+     */
+    void activated(ComponentId name);
+
+    /**
+     * Notification of retired component
+     * 
+     * @param name
+     */
+    void retired(ComponentId name);
+}

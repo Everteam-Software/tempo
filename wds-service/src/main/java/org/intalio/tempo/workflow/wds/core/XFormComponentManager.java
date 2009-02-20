@@ -101,7 +101,7 @@ public class XFormComponentManager implements org.intalio.tempo.deployment.spi.C
         }
     }
 
-    public void deployed(ComponentId name, File path) {
+    public void deployed(ComponentId name, File path, boolean activate) {
         // nothing
     }
 
@@ -282,6 +282,16 @@ public class XFormComponentManager implements org.intalio.tempo.deployment.spi.C
 	}
 
 	public void retire(ComponentId name) {
+		// TODO implement this
+		throw new RuntimeException("Not implemented yet!!");
+	}
+	
+	public void activated(ComponentId name) {
+		// TODO implement this
+		throw new RuntimeException("Not implemented yet!!");
+	}
+
+	public void retired(ComponentId name) {
 		// TODO implement this
 		throw new RuntimeException("Not implemented yet!!");
 	}

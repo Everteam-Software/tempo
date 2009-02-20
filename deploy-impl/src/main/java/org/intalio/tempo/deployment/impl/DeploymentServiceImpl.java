@@ -439,9 +439,9 @@ public class DeploymentServiceImpl implements DeploymentService, Remote, Cluster
 
                     _persist.commitTransaction();
                     
-                    deployed(assembly);
+                    deployed(assembly, activate);
                     
-                    cluster.sendMessage(new DeployedMessage(assembly));
+                    cluster.sendMessage(new DeployedMessage(assembly, activate));
                     
                     initializeAndStart(aid);
                 } else {
@@ -656,18 +656,18 @@ public class DeploymentServiceImpl implements DeploymentService, Remote, Cluster
         return result.finalResult();
     }
 
-    public void onDeployed(DeployedAssembly assembly) {
-        deployed(assembly);
+    public void onDeployed(DeployedAssembly assembly, boolean activate) {
+        deployed(assembly, activate);
 
         initializeAndStart(assembly.getAssemblyId());
     }
     
-    private void deployed(DeployedAssembly assembly) {
+    private void deployed(DeployedAssembly assembly, boolean activate) {
         for (DeployedComponent dc : assembly.getDeployedComponents()) {
             try {
                 LOG.debug(_("Deployed component {0}", dc));
                 ComponentManager manager = getComponentManager(dc.getComponentManagerName());
-                manager.deployed(dc.getComponentId(), new File(dc.getComponentDir()));
+                manager.deployed(dc.getComponentId(), new File(dc.getComponentDir()), activate);
             } catch (Exception except) {
                 String msg = _("Error during deployment notification of component {0}: {1}", dc.getComponentId(), except);
                 LOG.error(msg, except);
@@ -690,6 +690,34 @@ public class DeploymentServiceImpl implements DeploymentService, Remote, Cluster
         }
     }
     
+    public void onActivated(DeployedAssembly assembly) {
+        for (DeployedComponent dc : assembly.getDeployedComponents()) {
+            try {
+                LOG.debug(_("Activated component {0}", dc));
+                ComponentManager manager = getComponentManager(dc.getComponentManagerName());
+                manager.activated(dc.getComponentId());
+            } catch (Exception except) {
+                String msg = _("Error during activation notification of component {0}: {1}", dc.getComponentId(), except);
+                LOG.error(msg, except);
+                break;
+            }
+        }
+    }
+    
+    public void onRetired(DeployedAssembly assembly) {
+        for (DeployedComponent dc : assembly.getDeployedComponents()) {
+            try {
+                LOG.debug(_("Retired component {0}", dc));
+                ComponentManager manager = getComponentManager(dc.getComponentManagerName());
+                manager.retired(dc.getComponentId());
+            } catch (Exception except) {
+                String msg = _("Error during retirement notification of component {0}: {1}", dc.getComponentId(), except);
+                LOG.error(msg, except);
+                break;
+            }
+        }
+    }
+
     private DeployedAssembly initializeAndStart(AssemblyId aid) {
         DeployedAssembly assembly = loadAssemblyState(aid);
         List<DeployedAssembly> assemblies = new ArrayList<DeployedAssembly>();
@@ -779,7 +807,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote, Cluster
                     LOG.debug(_("Dispose component {0}", dc));
                     manager.dispose(dc.getComponentId());
                 } catch (Exception except) {
-                    String msg = _("Error while deactivating component {0}: {1}", dc.getComponentId(), except);
+                    String msg = _("Error while disposing component {0}: {1}", dc.getComponentId(), except);
                     LOG.error(msg, except);
                 }
             }
@@ -787,13 +815,35 @@ public class DeploymentServiceImpl implements DeploymentService, Remote, Cluster
     }
 
 	public void activate(AssemblyId assemblyId) {
-		// TODO Auto-generated method stub
-		
+        DeployedAssembly assembly = loadAssemblyState(assemblyId);
+        for (DeployedComponent dc : assembly.getDeployedComponents()) {
+            ComponentManager manager = getComponentManager(dc.getComponentManagerName());
+            try {
+                LOG.debug(_("Activate component {0}", dc));
+                manager.activate(dc.getComponentId());
+            } catch (Exception except) {
+                String msg = _("Error while activating component {0}: {1}", dc.getComponentId(), except);
+                LOG.error(msg, except);
+            }
+        }
+        
+        cluster.sendMessage(new ActivatedMessage(assembly));
 	}
 
 	public void retire(AssemblyId assemblyId) {
-		// TODO Auto-generated method stub
-		
+        DeployedAssembly assembly = loadAssemblyState(assemblyId);
+        for (DeployedComponent dc : assembly.getDeployedComponents()) {
+            ComponentManager manager = getComponentManager(dc.getComponentManagerName());
+            try {
+                LOG.debug(_("Retire component {0}", dc));
+                manager.retire(dc.getComponentId());
+            } catch (Exception except) {
+                String msg = _("Error while retiring component {0}: {1}", dc.getComponentId(), except);
+                LOG.error(msg, except);
+            }
+        }
+
+        cluster.sendMessage(new RetiredMessage(assembly));
 	}
 
 	private void checkRequiredComponentManagersAvailable() {
@@ -839,7 +889,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote, Cluster
             for( DeployedAssembly assembly : assemblies ) {
             	for( DeployedComponent component : assembly.getDeployedComponents() ) {
             		ComponentManager manager = _componentManagers.get(component.getComponentManagerName());
-            		manager.deployed(component.getComponentId(), new File(component.getComponentDir()));
+            		manager.deployed(component.getComponentId(), new File(component.getComponentDir()), false);
             	}
             }
             
@@ -1220,7 +1270,7 @@ public class DeploymentServiceImpl implements DeploymentService, Remote, Cluster
             LOG.warn(_("Missing component manager: deactivate {0}", cid));
         }
 
-        public void deployed(ComponentId cid, File path) {
+        public void deployed(ComponentId cid, File path, boolean activate) {
             LOG.warn(_("Missing component manager: deployed {0}", cid));
         }
 
@@ -1257,17 +1307,27 @@ public class DeploymentServiceImpl implements DeploymentService, Remote, Cluster
 		public void retire(ComponentId cid) {
             LOG.warn(_("Missing component manager: undeploy {0}", cid));
 		}
+
+		public void activated(ComponentId cid) {
+            LOG.warn(_("Missing component manager: undeploy {0}", cid));
+		}
+
+		public void retired(ComponentId cid) {
+            LOG.warn(_("Missing component manager: undeploy {0}", cid));
+		}
     }
     
     static class DeployedMessage implements Serializable {
         private static final long serialVersionUID = 1L;
         
         public DeployedAssembly assembly;
+        public boolean activate;
 
-        DeployedMessage(DeployedAssembly assembly) {
+        DeployedMessage(DeployedAssembly assembly, boolean activate) {
             this.assembly = assembly;
+            this.activate = activate;
         }
-}
+    }
     
     static class UndeployedMessage implements Serializable {
         private static final long serialVersionUID = 1L;
@@ -1275,6 +1335,26 @@ public class DeploymentServiceImpl implements DeploymentService, Remote, Cluster
         public DeployedAssembly assembly;
 
         UndeployedMessage(DeployedAssembly assembly) {
+            this.assembly = assembly;
+        }
+    }
+
+    static class ActivatedMessage implements Serializable {
+        private static final long serialVersionUID = 1L;
+        
+        public DeployedAssembly assembly;
+
+        ActivatedMessage(DeployedAssembly assembly) {
+            this.assembly = assembly;
+        }
+    }
+
+    static class RetiredMessage implements Serializable {
+        private static final long serialVersionUID = 1L;
+        
+        public DeployedAssembly assembly;
+
+        RetiredMessage(DeployedAssembly assembly) {
             this.assembly = assembly;
         }
     }

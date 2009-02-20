@@ -104,7 +104,7 @@ public class PIPAComponentManager implements org.intalio.tempo.deployment.spi.Co
         }
     }
 
-    public void deployed(ComponentId name, File path) {
+    public void deployed(ComponentId name, File path, boolean activate) {
         // nothing
     }
 
@@ -271,4 +271,14 @@ public class PIPAComponentManager implements org.intalio.tempo.deployment.spi.Co
 		// TODO Implement this
 		throw new RuntimeException("Not implemented yet!!");
 	}
- }
+
+	public void activated(ComponentId name) {
+		// TODO Implement this
+		throw new RuntimeException("Not implemented yet!!");
+	}
+
+	public void retired(ComponentId name) {
+		// TODO Implement this
+		throw new RuntimeException("Not implemented yet!!");
+	}
+}

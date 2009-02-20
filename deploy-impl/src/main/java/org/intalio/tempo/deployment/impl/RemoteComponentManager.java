@@ -85,8 +85,8 @@ public class RemoteComponentManager implements ComponentManager {
         getComponentManager().stop(name);
     }
 
-    public void deployed(ComponentId name, File path) {
-        getComponentManager().deployed(name, path);
+    public void deployed(ComponentId name, File path, boolean activate) {
+        getComponentManager().deployed(name, path, activate);
     }
 
     public void undeployed(ComponentId name) {
@@ -97,11 +97,19 @@ public class RemoteComponentManager implements ComponentManager {
 		getComponentManager().activate(name);
 	}
 
+	public void activated(ComponentId name) {
+		getComponentManager().activated(name);
+	}
+
 	public ComponentManagerResult deploy(ComponentId name, File path, boolean activate) {
 		return getComponentManager().deploy(name, path, activate);
 	}
 
 	public void retire(ComponentId name) {
 		getComponentManager().retire(name);
+	}
+
+	public void retired(ComponentId name) {
+		getComponentManager().retired(name);
 	}
 }

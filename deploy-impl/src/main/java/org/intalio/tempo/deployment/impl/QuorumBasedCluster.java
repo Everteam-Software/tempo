@@ -140,7 +140,7 @@ public class QuorumBasedCluster implements CallBack, Cluster {
                     Object obj = deserialize(((MessageSignal) signal).getMessage());
                     if (obj instanceof DeployedMessage) {
                         DeployedMessage msg = (DeployedMessage) obj;
-                        listener.onDeployed(msg.assembly);
+                        listener.onDeployed(msg.assembly, msg.activate);
                     } else if (obj instanceof UndeployedMessage) {
                         UndeployedMessage msg = (UndeployedMessage) obj;
                         listener.onUndeployed(msg.assembly);
