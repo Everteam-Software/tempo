@@ -26,9 +26,6 @@ import org.intalio.tempo.deployment.ComponentId;
  * <li>deployed - a component is deployed with the deploy() call</li>
  * <li>initialized - a component is initialized and ready for serving request</li>
  * <li>started - a component is started; the start() call notifies that all other components are initialized</li>
- * <li>stopped - a component is stopped; the component may be still serving requests, however, the component
- * should not assume other components that it may depends on are available</li>
- * <li>disposed - a component disables its services</li>
  * <li>undeployed - a component is undeployed with the undeploy() call; actual resources that the component registered during
  * the deployment are returned by the deployment service for additional clean-up</li>
  * </ul>
