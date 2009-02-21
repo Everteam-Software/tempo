@@ -61,7 +61,7 @@ $(document).ready(function(){
 <script>
 function test(str){
 $("#"+str).dialog("destroy").remove();
-var html='<div id="'+str+'" class="flora" title="'+str+'" style="display:none;" ><div id="'+str+'_input" style="display:block;" ><span style="font-weight:500;">Request:</span><br/><textArea rows=10 cols=52></textArea><br/><button id="upload" onclick="alert(\'not supported\');" >read from file</button><button id="submit" onclick="callws(\''+str+'\', \'\');">submit</button></div><div id="'+str+'_output" style="display:none;"><img src="ajax_load.gif"/></div></div>';
+var html='<div id="'+str+'" class="flora" title="'+str+'" style="display:none;" ><div id="'+str+'_input" style="display:block;" ><span style="font-weight:500;">Request:</span><br/><textArea rows=10 cols=52></textArea><br/><!--<button id="upload" onclick="alert(\'not supported\');" >read from file</button>--><button id="submit" onclick="callws(\''+str+'\', \'\');">submit</button></div><div id="'+str+'_output" style="display:none;"><img src="ajax_load.gif"/></div></div>';
   // alert(html);
 //var obj = $("#"+str);
 var obj = $(html);
