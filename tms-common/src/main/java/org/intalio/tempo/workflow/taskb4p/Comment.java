@@ -15,8 +15,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name="tempob4p_comment")
 @NamedQueries( { 
-	@NamedQuery(name = Comment.QUERY_ALL_COMMENTS, query = "select m from Comment m where m.task.id=?1 order by m.addedAt"),
-})
+	@NamedQuery(name = Comment.QUERY_ALL_COMMENTS, query = "select m from Comment m where m.task.id=?1 order by m.addedAt") })
 public class Comment {
 	public static final String QUERY_ALL_COMMENTS = "query_all_comments";
 	
