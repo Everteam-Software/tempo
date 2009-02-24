@@ -257,37 +257,3 @@ APACHE_JPA = [
 ]
 
 FREEMARKER = "org.freemarker:freemarker:jar:2.3.14"
-
-CAS_LIBS = [
-  group("cas-server-core",:under=>"org.jasig.cas", :version=>"3.2.1.1"),
-  group("cas-server-support-ldap",:under=>"org.jasig.cas", :version=>"3.2.1.1"),
-  "org.acegisecurity:acegi-security:jar:1.0.6",
-  "aopalliance:aopalliance:jar:1.0",
-  "aspectj:aspectjrt:jar:1.5.3",
-  "aspectj:aspectjweaver:jar:1.5.3",
-  JDOM,
-  BACKPORT,
-  CAS_CLIENT,
-  APACHE_COMMONS[:codec],
-  APACHE_COMMONS[:collections],
-  APACHE_COMMONS[:lang],
-  APACHE_COMMONS[:logging],
-  "net.sf.ehcache:ehcache:jar:1.4.0-beta2",
-  "quartz:quartz:jar:1.5.2",
-  "net.sf.jsr107cache:jsr107cache:jar:1.0",
-  "inspektr:core:jar:0.6.1",
-  "oro:oro:jar:2.0.8",
-  "jstl:jstl:jar:1.1.2",
-  LOG4J,
-  "ognl:ognl:jar:2.6.9",
-  "opensaml:opensaml:jar:1.1b",
-  "javax.persistence:persistence-api:jar:1.0",
-  "person.directory:api:jar:1.1.1",
-  "person.directory:impl:jar:1.1.1",
-  "quartz:quartz:jar:1.5.2",
-  group("spring-aop","spring-beans","spring-context", "spring-context-support", "spring-core", "spring-jdbc","spring-orm", "spring-tx", "spring-web", "spring-webmvc",:under=>"org.springframework", :version=>"2.5.1"),
-  group("spring-ldap", "spring-ldap-tiger",:under=>"org.springframework", :version=>"1.2.1"),
-  group("spring-binding", "spring-webflow",:under=>"org.springframework", :version=>"1.0.5"), 
-  "xml-security:xmlsec:jar:1.4.0",
-  "taglibs:standard:jar:1.1.2"
-]
