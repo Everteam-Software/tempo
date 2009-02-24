@@ -18,7 +18,7 @@ APACHE_COMMONS = {
   :validator => "commons-validator:commons-validator:jar:1.2.0"
 }
 APACHE_DERBY = "org.apache.derby:derby:jar:10.2.2.0"
-APACHE_DS = "org.apache.apacheds:noarch-installer:jar:1.5.1a"
+
 AXIOM = group("axiom-api", "axiom-dom", "axiom-impl", :under=>"org.apache.ws.commons.axiom", :version=>"1.2.7")
 
 BACKPORT = "backport-util-concurrent:backport-util-concurrent:jar:3.1"

@@ -376,13 +376,6 @@ define "tempo" do
     package :war
   end
   
-  desc "Apache Directory Service"
-  define "apacheds-webapp" do
-	  libs = [APACHE_DS, APACHE_COMMONS[:lang], APACHE_COMMONS[:collections], APACHE_COMMONS[:daemon]]
-  	compile.with(libs, SERVLET_API, LOG4J, SLF4J)
-	  package(:war).with :libs => libs
-  end
-  
   desc "Liferay CAS ticket filter"
   define "liferay-ticket-filter" do
   	compile.with(LIFERAY, SERVLET_API, PORTLET_API, CAS_CLIENT)
