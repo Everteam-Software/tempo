@@ -35,7 +35,7 @@ public class MockComponentManager implements ComponentManager {
     boolean _failStop;
     boolean _failDeactivate;
     boolean _failUndeploy;
-    boolean _failReserve;
+    boolean _failRetire;
 
     public MockComponentManager() {
     }
@@ -98,7 +98,7 @@ public class MockComponentManager implements ComponentManager {
         return _components.containsKey(name);
     }
     
-    public void deployed(ComponentId name, File path) {
+    public void deployed(ComponentId name, File path, boolean activate) {
         _components.put(name, new Component(name, path));
     }
 
@@ -129,6 +129,14 @@ public class MockComponentManager implements ComponentManager {
 	}
 
 	public void retire(ComponentId name) {
-        if (_failReserve) throw new RuntimeException("Reserve force-failed");
+        if (_failRetire) throw new RuntimeException("Retire force-failed");
+	}
+
+	public void activated(ComponentId name) {
+        if (_failActivate) throw new RuntimeException("Activated force-failed");
+	}
+
+	public void retired(ComponentId name) {
+        if (_failRetire) throw new RuntimeException("Retired force-failed");
 	}
 }
