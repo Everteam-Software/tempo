@@ -25,6 +25,7 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements
 
 	public void createTask(Task task) throws TaskIDConflictException {
         checkTransactionIsActive();
+        task.setCreatedOn(new Date(System.currentTimeMillis()));
         entityManager.persist(task);
 	}
 
