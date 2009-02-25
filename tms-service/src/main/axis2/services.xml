@@ -123,7 +123,7 @@
         <parameter name="ServiceObjectSupplier">org.intalio.tempo.workflow.ServiceObjectSupplier</parameter>
         <parameter name="SpringBeanName">tmsb4p.HTOServiceImplementation</parameter>
      	<parameter name="LoadOnStartup">true</parameter>
-    
+     <module ref="TMSHandler"/>
 	     <operation name="getMyTasks">
 	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
 	            <actionMapping>http://www.intalio.com/WS-HT/api/xsd/getMyTasks</actionMapping>
