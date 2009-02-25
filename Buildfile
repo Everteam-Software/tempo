@@ -360,14 +360,6 @@ define "tempo" do
     package :jar
   end
   
-  desc "XForms Manager"
-  define "xforms-manager" do
-	compile.with ORBEON_LIBS
-    resources.filter.using "version" => VERSION_NUMBER
-    package :jar
-    package :war
-  end
-  
   desc "Liferay CAS ticket filter"
   define "liferay-ticket-filter" do
   	compile.with(LIFERAY, SERVLET_API, PORTLET_API, CAS_CLIENT)
