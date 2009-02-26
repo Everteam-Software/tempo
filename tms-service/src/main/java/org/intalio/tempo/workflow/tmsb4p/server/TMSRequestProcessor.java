@@ -1,11 +1,15 @@
 package org.intalio.tempo.workflow.tmsb4p.server;
 
+import java.util.ArrayList;
+import java.util.Date;
+
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axis2.AxisFault;
 import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.task.xml.XmlTooling;
+import org.intalio.tempo.workflow.taskb4p.Task;
 import org.intalio.tempo.workflow.tms.AccessDeniedException;
 import org.intalio.tempo.workflow.tms.TMSException;
 import org.intalio.tempo.workflow.tms.UnavailableAttachmentException;
@@ -20,12 +24,13 @@ import com.intalio.wsHT.api.xsd.CreateDocument;
 import com.intalio.wsHT.api.xsd.CreateResponseDocument;
 import com.intalio.wsHT.api.xsd.GetMyTasksDocument;
 import com.intalio.wsHT.api.xsd.GetMyTasksResponseDocument;
+import com.intalio.wsHT.protocol.THumanTaskContext;
 
 public class TMSRequestProcessor {
     final static Logger _logger = LoggerFactory.getLogger(TMSRequestProcessor.class);
     private ITMSServer _server;
     private static final OMFactory OM_FACTORY = OMAbstractFactory.getOMFactory();
-
+    public static ThreadLocal<String> participantToken = new ThreadLocal<String>();
     /**
      * dumy function
      * 
@@ -93,10 +98,19 @@ public class TMSRequestProcessor {
         try {
             // unmarshal request
             CreateDocument req = CreateDocument.Factory.parse(requestElement.getXMLStreamReader());
+            String participantToken = "VE9LRU4mJnVzZXI9PWFkbWluJiZpc3N1ZWQ9PTExODA0NzY2NjUzOTMmJnJvbGVzPT1pbnRhbGlvXHByb2Nlc3NhZG1pbmlzdHJhdG9yLGV4YW1wbGVzXGVtcGxveWVlLGludGFsaW9ccHJvY2Vzc21hbmFnZXIsZXhhbXBsZXNcbWFuYWdlciYmZnVsbE5hbWU9PUFkbWluaW5pc3RyYXRvciYmZW1haWw9PWFkbWluQGV4YW1wbGUuY29tJiZub25jZT09NDMxNjAwNTE5NDM5MTk1MDMzMyYmdGltZXN0YW1wPT0xMTgwNDc2NjY1Mzk1JiZkaWdlc3Q9PTVmM1dQdDBXOEp2UlpRM2gyblJ6UkRrenRwTT0mJiYmVE9LRU4";
+           // Log.log("participantToken="+participantToken);
             
-            // TODO process request
-            // _server.create(task, participantToken);
-
+            THumanTaskContext tasks[] = req.getCreate().getHumanTaskContextArray();
+            for (int i = 0; i<tasks.length; i++){
+                Task task = new Task();
+                task.setId("0");
+                task.setName("test");
+                task.setCreatedOn(new Date());
+                task.setPriority(tasks[0].getPriority().intValue());
+                _server.create(task, participantToken);
+            }
+            
             // marshal response
             CreateResponseDocument ret = CreateResponseDocument.Factory.newInstance();
             //TODO set data 
@@ -115,9 +129,9 @@ public class TMSRequestProcessor {
         try {
             // unmarshal request
             GetMyTasksDocument req = GetMyTasksDocument.Factory.parse(requestElement.getXMLStreamReader());
-            
+            String participantToken = "VE9LRU4mJnVzZXI9PWFkbWluJiZpc3N1ZWQ9PTExODA0NzY2NjUzOTMmJnJvbGVzPT1pbnRhbGlvXHByb2Nlc3NhZG1pbmlzdHJhdG9yLGV4YW1wbGVzXGVtcGxveWVlLGludGFsaW9ccHJvY2Vzc21hbmFnZXIsZXhhbXBsZXNcbWFuYWdlciYmZnVsbE5hbWU9PUFkbWluaW5pc3RyYXRvciYmZW1haWw9PWFkbWluQGV4YW1wbGUuY29tJiZub25jZT09NDMxNjAwNTE5NDM5MTk1MDMzMyYmdGltZXN0YW1wPT0xMTgwNDc2NjY1Mzk1JiZkaWdlc3Q9PTVmM1dQdDBXOEp2UlpRM2gyblJ6UkRrenRwTT0mJiYmVE9LRU4"; 
             // TODO process request
-            // _server.create(task, participantToken);
+           // ArrayList<Task> tasks = _server.getTasks(participantToken);
 
             // marshal response
             GetMyTasksResponseDocument ret = GetMyTasksResponseDocument.Factory.newInstance();

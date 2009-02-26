@@ -21,7 +21,7 @@ td.status {font-size:10pt;width:296;text-align:center;}
 <!--
 <link rel="stylesheet" href="flora.tabs.css" />
 -->
-<link rel="stylesheet" href="http://ui.jquery.com/latest/themes/flora/flora.all.css" type="text/css" media="screen" title="Flora (Default)">
+<link rel="stylesheet" href="flora.all.css" type="text/css" media="screen" title="Flora (Default)">
 
 <script src="jquery-latest.js"></script>
 <script type="text/javascript" src="ui.core.js"></script>
@@ -61,7 +61,14 @@ $(document).ready(function(){
 <script>
 function test(str){
 $("#"+str).dialog("destroy").remove();
-var html='<div id="'+str+'" class="flora" title="'+str+'" style="display:none;" ><div id="'+str+'_input" style="display:block;" ><span style="font-weight:500;">Request:</span><br/><textArea rows=10 cols=52></textArea><br/><!--<button id="upload" onclick="alert(\'not supported\');" >read from file</button>--><button id="submit" onclick="callws(\''+str+'\', \'\');">submit</button></div><div id="'+str+'_output" style="display:none;"><img src="ajax_load.gif"/></div></div>';
+var url_template = "/ui-fw/b4ptest/request/"+str+".xml";
+
+var op = {type:'GET',async: false,url:url_template,contentType:"text/xml; charset=utf-8"};
+//var wsdlAjax = new XHR(op).send(this.url + "?wsdl", null);	
+var contentAjax = $.ajax(op);					
+var content = contentAjax.responseText;			
+
+var html='<div id="'+str+'" class="flora" title="'+str+'" style="display:none;" ><div id="'+str+'_input" style="display:block;" ><span style="font-weight:500;">Request:</span><br/><textArea id="content" rows=10 cols=52>'+content+'</textArea><br/><!--<button id="upload" onclick="alert(\'not supported\');" >read from file</button>--><button id="submit" onclick="callws(\''+str+'\', \'\');">submit</button></div><div id="'+str+'_output" style="display:none;"><img src="ajax_load.gif"/></div></div>';
   // alert(html);
 //var obj = $("#"+str);
 var obj = $(html);

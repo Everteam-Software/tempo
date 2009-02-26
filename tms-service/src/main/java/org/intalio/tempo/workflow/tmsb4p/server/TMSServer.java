@@ -4,17 +4,50 @@ import java.net.URL;
 
 import org.apache.axis2.AxisFault;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
+import org.intalio.tempo.workflow.auth.IAuthProvider;
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.PIPATask;
-import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.TaskState;
-import org.intalio.tempo.workflow.task.attachments.Attachment;
+import org.intalio.tempo.workflow.taskb4p.Attachment;
+import org.intalio.tempo.workflow.taskb4p.Task;
 import org.intalio.tempo.workflow.tms.TMSException;
-
+import org.intalio.tempo.workflow.tms.server.daob4p.ITaskDAOConnection;
+import org.intalio.tempo.workflow.tms.server.daob4p.ITaskDAOConnectionFactory;
+import org.intalio.tempo.workflow.tms.server.permissions.TaskPermissions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 public class TMSServer implements ITMSServer{
- 
+    private static final Logger _logger = LoggerFactory.getLogger(TMSServer.class);
+    private IAuthProvider _authProvider;
+    private ITaskDAOConnectionFactory _taskDAOFactory;
+    private TaskPermissions _permissions;
+    
+    public IAuthProvider getAuthProvider() {
+        return _authProvider;
+    }
+
+    public void setAuthProvider(IAuthProvider provider) {
+        _authProvider = provider;
+    }
+
+    public ITaskDAOConnectionFactory getTaskDAOFactory() {
+        return _taskDAOFactory;
+    }
+
+    public void setTaskDAOFactory(ITaskDAOConnectionFactory factory) {
+        _taskDAOFactory = factory;
+    }
+
+    public TaskPermissions getPermissions() {
+        return _permissions;
+    }
+
+    public void setPermissions(TaskPermissions _permissions) {
+        this._permissions = _permissions;
+    }
+
     /**
      * @param args
      */
@@ -34,7 +67,20 @@ public class TMSServer implements ITMSServer{
     }
 
     public void create(Task task, String participantToken) throws TMSException {
-        // TODO Auto-generated method stub
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        try {
+            dao.createTask(task);
+            dao.commit();
+            if (_logger.isDebugEnabled())
+                _logger.debug("Workflow Task " + task + " was created");
+            // TODO : Use credentials.getUserID() :vb
+        } catch (Exception e) {
+            _logger.error("Cannot create Workflow Tasks", e); // TODO :
+            // TaskIDConflictException
+            // must be rethrowed :vb
+        } finally {
+            dao.close();
+        }
         
     }
 
@@ -117,5 +163,7 @@ public class TMSServer implements ITMSServer{
         // TODO Auto-generated method stub
         
     }
+
+ 
 
 }

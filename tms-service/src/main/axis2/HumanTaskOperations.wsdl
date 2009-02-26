@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
-	xmlns="http://www.intalio.com/WS-HT/api/wsdl" xmlns:htd="http://www.intalio.com/WS-HT"
+	name="HumanTaskOperationServices" xmlns:htd="http://www.intalio.com/WS-HT" xmlns="http://www.intalio.com/WS-HT/api/wsdl"
 	xmlns:htda="http://www.intalio.com/WS-HT/api" xmlns:htdt="http://www.intalio.com/WS-HT/api/xsd"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.intalio.com/WS-HT/api/wsdl"
 	targetNamespace="http://www.intalio.com/WS-HT/api/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
@@ -265,261 +265,261 @@
 		<wsdl:operation name="claim">
 			<wsdl:input message="claim" />
 			<wsdl:output message="claimResponse" />
-			<wsdl:fault name="illegalStateFault" message="illegalStateFault" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
-			<wsdl:fault name="illegalAccessFault" message="illegalAccessFault" />
+			<wsdl:fault name="illegalStateFault" message="tns:illegalStateFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
+			<wsdl:fault name="illegalAccessFault" message="tns:illegalAccessFault" />
 		</wsdl:operation>
 		<wsdl:operation name="start">
 			<wsdl:input message="start" />
 			<wsdl:output message="startResponse" />
-			<wsdl:fault name="illegalStateFault" message="illegalStateFault" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
-			<wsdl:fault name="illegalAccessFault" message="illegalAccessFault" />
+			<wsdl:fault name="illegalStateFault" message="tns:illegalStateFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
+			<wsdl:fault name="illegalAccessFault" message="tns:illegalAccessFault" />
 		</wsdl:operation>
 		<wsdl:operation name="stop">
 			<wsdl:input message="stop" />
 			<wsdl:output message="stopResponse" />
-			<wsdl:fault name="illegalStateFault" message="illegalStateFault" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
-			<wsdl:fault name="illegalAccessFault" message="illegalAccessFault" />
+			<wsdl:fault name="illegalStateFault" message="tns:illegalStateFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
+			<wsdl:fault name="illegalAccessFault" message="tns:illegalAccessFault" />
 		</wsdl:operation>
 		<wsdl:operation name="release">
 			<wsdl:input message="release" />
 			<wsdl:output message="releaseResponse" />
-			<wsdl:fault name="illegalStateFault" message="illegalStateFault" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
-			<wsdl:fault name="illegalAccessFault" message="illegalAccessFault" />
+			<wsdl:fault name="illegalStateFault" message="tns:illegalStateFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
+			<wsdl:fault name="illegalAccessFault" message="tns:illegalAccessFault" />
 		</wsdl:operation>
 		<wsdl:operation name="suspend">
 			<wsdl:input message="suspend" />
 			<wsdl:output message="suspendResponse" />
-			<wsdl:fault name="illegalStateFault" message="illegalStateFault" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
-			<wsdl:fault name="illegalAccessFault" message="illegalAccessFault" />
+			<wsdl:fault name="illegalStateFault" message="tns:illegalStateFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
+			<wsdl:fault name="illegalAccessFault" message="tns:illegalAccessFault" />
 		</wsdl:operation>
 		<wsdl:operation name="suspendUntil">
 			<wsdl:input message="suspendUntil" />
 			<wsdl:output message="suspendUntilResponse" />
-			<wsdl:fault name="illegalStateFault" message="illegalStateFault" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
-			<wsdl:fault name="illegalAccessFault" message="illegalAccessFault" />
+			<wsdl:fault name="illegalStateFault" message="tns:illegalStateFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
+			<wsdl:fault name="illegalAccessFault" message="tns:illegalAccessFault" />
 		</wsdl:operation>
 		<wsdl:operation name="resume">
 			<wsdl:input message="resume" />
 			<wsdl:output message="resumeResponse" />
-			<wsdl:fault name="illegalStateFault" message="illegalStateFault" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
-			<wsdl:fault name="illegalAccessFault" message="illegalAccessFault" />
+			<wsdl:fault name="illegalStateFault" message="tns:illegalStateFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
+			<wsdl:fault name="illegalAccessFault" message="tns:illegalAccessFault" />
 		</wsdl:operation>
 		<wsdl:operation name="complete">
 			<wsdl:input message="complete" />
 			<wsdl:output message="completeResponse" />
-			<wsdl:fault name="illegalStateFault" message="illegalStateFault" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
-			<wsdl:fault name="illegalAccessFault" message="illegalAccessFault" />
+			<wsdl:fault name="illegalStateFault" message="tns:illegalStateFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
+			<wsdl:fault name="illegalAccessFault" message="tns:illegalAccessFault" />
 		</wsdl:operation>
 		<wsdl:operation name="remove">
 			<wsdl:input message="remove" />
 			<wsdl:output message="removeResponse" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
-			<wsdl:fault name="illegalAccessFault" message="illegalAccessFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
+			<wsdl:fault name="illegalAccessFault" message="tns:illegalAccessFault" />
 		</wsdl:operation>
 		<wsdl:operation name="fail">
 			<wsdl:input message="fail" />
 			<wsdl:output message="failResponse" />
-			<wsdl:fault name="illegalStateFault" message="illegalStateFault" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
-			<wsdl:fault name="illegalAccessFault" message="illegalAccessFault" />
-			<wsdl:fault name="illegalOperationFault" message="illegalOperationFault" />
+			<wsdl:fault name="illegalStateFault" message="tns:illegalStateFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
+			<wsdl:fault name="illegalAccessFault" message="tns:illegalAccessFault" />
+			<wsdl:fault name="illegalOperationFault" message="tns:illegalOperationFault" />
 		</wsdl:operation>
 		<wsdl:operation name="setPriority">
 			<wsdl:input message="setPriority" />
 			<wsdl:output message="setPriorityResponse" />
-			<wsdl:fault name="illegalStateFault" message="illegalStateFault" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
-			<wsdl:fault name="illegalAccessFault" message="illegalAccessFault" />
+			<wsdl:fault name="illegalStateFault" message="tns:illegalStateFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
+			<wsdl:fault name="illegalAccessFault" message="tns:illegalAccessFault" />
 		</wsdl:operation>
 		<wsdl:operation name="addAttachment">
 			<wsdl:input message="addAttachment" />
 			<wsdl:output message="addAttachmentResponse" />
-			<wsdl:fault name="illegalStateFault" message="illegalStateFault" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
-			<wsdl:fault name="illegalAccessFault" message="illegalAccessFault" />
+			<wsdl:fault name="illegalStateFault" message="tns:illegalStateFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
+			<wsdl:fault name="illegalAccessFault" message="tns:illegalAccessFault" />
 		</wsdl:operation>
 		<wsdl:operation name="getAttachmentInfos">
 			<wsdl:input message="getAttachmentInfos" />
 			<wsdl:output message="getAttachmentInfosResponse" />
-			<wsdl:fault name="illegalStateFault" message="illegalStateFault" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
-			<wsdl:fault name="illegalAccessFault" message="illegalAccessFault" />
+			<wsdl:fault name="illegalStateFault" message="tns:illegalStateFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
+			<wsdl:fault name="illegalAccessFault" message="tns:illegalAccessFault" />
 		</wsdl:operation>
 		<wsdl:operation name="getAttachments">
 			<wsdl:input message="getAttachments" />
 			<wsdl:output message="getAttachmentsResponse" />
-			<wsdl:fault name="illegalStateFault" message="illegalStateFault" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
-			<wsdl:fault name="illegalAccessFault" message="illegalAccessFault" />
+			<wsdl:fault name="illegalStateFault" message="tns:illegalStateFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
+			<wsdl:fault name="illegalAccessFault" message="tns:illegalAccessFault" />
 		</wsdl:operation>
-		<wsdl:operation name="Attachments">
+		<wsdl:operation name="deleteAttachments">
 			<wsdl:input message="deleteAttachments" />
 			<wsdl:output message="deleteAttachmentsResponse" />
-			<wsdl:fault name="illegalStateFault" message="illegalStateFault" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
-			<wsdl:fault name="illegalAccessFault" message="illegalAccessFault" />
+			<wsdl:fault name="illegalStateFault" message="tns:illegalStateFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
+			<wsdl:fault name="illegalAccessFault" message="tns:illegalAccessFault" />
 		</wsdl:operation>
 		<wsdl:operation name="addComment">
 			<wsdl:input message="addComment" />
 			<wsdl:output message="addCommentResposne" />
-			<wsdl:fault name="illegalStateFault" message="illegalStateFault" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
-			<wsdl:fault name="illegalAccessFault" message="illegalAccessFault" />
+			<wsdl:fault name="illegalStateFault" message="tns:illegalStateFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
+			<wsdl:fault name="illegalAccessFault" message="tns:illegalAccessFault" />
 		</wsdl:operation>
 		<wsdl:operation name="getComments">
 			<wsdl:input message="getComments" />
 			<wsdl:output message="getCommentsResponse" />
-			<wsdl:fault name="illegalStateFault" message="illegalStateFault" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
-			<wsdl:fault name="illegalAccessFault" message="illegalAccessFault" />
+			<wsdl:fault name="illegalStateFault" message="tns:illegalStateFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
+			<wsdl:fault name="illegalAccessFault" message="tns:illegalAccessFault" />
 		</wsdl:operation>
 		<wsdl:operation name="skip">
 			<wsdl:input message="skip" />
 			<wsdl:output message="skipResponse" />
-			<wsdl:fault name="illegalStateFault" message="illegalStateFault" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
-			<wsdl:fault name="illegalAccessFault" message="illegalAccessFault" />
-			<wsdl:fault name="illegalOperationFault" message="illegalOperationFault" />
+			<wsdl:fault name="illegalStateFault" message="tns:illegalStateFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
+			<wsdl:fault name="illegalAccessFault" message="tns:illegalAccessFault" />
+			<wsdl:fault name="illegalOperationFault" message="tns:illegalOperationFault" />
 		</wsdl:operation>
 		<wsdl:operation name="forward">
 			<wsdl:input message="forward" />
 			<wsdl:output message="forwardResponse" />
-			<wsdl:fault name="illegalStateFault" message="illegalStateFault" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
-			<wsdl:fault name="illegalAccessFault" message="illegalAccessFault" />
+			<wsdl:fault name="illegalStateFault" message="tns:illegalStateFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
+			<wsdl:fault name="illegalAccessFault" message="tns:illegalAccessFault" />
 		</wsdl:operation>
 		<wsdl:operation name="delegate">
 			<wsdl:input message="delegate" />
 			<wsdl:output message="delegateResponse" />
-			<wsdl:fault name="illegalStateFault" message="illegalStateFault" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
-			<wsdl:fault name="illegalAccessFault" message="illegalAccessFault" />
+			<wsdl:fault name="illegalStateFault" message="tns:illegalStateFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
+			<wsdl:fault name="illegalAccessFault" message="tns:illegalAccessFault" />
 			<wsdl:fault name="recipientNotAllowed" message="recipientNotAllowed" />
 		</wsdl:operation>
 		<wsdl:operation name="getRendering">
 			<wsdl:input message="getRendering" />
 			<wsdl:output message="getRenderingResponse" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
 		</wsdl:operation>
 		<wsdl:operation name="getRenderingTypes">
 			<wsdl:input message="getRenderingTypes" />
 			<wsdl:output message="getRenderingTypesResponse" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
 		</wsdl:operation>
 		<wsdl:operation name="getTaskInfo">
 			<wsdl:input message="getTaskInfo" />
 			<wsdl:output message="getTaskInfoResponse" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
 		</wsdl:operation>
 		<wsdl:operation name="getTaskDescription">
 			<wsdl:input message="getTaskDescription" />
 			<wsdl:output message="getTaskDescriptionResponse" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
 		</wsdl:operation>
 		<wsdl:operation name="setOutput">
 			<wsdl:input message="setOutput" />
 			<wsdl:output message="setOutputResponse" />
-			<wsdl:fault name="illegalStateFault" message="illegalStateFault" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
-			<wsdl:fault name="illegalAccessFault" message="illegalAccessFault" />
+			<wsdl:fault name="illegalStateFault" message="tns:illegalStateFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
+			<wsdl:fault name="illegalAccessFault" message="tns:illegalAccessFault" />
 		</wsdl:operation>
 		<wsdl:operation name="deleteOutput">
 			<wsdl:input message="deleteOutput" />
 			<wsdl:output message="deleteOutputResponse" />
-			<wsdl:fault name="illegalStateFault" message="illegalStateFault" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
-			<wsdl:fault name="illegalAccessFault" message="illegalAccessFault" />
+			<wsdl:fault name="illegalStateFault" message="tns:illegalStateFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
+			<wsdl:fault name="illegalAccessFault" message="tns:illegalAccessFault" />
 		</wsdl:operation>
 		<wsdl:operation name="setFault">
 			<wsdl:input message="setFault" />
 			<wsdl:output message="setFaultResponse" />
-			<wsdl:fault name="illegalStateFault" message="illegalStateFault" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
-			<wsdl:fault name="illegalAccessFault" message="illegalAccessFault" />
-			<wsdl:fault name="illegalOperationFault" message="illegalOperationFault" />
+			<wsdl:fault name="illegalStateFault" message="tns:illegalStateFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
+			<wsdl:fault name="illegalAccessFault" message="tns:illegalAccessFault" />
+			<wsdl:fault name="illegalOperationFault" message="tns:illegalOperationFault" />
 		</wsdl:operation>
 		<wsdl:operation name="deleteFault">
 			<wsdl:input message="deleteFault" />
 			<wsdl:output message="deleteFaultResponse" />
-			<wsdl:fault name="illegalStateFault" message="illegalStateFault" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
-			<wsdl:fault name="illegalAccessFault" message="illegalAccessFault" />
+			<wsdl:fault name="illegalStateFault" message="tns:illegalStateFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
+			<wsdl:fault name="illegalAccessFault" message="tns:illegalAccessFault" />
 		</wsdl:operation>
 		<wsdl:operation name="getInput">
 			<wsdl:input message="getInput" />
 			<wsdl:output message="getInputResponse" />
-			<wsdl:fault name="illegalStateFault" message="illegalStateFault" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
-			<wsdl:fault name="illegalAccessFault" message="illegalAccessFault" />
+			<wsdl:fault name="illegalStateFault" message="tns:illegalStateFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
+			<wsdl:fault name="illegalAccessFault" message="tns:illegalAccessFault" />
 		</wsdl:operation>
 		<wsdl:operation name="getOutput">
 			<wsdl:input message="getOutput" />
 			<wsdl:output message="getOutputResponse" />
-			<wsdl:fault name="illegalStateFault" message="illegalStateFault" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
-			<wsdl:fault name="illegalAccessFault" message="illegalAccessFault" />
+			<wsdl:fault name="illegalStateFault" message="tns:illegalStateFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
+			<wsdl:fault name="illegalAccessFault" message="tns:illegalAccessFault" />
 		</wsdl:operation>
 		<wsdl:operation name="getFault">
 			<wsdl:input message="getFault" />
 			<wsdl:output message="getFaultResponse" />
-			<wsdl:fault name="illegalStateFault" message="illegalStateFault" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
-			<wsdl:fault name="illegalAccessFault" message="illegalAccessFault" />
-			<wsdl:fault name="illegalOperationFault" message="illegalOperationFault" />
+			<wsdl:fault name="illegalStateFault" message="tns:illegalStateFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
+			<wsdl:fault name="illegalAccessFault" message="tns:illegalAccessFault" />
+			<wsdl:fault name="illegalOperationFault" message="tns:illegalOperationFault" />
 		</wsdl:operation>
 		<wsdl:operation name="getMyTaskAbstracts">
 			<wsdl:input message="getMyTaskAbstracts" />
 			<wsdl:output message="getMyTaskAbstractsResponse" />
-			<wsdl:fault name="illegalStateFault" message="illegalStateFault" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
+			<wsdl:fault name="illegalStateFault" message="tns:illegalStateFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
 		</wsdl:operation>
 		<wsdl:operation name="getMyTasks">
 			<wsdl:input message="getMyTasks" />
 			<wsdl:output message="getMyTasksResponse" />
-			<wsdl:fault name="illegalStateFault" message="illegalStateFault" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
+			<wsdl:fault name="illegalStateFault" message="tns:illegalStateFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
 		</wsdl:operation>
 		<wsdl:operation name="query">
 			<wsdl:input message="query" />
 			<wsdl:output message="queryResponse" />
-			<wsdl:fault name="illegalStateFault" message="illegalStateFault" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
+			<wsdl:fault name="illegalStateFault" message="tns:illegalStateFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
 		</wsdl:operation>
 		<wsdl:operation name="activate">
 			<wsdl:input message="activate" />
 			<wsdl:output message="activateResponse" />
-			<wsdl:fault name="illegalStateFault" message="illegalStateFault" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
-			<wsdl:fault name="illegalAccessFault" message="illegalAccessFault" />
+			<wsdl:fault name="illegalStateFault" message="tns:illegalStateFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
+			<wsdl:fault name="illegalAccessFault" message="tns:illegalAccessFault" />
 		</wsdl:operation>
 		<wsdl:operation name="nominate">
 			<wsdl:input message="nominate" />
 			<wsdl:output message="nominateResponse" />
-			<wsdl:fault name="illegalStateFault" message="illegalStateFault" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
-			<wsdl:fault name="illegalAccessFault" message="illegalAccessFault" />
+			<wsdl:fault name="illegalStateFault" message="tns:illegalStateFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
+			<wsdl:fault name="illegalAccessFault" message="tns:illegalAccessFault" />
 		</wsdl:operation>
 		<wsdl:operation name="setGenericHumanRole">
 			<wsdl:input message="setGenericHumanRole" />
 			<wsdl:output message="setGenericHumanRoleResponse" />
-			<wsdl:fault name="illegalStateFault" message="illegalStateFault" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
-			<wsdl:fault name="illegalAccessFault" message="illegalAccessFault" />
+			<wsdl:fault name="illegalStateFault" message="tns:illegalStateFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
+			<wsdl:fault name="illegalAccessFault" message="tns:illegalAccessFault" />
 		</wsdl:operation>
 		<wsdl:operation name="create">
 			<wsdl:input message="createRequest"></wsdl:input>
 			<wsdl:output message="createResponse"></wsdl:output>
-			<wsdl:fault name="illegalStateFault" message="illegalStateFault" />
-			<wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault" />
-			<wsdl:fault name="illegalAccessFault" message="illegalAccessFault" />
+			<wsdl:fault name="illegalStateFault" message="tns:illegalStateFault" />
+			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
+			<wsdl:fault name="illegalAccessFault" message="tns:illegalAccessFault" />
 		</wsdl:operation>
 	</wsdl:portType>
 
@@ -696,8 +696,8 @@
 			<wsdl:output>
 				<soap:body use="literal" />
 			</wsdl:output>
-			<wsdl:fault name="illegalStateFault">
-				<soap:fault name="illegalStateFault" use="literal" />
+			<wsdl:fault name="illegalAccessFault">
+				<soap:fault name="illegalAccessFault" use="literal" />
 			</wsdl:fault>
 			<wsdl:fault name="illegalArgumentFault">
 				<soap:fault name="illegalArgumentFault" use="literal" />
@@ -767,7 +767,7 @@
 				<soap:fault name="illegalArgumentFault" use="literal" />
 			</wsdl:fault>
 		</wsdl:operation>
-		<wsdl:operation name="deleteAttachment">
+		<wsdl:operation name="deleteAttachments">
 			<soap:operation
 				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/deleteAttachments" />
 			<wsdl:input>
@@ -872,9 +872,6 @@
 			<wsdl:output>
 				<soap:body use="literal" />
 			</wsdl:output>
-			<wsdl:fault name="illegalStateFault">
-				<soap:fault name="illegalStateFault" use="literal" />
-			</wsdl:fault>
 			<wsdl:fault name="illegalArgumentFault">
 				<soap:fault name="illegalArgumentFault" use="literal" />
 			</wsdl:fault>
@@ -888,9 +885,6 @@
 			<wsdl:output>
 				<soap:body use="literal" />
 			</wsdl:output>
-			<wsdl:fault name="illegalStateFault">
-				<soap:fault name="illegalStateFault" use="literal" />
-			</wsdl:fault>
 			<wsdl:fault name="illegalArgumentFault">
 				<soap:fault name="illegalArgumentFault" use="literal" />
 			</wsdl:fault>
@@ -904,9 +898,6 @@
 			<wsdl:output>
 				<soap:body use="literal" />
 			</wsdl:output>
-			<wsdl:fault name="illegalStateFault">
-				<soap:fault name="illegalStateFault" use="literal" />
-			</wsdl:fault>
 			<wsdl:fault name="illegalArgumentFault">
 				<soap:fault name="illegalArgumentFault" use="literal" />
 			</wsdl:fault>
@@ -920,9 +911,6 @@
 			<wsdl:output>
 				<soap:body use="literal" />
 			</wsdl:output>
-			<wsdl:fault name="illegalStateFault">
-				<soap:fault name="illegalStateFault" use="literal" />
-			</wsdl:fault>
 			<wsdl:fault name="illegalArgumentFault">
 				<soap:fault name="illegalArgumentFault" use="literal" />
 			</wsdl:fault>
@@ -1101,9 +1089,9 @@
 				<soap:fault name="illegalArgumentFault" use="literal" />
 			</wsdl:fault>
 		</wsdl:operation>
-		<wsdl:operation name="dominate">
+		<wsdl:operation name="nominate">
 			<soap:operation
-				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/dominate">
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/nominate">
 				<soap:documentation></soap:documentation>
 			</soap:operation>
 			<wsdl:input>
@@ -1119,42 +1107,7 @@
 				<soap:fault name="illegalArgumentFault" use="literal" />
 			</wsdl:fault>
 		</wsdl:operation>
-		<wsdl:operation name="setGenericHumanRole">
-			<soap:operation
-				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/setGenericHumanRole">
-				<soap:documentation></soap:documentation>
-			</soap:operation>
-			<wsdl:input>
-				<soap:body use="literal" />
-			</wsdl:input>
-			<wsdl:output>
-				<soap:body use="literal" />
-			</wsdl:output>
-			<wsdl:fault name="illegalStateFault">
-				<soap:fault name="illegalStateFault" use="literal" />
-			</wsdl:fault>
-			<wsdl:fault name="illegalArgumentFault">
-				<soap:fault name="illegalArgumentFault" use="literal" />
-			</wsdl:fault>
-		</wsdl:operation>
-				<wsdl:operation name="setPriority">
-			<soap:operation
-				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/setPriority">
-				<soap:documentation></soap:documentation>
-			</soap:operation>
-			<wsdl:input>
-				<soap:body use="literal" />
-			</wsdl:input>
-			<wsdl:output>
-				<soap:body use="literal" />
-			</wsdl:output>
-			<wsdl:fault name="illegalStateFault">
-				<soap:fault name="illegalStateFault" use="literal" />
-			</wsdl:fault>
-			<wsdl:fault name="illegalArgumentFault">
-				<soap:fault name="illegalArgumentFault" use="literal" />
-			</wsdl:fault>
-		</wsdl:operation>
+
 	</wsdl:binding>
 
 	<wsdl:service name="HumanTaskOperationServices">

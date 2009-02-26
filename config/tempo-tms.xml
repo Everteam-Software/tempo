@@ -34,17 +34,17 @@
 		</property>	
 	</bean>
 	<bean id="tmsb4p.server" class="org.intalio.tempo.workflow.tmsb4p.server.TMSServer">
-		<!--
-		<property name="authProvider">
+		
+		<!--<property name="authProvider">
 			<ref bean="tms.authProvider"/>
-		</property>
+		</property>-->
 		<property name="taskDAOFactory">
-			<ref bean="tms.daoFactory"/>
+			<ref bean="tmsb4p.daoFactory"/>
 		</property>
 		<property name="permissions">
 			<ref bean="tms.permissionsHandler"/>
 		</property>
-		-->
+		
 	</bean>
 	<bean id="tms.permissionsHandler" class="org.intalio.tempo.workflow.tms.server.permissions.TaskPermissions">
 		<constructor-arg><map>
@@ -67,5 +67,14 @@
 			</map>
 		</constructor-arg>
 	</bean>
-
+	<bean id="tmsb4p.daoFactory" class="org.intalio.tempo.workflow.tms.server.daob4p.JPATaskDaoConnectionFactory">
+		<constructor-arg>
+			<map>
+				<entry><key><value>openjpa.jdbc.SynchronizeMappings</value></key><value>buildSchema</value></entry>
+				<entry><key><value>openjpa.Log</value></key><value>log4j</value></entry>
+				<entry><key><value>openjpa.ConnectionFactoryMode</value></key><value>local</value></entry>
+				<entry><key><value>tempo.datasourceURL</value></key><value>java:comp/env/jdbc/BPMSDB</value></entry>
+			</map>
+		</constructor-arg>
+	</bean>
 </beans>

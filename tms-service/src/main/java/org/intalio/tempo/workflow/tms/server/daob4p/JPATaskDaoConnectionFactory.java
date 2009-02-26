@@ -20,11 +20,11 @@ public class JPATaskDaoConnectionFactory extends AbstractJPAConnectionFactory
 		implements ITaskDAOConnectionFactory {
 
 	public JPATaskDaoConnectionFactory(Map<String, Object> properties) {
-		super("org.intalio.tempob4p.tms", properties);
+		super("org.intalio.tempo.tmsb4p", properties);
 	}
 
 	public JPATaskDaoConnectionFactory() {
-		super("org.intalio.tempob4p.tms");
+		super("org.intalio.tempo.tmsb4p");
 	}
 
 	public ITaskDAOConnection openConnection() {

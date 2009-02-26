@@ -25,10 +25,10 @@ function WebService(URL1, method1, options1){
 			var op = {type:'GET',async: false,url:this.url+ "?wsdl"};
 			//var wsdlAjax = new XHR(op).send(this.url + "?wsdl", null);	
 			var wsdlAjax = $.ajax(op);					
-			wsdl = wsdlAjax.responseXML;			
+			wsdl = wsdlAjax.responseXML;	
 			WSDLS[this.url] = wsdl;
 		}
-		//alert(wsdl.responseText);
+	
 		//alert("wsdl="+wsdl.responseText+","+wsdl.statusText);
 		this.setSoap(wsdl);
 		//alert("setSoap leave");
@@ -36,8 +36,8 @@ function WebService(URL1, method1, options1){
 		
 		WebService.prototype.setSoap=function(wsdl)
 		{
-				
-		//var paraXML = this.getParaXML(wsdl);
+			
+			//var paraXML = this.getParaXML(wsdl);
 		//alert(paraXML);
 		var ns = (wsdl.documentElement.attributes["targetNamespace"] + "" == "undefined") ? wsdl.documentElement.attributes.getNamedItem("targetNamespace").nodeValue : wsdl.documentElement.attributes["targetNamespace"].value;
 		var sr = 
@@ -46,11 +46,14 @@ function WebService(URL1, method1, options1){
 				"xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" " +
 				"xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" " +
 				"xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">" +
+				"<soap:Header><participantToken>VE9LRU4mJnVzZXI9PWFkbWluJiZpc3N1ZWQ9PTExODA0NzY2NjUzOTMmJnJvbGVzPT1pbnRhbGlvXHByb2Nlc3NhZG1pbmlzdHJhdG9yLGV4YW1wbGVzXGVtcGxveWVlLGludGFsaW9ccHJvY2Vzc21hbmFnZXIsZXhhbXBsZXNcbWFuYWdlciYmZnVsbE5hbWU9PUFkbWluaW5pc3RyYXRvciYmZW1haWw9PWFkbWluQGV4YW1wbGUuY29tJiZub25jZT09NDMxNjAwNTE5NDM5MTk1MDMzMyYmdGltZXN0YW1wPT0xMTgwNDc2NjY1Mzk1JiZkaWdlc3Q9PTVmM1dQdDBXOEp2UlpRM2gyblJ6UkRrenRwTT0mJiYmVE9LRU4</participantToken></soap:Header>"+
 				"<soap:Body>" +
-				"<" + this.method + " xmlns=\"" + ns + "\">" +
-					  this.options.data +
-				"</" + this.method + "></soap:Body></soap:Envelope>";
-		//alert("sr="+sr);
+//				"<" + this.method + " xmlns=\"" + ns + "\">" +
+//					  this.options.data +
+//				"</" + this.method + ">" +
+				 this.options.data+
+				"</soap:Body></soap:Envelope>";
+		alert(sr);
 		this.options.method = 'post';
 		this.options.data = null;
 		

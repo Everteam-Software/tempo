@@ -4,7 +4,8 @@
     var service ;
     var m;
     var error;
-    function callws(method, p)
+   // function callws(method, p)
+    function callws(method)
     {
         error=false;
         m=method;
@@ -19,8 +20,10 @@
         //           传入的参数数量可以不等于(多于或少于)方法要求的参数
      // alert(m);  
         
-        var para = p;
-           
+        //var para = p;
+        var para = $("#content").val();
+     //   alert("para:" +para);
+    	
         var op = {
 	            data:para,
                     onComplete: showResponse,
