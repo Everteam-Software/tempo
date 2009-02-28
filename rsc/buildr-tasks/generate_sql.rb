@@ -15,7 +15,8 @@ def replace_text(inputFile, substitutions, outputFile)
       end
       lines << line
     end
-    raise "Missing substitutions" if subCount != substitutions.size
+    #raise "Missing substitutions" if subCount != substitutions.size
+    raise "Missing substitutions" if substitutions.size == 0 || subCount == 0  #In order to support multiple persistence unit
     File.open(outputFile, "w") { |output| output << lines }
   end
 end
