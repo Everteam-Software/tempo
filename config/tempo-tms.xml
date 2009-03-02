@@ -35,9 +35,9 @@
 	</bean>
 	<bean id="tmsb4p.server" class="org.intalio.tempo.workflow.tmsb4p.server.TMSServer">
 		
-		<!--<property name="authProvider">
+		<property name="authProvider">
 			<ref bean="tms.authProvider"/>
-		</property>-->
+		</property>
 		<property name="taskDAOFactory">
 			<ref bean="tmsb4p.daoFactory"/>
 		</property>
