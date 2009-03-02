@@ -67,6 +67,10 @@ public class TMSServer implements ITMSServer{
     }
 
     public void create(Task task, String participantToken) throws TMSException {
+        Log.event("create task");
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        Log.log("userid:"+ur.getUserID());
+        // TODO check if this user in task initialtor
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         try {
             dao.createTask(task);

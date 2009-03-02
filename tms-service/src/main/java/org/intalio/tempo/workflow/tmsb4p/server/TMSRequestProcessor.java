@@ -1,12 +1,15 @@
 package org.intalio.tempo.workflow.tmsb4p.server;
 
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
+import org.apache.axiom.soap.SOAPEnvelope;
+import org.apache.axiom.soap.SOAPHeader;
 import org.apache.axis2.AxisFault;
+import org.apache.axis2.context.MessageContext;
 import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.taskb4p.Task;
@@ -91,20 +94,50 @@ public class TMSRequestProcessor {
         _server = server;
     }
 
+//    private String GenTaskId(){
+//        
+//    }
     ///////////////////////////
     // operations
     ///////////////////////////
     public OMElement create(OMElement requestElement) throws AxisFault {
+        //String participantToken = "VE9LRU4mJnVzZXI9PWFkbWluJiZpc3N1ZWQ9PTExODA0NzY2NjUzOTMmJnJvbGVzPT1pbnRhbGlvXHByb2Nlc3NhZG1pbmlzdHJhdG9yLGV4YW1wbGVzXGVtcGxveWVlLGludGFsaW9ccHJvY2Vzc21hbmFnZXIsZXhhbXBsZXNcbWFuYWdlciYmZnVsbE5hbWU9PUFkbWluaW5pc3RyYXRvciYmZW1haWw9PWFkbWluQGV4YW1wbGUuY29tJiZub25jZT09NDMxNjAwNTE5NDM5MTk1MDMzMyYmdGltZXN0YW1wPT0xMTgwNDc2NjY1Mzk1JiZkaWdlc3Q9PTVmM1dQdDBXOEp2UlpRM2gyblJ6UkRrenRwTT0mJiYmVE9LRU4";
+        String participantToken = null;
+        Log.setFile("d:\\tempo.log");
+        Log.log("enter");
+        try{
+        MessageContext  inMsgCtxt =
+            MessageContext.getCurrentMessageContext();
+        SOAPEnvelope envelope = inMsgCtxt.getEnvelope();
+//      Log.event("soap body:"+envelope.toString());
+        SOAPHeader header = envelope.getHeader();
+        Log.log("soap header:" + header.toString());
+        Iterator it = header.getChildElements();
+        
+        while(it.hasNext()){
+            OMElement ele = (OMElement)it.next();
+            Log.event("element:"+ele.toString());
+            if (ele.getLocalName().equals("participantToken"))
+                //Log.event("particpant:"+ele.getText());
+                participantToken = ele.getText();
+        }
+        if (participantToken == null)
+            throw new AxisFault("participant token not found in soap header");
+        // do whatever you want with this envelope.
+        }catch(Exception e){
+            Log.log(e);
+        }
         try {
             // unmarshal request
             CreateDocument req = CreateDocument.Factory.parse(requestElement.getXMLStreamReader());
-            String participantToken = "VE9LRU4mJnVzZXI9PWFkbWluJiZpc3N1ZWQ9PTExODA0NzY2NjUzOTMmJnJvbGVzPT1pbnRhbGlvXHByb2Nlc3NhZG1pbmlzdHJhdG9yLGV4YW1wbGVzXGVtcGxveWVlLGludGFsaW9ccHJvY2Vzc21hbmFnZXIsZXhhbXBsZXNcbWFuYWdlciYmZnVsbE5hbWU9PUFkbWluaW5pc3RyYXRvciYmZW1haWw9PWFkbWluQGV4YW1wbGUuY29tJiZub25jZT09NDMxNjAwNTE5NDM5MTk1MDMzMyYmdGltZXN0YW1wPT0xMTgwNDc2NjY1Mzk1JiZkaWdlc3Q9PTVmM1dQdDBXOEp2UlpRM2gyblJ6UkRrenRwTT0mJiYmVE9LRU4";
-           // Log.log("participantToken="+participantToken);
+           
+            Log.log("participantToken="+participantToken);
             
             THumanTaskContext tasks[] = req.getCreate().getHumanTaskContextArray();
             for (int i = 0; i<tasks.length; i++){
+                Log.log("task "+i);
                 Task task = new Task();
-                task.setId("0");
+                task.setId(""+(new Date().getTime()));
                 task.setName("test");
                 task.setCreatedOn(new Date());
                 task.setPriority(tasks[0].getPriority().intValue());
@@ -147,7 +180,8 @@ public class TMSRequestProcessor {
 
     }
   
-    
+
+
     
     /**
      * @param args
