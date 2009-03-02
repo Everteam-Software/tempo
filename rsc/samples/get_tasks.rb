@@ -19,6 +19,13 @@ class SampleTMSClient
   def get_pa_tasks
     tasks = @tms_client.getAvailableTasks(:participantToken => @token, :taskType => "PATask", :subQuery=>"").task
   end
+  
+  def delete tasks
+    tasks.each do |task|
+      puts "Deleting task #{task.taskId}"
+      @tms_client.delete(:participantToken => @token, :taskId=> task.taskId)
+    end
+  end
 
   private
   def authenticate(user, password)
@@ -50,3 +57,4 @@ display_tasks tasks
 # display activity taskss
 tasks = tms_client.get_pa_tasks
 display_tasks tasks
+tms_client.delete tasks
