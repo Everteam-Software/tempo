@@ -1,4 +1,4 @@
-require "rubygems"
+trequire "rubygems"
 require "buildr"
 require "buildr/xmlbeans"
 require "buildr/cobertura"
