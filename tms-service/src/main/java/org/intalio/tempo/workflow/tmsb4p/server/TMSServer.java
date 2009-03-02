@@ -67,12 +67,12 @@ public class TMSServer implements ITMSServer{
     }
 
     public void create(Task task, String participantToken) throws TMSException {
-        Log.event("create task");
+        System.out.println("tmsserver-> create task");
         try{
             UserRoles ur = _authProvider.authenticate(participantToken);
-            Log.log("userid:"+ur.getUserID());            
+            System.out.println("userid:"+ur.getUserID());            
         }catch (Exception e ){
-            Log.error(e);
+            e.printStackTrace();
         }
         
         // TODO check if this user in task initialtor
