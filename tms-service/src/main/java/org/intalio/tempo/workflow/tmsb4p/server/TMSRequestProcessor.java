@@ -90,7 +90,7 @@ public class TMSRequestProcessor {
     }
 
     public void setServer(ITMSServer server) {
-        _logger.debug("TMSRequestProcessor.setServer:" + server.getClass().getSimpleName());
+        _logger.info("TMSRequestProcessor.setServer:" + server.getClass().getSimpleName());
         _server = server;
     }
 
@@ -101,22 +101,24 @@ public class TMSRequestProcessor {
     // operations
     ///////////////////////////
     public OMElement create(OMElement requestElement) throws AxisFault {
+
+        System.out.print("=======cerate\n");
         //String participantToken = "VE9LRU4mJnVzZXI9PWFkbWluJiZpc3N1ZWQ9PTExODA0NzY2NjUzOTMmJnJvbGVzPT1pbnRhbGlvXHByb2Nlc3NhZG1pbmlzdHJhdG9yLGV4YW1wbGVzXGVtcGxveWVlLGludGFsaW9ccHJvY2Vzc21hbmFnZXIsZXhhbXBsZXNcbWFuYWdlciYmZnVsbE5hbWU9PUFkbWluaW5pc3RyYXRvciYmZW1haWw9PWFkbWluQGV4YW1wbGUuY29tJiZub25jZT09NDMxNjAwNTE5NDM5MTk1MDMzMyYmdGltZXN0YW1wPT0xMTgwNDc2NjY1Mzk1JiZkaWdlc3Q9PTVmM1dQdDBXOEp2UlpRM2gyblJ6UkRrenRwTT0mJiYmVE9LRU4";
         String participantToken = null;
-        Log.setFile("d:\\tempo.log");
-        Log.log("enter");
+        //Log.setFile("d:\\tempo.log");
+        //Log.log("enter");
         try{
         MessageContext  inMsgCtxt =
             MessageContext.getCurrentMessageContext();
         SOAPEnvelope envelope = inMsgCtxt.getEnvelope();
 //      Log.event("soap body:"+envelope.toString());
         SOAPHeader header = envelope.getHeader();
-        Log.log("soap header:" + header.toString());
+       // Log.log("soap header:" + header.toString());
         Iterator it = header.getChildElements();
         
         while(it.hasNext()){
             OMElement ele = (OMElement)it.next();
-            Log.event("element:"+ele.toString());
+//            Log.event("element:"+ele.toString());
             if (ele.getLocalName().equals("participantToken"))
                 //Log.event("particpant:"+ele.getText());
                 participantToken = ele.getText();
@@ -125,17 +127,17 @@ public class TMSRequestProcessor {
             throw new AxisFault("participant token not found in soap header");
         // do whatever you want with this envelope.
         }catch(Exception e){
-            Log.log(e);
+           e.printStackTrace();
         }
         try {
             // unmarshal request
             CreateDocument req = CreateDocument.Factory.parse(requestElement.getXMLStreamReader());
            
-            Log.log("participantToken="+participantToken);
+            System.out.println("participantToken="+participantToken);
             
             THumanTaskContext tasks[] = req.getCreate().getHumanTaskContextArray();
             for (int i = 0; i<tasks.length; i++){
-                Log.log("task "+i);
+//                Log.log("task "+i);
                 Task task = new Task();
                 task.setId(""+(new Date().getTime()));
                 task.setName("test");
