@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.intalio.tempo.deployment.utils.DeploymentServiceRegister;
+import org.intalio.deploy.deployment.utils.DeploymentServiceRegister;
 import org.intalio.tempo.web.SysPropApplicationContextLoader;
 import org.intalio.tempo.workflow.wds.core.Item;
 import org.intalio.tempo.workflow.wds.core.UnavailableItemException;

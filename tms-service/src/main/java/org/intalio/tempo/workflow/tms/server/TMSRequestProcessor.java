@@ -24,7 +24,7 @@ import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axis2.AxisFault;
-import org.intalio.tempo.deployment.utils.DeploymentServiceRegister;
+import org.intalio.deploy.deployment.utils.DeploymentServiceRegister;
 import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.UserRoles;

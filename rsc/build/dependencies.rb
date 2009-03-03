@@ -295,10 +295,10 @@ CAS_LIBS = [
   "taglibs:standard:jar:1.1.2"
 ]
 
-DEPLOY_API = "org.intalio.deploy:deploy-deploy-api:jar:6.0.0.34-SNAPSHOT"
-REGISTRY = "org.intalio.deploy:deploy-registry:jar:6.0.0.34-SNAPSHOT"
-SECURITY = group("securities-security", :under=>"org.intalio.security", :version=>"6.0.0.34-SNAPSHOT")
-SECURITY_WS_COMMON = group("securities-security-ws-common", :under=>"org.intalio.security", :version=>"6.0.0.34-SNAPSHOT")
-SECURITY_WS_CLIENT = group("securities-security", "securities-security-ws-client", "securities-security-ws-common", :under=>"org.intalio.security", :version=>"6.0.0.34-SNAPSHOT")
-SECURITY_WS_CLIENT_ONLY = group("securities-security", "securities-security-ws-client", :under=>"org.intalio.security", :version=>"6.0.0.34-SNAPSHOT")
-WEB_NUTSNBOLTS = "org.intalio.security:securities-web-nutsNbolts:jar:6.0.0.34-SNAPSHOT"
+DEPLOY_API = "org.intalio.deploy:deploy-deploy-api:jar:1.0.0.0"
+REGISTRY = "org.intalio.deploy:deploy-registry:jar:1.0.0.0"
+SECURITY = group("securities-security", :under=>"org.intalio.security", :version=>"1.0.0.0")
+SECURITY_WS_COMMON = group("securities-security-ws-common", :under=>"org.intalio.security", :version=>"1.0.0.0")
+SECURITY_WS_CLIENT = group("securities-security", "securities-security-ws-client", "securities-security-ws-common", :under=>"org.intalio.security", :version=>"1.0.0.0")
+SECURITY_WS_CLIENT_ONLY = group("securities-security", "securities-security-ws-client", :under=>"org.intalio.security", :version=>"1.0.0.0")
+WEB_NUTSNBOLTS = "org.intalio.security:securities-web-nutsNbolts:jar:1.0.0.0"

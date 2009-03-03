@@ -21,10 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import org.intalio.tempo.deployment.ComponentId;
-import org.intalio.tempo.deployment.DeploymentMessage;
-import org.intalio.tempo.deployment.DeploymentMessage.Level;
-import org.intalio.tempo.deployment.spi.ComponentManagerResult;
+import org.intalio.deploy.deployment.ComponentId;
+import org.intalio.deploy.deployment.DeploymentMessage;
+import org.intalio.deploy.deployment.DeploymentMessage.Level;
+import org.intalio.deploy.deployment.spi.ComponentManagerResult;
 import org.intalio.tempo.security.token.TokenContext;
 import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.task.PIPATask;
@@ -33,7 +33,7 @@ import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PIPAComponentManager implements org.intalio.tempo.deployment.spi.ComponentManager {
+public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.ComponentManager {
     private static final Logger LOG = LoggerFactory.getLogger(PIPAComponentManager.class);
 
     ITMSServer _tms;

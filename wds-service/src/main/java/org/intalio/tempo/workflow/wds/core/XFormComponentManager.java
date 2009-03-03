@@ -22,16 +22,16 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.intalio.tempo.deployment.ComponentId;
-import org.intalio.tempo.deployment.DeploymentMessage;
-import org.intalio.tempo.deployment.DeploymentMessage.Level;
-import org.intalio.tempo.deployment.spi.ComponentManagerResult;
+import org.intalio.deploy.deployment.ComponentId;
+import org.intalio.deploy.deployment.DeploymentMessage;
+import org.intalio.deploy.deployment.DeploymentMessage.Level;
+import org.intalio.deploy.deployment.spi.ComponentManagerResult;
 import org.intalio.tempo.security.token.TokenContext;
 import org.intalio.tempo.workflow.wds.core.xforms.XFormsProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class XFormComponentManager implements org.intalio.tempo.deployment.spi.ComponentManager {
+public class XFormComponentManager implements org.intalio.deploy.deployment.spi.ComponentManager {
     private static final Logger LOG = LoggerFactory.getLogger(XFormComponentManager.class);
 
     private WDSServiceFactory _wdsFactory;
