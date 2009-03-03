@@ -46,7 +46,7 @@ public class XFormComponentManager implements org.intalio.tempo.deployment.spi.C
         return "xform";
     }
 
-    public void initialize(ComponentId name, File path) {
+    public void initialize(ComponentId name, String path) {
         // nothing
     }
 
@@ -54,8 +54,10 @@ public class XFormComponentManager implements org.intalio.tempo.deployment.spi.C
         // nothing
     }
 
-    public ComponentManagerResult deploy(ComponentId name, File base, boolean activate) {
+    public ComponentManagerResult deploy(ComponentId name, String path, boolean activate) {
         List<DeploymentMessage> msgs = new ArrayList<DeploymentMessage>();
+        
+        File base = new File(path);
 
         /*
          * ALEX: Disabled until we get token propagation from deploy-impl if (!TokenContext.hasToken()) { msgs.add(new
@@ -101,7 +103,7 @@ public class XFormComponentManager implements org.intalio.tempo.deployment.spi.C
         }
     }
 
-    public void deployed(ComponentId name, File path, boolean activate) {
+    public void deployed(ComponentId name, String path, boolean activate) {
         // nothing
     }
 
