@@ -10,7 +10,7 @@
 		<Environment name="simpleValue" type="java.lang.Integer" value="30"/>
 		<Resource name="UserDatabase" auth="Container" type="org.apache.catalina.UserDatabase" description="User database that can be updated and saved" factory="org.apache.catalina.users.MemoryUserDatabaseFactory" pathname="conf/tomcat-users.xml" />
 		<Resource name="jdbc/BPMSDB" auth="Container" type="javax.sql.DataSource" maxActive="100" maxIdle="30" maxWait="10000" username="root" password="" driverClassName="com.mysql.jdbc.Driver" url="jdbc:mysql://localhost:3306/bpms"/>
-		<Resource name="registry/TempoRegistry" auth="Container" type="org.intalio.tempo.registry.Registry" factory="org.intalio.tempo.registry.RegistryObjectFactory" />
+		<Resource name="registry/DeployRegistry" auth="Container" type="org.intalio.deploy.registry.Registry" factory="org.intalio.deploy.registry.RegistryObjectFactory" />
 	</GlobalNamingResources>
 
 	<Service name="Catalina">
