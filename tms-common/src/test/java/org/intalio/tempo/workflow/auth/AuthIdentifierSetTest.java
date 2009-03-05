@@ -68,6 +68,13 @@ public class AuthIdentifierSetTest extends TestCase {
         AuthIdentifierSet set2 = new AuthIdentifierSet(set1);
         TaskEquality.areAuthIdSetEquals(set1, set2);
     }
+  
+
+    public void testAddWithCommas() throws Exception {
+	   	AuthIdentifierSet set1 = new AuthIdentifierSet();
+        set1.add("test/user1,test/user2");
+	    Assert.assertTrue(set1.size()==2);
+    }
 
     public void testAuthIdentifierSetStringArray() {
         String[] testIDs = { "test/user1", "test.user2", "test\\user3" };

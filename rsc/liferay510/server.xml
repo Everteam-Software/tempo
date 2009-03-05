@@ -16,7 +16,7 @@
 	<Service name="Catalina">
 
 		<Connector port="8280" maxHttpHeaderSize="8192" maxThreads="150" minSpareThreads="25" maxSpareThreads="75" enableLookups="false" redirectPort="8443" acceptCount="100" connectionTimeout="20000" disableUploadTimeout="true" />
-		<Connector port="8643" maxHttpHeaderSize="8192" maxThreads="150" minSpareThreads="25" maxSpareThreads="75" enableLookups="false" disableUploadTimeout="true" acceptCount="100" scheme="https" secure="true" clientAuth="false" sslProtocol="TLS" keystoreFile="var/config/tempokeystore"/>
+		<Connector port="8643" maxHttpHeaderSize="8192" maxThreads="150" minSpareThreads="25" maxSpareThreads="75" enableLookups="false" disableUploadTimeout="true" acceptCount="100" scheme="https" secure="true" clientAuth="false" sslProtocol="TLS" keystoreFile="var/config/intalio-keystore.jks"/>
 		<Connector port="8009"  enableLookups="false" redirectPort="8443" protocol="AJP/1.3" />
 
 		<Engine name="Catalina" defaultHost="localhost">

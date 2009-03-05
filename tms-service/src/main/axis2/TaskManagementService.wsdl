@@ -25,7 +25,7 @@
 			<xsd:element name="getTaskListResponse">
 				<xsd:complexType>
 					<xsd:sequence maxOccurs="unbounded">
-						<xsd:element name="task" type="tns:task" maxOccurs="unbounded"/>
+						<xsd:element name="task" type="tns:taskMetadata" maxOccurs="unbounded"/>
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
@@ -302,7 +302,7 @@
 			<xsd:element name="getAvailableTasksResponse">
 				<xsd:complexType>
 					<xsd:sequence>
-						<xsd:element name="task" type="tns:task" minOccurs="0" maxOccurs="unbounded"></xsd:element>
+						<xsd:element name="task" type="tns:taskMetadata" minOccurs="0" maxOccurs="unbounded"></xsd:element>
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>

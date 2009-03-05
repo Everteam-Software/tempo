@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import javax.persistence.MappedSuperclass;
 
@@ -53,8 +54,20 @@ public class AuthIdentifierSet extends HashSet<String> {
     public boolean add(String authID) {
         // ignore null parameters and empty strings
         if (StringUtils.isEmpty(authID)) return true; 
-        String normalizedID = AuthIdentifierNormalizer.normalizeAuthIdentifier(authID);
-        return super.add(normalizedID);
+
+		// add as many identifiers as separated by commas
+        if(authID.indexOf(',') > 0) {
+			StringTokenizer st = new StringTokenizer(authID,",");
+			boolean result = false;
+	        while (st.hasMoreTokens()) {
+		      result |= this.add(st.nextToken());
+            } 
+            return result;
+        } else {
+	        // add a simple identifier
+			String normalizedID = AuthIdentifierNormalizer.normalizeAuthIdentifier(authID);
+	        return super.add(normalizedID);
+        }
     }
 
     public boolean contains(Object object) {
