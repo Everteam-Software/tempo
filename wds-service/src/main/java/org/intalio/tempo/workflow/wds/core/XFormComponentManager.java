@@ -46,7 +46,7 @@ public class XFormComponentManager implements org.intalio.deploy.deployment.spi.
         return "xform";
     }
 
-    public void initialize(ComponentId name, String path) {
+    public void initialize(ComponentId name, File path) {
         // nothing
     }
 
@@ -54,11 +54,9 @@ public class XFormComponentManager implements org.intalio.deploy.deployment.spi.
         // nothing
     }
 
-    public ComponentManagerResult deploy(ComponentId name, String path, boolean activate) {
+    public ComponentManagerResult deploy(ComponentId name, File base, boolean activate) {
         List<DeploymentMessage> msgs = new ArrayList<DeploymentMessage>();
         
-        File base = new File(path);
-
         /*
          * ALEX: Disabled until we get token propagation from deploy-impl if (!TokenContext.hasToken()) { msgs.add(new
          * DeploymentMessage(Level.ERROR, "No security context token")); return msgs; }

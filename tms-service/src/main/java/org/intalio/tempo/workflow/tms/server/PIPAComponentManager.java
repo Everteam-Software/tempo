@@ -48,7 +48,7 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
         return "pipa";
     }
 
-    public void initialize(ComponentId name, String path) {
+    public void initialize(ComponentId name, File path) {
         // nothing
     }
 
@@ -56,10 +56,9 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
         // nothing
     }
 
-    public ComponentManagerResult deploy(ComponentId name, String path, boolean activate) {
+    public ComponentManagerResult deploy(ComponentId name, File base, boolean activate) {
         List<DeploymentMessage> msgs = new ArrayList<DeploymentMessage>();
 
-        File base = new File(path);
         /*
          * ALEX: Disabled until we get token propagation from deploy-impl if (!TokenContext.hasToken()) { msgs.add(new
          * DeploymentMessage(Level.ERROR, "No security context token")); return msgs; }
