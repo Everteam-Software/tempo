@@ -5,12 +5,12 @@ BUILD_CONFIG = {
   :directory => "../intalio",
   
   # build nothing
-  :mode => BuildMode::EMPTY,
+  # :mode => BuildMode::EMPTY,
   #
   
   # build with ode, axis2, uifw
   #
-  # :mode => BuildMode::TOMCAT|BuildMode::UIFW,
+  :mode => BuildMode::TOMCAT|BuildMode::UIFW,
   #
   
   # build with tomcat6 and uifw 
