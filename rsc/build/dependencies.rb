@@ -84,6 +84,7 @@ SPRING_MOCK = [
 ]
 
 STAX_API = [ "stax:stax-api:jar:1.0.1" ]
+STAX_LIB = "stax:stax:jar:1.2.0"
 
 TAGLIBS = [ "taglibs:standard:jar:1.1.2" ]
 
