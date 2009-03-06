@@ -417,8 +417,8 @@ BUILD_URI = {
 		:v5_2_0 => "http://downloads.sourceforge.net/sourceforge/lportal/liferay-portal-tomcat-5.5-5.2.0.zip",
 	},
 	:tomcat => {
-		:v5 => APACHE_MIRROR + "tomcat/tomcat-5/v5.5.26/bin/apache-tomcat-5.5.26.zip",
-		:v6 => APACHE_MIRROR + "tomcat/tomcat-6/v6.0.16/bin/apache-tomcat-6.0.16.zip"
+		:v5 => APACHE_MIRROR + "tomcat/tomcat-5/v5.5.27/bin/apache-tomcat-5.5.27.zip",
+		:v6 => APACHE_MIRROR + "tomcat/tomcat-6/v6.0.18/bin/apache-tomcat-6.0.18.zip"
 	},  
 	:axis2 => APACHE_MIRROR + "ws/axis2/1_4_1/axis2-1.4.1-war.zip",
 	:ode => {
