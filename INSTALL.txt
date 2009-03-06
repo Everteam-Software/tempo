@@ -10,25 +10,19 @@ Intalio Tempo is a set of runtime components that support human workflow within 
  Required software
 ======================================
 A JVM to compile and run the different components.
-Also, be sure to have installed buildr (build tool) and svn (version control) installed.
+Also, be sure to have installed buildr (build tool) and git (version control) installed.
 
 ======================================
  Check out tempo
 ======================================
 With the following command:
-svn co http://tempo.intalio.org/tempo/trunk/ tempo
+git clone git://github.com/intalio/tempo.git
 
 ======================================
  Installation
 ======================================
-
-If you haven't compiled the tempo component yet, edit: 
-TEMPO_CHECKOUT/rsc/scripts/config.yml:
-    set rebuild to "true"
-    if you want to try the liferay integration, uncomment: #server: liferay_v501
-
 Run the ruby script:
-    TEMPO_CHECKOUT/rsc/scripts/create_tomcat.rb
+    TEMPO_CHECKOUT/rsc/scripts/tempo_builder.rb
 ======================================
  Database setup
 ======================================
@@ -41,7 +35,7 @@ Start mysql engine and check user access. On the command line this would be some
 ======================================
  Start up
 ======================================
-A folder named intalio will be created in the current directory. Go to the bin folder of apache tomcat, and use the following command
+By default, a folder named intalio will be created in the parent directory of the git checkout. Go to the bin folder of apache tomcat, and use the following command
     catalina.sh run
 
 or on WINDOWS, double click on the icon named:
