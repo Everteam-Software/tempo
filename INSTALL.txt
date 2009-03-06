@@ -4,13 +4,17 @@ Install TEMPO on tomcat 5.5 with mysql
  Introduction
 ======================================
 
-Intalio Tempo is a set of runtime components that support human workflow within an service-oriented architecture (SOA). Our main goal is to provide a complete and extensible workflow solution with a bias towards interoperable technologies (BPEL, BPEL4People, XForms, REST, and web services) as a default implementation.
+Intalio Tempo is a set of runtime components that support human workflow within
+an service-oriented architecture (SOA). Our main goal is to provide a complete
+and extensible workflow solution with a bias towards interoperable 
+technologies (BPEL, BPEL4People, XForms, REST, and web services) as a default
+implementation.
 
 ======================================
  Required software
 ======================================
-A JVM to compile and run the different components.
-Also, be sure to have installed buildr (build tool) and git (version control) installed.
+A JVM to compile and run the different components. Also, be sure to have 
+installed buildr (build tool) and git (version control) installed.
 
 ======================================
  Check out tempo
@@ -26,8 +30,9 @@ Run the ruby script:
 ======================================
  Database setup
 ======================================
-Setup a mysql database named "bpms" with user "root" and no password. This is very unsecure. Change DB as needed in the final tomcat configuration.
-Start mysql engine and check user access. On the command line this would be something like:
+Setup a mysql database named "bpms" with user "root" and no password. 
+Start mysql engine and check user access. On the command line this would be 
+something like:
 
     mysqladmin create bpms -u root
     mysql -D bpms -u root < TEMPO_CHECKOUT/../intalio/bpms.sql
@@ -35,7 +40,9 @@ Start mysql engine and check user access. On the command line this would be some
 ======================================
  Start up
 ======================================
-By default, a folder named intalio will be created in the parent directory of the git checkout. Go to the bin folder of apache tomcat, and use the following command
+In the parent folder of the git clone, you will now find a folder named intalio.
+In this folder, a tomcat-tempo-* will be created. This is a tomcat based build, 
+so go to the bin folder of apache tomcat, and use the following command:
     catalina.sh run
 
 or on WINDOWS, double click on the icon named:
@@ -46,7 +53,7 @@ Congratulation, tempo is now running!
 ======================================
  Play with it
 ======================================
-The UI is at the following URL: http://localhost:8080/ui-fw/
+The TaskList or Task inbox is at this URL: http://localhost:8080/ui-fw/
 And you can start the sample "AbsenceRequest" process.
 
 ======================================
