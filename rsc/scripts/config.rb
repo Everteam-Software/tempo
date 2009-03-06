@@ -13,6 +13,10 @@ BUILD_CONFIG = {
   :mode => BuildMode::TOMCAT|BuildMode::UIFW,
   #
   
+  #
+  # build the above and zip the resulting folder
+  # :mode => BuildMode::TOMCAT|BuildMode::UIFW|BuildMode::ZIP,
+  
   # build with tomcat6 and uifw 
   #
   # :mode => BuildMode::REMOTE|BuildMode::UIFW,

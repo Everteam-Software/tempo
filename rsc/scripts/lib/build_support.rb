@@ -89,7 +89,7 @@ module BuildSupport
   # with a .zip extension appended
   def compress(path)
     path.sub!(%r[/$],'')
-    archive = File.join(path,File.basename(path))+'.zip'
+    archive = File.join(path,"../"+File.basename(path))+'.zip'
     FileUtils.rm archive, :force=>true
 
     Zip::ZipFile.open(archive, 'w') do |zipfile|
@@ -402,7 +402,7 @@ module BuildMode
   ALFRESCO = 4
   TOMCAT = 8
   OPENSSO = 16
-  TEST = 32
+  ZIP = 32
   REMOTE = 64
   UIFW = 128
 end

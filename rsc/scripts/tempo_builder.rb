@@ -47,7 +47,7 @@ activate_step BuildMode::LIFERAY, "Downloading Liferay" do
 end
 
 # this creates a full tomcat build, but does not include the uifw
-activate_step BuildMode::TOMCAT, "Preparing for standalone build" do
+activate_step BuildMode::TOMCAT, "Prepare standalone open source tomcat build" do
   install_tomcat
   setup_axis_and_ode
   install_tempo_services
@@ -64,9 +64,9 @@ activate_step BuildMode::TOMCAT, "Preparing for standalone build" do
 end
 
 # this creates a tomcat6 build with 
-activate_step BuildMode::REMOTE do
+activate_step BuildMode::REMOTE, "Prepare remote open source tomcat build" do
   install_tomcat6 "tempo-remote"
-  
+
   copy_tempo_config_files("tempo-ui-fw*")
   copy_tempo_config_files("tempo-formmanager.xml")
   replace_all_with_map_in_folder({"localhost:8080"=>"bpms.tempo.com:8080", "127.0.0.1:8080"=>"bpms.tempo.com:8080"}, "#{@@server_folder}/var/config")
@@ -83,6 +83,10 @@ activate_step BuildMode::REMOTE do
 end
 
 # this install the uifw war file
-activate_step BuildMode::UIFW do
+activate_step BuildMode::UIFW, "Adding the task list webapp" do 
   install_tempo_uifw
+end
+
+activate_step BuildMode::ZIP, "Zip build release" do
+  compress(@@server_folder) if @@server_folder and File.exist? @@server_folder
 end
