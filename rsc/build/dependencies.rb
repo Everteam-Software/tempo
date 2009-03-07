@@ -296,8 +296,8 @@ CAS_LIBS = [
   "taglibs:standard:jar:1.1.2"
 ]
 
-DEPLOY_API = "org.intalio.deploy:deploy-api:jar:1.0.3"
-REGISTRY = "org.intalio.deploy:deploy-registry:jar:1.0.3"
+DEPLOY_API = "org.intalio.deploy:deploy-api:jar:1.0.0-SNAPSHOT"
+REGISTRY = "org.intalio.deploy:deploy-registry:jar:1.0.0-SNAPSHOT"
 SECURITY = group("security-api", :under=>"org.intalio.security", :version=>"1.0.0")
 SECURITY_WS_COMMON = group("security-ws-common", :under=>"org.intalio.security", :version=>"1.0.0")
 SECURITY_WS_CLIENT = group("security-api", "security-ws-client", "security-ws-common", :under=>"org.intalio.security", :version=>"1.0.0")
