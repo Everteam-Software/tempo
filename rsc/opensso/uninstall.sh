@@ -1,0 +1,1 @@
+./agentadmin --uninstall --useResponse silent_agent_uninstall.txt 

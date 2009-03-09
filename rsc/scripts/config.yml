@@ -1,7 +1,8 @@
 ---
-install_dir: ../intalio5
+install_dir: ../intalio2
 rebuild: false
 debug: true
+
 server: liferay_510
 # add_alfresco: true
 add_ldap: true

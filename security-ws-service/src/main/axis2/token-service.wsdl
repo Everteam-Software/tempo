@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	~ Copyright (c) 2005-2007 Intalio inc.
+	~
+	~ All rights reserved. This program and the accompanying materials
+	~ are made available under the terms of the Eclipse Public License v1.0
+	~ which accompanies this distribution, and is available at
+	~ http://www.eclipse.org/legal/epl-v10.html
+	~
+	~ Contributors:
+	~ Intalio inc. - initial API and implementation
+-->
+<wsdl:definitions
+	targetNamespace="http://tempo.intalio.org/security/tokenService/"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tns="http://tempo.intalio.org/security/tokenService/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:ns="http://tempo.intalio.org/security/">
+
+	<wsdl:types>
+		<xsd:schema
+			targetNamespace="http://tempo.intalio.org/security/tokenService/"
+			elementFormDefault="qualified" attributeFormDefault="unqualified">
+			<xsd:complexType name="PropertyType">
+				<xsd:sequence>
+					<xsd:element name="name" type="xsd:string" />
+					<xsd:element name="value" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:element name="properties">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="property"
+							type="tns:PropertyType" maxOccurs="unbounded" minOccurs="0" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="authenticateUser">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="user" type="xsd:string" />
+						<xsd:element name="password" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="authenticateUserWithCredentials">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="user" type="xsd:string" />
+						<xsd:element name="credentials"
+							type="tns:PropertyType" maxOccurs="1" minOccurs="1" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="authenticateUserResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="token" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="getTokenProperties">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="token" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="getTokenPropertiesResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="credentials"
+							type="tns:PropertyType" maxOccurs="1" minOccurs="1" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="getTokenResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="out" type="xsd:string"></xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="proxyTicket">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="ticket" type="xsd:string">
+						</xsd:element>
+						<xsd:element name="serviceURL"
+							type="xsd:string">
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="openssoTicket">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="openssoToken" type="xsd:string">
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>			
+		</xsd:schema>
+	</wsdl:types>
+
+
+	<wsdl:message name="authenticateUser">
+		<wsdl:part name="payload" element="tns:authenticateUser" />
+	</wsdl:message>
+
+	<wsdl:message name="authenticateUserWithCredentials">
+		<wsdl:part name="payload"
+			element="tns:authenticateUserWithCredentials" />
+	</wsdl:message>
+
+	<wsdl:message name="authenticateUserResponse">
+		<wsdl:part name="payload"
+			element="tns:authenticateUserResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="getTokenProperties">
+		<wsdl:part name="payload" element="tns:getTokenProperties" />
+	</wsdl:message>
+
+	<wsdl:message name="getTokenPropertiesResponse">
+		<wsdl:part name="payload"
+			element="tns:getTokenPropertiesResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="getTokenFromTicketRequest">
+		<wsdl:part name="payload" element="tns:proxyTicket"></wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="getTokenFromTicketResponse">
+		<wsdl:part name="payload"
+			element="tns:authenticateUserResponse">
+		</wsdl:part>
+	</wsdl:message>
+	
+	<wsdl:message name="getTokenFromOpenSSOTokenRequest">
+		<wsdl:part name="payload" element="tns:openssoTicket"></wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="getTokenFromOpenSSOTokenResponse">
+		<wsdl:part name="payload"
+			element="tns:authenticateUserResponse">
+		</wsdl:part>
+	</wsdl:message>
+	
+	<wsdl:portType name="TokenService">
+		<wsdl:operation name="authenticateUser">
+			<wsdl:input message="tns:authenticateUser" />
+			<wsdl:output message="tns:authenticateUserResponse" />
+		</wsdl:operation>
+
+		<wsdl:operation name="authenticateUserWithCredentials">
+			<wsdl:input message="tns:authenticateUserWithCredentials" />
+			<wsdl:output message="tns:authenticateUserResponse" />
+		</wsdl:operation>
+
+		<wsdl:operation name="getTokenProperties">
+			<wsdl:input message="tns:getTokenProperties" />
+			<wsdl:output message="tns:getTokenPropertiesResponse" />
+		</wsdl:operation>
+		<wsdl:operation name="getTokenFromTicket">
+			<wsdl:input message="tns:getTokenFromTicketRequest"></wsdl:input>
+			<wsdl:output message="tns:getTokenFromTicketResponse"></wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getTokenFromOpenSSOToken">
+			<wsdl:input message="tns:getTokenFromOpenSSOTokenRequest"></wsdl:input>
+			<wsdl:output message="tns:getTokenFromOpenSSOTokenResponse"></wsdl:output>
+		</wsdl:operation>		
+	</wsdl:portType>
+
+	<wsdl:binding name="TokenServiceSOAP" type="tns:TokenService">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+
+		<wsdl:operation name="authenticateUser">
+			<soap:operation soapAction="authenticateUser" />
+			<wsdl:input>
+				<soap:body parts="payload" use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="payload" use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="authenticateUserWithCredentials">
+			<soap:operation
+				soapAction="authenticateUserWithCredentials" />
+			<wsdl:input>
+				<soap:body parts="payload" use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="payload" use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="getTokenProperties">
+			<soap:operation soapAction="getTokenProperties" />
+			<wsdl:input>
+				<soap:body parts="payload" use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="payload" use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="getTokenFromTicket">
+			<soap:operation soapAction="getTokenFromTicket" />
+			<wsdl:input>
+				<soap:body parts="payload" use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="payload" use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		
+		<wsdl:operation name="getTokenFromOpenSSOToken">
+			<soap:operation soapAction="getTokenFromOpenSSOToken" />
+			<wsdl:input>
+				<soap:body parts="payload" use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="payload" use="literal" />
+			</wsdl:output>
+		</wsdl:operation>		
+	</wsdl:binding>
+
+	<wsdl:service name="TokenService">
+		<wsdl:port name="Service" binding="tns:TokenServiceSOAP">
+			<soap:address location="http://localhost:8080/axis2/services/TokenService" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

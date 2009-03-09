@@ -1,5 +1,9 @@
 #!/usr/bin/env ruby
 
+puts "WARNING:This script is totally deprecated, and won't build anything useful just now."
+puts "Please use tempo_builder.rb"
+exit(0)
+
 require "rubygems"
 require "hpricot"
 require 'net/http'
@@ -9,6 +13,12 @@ require 'yaml'
 require 'fileutils'
 require 'open-uri'
 require "buildr"
+
+class Buildr::Application
+  def settings
+    @settings ||= Settings.new(self)
+  end
+end
 
 script_folder = File.dirname(File.expand_path("#{$0}"))
 load "#{script_folder}/../build/repositories.rb"
@@ -26,17 +36,19 @@ SERVER = config["server"]
 ADD_ALFRESCO = config["add_alfresco"]
 ADD_LDAP = config["add_ldap"]
 ADD_LIFERAY = "liferay_510"
+
 APACHE_MIRROR = find_apache_mirror
 TOMCAT_5_DOWNLOAD = APACHE_MIRROR + "tomcat/tomcat-5/v5.5.26/bin/apache-tomcat-5.5.26.zip"
-TOMCAT_6_DOWNLOAD = APACHE_MIRROR + "tomcat/tomcat-6/v6.0.16/bin/apache-tomcat-6.0.16.zip"
+TOMCAT_6_DOWNLOAD = APACHE_MIRROR + "tomcat/tomcat-6/v6.0.18/bin/apache-tomcat-6.0.18.zip"
 TOMCAT_ADMIN_DOWNLOAD = APACHE_MIRROR + "tomcat/tomcat-5/v5.5.26/bin/apache-tomcat-5.5.26-admin.zip"
 AXIS_DOWNLOAD = APACHE_MIRROR + "ws/axis2/1_4_1/axis2-1.4.1-war.zip"
 ODE_RELEASES = {
   :v1_2 => APACHE_MIRROR + "ode/apache-ode-war-1.2.zip",
   :v1_2_snapshot => "http://www.intalio.org/public/ode/apache-ode-1.2-SNAPSHOT-700632.zip",
-  :v1_3_snapshot => "http://www.intalio.org/public/ode/apache-ode-1.3-SNAPSHOT-745704.zip"
+  :v1_3_snapshot => "http://www.intalio.org/public/ode/apache-ode-1.3-SNAPSHOT-745704.zip",
+  :v2_1_snapshot => "http://www.intalio.org/public/ode/apache-ode-war-2.1-SNAPSHOT-20090303-749508.zip"
 }
-ODE_DOWNLOAD = ODE_RELEASES[:v1_3_snapshot]
+ODE_DOWNLOAD = ODE_RELEASES[:v2_1_snapshot]
 # LIFERAY_5 = "http://downloads.sourceforge.net/sourceforge/lportal/liferay-portal-tomcat-5.5-5.1.1.zip"  #CA
 LIFERAY_5 = "http://downloads.sourceforge.net/sourceforge/lportal/liferay-portal-tomcat-5.5-5.1.0.zip"
 ALFRESCO = {
@@ -152,8 +164,8 @@ opi.install_process_from_tempo_trunk "AbsenceRequest"
 title "Installing missing libs into Tomcat"
 explain "Some libs are missing in tomcat, so we add them here."
 ##
-lib_folder = "#{server_folder}/common/lib" # tomcat5
-#lib_folder = "#{server_folder}/lib" # tomcat6
+#lib_folder = "#{server_folder}/common/lib" # tomcat5
+lib_folder = "#{server_folder}/lib" # tomcat6
 FileUtils.mkdir_p lib_folder
 [
   DB_CONNECTOR[:mysql],
@@ -235,7 +247,8 @@ title "Copying tomcat config xml files (JNDI resources)"
 explain "Making the deploy registry and the mysql DS available to all tomcat application"
 ##
 Dir.glob(File.join("#{TEMPO_SVN}/rsc/tomcat", "*.*")) {|x| File.copy(x,"#{server_folder}/conf", DEBUG)}
-Dir.glob(File.join("#{server_folder}/conf", "log4j.properties")) {|x| File.move(x,"#{server_folder}/common/classes", DEBUG)}
+#Dir.glob(File.join("#{server_folder}/conf", "log4j.properties")) {|x| File.move(x,"#{server_folder}/common/classes", DEBUG)}
+Dir.glob(File.join("#{server_folder}/conf", "log4j.properties")) {|x| File.move(x,"#{server_folder}/lib", DEBUG)}   #tomcat 6
 ##
 
 ## For liferay specific
@@ -302,7 +315,7 @@ if ADD_LDAP
     File.copy "#{TEMPO_SVN}/rsc/LDAP/"+config["ldif"], "#{apacheds_war_folder}/WEB-INF/classes/intalio-apacheds.ldif", DEBUG
   end
   
-  if ADD_ALFRESCO
+  if ADD_ALFRESCO && SERVER == LIFERAY
     explain "Also need to config Alfresco to use apacheds"
     Dir.glob("#{TEMPO_SVN}/rsc/alfresco/extension/*.*") {|x| File.copy x, "#{webapp_folder}/alfresco/WEB-INF/classes/alfresco/extension", DEBUG}
     
@@ -319,7 +332,6 @@ File.copy "#{TEMPO_SVN}/rsc/liferay510/intalio-keystore.jks", tomcat_config_fold
 Dir.glob(File.join("#{TEMPO_SVN}/rsc/liferay510", "server.xml")) {|x| File.copy(x,"#{server_folder}/conf", DEBUG)}
 Dir.glob(File.join("#{webapp_folder}/cas/WEB-INF/lib", "casclient*.jar")) {|x| File.cp x, "#{lib_folder}"}
 Dir.glob(File.join("#{webapp_folder}", "**/casclient*.jar")) {|x| File.delete x}
-# locate_and_copy( DSIG , "#{webapp_folder}/cas/WEB-INF/lib" )
 ##
   
 title "Deleting unused files"

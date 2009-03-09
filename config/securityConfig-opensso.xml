@@ -25,17 +25,17 @@
 	</bean>
 
 	<!-- Uncomment this section to enable Simple support -->
-	<bean id="securityProvider" class="org.intalio.tempo.security.simple.SimpleSecurityProvider" init-method="init">
+	<!-- <bean id="securityProvider" class="org.intalio.tempo.security.simple.SimpleSecurityProvider" init-method="init">
 		<property name="configFile">
 			<value>${org.intalio.tempo.configDirectory}/security.xml</value>
 		</property>
-	</bean>
+	</bean> -->
 
-	<!-- <bean id="securityProvider" class="org.intalio.tempo.security.ldap.LDAPSecurityProvider">
+	<bean id="securityProvider" class="org.intalio.tempo.security.ldap.LDAPSecurityProvider">
 		<property name="propertiesFile">
-			<value>${org.intalio.tempo.configDirectory}/ldap.properties</value>
+			<value>${org.intalio.tempo.configDirectory}/opensso-ldap.properties</value>
 		</property>
-	</bean> --> 
+	</bean>
 
 	<bean id="tokenHandler" class="org.intalio.tempo.security.impl.TokenHandler">
 		<property name="secret"><value>mySecret</value></property>

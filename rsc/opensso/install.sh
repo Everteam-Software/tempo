@@ -1,0 +1,1 @@
+./agentadmin --install --useResponse silent_agent_install.txt 

@@ -214,6 +214,7 @@ define "tempo" do
            JSON_NAGGIT,
            JSTL,
            LOG4J,
+           OPENSSO_CLIENT_SDK,
            PLUTO,
            SPRING[:core], 
            SPRING[:webmvc],

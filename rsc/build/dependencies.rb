@@ -69,6 +69,7 @@ LOG4J = "log4j:log4j:jar:1.2.15"
 
 NEETHI = "org.apache.neethi:neethi:jar:2.0.4"
 
+OPENSSO_CLIENT_SDK = "com.sun:openssoclientsdk:jar:3.0"
 PORTLET_API = "portlet-api:portlet-api:jar:1.0"
 
 QOM = "net.sf.qom:qom:jar:0.1alpha3"
@@ -88,6 +89,7 @@ SPRING_MOCK = [
 ]
 
 STAX_API = [ "stax:stax-api:jar:1.0.1" ]
+STAX_LIB = "stax:stax:jar:1.2.0"
 
 TAGLIBS = [ "taglibs:standard:jar:1.1.2" ]
 
