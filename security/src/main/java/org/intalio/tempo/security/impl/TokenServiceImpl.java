@@ -24,6 +24,13 @@ import org.intalio.tempo.security.util.PropertyUtils;
 import org.intalio.tempo.security.util.StringArrayUtils;
 import org.intalio.tempo.security.util.TimeExpirationMap;
 
+import com.iplanet.sso.SSOException;
+import com.iplanet.sso.SSOToken;
+import com.iplanet.sso.SSOTokenManager;
+import com.sun.identity.idm.AMIdentity;
+import com.sun.identity.idm.IdRepoException;
+import com.sun.identity.idm.IdUtils;
+
 import edu.yale.its.tp.cas.client.ProxyTicketValidator;
 
 /**
@@ -221,5 +228,38 @@ public class TokenServiceImpl implements TokenService {
         }
 
     }
+    
+    public String getTokenFromOpenSSOToken(String tokenId)
+			throws AuthenticationException, RBACException, RemoteException {
+		try {
+			SSOToken token = SSOTokenManager.getInstance().createSSOToken(
+					tokenId);
+			if (token == null) {
+				throw new AuthenticationException(
+						"Failed to get the sso token with token ID: " + tokenId);
+			}
+
+			// check the token validity
+			SSOTokenManager manager = SSOTokenManager.getInstance();
+			if (!manager.isValidToken(token)) {
+				throw new AuthenticationException("Token with ID: " + tokenId
+						+ " is invalid.");
+			}
+
+			// get the user with sso token
+			AMIdentity userIdentity = IdUtils.getIdentity(token);
+			String user = userIdentity.getName();
+
+			return createToken(user);
+		} catch (UnsupportedOperationException e) {
+			e.printStackTrace();
+		} catch (SSOException e) {
+			e.printStackTrace();
+		} catch (IdRepoException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
 
 }

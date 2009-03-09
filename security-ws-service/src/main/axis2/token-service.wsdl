@@ -99,6 +99,14 @@
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
+			<xsd:element name="openssoTicket">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="openssoToken" type="xsd:string">
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>			
 		</xsd:schema>
 	</wsdl:types>
 
@@ -134,6 +142,16 @@
 			element="tns:authenticateUserResponse">
 		</wsdl:part>
 	</wsdl:message>
+	
+	<wsdl:message name="getTokenFromOpenSSOTokenRequest">
+		<wsdl:part name="payload" element="tns:openssoTicket"></wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="getTokenFromOpenSSOTokenResponse">
+		<wsdl:part name="payload"
+			element="tns:authenticateUserResponse">
+		</wsdl:part>
+	</wsdl:message>
+	
 	<wsdl:portType name="TokenService">
 		<wsdl:operation name="authenticateUser">
 			<wsdl:input message="tns:authenticateUser" />
@@ -153,6 +171,10 @@
 			<wsdl:input message="tns:getTokenFromTicketRequest"></wsdl:input>
 			<wsdl:output message="tns:getTokenFromTicketResponse"></wsdl:output>
 		</wsdl:operation>
+		<wsdl:operation name="getTokenFromOpenSSOToken">
+			<wsdl:input message="tns:getTokenFromOpenSSOTokenRequest"></wsdl:input>
+			<wsdl:output message="tns:getTokenFromOpenSSOTokenResponse"></wsdl:output>
+		</wsdl:operation>		
 	</wsdl:portType>
 
 	<wsdl:binding name="TokenServiceSOAP" type="tns:TokenService">
@@ -199,12 +221,21 @@
 				<soap:body parts="payload" use="literal" />
 			</wsdl:output>
 		</wsdl:operation>
+		
+		<wsdl:operation name="getTokenFromOpenSSOToken">
+			<soap:operation soapAction="getTokenFromOpenSSOToken" />
+			<wsdl:input>
+				<soap:body parts="payload" use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body parts="payload" use="literal" />
+			</wsdl:output>
+		</wsdl:operation>		
 	</wsdl:binding>
 
 	<wsdl:service name="TokenService">
 		<wsdl:port name="Service" binding="tns:TokenServiceSOAP">
-			<soap:address
-				location="http://localhost:8080/axis2/services/TokenService" />
+			<soap:address location="http://localhost:8080/axis2/services/TokenService" />
 		</wsdl:port>
 	</wsdl:service>
 </wsdl:definitions>

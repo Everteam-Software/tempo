@@ -145,7 +145,7 @@ define "tempo" do
 
   desc "Security Framework"
   define "security" do
-    compile.with CAS_CLIENT, DOM4J, CASTOR, LOG4J, SLF4J, SPRING[:core], XERCES
+    compile.with CAS_CLIENT, DOM4J, CASTOR, LOG4J, SLF4J, SPRING[:core], XERCES, CAS_CLIENT, OPENSSO_CLIENT_SDK, SERVLET_API
 
     test.exclude "*BaseSuite"
     test.exclude "*FuncTestSuite"
@@ -165,7 +165,7 @@ define "tempo" do
   desc "Security Web-Service Client"
   define "security-ws-client" do
     compile.with projects("security", "security-ws-common"),AXIOM, AXIS2, SLF4J, STAX_API, SPRING[:core]
-    test.with APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], CASTOR, LOG4J, SUNMAIL, XERCES, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX, CAS_CLIENT, INSTINCT
+    test.with APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], CASTOR, LOG4J, SUNMAIL, XERCES, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX, CAS_CLIENT, INSTINCT, OPENSSO_CLIENT_SDK
 
     # Remember to set JAVA_OPTIONS before starting Jetty
     # export JAVA_OPTIONS=-Dorg.intalio.tempo.configDirectory=/home/boisvert/svn/tempo/security-ws2/src/test/resources
@@ -190,13 +190,12 @@ define "tempo" do
   desc "Security Web-Service"
   define "security-ws-service" do
     compile.with projects("security", "security-ws-common"), AXIOM, AXIS2, SLF4J, SPRING[:core], STAX_API  
-    package(:aar).with :libs => [ projects("security", "security-ws-common"), CASTOR, SLF4J, SPRING[:core], CAS_CLIENT ]
+    package(:aar).with :libs => [ projects("security", "security-ws-common"), CASTOR, SLF4J, SPRING[:core], CAS_CLIENT, OPENSSO_CLIENT_SDK ]
   end
   
   desc "Task Attachment Service"
   define "tas-service" do
-    compile.with projects("security", "security-ws-client"), 
-                 APACHE_COMMONS[:httpclient], AXIOM, AXIS2, JAXEN, SLF4J, STAX_API, WEBDAV
+    compile.with projects("security", "security-ws-client"),APACHE_COMMONS[:httpclient], AXIOM, AXIS2, JAXEN, SLF4J, STAX_API, WEBDAV
 
     test.with projects("security-ws-common", "security-ws-client"), APACHE_COMMONS[:codec], LOG4J, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, INSTINCT
     test.exclude '*TestUtils*'
@@ -210,7 +209,9 @@ define "tempo" do
 
     package :jar
     package(:aar).with(:libs => [ 
-        projects("security", "security-ws-client", "security-ws-common", "web-nutsNbolts"), APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], JAXEN, SLF4J, SPRING[:core], WEBDAV])
+        projects("security", "security-ws-client", "security-ws-common", "web-nutsNbolts"), 
+        APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], JAXEN, SLF4J, SPRING[:core], 
+        WEBDAV])
   end
 
   desc "Xml Beans generation"
@@ -304,6 +305,7 @@ define "tempo" do
            JSON_NAGGIT,
            JSTL,
            LOG4J,
+           OPENSSO_CLIENT_SDK,
            PLUTO,
            SPRING[:core], 
            SPRING[:webmvc],

@@ -71,4 +71,16 @@ public interface TokenService
 	 */
 	public String getTokenFromTicket(String ticket, String serviceURL) 
 		throws AuthenticationException, RBACException, RemoteException;
+	
+	/**
+	 * Get the security token with the OpenSSO token id
+	 * 
+	 * @param tokenId OpenSSO Token id
+	 * @return
+	 * @throws AuthenticationException
+	 * @throws RBACException
+	 * @throws RemoteException
+	 */
+    public String getTokenFromOpenSSOToken(String tokenId)
+			throws AuthenticationException, RBACException, RemoteException;
 }

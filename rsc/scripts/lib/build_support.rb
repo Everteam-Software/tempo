@@ -7,12 +7,63 @@ require 'fileutils'
 require 'open-uri'
 require "hpricot"
 
+
+module BuildMode
+  BPMS = 0
+  LIFERAY = 1
+  TOMCAT5 = 2
+  TOMCAT6 = 3
+  LDAP = 4
+  ALFRESCO = 5
+  OPENSSO = 6
+  ZIP = 7
+  OPENSSO_SERVER = 8
+  UIFW = 9
+  TOMCAT = 10
+  REMOTE = 11
+  AGENT = 12
+end
+
+module BuildActivate
+  
+  attr_accessor :config
+  attr_accessor :show_steps
+  
+  # only execute the step, if the step_mode 
+  # applies to the configuration defined in config.rb
+  # this also to have something like
+  #
+  # BuildMode::OPENSSO|BuildMode::TOMCAT
+  #
+  # in the config file, and get 
+  #  activate_step BuildMode::OPENSSO do
+  #    ...
+  #  end
+  # 
+  # executed.
+  def activate_step step_mode, msg=""
+    if support_step step_mode
+      if not show_steps
+        puts "--> #{msg}"
+        yield 
+      else
+        puts "--> Planned step:#{msg}"
+      end
+    end
+  end
+  
+  # check whether the given step will be executed or not
+  def support_step step_mode
+    return (step_mode & config[:mode]) == step_mode
+  end
+  
+end
+
 module BuildSupport
   
   
   # Replace all the strings in a file
   def replace_all(src_string, target_string, src_file, target_file=src_file)
-    pp src_file
     f = IO.read(src_file)
     File.open(target_file, "w") { |io|
       io << f.gsub(src_string, target_string)
@@ -39,30 +90,11 @@ module BuildSupport
     }
   end
   
-  # only execute the step, if the step_mode 
-  # applies to the configuration defined in config.rb
-  # this also to have something like
-  #
-  # BuildMode::OPENSSO|BuildMode::TOMCAT
-  #
-  # in the config file, and get 
-  #  activate_step BuildMode::OPENSSO do
-  #    ...
-  #  end
-  # 
-  # executed.
-  def activate_step step_mode, msg=""
-    if ((BUILD_CONFIG[:mode] & step_mode) != 0) then
-      title msg
-      yield 
-    end
-  end
-  
   # ensure all the sh files in the /bin folder 
   # of the server folder have the proper unix rights
   # for execution
   def sh_files server_folder
-    shfiles = File.join("#{server_folder}/bin", "*.sh")
+    shfiles = File.join("#{server_folder}/bin", "*")
     Dir.glob(shfiles) {|x| FileUtils.chmod 0755, x, :verbose => BUILD_DEBUG }
   end
   
@@ -190,12 +222,13 @@ module BuildSupport
   # renamed folder, which the original method
   # doesn't do
   def rename_folder org_name, new_name
-     parent = File.dirname(org_name)
-     begin 
-       File.rename(org_name,new_name) 
-     rescue 
-     end
-     return "#{parent}/#{new_name}"
+    parent = File.dirname(org_name)
+    begin 
+      File.rename(org_name,new_name) 
+    rescue 
+      print "An error occurred: ",$!, "\n"
+    end
+    return "#{parent}/#{new_name}"
   end
 
   # make a clean build of tempo, directly from this method. 
@@ -395,18 +428,6 @@ module BuildSupport
 
 end
 
-module BuildMode
-  EMPTY = 0
-  LIFERAY = 1
-  LDAP = 2
-  ALFRESCO = 4
-  TOMCAT = 8
-  OPENSSO = 16
-  ZIP = 32
-  REMOTE = 64
-  UIFW = 128
-end
-
 include BuildSupport
 
 APACHE_MIRROR = find_apache_mirror
@@ -430,5 +451,6 @@ BUILD_URI = {
 	  :v2_1 => "http://downloads.sourceforge.net/sourceforge/alfresco/alfresco-community-war-2.1.0.zip",
     :v2_9 => "http://downloads.sourceforge.net/sourceforge/alfresco/alfresco-community-war-2.9.0B.zip",
     :v3_0 => "http://downloads.sourceforge.net/sourceforge/alfresco/alfresco-labs-war-3a.1032.zip"  
-	}
+	}, 
+	:opensso_agent => "http://download.java.net/general/opensso/nightly/latest/j2eeagents/tomcat_v6_agent_3.zip"
 }

@@ -54,9 +54,24 @@ def install_tmp
   opi.install_artifact "org.intalio.tempo:tempo-processes-TaskManager:jar:#{BUILD_CONFIG[:tempo][:core]}", "TaskManager"
 end
 
+# some boring stuff you need to do for setting up the agent
+def setup_opensso_tomcat6_agent
+  # unzip agent file, 10M !!!
+  agent_folder = download_unzip(BUILD_URI[:opensso_agent],true)
+  FileUtils.mv("j2ee_agents/tomcat_v6_agent",File.expand_path("#{@@server_folder}"), :force => true )
+  # add fuzzy password, someone tellme what this is doing here
+  open("#{@@server_folder}/password", "w") do |f|
+    f << "intalio3"
+  end
+  # copy sample files to bin, unless you want to type all this by hand
+  shfiles = File.join("#{@@script_folder}/../opensso", "*.*")
+  Dir.glob(shfiles) {|x| FileUtils.copy x,"#{@@server_folder}/tomcat_v6_agent/bin",:verbose => BUILD_DEBUG}
+  # chmod script files for *nix
+  sh_files "#{@@server_folder}/tomcat_v6_agent"
+end
+
 # Copy missing tomcat libs, including the tempo registry
 def copy_missing_lib
-  @@lib_folder = "#{@@server_folder}/common/lib" # tomcat5
   FileUtils.mkdir_p @@lib_folder
   missing_libs = [
     DB_CONNECTOR[:mysql],
@@ -138,6 +153,11 @@ def copy_tempo_config_files filter="*.*"
   Dir.glob(config_files) {|x| File.copy(x, config_folder, BUILD_DEBUG)}
 end
 
+def copy_tempo_config_file config, target=config
+  config_folder = check_folder("#{@@server_folder}/var/config")
+  File.copy "#{TEMPO_SVN}/config/#{config}", "#{config_folder}/#{target}"
+end
+
 # define standard tomcat only java options
 def setup_java_options
   options = "-XX:MaxPermSize=256m -server"
@@ -161,6 +181,10 @@ end
 
 def install_cas_webapp
   @@wi.install_war_artifact("org.intalio.tempo:tempo-cas-webapp:war:#{BUILD_CONFIG[:tempo][:cas]}","cas")
+end
+
+def enable_opensso_in_uifw
+  File.copy "#{@@webapp_folder}/ui-fw/WEB-INF/web-opensso.xml", "#{@@webapp_folder}/ui-fw/WEB-INF/web.xml"
 end
 
 def install_ldap_support
