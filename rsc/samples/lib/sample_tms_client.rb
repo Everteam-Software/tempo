@@ -3,15 +3,33 @@ require 'soap/wsdlDriver'
 class SampleTMSClient 
 
   attr_reader :token
+  attr_writer :fake_delete
 
-  def initialize(host="localhost:8080", user="admin",password="changeit")
+  def initialize(host="localhost:8080", user="intalio\\admin",password="changeit", fake_delete=true)
     @host = host
     @token = authenticate(user,password)
+    @fake_delete = fake_delete
     @tms_client = SOAP::WSDLDriverFactory.new("http://#{@host}/axis2/services/TaskManagementServices?wsdl").create_rpc_driver if not @tms_client
   end
 
   def get_tasks
     tasks = @tms_client.getTaskList(:participantToken => @token).task
+  end
+
+  def get_task id
+    @tms_client.getTask(:participantToken => @token, :taskId => id)
+  end  
+
+  def get_attachments id
+    @tms_client.getAttachments(:participantToken => @token, :taskId => id)
+  end
+
+  def remove_attachment task_id, attachment_url
+    if @fake_delete then
+      puts "Fake delete of:#{attachment_url} for task:#{task_id}"
+    else
+      @tms_client.removeAttachment(:participantToken => @token, :taskId => task_id, :attachmentUrl=>attachment_url)
+    end
   end
 
   def get_pa_tasks
@@ -21,25 +39,51 @@ class SampleTMSClient
   def delete tasks
     tasks.each do |task|
       puts "Deleting task #{task.taskId}"
-      @tms_client.delete(:participantToken => @token, :taskId=> task.taskId)
+      if @fakeDelete then
+        puts "Fake delete of task:#{id}"
+      else        
+        @tms_client.delete(:participantToken => @token, :taskId=> task.taskId)
+      end
     end
   end
 
   def delete_by_ids ids
     ids.each do |id|
-      @tms_client.delete(:participantToken => @token, :taskId=> id)
+      if @fake_delete then
+        puts "Fake delete of task:#{id}"
+      else       
+        @tms_client.delete(:participantToken => @token, :taskId=> id)
+      end
     end
   end
 
-  def delete_all task_type="PATask", query="", fake_delete=false
+  def delete_all task_type="PATask", query=""
     puts "Deleting task matching query:#{query}"
-    @tms_client.deleteAll(:participantToken =>@token, :taskType=> task_type, :fakeDelete=> fake_delete, :subQuery=>query)
+    @tms_client.deleteAll(:participantToken =>@token, :taskType=> task_type, :fakeDelete=> @fake_delete, :subQuery=>query)
   end
-  # 
-  #   <xsd:element name="taskType" type="xsd:string" maxOccurs="1" minOccurs="0"/>
-  # <xsd:element name="subQuery" type="xsd:string" maxOccurs="1" minOccurs="0"/>
-  # <xsd:element name="fakeDelete" type="xsd:boolean" maxOccurs="1" minOccurs="1"/>
-  # <xsd:element name="participantToken" type="xsd:string" maxOccurs="1" minOccurs="1"/>
+
+  def delete_attachments task_id
+    attachments = get_attachments(task_id)
+    array = nil
+    begin
+       array = attachments.attachment
+    rescue
+      ## no attachments
+      return
+    end
+    if array.instance_of? Array then
+      array.each do |att|
+        remove_attachment(task_id, att.payloadUrl)  
+      end
+    else
+      remove_attachment(task_id, array.payloadUrl)
+    end
+  end
+
+  def delete_task task_id
+    delete_attachments task_id
+    delete_by_ids [task_id]
+  end
 
   private
   def authenticate(user, password)
