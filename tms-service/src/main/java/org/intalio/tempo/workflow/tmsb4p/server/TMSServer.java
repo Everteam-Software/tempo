@@ -1,6 +1,7 @@
 package org.intalio.tempo.workflow.tmsb4p.server;
 
 import java.net.URL;
+import java.util.List;
 
 import org.apache.axis2.AxisFault;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
@@ -11,12 +12,14 @@ import org.intalio.tempo.workflow.task.TaskState;
 import org.intalio.tempo.workflow.taskb4p.Attachment;
 import org.intalio.tempo.workflow.taskb4p.Task;
 import org.intalio.tempo.workflow.tms.TMSException;
-import org.intalio.tempo.workflow.tms.server.daob4p.ITaskDAOConnection;
-import org.intalio.tempo.workflow.tms.server.daob4p.ITaskDAOConnectionFactory;
 import org.intalio.tempo.workflow.tms.server.permissions.TaskPermissions;
+import org.intalio.tempo.workflow.tmsb4p.server.dao.ITaskDAOConnection;
+import org.intalio.tempo.workflow.tmsb4p.server.dao.ITaskDAOConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
+
+import com.intalio.wsHT.api.TStatus;
 
 public class TMSServer implements ITMSServer{
     private static final Logger _logger = LoggerFactory.getLogger(TMSServer.class);
@@ -174,6 +177,58 @@ public class TMSServer implements ITMSServer{
         
     }
 
+    public List<Task> getMyTasks(String participantToken, String taskType, String genericHumanRole, String workQueue, TStatus.Enum[] statusList, String whereClause, String createdOnClause, int maxTasks) throws TMSException{
+        System.out.println("tmsserver->getTasks");
+        try{
+            UserRoles ur = _authProvider.authenticate(participantToken);
+            System.out.println("userid:"+ur.getUserID());            
+        }catch (Exception e ){
+            e.printStackTrace();
+        }
+        
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        try {
+           // dao.getMyTasks());
+           
+         //   if (_logger.isDebugEnabled())
+         //       _logger.debug("Workflow Task " + task + " was created");
+            // TODO : Use credentials.getUserID() :vb
+        } catch (Exception e) {
+            _logger.error("Cannot create Workflow Tasks", e); // TODO :
+            // TaskIDConflictException
+            // must be rethrowed :vb
+        } finally {
+            dao.close();
+        }
+        
+        return null;
+    
+    }
+
+    public List<Task> query(String participantToken, String selectClause, String whereClause, String orderByClause, int maxTasks, int taskIndexOffset) throws TMSException {
+        // get user
+        UserRoles ur = null;
+        try{
+            ur = _authProvider.authenticate(participantToken);
+           
+            System.out.println("userid:"+ur.getUserID());            
+        }catch (Exception e ){
+            e.printStackTrace();
+        }
+        
+        // do query
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        try {
+                return dao.query(ur, selectClause, whereClause, orderByClause, maxTasks, taskIndexOffset);
+        } catch (Exception e) {
+            _logger.error("Query failed", e); 
+        } finally {
+            dao.close();
+        }
+        
+        
+        return null;
+    }
  
 
 }

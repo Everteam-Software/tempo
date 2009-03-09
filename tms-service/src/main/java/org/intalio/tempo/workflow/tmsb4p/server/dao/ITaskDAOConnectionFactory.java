@@ -13,7 +13,7 @@
  * $Log:$
  */
 
-package org.intalio.tempo.workflow.tms.server.daob4p;
+package org.intalio.tempo.workflow.tmsb4p.server.dao;
 
 public interface ITaskDAOConnectionFactory {
     ITaskDAOConnection openConnection();    
