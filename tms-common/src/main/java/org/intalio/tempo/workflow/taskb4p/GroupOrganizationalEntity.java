@@ -6,29 +6,25 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-
-import org.apache.openjpa.persistence.PersistentCollection;
-import org.apache.openjpa.persistence.jdbc.ContainerTable;
+import javax.persistence.OneToMany;
 
 @Entity
 @DiscriminatorValue("GroupEntity")
 public class GroupOrganizationalEntity extends OrganizationalEntity {
-    @PersistentCollection(elementType=String.class, elementCascade=CascadeType.ALL, elementEmbedded = false, fetch=FetchType.EAGER)
-    @ContainerTable(name="tempob4p_groups")	
-	private Set<String> groups;
+    @OneToMany(cascade=CascadeType.ALL, mappedBy="orgEntity")	
+	private Set<Principal> groups;
 
-	public Set<String> getGroups() {
+	public Set<Principal> getGroups() {
 		return groups;
 	}
 
-	public void setGroups(Set<String> groups) {
+	public void setGroups(Set<Principal> groups) {
 		this.groups = groups;
 	}
 	
-	public void addGroup(String group) {
+	public void addGroup(Principal group) {
 		if (this.groups == null) {
-			groups = new HashSet<String>();
+			groups = new HashSet<Principal>();
 		}
 		
 		groups.add(group);

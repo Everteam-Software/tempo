@@ -46,6 +46,7 @@
         <class>org.intalio.tempo.workflow.taskb4p.AttachmentInfo</class>
         <class>org.intalio.tempo.workflow.taskb4p.Attachment</class>
         <class>org.intalio.tempo.workflow.taskb4p.Comment</class>
+		<class>org.intalio.tempo.workflow.taskb4p.Principal</class>        
         <class>org.intalio.tempo.workflow.taskb4p.OrganizationalEntity</class>
         <class>org.intalio.tempo.workflow.taskb4p.GroupOrganizationalEntity</class>
         <class>org.intalio.tempo.workflow.taskb4p.UserOrganizationalEntity</class>

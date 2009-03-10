@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.Lob;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
@@ -31,28 +32,37 @@ public abstract class TaskAbstract {
 	@Basic
 	private boolean isSkipable;
 	@Basic
-	private boolean hasPotentialOwners;
+	private Date startBy;
 	@Basic
-	private boolean startByExists;
-	@Basic
-	private boolean completeByExists;
+	private Date complteBy;
 	@Column(length = 64)
 	private String presentationName;
 	@Column(length = 254)
 	private String presentationSubject;
 	@Basic
-	private boolean renderingMethodExists;
-	@Basic
-	private boolean hasOutput;
-	@Basic
-	private boolean hasFault;
-	@Basic
 	private boolean escalated;
+	@Column(length = 2048)
+	@Lob
+	private String faultMessage;
+	@Column(length = 2048)
+	@Lob
+	private String inputMessage;
+	@Column(length = 2048)
+	@Lob
+	private String outputMessage;
+	@Basic
+	private String renderingMethName;
+	
 
-	// below two attributes should be calculated dynamically
+	// below attributes should be calculated dynamically
 	private boolean hasAttachments;
 	private boolean hasComments;
-
+	private boolean hasOutput;
+	private boolean hasFault;
+	private boolean hasPotentialOwners;
+	private boolean renderingMethodExists;
+	private boolean completeByExists;
+	private boolean startByExists;
 	
 	public String getId() {
 		return id;
@@ -212,5 +222,53 @@ public abstract class TaskAbstract {
 
 	public boolean isHasComments() {
 		return hasComments;
+	}
+
+	public Date getStartBy() {
+		return startBy;
+	}
+
+	public void setStartBy(Date startBy) {
+		this.startBy = startBy;
+	}
+
+	public Date getComplteBy() {
+		return complteBy;
+	}
+
+	public void setComplteBy(Date complteBy) {
+		this.complteBy = complteBy;
+	}
+
+	public String getFaultMessage() {
+		return faultMessage;
+	}
+
+	public void setFaultMessage(String faultMessage) {
+		this.faultMessage = faultMessage;
+	}
+
+	public String getInputMessage() {
+		return inputMessage;
+	}
+
+	public void setInputMessage(String inputMessage) {
+		this.inputMessage = inputMessage;
+	}
+
+	public String getOutputMessage() {
+		return outputMessage;
+	}
+
+	public void setOutputMessage(String outputMessage) {
+		this.outputMessage = outputMessage;
+	}
+
+	public String getRenderingMethName() {
+		return renderingMethName;
+	}
+
+	public void setRenderingMethName(String renderingMethName) {
+		this.renderingMethName = renderingMethName;
 	}
 }
