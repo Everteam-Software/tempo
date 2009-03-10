@@ -23,12 +23,12 @@ import org.intalio.tempo.security.util.IdentifierUtils;
 import org.intalio.tempo.security.util.PropertyUtils;
 import org.intalio.tempo.security.util.StringArrayUtils;
 import org.intalio.tempo.security.util.TimeExpirationMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.iplanet.sso.SSOException;
 import com.iplanet.sso.SSOToken;
 import com.iplanet.sso.SSOTokenManager;
 import com.sun.identity.idm.AMIdentity;
-import com.sun.identity.idm.IdRepoException;
 import com.sun.identity.idm.IdUtils;
 
 import edu.yale.its.tp.cas.client.ProxyTicketValidator;
@@ -40,6 +40,7 @@ import edu.yale.its.tp.cas.client.ProxyTicketValidator;
  * @author <a href="http://www.intalio.com">&copy; Intalio Inc.</a>
  */
 public class TokenServiceImpl implements TokenService {
+	Logger _logger = LoggerFactory.getLogger(TokenServiceImpl.class);
     Realms _realms;
     TokenHandler _tokenHandler;
 
@@ -218,13 +219,12 @@ public class TokenServiceImpl implements TokenService {
 
         if (pv.isAuthenticationSuccesful()) {
             String user = pv.getUser();
-
             if (user == null) {
-                throw new AuthenticationException("Authentication failed: User" + user + "'");
+                throw new AuthenticationException("Authentication failed: Null User");
             }
             return createToken(user);
         } else {
-            throw new AuthenticationException("Authentication failed! Proxy ticket authentication faild!");
+            throw new AuthenticationException("Authentication failed! Proxy ticket authentication failed!");
         }
 
     }
@@ -232,7 +232,8 @@ public class TokenServiceImpl implements TokenService {
     public String getTokenFromOpenSSOToken(String tokenId)
 			throws AuthenticationException, RBACException, RemoteException {
 		try {
-			SSOToken token = SSOTokenManager.getInstance().createSSOToken(
+			SSOTokenManager tokenManager = SSOTokenManager.getInstance();
+			SSOToken token = tokenManager.createSSOToken(
 					tokenId);
 			if (token == null) {
 				throw new AuthenticationException(
@@ -240,7 +241,7 @@ public class TokenServiceImpl implements TokenService {
 			}
 
 			// check the token validity
-			SSOTokenManager manager = SSOTokenManager.getInstance();
+			SSOTokenManager manager = tokenManager;
 			if (!manager.isValidToken(token)) {
 				throw new AuthenticationException("Token with ID: " + tokenId
 						+ " is invalid.");
@@ -251,15 +252,10 @@ public class TokenServiceImpl implements TokenService {
 			String user = userIdentity.getName();
 
 			return createToken(user);
-		} catch (UnsupportedOperationException e) {
-			e.printStackTrace();
-		} catch (SSOException e) {
-			e.printStackTrace();
-		} catch (IdRepoException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			_logger.error("OpenSSO Token Error",e);
+			throw new AuthenticationException("Authentication failed! OpenSSO ticket authentication failed!");
 		}
-
-		return null;
 	}
 
 }
