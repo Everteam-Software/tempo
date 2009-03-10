@@ -1,7 +1,8 @@
-package org.intalio.tempo.workflow.tms.server.daob4p;
+package org.intalio.tempo.workflow.tmsb4p.server.dao;
 
 import java.util.List;
 
+import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.taskb4p.Attachment;
 import org.intalio.tempo.workflow.taskb4p.AttachmentAccessType;
 import org.intalio.tempo.workflow.taskb4p.AttachmentInfo;
@@ -40,4 +41,9 @@ public interface ITaskDAOConnection {
 	public void addComment(String taskId, String addedBy, String text);
 	
 	public List<Comment> getComments(String taskId);
+	
+	public List<Task>  getMyTasks(UserRoles ur, String taskType, String genericHumanRole, String workQueue, Enum[] statusList, String whereClause, String createdOnClause, int maxTasks);
+	
+	public List<Task>  query(UserRoles ur, String selectClause, String whereClause, String orderByClause, int maxTasks, int taskIndexOffset);
+	
 }

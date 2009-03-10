@@ -7,7 +7,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  */
-package org.intalio.tempo.workflow.tms.server.daob4p;
+package org.intalio.tempo.workflow.tmsb4p.server.dao;
 
 import java.util.Map;
 

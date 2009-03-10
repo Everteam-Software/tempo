@@ -1,11 +1,13 @@
-package org.intalio.tempo.workflow.tms.server.daob4p;
+package org.intalio.tempo.workflow.tmsb4p.server.dao;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.dao.AbstractJPAConnection;
 import org.intalio.tempo.workflow.taskb4p.Attachment;
 import org.intalio.tempo.workflow.taskb4p.AttachmentAccessType;
@@ -155,5 +157,35 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements
         Long count = (Long)hasCommentQury.getSingleResult();
         return (count.longValue() > 0);
 	}
+	
+
+	
+	public List<Task>  query(UserRoles ur, String selectClause, String whereClause, String orderByClause, int maxTasks, int taskIndexOffset){
+	    String queryString = "select " + selectClause + " from tempob4p_task where " + whereClause + " " + orderByClause;
+	    _logger.info(queryString);
+	    
+	    Query q = this.entityManager.createQuery(queryString);
+	    q.setMaxResults(maxTasks);
+	    List r = q.getResultList();
+//	    
+//	    ArrayList<Task> ret = new ArrayList<Task>();
+//	    int m = 0;
+//	    _logger.info("result size = " + r.size());
+//	    while (m < maxTasks &&  m < r.size()){
+//	        Task t = (Task)r.get(m);
+//	        _logger.info("task["+m+"]:"+t);
+//	        m++;	    
+//	    }
+	    
+	    return r;    
+	}
+
+    public List<Task> getMyTasks(UserRoles ur, String taskType, String genericHumanRole, String workQueue, Enum[] statusList, String whereClause,
+                    String createdOnClause, int maxTasks) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+   
 
 }
