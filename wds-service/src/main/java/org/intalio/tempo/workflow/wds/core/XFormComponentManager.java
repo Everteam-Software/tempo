@@ -46,11 +46,11 @@ public class XFormComponentManager implements org.intalio.deploy.deployment.spi.
         return "xform";
     }
 
-    public void initialize(ComponentId name, File path) {
+    public void initialize(ComponentId name, File path, List<String> deployedResources, boolean active) {
         // nothing
     }
 
-    public void dispose(ComponentId name) {
+    public void dispose(ComponentId name, File path, List<String> deployedResources, boolean active) {
         // nothing
     }
 
@@ -87,7 +87,7 @@ public class XFormComponentManager implements org.intalio.deploy.deployment.spi.
         }
     }
 
-    public void undeploy(ComponentId name, List<String> deployedObjects) {
+    public void undeploy(ComponentId name, File path, List<String> deployedObjects) {
         WDSService wds = _wdsFactory.getWDSService();
         String token = "x"; // TODO
         for (String url: deployedObjects) {
@@ -101,23 +101,43 @@ public class XFormComponentManager implements org.intalio.deploy.deployment.spi.
         }
     }
 
-    public void deployed(ComponentId name, String path, boolean activate) {
+    public void deployed(ComponentId name, String path, List<String> deployedResources, boolean active) {
         // nothing
     }
 
-    public void undeployed(ComponentId name) {
+    public void undeployed(ComponentId name, String path, List<String> deployedResources) {
         // nothing
     }
 
-    public void start(ComponentId name) {
+    public void start(ComponentId name, File path, List<String> deployedResources, boolean active) {
         // nothing
     }
 
-    public void stop(ComponentId name) {
+    public void stop(ComponentId name, File path, List<String> deployedResources, boolean active) {
         // nothing
     }
 
-    // ------------------ Common deployment methods ------------------------
+	public void activate(ComponentId name, File path, List<String> deployedResources) {
+		// TODO implement this
+		throw new RuntimeException("Not implemented yet!!");
+	}
+
+	public void retire(ComponentId name, File path, List<String> deployedResources) {
+		// TODO implement this
+		throw new RuntimeException("Not implemented yet!!");
+	}
+	
+	public void activated(ComponentId name, String path, List<String> deployedResources) {
+		// TODO implement this
+		throw new RuntimeException("Not implemented yet!!");
+	}
+
+	public void retired(ComponentId name, String path, List<String> deployedResources) {
+		// TODO implement this
+		throw new RuntimeException("Not implemented yet!!");
+	}
+
+	// ------------------ Common deployment methods ------------------------
 
 
     public DeploymentMessage checkItem(String token, WDSService wds, InputStream input, String itemURL) {
@@ -275,24 +295,4 @@ public class XFormComponentManager implements org.intalio.deploy.deployment.spi.
             // ignore
         }
     }
-
-	public void activate(ComponentId name) {
-		// TODO implement this
-		throw new RuntimeException("Not implemented yet!!");
-	}
-
-	public void retire(ComponentId name) {
-		// TODO implement this
-		throw new RuntimeException("Not implemented yet!!");
-	}
-	
-	public void activated(ComponentId name) {
-		// TODO implement this
-		throw new RuntimeException("Not implemented yet!!");
-	}
-
-	public void retired(ComponentId name) {
-		// TODO implement this
-		throw new RuntimeException("Not implemented yet!!");
-	}
 }

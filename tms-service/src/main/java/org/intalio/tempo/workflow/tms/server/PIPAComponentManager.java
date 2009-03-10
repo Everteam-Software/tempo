@@ -48,11 +48,11 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
         return "pipa";
     }
 
-    public void initialize(ComponentId name, File path) {
+    public void initialize(ComponentId name, File path, List<String> deployedResources, boolean active) {
         // nothing
     }
 
-    public void dispose(ComponentId name) {
+    public void dispose(ComponentId name, File path, List<String> deployedResources, boolean active) {
         // nothing
     }
 
@@ -87,9 +87,9 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
         }
     }
 
-    public void undeploy(ComponentId name, List<String> deployedObjects) {
+    public void undeploy(ComponentId name, File path, List<String> deployedResources) {
         String token = "x"; // TODO
-        for (String url: deployedObjects) {
+        for (String url: deployedResources) {
             try {
                 _tms.deletePipa(url, token);
             } catch (UnavailableTaskException e) {
@@ -104,23 +104,43 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
         }
     }
 
-    public void deployed(ComponentId name, String path, boolean activate) {
+    public void start(ComponentId name, File path, List<String> deployedResources, boolean active) {
         // nothing
     }
 
-    public void undeployed(ComponentId name) {
+    public void stop(ComponentId name, File path, List<String> deployedResources, boolean active) {
         // nothing
     }
 
-    public void start(ComponentId name) {
+	public void activate(ComponentId name, File path, List<String> deployedResources) {
+		// TODO Implement this
+		throw new RuntimeException("Not implemented yet!!");
+	}
+
+	public void retire(ComponentId name, File path, List<String> deployedResources) {
+		// TODO Implement this
+		throw new RuntimeException("Not implemented yet!!");
+	}
+
+    public void deployed(ComponentId name, String path, List<String> deployedResources, boolean active) {
         // nothing
     }
 
-    public void stop(ComponentId name) {
+    public void undeployed(ComponentId name, String path, List<String> deployedResources) {
         // nothing
     }
 
-    // ------------------ Common deployment methods ------------------------
+	public void activated(ComponentId name, String path, List<String> deployedResources) {
+		// TODO Implement this
+		throw new RuntimeException("Not implemented yet!!");
+	}
+
+	public void retired(ComponentId name, String path, List<String> deployedResources) {
+		// TODO Implement this
+		throw new RuntimeException("Not implemented yet!!");
+	}
+
+	// ------------------ Common deployment methods ------------------------
 
     public DeploymentMessage checkPipa(String token, InputStream input, String name) {
         DeploymentMessage msg = null;
@@ -261,24 +281,4 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
             // ignore
         }
     }
-
-	public void activate(ComponentId name) {
-		// TODO Implement this
-		throw new RuntimeException("Not implemented yet!!");
-	}
-
-	public void retire(ComponentId name) {
-		// TODO Implement this
-		throw new RuntimeException("Not implemented yet!!");
-	}
-
-	public void activated(ComponentId name) {
-		// TODO Implement this
-		throw new RuntimeException("Not implemented yet!!");
-	}
-
-	public void retired(ComponentId name) {
-		// TODO Implement this
-		throw new RuntimeException("Not implemented yet!!");
-	}
 }
