@@ -186,6 +186,9 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements
         return null;
     }
 
-   
+    // TODO: below method will be removed
+   public EntityManager getEntityManager() {
+	   return this.entityManager;
+   }
 
 }
