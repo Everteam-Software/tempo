@@ -122,20 +122,20 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
 		throw new RuntimeException("Not implemented yet!!");
 	}
 
-    public void deployed(ComponentId name, String path, List<String> deployedResources, boolean active) {
+    public void deployed(ComponentId name, File path, List<String> deployedResources, boolean active) {
         // nothing
     }
 
-    public void undeployed(ComponentId name, String path, List<String> deployedResources) {
+    public void undeployed(ComponentId name, File path, List<String> deployedResources) {
         // nothing
     }
 
-	public void activated(ComponentId name, String path, List<String> deployedResources) {
+	public void activated(ComponentId name, File path, List<String> deployedResources) {
 		// TODO Implement this
 		throw new RuntimeException("Not implemented yet!!");
 	}
 
-	public void retired(ComponentId name, String path, List<String> deployedResources) {
+	public void retired(ComponentId name, File path, List<String> deployedResources) {
 		// TODO Implement this
 		throw new RuntimeException("Not implemented yet!!");
 	}

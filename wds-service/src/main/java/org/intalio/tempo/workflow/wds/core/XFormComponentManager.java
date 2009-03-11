@@ -101,11 +101,11 @@ public class XFormComponentManager implements org.intalio.deploy.deployment.spi.
         }
     }
 
-    public void deployed(ComponentId name, String path, List<String> deployedResources, boolean active) {
+    public void deployed(ComponentId name, File path, List<String> deployedResources, boolean active) {
         // nothing
     }
 
-    public void undeployed(ComponentId name, String path, List<String> deployedResources) {
+    public void undeployed(ComponentId name, File path, List<String> deployedResources) {
         // nothing
     }
 
@@ -127,12 +127,12 @@ public class XFormComponentManager implements org.intalio.deploy.deployment.spi.
 		throw new RuntimeException("Not implemented yet!!");
 	}
 	
-	public void activated(ComponentId name, String path, List<String> deployedResources) {
+	public void activated(ComponentId name, File path, List<String> deployedResources) {
 		// TODO implement this
 		throw new RuntimeException("Not implemented yet!!");
 	}
 
-	public void retired(ComponentId name, String path, List<String> deployedResources) {
+	public void retired(ComponentId name, File path, List<String> deployedResources) {
 		// TODO implement this
 		throw new RuntimeException("Not implemented yet!!");
 	}
