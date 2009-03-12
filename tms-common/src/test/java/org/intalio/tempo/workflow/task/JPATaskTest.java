@@ -140,6 +140,27 @@ public class JPATaskTest {
         
         remoteQuery();
     }
+    
+    @Test
+    public void oneMoreTestForDescriptionSearch() throws Exception {
+        String query = "(T._state = TaskState.READY OR T._state = TaskState.CLAIMED) AND T._description like '%hello%' ORDER BY T._creationDate DESC";
+        PATask task1 = new PATask(getUniqueTaskID(), new URI("http://hellonico.net"));
+        task1.setDescription("bonjour");
+        task1.getUserOwners().add("niko");
+        persist(task1);
+        
+        PATask task2 = new PATask(getUniqueTaskID(), new URI("http://hellonico.net"));
+        task2.setDescription("hello");
+        task2.getUserOwners().add("niko");
+        persist(task2);
+        
+        UserRoles ur = new UserRoles("niko", new String[] { "examples\\employee" });
+        final TaskFetcher taskFetcher = new TaskFetcher(em);
+        Task[] t1 = taskFetcher.fetchAvailableTasks(ur, PATask.class, query);
+        Assert.assertEquals(1, t1.length);
+        
+        checkRemoved(new Task[]{task1,task2});
+    }
 
     @Test
     public void plentyOfRoles() throws Exception {

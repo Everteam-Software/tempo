@@ -70,7 +70,13 @@
 					</cell>
 					<cell><![CDATA[<a href="${taskFullURL}" title="${taskHolder.task.creationDate}" target="taskform"><fmt:formatDate value="${taskHolder.task.creationDate}" type="both" timeStyle="short" dateStyle="short" /></a>]]></cell>
 						<cell><![CDATA[<a href="${taskFullURL}" title="${taskHolder.task.deadline}" target="taskform"><fmt:formatDate value="${taskHolder.task.deadline}" type="both" timeStyle="short" dateStyle="short" /></a>]]></cell>
-					<cell>${taskHolder.task.priority}</cell>
+					<cell>
+					    <c:choose>
+							<c:when test="${taskHolder.task.priority != '0'}">
+								${taskHolder.task.priority}
+							</c:when>
+						</c:choose>
+					    </cell>
 					<cell><![CDATA[
 							<c:forEach items="${taskHolder.task.attachments}" var="attachment" varStatus="index">
 								<a href="${attachment.payloadURL}" onClick="window.open('${attachment.payloadURL}', 'newwindow'); return false;"><img border="0" height="${iconSize}" width="${iconSize}" title="${attachment.payloadURL}" src="images/mail.gif"/></a>

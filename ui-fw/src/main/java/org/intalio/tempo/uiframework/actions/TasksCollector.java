@@ -17,6 +17,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequestWrapper;
 
+import org.apache.commons.lang.StringUtils;
 import org.intalio.tempo.uiframework.Configuration;
 import org.intalio.tempo.uiframework.URIUtils;
 import org.intalio.tempo.uiframework.forms.FormManager;
@@ -107,7 +108,7 @@ public class TasksCollector {
         String type = params.get("type");
 
         if (type.equals(Notification.class.getSimpleName()) || type.equals(PATask.class.getSimpleName())) {
-            StringBuffer baseQuery = new StringBuffer("T._state = TaskState.READY OR T._state = TaskState.CLAIMED ");
+            StringBuffer baseQuery = new StringBuffer("(T._state = TaskState.READY OR T._state = TaskState.CLAIMED) ");
             collect(fmanager, _tasks, taskManager, params, type, baseQuery);
         } else if (type.equals(PIPATask.class.getSimpleName())) {
             StringBuffer baseQuery = new StringBuffer("");
@@ -123,8 +124,12 @@ public class TasksCollector {
         // do we have a valid query
         boolean validQuery = params.isSet("qtype") && params.isSet("query");
         // if yes, append it
-        if (validQuery)
-            query.append(" AND T." + params.get("qtype") + " like '%" + params.get("query") + "%'");
+        if (validQuery) {
+            // PIPA have no base query, since they have no state.
+            // so we don't need the keyword AND here.
+            if (query.length()!=0) {query.append(" AND ");}
+            query.append(" T." + params.get("qtype") + " like '%" + params.get("query") + "%'");
+        }
         // keep this for counting total tasks
         String countQuery = query.toString();
         // set the order column

@@ -304,7 +304,6 @@ define "tempo" do
            JSON,
            JSON_NAGGIT,
            JSTL,
-           LOG4J,
            OPENSSO_CLIENT_SDK,
            PLUTO,
            SPRING[:core], 
@@ -330,7 +329,7 @@ define "tempo" do
     web_xml = _("src/main/webapp/WEB-INF/"+web_xml) 
     
     resources.filter.using "version" => VERSION_NUMBER
-    test.with JAXEN, XMLUNIT, INSTINCT
+    test.with JAXEN, XMLUNIT, INSTINCT, LOG4J
     package(:war).include(web_xml, :as=>'WEB-INF/web.xml').with(:libs=>libs)
   end
 
