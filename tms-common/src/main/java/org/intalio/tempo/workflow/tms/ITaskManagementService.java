@@ -32,6 +32,10 @@ public interface ITaskManagementService {
     Task[] getTaskList() throws AuthException;
 
     Task[] getAvailableTasks(final String taskType, final String subQuery) throws AuthException;
+    
+    Long countAvailableTasks(final String taskType, final String subQuery) throws AuthException;
+    
+    Task[] getAvailableTasks(final String taskType, final String subQuery, final String first, final String max) throws AuthException;
 
     Task getTask(String taskID) throws AuthException, UnavailableTaskException;
 
@@ -56,10 +60,6 @@ public interface ITaskManagementService {
     void addAttachment(String taskID, Attachment attachment) throws AuthException, UnavailableTaskException;
 
     void removeAttachment(String taskID, URL attachmentURL) throws AuthException, UnavailableTaskException, UnavailableAttachmentException;
-
-    // void reassign(Task task)
-    // throws AuthException,
-    // UnavailableTaskException;
 
     void reassign(String taskID, AuthIdentifierSet users, AuthIdentifierSet roles, TaskState state) throws AuthException, UnavailableTaskException;
 

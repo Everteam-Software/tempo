@@ -1,12 +1,15 @@
 package org.intalio.tempo.workflow.util.jpa;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.PIPATask;
@@ -18,20 +21,31 @@ import org.slf4j.LoggerFactory;
 /**
  * The code to retrieve task is decomposed into two calls to the persistence:
  * <ul>
- * <li>One call to retrieve the tasks ids. The query cannot be expressed
- * through JPQL AND load the proper classes so we are using simple SQL</li>
+ * <li>One call to retrieve the tasks ids. The query cannot be expressed through
+ * JPQL AND load the proper classes so we are using simple SQL</li>
  * <li>The second call uses JPQL to load the tasks, and load the proper
  * inheritance tree</li>
  * </ul>
  */
 @SuppressWarnings("unchecked")
 public class TaskFetcher {
+    public static final String FETCH_MAX = ":max";
+    public static final String FETCH_FIRST = ":first";
+    public static final String FETCH_SUB_QUERY = ":subQuery";
+    public static final String FETCH_CLASS = ":class";
+    public static final String FETCH_CLASS_NAME = ":classname";
+    public static final String FETCH_USER = ":user";
+    public static final String FETCH_COUNT = ":count";
+
     final static Logger _logger = LoggerFactory.getLogger(TaskFetcher.class);
     private EntityManager _entityManager;
     private Query find_by_id;
     private final String QUERY_GENERIC1 = "select DISTINCT T from ";
+    private final String QUERY_GENERIC_COUNT = "select COUNT(T) from ";
     private final String QUERY_GENERIC2 = " T where (T._userOwners in (?1) or T._roleOwners in (?2)) ";
-    private final String DELETE_TASKS = "delete from Task m where m._userOwners in (?1) or m._roleOwners in (?2) ";
+    // private final String DELETE_TASKS =
+    // "delete from Task m where m._userOwners in (?1) or m._roleOwners in (?2) "
+    // ;
     private final String DELETE_ALL_TASK_WITH_ID = "delete from Task m where m._id = (?1) ";
 
     public TaskFetcher(EntityManager em) {
@@ -86,21 +100,39 @@ public class TaskFetcher {
      * and task state, task type
      */
     public Task[] fetchAvailableTasks(UserRoles user, Class taskClass, String subQuery) {
+        HashMap params = new HashMap(3);
+        params.put(FETCH_USER, user);
+        params.put(FETCH_CLASS, taskClass);
+        params.put(FETCH_SUB_QUERY, subQuery);
+        return fetchAvailableTasks(params);
+    }
+
+    public Long countTasks(Map parameters) {
+        parameters.put(TaskFetcher.FETCH_COUNT, StringUtils.EMPTY);
+        Query q = buildQuery(parameters);
+        return (Long) q.getSingleResult();
+    }
+
+    private Query buildQuery(Map parameters) {
+        UserRoles user = (UserRoles) parameters.get(FETCH_USER);
+        Class taskClass = (Class) parameters.get(FETCH_CLASS);
+        String subQuery = MapUtils.getString(parameters, FETCH_SUB_QUERY, "");
+
         ArrayList userIdList = new ArrayList();
         userIdList.add(user.getUserID());
+        String baseQuery = parameters.containsKey(FETCH_COUNT) ? QUERY_GENERIC_COUNT : QUERY_GENERIC1;
         Query q;
-
         if (StringUtils.isEmpty(subQuery)) {
-            q = _entityManager.createQuery(QUERY_GENERIC1 + taskClass.getSimpleName() + QUERY_GENERIC2).setParameter(1, userIdList).setParameter(2,
+            q = _entityManager.createQuery(baseQuery + taskClass.getSimpleName() + QUERY_GENERIC2).setParameter(1, userIdList).setParameter(2,
                             user.getAssignedRoles());
         } else {
             StringBuffer buffer = new StringBuffer();
-            buffer.append(QUERY_GENERIC1).append(taskClass.getSimpleName()).append(QUERY_GENERIC2);
-            
+            buffer.append(baseQuery).append(taskClass.getSimpleName()).append(QUERY_GENERIC2);
+
             String trim = subQuery.toLowerCase().trim();
             int orderIndex = trim.indexOf("order");
-            if(orderIndex==-1) {
-                buffer.append(" and ").append(" ( ").append(subQuery).append(" ) ");    
+            if (orderIndex == -1) {
+                buffer.append(" and ").append(" ( ").append(subQuery).append(" ) ");
             } else {
                 if (!trim.startsWith("order"))
                     buffer.append(" and (").append(subQuery.substring(0, orderIndex)).append(") ").append(subQuery.substring(orderIndex));
@@ -108,8 +140,20 @@ public class TaskFetcher {
                     buffer.append(subQuery);
                 }
             }
-            if(_logger.isDebugEnabled()) _logger.debug(buffer.toString());
+            if (_logger.isDebugEnabled())
+                _logger.debug(buffer.toString());
             q = _entityManager.createQuery(buffer.toString()).setParameter(1, userIdList).setParameter(2, user.getAssignedRoles());
+        }
+        return q;
+    }
+
+    public Task[] fetchAvailableTasks(Map parameters) {
+        Query q = buildQuery(parameters);
+        int first = MapUtils.getIntValue(parameters, FETCH_FIRST, -1);
+        int max = MapUtils.getIntValue(parameters, FETCH_MAX, -1);
+        if (first >= 0 && max > 0) {
+            q.setFirstResult(first);
+            q.setMaxResults(max);
         }
         List result = q.getResultList();
         return (Task[]) result.toArray(new Task[result.size()]);

@@ -2,7 +2,7 @@ require 'soap/wsdlDriver'
 
 class SampleTMSClient 
 
-  attr_reader :token
+  attr_reader :token, :tms_client
   attr_writer :fake_delete
 
   def initialize(host="localhost:8080", user="intalio\\admin",password="changeit", fake_delete=true)
@@ -10,6 +10,11 @@ class SampleTMSClient
     @token = authenticate(user,password)
     @fake_delete = fake_delete
     @tms_client = SOAP::WSDLDriverFactory.new("http://#{@host}/axis2/services/TaskManagementServices?wsdl").create_rpc_driver if not @tms_client
+    puts @token
+  end
+  
+  def get_available_tasks query="", task_type="PATask", first="-1", max="-1"
+    tasks = @tms_client.getAvailableTasks(:participantToken => @token, :taskType => task_type, :subQuery => query, :first=>first, :max=>max).task
   end
 
   def get_tasks

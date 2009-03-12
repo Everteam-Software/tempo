@@ -18,6 +18,7 @@ package org.intalio.tempo.workflow.tms.server;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.axiom.om.OMAbstractFactory;
@@ -42,6 +43,7 @@ import org.intalio.tempo.workflow.tms.AccessDeniedException;
 import org.intalio.tempo.workflow.tms.TMSException;
 import org.intalio.tempo.workflow.tms.UnavailableAttachmentException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
+import org.intalio.tempo.workflow.util.jpa.TaskFetcher;
 import org.intalio.tempo.workflow.util.xml.InvalidInputFormatException;
 import org.intalio.tempo.workflow.util.xml.OMElementQueue;
 import org.intalio.tempo.workflow.util.xml.OMMarshaller;
@@ -385,9 +387,41 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             String participantToken = requireElementValue(rootQueue, "participantToken");
             String taskType = requireElementValue(rootQueue, "taskType");
             String subQuery = requireElementValue(rootQueue, "subQuery");
+            String first = expectElementValue(rootQueue, "first");
+            String max = expectElementValue(rootQueue, "max");
+            HashMap map = new HashMap();
+            map.put(TaskFetcher.FETCH_CLASS_NAME, taskType);
+            map.put(TaskFetcher.FETCH_SUB_QUERY, subQuery);
+            map.put(TaskFetcher.FETCH_FIRST, first);
+            map.put(TaskFetcher.FETCH_MAX, max);
             final UserRoles user = _server.getUserRoles(participantToken);
-            Task[] tasks = _server.getAvailableTasks(participantToken, taskType, subQuery);
+            Task[] tasks = _server.getAvailableTasks(participantToken, map);
             return marshalTasksList(user, tasks, "getAvailableTasksResponse");
+        } catch (Exception e) {
+            throw makeFault(e);
+        }
+    }
+    
+    public OMElement countAvailableTasks(final OMElement requestElement) throws AxisFault {
+        try {
+            OMElementQueue rootQueue = new OMElementQueue(requestElement);
+            String participantToken = requireElementValue(rootQueue, "participantToken");
+            String taskType = requireElementValue(rootQueue, "taskType");
+            String subQuery = requireElementValue(rootQueue, "subQuery");
+            String first = expectElementValue(rootQueue, "first");
+            String max = expectElementValue(rootQueue, "max");
+            HashMap map = new HashMap();
+            map.put(TaskFetcher.FETCH_CLASS_NAME, taskType);
+            map.put(TaskFetcher.FETCH_SUB_QUERY, subQuery);
+            final UserRoles user = _server.getUserRoles(participantToken);
+            final Long taskCount = _server.countAvailableTasks(participantToken, map);
+            return new TMSResponseMarshaller(OM_FACTORY) {
+                public OMElement createOkResponse() {
+                    OMElement response = createElement("countAvailableTasksResponse");
+                    response.setText(Long.toString(taskCount));
+                    return response;
+                }
+            }.createOkResponse();
         } catch (Exception e) {
             throw makeFault(e);
         }

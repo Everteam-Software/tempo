@@ -9,6 +9,8 @@
  */
 package org.intalio.tempo.workflow.tms.server.dao;
 
+import java.util.HashMap;
+
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
@@ -55,7 +57,7 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
         checkTransactionIsActive();
         entityManager.persist(task);
     }
-    
+
     public void deletePipaTask(String formUrl) {
         try {
             PIPATask toDelete = _fetcher.fetchPipaFromUrl(formUrl);
@@ -78,7 +80,15 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
     }
 
     public Task[] fetchAvailableTasks(UserRoles user, Class className, String subQuery) {
-      return _fetcher.fetchAvailableTasks(user, className, subQuery);
+        return _fetcher.fetchAvailableTasks(user, className, subQuery);
+    }
+
+    public Task[] fetchAvailableTasks(HashMap parameters) {
+        return _fetcher.fetchAvailableTasks(parameters);
+    }
+
+    public Long countAvailableTasks(HashMap parameters) {
+        return _fetcher.countTasks(parameters);
     }
 
 }

@@ -13,8 +13,10 @@
 package org.intalio.tempo.workflow.tms.server;
 
 import java.net.URL;
+import java.util.HashMap;
 
 import org.apache.axis2.AxisFault;
+import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.PIPATask;
@@ -65,4 +67,8 @@ public interface ITMSServer {
     void create(Task task, String participantToken) throws TMSException;
 
     void deleteAll(boolean fakeDelete, String subquery, String subqueryClass, String participantToken) throws TMSException;
+
+    Task[] getAvailableTasks(String participantToken, HashMap parameters) throws Exception;
+
+    Long countAvailableTasks(String participantToken, HashMap map) throws AuthException;
 }

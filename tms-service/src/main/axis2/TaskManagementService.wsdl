@@ -315,11 +315,25 @@
 						<xsd:element name="taskType"
 							type="xsd:string">
 						</xsd:element>
-						<xsd:element name="subQuery"
-							type="xsd:string">
-						</xsd:element>
+						<xsd:element name="subQuery" type="xsd:string"/>
+						<xsd:element name="first" type="xsd:string"/>
+						<xsd:element name="max" type="xsd:string"/>
 					</xsd:sequence>
 				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="countAvailableTasksRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="participantToken" type="xsd:string">
+						</xsd:element>
+						<xsd:element name="taskType" type="xsd:string">
+						</xsd:element>
+						<xsd:element name="subQuery" type="xsd:string"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="countAvailableTasksResponse" type="xsd:string">
+				
 			</xsd:element>
 			<xsd:element name="reassignRequest">
 			     <xsd:complexType>
@@ -451,6 +465,14 @@
 	<wsdl:message name="getAvailableTasksResponse">
 		<wsdl:part name="getAvailableTasksResponse" element="tns:getAvailableTasksResponse"></wsdl:part>
 	</wsdl:message>
+	
+	<wsdl:message name="countAvailableTasksRequest">
+		<wsdl:part name="countAvailableTasksRequest" element="tns:countAvailableTasksRequest"/>
+	</wsdl:message>
+	<wsdl:message name="countAvailableTasksResponse">
+		<wsdl:part name="countAvailableTasksResponse" element="tns:countAvailableTasksResponse"></wsdl:part>
+	</wsdl:message>
+	
 	<wsdl:message name="reassignRequest">
 		<wsdl:part name="reassignRequest" element="tns:reassignRequest"></wsdl:part>
 	</wsdl:message>
@@ -603,6 +625,12 @@
 			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault"/>
 			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault"/>
 		</wsdl:operation>
+		<wsdl:operation name="countAvailableTasks">
+			<wsdl:input message="tns:countAvailableTasksRequest"></wsdl:input>
+			<wsdl:output message="tns:countAvailableTasksResponse"></wsdl:output>
+			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault"/>
+			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault"/>
+		</wsdl:operation>
 	</wsdl:portType>
 	
 	<wsdl:binding name="TaskManagementServicesSOAP" type="tns:TaskManagementServices">
@@ -642,6 +670,21 @@
 		</wsdl:operation>
 		<wsdl:operation name="getAvailableTasks">
 			<soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getAvailableTasks"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="InvalidParticipantToken">
+				<soap:fault name="InvalidParticipantToken" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="InvalidInputMessage">
+				<soap:fault name="InvalidInputMessage" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+				<wsdl:operation name="countAvailableTasks">
+			<soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/countAvailableTasks"/>
 			<wsdl:input>
 				<soap:body use="literal"/>
 			</wsdl:input>

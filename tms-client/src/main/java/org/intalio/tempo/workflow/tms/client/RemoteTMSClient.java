@@ -271,15 +271,15 @@ public class RemoteTMSClient implements ITaskManagementService {
 
         sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "delete");
     }
-    
+
     public void deleteAll(final String fakeDelete, final String subQuery, final String taskType) throws AuthException, UnavailableTaskException {
         OMElement request = new TMSMarshaller() {
             public OMElement marshalRequest() {
                 OMElement request = createElement("deleteAllRequest");
                 createElement(request, "taskType", taskType);
                 createElement(request, "subQuery", subQuery);
-                createElement(request, "fakeDelete", fakeDelete);                
-                createElement(request, "participantToken", _participantToken);              
+                createElement(request, "fakeDelete", fakeDelete);
+                createElement(request, "participantToken", _participantToken);
                 return request;
             }
         }.marshalRequest();
@@ -510,12 +510,32 @@ public class RemoteTMSClient implements ITaskManagementService {
     }
 
     public Task[] getAvailableTasks(final String taskType, final String subQuery) throws AuthException {
+        return getAvailableTasks(taskType, subQuery, null, null);
+    }
+    
+    public Long countAvailableTasks(final String taskType, final String subQuery) throws AuthException {
         OMElement request = new TMSMarshaller() {
             public OMElement marshalRequest() {
                 OMElement request = createElement("getTaskListRequest");
                 createElement(request, "participantToken", _participantToken);
                 createElement(request, "taskType", taskType);
                 createElement(request, "subQuery", subQuery);
+                return request;
+            }
+        }.marshalRequest();
+        OMElement response = sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "countAvailableTasks");
+        return Long.parseLong(response.getText());
+    }
+
+    public Task[] getAvailableTasks(final String taskType, final String subQuery, final String first, final String max) throws AuthException {
+        OMElement request = new TMSMarshaller() {
+            public OMElement marshalRequest() {
+                OMElement request = createElement("getTaskListRequest");
+                createElement(request, "participantToken", _participantToken);
+                createElement(request, "taskType", taskType);
+                createElement(request, "subQuery", subQuery);
+                if(first!=null) createElement(request, "first", first);
+                if(max!=null) createElement(request, "max", max);
                 return request;
             }
         }.marshalRequest();

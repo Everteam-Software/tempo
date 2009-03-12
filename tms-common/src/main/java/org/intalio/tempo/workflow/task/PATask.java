@@ -26,6 +26,7 @@ import java.util.Map;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Lob;
 import javax.persistence.MapKey;
 import javax.persistence.NamedQueries;
@@ -85,17 +86,15 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
     @Column(name = "complete_soap_action")
     private String _completeSOAPAction;
 
-    @Persistent(cascade = CascadeType.ALL)
+    @Persistent(cascade = CascadeType.REFRESH, fetch=FetchType.LAZY)
     @Column(name = "input_xml", length = 2048)
-    @Lob
     private String _input;
 
-    @Persistent(cascade = CascadeType.ALL)
+    @Persistent(cascade = CascadeType.REFRESH, fetch= FetchType.LAZY)
     @Column(name = "output_xml", length = 2048)
-    @Lob
     private String _output;
 
-    @PersistentMap(keyCascade = CascadeType.ALL, elementCascade = CascadeType.ALL, keyType = String.class, elementType = Attachment.class)
+    @PersistentMap(keyCascade = CascadeType.REFRESH, elementCascade = CascadeType.ALL, keyType = String.class, elementType = Attachment.class, fetch=FetchType.LAZY)
     @MapKey(name = "payloadURLAsString")
     @ContainerTable(name = "tempo_attachment_map")
     private Map<String, Attachment> _attachments = new HashMap<String, Attachment>();

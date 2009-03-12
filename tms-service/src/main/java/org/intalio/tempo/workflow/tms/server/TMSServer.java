@@ -47,6 +47,7 @@ import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnectionFactory;
 import org.intalio.tempo.workflow.tms.server.permissions.TaskPermissions;
+import org.intalio.tempo.workflow.util.jpa.TaskFetcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -372,7 +373,8 @@ public class TMSServer implements ITMSServer {
 
     public void reassign(String taskID, AuthIdentifierSet users, AuthIdentifierSet roles, TaskState state, String participantToken) throws AuthException,
                     UnavailableTaskException {
-        // UserRoles credentials = _authProvider // TODO: this requires SYSTEM
+        // UserRoles credentials = _authProvider 
+        // TODO: this requires SYSTEM
         // role
         // to be present
         // .authenticate(participantToken); // for the Escalations to work. This
@@ -440,11 +442,35 @@ public class TMSServer implements ITMSServer {
     }
 
     public Task[] getAvailableTasks(String participantToken, String taskType, String subQuery) throws AuthException {
+        HashMap map = new HashMap(3);
+        map.put(TaskFetcher.FETCH_CLASS_NAME, taskType);
+        map.put(TaskFetcher.FETCH_SUB_QUERY, subQuery);
+        return this.getAvailableTasks(participantToken, map);
+    }
+    
+
+    public Long countAvailableTasks(String participantToken, HashMap parameters) throws AuthException {
         UserRoles credentials = _authProvider.authenticate(participantToken);
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         try {
-            Task[] result = dao.fetchAvailableTasks(credentials, Class.forName("org.intalio.tempo.workflow.task." + taskType), subQuery);
-            return result;
+            parameters.put(TaskFetcher.FETCH_USER, credentials);
+            String klass = (String)parameters.get(TaskFetcher.FETCH_CLASS_NAME);
+            if(klass!=null) parameters.put(TaskFetcher.FETCH_CLASS, Class.forName("org.intalio.tempo.workflow.task." + klass));
+            return dao.countAvailableTasks(parameters);
+        } catch (Exception e) {
+            _logger.error("Error while tasks list retrieval for user " + credentials.getUserID(), e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Task[] getAvailableTasks(String participantToken, HashMap parameters) throws AuthException {
+        UserRoles credentials = _authProvider.authenticate(participantToken);
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        try {
+            parameters.put(TaskFetcher.FETCH_USER, credentials);
+            String klass = (String)parameters.get(TaskFetcher.FETCH_CLASS_NAME);
+            if(klass!=null) parameters.put(TaskFetcher.FETCH_CLASS, Class.forName("org.intalio.tempo.workflow.task." + klass));
+            return dao.fetchAvailableTasks(parameters);
         } catch (Exception e) {
             _logger.error("Error while tasks list retrieval for user " + credentials.getUserID(), e);
             throw new RuntimeException(e);
