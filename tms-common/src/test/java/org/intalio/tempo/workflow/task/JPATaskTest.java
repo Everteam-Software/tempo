@@ -256,7 +256,7 @@ public class JPATaskTest {
 
         final TaskFetcher taskFetcher = new TaskFetcher(em);
         task2 = (Notification) taskFetcher.fetchTasksForRole("intalio\\manager")[0];
-        TaskEquality.isEqual(task1, task2);
+        TaskEquality.areTasksEquals(task1, task2);
 
         checkRemoved(task2);
     }
@@ -271,7 +271,7 @@ public class JPATaskTest {
 
         final TaskFetcher taskFetcher = new TaskFetcher(em);
         task2 = (Notification) taskFetcher.fetchTasksForUser("intalio\\admin")[0];
-        TaskEquality.isEqual(task1, task2);
+        TaskEquality.areTasksEquals(task1, task2);
 
         checkRemoved(task2);
     }
@@ -283,7 +283,7 @@ public class JPATaskTest {
         persist(task1);
         Query q = em.createNamedQuery(PIPATask.FIND_BY_URL).setParameter(1, "http://hellonico2.net");
         PIPATask task2 = (PIPATask) (q.getSingleResult());
-        TaskEquality.isEqual(task1, task2);
+        TaskEquality.areTasksEquals(task1, task2);
         checkRemoved(task2);
     }
     
@@ -304,7 +304,7 @@ public class JPATaskTest {
         Query q = em.createNamedQuery(Task.FIND_BY_ID).setParameter(1, id);
         PATask task2 = (PATask) (q.getResultList()).get(0);
 
-        TaskEquality.isEqual(task1, task2);
+        TaskEquality.areTasksEquals(task1, task2);
 
         Assert.assertEquals(task1.getInputAsXmlString(), task2.getInputAsXmlString());
         Assert.assertEquals(task1.getInputAsXmlString(), task2.getInputAsXmlString());
@@ -324,7 +324,7 @@ public class JPATaskTest {
 
         PIPATask task2 = (PIPATask) (q.getResultList()).get(0);
 
-        TaskEquality.isEqual(task1, task2);
+        TaskEquality.areTasksEquals(task1, task2);
         checkRemoved(task2);
     }
 
@@ -419,7 +419,7 @@ public class JPATaskTest {
         final TaskFetcher taskFetcher = new TaskFetcher(em);
         final UserRoles user = new UserRoles("intalio\\admin", new String[] { "examples\\manager", "examples\\employee" });
         task2 = (PATask) taskFetcher.fetchAllAvailableTasks(user)[0];
-        TaskEquality.isEqual(task1, task2);
+        TaskEquality.areTasksEquals(task1, task2);
 
         checkRemoved(task2);
 

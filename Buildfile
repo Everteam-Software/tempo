@@ -24,31 +24,31 @@ define "tempo" do
     package :jar
   end
    
-  define "dao-tools" do
-    compile.with projects("security", "security-ws-client", "tms-axis", "tms-common", "tms-client", "web-nutsNbolts", "dao-nutsNbolts"), 
-    project("wds-service").package(:jar),
-    project("tms-service").package(:jar),
-    APACHE_DERBY, 
-    APACHE_JPA, 
-    AXIOM, 
-    AXIS2, 
-    DOM4J,
-    JAXEN, 
-    JYAML,
-    LOG4J, 
-    DB_CONNECTOR.values, 
-    SLF4J, 
-    SPRING[:core], 
-    SERVLET_API, 
-    STAX_API, 
-    XMLBEANS
-
-    test.with projects("tms-common"), APACHE_COMMONS[:pool], CASTOR, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES
-    unless ENV["MIGRATE"] == 'yes'
-      test.exclude '*JDBC2JPAConverterTest*'
-    end
-    package :war
-  end
+  # define "dao-tools" do
+  #     compile.with projects("security", "security-ws-client", "tms-axis", "tms-common", "tms-client", "web-nutsNbolts", "dao-nutsNbolts"), 
+  #     project("wds-service").package(:jar),
+  #     project("tms-service").package(:jar),
+  #     APACHE_DERBY, 
+  #     APACHE_JPA, 
+  #     AXIOM, 
+  #     AXIS2, 
+  #     DOM4J,
+  #     JAXEN, 
+  #     JYAML,
+  #     LOG4J, 
+  #     DB_CONNECTOR.values, 
+  #     SLF4J, 
+  #     SPRING[:core], 
+  #     SERVLET_API, 
+  #     STAX_API, 
+  #     XMLBEANS
+  # 
+  #     test.with projects("tms-common"), APACHE_COMMONS[:pool], CASTOR, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES
+  #     unless ENV["MIGRATE"] == 'yes'
+  #       test.exclude '*JDBC2JPAConverterTest*'
+  #     end
+  #     package :war
+  #   end
   
   desc "Deployment API"
   define "deploy-api" do
@@ -341,16 +341,16 @@ define "tempo" do
   desc "Workflow Deployment Service"
   define "wds-service" do |project|
     libs = [ projects("dao-nutsNbolts", "deploy-api", "registry", "security", "tms-client", "tms-axis", "tms-common", "web-nutsNbolts"), 
-      AXIS2, AXIOM, APACHE_COMMONS[:io], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], APACHE_COMMONS[:pool], APACHE_JPA, DOM4J, JAXEN, LOG4J, SERVLET_API, SLF4J, SPRING[:core], STAX_API, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX, XERCES, XMLBEANS ]
-    test_libs = libs + [EASY_B, INSTINCT, DB_CONNECTOR.values]
+      AXIS2, AXIOM, APACHE_COMMONS[:io], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], APACHE_COMMONS[:pool], APACHE_JPA, DOM4J, JAXEN, SLF4J, SPRING[:core], STAX_API, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX, XERCES, XMLBEANS ]
+    test_libs = libs + [SERVLET_API, EASY_B, INSTINCT, DB_CONNECTOR.values]
     compile.with test_libs
     compile { open_jpa_enhance }
-    test.with APACHE_DERBY
+    test.with APACHE_DERBY, LOG4J
     resources.filter.using "version" => VERSION_NUMBER
     task "package" => generate_sql([project], "workflow.deployment")
     
     package :jar
-    package :war
+    package(:war).with(:libs=>libs)
   end
 
   desc "Common spring and web related classes"

@@ -31,13 +31,15 @@ import org.apache.openjpa.persistence.jdbc.ContainerTable;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class BaseRestrictedEntity implements IRestrictedEntity {
     
+    /** Note: do not access this field directly, otherwise JPA cannot load them */
     @PersistentCollection(elementType=String.class, elementCascade=CascadeType.ALL, elementEmbedded = false, fetch=FetchType.EAGER)
     @ContainerTable(name="tempo_user")
-    protected Collection<String> _userOwners;
+    private Collection<String> _userOwners;
 
+    /** Note: do not access this field directly, otherwise JPA cannot load them */
     @PersistentCollection(elementType=String.class, elementCascade=CascadeType.ALL, elementEmbedded = false, fetch=FetchType.EAGER)
     @ContainerTable(name="tempo_role")
-    protected Collection<String> _roleOwners;
+    private Collection<String> _roleOwners;
 
     public BaseRestrictedEntity() {
         _userOwners = new AuthIdentifierSet();
@@ -62,8 +64,8 @@ public abstract class BaseRestrictedEntity implements IRestrictedEntity {
 
     public boolean isAvailableTo(UserRoles credentials) {
 		String userId = credentials.getUserID();
-        for (String userOwner : _userOwners) if (userId.equals(userOwner)) return true;
-        return CollectionUtils.containsAny(_roleOwners, credentials.getAssignedRoles());
+        for (String userOwner : getUserOwners()) if (userId.equals(userOwner)) return true;
+        return CollectionUtils.containsAny(getRoleOwners(), credentials.getAssignedRoles());
     }
     
 }
