@@ -3,11 +3,11 @@ load File.dirname(File.expand_path("#{$0}"))+"/lib/sample_tms_client.rb"
 
 # create a new tms client
 tms_client = SampleTMSClient.new
-tms_client.fake_delete = true
+tms_client.fake_delete = false
 
 # sample to delete task by query
 # those task have to be accessible by the authenticated user, since the query use the getAvailableTask method on the server
-# tms_client.delete_all "PATask", "", false
+tms_client.delete_all "PATask", ""
 
 
 # ids = ["9edef9aa63f0e40d:51bb29f8:11fe8f338b8:-7fbf114.48.183.2115602"]

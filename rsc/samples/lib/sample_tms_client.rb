@@ -5,7 +5,7 @@ class SampleTMSClient
   attr_reader :token, :tms_client
   attr_writer :fake_delete
 
-  def initialize(host="localhost:8080", user="intalio\\admin",password="changeit", fake_delete=true)
+  def initialize(host="localhost:8080", user="intalio\\admin",password="changeit", fake_delete=false)
     @host = host
     @token = authenticate(user,password)
     @fake_delete = fake_delete

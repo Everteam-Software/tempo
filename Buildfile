@@ -119,29 +119,6 @@ define "tempo" do
       package(:zip).path("AbsenceRequest.xform").include(_("src/main/xform/*"))
     end
   end
-  
-  desc "Workflow Processes"
-  define "processes" do
-    define "xpath-extensions" do
-      package :jar
-    end
-    
-    define "AbsenceRequest" do
-      package :jar
-    end
-    
-    define "TaskManager" do
-      package :jar
-    end
-    
-    define "Store" do
-      package :jar
-    end
-    
-    define "peopleActivity" do
-      package :jar
-    end
-  end
 
   desc "Security Framework"
   define "security" do
