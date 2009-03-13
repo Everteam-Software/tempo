@@ -13,7 +13,7 @@
 package org.intalio.tempo.workflow.tms.client.dependent_tests;
 
 import java.io.StringWriter;
-import java.text.MessageFormat;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -59,7 +59,8 @@ public class RemoteAbsenceRequestTest extends TestCase {
 
     static final XmlTooling xmlTooling = new XmlTooling();
     Configuration cfg;
-    static final int SLEEP_TIME = 2000;
+    static final int SLEEP_TIME = 3000;
+    static final int MICRO_SLEEP_TIME = 200;
 
     public void setUp() {
         TemplateLoader loader = new ClassTemplateLoader(this.getClass(), "/");
@@ -117,7 +118,7 @@ public class RemoteAbsenceRequestTest extends TestCase {
         // Provoke a fail by calling TMS.fail while the task has been created
         runAbsenceRequestWithOptionalCall(paramUser, paramPassword, pipa, complete, "fail");
         // Provoke a skip by calling TMP.skip while the task has been created
-        runAbsenceRequestWithOptionalCall(paramUser, paramPassword, pipa, complete, "skip");
+//        runAbsenceRequestWithOptionalCall(paramUser, paramPassword, pipa, complete, "skip");
         // Provoke a delete by calling TMS.delete while the task has been
         // created.
         runAbsenceRequestWithOptionalCall("admin", "changeit", pipa, complete, "delete");
@@ -127,6 +128,8 @@ public class RemoteAbsenceRequestTest extends TestCase {
         // Provoke a reassign to a new user. If we reassign to a new user, it
         // will disappear from the list, so we're good. (hint: hack!)
         runAbsenceRequestWithOptionalCall("admin", "changeit", pipa, complete, "reassign");
+
+        runAbsenceRequestWithRandomClaimRevokeTMPCalls(paramUser, paramPassword, pipa, complete);
     }
 
     /**
@@ -256,6 +259,29 @@ public class RemoteAbsenceRequestTest extends TestCase {
 
         _log.info("Dismiss this notification");
         tms.complete(notificationId);
+    }
+    
+
+    /**
+     * This is to check, we have no problems completing the task after numerous (possibly conflicting) CLAIM/REVOKE requests
+     */
+    private void runAbsenceRequestWithRandomClaimRevokeTMPCalls(String paramUser, String paramPassword, HashMap pipa, HashMap complete) throws Exception {
+        TokenClient client = new TokenClient(TOKEN_SERVICE);
+        String token = client.authenticateUser(paramUser, paramPassword);
+        RemoteTMSClient tms = new RemoteTMSClient(TMS_SERVICE, token);
+        Task[] ts = tms.getAvailableTasks("PIPATask", "T._description like '%Examples%'");
+        String pipaID = ts[0].getID();
+        tms.init(pipaID, xmlTooling.parseXML(pipa(pipa)));
+        Thread.sleep(SLEEP_TIME);
+        String id = tms.getAvailableTasks("PATask", "T._description like '%Approval%' ORDER BY T._creationDate DESC")[0].getID();
+        SecureRandom r = new SecureRandom();
+        for (int i = 0; i < 10; i++) {
+            if (r.nextBoolean()) {
+                sendSoapToTMP(claim(token, id, paramUser), "claimTask");
+            } else {
+                sendSoapToTMP(revoke(token, id), "revokeTask");
+            }
+        }
     }
 
     /**
