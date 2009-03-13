@@ -42,7 +42,7 @@ public interface ITaskDAOConnection {
 	
 	public List<Comment> getComments(String taskId);
 	
-	public List<Task>  getMyTasks(UserRoles ur, String taskType, String genericHumanRole, String workQueue, Enum[] statusList, String whereClause, String createdOnClause, int maxTasks);
+	public List<Task>  getMyTasks(UserRoles ur, String taskType, String genericHumanRole, String workQueue, List<TaskStatus> statusList, String whereClause, String createdOnClause, int maxTasks);
 	
 	public List<Task>  query(UserRoles ur, String selectClause, String whereClause, String orderByClause, int maxTasks, int taskIndexOffset);
 	
