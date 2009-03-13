@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<!--
+	Copyright (c) 2005-2008 Intalio inc.
+
+	All rights reserved. This program and the accompanying materials
+	are made available under the terms of the Eclipse Public License v1.0
+	which accompanies this distribution, and is available at
+	http://www.eclipse.org/legal/epl-v10.html
+
+	Contributors:
+	Intalio inc. - initial API and implementation
+-->
+
+
+<beans>
+
+	<bean id="realms" class="org.intalio.tempo.security.impl.Realms">
+		<property name="defaultRealm" value="opensso"/>
+		<property name="securityProviders">
+			<list>
+				<ref bean="securityProvider"/>
+			</list>
+		</property>
+	</bean>
+
+	<!-- Uncomment this section to enable Simple support -->
+	<!-- <bean id="securityProvider" class="org.intalio.tempo.security.simple.SimpleSecurityProvider" init-method="init">
+		<property name="configFile">
+			<value>${org.intalio.tempo.configDirectory}/security.xml</value>
+		</property>
+	</bean> -->
+
+	<bean id="securityProvider" class="org.intalio.tempo.security.ldap.LDAPSecurityProvider">
+		<property name="propertiesFile">
+			<value>${org.intalio.tempo.configDirectory}/opensso-ldap.properties</value>
+		</property>
+	</bean>
+
+	<bean id="tokenHandler" class="org.intalio.tempo.security.impl.TokenHandler">
+		<property name="secret"><value>mySecret</value></property>
+		<property name="compressToken"><value>false</value></property>
+	</bean>
+
+	<!-- 
+		<bean id="tokenService" class="org.intalio.tempo.security.impl.TokenServiceImpl">
+			<property name="realms"><ref bean="realms"/></property>
+			<property name="tokenHandler"><ref bean="tokenHandler"/></property>
+		</bean>
+	-->
+	<bean id="tokenService"
+		class="org.intalio.tempo.security.impl.TokenServiceImpl">
+		<constructor-arg index="0" ref="realms" />
+		<constructor-arg index="1" value="https://localhost:8443/cas/proxyValidate" />
+		<property name="tokenHandler"><ref bean="tokenHandler" /></property>
+        <property name="cacheRoles" value="false"/>
+	</bean>
+
+</beans>

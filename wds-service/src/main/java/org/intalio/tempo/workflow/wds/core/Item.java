@@ -16,6 +16,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.QueryHint;
@@ -59,7 +60,8 @@ public class Item {
     private String _contentType;
     
     @Persistent
-    @Column(name="payload")
+    @Column(name="payload", length=4096)
+    @Lob
     private byte[] _payload;
     
     @Persistent

@@ -166,7 +166,7 @@ public class PIPATask extends Task implements InitTask {
      *            "group/role" or "group.role".
      */
     public void setRoleOwners(String[] roleOwners) {
-        _roleOwners = normalizeAuthIdentifiers(roleOwners);
+        setRoleOwners(normalizeAuthIdentifiers(roleOwners));
     }
 
     /**
@@ -179,7 +179,7 @@ public class PIPATask extends Task implements InitTask {
      *            "group/user" or "group.user".
      */
     public void setUserOwners(String[] userOwners) {
-        _userOwners = normalizeAuthIdentifiers(userOwners);
+        setUserOwners(normalizeAuthIdentifiers(userOwners));
     }
 
 }

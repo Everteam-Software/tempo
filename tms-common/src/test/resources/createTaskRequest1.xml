@@ -11,21 +11,21 @@
   Intalio inc. - initial API and implementation
  -->
 
-<m:createRequest xmlns:m="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
-  <m:task>
-    <m:metadata>
-      <m:taskId>001_Create_Good_Test_Task</m:taskId>
-      <m:taskType>activity</m:taskType>
-      <m:description>I'm a Good Test Task</m:description>
-      <m:processId>Fake_Process_ID</m:processId>
-      <m:userOwner>test\user1</m:userOwner>
-      <m:roleOwner>test\role2</m:roleOwner>
-      <m:formUrl>http://localhost/1</m:formUrl>
-      <m:userProcessCompleteSOAPAction>urn:completeSOAPAction</m:userProcessCompleteSOAPAction>
-    </m:metadata>
-    <m:input>
+<tns:createRequest xmlns:tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+  <tns:task>
+    <tns:metadata>
+      <tns:taskId>001_Create_Good_Test_Task</tns:taskId>
+      <tns:taskType>activity</tns:taskType>
+      <tns:description>I'm a Good Test Task</tns:description>
+      <tns:processId>Fake_Process_ID</tns:processId>
+      <tns:userOwner>test\user1</tns:userOwner>
+      <tns:roleOwner>test\role2</tns:roleOwner>
+      <tns:formUrl>http://localhost/1</tns:formUrl>
+      <tns:userProcessCompleteSOAPAction>urn:completeSOAPAction</tns:userProcessCompleteSOAPAction>
+    </tns:metadata>
+    <tns:input>
       <test-input>test</test-input>
-    </m:input>
-  </m:task>
-  <m:participantToken>token1</m:participantToken>
-</m:createRequest>
+    </tns:input>
+  </tns:task>
+  <tns:participantToken>token1</tns:participantToken>
+</tns:createRequest>

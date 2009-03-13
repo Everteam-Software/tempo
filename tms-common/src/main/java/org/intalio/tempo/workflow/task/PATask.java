@@ -26,6 +26,7 @@ import java.util.Map;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Lob;
 import javax.persistence.MapKey;
 import javax.persistence.NamedQueries;
@@ -73,11 +74,11 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
     @Column(name = "state")
     private TaskState _state = TaskState.READY;
 
-    @Persistent
+    @Persistent(fetch=FetchType.LAZY)
     @Column(name = "failure_code")
     private String _failureCode = "";
 
-    @Persistent
+    @Persistent(fetch=FetchType.LAZY)
     @Column(name = "failure_reason")
     private String _failureReason = "";
 
@@ -85,25 +86,26 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
     @Column(name = "complete_soap_action")
     private String _completeSOAPAction;
 
-    @Persistent(cascade = CascadeType.ALL)
-    @Column(name = "input_xml", length = 2048)
+    @Persistent(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
     @Lob
+    @Column(name = "input_xml")
     private String _input;
 
-    @Persistent(cascade = CascadeType.ALL)
-    @Column(name = "output_xml", length = 2048)
+    @Persistent(cascade = CascadeType.ALL, fetch= FetchType.LAZY)
+    @Column(name = "output_xml")
     @Lob
     private String _output;
 
-    @PersistentMap(keyCascade = CascadeType.ALL, elementCascade = CascadeType.ALL, keyType = String.class, elementType = Attachment.class)
+    @PersistentMap(keyCascade = CascadeType.ALL, elementCascade = CascadeType.ALL, keyType = String.class, elementType = Attachment.class, fetch=FetchType.LAZY)
     @MapKey(name = "payloadURLAsString")
     @ContainerTable(name = "tempo_attachment_map")
     private Map<String, Attachment> _attachments = new HashMap<String, Attachment>();
 
+    @Persistent(fetch= FetchType.EAGER)
     @Column(name = "is_chained_before")
     private Boolean _isChainedBefore = false;
 
-    @Persistent
+    @Persistent(fetch= FetchType.EAGER)
     @Column(name = "previous_task_id")
     private String _previousTaskID = null;
 
@@ -309,7 +311,7 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
     
     public boolean isAvailableTo(UserRoles credentials) {
 		if(_state.equals(TaskState.CLAIMED)) {
-			for (String userOwner : _userOwners) if (credentials.getUserID().equals(userOwner)) return true;
+			for (String userOwner : this.getUserOwners()) if (credentials.getUserID().equals(userOwner)) return true;
 			return false;
 		} else {
 			return super.isAvailableTo(credentials);

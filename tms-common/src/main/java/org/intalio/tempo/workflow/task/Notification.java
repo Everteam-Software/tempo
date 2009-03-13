@@ -19,8 +19,9 @@ import java.net.URI;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Lob;
+import javax.persistence.FetchType;
 import javax.persistence.Table;
+import javax.persistence.Lob;
 
 import org.apache.openjpa.persistence.Persistent;
 import org.intalio.tempo.workflow.task.traits.ITaskWithInput;
@@ -42,15 +43,15 @@ public class Notification extends Task implements ITaskWithState, ITaskWithInput
     private TaskState _state = TaskState.READY;
 
     @Column(name = "failure_code")
-    @Persistent
+    @Persistent(fetch = FetchType.LAZY)
     private String _failureCode;
 
     @Column(name = "failure_reason")
-    @Persistent
+    @Persistent(fetch = FetchType.LAZY)
     private String _failureReason;
 
-    @Persistent(cascade = CascadeType.ALL)
-    @Column(name = "input_xml", length = 2048)
+    @Persistent(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Column(name = "input_xml")
     @Lob
     private String _input;
 
@@ -88,8 +89,7 @@ public class Notification extends Task implements ITaskWithState, ITaskWithInput
         if (_state.equals(TaskState.FAILED)) {
             return _failureCode;
         } else {
-            throw new IllegalStateException("Task ID '" + getID() + "': "
-                    + "Attempt to get the failure code at task state " + _state);
+            throw new IllegalStateException("Task ID '" + getID() + "': " + "Attempt to get the failure code at task state " + _state);
         }
     }
 
@@ -101,8 +101,7 @@ public class Notification extends Task implements ITaskWithState, ITaskWithInput
         if (_state.equals(TaskState.FAILED)) {
             _failureCode = failureCode;
         } else {
-            throw new IllegalStateException("Task ID '" + getID() + "': "
-                    + "Attempt to set the failure code at task state " + _state);
+            throw new IllegalStateException("Task ID '" + getID() + "': " + "Attempt to set the failure code at task state " + _state);
         }
     }
 
@@ -110,8 +109,7 @@ public class Notification extends Task implements ITaskWithState, ITaskWithInput
         if (_state.equals(TaskState.FAILED)) {
             return _failureReason;
         } else {
-            throw new IllegalStateException("Task ID '" + getID() + "': "
-                    + "Attempt to get the failure reason at task state " + _state);
+            throw new IllegalStateException("Task ID '" + getID() + "': " + "Attempt to get the failure reason at task state " + _state);
         }
     }
 
@@ -123,8 +121,7 @@ public class Notification extends Task implements ITaskWithState, ITaskWithInput
         if (_state.equals(TaskState.FAILED)) {
             _failureReason = failureReason;
         } else {
-            throw new IllegalStateException("Task ID '" + getID() + "': "
-                    + "Attempt to set the failure reason at task state " + _state);
+            throw new IllegalStateException("Task ID '" + getID() + "': " + "Attempt to set the failure reason at task state " + _state);
         }
     }
 

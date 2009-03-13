@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 
@@ -77,26 +78,111 @@ public class JPATaskTest {
         // this is to prevent caching at the entity manager level
         em.clear();
     }
-    
+
     @Test
-    public void plentyOfRoles() throws Exception {
-    	PATask task1 = new PATask(getUniqueTaskID(), new URI("http://hellonico.net"));
-    	ArrayList<String> list = new ArrayList<String>();
-    	for(int i = 0 ; i < 200 ; i++) list.add(new String("proto\\PARIS_MEDI_Liquidateur_"+i));
-    	list.add(new String("proto\\RoleNotFound"));
-    	String[] assignedRoles = list.toArray(new String[list.size()]);
-    	for(String role : assignedRoles)  task1.getRoleOwners().add(role);
-    	task1.getUserOwners().add("niko");
-    	persist(task1);
-    	
-    	UserRoles ur = new UserRoles("niko", assignedRoles);
-    	final TaskFetcher taskFetcher = new TaskFetcher(em);
-    	Task[] t1 = taskFetcher.fetchAvailableTasks(ur, PATask.class, "");
-    	
-    	Assert.assertEquals(1, t1.length);
-    	checkRemoved(new Task[]{task1});
+    public void testInjection() throws Exception {
+        PATask task1 = new PATask(getUniqueTaskID(), new URI("http://hellonico.net"));
+        task1.setInput("OR true; DELETE * FROM tempo_task;");
+        task1.getUserOwners().add("niko");
+        persist(task1);
+        UserRoles ur = new UserRoles("niko", new String[] { "examples\\employee" });
+        final TaskFetcher taskFetcher = new TaskFetcher(em);
+        Task[] t1 = taskFetcher.fetchAvailableTasks(ur, PATask.class, "");
+
+        Assert.assertEquals(1, t1.length);
+        checkRemoved(new Task[] { task1 });
+    }
+
+    @Test
+    public void testUTF() throws Exception {
+        PATask task1 = new PATask(getUniqueTaskID(), new URI("http://hellonico.net"));
+        String someJapanese = "\u201e\u00c5\u00c7\u201e\u00c7\u00e4\u201e\u00c5\u00e5\u201e\u00c5\u00ae\u201e\u00c5\u00dc";
+        task1.setInput(someJapanese);
+        task1.getUserOwners().add(someJapanese);
+        persist(task1);
+        UserRoles ur = new UserRoles(someJapanese, new String[] { "examples\\employee" });
+        final TaskFetcher taskFetcher = new TaskFetcher(em);
+        Task[] t1 = taskFetcher.fetchAvailableTasks(ur, PATask.class, "");
+        Assert.assertEquals(1, t1.length);
+        checkRemoved(new Task[] { task1 });
+    }
+
+    @Test
+    public void testFetchRangeAndCount() throws Exception {
+        PATask[] tasks = getSampleTasks(10);
+        for (Task t : tasks)
+            persist(t);
+        testRange(1, 1, 1);
+        testRange(1, 2, 2);
+        testRange(-1, 1, tasks.length);
+        testCount(tasks.length);
+        checkRemoved(tasks);
+    }
+
+    private void testRange(int first, int max, int expected) {
+        final TaskFetcher taskFetcher = new TaskFetcher(em);
+        HashMap map = new HashMap();
+        map.put(TaskFetcher.FETCH_USER, new UserRoles("user1", new String[] { "examples\\employee" }));
+        map.put(TaskFetcher.FETCH_CLASS, PATask.class);
+        map.put(TaskFetcher.FETCH_SUB_QUERY, "");
+        map.put(TaskFetcher.FETCH_FIRST, first);
+        map.put(TaskFetcher.FETCH_MAX, max);
+        this._logger.debug("Testing range with :first=" + first + " and :max=" + max + " ; expected:" + expected);
+        Assert.assertEquals(expected, taskFetcher.fetchAvailableTasks(map).length);
     }
     
+    private void testCount(long expected) throws Exception {
+        final TaskFetcher taskFetcher = new TaskFetcher(em);
+        HashMap map = new HashMap();
+        map.put(TaskFetcher.FETCH_USER, new UserRoles("user1", new String[] { "examples\\employee" }));
+        map.put(TaskFetcher.FETCH_CLASS, PATask.class);
+        Assert.assertEquals((Long)expected, (Long)taskFetcher.countTasks(map));
+        
+        remoteQuery();
+    }
+    
+    @Test
+    public void oneMoreTestForDescriptionSearch() throws Exception {
+        String query = "(T._state = TaskState.READY OR T._state = TaskState.CLAIMED) AND T._description like '%hello%' ORDER BY T._creationDate DESC";
+        PATask task1 = new PATask(getUniqueTaskID(), new URI("http://hellonico.net"));
+        task1.setDescription("bonjour");
+        task1.getUserOwners().add("niko");
+        persist(task1);
+        
+        PATask task2 = new PATask(getUniqueTaskID(), new URI("http://hellonico.net"));
+        task2.setDescription("hello");
+        task2.getUserOwners().add("niko");
+        persist(task2);
+        
+        UserRoles ur = new UserRoles("niko", new String[] { "examples\\employee" });
+        final TaskFetcher taskFetcher = new TaskFetcher(em);
+        Task[] t1 = taskFetcher.fetchAvailableTasks(ur, PATask.class, query);
+        Assert.assertEquals(1, t1.length);
+        
+        checkRemoved(new Task[]{task1,task2});
+    }
+
+    @Test
+    public void plentyOfRoles() throws Exception {
+        PATask task1 = new PATask(getUniqueTaskID(), new URI("http://hellonico.net"));
+        ArrayList<String> list = new ArrayList<String>();
+        for (int i = 0; i < 200; i++)
+            list.add(new String("proto\\PARIS_MEDI_Liquidateur_" + i));
+        list.add(new String("proto\\RoleNotFound"));
+        String[] assignedRoles = list.toArray(new String[list.size()]);
+        for (String role : assignedRoles)
+            task1.getRoleOwners().add(role);
+        task1.getUserOwners().add("niko");
+        persist(task1);
+
+        UserRoles ur = new UserRoles("niko", assignedRoles);
+        final TaskFetcher taskFetcher = new TaskFetcher(em);
+        Task[] t1 = taskFetcher.fetchAvailableTasks(ur, PATask.class, "");
+
+        Assert.assertEquals(1, t1.length);
+        checkRemoved(new Task[] { task1 });
+    }
+
     @Test
     public void avoidClaimComingBack() throws Exception {
         PATask task1 = new PATask(getUniqueTaskID(), new URI("http://hellonico.net"));
@@ -114,24 +200,20 @@ public class JPATaskTest {
         persist(task1);
         persist(task2);
         persist(task3);
-        
+
         final TaskFetcher taskFetcher = new TaskFetcher(em);
         UserRoles ur = new UserRoles("niko", new String[] { "examples\\employee" });
         Task[] t1 = taskFetcher.fetchAvailableTasks(ur, PATask.class, "");
         Task[] t2 = taskFetcher.fetchAvailableTasks(ur, PATask.class, "T._state = TaskState.READY OR T._state = TaskState.CLAIMED");
         UserRoles ur2 = new UserRoles("alex", new String[] { "examples\\employee2" });
         Task[] t3 = taskFetcher.fetchAvailableTasks(ur2, PATask.class, "T._state = TaskState.READY OR T._state = TaskState.CLAIMED");
-        
+
         Assert.assertEquals(3, t1.length);
         Assert.assertEquals(2, t2.length);
         Assert.assertEquals(0, t3.length);
-        checkRemoved(new Task[]{task1,task2,task3});
+        checkRemoved(new Task[] { task1, task2, task3 });
     }
-    
-    private void checkRemoved(Task[] tasks) {
-        for(Task t : tasks) checkRemoved(t);
-    }
-    
+
     @Test
     public void faultyQueryWithOpenJPA1_2() throws Exception {
 
@@ -143,8 +225,8 @@ public class JPATaskTest {
         task1.getUserOwners().add(user);
         persist(task1);
         em.clear(); // <--- this was causing problems as getSingleResult is
-                    // optimized in openjpa12 and clear the entity manager
-                    // somehow
+        // optimized in openjpa12 and clear the entity manager
+        // somehow
         final TaskFetcher taskFetcher = new TaskFetcher(em);
         Notification task3 = (Notification) taskFetcher.fetchTaskIfExists(task1.getID());
 
@@ -174,7 +256,7 @@ public class JPATaskTest {
 
         final TaskFetcher taskFetcher = new TaskFetcher(em);
         task2 = (Notification) taskFetcher.fetchTasksForRole("intalio\\manager")[0];
-        TaskEquality.isEqual(task1, task2);
+        TaskEquality.areTasksEquals(task1, task2);
 
         checkRemoved(task2);
     }
@@ -189,7 +271,7 @@ public class JPATaskTest {
 
         final TaskFetcher taskFetcher = new TaskFetcher(em);
         task2 = (Notification) taskFetcher.fetchTasksForUser("intalio\\admin")[0];
-        TaskEquality.isEqual(task1, task2);
+        TaskEquality.areTasksEquals(task1, task2);
 
         checkRemoved(task2);
     }
@@ -201,8 +283,13 @@ public class JPATaskTest {
         persist(task1);
         Query q = em.createNamedQuery(PIPATask.FIND_BY_URL).setParameter(1, "http://hellonico2.net");
         PIPATask task2 = (PIPATask) (q.getSingleResult());
-        TaskEquality.isEqual(task1, task2);
+        TaskEquality.areTasksEquals(task1, task2);
         checkRemoved(task2);
+    }
+    
+    private void remoteQuery() throws Exception {
+        Query q = em.createQuery("select COUNT(T) from PIPATask T where (T._description like '%hello%')");
+        q.getSingleResult();
     }
 
     @Test
@@ -217,7 +304,7 @@ public class JPATaskTest {
         Query q = em.createNamedQuery(Task.FIND_BY_ID).setParameter(1, id);
         PATask task2 = (PATask) (q.getResultList()).get(0);
 
-        TaskEquality.isEqual(task1, task2);
+        TaskEquality.areTasksEquals(task1, task2);
 
         Assert.assertEquals(task1.getInputAsXmlString(), task2.getInputAsXmlString());
         Assert.assertEquals(task1.getInputAsXmlString(), task2.getInputAsXmlString());
@@ -237,13 +324,14 @@ public class JPATaskTest {
 
         PIPATask task2 = (PIPATask) (q.getResultList()).get(0);
 
-        TaskEquality.isEqual(task1, task2);
+        TaskEquality.areTasksEquals(task1, task2);
         checkRemoved(task2);
     }
 
     /**
      * This tests that a user cannot get a task in his task list that is not
-     * available to him use the  <code>isAvailableTo</code> method in the <code>Task</code> class.
+     * available to him use the <code>isAvailableTo</code> method in the
+     * <code>Task</code> class.
      */
     @Test
     public void userWithStrangeLogin() throws Exception {
@@ -331,7 +419,7 @@ public class JPATaskTest {
         final TaskFetcher taskFetcher = new TaskFetcher(em);
         final UserRoles user = new UserRoles("intalio\\admin", new String[] { "examples\\manager", "examples\\employee" });
         task2 = (PATask) taskFetcher.fetchAllAvailableTasks(user)[0];
-        TaskEquality.isEqual(task1, task2);
+        TaskEquality.areTasksEquals(task1, task2);
 
         checkRemoved(task2);
 
@@ -398,21 +486,11 @@ public class JPATaskTest {
         testFetchForUserRolesWithCriteria("user1", new String[] { "role1" }, PATask.class, "T._state = TaskState.FAILED or T._priority = 1", 1);
         testFetchForUserRolesWithCriteria("user3", new String[] { "role3" }, PATask.class, "T._state = TaskState.FAILED", 0);
         testFetchForUserRolesWithCriteria("user1", new String[] { "role1" }, PATask.class, "T._state = TaskState.COMPLETED", 0);
-        testFetchForUserRolesWithCriteria("user1", new String[] { "role1" }, PATask.class, "NOT T._state = TaskState.COMPLETED and NOT T._state = TaskState.READY  AND T._description like '%%' ", 1);
+        testFetchForUserRolesWithCriteria("user1", new String[] { "role1" }, PATask.class,
+                        "NOT T._state = TaskState.COMPLETED and NOT T._state = TaskState.READY  AND T._description like '%%' ", 1);
         testFetchForUserRolesWithCriteria("user1", new String[] { "role1" }, Notification.class, null, 0);
 
         checkRemoved(task1.getID());
-    }
-
-    private PATask getSampleTask(TaskState state) throws URISyntaxException, Exception {
-        String id = getUniqueTaskID();
-        PATask task1 = new PATask(id, new URI("http://hellonico.net"), "processId", "soap", getXmlSampleDocument());
-        task1.authorizeActionForUser("save", "examples\\manager");
-        task1.setPriority(2);
-        task1.setState(state);
-        task1.getRoleOwners().add("role1");
-        task1.getUserOwners().add("user1");
-        return task1;
     }
 
     @Test
@@ -462,8 +540,7 @@ public class JPATaskTest {
     @Test
     public void testFetchAvailabeTasksWithCriteriaPIPA() throws Exception {
         String id = getUniqueTaskID();
-        PIPATask task1 = new PIPATask(id, new URI("http://hellonico.net"), new URI("http://hellonico.net"), new URI("http://hellonico.net"),
-                        "initOperationSOAPAction");
+        PIPATask task1 = new PIPATask(id, new URI("http://hellonico.net"), new URI("http://hellonico.net"), new URI("http://hellonico.net"),"initOperationSOAPAction");
 
         task1.getRoleOwners().add("role1");
         task1.getUserOwners().add("user1");
@@ -508,6 +585,29 @@ public class JPATaskTest {
         } catch (Exception expected) {
             // this is good.
         }
+    }
+
+    private void checkRemoved(Task[] tasks) {
+        for (Task t : tasks)
+            checkRemoved(t);
+    }
+
+    private PATask getSampleTask(TaskState state) throws URISyntaxException, Exception {
+        String id = getUniqueTaskID();
+        PATask task1 = new PATask(id, new URI("http://hellonico.net"), "processId", "soap", getXmlSampleDocument());
+        task1.authorizeActionForUser("save", "examples\\manager");
+        task1.setPriority(2);
+        task1.setState(state);
+        task1.getRoleOwners().add("role1");
+        task1.getUserOwners().add("user1");
+        return task1;
+    }
+
+    private PATask[] getSampleTasks(int max) throws Exception {
+        PATask[] tasks = new PATask[max];
+        for (int i = 0; i < max; i++)
+            tasks[i] = getSampleTask(TaskState.READY);
+        return tasks;
     }
 
 }

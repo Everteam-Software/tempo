@@ -8,16 +8,16 @@
   <dd:invoke partnerLink="tMPAndUBPPlkVar">
     <dd:service name="UserBusinessProcess1:UserBusinessProcessesServices" port="userProcessPort"></dd:service>
   </dd:invoke>
-  <dd:invoke partnerLink="taskManagementProcessAndTaskManagementSystemPlkVar">
+  <dd:invoke partnerLink="taskManagementProcessAndTaskManagementSystemForPortTaskManagementServicesSOAPPlkVar">
     <dd:service name="tns:TaskManagementServices" port="TaskManagementServicesSOAP"></dd:service>
   </dd:invoke>
-  <dd:invoke partnerLink="taskManagementProcessAndPreviousProcessTaskManagerPlkVar">
+  <dd:invoke partnerLink="taskManagementProcessAndPreviousProcessTaskManagerForTMPPortPlkVar">
     <dd:service name="b4p:TMPService" port="TMPPort"></dd:service>
   </dd:invoke>
-  <dd:provide partnerLink="taskManagementProcessAndNextTaskManagerPlkVar">
-    <dd:service name="b4p:TMPService" port="TMPPort"></dd:service>
-  </dd:provide>
-  <dd:provide partnerLink="taskManagementProcessAndUIFWPlkVar">
+  <dd:provide partnerLink="taskManagementProcessAndUIFWForUIFWPortPlkVar">
     <dd:service name="b4p:UIFWService" port="UIFWPort"></dd:service>
+  </dd:provide>
+  <dd:provide partnerLink="taskManagementProcessAndNextTaskManagerForTMPPortPlkVar">
+    <dd:service name="b4p:TMPService" port="TMPPort"></dd:service>
   </dd:provide>
 </dd:process></dd:deploy>

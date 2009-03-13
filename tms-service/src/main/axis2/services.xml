@@ -119,5 +119,10 @@
             <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
             <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getAvailableTasks</actionMapping>
         </operation>
+        
+        <operation name="countAvailableTasks">
+            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+            <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/countAvailableTasks</actionMapping>
+        </operation>
     </service>
 </serviceGroup>

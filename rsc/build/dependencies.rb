@@ -40,6 +40,7 @@ FOP = "fop:fop:jar:0.20.5"
 GERONIMO_SPECS = {
   "jta" => "org.apache.geronimo.specs:geronimo-jta_1.1_spec:jar:1.1",
   "jpa" => "org.apache.geronimo.specs:geronimo-jpa_3.0_spec:jar:1.0",
+  # "jpa" => "org.apache.geronimo.specs:geronimo-jpa_2.0_spec:jar:1.0-EA-20090312",
   "jms" => "org.apache.geronimo.specs:geronimo-jms_1.1_spec:jar:1.0.1"
 }
 
@@ -66,6 +67,7 @@ LOG4J = "log4j:log4j:jar:1.2.15"
 
 NEETHI = "org.apache.neethi:neethi:jar:2.0.4"
 
+OPENSSO_CLIENT_SDK = "com.sun:openssoclientsdk:jar:3.0"
 PORTLET_API = "portlet-api:portlet-api:jar:1.0"
 
 QOM = "net.sf.qom:qom:jar:0.1alpha3"
@@ -84,6 +86,7 @@ SPRING_MOCK = [
 ]
 
 STAX_API = [ "stax:stax-api:jar:1.0.1" ]
+STAX_LIB = "stax:stax:jar:1.2.0"
 
 TAGLIBS = [ "taglibs:standard:jar:1.1.2" ]
 
@@ -186,9 +189,11 @@ MY_FACES = [
 APACHE_JPA = [
   APACHE_COMMONS[:lang],
   APACHE_COMMONS[:collections],
-  GERONIMO_SPECS.values,
+  GERONIMO_SPECS["jta"],
+  GERONIMO_SPECS["jpa"],
   "org.apache.openjpa:openjpa:jar:1.1.0-645340",
   # "org.apache.openjpa:openjpa:jar:1.2",
+  # "org.apache.openjpa:openjpa:jar:1.2-optimized",
   "serp:serp:jar:1.13.1"
 ]
 

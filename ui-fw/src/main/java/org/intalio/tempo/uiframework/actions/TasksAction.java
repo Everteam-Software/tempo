@@ -54,9 +54,8 @@ public class TasksAction extends Action {
         final String token = state.getCurrentUser().getToken();
         final String user = state.getCurrentUser().getName();
         try {
-        	 TasksCollector collector = getTaskCollector(user, token);
-            collector.retrieveTasks();
-            model.put("tasks", collector.getTasks());
+        	TasksCollector collector = getTaskCollector(user, token);
+            model.put("tasks", collector.retrieveTasks());
         } catch (Exception ex) {
             _errors.add(new ActionError(-1, null, "com_intalio_bpms_workflow_tasks_retrieve_error", null, ActionError.getStackTrace(ex), null, null));
             _log.error("Error while retrieving task list", ex);

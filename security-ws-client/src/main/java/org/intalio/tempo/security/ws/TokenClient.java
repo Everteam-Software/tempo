@@ -103,6 +103,14 @@ public class TokenClient implements TokenService {
         return response.getRequiredString(TokenConstants.TOKEN);
     }
 
+	public String getTokenFromOpenSSOToken(String tokenId)
+	throws AuthenticationException, RBACException, RemoteException {
+		OMElement request = element(TokenConstants.OPENSSO_TICKET);
+		request.addChild(elementText(TokenConstants.OPENSSO_TOKEN, tokenId));
+		OMParser response = invoke(TokenConstants.GETTOKEN_FROM_OPSSSOTOKEN.getLocalPart(), request);
+		return response.getRequiredString(TokenConstants.TOKEN);
+	}
+
     protected ServiceClient getServiceClient() throws AxisFault {
         return new ServiceClient();
     }

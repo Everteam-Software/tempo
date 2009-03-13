@@ -109,7 +109,12 @@ public final class TaskEquality {
      * 
      */
     static public boolean areTasksEquals(Task t1, Task t2) {
-        boolean b = isEqual(t1, t2);
+//        boolean b = isEqual(t1, t2);
+        boolean b = true;
+        b &= t1.getCreationDate().equals(t2.getCreationDate());
+        b &= t1.getID().equals(t2.getID());
+        b &= t1.getDescription().equals(t2.getDescription());
+        b &= t1.getClass().equals(t2.getClass());
         // we skip the ones below because they are too complex to check when out
         // of jpa
         // doing them one by one

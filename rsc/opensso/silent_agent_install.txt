@@ -1,0 +1,8 @@
+# Agent User Response File
+CONFIG_DIR= /Users/niko/projects/intalio/tempo-remote/conf
+AM_SERVER_URL= http://opensso.tempo.com:7080/opensso
+CATALINA_HOME= /Users/niko/projects/intalio/tempo-remote
+INSTALL_GLOBAL_WEB_XML= false
+AGENT_URL= http://www.tempo.com:9080/agentapp
+AGENT_PROFILE_NAME= tempo
+AGENT_PASSWORD_FILE= /Users/niko/projects/intalio/tempo-remote/password

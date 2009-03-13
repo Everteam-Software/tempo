@@ -16,6 +16,7 @@
 package org.intalio.tempo.workflow.tms.server.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.intalio.tempo.workflow.auth.UserRoles;
@@ -28,86 +29,94 @@ import org.slf4j.LoggerFactory;
 
 public class SimpleTaskDAOConnection implements ITaskDAOConnection {
 
-  private static final Logger _logger = LoggerFactory.getLogger(SimpleTaskDAOConnection.class);
+    private static final Logger _logger = LoggerFactory.getLogger(SimpleTaskDAOConnection.class);
 
-  private boolean _closed = false;
+    private boolean _closed = false;
 
-  private Map<String, Task> _tasks;
+    private Map<String, Task> _tasks;
 
-  SimpleTaskDAOConnection(Map<String, Task> tasks) {
-    if (tasks == null) {
-      throw new RequiredArgumentException("tasks");
+    SimpleTaskDAOConnection(Map<String, Task> tasks) {
+        if (tasks == null) {
+            throw new RequiredArgumentException("tasks");
+        }
+        _tasks = tasks;
+
+        _logger.debug("Opened a simple DAO connection.");
     }
-    _tasks = tasks;
 
-    _logger.debug("Opened a simple DAO connection.");
-  }
+    public void commit() {
 
-  public void commit() {
-
-  }
-
-  public void close() {
-    _closed = true;
-    _logger.debug("simple DAO closed.");
-  }
-
-  @Override
-  public void finalize() {
-    if (!_closed) {
-      _logger.warn("simple DAO was not closed!");
     }
-  }
 
-  public synchronized Task[] fetchAllAvailableTasks(UserRoles user) {
-    ArrayList<Task> availableTasks = new ArrayList<Task>();
-    for (Task task : _tasks.values()) {
-      if (task.isAvailableTo(user)) {
-        availableTasks.add(task);
-      }
+    public void close() {
+        _closed = true;
+        _logger.debug("simple DAO closed.");
     }
-    return availableTasks.toArray(new Task[] {});
-  }
 
-  public synchronized Task fetchTaskIfExists(String taskID) {
-    return _tasks.get(taskID);
-  }
-
-  public synchronized void updateTask(Task task) {
-    String id = task.getID();
-    if (!_tasks.containsKey(id)) {
-      throw new RuntimeException("Task with ID '" + id + "' does not exist");
+    @Override
+    public void finalize() {
+        if (!_closed) {
+            _logger.warn("simple DAO was not closed!");
+        }
     }
-    _tasks.put(id, task);
-  }
 
-  public synchronized void createTask(Task task) throws TaskIDConflictException {
-    String id = task.getID();
-    if (_tasks.containsKey(id)) {
-      throw new TaskIDConflictException("Task with ID '" + id + "' already exists");
+    public synchronized Task[] fetchAllAvailableTasks(UserRoles user) {
+        ArrayList<Task> availableTasks = new ArrayList<Task>();
+        for (Task task : _tasks.values()) {
+            if (task.isAvailableTo(user)) {
+                availableTasks.add(task);
+            }
+        }
+        return availableTasks.toArray(new Task[] {});
     }
-    _tasks.put(id, task);
-  }
 
-  public synchronized boolean deleteTask(int internalTaskId, String taskID) {
-    Task removedTask = _tasks.remove(taskID);
-    return removedTask != null;
-  }
+    public synchronized Task fetchTaskIfExists(String taskID) {
+        return _tasks.get(taskID);
+    }
 
-  public void deletePipaTask(String formUrl) {
-    throw new RuntimeException("Not Implemented");
-  }
+    public synchronized void updateTask(Task task) {
+        String id = task.getID();
+        if (!_tasks.containsKey(id)) {
+            throw new RuntimeException("Task with ID '" + id + "' does not exist");
+        }
+        _tasks.put(id, task);
+    }
 
-  public void storePipaTask(PIPATask task) {
-    throw new RuntimeException("Not Implemented");
-  }
+    public synchronized void createTask(Task task) throws TaskIDConflictException {
+        String id = task.getID();
+        if (_tasks.containsKey(id)) {
+            throw new TaskIDConflictException("Task with ID '" + id + "' already exists");
+        }
+        _tasks.put(id, task);
+    }
 
-  public PIPATask fetchPipa(String formUrl) {
-    throw new RuntimeException("Not Implemented");
-  }
+    public synchronized boolean deleteTask(int internalTaskId, String taskID) {
+        Task removedTask = _tasks.remove(taskID);
+        return removedTask != null;
+    }
 
-  public Task[] fetchAvailableTasks(UserRoles user, Class className, String subQuery) {
-    throw new RuntimeException("Not Implemented");
-  }
+    public void deletePipaTask(String formUrl) {
+        throw new RuntimeException("Not Implemented");
+    }
+
+    public void storePipaTask(PIPATask task) {
+        throw new RuntimeException("Not Implemented");
+    }
+
+    public PIPATask fetchPipa(String formUrl) {
+        throw new RuntimeException("Not Implemented");
+    }
+
+    public Task[] fetchAvailableTasks(UserRoles user, Class className, String subQuery) {
+        throw new RuntimeException("Not Implemented");
+    }
+
+    public Task[] fetchAvailableTasks(HashMap parameters) {
+        throw new RuntimeException("Not Implemented");
+    }
+
+    public Long countAvailableTasks(HashMap parameters) {
+        throw new RuntimeException("Not Implemented");
+    }
 
 }

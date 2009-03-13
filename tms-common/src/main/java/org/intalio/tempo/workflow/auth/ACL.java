@@ -34,11 +34,11 @@ public class ACL extends BaseRestrictedEntity {
 
     public boolean isAuthorizedAction(UserRoles user, String action) {
         // Note: Action is authorized if there's no ACL provided (default)
-        if (_userOwners.isEmpty() && _roleOwners.isEmpty())
+        if (getUserOwners().isEmpty() && getRoleOwners().isEmpty())
             return true;
-        else if (_userOwners.contains(user.getUserID()))
+        else if (getUserOwners().contains(user.getUserID()))
             return true;
-        else return (CollectionUtils.containsAny(_roleOwners,user.getAssignedRoles()));
+        else return (CollectionUtils.containsAny(getRoleOwners(),user.getAssignedRoles()));
     }
 
 }

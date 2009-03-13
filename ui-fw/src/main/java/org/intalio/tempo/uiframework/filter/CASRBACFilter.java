@@ -6,7 +6,6 @@ import java.rmi.RemoteException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -15,8 +14,6 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.intalio.tempo.security.Property;
 import org.intalio.tempo.security.authentication.AuthenticationConstants;
 import org.intalio.tempo.security.authentication.AuthenticationException;
@@ -27,6 +24,8 @@ import org.intalio.tempo.security.util.StringArrayUtils;
 import org.intalio.tempo.uiframework.Configuration;
 import org.intalio.tempo.web.ApplicationState;
 import org.intalio.tempo.web.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -34,10 +33,10 @@ import edu.yale.its.tp.cas.client.CASReceipt;
 import edu.yale.its.tp.cas.proxy.ProxyTicketReceptor;
 
 /**
- * @author Arthur
+ * @author Niko
  */
 public class CASRBACFilter implements Filter {
-    private static final Logger LOG = LogManager.getLogger("tempo.security");
+    private static final Logger LOG = LoggerFactory.getLogger("tempo.security");
 
     private static final String CAS_RECEIPT = "edu.yale.its.tp.cas.client.filter.receipt";
     private static final String SERVICE_URL = "edu.yale.its.tp.cas.client.filter.serviceUrl";

@@ -23,6 +23,13 @@ import org.intalio.tempo.security.util.IdentifierUtils;
 import org.intalio.tempo.security.util.PropertyUtils;
 import org.intalio.tempo.security.util.StringArrayUtils;
 import org.intalio.tempo.security.util.TimeExpirationMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.iplanet.sso.SSOToken;
+import com.iplanet.sso.SSOTokenManager;
+import com.sun.identity.idm.AMIdentity;
+import com.sun.identity.idm.IdUtils;
 
 import edu.yale.its.tp.cas.client.ProxyTicketValidator;
 
@@ -33,6 +40,7 @@ import edu.yale.its.tp.cas.client.ProxyTicketValidator;
  * @author <a href="http://www.intalio.com">&copy; Intalio Inc.</a>
  */
 public class TokenServiceImpl implements TokenService {
+	Logger _logger = LoggerFactory.getLogger(TokenServiceImpl.class);
     Realms _realms;
     TokenHandler _tokenHandler;
 
@@ -211,15 +219,43 @@ public class TokenServiceImpl implements TokenService {
 
         if (pv.isAuthenticationSuccesful()) {
             String user = pv.getUser();
-
             if (user == null) {
-                throw new AuthenticationException("Authentication failed: User" + user + "'");
+                throw new AuthenticationException("Authentication failed: Null User");
             }
             return createToken(user);
         } else {
-            throw new AuthenticationException("Authentication failed! Proxy ticket authentication faild!");
+            throw new AuthenticationException("Authentication failed! Proxy ticket authentication failed!");
         }
 
     }
+    
+    public String getTokenFromOpenSSOToken(String tokenId)
+			throws AuthenticationException, RBACException, RemoteException {
+		try {
+			SSOTokenManager tokenManager = SSOTokenManager.getInstance();
+			SSOToken token = tokenManager.createSSOToken(
+					tokenId);
+			if (token == null) {
+				throw new AuthenticationException(
+						"Failed to get the sso token with token ID: " + tokenId);
+			}
+
+			// check the token validity
+			SSOTokenManager manager = tokenManager;
+			if (!manager.isValidToken(token)) {
+				throw new AuthenticationException("Token with ID: " + tokenId
+						+ " is invalid.");
+			}
+
+			// get the user with sso token
+			AMIdentity userIdentity = IdUtils.getIdentity(token);
+			String user = userIdentity.getName();
+
+			return createToken(user);
+		} catch (Exception e) {
+			_logger.error("OpenSSO Token Error",e);
+			throw new AuthenticationException("Authentication failed! OpenSSO ticket authentication failed!");
+		}
+	}
 
 }
