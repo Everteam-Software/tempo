@@ -84,7 +84,15 @@ public class RemoteProxy<T> implements InvocationHandler {
             parameterTypes[i] = converted.convertedType;
         }
         Method remoteMethod = _remoteObject.getClass().getMethod(method.getName(), parameterTypes);
-        Object result = remoteMethod.invoke(_remoteObject, args);
+        ClassLoader threadClassLoader = Thread.currentThread().getContextClassLoader();
+
+        Object result = null;
+        try {
+            Thread.currentThread().setContextClassLoader(_remoteClassLoader);
+            result = remoteMethod.invoke(_remoteObject, args);
+        } finally {
+            Thread.currentThread().setContextClassLoader(threadClassLoader);
+        }
         return export((Class<Object>)method.getReturnType(), result, _remoteClassLoader, _localClassLoader).convertedObject;
     }
 
