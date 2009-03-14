@@ -52,18 +52,7 @@ public abstract class TaskAbstract {
 	private String outputMessage;
 	@Basic
 	private String renderingMethName;
-	
 
-	// below attributes should be calculated dynamically
-	private boolean hasAttachments;
-	private boolean hasComments;
-	private boolean hasOutput;
-	private boolean hasFault;
-	private boolean hasPotentialOwners;
-	private boolean renderingMethodExists;
-	private boolean completeByExists;
-	private boolean startByExists;
-	
 	public String getId() {
 		return id;
 	}
@@ -136,30 +125,6 @@ public abstract class TaskAbstract {
 		this.isSkipable = isSkipable;
 	}
 
-	public boolean isHasPotentialOwners() {
-		return hasPotentialOwners;
-	}
-
-	public void setHasPotentialOwners(boolean hasPotentialOwners) {
-		this.hasPotentialOwners = hasPotentialOwners;
-	}
-
-	public boolean isStartByExists() {
-		return startByExists;
-	}
-
-	public void setStartByExists(boolean startByExists) {
-		this.startByExists = startByExists;
-	}
-
-	public boolean isCompleteByExists() {
-		return completeByExists;
-	}
-
-	public void setCompleteByExists(boolean completeByExists) {
-		this.completeByExists = completeByExists;
-	}
-
 	public String getPresentationName() {
 		return presentationName;
 	}
@@ -176,52 +141,12 @@ public abstract class TaskAbstract {
 		this.presentationSubject = presentationSubject;
 	}
 
-	public boolean isRenderingMethodExists() {
-		return renderingMethodExists;
-	}
-
-	public void setRenderingMethodExists(boolean renderingMethodExists) {
-		this.renderingMethodExists = renderingMethodExists;
-	}
-
-	public boolean isHasOutput() {
-		return hasOutput;
-	}
-
-	public void setHasOutput(boolean hasOutput) {
-		this.hasOutput = hasOutput;
-	}
-
-	public boolean isHasFault() {
-		return hasFault;
-	}
-
-	public void setHasFault(boolean hasFault) {
-		this.hasFault = hasFault;
-	}
-
 	public boolean isEscalated() {
 		return escalated;
 	}
 
 	public void setEscalated(boolean escalated) {
 		this.escalated = escalated;
-	}
-
-	public void setHasAttachments(boolean hasAttachments) {
-		this.hasAttachments = hasAttachments;
-	}
-
-	public void setHasComments(boolean hasComments) {
-		this.hasComments = hasComments;
-	}
-
-	public boolean isHasAttachments() {
-		return hasAttachments;
-	}
-
-	public boolean isHasComments() {
-		return hasComments;
 	}
 
 	public Date getStartBy() {

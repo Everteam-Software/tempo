@@ -17,7 +17,7 @@ import org.apache.openjpa.persistence.Persistent;
 @Entity
 @Table(name = "tempob4p_task")
 @NamedQueries( { @NamedQuery(name = Task.FIND_BY_ID, query = "select m from Task m where m.id=?1", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }),
-	@NamedQuery(name = Task.FIND_BY_NAME, query = "select m from Task m where m.name=?1", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") })})
+	@NamedQuery(name = Task.FIND_BY_NAME, query = "select m from Task m where m.name=?1")})
 public class Task extends TaskAbstract {
     public static final String FIND_BY_ID = "find_by_id"; 
     public static final String FIND_BY_NAME = "fine_by_name";

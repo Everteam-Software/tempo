@@ -99,11 +99,7 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements
         Query query = entityManager.createNamedQuery(Task.FIND_BY_ID);
         query.setParameter(1, taskId);
         
-        // set the value for hasAttachments and hasComments
         Task task = (Task)query.getSingleResult();
-        task.setHasAttachments(this.hasAttachment(taskId));
-        task.setHasComments(this.hasComment(taskId));
-        
         return task;         
     }
 
@@ -164,17 +160,12 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements
         return (count.longValue() > 0);
     }
     
-    public Task fetchTaskWithName(String taskName)
-            throws UnavailableTaskException {
+    public List<Task> getTasksWithName(String taskName) {
         Query query = entityManager.createNamedQuery(Task.FIND_BY_NAME);
         query.setParameter(1, taskName);
 
-        // set the value for hasAttachments and hasComments
-        Task task = (Task) query.getSingleResult();
-        task.setHasAttachments(this.hasAttachment(task.getId()));
-        task.setHasComments(this.hasComment(task.getId()));
-
-        return task;
+        List<Task> tasks = query.getResultList();
+        return tasks;
     }
 
     
