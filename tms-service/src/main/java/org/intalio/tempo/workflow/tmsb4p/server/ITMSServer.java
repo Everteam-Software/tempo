@@ -13,12 +13,15 @@ public interface ITMSServer {
     public void remove(String participantToken, String taskId) throws TMSException;
     public List<Task> getMyTasks(String participantToken, String taskType, String genericHumanRole, String workQueue, TStatus.Enum[] statusList, String whereClause, String createdOnClause, int maxTasks) throws TMSException;
     public List<Task> query(String participantToken, String selectClause, String whereClause, String orderByClause, int maxTasks, int taskIndexOffset) throws TMSException;
-	public void Stop(String participantToken, String identifier);
-	public void Start(String participantToken, String identifier);
+	public void stop(String participantToken, String identifier);
+	public void start(String participantToken, String identifier);
 	public void claim(String participantToken, String identifier);
-	public void Release(String participantToken, String identifier);
-	public void Complete(String participantToken, String identifier, XmlObject xmlObject);
-	public void Fail(String participantToken, String identifier,
+	public void release(String participantToken, String identifier);
+	public void complete(String participantToken, String identifier, XmlObject xmlObject);
+	public void fail(String participantToken, String identifier,
 			String faultName, XmlObject faultData);
-	public void Resume(String participantToken, String identifier);
+	public void resume(String participantToken, String identifier);
+	public void skip(String participantToken, String identifier);
+	public void forward(String participantToken, String identifier);
+	public void delegate(String participantToken, String identifier);
 }

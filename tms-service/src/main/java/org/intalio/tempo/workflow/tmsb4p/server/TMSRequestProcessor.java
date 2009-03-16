@@ -43,8 +43,12 @@ import com.intalio.wsHT.api.xsd.CompleteDocument;
 import com.intalio.wsHT.api.xsd.CompleteResponseDocument;
 import com.intalio.wsHT.api.xsd.CreateDocument;
 import com.intalio.wsHT.api.xsd.CreateResponseDocument;
+import com.intalio.wsHT.api.xsd.DelegateDocument;
+import com.intalio.wsHT.api.xsd.DelegateResponseDocument;
 import com.intalio.wsHT.api.xsd.FailDocument;
 import com.intalio.wsHT.api.xsd.FailResponseDocument;
+import com.intalio.wsHT.api.xsd.ForwardDocument;
+import com.intalio.wsHT.api.xsd.ForwardResponseDocument;
 import com.intalio.wsHT.api.xsd.GetMyTasksDocument;
 import com.intalio.wsHT.api.xsd.GetMyTasksResponseDocument;
 import com.intalio.wsHT.api.xsd.QueryDocument;
@@ -55,6 +59,8 @@ import com.intalio.wsHT.api.xsd.RemoveDocument;
 import com.intalio.wsHT.api.xsd.RemoveResponseDocument;
 import com.intalio.wsHT.api.xsd.ResumeDocument;
 import com.intalio.wsHT.api.xsd.ResumeResponseDocument;
+import com.intalio.wsHT.api.xsd.SkipDocument;
+import com.intalio.wsHT.api.xsd.SkipResponseDocument;
 import com.intalio.wsHT.api.xsd.StartDocument;
 import com.intalio.wsHT.api.xsd.StartResponseDocument;
 import com.intalio.wsHT.api.xsd.StopDocument;
@@ -64,8 +70,12 @@ import com.intalio.wsHT.api.xsd.ClaimResponseDocument.ClaimResponse;
 import com.intalio.wsHT.api.xsd.CompleteDocument.Complete;
 import com.intalio.wsHT.api.xsd.CompleteResponseDocument.CompleteResponse;
 import com.intalio.wsHT.api.xsd.CreateDocument.Create;
+import com.intalio.wsHT.api.xsd.DelegateDocument.Delegate;
+import com.intalio.wsHT.api.xsd.DelegateResponseDocument.DelegateResponse;
 import com.intalio.wsHT.api.xsd.FailDocument.Fail;
 import com.intalio.wsHT.api.xsd.FailResponseDocument.FailResponse;
+import com.intalio.wsHT.api.xsd.ForwardDocument.Forward;
+import com.intalio.wsHT.api.xsd.ForwardResponseDocument.ForwardResponse;
 import com.intalio.wsHT.api.xsd.GetMyTasksDocument.GetMyTasks;
 import com.intalio.wsHT.api.xsd.GetMyTasksResponseDocument.GetMyTasksResponse;
 import com.intalio.wsHT.api.xsd.QueryDocument.Query;
@@ -76,6 +86,8 @@ import com.intalio.wsHT.api.xsd.RemoveDocument.Remove;
 import com.intalio.wsHT.api.xsd.RemoveResponseDocument.RemoveResponse;
 import com.intalio.wsHT.api.xsd.ResumeDocument.Resume;
 import com.intalio.wsHT.api.xsd.ResumeResponseDocument.ResumeResponse;
+import com.intalio.wsHT.api.xsd.SkipDocument.Skip;
+import com.intalio.wsHT.api.xsd.SkipResponseDocument.SkipResponse;
 import com.intalio.wsHT.api.xsd.StartDocument.Start;
 import com.intalio.wsHT.api.xsd.StartResponseDocument.StartResponse;
 import com.intalio.wsHT.api.xsd.StopDocument.Stop;
@@ -113,6 +125,11 @@ public class TMSRequestProcessor {
 //		}.createOkResponse();
 //	}
 
+	
+	/************************************************************************
+	 *         Internal function
+	 ************************************************************************/
+	
 	/**
 	 * @TODO need to be improved
 	 */
@@ -259,6 +276,7 @@ public class TMSRequestProcessor {
 	
 	/************************************************************************
 	 *          Main Participant operation (most will change task status)
+	 *------------------------------------------------------------------------
 	 * Create/remove/start/stop/complete/fail/skip/forward/delegate/resume/
 	 * release/suspend/suspendUtil
 	 ************************************************************************/
@@ -592,6 +610,51 @@ public class TMSRequestProcessor {
 	
 	
 	/**
+	 * Skip the task. If the task is not skipable then the fault illegalOperationFault is returned. 
+		In 
+		¥ task identifier 
+		Out 
+		¥ void 
+		
+		Authorization
+			Task Initiator 
+			Actual Owner 
+			Business 
+			Administrator 
+
+	 * @param requestElement
+	 * @return
+	 * @throws AxisFault
+	 */
+	public OMElement skip(OMElement requestElement) throws AxisFault {
+		SkipResponseDocument retDoc = null;
+		try {
+			// check participant token
+			String participantToken = getParticipantToken();
+			if (participantToken == null)
+				throw makeFault(new Exception(
+						"Cannot get participant toke in soap header"));
+			
+			// unmarshal request
+			SkipDocument reqDoc = SkipDocument.Factory.parse(requestElement.getXMLStreamReader());
+			Skip req = reqDoc.getSkip();
+			
+			// call TMSServer to process request
+			this._server.Skip(participantToken, req.getIdentifier());
+			
+			// marshal response
+		    retDoc = SkipResponseDocument.Factory.newInstance();
+			SkipResponse ret = retDoc.addNewSkipResponse();
+			
+		}catch(Exception e){
+			
+			throw makeFault(e);
+		}
+		return this.convertXML(retDoc);
+	}
+	
+	
+	/**
 	 * Resume a suspended task.  
 	In 
 	¥ task identifier 
@@ -634,10 +697,102 @@ public class TMSRequestProcessor {
 		return this.convertXML(retDoc);
 	}
 	
+	/**
+	 * Forward the task to another organization entity. The caller has to specify the receiving organizational entity. 
+	 * Potential owners can only forward a task while the task is in the Ready state. 
+	 * In 
+		¥ task identifier 
+		¥ organizational 
+		entity 
+		(htd:tOrganization 
+		alEntity) 
+	 * Out 
+		¥ void 
+	 * Authorization
+		Potential Owners 
+		Actual Owner 
+		Business 
+		Administrator 
+	 * @param requestElement
+	 * @return
+	 * @throws AxisFault
+	 */
+	public OMElement forward(OMElement requestElement) throws AxisFault {
+		ForwardResponseDocument retDoc = null;
+		try {
+			// check participant token
+			String participantToken = getParticipantToken();
+			if (participantToken == null)
+				throw makeFault(new Exception(
+						"Cannot get participant toke in soap header"));
+			
+			// unmarshal request
+			ForwardDocument reqDoc = ForwardDocument.Factory.parse(requestElement.getXMLStreamReader());
+			Forward req = reqDoc.getForward();
+			
+			// call TMSServer to process request
+			this._server.forward(participantToken, req.getIdentifier());
+			
+			// marshal response
+		    retDoc = ForwardResponseDocument.Factory.newInstance();
+			ForwardResponse ret = retDoc.addNewForwardResponse();
+			
+		}catch(Exception e){
+			
+			throw makeFault(e);
+		}
+		return this.convertXML(retDoc);
+	}
 	
+	/**
+	 * Assign the task to one user and set the task to state Reserved. If the recipient was not a 
+	 * potential owner then this person is added to the set of potential owners.  
+	 * In 
+		¥ task identifier 
+		¥ organizational 
+		entity 
+		(htd:tOrganization 
+		alEntity) 
+	* Out 
+		¥ void 
+	* Authorization
+		Potential Owners (only in Ready	state) 
+		Actual Owner 
+		Business Administrator 
+	 * @param requestElement
+	 * @return
+	 * @throws AxisFault
+	 */
+	public OMElement delegate(OMElement requestElement) throws AxisFault {
+		DelegateResponseDocument retDoc = null;
+		try {
+			// check participant token
+			String participantToken = getParticipantToken();
+			if (participantToken == null)
+				throw makeFault(new Exception(
+						"Cannot get participant toke in soap header"));
+			
+			// unmarshal request
+			DelegateDocument reqDoc = DelegateDocument.Factory.parse(requestElement.getXMLStreamReader());
+			Delegate req = reqDoc.getDelegate();
+			
+			// call TMSServer to process request
+			this._server.delegate(participantToken, req.getIdentifier());
+			
+			// marshal response
+		    retDoc = DelegateResponseDocument.Factory.newInstance();
+			DelegateResponse ret = retDoc.addNewDelegateResponse();
+			
+		}catch(Exception e){
+			
+			throw makeFault(e);
+		}
+		return this.convertXML(retDoc);
+	}
 	
 	/***********************************************************************
-	 * Simple Participant operation (most will only change task property)
+	 * Task data operation (most will only change task property)
+	 *------------------------------------------------------------------------
 	 * getXXX/setXXX
 	 ************************************************************************/
 	
@@ -765,6 +920,11 @@ public class TMSRequestProcessor {
 		}
 
 	}
+	
+	/*****************************************
+	 *           Administrative operation
+	 *****************************************/
+	
 
 
 }

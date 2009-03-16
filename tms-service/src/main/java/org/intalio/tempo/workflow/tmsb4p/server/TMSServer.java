@@ -54,23 +54,9 @@ public class TMSServer implements ITMSServer{
         this._permissions = _permissions;
     }
 
-    /**
-     * @param args
-     */
-    public static void main(String[] args) {
-        // TODO Auto-generated method stub
-
-    }
-
-    public void addAttachment(String taskID, Attachment attachment, String participantToken) throws TMSException {
-        // TODO Auto-generated method stub
-        
-    }
-
-    public void complete(String taskID, String participantToken) throws TMSException {
-        // TODO Auto-generated method stub
-        
-    }
+    /**************************************
+     *  flow-related participant operations
+     ***************************************/
 
     public void create(Task task, String participantToken) throws TMSException {
         System.out.println("tmsserver-> create task");
@@ -101,89 +87,6 @@ public class TMSServer implements ITMSServer{
         
     }
 
-    public void delete(String[] taskIDs, String participantToken) throws TMSException {
-        // TODO Auto-generated method stub
-        
-    }
-
-    public void deleteAll(boolean fakeDelete, String subquery, String subqueryClass, String participantToken) throws TMSException {
-        // TODO Auto-generated method stub
-        
-    }
-
-    public void deletePipa(String formUrl, String participantToken) throws TMSException {
-        // TODO Auto-generated method stub
-        
-    }
-
-    public void fail(String taskID, String failureCode, String failureReason, String participantToken) throws TMSException {
-        // TODO Auto-generated method stub
-        
-    }
-
-    public Attachment[] getAttachments(String taskID, String participantToken) throws TMSException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public Task[] getAvailableTasks(String participantToken, String taskType, String subQuery) throws TMSException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public PIPATask getPipa(String formUrl, String participantToken) throws TMSException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public Task getTask(String taskID, String participantToken) throws TMSException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public Task[] getTaskList(String participantToken) throws TMSException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public UserRoles getUserRoles(String participantToken) throws TMSException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public Document initProcess(String taskID, Document input, String participantToken) throws TMSException, AxisFault {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public void reassign(String taskID, AuthIdentifierSet users, AuthIdentifierSet roles, TaskState state, String participantToken) throws TMSException {
-        // TODO Auto-generated method stub
-        
-    }
-
-    public void removeAttachment(String taskID, URL attachmentURL, String participantToken) throws TMSException {
-        // TODO Auto-generated method stub
-        
-    }
-
-    public void setOutput(String taskID, Document output, String participantToken) throws TMSException {
-        // TODO Auto-generated method stub
-        
-    }
-
-    public void setOutputAndComplete(String taskID, Document output, String participantToken) throws TMSException {
-        // TODO Auto-generated method stub
-        
-    }
-
-    public void storePipa(PIPATask task, String participantToken) throws TMSException {
-        // TODO Auto-generated method stub
-        
-    }
-
- 
-
- 
 
 	public void remove(String participantToken, String taskId)
 			throws TMSException {
@@ -211,6 +114,84 @@ public class TMSServer implements ITMSServer{
         return;
 		
 	}
+	
+	public void Release(String participantToken, String identifier) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void Resume(String participantToken, String identifier) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void Start(String participantToken, String identifier) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void Stop(String participantToken, String identifier) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void claim(String participantToken, String identifier) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void delegate(String participantToken, String identifier) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	public void forward(String participantToken, String identifier) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void release(String participantToken, String identifier) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void resume(String participantToken, String identifier) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void skip(String participantToken, String identifier) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void start(String participantToken, String identifier) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void stop(String participantToken, String identifier) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void fail(String participantToken, String identifier,
+			String faultName, XmlObject faultData) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+    /**************************************
+     *  data operation operations
+     ***************************************/
+	
+	
+	/*****************************************
+	 *           administrative operation
+	 *****************************************/
+	
 	
 	/*****************************************
 	 *           Query operation
@@ -286,39 +267,8 @@ public class TMSServer implements ITMSServer{
 	    
 	    }
 
-	public void Complete(String participantToken, String identifier,
+	public void complete(String participantToken, String identifier,
 			XmlObject xmlObject) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void Fail(String participantToken, String identifier,
-			String faultName, XmlObject faultData) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void Release(String participantToken, String identifier) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void Resume(String participantToken, String identifier) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void Start(String participantToken, String identifier) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void Stop(String participantToken, String identifier) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void claim(String participantToken, String identifier) {
 		// TODO Auto-generated method stub
 		
 	}
