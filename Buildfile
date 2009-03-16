@@ -289,7 +289,7 @@ define "tempo" do
     test.exclude '*TestUtils*'
 
     package :jar
-    package(:aar).with :libs => 
+    package(:aar).include(_('src/main/axis2/'), :as=>'META-INF').with :libs => 
         [ projects("deploy-api", "registry", "security", "security-ws-client", "security-ws-common", "tms-axis", "tms-common", "web-nutsNbolts", "dao-nutsNbolts"), APACHE_COMMONS[:pool], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], APACHE_JPA, SLF4J, SPRING[:core] ] 
   end
   
