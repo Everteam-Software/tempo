@@ -188,6 +188,8 @@ public class TMSServer implements ITMSServer{
             System.out.println("userid:"+ur.getUserID());            
         }catch (Exception e ){
             e.printStackTrace();
+            this._logger.error("authenticate user failed",e);
+            return null;
         }
         
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
@@ -228,6 +230,8 @@ public class TMSServer implements ITMSServer{
             System.out.println("userid:"+ur.getUserID());            
         }catch (Exception e ){
             e.printStackTrace();
+            this._logger.error("authenticate user failed",e);
+            return null;
         }
         
         // do query
@@ -243,6 +247,33 @@ public class TMSServer implements ITMSServer{
         
         return null;
     }
+
+	public void remove(String participantToken, String taskId)
+			throws TMSException {
+		// get user
+        UserRoles ur = null;
+        try{
+            ur = _authProvider.authenticate(participantToken);                      
+        }catch (Exception e ){
+            e.printStackTrace();
+            this._logger.error("authenticate user failed",e);
+            return;
+        }
+        
+        // do query
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        try {
+        	dao.deleteTask(taskId);
+        } catch (Exception e) {
+            _logger.error("remove task failed, task id "+ taskId, e); 
+        } finally {
+            dao.close();
+        }
+        
+        
+        return;
+		
+	}
  
 
 }

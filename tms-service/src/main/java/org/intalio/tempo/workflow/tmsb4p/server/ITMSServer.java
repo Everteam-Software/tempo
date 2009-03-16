@@ -9,6 +9,7 @@ import com.intalio.wsHT.api.TStatus;
 
 public interface ITMSServer {
     public void create(Task task, String participantToken) throws TMSException;
+    public void remove(String participantToken, String taskId) throws TMSException;
     public List<Task> getMyTasks(String participantToken, String taskType, String genericHumanRole, String workQueue, TStatus.Enum[] statusList, String whereClause, String createdOnClause, int maxTasks) throws TMSException;
     public List<Task> query(String participantToken, String selectClause, String whereClause, String orderByClause, int maxTasks, int taskIndexOffset) throws TMSException;
 }

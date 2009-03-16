@@ -44,11 +44,15 @@ import com.intalio.wsHT.api.xsd.GetMyTasksDocument;
 import com.intalio.wsHT.api.xsd.GetMyTasksResponseDocument;
 import com.intalio.wsHT.api.xsd.QueryDocument;
 import com.intalio.wsHT.api.xsd.QueryResponseDocument;
+import com.intalio.wsHT.api.xsd.RemoveDocument;
+import com.intalio.wsHT.api.xsd.RemoveResponseDocument;
 import com.intalio.wsHT.api.xsd.CreateDocument.Create;
 import com.intalio.wsHT.api.xsd.GetMyTasksDocument.GetMyTasks;
 import com.intalio.wsHT.api.xsd.GetMyTasksResponseDocument.GetMyTasksResponse;
 import com.intalio.wsHT.api.xsd.QueryDocument.Query;
 import com.intalio.wsHT.api.xsd.QueryResponseDocument.QueryResponse;
+import com.intalio.wsHT.api.xsd.RemoveDocument.Remove;
+import com.intalio.wsHT.api.xsd.RemoveResponseDocument.RemoveResponse;
 import com.intalio.wsHT.protocol.THumanTaskContext;
 
 public class TMSRequestProcessor {
@@ -193,8 +197,8 @@ public class TMSRequestProcessor {
 				// Log.log("task "+i);
 				Task task = new Task();
 				task.setId(UUID.randomUUID().toString()); // temporary solution
-															// to generate task
-															// id
+				// to generate task
+				// id
 				task.setName("test");
 				task.setCreatedOn(new Date());
 				task.setPriority(tasks[i].getPriority().intValue());
@@ -265,6 +269,62 @@ public class TMSRequestProcessor {
 
 	}
 
+	public OMElement remove(OMElement requestElement) throws AxisFault {
+		RemoveResponseDocument retDoc = null;
+		try {
+			// check participant token
+			String participantToken = getParticipantToken();
+			if (participantToken == null)
+				throw makeFault(new Exception(
+						"Cannot get participant toke in soap header"));
+			
+			// unmarshal request
+			RemoveDocument reqDoc = RemoveDocument.Factory.parse(requestElement.getXMLStreamReader());
+			Remove req = reqDoc.getRemove();
+			
+			// call TMSServer to process request
+			this._server.remove(participantToken, req.getIdentifier());
+			
+			// marshal response
+		    retDoc = RemoveResponseDocument.Factory.newInstance();
+			RemoveResponse ret = retDoc.addNewRemoveResponse();
+			
+		}catch(Exception e){
+			
+			throw makeFault(e);
+		}
+			
+		return this.convertXML(retDoc);
+	}
+
+	private void marshalTask(Task t, TTask tt) {
+		if (t == null || tt == null)
+			return;
+		if (t.getActivationTime() != null) {
+			Calendar at = Calendar.getInstance();
+			at.setTime(t.getActivationTime());
+			tt.setActivationTime(at);
+		}
+		tt.setActualOwner(t.getActualOwner());
+		System.out.println("created by:" + t.getCreatedBy());
+		tt.setCreatedBy(t.getCreatedBy());
+		if (t.getCreatedOn() != null) {
+			Calendar createdOn = Calendar.getInstance();
+			createdOn.setTime(t.getCreatedOn());
+			tt.setCreatedOn(createdOn);
+		}
+		tt.setId(t.getId());
+		System.out.println("status:" + t.getStatus());
+		if (t.getStatus() != null)
+			tt.setStatus(TStatus.Enum.forString(t.getStatus().toString()));
+		tt.setTaskInitiator(t.getTaskInitiator());
+		if (t.getTaskType() != null)
+			tt.setTaskType(t.getTaskType().toString());
+		// _logger.info("task " + i + ": " + tt.xmlText());
+		// System.out.println("task: " + tt.xmlText());
+
+	}
+
 	public OMElement getMyTasks(OMElement requestElement) throws AxisFault {
 		try {
 			// check participant token
@@ -304,27 +364,7 @@ public class TMSRequestProcessor {
 				// GetMyTasksResponse node = ret.addNewGetMyTasksResponse();
 				TTask tt = ret.addNewTaskAbstract();
 				Task t = tasks.get(i);
-				if (t.getActivationTime() != null) {
-					Calendar at = Calendar.getInstance();
-					at.setTime(t.getActivationTime());
-					tt.setActivationTime(at);
-				}
-				tt.setActualOwner(t.getActualOwner());
-				System.out.println("created by:" + t.getCreatedBy());
-				tt.setCreatedBy(t.getCreatedBy());
-				if (t.getCreatedOn() != null) {
-					Calendar createdOn = Calendar.getInstance();
-					createdOn.setTime(t.getCreatedOn());
-					tt.setCreatedOn(createdOn);
-				}
-				tt.setId(t.getId());
-				System.out.println("status:" + t.getStatus());
-				if (t.getStatus() != null)
-					tt.setStatus(TStatus.Enum.forString(t.getStatus()
-							.toString()));
-				tt.setTaskInitiator(t.getTaskInitiator());
-				if (t.getTaskType() != null)
-					tt.setTaskType(t.getTaskType().toString());
+				this.marshalTask(t, tt);
 				_logger.info("task " + i + ": " + tt.xmlText());
 				System.out.println("task " + i + ": " + tt.xmlText());
 
@@ -339,8 +379,6 @@ public class TMSRequestProcessor {
 
 			// convert to OMElment
 			return convertXML(retDoc);
-
-			// return this.createOkResponse();
 
 		} catch (Exception e) {
 			throw makeFault(e);
