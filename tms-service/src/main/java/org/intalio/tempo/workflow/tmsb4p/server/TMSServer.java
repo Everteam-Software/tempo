@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.axis2.AxisFault;
+import org.apache.xmlbeans.XmlObject;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.IAuthProvider;
 import org.intalio.tempo.workflow.auth.UserRoles;
@@ -180,73 +181,9 @@ public class TMSServer implements ITMSServer{
         
     }
 
-    public List<Task> getMyTasks(String participantToken, String taskType, String genericHumanRole, String workQueue, TStatus.Enum[] statusList, String whereClause, String createdOnClause, int maxTasks) throws TMSException{
-        System.out.println("tmsserver->getTasks");
-        UserRoles ur = null;
-        try{
-            ur = _authProvider.authenticate(participantToken);
-            System.out.println("userid:"+ur.getUserID());            
-        }catch (Exception e ){
-            e.printStackTrace();
-            this._logger.error("authenticate user failed",e);
-            return null;
-        }
-        
-        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
-        try {
-            List<TaskStatus> statuses = new ArrayList<TaskStatus>();
-        	for (int i = 0; i< statusList.length;i++){
-        		statuses.add(TaskStatus.valueOf(statusList[i].toString())); 
-        	}
-        	System.out.println("==>call dao.getMyTasks");
-        	List<Task> tasks = dao.getMyTasks(ur, taskType, genericHumanRole, workQueue, statuses, whereClause, createdOnClause, maxTasks);
-           _logger.info("return " + tasks.size()+ " tasks.");
-           
-           return tasks;
-        	
-         //   if (_logger.isDebugEnabled())
-         //       _logger.debug("Workflow Task " + task + " was created");
-            // TODO : Use credentials.getUserID() :vb
-        } catch (Exception e) {
-            _logger.error("Cannot create Workflow Tasks", e); 
-            System.out.println("exception raised,"+e.getMessage());
-            // TODO :
-            // TaskIDConflictException
-            // must be rethrowed :vb
-        } finally {
-            dao.close();
-        }
-        
-        return null;
-    
-    }
+ 
 
-    public List<Task> query(String participantToken, String selectClause, String whereClause, String orderByClause, int maxTasks, int taskIndexOffset) throws TMSException {
-        // get user
-        UserRoles ur = null;
-        try{
-            ur = _authProvider.authenticate(participantToken);
-           
-            System.out.println("userid:"+ur.getUserID());            
-        }catch (Exception e ){
-            e.printStackTrace();
-            this._logger.error("authenticate user failed",e);
-            return null;
-        }
-        
-        // do query
-        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
-        try {
-                return dao.query(ur, selectClause, whereClause, orderByClause, maxTasks, taskIndexOffset);
-        } catch (Exception e) {
-            _logger.error("Query failed", e); 
-        } finally {
-            dao.close();
-        }
-        
-        
-        return null;
-    }
+ 
 
 	public void remove(String participantToken, String taskId)
 			throws TMSException {
@@ -272,6 +209,117 @@ public class TMSServer implements ITMSServer{
         
         
         return;
+		
+	}
+	
+	/*****************************************
+	 *           Query operation
+	 *****************************************/
+	
+	
+	   public List<Task> query(String participantToken, String selectClause, String whereClause, String orderByClause, int maxTasks, int taskIndexOffset) throws TMSException {
+	        // get user
+	        UserRoles ur = null;
+	        try{
+	            ur = _authProvider.authenticate(participantToken);
+	           
+	            System.out.println("userid:"+ur.getUserID());            
+	        }catch (Exception e ){
+	            e.printStackTrace();
+	            this._logger.error("authenticate user failed",e);
+	            return null;
+	        }
+	        
+	        // do query
+	        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+	        try {
+	                return dao.query(ur, selectClause, whereClause, orderByClause, maxTasks, taskIndexOffset);
+	        } catch (Exception e) {
+	            _logger.error("Query failed", e); 
+	        } finally {
+	            dao.close();
+	        }
+	        
+	        
+	        return null;
+	    }
+	   
+	   
+	   public List<Task> getMyTasks(String participantToken, String taskType, String genericHumanRole, String workQueue, TStatus.Enum[] statusList, String whereClause, String createdOnClause, int maxTasks) throws TMSException{
+	        System.out.println("tmsserver->getTasks");
+	        UserRoles ur = null;
+	        try{
+	            ur = _authProvider.authenticate(participantToken);
+	            System.out.println("userid:"+ur.getUserID());            
+	        }catch (Exception e ){
+	            e.printStackTrace();
+	            this._logger.error("authenticate user failed",e);
+	            return null;
+	        }
+	        
+	        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+	        try {
+	            List<TaskStatus> statuses = new ArrayList<TaskStatus>();
+	        	for (int i = 0; i< statusList.length;i++){
+	        		statuses.add(TaskStatus.valueOf(statusList[i].toString())); 
+	        	}
+	        	System.out.println("==>call dao.getMyTasks");
+	        	List<Task> tasks = dao.getMyTasks(ur, taskType, genericHumanRole, workQueue, statuses, whereClause, createdOnClause, maxTasks);
+	           _logger.info("return " + tasks.size()+ " tasks.");
+	           
+	           return tasks;
+	        	
+	         //   if (_logger.isDebugEnabled())
+	         //       _logger.debug("Workflow Task " + task + " was created");
+	            // TODO : Use credentials.getUserID() :vb
+	        } catch (Exception e) {
+	            _logger.error("Cannot create Workflow Tasks", e); 
+	            System.out.println("exception raised,"+e.getMessage());
+	            // TODO :
+	            // TaskIDConflictException
+	            // must be rethrowed :vb
+	        } finally {
+	            dao.close();
+	        }
+	        
+	        return null;
+	    
+	    }
+
+	public void Complete(String participantToken, String identifier,
+			XmlObject xmlObject) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void Fail(String participantToken, String identifier,
+			String faultName, XmlObject faultData) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void Release(String participantToken, String identifier) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void Resume(String participantToken, String identifier) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void Start(String participantToken, String identifier) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void Stop(String participantToken, String identifier) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void claim(String participantToken, String identifier) {
+		// TODO Auto-generated method stub
 		
 	}
  

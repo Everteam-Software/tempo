@@ -30,7 +30,6 @@ import org.intalio.tempo.workflow.tms.UnavailableAttachmentException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.intalio.tempo.workflow.tms.server.TMSConstants;
 import org.intalio.tempo.workflow.util.xml.InvalidInputFormatException;
-import org.intalio.tempo.workflow.util.xml.OMMarshaller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,21 +37,49 @@ import com.intalio.wsHT.api.TStatus;
 import com.intalio.wsHT.api.TTask;
 import com.intalio.wsHT.api.TTaskQueryResultRow;
 import com.intalio.wsHT.api.TTaskQueryResultSet;
+import com.intalio.wsHT.api.xsd.ClaimDocument;
+import com.intalio.wsHT.api.xsd.ClaimResponseDocument;
+import com.intalio.wsHT.api.xsd.CompleteDocument;
+import com.intalio.wsHT.api.xsd.CompleteResponseDocument;
 import com.intalio.wsHT.api.xsd.CreateDocument;
 import com.intalio.wsHT.api.xsd.CreateResponseDocument;
+import com.intalio.wsHT.api.xsd.FailDocument;
+import com.intalio.wsHT.api.xsd.FailResponseDocument;
 import com.intalio.wsHT.api.xsd.GetMyTasksDocument;
 import com.intalio.wsHT.api.xsd.GetMyTasksResponseDocument;
 import com.intalio.wsHT.api.xsd.QueryDocument;
 import com.intalio.wsHT.api.xsd.QueryResponseDocument;
+import com.intalio.wsHT.api.xsd.ReleaseDocument;
+import com.intalio.wsHT.api.xsd.ReleaseResponseDocument;
 import com.intalio.wsHT.api.xsd.RemoveDocument;
 import com.intalio.wsHT.api.xsd.RemoveResponseDocument;
+import com.intalio.wsHT.api.xsd.ResumeDocument;
+import com.intalio.wsHT.api.xsd.ResumeResponseDocument;
+import com.intalio.wsHT.api.xsd.StartDocument;
+import com.intalio.wsHT.api.xsd.StartResponseDocument;
+import com.intalio.wsHT.api.xsd.StopDocument;
+import com.intalio.wsHT.api.xsd.StopResponseDocument;
+import com.intalio.wsHT.api.xsd.ClaimDocument.Claim;
+import com.intalio.wsHT.api.xsd.ClaimResponseDocument.ClaimResponse;
+import com.intalio.wsHT.api.xsd.CompleteDocument.Complete;
+import com.intalio.wsHT.api.xsd.CompleteResponseDocument.CompleteResponse;
 import com.intalio.wsHT.api.xsd.CreateDocument.Create;
+import com.intalio.wsHT.api.xsd.FailDocument.Fail;
+import com.intalio.wsHT.api.xsd.FailResponseDocument.FailResponse;
 import com.intalio.wsHT.api.xsd.GetMyTasksDocument.GetMyTasks;
 import com.intalio.wsHT.api.xsd.GetMyTasksResponseDocument.GetMyTasksResponse;
 import com.intalio.wsHT.api.xsd.QueryDocument.Query;
 import com.intalio.wsHT.api.xsd.QueryResponseDocument.QueryResponse;
+import com.intalio.wsHT.api.xsd.ReleaseDocument.Release;
+import com.intalio.wsHT.api.xsd.ReleaseResponseDocument.ReleaseResponse;
 import com.intalio.wsHT.api.xsd.RemoveDocument.Remove;
 import com.intalio.wsHT.api.xsd.RemoveResponseDocument.RemoveResponse;
+import com.intalio.wsHT.api.xsd.ResumeDocument.Resume;
+import com.intalio.wsHT.api.xsd.ResumeResponseDocument.ResumeResponse;
+import com.intalio.wsHT.api.xsd.StartDocument.Start;
+import com.intalio.wsHT.api.xsd.StartResponseDocument.StartResponse;
+import com.intalio.wsHT.api.xsd.StopDocument.Stop;
+import com.intalio.wsHT.api.xsd.StopResponseDocument.StopResponse;
 import com.intalio.wsHT.protocol.THumanTaskContext;
 
 public class TMSRequestProcessor {
@@ -61,31 +88,34 @@ public class TMSRequestProcessor {
 	private ITMSServer _server;
 	private static final OMFactory OM_FACTORY = OMAbstractFactory
 			.getOMFactory();
-	public static ThreadLocal<String> participantToken = new ThreadLocal<String>();
+//	public static ThreadLocal<String> participantToken = new ThreadLocal<String>();
+
+//	/**
+//	 * dumy function
+//	 * 
+//	 * @return
+//	 */
+//	public OMElement marshallResponse() {
+//		return new TMSResponseMarshaller(OM_FACTORY) {
+//			public OMElement createOkResponse() {
+//				OMElement okResponse = createElement("okResponse");
+//				return okResponse;
+//			}
+//		}.createOkResponse();
+//	}
+
+//	public OMElement createOkResponse() {
+//		return new TMSResponseMarshaller(OM_FACTORY) {
+//			public OMElement createOkResponse() {
+//				OMElement okResponse = createElement("okResponse");
+//				return okResponse;
+//			}
+//		}.createOkResponse();
+//	}
 
 	/**
-	 * dumy function
-	 * 
-	 * @return
+	 * @TODO need to be improved
 	 */
-	public OMElement marshallResponse() {
-		return new TMSResponseMarshaller(OM_FACTORY) {
-			public OMElement createOkResponse() {
-				OMElement okResponse = createElement("okResponse");
-				return okResponse;
-			}
-		}.createOkResponse();
-	}
-
-	public OMElement createOkResponse() {
-		return new TMSResponseMarshaller(OM_FACTORY) {
-			public OMElement createOkResponse() {
-				OMElement okResponse = createElement("okResponse");
-				return okResponse;
-			}
-		}.createOkResponse();
-	}
-
 	private AxisFault makeFault(Exception e) {
 		if (e instanceof TMSException) {
 			if (_logger.isDebugEnabled())
@@ -167,9 +197,80 @@ public class TMSRequestProcessor {
 		return null;
 	}
 
-	// /////////////////////////
-	// operations
-	// /////////////////////////
+	private void marshalTask(Task t, TTask tt) {
+		if (t == null || tt == null)
+			return;
+		if (t.getActivationTime() != null) {
+			Calendar at = Calendar.getInstance();
+			at.setTime(t.getActivationTime());
+			tt.setActivationTime(at);
+		}
+		tt.setActualOwner(t.getActualOwner());
+		System.out.println("created by:" + t.getCreatedBy());
+		tt.setCreatedBy(t.getCreatedBy());
+		if (t.getCreatedOn() != null) {
+			Calendar createdOn = Calendar.getInstance();
+			createdOn.setTime(t.getCreatedOn());
+			tt.setCreatedOn(createdOn);
+		}
+		tt.setId(t.getId());
+		System.out.println("status:" + t.getStatus());
+		if (t.getStatus() != null)
+			tt.setStatus(TStatus.Enum.forString(t.getStatus().toString()));
+		tt.setTaskInitiator(t.getTaskInitiator());
+		if (t.getTaskType() != null)
+			tt.setTaskType(t.getTaskType().toString());
+		// _logger.info("task " + i + ": " + tt.xmlText());
+		// System.out.println("task: " + tt.xmlText());
+
+	}
+
+//	private abstract class TMSResponseMarshaller extends OMMarshaller {
+//
+//		public TMSResponseMarshaller(OMFactory omFactory) {
+//			super(
+//					omFactory,
+//					omFactory
+//							.createOMNamespace(
+//									"http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/",
+//									"tmsb4p"));
+//		}
+//	}
+
+	private OMElement convertXML(XmlObject xmlObject) {
+		if (xmlObject == null)
+			return null;
+		HashMap<String, String> suggestedPrefixes = new HashMap<String, String>();
+		suggestedPrefixes.put(TaskXMLConstants.TASK_NAMESPACE,
+				TaskXMLConstants.TASK_NAMESPACE_PREFIX);
+		XmlOptions opts = new XmlOptions();
+		opts.setSaveSuggestedPrefixes(suggestedPrefixes);
+		OMElement dm = null;
+		InputStream is = xmlObject.newInputStream(opts);
+		StAXOMBuilder builder;
+		try {
+			builder = new StAXOMBuilder(is);
+			dm = builder.getDocumentElement();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		return dm;
+	}
+	
+	/************************************************************************
+	 *          Main Participant operation (most will change task status)
+	 * Create/remove/start/stop/complete/fail/skip/forward/delegate/resume/
+	 * release/suspend/suspendUtil
+	 ************************************************************************/
+	
+
+	/**
+	 * Create a Task
+	 * @param requestElement
+	 * @return
+	 * @throws AxisFault
+	 * @author JackieJu
+	 */
 	public OMElement create(OMElement requestElement) throws AxisFault {
 
 		System.out.print("=======created\n");
@@ -180,9 +281,6 @@ public class TMSRequestProcessor {
 		if (participantToken == null)
 			throw makeFault(new Exception(
 					"Cannot get participant toke in soap header"));
-
-		// Log.setFile("d:\\tempo.log");
-		// Log.log("enter");
 
 		try {
 			// unmarshal request
@@ -227,48 +325,14 @@ public class TMSRequestProcessor {
 
 	}
 
-	public OMElement query(OMElement requestElement) throws AxisFault {
-		System.out.print("=======query\n");
-		// check participant token
-		String participantToken = getParticipantToken();
-		if (participantToken == null)
-			throw makeFault(new Exception(
-					"Cannot get participant toke in soap header"));
-
-		try {
-			// unmarshal request
-			Query req = QueryDocument.Factory.parse(
-					requestElement.getXMLStreamReader()).getQuery();
-
-			// call server
-			List<Task> ret = _server.query(participantToken, req
-					.getSelectClause(), req.getWhereClause(), req
-					.getOrderByClause(), req.getMaxTasks(), req
-					.getTaskIndexOffset());
-
-			// marshal response
-			QueryResponseDocument resp = QueryResponseDocument.Factory
-					.newInstance();
-			for (int i = 0; i < ret.size(); i++) {
-				Task r = ret.get(i);
-				QueryResponse qr = resp.addNewQueryResponse();
-				TTaskQueryResultSet result = qr.addNewQuery();
-				TTaskQueryResultRow row = result.addNewRow();
-				Calendar ca = Calendar.getInstance();
-				ca.setTime(r.getActivationTime());
-				row.addActivationTime(ca);
-				row.addActualOwner(r.getActualOwner());
-				// ? row.addCompleteByExists(r.)
-				// ...
-
-			}
-			return XmlTooling.convertDocument(resp);
-		} catch (Exception e) {
-			throw makeFault(e);
-		}
-
-	}
-
+	
+	/**
+	 * Remove a Task
+	 * @param requestElement
+	 * @return
+	 * @throws AxisFault
+	 * @author Jackie Ju
+	 */
 	public OMElement remove(OMElement requestElement) throws AxisFault {
 		RemoveResponseDocument retDoc = null;
 		try {
@@ -296,35 +360,302 @@ public class TMSRequestProcessor {
 			
 		return this.convertXML(retDoc);
 	}
-
-	private void marshalTask(Task t, TTask tt) {
-		if (t == null || tt == null)
-			return;
-		if (t.getActivationTime() != null) {
-			Calendar at = Calendar.getInstance();
-			at.setTime(t.getActivationTime());
-			tt.setActivationTime(at);
+	
+	/**
+	 * Claim responsibility for a task, i.e. set the task to status Reserved 
+	 * In task identifier
+	 * @param requestElement 
+	 * task identifier
+	 * @return
+	 * @throws AxisFault
+	 * @author JackieJu
+	 */
+	public OMElement claim(OMElement requestElement) throws AxisFault {
+		ClaimResponseDocument retDoc = null;
+		try {
+			// check participant token
+			String participantToken = getParticipantToken();
+			if (participantToken == null)
+				throw makeFault(new Exception(
+						"Cannot get participant toke in soap header"));
+			
+			// unmarshal request
+			ClaimDocument reqDoc = ClaimDocument.Factory.parse(requestElement.getXMLStreamReader());
+			Claim req = reqDoc.getClaim();
+			
+			// call TMSServer to process request
+			this._server.claim(participantToken, req.getIdentifier());
+			
+			// marshal response
+		    retDoc = ClaimResponseDocument.Factory.newInstance();
+			ClaimResponse ret = retDoc.addNewClaimResponse();
+			
+		}catch(Exception e){
+			
+			throw makeFault(e);
 		}
-		tt.setActualOwner(t.getActualOwner());
-		System.out.println("created by:" + t.getCreatedBy());
-		tt.setCreatedBy(t.getCreatedBy());
-		if (t.getCreatedOn() != null) {
-			Calendar createdOn = Calendar.getInstance();
-			createdOn.setTime(t.getCreatedOn());
-			tt.setCreatedOn(createdOn);
+			
+		return this.convertXML(retDoc);
+	}
+	
+	/**
+	 * Start the execution of the task, i.e. set the task to status InProgress. 
+	 * In task identifier 
+	 * @param requestElement
+	 * @return
+	 * @throws AxisFault
+	 */
+	public OMElement start(OMElement requestElement) throws AxisFault {
+		StartResponseDocument retDoc = null;
+		try {
+			// check participant token
+			String participantToken = getParticipantToken();
+			if (participantToken == null)
+				throw makeFault(new Exception(
+						"Cannot get participant toke in soap header"));
+			
+			// unmarshal request
+			StartDocument reqDoc = StartDocument.Factory.parse(requestElement.getXMLStreamReader());
+			Start req = reqDoc.getStart();
+			
+			// call TMSServer to process request
+			this._server.Start(participantToken, req.getIdentifier());
+			
+			// marshal response
+		    retDoc = StartResponseDocument.Factory.newInstance();
+			StartResponse ret = retDoc.addNewStartResponse();
+			
+		}catch(Exception e){
+			
+			throw makeFault(e);
 		}
-		tt.setId(t.getId());
-		System.out.println("status:" + t.getStatus());
-		if (t.getStatus() != null)
-			tt.setStatus(TStatus.Enum.forString(t.getStatus().toString()));
-		tt.setTaskInitiator(t.getTaskInitiator());
-		if (t.getTaskType() != null)
-			tt.setTaskType(t.getTaskType().toString());
-		// _logger.info("task " + i + ": " + tt.xmlText());
-		// System.out.println("task: " + tt.xmlText());
-
+			
+		return this.convertXML(retDoc);
+	}
+	
+	/**
+	 * Cancel/stop the processing of the task. The task returns to the Reserved state.
+	 * In task identifier 
+	 * Out void
+	 * @param requestElement
+	 * @return
+	 * @throws AxisFault
+	 * @author Jackie Ju
+	 */
+	public OMElement stop(OMElement requestElement) throws AxisFault {
+		StopResponseDocument retDoc = null;
+		try {
+			// check participant token
+			String participantToken = getParticipantToken();
+			if (participantToken == null)
+				throw makeFault(new Exception(
+						"Cannot get participant toke in soap header"));
+			
+			// unmarshal request
+			StopDocument reqDoc = StopDocument.Factory.parse(requestElement.getXMLStreamReader());
+			Stop req = reqDoc.getStop();
+			
+			// call TMSServer to process request
+			this._server.Stop(participantToken, req.getIdentifier());
+			
+			// marshal response
+		    retDoc = StopResponseDocument.Factory.newInstance();
+			StopResponse ret = retDoc.addNewStopResponse();
+			
+		}catch(Exception e){
+			
+			throw makeFault(e);
+		}
+			
+		return this.convertXML(retDoc);
+	}
+	
+	/**
+	 * Release the task, i.e. set the task back to status Ready.  
+	 * In ¥ task identifier 
+	 * @param requestElement
+	 * @return
+	 * @throws AxisFault
+	 * @author juweihua
+	 */
+	public OMElement release(OMElement requestElement) throws AxisFault {
+		ReleaseResponseDocument retDoc = null;
+		try {
+			// check participant token
+			String participantToken = getParticipantToken();
+			if (participantToken == null)
+				throw makeFault(new Exception(
+						"Cannot get participant toke in soap header"));
+			
+			// unmarshal request
+			ReleaseDocument reqDoc = ReleaseDocument.Factory.parse(requestElement.getXMLStreamReader());
+			Release req = reqDoc.getRelease();
+			
+			// call TMSServer to process request
+			this._server.Release(participantToken, req.getIdentifier());
+			
+			// marshal response
+		    retDoc = ReleaseResponseDocument.Factory.newInstance();
+			ReleaseResponse ret = retDoc.addNewReleaseResponse();
+			
+		}catch(Exception e){
+			
+			throw makeFault(e);
+		}
+		return this.convertXML(retDoc);
+	}
+	
+	/**
+	 * 	Execution of the task finished successfully. If no 
+		output data is set the operation returns illegalArgumentFault. 
+		In 
+		¥ task identifier 
+		¥ output data of task 
+		Out 
+		¥ void  
+		Authorization
+		¥ Actual Owner 
+	 * @param requestElement
+	 * @return
+	 * @throws AxisFault
+	 */
+	public OMElement complete(OMElement requestElement) throws AxisFault {
+		CompleteResponseDocument retDoc = null;
+		try {
+			// check participant token
+			String participantToken = getParticipantToken();
+			if (participantToken == null)
+				throw makeFault(new Exception(
+						"Cannot get participant toke in soap header"));
+			
+			// unmarshal request
+			CompleteDocument reqDoc = CompleteDocument.Factory.parse(requestElement.getXMLStreamReader());
+			Complete req = reqDoc.getComplete();
+			
+			// call TMSServer to process request
+			this._server.Complete(participantToken, req.getIdentifier(), req.getTaskData());
+			
+			// marshal response
+		    retDoc = CompleteResponseDocument.Factory.newInstance();
+			CompleteResponse ret = retDoc.addNewCompleteResponse();
+			
+		}catch(Exception e){
+			
+			throw makeFault(e);
+		}
+		return this.convertXML(retDoc);
 	}
 
+	/**
+	 * Actual owner completes the execution of the task raising a fault.  
+		In 
+		¥ task identifier 
+		¥ fault name 
+		¥ fault data 
+		Out 
+		¥ void 
+		Authorization
+		¥ Actual Owner 
+		The fault illegalOperationFault	is returned if the task interface defines no 
+		faults. 
+		If fault name or fault data is not set the operation returns illegalArgumentFault.
+	 * @param requestElement
+	 * @return
+	 * @throws AxisFault
+	 */
+	public OMElement fail(OMElement requestElement) throws AxisFault {
+		FailResponseDocument retDoc = null;
+		try {
+			// check participant token
+			String participantToken = getParticipantToken();
+			if (participantToken == null)
+				throw makeFault(new Exception(
+						"Cannot get participant toke in soap header"));
+			
+			// unmarshal request
+			FailDocument reqDoc = FailDocument.Factory.parse(requestElement.getXMLStreamReader());
+			Fail req = reqDoc.getFail();
+			
+			// call TMSServer to process request
+			this._server.Fail(participantToken, req.getIdentifier(), req.getFaultName(), req.getFaultData());
+			
+			// marshal response
+		    retDoc = FailResponseDocument.Factory.newInstance();
+			FailResponse ret = retDoc.addNewFailResponse();
+			
+		}catch(Exception e){
+			
+			throw makeFault(e);
+		}
+		return this.convertXML(retDoc);
+	}
+	
+	
+	/**
+	 * Resume a suspended task.  
+	In 
+	¥ task identifier 
+	Out 
+	¥ void 
+ 
+ 	Authorization
+		Potential Owners (state Ready) 
+		Actual Owner  
+		Business 
+		Administrator
+	 * @param requestElement
+	 * @return
+	 * @throws AxisFault
+	 */
+	public OMElement resume(OMElement requestElement) throws AxisFault {
+		ResumeResponseDocument retDoc = null;
+		try {
+			// check participant token
+			String participantToken = getParticipantToken();
+			if (participantToken == null)
+				throw makeFault(new Exception(
+						"Cannot get participant toke in soap header"));
+			
+			// unmarshal request
+			ResumeDocument reqDoc = ResumeDocument.Factory.parse(requestElement.getXMLStreamReader());
+			Resume req = reqDoc.getResume();
+			
+			// call TMSServer to process request
+			this._server.Resume(participantToken, req.getIdentifier());
+			
+			// marshal response
+		    retDoc = ResumeResponseDocument.Factory.newInstance();
+			ResumeResponse ret = retDoc.addNewResumeResponse();
+			
+		}catch(Exception e){
+			
+			throw makeFault(e);
+		}
+		return this.convertXML(retDoc);
+	}
+	
+	
+	
+	/***********************************************************************
+	 * Simple Participant operation (most will only change task property)
+	 * getXXX/setXXX
+	 ************************************************************************/
+	
+	
+	
+	
+	/*****************************************
+	 *           Query operation
+	 *****************************************/
+	
+	
+	/**
+	 * Query tasks created/assigned/potential assigned to login user
+	 * @param requestElement
+	 * @return
+	 * @throws AxisFault
+	 * @author Jackie Ju, Michael Zhu
+	 */
 	public OMElement getMyTasks(OMElement requestElement) throws AxisFault {
 		try {
 			// check participant token
@@ -385,44 +716,55 @@ public class TMSRequestProcessor {
 		}
 
 	}
-
+	
 	/**
-	 * @param args
+	 * advanced query
+	 * @param requestElement
+	 * @return
+	 * @throws AxisFault
+	 * @author Jackie Ju, Michael Zhu
 	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+	public OMElement query(OMElement requestElement) throws AxisFault {
+		System.out.print("=======query\n");
+		// check participant token
+		String participantToken = getParticipantToken();
+		if (participantToken == null)
+			throw makeFault(new Exception(
+					"Cannot get participant toke in soap header"));
 
-	}
-
-	private abstract class TMSResponseMarshaller extends OMMarshaller {
-
-		public TMSResponseMarshaller(OMFactory omFactory) {
-			super(
-					omFactory,
-					omFactory
-							.createOMNamespace(
-									"http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/",
-									"tmsb4p"));
-		}
-	}
-
-	private OMElement convertXML(XmlObject xmlObject) {
-		if (xmlObject == null)
-			return null;
-		HashMap<String, String> suggestedPrefixes = new HashMap<String, String>();
-		suggestedPrefixes.put(TaskXMLConstants.TASK_NAMESPACE,
-				TaskXMLConstants.TASK_NAMESPACE_PREFIX);
-		XmlOptions opts = new XmlOptions();
-		opts.setSaveSuggestedPrefixes(suggestedPrefixes);
-		OMElement dm = null;
-		InputStream is = xmlObject.newInputStream(opts);
-		StAXOMBuilder builder;
 		try {
-			builder = new StAXOMBuilder(is);
-			dm = builder.getDocumentElement();
+			// unmarshal request
+			Query req = QueryDocument.Factory.parse(
+					requestElement.getXMLStreamReader()).getQuery();
+
+			// call server
+			List<Task> ret = _server.query(participantToken, req
+					.getSelectClause(), req.getWhereClause(), req
+					.getOrderByClause(), req.getMaxTasks(), req
+					.getTaskIndexOffset());
+
+			// marshal response
+			QueryResponseDocument resp = QueryResponseDocument.Factory
+					.newInstance();
+			for (int i = 0; i < ret.size(); i++) {
+				Task r = ret.get(i);
+				QueryResponse qr = resp.addNewQueryResponse();
+				TTaskQueryResultSet result = qr.addNewQuery();
+				TTaskQueryResultRow row = result.addNewRow();
+				Calendar ca = Calendar.getInstance();
+				ca.setTime(r.getActivationTime());
+				row.addActivationTime(ca);
+				row.addActualOwner(r.getActualOwner());
+				// ? row.addCompleteByExists(r.)
+				// ...
+
+			}
+			return XmlTooling.convertDocument(resp);
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw makeFault(e);
 		}
-		return dm;
+
 	}
+
+
 }
