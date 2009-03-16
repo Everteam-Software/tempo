@@ -53,19 +53,17 @@
 		document.getElementById('taskform').onload = resizeIframe;
 		window.onresize = resizeIframe;
 		</script>
-
-			<%@ include file="/script/grids.jsp"%>
-			
-
-
+		
+		<%@ include file="/script/grids.jsp"%>
+		
 		</head>
 		<body width="95%" height="98%">
 			<%@ include file="/WEB-INF/jsp/siteHeader.jsp"%>
 						<div id="container">			
 							<ul id="tabnav">
-								<li><a href="#" id="tabTasks" title="<fmt:message key="com_intalio_bpms_workflow_tab_tasks"/>"><fmt:message key="com_intalio_bpms_workflow_tab_tasks"/></a></li>
-								<li><a href="#" id="tabNotif" title="<fmt:message key="com_intalio_bpms_workflow_tab_notifications"/>"><fmt:message key="com_intalio_bpms_workflow_tab_notifications"/></a></li>
-								<li><a href="#" id="tabPipa" title="<fmt:message key="com_intalio_bpms_workflow_tab_processes"/>"><fmt:message key="com_intalio_bpms_workflow_tab_processes"/></a></li>
+								<li><a href="#" id="tabTasks" title="com_intalio_bpms_workflow_tab_tasks"><fmt:message key="com_intalio_bpms_workflow_tab_tasks"/></a></li>
+								<li><a href="#" id="tabNotif" title="com_intalio_bpms_workflow_tab_notifications"><fmt:message key="com_intalio_bpms_workflow_tab_notifications"/></a></li>
+								<li><a href="#" id="tabPipa" title="com_intalio_bpms_workflow_tab_processes"><fmt:message key="com_intalio_bpms_workflow_tab_processes"/></a></li>
 								<li>
 									<div id="filterdiv" class="filtertext">
 										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -81,13 +79,13 @@
 					</div>
 
 					<div style="clear: both ; float:left; position:relative; top:0px">
-						<div class="hiddencontent" id="<fmt:message key="com_intalio_bpms_workflow_tab_tasks"/>">
+						<div class="hiddencontent" id="com_intalio_bpms_workflow_tab_tasks">
 						<table id="table1" style="display:none"></table>
 						</div>
-						<div class="hiddencontent" id="<fmt:message key="com_intalio_bpms_workflow_tab_notifications"/>">
+						<div class="hiddencontent" id="com_intalio_bpms_workflow_tab_notifications">
 						<table id="table2" style="display:none"></table>
 						</div>
-						<div class="hiddencontent" id="<fmt:message key="com_intalio_bpms_workflow_tab_processes"/>">
+						<div class="hiddencontent" id="com_intalio_bpms_workflow_tab_processes">
 						<table id="table3" style="display:none"></table>
 						</div>
 					</div>
