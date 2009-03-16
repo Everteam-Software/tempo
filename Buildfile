@@ -112,14 +112,6 @@ define "tempo" do
     package :war
   end
 
-  desc "Workflow Forms"
-  define "forms" do
-    define "AbsenceRequest" do
-      package(:zip).path("AbsenceRequest.pipa").include(_("src/main/pipa/*"))
-      package(:zip).path("AbsenceRequest.xform").include(_("src/main/xform/*"))
-    end
-  end
-
   desc "Security Framework"
   define "security" do
     compile.with CAS_CLIENT, DOM4J, CASTOR, LOG4J, SLF4J, SPRING[:core], XERCES, CAS_CLIENT, OPENSSO_CLIENT_SDK, SERVLET_API
