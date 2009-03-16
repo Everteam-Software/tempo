@@ -22,10 +22,12 @@
         
         //var para = p;
         var para = $("#content").val();
+        var t = $("#token").val();
      //   alert("para:" +para);
     	
         var op = {
-	            data:para,
+                    token: t,
+                    data:para,
                     onComplete: showResponse,
                     onFailure:showError,
                     update:'ajaxBack'
@@ -59,8 +61,10 @@
 		//alert(service.getBackData(requestXML));
 		    
 		if (error)
-		return;
+            return;
         $("#"+m+" #"+m+"_output").empty().append("Response<br/><pre><textArea id=outputtext rows=13 cols=55>"+requestText.responseText+"</textArea></pre>");
+        $('#content').remove();
+        
     }
 
 

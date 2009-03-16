@@ -59,16 +59,62 @@ $(document).ready(function(){
 <script type="text/javascript" src="ui.resizable.js"></script>
 <script type="text/javascript" src="ui.draggable.js"></script>
 <script>
+function Get_Cookie( check_name ) {
+	// first we'll split this cookie up into name/value pairs
+	// note: document.cookie only returns name=value, not the other components
+	var a_all_cookies = document.cookie.split( ';' );
+  //  alert("cookies:"+document.cookie);
+	var a_temp_cookie = '';
+	var cookie_name = '';
+	var cookie_value = '';
+	var b_cookie_found = false; // set boolean t/f default f
+
+	for ( i = 0; i < a_all_cookies.length; i++ )
+	{
+		// now we'll split apart each name=value pair
+		a_temp_cookie = a_all_cookies[i].split( '=' );
+
+
+		// and trim left/right whitespace while we're at it
+		cookie_name = a_temp_cookie[0].replace(/^\s+|\s+$/g, '');
+
+		// if the extracted name matches passed check_name
+		if ( cookie_name == check_name )
+		{
+			b_cookie_found = true;
+			// we need to handle case where cookie has no value but exists (no = sign, that is):
+			if ( a_temp_cookie.length > 1 )
+			{
+				cookie_value = unescape( a_temp_cookie[1].replace(/^\s+|\s+$/g, '') );
+			}
+			// note that in cases where cookie is initialized but no value, null is returned
+			return cookie_value;
+			break;
+		}
+		a_temp_cookie = null;
+		cookie_name = '';
+	}
+	if ( !b_cookie_found )
+	{
+		return null;
+	}
+}
+
 function test(str){
 $("#"+str).dialog("destroy").remove();
-var url_template = "/ui-fw/b4ptest/request/"+str+".xml";
+var url_template = "/ui-fw/b4ptest/request/"+str+".xml?r="+ Math.random();
 
 var op = {type:'GET',async: false,url:url_template,contentType:"text/xml; charset=utf-8"};
 //var wsdlAjax = new XHR(op).send(this.url + "?wsdl", null);	
 var contentAjax = $.ajax(op);					
 var content = contentAjax.responseText;			
+var token = Get_Cookie("singleLogin");
+//alert("token="+token);
+var html='<div id="'+str+'" class="flora" title="'+str+'" style="display:none;" ><div id="'+str+'_input" style="display:block;" ><span style="font-weight:500;">Request:</span><br/>Your Token:<br/><textArea id="token" rows=8 cols=70>'+token+'</textArea><br/><textArea id="content" rows=10 cols=70>'+content+'</textArea><br/><!--<button id="upload" onclick="alert(\'not supported\');" >read from file</button>--><button id="submit" onclick="callws(\''+str+'\', \'\');">submit</button></div><div id="'+str+'_output" style="display:none;"><img src="ajax_load.gif"/></div></div>';
+//var obj = $('#_request');
 
-var html='<div id="'+str+'" class="flora" title="'+str+'" style="display:none;" ><div id="'+str+'_input" style="display:block;" ><span style="font-weight:500;">Request:</span><br/><textArea id="content" rows=10 cols=52>'+content+'</textArea><br/><!--<button id="upload" onclick="alert(\'not supported\');" >read from file</button>--><button id="submit" onclick="callws(\''+str+'\', \'\');">submit</button></div><div id="'+str+'_output" style="display:none;"><img src="ajax_load.gif"/></div></div>';
+//alert(obj.get(0).innerHTML);
+//obj.get(0).innerHTML=html;
   // alert(html);
 //var obj = $("#"+str);
 var obj = $(html);
@@ -78,14 +124,16 @@ obj.css("display", "block");
 //$("#"+str+" #output").empty().append("<img src='ajax_load.gif'/>");
   obj.dialog({ 
       modal: true,  // 模态
-      width: 500,
-      height:309,
-      open:	function (Event, ui){alert("open");},
-      close:	function (Event, ui){alert("destroy");$(this).dialog("destroy").remove();;},
-      overlay: { opacity: 0.5, background: "black" }// 半透明背景
-     // title: "Dialog Title",   // 对话框标题
-   //   buttons: { "Close": function(){ $(this).dialog("destory").remove(); } }  // 对话框按钮
-});
+      width: 600,
+      height:390,
+   //   open:	function (Event, ui){alert("open");},
+     close:function (event1, ui1){alert("destroy");obj.remove();},
+      overlay: { opacity: 0.5, background: "black" },// 半透明背景
+      title: "b4p test"//,   // 对话框标题
+      //buttons: { "Close": function(){ $(this).dialog("destory").remove(); obj.remove();} }  // 对话框按钮
+}).bind('close', function (e, a){alert("destroy");obj.remove();});;
+obj.bind('close', function (e, a){alert("destroy");obj.remove();});
+
 }
 </script>
 
@@ -95,7 +143,9 @@ obj.css("display", "block");
 
 </head>
 <body style="font-size:10pt;color:#112222;font-family:"Trebuchet MS",Trebuchet,Verdana,Helvetica,Arial,sans-serif;>
-
+	<div id="_request" style="display:none" >
+		DDSS
+	</div>
 <!-- 定义Tabs头部 -->
 <div style="position:relative;z-index:99;border:0px dotted red;">
 <ul id="tabs" style="z-index:99;">

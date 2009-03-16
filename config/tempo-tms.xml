@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 	Copyright (c) 2005-2007 Intalio inc.
 
@@ -67,7 +67,7 @@
 			</map>
 		</constructor-arg>
 	</bean>
-	<bean id="tmsb4p.daoFactory" class="org.intalio.tempo.workflow.tms.server.daob4p.JPATaskDaoConnectionFactory">
+	<bean id="tmsb4p.daoFactory" class="org.intalio.tempo.workflow.tmsb4p.server.dao.JPATaskDaoConnectionFactory">
 		<constructor-arg>
 			<map>
 				<entry><key><value>openjpa.jdbc.SynchronizeMappings</value></key><value>buildSchema</value></entry>

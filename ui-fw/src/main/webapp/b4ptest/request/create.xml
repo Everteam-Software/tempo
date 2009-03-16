@@ -1,16 +1,22 @@
-﻿<create xmlns="http://www.intalio.com/WS-HT/api/xsd" xmlns:htpt="http://www.intalio.com/WS-HT/protocol">
+<create xmlns="http://www.intalio.com/WS-HT/api/xsd" xmlns:htpt="http://www.intalio.com/WS-HT/protocol">
 	<in>test</in>
 	<htpt:humanTaskContext>
 		<htpt:priority>1</htpt:priority>
-		<htpt:peopleAssignments></htpt:peopleAssignments>
-		<isSkipable></isSkipable>
+		<htpt:peopleAssignments> 
+             <htpt:potentialOwners>intalio/admin</htpt:potentialOwners>
+             <htpt:businessAdministrators>intalio/admin</htpt:businessAdministrators> 
+        </htpt:peopleAssignments>
+		<isSkipable>false</isSkipable>
 		<htpt:expirationTime></htpt:expirationTime>
 		<htpt:attachments></htpt:attachments>
 	</htpt:humanTaskContext>
 	<htpt:humanTaskContext>
-	<htpt:priority></htpt:priority>
-		<htpt:peopleAssignments></htpt:peopleAssignments>
-		<isSkipable></isSkipable>
+	    <htpt:priority>1</htpt:priority>
+		<htpt:peopleAssignments>
+            <htpt:taskInitiator>intalio/admin</htpt:taskInitiator>
+            <htpt:businessAdministrators>intalio/admin</htpt:businessAdministrators> 
+        </htpt:peopleAssignments>
+		<isSkipable>true</isSkipable>
 		<htpt:expirationTime></htpt:expirationTime>
 		<htpt:attachments></htpt:attachments>
 	</htpt:humanTaskContext>

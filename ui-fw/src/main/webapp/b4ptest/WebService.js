@@ -1,5 +1,6 @@
-﻿
+
 var WSDLS = {};
+
 
 function WebService(URL1, method1, options1){
 	
@@ -17,7 +18,7 @@ function WebService(URL1, method1, options1){
 		
 		WebService.prototype.request=function()
 		{
-
+        //alert("content="+this.options.data);
 		var wsdl = WSDLS[this.url];
 		//alert("wsdl="+wsdl);
 		if(!wsdl) 
@@ -28,7 +29,7 @@ function WebService(URL1, method1, options1){
 			wsdl = wsdlAjax.responseXML;	
 			WSDLS[this.url] = wsdl;
 		}
-	
+       // alert("content2="+this.options.data);	
 		//alert("wsdl="+wsdl.responseText+","+wsdl.statusText);
 		this.setSoap(wsdl);
 		//alert("setSoap leave");
@@ -36,7 +37,7 @@ function WebService(URL1, method1, options1){
 		
 		WebService.prototype.setSoap=function(wsdl)
 		{
-			
+			//Get_Cookie("afadsf");
 			//var paraXML = this.getParaXML(wsdl);
 		//alert(paraXML);
 		var ns = (wsdl.documentElement.attributes["targetNamespace"] + "" == "undefined") ? wsdl.documentElement.attributes.getNamedItem("targetNamespace").nodeValue : wsdl.documentElement.attributes["targetNamespace"].value;
@@ -46,7 +47,7 @@ function WebService(URL1, method1, options1){
 				"xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" " +
 				"xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" " +
 				"xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">" +
-				"<soap:Header><participantToken>VE9LRU4mJnVzZXI9PWFkbWluJiZpc3N1ZWQ9PTExODA0NzY2NjUzOTMmJnJvbGVzPT1pbnRhbGlvXHByb2Nlc3NhZG1pbmlzdHJhdG9yLGV4YW1wbGVzXGVtcGxveWVlLGludGFsaW9ccHJvY2Vzc21hbmFnZXIsZXhhbXBsZXNcbWFuYWdlciYmZnVsbE5hbWU9PUFkbWluaW5pc3RyYXRvciYmZW1haWw9PWFkbWluQGV4YW1wbGUuY29tJiZub25jZT09NDMxNjAwNTE5NDM5MTk1MDMzMyYmdGltZXN0YW1wPT0xMTgwNDc2NjY1Mzk1JiZkaWdlc3Q9PTVmM1dQdDBXOEp2UlpRM2gyblJ6UkRrenRwTT0mJiYmVE9LRU4</participantToken></soap:Header>"+
+				"<soap:Header><participantToken>"+this.options.token+"</participantToken></soap:Header>"+
 				"<soap:Body>" +
 //				"<" + this.method + " xmlns=\"" + ns + "\">" +
 //					  this.options.data +

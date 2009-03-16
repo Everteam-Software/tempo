@@ -1,6 +1,7 @@
 package org.intalio.tempo.workflow.tmsb4p.server;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.axis2.AxisFault;
@@ -11,6 +12,7 @@ import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.TaskState;
 import org.intalio.tempo.workflow.taskb4p.Attachment;
 import org.intalio.tempo.workflow.taskb4p.Task;
+import org.intalio.tempo.workflow.taskb4p.TaskStatus;
 import org.intalio.tempo.workflow.tms.TMSException;
 import org.intalio.tempo.workflow.tms.server.permissions.TaskPermissions;
 import org.intalio.tempo.workflow.tmsb4p.server.dao.ITaskDAOConnection;
@@ -73,7 +75,8 @@ public class TMSServer implements ITMSServer{
         System.out.println("tmsserver-> create task");
         try{
             UserRoles ur = _authProvider.authenticate(participantToken);
-            System.out.println("userid:"+ur.getUserID());            
+            System.out.println("userid:"+ur.getUserID());   
+        	task.setCreatedBy(ur.getUserID());
         }catch (Exception e ){
             e.printStackTrace();
         }
@@ -81,7 +84,7 @@ public class TMSServer implements ITMSServer{
         // TODO check if this user in task initialtor
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         try {
-       
+        	
             dao.createTask(task);
             dao.commit();
             if (_logger.isDebugEnabled())
@@ -179,8 +182,9 @@ public class TMSServer implements ITMSServer{
 
     public List<Task> getMyTasks(String participantToken, String taskType, String genericHumanRole, String workQueue, TStatus.Enum[] statusList, String whereClause, String createdOnClause, int maxTasks) throws TMSException{
         System.out.println("tmsserver->getTasks");
+        UserRoles ur = null;
         try{
-            UserRoles ur = _authProvider.authenticate(participantToken);
+            ur = _authProvider.authenticate(participantToken);
             System.out.println("userid:"+ur.getUserID());            
         }catch (Exception e ){
             e.printStackTrace();
@@ -188,13 +192,23 @@ public class TMSServer implements ITMSServer{
         
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         try {
-           // dao.getMyTasks());
+            List<TaskStatus> statuses = new ArrayList<TaskStatus>();
+        	for (int i = 0; i< statusList.length;i++){
+        		statuses.add(TaskStatus.valueOf(statusList[i].toString())); 
+        	}
+        	System.out.println("==>call dao.getMyTasks");
+        	List<Task> tasks = dao.getMyTasks(ur, taskType, genericHumanRole, workQueue, statuses, whereClause, createdOnClause, maxTasks);
+           _logger.info("return " + tasks.size()+ " tasks.");
            
+           return tasks;
+        	
          //   if (_logger.isDebugEnabled())
          //       _logger.debug("Workflow Task " + task + " was created");
             // TODO : Use credentials.getUserID() :vb
         } catch (Exception e) {
-            _logger.error("Cannot create Workflow Tasks", e); // TODO :
+            _logger.error("Cannot create Workflow Tasks", e); 
+            System.out.println("exception raised,"+e.getMessage());
+            // TODO :
             // TaskIDConflictException
             // must be rethrowed :vb
         } finally {

@@ -24,6 +24,8 @@ import org.intalio.tempo.workflow.taskb4p.TaskType;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 
+//import com.ibm.db2.jcc.a.l;
+
 public class JPATaskDaoConnection extends AbstractJPAConnection implements
         ITaskDAOConnection {
 
@@ -192,7 +194,7 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements
     public List<Task> getMyTasks(UserRoles ur, String taskType, String genericHumanRole, String workQueue, List<TaskStatus> statusList, String whereClause,
                     String createdOnClause, int maxTasks) {
         SQLStatement statement = new SQLStatement();
-
+        System.out.println("====>getMyTasks");
         // for the task self
         statement.addSelectClause("t");
         statement.addFromClause("Task t");
@@ -200,10 +202,11 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements
         // for the generic roles
         List<String> queryGenRoleTypes = this.parseString(genericHumanRole, ",");
         if (queryGenRoleTypes != null) {
+        	 System.out.println("====>1");
             // check the work queue first.
             if (workQueue != null) {
                 List<String> resultRoles = new ArrayList<String>();
-
+                System.out.println("====>2");
                 // check whether the user belongs the work queue, if not, empty
                 // result returned.
                 AuthIdentifierSet urRoles = ur.getAssignedRoles();
@@ -217,15 +220,19 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements
                     }
                 }
 
-                if (resultRoles.isEmpty()) {
-                    return Collections.EMPTY_LIST;
-                }
+                // if no workqueue specified, should retrieve personal tasks
+//                if (resultRoles.isEmpty()) {
+//                	System.out.println("====>3");
+//                    return Collections.EMPTY_LIST;
+//                }
                 
-                populateSQLWithRole(queryGenRoleTypes, resultRoles, statement);
+ //               populateSQLWithRole(queryGenRoleTypes, resultRoles, statement);
             } else {
+            	System.out.println("====>4");
                 populateSQLWithUser(queryGenRoleTypes, ur.getUserID(), statement);
             }
         }
+        System.out.println("====>5");
         
         // for the task type
         if (taskType != null) {
@@ -239,15 +246,20 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements
                 statement.addParaValue(20, TaskType.TASK);
             }
         }
-        
+        System.out.println("====>6");
         // for the status
         if ((statusList != null) && (statusList.size() > 0)) {
             statement.addWhereClause("t.status in (?30)");
             statement.addParaValue(30, statusList);
+            System.out.println("statuslist="+statusList);
         }
         
+        if (createdOnClause != null && createdOnClause.length()>0){
+        	statement.addWhereClause("t.createdOn " + createdOnClause);
+        }
+        System.out.println("====>7");
         String sql = statement.toString();
-        System.out.print(sql);
+        System.out.println(sql);
         Query query = this.entityManager.createQuery(sql);
         
         if (statement.getParaValues() != null) {
@@ -261,6 +273,7 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements
         // for the query size
         query.setFirstResult(0);
         query.setMaxResults(maxTasks);
+        
 
         return query.getResultList();
     }
