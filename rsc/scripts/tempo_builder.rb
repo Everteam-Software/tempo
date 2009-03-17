@@ -128,5 +128,3 @@ end
 
 tb = TempoBuilder.new
 tb.build BUILD_CONFIG
-
-
