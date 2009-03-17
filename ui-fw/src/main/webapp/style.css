@@ -15,7 +15,6 @@ body {
 	font-family: Verdana; 
 	background-color: #FFFFFF; 
 	color: #333333;	
-	direction: lrt;
 }
 
 .siteHeader {
@@ -149,15 +148,15 @@ table {
 
 .tasks {
 	width:95%;
-	position: center;
-	cellspacing:0px;
-	cellpadding:0px;
-	font: Arial Black;
+	text-align: center;
+/*	cellspacing:0px;*/
+/*	cellpadding:0px;*/
+	font-family: "Arial Black";
 	font-size: 9px;
 }
 .tasks a {
-	font: Arial Black;
-	font-size: 12px;
+	font-family: "Arial Black";
+	font-size:  12px;
 }
 .tasks .odd {
 	background:#f1f5fa;
@@ -165,7 +164,7 @@ table {
 
 
 .line {
-	font: Arial Black;
+	font-family: "Arial Black";
 	font-size: 8px;
 	height: 30%;
 }
@@ -180,7 +179,7 @@ table {
 }
 
 #user_logged {
-	font-family: Arial Black;
+	font-family: "Arial Black";
 }
 
 #taskform {
@@ -195,7 +194,7 @@ table {
 #taskform_bottom {
 	width:100%;
 	background: url(images/tab_bottom.gif) repeat-x bottom;
-	position: bottom;
+	vertical-align:bottom;
 }
 
 #footer {
@@ -210,7 +209,7 @@ table {
 
 .pagedisplay {
 	height: 15px;
-	font: 8px;	
+	font-size: 8px;	
 	width: 50px;
 }
 

@@ -50,7 +50,6 @@
 		    document.getElementById('taskform').style.height = height +"px";
 
 		};
-		document.getElementById('taskform').onload = resizeIframe;
 		window.onresize = resizeIframe;
 		</script>
 		
@@ -58,6 +57,8 @@
 		
 		</head>
 		<body width="95%" height="98%">
+		    
+		    
 			<%@ include file="/WEB-INF/jsp/siteHeader.jsp"%>
 						<div id="container">			
 							<ul id="tabnav">
@@ -96,7 +97,7 @@
 						</div>
 					</div>
 					
-					<iframe name="taskform" FRAMEBORDER="0" id="taskform" SCROLLING="auto"></iframe>
+					<iframe onLoad="resizeIframe" name="taskform" FRAMEBORDER="0" id="taskform" SCROLLING="auto"></iframe>
 					
 						<div id="footer">&nbsp;&nbsp;<fmt:message key="com_intalio_bpms_workflow_pageFooter_poweredBy_label" />&nbsp;&nbsp;
 							<a href="http://www.intalio.com"><span style="color: #3082A8"><fmt:message key="com_intalio_bpms_workflow_pageFooter_poweredBy_value" /></span></a>
