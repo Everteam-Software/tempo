@@ -73,7 +73,11 @@
 		});
 		
 		var t2 = $("#table2").flexigrid({
-		url: "updates.htm?update=true&type=Notification",
+		url: "updates.htm",
+		params: [
+			 { name : 'type', value : 'Notification' }
+			,{ name : 'update', value : true }
+		],
 		colModel : [
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description', width : width*0.6, sortable : true, align: 'left'},
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/>', name : '_creationDate', width : width*0.2, sortable : true, align: 'left'}
@@ -88,8 +92,12 @@
 		);
 		
 		var t1 = $("#table1").flexigrid({
-		url: 'updates.htm?update=true&type=PATask',
+		url: 'updates.htm',
         dataType: 'xml',
+        params: [
+			 { name : 'type', value : 'PATask' }
+			,{ name : 'update', value : true }
+		],
 		colModel : [
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description', width : width*0.39, sortable : true, align: 'left'},
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_taskState"/>', name : '_state', width : width*0.035, resize : true, sortable : true, align: 'center'},
@@ -108,7 +116,11 @@
 		);
 		
 		var t3 = $("#table3").flexigrid({
-		url: "updates.htm?update=true&type=PIPATask",
+		url: "updates.htm",
+		params: [
+			 { name : 'type', value : 'PIPATask' }
+			,{ name : 'update', value : true }
+		],
 		colModel : [
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description', width : width*0.6, sortable : true, align: 'left'},
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/>', name : '_creationDate', width : width*0.2, sortable : true, align: 'left'}
