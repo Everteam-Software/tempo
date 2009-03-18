@@ -66,7 +66,7 @@
 
 
         // make the soap calls to delete the tasks
-        function delete(com,grid)
+        function deleteTask(com,grid)
         {
            if (com=='Delete' && $('.trSelected',grid).length>0) {
            if(confirm('Delete ' + $('.trSelected',grid).length + ' tasks?')){
@@ -133,14 +133,14 @@
 		showTableToggleBtn: true,
 		width: width,
 		height: height2,
-		buttons : [{name: 'Delete', bclass: 'delete', onpress : delete}]
+		buttons : [{name: 'Delete', bclass: 'delete', onpress : deleteTask}]
 		}
 		);
 		
 		var t1 = $("#table1").flexigrid({
 		url: 'updates.htm',
         dataType: 'xml',
-        buttons : [{name: 'Delete', bclass: 'delete', onpress : delete}],
+        buttons : [{name: 'Delete', bclass: 'delete', onpress : deleteTask}],
         params: [
 			 { name : 'type', value : 'PATask' }
 			,{ name : 'update', value : true }
@@ -164,7 +164,7 @@
 		
 		var t3 = $("#table3").flexigrid({
 		url: "updates.htm",
-		buttons : [{name: 'Delete', bclass: 'delete', onpress : delete}],
+		buttons : [{name: 'Delete', bclass: 'delete', onpress : deleteTask}],
 		params: [
 			 { name : 'type', value : 'PIPATask' }
 			,{ name : 'update', value : true }
