@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
+<%@page import="org.intalio.tempo.uiframework.Configuration"%>
 
 	<script type="text/javascript">
 
@@ -57,9 +58,53 @@
 				$("#modal").click();
 			}
 		});
+		
+		
 		$(this).click(function() {resetTimer();});
+		
 		$('#modal').modal({modal_styles: {width:"30%", "height":"30%"}, hide:"location.reload(true);"});
 
+
+        // make the soap calls to delete the tasks
+        function delete(com,grid)
+        {
+           if (com=='Delete' && $('.trSelected',grid).length>0) {
+           if(confirm('Delete ' + $('.trSelected',grid).length + ' tasks?')){
+
+            $('.trSelected',grid).each(function() {
+
+              var pipa = $('a.pipa',$(this));
+              if(pipa!=null) {
+               var soapBody = new SOAPObject("deletePipa");
+               soapBody.ns = "http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/";
+               soapBody.appendChild(new SOAPObject("pipaurl")).val(pipa.attr('url'));
+               soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
+               var sr = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/deletePipa", soapBody);
+               //SOAPClient.SOAPServer = '<%=Configuration.getInstance().getServiceEndpoint()%>';
+               SOAPClient.Proxy = '<%=Configuration.getInstance().getServiceEndpoint()%>';
+               SOAPClient.SendRequest(sr, null);
+              } // end soap delete pipa
+     
+             var task = $('a.task',$(this));
+             if(task!=null) {
+               var soapBody = new SOAPObject("deletePipa");
+               soapBody.ns = "http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/";
+               soapBody.appendChild(new SOAPObject("taskId")).val(task.attr('tid'));
+               soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
+               var sr = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/delete", soapBody);
+               //SOAPClient.SOAPServer = '<%=Configuration.getInstance().getServiceEndpoint()%>';
+               SOAPClient.Proxy = '<%=Configuration.getInstance().getServiceEndpoint()%>';
+               SOAPClient.SendRequest(sr, null);
+             } // end soap delete tasks
+     
+             refresh(true);
+                        
+            }); // end each
+        		      
+           } // end confirm
+           } // end delete
+        }; // end function
+        
 		//
 		// tab definition
 		//
@@ -87,13 +132,15 @@
 		searchitems : [{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description'}],
 		showTableToggleBtn: true,
 		width: width,
-		height: height2
+		height: height2,
+		buttons : [{name: 'Delete', bclass: 'delete', onpress : delete}]
 		}
 		);
 		
 		var t1 = $("#table1").flexigrid({
 		url: 'updates.htm',
         dataType: 'xml',
+        buttons : [{name: 'Delete', bclass: 'delete', onpress : delete}],
         params: [
 			 { name : 'type', value : 'PATask' }
 			,{ name : 'update', value : true }
@@ -117,6 +164,7 @@
 		
 		var t3 = $("#table3").flexigrid({
 		url: "updates.htm",
+		buttons : [{name: 'Delete', bclass: 'delete', onpress : delete}],
 		params: [
 			 { name : 'type', value : 'PIPATask' }
 			,{ name : 'update', value : true }

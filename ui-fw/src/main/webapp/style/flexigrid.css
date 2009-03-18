@@ -1,4 +1,10 @@
 @charset "UTF-8";
+/* Custom buttons for flexigrid */
+.flexigrid div.fbutton .delete
+{
+    background: url(../images/icon.delete.gif) no-repeat center left;
+}
+
 /* CSS Document */
 
 .flexigrid
@@ -721,4 +727,3 @@ div.colCopy {
 			{
 			overflow: hidden;
 			}			
-		
