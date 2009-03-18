@@ -15,20 +15,13 @@ require "buildr"
 #
 # Author: Nico: nico at intalio dot com
 
-# monkey patching to allow buildr to run without a buildfile (since buildr 1.3.3)
-class Buildr::Application 
-  def settings
-    @settings ||= Settings.new(self) 
-  end 
-end
-
 OPENSSO_SERVER = "com.sun.opensso:server:war:8.0"
 
 # loading repositories, dependencies files to locate artifacts
 @@script_folder = File.dirname(File.expand_path("#{$0}"))
+load "#{@@script_folder}/../scripts/lib/build_support.rb"
 load "#{@@script_folder}/../build/repositories.rb"
 load "#{@@script_folder}/../build/dependencies.rb"
-load "#{@@script_folder}/../scripts/lib/build_support.rb"
 load "#{@@script_folder}/../scripts/lib/bundle_servers.rb"
 load "#{@@script_folder}/../scripts/lib/bundle_opensso.rb"
 load "#{@@script_folder}/../scripts/lib/bundle_standalone.rb"
@@ -84,13 +77,27 @@ class TempoBuilder
       copy_tempo_config_file("securityConfig-opensso.xml", "securityConfig.xml")
       # opensso-ldap should be already copied
     end
+    
+    activate_step [BuildMode::REMOTE, BuildMode::TOMCAT6], "Prepare remote open source tomcat build" do
+      install_tomcat6 "tempo-remote"
+      chmod_sh_files
+    end
+
+    activate_step [BuildMode::TOMCAT6, BuildMode::TOKEN_SERVICE], "Install Token Service" do
+      setup_axis
+      install_token_service
+      copy_tempo_config_file("securityConfig-opensso.xml","securityConfig.xml")
+      copy_tempo_config_file("opensso-ldap.properties")
+    end
 
     # this creates a tomcat6 build with ui-fw
-    activate_step [BuildMode::UIFW,BuildMode::TOMCAT6], "Prepare remote open source tomcat build" do
-      install_tomcat6 "tempo-remote"
-
+    activate_step [BuildMode::UIFW,BuildMode::TOMCAT6], "Install Remote UIFW" do
       copy_tempo_config_files("tempo-ui-fw*")
       copy_tempo_config_files("tempo-formmanager.xml")
+      
+      replace_all_with_map_in_folder(
+      {"http://localhost:8080/axis2/services/TokenService"=>"http://www.tempo.com:9080/axis2/services/TokenService"}, 
+      "#{@@server_folder}/var/config")
       replace_all_with_map_in_folder({"localhost:8080"=>"bpms.tempo.com:8080", "127.0.0.1:8080"=>"bpms.tempo.com:8080"}, "#{@@server_folder}/var/config")
 
       set_tomcat_ports ({"8005"=>"9005","8080"=>"9080", "8443"=>"9443", "8009"=> "9009"})
@@ -102,6 +109,11 @@ class TempoBuilder
       setenv "#{@@server_folder}/bin", options
 
       clean_unused_files
+      
+      locate_and_copy(LOG4J, "#{@@server_folder}/lib")
+      locate_and_copy(SLF4J, "#{@@server_folder}/lib")
+      FileUtils.cp "#{TEMPO_SVN}/rsc/bundle-config/log4j.properties", "#{@@server_folder}/lib"
+      
       chmod_sh_files
     end
 
@@ -109,12 +121,17 @@ class TempoBuilder
     activate_step [BuildMode::UIFW], "Adding the task list webapp" do 
       install_tempo_uifw
     end
+    
+    activate_step [BuildMode::BPMS, BuildMode::LDAP], "Install LDAP"  do
+      install_embedded_apacheds
+    end
 
     # add the configuration for ui-fw so that it can use opensso
     activate_step [BuildMode::UIFW,BuildMode::REMOTE,BuildMode::OPENSSO], "Configuring task list for opensso" do
       enable_opensso_in_uifw
     end
     
+    # install the open sso agent
     activate_step [BuildMode::TOMCAT6, BuildMode::AGENT], "Installing OpenSSO Agent" do
       setup_opensso_tomcat6_agent
     end

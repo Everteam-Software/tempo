@@ -2,36 +2,44 @@
 # Downloaded from the urls defined in build_support.rb
 # Versions are defined in the config file
 def setup_axis_and_ode
-  @@axis_folder = download_unzip(BUILD_URI[:axis2],false)
-  unzip2(filename_from_url(BUILD_URI[:axis2]),@@axis_folder)
-
+  setup_axis
   @@ode_folder = download_unzip(BUILD_URI[:ode][BUILD_CONFIG[:ode]])
-  @@finder = Finder.new
-
   ode_war = @@finder.find_war( @@ode_folder )
-  axis_war = @@finder.find_war( @@axis_folder )
-
   @@ode_war_folder   = @@wi.install ode_war, "ode.war"
-  @@axis2_war_folder = @@wi.install axis_war, "axis2.war"
-
+  
   # copy required xpath extension for ode
-  # someone explain me why this is in tempo
+  # see: http://www.intalio.org/confluence/display/PXE/Custom+XPath+Functions
   locate_and_copy("org.intalio.tempo:tempo-processes-xpath-extensions:jar:#{BUILD_CONFIG[:tempo][:core]}", "#{@@ode_war_folder}/WEB-INF/lib")
 
-  # copy ode and axis2 only related configuration
-  @@config_folder = check_folder("#{@@server_folder}/var/config")
+  # copy ode related configuration
   File.copy "#{TEMPO_SVN}/rsc/bundle-config/ode-axis2.properties", @@config_folder
+end
+
+def setup_axis
+  @@axis_folder = download_unzip(BUILD_URI[:axis2],false)
+  @@finder = Finder.new
+  unzip2(filename_from_url(BUILD_URI[:axis2]),@@axis_folder)
+  
+  axis_war = @@finder.find_war( @@axis_folder )
+  @@axis2_war_folder = @@wi.install axis_war, "axis2.war"
+  
+  @@config_folder = check_folder("#{@@server_folder}/var/config")
   File.copy "#{TEMPO_SVN}/rsc/bundle-config/axis2.xml", "#{@@webapp_folder}/axis2/WEB-INF/conf"
+  
+  @@si = ServiceInstaller.new( @@axis2_war_folder )
+end
+
+def install_token_service
+  @@si.install_artifact_aar("org.intalio.tempo:tempo-security-ws-service:aar:#{BUILD_CONFIG[:tempo][:core]}")
 end
 
 # Install and copy tempo axis services
 # the version values are taken from the config file
 def install_tempo_services 
-  @@si = ServiceInstaller.new( @@axis2_war_folder )
   # @@si.install_artifact_aar("org.intalio.deploy:deploy-ws-service:aar:#{BUILD_CONFIG[:tempo][:deploy]}")
   # @@si.install_artifact_aar("org.intalio.security:security-ws-service:aar:#{BUILD_CONFIG[:tempo][:security]}")
   @@si.install_artifact_aar("org.intalio.tempo:tempo-deploy-ws-service:aar:#{BUILD_CONFIG[:tempo][:core]}")
-  @@si.install_artifact_aar("org.intalio.tempo:tempo-security-ws-service:aar:#{BUILD_CONFIG[:tempo][:core]}")
+  install_token_service
   @@si.install_artifact_aar("org.intalio.tempo:tempo-tas-service:aar:#{BUILD_CONFIG[:tempo][:core]}")
   @@si.install_artifact_aar("org.intalio.tempo:tempo-tms-service:aar:#{BUILD_CONFIG[:tempo][:core]}")
 end
@@ -61,7 +69,7 @@ def setup_opensso_tomcat6_agent
   FileUtils.mv("j2ee_agents/tomcat_v6_agent",File.expand_path("#{@@server_folder}"), :force => true )
   # add fuzzy password, someone tellme what this is doing here
   open("#{@@server_folder}/password", "w") do |f|
-    f << "intalio3"
+    f << "intalio0"
   end
   # copy sample files to bin, unless you want to type all this by hand
   shfiles = File.join("#{@@script_folder}/../opensso", "*.*")
@@ -148,14 +156,12 @@ end
 # copy some tempo configuration files
 # note that you can restrict the files being copied, by given an array of files
 def copy_tempo_config_files filter="*.*"
-  config_folder = check_folder("#{@@server_folder}/var/config")
   config_files = File.join("#{TEMPO_SVN}/config",filter)
-  Dir.glob(config_files) {|x| File.copy(x, config_folder, BUILD_DEBUG)}
+  Dir.glob(config_files) {|x| File.copy(x, "#{@@config_folder}", BUILD_DEBUG)}
 end
 
 def copy_tempo_config_file config, target=config
-  config_folder = check_folder("#{@@server_folder}/var/config")
-  File.copy "#{TEMPO_SVN}/config/#{config}", "#{config_folder}/#{target}"
+  File.copy "#{TEMPO_SVN}/config/#{config}", "#{@@config_folder}/#{target}"
 end
 
 # define standard tomcat only java options
@@ -187,6 +193,7 @@ def enable_opensso_in_uifw
   File.copy "#{@@webapp_folder}/ui-fw/WEB-INF/web-opensso.xml", "#{@@webapp_folder}/ui-fw/WEB-INF/web.xml"
 end
 
-def install_ldap_support
-
+def install_embedded_apacheds
+  @@wi.install_war_artifact("org.intalio.tempo:apacheds-webapp:war:#{BUILD_CONFIG[:tempo][:apacheds]}","apacheds")
+  # File.copy "#{@@webapp_folder}/ui-fw/WEB-INF/web-opensso.xml", "#{@@webapp_folder}/ui-fw/WEB-INF/web.xml"
 end

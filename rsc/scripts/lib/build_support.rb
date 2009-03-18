@@ -7,6 +7,12 @@ require 'fileutils'
 require 'open-uri'
 require "hpricot"
 
+# monkey patching to allow buildr to run without a buildfile (since buildr 1.3.3)
+class Buildr::Application 
+  def settings
+    @settings ||= Settings.new(self) 
+  end 
+end
 
 module BuildMode
   BPMS = 0
@@ -22,6 +28,7 @@ module BuildMode
   TOMCAT = 10
   REMOTE = 11
   AGENT = 12
+  TOKEN_SERVICE = 15
 end
 
 module BuildActivate

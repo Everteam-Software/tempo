@@ -16,7 +16,7 @@
 <beans>
 
 	<bean id="realms" class="org.intalio.tempo.security.impl.Realms">
-		<property name="defaultRealm" value="opensso"/>
+		<property name="defaultRealm" value="intalio"/>
 		<property name="securityProviders">
 			<list>
 				<ref bean="securityProvider"/>
