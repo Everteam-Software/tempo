@@ -1,2 +1,0 @@
-# Agent User Response File
-CONFIG_DIR= /Users/niko/projects/intalio/tempo-remote/conf
