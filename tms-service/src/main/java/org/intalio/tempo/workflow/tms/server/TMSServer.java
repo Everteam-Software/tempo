@@ -261,13 +261,10 @@ public class TMSServer implements ITMSServer {
         omFormUrl.setText(formUrl);
 
         OMElement omTaskOutput = omFactory.createOMElement("taskOutput", omNamespace, omInitProcessRequest);
-        // OMElement omOutput = omFactory.createOMElement("output", omNamespace,
-        // omTaskOutput);
 
-        // omOutput.addChild(OMDOMConvertor.convertDOMToOM(input, omFactory));
         XmlTooling xmlTooling = new XmlTooling();
-        omTaskOutput.addChild(xmlTooling.convertDOMToOM(input, omFactory));
-
+        if(input!=null) omTaskOutput.addChild(xmlTooling.convertDOMToOM(input, omFactory));
+        
         Options options = new Options();
         EndpointReference endpointReference = new EndpointReference(task.getProcessEndpoint().toString());
         options.setTo(endpointReference);
