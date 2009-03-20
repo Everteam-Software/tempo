@@ -437,7 +437,7 @@ public class TMSRequestProcessor {
 			Start req = reqDoc.getStart();
 			
 			// call TMSServer to process request
-			this._server.Start(participantToken, req.getIdentifier());
+			this._server.start(participantToken, req.getIdentifier());
 			
 			// marshal response
 		    retDoc = StartResponseDocument.Factory.newInstance();
@@ -474,7 +474,7 @@ public class TMSRequestProcessor {
 			Stop req = reqDoc.getStop();
 			
 			// call TMSServer to process request
-			this._server.Stop(participantToken, req.getIdentifier());
+			this._server.stop(participantToken, req.getIdentifier());
 			
 			// marshal response
 		    retDoc = StopResponseDocument.Factory.newInstance();
@@ -510,7 +510,7 @@ public class TMSRequestProcessor {
 			Release req = reqDoc.getRelease();
 			
 			// call TMSServer to process request
-			this._server.Release(participantToken, req.getIdentifier());
+			this._server.release(participantToken, req.getIdentifier());
 			
 			// marshal response
 		    retDoc = ReleaseResponseDocument.Factory.newInstance();
@@ -551,7 +551,7 @@ public class TMSRequestProcessor {
 			Complete req = reqDoc.getComplete();
 			
 			// call TMSServer to process request
-			this._server.Complete(participantToken, req.getIdentifier(), req.getTaskData());
+			this._server.complete(participantToken, req.getIdentifier(), req.getTaskData());
 			
 			// marshal response
 		    retDoc = CompleteResponseDocument.Factory.newInstance();
@@ -595,7 +595,7 @@ public class TMSRequestProcessor {
 			Fail req = reqDoc.getFail();
 			
 			// call TMSServer to process request
-			this._server.Fail(participantToken, req.getIdentifier(), req.getFaultName(), req.getFaultData());
+			this._server.fail(participantToken, req.getIdentifier(), req.getFaultName(), req.getFaultData());
 			
 			// marshal response
 		    retDoc = FailResponseDocument.Factory.newInstance();
@@ -640,7 +640,7 @@ public class TMSRequestProcessor {
 			Skip req = reqDoc.getSkip();
 			
 			// call TMSServer to process request
-			this._server.Skip(participantToken, req.getIdentifier());
+			this._server.skip(participantToken, req.getIdentifier());
 			
 			// marshal response
 		    retDoc = SkipResponseDocument.Factory.newInstance();
@@ -684,7 +684,7 @@ public class TMSRequestProcessor {
 			Resume req = reqDoc.getResume();
 			
 			// call TMSServer to process request
-			this._server.Resume(participantToken, req.getIdentifier());
+			this._server.resume(participantToken, req.getIdentifier());
 			
 			// marshal response
 		    retDoc = ResumeResponseDocument.Factory.newInstance();
