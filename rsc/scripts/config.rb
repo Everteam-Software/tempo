@@ -44,12 +44,12 @@ BUILD_CONFIG = {
   :liferay => :v5_1_0,
   :alfresco => :v3_0,
   :tempo => {
-    :core => "6.0.0.37",
+    :core => "6.0.0.38",
     # not used until we've upgraded to the new deploy and security packages
     # :security => "6.0.0.35",
     # :deploy => "6.0.0.35",
     :processes => "6.0.6",
-    :formManager => "6.0.0.35",
+    :formManager => "6.0.0.38",
     :apacheds => "6.0.0.34",
     :cas => "6.0.0.34"
   }
