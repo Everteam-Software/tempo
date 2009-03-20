@@ -13,7 +13,7 @@
 		if($.browser.msie){
 		     height = $(window).height() - 140;
 		  }else{
-		     height = $(window).height() - 100;
+		     height = $(window).height() - 140;
 		  }
 		var height2 = height - 80;
 		$(window).resize(function() {
@@ -36,6 +36,7 @@
 
 		function clearFrame() {
 			$('#taskform').animate({height:"0px"},speed);
+            window.open("about:blank", "taskform");
 		}
 		
 		//
@@ -248,17 +249,19 @@
 		$('#taskform').load(function(){
 			var elo = $('html', window.frames['taskform'].document);
 			var loc = window.frames['taskform'].location;
+			if(loc == "about:blank") return;
+			
 			var visible = $('#taskform').height() != 0;
 			if(visible) {
      			// TODO: let's find a clever way of checking for content independent of the form manager
-	    		var content = (loc.toString().indexOf('type=PATask')!=-1) || (elo.html().substring(0,6).toLowerCase() == '<head>' && elo.html().length > 500)
-				if(!content) {
-			    $('#taskform').animate({height:"0px"},speed);
+	    		var content = (loc.toString().indexOf('type=PATask')!=-1) || (elo.html().substring(0,6).toLowerCase() == '<head>' && elo.html().length > 500);
+			  if(!content) {
+     			clearFrame();
 				refresh(true);
-				}
-			} else {
+			  } else {
 			    $('#taskform').animate({height:height},speed);
 				refresh(false);
+			  }
 			}
 
 		});

@@ -183,7 +183,7 @@ table {
 }
 
 #taskform {
-	background-image: url(images/gradient.jpg);
+/*	background-image: url(images/gradient.jpg);*/
 	background-repeat: repeat-x;
 	background-attachment:fixed;
 	background-position: 0% 100%;
