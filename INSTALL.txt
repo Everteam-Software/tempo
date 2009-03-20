@@ -35,7 +35,9 @@ Start mysql engine and check user access. On the command line this would be
 something like:
 
     mysqladmin create bpms -u root
-    mysql -D bpms -u root < TEMPO_CHECKOUT/../intalio/bpms.sql
+    mysql -D bpms -u root < bpms.sql
+    
+The bpms.sql file is included in the generated bundle. 
 
 ======================================
  Start up

@@ -14,6 +14,7 @@ package org.intalio.tempo.workflow.tms.client.dependent_tests;
 
 import java.io.StringWriter;
 import java.security.SecureRandom;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -59,8 +60,8 @@ public class RemoteAbsenceRequestTest extends TestCase {
 
     static final XmlTooling xmlTooling = new XmlTooling();
     Configuration cfg;
-    static final int SLEEP_TIME = 3000;
-    static final int MICRO_SLEEP_TIME = 200;
+    static final int SLEEP_TIME = 5000;
+    static final int MICRO_SLEEP_TIME = 400;
 
     public void setUp() {
         TemplateLoader loader = new ClassTemplateLoader(this.getClass(), "/");
@@ -115,88 +116,29 @@ public class RemoteAbsenceRequestTest extends TestCase {
 
         // Standard absence request
         runAbsenceRequest(paramUser, paramPassword, pipa, complete);
+
         // Provoke a fail by calling TMS.fail while the task has been created
         runAbsenceRequestWithOptionalCall(paramUser, paramPassword, pipa, complete, "fail");
+
         // Provoke a skip by calling TMP.skip while the task has been created
-//        runAbsenceRequestWithOptionalCall(paramUser, paramPassword, pipa, complete, "skip");
+        // runAbsenceRequestWithOptionalCall(paramUser, paramPassword, pipa, complete, "skip");
+
         // Provoke a delete by calling TMS.delete while the task has been
         // created.
         runAbsenceRequestWithOptionalCall("admin", "changeit", pipa, complete, "delete");
+
         // Provoke a deleteAll by calling TMS.deleteAll while the task has been
         // created.
         runAbsenceRequestWithOptionalCall("admin", "changeit", pipa, complete, "deleteAll");
+
         // Provoke a reassign to a new user. If we reassign to a new user, it
         // will disappear from the list, so we're good. (hint: hack!)
         runAbsenceRequestWithOptionalCall("admin", "changeit", pipa, complete, "reassign");
-
+    
+        // Runs consecutive claim and revoke calls. 
         runAbsenceRequestWithRandomClaimRevokeTMPCalls(paramUser, paramPassword, pipa, complete);
     }
 
-    /**
-     * Quite a few different call to check that the release is in good shape.
-     */
-    private void runAbsenceRequestWithOptionalCall(String paramUser, String paramPassword, HashMap pipa, HashMap complete, String optionalCall)
-                    throws Exception {
-        _log.info("Running absence request with optional call to:" + optionalCall);
-
-        _log.info("Get the token client and authenticate");
-        TokenClient client = new TokenClient(TOKEN_SERVICE);
-        String token = client.authenticateUser(paramUser, paramPassword);
-
-        _log.info("get the tms client");
-        RemoteTMSClient tms = new RemoteTMSClient(TMS_SERVICE, token);
-
-        _log.info("get the absence request PIPA");
-        Task[] ts = tms.getAvailableTasks("PIPATask", "T._description like '%Examples%'");
-        String pipaID = ts[0].getID();
-
-        _log.info("Init the process and wait");
-        tms.init(pipaID, xmlTooling.parseXML(pipa(pipa)));
-        Thread.sleep(SLEEP_TIME);
-
-        _log.info("check the new task has appeared");
-        Task[] paList = tms.getAvailableTasks("PATask", "T._state = TaskState.READY ORDER BY T._creationDate DESC");
-        String id = paList[0].getID();
-
-        _log.info("keep track of the current time");
-        long currentTime = System.currentTimeMillis();
-
-        _log.info("do the optional call.");
-
-        // skip needs to be called on TMP first.
-        if (optionalCall.equals("skip"))
-            sendSoapToTMP(skip(token, id), "skipTask");
-        // while the other ones call TMS straight. Note that those should rarely
-        // be called directly
-        // from a user process in a real life system. More like administration
-        // methods
-        else if (optionalCall.equals("fail"))
-            tms.fail(id, "0", "Error message");
-        else if (optionalCall.equals("delete"))
-            tms.delete(new String[] { id });
-        else if (optionalCall.equals("deleteAll"))
-            tms.deleteAll("false", "T._state = TaskState.READY", "PATask");
-        else if (optionalCall.equals("reassign"))
-            sendSoapToWorkflow(reassign(token, id, "examples/msmith"), "escalate");
-        else
-            throw new Exception("invalid optional call:" + optionalCall);
-
-        _log.info("wait some more so that we process the optional call");
-        Thread.sleep(SLEEP_TIME);
-
-        _log.info("check the task has disappeared. All the call we've done make the task not showing the user task list anymore");
-        Task[] ts2 = tms.getAvailableTasks("PATask", "T._state = TaskState.READY ORDER BY T._creationDate DESC");
-        Assert.assertEquals(0, ts2.length);
-
-        if (optionalCall.equals("skip")) {
-            _log.info("for skip, we're doing one extra check to see if the state of the task is appropriately OBSOLETE");
-            Task[] ts3 = tms.getAvailableTasks("PATask", "T._state = TaskState.OBSOLETE ORDER BY T._creationDate DESC");
-            long time = currentTime - ts3[0].getCreationDate().getTime();
-            Assert.assertTrue(time > 0);
-            Assert.assertTrue(time < 5000); // 2*SLEEP_TIME + 1s of computer
-            // work margin
-        }
-    }
 
     /**
      * Run the examples with the given parameters
@@ -260,6 +202,68 @@ public class RemoteAbsenceRequestTest extends TestCase {
         _log.info("Dismiss this notification");
         tms.complete(notificationId);
     }
+
+    /**
+     * Quite a few different call to check that the release is in good shape.
+     */
+    private void runAbsenceRequestWithOptionalCall(String paramUser, String paramPassword, HashMap pipa, HashMap complete, String optionalCall)
+                    throws Exception {
+        _log.info("Running absence request with optional call to:" + optionalCall);
+
+        _log.info("Get the token client and authenticate");
+        TokenClient client = new TokenClient(TOKEN_SERVICE);
+        String token = client.authenticateUser(paramUser, paramPassword);
+
+        _log.info("get the tms client");
+        RemoteTMSClient tms = new RemoteTMSClient(TMS_SERVICE, token);
+
+        _log.info("get the absence request PIPA");
+        Task[] ts = tms.getAvailableTasks("PIPATask", "T._description like '%Examples%'");
+        String pipaID = ts[0].getID();
+
+        _log.info("Init the process and wait");
+        tms.init(pipaID, xmlTooling.parseXML(pipa(pipa)));
+        Thread.sleep(SLEEP_TIME);
+
+        _log.info("check the new task has appeared");
+        Task[] paList = tms.getAvailableTasks("PATask", "T._state = TaskState.READY ORDER BY T._creationDate DESC");
+        String id = paList[0].getID();
+
+        _log.info("keep track of the current time");
+        long currentTime = System.currentTimeMillis();
+
+        _log.info("do the optional call.");
+
+        // skip needs to be called on TMP first.
+        if (optionalCall.equals("skip"))
+            sendSoapToTMP(skip(token, id), "skipTask");
+        else if (optionalCall.equals("fail"))
+            tms.fail(id, "0", "Error message");
+        else if (optionalCall.equals("delete"))
+            tms.delete(new String[] { id });
+        else if (optionalCall.equals("deleteAll"))
+            tms.deleteAll("false", "T._state = TaskState.READY", "PATask");
+        else if (optionalCall.equals("reassign"))
+            sendSoapToWorkflow(reassign(token, id, "examples/msmith"), "escalate");
+        else
+            throw new Exception("invalid optional call:" + optionalCall);
+
+        _log.info("wait some more so that we process the optional call");
+        Thread.sleep(SLEEP_TIME);
+
+        _log.info("check the task has disappeared. All the call we've done make the task not showing the user task list anymore");
+        Task[] ts2 = tms.getAvailableTasks("PATask", "T._state = TaskState.READY ORDER BY T._creationDate DESC");
+        Assert.assertEquals(0, ts2.length);
+
+        if (optionalCall.equals("skip")) {
+            _log.info("for skip, we're doing one extra check to see if the state of the task is appropriately OBSOLETE");
+            Task[] ts3 = tms.getAvailableTasks("PATask", "T._state = TaskState.OBSOLETE ORDER BY T._creationDate DESC");
+            long time = currentTime - ts3[0].getCreationDate().getTime();
+            Assert.assertTrue(time > 0);
+            Assert.assertTrue(time < 5000); // 2*SLEEP_TIME + 1s of computer
+            // work margin
+        }
+    }
     
 
     /**
@@ -285,16 +289,23 @@ public class RemoteAbsenceRequestTest extends TestCase {
     }
 
     /**
-     * Send the WS request to TMP.
+     * Send a WS request to Form Dispatcher Service (FDS).
+     * This is called on a reassign
      */
     private void sendSoapToWorkflow(String request, String soapAction) throws Exception {
         sendSoapTo(request, soapAction, TASK_MANAGEMENT_PROCESS_WORKFLOW);
     }
 
+    /**
+     * Send a WS request to The Task Management Process (TMP).
+     */
     private void sendSoapToTMP(String request, String soapAction) throws Exception {
         sendSoapTo(request, soapAction, TASK_MANAGEMENT_PROCESS);
     }
 
+    /**
+    * Generic http method to send a soap request
+    */
     private void sendSoapTo(String request, String soapAction, String endpoint) throws Exception {
         ServiceClient serviceClient = new ServiceClient();
         OMFactory factory = OMAbstractFactory.getOMFactory();
@@ -303,17 +314,22 @@ public class RemoteAbsenceRequestTest extends TestCase {
         serviceClient.setOptions(options);
         options.setAction(soapAction);
         OMElement response = serviceClient.sendReceive(xmlTooling.convertDOMToOM(xmlTooling.parseXML(request), factory));
-        // _log.info(MessageFormat.format("Answer from endpoint {0}: {1}",
-        // endpoint, response.toString()));
+        _log.info(MessageFormat.format("Answer from endpoint {0}: {1}", endpoint, response.toString()));
     }
-
+    
+    /**
+    * Prepare a skip message
+    */
     private String skip(String token, String taskId) throws Exception {
         HashMap<String, String> skip = new HashMap<String, String>();
         skip.put("taskId", taskId);
         skip.put("token", token);
         return templateMe("skip.ftl", skip);
     }
-
+   
+    /**
+    * Prepare a reassign message
+    */ 
     private String reassign(String token, String taskId, String user) throws Exception {
         HashMap<String, String> escalate = new HashMap<String, String>();
         escalate.put("taskId", taskId);

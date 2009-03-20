@@ -9,7 +9,7 @@ def setup_axis_and_ode
   
   # copy required xpath extension for ode
   # see: http://www.intalio.org/confluence/display/PXE/Custom+XPath+Functions
-  locate_and_copy("org.intalio.tempo:tempo-processes-xpath-extensions:jar:#{BUILD_CONFIG[:tempo][:core]}", "#{@@ode_war_folder}/WEB-INF/lib")
+  locate_and_copy("org.intalio.tempo:tempo-processes-xpath-extensions:jar:#{BUILD_CONFIG[:tempo][:processes]}", "#{@@ode_war_folder}/WEB-INF/lib")
 
   # copy ode related configuration
   File.copy "#{TEMPO_SVN}/rsc/bundle-config/ode-axis2.properties", @@config_folder
@@ -59,7 +59,7 @@ end
 # Install the TMP process, and the absence request process into the ode services folders
 def install_tmp
   opi = OdeProcessInstaller.new @@server_folder
-  opi.install_artifact "org.intalio.tempo:tempo-processes-TaskManager:jar:#{BUILD_CONFIG[:tempo][:core]}", "TaskManager"
+  opi.install_artifact "org.intalio.tempo:tempo-processes-TaskManager:jar:#{BUILD_CONFIG[:tempo][:processes]}", "TaskManager"
 end
 
 # some boring stuff you need to do for setting up the agent
@@ -102,10 +102,10 @@ end
 def install_absence_request
   opi = OdeProcessInstaller.new @@server_folder
   # copy the process
-  opi.install_artifact "org.intalio.tempo:tempo-processes-AbsenceRequest:jar:#{BUILD_CONFIG[:tempo][:core]}", "AbsenceRequest"
+  opi.install_artifact "org.intalio.tempo:tempo-processes-AbsenceRequest:jar:#{BUILD_CONFIG[:tempo][:processes]}", "AbsenceRequest"
   # copy the forms and the pipa
   abs_deploy_folder = check_folder("#{@@server_folder}/var/deploy/AbsenceRequest")
-  ar_zip = locate_artifact("org.intalio.tempo:tempo-forms-AbsenceRequest:zip:#{BUILD_CONFIG[:tempo][:core]}")
+  ar_zip = locate_artifact("org.intalio.tempo:tempo-forms-AbsenceRequest:zip:#{BUILD_CONFIG[:tempo][:processes]}")
   unzip2(ar_zip, abs_deploy_folder, true)
 end
 

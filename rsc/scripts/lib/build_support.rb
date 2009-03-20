@@ -264,7 +264,7 @@ module BuildSupport
       file << "export JAVA_OPTS=\"#{opts}\""
     }
     File.open("#{bin_folder}/setenv.bat", "a") { |file|
-      file << "set JAVA_OPTS=#{opts.gsub('$', '%').gsub('/','\\')}"
+      file << "set JAVA_OPTS=#{opts.gsub('$CATALINA_HOME', '%CATALINA_HOME%').gsub('/','\\')}"
     }
   end
 

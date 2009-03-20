@@ -20,6 +20,7 @@ import org.intalio.tempo.security.authentication.AuthenticationException;
 import org.intalio.tempo.security.rbac.RBACException;
 import org.intalio.tempo.security.token.TokenService;
 import org.intalio.tempo.security.util.IdentifierUtils;
+import org.intalio.tempo.security.util.MD5;
 import org.intalio.tempo.security.util.PropertyUtils;
 import org.intalio.tempo.security.util.StringArrayUtils;
 import org.intalio.tempo.security.util.TimeExpirationMap;
@@ -49,9 +50,14 @@ public class TokenServiceImpl implements TokenService {
     boolean _passwordAsAProperty;
     // should we NOT put the roles in the token, and cache them in memory instead
     boolean cacheRoles = false;
+    // cache token properties
+    boolean cacheProperties = false;
+    
+    
 
     // check every minute, expire after one hour
     TimeExpirationMap userAndRoles = new TimeExpirationMap(1000 * 60 * 30, 1000 * 60);
+    TimeExpirationMap tokenAndProperties = new TimeExpirationMap(1000 * 60 * 30, 1000 * 60);
 
     public TokenServiceImpl() {
         // nothing
@@ -77,6 +83,14 @@ public class TokenServiceImpl implements TokenService {
 
     public final void setCacheRoles(boolean cacheRoles) {
         this.cacheRoles = cacheRoles;
+    }
+
+    public final boolean isCacheProperties() {
+        return cacheProperties;
+    }
+
+    public final void setCacheProperties(boolean cacheProperties) {
+        this.cacheProperties = cacheProperties;
     }
 
     public void setPasswordAsAProperty(Boolean asAProperty) {
@@ -177,6 +191,18 @@ public class TokenServiceImpl implements TokenService {
      * @return properties encoded in token
      */
     public Property[] getTokenProperties(String token) throws AuthenticationException, RemoteException {
+        if(token==null) return null;
+        
+        String hash = MD5.compute(token);
+        
+        if(cacheProperties) {
+            Property[] props = (Property[]) tokenAndProperties.get(hash);
+            if(props!=null) {
+                _logger.debug("Retrieving token properties from cache for:"+hash);
+                return props;
+            }
+        }
+        
         Property[] props = _tokenHandler.parseToken(token);
         Map<String, Object> map = PropertyUtils.toMap(props);
         String user = ((Property) map.get(AuthenticationConstants.PROPERTY_USER)).getValue().toString();
@@ -197,8 +223,15 @@ public class TokenServiceImpl implements TokenService {
         // cache only if needed
         if(this.cacheRoles) userAndRoles.put(user, rolesForUser);
         
+        
         map.put(AuthenticationConstants.PROPERTY_ROLES, rolesForUser);
-        return map.values().toArray(new Property[map.size()]);
+        Property[] propsArray = map.values().toArray(new Property[map.size()]);
+        
+        if(this.cacheProperties) {
+            _logger.debug("Caching token properties to cache for:"+hash);
+            tokenAndProperties.put(hash, propsArray);
+        }
+        return propsArray;
     }
 
     public ProxyTicketValidator getProxyTicketValidator() {

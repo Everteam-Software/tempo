@@ -37,7 +37,9 @@
 		<script type="text/javascript" src="script/jquery.demensions.js"></script>
 		<script type="text/javascript" src="script/jquery.string.1.0.js"></script>
 		<script src="script/jquery.smartmodal.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="script/soapclient.js"></script>
 
+		<%@ include file="/script/grids.jsp"%>
 
 		<script type="text/javascript">
 		function resizeIframe() {
@@ -51,9 +53,9 @@
 
 		};
 		window.onresize = resizeIframe;
+		
 		</script>
 		
-		<%@ include file="/script/grids.jsp"%>
 		
 		</head>
 		<body width="95%" height="98%">
@@ -91,6 +93,7 @@
 						</div>
 					</div>
 					
+					
 					<div class="intro" id="introhelp">
 						<div id="intro">
 							<%@ include file="/customize/intro.jsp"%>	
@@ -125,4 +128,7 @@
 						    <!-- Note we can add any kind of HTML code in here for the session timeout -->
 						</div>
 		</body>
+		<script>
+            document.getElementById('taskform').onload = resizeIframe;
+		</script>
 	</html>

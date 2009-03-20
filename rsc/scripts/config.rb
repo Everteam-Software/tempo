@@ -6,7 +6,7 @@ BUILD_CONFIG = {
   
   # build with ode, axis2, uifw
   #
-  # :mode => [BuildMode::BPMS,BuildMode::UIFW],
+  :mode => [BuildMode::BPMS,BuildMode::UIFW],
   #
   
   # build an opensso server
@@ -36,7 +36,7 @@ BUILD_CONFIG = {
   
   # build with tomcat6 and uifw, enable for opensso 
   #
-  :mode => [BuildMode::REMOTE, BuildMode::TOMCAT6,BuildMode::TOKEN_SERVICE, BuildMode::UIFW,BuildMode::OPENSSO,BuildMode::AGENT],
+  # :mode => [BuildMode::REMOTE, BuildMode::TOMCAT6,BuildMode::TOKEN_SERVICE, BuildMode::UIFW,BuildMode::OPENSSO,BuildMode::AGENT],
   #
   
   :ode => :v2_1_snapshot,
@@ -48,6 +48,7 @@ BUILD_CONFIG = {
     # not used until we've upgraded to the new deploy and security packages
     # :security => "6.0.0.35",
     # :deploy => "6.0.0.35",
+    :processes => "6.0.6",
     :formManager => "6.0.0.35",
     :apacheds => "6.0.0.34",
     :cas => "6.0.0.34"

@@ -19,7 +19,7 @@
     </bean>
 	
 	<bean id="formManager" class="org.intalio.tempo.uiframework.forms.GenericFormManager">
-		<property name="baseURL" value="http://localhost:8080/xFormsManager/"/>
+		<property name="baseURL" value="/xFormsManager/"/>
 		<property name="mappings">
 		<map>
 			<entry key="PIPATask"><map><entry key=".*xform" value="init"/></map></entry>

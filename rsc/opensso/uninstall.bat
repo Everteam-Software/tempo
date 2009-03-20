@@ -1,1 +1,1 @@
-agentadmin.bat --uninstall --useResponse silent_agent_uninstall.txt 
+agentadmin.bat --uninstall --useResponse silent_agent_install.txt 
