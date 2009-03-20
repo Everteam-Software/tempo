@@ -53,7 +53,7 @@
 		<constructor-arg index="0" ref="realms" />
 		<constructor-arg index="1" value="https://localhost:8443/cas/proxyValidate" />
 		<property name="tokenHandler"><ref bean="tokenHandler" /></property>
-        <property name="cacheRoles" value="false"/>
+        <property name="cacheProperties" value="true"/>
 	</bean>
 
 </beans>

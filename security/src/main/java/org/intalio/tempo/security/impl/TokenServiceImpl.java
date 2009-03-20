@@ -10,7 +10,6 @@
 package org.intalio.tempo.security.impl;
 
 import java.rmi.RemoteException;
-import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +51,7 @@ public class TokenServiceImpl implements TokenService {
     // should we NOT put the roles in the token, and cache them in memory instead
     boolean cacheRoles = false;
     // cache token properties
-    boolean cacheProperties = true;
+    boolean cacheProperties = false;
     
     
 
