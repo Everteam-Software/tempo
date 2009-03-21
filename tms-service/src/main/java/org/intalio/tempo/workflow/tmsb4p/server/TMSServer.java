@@ -9,6 +9,7 @@ import org.intalio.tempo.workflow.auth.IAuthProvider;
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.taskb4p.Task;
 import org.intalio.tempo.workflow.taskb4p.TaskStatus;
+import org.intalio.tempo.workflow.tms.B4PPersistException;
 import org.intalio.tempo.workflow.tms.TMSException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.intalio.tempo.workflow.tms.server.permissions.TaskPermissions;
@@ -61,6 +62,7 @@ public class TMSServer implements ITMSServer {
             task.setCreatedBy(ur.getUserID());
         } catch (Exception e) {
             e.printStackTrace();
+            throw new AuthException(e);
         }
 
         // TODO check if this user in task initialtor
@@ -76,6 +78,7 @@ public class TMSServer implements ITMSServer {
             _logger.error("Cannot create Workflow Tasks", e); // TODO :
             // TaskIDConflictException
             // must be rethrowed :vb
+            throw new B4PPersistException(e);
         } finally {
             dao.close();
         }
@@ -90,7 +93,7 @@ public class TMSServer implements ITMSServer {
         } catch (Exception e) {
             e.printStackTrace();
             this._logger.error("authenticate user failed", e);
-            return;
+            throw new AuthException(e);
         }
 
         // do query
@@ -117,13 +120,64 @@ public class TMSServer implements ITMSServer {
 
     }
 
-    public void Start(String participantToken, String identifier) {
-        // TODO Auto-generated method stub
+    public void Start(String participantToken, String identifier) throws Exception {
+        // get user
+        UserRoles ur = null;
+        try {
+            ur = _authProvider.authenticate(participantToken);
 
+            System.out.println("userid:" + ur.getUserID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            this._logger.error("authenticate user failed", e);
+            return;
+        }
+
+        // @TODO check permision (action owner / potential owner can start task
+
+        // @TODO check status ( should be ready )
+
+        // update task status
+        ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
+        try {
+            dao.updateTaskStatus(identifier, TaskStatus.IN_PROGRESS);
+        } catch (Exception e) {
+            _logger.error("remove task failed, task id " + identifier, e);
+            throw e;
+        } finally {
+            dao.close();
+        }
     }
 
-    public void Stop(String participantToken, String identifier) {
-        // TODO Auto-generated method stub
+    public void Stop(String participantToken, String identifier) throws TMSException {
+
+        // get user
+        UserRoles ur = null;
+        try {
+            ur = _authProvider.authenticate(participantToken);
+
+            System.out.println("userid:" + ur.getUserID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            this._logger.error("authenticate user failed", e);
+            throw new AuthException(e);
+        }
+
+        // @TODO check permission (action owner / business administrators can
+        // stop task
+
+        // @TODO check status ( should be ready )
+
+        // update task status
+        ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
+        try {
+            dao.updateTaskStatus(identifier, TaskStatus.RESERVED);
+        } catch (Exception e) {
+            _logger.error("remove task failed, task id " + identifier, e);
+            throw new B4PPersistException(e);
+        } finally {
+            dao.close();
+        }
 
     }
 
@@ -187,8 +241,8 @@ public class TMSServer implements ITMSServer {
 
         // OrganizationalEntity = task.getBusinessAdministrators();
         // TODO auth check
-        if (true){
-        //if (ur.getUserID().equalsIgnoreCase(actualOwner)) {
+        if (true) {
+            // if (ur.getUserID().equalsIgnoreCase(actualOwner)) {
             task.setPriority(priority);
             System.out.println("set priority:" + priority);
             dao.updateTask(task);
