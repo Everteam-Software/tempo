@@ -24,7 +24,7 @@
     </bean>
 
     <bean id="tokenService" class="org.intalio.tempo.security.ws.TokenClient">
-        <constructor-arg value="http://localhost:8280/axis2/services/TokenService"/>
+        <constructor-arg value="http://localhost:8080/axis2/services/TokenService"/>
     </bean>
 
     <bean id="applicationState" class="org.intalio.tempo.uiframework.UIFWApplicationState"/>

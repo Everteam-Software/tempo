@@ -46,8 +46,9 @@ function WebService(URL1, method1, options1){
 				"<soap:Envelope " +
 				"xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" " +
 				"xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" " +
-				"xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">" +
-				"<soap:Header><participantToken>"+this.options.token+"</participantToken></soap:Header>"+
+				"xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" " +
+				"xmlns:htd=\"http://www.intalio.org/WS-HT/\">" +
+				"<soap:Header><htd:participantToken>"+this.options.token+"</htd:participantToken></soap:Header>"+
 				"<soap:Body>" +
 //				"<" + this.method + " xmlns=\"" + ns + "\">" +
 //					  this.options.data +

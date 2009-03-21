@@ -316,7 +316,7 @@ title "Set up CAS server and client"
 explain "All the webapp should use the same version of casclient"
 ##
 File.copy "#{TEMPO_SVN}/rsc/liferay510/tempokeystore", tomcat_config_folder
-Dir.glob(File.join("#{TEMPO_SVN}/rsc/liferay510", "server.xml")) {|x| File.copy(x,"#{server_folder}/conf", DEBUG)}
+#Dir.glob(File.join("#{TEMPO_SVN}/rsc/liferay510", "server.xml")) {|x| File.copy(x,"#{server_folder}/conf", DEBUG)}
 Dir.glob(File.join("#{webapp_folder}/cas/WEB-INF/lib", "casclient*.jar")) {|x| File.cp x, "#{lib_folder}"}
 Dir.glob(File.join("#{webapp_folder}", "**/casclient*.jar")) {|x| File.delete x}
 # locate_and_copy( DSIG , "#{webapp_folder}/cas/WEB-INF/lib" )
