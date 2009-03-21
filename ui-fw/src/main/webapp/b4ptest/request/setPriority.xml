@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<htapis:setPriority xmlns:htapis="http://www.intalio.com/WS-HT/api/xsd">
+	<htapis:identifier>testTask1</htapis:identifier>
+	<htapis:priority>0</htapis:priority>
+</htapis:setPriority>
