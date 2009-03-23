@@ -34,7 +34,7 @@ public abstract class TaskAbstract {
 	@Basic
 	private Date startBy;
 	@Basic
-	private Date complteBy;
+	private Date completeBy;
 	@Column(length = 64)
 	private String presentationName;
 	@Column(length = 254)
@@ -157,12 +157,12 @@ public abstract class TaskAbstract {
 		this.startBy = startBy;
 	}
 
-	public Date getComplteBy() {
-		return complteBy;
+	public Date getCompleteBy() {
+		return completeBy;
 	}
 
-	public void setComplteBy(Date complteBy) {
-		this.complteBy = complteBy;
+	public void setCompleteBy(Date completeBy) {
+		this.completeBy = completeBy;
 	}
 
 	public String getFaultMessage() {
