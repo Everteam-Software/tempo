@@ -19,7 +19,7 @@ import org.apache.openjpa.persistence.Persistent;
 @Table(name="tempob4p_attachment")
 @NamedQueries( { 
 	@NamedQuery(name = Attachment.QUERY_ALL_INFOS, query = "select m.attachmentInfo from Attachment m where m.task.id=?1 order by m.attachmentInfo.attachedAt"),
-	@NamedQuery(name = Attachment.QUERY_ALL_ATTACHMENTS, query = "select m from Attachment m where m.task.id=?1 order by m.attachmentInfo.attachedAt"),
+	@NamedQuery(name = Attachment.QUERY_ALL_ATTACHMENTS, query = "select m from Attachment m where m.task.id=?1 and m.attachmentInfo.name=?2 order by m.attachmentInfo.attachedAt"),
 	@NamedQuery(name = Attachment.DELETE_WITH_NAME, query = "delete from Attachment m where m.task.id=?1 and m.attachmentInfo.name=?2")})
 
 public class Attachment {

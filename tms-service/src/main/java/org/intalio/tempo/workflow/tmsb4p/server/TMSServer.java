@@ -7,6 +7,7 @@ import org.apache.xmlbeans.XmlObject;
 import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.auth.IAuthProvider;
 import org.intalio.tempo.workflow.auth.UserRoles;
+import org.intalio.tempo.workflow.taskb4p.Attachment;
 import org.intalio.tempo.workflow.taskb4p.AttachmentAccessType;
 import org.intalio.tempo.workflow.taskb4p.AttachmentInfo;
 import org.intalio.tempo.workflow.taskb4p.Task;
@@ -280,8 +281,18 @@ public class TMSServer implements ITMSServer {
         //TODO auth check
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
 
-        return dao.getAttachmentInfos(identifier);
-
+        List<AttachmentInfo> ret = dao.getAttachmentInfos(identifier);
+        dao.close();
+        return ret;
+    }
+    
+    public List<Attachment> getAttachments(String participantToken, String identifier, String attachmentName) throws AuthException{
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        //TODO auth check
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        List<Attachment> ret = dao.getAttachments(identifier, attachmentName);
+        dao.close();
+        return ret;
     }
 
     /*****************************************

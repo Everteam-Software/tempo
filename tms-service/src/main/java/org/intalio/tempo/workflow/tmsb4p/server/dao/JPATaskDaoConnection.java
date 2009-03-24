@@ -1,7 +1,6 @@
 package org.intalio.tempo.workflow.tmsb4p.server.dao;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -115,10 +114,11 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements
         return infos;
     }
 
-    public List<Attachment> getAttachments(String taskId) {
+    public List<Attachment> getAttachments(String taskId, String attachmentName) {
         Query query = entityManager
-                .createNamedQuery(Attachment.QUERY_ALL_INFOS);
+                .createNamedQuery(Attachment.QUERY_ALL_ATTACHMENTS);
         query.setParameter(1, taskId);
+        query.setParameter(2, attachmentName);
 
         List<Attachment> attachments = query.getResultList();
         return attachments;

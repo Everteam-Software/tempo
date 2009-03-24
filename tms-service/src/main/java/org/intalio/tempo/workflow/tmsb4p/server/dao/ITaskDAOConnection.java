@@ -34,7 +34,7 @@ public interface ITaskDAOConnection {
 	
 	public List<AttachmentInfo> getAttachmentInfos(String taskId);
 	
-	public List<Attachment> getAttachments(String taskId);
+	public List<Attachment> getAttachments(String taskId, String attachmentName);
 	
 	public boolean deleteAttachments(String taskId, String attachmentName);
 	
