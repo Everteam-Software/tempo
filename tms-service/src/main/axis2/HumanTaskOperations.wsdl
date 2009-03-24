@@ -719,6 +719,22 @@
 				<soap:fault name="illegalArgumentFault" use="literal" />
 			</wsdl:fault>
 		</wsdl:operation>
+		<wsdl:operation name="setPriority">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/setPriority" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
 		<wsdl:operation name="addAttachment">
 			<soap:operation
 				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/addAttachment" />
@@ -1107,7 +1123,24 @@
 				<soap:fault name="illegalArgumentFault" use="literal" />
 			</wsdl:fault>
 		</wsdl:operation>
-
+		<wsdl:operation name="setGenericHumanRole">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/HumanTaskOperationServices-20081209/setGenericHumanRole">
+				<soap:documentation></soap:documentation>
+			</soap:operation>
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="illegalStateFault">
+				<soap:fault name="illegalStateFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="illegalArgumentFault">
+				<soap:fault name="illegalArgumentFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
 	</wsdl:binding>
 
 	<wsdl:service name="HumanTaskOperationServices">

@@ -735,19 +735,13 @@ public class TMSRequestProcessor {
      * value of the new priority.
      */
     public OMElement setPriority(OMElement requestElement) throws AxisFault {
-        System.out.println("in setPriority");
         String participantToken = getParticipantToken();
-        System.out.println("get token:" + participantToken);
         try {
             SetPriorityDocument spd = SetPriorityDocument.Factory.parse(requestElement.getXMLStreamReader());
-            System.out.println("get spd:" + spd.xmlText());
             SetPriority sp = spd.getSetPriority();
-            System.out.println("get sp:" + sp.xmlText());
             
             String identifier = sp.getIdentifier();
-            System.out.println("get identifier:" + identifier);
             int priority = sp.getPriority().intValue();
-            System.out.println("get priority:" + priority);
             
             _server.setPriority(participantToken, identifier, priority);
 

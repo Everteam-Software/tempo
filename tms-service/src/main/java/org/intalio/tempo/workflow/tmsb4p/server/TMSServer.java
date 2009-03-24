@@ -231,12 +231,11 @@ public class TMSServer implements ITMSServer {
      * 
      * @throws AuthException
      ***************************************/
+    
     public void setPriority(String participantToken, String identifier, int priority) throws AuthException, UnavailableTaskException {
         UserRoles ur = _authProvider.authenticate(participantToken);
-        System.out.println("ur:" + ur.toString());
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         Task task = dao.fetchTaskIfExists(identifier);
-        System.out.println("task id:" + task.getId());
         String actualOwner = task.getActualOwner();
 
         // OrganizationalEntity = task.getBusinessAdministrators();
@@ -244,9 +243,8 @@ public class TMSServer implements ITMSServer {
         if (true) {
             // if (ur.getUserID().equalsIgnoreCase(actualOwner)) {
             task.setPriority(priority);
-            System.out.println("set priority:" + priority);
             dao.updateTask(task);
-            System.out.println("task priority:" + task.getPriority());
+            dao.commit();
             dao.close();
         } else {
             dao.close();

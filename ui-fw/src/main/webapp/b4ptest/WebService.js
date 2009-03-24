@@ -55,7 +55,7 @@ function WebService(URL1, method1, options1){
 //				"</" + this.method + ">" +
 				 this.options.data+
 				"</soap:Body></soap:Envelope>";
-		alert(sr);
+		//alert(sr);
 		this.options.method = 'post';
 		this.options.data = null;
 		
