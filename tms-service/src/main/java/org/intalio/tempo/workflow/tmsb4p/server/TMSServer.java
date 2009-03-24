@@ -7,6 +7,8 @@ import org.apache.xmlbeans.XmlObject;
 import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.auth.IAuthProvider;
 import org.intalio.tempo.workflow.auth.UserRoles;
+import org.intalio.tempo.workflow.taskb4p.AttachmentAccessType;
+import org.intalio.tempo.workflow.taskb4p.AttachmentInfo;
 import org.intalio.tempo.workflow.taskb4p.Task;
 import org.intalio.tempo.workflow.taskb4p.TaskStatus;
 import org.intalio.tempo.workflow.tms.B4PPersistException;
@@ -231,7 +233,7 @@ public class TMSServer implements ITMSServer {
      * 
      * @throws AuthException
      ***************************************/
-    
+
     public void setPriority(String participantToken, String identifier, int priority) throws AuthException, UnavailableTaskException {
         UserRoles ur = _authProvider.authenticate(participantToken);
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
@@ -250,6 +252,36 @@ public class TMSServer implements ITMSServer {
             dao.close();
             throw new AuthException("User:" + ur.getUserID() + "does not authorized to setPriority");
         }
+    }
+
+    public void addAttachment(String participantToken, String identifier, String attachmentName, String accessType, String value) throws AuthException,
+                    UnavailableTaskException {
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        try {
+            // TODO auth check
+            // TODO get contentType
+            String contentType = "plain/text";
+            if (accessType.equalsIgnoreCase("inline")) {
+                dao.addAttachment(identifier, attachmentName, AttachmentAccessType.INLINE, contentType, ur.getUserID(), value);
+            } else if (accessType.equalsIgnoreCase("url")) {
+                dao.addAttachment(identifier, attachmentName, AttachmentAccessType.URL, contentType, ur.getUserID(), value);
+            } else {
+                dao.addAttachment(identifier, attachmentName, AttachmentAccessType.OTHER, contentType, ur.getUserID(), value);
+            }
+            dao.commit();
+        } finally {
+            dao.close();
+        }
+    }
+
+    public List<AttachmentInfo> getAttachmentInfos(String participantToken, String identifier) throws AuthException {
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        //TODO auth check
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+
+        return dao.getAttachmentInfos(identifier);
+
     }
 
     /*****************************************

@@ -21,8 +21,8 @@ import org.apache.xmlbeans.XmlOptions;
 import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.task.xml.TaskXMLConstants;
 import org.intalio.tempo.workflow.task.xml.XmlTooling;
+import org.intalio.tempo.workflow.taskb4p.AttachmentInfo;
 import org.intalio.tempo.workflow.taskb4p.Task;
-import org.intalio.tempo.workflow.taskb4p.TaskAbstract;
 import org.intalio.tempo.workflow.taskb4p.TaskStatus;
 import org.intalio.tempo.workflow.taskb4p.TaskType;
 import org.intalio.tempo.workflow.tms.AccessDeniedException;
@@ -34,10 +34,13 @@ import org.intalio.tempo.workflow.util.xml.InvalidInputFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.intalio.wsHT.api.TAttachmentInfo;
 import com.intalio.wsHT.api.TStatus;
 import com.intalio.wsHT.api.TTask;
 import com.intalio.wsHT.api.TTaskQueryResultRow;
 import com.intalio.wsHT.api.TTaskQueryResultSet;
+import com.intalio.wsHT.api.xsd.AddAttachmentDocument;
+import com.intalio.wsHT.api.xsd.AddAttachmentResponseDocument;
 import com.intalio.wsHT.api.xsd.ClaimDocument;
 import com.intalio.wsHT.api.xsd.ClaimResponseDocument;
 import com.intalio.wsHT.api.xsd.CompleteDocument;
@@ -50,6 +53,8 @@ import com.intalio.wsHT.api.xsd.FailDocument;
 import com.intalio.wsHT.api.xsd.FailResponseDocument;
 import com.intalio.wsHT.api.xsd.ForwardDocument;
 import com.intalio.wsHT.api.xsd.ForwardResponseDocument;
+import com.intalio.wsHT.api.xsd.GetAttachmentInfosDocument;
+import com.intalio.wsHT.api.xsd.GetAttachmentInfosResponseDocument;
 import com.intalio.wsHT.api.xsd.GetMyTasksDocument;
 import com.intalio.wsHT.api.xsd.GetMyTasksResponseDocument;
 import com.intalio.wsHT.api.xsd.QueryDocument;
@@ -68,6 +73,7 @@ import com.intalio.wsHT.api.xsd.StartDocument;
 import com.intalio.wsHT.api.xsd.StartResponseDocument;
 import com.intalio.wsHT.api.xsd.StopDocument;
 import com.intalio.wsHT.api.xsd.StopResponseDocument;
+import com.intalio.wsHT.api.xsd.AddAttachmentDocument.AddAttachment;
 import com.intalio.wsHT.api.xsd.ClaimDocument.Claim;
 import com.intalio.wsHT.api.xsd.ClaimResponseDocument.ClaimResponse;
 import com.intalio.wsHT.api.xsd.CompleteDocument.Complete;
@@ -79,6 +85,8 @@ import com.intalio.wsHT.api.xsd.FailDocument.Fail;
 import com.intalio.wsHT.api.xsd.FailResponseDocument.FailResponse;
 import com.intalio.wsHT.api.xsd.ForwardDocument.Forward;
 import com.intalio.wsHT.api.xsd.ForwardResponseDocument.ForwardResponse;
+import com.intalio.wsHT.api.xsd.GetAttachmentInfosDocument.GetAttachmentInfos;
+import com.intalio.wsHT.api.xsd.GetAttachmentInfosResponseDocument.GetAttachmentInfosResponse;
 import com.intalio.wsHT.api.xsd.GetMyTasksDocument.GetMyTasks;
 import com.intalio.wsHT.api.xsd.GetMyTasksResponseDocument.GetMyTasksResponse;
 import com.intalio.wsHT.api.xsd.QueryDocument.Query;
@@ -753,7 +761,63 @@ public class TMSRequestProcessor {
             throw makeFault(e);
         }
     }
-
+    
+    /**
+     * Add attachment to the task
+     */
+    public OMElement addAttachment(OMElement requestElement) throws AxisFault{
+        String participantToken = getParticipantToken();
+        try{
+            AddAttachmentDocument aad = AddAttachmentDocument.Factory.parse(requestElement.getXMLStreamReader());
+            AddAttachment aa = aad.getAddAttachment();
+            
+            _server.addAttachment(participantToken, aa.getIdentifier(), aa.getName(), aa.getAccessType(), aa.getAttachment().xmlText());
+            //TODO process the attachment field
+            
+            AddAttachmentResponseDocument ret = AddAttachmentResponseDocument.Factory.newInstance();
+            ret.addNewAddAttachmentResponse();
+            
+            return convertXML(ret);
+        } catch (Exception e) {
+            throw makeFault(e);
+        }
+    }
+    
+    /**
+     * Get attachment information for all attachments associated with the task
+     */
+    public OMElement getAttachmentInfos(OMElement requestElement) throws AxisFault{
+        String participantToken = getParticipantToken();
+        try{
+            GetAttachmentInfosDocument gaid = GetAttachmentInfosDocument.Factory.parse(requestElement.getXMLStreamReader());
+            GetAttachmentInfos gai = gaid.getGetAttachmentInfos();
+            
+            List<AttachmentInfo> attInfos = _server.getAttachmentInfos(participantToken, gai.getIdentifier());
+            
+            GetAttachmentInfosResponseDocument retDoc = GetAttachmentInfosResponseDocument.Factory.newInstance();
+            GetAttachmentInfosResponse ret = retDoc.addNewGetAttachmentInfosResponse();
+            Iterator<AttachmentInfo> it = attInfos.iterator();
+            while(it.hasNext()){
+                TAttachmentInfo tAttInfo = ret.addNewInfo();
+                AttachmentInfo attInfo = it.next();
+                tAttInfo.setAccessType(attInfo.getAccessType().name());
+                
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(attInfo.getAttachedAt());
+                tAttInfo.setAttachedAt(cal);
+                
+                tAttInfo.setAttachedBy(attInfo.getAttachedBy());
+                tAttInfo.setContentType(attInfo.getContentType());
+                tAttInfo.setName(attInfo.getName());
+            }
+            
+            return convertXML(retDoc);
+        }catch (Exception e) {
+            throw makeFault(e);
+        }
+    }
+    
+    
     /*****************************************
      * Query operation
      *****************************************/

@@ -50,6 +50,7 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements
         attachment.setValue(value);
         
         AttachmentInfo attachmentInfo = new AttachmentInfo();
+        attachmentInfo.setName(attachmentName);
         attachmentInfo.setAccessType(accessType);
         attachmentInfo.setAttachedAt(new Date(System.currentTimeMillis()));
         attachmentInfo.setAttachedBy(attachedBy);
