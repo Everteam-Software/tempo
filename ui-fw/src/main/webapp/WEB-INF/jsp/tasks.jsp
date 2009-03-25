@@ -37,7 +37,7 @@
 		<script type="text/javascript" src="script/jquery.demensions.js"></script>
 		<script type="text/javascript" src="script/jquery.string.1.0.js"></script>
 		<script src="script/jquery.smartmodal.js" type="text/javascript" charset="utf-8"></script>
-		<script type="text/javascript" src="script/soapclient.js"></script>
+		<script type="text/javascript" src="script/soap-1.3.js"></script>
 
 		<%@ include file="/script/grids.jsp"%>
 
