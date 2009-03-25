@@ -325,6 +325,18 @@ public class TMSServer implements ITMSServer {
         dao.close();
         return comments;
     }
+    
+    public Task getTaskByIdentifier(String participantToken, String identifier) throws AuthException, UnavailableTaskException{
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        //TODO auth check
+        
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        Task task = dao.fetchTaskIfExists(identifier);
+        dao.close();
+        return task;
+    }
+    
+    
     /*****************************************
      * administrative operation
      *****************************************/

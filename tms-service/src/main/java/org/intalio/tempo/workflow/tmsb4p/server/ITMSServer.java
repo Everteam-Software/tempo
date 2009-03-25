@@ -38,4 +38,5 @@ public interface ITMSServer {
 	public void deleteAttachments(String participantToken, String identifier, String attachmentName) throws AuthException;
 	public void addComment(String participantToken, String identifier, String text) throws AuthException;
 	public List<Comment> getComments(String participantToken, String identifier) throws AuthException;
+	public Task getTaskByIdentifier(String participantToken, String identifier) throws AuthException, UnavailableTaskException;
 }

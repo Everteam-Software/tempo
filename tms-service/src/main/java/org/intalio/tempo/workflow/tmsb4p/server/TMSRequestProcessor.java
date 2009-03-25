@@ -24,6 +24,7 @@ import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.taskb4p.Attachment;
 import org.intalio.tempo.workflow.taskb4p.AttachmentInfo;
 import org.intalio.tempo.workflow.taskb4p.Comment;
+import org.intalio.tempo.workflow.taskb4p.OrganizationalEntity;
 import org.intalio.tempo.workflow.taskb4p.Task;
 import org.intalio.tempo.workflow.taskb4p.TaskStatus;
 import org.intalio.tempo.workflow.taskb4p.TaskType;
@@ -36,6 +37,7 @@ import org.intalio.tempo.workflow.util.xml.InvalidInputFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.intalio.wsHT.TOrganizationalEntity;
 import com.intalio.wsHT.api.TAttachment;
 import com.intalio.wsHT.api.TAttachmentInfo;
 import com.intalio.wsHT.api.TComment;
@@ -69,6 +71,10 @@ import com.intalio.wsHT.api.xsd.GetCommentsDocument;
 import com.intalio.wsHT.api.xsd.GetCommentsResposneDocument;
 import com.intalio.wsHT.api.xsd.GetMyTasksDocument;
 import com.intalio.wsHT.api.xsd.GetMyTasksResponseDocument;
+import com.intalio.wsHT.api.xsd.GetTaskDescriptionDocument;
+import com.intalio.wsHT.api.xsd.GetTaskDescriptionResponseDocument;
+import com.intalio.wsHT.api.xsd.GetTaskInfoDocument;
+import com.intalio.wsHT.api.xsd.GetTaskInfoResponseDocument;
 import com.intalio.wsHT.api.xsd.QueryDocument;
 import com.intalio.wsHT.api.xsd.QueryResponseDocument;
 import com.intalio.wsHT.api.xsd.ReleaseDocument;
@@ -107,6 +113,10 @@ import com.intalio.wsHT.api.xsd.GetCommentsDocument.GetComments;
 import com.intalio.wsHT.api.xsd.GetCommentsResposneDocument.GetCommentsResposne;
 import com.intalio.wsHT.api.xsd.GetMyTasksDocument.GetMyTasks;
 import com.intalio.wsHT.api.xsd.GetMyTasksResponseDocument.GetMyTasksResponse;
+import com.intalio.wsHT.api.xsd.GetTaskDescriptionDocument.GetTaskDescription;
+import com.intalio.wsHT.api.xsd.GetTaskDescriptionResponseDocument.GetTaskDescriptionResponse;
+import com.intalio.wsHT.api.xsd.GetTaskInfoDocument.GetTaskInfo;
+import com.intalio.wsHT.api.xsd.GetTaskInfoResponseDocument.GetTaskInfoResponse;
 import com.intalio.wsHT.api.xsd.QueryDocument.Query;
 import com.intalio.wsHT.api.xsd.QueryResponseDocument.QueryResponse;
 import com.intalio.wsHT.api.xsd.ReleaseDocument.Release;
@@ -255,6 +265,18 @@ public class TMSRequestProcessor {
         // _logger.info("task " + i + ": " + tt.xmlText());
         // System.out.println("task: " + tt.xmlText());
 
+    }
+    
+    private void marsalAttachmentInfo(AttachmentInfo attInfo, TAttachmentInfo tAttInfo){
+        tAttInfo.setAccessType(attInfo.getAccessType().name());
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(attInfo.getAttachedAt());
+        tAttInfo.setAttachedAt(cal);
+
+        tAttInfo.setAttachedBy(attInfo.getAttachedBy());
+        tAttInfo.setContentType(attInfo.getContentType());
+        tAttInfo.setName(attInfo.getName());
     }
 
     // private abstract class TMSResponseMarshaller extends OMMarshaller {
@@ -818,16 +840,7 @@ public class TMSRequestProcessor {
             while (it.hasNext()) {
                 TAttachmentInfo tAttInfo = ret.addNewInfo();
                 AttachmentInfo attInfo = it.next();
-                tAttInfo.setAccessType(attInfo.getAccessType().name());
-
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(attInfo.getAttachedAt());
-                tAttInfo.setAttachedAt(cal);
-
-                tAttInfo.setAttachedBy(attInfo.getAttachedBy());
-                tAttInfo.setContentType(attInfo.getContentType());
-                tAttInfo.setName(attInfo.getName());
-            }
+                marsalAttachmentInfo(attInfo, tAttInfo);            }
 
             return convertXML(retDoc);
         } catch (Exception e) {
@@ -855,16 +868,7 @@ public class TMSRequestProcessor {
                 Attachment att = it.next();
                 AttachmentInfo attInfo = att.getAttachmentInfo();
                 
-                tAttInfo.setAccessType(attInfo.getAccessType().name());
-
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(attInfo.getAttachedAt());
-                tAttInfo.setAttachedAt(cal);
-
-                tAttInfo.setAttachedBy(attInfo.getAttachedBy());
-                tAttInfo.setContentType(attInfo.getContentType());
-                tAttInfo.setName(attInfo.getName());
-            }
+                marsalAttachmentInfo(attInfo, tAttInfo);            }
             return convertXML(retDoc);
         } catch (Exception e) {
             throw makeFault(e);
@@ -944,6 +948,55 @@ public class TMSRequestProcessor {
             throw makeFault(e);
         }
     }
+    
+    /**
+     * Applies to both tasks and notifications.
+     * Returns a data object of type tTask
+     */
+    public OMElement getTaskInfo(OMElement requestElement) throws AxisFault{
+        String participantToken = getParticipantToken();
+        try{
+            GetTaskInfoDocument gtid = GetTaskInfoDocument.Factory.parse(requestElement.getXMLStreamReader());
+            GetTaskInfo gti = gtid.getGetTaskInfo();
+            
+            Task task = _server.getTaskByIdentifier(participantToken, gti.getIdentifier());
+            
+            GetTaskInfoResponseDocument gtird = GetTaskInfoResponseDocument.Factory.newInstance();
+            GetTaskInfoResponse gtir = gtird.addNewGetTaskInfoResponse();
+            
+            TTask tTask = gtir.addNewTask();
+            
+            this.marshalTask(task, tTask);
+            
+            return convertXML(gtird);
+        }catch(Exception e) {
+            throw makeFault(e);
+        }
+    }
+    
+    /**
+     * Applies to both tasks and notifications. Returns the presentation description 
+     * in the specified mime type. 
+     */
+    public OMElement getTaskDescription(OMElement requestElement) throws AxisFault{
+        String participantToken = getParticipantToken();
+        try{
+            GetTaskDescriptionDocument gtdd = GetTaskDescriptionDocument.Factory.parse(requestElement.getXMLStreamReader());
+            GetTaskDescription gtd = gtdd.getGetTaskDescription();
+            
+            Task task = _server.getTaskByIdentifier(participantToken, gtd.getIdentifier());
+            
+            GetTaskDescriptionResponseDocument gtdrd = GetTaskDescriptionResponseDocument.Factory.newInstance();
+            GetTaskDescriptionResponse gtdr = gtdrd.addNewGetTaskDescriptionResponse();
+            gtdr.setDescription(task.getPresentationName());
+            //TODO replace the presentation name with the real description
+            
+            return convertXML(gtdrd);
+        }catch(Exception e) {
+            throw makeFault(e);
+        }
+    }
+    
 
     /*****************************************
      * Query operation
