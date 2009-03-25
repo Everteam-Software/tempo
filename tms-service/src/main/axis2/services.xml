@@ -187,9 +187,9 @@
 	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
 	            <actionMapping>http://www.intalio.com/WS-HT/api/wsdl/getAttachments</actionMapping>
 	     </operation>
-	     <operation name="Attachments">
+	     <operation name="deleteAttachments">
 	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
-	            <actionMapping>http://www.intalio.com/WS-HT/api/wsdl/Attachments</actionMapping>
+	            <actionMapping>http://www.intalio.com/WS-HT/api/wsdl/deleteAttachments</actionMapping>
 	     </operation>
 	     <operation name="addComment">
 	            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>

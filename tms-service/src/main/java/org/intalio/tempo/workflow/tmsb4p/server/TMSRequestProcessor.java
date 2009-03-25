@@ -23,6 +23,7 @@ import org.intalio.tempo.workflow.task.xml.TaskXMLConstants;
 import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.taskb4p.Attachment;
 import org.intalio.tempo.workflow.taskb4p.AttachmentInfo;
+import org.intalio.tempo.workflow.taskb4p.Comment;
 import org.intalio.tempo.workflow.taskb4p.Task;
 import org.intalio.tempo.workflow.taskb4p.TaskStatus;
 import org.intalio.tempo.workflow.taskb4p.TaskType;
@@ -37,12 +38,15 @@ import org.slf4j.LoggerFactory;
 
 import com.intalio.wsHT.api.TAttachment;
 import com.intalio.wsHT.api.TAttachmentInfo;
+import com.intalio.wsHT.api.TComment;
 import com.intalio.wsHT.api.TStatus;
 import com.intalio.wsHT.api.TTask;
 import com.intalio.wsHT.api.TTaskQueryResultRow;
 import com.intalio.wsHT.api.TTaskQueryResultSet;
 import com.intalio.wsHT.api.xsd.AddAttachmentDocument;
 import com.intalio.wsHT.api.xsd.AddAttachmentResponseDocument;
+import com.intalio.wsHT.api.xsd.AddCommentDocument;
+import com.intalio.wsHT.api.xsd.AddCommentResponseDocument;
 import com.intalio.wsHT.api.xsd.ClaimDocument;
 import com.intalio.wsHT.api.xsd.ClaimResponseDocument;
 import com.intalio.wsHT.api.xsd.CompleteDocument;
@@ -51,6 +55,8 @@ import com.intalio.wsHT.api.xsd.CreateDocument;
 import com.intalio.wsHT.api.xsd.CreateResponseDocument;
 import com.intalio.wsHT.api.xsd.DelegateDocument;
 import com.intalio.wsHT.api.xsd.DelegateResponseDocument;
+import com.intalio.wsHT.api.xsd.DeleteAttachmentsDocument;
+import com.intalio.wsHT.api.xsd.DeleteAttachmentsResponseDocument;
 import com.intalio.wsHT.api.xsd.FailDocument;
 import com.intalio.wsHT.api.xsd.FailResponseDocument;
 import com.intalio.wsHT.api.xsd.ForwardDocument;
@@ -59,6 +65,8 @@ import com.intalio.wsHT.api.xsd.GetAttachmentInfosDocument;
 import com.intalio.wsHT.api.xsd.GetAttachmentInfosResponseDocument;
 import com.intalio.wsHT.api.xsd.GetAttachmentsDocument;
 import com.intalio.wsHT.api.xsd.GetAttachmentsResponseDocument;
+import com.intalio.wsHT.api.xsd.GetCommentsDocument;
+import com.intalio.wsHT.api.xsd.GetCommentsResposneDocument;
 import com.intalio.wsHT.api.xsd.GetMyTasksDocument;
 import com.intalio.wsHT.api.xsd.GetMyTasksResponseDocument;
 import com.intalio.wsHT.api.xsd.QueryDocument;
@@ -78,6 +86,7 @@ import com.intalio.wsHT.api.xsd.StartResponseDocument;
 import com.intalio.wsHT.api.xsd.StopDocument;
 import com.intalio.wsHT.api.xsd.StopResponseDocument;
 import com.intalio.wsHT.api.xsd.AddAttachmentDocument.AddAttachment;
+import com.intalio.wsHT.api.xsd.AddCommentDocument.AddComment;
 import com.intalio.wsHT.api.xsd.ClaimDocument.Claim;
 import com.intalio.wsHT.api.xsd.ClaimResponseDocument.ClaimResponse;
 import com.intalio.wsHT.api.xsd.CompleteDocument.Complete;
@@ -85,6 +94,7 @@ import com.intalio.wsHT.api.xsd.CompleteResponseDocument.CompleteResponse;
 import com.intalio.wsHT.api.xsd.CreateDocument.Create;
 import com.intalio.wsHT.api.xsd.DelegateDocument.Delegate;
 import com.intalio.wsHT.api.xsd.DelegateResponseDocument.DelegateResponse;
+import com.intalio.wsHT.api.xsd.DeleteAttachmentsDocument.DeleteAttachments;
 import com.intalio.wsHT.api.xsd.FailDocument.Fail;
 import com.intalio.wsHT.api.xsd.FailResponseDocument.FailResponse;
 import com.intalio.wsHT.api.xsd.ForwardDocument.Forward;
@@ -93,6 +103,8 @@ import com.intalio.wsHT.api.xsd.GetAttachmentInfosDocument.GetAttachmentInfos;
 import com.intalio.wsHT.api.xsd.GetAttachmentInfosResponseDocument.GetAttachmentInfosResponse;
 import com.intalio.wsHT.api.xsd.GetAttachmentsDocument.GetAttachments;
 import com.intalio.wsHT.api.xsd.GetAttachmentsResponseDocument.GetAttachmentsResponse;
+import com.intalio.wsHT.api.xsd.GetCommentsDocument.GetComments;
+import com.intalio.wsHT.api.xsd.GetCommentsResposneDocument.GetCommentsResposne;
 import com.intalio.wsHT.api.xsd.GetMyTasksDocument.GetMyTasks;
 import com.intalio.wsHT.api.xsd.GetMyTasksResponseDocument.GetMyTasksResponse;
 import com.intalio.wsHT.api.xsd.QueryDocument.Query;
@@ -855,6 +867,80 @@ public class TMSRequestProcessor {
             }
             return convertXML(retDoc);
         } catch (Exception e) {
+            throw makeFault(e);
+        }
+    }
+    
+    /**
+     * Delete the attachments with the specified name from the task (if multiple attachments with that
+     * name exist, all are deleted).
+     * Attachments provided by the enclosing context are not affected by this operation. 
+     */
+    public OMElement deleteAttachments(OMElement requestElement) throws AxisFault {
+        String participantToken = getParticipantToken();
+        try{
+            DeleteAttachmentsDocument dad = DeleteAttachmentsDocument.Factory.parse(requestElement.getXMLStreamReader());
+            DeleteAttachments da = dad.getDeleteAttachments();
+            
+            _server.deleteAttachments(participantToken, da.getIdentifier(), da.getAttachmentName());
+            
+            DeleteAttachmentsResponseDocument dar = DeleteAttachmentsResponseDocument.Factory.newInstance();
+            dar.addNewDeleteAttachmentsResponse();
+            
+            return convertXML(dar);
+        }catch(Exception e) {
+            throw makeFault(e);
+        }
+    }
+    
+    /**
+     * Add a comment to a task.
+     */
+    public OMElement addComment(OMElement requestElement) throws AxisFault {
+        String participantToken = getParticipantToken();
+        try{
+            AddCommentDocument acd = AddCommentDocument.Factory.parse(requestElement.getXMLStreamReader());
+            AddComment ac = acd.getAddComment();
+            
+            _server.addComment(participantToken, ac.getIdentifier(), ac.getText());
+            
+            AddCommentResponseDocument ard = AddCommentResponseDocument.Factory.newInstance();
+            ard.addNewAddCommentResponse();
+            
+            return convertXML(ard);
+        }catch(Exception e) {
+            throw makeFault(e);
+        }
+    }
+    
+    /**
+     * Get all comments of a task
+     */
+    public OMElement getComments(OMElement requestElement) throws AxisFault{
+        String participantToken = getParticipantToken();
+        try{
+            GetCommentsDocument gcd = GetCommentsDocument.Factory.parse(requestElement.getXMLStreamReader());
+            GetComments gc = gcd.getGetComments();
+            
+            List<Comment> comments = _server.getComments(participantToken, gc.getIdentifier());
+            Iterator<Comment> it = comments.iterator();
+            
+            GetCommentsResposneDocument gcrd = GetCommentsResposneDocument.Factory.newInstance();
+            GetCommentsResposne gcr = gcrd.addNewGetCommentsResposne();
+            while(it.hasNext()){
+                Comment comment = it.next();
+                TComment tComment = gcr.addNewComment();
+                tComment.setAddedBy(comment.getAddedBy());
+                
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(comment.getAddedAt());
+                tComment.setAddedAt(cal);
+                
+                tComment.setText(comment.getText());
+            }
+            
+            return convertXML(gcrd);
+        }catch(Exception e) {
             throw makeFault(e);
         }
     }

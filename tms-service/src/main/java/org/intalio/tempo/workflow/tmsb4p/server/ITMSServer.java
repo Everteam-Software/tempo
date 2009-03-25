@@ -6,6 +6,7 @@ import org.apache.xmlbeans.XmlObject;
 import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.taskb4p.Attachment;
 import org.intalio.tempo.workflow.taskb4p.AttachmentInfo;
+import org.intalio.tempo.workflow.taskb4p.Comment;
 import org.intalio.tempo.workflow.taskb4p.Task;
 import org.intalio.tempo.workflow.tms.TMSException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
@@ -34,4 +35,7 @@ public interface ITMSServer {
     throws AuthException, UnavailableTaskException;
 	public List<AttachmentInfo> getAttachmentInfos(String participantToken, String identifier) throws AuthException;
 	public List<Attachment> getAttachments(String participantToken, String identifier, String attachmentName) throws AuthException;
+	public void deleteAttachments(String participantToken, String identifier, String attachmentName) throws AuthException;
+	public void addComment(String participantToken, String identifier, String text) throws AuthException;
+	public List<Comment> getComments(String participantToken, String identifier) throws AuthException;
 }

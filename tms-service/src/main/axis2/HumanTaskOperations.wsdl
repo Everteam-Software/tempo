@@ -369,7 +369,7 @@
 		</wsdl:operation>
 		<wsdl:operation name="addComment">
 			<wsdl:input message="addComment" />
-			<wsdl:output message="addCommentResposne" />
+			<wsdl:output message="addCommentResponse" />
 			<wsdl:fault name="illegalStateFault" message="tns:illegalStateFault" />
 			<wsdl:fault name="illegalArgumentFault" message="tns:illegalArgumentFault" />
 			<wsdl:fault name="illegalAccessFault" message="tns:illegalAccessFault" />

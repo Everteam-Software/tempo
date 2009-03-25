@@ -71,7 +71,8 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements
         comment.setAddedAt(new Date(System.currentTimeMillis()));
         comment.setText(text);
         comment.setAddedBy(addedBy);
-
+        comment.setTask(task);
+        
         entityManager.persist(comment);
     }
 

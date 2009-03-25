@@ -10,6 +10,7 @@ import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.taskb4p.Attachment;
 import org.intalio.tempo.workflow.taskb4p.AttachmentAccessType;
 import org.intalio.tempo.workflow.taskb4p.AttachmentInfo;
+import org.intalio.tempo.workflow.taskb4p.Comment;
 import org.intalio.tempo.workflow.taskb4p.Task;
 import org.intalio.tempo.workflow.taskb4p.TaskStatus;
 import org.intalio.tempo.workflow.tms.B4PPersistException;
@@ -294,7 +295,36 @@ public class TMSServer implements ITMSServer {
         dao.close();
         return ret;
     }
+    
+    public void deleteAttachments(String participantToken, String identifier, String attachmentName) throws AuthException{
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        //TODO auth check
+        
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        dao.deleteAttachments(identifier, attachmentName);
+        dao.commit();
+        dao.close();
+    }
+    
+    public void addComment(String participantToken, String identifier, String text) throws AuthException{
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        //TODO auth check
+        
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        dao.addComment(identifier, ur.getUserID(), text);
+        dao.commit();
+        dao.close();
+    }
 
+    public List<Comment> getComments(String participantToken, String identifier) throws AuthException{
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        //TODO auth check
+        
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        List<Comment> comments = dao.getComments(identifier);
+        dao.close();
+        return comments;
+    }
     /*****************************************
      * administrative operation
      *****************************************/
