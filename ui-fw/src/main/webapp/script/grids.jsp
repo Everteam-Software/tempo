@@ -75,7 +75,7 @@
             $('.trSelected',grid).each(function() {
 
               var pipa = $('a.pipa',$(this));
-              if(pipa!=null) {
+              if(pipa.html()!=null) {
                var soapBody = new SOAPObject("deletePipa");
                soapBody.ns = "http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/";
                soapBody.appendChild(new SOAPObject("pipaurl")).val(pipa.attr('url'));
@@ -86,9 +86,9 @@
                SOAPClient.SendRequest(sr, null);
               } // end soap delete pipa
      
-             var task = $('a.task',$(this));
-             if(task!=null) {
-               var soapBody = new SOAPObject("deletePipa");
+             var task = $('a.taskd',$(this));
+             if(task.html()!=null) {
+               var soapBody = new SOAPObject("delete");
                soapBody.ns = "http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/";
                soapBody.appendChild(new SOAPObject("taskId")).val(task.attr('tid'));
                soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');

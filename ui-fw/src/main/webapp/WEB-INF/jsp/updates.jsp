@@ -12,7 +12,7 @@
 				<c:set var="taskFullURL" value="${taskHolder.formManagerURL}" />
 				<row id="no${status.index}">
 					<cell><![CDATA[
-					    <a class="task" href="${taskFullURL}" tid="${taskHolder.task.ID}" target="taskform">
+					    <a class="taskd" href="${taskFullURL}" tid="${taskHolder.task.ID}" target="taskform">
 						<c:choose>
 							<c:when test="${taskHolder.task.description == ''}">
 								<i><fmt:message key="org_intalio_uifw_tasks_notitle"/></i>
@@ -48,7 +48,7 @@
 				<c:set var="taskFullURL" value="${taskHolder.formManagerURL}" />
 				<row id="pa${status.index}">
 						<cell><![CDATA[
-						    <a class="task" href="${taskFullURL}" tid="${taskHolder.task.ID}" target="taskform">
+						    <a class="taskd" href="${taskFullURL}" tid="${taskHolder.task.ID}" target="taskform">
 							<c:choose>
 								<c:when test="${taskHolder.task.description == ''}">
 									<i><fmt:message key="org_intalio_uifw_tasks_notitle"/></i>
