@@ -1,11 +1,14 @@
 package org.intalio.tempo.workflow.tmsb4p.server;
 
 import java.io.InputStream;
+import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.apache.axiom.om.OMAbstractFactory;
@@ -25,9 +28,11 @@ import org.intalio.tempo.workflow.taskb4p.Attachment;
 import org.intalio.tempo.workflow.taskb4p.AttachmentInfo;
 import org.intalio.tempo.workflow.taskb4p.Comment;
 import org.intalio.tempo.workflow.taskb4p.OrganizationalEntity;
+import org.intalio.tempo.workflow.taskb4p.Principal;
 import org.intalio.tempo.workflow.taskb4p.Task;
 import org.intalio.tempo.workflow.taskb4p.TaskStatus;
 import org.intalio.tempo.workflow.taskb4p.TaskType;
+import org.intalio.tempo.workflow.taskb4p.UserOrganizationalEntity;
 import org.intalio.tempo.workflow.tms.AccessDeniedException;
 import org.intalio.tempo.workflow.tms.TMSException;
 import org.intalio.tempo.workflow.tms.UnavailableAttachmentException;
@@ -37,7 +42,11 @@ import org.intalio.tempo.workflow.util.xml.InvalidInputFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.intalio.wsHT.TGroup;
+import com.intalio.wsHT.TGrouplist;
 import com.intalio.wsHT.TOrganizationalEntity;
+import com.intalio.wsHT.TUser;
+import com.intalio.wsHT.TUserlist;
 import com.intalio.wsHT.api.TAttachment;
 import com.intalio.wsHT.api.TAttachmentInfo;
 import com.intalio.wsHT.api.TComment;
@@ -243,36 +252,75 @@ public class TMSRequestProcessor {
         if (t == null || tt == null)
             return;
         if (t.getActivationTime() != null) {
-            Calendar at = Calendar.getInstance();
-            at.setTime(t.getActivationTime());
-            tt.setActivationTime(at);
+            tt.setActivationTime(convertDateToCalendar(t.getActivationTime()));
         }
         tt.setActualOwner(t.getActualOwner());
+
+        // Business Administrators
+        OrganizationalEntity ba = t.getBusinessAdministrators();
+        tt.setBusinessAdministrators(marshOrgEntity(ba));
+
         System.out.println("created by:" + t.getCreatedBy());
         tt.setCreatedBy(t.getCreatedBy());
         if (t.getCreatedOn() != null) {
-            Calendar createdOn = Calendar.getInstance();
-            createdOn.setTime(t.getCreatedOn());
-            tt.setCreatedOn(createdOn);
+            tt.setCreatedOn(convertDateToCalendar(t.getCreatedOn()));
         }
+
         tt.setId(t.getId());
-        System.out.println("status:" + t.getStatus());
+
+        tt.setExpirationTime(convertDateToCalendar(t.getExpirationTime()));
+
+        if (t.getAttachments() != null && t.getAttachments().size() > 0) {
+            tt.setHasAttachments(true);
+        } else {
+            tt.setHasAttachments(false);
+        }
+
+        if (t.getComments() != null && t.getComments().size() > 0) {
+            tt.setHasComments(true);
+        } else {
+            tt.setHasComments(false);
+        }
+
+        if (t.getPotentialOwners() != null && t.getPotentialOwners().getPrincipals() != null && t.getPotentialOwners().getPrincipals().size() > 0) {
+            tt.setHasPotentialOwners(true);
+        } else {
+            tt.setHasPotentialOwners(false);
+        }
+
+        tt.setIsSkipable(t.isSkipable());
+        tt.setName(new javax.xml.namespace.QName(t.getName()));
+        tt.setNotificationRecipients(marshOrgEntity(t.getNotificationRecipients()));
+        tt.setPotentialOwners(marshOrgEntity(t.getPotentialOwners()));
+        tt.setPresentationName(t.getPresentationName());
+        tt.setPresentationSubject(t.getPresentationSubject());
+        tt.setPrimarySearchBy(t.getPrimarySearchBy());
+        tt.setPriority(BigInteger.valueOf(t.getPriority()));
+
+        if (t.getRenderingMethName() != null)
+            tt.setRenderingMethodExists(true);
+        else
+            tt.setRenderingMethodExists(false);
+
+        if (t.getStartBy() != null)
+            tt.setStartByExists(true);
+        else
+            tt.setStartByExists(false);
+
+        tt.setTaskInitiator(t.getTaskInitiator());
+        tt.setTaskStakeholders(marshOrgEntity(t.getTaskStakeholders()));
+
         if (t.getStatus() != null)
             tt.setStatus(TStatus.Enum.forString(t.getStatus().toString()));
-        tt.setTaskInitiator(t.getTaskInitiator());
         if (t.getTaskType() != null)
             tt.setTaskType(t.getTaskType().toString());
-        // _logger.info("task " + i + ": " + tt.xmlText());
-        // System.out.println("task: " + tt.xmlText());
 
     }
-    
-    private void marsalAttachmentInfo(AttachmentInfo attInfo, TAttachmentInfo tAttInfo){
+
+    private void marsalAttachmentInfo(AttachmentInfo attInfo, TAttachmentInfo tAttInfo) {
         tAttInfo.setAccessType(attInfo.getAccessType().name());
 
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(attInfo.getAttachedAt());
-        tAttInfo.setAttachedAt(cal);
+        tAttInfo.setAttachedAt(convertDateToCalendar(attInfo.getAttachedAt()));
 
         tAttInfo.setAttachedBy(attInfo.getAttachedBy());
         tAttInfo.setContentType(attInfo.getContentType());
@@ -308,6 +356,39 @@ public class TMSRequestProcessor {
             throw new RuntimeException(e);
         }
         return dm;
+    }
+
+    private TOrganizationalEntity marshOrgEntity(OrganizationalEntity oe) {
+        TOrganizationalEntity tOE = TOrganizationalEntity.Factory.newInstance();
+        if (oe != null && oe.getEntityType() != null) {
+            if (oe.getEntityType().equalsIgnoreCase(OrganizationalEntity.USER_ENTITY)) {
+                TUserlist tUL = tOE.addNewUsers();
+                Iterator<Principal> it = oe.getPrincipals().iterator();
+                while (it != null && it.hasNext()) {
+                    TUser tUser = tUL.addNewUser();
+                    tUser.setStringValue(it.next().getValue());
+                }
+            } else {
+                TGrouplist tGL = tOE.addNewGroups();
+                Iterator<Principal> it = oe.getPrincipals().iterator();
+                while (it != null && it.hasNext()) {
+                    TGroup tGroup = tGL.addNewGroup();
+                    tGroup.setStringValue(it.next().getValue());
+                }
+            }
+        }
+        return tOE;
+    }
+
+    private Calendar convertDateToCalendar(Date date) {
+        if (date != null) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+            return cal;
+        }else{
+            return null;
+        }
+
     }
 
     /************************************************************************
@@ -353,6 +434,16 @@ public class TMSRequestProcessor {
                 task.setCreatedOn(new Date());
                 task.setPriority(tasks[i].getPriority().intValue());
                 task.setStatus(TaskStatus.CREATED);
+
+                OrganizationalEntity potentialOwner = new UserOrganizationalEntity();
+                Principal user = new Principal();
+                user.setValue("some test user");
+                user.setOrgEntity(potentialOwner);
+                Set<Principal> users = new HashSet<Principal>();
+                users.add(user);
+                potentialOwner.setPrincipals(users);
+
+                task.setPotentialOwners(potentialOwner);
                 task.setInputMessage(req.getCreate().getIn());
                 // task.setPotentialOwners(potentialOwners)(tasks[i].getPeopleAssignments().getPotentialOwnersArray()
                 task.setSkipable(tasks[i].getIsSkipable());
@@ -840,7 +931,8 @@ public class TMSRequestProcessor {
             while (it.hasNext()) {
                 TAttachmentInfo tAttInfo = ret.addNewInfo();
                 AttachmentInfo attInfo = it.next();
-                marsalAttachmentInfo(attInfo, tAttInfo);            }
+                marsalAttachmentInfo(attInfo, tAttInfo);
+            }
 
             return convertXML(retDoc);
         } catch (Exception e) {
@@ -856,7 +948,7 @@ public class TMSRequestProcessor {
         try {
             GetAttachmentsDocument gad = GetAttachmentsDocument.Factory.parse(requestElement.getXMLStreamReader());
             GetAttachments ga = gad.getGetAttachments();
-            
+
             List<Attachment> atts = _server.getAttachments(participantToken, ga.getIdentifier(), ga.getAttachmentName());
             GetAttachmentsResponseDocument retDoc = GetAttachmentsResponseDocument.Factory.newInstance();
             GetAttachmentsResponse gar = retDoc.addNewGetAttachmentsResponse();
@@ -867,136 +959,134 @@ public class TMSRequestProcessor {
                 TAttachmentInfo tAttInfo = tAtt.addNewAttachmentInfo();
                 Attachment att = it.next();
                 AttachmentInfo attInfo = att.getAttachmentInfo();
-                
-                marsalAttachmentInfo(attInfo, tAttInfo);            }
+
+                marsalAttachmentInfo(attInfo, tAttInfo);
+            }
             return convertXML(retDoc);
         } catch (Exception e) {
             throw makeFault(e);
         }
     }
-    
+
     /**
-     * Delete the attachments with the specified name from the task (if multiple attachments with that
-     * name exist, all are deleted).
-     * Attachments provided by the enclosing context are not affected by this operation. 
+     * Delete the attachments with the specified name from the task (if multiple
+     * attachments with that name exist, all are deleted). Attachments provided
+     * by the enclosing context are not affected by this operation.
      */
     public OMElement deleteAttachments(OMElement requestElement) throws AxisFault {
         String participantToken = getParticipantToken();
-        try{
+        try {
             DeleteAttachmentsDocument dad = DeleteAttachmentsDocument.Factory.parse(requestElement.getXMLStreamReader());
             DeleteAttachments da = dad.getDeleteAttachments();
-            
+
             _server.deleteAttachments(participantToken, da.getIdentifier(), da.getAttachmentName());
-            
+
             DeleteAttachmentsResponseDocument dar = DeleteAttachmentsResponseDocument.Factory.newInstance();
             dar.addNewDeleteAttachmentsResponse();
-            
+
             return convertXML(dar);
-        }catch(Exception e) {
+        } catch (Exception e) {
             throw makeFault(e);
         }
     }
-    
+
     /**
      * Add a comment to a task.
      */
     public OMElement addComment(OMElement requestElement) throws AxisFault {
         String participantToken = getParticipantToken();
-        try{
+        try {
             AddCommentDocument acd = AddCommentDocument.Factory.parse(requestElement.getXMLStreamReader());
             AddComment ac = acd.getAddComment();
-            
+
             _server.addComment(participantToken, ac.getIdentifier(), ac.getText());
-            
+
             AddCommentResponseDocument ard = AddCommentResponseDocument.Factory.newInstance();
             ard.addNewAddCommentResponse();
-            
+
             return convertXML(ard);
-        }catch(Exception e) {
+        } catch (Exception e) {
             throw makeFault(e);
         }
     }
-    
+
     /**
      * Get all comments of a task
      */
-    public OMElement getComments(OMElement requestElement) throws AxisFault{
+    public OMElement getComments(OMElement requestElement) throws AxisFault {
         String participantToken = getParticipantToken();
-        try{
+        try {
             GetCommentsDocument gcd = GetCommentsDocument.Factory.parse(requestElement.getXMLStreamReader());
             GetComments gc = gcd.getGetComments();
-            
+
             List<Comment> comments = _server.getComments(participantToken, gc.getIdentifier());
             Iterator<Comment> it = comments.iterator();
-            
+
             GetCommentsResposneDocument gcrd = GetCommentsResposneDocument.Factory.newInstance();
             GetCommentsResposne gcr = gcrd.addNewGetCommentsResposne();
-            while(it.hasNext()){
+            while (it.hasNext()) {
                 Comment comment = it.next();
                 TComment tComment = gcr.addNewComment();
                 tComment.setAddedBy(comment.getAddedBy());
-                
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(comment.getAddedAt());
-                tComment.setAddedAt(cal);
-                
+
+                tComment.setAddedAt(convertDateToCalendar(comment.getAddedAt()));
+
                 tComment.setText(comment.getText());
             }
-            
+
             return convertXML(gcrd);
-        }catch(Exception e) {
+        } catch (Exception e) {
             throw makeFault(e);
         }
     }
-    
+
     /**
-     * Applies to both tasks and notifications.
-     * Returns a data object of type tTask
+     * Applies to both tasks and notifications. Returns a data object of type
+     * tTask
      */
-    public OMElement getTaskInfo(OMElement requestElement) throws AxisFault{
+    public OMElement getTaskInfo(OMElement requestElement) throws AxisFault {
         String participantToken = getParticipantToken();
-        try{
+        try {
             GetTaskInfoDocument gtid = GetTaskInfoDocument.Factory.parse(requestElement.getXMLStreamReader());
             GetTaskInfo gti = gtid.getGetTaskInfo();
-            
+
             Task task = _server.getTaskByIdentifier(participantToken, gti.getIdentifier());
-            
+
             GetTaskInfoResponseDocument gtird = GetTaskInfoResponseDocument.Factory.newInstance();
             GetTaskInfoResponse gtir = gtird.addNewGetTaskInfoResponse();
-            
+
             TTask tTask = gtir.addNewTask();
-            
+
             this.marshalTask(task, tTask);
-            
+
             return convertXML(gtird);
-        }catch(Exception e) {
+        } catch (Exception e) {
             throw makeFault(e);
         }
     }
-    
+
     /**
-     * Applies to both tasks and notifications. Returns the presentation description 
-     * in the specified mime type. 
+     * Applies to both tasks and notifications. Returns the presentation
+     * description in the specified mime type.
      */
-    public OMElement getTaskDescription(OMElement requestElement) throws AxisFault{
+    public OMElement getTaskDescription(OMElement requestElement) throws AxisFault {
         String participantToken = getParticipantToken();
-        try{
+        try {
             GetTaskDescriptionDocument gtdd = GetTaskDescriptionDocument.Factory.parse(requestElement.getXMLStreamReader());
             GetTaskDescription gtd = gtdd.getGetTaskDescription();
-            
+
             Task task = _server.getTaskByIdentifier(participantToken, gtd.getIdentifier());
-            
+
             GetTaskDescriptionResponseDocument gtdrd = GetTaskDescriptionResponseDocument.Factory.newInstance();
             GetTaskDescriptionResponse gtdr = gtdrd.addNewGetTaskDescriptionResponse();
             gtdr.setDescription(task.getPresentationName());
-            //TODO replace the presentation name with the real description
-            
+            // TODO replace the presentation name with the real description
+
             return convertXML(gtdrd);
-        }catch(Exception e) {
+        } catch (Exception e) {
             throw makeFault(e);
         }
     }
-    
 
     /*****************************************
      * Query operation
@@ -1093,9 +1183,7 @@ public class TMSRequestProcessor {
                 QueryResponse qr = resp.addNewQueryResponse();
                 TTaskQueryResultSet result = qr.addNewQuery();
                 TTaskQueryResultRow row = result.addNewRow();
-                Calendar ca = Calendar.getInstance();
-                ca.setTime(r.getActivationTime());
-                row.addActivationTime(ca);
+                row.addActivationTime(convertDateToCalendar(r.getActivationTime()));
                 row.addActualOwner(r.getActualOwner());
                 // ? row.addCompleteByExists(r.)
                 // ...
