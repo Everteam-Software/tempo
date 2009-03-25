@@ -26,8 +26,8 @@ var SOAPClient = {
 					SOAPClient.Status = xData.status;
 					SOAPClient.ResponseText = xData.responseText;
 					SOAPClient.ResponseXML = xData.responseXML;
-					var jsOut = $.xmlToJSON(xData.responseXML);
-					callback(jsOut);
+					//var jsOut = $.xmlToJSON(xData.responseXML);
+					callback(xData.responseXML);
 				}
 			}
 			$.ajax({

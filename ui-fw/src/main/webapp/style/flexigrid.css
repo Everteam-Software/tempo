@@ -4,6 +4,11 @@
 {
     background: url(../images/icon.delete.gif) no-repeat center left;
 }
+.flexigrid div.fbutton .claim
+{
+    background: url(../images/icon.claim.gif) no-repeat center left;
+}
+
 
 /* CSS Document */
 

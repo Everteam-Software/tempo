@@ -62,7 +62,6 @@ public class TasksAction extends Action {
         }
 
         model.put("participantToken", token);
-        model.put("participantToken", token);
         model.put("currentUser", user);
         model.put("refreshTime", Configuration.getInstance().getRefreshTime());
         model.put("sessionTimeout", Configuration.getInstance().getSessionTimeout());

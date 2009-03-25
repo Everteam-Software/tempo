@@ -21,6 +21,7 @@ public class Configuration {
     private static Configuration INSTANCE = new Configuration();
 
     private String _serviceEndpoint;
+    private String _tmpEndpoint = "http://localhost:8080/ode/processes/completeTask";
     private int _pagingLength;
     private int _refreshTime = 5;
     private int _sessionTimeout = 10;
@@ -53,6 +54,14 @@ public class Configuration {
 
     public void setServiceEndpoint(String serviceEndpoint) {
         _serviceEndpoint = serviceEndpoint;
+    }
+
+    public void setTMPEndpoint(String serviceEndpoint) {
+        _tmpEndpoint = serviceEndpoint;
+    }
+
+    public String getTMPEndpoint() {
+	    return _tmpEndpoint;
     }
 
     public int getPagingLength() {
