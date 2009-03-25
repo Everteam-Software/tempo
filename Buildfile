@@ -3,6 +3,8 @@ require "buildr"
 require "buildr/xmlbeans"
 require "buildr/cobertura"
 
+TEST="no"
+
 # Keep this structure to allow the build system to update version numbers.
 VERSION_NUMBER = "6.0.0.38"
 
