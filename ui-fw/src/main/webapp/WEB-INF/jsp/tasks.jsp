@@ -24,12 +24,14 @@
 		<link rel="stylesheet" type="text/css" href="style/tabs.css"/>
 		<link rel="stylesheet" type="text/css" href="style/flexigrid.css"/>
 		<link rel="stylesheet" type="text/css" href="style/modal.css"/>
+		<link type="text/css" href="http://jqueryui.com/themes/base/ui.all.css" rel="stylesheet" />
+        
 
 		<link rel="alternate" type="application/atom+xml" title="Personal Task feed" href="/feeds/atom/tasks?token=${participantToken}"/>
 		<link rel="alternate" type="application/atom+xml" title="Process feed" href="/feeds/atom/processes?token=${participantToken}"/>
 
 		<script type="text/javascript" src="script/ui-fw.js"></script>
-		<script type="text/javascript" src="script/jquery.js"></script>
+		<script type="text/javascript" src="script/jquery-1.3.2.min.js"></script>
 		<script type="text/javascript" src="script/jtabber.js"></script>
 		<script type="text/javascript" src="script/jquery-timer.js"></script>
 		<script type="text/javascript" src="script/flexigrid.js"></script>
@@ -38,6 +40,22 @@
 		<script type="text/javascript" src="script/jquery.string.1.0.js"></script>
 		<script src="script/jquery.smartmodal.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript" src="script/soap-1.3.js"></script>
+		
+		<script type="text/javascript" src="script/ui/ui.core.js"></script>
+    	<script type="text/javascript" src="script/ui/ui.draggable.js"></script>
+    	<script type="text/javascript" src="script/ui/ui.resizable.js"></script>
+    	<script type="text/javascript" src="script/ui/ui.dialog.js"></script>
+    	<script type="text/javascript" src="script/ui/effects.core.js"></script>
+    	<script type="text/javascript" src="script/ui/effects.highlight.js"></script>
+    	<script type="text/javascript" src="script/ui/jquery.bgiframe.js"></script>
+
+        <style type="text/css">
+        		input.text { margin-bottom:12px; width:95%; padding: .4em; }
+        		fieldset { padding:0; border:0; margin-top:25px; }
+        		.ui-button { outline: 0; margin:0; padding: .4em 1em .5em; text-decoration:none;  !important; cursor:pointer; position: relative; text-align: center; }
+        		.ui-dialog .ui-state-highlight, .ui-dialog .ui-state-error { padding: .3em;  }
+        	</style>
+    	
 
 		<%@ include file="/script/grids.jsp"%>
 
@@ -55,7 +73,6 @@
 		window.onresize = resizeIframe;
 		
 		</script>
-		
 		
 		</head>
 		<body width="95%" height="98%">
@@ -93,12 +110,23 @@
 						</div>
 					</div>
 					
-					
+          <div id="reassignDialog" class="hiddencontent" title="Reassign current task">
+            <form>
+              <fieldset>
+                <label for="user">User</label>
+                <input type="text" name="user" id="reassign_user" class="text ui-widget-content ui-corner-all" /><br/>
+                <label for="email">Roles</label>
+                <input type="text" name="roles" id="reassign_roles" value="" class="text ui-widget-content ui-corner-all" />
+              </fieldset>
+            </form>
+          </div>
+
 					<div class="intro" id="introhelp">
 						<div id="intro">
 							<%@ include file="/customize/intro.jsp"%>	
 						</div>
 					</div>
+					
 					
 					<iframe onLoad="resizeIframe" name="taskform" FRAMEBORDER="0" id="taskform" SCROLLING="auto"></iframe>
 					

@@ -97,8 +97,6 @@
                SOAPClient.Proxy = '<%=Configuration.getInstance().getServiceEndpoint()%>';
                SOAPClient.SendRequest(sr, update);
              } // end soap delete tasks
-     
-             refresh(true);
                         
             }); // end each
         		      
@@ -108,43 +106,101 @@
       
         function claimTask(com,grid)
         {
-                $('.trSelected',grid).each(function() 
-                {
-                var task = $('a.taskd',$(this));
-                if(task.attr('state') == "READY") {
-                // claim
-                var soapBody            = new SOAPObject("claimTaskRequest");
-                soapBody.ns             = "http://www.intalio.com/bpms/workflow/ib4p_20051115";
-                soapBody.appendChild(new SOAPObject("taskId")).val(task.attr('tid'));
-                
-                var currentUser = '<%= ((String)request.getAttribute("currentUser")).replace("\\", "\\\\")%>';
-                soapBody.appendChild(new SOAPObject("claimerUser")).val(currentUser);
-                soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
-                var sr                  = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/claimTask", soapBody);
-                SOAPClient.Proxy        = '<%=Configuration.getInstance().getTMPEndpoint()%>';
-                SOAPClient.SendRequest(sr, update);
-                } else {
-                
-                // revoke
-                var soapBody            = new SOAPObject("revokeTaskRequest");
-                soapBody.ns             = "http://www.intalio.com/bpms/workflow/ib4p_20051115";
-                soapBody.appendChild(new SOAPObject("taskId")).val(task.attr('tid'));
-                var currentUser = '<%= ((String)request.getAttribute("currentUser")).replace("\\", "\\\\")%>';
-                soapBody.appendChild(new SOAPObject("claimerUser")).val(currentUser);
-                soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
-                var sr                  = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/revokeTask", soapBody);
-                SOAPClient.Proxy        = '<%=Configuration.getInstance().getTMPEndpoint()%>';
-                SOAPClient.SendRequest(sr, update);
-                }
-                
-                }); // end each
+          $('.trSelected',grid).each(function() 
+          {
+          var task = $('a.taskd',$(this));
+          
+            if(task.attr('state') == "READY") {
+              // claim
+              var soapBody            = new SOAPObject("claimTaskRequest");
+              soapBody.ns             = "http://www.intalio.com/bpms/workflow/ib4p_20051115";
+              soapBody.appendChild(new SOAPObject("taskId")).val(task.attr('tid'));
+          
+              var currentUser = '<%= ((String)request.getAttribute("currentUser")).replace("\\", "\\\\")%>';
+              soapBody.appendChild(new SOAPObject("claimerUser")).val(currentUser);
+              soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
+              var sr                  = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/claimTask", soapBody);
+              SOAPClient.Proxy        = '<%=Configuration.getInstance().getTMPEndpoint()%>';
+              SOAPClient.SendRequest(sr, update);
+              } else {
+          
+              // revoke
+              var soapBody            = new SOAPObject("revokeTaskRequest");
+              soapBody.ns             = "http://www.intalio.com/bpms/workflow/ib4p_20051115";
+              soapBody.appendChild(new SOAPObject("taskId")).val(task.attr('tid'));
+              var currentUser = '<%= ((String)request.getAttribute("currentUser")).replace("\\", "\\\\")%>';
+              soapBody.appendChild(new SOAPObject("claimerUser")).val(currentUser);
+              soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
+              var sr                  = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/revokeTask", soapBody);
+              SOAPClient.Proxy        = '<%=Configuration.getInstance().getTMPEndpoint()%>';
+              SOAPClient.SendRequest(sr, update);
+            }
+
+          }); // end each
                 
         }; // end function claims
         
-        function update() 
+        // update the current task list after sending some request to the server
+        function update(object) 
         {
-        refresh(true);
+           // use below later on
+           // alert((new XMLSerializer()).serializeToString(object));
+           refresh(true);
         }
+        
+        function skipTask(com,grid) {
+            $('.trSelected',grid).each(function() 
+            {
+                var task = $('a.taskd',$(this));
+                
+                var soapBody     = new SOAPObject("skipTaskRequest");
+                soapBody.ns             = "http://www.intalio.com/bpms/workflow/ib4p_20051115";
+                soapBody.appendChild(new SOAPObject("taskId")).val(task.attr('tid'));
+                soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
+                
+                var sr           = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/skipTask", soapBody);
+                SOAPClient.Proxy        = '<%=Configuration.getInstance().getTMPEndpoint()%>';
+                SOAPClient.SendRequest(sr, update);
+            });
+        }
+        
+        function reassignTask(com,grid) {
+            $('.trSelected',grid).each(function() 
+            {
+                var task = $('a.taskd',$(this));
+                
+                var soapBody     = new SOAPObject("reassign");
+                soapBody.ns      = "http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/";
+                soapBody.appendChild(new SOAPObject("taskId")).val(task.attr('tid'));
+                soapBody.appendChild(new SOAPObject("userOwner")).val($('#reassign_user').val());
+                soapBody.appendChild(new SOAPObject("roleOwner")).val($('#reassign_roles').val());
+                soapBody.appendChild(new SOAPObject("taskState")).val('READY');
+                soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
+                
+                var sr           = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/reassign", soapBody);
+                SOAPClient.Proxy = '<%=Configuration.getInstance().getServiceEndpoint()%>';
+                SOAPClient.SendRequest(sr, update);
+            });
+        }
+        
+        function clickReassign(com,grid) {
+            if($('.trSelected',grid).length!=0) {
+                $("#reassignDialog").dialog({
+                			bgiframe: false,
+                			autoOpen: open,
+                			height: 200,
+                			modal: true,		
+                      buttons: {
+                				Reassign: function() {reassignTask(com,grid); $(this).dialog('close');},
+                				Cancel: function() {$(this).dialog('close');}
+                			},
+                			close: function() {}
+                });
+                $("#reassignDialog").dialog('open');
+            }
+        }
+        
+        
         
 		//
 		// tab definition
@@ -183,7 +239,9 @@
         dataType: 'xml',
         buttons : [
            {name: 'Delete', bclass: 'delete', onpress : deleteTask},
-           {name: 'Claim/Revoke', bclass: 'claim', onpress : claimTask}
+           {name: 'Claim/Revoke', bclass: 'claim', onpress : claimTask},
+           {name: 'Reassign', bclass: 'reassign', onpress : clickReassign},
+           {name: 'Skip', bclass: 'skip', onpress : skipTask}
         ],
         params: [
 			 { name : 'type', value : 'PATask' }
