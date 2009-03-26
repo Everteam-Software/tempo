@@ -343,7 +343,7 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             Task task = _server.getPipa(taskID, participantToken);
             OMElement response = new TMSResponseMarshaller(OM_FACTORY) {
                 public OMElement marshalResponse(Task task) {
-                    OMElement response = createElement("getPipaTaskResponse");
+                    OMElement response = createElement("getPipaResponse");
                     response.addChild(new TaskMarshaller().marshalFullTask(task, user));
                     return response;
                 }
