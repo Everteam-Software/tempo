@@ -258,7 +258,7 @@ public class TMSRequestProcessor {
 
         // Business Administrators
         OrganizationalEntity ba = t.getBusinessAdministrators();
-        tt.setBusinessAdministrators(marshOrgEntity(ba));
+        tt.setBusinessAdministrators(marshalOrgEntity(ba));
 
         System.out.println("created by:" + t.getCreatedBy());
         tt.setCreatedBy(t.getCreatedBy());
@@ -290,8 +290,8 @@ public class TMSRequestProcessor {
 
         tt.setIsSkipable(t.isSkipable());
         tt.setName(new javax.xml.namespace.QName(t.getName()));
-        tt.setNotificationRecipients(marshOrgEntity(t.getNotificationRecipients()));
-        tt.setPotentialOwners(marshOrgEntity(t.getPotentialOwners()));
+        tt.setNotificationRecipients(marshalOrgEntity(t.getNotificationRecipients()));
+        tt.setPotentialOwners(marshalOrgEntity(t.getPotentialOwners()));
         tt.setPresentationName(t.getPresentationName());
         tt.setPresentationSubject(t.getPresentationSubject());
         tt.setPrimarySearchBy(t.getPrimarySearchBy());
@@ -308,7 +308,7 @@ public class TMSRequestProcessor {
             tt.setStartByExists(false);
 
         tt.setTaskInitiator(t.getTaskInitiator());
-        tt.setTaskStakeholders(marshOrgEntity(t.getTaskStakeholders()));
+        tt.setTaskStakeholders(marshalOrgEntity(t.getTaskStakeholders()));
 
         if (t.getStatus() != null)
             tt.setStatus(TStatus.Enum.forString(t.getStatus().toString()));
@@ -317,7 +317,7 @@ public class TMSRequestProcessor {
 
     }
 
-    private void marsalAttachmentInfo(AttachmentInfo attInfo, TAttachmentInfo tAttInfo) {
+    private void marshalAttachmentInfo(AttachmentInfo attInfo, TAttachmentInfo tAttInfo) {
         tAttInfo.setAccessType(attInfo.getAccessType().name());
 
         tAttInfo.setAttachedAt(convertDateToCalendar(attInfo.getAttachedAt()));
@@ -358,7 +358,7 @@ public class TMSRequestProcessor {
         return dm;
     }
 
-    private TOrganizationalEntity marshOrgEntity(OrganizationalEntity oe) {
+    private TOrganizationalEntity marshalOrgEntity(OrganizationalEntity oe) {
         TOrganizationalEntity tOE = TOrganizationalEntity.Factory.newInstance();
         if (oe != null && oe.getEntityType() != null) {
             if (oe.getEntityType().equalsIgnoreCase(OrganizationalEntity.USER_ENTITY)) {
@@ -931,7 +931,7 @@ public class TMSRequestProcessor {
             while (it.hasNext()) {
                 TAttachmentInfo tAttInfo = ret.addNewInfo();
                 AttachmentInfo attInfo = it.next();
-                marsalAttachmentInfo(attInfo, tAttInfo);
+                marshalAttachmentInfo(attInfo, tAttInfo);
             }
 
             return convertXML(retDoc);
@@ -960,7 +960,7 @@ public class TMSRequestProcessor {
                 Attachment att = it.next();
                 AttachmentInfo attInfo = att.getAttachmentInfo();
 
-                marsalAttachmentInfo(attInfo, tAttInfo);
+                marshalAttachmentInfo(attInfo, tAttInfo);
             }
             return convertXML(retDoc);
         } catch (Exception e) {
