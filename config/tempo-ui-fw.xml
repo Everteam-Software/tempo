@@ -22,6 +22,7 @@
         <property name="pagingLength" value="10"/>
         <property name="refreshTime" value="20"/>
         <property name="sessionTimeout" value="10"/>
+        <property name="useToolbarIcons" value="true"/>
         <property name="tokenClient"><ref bean="tokenService"/></property>
     </bean>
 

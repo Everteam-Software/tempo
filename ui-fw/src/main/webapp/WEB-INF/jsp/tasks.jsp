@@ -30,55 +30,31 @@
 		<link rel="alternate" type="application/atom+xml" title="Personal Task feed" href="/feeds/atom/tasks?token=${participantToken}"/>
 		<link rel="alternate" type="application/atom+xml" title="Process feed" href="/feeds/atom/processes?token=${participantToken}"/>
 
-		<script type="text/javascript" src="script/ui-fw.js"></script>
-		<script type="text/javascript" src="script/jquery-1.3.2.min.js"></script>
-		<script type="text/javascript" src="script/jtabber.js"></script>
-		<script type="text/javascript" src="script/jquery-timer.js"></script>
-		<script type="text/javascript" src="script/flexigrid.js"></script>
-		<script type="text/javascript" src="script/jquery.jcorners.js"></script>
-		<script type="text/javascript" src="script/jquery.demensions.js"></script>
-		<script type="text/javascript" src="script/jquery.string.1.0.js"></script>
-		<script src="script/jquery.smartmodal.js" type="text/javascript" charset="utf-8"></script>
-		<script type="text/javascript" src="script/soap-1.3.js"></script>
-		
-		<script type="text/javascript" src="script/ui/ui.core.js"></script>
-    	<script type="text/javascript" src="script/ui/ui.draggable.js"></script>
-    	<script type="text/javascript" src="script/ui/ui.resizable.js"></script>
-    	<script type="text/javascript" src="script/ui/ui.dialog.js"></script>
-    	<script type="text/javascript" src="script/ui/effects.core.js"></script>
-    	<script type="text/javascript" src="script/ui/effects.highlight.js"></script>
-    	<script type="text/javascript" src="script/ui/jquery.bgiframe.js"></script>
+    <script src="script/ui-fw.js"></script>
+    <script src="script/jquery-1.3.2.min.js"></script>
+    <script type="text/javascript" src="script/jtabber.js"></script>
+    <script type="text/javascript" src="script/jquery-timer.js"></script>
+    <script type="text/javascript" src="script/flexigrid.js"></script>
+    <script type="text/javascript" src="script/jquery.jcorners.js"></script>
+    <script type="text/javascript" src="script/jquery.demensions.js"></script>
+    <script type="text/javascript" src="script/jquery.string.1.0.js"></script>
+    <script src="script/jquery.smartmodal.js" type="text/javascript" charset="utf-8"></script>
+    <script src="script/soap-1.4beta.js" type="text/javascript"></script>
 
-        <style type="text/css">
-        		input.text { margin-bottom:12px; width:95%; padding: .4em; }
-        		fieldset { padding:0; border:0; margin-top:25px; }
-        		.ui-button { outline: 0; margin:0; padding: .4em 1em .5em; text-decoration:none;  !important; cursor:pointer; position: relative; text-align: center; }
-        		.ui-dialog .ui-state-highlight, .ui-dialog .ui-state-error { padding: .3em;  }
-        	</style>
-    	
+    <script type="text/javascript" src="script/ui/ui.core.js"></script>
+    <script type="text/javascript" src="script/ui/ui.draggable.js"></script>
+    <script type="text/javascript" src="script/ui/ui.resizable.js"></script>
+    <script type="text/javascript" src="script/ui/ui.dialog.js"></script>
+    <script type="text/javascript" src="script/ui/effects.core.js"></script>
+    <script type="text/javascript" src="script/ui/effects.highlight.js"></script>
+    <script type="text/javascript" src="script/ui/jquery.bgiframe.js"></script>
 
 		<%@ include file="/script/grids.jsp"%>
-
-		<script type="text/javascript">
-		function resizeIframe() {
-		    var height = document.documentElement.clientHeight;
-		    height -= document.getElementById('taskform').offsetTop;
-
-		    // not sure how to get this dynamically
-		    height -= 20; /* whatever you set your body bottom margin/padding to be */
-
-		    document.getElementById('taskform').style.height = height +"px";
-
-		};
-		window.onresize = resizeIframe;
-		
-		</script>
 		
 		</head>
 		<body width="95%" height="98%">
-		    
-		    
-			<%@ include file="/WEB-INF/jsp/siteHeader.jsp"%>
+		    		    
+			      <%@ include file="/WEB-INF/jsp/siteHeader.jsp"%>
 						<div id="container">			
 							<ul id="tabnav">
 								<li><a href="#" id="tabTasks" title="com_intalio_bpms_workflow_tab_tasks"><fmt:message key="com_intalio_bpms_workflow_tab_tasks"/></a></li>

@@ -28,6 +28,7 @@ public class Configuration {
     private TokenClient _tokenClient;
     private String _baseUrl;
     private String _feedUrl;
+    private Boolean _toolbarIcons = Boolean.TRUE;
  
     public String getFeedUrl() {
         return _feedUrl;
@@ -35,6 +36,14 @@ public class Configuration {
 
     public void setFeedUrl(String url) {
         _feedUrl = url;
+    }
+    
+    public void setUseToolbarIcons(Boolean use) {
+        _toolbarIcons=use;
+    }
+    
+    public Boolean isUseToolbarIcons() {
+        return _toolbarIcons;
     }
 
     private Configuration() {

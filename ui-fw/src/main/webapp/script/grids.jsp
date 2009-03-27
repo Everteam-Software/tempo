@@ -81,7 +81,7 @@
                soapBody.appendChild(new SOAPObject("pipaurl")).val(pipa.attr('url'));
                soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
                var sr = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/deletePipa", soapBody);
-               //SOAPClient.SOAPServer = '<%=Configuration.getInstance().getServiceEndpoint()%>';
+               SOAPClient.SOAPServer = '<%=Configuration.getInstance().getServiceEndpoint()%>';
                SOAPClient.Proxy = '<%=Configuration.getInstance().getServiceEndpoint()%>';
                SOAPClient.SendRequest(sr, update);
               } // end soap delete pipa
@@ -93,7 +93,7 @@
                soapBody.appendChild(new SOAPObject("taskId")).val(task.attr('tid'));
                soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
                var sr = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/delete", soapBody);
-               //SOAPClient.SOAPServer = '<%=Configuration.getInstance().getServiceEndpoint()%>';
+               SOAPClient.SOAPServer = '<%=Configuration.getInstance().getServiceEndpoint()%>';
                SOAPClient.Proxy = '<%=Configuration.getInstance().getServiceEndpoint()%>';
                SOAPClient.SendRequest(sr, update);
              } // end soap delete tasks
@@ -121,6 +121,7 @@
               soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
               var sr                  = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/claimTask", soapBody);
               SOAPClient.Proxy        = '<%=Configuration.getInstance().getTMPEndpoint()%>';
+              SOAPClient.SOAPServer        = '<%=Configuration.getInstance().getTMPEndpoint()%>';
               SOAPClient.SendRequest(sr, update);
               } else {
           
@@ -133,6 +134,7 @@
               soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
               var sr                  = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/revokeTask", soapBody);
               SOAPClient.Proxy        = '<%=Configuration.getInstance().getTMPEndpoint()%>';
+              SOAPClient.SOAPServer        = '<%=Configuration.getInstance().getTMPEndpoint()%>';
               SOAPClient.SendRequest(sr, update);
             }
 
@@ -143,10 +145,18 @@
         // update the current task list after sending some request to the server
         function update(object) 
         {
-           // use below later on
-           // alert((new XMLSerializer()).serializeToString(object));
            refresh(true);
+           
+           // use below when debugging
+           //alert((new XMLSerializer()).serializeToString(object));
+           
+           $.timer(200, function (timer) {
+              refresh(true);
+              timer.stop();
+           });
         }
+        
+
         
         function skipTask(com,grid) {
             $('.trSelected',grid).each(function() 
@@ -160,6 +170,7 @@
                 
                 var sr           = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/skipTask", soapBody);
                 SOAPClient.Proxy        = '<%=Configuration.getInstance().getTMPEndpoint()%>';
+                SOAPClient.SOAPServer        = '<%=Configuration.getInstance().getTMPEndpoint()%>';
                 SOAPClient.SendRequest(sr, update);
             });
         }
@@ -179,6 +190,7 @@
                 
                 var sr           = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/reassign", soapBody);
                 SOAPClient.Proxy = '<%=Configuration.getInstance().getServiceEndpoint()%>';
+                SOAPClient.SOAPServer = '<%=Configuration.getInstance().getServiceEndpoint()%>';
                 SOAPClient.SendRequest(sr, update);
             });
         }
@@ -230,19 +242,23 @@
 		showTableToggleBtn: true,
 		width: width,
 		height: height2,
+		<% if(Configuration.getInstance().isUseToolbarIcons()) {%> 
 		buttons : [{name: 'Delete', bclass: 'delete', onpress : deleteTask}]
+		<%} %>
 		}
 		);
 		
 		var t1 = $("#table1").flexigrid({
 		url: 'updates.htm',
         dataType: 'xml',
+        <% if(Configuration.getInstance().isUseToolbarIcons()) {%> 
         buttons : [
            {name: 'Delete', bclass: 'delete', onpress : deleteTask},
            {name: 'Claim/Revoke', bclass: 'claim', onpress : claimTask},
            {name: 'Reassign', bclass: 'reassign', onpress : clickReassign},
            {name: 'Skip', bclass: 'skip', onpress : skipTask}
         ],
+        <%} %>
         params: [
 			 { name : 'type', value : 'PATask' }
 			,{ name : 'update', value : true }
@@ -266,7 +282,9 @@
 		
 		var t3 = $("#table3").flexigrid({
 		url: "updates.htm",
-		buttons : [{name: 'Delete', bclass: 'delete', onpress : deleteTask}],
+		  <% if(Configuration.getInstance().isUseToolbarIcons()) {%> 
+		buttons : [{name: 'Delete', bclass: 'delete', onpress : deleteTask}], 
+		  <%} %>
 		params: [
 			 { name : 'type', value : 'PIPATask' }
 			,{ name : 'update', value : true }

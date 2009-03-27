@@ -23,3 +23,15 @@ function submitActionToURL(url, actionName) {
 	document.getElementById('actionName').value = actionName;
 	formObj.submit();
 }
+
+function resizeIframe() {
+    var height = document.documentElement.clientHeight;
+    height -= document.getElementById('taskform').offsetTop;
+
+    // not sure how to get this dynamically
+    height -= 20; /* whatever you set your body bottom margin/padding to be */
+
+    document.getElementById('taskform').style.height = height +"px";
+
+};
+window.onresize = resizeIframe;
