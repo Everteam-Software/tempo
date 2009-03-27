@@ -52,7 +52,7 @@ var SOAPClient = (function() {
 					//if(typeof(callback) === "function") {
 						//var jsOut = $.xmlToJSON(xData);
 						//callback(jsOut);
-						callback(xData.responseXML);
+						callback(xData);
 					//}
 				}
 				var xhrReq = $.ajax({

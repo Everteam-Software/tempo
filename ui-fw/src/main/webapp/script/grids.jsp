@@ -4,12 +4,27 @@
 
 	<script type="text/javascript">
 
+    (function($){
+        $.newSelector = function() {
+            if(!arguments) { return; }
+            $.extend($.expr[':'],typeof(arguments[0])==='object' ? arguments[0]
+              : (function(){
+                  var newOb = {}; newOb[arguments[0]] = arguments[1];
+                  return newOb;
+              })()
+            );
+        }
+    })(jQuery);
+
 		$(document).ready(function(){ 
 
 		var speed = "fast";
-		window.open("about:blank", "taskform");
+		var currentUser = '<%= ((String)request.getAttribute("currentUser")).replace("\\", "\\\\")%>';
 		var width = $(window).width()-($(window).width()/30);
 		var height = 0;
+		
+		window.open("about:blank", "taskform");
+		
 		if($.browser.msie){
 		     height = $(window).height() - 140;
 		  }else{
@@ -48,7 +63,7 @@
 		
 		function resetTimer() {
 		    time = 0;
-            $("#timer").text("");
+        $("#timer").text("");
 		}
 		
 		$.timer(timeCount,function(timer) {
@@ -115,8 +130,6 @@
               var soapBody            = new SOAPObject("claimTaskRequest");
               soapBody.ns             = "http://www.intalio.com/bpms/workflow/ib4p_20051115";
               soapBody.appendChild(new SOAPObject("taskId")).val(task.attr('tid'));
-          
-              var currentUser = '<%= ((String)request.getAttribute("currentUser")).replace("\\", "\\\\")%>';
               soapBody.appendChild(new SOAPObject("claimerUser")).val(currentUser);
               soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
               var sr                  = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/claimTask", soapBody);
@@ -129,7 +142,6 @@
               var soapBody            = new SOAPObject("revokeTaskRequest");
               soapBody.ns             = "http://www.intalio.com/bpms/workflow/ib4p_20051115";
               soapBody.appendChild(new SOAPObject("taskId")).val(task.attr('tid'));
-              var currentUser = '<%= ((String)request.getAttribute("currentUser")).replace("\\", "\\\\")%>';
               soapBody.appendChild(new SOAPObject("claimerUser")).val(currentUser);
               soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
               var sr                  = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/revokeTask", soapBody);
@@ -145,18 +157,25 @@
         // update the current task list after sending some request to the server
         function update(object) 
         {
-           refresh(true);
+           //refresh(true);
            
            // use below when debugging
            //alert((new XMLSerializer()).serializeToString(object));
            
-           $.timer(200, function (timer) {
+           $.timer(500, function (timer) {
               refresh(true);
               timer.stop();
            });
         }
         
-
+        $('#loadingdiv')
+            .hide()  // hide it initially
+            .ajaxStart(function() {
+                $(this).show();
+            })
+            .ajaxStop(function() {
+                $(this).hide();
+            });
         
         function skipTask(com,grid) {
             $('.trSelected',grid).each(function() 
@@ -188,19 +207,84 @@
                 soapBody.appendChild(new SOAPObject("taskState")).val('READY');
                 soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
                 
-                var sr           = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/reassign", soapBody);
+                var sr = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/reassign", soapBody);
                 SOAPClient.Proxy = '<%=Configuration.getInstance().getServiceEndpoint()%>';
                 SOAPClient.SOAPServer = '<%=Configuration.getInstance().getServiceEndpoint()%>';
                 SOAPClient.SendRequest(sr, update);
             });
         }
         
+        function populateRoles(data) {
+        
+            $(data).find("/rbac:getAssignedRolesResponse/rbac:role/").each(function(){
+                if(this.nodeName == "rbac:role") {
+                 var option = "<option value=\""+$(this).text()+"\">"+$(this).text()+"</option>";
+                 $("#reassign_dyn").append(option);
+                }
+              });
+        }
+        
+        function updateDynamicRoles() {
+                var soapBody     = new SOAPObject("getAssignedRoles");
+                soapBody.ns      = "http://tempo.intalio.org/security/RBACQueryService/";
+                soapBody.appendChild(new SOAPObject("user")).val(currentUser);
+                var sr           = new SOAPRequest("http://tempo.intalio.org/security/RBACQueryService/getAssignedRoles", soapBody);
+                SOAPClient.Proxy = 'http://localhost:8080/axis2/services/RBACQueryService';
+                SOAPClient.SOAPServer = 'http://localhost:8080/axis2/services/RBACQueryService';
+                SOAPClient.SendRequest(sr, populateRoles);
+        }
+        
+        function updateDynamicUsers() {
+                var soapBody     = new SOAPObject("getAssignedUsers");
+                soapBody.ns      = "http://tempo.intalio.org/security/RBACQueryService/";
+                soapBody.appendChild(new SOAPObject("role")).val($('#reassign_dyn').val());
+                var sr           = new SOAPRequest("http://tempo.intalio.org/security/RBACQueryService/getAssignedUsers", soapBody);
+                SOAPClient.Proxy = 'http://localhost:8080/axis2/services/RBACQueryService';
+                SOAPClient.SOAPServer = 'http://localhost:8080/axis2/services/RBACQueryService';
+                SOAPClient.SendRequest(sr, populateDynamicUsers);
+        }
+        
+        
+        
+        function populateDynamicUsers(data) {
+           $('#reassign_dyn_user').empty();
+           $(data).find("/rbac:getAssignedRolesResponse/rbac:role/").each(function(){
+               if(this.nodeName == "rbac:user") {
+                var option = "<option value=\""+$(this).text()+"\">"+$(this).text()+"</option>";
+                $("#reassign_dyn_user").append(option);
+               }
+             });
+           
+        }
+        
+        $('#reassign_dyn').change(function() {
+            $('#reassign_roles').text($('#reassign_dyn').val());
+            $('#reassign_roles').val($('#reassign_dyn').val());
+            $('#reassign_user').text("");
+            $('#reassign_user').val("");
+            updateDynamicUsers();
+        });
+        
+        $('#reassign_dyn_user').change(function() {
+            $('#reassign_user').text($('#reassign_dyn_user').val());
+            $('#reassign_user').val($('#reassign_dyn_user').val());
+            
+            $('#reassign_roles').text("");
+            $('#reassign_roles').val("");
+        });
+        
         function clickReassign(com,grid) {
             if($('.trSelected',grid).length!=0) {
+            
+                $('#reassign_dyn_user').empty();
+                $('#reassign_dyn').empty();
+                
+                updateDynamicRoles();
+            
                 $("#reassignDialog").dialog({
                 			bgiframe: false,
                 			autoOpen: open,
-                			height: 200,
+                			height: 300,
                 			modal: true,		
                       buttons: {
                 				Reassign: function() {reassignTask(com,grid); $(this).dialog('close');},
@@ -211,8 +295,6 @@
                 $("#reassignDialog").dialog('open');
             }
         }
-        
-        
         
 		//
 		// tab definition
@@ -381,19 +463,21 @@
 				refresh(false);
 			  }
 			}
-
 		});
 		
 		$.jcorners("#intro",{radius:10});
 		$("#filterdiv").hide();
+		$("#reassignDialog").hide();
 		
 		var timeout = <c:out value="${refreshTime}"/> * 1000;
 
 		if(timeout == null || timeout < 1000) timeout = 1000;
 		$.timer(timeout,function(timer) {
-		    if(current=='tabTasks') t1.flexReload();
-	    	if(current=='tabNotif') t2.flexReload();
-			if(current=='tabPipa') t3.flexReload();
+		  if ($("reassignDialog").is(":visible")) return;
+		  
+      if(current=='tabTasks') t1.flexReload();
+      if(current=='tabNotif') t2.flexReload();
+      if(current=='tabPipa')  t3.flexReload();
 		});
 		
 		$("#tabTasks").click();
