@@ -45,6 +45,10 @@ public class TokenClient implements TokenService {
         _endpoint = endpointUrl;
     }
 
+    public String getEndpoint() {
+        return _endpoint;
+    }
+
     public String authenticateUser(String user, String password) throws AuthenticationException, RBACException, RemoteException {
         OMElement request = element(TokenConstants.AUTHENTICATE_USER);
         request.addChild(elementText(TokenConstants.USER, user));

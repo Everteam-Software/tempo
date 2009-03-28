@@ -1,25 +1,17 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
 <%@page import="org.intalio.tempo.uiframework.Configuration"%>
+<%@page import="org.intalio.tempo.security.ws.TokenClient"%>
 
 	<script type="text/javascript">
 
-    (function($){
-        $.newSelector = function() {
-            if(!arguments) { return; }
-            $.extend($.expr[':'],typeof(arguments[0])==='object' ? arguments[0]
-              : (function(){
-                  var newOb = {}; newOb[arguments[0]] = arguments[1];
-                  return newOb;
-              })()
-            );
-        }
-    })(jQuery);
-
 		$(document).ready(function(){ 
-
+    
+    <% String tokenService = Configuration.getInstance().getTokenClient().getEndpoint();%>
 		var speed = "fast";
 		var currentUser = '<%= ((String)request.getAttribute("currentUser")).replace("\\", "\\\\")%>';
+		var tokenService = '<%= tokenService %> ';
+		var rbacService = '<%= tokenService.substring(0, tokenService.indexOf("/TokenService"))+"/RBACQueryService" %>';
 		var width = $(window).width()-($(window).width()/30);
 		var height = 0;
 		
