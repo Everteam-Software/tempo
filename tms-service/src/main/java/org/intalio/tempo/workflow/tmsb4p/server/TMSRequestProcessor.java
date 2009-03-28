@@ -257,19 +257,16 @@ public class TMSRequestProcessor {
         tt.setActualOwner(t.getActualOwner());
 
         // Business Administrators
-        OrganizationalEntity ba = t.getBusinessAdministrators();
-        tt.setBusinessAdministrators(marshalOrgEntity(ba));
+        tt.setBusinessAdministrators(marshalOrgEntity(t.getBusinessAdministrators()));
 
-        System.out.println("created by:" + t.getCreatedBy());
         tt.setCreatedBy(t.getCreatedBy());
         if (t.getCreatedOn() != null) {
             tt.setCreatedOn(convertDateToCalendar(t.getCreatedOn()));
         }
-
-        tt.setId(t.getId());
+        tt.setEscalated(t.isEscalated());
 
         tt.setExpirationTime(convertDateToCalendar(t.getExpirationTime()));
-
+        
         if (t.getAttachments() != null && t.getAttachments().size() > 0) {
             tt.setHasAttachments(true);
         } else {
@@ -281,13 +278,23 @@ public class TMSRequestProcessor {
         } else {
             tt.setHasComments(false);
         }
-
+        if (t.getFaultMessage() != null){
+            tt.setHasFault(true);
+        }else{
+            tt.setHasFault(false);
+        }
+        if (t.getOutputMessage() != null){
+            tt.setHasOutput(true);
+        }else{
+            tt.setHasOutput(false);
+        }
         if (t.getPotentialOwners() != null && t.getPotentialOwners().getPrincipals() != null && t.getPotentialOwners().getPrincipals().size() > 0) {
             tt.setHasPotentialOwners(true);
         } else {
             tt.setHasPotentialOwners(false);
         }
-
+        tt.setId(t.getId());
+        
         tt.setIsSkipable(t.isSkipable());
         tt.setName(new javax.xml.namespace.QName(t.getName()));
         tt.setNotificationRecipients(marshalOrgEntity(t.getNotificationRecipients()));
@@ -296,7 +303,7 @@ public class TMSRequestProcessor {
         tt.setPresentationSubject(t.getPresentationSubject());
         tt.setPrimarySearchBy(t.getPrimarySearchBy());
         tt.setPriority(BigInteger.valueOf(t.getPriority()));
-
+        
         if (t.getRenderingMethName() != null)
             tt.setRenderingMethodExists(true);
         else
@@ -314,7 +321,7 @@ public class TMSRequestProcessor {
             tt.setStatus(TStatus.Enum.forString(t.getStatus().toString()));
         if (t.getTaskType() != null)
             tt.setTaskType(t.getTaskType().toString());
-
+        
     }
 
     private void marshalAttachmentInfo(AttachmentInfo attInfo, TAttachmentInfo tAttInfo) {
@@ -421,6 +428,7 @@ public class TMSRequestProcessor {
             // unmarshal request
             CreateDocument req = CreateDocument.Factory.parse(requestElement.getXMLStreamReader());
             Create r = req.getCreate();
+            
             THumanTaskContext tasks[] = req.getCreate().getHumanTaskContextArray();
 
             // call server
