@@ -132,12 +132,14 @@ TOKEN:
 |	< LE:   "<=" >
 |	< GE:   ">=" >
 |	< NE:   "!=" >
+|	< NE2:   "<>" >
 |	< AND:  "and" >
 |	< OR:   "or" >
 |	< NOT:  "not"  >
 |	< IS_NULL:  "is null"  >
 |	< IS_NOT_NULL:  "is not null"  >
 |	< IN:  "in"  >
+|	< NOT_IN:  "not in"  >
 |	< BETWEEN:  "between"  >
 |	< LIKE:  "like"  >
 |	< NOT_LIKE:  "not like"  >
@@ -279,6 +281,12 @@ void EqualExpression() :
 	    }
 	  ) #FunNode(2)
 	|
+	  ( <NE2> RelationalExpression()
+	    {
+	    jjtThis.setFunction(tokenImage[NE2]);
+	    }
+	  ) #FunNode(2)
+	|  
 	  ( <EQ> RelationalExpression()
 	    {
 	      jjtThis.setFunction(tokenImage[EQ]);
@@ -345,6 +353,12 @@ void PostfixExpression() :
 		  jjtThis.setFunction(tokenImage[IN]);
 		}
 	  ) #FunNode(2)
+	|
+	  ( <NOT_IN> Array()
+		{
+		  jjtThis.setFunction(tokenImage[NOT_IN]);
+		}
+	  ) #FunNode(2)	  
 	|
 	  ( <BETWEEN> AdditiveExpression() <AND> AdditiveExpression()
 		{
