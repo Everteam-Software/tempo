@@ -24,8 +24,7 @@
     <link rel="stylesheet" type="text/css" href="style.css" />
     <link rel="stylesheet" type="text/css" href="style/tabs.css"/>
     <link rel="stylesheet" type="text/css" href="style/flexigrid.css"/>
-    <link rel="stylesheet" type="text/css" href="style/modal.css"/>
-    <link rel="stylesheet" type="text/css" href="http://jqueryui.com/themes/base/ui.all.css"/>
+    <link rel="stylesheet" type="text/css" href="style/jqueryui/ui.all.css"/>
 
     <link rel="alternate" type="application/atom+xml" title="Personal Task feed" href="/feeds/atom/tasks?token=${participantToken}"/>
     <link rel="alternate" type="application/atom+xml" title="Process feed" href="/feeds/atom/processes?token=${participantToken}"/>
@@ -38,7 +37,6 @@
     <script type="text/javascript" src="script/jquery.jcorners.js"></script>
     <script type="text/javascript" src="script/jquery.demensions.js"></script>
     <script type="text/javascript" src="script/jquery.string.1.0.js"></script>
-    <script type="text/javascript" src="script/jquery.smartmodal.js" charset="utf-8"></script>
     <script type="text/javascript" src="script/soap-1.4beta.js"></script>
     <script type="text/javascript" src="script/ui/ui.core.js"></script>
     <script type="text/javascript" src="script/ui/ui.draggable.js"></script>
@@ -84,8 +82,8 @@
           </div>
         </li>
         <li id="loadingdiv" style="margin-left:10px; float: right;">
-          Loading ...
-          <img src="http://www.amcham-shanghai.org/AmChamPortal/images/icons/animated_loading.gif"/>
+          <fmt:message key="org_intalio_uifw_message_loading"/>
+          <img src="images/loading.gif"/>
         </li>
       </ul>
     </div>
@@ -102,24 +100,29 @@
       </div>
     </div>
 
-    <div id="reassignDialog" title="Reassign current task">
+    <div id="reassignDialog" title="<fmt:message key="org_intalio_uifw_reassign_title"/>">
       <form>
         <fieldset>
-          <label for="user">User</label>
+          <label for="user"><fmt:message key="org_intalio_uifw_reassign_user"/></label>
           <input type="text" name="user" id="reassign_user" class="text ui-widget-content ui-corner-all" /><br/>
-          <label for="email">Roles</label>
+          <label for="roles"><fmt:message key="org_intalio_uifw_reassign_roles"/></label>
           <input type="text" name="roles" id="reassign_roles" value="" class="text ui-widget-content ui-corner-all" /><br/>
-          <label for="reassign_dyn">RBAC Roles</label><br/>
+          <label for="reassign_dyn"><fmt:message key="org_intalio_uifw_reassign_fetched_roles"/></label><br/>
           <select name="reassign_dyn" id="reassign_dyn" style="width:200px" class="text ui-widget-content ui-corner-all">
           </select><br/>
-          <label for="reassign_dyn_user">RBAC Users</label><br/>
+          <label for="reassign_dyn_user"><fmt:message key="org_intalio_uifw_reassign_fetched_users"/></label><br/>
           <select name="reassign_dyn_user" id="reassign_dyn_user" style="width:200px" class="text ui-widget-content ui-corner-all">
           </select><br/>
         </fieldset>
       </form>
     </div>
+    
+    <div id="sessionExpired" title="<fmt:message key="org_intalio_uifw_session_expired"/>">
+       <p><fmt:message key="org_intalio_uifw_session_expired"/></p>
+       <p><a href="/ui-fw"><fmt:message key="org_intalio_uifw_session_login_again"/></a></p>
+    </div>
 
-    <iframe onLoad="resizeIframe" name="taskform" FRAMEBORDER="0" id="taskform" SCROLLING="auto"></iframe>
+    <iframe onLoad="resizeIframe" name="taskform" frameborder="0" id="taskform" scrolling="auto"></iframe>
 
     <div id="footer" style="margin-left:20px">
       <fmt:message key="com_intalio_bpms_workflow_pageFooter_poweredBy_label" />
@@ -147,15 +150,9 @@
       </a>
     </div>
 
-    <div id="rel_modal_content" class="hiddencontent">
-      <p>Your session has expired.</p>
-      <p><a href="/ui-fw">Please click here to log in again</a></p>
-      <!-- Note we can add any kind of HTML code in here for the session timeout -->
-    </div>
-
-  </body>
-
   <script>
     document.getElementById('taskform').onload = resizeIframe;
   </script>
+
+  </body>
 </html>

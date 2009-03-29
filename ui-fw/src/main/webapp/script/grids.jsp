@@ -3,9 +3,9 @@
 <%@page import="org.intalio.tempo.uiframework.Configuration"%>
 <%@page import="org.intalio.tempo.security.ws.TokenClient"%>
 
-	<script type="text/javascript">
+<script type="text/javascript">
 
-		$(document).ready(function(){ 
+	$(document).ready(function(){ 
     
     <% 
     String tokenService = Configuration.getInstance().getTokenClient().getEndpoint();
@@ -61,28 +61,45 @@
 		
 		function resetTimer() {
 		    time = 0;
-            $("#timer").text("");
+        $("#timer").text("");
 		}
 		
 		$.timer(timeCount,function(timer) {
-			if(time>=1) $("#timer").text("You have been inactive for "+ time +" minute(s)");
+			if(time>=1) {
+				var text = '<fmt:message key="org_intalio_uifw_session_inactivity_1"/>';
+				text = text+" "+time+" "+'<fmt:message key="org_intalio_uifw_session_inactivity_2"/>';
+				$("#timer").text(text);
+			}
 			time = time + 1;
 			if(time > sessionTimeout) {
-				$.post("login.htm?actionName=logOut");		
-				$("#modal").click();
+        log_me_out();
+        timer.stop();
 			}
 		});
 		
 		
 		$(this).click(function() {resetTimer();});
 		
-		$('#modal').modal({modal_styles: {width:"30%", "height":"30%"}, hide:"location.reload(true);"});
-
+		function log_me_out() {
+		   $.post("login.htm?actionName=logOut");
+		   $("#sessionExpired").dialog('open');
+		}
+		
+		$("#sessionExpired").dialog({
+    			bgiframe: false,
+    			autoOpen: false,
+    			height: 150,
+    			modal: true,		
+          buttons: {
+    				OK: function() {location.reload(true);}
+    			},
+    			close: function() {location.reload(true);}
+    });
 
         // make the soap calls to delete the tasks
         function deleteTask(com,grid)
         {
-           if (com=='Delete' && $('.trSelected',grid).length>0) {
+           if ($('.trSelected',grid).length>0) {
            if(confirm('Delete ' + $('.trSelected',grid).length + ' tasks?')){
 
             $('.trSelected',grid).each(function() {
@@ -301,8 +318,25 @@
 			effectSpeed: speed 
 		});
 		
-		var t2 = $("#table2").flexigrid({
-		url: "updates.htm",
+		// 
+		// Common flexigrid properties
+		//
+		var p = {
+        url: 'updates.htm',
+        dataType: 'xml',
+        showTableToggleBtn: true,
+    		width: width,
+    		pagestat: '<fmt:message key="org_intalio_uifw_flexigrid_displaying"/>',
+    		procmsg: '<fmt:message key="org_intalio_uifw_flexigrid_processing"/>',
+    		nomsg: '<fmt:message key="org_intalio_uifw_flexigrid_noitem"/>',
+    		errormsg: '<fmt:message key="org_intalio_uifw_flexigrid_error"/>',
+    		height: height2,
+    		preProcess: preProcess,
+    		usepager: true,
+    		searchitems : [{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description'}],
+		}
+		
+		var t2 = $("#table2").flexigrid($.extend({
 		params: [
 			 { name : 'type', value : 'Notification' }
 			,{ name : 'update', value : true }
@@ -311,27 +345,21 @@
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description', width : width*0.6, sortable : true, align: 'left'},
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/>', name : '_creationDate', width : width*0.2, sortable : true, align: 'left'}
 		],	
-		preProcess: preProcess,
-		usepager: true,
-		searchitems : [{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description'}],
-		showTableToggleBtn: true,
-		width: width,
-		height: height2,
 		<% if(Configuration.getInstance().isUseToolbarIcons()) {%> 
-		buttons : [{name: 'Delete', bclass: 'delete', onpress : deleteTask}]
+		buttons : [{name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : deleteTask}]
 		<%} %>
-		}
-		);
+		},p));
 		
-		var t1 = $("#table1").flexigrid({
-		url: 'updates.htm',
-        dataType: 'xml',
+
+		var t1 = $("#table1").flexigrid($.extend(
+		{
+		
         <% if(Configuration.getInstance().isUseToolbarIcons()) {%> 
         buttons : [
-           {name: 'Delete', bclass: 'delete', onpress : deleteTask},
-           {name: 'Claim/Revoke', bclass: 'claim', onpress : claimTask},
-           {name: 'Reassign', bclass: 'reassign', onpress : clickReassign},
-           {name: 'Skip', bclass: 'skip', onpress : skipTask}
+           {name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : deleteTask},
+           {name: '<fmt:message key="org_intalio_uifw_toolbar_button_claimrevoke"/>', bclass: 'claim', onpress : claimTask},
+           {name: '<fmt:message key="org_intalio_uifw_toolbar_button_reassign"/>', bclass: 'reassign', onpress : clickReassign},
+           {name: '<fmt:message key="org_intalio_uifw_toolbar_button_skip"/>', bclass: 'skip', onpress : skipTask}
         ],
         <%} %>
         params: [
@@ -345,20 +373,13 @@
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_dueDate"/>', name : '_deadline', width : width*0.15, sortable : true, align: 'left'},
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_priority"/>', name : '_priority', width : width*0.070, sortable : true, align: 'center'},
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_attachments"/>', name : '_attachments', width : width*0.09, sortable : false, align: 'center'}
-		],
-		usepager: true,
-		preProcess: preProcess,
-		searchitems : [{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description'}],
-		showTableToggleBtn: true,
-		width: width,
-		height: height2
-		}
+		]
+		},p)
 		);
 		
-		var t3 = $("#table3").flexigrid({
-		url: "updates.htm",
+		var t3 = $("#table3").flexigrid($.extend({
 		  <% if(Configuration.getInstance().isUseToolbarIcons()) {%> 
-		buttons : [{name: 'Delete', bclass: 'delete', onpress : deleteTask}], 
+		buttons : [{name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : deleteTask}], 
 		  <%} %>
 		params: [
 			 { name : 'type', value : 'PIPATask' }
@@ -367,16 +388,8 @@
 		colModel : [
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description', width : width*0.6, sortable : true, align: 'left'},
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/>', name : '_creationDate', width : width*0.38, sortable : true, align: 'left'}
-		],	
-		usepager: true,
-		preProcess: preProcess,
-		searchitems : [
-		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description'}
-		],
-		showTableToggleBtn: true,
-		width: width,
-		height: height2
-		}
+		]
+		},p)
 		);
 		
 		var current = null;
@@ -463,11 +476,12 @@
 		$("#reassignDialog").hide();
 		
 		var timeout = <c:out value="${refreshTime}"/> * 1000;
-
 		if(timeout == null || timeout < 1000) timeout = 1000;
-		$.timer(2000,function(timer) {
-		  // don't refresh if showing the reassign dialog
-		  if ($("#reassignDialog").is(":true")) return; 
+		
+		$.timer(timeout,function(timer) {
+		  // don't refresh if showing a dialog
+		  if ($("#reassignDialog").is(":visible")) return; 
+		  if ($("#sessionExpired").is(":visible")) return; 
 		  
       if(current=='tabTasks') t1.flexReload();
       if(current=='tabNotif') t2.flexReload();
@@ -477,4 +491,5 @@
 		$("#tabTasks").click();
 		
 		});
-	</script>
+
+</script>
