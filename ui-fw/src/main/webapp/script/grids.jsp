@@ -7,18 +7,24 @@
 
 		$(document).ready(function(){ 
     
-    <% String tokenService = Configuration.getInstance().getTokenClient().getEndpoint();%>
+    <% 
+    String tokenService = Configuration.getInstance().getTokenClient().getEndpoint();
+    %>
+    
 		var speed = "fast";
 		var currentUser = '<%= ((String)request.getAttribute("currentUser")).replace("\\", "\\\\")%>';
-		var tokenService = '<%= tokenService %> ';
+		var tokenService = '<%= tokenService %>';
+		var tmsService = '<%=Configuration.getInstance().getServiceEndpoint()%>';
+		var tmpService = '<%=Configuration.getInstance().getTMPEndpoint()%>';
 		var rbacService = '<%= tokenService.substring(0, tokenService.indexOf("/TokenService"))+"/RBACQueryService" %>';
+		var proxy = '/ui-fw/script/proxy.jsp';
 		var width = $(window).width()-($(window).width()/30);
 		var height = 0;
 		
 		window.open("about:blank", "taskform");
 		
 		if($.browser.msie){
-		     height = $(window).height() - 140;
+		     height = $(window).height() - 160;
 		  }else{
 		     height = $(window).height() - 140;
 		  }
@@ -55,7 +61,7 @@
 		
 		function resetTimer() {
 		    time = 0;
-        $("#timer").text("");
+            $("#timer").text("");
 		}
 		
 		$.timer(timeCount,function(timer) {
@@ -88,8 +94,8 @@
                soapBody.appendChild(new SOAPObject("pipaurl")).val(pipa.attr('url'));
                soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
                var sr = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/deletePipa", soapBody);
-               SOAPClient.SOAPServer = '<%=Configuration.getInstance().getServiceEndpoint()%>';
-               SOAPClient.Proxy = '<%=Configuration.getInstance().getServiceEndpoint()%>';
+               SOAPClient.SOAPServer = tmsService;
+               SOAPClient.Proxy = proxy;
                SOAPClient.SendRequest(sr, update);
               } // end soap delete pipa
      
@@ -100,8 +106,8 @@
                soapBody.appendChild(new SOAPObject("taskId")).val(task.attr('tid'));
                soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
                var sr = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/delete", soapBody);
-               SOAPClient.SOAPServer = '<%=Configuration.getInstance().getServiceEndpoint()%>';
-               SOAPClient.Proxy = '<%=Configuration.getInstance().getServiceEndpoint()%>';
+               SOAPClient.SOAPServer = tmsService;
+               SOAPClient.Proxy = proxy;
                SOAPClient.SendRequest(sr, update);
              } // end soap delete tasks
                         
@@ -125,8 +131,8 @@
               soapBody.appendChild(new SOAPObject("claimerUser")).val(currentUser);
               soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
               var sr                  = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/claimTask", soapBody);
-              SOAPClient.Proxy        = '<%=Configuration.getInstance().getTMPEndpoint()%>';
-              SOAPClient.SOAPServer        = '<%=Configuration.getInstance().getTMPEndpoint()%>';
+              SOAPClient.Proxy = proxy;
+              SOAPClient.SOAPServer        = tmpService;
               SOAPClient.SendRequest(sr, update);
               } else {
           
@@ -137,8 +143,8 @@
               soapBody.appendChild(new SOAPObject("claimerUser")).val(currentUser);
               soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
               var sr                  = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/revokeTask", soapBody);
-              SOAPClient.Proxy        = '<%=Configuration.getInstance().getTMPEndpoint()%>';
-              SOAPClient.SOAPServer        = '<%=Configuration.getInstance().getTMPEndpoint()%>';
+              SOAPClient.Proxy        = proxy;
+              SOAPClient.SOAPServer        = tmpService;
               SOAPClient.SendRequest(sr, update);
             }
 
@@ -180,8 +186,8 @@
                 soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
                 
                 var sr           = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/skipTask", soapBody);
-                SOAPClient.Proxy        = '<%=Configuration.getInstance().getTMPEndpoint()%>';
-                SOAPClient.SOAPServer        = '<%=Configuration.getInstance().getTMPEndpoint()%>';
+                SOAPClient.Proxy        = proxy;
+                SOAPClient.SOAPServer        = tmpService;
                 SOAPClient.SendRequest(sr, update);
             });
         }
@@ -200,8 +206,8 @@
                 soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
                 
                 var sr = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/reassign", soapBody);
-                SOAPClient.Proxy = '<%=Configuration.getInstance().getServiceEndpoint()%>';
-                SOAPClient.SOAPServer = '<%=Configuration.getInstance().getServiceEndpoint()%>';
+                SOAPClient.Proxy = proxy;
+                SOAPClient.SOAPServer = tmsService;
                 SOAPClient.SendRequest(sr, update);
             });
         }
@@ -221,8 +227,8 @@
                 soapBody.ns      = "http://tempo.intalio.org/security/RBACQueryService/";
                 soapBody.appendChild(new SOAPObject("user")).val(currentUser);
                 var sr           = new SOAPRequest("http://tempo.intalio.org/security/RBACQueryService/getAssignedRoles", soapBody);
-                SOAPClient.Proxy = 'http://localhost:8080/axis2/services/RBACQueryService';
-                SOAPClient.SOAPServer = 'http://localhost:8080/axis2/services/RBACQueryService';
+                SOAPClient.Proxy = proxy;
+                SOAPClient.SOAPServer = rbacService;
                 SOAPClient.SendRequest(sr, populateRoles);
         }
         
@@ -231,8 +237,8 @@
                 soapBody.ns      = "http://tempo.intalio.org/security/RBACQueryService/";
                 soapBody.appendChild(new SOAPObject("role")).val($('#reassign_dyn').val());
                 var sr           = new SOAPRequest("http://tempo.intalio.org/security/RBACQueryService/getAssignedUsers", soapBody);
-                SOAPClient.Proxy = 'http://localhost:8080/axis2/services/RBACQueryService';
-                SOAPClient.SOAPServer = 'http://localhost:8080/axis2/services/RBACQueryService';
+                SOAPClient.Proxy = proxy;
+                SOAPClient.SOAPServer = rbacService;
                 SOAPClient.SendRequest(sr, populateDynamicUsers);
         }
         
@@ -250,18 +256,13 @@
         }
         
         $('#reassign_dyn').change(function() {
-            $('#reassign_roles').text($('#reassign_dyn').val());
-            $('#reassign_roles').val($('#reassign_dyn').val());
-            $('#reassign_user').text("");
-            $('#reassign_user').val("");
             updateDynamicUsers();
+            $('#reassign_roles').val($('#reassign_dyn').val());
+            $('#reassign_user').val("");
         });
         
         $('#reassign_dyn_user').change(function() {
-            $('#reassign_user').text($('#reassign_dyn_user').val());
             $('#reassign_user').val($('#reassign_dyn_user').val());
-            
-            $('#reassign_roles').text("");
             $('#reassign_roles').val("");
         });
         
@@ -464,8 +465,9 @@
 		var timeout = <c:out value="${refreshTime}"/> * 1000;
 
 		if(timeout == null || timeout < 1000) timeout = 1000;
-		$.timer(timeout,function(timer) {
-		  if ($("reassignDialog").is(":visible")) return;
+		$.timer(2000,function(timer) {
+		  // don't refresh if showing the reassign dialog
+		  if ($("#reassignDialog").is(":true")) return; 
 		  
       if(current=='tabTasks') t1.flexReload();
       if(current=='tabNotif') t2.flexReload();
