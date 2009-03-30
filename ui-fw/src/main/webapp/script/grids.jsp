@@ -10,6 +10,7 @@
     <% 
     Configuration conf = Configuration.getInstance();
     String tokenService = conf.getTokenClient().getEndpoint();
+    boolean useToolbar = conf.isUseToolbarIcons().booleanValue();
     %>
     
 		var speed = "fast";
@@ -357,7 +358,7 @@
 
 		var t1 = $("#table1").flexigrid($.extend(
 		{
-        <% if(conf.isUseToolbarIcons()) {%> 
+        <% if(useToolbar) {%> 
         buttons : [
            {name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : deleteTask},
            {name: '<fmt:message key="org_intalio_uifw_toolbar_button_claimrevoke"/>', bclass: 'claim', onpress : claimTask},
@@ -390,13 +391,13 @@
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description', width : width*0.6, sortable : true, align: 'left'},
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/>', name : '_creationDate', width : width*0.2, sortable : true, align: 'left'}
 		],	
-		<% if(conf.isUseToolbarIcons()) {%> 
+		<% if(useToolbar) {%> 
 		buttons : [{name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : deleteTask}]
 		<%} %>
 		},p));
 		
 		var t3 = $("#table3").flexigrid($.extend({
-		  <% if(conf.isUseToolbarIcons()) {%> 
+		  <% if(useToolbar) {%> 
 		buttons : [{name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : deleteTask}], 
 		  <%} %>
 		params: [
