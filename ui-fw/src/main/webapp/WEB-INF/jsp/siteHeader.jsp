@@ -1,8 +1,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
 <div class="siteHeader">
-<form id="form" name="form" method="POST" border="0" cellpadding="0" cellspacing="0" >
+  <img src="images/logo.gif" alt="" width="200"/>
+  <form id="form" name="form" method="POST" border="0" cellpadding="0" cellspacing="0" >
 	<input type="hidden" id="actionName" name="actionName" value=""/>
-	<img src="images/logo.gif" alt="" width="200"/>
 	<div class="siteHeaderIcons">
 	<span id="timer"></span>
 	<%@ include file="icons.jsp" %>
