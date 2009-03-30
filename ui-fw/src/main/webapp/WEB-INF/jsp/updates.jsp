@@ -2,7 +2,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ page contentType="text/xml;charset=UTF-8"%>
-<c:set var="iconSize" value="14"/>
+<c:set var="iconSize" value="12"/>
 <rows>
 	<page><%= request.getAttribute("currentPage") %></page>
 	<total><%= request.getAttribute("totalPage") %></total>
@@ -60,10 +60,10 @@
 					<cell><![CDATA[
 						<a href="${taskFullURL}" target="taskform">
 						<c:if test="${taskHolder.task.state =='CLAIMED'}">
-     						<img height="${iconSize}" width="${iconSize}" title="<fmt:message key="org_intalio_uifw_tasks_claimed"/>" border="0px" src="images/orange.jpg"/>
+     						<img height="${iconSize}" width="${iconSize}" title="<fmt:message key="org_intalio_uifw_tasks_claimed"/>" border="0px" src="images/icons/icon.claimed.gif"/>
 						</c:if>
 						<c:if test="${taskHolder.task.state =='READY'}">
-	    					<img height="${iconSize}" width="${iconSize}" title="<fmt:message key="org_intalio_uifw_tasks_ready"/>" border="0px" src="images/green.jpg"/>
+	    					<img height="${iconSize}" width="${iconSize}" title="<fmt:message key="org_intalio_uifw_tasks_ready"/>" border="0px" src="images/icons/icon.notclaimed.gif"/>
 						</c:if>
 						</a>
 						]]>
@@ -79,7 +79,7 @@
 					    </cell>
 					<cell><![CDATA[
 							<c:forEach items="${taskHolder.task.attachments}" var="attachment" varStatus="index">
-								<a href="${attachment.payloadURL}" onClick="window.open('${attachment.payloadURL}', 'newwindow'); return false;"><img border="0" height="${iconSize}" width="${iconSize}" title="${attachment.payloadURL}" src="images/mail.gif"/></a>
+								<a href="${attachment.payloadURL}" onClick="window.open('${attachment.payloadURL}', 'newwindow'); return false;"><img border="0" height="${iconSize}" width="${iconSize}" title="${attachment.payloadURL}" src="images/icons/icon.attachment.gif"/></a>
 							</c:forEach>
 						]]>
 					</cell>

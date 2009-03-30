@@ -18,7 +18,8 @@
 		var tmpService = '<%=Configuration.getInstance().getTMPEndpoint()%>';
 		var rbacService = '<%= tokenService.substring(0, tokenService.indexOf("/TokenService"))+"/RBACQueryService" %>';
 		var proxy = '/ui-fw/script/proxy.jsp';
-		var width = $(window).width()-($(window).width()/30);
+		var widthFull = $(window).width()*0.99;
+		var width = $(window).width()*0.90;
 		var height = 0;
 		
 		window.open("about:blank", "taskform");
@@ -325,7 +326,7 @@
         url: 'updates.htm',
         dataType: 'xml',
         showTableToggleBtn: true,
-    		width: width,
+    		width: widthFull,
     		pagestat: '<fmt:message key="org_intalio_uifw_flexigrid_displaying"/>',
     		procmsg: '<fmt:message key="org_intalio_uifw_flexigrid_processing"/>',
     		nomsg: '<fmt:message key="org_intalio_uifw_flexigrid_noitem"/>',
@@ -351,12 +352,12 @@
 			,{ name : 'update', value : true }
 		],
 		colModel : [
-		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description', width : width*0.39, sortable : true, align: 'left'},
+		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description', width : width*0.44, sortable : true, align: 'left'},
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_taskState"/>', name : '_state', width : width*0.035, resize : true, sortable : true, align: 'center'},
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/>', name : '_creationDate', width : width*0.15, sortable : true, align: 'left'},
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_dueDate"/>', name : '_deadline', width : width*0.15, sortable : true, align: 'left'},
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_priority"/>', name : '_priority', width : width*0.070, sortable : true, align: 'center'},
-		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_attachments"/>', name : '_attachments', width : width*0.09, sortable : false, align: 'center'}
+		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_attachments"/>', name : '_attachments', width : width*0.12, sortable : false, align: 'center'}
 		]
 		},p)
 		);

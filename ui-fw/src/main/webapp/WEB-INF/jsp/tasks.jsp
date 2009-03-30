@@ -71,8 +71,7 @@
         </li>
         <li>
           <div id="filterdiv" class="filtertext" style="margin-left:20px; margin-right:20px">
-            <fmt:message key="org_intalio_uifw_tasks_filtertext"/> 
-            <input type="text" id="filter" style="margin-left:20px"/>
+            <input type="text" id="filter" style="margin-left:20px" title="<fmt:message key="org_intalio_uifw_tasks_filtertext"/> "/>
             <input 
               title="<fmt:message key="org_intalio_uifw_tasks_filtertext"/>" 
               id="filterbutt" 
@@ -83,10 +82,10 @@
         </li>
         <li id="loadingdiv" style="margin-left:10px;">
           <fmt:message key="org_intalio_uifw_message_loading"/>
-          <img src="images/loading.gif"/>
+          <img src="images/icons/icon.loading.gif"/>
         </li>
       </ul>
-      
+
       <div id ="tasktables">
         <div class="hiddencontent" id="com_intalio_bpms_workflow_tab_tasks">
           <table id="table1" style="display:none"></table>
