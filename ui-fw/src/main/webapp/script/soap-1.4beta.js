@@ -47,13 +47,20 @@ var SOAPClient = (function() {
 				function getResponse(xData) {
 					if(!!_tId) {clearTimeout(_tId);}
 						SOAPClient.Status = xhrReq.status;
+						//alert(SOAPClient.ResponseText = xhrReq.responseText);
 						SOAPClient.ResponseText = xhrReq.responseText;
 						SOAPClient.ResponseXML = xhrReq.responseXML;
 					//if(typeof(callback) === "function") {
 						//var jsOut = $.xmlToJSON(xData);
 						//callback(jsOut);
-						callback(xData);
+						 callback(xData);
 					//}
+				}
+				function handleError(xData) {
+				    SOAPClient.Status = xhrReq.status;
+					SOAPClient.ResponseText = xhrReq.responseText;
+					SOAPClient.ResponseXML = xhrReq.responseXML;
+					//alert(new XMLSerializer().serializeToString(xData.responseXML));
 				}
 				var xhrReq = $.ajax({
 					 type: "POST",
@@ -62,6 +69,7 @@ var SOAPClient = (function() {
 					 processData: false,
 					 data: content,
 					 success: getResponse,
+					 error: handleError,
 					 contentType: SOAPClient.ContentType + "; charset=\"" + SOAPClient.CharSet + "\"",
 					 beforeSend: function(req) {
 						req.setRequestHeader("Method", "POST");

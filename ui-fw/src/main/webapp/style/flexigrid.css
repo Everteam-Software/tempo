@@ -2,19 +2,26 @@
 /* Custom buttons for flexigrid */
 .flexigrid div.fbutton .delete
 {
-    background: url(../images/toolbar/icon.delete.gif) no-repeat center left;
+    background: url(../images/icons/icon.delete.gif) no-repeat center left;
 }
 .flexigrid div.fbutton .reassign
 {
-    background: url(../images/toolbar/icon.reassign.gif) no-repeat center left;
+    background: url(../images/icons/icon.reassign.gif) no-repeat center left;
 }
 .flexigrid div.fbutton .claim
 {
-    background: url(../images/toolbar/icon.claim.gif) no-repeat center left;
+    background: url(../images/icons/icon.claim.gif) no-repeat center left;
 }
 .flexigrid div.fbutton .skip
 {
-    background: url(../images/toolbar/icon.skip.gif) no-repeat center left;
+    background: url(../images/icons/icon.skip.gif) no-repeat center left;
+}
+/* The two below are fixes for IE */
+.flexigrid input {
+    font-size: 11px;
+}
+.flexigrid select {
+    font-size: 11px;
 }
 
 

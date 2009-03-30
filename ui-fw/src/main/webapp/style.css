@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2005-2008 Intalio inc.
+ Copyright (c) 2005-2009 Intalio inc.
 
  All rights reserved. This program and the accompanying materials
  are made available under the terms of the Eclipse Public License v1.0
@@ -9,6 +9,7 @@
  Contributors:
  Intalio inc. - initial API and implementation
 */
+@charset "UTF-8";
 body {
 	margin: 0px;
 	font-size: 9px;
@@ -238,6 +239,8 @@ table {
 }
 
 #filterbutt{
+    font-family: Verdana; 
+	font-size: 9px;
 	height: 20px;
 	width: 100px;
 	border: 1px solid #BDBDBD;
@@ -250,6 +253,20 @@ table {
 	font-size: 9px;
 }
 
+#reassignDialog {
+    font-size:9px;
+}
+
+#tasktables {
+    clear: both; 
+    float:left; 
+    position:relative; 
+    top:0px;
+    margin-top:0px;
+}
+#container {
+    margin-bottom:0px;
+}
 
 
 input.text { margin-bottom:12px; width:95%; padding: .4em; }

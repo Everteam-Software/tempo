@@ -3,24 +3,31 @@
 <%@page import="org.intalio.tempo.uiframework.Configuration"%>
 <%@page import="org.intalio.tempo.security.ws.TokenClient"%>
 
-	<script type="text/javascript">
+<script type="text/javascript">
 
-		$(document).ready(function(){ 
+	$(document).ready(function(){ 
     
-    <% String tokenService = Configuration.getInstance().getTokenClient().getEndpoint();%>
+    <% 
+    String tokenService = Configuration.getInstance().getTokenClient().getEndpoint();
+    %>
+    
 		var speed = "fast";
 		var currentUser = '<%= ((String)request.getAttribute("currentUser")).replace("\\", "\\\\")%>';
-		var tokenService = '<%= tokenService %> ';
+		var tokenService = '<%= tokenService %>';
+		var tmsService = '<%=Configuration.getInstance().getServiceEndpoint()%>';
+		var tmpService = '<%=Configuration.getInstance().getTMPEndpoint()%>';
 		var rbacService = '<%= tokenService.substring(0, tokenService.indexOf("/TokenService"))+"/RBACQueryService" %>';
-		var width = $(window).width()-($(window).width()/30);
+		var proxy = '/ui-fw/script/proxy.jsp';
+		var widthFull = $(window).width()*0.99;
+		var width = $(window).width()*0.90;
 		var height = 0;
 		
 		window.open("about:blank", "taskform");
 		
 		if($.browser.msie){
-		     height = $(window).height() - 140;
+		     height = $(window).height() - 130;
 		  }else{
-		     height = $(window).height() - 140;
+		     height = $(window).height() - 130;
 		  }
 		var height2 = height - 80;
 		$(window).resize(function() {
@@ -59,24 +66,41 @@
 		}
 		
 		$.timer(timeCount,function(timer) {
-			if(time>=1) $("#timer").text("You have been inactive for "+ time +" minute(s)");
+			if(time>=1) {
+				var text = '<fmt:message key="org_intalio_uifw_session_inactivity_1"/>';
+				text = text+" "+time+" "+'<fmt:message key="org_intalio_uifw_session_inactivity_2"/>';
+				$("#timer").text(text);
+			}
 			time = time + 1;
 			if(time > sessionTimeout) {
-				$.post("login.htm?actionName=logOut");		
-				$("#modal").click();
+        log_me_out();
+        timer.stop();
 			}
 		});
 		
 		
 		$(this).click(function() {resetTimer();});
 		
-		$('#modal').modal({modal_styles: {width:"30%", "height":"30%"}, hide:"location.reload(true);"});
-
+		function log_me_out() {
+		   $.post("login.htm?actionName=logOut");
+		   $("#sessionExpired").dialog('open');
+		}
+		
+		$("#sessionExpired").dialog({
+    			bgiframe: false,
+    			autoOpen: false,
+    			height: 150,
+    			modal: true,		
+          buttons: {
+    				OK: function() {location.reload(true);}
+    			},
+    			close: function() {location.reload(true);}
+    });
 
         // make the soap calls to delete the tasks
         function deleteTask(com,grid)
         {
-           if (com=='Delete' && $('.trSelected',grid).length>0) {
+           if ($('.trSelected',grid).length>0) {
            if(confirm('Delete ' + $('.trSelected',grid).length + ' tasks?')){
 
             $('.trSelected',grid).each(function() {
@@ -88,8 +112,8 @@
                soapBody.appendChild(new SOAPObject("pipaurl")).val(pipa.attr('url'));
                soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
                var sr = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/deletePipa", soapBody);
-               SOAPClient.SOAPServer = '<%=Configuration.getInstance().getServiceEndpoint()%>';
-               SOAPClient.Proxy = '<%=Configuration.getInstance().getServiceEndpoint()%>';
+               SOAPClient.SOAPServer = tmsService;
+               SOAPClient.Proxy = proxy;
                SOAPClient.SendRequest(sr, update);
               } // end soap delete pipa
      
@@ -100,8 +124,8 @@
                soapBody.appendChild(new SOAPObject("taskId")).val(task.attr('tid'));
                soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
                var sr = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/delete", soapBody);
-               SOAPClient.SOAPServer = '<%=Configuration.getInstance().getServiceEndpoint()%>';
-               SOAPClient.Proxy = '<%=Configuration.getInstance().getServiceEndpoint()%>';
+               SOAPClient.SOAPServer = tmsService;
+               SOAPClient.Proxy = proxy;
                SOAPClient.SendRequest(sr, update);
              } // end soap delete tasks
                         
@@ -125,8 +149,8 @@
               soapBody.appendChild(new SOAPObject("claimerUser")).val(currentUser);
               soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
               var sr                  = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/claimTask", soapBody);
-              SOAPClient.Proxy        = '<%=Configuration.getInstance().getTMPEndpoint()%>';
-              SOAPClient.SOAPServer        = '<%=Configuration.getInstance().getTMPEndpoint()%>';
+              SOAPClient.Proxy = proxy;
+              SOAPClient.SOAPServer        = tmpService;
               SOAPClient.SendRequest(sr, update);
               } else {
           
@@ -137,8 +161,8 @@
               soapBody.appendChild(new SOAPObject("claimerUser")).val(currentUser);
               soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
               var sr                  = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/revokeTask", soapBody);
-              SOAPClient.Proxy        = '<%=Configuration.getInstance().getTMPEndpoint()%>';
-              SOAPClient.SOAPServer        = '<%=Configuration.getInstance().getTMPEndpoint()%>';
+              SOAPClient.Proxy        = proxy;
+              SOAPClient.SOAPServer        = tmpService;
               SOAPClient.SendRequest(sr, update);
             }
 
@@ -180,8 +204,8 @@
                 soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
                 
                 var sr           = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/skipTask", soapBody);
-                SOAPClient.Proxy        = '<%=Configuration.getInstance().getTMPEndpoint()%>';
-                SOAPClient.SOAPServer        = '<%=Configuration.getInstance().getTMPEndpoint()%>';
+                SOAPClient.Proxy        = proxy;
+                SOAPClient.SOAPServer        = tmpService;
                 SOAPClient.SendRequest(sr, update);
             });
         }
@@ -200,8 +224,8 @@
                 soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
                 
                 var sr = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/reassign", soapBody);
-                SOAPClient.Proxy = '<%=Configuration.getInstance().getServiceEndpoint()%>';
-                SOAPClient.SOAPServer = '<%=Configuration.getInstance().getServiceEndpoint()%>';
+                SOAPClient.Proxy = proxy;
+                SOAPClient.SOAPServer = tmsService;
                 SOAPClient.SendRequest(sr, update);
             });
         }
@@ -221,8 +245,8 @@
                 soapBody.ns      = "http://tempo.intalio.org/security/RBACQueryService/";
                 soapBody.appendChild(new SOAPObject("user")).val(currentUser);
                 var sr           = new SOAPRequest("http://tempo.intalio.org/security/RBACQueryService/getAssignedRoles", soapBody);
-                SOAPClient.Proxy = 'http://localhost:8080/axis2/services/RBACQueryService';
-                SOAPClient.SOAPServer = 'http://localhost:8080/axis2/services/RBACQueryService';
+                SOAPClient.Proxy = proxy;
+                SOAPClient.SOAPServer = rbacService;
                 SOAPClient.SendRequest(sr, populateRoles);
         }
         
@@ -231,8 +255,8 @@
                 soapBody.ns      = "http://tempo.intalio.org/security/RBACQueryService/";
                 soapBody.appendChild(new SOAPObject("role")).val($('#reassign_dyn').val());
                 var sr           = new SOAPRequest("http://tempo.intalio.org/security/RBACQueryService/getAssignedUsers", soapBody);
-                SOAPClient.Proxy = 'http://localhost:8080/axis2/services/RBACQueryService';
-                SOAPClient.SOAPServer = 'http://localhost:8080/axis2/services/RBACQueryService';
+                SOAPClient.Proxy = proxy;
+                SOAPClient.SOAPServer = rbacService;
                 SOAPClient.SendRequest(sr, populateDynamicUsers);
         }
         
@@ -250,18 +274,13 @@
         }
         
         $('#reassign_dyn').change(function() {
-            $('#reassign_roles').text($('#reassign_dyn').val());
-            $('#reassign_roles').val($('#reassign_dyn').val());
-            $('#reassign_user').text("");
-            $('#reassign_user').val("");
             updateDynamicUsers();
+            $('#reassign_roles').val($('#reassign_dyn').val());
+            $('#reassign_user').val("");
         });
         
         $('#reassign_dyn_user').change(function() {
-            $('#reassign_user').text($('#reassign_dyn_user').val());
             $('#reassign_user').val($('#reassign_dyn_user').val());
-            
-            $('#reassign_roles').text("");
             $('#reassign_roles').val("");
         });
         
@@ -300,8 +319,51 @@
 			effectSpeed: speed 
 		});
 		
-		var t2 = $("#table2").flexigrid({
-		url: "updates.htm",
+		// 
+		// Common flexigrid properties
+		//
+		var p = {
+        url: 'updates.htm',
+        dataType: 'xml',
+        showTableToggleBtn: true,
+    		width: widthFull,
+    		pagestat: '<fmt:message key="org_intalio_uifw_flexigrid_displaying"/>',
+    		procmsg: '<fmt:message key="org_intalio_uifw_flexigrid_processing"/>',
+    		nomsg: '<fmt:message key="org_intalio_uifw_flexigrid_noitem"/>',
+    		errormsg: '<fmt:message key="org_intalio_uifw_flexigrid_error"/>',
+    		height: height2,
+    		preProcess: preProcess,
+    		usepager: true,
+    		searchitems : [{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description'}]
+		};		
+
+		var t1 = $("#table1").flexigrid($.extend(
+		{
+        <% if(Configuration.getInstance().isUseToolbarIcons()) {%> 
+        buttons : [
+           {name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : deleteTask},
+           {name: '<fmt:message key="org_intalio_uifw_toolbar_button_claimrevoke"/>', bclass: 'claim', onpress : claimTask},
+           {name: '<fmt:message key="org_intalio_uifw_toolbar_button_reassign"/>', bclass: 'reassign', onpress : clickReassign},
+           {name: '<fmt:message key="org_intalio_uifw_toolbar_button_skip"/>', bclass: 'skip', onpress : skipTask}
+        ],
+        <%} %>
+        params: [
+			 { name : 'type', value : 'PATask' }
+			,{ name : 'update', value : true }
+		],
+		colModel : [
+		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description', width : width*0.44, sortable : true, align: 'left'},
+		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_taskState"/>', name : '_state', width : width*0.035, resize : true, sortable : true, align: 'center'},
+		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/>', name : '_creationDate', width : width*0.15, sortable : true, align: 'left'},
+		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_dueDate"/>', name : '_deadline', width : width*0.15, sortable : true, align: 'left'},
+		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_priority"/>', name : '_priority', width : width*0.070, sortable : true, align: 'center'},
+		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_attachments"/>', name : '_attachments', width : width*0.12, sortable : false, align: 'center'}
+		]
+		},p)
+		);
+		
+		
+		var t2 = $("#table2").flexigrid($.extend({
 		params: [
 			 { name : 'type', value : 'Notification' }
 			,{ name : 'update', value : true }
@@ -310,54 +372,14 @@
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description', width : width*0.6, sortable : true, align: 'left'},
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/>', name : '_creationDate', width : width*0.2, sortable : true, align: 'left'}
 		],	
-		preProcess: preProcess,
-		usepager: true,
-		searchitems : [{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description'}],
-		showTableToggleBtn: true,
-		width: width,
-		height: height2,
 		<% if(Configuration.getInstance().isUseToolbarIcons()) {%> 
-		buttons : [{name: 'Delete', bclass: 'delete', onpress : deleteTask}]
+		buttons : [{name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : deleteTask}]
 		<%} %>
-		}
-		);
+		},p));
 		
-		var t1 = $("#table1").flexigrid({
-		url: 'updates.htm',
-        dataType: 'xml',
-        <% if(Configuration.getInstance().isUseToolbarIcons()) {%> 
-        buttons : [
-           {name: 'Delete', bclass: 'delete', onpress : deleteTask},
-           {name: 'Claim/Revoke', bclass: 'claim', onpress : claimTask},
-           {name: 'Reassign', bclass: 'reassign', onpress : clickReassign},
-           {name: 'Skip', bclass: 'skip', onpress : skipTask}
-        ],
-        <%} %>
-        params: [
-			 { name : 'type', value : 'PATask' }
-			,{ name : 'update', value : true }
-		],
-		colModel : [
-		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description', width : width*0.39, sortable : true, align: 'left'},
-		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_taskState"/>', name : '_state', width : width*0.035, resize : true, sortable : true, align: 'center'},
-		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/>', name : '_creationDate', width : width*0.15, sortable : true, align: 'left'},
-		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_dueDate"/>', name : '_deadline', width : width*0.15, sortable : true, align: 'left'},
-		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_priority"/>', name : '_priority', width : width*0.070, sortable : true, align: 'center'},
-		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_attachments"/>', name : '_attachments', width : width*0.09, sortable : false, align: 'center'}
-		],
-		usepager: true,
-		preProcess: preProcess,
-		searchitems : [{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description'}],
-		showTableToggleBtn: true,
-		width: width,
-		height: height2
-		}
-		);
-		
-		var t3 = $("#table3").flexigrid({
-		url: "updates.htm",
+		var t3 = $("#table3").flexigrid($.extend({
 		  <% if(Configuration.getInstance().isUseToolbarIcons()) {%> 
-		buttons : [{name: 'Delete', bclass: 'delete', onpress : deleteTask}], 
+		buttons : [{name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : deleteTask}], 
 		  <%} %>
 		params: [
 			 { name : 'type', value : 'PIPATask' }
@@ -366,16 +388,8 @@
 		colModel : [
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description', width : width*0.6, sortable : true, align: 'left'},
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/>', name : '_creationDate', width : width*0.38, sortable : true, align: 'left'}
-		],	
-		usepager: true,
-		preProcess: preProcess,
-		searchitems : [
-		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description'}
-		],
-		showTableToggleBtn: true,
-		width: width,
-		height: height2
-		}
+		]
+		},p)
 		);
 		
 		var current = null;
@@ -462,10 +476,12 @@
 		$("#reassignDialog").hide();
 		
 		var timeout = <c:out value="${refreshTime}"/> * 1000;
-
 		if(timeout == null || timeout < 1000) timeout = 1000;
+		
 		$.timer(timeout,function(timer) {
-		  if ($("reassignDialog").is(":visible")) return;
+		  // don't refresh if showing a dialog
+		  if ($("#reassignDialog").is(":visible")) return; 
+		  if ($("#sessionExpired").is(":visible")) return; 
 		  
       if(current=='tabTasks') t1.flexReload();
       if(current=='tabNotif') t2.flexReload();
@@ -475,4 +491,5 @@
 		$("#tabTasks").click();
 		
 		});
-	</script>
+
+</script>
