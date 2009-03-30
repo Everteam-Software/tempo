@@ -29,6 +29,7 @@ public class Configuration {
     private String _baseUrl;
     private String _feedUrl;
     private Boolean _toolbarIcons = Boolean.TRUE;
+    private int _ajaxTimeout = 5000;
  
     public String getFeedUrl() {
         return _feedUrl;
@@ -36,6 +37,14 @@ public class Configuration {
 
     public void setFeedUrl(String url) {
         _feedUrl = url;
+    }
+    
+    public void setAjaxTimeout(int timeout) {
+        _ajaxTimeout = timeout;
+    }
+    
+    public int getAjaxTimeout() {
+        return _ajaxTimeout;
     }
     
     public void setUseToolbarIcons(Boolean use) {

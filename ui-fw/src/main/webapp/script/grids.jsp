@@ -8,19 +8,22 @@
 	$(document).ready(function(){ 
     
     <% 
-    String tokenService = Configuration.getInstance().getTokenClient().getEndpoint();
+    Configuration conf = Configuration.getInstance();
+    String tokenService = conf.getTokenClient().getEndpoint();
     %>
     
 		var speed = "fast";
 		var currentUser = '<%= ((String)request.getAttribute("currentUser")).replace("\\", "\\\\")%>';
 		var tokenService = '<%= tokenService %>';
-		var tmsService = '<%=Configuration.getInstance().getServiceEndpoint()%>';
-		var tmpService = '<%=Configuration.getInstance().getTMPEndpoint()%>';
+		var tmsService = '<%=conf.getServiceEndpoint()%>';
+		var tmpService = '<%=conf.getTMPEndpoint()%>';
 		var rbacService = '<%= tokenService.substring(0, tokenService.indexOf("/TokenService"))+"/RBACQueryService" %>';
 		var proxy = '/ui-fw/script/proxy.jsp';
 		var widthFull = $(window).width()*0.99;
 		var width = $(window).width()*0.90;
 		var height = 0;
+		$.ajaxSetup({timeout: <%= conf.getAjaxTimeout() %>});
+    
 		
 		window.open("about:blank", "taskform");
 		
@@ -72,6 +75,11 @@
 				$("#timer").text(text);
 			}
 			time = time + 1;
+			
+			if ($("#connectionLost").is(":visible")) {
+			   timer.stop();
+			}
+			   
 			if(time > sessionTimeout) {
         log_me_out();
         timer.stop();
@@ -87,15 +95,25 @@
 		}
 		
 		$("#sessionExpired").dialog({
-    			bgiframe: false,
-    			autoOpen: false,
-    			height: 150,
-    			modal: true,		
-          buttons: {
-    				OK: function() {location.reload(true);}
-    			},
-    			close: function() {location.reload(true);}
-    });
+		      bgiframe: false,
+		      autoOpen: false,
+		      height: 200,
+    		  modal: true,		
+              buttons: {
+    				'<fmt:message key="org_intalio_uifw_message.button.ok"/>': function() {location.reload(true);}
+    		  },
+    	      close: function() {location.reload(true);}
+         });
+    
+         $("#connectionLost").dialog({
+		      bgiframe: false,
+		      autoOpen: false,
+		      height: 200,
+    	      modal: true,		
+              buttons: {'<fmt:message key="org_intalio_uifw_message.button.ok"/>': function() {location.reload(true);}},
+    		  close: function() {location.reload(true);}
+          });
+    
 
         // make the soap calls to delete the tasks
         function deleteTask(com,grid)
@@ -178,7 +196,7 @@
            // use below when debugging
            //alert((new XMLSerializer()).serializeToString(object));
            
-           $.timer(500, function (timer) {
+           $.timer(1000, function (timer) {
               refresh(true);
               timer.stop();
            });
@@ -339,7 +357,7 @@
 
 		var t1 = $("#table1").flexigrid($.extend(
 		{
-        <% if(Configuration.getInstance().isUseToolbarIcons()) {%> 
+        <% if(conf.isUseToolbarIcons()) {%> 
         buttons : [
            {name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : deleteTask},
            {name: '<fmt:message key="org_intalio_uifw_toolbar_button_claimrevoke"/>', bclass: 'claim', onpress : claimTask},
@@ -372,13 +390,13 @@
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description', width : width*0.6, sortable : true, align: 'left'},
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/>', name : '_creationDate', width : width*0.2, sortable : true, align: 'left'}
 		],	
-		<% if(Configuration.getInstance().isUseToolbarIcons()) {%> 
+		<% if(conf.isUseToolbarIcons()) {%> 
 		buttons : [{name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : deleteTask}]
 		<%} %>
 		},p));
 		
 		var t3 = $("#table3").flexigrid($.extend({
-		  <% if(Configuration.getInstance().isUseToolbarIcons()) {%> 
+		  <% if(conf.isUseToolbarIcons()) {%> 
 		buttons : [{name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : deleteTask}], 
 		  <%} %>
 		params: [
@@ -471,9 +489,10 @@
 			}
 		});
 		
-		$.jcorners("#intro",{radius:10});
+		$.jcorners("#intro",{radius:20});
 		$("#filterdiv").hide();
 		$("#reassignDialog").hide();
+		$("#connectionLost").hide();
 		
 		var timeout = <c:out value="${refreshTime}"/> * 1000;
 		if(timeout == null || timeout < 1000) timeout = 1000;
@@ -482,11 +501,25 @@
 		  // don't refresh if showing a dialog
 		  if ($("#reassignDialog").is(":visible")) return; 
 		  if ($("#sessionExpired").is(":visible")) return; 
+		  if ($("#connectionLost").is(":visible")) return; 
 		  
-      if(current=='tabTasks') t1.flexReload();
-      if(current=='tabNotif') t2.flexReload();
-      if(current=='tabPipa')  t3.flexReload();
+		  ping(timer);
+		  
+          if(current=='tabTasks') t1.flexReload();
+          if(current=='tabNotif') t2.flexReload();
+          if(current=='tabPipa')  t3.flexReload();
 		});
+		
+		function ping(timer) {
+		   var xhrReq = $.ajax({
+					 type: "HEAD",
+					 url: "/ui-fw/images/spacer.gif",
+					 error: function() {
+					    $("#connectionLost").dialog('open');
+					    timer.stop();
+					 }
+				});
+		}
 		
 		$("#tabTasks").click();
 		

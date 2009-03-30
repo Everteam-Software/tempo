@@ -97,6 +97,10 @@
           <table id="table3" style="display:none"></table>
         </div>
       </div>
+      
+    </div>
+    
+    <div id="connectionLost" title="<fmt:message key="org_intalio_uifw_session_connection_lost"/>">
     </div>
 
     <div id="reassignDialog" title="<fmt:message key="org_intalio_uifw_reassign_title"/>">
