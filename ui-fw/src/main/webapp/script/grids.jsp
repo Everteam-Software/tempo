@@ -24,9 +24,9 @@
 		window.open("about:blank", "taskform");
 		
 		if($.browser.msie){
-		     height = $(window).height() - 160;
+		     height = $(window).height() - 130;
 		  }else{
-		     height = $(window).height() - 140;
+		     height = $(window).height() - 130;
 		  }
 		var height2 = height - 80;
 		$(window).resize(function() {

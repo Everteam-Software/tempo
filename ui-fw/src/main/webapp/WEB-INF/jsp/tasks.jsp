@@ -86,17 +86,17 @@
           <img src="images/loading.gif"/>
         </li>
       </ul>
-    </div>
-
-    <div style="clear: both ; float:left; position:relative; top:0px">
-      <div class="hiddencontent" id="com_intalio_bpms_workflow_tab_tasks">
-        <table id="table1" style="display:none"></table>
-      </div>
-      <div class="hiddencontent" id="com_intalio_bpms_workflow_tab_notifications">
-        <table id="table2" style="display:none"></table>
-      </div>
-      <div class="hiddencontent" id="com_intalio_bpms_workflow_tab_processes">
-        <table id="table3" style="display:none"></table>
+      
+      <div id ="tasktables">
+        <div class="hiddencontent" id="com_intalio_bpms_workflow_tab_tasks">
+          <table id="table1" style="display:none"></table>
+        </div>
+        <div class="hiddencontent" id="com_intalio_bpms_workflow_tab_notifications">
+          <table id="table2" style="display:none"></table>
+        </div>
+        <div class="hiddencontent" id="com_intalio_bpms_workflow_tab_processes">
+          <table id="table3" style="display:none"></table>
+        </div>
       </div>
     </div>
 
