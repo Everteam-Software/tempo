@@ -81,7 +81,7 @@
             </input>
           </div>
         </li>
-        <li id="loadingdiv" style="margin-left:10px; float: right;">
+        <li id="loadingdiv" style="margin-left:10px;">
           <fmt:message key="org_intalio_uifw_message_loading"/>
           <img src="images/loading.gif"/>
         </li>

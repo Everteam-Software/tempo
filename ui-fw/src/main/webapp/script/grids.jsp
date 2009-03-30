@@ -333,27 +333,11 @@
     		height: height2,
     		preProcess: preProcess,
     		usepager: true,
-    		searchitems : [{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description'}],
-		}
-		
-		var t2 = $("#table2").flexigrid($.extend({
-		params: [
-			 { name : 'type', value : 'Notification' }
-			,{ name : 'update', value : true }
-		],
-		colModel : [
-		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description', width : width*0.6, sortable : true, align: 'left'},
-		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/>', name : '_creationDate', width : width*0.2, sortable : true, align: 'left'}
-		],	
-		<% if(Configuration.getInstance().isUseToolbarIcons()) {%> 
-		buttons : [{name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : deleteTask}]
-		<%} %>
-		},p));
-		
+    		searchitems : [{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description'}]
+		};		
 
 		var t1 = $("#table1").flexigrid($.extend(
 		{
-		
         <% if(Configuration.getInstance().isUseToolbarIcons()) {%> 
         buttons : [
            {name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : deleteTask},
@@ -376,6 +360,21 @@
 		]
 		},p)
 		);
+		
+		
+		var t2 = $("#table2").flexigrid($.extend({
+		params: [
+			 { name : 'type', value : 'Notification' }
+			,{ name : 'update', value : true }
+		],
+		colModel : [
+		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description', width : width*0.6, sortable : true, align: 'left'},
+		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/>', name : '_creationDate', width : width*0.2, sortable : true, align: 'left'}
+		],	
+		<% if(Configuration.getInstance().isUseToolbarIcons()) {%> 
+		buttons : [{name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : deleteTask}]
+		<%} %>
+		},p));
 		
 		var t3 = $("#table3").flexigrid($.extend({
 		  <% if(Configuration.getInstance().isUseToolbarIcons()) {%> 
