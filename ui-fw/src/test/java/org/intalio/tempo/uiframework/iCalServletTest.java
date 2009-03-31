@@ -10,6 +10,7 @@ import junit.framework.TestCase;
 
 import org.intalio.tempo.security.Property;
 import org.intalio.tempo.security.ws.TokenClient;
+import org.intalio.tempo.uiframework.export.iCalServlet;
 import org.intalio.tempo.uiframework.forms.FormManager;
 import org.intalio.tempo.uiframework.forms.FormManagerBroker;
 import org.intalio.tempo.workflow.task.PATask;

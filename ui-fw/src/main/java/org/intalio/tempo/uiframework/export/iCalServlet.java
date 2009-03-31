@@ -10,12 +10,11 @@
  * Intalio inc. - initial API and implementation
  */
 
-package org.intalio.tempo.uiframework;
+package org.intalio.tempo.uiframework.export;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -40,8 +39,8 @@ import org.intalio.tempo.workflow.task.Task;
 public class iCalServlet extends ExternalTasksServlet {
     private static final long serialVersionUID = -76889544882620584L;
 
-    public void generateFile(HttpServletRequest request, String pToken, String user, ArrayList<TaskHolder<Task>> tasks, ServletOutputStream outputStream)
-                    throws URISyntaxException, IOException, ValidationException {
+    public void generateFile(HttpServletRequest request, String pToken, String user, ServletOutputStream outputStream) throws URISyntaxException, IOException,
+                    ValidationException {
 
         Calendar calendar = new Calendar();
         calendar.getProperties().add(new ProdId("-//Ben Fortuna//iCal4j 1.0//EN"));
@@ -59,8 +58,9 @@ public class iCalServlet extends ExternalTasksServlet {
             vtask.getProperties().add(new Summary(task.getDescription()));
             Url ur = new Url();
             ur.setUri(URI.create(url));
-            vtask.getProperties().add(url);
-            calendar.getComponents().add(task);
+            vtask.getProperties().add(ur);
+
+            calendar.getComponents().add(vtask);
         }
         new CalendarOutputter().output(calendar, outputStream);
     }

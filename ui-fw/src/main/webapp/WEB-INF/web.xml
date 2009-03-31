@@ -102,7 +102,7 @@
     
     <servlet>
         <servlet-name>iCalServlet</servlet-name>
-        <servlet-class>org.intalio.tempo.uiframework.iCalServlet</servlet-class>
+        <servlet-class>org.intalio.tempo.uiframework.export.iCalServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -112,7 +112,7 @@
 
 	<servlet>
         <servlet-name>CSVServlet</servlet-name>
-        <servlet-class>org.intalio.tempo.uiframework.CSVServlet</servlet-class>
+        <servlet-class>org.intalio.tempo.uiframework.export.CSVServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
