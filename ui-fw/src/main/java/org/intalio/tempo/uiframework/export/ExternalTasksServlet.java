@@ -76,6 +76,7 @@ public abstract class ExternalTasksServlet extends HttpServlet {
 
     public ArrayList<Map<ExportKey, String>> sortTasks() {
         ArrayList<Map<ExportKey, String>> sortedTaskList = new ArrayList<Map<ExportKey, String>>();
+        if(tasks==null) return sortedTaskList;
         for (TaskHolder<Task> t : tasks) {
             Task task = t.getTask();
             HashMap<ExportKey, String> map = new HashMap<ExportKey, String>();

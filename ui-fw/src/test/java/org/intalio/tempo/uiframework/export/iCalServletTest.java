@@ -55,21 +55,24 @@ public class iCalServletTest extends TestCase {
 //		   tasks[0].setFormURLFromString("http://www.intalio.org/form");
 		   expect.that(new Expectations(){{
 			  one(req).getParameter("token");will(returnValue(token));
+			  one(req).getParameter("page");
+			  one(req).getParameter("rp");
+			  one(req).getParameter("sortname");
+			  one(req).getParameter("sortorder");
+			  one(req).getParameter("query");
+			  one(req).getParameter("qtype");
+			  one(req).getParameter("type");
 			  one(tc).getTokenProperties("The quick brown fox jumps over the lazy dog.");will(returnValue(prop));
-			  one(tms).getAvailableTasks("Task", "ORDER BY T._creationDate");will(returnValue(tasks));
-			  one(resp).getOutputStream();will(returnValue(stream));
-			  one(resp).setContentType("text/calendar");
-			  one(resp).addHeader("Content-disposition", "attachment; filename=\"tasks for user1.ics\"");
-			  one(fmanager).getURL(tasks[0]);will(returnValue("Http://www.intalio.com"));
+              // one(tms).getAvailableTasks("Task", "ORDER BY T._creationDate");will(returnValue(tasks));
+              // one(resp).getOutputStream();will(returnValue(stream));
+              // one(resp).setContentType("text/calendar");
+              // one(resp).addHeader("Content-disposition", "attachment; filename=\"tasks for user1.ics\"");
+              // one(fmanager).getURL(tasks[0]);will(returnValue("Http://www.intalio.com"));
 			  one(req).getScheme();will(returnValue("schema1"));
 			  one(req).getServerName();will(returnValue("localhost"));
 			  one(req).getServerPort();will(returnValue(80));
 		   }});
-		   servlet = new iCalServlet(){
-			   protected ITaskManagementService getTMS(HttpServletRequest request, String participantToken) throws Exception{
-				   return tms;
-			   }
-		   };
+		   servlet = new iCalServlet();
 		   FormManagerBroker.getInstance().setFormManager(fmanager);
 		   Configuration.getInstance().setTokenClient(tc);
 		   Configuration.getInstance().setServiceEndpoint("http://www.intalio.org");
