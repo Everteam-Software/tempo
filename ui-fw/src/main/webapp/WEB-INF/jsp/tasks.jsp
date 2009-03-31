@@ -102,6 +102,30 @@
     
     <div id="connectionLost" title="<fmt:message key="org_intalio_uifw_session_connection_lost"/>">
     </div>
+    
+    <div id="exportdialog" title="<fmt:message key="org_intalio_uifw_dialog_export"/>">
+    <form>
+      <fieldset>
+        
+        <fmt:message key="org_intalio_uifw_dialog_export_select_format"/><br/>
+        
+        <input type="radio" value="csv" name="eformat" class="ui-widget-content ui-corner-all"><img src="images/icons/export/csv.png" title="csv">
+        <input type="radio" value="ical" name="eformat" class="ui-widget-content ui-corner-all"><img src="images/icons/export/ical.png" title="ical">
+        <input type="radio" value="pdf" name="eformat" class="ui-widget-content ui-corner-all" checked><img src="images/icons/export/pdf.png" title="pdf">
+        <hr width="100%" align="center">
+        
+        <fmt:message key="org_intalio_uifw_dialog_export_select_content"/><br/>
+        <!-- <label for="etype_pa" ><fmt:message key="com_intalio_bpms_workflow_tab_tasks"/></label> -->
+        <input type="radio" value="PATask" id="etype_pa" name="etype" class="ui-widget-content ui-corner-all" checked><img src="images/icons/icon.task.png" title="<fmt:message key="com_intalio_bpms_workflow_tab_tasks"/>">
+        <!-- <label for="etype_pipa" ><fmt:message key="com_intalio_bpms_workflow_tab_processes"/></label> -->
+        <input type="radio" value="PIPATask" name="etype" class="ui-widget-content ui-corner-all"><img src="images/icons/icon.process.png" title="<fmt:message key="com_intalio_bpms_workflow_tab_processes"/>" id="etype_pipa">
+        <!-- <label for="etype_pipa" ><fmt:message key="com_intalio_bpms_workflow_tab_notifications"/></label> -->
+        <input type="radio" value="Notification" name="etype" class="ui-widget-content ui-corner-all"><img src="images/icons/icon.notification.png" title="<fmt:message key="com_intalio_bpms_workflow_tab_notifications"/>">
+        <!-- <label for="equery"><fmt:message key="org_intalio_uifw_dialog_export_query"/></label>
+        <input disabled type="text" name="equery" id="export_query" value="" class="text ui-widget-content ui-corner-all" /><br/> -->
+      </fieldset>
+    </form>
+    </div>
 
     <div id="reassignDialog" title="<fmt:message key="org_intalio_uifw_reassign_title"/>">
       <form>

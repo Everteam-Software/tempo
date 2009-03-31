@@ -16,6 +16,10 @@
 {
     background: url(../images/icons/icon.skip.gif) no-repeat center left;
 }
+.flexigrid div.fbutton .export
+{
+    background: url(../images/icons/icon.export.gif) no-repeat center left;
+}
 /* The two below are fixes for IE */
 .flexigrid input {
     font-size: 11px;

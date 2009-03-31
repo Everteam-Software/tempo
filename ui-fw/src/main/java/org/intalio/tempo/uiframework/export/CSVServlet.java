@@ -26,7 +26,6 @@ public class CSVServlet extends ExternalTasksServlet {
 
     private static final long serialVersionUID = 4204605680520386297L;
 
-    @Override
     public void generateFile(HttpServletRequest request, String token, String user, ServletOutputStream outputStream)
                     throws Exception {
         

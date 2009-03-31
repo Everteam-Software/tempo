@@ -203,7 +203,17 @@
         <servlet-name>CSVServlet</servlet-name>
         <url-pattern>/csv</url-pattern>
     </servlet-mapping>
-    
+
+    <servlet>
+      <servlet-name>PDFServlet</servlet-name>
+      <servlet-class>org.intalio.tempo.uiframework.export.PDFServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+      <servlet-name>PDFServlet</servlet-name>
+      <url-pattern>/pdf</url-pattern>
+    </servlet-mapping>
+
 
     <!-- Welcome File List -->
 

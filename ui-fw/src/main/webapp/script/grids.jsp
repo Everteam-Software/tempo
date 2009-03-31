@@ -26,7 +26,7 @@
 		$.ajaxSetup({timeout: <%= conf.getAjaxTimeout() %>});
     
 		
-		window.open("about:blank", "taskform");
+		window.open("/ui-fw/script/empty.jsp", "taskform");
 		
 		if($.browser.msie){
 		     height = $(window).height() - 130;
@@ -53,13 +53,11 @@
 		}
 
 		function clearFrame() {
+    	var loc = window.frames['taskform'].location;
+		  if(loc.toString().match("empty.jsp")!=null) return ;
+		  
 			$('#taskform').animate({height:"0px"},speed);
-      window.open("about:blank", "taskform");
-      /* 
-        Looks like this is lost in IE when the frame has been resized.
-        So reapplying here each time we close the frame.
-      */
-      if($.browser.msie) $('#taskform').addClass("taskformHidden");
+      window.open("/ui-fw/script/empty.jsp", "taskform");
 		}
 
 		
@@ -120,7 +118,14 @@
               buttons: {'<fmt:message key="org_intalio_uifw_message.button.ok"/>': function() {location.reload(true);}},
     		  close: function() {location.reload(true);}
           });
-    
+          
+          $("#exportdialog").dialog({
+  		      bgiframe: false,
+  		      autoOpen: false,
+  		      height: 300,
+      	    modal: true,		
+            buttons: {'<fmt:message key="org_intalio_uifw_message.button.ok"/>': function() {exportTasksAction();}}
+            });
 
         // make the soap calls to delete the tasks
         function deleteTask(com,grid)
@@ -332,6 +337,20 @@
             }
         }
         
+        function exportTasks() {
+           $('#exportdialog').dialog('open');
+        }
+        
+        function exportTasksAction() {
+           $('#exportdialog').dialog('close');
+           var format = $("input[name='eformat']:checked").val();
+           var type = $("input[name='etype']:checked").val();
+           var export_url = format+"?";
+           export_url += "type="+type;
+           //export_url += "&query="+$('#export_query').val();   
+           window.open(export_url,"_new");
+        }
+        
 		//
 		// tab definition
 		//
@@ -369,7 +388,8 @@
            {name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : deleteTask},
            {name: '<fmt:message key="org_intalio_uifw_toolbar_button_claimrevoke"/>', bclass: 'claim', onpress : claimTask},
            {name: '<fmt:message key="org_intalio_uifw_toolbar_button_reassign"/>', bclass: 'reassign', onpress : clickReassign},
-           {name: '<fmt:message key="org_intalio_uifw_toolbar_button_skip"/>', bclass: 'skip', onpress : skipTask}
+           {name: '<fmt:message key="org_intalio_uifw_toolbar_button_skip"/>', bclass: 'skip', onpress : skipTask},
+           {name: '<fmt:message key="org_intalio_uifw_toolbar_button_export"/>', bclass: 'export', onpress : exportTasks}
         ],
         <%} %>
         params: [
@@ -456,7 +476,7 @@
 		// change tab on click, refresh frame, refresh task list
 		//
 		$('#tabnav li a').click(function(){
-            resetTimer();
+      resetTimer();
 			clearFrame();
 			$("#filter").val("");
 			if(current==null)  {
@@ -489,7 +509,7 @@
 				refresh(true);
 			  } else {
 			    $('#taskform').animate({height:height},speed);
-				refresh(false);
+				  refresh(false);
 			  }
 			}
 		});

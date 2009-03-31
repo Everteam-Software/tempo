@@ -1,4 +1,4 @@
-package org.intalio.tempo.uiframework;
+package org.intalio.tempo.uiframework.export;
 
 import java.net.URI;
 
@@ -10,6 +10,7 @@ import junit.framework.TestCase;
 
 import org.intalio.tempo.security.Property;
 import org.intalio.tempo.security.ws.TokenClient;
+import org.intalio.tempo.uiframework.Configuration;
 import org.intalio.tempo.uiframework.export.iCalServlet;
 import org.intalio.tempo.uiframework.forms.FormManager;
 import org.intalio.tempo.uiframework.forms.FormManagerBroker;
