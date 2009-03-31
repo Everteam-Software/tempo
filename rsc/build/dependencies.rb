@@ -46,6 +46,7 @@ GERONIMO_SPECS = {
 
 ICAL = "ical4j:ical4j:jar:0.9.20"
 INTALIO_STATS = "org.intalio.common:intalio-stats:jar:1.0.2" 
+ITEXT = "itext:itext:jar:1.3.1"
 
 JARGS = "jargs:jargs:jar:1.0"
 JAVAMAIL = "geronimo-spec:geronimo-spec-javamail:jar:1.3.1-rc5", "geronimo-spec:geronimo-spec-activation:jar:1.0.2-rc4"

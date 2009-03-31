@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 require "rubygems"
-gem "buildr", "1.2.10"
+gem "buildr"
 require "buildr"
 require "hpricot"
 require "open-uri"

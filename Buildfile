@@ -267,6 +267,7 @@ define "tempo" do
            CSV,
            CASTOR,
            DOM4J,
+           ITEXT,
            ICAL,
            INTALIO_STATS, 
            JODATIME,
