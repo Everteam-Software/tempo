@@ -17,7 +17,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequestWrapper;
 
-import org.apache.commons.lang.StringUtils;
 import org.intalio.tempo.uiframework.Configuration;
 import org.intalio.tempo.uiframework.URIUtils;
 import org.intalio.tempo.uiframework.forms.FormManager;

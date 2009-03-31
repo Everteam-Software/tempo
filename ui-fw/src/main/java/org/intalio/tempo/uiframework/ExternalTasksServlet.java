@@ -1,6 +1,8 @@
 package org.intalio.tempo.uiframework;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -13,16 +15,17 @@ import org.intalio.tempo.security.Property;
 import org.intalio.tempo.security.authentication.AuthenticationConstants;
 import org.intalio.tempo.security.util.PropertyUtils;
 import org.intalio.tempo.security.ws.TokenClient;
-import org.intalio.tempo.uiframework.forms.FormManager;
-import org.intalio.tempo.uiframework.forms.FormManagerBroker;
+import org.intalio.tempo.uiframework.actions.TasksCollector;
+import org.intalio.tempo.uiframework.model.TaskHolder;
 import org.intalio.tempo.web.ApplicationState;
 import org.intalio.tempo.web.User;
 import org.intalio.tempo.workflow.task.Task;
-import org.intalio.tempo.workflow.tms.ITaskManagementService;
-import org.intalio.tempo.workflow.tms.client.RemoteTMSFactory;
 
+@SuppressWarnings("serial")
 public abstract class ExternalTasksServlet extends HttpServlet {
-
+    
+    final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss z");
+    
     public ExternalTasksServlet() {
         super();
     }
@@ -46,30 +49,24 @@ public abstract class ExternalTasksServlet extends HttpServlet {
                 user = currentUser.getName();
             }
 
-            ITaskManagementService taskManager = getTMS(request, pToken);
-            Task[] tasks = taskManager.getAvailableTasks("Task", "ORDER BY T._creationDate");
-            FormManager fmanager = FormManagerBroker.getInstance().getFormManager();
+            TasksCollector collector = new TasksCollector(new HttpServletRequestWrapper(request), user, pToken);
+            ArrayList<TaskHolder<Task>> tasks = collector.retrieveTasks();
             ServletOutputStream outputStream = response.getOutputStream();
             String filename = "tasks for "+user+getFileExt();
             response.setContentType(getFileMimeType());
             response.addHeader("Content-disposition", "attachment; filename=\""      + filename + "\"");
             
-            generateFile(request, pToken, user, tasks, fmanager, outputStream);
+            generateFile(request, pToken, user, tasks, outputStream);
         } catch (Exception e) {
             throw new ServletException(e);
         }
     }
 
-    public abstract void generateFile(HttpServletRequest request, String pToken, String user, Task[] tasks, FormManager fmanager, ServletOutputStream outputStream) 
+    public abstract void generateFile(HttpServletRequest request, String pToken, String user, ArrayList<TaskHolder<Task>> tasks, ServletOutputStream outputStream) 
         throws Exception;
 
     public abstract String getFileExt();
     
     public abstract String getFileMimeType();
-
-    protected ITaskManagementService getTMS(HttpServletRequest request, String participantToken) throws Exception {
-        String endpoint = URIUtils.resolveURI(request, Configuration.getInstance().getServiceEndpoint());
-        return new RemoteTMSFactory(endpoint, participantToken).getService();
-    }
 
 }

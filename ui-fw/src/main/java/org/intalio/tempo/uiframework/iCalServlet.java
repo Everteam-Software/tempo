@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2005-2008 Intalio inc.
+ * Copyright (c) 2005-2009 Intalio inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -13,11 +13,12 @@
 package org.intalio.tempo.uiframework;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.model.Calendar;
@@ -33,14 +34,13 @@ import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.model.property.Url;
 import net.fortuna.ical4j.model.property.Version;
 
-import org.intalio.tempo.uiframework.forms.FormManager;
-import org.intalio.tempo.workflow.task.PIPATask;
+import org.intalio.tempo.uiframework.model.TaskHolder;
 import org.intalio.tempo.workflow.task.Task;
 
 public class iCalServlet extends ExternalTasksServlet {
     private static final long serialVersionUID = -76889544882620584L;
 
-    public void generateFile(HttpServletRequest request, String pToken, String user, Task[] tasks, FormManager fmanager, ServletOutputStream outputStream)
+    public void generateFile(HttpServletRequest request, String pToken, String user, ArrayList<TaskHolder<Task>> tasks, ServletOutputStream outputStream)
                     throws URISyntaxException, IOException, ValidationException {
 
         Calendar calendar = new Calendar();
@@ -48,19 +48,19 @@ public class iCalServlet extends ExternalTasksServlet {
         calendar.getProperties().add(Version.VERSION_2_0);
         calendar.getProperties().add(CalScale.GREGORIAN);
 
-        for (Task t : tasks) {
-            if (!(t instanceof PIPATask)) {
-                VEvent task = new VEvent();
-                task.getProperties().add(new DtStart(new DateTime(t.getCreationDate()), false));
-                task.getProperties().add(new Description(t.getDescription()));
-                task.getProperties().add(new Uid(t.getID()));
-                task.getProperties().add(new Summary(t.getDescription()));
-                Url url = new Url();
-                url.setUri(URIUtils.getResolvedTaskURL(new HttpServletRequestWrapper(request), fmanager, t, pToken, user));
-                task.getProperties().add(url);
-                calendar.getComponents().add(task);
-            }
+        for (TaskHolder<Task> t : tasks) {
+            Task task = t.getTask();
+            String url = t.getFormManagerURL();
 
+            VEvent vtask = new VEvent();
+            vtask.getProperties().add(new DtStart(new DateTime(task.getCreationDate()), false));
+            vtask.getProperties().add(new Description(task.getDescription()));
+            vtask.getProperties().add(new Uid(task.getID()));
+            vtask.getProperties().add(new Summary(task.getDescription()));
+            Url ur = new Url();
+            ur.setUri(URI.create(url));
+            vtask.getProperties().add(url);
+            calendar.getComponents().add(task);
         }
         new CalendarOutputter().output(calendar, outputStream);
     }
