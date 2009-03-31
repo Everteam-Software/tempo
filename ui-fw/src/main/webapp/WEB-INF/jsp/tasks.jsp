@@ -155,6 +155,7 @@
 
   <script>
     document.getElementById('taskform').onload = resizeIframe;
+    window.onresize = resizeIframe;
   </script>
 
   </body>

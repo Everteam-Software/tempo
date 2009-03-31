@@ -33,5 +33,4 @@ function resizeIframe() {
 
     document.getElementById('taskform').style.height = height +"px";
 
-};
-window.onresize = resizeIframe;
+}

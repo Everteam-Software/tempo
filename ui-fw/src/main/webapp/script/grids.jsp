@@ -54,8 +54,14 @@
 
 		function clearFrame() {
 			$('#taskform').animate({height:"0px"},speed);
-            window.open("about:blank", "taskform");
+      window.open("about:blank", "taskform");
+      /* 
+        Looks like this is lost in IE when the frame has been resized.
+        So reapplying here each time we close the frame.
+      */
+      $('#taskform').addClass("taskformHidden");
 		}
+
 		
 		//
 		// Session timeout management
@@ -387,29 +393,27 @@
 			 { name : 'type', value : 'Notification' }
 			,{ name : 'update', value : true }
 		],
+		<% if(useToolbar) {%> 
+		buttons : [{name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : deleteTask}],
+		<%} %>
 		colModel : [
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description', width : width*0.6, sortable : true, align: 'left'},
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/>', name : '_creationDate', width : width*0.2, sortable : true, align: 'left'}
-		],	
-		<% if(useToolbar) {%> 
-		buttons : [{name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : deleteTask}]
-		<%} %>
+		]
 		},p));
 		
 		var t3 = $("#table3").flexigrid($.extend({
-		  <% if(useToolbar) {%> 
+		<% if(useToolbar) {%> 
 		buttons : [{name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : deleteTask}], 
-		  <%} %>
+		<%} %>
 		params: [
 			 { name : 'type', value : 'PIPATask' }
 			,{ name : 'update', value : true }
 		],
 		colModel : [
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description', width : width*0.6, sortable : true, align: 'left'},
-		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/>', name : '_creationDate', width : width*0.38, sortable : true, align: 'left'}
-		]
-		},p)
-		);
+		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/>', name : '_creationDate', width : width*0.4, sortable : true, align: 'left'}
+		]},p));
 		
 		var current = null;
 

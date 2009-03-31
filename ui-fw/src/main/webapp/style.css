@@ -191,6 +191,9 @@ table {
 	width:100%;
 	height:95%;
 }
+.taskformHidden {
+    overflow:hidden;
+}
 
 #taskform_bottom {
 	width:100%;
