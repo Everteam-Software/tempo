@@ -59,7 +59,7 @@
         Looks like this is lost in IE when the frame has been resized.
         So reapplying here each time we close the frame.
       */
-      $('#taskform').addClass("taskformHidden");
+      if($.browser.msie) $('#taskform').addClass("taskformHidden");
 		}
 
 		
