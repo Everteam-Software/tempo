@@ -68,7 +68,8 @@ public class SQLStatement {
 		if (paraValues == null) {
 			paraValues = new HashMap<Integer, Object>();
 		}
-		return paraValues.size();
+		
+		return paraValues.size() + 1;
 	}
 	
 	public String toString() {
@@ -95,12 +96,13 @@ public class SQLStatement {
 		}
 		
 		// where clause
-		if (whereClause != null) {
+		if (!whereClause.isEmpty()) {
 			result.append(" where ");
 			for (int i = 0; i < this.whereClause.size(); i++) {
 				if (i == 0) {
 					result.append(whereClause.get(i));
 				} else {
+					// always with "and"
 					result.append(" and " + whereClause.get(i));
 				}
 			}

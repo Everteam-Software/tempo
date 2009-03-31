@@ -540,7 +540,7 @@ void AnyConstant() #Constant:
 	|
 	t=<INTEGER_LITERAL> {
 		try {
-			jjtThis.setValue(Long.valueOf(t.image));
+			jjtThis.setValue(Integer.valueOf(t.image));
 		} 
 		catch (Exception e) {
 			jjtThis.setValue(null);

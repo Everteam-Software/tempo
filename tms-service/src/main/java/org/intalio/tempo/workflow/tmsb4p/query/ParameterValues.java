@@ -37,13 +37,31 @@ public class ParameterValues {
 				result.append(" ").append(m_funName).append(" ");
 			}
 
-			result.append(tableAlias).append(".").append(para.paraName);
+			if (tableAlias != null) {
+				result.append(tableAlias).append(".");
+			}
+			result.append(para.paraName);
+			
 			if (para.funName != null) {
 				result.append(" " + para.funName + " ");
+				
 			}
 			
+			boolean isCollection = false;
 			if (para.value != null) {
+				if (QueryOperator.IN.equals(para.funName)
+						|| (QueryOperator.NOT_IN.equals(para.funName))) {
+					isCollection = true;
+				}
+
+				if (isCollection) 
+					result.append("(");
+				
 				result.append("?" + startParaIdx);
+
+				if (isCollection) 
+					result.append(")");
+				
 				values.put(startParaIdx, para.value);
 				startParaIdx++;
 			}

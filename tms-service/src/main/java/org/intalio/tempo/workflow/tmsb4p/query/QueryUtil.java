@@ -4,7 +4,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.persistence.Query;
 
 public class QueryUtil {
 	public static String[] parseSelectClause(String clause) {
@@ -71,19 +76,19 @@ public class QueryUtil {
 	}
 	
 	public static List<String> parseString(String data, String seperator) {
-	       if (data == null) {
-	           return null;
-	       }
-	       String[] arrs = data.split(seperator);
-	       
-	       List<String> result = new ArrayList<String>();
-	       for (int i = 0; i < arrs.length; i++) {
-	           result.add(arrs[i]);
-	       }
-	       
-	       return result;
-	   }
-	
+		if (data == null) {
+			return null;
+		}
+		String[] arrs = data.split(seperator);
+
+		List<String> result = new ArrayList<String>();
+		for (int i = 0; i < arrs.length; i++) {
+			result.add(arrs[i]);
+		}
+
+		return result;
+	}
+		
 	public static void main(String[] args) throws Exception{
 		System.out.println(formatDate("2009-11-27 16"));
 		System.out.println(formatDate("2009"));

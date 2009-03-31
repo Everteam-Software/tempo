@@ -14,24 +14,24 @@ package org.intalio.tempo.workflow.tmsb4p.parser;
 public class ParseException extends Exception {
 
   /**
-   * The version identifier for this Serializable class.
-   * Increment only if the <i>serialized</i> form of the
-   * class changes.
-   */
-  private static final long serialVersionUID = 1L;
-
-  /**
    * This constructor is used by the method "generateParseException"
    * in the generated parser.  Calling this constructor generates
    * a new object of this type with the fields "currentToken",
-   * "expectedTokenSequences", and "tokenImage" set.
+   * "expectedTokenSequences", and "tokenImage" set.  The boolean
+   * flag "specialConstructor" is also set to true to indicate that
+   * this constructor was used to create this object.
+   * This constructor calls its super class with the empty string
+   * to force the "toString" method of parent class "Throwable" to
+   * print the error message in the form:
+   *     ParseException: <result of getMessage>
    */
   public ParseException(Token currentTokenVal,
                         int[][] expectedTokenSequencesVal,
                         String[] tokenImageVal
                        )
   {
-    super(initialise(currentTokenVal, expectedTokenSequencesVal, tokenImageVal));
+    super("");
+    specialConstructor = true;
     currentToken = currentTokenVal;
     expectedTokenSequences = expectedTokenSequencesVal;
     tokenImage = tokenImageVal;
@@ -49,13 +49,21 @@ public class ParseException extends Exception {
 
   public ParseException() {
     super();
+    specialConstructor = false;
   }
 
   /** Constructor with message. */
   public ParseException(String message) {
     super(message);
+    specialConstructor = false;
   }
 
+  /**
+   * This variable determines which constructor was used to create
+   * this object and thereby affects the semantics of the
+   * "getMessage" method (see below).
+   */
+  protected boolean specialConstructor;
 
   /**
    * This is the last token that has been consumed successfully.  If
@@ -79,16 +87,19 @@ public class ParseException extends Exception {
   public String[] tokenImage;
 
   /**
-   * It uses "currentToken" and "expectedTokenSequences" to generate a parse
+   * This method has the standard behavior when this object has been
+   * created using the standard constructors.  Otherwise, it uses
+   * "currentToken" and "expectedTokenSequences" to generate a parse
    * error message and returns it.  If this object has been created
    * due to a parse error, and you do not catch it (it gets thrown
-   * from the parser) the correct error message
+   * from the parser), then this method is called during the printing
+   * of the final stack trace, and hence the correct error message
    * gets displayed.
    */
-  private static String initialise(Token currentToken,
-                           int[][] expectedTokenSequences,
-                           String[] tokenImage) {
-    String eol = System.getProperty("line.separator", "\n");
+  public String getMessage() {
+    if (!specialConstructor) {
+      return super.getMessage();
+    }
     StringBuffer expected = new StringBuffer();
     int maxSize = 0;
     for (int i = 0; i < expectedTokenSequences.length; i++) {
@@ -115,7 +126,7 @@ public class ParseException extends Exception {
       retval += " \"";
       retval += add_escapes(tok.image);
       retval += " \"";
-      tok = tok.next;
+      tok = tok.next; 
     }
     retval += "\" at line " + currentToken.next.beginLine + ", column " + currentToken.next.beginColumn;
     retval += "." + eol;
@@ -132,13 +143,13 @@ public class ParseException extends Exception {
    * The end of line string for this machine.
    */
   protected String eol = System.getProperty("line.separator", "\n");
-
+ 
   /**
    * Used to convert raw characters to their escaped version
    * when these raw version cannot be used as part of an ASCII
    * string literal.
    */
-  static String add_escapes(String str) {
+  protected String add_escapes(String str) {
       StringBuffer retval = new StringBuffer();
       char ch;
       for (int i = 0; i < str.length(); i++) {
@@ -184,4 +195,4 @@ public class ParseException extends Exception {
    }
 
 }
-/* JavaCC - OriginalChecksum=6668c4625dc29503aa7adb2b856c7ace (do not edit this line) */
+/* JavaCC - OriginalChecksum=fad86f787dbd41f8288e093cb1c1cede (do not edit this line) */

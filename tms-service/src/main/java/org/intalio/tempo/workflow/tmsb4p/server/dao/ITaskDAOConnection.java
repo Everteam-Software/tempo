@@ -9,6 +9,7 @@ import org.intalio.tempo.workflow.taskb4p.AttachmentInfo;
 import org.intalio.tempo.workflow.taskb4p.Comment;
 import org.intalio.tempo.workflow.taskb4p.Task;
 import org.intalio.tempo.workflow.taskb4p.TaskStatus;
+import org.intalio.tempo.workflow.tms.InvalidQueryException;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 
@@ -44,8 +45,13 @@ public interface ITaskDAOConnection {
 	
 	public List<Task> getTasksWithName(String taskName);
 	
-	public List<Task>  getMyTasks(UserRoles ur, String taskType, String genericHumanRole, String workQueue, List<TaskStatus> statusList, String whereClause, String createdOnClause, int maxTasks);
-	
-	public List<Task>  query(UserRoles ur, String selectClause, String whereClause, String orderByClause, int maxTasks, int taskIndexOffset);
+	public List<Task> getMyTasks(UserRoles ur, String taskType,
+			String genericHumanRole, String workQueue,
+			List<TaskStatus> statusList, String whereClause,
+			String createdOnClause, int maxTasks) throws InvalidQueryException;
+
+	public List<Task> query(UserRoles ur, String selectClause,
+			String whereClause, String orderByClause, int maxTasks,
+			int taskIndexOffset) throws InvalidQueryException;
 	
 }

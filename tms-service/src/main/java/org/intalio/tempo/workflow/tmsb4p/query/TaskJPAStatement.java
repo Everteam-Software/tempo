@@ -3,6 +3,7 @@ package org.intalio.tempo.workflow.tmsb4p.query;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -18,28 +19,29 @@ import org.intalio.tempo.workflow.tmsb4p.parser.ParseException;
 import org.intalio.tempo.workflow.tmsb4p.parser.Parser;
 import org.intalio.tempo.workflow.tmsb4p.parser.ParserConstants;
 import org.intalio.tempo.workflow.tmsb4p.parser.ParserTreeConstants;
+import org.intalio.tempo.workflow.tmsb4p.query.ParameterValues.SinglePara;
 import org.intalio.tempo.workflow.tmsb4p.server.dao.GenericRoleType;
 
 public class TaskJPAStatement {
     private static final String TASK_ALIAS = "t";
 
     // for the attachment info
-    private static final String ATT_ALIAS = "a";
-    private static final String ATT_FROM_CLAUSE = "in (t.attachments) a";
+    static final String ATT_ALIAS = "a";
+    static final String ATT_FROM_CLAUSE = "in (t.attachments) a";
 
     // for user and role info
     // for the task stake holders
-    private static final String STAKE_HOLDERS_ALIAS = "th";
-    private static final String STAKE_HOLDERS_FROM_CLAUSE = "in (t.taskStakeholders.principals) th";
+    static final String STAKE_HOLDERS_ALIAS = "th";
+    static final String STAKE_HOLDERS_FROM_CLAUSE = "in (t.taskStakeholders.principals) th";
     // for the potential owners
-    private static final String POTENTIAL_OWNER_ALIAS = "tp";
-    private static final String POTENTIAL_OWNER_FROM_CLAUSE = "in (t.potentialOwners.principals) tp";
+    static final String POTENTIAL_OWNER_ALIAS = "tp";
+    static final String POTENTIAL_OWNER_FROM_CLAUSE = "in (t.potentialOwners.principals) tp";
     // for the business administrator
-    private static final String BUSINESS_ADMIN_ALIAS = "tb";
-    private static final String BUSINESS_ADMIN_FROM_CLAUSE = "in (t.businessAdministrators.principals) tb";
+    static final String BUSINESS_ADMIN_ALIAS = "tb";
+    static final String BUSINESS_ADMIN_FROM_CLAUSE = "in (t.businessAdministrators.principals) tb";
     // for the notification recipient
-    private static final String NOTIFY_RECIPIENT_ALIAS = "tr";
-    private static final String NOTIFY_RECIPIENT_FROM_CLAUSE = "in (t.notificationRecipients.principals) tr";
+    static final String NOTIFY_RECIPIENT_ALIAS = "tr";
+    static final String NOTIFY_RECIPIENT_FROM_CLAUSE = "in (t.notificationRecipients.principals) tr";
 
     private static final String SELECT_ALL_CLAUSE = "*";
     private static final String ORDER_BY_ASC = "asc";
@@ -59,82 +61,72 @@ public class TaskJPAStatement {
     private String m_whereClause = null;
     private String m_orderbyClause = null;
 
-    private SQLStatement m_statement = new SQLStatement();
+    private boolean m_specifiedRoles = false;
 
-    public TaskJPAStatement(String sqlClause) throws SQLClauseException {
-        parseSQLClause(sqlClause);
-    }
+    // additional attributes if has specified the roles information
+    private Set<String> m_queryRoles = null;
+    private List<String> m_groupOrUsers = null;
+    private String m_entityType = null;
+
+    private SQLStatement m_statement = new SQLStatement();
 
     public TaskJPAStatement(String selectClause, String whereClause, String orderbyClause) {
         this.m_selectClause = selectClause;
         this.m_whereClause = whereClause;
         this.m_orderbyClause = orderbyClause;
+
+        this.m_specifiedRoles = false;
+
+        initialize();
     }
 
-    /*
-     * public String getJPAClause() throws InvalidAttributeException {
-     * StringBuffer result = new StringBuffer(); // for the select clause
-     * result.append("select "); if (selectClauses == null) { // default to all
-     * the data result.append(this.alias); } else { for (int i = 0; i <
-     * this.selectClauses.size(); i++) { String clause = selectClauses.get(i);
-     * if (converter != null) { clause = converter.convertAttribute(clause); }
-     * if (i == 0) { result.append(clause); } else { result.append(", " +
-     * clause); } } } // for the from clause
-     * result.append(" from ").append(this.className).append(" " + this.alias);
-     * // for the where clause if (this.whereClause != null) {
-     * result.append(" where " + this.whereClause.toString(converter)); } // for
-     * the order by clause if (this.orderByClause != null) {
-     * result.append(orderByClause.toString(converter)); } return
-     * result.toString(); } public static void main(String[] args) throws
-     * Exception { TaskClauseConverter taskConverter = new
-     * TaskClauseConverter("t"); TaskJPAStatement statement = new
-     * TaskJPAStatement("Task", "t", taskConverter); List<String> selectClause =
-     * new ArrayList<String>(); selectClause.add(TaskView.ID);
-     * selectClause.add(TaskView.STATUS); selectClause.add(TaskView.PRIORITY);
-     * selectClause.add(TaskView.SKIPABLE); selectClause.add("Task." +
-     * TaskView.PRIMARY_SEARCH_BY); statement.setSelectClauses(selectClause);
-     * SQLClause clause1 = new SQLClause(TaskView.ID, SQLOperators.EQUALS,
-     * "id"); SQLClause clause2 = new SQLClause(TaskView.NAME,
-     * SQLOperators.GREATER_THAN, "name"); SQLClause clause3 = new
-     * SQLClause(TaskView.STATUS, SQLOperators.LESS_THAN, "status"); SQLClause
-     * clause4 = new SQLClause(TaskView.PRIORITY, SQLOperators.EQUALS, 1);
-     * SQLClause clause5 = new SQLClause(TaskView.SKIPABLE, SQLOperators.EQUALS,
-     * true); SQLClause clause6 = new SQLClause(TaskView.PRIMARY_SEARCH_BY,
-     * SQLOperators.EQUALS, "PRIMARY_SEARCH_BY"); AndClause andClause1 = new
-     * AndClause(); andClause1.addClause(clause1);
-     * andClause1.addClause(clause2); andClause1.addClause(clause3); OrClause
-     * orClause = new OrClause(); orClause.addClause(clause4);
-     * orClause.addClause(clause5); AndClause andClause2 = new AndClause();
-     * andClause2.addClause(andClause1); andClause2.addClause(orClause);
-     * andClause2.addClause(clause6); statement.setWhereClauses(andClause2);
-     * OrderByClause orderByClause = new OrderByClause();
-     * orderByClause.addClause(new OrderByOption(TaskView.PRIORITY, "asc"));
-     * orderByClause.addClause(new OrderByOption("Task." +
-     * TaskView.PRIMARY_SEARCH_BY, "desc"));
-     * statement.setOrderByClause(orderByClause);
-     * System.out.println(statement.getJPAClause()); Map<Integer, Object>
-     * paraValues = statement.getParaValues(); Set keys = paraValues.keySet();
-     * for (Iterator iterator = keys.iterator(); iterator.hasNext();) { Object
-     * key = iterator.next(); System.out.println(" key: " + key + "  value: " +
-     * paraValues.get(key)); } }
-     */
+    public TaskJPAStatement(Set<String> roles, List<String> groupOrUsers, String entityType, String whereClause) {
+        this.m_queryRoles = roles;
+        this.m_groupOrUsers = groupOrUsers;
+        this.m_entityType = entityType;
+        this.m_whereClause = whereClause;
+
+        this.m_specifiedRoles = true;
+        initialize();
+    }
+
+    private void initialize() {
+        this.m_statement.addFromClause("Task " + TASK_ALIAS);
+    }
 
     private void convertSelectClause() throws InvalidFieldException {
         String[] clauses = QueryUtil.parseSelectClause(this.m_selectClause);
-        if ((clauses.length == 0) && (SELECT_ALL_CLAUSE.equals(clauses[0]))) {
+        if (clauses.length == 0) {
+            m_statement.addSelectClause(TASK_ALIAS);
+            return;
+        }
+
+        if ((clauses.length == 1) && (SELECT_ALL_CLAUSE.equals(clauses[0]))) {
             m_statement.addSelectClause(TASK_ALIAS);
             return;
         }
 
         for (int i = 0; i < clauses.length; i++) {
-            String field = TaskFieldConverter.getFieldForSelectClause(clauses[i]);
-            if (field != null) {
-                m_statement.addSelectClause(TASK_ALIAS + "." + field);
+            String viewField = TaskFieldConverter.getTaskViewField(clauses[i]);
+
+            if ((TaskView.ATTACHMENT_TYPE.equals(viewField)) || (TaskView.ATTACHMENT_NAME.equals(viewField))) {
+
+                m_statement.addFromClause(TaskJPAStatement.ATT_FROM_CLAUSE);
+                m_statement.addSelectClause(TaskJPAStatement.ATT_ALIAS);
+
+            } else {
+                String mappingField = TaskFieldConverter.getFieldForSelectClause(clauses[i]);
+                if (mappingField != null) {
+                    m_statement.addSelectClause(TASK_ALIAS + "." + mappingField);
+                }
             }
         }
     }
 
     private void convertWhereClause() throws ParseException, InvalidFieldException {
+        if (this.m_whereClause == null) {
+            return;
+        }
         Reader reader = new StringReader(this.m_whereClause);
         Parser parser = new Parser(reader);
         Node topNode = parser.parseStream(reader);
@@ -149,9 +141,14 @@ public class TaskJPAStatement {
             }
         }
 
-        // output the user query information
-        outputUserQuerInfo(output);
-        this.m_statement.addWhereClause(output.toString());
+        if (!this.m_specifiedRoles) {
+            // output the user query information
+            outputUserQuerInfo(output);
+        }
+
+        if (output.length() > 0) {
+            this.m_statement.addWhereClause(output.toString());
+        }
     }
 
     private void outputUserQuerInfo(StringBuffer output) throws InvalidFieldException {
@@ -169,13 +166,21 @@ public class TaskJPAStatement {
                 throw new InvalidFieldException("The role query operator name is invalid.");
             }
             // extract the roles info
-            List<String> roles = extractRoles(m_rolesNode, roleOpName);
+            Set<String> inclduedRoles = extractIncludedRoles(m_rolesNode, roleOpName);
 
             if (m_groupIdNode != null) {
-                outputRoleQueryInfo(this.m_groupIdNode, OrganizationalEntity.GROUP_ENTITY, roleOpName, roles, output);
-            } else if (m_userIdNode != null) {
-                outputRoleQueryInfo(this.m_groupIdNode, OrganizationalEntity.USER_ENTITY, roleOpName, roles, output);
+                outputRoleQueryInfo(this.m_groupIdNode, OrganizationalEntity.GROUP_ENTITY, inclduedRoles, output);
             }
+            if (m_userIdNode != null) {
+                outputRoleQueryInfo(this.m_userIdNode, OrganizationalEntity.USER_ENTITY, inclduedRoles, output);
+            }
+
+            // for the role place holder, just replace it with (1==1), it won't
+            // affect the query
+            // TODO: the ideal way is to remove the whole role clause.
+            int start = output.indexOf(ROLE_PLACE_HOLDER);
+            int end = start + ROLE_PLACE_HOLDER.length();
+            output.replace(start, end, "(1=1)");
         } else {
             // no user id and group query info
             if (this.m_rolesNode != null) {
@@ -207,26 +212,255 @@ public class TaskJPAStatement {
 
     }
 
-    private void outputRoleQueryInfo(Node node, String entityType, String roleOpName, List<String> roles, StringBuffer output) {
-        // real value of the users or groups
-        // TODO:
-        // String values =
+    private void outputRoleQueryInfo(ASTFunNode node, String entityType, Set<String> roles, StringBuffer output) throws InvalidFieldException {
+        // one function node should have one child at least
+        Node paraNode = node.jjtGetChild(0);
+        String paraName = (String) this.getNodeValue(paraNode);
 
+        if (node.jjtGetNumChildren() != 2) {
+            throw new InvalidFieldException("No value has been defined for the field: " + paraName);
+        }
+
+        Object values = this.getNodeValue(node.jjtGetChild(1));
+        List userOrGroupVal = TaskFieldConverter.convertListValue(values);
+
+        // get the user or group info
+        String opName = this.getFunctionName(node);
+        String jpaCollectionOpName = getJPACollectionOp(opName, paraName);
+
+        int start = 0;
+        int end = 0;
+        String roleQuery = null;
+        if (OrganizationalEntity.GROUP_ENTITY.equals(entityType)) {
+            roleQuery = outputGroupRoleQueryInfo(roles, userOrGroupVal, jpaCollectionOpName);
+
+            // replace the group place holder with the role query
+            start = output.indexOf(GROUP_ID_PLACE_HOLDER);
+            end = start + GROUP_ID_PLACE_HOLDER.length();
+            output.replace(start, end, roleQuery);
+        } else if (OrganizationalEntity.USER_ENTITY.equals(entityType)) {
+            roleQuery = outputUserRoleQueryInfo(roles, userOrGroupVal, jpaCollectionOpName);
+
+            // replace the user place holder with the role query
+            start = output.indexOf(USER_ID_PLACE_HOLDER);
+            end = start + USER_ID_PLACE_HOLDER.length();
+            output.replace(start, end, roleQuery);
+        }
     }
 
-    private List<String> extractRoles(ASTFunNode node, String funName) {
+    private String outputGroupRoleQueryInfo(Set<String> includedRoles, List<String> groups, String collectionOp) {
+        String clauseRelation = null;
+        if (QueryOperator.IN.equals(collectionOp)) {
+            clauseRelation = "or";
+        } else {
+            // not in
+            clauseRelation = "and";
+        }
+
+        List<ParameterValues> roleQueries = new ArrayList<ParameterValues>();
+        for (Iterator<String> iterator = includedRoles.iterator(); iterator.hasNext();) {
+            String role = iterator.next();
+
+            if (role.equalsIgnoreCase(GenericRoleType.task_initiator.name())) {
+                // ignore it, only worked for the user type.
+            } else if (role.equalsIgnoreCase(GenericRoleType.task_stakeholders.name())) {
+                this.m_statement.addFromClause(STAKE_HOLDERS_FROM_CLAUSE);
+
+                ParameterValues paraValues = new ParameterValues("and");
+                // Assemble the the sql like
+                // "(th.value in (?1) and t.taskStakeholders.entityType=?2)"
+                paraValues.addPara(new SinglePara(STAKE_HOLDERS_ALIAS + ".value", collectionOp, groups));
+                paraValues.addPara(new SinglePara(TASK_ALIAS + ".taskStakeholders.entityType", QueryOperator.EQUALS, OrganizationalEntity.GROUP_ENTITY));
+
+                roleQueries.add(paraValues);
+            } else if (role.equalsIgnoreCase(GenericRoleType.potential_owners.name())) {
+                this.m_statement.addFromClause(POTENTIAL_OWNER_FROM_CLAUSE);
+
+                ParameterValues paraValues = new ParameterValues("and");
+                // Assemble the sql like
+                // "(tp.value in (?3) and t.potentialOwners.entityType=?4)"
+                paraValues.addPara(new SinglePara(POTENTIAL_OWNER_ALIAS + ".value", collectionOp, groups));
+                paraValues.addPara(new SinglePara(TASK_ALIAS + ".potentialOwners.entityType", QueryOperator.EQUALS, OrganizationalEntity.GROUP_ENTITY));
+
+                roleQueries.add(paraValues);
+            } else if (role.equalsIgnoreCase(GenericRoleType.actual_owner.name())) {
+                // ignore it, only worked for the user type.
+            } else if (role.equalsIgnoreCase(GenericRoleType.excluded_owners.name())) {
+                // ignore it, should model this role in the task entity?
+            } else if (role.equalsIgnoreCase(GenericRoleType.business_administrators.name())) {
+                this.m_statement.addFromClause(BUSINESS_ADMIN_FROM_CLAUSE);
+
+                ParameterValues paraValues = new ParameterValues("and");
+                // Assemble the sql like
+                // "(tb.value in (?5) and t.businessAdministrators.entityType=?6)"
+                paraValues.addPara(new SinglePara(BUSINESS_ADMIN_ALIAS + ".value", collectionOp, groups));
+                paraValues.addPara(new SinglePara(TASK_ALIAS + ".businessAdministrators.entityType", QueryOperator.EQUALS, OrganizationalEntity.GROUP_ENTITY));
+
+                roleQueries.add(paraValues);
+            } else if (role.equalsIgnoreCase(GenericRoleType.notification_recipients.name())) {
+                this.m_statement.addFromClause(NOTIFY_RECIPIENT_FROM_CLAUSE);
+
+                ParameterValues paraValues = new ParameterValues("and");
+                // Assemble the sql like
+                // "(tr.value in (?5) and t.businessAdministrators.entityType=?6)"
+                paraValues.addPara(new SinglePara(NOTIFY_RECIPIENT_ALIAS + ".value", collectionOp, groups));
+                paraValues.addPara(new SinglePara(TASK_ALIAS + ".businessAdministrators.entityType", QueryOperator.EQUALS, OrganizationalEntity.GROUP_ENTITY));
+
+                roleQueries.add(paraValues);
+            }
+        }
+
+        // output the sql string
+        StringBuffer result = new StringBuffer();
+        if (!roleQueries.isEmpty()) {
+            for (int i = 0; i < roleQueries.size(); i++) {
+                ParameterValues paraValues = roleQueries.get(i);
+
+                if (i != 0) {
+                    result.append(" ").append(clauseRelation).append(" ");
+                }
+
+                // clauses
+                result.append(paraValues.toJPAClause(null, m_statement.getParaValuesStartIdx()));
+
+                // values
+                Map<Integer, Object> values = paraValues.getJPAValues();
+                m_statement.getParaValues().putAll(values);
+            }
+        }
+
+        return "(" + result.toString() + ")";
+    }
+
+    private String outputUserRoleQueryInfo(Set<String> includedRoles, List<String> users, String collectionOp) {
+        String clauseRelation = null;
+        if (QueryOperator.IN.equals(collectionOp)) {
+            clauseRelation = "or";
+        } else {
+            // not in
+            clauseRelation = "and";
+        }
+
+        List<ParameterValues> roleQueries = new ArrayList<ParameterValues>();
+        for (Iterator<String> iterator = includedRoles.iterator(); iterator.hasNext();) {
+            String role = iterator.next();
+
+            if (role.equalsIgnoreCase(GenericRoleType.task_initiator.name())) {
+                ParameterValues paraValues = new ParameterValues();
+
+                // Assemble the sql like "t.taskInitiator=?9"
+                paraValues.addPara(new SinglePara(TASK_ALIAS + ".taskInitiator", collectionOp, users));
+                roleQueries.add(paraValues);
+            } else if (role.equalsIgnoreCase(GenericRoleType.task_stakeholders.name())) {
+                this.m_statement.addFromClause(STAKE_HOLDERS_FROM_CLAUSE);
+
+                ParameterValues paraValues = new ParameterValues("and");
+                // Assemble the sql like
+                // "(th.value in (?1) and t.taskStakeholders.entityType=?2)"
+                paraValues.addPara(new SinglePara(STAKE_HOLDERS_ALIAS + ".value", collectionOp, users));
+                paraValues.addPara(new SinglePara(TASK_ALIAS + ".taskStakeholders.entityType", QueryOperator.EQUALS, OrganizationalEntity.USER_ENTITY));
+
+                roleQueries.add(paraValues);
+            } else if (role.equalsIgnoreCase(GenericRoleType.potential_owners.name())) {
+                this.m_statement.addFromClause(POTENTIAL_OWNER_FROM_CLAUSE);
+
+                ParameterValues paraValues = new ParameterValues("and");
+                // Assemble the sql like
+                // "(tp.value in (?3) and t.potentialOwners.entityType=?4)"
+                paraValues.addPara(new SinglePara(POTENTIAL_OWNER_ALIAS + ".value", collectionOp, users));
+                paraValues.addPara(new SinglePara(TASK_ALIAS + ".potentialOwners.entityType", QueryOperator.EQUALS, OrganizationalEntity.USER_ENTITY));
+
+                roleQueries.add(paraValues);
+            } else if (role.equalsIgnoreCase(GenericRoleType.actual_owner.name())) {
+                ParameterValues paraValues = new ParameterValues();
+
+                // Assemble the sql like "t.actualOwner=?9"
+                paraValues.addPara(new SinglePara(TASK_ALIAS + ".actualOwner", collectionOp, users));
+                roleQueries.add(paraValues);
+            } else if (role.equalsIgnoreCase(GenericRoleType.excluded_owners.name())) {
+                // ignore it, should model this role in the task entity?
+            } else if (role.equalsIgnoreCase(GenericRoleType.business_administrators.name())) {
+                this.m_statement.addFromClause(BUSINESS_ADMIN_FROM_CLAUSE);
+
+                ParameterValues paraValues = new ParameterValues("and");
+                // Assemble the sql like
+                // "(tb.value in (?5) and t.businessAdministrators.entityType=?6)"
+                paraValues.addPara(new SinglePara(BUSINESS_ADMIN_ALIAS + ".value", collectionOp, users));
+                paraValues.addPara(new SinglePara(TASK_ALIAS + ".businessAdministrators.entityType", QueryOperator.EQUALS, OrganizationalEntity.USER_ENTITY));
+
+                roleQueries.add(paraValues);
+            } else if (role.equalsIgnoreCase(GenericRoleType.notification_recipients.name())) {
+                this.m_statement.addFromClause(NOTIFY_RECIPIENT_FROM_CLAUSE);
+
+                ParameterValues paraValues = new ParameterValues("and");
+                // Assemble the sql like
+                // "(tr.value in (?5) and t.businessAdministrators.entityType=?6)"
+                paraValues.addPara(new SinglePara(NOTIFY_RECIPIENT_ALIAS + ".value", collectionOp, users));
+                paraValues.addPara(new SinglePara(TASK_ALIAS + ".businessAdministrators.entityType", QueryOperator.EQUALS, OrganizationalEntity.USER_ENTITY));
+
+                roleQueries.add(paraValues);
+            }
+        }
+
+        // output the sql string
+        StringBuffer result = new StringBuffer();
+        if (!roleQueries.isEmpty()) {
+            for (int i = 0; i < roleQueries.size(); i++) {
+                ParameterValues paraValues = roleQueries.get(i);
+
+                if (i != 0) {
+                    result.append(" ").append(clauseRelation).append(" ");
+                }
+
+                // clauses
+                result.append(paraValues.toJPAClause(null, m_statement.getParaValuesStartIdx()));
+
+                // values
+                Map<Integer, Object> values = paraValues.getJPAValues();
+                m_statement.getParaValues().putAll(values);
+            }
+        }
+
+        return "(" + result.toString() + ")";
+    }
+
+    private String getJPACollectionOp(String opName, String exceptionField) throws InvalidFieldException {
+        if (opName == null) {
+            throw new InvalidFieldException("The operator name can't be empty for field " + exceptionField);
+        }
+
+        if ((QueryOperator.EQUALS.equals(opName)) || (QueryOperator.IN.equalsIgnoreCase(opName))) {
+            return QueryOperator.IN;
+        } else if ((QueryOperator.NOT_EQUALS.equals(opName)) || (QueryOperator.NOT_EQUALS2.equals(opName)) || (QueryOperator.NOT_IN.equalsIgnoreCase(opName))) {
+            return QueryOperator.NOT_IN;
+        } else {
+            throw new InvalidFieldException("Invalid operator for field " + exceptionField);
+        }
+    }
+
+    private Set<String> extractIncludedRoles(ASTFunNode node, String opName) {
         List<String> roles = null;
         Node valueNode = node.jjtGetChild(1);
-        if ((QueryOperator.EQUALS.equals(funName)) || (QueryOperator.NOT_EQUALS.equals(funName)) || (QueryOperator.NOT_EQUALS2.equals(funName))) {
+
+        if ((QueryOperator.EQUALS.equals(opName)) || (QueryOperator.NOT_EQUALS.equals(opName)) || (QueryOperator.NOT_EQUALS2.equals(opName))) {
             // the roles should be string.
             String values = (String) this.getNodeValue(valueNode);
             roles = QueryUtil.parseString(values, ",");
-        } else if (QueryOperator.IN.equals(funName)) {
+        } else if ((QueryOperator.IN.equals(opName)) || (QueryOperator.NOT_IN.equals(opName))) {
             // should be one List object
             roles = (List<String>) getNodeValue(valueNode);
         }
 
-        return roles;
+        // if the operator is "<>", "not in" or "!=", needs to get the included
+        // role name
+        if ((QueryOperator.NOT_EQUALS.equals(opName)) || (QueryOperator.NOT_EQUALS2.equals(opName)) || (QueryOperator.NOT_IN.equals(opName))) {
+            return TaskFieldConverter.getInlcudedRole(roles);
+        }
+
+        Set<String> result = new HashSet<String>();
+        result.addAll(roles);
+
+        return result;
     }
 
     private boolean validateRoleFun(String funName) {
@@ -354,94 +588,103 @@ public class TaskJPAStatement {
         return null;
     }
 
-    private List<String> getNodeValue(ASTArray node) {
+    private List<Object> getNodeValue(ASTArray node) {
         int num = node.jjtGetNumChildren();
         if (num == 0) {
             return null;
         }
 
-        List<String> result = new ArrayList<String>();
+        List<Object> result = new ArrayList<Object>();
         for (int i = 0; i < num; i++) {
             Node childNode = node.jjtGetChild(i);
-            result.add((String) getNodeValue(childNode));
+            result.add(getNodeValue(childNode));
         }
 
         return result;
     }
 
-    // TODO:
     private String convertOrderbyClause() throws InvalidFieldException, SQLClauseException {
         // the orderby clause maybe as
         // "order by Task.Priority asc, Task.Name desc"
-        // String[] clauses = QueryUtil.parseOrderbyClause(this.orderbyClause);
-        // if ((clauses.length == 0) && (SELECT_ALL_CLAUSE.equals(clauses[0])))
-        // {
-        // return TASK_ALIAS;
-        // }
-        //
-        // String field = null;
-        // String orderbyOption = null;
-        // StringBuffer result = new StringBuffer();
-        // for (int i = 0; i < clauses.length; i++) {
-        // String[] temp = clauses[i].split(" ");
-        // if (temp.length > 1) {
-        // field = temp[0];
-        // orderbyOption = temp[1];
-        // }
-        //            
-        // field = TaskFieldConverter
-        // .getFieldForOrderClause(clauses[i]);
-        // if (field != null) {
-        // if (result.length() > 0) {
-        // result.append(",");
-        // }
-        // result.append(TASK_ALIAS + "." + field);
-        //                
-        // if (orderbyOption != null) {
-        // result.append(" ").append(orderbyOption);
-        // }
-        // }
-        //            
-        // field = null;
-        // orderbyOption = null;
-        // }
-        //
-        // return result.toString();
-        return null;
-    }
-
-    /**
-     * It is to extract the select, from, where, and order by clause.
-     * 
-     * @param sqlClause
-     */
-    private void parseSQLClause(String sqlClause) throws SQLClauseException {
-        if ((sqlClause == null) || (sqlClause.length() == 0)) {
-            throw new SQLClauseException("SQL clause can't be empty!");
+        if (this.m_orderbyClause == null) {
+            return null;
         }
 
-        String newClause = sqlClause.toLowerCase();
-        if (!newClause.startsWith("select")) {
-            throw new SQLClauseException("No select clause found!");
+        String[] clauses = QueryUtil.parseOrderbyClause(this.m_orderbyClause);
+        if ((clauses == null) || (clauses.length == 0)) {
+            return null;
         }
 
-        if (newClause.indexOf(" from ") <= 0) {
-            throw new SQLClauseException("No from clause found!");
+        String field = null;
+        String orderbyOption = null;
+        StringBuffer result = new StringBuffer();
+        for (int i = 0; i < clauses.length; i++) {
+            String[] temp = clauses[i].split(" ");
+            if (temp.length == 0) {
+                throw new SQLClauseException("Invalid order by clause: " + this.m_orderbyClause);
+            }
+            field = temp[0];
+            if (temp.length > 1) {
+                orderbyOption = temp[1];
+            }
+
+            field = TaskFieldConverter.getFieldForOrderClause(field);
+            if (field != null) {
+                if (result.length() > 0) {
+                    result.append(",");
+                }
+                result.append(TASK_ALIAS + "." + field);
+
+                if (orderbyOption != null) {
+                    result.append(" ").append(orderbyOption);
+                }
+            }
+
+            field = null;
+            orderbyOption = null;
         }
 
-        // extract the select clause
-        int fromIdx = newClause.indexOf(" from ");
-        int whereIdx = newClause.indexOf(" where ");
-        int orderbyIdx = newClause.indexOf(" order ");
+        return result.toString();
     }
 
     public SQLStatement getStatement() throws InvalidFieldException, ParseException, SQLClauseException {
         // convert all clauses
-        this.convertSelectClause();
-        this.convertWhereClause();
-        this.convertOrderbyClause();
+        if (this.m_specifiedRoles) {
+            this.m_statement.addSelectClause(TASK_ALIAS);
+            this.convertWhereClause();
+
+            // add the query info about the role query
+            String roleQuery = null;
+            if (OrganizationalEntity.GROUP_ENTITY.equalsIgnoreCase(this.m_entityType)) {
+                roleQuery = outputGroupRoleQueryInfo(this.m_queryRoles, this.m_groupOrUsers, QueryOperator.IN);
+            } else if (OrganizationalEntity.USER_ENTITY.equalsIgnoreCase(this.m_entityType)) {
+                roleQuery = outputUserRoleQueryInfo(this.m_queryRoles, this.m_groupOrUsers, QueryOperator.IN);
+            }
+            if ((roleQuery != null) && (roleQuery.length() > 0)) {
+                this.m_statement.addWhereClause(roleQuery);
+            }
+
+        } else {
+            this.convertSelectClause();
+            this.convertWhereClause();
+            this.convertOrderbyClause();
+        }
 
         return this.m_statement;
+    }
+
+    static class ParaValuesWithAlias {
+        private ParameterValues paraValues = null;
+        private String jpaAlias = null;
+
+        public ParaValuesWithAlias(ParameterValues paraValues, String alias) {
+            this.paraValues = paraValues;
+            this.jpaAlias = alias;
+        }
+
+        public String getJPAClause(int startParaIdx) {
+            return paraValues.toJPAClause(jpaAlias, startParaIdx);
+        }
     }
 
     public static void main(String[] args) throws Exception {

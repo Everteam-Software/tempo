@@ -30,4 +30,7 @@ public interface TaskView {
 	public static String ATTACHMENT_TYPE = "attachmenttype";
 	public static String ESCALATED = "escalated";
 	public static String PRIMARY_SEARCH_BY = "primarysearchby";	
+	
+	// extends field
+	public static String ATTACHMENTS = "attachments";
 }
