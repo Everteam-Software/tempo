@@ -83,7 +83,7 @@ public class TaskMarshallerTest extends TestCase {
 
     public void testNotificationMarshalling() throws Exception {
         Notification task = new Notification("id", new URI("http://localhost/form"), TestUtils.createXMLDocument());
-
+        task.authorizeActionForUser("dismiss", "test/user1");
         this.testTaskMarshalling(task);
     }
 

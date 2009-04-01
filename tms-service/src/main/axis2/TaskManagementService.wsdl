@@ -276,6 +276,7 @@
 				    <xsd:element name="claimAction" type="tns:accessControlType" maxOccurs="1" minOccurs="0"/>
                     <xsd:element name="revokeAction" type="tns:accessControlType" maxOccurs="1" minOccurs="0"/>
                     <xsd:element name="saveAction" type="tns:accessControlType" maxOccurs="1" minOccurs="0"/>
+                    <xsd:element name="dismissAction" type="tns:accessControlType" maxOccurs="1" minOccurs="0"/>
                     <xsd:element name="completeAction" type="tns:accessControlType" maxOccurs="1" minOccurs="0"/>
 					<xsd:element name="attachments" type="tns:attachments" maxOccurs="1" minOccurs="0"/>
   				</xsd:sequence>

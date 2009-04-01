@@ -53,7 +53,7 @@ import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
 
 public class TaskMarshaller {
     final static Logger _log = LoggerFactory.getLogger(TaskMarshaller.class);
-    final static String[] ACTIONS = new String[] { "claim", "revoke", "save", "complete" };
+    final static String[] ACTIONS = new String[] { "claim", "revoke", "save", "complete" , "dismiss"};
 
     public TaskMarshaller() {
     }
