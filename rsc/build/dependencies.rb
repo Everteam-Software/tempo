@@ -18,6 +18,9 @@ APACHE_COMMONS = {
   :validator => "commons-validator:commons-validator:jar:1.2.0"
 }
 APACHE_DERBY = "org.apache.derby:derby:jar:10.2.2.0"
+APACHE_DERBY_NET = "org.apache.derby:derbynet:jar:10.2.2.0"
+APACHE_DERBY_CLIENT = "org.apache.derby:derbyclient:jar:10.2.2.0"
+APACHE_DS = "org.apache.apacheds:noarch-installer:jar:1.5.1a"
 
 AXIOM = group("axiom-api", "axiom-dom", "axiom-impl", :under=>"org.apache.ws.commons.axiom", :version=>"1.2.7")
 
@@ -76,6 +79,7 @@ QOM = "net.sf.qom:qom:jar:0.1alpha3"
 SUNACTIVATION = ["javax.activation:activation:jar:1.1.1"]
 SUNMAIL = ["javax.mail:mail:jar:1.4.1", SUNACTIVATION]
 SERVLET_API = "javax.servlet:servlet-api:jar:2.4" 
+SHOAL = [ "net.java.dev.shoal:shoal-jxta:jar:1.0.20071114", "net.java.dev.shoal:shoal-gms:jar:1.0.20071114" ]
 SLF4J = group(%w{ slf4j-api slf4j-log4j12 jcl104-over-slf4j }, :under=>"org.slf4j", :version=>"1.4.3")
 SPRING = {
   :core => "org.springframework:spring:jar:2.5.5",
@@ -127,6 +131,70 @@ PLUTO_DEPLOY = [
 ]
 
 WEBDAV = "org.apache.jackrabbit:webdav:jar:1.4"
+
+ORBEON_COMMONS = [
+  APACHE_COMMONS[:beanutils],
+  APACHE_COMMONS[:cli],
+  APACHE_COMMONS[:codec],
+  APACHE_COMMONS[:collections],
+  APACHE_COMMONS[:digester],
+  APACHE_COMMONS[:discovery],
+  APACHE_COMMONS[:fileupload],
+  APACHE_COMMONS[:httpclient],
+  APACHE_COMMONS[:io],
+  APACHE_COMMONS[:lang],
+  APACHE_COMMONS[:pool],
+  APACHE_COMMONS[:validator],
+]
+
+ORBEON_MSV = [
+  group("msv", "isorelax", "relaxng-datatype","xsdlib", :under => "msv", :version => "20070407")
+]
+
+ORBEON_AXIS = [
+ "orbeon:axis-orbeon:jar:1.2.1",
+ "orbeon:axis-jaxrpc:jar:1.2.1",
+ "orbeon:axis-saaj:jar:1.2.1",
+ "orbeon:axis-wsdl4j:jar:1.2.1-1.5.1"
+]
+
+ORBEON_XERCES = [
+  group("xerces-resolver", "xerces-serializer", "xerces-xml-apis", "xerces-xercesImpl", :under => "orbeon" , :version => "2_9_orbeon_20070711")
+]
+
+
+ORBEON_CORE = [
+  group("orbeon", "orbeon-xforms-filter", "orbeon-resources-public", "orbeon-resources-private", :under=>"orbeon", :version=>"3.7.0beta1.200811030320")
+]
+ORBEON_CUSTOM = [
+  ORBEON_XERCES,
+  "orbeon:jakarta-oro-orbeon:jar:2.0.8",
+  "orbeon:saxpath:jar:dev_orbeon",
+  "orbeon:xsltc-orbeon:jar:2.5.1",
+  "orbeon:xalan-orbeon:jar:2.5.1",
+  "orbeon:castor-xml:jar:0.9.4.3",
+  "orbeon:metadata-extractor:jar:2.1",
+  "orbeon:saxon-8_8_orbeon:jar:20080516"
+]
+
+ORBEON_LIBS_NO_JAXEN = [
+  JAVAMAIL,
+  ORBEON_AXIS,
+  ORBEON_COMMONS,
+  ORBEON_MSV,
+  ORBEON_CORE,
+  ORBEON_CUSTOM,
+  DOM4J,
+  GERONIMO_SPECS["jms"],
+  "jtidy:jtidy:jar:8.0-20060801.131059-3",
+  "batik:batik-all:jar:1.6"
+]
+
+ORBEON_LIBS = [
+  ORBEON_LIBS_NO_JAXEN,
+  JAXEN
+  # "orbeon:jaxen:jar:1.1-beta-1-dev",
+]
 
 # For testing
 EASY_B = [
@@ -199,3 +267,45 @@ APACHE_JPA = [
 ]
 
 FREEMARKER = "org.freemarker:freemarker:jar:2.3.14"
+
+CAS_LIBS = [
+  group("cas-server-core",:under=>"org.jasig.cas", :version=>"3.2.1.1"),
+  group("cas-server-support-ldap",:under=>"org.jasig.cas", :version=>"3.2.1.1"),
+  "org.acegisecurity:acegi-security:jar:1.0.6",
+  "aopalliance:aopalliance:jar:1.0",
+  "aspectj:aspectjrt:jar:1.5.3",
+  "aspectj:aspectjweaver:jar:1.5.3",
+  JDOM,
+  BACKPORT,
+  CAS_CLIENT,
+  APACHE_COMMONS[:codec],
+  APACHE_COMMONS[:collections],
+  APACHE_COMMONS[:lang],
+  APACHE_COMMONS[:logging],
+  "net.sf.ehcache:ehcache:jar:1.4.0-beta2",
+  "quartz:quartz:jar:1.5.2",
+  "net.sf.jsr107cache:jsr107cache:jar:1.0",
+  "inspektr:core:jar:0.6.1",
+  "oro:oro:jar:2.0.8",
+  "jstl:jstl:jar:1.1.2",
+  LOG4J,
+  "ognl:ognl:jar:2.6.9",
+  "opensaml:opensaml:jar:1.1b",
+  "javax.persistence:persistence-api:jar:1.0",
+  "person.directory:api:jar:1.1.1",
+  "person.directory:impl:jar:1.1.1",
+  "quartz:quartz:jar:1.5.2",
+  group("spring-aop","spring-beans","spring-context", "spring-context-support", "spring-core", "spring-jdbc","spring-orm", "spring-tx", "spring-web", "spring-webmvc",:under=>"org.springframework", :version=>"2.5.1"),
+  group("spring-ldap", "spring-ldap-tiger",:under=>"org.springframework", :version=>"1.2.1"),
+  group("spring-binding", "spring-webflow",:under=>"org.springframework", :version=>"1.0.5"), 
+  "xml-security:xmlsec:jar:1.4.0",
+  "taglibs:standard:jar:1.1.2"
+]
+
+DEPLOY_API = "org.intalio.deploy:deploy-api:jar:1.0.3"
+REGISTRY = "org.intalio.deploy:deploy-registry:jar:1.0.3"
+SECURITY = group("security-api", :under=>"org.intalio.security", :version=>"1.0.0")
+SECURITY_WS_COMMON = group("security-ws-common", :under=>"org.intalio.security", :version=>"1.0.0")
+SECURITY_WS_CLIENT = group("security-api", "security-ws-client", "security-ws-common", :under=>"org.intalio.security", :version=>"1.0.0")
+SECURITY_WS_CLIENT_ONLY = group("security-api", "security-ws-client", :under=>"org.intalio.security", :version=>"1.0.0")
+WEB_NUTSNBOLTS = "org.intalio.security:security-web-nutsNbolts:jar:1.0.0"

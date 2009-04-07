@@ -107,13 +107,14 @@ public class OpenSSORBACFilter implements Filter {
         }
         if (state.getCurrentUser() == null) {
             String tempoToken = null;
-            try {
-                tempoToken = tokenService.getTokenFromOpenSSOToken(ssoTokenId);
-            } catch (AuthenticationException e) {
-                throw new RuntimeException("Could not get token!", e);
-            } catch (RBACException e) {
-                throw new RuntimeException("Could not get token!", e);
-            }
+// @TODO SEAN - revive this!!!            
+//            try {
+//                tempoToken = tokenService.getTokenFromOpenSSOToken(ssoTokenId);
+//            } catch (AuthenticationException e) {
+//                throw new RuntimeException("Could not get token!", e);
+//            } catch (RBACException e) {
+//                throw new RuntimeException("Could not get token!", e);
+//            }
 
             User currentUser = authenticate(tokenService, tempoToken);
             state.setCurrentUser(currentUser);

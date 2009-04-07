@@ -21,6 +21,6 @@
 	<!-- Default set of monitored resources -->
 	<WatchedResource>WEB-INF/web.xml</WatchedResource>
 	<ResourceLink global="jdbc/BPMSDB" name="jdbc/BPMSDB" type="javax.sql.DataSource"/>
-	<ResourceLink global="registry/TempoRegistry" name="registry/TempoRegistry" type="org.intalio.tempo.registry.Registry"/>
+	<ResourceLink global="registry/DeployRegistry" name="registry/DeployRegistry" type="org.intalio.deploy.registry.Registry"/>
 	<Transaction factory="TomcatGeronimoTxFactory" />
 </Context>
