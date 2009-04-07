@@ -13,8 +13,14 @@ implementation.
 ======================================
  Required software
 ======================================
-A JVM to compile and run the different components. Also, be sure to have 
-installed buildr (build tool) and git (version control) installed.
+1. 
+# A JVM to compile and run the different components. 
+## Be sure %JAVA_HOME% is defined, and the different java binaries are in the windows path
+# ruby 1.8
+# rubygems
+# buildr gem (version 1.3.3 or later)
+# git for checking out the source of tempo
+# mysql for the database
 
 ======================================
  Check out tempo
