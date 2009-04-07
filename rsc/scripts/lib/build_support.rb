@@ -1,6 +1,3 @@
-gem 'rubyzip'
-require 'zip/zip'
-require 'zip/zipfilesystem'
 require 'net/http'
 require 'open-uri'
 require 'fileutils'

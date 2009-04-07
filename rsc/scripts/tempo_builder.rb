@@ -1,6 +1,13 @@
 #!/usr/bin/env ruby
 
-gem "buildr","1.3.3"
+require "rubygems"
+# ruby superclassmismatch when loading buildr before rubyzip
+# so leave this here
+gem 'rubyzip'
+require 'zip/zip'
+require 'zip/zipfilesystem'
+
+gem "buildr",">=1.3.3"
 require "buildr"
 
 # The goal of this script is to
@@ -27,7 +34,7 @@ load "#{@@script_folder}/../scripts/lib/bundle_opensso.rb"
 load "#{@@script_folder}/../scripts/lib/bundle_standalone.rb"
 load "#{@@script_folder}/../scripts/config.rb"
 TEMPO_SVN="#{@@script_folder}/../.."
-Dir.chdir check_folder BUILD_CONFIG[:directory]
+Dir.chdir check_folder(BUILD_CONFIG[:directory])
 
 class TempoBuilder  
   include BuildActivate
