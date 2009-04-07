@@ -21,16 +21,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import org.intalio.tempo.deployment.ComponentId;
-import org.intalio.tempo.deployment.DeploymentMessage;
-import org.intalio.tempo.deployment.DeploymentMessage.Level;
-import org.intalio.tempo.deployment.spi.ComponentManagerResult;
+import org.intalio.deploy.deployment.ComponentId;
+import org.intalio.deploy.deployment.DeploymentMessage;
+import org.intalio.deploy.deployment.DeploymentMessage.Level;
+import org.intalio.deploy.deployment.spi.ComponentManagerResult;
 import org.intalio.tempo.security.token.TokenContext;
+import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.task.PIPATask;
+import org.intalio.tempo.workflow.tms.TMSException;
+import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PIPAComponentManager implements org.intalio.tempo.deployment.spi.ComponentManager {
+public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.ComponentManager {
     private static final Logger LOG = LoggerFactory.getLogger(PIPAComponentManager.class);
 
     ITMSServer _tms;
@@ -45,15 +48,15 @@ public class PIPAComponentManager implements org.intalio.tempo.deployment.spi.Co
         return "pipa";
     }
 
-    public void activate(ComponentId name, File path) {
+    public void initialize(ComponentId name, File path, List<String> deployedResources, boolean active) {
         // nothing
     }
 
-    public void deactivate(ComponentId name) {
+    public void dispose(ComponentId name, File path, List<String> deployedResources, boolean active) {
         // nothing
     }
 
-    public ComponentManagerResult deploy(ComponentId name, File base) {
+    public ComponentManagerResult deploy(ComponentId name, File base, boolean activate) {
         List<DeploymentMessage> msgs = new ArrayList<DeploymentMessage>();
 
         /*
@@ -77,25 +80,67 @@ public class PIPAComponentManager implements org.intalio.tempo.deployment.spi.Co
             }
 
             // Phase 2: Actual deployment
-            processDir(base, base, msgs, token);
+            ArrayList<String> urls = new ArrayList<String>();
+            processDir(base, base, urls, msgs, token);
+            return new ComponentManagerResult(msgs, urls);
         } finally {
         }
-        return new ComponentManagerResult(msgs);
     }
 
-    public void undeploy(ComponentId name, List<String> deployedObjects) {
-        // TODO: We need to record which PIPAs were deployed for this component.
+    public void undeploy(ComponentId name, File path, List<String> deployedResources) {
+        String token = "x"; // TODO
+        for (String url: deployedResources) {
+            try {
+                _tms.deletePipa(url, token);
+            } catch (UnavailableTaskException e) {
+                LOG.warn("Undeploy - PIPA not found: "+url);
+            } catch (AuthException e) {
+                LOG.warn("Undeploy - AuthException: "+url, e);
+                break; // fail-fast
+            } catch (TMSException e) {
+                LOG.warn("Undeploy - TMSException: "+url, e);
+                break; // fail-fast
+			}
+        }
     }
 
-    public void start(ComponentId name) {
+    public void start(ComponentId name, File path, List<String> deployedResources, boolean active) {
         // nothing
     }
 
-    public void stop(ComponentId name) {
+    public void stop(ComponentId name, File path, List<String> deployedResources, boolean active) {
         // nothing
     }
 
-    // ------------------ Common deployment methods ------------------------
+	public void activate(ComponentId name, File path, List<String> deployedResources) {
+		// TODO Implement this
+		throw new RuntimeException("Not implemented yet!!");
+	}
+
+	public void retire(ComponentId name, File path, List<String> deployedResources) {
+		// TODO Implement this
+		throw new RuntimeException("Not implemented yet!!");
+	}
+
+    public void deployed(ComponentId name, File path, List<String> deployedResources, boolean active) {
+        // nothing
+    }
+
+    public void undeployed(ComponentId name, File path, List<String> deployedResources) {
+        // nothing
+    }
+
+	public void activated(ComponentId name, File path, List<String> deployedResources) {
+		// TODO Implement this
+		throw new RuntimeException("Not implemented yet!!");
+	}
+
+	public void retired(ComponentId name, File path, List<String> deployedResources) {
+		// TODO Implement this
+		throw new RuntimeException("Not implemented yet!!");
+	}
+
+	// ------------------ Common deployment methods ------------------------
 
     public DeploymentMessage checkPipa(String token, InputStream input, String name) {
         DeploymentMessage msg = null;
@@ -120,10 +165,11 @@ public class PIPAComponentManager implements org.intalio.tempo.deployment.spi.Co
         return msg;
     }
 
-    public DeploymentMessage processPipa(String token, InputStream input, String name) {
+    public DeploymentMessage processPipa(String token, InputStream input, String name, ArrayList<String> urls) {
         DeploymentMessage msg = null;
         try {
             PIPATask task = loadPIPADescriptor(input);
+            urls.add(task.getFormURLAsString());
             if (task.isValid()) {
                 LOG.debug("Store PIPA {}", name);
                 try {
@@ -158,6 +204,7 @@ public class PIPAComponentManager implements org.intalio.tempo.deployment.spi.Co
         File[] files = dir.listFiles();
         for (File f : files) {
             LOG.debug("Check: {}", f);
+            String itemURL = relativePath(base, f);
             if (f.isDirectory()) {
                 checkDir(base, f, msgs, token);
             } else if (f.isFile()) {
@@ -166,7 +213,7 @@ public class PIPAComponentManager implements org.intalio.tempo.deployment.spi.Co
                     InputStream input = new FileInputStream(f);
                     try {
                         if (f.getName().endsWith(".pipa")) {
-                            msg = checkPipa(token, input, relativePath(base, f));
+                            msg = checkPipa(token, input, itemURL);
                         }
                         if (msg != null)
                             msgs.add(msg);
@@ -176,30 +223,31 @@ public class PIPAComponentManager implements org.intalio.tempo.deployment.spi.Co
                 } catch (Exception e) {
                     LOG.error("Error while checking PIPA: " + f, e);
                     DeploymentMessage msg = new DeploymentMessage(Level.ERROR, e.toString());
-                    msg.setResource(relativePath(base, f));
+                    msg.setResource(itemURL);
                     msgs.add(msg);
                 }
             } else {
                 DeploymentMessage msg = new DeploymentMessage(Level.WARNING, "Unknown file type: " + f);
-                msg.setResource(relativePath(base, f));
+                msg.setResource(itemURL);
                 msgs.add(msg);
             }
         }
     }
 
-    private void processDir(File base, File dir, List<DeploymentMessage> msgs, String token) {
+    private void processDir(File base, File dir, ArrayList<String> urls, List<DeploymentMessage> msgs, String token) {
         File[] files = dir.listFiles();
         for (File f : files) {
             LOG.debug("Process: {}", f);
+            String itemURL = relativePath(base, f);
             if (f.isDirectory()) {
-                processDir(base, f, msgs, token);
+                processDir(base, f, urls, msgs, token);
             } else if (f.isFile()) {
                 try {
                     DeploymentMessage msg = null;
                     InputStream input = new FileInputStream(f);
                     try {
                         if (f.getName().endsWith(".pipa")) {
-                            msg = processPipa(token, input, relativePath(base, f));
+                            msg = processPipa(token, input, itemURL, urls);
                         }
                         if (msg != null)
                             msgs.add(msg);
@@ -210,13 +258,13 @@ public class PIPAComponentManager implements org.intalio.tempo.deployment.spi.Co
                     // this shouldn't happen but if it does, fail fast
                     LOG.error("Error while processing PIPA: " + f, e);
                     DeploymentMessage msg = new DeploymentMessage(Level.ERROR, e.toString());
-                    msg.setResource(relativePath(base, f));
+                    msg.setResource(itemURL);
                     msgs.add(msg);
                     break;
                 }
             } else {
                 DeploymentMessage msg = new DeploymentMessage(Level.WARNING, "Unknown file type: " + f);
-                msg.setResource(relativePath(base, f));
+                msg.setResource(itemURL);
                 msgs.add(msg);
             }
         }

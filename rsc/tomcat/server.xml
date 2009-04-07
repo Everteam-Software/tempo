@@ -55,9 +55,9 @@
 			username="root" password="" driverClassName="com.mysql.jdbc.Driver"
 			url="jdbc:mysql://localhost:3306/bpms?relaxAutoCommit=true"/>
 
-		  <Resource name="registry/TempoRegistry" auth="Container"
-		            type="org.intalio.tempo.registry.Registry"
-		            factory="org.intalio.tempo.registry.RegistryObjectFactory" />
+		  <Resource name="registry/DeployRegistry" auth="Container"
+		            type="org.intalio.deploy.registry.Registry"
+		            factory="org.intalio.deploy.registry.RegistryObjectFactory" />
 
   </GlobalNamingResources>
 
