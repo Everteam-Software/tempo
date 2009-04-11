@@ -45,6 +45,8 @@ public interface ITaskDAOConnection {
 	
 	public List<Task> getTasksWithName(String taskName);
 	
+    public boolean isRoleMember(String taskId, UserRoles ur, GenericRoleType role);
+	
 	public List<Task> getMyTasks(UserRoles ur, String taskType,
 			String genericHumanRole, String workQueue,
 			List<TaskStatus> statusList, String whereClause,

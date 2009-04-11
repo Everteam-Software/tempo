@@ -9,8 +9,10 @@ public class ParameterValues {
 	public static final String AND_FUNCTION = "and";
 	public static final String OR_FUNCTION = "or";
 	private List<SinglePara> paras = new ArrayList<SinglePara>();
-	private Map<Integer, Object> values = new HashMap<Integer, Object>();
+	private Map<String, Object> values = new HashMap<String, Object>();
 	private String m_funName = null;
+	
+	private final String PARA_PREFIX = "p";
 	
 	public ParameterValues() {
 	}
@@ -47,6 +49,7 @@ public class ParameterValues {
 				
 			}
 			
+			String pName = null;
 			boolean isCollection = false;
 			if (para.value != null) {
 				if (QueryOperator.IN.equals(para.funName)
@@ -57,12 +60,13 @@ public class ParameterValues {
 				if (isCollection) 
 					result.append("(");
 				
-				result.append("?" + startParaIdx);
+				pName = PARA_PREFIX + startParaIdx;
+				result.append(":" + pName);
 
 				if (isCollection) 
 					result.append(")");
 				
-				values.put(startParaIdx, para.value);
+				values.put(pName, para.value);
 				startParaIdx++;
 			}
 		}
@@ -74,7 +78,7 @@ public class ParameterValues {
 		return result.toString();
 	}
 	
-	public Map<Integer, Object> getJPAValues() {
+	public Map<String, Object> getJPAValues() {
 		return this.values;
 	}
 	

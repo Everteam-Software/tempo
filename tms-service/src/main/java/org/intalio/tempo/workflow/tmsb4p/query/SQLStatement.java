@@ -10,7 +10,7 @@ public class SQLStatement {
 	private List<String> fromClause = new ArrayList<String>();
 	private List<String> whereClause = new ArrayList<String>();
 	private List<String> orderByClause = new ArrayList<String>();
-	private Map<Integer, Object> paraValues = null;
+	private Map<String, Object> paraValues = null;
 	
 	public List<String> getSelectClause() {
 		return selectClause;
@@ -30,10 +30,10 @@ public class SQLStatement {
 	public void setWhereClause(List<String> whereClause) {
 		this.whereClause = whereClause;
 	}
-	public Map<Integer, Object> getParaValues() {
+	public Map<String, Object> getParaValues() {
 		return paraValues;
 	}
-	public void setParaValues(Map<Integer, Object> paraValues) {
+	public void setParaValues(Map<String, Object> paraValues) {
 		this.paraValues = paraValues;
 	}
 	
@@ -56,17 +56,17 @@ public class SQLStatement {
 		
 	}
 	
-	public void addParaValue(int idx, Object value) {
+	public void addParaValue(String pName, Object value) {
 		if (paraValues == null) {
-			paraValues = new HashMap<Integer, Object>();
+			paraValues = new HashMap<String, Object>();
 		}
 		
-		paraValues.put(idx, value);
+		paraValues.put(pName, value);
 	}
 	
 	public int getParaValuesStartIdx() {
 		if (paraValues == null) {
-			paraValues = new HashMap<Integer, Object>();
+			paraValues = new HashMap<String, Object>();
 		}
 		
 		return paraValues.size() + 1;

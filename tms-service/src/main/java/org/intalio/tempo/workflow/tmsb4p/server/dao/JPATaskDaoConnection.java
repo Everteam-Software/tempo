@@ -287,12 +287,11 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
         String jql = sqlStatement.toString();
 
         Query query = this.entityManager.createQuery(jql);
-        Map<Integer, Object> data = sqlStatement.getParaValues();
+        Map<String, Object> data = sqlStatement.getParaValues();
 
         if (data != null) {
-            Set<Integer> keys = data.keySet();
-            for (Iterator<Integer> iterator = keys.iterator(); iterator.hasNext();) {
-                Integer key = iterator.next();
+            Set<String> keys = data.keySet();
+            for (String key: keys) {
                 query.setParameter(key, data.get(key));
             }
         }
@@ -300,6 +299,34 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
         return query;
     }
 
+    public boolean isRoleMember(String taskId, UserRoles ur, GenericRoleType role) {
+        String selectClause = "id";
+        StringBuffer wClause = new StringBuffer();
+        // user id clause
+        wClause.append("(").append(TaskView.USERID).append("='").append(ur.getUserID()).append("'");
+        // group clause
+        wClause.append(" or ").append(TaskView.GROUP).append("='")
+                .append(QueryUtil.joinString(ur.getAssignedRoles(), ","))
+                .append("'").append(")");
+        // role info
+        wClause.append(" and  ").append(TaskView.GENERIC_HUMAN_ROLE).append("='")
+                .append(role.name()).append("'");
+        // task id clause
+        wClause.append(" and  ").append("id='").append(taskId).append("'");
+         
+        TaskJPAStatement taskStatement = new TaskJPAStatement(selectClause, wClause.toString(), null);
+        
+        Query query = null;
+        try {
+            query = this.createJPAQuery(taskStatement);
+        } catch (InvalidQueryException e) {
+            // ignore it, it shouldn't happen.
+        }
+        int size = query.getResultList().size();
+        
+        return (size > 0);
+    }
+    
     // TODO: below method will be removed
     public EntityManager getEntityManager() {
         return this.entityManager;

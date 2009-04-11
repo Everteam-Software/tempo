@@ -1,6 +1,7 @@
 package org.intalio.tempo.workflow.tmsb4p.server;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.xmlbeans.XmlObject;
@@ -14,9 +15,11 @@ import org.intalio.tempo.workflow.taskb4p.Comment;
 import org.intalio.tempo.workflow.taskb4p.Task;
 import org.intalio.tempo.workflow.taskb4p.TaskStatus;
 import org.intalio.tempo.workflow.tms.B4PPersistException;
+import org.intalio.tempo.workflow.tms.InvalidTaskStateException;
 import org.intalio.tempo.workflow.tms.TMSException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.intalio.tempo.workflow.tms.server.permissions.TaskPermissions;
+import org.intalio.tempo.workflow.tmsb4p.server.dao.GenericRoleType;
 import org.intalio.tempo.workflow.tmsb4p.server.dao.ITaskDAOConnection;
 import org.intalio.tempo.workflow.tmsb4p.server.dao.ITaskDAOConnectionFactory;
 import org.slf4j.Logger;
@@ -417,6 +420,49 @@ public class TMSServer implements ITMSServer {
     public void complete(String participantToken, String identifier, XmlObject xmlObject) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public void activate(String participantToken, String identifier) throws AuthException, InvalidTaskStateException, UnavailableTaskException{
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        
+        // check whether the user has the business administrator role
+        boolean isRightPerson = dao.isRoleMember(identifier, ur, GenericRoleType.business_administrators);
+        if (!isRightPerson) {
+            throw new AuthException("Only business administrator can activate the task.");
+        }
+        
+        try {
+            Task task = dao.fetchTaskIfExists(identifier);
+            
+            if (!TaskStatus.CREATED.equals(task.getStatus())) {
+                throw new InvalidTaskStateException("Only created status's Task can be activated!");
+            }
+            
+            task.setActivationTime(new Date(System.currentTimeMillis()));
+            task.setStatus(TaskStatus.READY);
+            
+            dao.updateTask(task);
+            dao.commit();           
+        } catch (UnavailableTaskException e) {
+            _logger.error("Cannot activate Task: ", e);
+        } finally {
+            dao.close();
+        }
+
+    }
+
+    @Override
+    public void nominate(String participantToken, String identifier) throws AuthException {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void setGenericHumanRole(String participantToken, String identifier) throws AuthException {
+        // TODO Auto-generated method stub
+        
     }
 
 }

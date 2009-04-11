@@ -8,6 +8,7 @@ import org.intalio.tempo.workflow.taskb4p.Attachment;
 import org.intalio.tempo.workflow.taskb4p.AttachmentInfo;
 import org.intalio.tempo.workflow.taskb4p.Comment;
 import org.intalio.tempo.workflow.taskb4p.Task;
+import org.intalio.tempo.workflow.tms.InvalidTaskStateException;
 import org.intalio.tempo.workflow.tms.TMSException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 
@@ -39,4 +40,7 @@ public interface ITMSServer {
 	public void addComment(String participantToken, String identifier, String text) throws AuthException;
 	public List<Comment> getComments(String participantToken, String identifier) throws AuthException;
 	public Task getTaskByIdentifier(String participantToken, String identifier) throws AuthException, UnavailableTaskException;
+	public void activate(String participantToken, String identifier) throws AuthException, InvalidTaskStateException, UnavailableTaskException;
+	public void nominate(String participantToken, String identifier) throws AuthException;
+	public void setGenericHumanRole(String participantToken, String identifier) throws AuthException;
 }
