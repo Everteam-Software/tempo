@@ -19,9 +19,12 @@ import org.intalio.tempo.workflow.taskb4p.Attachment;
 import org.intalio.tempo.workflow.taskb4p.AttachmentAccessType;
 import org.intalio.tempo.workflow.taskb4p.AttachmentInfo;
 import org.intalio.tempo.workflow.taskb4p.Comment;
+import org.intalio.tempo.workflow.taskb4p.GroupOrganizationalEntity;
 import org.intalio.tempo.workflow.taskb4p.OrganizationalEntity;
+import org.intalio.tempo.workflow.taskb4p.Principal;
 import org.intalio.tempo.workflow.taskb4p.Task;
 import org.intalio.tempo.workflow.taskb4p.TaskStatus;
+import org.intalio.tempo.workflow.taskb4p.UserOrganizationalEntity;
 import org.intalio.tempo.workflow.tms.InvalidQueryException;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
@@ -172,6 +175,67 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
 
         List<Task> tasks = query.getResultList();
         return tasks;
+    }
+    
+    public void updateTaskRole(String taskId, GenericRoleType role, Set<String> values, String orgType) throws UnavailableTaskException {
+        Task task = this.fetchTaskIfExists(taskId);
+        if (GenericRoleType.task_initiator.equals(role) || GenericRoleType.actual_owner.equals(role)) {            
+            String newUser = values.iterator().next();
+            if (GenericRoleType.task_initiator.equals(role)) {
+                task.setTaskInitiator(newUser);
+            } else {
+                task.setActualOwner(newUser);
+            }
+        } else {
+            OrganizationalEntity orgEntity = null;
+            if (GenericRoleType.business_administrators.equals(role)) {
+                orgEntity = task.getBusinessAdministrators();
+            } else if (GenericRoleType.task_stakeholders.equals(role)) {
+                orgEntity = task.getTaskStakeholders();
+            } else if (GenericRoleType.potential_owners.equals(role)) {
+                orgEntity = task.getPotentialOwners();
+            } else if (GenericRoleType.notification_recipients.equals(role)) {
+                orgEntity = task.getNotificationRecipients();
+            } else if (GenericRoleType.excluded_owners.equals(role)) {
+                orgEntity = task.getExcludedOwners();
+            }
+            
+            boolean isNewOrg = false;
+            if ((orgEntity == null) || (!orgEntity.equals(orgType))) {
+                // create one organization
+                isNewOrg = true;
+                if (OrganizationalEntity.GROUP_ENTITY.equals(orgType)) {
+                    orgEntity = new GroupOrganizationalEntity();
+                } else {
+                    orgEntity = new UserOrganizationalEntity();
+                }                
+            }
+            
+            // update the principal to the organization
+            orgEntity.getPrincipals().clear();
+            
+            for (String value : values) {
+                Principal p = new Principal();
+                p.setValue(value);
+                p.setOrgEntity(orgEntity);
+            }
+            
+            if (isNewOrg) {
+                if (GenericRoleType.business_administrators.equals(role)) {
+                    task.setBusinessAdministrators(orgEntity);
+                } else if (GenericRoleType.task_stakeholders.equals(role)) {
+                    task.setTaskStakeholders(orgEntity);
+                } else if (GenericRoleType.potential_owners.equals(role)) {
+                    task.setPotentialOwners(orgEntity);
+                } else if (GenericRoleType.notification_recipients.equals(role)) {
+                    task.setNotificationRecipients(orgEntity);
+                } else if (GenericRoleType.excluded_owners.equals(role)) {
+                    task.setExcludedOwners(orgEntity);
+                }
+            }
+        }
+        
+        this.updateTask(task);
     }
 
     public List<Task> query(UserRoles ur, String selectClause, String whereClause, String orderByClause, int maxTasks, int taskIndexOffset)

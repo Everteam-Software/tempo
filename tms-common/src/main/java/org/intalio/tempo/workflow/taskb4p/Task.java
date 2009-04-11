@@ -38,6 +38,9 @@ public class Task extends TaskAbstract {
 	private String createdBy;
 	@Basic
 	private String primarySearchBy;
+    @Persistent(cascade = { CascadeType.ALL })
+    private OrganizationalEntity excludedOwners;
+	
 
 	@OneToMany(cascade=CascadeType.REMOVE, mappedBy="task", fetch=FetchType.LAZY)
 	private Set<Comment> comments;
@@ -95,7 +98,15 @@ public class Task extends TaskAbstract {
 		this.notificationRecipients = notificationRecipients;
 	}
 
-	public String getCreatedBy() {
+	public OrganizationalEntity getExcludedOwners() {
+        return excludedOwners;
+    }
+
+    public void setExcludedOwners(OrganizationalEntity excludedOwners) {
+        this.excludedOwners = excludedOwners;
+    }
+
+    public String getCreatedBy() {
 		return createdBy;
 	}
 

@@ -1,6 +1,7 @@
 package org.intalio.tempo.workflow.tmsb4p.server;
 
 import java.util.List;
+import java.util.Set;
 
 import org.apache.xmlbeans.XmlObject;
 import org.intalio.tempo.workflow.auth.AuthException;
@@ -11,6 +12,7 @@ import org.intalio.tempo.workflow.taskb4p.Task;
 import org.intalio.tempo.workflow.tms.InvalidTaskStateException;
 import org.intalio.tempo.workflow.tms.TMSException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
+import org.intalio.tempo.workflow.tmsb4p.server.dao.GenericRoleType;
 
 import com.intalio.wsHT.api.TStatus;
 
@@ -41,6 +43,6 @@ public interface ITMSServer {
 	public List<Comment> getComments(String participantToken, String identifier) throws AuthException;
 	public Task getTaskByIdentifier(String participantToken, String identifier) throws AuthException, UnavailableTaskException;
 	public void activate(String participantToken, String identifier) throws AuthException, InvalidTaskStateException, UnavailableTaskException;
-	public void nominate(String participantToken, String identifier) throws AuthException;
-	public void setGenericHumanRole(String participantToken, String identifier) throws AuthException;
+	public void nominate(String participantToken, String identifier, Set<String> principals, boolean isUser) throws AuthException, InvalidTaskStateException, UnavailableTaskException;
+	public void setGenericHumanRole(String participantToken, String identifier, GenericRoleType roleType, Set<String> principals, boolean isUser) throws AuthException, UnavailableTaskException;
 }
