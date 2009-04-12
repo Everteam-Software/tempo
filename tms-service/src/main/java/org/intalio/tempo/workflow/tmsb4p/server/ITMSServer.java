@@ -43,6 +43,6 @@ public interface ITMSServer {
 	public List<Comment> getComments(String participantToken, String identifier) throws AuthException;
 	public Task getTaskByIdentifier(String participantToken, String identifier) throws AuthException, UnavailableTaskException;
 	public void activate(String participantToken, String identifier) throws AuthException, InvalidTaskStateException, UnavailableTaskException;
-	public void nominate(String participantToken, String identifier, Set<String> principals, boolean isUser) throws AuthException, InvalidTaskStateException, UnavailableTaskException;
-	public void setGenericHumanRole(String participantToken, String identifier, GenericRoleType roleType, Set<String> principals, boolean isUser) throws AuthException, UnavailableTaskException;
+	public void nominate(String participantToken, String identifier, List<String> principals, boolean isUser) throws AuthException, InvalidTaskStateException, UnavailableTaskException;
+	public void setGenericHumanRole(String participantToken, String identifier, GenericRoleType roleType, List<String> principals, boolean isUser) throws AuthException, UnavailableTaskException;
 }

@@ -48,7 +48,7 @@ public interface ITaskDAOConnection {
 	
     public boolean isRoleMember(String taskId, UserRoles ur, GenericRoleType role);
     
-    public void updateTaskRole(String taskId, GenericRoleType role, Set<String> value, String orgType) throws UnavailableTaskException;
+    public void updateTaskRole(String taskId, GenericRoleType role, List<String> value, String orgType) throws UnavailableTaskException;
 	
 	public List<Task> getMyTasks(UserRoles ur, String taskType,
 			String genericHumanRole, String workQueue,

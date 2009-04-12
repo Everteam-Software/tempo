@@ -447,7 +447,7 @@ public class TMSServer implements ITMSServer {
     }
 
     @Override
-    public void nominate(String participantToken, String identifier, Set<String> principals, boolean isUser) throws AuthException, InvalidTaskStateException,
+    public void nominate(String participantToken, String identifier, List<String> principals, boolean isUser) throws AuthException, InvalidTaskStateException,
                     UnavailableTaskException {
         UserRoles ur = _authProvider.authenticate(participantToken);
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
@@ -517,7 +517,7 @@ public class TMSServer implements ITMSServer {
     }
 
     @Override
-    public void setGenericHumanRole(String participantToken, String identifier, GenericRoleType roleType, Set<String> principals, boolean isUser)
+    public void setGenericHumanRole(String participantToken, String identifier, GenericRoleType roleType, List<String> principals, boolean isUser)
                     throws AuthException, UnavailableTaskException {
         UserRoles ur = _authProvider.authenticate(participantToken);
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
@@ -569,7 +569,7 @@ public class TMSServer implements ITMSServer {
      * @param isUser
      * @return
      */
-    private boolean isMemeber(UserRoles ur, Set<String> principals, boolean isUser) {
+    private boolean isMemeber(UserRoles ur, List<String> principals, boolean isUser) {
         String uId = ur.getUserID();
         if (isUser) {
             return principals.contains(uId);

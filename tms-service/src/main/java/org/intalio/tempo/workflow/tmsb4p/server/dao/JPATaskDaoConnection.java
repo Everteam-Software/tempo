@@ -177,7 +177,7 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
         return tasks;
     }
     
-    public void updateTaskRole(String taskId, GenericRoleType role, Set<String> values, String orgType) throws UnavailableTaskException {
+    public void updateTaskRole(String taskId, GenericRoleType role, List<String> values, String orgType) throws UnavailableTaskException {
         Task task = this.fetchTaskIfExists(taskId);
         if (GenericRoleType.task_initiator.equals(role) || GenericRoleType.actual_owner.equals(role)) {            
             String newUser = values.iterator().next();
