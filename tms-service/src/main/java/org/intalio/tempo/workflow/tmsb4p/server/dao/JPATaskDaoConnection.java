@@ -197,9 +197,11 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
         // Avoid the duplicate roles.
         Set<String> queryRoles = new HashSet<String>();
         queryRoles.addAll(genRoles);
-
+        System.out.println("workqueue:"+workQueue);
+        
         TaskJPAStatement taskStatement = null;
-        if (workQueue != null) {
+        if (workQueue != null && workQueue.length() > 0) {
+        	
             List<String> groups = new ArrayList<String>();
             // check whether the user belongs the work queue, if not, empty
             // result returned.
@@ -231,6 +233,12 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
 
         Query query = this.createJPAQuery(taskStatement);
 
+        try{
+        System.out.println("sql:"+taskStatement.getStatement().toString());
+        }catch (Exception e){
+        	e.printStackTrace();
+        }
+        
         query.setMaxResults(maxTasks);
 
         return (List<Task>) query.getResultList();

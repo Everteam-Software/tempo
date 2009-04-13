@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.intalio.wsHT.api.TStatus;
+import com.intalio.wsHT.api.xsd.TTime;
 
 public class TMSServer implements ITMSServer {
     private static final Logger _logger = LoggerFactory.getLogger(TMSServer.class);
@@ -77,6 +78,7 @@ public class TMSServer implements ITMSServer {
             dao.commit();
             if (_logger.isDebugEnabled())
                 _logger.debug("Workflow Task " + task + " was created");
+            System.out.println("Workflow Task " + task + " was created");
             // TODO : Use credentials.getUserID() :vb
         } catch (Exception e) {
             _logger.error("Cannot create Workflow Tasks", e); // TODO :
@@ -104,6 +106,7 @@ public class TMSServer implements ITMSServer {
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         try {
             dao.deleteTask(taskId);
+            dao.commit();
         } catch (Exception e) {
             _logger.error("remove task failed, task id " + taskId, e);
         } finally {
@@ -114,22 +117,12 @@ public class TMSServer implements ITMSServer {
 
     }
 
-    public void Release(String participantToken, String identifier) {
-        // TODO Auto-generated method stub
 
-    }
-
-    public void Resume(String participantToken, String identifier) {
-        // TODO Auto-generated method stub
-
-    }
-
-    public void Start(String participantToken, String identifier) throws Exception {
+    public void start(String participantToken, String identifier) throws TMSException {
         // get user
         UserRoles ur = null;
         try {
             ur = _authProvider.authenticate(participantToken);
-
             System.out.println("userid:" + ur.getUserID());
         } catch (Exception e) {
             e.printStackTrace();
@@ -145,21 +138,21 @@ public class TMSServer implements ITMSServer {
         ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
         try {
             dao.updateTaskStatus(identifier, TaskStatus.IN_PROGRESS);
+            dao.commit();
         } catch (Exception e) {
             _logger.error("remove task failed, task id " + identifier, e);
-            throw e;
+            throw new B4PPersistException(e);
         } finally {
             dao.close();
         }
     }
 
-    public void Stop(String participantToken, String identifier) throws TMSException {
+    public void stop(String participantToken, String identifier) throws TMSException {
 
         // get user
         UserRoles ur = null;
         try {
             ur = _authProvider.authenticate(participantToken);
-
             System.out.println("userid:" + ur.getUserID());
         } catch (Exception e) {
             e.printStackTrace();
@@ -176,6 +169,7 @@ public class TMSServer implements ITMSServer {
         ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
         try {
             dao.updateTaskStatus(identifier, TaskStatus.RESERVED);
+            dao.commit();
         } catch (Exception e) {
             _logger.error("remove task failed, task id " + identifier, e);
             throw new B4PPersistException(e);
@@ -185,50 +179,337 @@ public class TMSServer implements ITMSServer {
 
     }
 
-    public void claim(String participantToken, String identifier) {
-        // TODO Auto-generated method stub
+    public void claim(String participantToken, String identifier) throws TMSException {
+        // get user
+        UserRoles ur = null;
+        try {
+            ur = _authProvider.authenticate(participantToken);
+
+            System.out.println("userid:" + ur.getUserID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            this._logger.error("authenticate user failed", e);
+            throw new AuthException(e);
+        }
+
+        // @TODO check permission (action owner / business administrators can claim tasks
+
+        // @TODO check status ( should be ready )
+
+        // update task status
+        ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
+        try {
+            dao.updateTaskStatus(identifier, TaskStatus.RESERVED);
+            dao.commit();
+        } catch (Exception e) {
+            _logger.error("remove task failed, task id " + identifier, e);
+            throw new B4PPersistException(e);
+        } finally {
+            dao.close();
+        }
+
 
     }
 
-    public void delegate(String participantToken, String identifier) {
-        // TODO Auto-generated method stub
+    public void delegate(String participantToken, String identifier) throws TMSException{
+        // get user
+        UserRoles ur = null;
+        try {
+            ur = _authProvider.authenticate(participantToken);
+
+            System.out.println("userid:" + ur.getUserID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            this._logger.error("authenticate user failed", e);
+            throw new AuthException(e);
+        }
+
+        // @TODO check permission (action owner / business administrators can claim tasks
+
+        // @TODO check status ( should be ready )
+
+        // update task status
+        ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
+        try {
+        	//TODO assign task to user and put him into potential owner if he is not
+            dao.updateTaskStatus(identifier, TaskStatus.RESERVED);
+            dao.commit();
+        } catch (Exception e) {
+            _logger.error("remove task failed, task id " + identifier, e);
+            throw new B4PPersistException(e);
+        } finally {
+            dao.close();
+        }
+
 
     }
 
-    public void forward(String participantToken, String identifier) {
-        // TODO Auto-generated method stub
+    public void forward(String participantToken, String identifier) throws TMSException{
+        // get user
+        UserRoles ur = null;
+        try {
+            ur = _authProvider.authenticate(participantToken);
+
+            System.out.println("userid:" + ur.getUserID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            this._logger.error("authenticate user failed", e);
+            throw new AuthException(e);
+        }
+
+        // @TODO check permission (action owner / business administrators can claim tasks
+
+        // @TODO check status ( should be ready )
+
+        // update task 
+        ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
+        try {
+        	// TODO impl logic
+        	
+        	// update status
+            dao.updateTaskStatus(identifier, TaskStatus.RESERVED);
+            
+            // commit
+            dao.commit();
+        } catch (Exception e) {
+            _logger.error("remove task failed, task id " + identifier, e);
+            throw new B4PPersistException(e);
+        } finally {
+            dao.close();
+        }
 
     }
 
-    public void release(String participantToken, String identifier) {
-        // TODO Auto-generated method stub
+    public void release(String participantToken, String identifier) throws TMSException{
+        // get user
+        UserRoles ur = null;
+        try {
+            ur = _authProvider.authenticate(participantToken);
+
+            System.out.println("userid:" + ur.getUserID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            this._logger.error("authenticate user failed", e);
+            throw new AuthException(e);
+        }
+
+        // @TODO check permission (action owner / business administrators can claim tasks
+
+        // @TODO check status ( should be ready )
+
+        // update task 
+        ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
+        try {
+        	// TODO impl logic
+        	
+        	// update status
+            dao.updateTaskStatus(identifier, TaskStatus.READY);
+            
+            // commit
+            dao.commit();
+        } catch (Exception e) {
+            _logger.error("remove task failed, task id " + identifier, e);
+            throw new B4PPersistException(e);
+        } finally {
+            dao.close();
+        }
 
     }
 
-    public void resume(String participantToken, String identifier) {
-        // TODO Auto-generated method stub
+    public void resume(String participantToken, String identifier) throws TMSException{
+        // get user
+        UserRoles ur = null;
+        try {
+            ur = _authProvider.authenticate(participantToken);
+
+            System.out.println("userid:" + ur.getUserID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            this._logger.error("authenticate user failed", e);
+            throw new AuthException(e);
+        }
+
+        // @TODO check permission (action owner / business administrators can claim tasks
+
+        // @TODO check status ( should be ready )
+
+        // update task 
+        ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
+        try {
+        	// TODO impl logic
+        	
+        	// update status
+            dao.updateTaskStatus(identifier, TaskStatus.IN_PROGRESS);
+            
+            // commit
+            dao.commit();
+        } catch (Exception e) {
+            _logger.error("remove task failed, task id " + identifier, e);
+            throw new B4PPersistException(e);
+        } finally {
+            dao.close();
+        }
 
     }
 
-    public void skip(String participantToken, String identifier) {
-        // TODO Auto-generated method stub
+    public void skip(String participantToken, String identifier) throws TMSException{
+    	 // get user
+        UserRoles ur = null;
+        try {
+            ur = _authProvider.authenticate(participantToken);
+
+            System.out.println("userid:" + ur.getUserID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            this._logger.error("authenticate user failed", e);
+            throw new AuthException(e);
+        }
+
+        // @TODO check permission (action owner / business administrators can claim tasks
+
+        // @TODO check status ( should be ready )
+
+        // update task 
+        ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
+        try {
+        	// TODO impl logic
+        	
+        	// update status
+            dao.updateTaskStatus(identifier, TaskStatus.OBSOLETE);
+            
+            // commit
+            dao.commit();
+        } catch (Exception e) {
+            _logger.error("remove task failed, task id " + identifier, e);
+            throw new B4PPersistException(e);
+        } finally {
+            dao.close();
+        }
+
 
     }
 
-    public void start(String participantToken, String identifier) {
-        // TODO Auto-generated method stub
+
+    public void fail(String participantToken, String identifier, String faultName, XmlObject faultData) throws TMSException{
+        // get user
+        UserRoles ur = null;
+        try {
+            ur = _authProvider.authenticate(participantToken);
+
+            System.out.println("userid:" + ur.getUserID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            this._logger.error("authenticate user failed", e);
+            throw new AuthException(e);
+        }
+
+        // @TODO check permission (action owner / business administrators can claim tasks
+
+        // @TODO check status ( should be ready )
+
+        // update task 
+        ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
+        try {
+        	// TODO impl logic
+        	
+        	// update status
+            dao.updateTaskStatus(identifier, TaskStatus.FAILED);
+            
+            // commit
+            dao.commit();
+        } catch (Exception e) {
+            _logger.error("remove task failed, task id " + identifier, e);
+            throw new B4PPersistException(e);
+        } finally {
+            dao.close();
+        }
 
     }
+    
+    public void complete(String participantToken, String identifier, XmlObject taskData) throws TMSException{
+        // get user
+        UserRoles ur = null;
+        try {
+            ur = _authProvider.authenticate(participantToken);
 
-    public void stop(String participantToken, String identifier) {
-        // TODO Auto-generated method stub
+            System.out.println("userid:" + ur.getUserID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            this._logger.error("authenticate user failed", e);
+            throw new AuthException(e);
+        }
 
+        // @TODO check permission (action owner / business administrators can claim tasks
+
+        // @TODO check status ( should be ready )
+
+        // update task 
+        ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
+        try {
+        	// TODO impl logic
+            Task task = dao.fetchTaskIfExists(identifier);
+            if (task == null){
+            	_logger.warn("task "+ identifier+" not found");
+            	return;
+            }
+        	// update status
+            task.setStatus(TaskStatus.COMPLETED);
+            // update output data
+            task.setOutputMessage(taskData.toString()); //?
+            dao.updateTask(task);
+       
+            // commit
+            dao.commit();
+        } catch (Exception e) {
+            _logger.error("remove task failed, task id " + identifier, e);
+            throw new B4PPersistException(e);
+        } finally {
+            dao.close();
+        }
     }
 
-    public void fail(String participantToken, String identifier, String faultName, XmlObject faultData) {
-        // TODO Auto-generated method stub
+	public void suspend(String participantToken, String identifier) throws TMSException{
+        // get user
+        UserRoles ur = null;
+        try {
+            ur = _authProvider.authenticate(participantToken);
 
-    }
+            System.out.println("userid:" + ur.getUserID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            this._logger.error("authenticate user failed", e);
+            throw new AuthException(e);
+        }
+
+        // @TODO check permission (action owner / business administrators can claim tasks
+
+        // @TODO check status ( should be ready )
+
+        // update task 
+        ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
+        try {
+        	// TODO impl logic
+        	
+        	// update status
+            dao.updateTaskStatus(identifier, TaskStatus.COMPLETED);
+            
+            // commit
+            dao.commit();
+        } catch (Exception e) {
+            _logger.error("remove task failed, task id " + identifier, e);
+            throw new B4PPersistException(e);
+        } finally {
+            dao.close();
+        }
+		
+	}
+
+	public void suspendUntil(String participantToken, String identifier,
+			TTime time) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
     /**************************************
      * data operation operations
@@ -414,9 +695,5 @@ public class TMSServer implements ITMSServer {
 
     }
 
-    public void complete(String participantToken, String identifier, XmlObject xmlObject) {
-        // TODO Auto-generated method stub
-
-    }
 
 }

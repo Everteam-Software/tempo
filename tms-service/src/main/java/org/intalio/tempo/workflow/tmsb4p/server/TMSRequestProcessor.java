@@ -100,6 +100,10 @@ import com.intalio.wsHT.api.xsd.StartDocument;
 import com.intalio.wsHT.api.xsd.StartResponseDocument;
 import com.intalio.wsHT.api.xsd.StopDocument;
 import com.intalio.wsHT.api.xsd.StopResponseDocument;
+import com.intalio.wsHT.api.xsd.SuspendDocument;
+import com.intalio.wsHT.api.xsd.SuspendResponseDocument;
+import com.intalio.wsHT.api.xsd.SuspendUntilDocument;
+import com.intalio.wsHT.api.xsd.SuspendUntilResponseDocument;
 import com.intalio.wsHT.api.xsd.AddAttachmentDocument.AddAttachment;
 import com.intalio.wsHT.api.xsd.AddCommentDocument.AddComment;
 import com.intalio.wsHT.api.xsd.ClaimDocument.Claim;
@@ -141,6 +145,10 @@ import com.intalio.wsHT.api.xsd.StartDocument.Start;
 import com.intalio.wsHT.api.xsd.StartResponseDocument.StartResponse;
 import com.intalio.wsHT.api.xsd.StopDocument.Stop;
 import com.intalio.wsHT.api.xsd.StopResponseDocument.StopResponse;
+import com.intalio.wsHT.api.xsd.SuspendDocument.Suspend;
+import com.intalio.wsHT.api.xsd.SuspendResponseDocument.SuspendResponse;
+import com.intalio.wsHT.api.xsd.SuspendUntilDocument.SuspendUntil;
+import com.intalio.wsHT.api.xsd.SuspendUntilResponseDocument.SuspendUntilResponse;
 import com.intalio.wsHT.protocol.THumanTaskContext;
 
 public class TMSRequestProcessor {
@@ -463,7 +471,7 @@ public class TMSRequestProcessor {
 
             // marshal response
             CreateResponseDocument resp = CreateResponseDocument.Factory.newInstance();
-            resp.addNewCreateResponse().setOut("Task:" + taskID + " ---> ok");
+            resp.addNewCreateResponse().setOut(taskID);
 
             // convert to OMElment
             return this.convertXML(resp);
@@ -761,6 +769,58 @@ public class TMSRequestProcessor {
         return this.convertXML(retDoc);
     }
 
+    public OMElement suspend(OMElement requestElement) throws AxisFault {
+    	SuspendResponseDocument retDoc = null;
+        try {
+            // check participant token
+            String participantToken = getParticipantToken();
+            if (participantToken == null)
+                throw makeFault(new Exception("Cannot get participant toke in soap header"));
+
+            // unmarshal request
+            SuspendDocument reqDoc = SuspendDocument.Factory.parse(requestElement.getXMLStreamReader());
+            Suspend req = reqDoc.getSuspend();
+
+            // call TMSServer to process request
+            this._server.suspend(participantToken, req.getIdentifier());
+
+            // marshal response
+            retDoc = SuspendResponseDocument.Factory.newInstance();
+            SuspendResponse ret = retDoc.addNewSuspendResponse();
+
+        } catch (Exception e) {
+
+            throw makeFault(e);
+        }
+        return this.convertXML(retDoc);
+    }
+
+    public OMElement suspendUntil(OMElement requestElement) throws AxisFault {
+    	SuspendUntilResponseDocument retDoc = null;
+        try {
+            // check participant token
+            String participantToken = getParticipantToken();
+            if (participantToken == null)
+                throw makeFault(new Exception("Cannot get participant toke in soap header"));
+
+            // unmarshal request
+            SuspendUntilDocument reqDoc = SuspendUntilDocument.Factory.parse(requestElement.getXMLStreamReader());
+            SuspendUntil req = reqDoc.getSuspendUntil();
+
+            // call TMSServer to process request
+            this._server.suspendUntil(participantToken, req.getIdentifier(), req.getTime());
+
+            // marshal response
+            retDoc = SuspendUntilResponseDocument.Factory.newInstance();
+            SuspendUntilResponse ret = retDoc.addNewSuspendUntilResponse();
+
+        } catch (Exception e) {
+
+            throw makeFault(e);
+        }
+        return this.convertXML(retDoc);
+    }
+    
     /**
      * Resume a suspended task. In ¥ task identifier Out ¥ void
      * 
