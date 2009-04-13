@@ -1,0 +1,4 @@
+<forward xmlns="http://www.intalio.com/WS-HT/api/xsd" xmlns:htpt="http://www.intalio.com/WS-HT/protocol">
+	<identifier></identifier>
+	<organizationalEntity></organizationalEntity>
+</forward>
