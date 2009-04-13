@@ -13,10 +13,11 @@ td.ndone {width:10px;height:6px;}
 
 td.title {font-size:10pt;text-align:center;}
 td.operation {font-size:8pt;width:51;text-align:center;}
-td.description {font-size:10pt;background:#d1ffc1;width:272;text-align:center;}
+td.description {font-size:10pt;background:#d1ffc1;width:500px;text-align:center;}
 td.action {font-size:10pt;width:126;text-align:center;}
 td.status {font-size:10pt;width:296;text-align:center;}
-
+td.state_transition{font-size:10pt;text-align:center;}
+td.error_handling{font-size:10pt;text-align:center;}
 </style>
 <!--
 <link rel="stylesheet" href="flora.tabs.css" />
@@ -176,23 +177,27 @@ obj.css("display", "block");
 
 <!-- 定义Tabs内容 -->
 <div id="participant_operations" style="position:relative;z-index:1;border:0px dotted red;">
-  <table width="750" cellpadding="5" cellspacing="1" border="0" bgcolor="#999999">
+  <table width="1000" cellpadding="5" cellspacing="1" border="0" bgcolor="#999999">
   <tr>
     <td width="51"  align="center" ><h5>Operation</h5></td>
     <td width="272"  bgcolor="#d1ffc1" align="center"><h5>Description</h5></td>
+    <td width="272"  bgcolor="#d1ffc1" align="center"><h5>Error Handling</h5></td>
+	<td align="center"><h5>State Transition</h5></td>
     <td width="126"  align="center"><h5>Action</h5></td>
-    <td width="296"  align="center"><h5>Status</h5><br/><span style="font-size:9pt;">WebService|serviceImpl|OperationImpl|Persist|security</span></td>
+    <td width="296"  align="center"><h5>Status</h5><br/><span style="font-size:9pt;">WebService|serviceImpl|OperationImpl|Persist|security|ErrHandling</span></td>
   </tr>
   <tr>
     <td class="operation" >Create</td>
     <td class="description">Create a Human Task</td>
+    <td class="error_handling"></td>
+	<td class="state_transition" > Created</td>
     <td class="action">
     <a href="#" onclick="test('create');" ><img width=30 src="test.png" alt="test it"/></a>
     </td>
     <td class="status">
     <table align="center">
     <tr>
-    <td class="done" /><td class="done" /><td class="ndone" /><td class="ndone" /><td class="ndone" />
+    <td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /><td class="ndone" />
     </tr>
     </table>
     
@@ -201,108 +206,180 @@ obj.css("display", "block");
  
   <tr>
     <td class="operation" >remove</td>
-    <td class="description">remove</td>
+    <td class="description">Applies to notifications 
+	only. 
+	Used by notification 
+	recipients to remove the 
+	notification permanently 
+	from their task list client. 
+	It will not be returned on 
+	any subsequent retrieval 
+	operation invoked by the 
+	same user.  
+	
+
+	</td> <td class="error_handling"></td>
+	<td class="state_transition" >--- </td>
     <td class="action"><a href="#" onclick="test('remove');" ><img width=30 src="test.png" alt="test it"/></a></td>
     <td class="status"> 
-    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /></td><td class="ndone" /></tr></table>
     </td>
   </tr>
 
    <tr>
     <td class="operation" >start</td>
-    <td class="description"></td>
+    <td class="description">Start the execution of the 
+	taskIn 
+	Actual Owner 
+	</td> <td class="error_handling"></td>
+	<td class="state_transition" >IN_PROGRESS </td>
     <td class="action"><a href="#" onclick="test('start');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
-    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /><td class="ndone" /></tr></table>
     </td>
   </tr>
   <tr>
     <td class="operation" >stop</td>
-    <td class="description"></td>
+    <td class="description">Cancel/stop the 
+	processing of the taskIn 
+	Actual Owner 
+	</td> <td class="error_handling"></td>
+	<td class="state_transition" >RESERVED </td>
     <td class="action"><a href="#" onclick="test('stop');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
-    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /><td class="ndone" /></tr></table>
     </td>
   </tr>
   <tr>
     <td class="operation" >claim</td>
-    <td class="description"></td>
+    <td class="description">Claim responsibility for a 
+	task
+	</td> <td class="error_handling"></td>
+	<td class="state_transition" > Reserved</td>
     <td class="action"><a href="#" onclick="test('claim');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
-    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /><td class="ndone" /></tr></table>
     </td>
   </tr>
   <tr>
     <td class="operation" >complete</td>
-    <td class="description"></td>
+    <td class="description">Execution of the task 
+	finished successfully. 
+
+	</td> 
+	<td class="error_handling">If no 
+	output data is set the 
+	operation returns 
+	illegalArgumentFault.</td>
+	<td class="state_transition" >Completed</td>
     <td class="action"><a href="#" onclick="test('complete');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
-    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /><td class="ndone" /></tr></table>
     </td>
   </tr>
   <tr>
     <td class="operation" >skip</td>
-    <td class="description"></td>
+    <td class="description"></td> <td class="error_handling"></td>
+	<td class="state_transition" >--- </td>
     <td class="action"><a href="#" onclick="test('skip');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
-    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /><td class="ndone" /></tr></table>
     </td>
   </tr>
   <tr>
     <td class="operation" >release</td>
-    <td class="description"></td>
+    <td class="description">Release the task</td> <td class="error_handling"></td>
+	<td class="state_transition" >Ready</td>
     <td class="action"><a href="#" onclick="test('release');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
-    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /><td class="ndone" /></tr></table>
     </td>
   </tr>
   <tr>
     <td class="operation" >suspend</td>
-    <td class="description"></td>
+    <td class="description">Suspend the task</td> <td class="error_handling"></td>
+	<td class="state_transition" >--- </td>
     <td class="action"><a href="#" onclick="test('suspend');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
-    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /><td class="ndone" /></tr></table>
     </td>
   </tr>
   <tr>
     <td class="operation" >suspendUntil</td>
-    <td class="description"></td>
+    <td class="description">Suspend the task for a 
+	given period of time or 
+	until a fixed point in time. 
+	The caller has to specify 
+	either a period of time or 
+	a fixed point in time.
+	</td> <td class="error_handling"></td>
+	<td class="state_transition" >--- </td>
     <td class="action"><a href="#" onclick="test('suspendUntil');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
-    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /><td class="ndone" /></tr></table>
+    </td>
+  </tr>
+<tr>
+    <td class="operation" >resume</td>
+    <td class="description">Resume a suspended 
+	task. 
+	</td> <td class="error_handling"></td>
+	<td class="state_transition" >--- </td>
+    <td class="action"><a href="#" onclick="test('suspendUntil');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
+    <td class="status"> 
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /><td class="ndone" /></tr></table>
     </td>
   </tr>
   <tr>
     <td class="operation" >fail</td>
-    <td class="description"></td>
+    <td class="description">Actual owner completes 
+	the execution of the task 
+	raising a fault.  
+	</td> <td class="error_handling"></td>
+	<td class="state_transition" >Failed </td>
     <td class="action"><a href="#" onclick="test('fail');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
-    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
-    </td>
-  </tr>
-
-  <tr>
-    <td class="operation" >skip</td>
-    <td class="description"></td>
-    <td class="action"><a href="#" onclick="test('skip');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
-    <td class="status"> 
-    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /><td class="ndone" /></tr></table>
     </td>
   </tr>
   <tr>
     <td class="operation" >forward</td>
-    <td class="description"></td>
+    <td class="description">Forward the task to 
+	another organization 
+	entity. The caller has to 
+	specify the receiving 
+	organizational entity. 
+	Potential owners can only 
+	forward a task while the 
+	task is in the Ready state.  
+	For details on forwarding 
+	human tasks refer to 
+	section 4.7.3
+	</td> <td class="error_handling"></td>
+	<td class="state_transition" > not changed | error </td>
     <td class="action"><a href="#" onclick="test('forward');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
-    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /><td class="ndone" /></tr></table>
     </td>
   </tr>
   <tr>
     <td class="operation" >delegate</td>
-    <td class="description"></td>
+    <td class="description">Assign the task to one 
+	user and set the task to 
+	state Reserved. If the 
+	recipient was not a 
+	potential owner then this 
+	person is added to the set 
+	of potential owners.  
+	For details on delegating  
+	human tasks refer to 
+	section 4.7.3. 
+	
+	</td> <td class="error_handling"></td>
+	<td class="state_transition" >Reserved</td>
     <td class="action"><a href="#" onclick="test('delegate');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
-    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /></td><td class="ndone" /></tr></table>
     </td>
   </tr>
 
@@ -532,6 +609,7 @@ obj.css("display", "block");
 </div>
 
 <div id="integration_test">
+	
 </div>
 </body>
 </html>
