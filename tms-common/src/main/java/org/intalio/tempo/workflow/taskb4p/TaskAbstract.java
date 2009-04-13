@@ -22,6 +22,8 @@ public abstract class TaskAbstract {
 	@Basic
 	private TaskStatus status;
 	@Basic
+	private TaskStatus originalStatus;	
+	@Basic
 	private int priority;
 	@Basic
 	private Date createdOn;
@@ -85,7 +87,15 @@ public abstract class TaskAbstract {
 		this.status = status;
 	}
 
-	public int getPriority() {
+	public TaskStatus getOriginalStatus() {
+        return originalStatus;
+    }
+
+    public void setOriginalStatus(TaskStatus originalStatus) {
+        this.originalStatus = originalStatus;
+    }
+
+    public int getPriority() {
 		return priority;
 	}
 
