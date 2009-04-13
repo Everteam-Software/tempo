@@ -165,15 +165,17 @@ obj.css("display", "block");
 <!-- 定义Tabs头部 -->
 <div style="position:relative;z-index:99;border:0px dotted red;">
 <ul id="tabs" style="z-index:99;">
-  <li><a href="#tab-1">Normal Operation</a></li>
-  <li><a href="#tab-2">Admin Operation</a></li>
-  <li><a href="#tab-3">Query</a></li>
+  <li><a href="#participant_operations">Participant Operation</a></li>
+  <li><a href="#admin_operations">Admin Operation</a></li>
+  <li><a href="#query_operations">Query</a></li> 
+  <li><a href="#task_manipulation">Task Manapulation</a></li>
+  <li><a href="#integration_test">integration test</a></li>
 </ul>
 </div>
 
 
 <!-- 定义Tabs内容 -->
-<div id="tab-1" style="position:relative;z-index:1;border:0px dotted red;">
+<div id="participant_operations" style="position:relative;z-index:1;border:0px dotted red;">
   <table width="750" cellpadding="5" cellspacing="1" border="0" bgcolor="#999999">
   <tr>
     <td width="51"  align="center" ><h5>Operation</h5></td>
@@ -196,14 +198,7 @@ obj.css("display", "block");
     
     </td>
   </tr>
-  <tr>
-    <td width="51"  align="center">getMyTasks</td>
-    <td class="description">getMyTasks</td>
-    <td class="action"> <a href="#" onclick="test('getMyTasks');" ><img width=30 src="test.png" alt="test it"/></a></td>
-    <td class="status">
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></tr></table>
-    </td>
-  </tr>
+ 
   <tr>
     <td class="operation" >remove</td>
     <td class="description">remove</td>
@@ -212,14 +207,7 @@ obj.css("display", "block");
     <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
     </td>
   </tr>
-  <tr>
-    <td class="operation" >activate</td>
-    <td class="description"></td>
-    <td class="action"><a href="#" onclick="test('activate');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
-    <td class="status"> 
-    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
-    </td>
-  </tr>
+
    <tr>
     <td class="operation" >start</td>
     <td class="description"></td>
@@ -292,6 +280,118 @@ obj.css("display", "block");
     <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
     </td>
   </tr>
+
+  <tr>
+    <td class="operation" >skip</td>
+    <td class="description"></td>
+    <td class="action"><a href="#" onclick="test('skip');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
+    <td class="status"> 
+    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
+    </td>
+  </tr>
+  <tr>
+    <td class="operation" >forward</td>
+    <td class="description"></td>
+    <td class="action"><a href="#" onclick="test('forward');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
+    <td class="status"> 
+    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
+    </td>
+  </tr>
+  <tr>
+    <td class="operation" >delegate</td>
+    <td class="description"></td>
+    <td class="action"><a href="#" onclick="test('delegate');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
+    <td class="status"> 
+    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
+    </td>
+  </tr>
+
+ 
+
+ 
+ 
+
+</table>
+
+</div>
+<div id="admin_operations">
+<table width="750" cellpadding="5" cellspacing="1" border="0" bgcolor="#999999">
+  <tr>
+    <td width="51"  align="center" ><h5>Operation</h5></td>
+    <td width="272"  bgcolor="#d1ffc1" align="center"><h5>Description</h5></td>
+    <td width="126"  align="center"><h5>Action</h5></td>
+    <td width="296"  align="center"><h5>Status</h5><br/><span style="font-size:9pt;">WebService|serviceImpl|OperationImpl|Persist|security</span></td>
+  </tr>
+  <tr>
+    <td class="operation" >activate</td>
+    <td class="description"></td>
+    <td class="action"><a href="#" onclick="test('activate');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
+    <td class="status"> 
+    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
+    </td>
+  </tr>
+  <tr>
+    <td class="operation" >nominate</td>
+    <td class="description"></td>
+    <td class="action"><a href="#" onclick="test('nominate');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
+    <td class="status"> 
+    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
+    </td>
+  </tr>
+  <tr>
+    <td class="operation" >setGenericHumanRole</td>
+    <td class="description"></td>
+    <td class="action"><a href="#" onclick="test('setGenericHumanRole');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
+    <td class="status"> 
+    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
+    </td>
+  </tr>
+</table>
+</div>
+<div id="query_operations">
+<table width="750" cellpadding="5" cellspacing="1" border="0" bgcolor="#999999">
+  <tr>
+    <td width="51"  align="center" ><h5>Operation</h5></td>
+    <td width="272"  bgcolor="#d1ffc1" align="center"><h5>Description</h5></td>
+    <td width="126"  align="center"><h5>Action</h5></td>
+    <td width="296"  align="center"><h5>Status</h5><br/><span style="font-size:9pt;">WebService|serviceImpl|OperationImpl|Persist|security</span></td>
+  </tr>
+  <tr>
+    <td width="51"  align="center">getMyTasks</td>
+    <td class="description">getMyTasks</td>
+    <td class="action"> <a href="#" onclick="test('getMyTasks');" ><img width=30 src="test.png" alt="test it"/></a></td>
+    <td class="status">
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></tr></table>
+    </td>
+  </tr>
+ <tr>
+    <td class="operation" >getMyTaskAbstracts</td>
+    <td class="description"></td>
+    <td class="action"><a href="#" onclick="test('getMyTaskAbstracts');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
+    <td class="status"> 
+    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
+    </td>
+  </tr>
+  <tr>
+    <td class="operation" >query</td>
+    <td class="description"></td>
+    <td class="action"><a href="#" onclick="test('query');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
+    <td class="status"> 
+    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
+    </td>
+  </tr>
+	
+</table>
+</div>
+<div id="task_manipulation">
+  <table width="750" cellpadding="5" cellspacing="1" border="0" bgcolor="#999999">
+  <tr>
+    <td width="51"  align="center" ><h5>Operation</h5></td>
+    <td width="272"  bgcolor="#d1ffc1" align="center"><h5>Description</h5></td>
+    <td width="126"  align="center"><h5>Action</h5></td>
+    <td width="296"  align="center"><h5>Status</h5><br/><span style="font-size:9pt;">WebService|serviceImpl|OperationImpl|Persist|security</span></td>
+  </tr>
+
   <tr>
     <td class="operation" >setPriority</td>
     <td class="description">Change the priority of the task.</td>
@@ -346,30 +446,6 @@ obj.css("display", "block");
     <td class="action"><a href="#" onclick="test('getComments');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
     <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /></td></tr></table>
-    </td>
-  </tr>
-  <tr>
-    <td class="operation" >skip</td>
-    <td class="description"></td>
-    <td class="action"><a href="#" onclick="test('skip');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
-    <td class="status"> 
-    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
-    </td>
-  </tr>
-  <tr>
-    <td class="operation" >forward</td>
-    <td class="description"></td>
-    <td class="action"><a href="#" onclick="test('forward');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
-    <td class="status"> 
-    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
-    </td>
-  </tr>
-  <tr>
-    <td class="operation" >delegate</td>
-    <td class="description"></td>
-    <td class="action"><a href="#" onclick="test('delegate');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
-    <td class="status"> 
-    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
     </td>
   </tr>
   <tr>
@@ -452,61 +528,10 @@ obj.css("display", "block");
     <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
     </td>
   </tr>
-  <tr>
-    <td class="operation" >getMyTaskAbstracts</td>
-    <td class="description"></td>
-    <td class="action"><a href="#" onclick="test('getMyTaskAbstracts');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
-    <td class="status"> 
-    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
-    </td>
-  </tr>
-  <tr>
-    <td class="operation" >query</td>
-    <td class="description"></td>
-    <td class="action"><a href="#" onclick="test('query');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
-    <td class="status"> 
-    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
-    </td>
-  </tr>
-  <tr>
-    <td class="operation" >activate</td>
-    <td class="description"></td>
-    <td class="action"><a href="#" onclick="test('activate');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
-    <td class="status"> 
-    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
-    </td>
-  </tr>
-  <tr>
-    <td class="operation" >nominate</td>
-    <td class="description"></td>
-    <td class="action"><a href="#" onclick="test('nominate');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
-    <td class="status"> 
-    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
-    </td>
-  </tr>
-  <tr>
-    <td class="operation" >setGenericHumanRole</td>
-    <td class="description"></td>
-    <td class="action"><a href="#" onclick="test('setGenericHumanRole');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
-    <td class="status"> 
-    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
-    </td>
-  </tr>
-
- 
- 
-
 </table>
-
-</div>
-<div id="tab-2">
-  Second Tab
-</div>
-<div id="tab-3">
-  Third Tab
 </div>
 
-
-
+<div id="integration_test">
+</div>
 </body>
 </html>
