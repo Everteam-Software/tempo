@@ -101,7 +101,12 @@ function Get_Cookie( check_name ) {
 }
 
 function test(str){
-$("#"+str).dialog("destroy").remove();
+	 //$("#output").empty();
+       $("#output").css("display", "none");
+$("#input").css("display", "block");
+$("#token").css("display", "block");
+$("#content").css("display", "block");
+//$("#"+str).dialog("destroy").remove();
 var url_template = "/ui-fw/b4ptest/request/"+str+".xml?r="+ Math.random();
 
 var op = {type:'GET',async: false,url:url_template,contentType:"text/xml; charset=utf-8"};
@@ -110,14 +115,17 @@ var contentAjax = $.ajax(op);
 var content = contentAjax.responseText;			
 var token = Get_Cookie("singleLogin");
 //alert("token="+token);
-var html='<div id="'+str+'" class="flora" title="'+str+'" style="display:none;" ><div id="'+str+'_input" style="display:block;" ><span style="font-weight:500;">Request:</span><br/>Your Token:<br/><textArea id="token" rows=8 cols=70>'+token+'</textArea><br/><textArea id="content" rows=10 cols=70>'+content+'</textArea><br/><!--<button id="upload" onclick="alert(\'not supported\');" >read from file</button>--><button id="submit" onclick="callws(\''+str+'\', \'\');">submit</button></div><div id="'+str+'_output" style="display:none;"><img src="ajax_load.gif"/></div></div>';
-//var obj = $('#_request');
+//var html='<div id="'+str+'" class="flora" title="'+str+'" style="display:none;" ><div id="'+str+'_input" style="display:block;" ><span style="font-weight:500;">Request:</span><br/>Your Token:<br/><textArea id="token" rows=8 cols=70>'+token+'</textArea><br/><textArea id="content" rows=10 cols=70>'+content+'</textArea><br/><!--<button id="upload" onclick="alert(\'not supported\');" >read from file</button>--><button id="submit" onclick="callws(\''+str+'\', \'\');">submit</button></div><div id="'+str+'_output" style="display:none;"><img src="ajax_load.gif"/></div></div>';
+var obj = $('#request');
+$("#token").get(0).innerHTML=token;
+$("#content").text(content);
+g_ws_method = str;
 
 //alert(obj.get(0).innerHTML);
 //obj.get(0).innerHTML=html;
   // alert(html);
 //var obj = $("#"+str);
-var obj = $(html);
+//var obj = $(html);
 obj.css("display", "block");
 //$("#"+str+" #input").css("display", "block");
 //$("#"+str+" #output").css("display", "none");
@@ -127,12 +135,12 @@ obj.css("display", "block");
       width: 600,
       height:390,
    //   open:	function (Event, ui){alert("open");},
-     close:function (event1, ui1){alert("destroy");obj.remove();},
+    // close:function (event1, ui1){alert("destroy");obj.remove();},
       overlay: { opacity: 0.5, background: "black" },// 半透明背景
       title: "b4p test"//,   // 对话框标题
       //buttons: { "Close": function(){ $(this).dialog("destory").remove(); obj.remove();} }  // 对话框按钮
-}).bind('close', function (e, a){alert("destroy");obj.remove();});;
-obj.bind('close', function (e, a){alert("destroy");obj.remove();});
+});//.bind('close', function (e, a){alert("destroy");obj.remove();});;
+//obj.bind('close', function (e, a){alert("destroy");obj.remove();});
 
 }
 </script>
@@ -142,9 +150,17 @@ obj.bind('close', function (e, a){alert("destroy");obj.remove();});
 <script src="call_tempo_ws.js" type="text/javascript"></script>
 
 </head>
-<body style="font-size:10pt;color:#112222;font-family:"Trebuchet MS",Trebuchet,Verdana,Helvetica,Arial,sans-serif;>
-	<div id="_request" style="display:none" >
-		DDSS
+<body style="font-size:10pt;color:#112222;font-family:"rebuchet MS,Trebuchet,Verdana,Helvetica,Arial,sans-serif;">
+	<div id="request" class="flora" title="" style="display:none;" >
+			<div id="input" style="display:block;" >
+				<span style="font-weight:500;">Request:</span><br/>Your Token:<br/>
+				<textArea id="token" rows=8 cols=70></textArea><br/>
+				<textArea id="content" rows=10 cols=70></textArea><br/>
+				<!--<button id="upload" onclick="alert('not supported');" >read from file</button>-->
+				<button id="submit" onclick="callws(g_ws_method);">submit</button>
+			</div>
+			<div id="output" style="display:none;"><img src="ajax_load.gif"/>
+			</div>
 	</div>
 <!-- 定义Tabs头部 -->
 <div style="position:relative;z-index:99;border:0px dotted red;">

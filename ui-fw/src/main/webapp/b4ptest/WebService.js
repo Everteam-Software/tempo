@@ -49,7 +49,7 @@ function WebService(URL1, method1, options1){
 				"xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" " +
 				"xmlns:htd=\"http://www.intalio.org/WS-HT/\">" +
 				"<soap:Header><htd:participantToken>"+this.options.token+"</htd:participantToken></soap:Header>"+
-				"<soap:Body>" +
+				"<soap:Body  xmlns=\"http://www.intalio.com/WS-HT/api/xsd\">" +
 //				"<" + this.method + " xmlns=\"" + ns + "\">" +
 //					  this.options.data +
 //				"</" + this.method + ">" +
@@ -67,7 +67,7 @@ function WebService(URL1, method1, options1){
 			alert("set header");
 			//XMLHttpRequest.setRequestHeader("SOAPAction", soapaction);
 			};*/
-		
+
 		var soapAjax = $.ajax({
 		url:this.url,
 		contentType:"text/xml; charset=utf-8",
