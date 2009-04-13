@@ -21,7 +21,6 @@ import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
-import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.task.xml.TaskXMLConstants;
 import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.taskb4p.Attachment;
@@ -33,13 +32,8 @@ import org.intalio.tempo.workflow.taskb4p.Task;
 import org.intalio.tempo.workflow.taskb4p.TaskStatus;
 import org.intalio.tempo.workflow.taskb4p.TaskType;
 import org.intalio.tempo.workflow.taskb4p.UserOrganizationalEntity;
-import org.intalio.tempo.workflow.tms.AccessDeniedException;
 import org.intalio.tempo.workflow.tms.TMSException;
-import org.intalio.tempo.workflow.tms.UnavailableAttachmentException;
-import org.intalio.tempo.workflow.tms.UnavailableTaskException;
-import org.intalio.tempo.workflow.tms.server.TMSConstants;
 import org.intalio.tempo.workflow.tmsb4p.server.dao.GenericRoleType;
-import org.intalio.tempo.workflow.util.xml.InvalidInputFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,10 +81,15 @@ import com.intalio.wsHT.api.xsd.GetTaskDescriptionDocument;
 import com.intalio.wsHT.api.xsd.GetTaskDescriptionResponseDocument;
 import com.intalio.wsHT.api.xsd.GetTaskInfoDocument;
 import com.intalio.wsHT.api.xsd.GetTaskInfoResponseDocument;
+import com.intalio.wsHT.api.xsd.IllegalAccessDocument;
+import com.intalio.wsHT.api.xsd.IllegalArgumentDocument;
+import com.intalio.wsHT.api.xsd.IllegalOperationDocument;
+import com.intalio.wsHT.api.xsd.IllegalStateDocument;
 import com.intalio.wsHT.api.xsd.NominateDocument;
 import com.intalio.wsHT.api.xsd.NominateResponseDocument;
 import com.intalio.wsHT.api.xsd.QueryDocument;
 import com.intalio.wsHT.api.xsd.QueryResponseDocument;
+import com.intalio.wsHT.api.xsd.RecipientNotAllowedDocument;
 import com.intalio.wsHT.api.xsd.ReleaseDocument;
 import com.intalio.wsHT.api.xsd.ReleaseResponseDocument;
 import com.intalio.wsHT.api.xsd.RemoveDocument;
@@ -206,17 +205,16 @@ public class TMSRequestProcessor {
             if (_logger.isDebugEnabled())
                 _logger.debug(e.getMessage(), e);
             OMElement response = null;
-            if (e instanceof InvalidInputFormatException)
-                response = OM_FACTORY.createOMElement(TMSConstants.INVALID_INPUT_FORMAT);
-            else if (e instanceof AccessDeniedException)
-                response = OM_FACTORY.createOMElement(TMSConstants.ACCESS_DENIED);
-            else if (e instanceof UnavailableTaskException)
-                response = OM_FACTORY.createOMElement(TMSConstants.UNAVAILABLE_TASK);
-            else if (e instanceof UnavailableAttachmentException)
-                response = OM_FACTORY.createOMElement(TMSConstants.UNAVAILABLE_ATTACHMENT);
-            else if (e instanceof AuthException)
-                response = OM_FACTORY.createOMElement(TMSConstants.INVALID_TOKEN);
-
+            if (e instanceof IllegalArgumentException)
+                response = this.convertXML(IllegalArgumentDocument.Factory.newInstance());
+            else if (e instanceof IllegalAccessException)
+                response = convertXML(IllegalAccessDocument.Factory.newInstance());
+            else if (e instanceof IllegalOperationException)
+                response = convertXML(IllegalOperationDocument.Factory.newInstance());
+            else if (e instanceof IllegalStateException)
+                response = convertXML(IllegalStateDocument.Factory.newInstance());
+            else if (e instanceof RecipientNotAllowedException)
+                response = convertXML(RecipientNotAllowedDocument.Factory.newInstance());
             else
                 return AxisFault.makeFault(e);
 
@@ -515,6 +513,12 @@ public class TMSRequestProcessor {
             RemoveDocument reqDoc = RemoveDocument.Factory.parse(requestElement.getXMLStreamReader());
             Remove req = reqDoc.getRemove();
 
+            // check request
+            String taskId = req.getIdentifier();
+            if (taskId == null  || taskId.length() == 0){            	
+            	throw new IllegalArgumentException();
+            }
+  
             // call TMSServer to process request
             this._server.remove(participantToken, req.getIdentifier());
 
@@ -552,6 +556,12 @@ public class TMSRequestProcessor {
             ClaimDocument reqDoc = ClaimDocument.Factory.parse(requestElement.getXMLStreamReader());
             Claim req = reqDoc.getClaim();
 
+            // check request
+            String taskId = req.getIdentifier();
+            if (taskId == null  || taskId.length() == 0){            	
+            	throw new IllegalArgumentException();
+            }
+  
             // call TMSServer to process request
             this._server.claim(participantToken, req.getIdentifier());
 
@@ -587,6 +597,12 @@ public class TMSRequestProcessor {
             StartDocument reqDoc = StartDocument.Factory.parse(requestElement.getXMLStreamReader());
             Start req = reqDoc.getStart();
 
+            // check request
+            String taskId = req.getIdentifier();
+            if (taskId == null  || taskId.length() == 0){            	
+            	throw new IllegalArgumentException();
+            }
+            
             // call TMSServer to process request
             this._server.start(participantToken, req.getIdentifier());
 
@@ -623,6 +639,12 @@ public class TMSRequestProcessor {
             StopDocument reqDoc = StopDocument.Factory.parse(requestElement.getXMLStreamReader());
             Stop req = reqDoc.getStop();
 
+            // check request
+            String taskId = req.getIdentifier();
+            if (taskId == null  || taskId.length() == 0){            	
+            		throw new IllegalArgumentException();
+            }
+            
             // call TMSServer to process request
             this._server.stop(participantToken, req.getIdentifier());
 
@@ -659,6 +681,12 @@ public class TMSRequestProcessor {
             ReleaseDocument reqDoc = ReleaseDocument.Factory.parse(requestElement.getXMLStreamReader());
             Release req = reqDoc.getRelease();
 
+            // check request
+            String taskId = req.getIdentifier();
+            if (taskId == null  || taskId.length() == 0){            	
+            		throw new IllegalArgumentException();
+            }
+            
             // call TMSServer to process request
             this._server.release(participantToken, req.getIdentifier());
 
@@ -694,8 +722,21 @@ public class TMSRequestProcessor {
             CompleteDocument reqDoc = CompleteDocument.Factory.parse(requestElement.getXMLStreamReader());
             Complete req = reqDoc.getComplete();
 
+            XmlObject taskData = req.getTaskData();
+            
+            // check request
+            String taskId = req.getIdentifier();
+            if (taskId == null  || taskId.length() == 0){            	
+            		throw new IllegalArgumentException();
+            }
+
+            if (taskData == null){            	
+            		throw new IllegalArgumentException();
+            }
+  
+            
             // call TMSServer to process request
-            this._server.complete(participantToken, req.getIdentifier(), req.getTaskData());
+            this._server.complete(participantToken, taskId, taskData);
 
             // marshal response
             retDoc = CompleteResponseDocument.Factory.newInstance();
@@ -731,6 +772,12 @@ public class TMSRequestProcessor {
             FailDocument reqDoc = FailDocument.Factory.parse(requestElement.getXMLStreamReader());
             Fail req = reqDoc.getFail();
 
+            // check request
+            String taskId = req.getIdentifier();
+            if (taskId == null  || taskId.length() == 0){            	
+            		throw new IllegalArgumentException();
+            }
+  
             // call TMSServer to process request
             this._server.fail(participantToken, req.getIdentifier(), req.getFaultName(), req.getFaultData());
 
@@ -767,6 +814,12 @@ public class TMSRequestProcessor {
             SkipDocument reqDoc = SkipDocument.Factory.parse(requestElement.getXMLStreamReader());
             Skip req = reqDoc.getSkip();
 
+            // check request
+            String taskId = req.getIdentifier();
+            if (taskId == null  || taskId.length() == 0){            	
+            		throw new IllegalArgumentException();
+            }
+  
             // call TMSServer to process request
             this._server.skip(participantToken, req.getIdentifier());
 
@@ -793,6 +846,12 @@ public class TMSRequestProcessor {
             SuspendDocument reqDoc = SuspendDocument.Factory.parse(requestElement.getXMLStreamReader());
             Suspend req = reqDoc.getSuspend();
 
+            // check request
+            String taskId = req.getIdentifier();
+            if (taskId == null  || taskId.length() == 0){            	
+            		throw new IllegalArgumentException();
+            }
+  
             // call TMSServer to process request
             this._server.suspend(participantToken, req.getIdentifier());
 
@@ -819,6 +878,12 @@ public class TMSRequestProcessor {
             SuspendUntilDocument reqDoc = SuspendUntilDocument.Factory.parse(requestElement.getXMLStreamReader());
             SuspendUntil req = reqDoc.getSuspendUntil();
 
+            // check request
+            String taskId = req.getIdentifier();
+            if (taskId == null  || taskId.length() == 0){            	
+            		throw new IllegalArgumentException();
+            }
+  
             // call TMSServer to process request
             this._server.suspendUntil(participantToken, req.getIdentifier(), req.getTime());
 
@@ -855,6 +920,12 @@ public class TMSRequestProcessor {
             ResumeDocument reqDoc = ResumeDocument.Factory.parse(requestElement.getXMLStreamReader());
             Resume req = reqDoc.getResume();
 
+            // check request
+            String taskId = req.getIdentifier();
+            if (taskId == null  || taskId.length() == 0){            	
+            		throw new IllegalArgumentException();
+            }
+  
             // call TMSServer to process request
             this._server.resume(participantToken, req.getIdentifier());
 
@@ -892,6 +963,12 @@ public class TMSRequestProcessor {
             ForwardDocument reqDoc = ForwardDocument.Factory.parse(requestElement.getXMLStreamReader());
             Forward req = reqDoc.getForward();
 
+            // check request
+            String taskId = req.getIdentifier();
+            if (taskId == null  || taskId.length() == 0){            	
+            		throw new IllegalArgumentException();
+            }
+  
             // call TMSServer to process request
             this._server.forward(participantToken, req.getIdentifier());
 
@@ -929,6 +1006,12 @@ public class TMSRequestProcessor {
             DelegateDocument reqDoc = DelegateDocument.Factory.parse(requestElement.getXMLStreamReader());
             Delegate req = reqDoc.getDelegate();
 
+            // check request
+            String taskId = req.getIdentifier();
+            if (taskId == null  || taskId.length() == 0){            	
+            		throw new IllegalArgumentException();
+            }
+  
             // call TMSServer to process request
             this._server.delegate(participantToken, req.getIdentifier());
 

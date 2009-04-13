@@ -499,7 +499,7 @@ public class TMSServer implements ITMSServer {
         	// TODO impl logic
         	
         	// update status
-            dao.updateTaskStatus(identifier, TaskStatus.COMPLETED);
+            dao.updateTaskStatus(identifier, TaskStatus.SUSPENDED);
             
             // commit
             dao.commit();
