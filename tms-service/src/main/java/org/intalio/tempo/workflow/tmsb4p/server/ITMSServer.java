@@ -1,6 +1,7 @@
 package org.intalio.tempo.workflow.tmsb4p.server;
 
 import java.util.List;
+import java.util.Set;
 
 import org.apache.xmlbeans.XmlObject;
 import org.intalio.tempo.workflow.auth.AuthException;
@@ -8,8 +9,10 @@ import org.intalio.tempo.workflow.taskb4p.Attachment;
 import org.intalio.tempo.workflow.taskb4p.AttachmentInfo;
 import org.intalio.tempo.workflow.taskb4p.Comment;
 import org.intalio.tempo.workflow.taskb4p.Task;
+import org.intalio.tempo.workflow.tms.InvalidTaskStateException;
 import org.intalio.tempo.workflow.tms.TMSException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
+import org.intalio.tempo.workflow.tmsb4p.server.dao.GenericRoleType;
 
 import com.intalio.wsHT.api.TStatus;
 import com.intalio.wsHT.api.xsd.TTime;
@@ -40,7 +43,13 @@ public interface ITMSServer {
 	public void addComment(String participantToken, String identifier, String text) throws AuthException;
 	public List<Comment> getComments(String participantToken, String identifier) throws AuthException;
 	public Task getTaskByIdentifier(String participantToken, String identifier) throws AuthException, UnavailableTaskException;
+
 	public void suspendUntil(String participantToken, String identifier,
 			TTime time);
 	public void suspend(String participantToken, String identifier) throws TMSException;
+
+	public void activate(String participantToken, String identifier) throws AuthException, InvalidTaskStateException, UnavailableTaskException;
+	public void nominate(String participantToken, String identifier, List<String> principals, boolean isUser) throws AuthException, InvalidTaskStateException, UnavailableTaskException;
+	public void setGenericHumanRole(String participantToken, String identifier, GenericRoleType roleType, List<String> principals, boolean isUser) throws AuthException, UnavailableTaskException;
+
 }

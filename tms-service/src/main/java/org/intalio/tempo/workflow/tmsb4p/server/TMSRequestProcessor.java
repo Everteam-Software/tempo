@@ -38,6 +38,7 @@ import org.intalio.tempo.workflow.tms.TMSException;
 import org.intalio.tempo.workflow.tms.UnavailableAttachmentException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.intalio.tempo.workflow.tms.server.TMSConstants;
+import org.intalio.tempo.workflow.tmsb4p.server.dao.GenericRoleType;
 import org.intalio.tempo.workflow.util.xml.InvalidInputFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +55,8 @@ import com.intalio.wsHT.api.TStatus;
 import com.intalio.wsHT.api.TTask;
 import com.intalio.wsHT.api.TTaskQueryResultRow;
 import com.intalio.wsHT.api.TTaskQueryResultSet;
+import com.intalio.wsHT.api.xsd.ActivateDocument;
+import com.intalio.wsHT.api.xsd.ActivateResponseDocument;
 import com.intalio.wsHT.api.xsd.AddAttachmentDocument;
 import com.intalio.wsHT.api.xsd.AddAttachmentResponseDocument;
 import com.intalio.wsHT.api.xsd.AddCommentDocument;
@@ -84,6 +87,8 @@ import com.intalio.wsHT.api.xsd.GetTaskDescriptionDocument;
 import com.intalio.wsHT.api.xsd.GetTaskDescriptionResponseDocument;
 import com.intalio.wsHT.api.xsd.GetTaskInfoDocument;
 import com.intalio.wsHT.api.xsd.GetTaskInfoResponseDocument;
+import com.intalio.wsHT.api.xsd.NominateDocument;
+import com.intalio.wsHT.api.xsd.NominateResponseDocument;
 import com.intalio.wsHT.api.xsd.QueryDocument;
 import com.intalio.wsHT.api.xsd.QueryResponseDocument;
 import com.intalio.wsHT.api.xsd.ReleaseDocument;
@@ -92,6 +97,8 @@ import com.intalio.wsHT.api.xsd.RemoveDocument;
 import com.intalio.wsHT.api.xsd.RemoveResponseDocument;
 import com.intalio.wsHT.api.xsd.ResumeDocument;
 import com.intalio.wsHT.api.xsd.ResumeResponseDocument;
+import com.intalio.wsHT.api.xsd.SetGenericHumanRoleDocument;
+import com.intalio.wsHT.api.xsd.SetGenericHumanRoleResponseDocument;
 import com.intalio.wsHT.api.xsd.SetPriorityDocument;
 import com.intalio.wsHT.api.xsd.SetPriorityResponseDocument;
 import com.intalio.wsHT.api.xsd.SkipDocument;
@@ -104,6 +111,7 @@ import com.intalio.wsHT.api.xsd.SuspendDocument;
 import com.intalio.wsHT.api.xsd.SuspendResponseDocument;
 import com.intalio.wsHT.api.xsd.SuspendUntilDocument;
 import com.intalio.wsHT.api.xsd.SuspendUntilResponseDocument;
+import com.intalio.wsHT.api.xsd.ActivateDocument.Activate;
 import com.intalio.wsHT.api.xsd.AddAttachmentDocument.AddAttachment;
 import com.intalio.wsHT.api.xsd.AddCommentDocument.AddComment;
 import com.intalio.wsHT.api.xsd.ClaimDocument.Claim;
@@ -130,6 +138,7 @@ import com.intalio.wsHT.api.xsd.GetTaskDescriptionDocument.GetTaskDescription;
 import com.intalio.wsHT.api.xsd.GetTaskDescriptionResponseDocument.GetTaskDescriptionResponse;
 import com.intalio.wsHT.api.xsd.GetTaskInfoDocument.GetTaskInfo;
 import com.intalio.wsHT.api.xsd.GetTaskInfoResponseDocument.GetTaskInfoResponse;
+import com.intalio.wsHT.api.xsd.NominateDocument.Nominate;
 import com.intalio.wsHT.api.xsd.QueryDocument.Query;
 import com.intalio.wsHT.api.xsd.QueryResponseDocument.QueryResponse;
 import com.intalio.wsHT.api.xsd.ReleaseDocument.Release;
@@ -138,6 +147,7 @@ import com.intalio.wsHT.api.xsd.RemoveDocument.Remove;
 import com.intalio.wsHT.api.xsd.RemoveResponseDocument.RemoveResponse;
 import com.intalio.wsHT.api.xsd.ResumeDocument.Resume;
 import com.intalio.wsHT.api.xsd.ResumeResponseDocument.ResumeResponse;
+import com.intalio.wsHT.api.xsd.SetGenericHumanRoleDocument.SetGenericHumanRole;
 import com.intalio.wsHT.api.xsd.SetPriorityDocument.SetPriority;
 import com.intalio.wsHT.api.xsd.SkipDocument.Skip;
 import com.intalio.wsHT.api.xsd.SkipResponseDocument.SkipResponse;
@@ -150,6 +160,8 @@ import com.intalio.wsHT.api.xsd.SuspendResponseDocument.SuspendResponse;
 import com.intalio.wsHT.api.xsd.SuspendUntilDocument.SuspendUntil;
 import com.intalio.wsHT.api.xsd.SuspendUntilResponseDocument.SuspendUntilResponse;
 import com.intalio.wsHT.protocol.THumanTaskContext;
+
+import edu.emory.mathcs.backport.java.util.Arrays;
 
 public class TMSRequestProcessor {
     final static Logger _logger = LoggerFactory.getLogger(TMSRequestProcessor.class);
@@ -627,7 +639,7 @@ public class TMSRequestProcessor {
     }
 
     /**
-     * Release the task, i.e. set the task back to status Ready. In ¥ task
+     * Release the task, i.e. set the task back to status Ready. In ï¿½ task
      * identifier
      * 
      * @param requestElement
@@ -663,8 +675,8 @@ public class TMSRequestProcessor {
 
     /**
      * Execution of the task finished successfully. If no output data is set the
-     * operation returns illegalArgumentFault. In ¥ task identifier ¥ output
-     * data of task Out ¥ void Authorization ¥ Actual Owner
+     * operation returns illegalArgumentFault. In ï¿½ task identifier ï¿½ output
+     * data of task Out ï¿½ void Authorization ï¿½ Actual Owner
      * 
      * @param requestElement
      * @return
@@ -697,8 +709,8 @@ public class TMSRequestProcessor {
     }
 
     /**
-     * Actual owner completes the execution of the task raising a fault. In ¥
-     * task identifier ¥ fault name ¥ fault data Out ¥ void Authorization ¥
+     * Actual owner completes the execution of the task raising a fault. In ï¿½
+     * task identifier ï¿½ fault name ï¿½ fault data Out ï¿½ void Authorization ï¿½
      * Actual Owner The fault illegalOperationFault is returned if the task
      * interface defines no faults. If fault name or fault data is not set the
      * operation returns illegalArgumentFault.
@@ -735,7 +747,7 @@ public class TMSRequestProcessor {
 
     /**
      * Skip the task. If the task is not skipable then the fault
-     * illegalOperationFault is returned. In ¥ task identifier Out ¥ void
+     * illegalOperationFault is returned. In ï¿½ task identifier Out ï¿½ void
      * 
      * Authorization Task Initiator Actual Owner Business Administrator
      * 
@@ -822,7 +834,7 @@ public class TMSRequestProcessor {
     }
     
     /**
-     * Resume a suspended task. In ¥ task identifier Out ¥ void
+     * Resume a suspended task. In ï¿½ task identifier Out ï¿½ void
      * 
      * Authorization Potential Owners (state Ready) Actual Owner Business
      * Administrator
@@ -860,8 +872,8 @@ public class TMSRequestProcessor {
     /**
      * Forward the task to another organization entity. The caller has to
      * specify the receiving organizational entity. Potential owners can only
-     * forward a task while the task is in the Ready state. In ¥ task identifier
-     * ¥ organizational entity (htd:tOrganization alEntity) Out ¥ void
+     * forward a task while the task is in the Ready state. In ï¿½ task identifier
+     * ï¿½ organizational entity (htd:tOrganization alEntity) Out ï¿½ void
      * Authorization Potential Owners Actual Owner Business Administrator
      * 
      * @param requestElement
@@ -897,8 +909,8 @@ public class TMSRequestProcessor {
     /**
      * Assign the task to one user and set the task to state Reserved. If the
      * recipient was not a potential owner then this person is added to the set
-     * of potential owners. In ¥ task identifier ¥ organizational entity
-     * (htd:tOrganization alEntity) Out ¥ void Authorization Potential Owners
+     * of potential owners. In ï¿½ task identifier ï¿½ organizational entity
+     * (htd:tOrganization alEntity) Out ï¿½ void Authorization Potential Owners
      * (only in Ready state) Actual Owner Business Administrator
      * 
      * @param requestElement
@@ -1267,5 +1279,79 @@ public class TMSRequestProcessor {
     /*****************************************
      * Administrative operation
      *****************************************/
+    public OMElement activate(OMElement requestElement) throws AxisFault {
+        String participantToken = getParticipantToken();
+        try {
+            Activate req =  ActivateDocument.Factory.parse(requestElement.getXMLStreamReader()).getActivate();
+            
+            // call the server
+            _server.activate(participantToken, req.getIdentifier());
+            
+            ActivateResponseDocument retDoc = ActivateResponseDocument.Factory.newInstance();
+            retDoc.addNewActivateResponse();
+            
+            return this.convertXML(retDoc);
+        } catch (Exception e) {
+            throw makeFault(e);
+        }        
+    }
+    
+    public OMElement nominate(OMElement requestElement) throws AxisFault {
+        String participantToken = getParticipantToken();
+        try {
+            Nominate req =  NominateDocument.Factory.parse(requestElement.getXMLStreamReader()).getNominate();
+            
+            TOrganizationalEntity  orgEntity = req.getOrganizationalEntity();
+            
+            List<String> principals = null;
+            if (orgEntity.isSetUsers()) {
+                TUserlist userList = orgEntity.getUsers();
+                principals = Arrays.asList(userList.getUserArray());
+            } else {
+                // should be groups
+                TGrouplist groupList = orgEntity.getGroups();
+                principals = Arrays.asList(groupList.getGroupArray());
+            }
+            // call the server
+            _server.nominate(participantToken, req.getIdentifier(), principals, orgEntity.isSetUsers());
+            
+            NominateResponseDocument retDoc = NominateResponseDocument.Factory.newInstance();
+            retDoc.addNewNominateResponse();
+            
+            return this.convertXML(retDoc);
+        } catch (Exception e) {
+            throw makeFault(e);
+        }
+    }
+    
+    public OMElement setGenericHumanRole(OMElement requestElement) throws AxisFault {
+        String participantToken = getParticipantToken();
+        try {
+            SetGenericHumanRole req =  SetGenericHumanRoleDocument.Factory.parse(requestElement.getXMLStreamReader()).getSetGenericHumanRole();
+            
+            GenericRoleType roleType = GenericRoleType.valueOf(req.getGenericHumanRole());
+            
+            TOrganizationalEntity  orgEntity = req.getOrganizationalEntity();
+            List<String> principals = null;
+            
+            if (orgEntity.isSetUsers()) {
+                TUserlist userList = orgEntity.getUsers();
+                principals = Arrays.asList(userList.getUserArray());
+            } else {
+                // should be groups
+                TGrouplist groupList = orgEntity.getGroups();
+                principals = Arrays.asList(groupList.getGroupArray());
+            }
+            
+            _server.setGenericHumanRole(participantToken, req.getIdentifier(), roleType, principals, orgEntity.isSetUsers());
 
+            SetGenericHumanRoleResponseDocument retDoc = SetGenericHumanRoleResponseDocument.Factory.newInstance();
+            retDoc.addNewSetGenericHumanRoleResponse();
+            
+            return this.convertXML(retDoc);
+        } catch (Exception e) {
+            throw makeFault(e);
+        }
+
+    }
 }

@@ -1,6 +1,7 @@
 package org.intalio.tempo.workflow.tmsb4p.server.dao;
 
 import java.util.List;
+import java.util.Set;
 
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.taskb4p.Attachment;
@@ -44,6 +45,10 @@ public interface ITaskDAOConnection {
 	public List<Comment> getComments(String taskId);
 	
 	public List<Task> getTasksWithName(String taskName);
+	
+    public boolean isRoleMember(String taskId, UserRoles ur, GenericRoleType role);
+    
+    public void updateTaskRole(String taskId, GenericRoleType role, List<String> value, String orgType) throws UnavailableTaskException;
 	
 	public List<Task> getMyTasks(UserRoles ur, String taskType,
 			String genericHumanRole, String workQueue,

@@ -324,7 +324,7 @@ public class TaskJPAStatement {
                 result.append(paraValues.toJPAClause(null, m_statement.getParaValuesStartIdx()));
 
                 // values
-                Map<Integer, Object> values = paraValues.getJPAValues();
+                Map<String, Object> values = paraValues.getJPAValues();
                 m_statement.getParaValues().putAll(values);
             }
         }
@@ -416,7 +416,7 @@ public class TaskJPAStatement {
                 result.append(paraValues.toJPAClause(null, m_statement.getParaValuesStartIdx()));
 
                 // values
-                Map<Integer, Object> values = paraValues.getJPAValues();
+                Map<String, Object> values = paraValues.getJPAValues();
                 m_statement.getParaValues().putAll(values);
             }
         }
@@ -560,7 +560,7 @@ public class TaskJPAStatement {
 
             if (paraValues != null) {
                 output.append(paraValues.toJPAClause(alias, m_statement.getParaValuesStartIdx()));
-                Map<Integer, Object> values = paraValues.getJPAValues();
+                Map<String, Object> values = paraValues.getJPAValues();
                 m_statement.getParaValues().putAll(values);
             }
 
@@ -698,11 +698,11 @@ public class TaskJPAStatement {
 
         System.out.println(statement.toString());
 
-        Map<Integer, Object> paraValues = statement.getParaValues();
+        Map<String, Object> paraValues = statement.getParaValues();
         if (paraValues != null) {
-            Set<Integer> keys = paraValues.keySet();
+            Set<String> keys = paraValues.keySet();
 
-            for (Iterator<Integer> iterator = keys.iterator(); iterator.hasNext();) {
+            for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
                 Object key = iterator.next();
                 System.out.println("idx: " + key);
                 System.out.println("val: " + paraValues.get(key));

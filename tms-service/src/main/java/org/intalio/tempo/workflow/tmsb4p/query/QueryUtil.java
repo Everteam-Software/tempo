@@ -3,13 +3,9 @@ package org.intalio.tempo.workflow.tmsb4p.query;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.persistence.Query;
 
 public class QueryUtil {
 	public static String[] parseSelectClause(String clause) {
@@ -87,6 +83,20 @@ public class QueryUtil {
 		}
 
 		return result;
+	}
+	
+	public static String joinString(Collection<String> data, String seperator) {
+	    if ((data == null) || (data.isEmpty())) {
+	        return "";
+	    }
+	    
+	    StringBuffer result = new StringBuffer();
+	    for (String value: data) {
+	        result.append(value).append(",");
+	    }
+	    
+	    result = result.deleteCharAt(result.length() - 1);
+	    return result.toString();
 	}
 		
 	public static void main(String[] args) throws Exception{

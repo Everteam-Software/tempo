@@ -1,7 +1,9 @@
 package org.intalio.tempo.workflow.tmsb4p.server;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.xmlbeans.XmlObject;
 import org.intalio.tempo.workflow.auth.AuthException;
@@ -11,12 +13,18 @@ import org.intalio.tempo.workflow.taskb4p.Attachment;
 import org.intalio.tempo.workflow.taskb4p.AttachmentAccessType;
 import org.intalio.tempo.workflow.taskb4p.AttachmentInfo;
 import org.intalio.tempo.workflow.taskb4p.Comment;
+import org.intalio.tempo.workflow.taskb4p.GroupOrganizationalEntity;
+import org.intalio.tempo.workflow.taskb4p.OrganizationalEntity;
+import org.intalio.tempo.workflow.taskb4p.Principal;
 import org.intalio.tempo.workflow.taskb4p.Task;
 import org.intalio.tempo.workflow.taskb4p.TaskStatus;
+import org.intalio.tempo.workflow.taskb4p.UserOrganizationalEntity;
 import org.intalio.tempo.workflow.tms.B4PPersistException;
+import org.intalio.tempo.workflow.tms.InvalidTaskStateException;
 import org.intalio.tempo.workflow.tms.TMSException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.intalio.tempo.workflow.tms.server.permissions.TaskPermissions;
+import org.intalio.tempo.workflow.tmsb4p.server.dao.GenericRoleType;
 import org.intalio.tempo.workflow.tmsb4p.server.dao.ITaskDAOConnection;
 import org.intalio.tempo.workflow.tmsb4p.server.dao.ITaskDAOConnectionFactory;
 import org.slf4j.Logger;
@@ -696,4 +704,161 @@ public class TMSServer implements ITMSServer {
     }
 
 
+
+    public void activate(String participantToken, String identifier) throws AuthException, InvalidTaskStateException, UnavailableTaskException {
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+
+        Task task = checkAdminOperation(dao, ur, identifier);
+        try {
+            task.setActivationTime(new Date(System.currentTimeMillis()));
+            task.setStatus(TaskStatus.READY);
+
+            dao.updateTask(task);
+            dao.commit();
+        } catch (Exception e) {
+            _logger.error("Cannot activate Task: ", e);
+        } finally {
+            dao.close();
+        }
+    }
+
+
+    public void nominate(String participantToken, String identifier, List<String> principals, boolean isUser) throws AuthException, InvalidTaskStateException,
+                    UnavailableTaskException {
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        
+        Task task = checkAdminOperation(dao, ur, identifier);
+        OrganizationalEntity orgEntity = task.getPotentialOwners();
+        if (isUser) {
+           // user type
+            if (principals.size() == 1) {
+                // status -> reserved
+                task.setStatus(TaskStatus.RESERVED);
+            } else {
+                task.setStatus(TaskStatus.READY);
+            }
+            
+            if ((orgEntity == null) || (!OrganizationalEntity.USER_ENTITY.equalsIgnoreCase(orgEntity.getEntityType()))) {
+                orgEntity = new UserOrganizationalEntity();
+            }
+
+        } else {
+           // should be group type
+            task.setStatus(TaskStatus.READY);
+            if ((orgEntity == null) || (!OrganizationalEntity.GROUP_ENTITY.equalsIgnoreCase(orgEntity.getEntityType()))) {
+                orgEntity = new GroupOrganizationalEntity();
+            }
+        }
+        
+        orgEntity.getPrincipals().clear();
+        for (String principal: principals) {
+            Principal p = new Principal();
+            p.setValue(principal);
+            p.setOrgEntity(orgEntity);
+        }
+        task.setPotentialOwners(orgEntity);
+        
+        try {
+            dao.updateTask(task);
+            dao.commit();
+        } catch (Exception e) {
+            _logger.error("Cannot nominate Task: ", e);
+        } finally {
+            dao.close();
+        }
+    }
+    
+    private Task checkAdminOperation(ITaskDAOConnection dao, UserRoles ur, String identifier) throws AuthException, UnavailableTaskException,
+                    InvalidTaskStateException {
+        // check whether the user has the business administrator role
+        boolean isRightPerson = dao.isRoleMember(identifier, ur, GenericRoleType.business_administrators);
+        if (!isRightPerson) {
+            throw new AuthException("Only business administrator can activate the task.");
+        }
+
+        Task task = null;
+        try {
+            task = dao.fetchTaskIfExists(identifier);
+
+            if (!TaskStatus.CREATED.equals(task.getStatus())) {
+                throw new InvalidTaskStateException("Only created status's Task can be activated or nominated!");
+            }
+        } catch (UnavailableTaskException e) {
+            _logger.error("Cannot activate Task: ", e);
+            throw e;
+        }
+
+        return task;
+    }
+
+
+    public void setGenericHumanRole(String participantToken, String identifier, GenericRoleType roleType, List<String> principals, boolean isUser)
+                    throws AuthException, UnavailableTaskException {
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        
+        boolean isRightPerson = dao.isRoleMember(identifier, ur, GenericRoleType.business_administrators);
+        if (!isRightPerson) {
+            throw new AuthException("Only business administrator can update roles.");
+        }
+        
+        Task task = dao.fetchTaskIfExists(identifier);
+        
+        if (GenericRoleType.business_administrators.equals(roleType)) {
+            // the operator must be one member of the business parter
+            boolean isMember = isMemeber(ur, principals, isUser);
+            if (!isMember) {
+                if (isUser) {
+                    // add the operator the user list auto
+                    principals.add(ur.getUserID());
+                } else {
+                   throw new AuthException("The user should be one memeber of the Business Parter.");
+                }
+            }
+        }
+        
+        // update the generic role data to task
+        if (GenericRoleType.task_initiator.equals(roleType) || GenericRoleType.actual_owner.equals(roleType)) {
+            // can be one user
+            if ((isUser) && (principals.size() == 1)){                
+            } else {
+                throw new AuthException("Only one user can be: " + roleType.name());
+            }
+        }
+        
+        String orgType = isUser ? OrganizationalEntity.USER_ENTITY : OrganizationalEntity.GROUP_ENTITY;
+        try {
+            dao.updateTaskRole(identifier, roleType, principals, orgType);
+            dao.commit();
+        } catch (Exception e) {
+            _logger.error("Cannot set generic role: ", e);
+        } finally {
+            dao.close();
+        }
+    }
+    
+    /**
+     * check whether the user belongs to one set of principals.
+     * @param ur
+     * @param principals
+     * @param isUser
+     * @return
+     */
+    private boolean isMemeber(UserRoles ur, List<String> principals, boolean isUser) {
+        String uId = ur.getUserID();
+        if (isUser) {
+            return principals.contains(uId);
+        }
+        
+        Set<String> roles = ur.getAssignedRoles();
+        for (String role : roles) {
+            if (principals.contains(role)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
 }
