@@ -40,6 +40,7 @@ import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.tms.client.RemoteTMSClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
 
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.TemplateLoader;
@@ -185,6 +186,11 @@ public class RemoteAbsenceRequestTest extends TestCase {
         sendSoapToTMP(claim(token, id, user), "claimTask");
         _log.info("Let's revoke the task:every one can access this task again");
         sendSoapToTMP(revoke(token, id), "revokeTask");
+        _log.info("Call setoutput from TMS Client");
+        tms.setOutput(id, createOutputMessage(complete));
+        _log.info("Check the output we've just set");
+        String outputAsXmlString = ((PATask)tms.getTask(id)).getOutputAsXmlString();
+		_log.info(outputAsXmlString);
         _log.info("complete the PA task with some output");
         sendSoapToTMP(complete(token, id, complete), "completeTask");
 
@@ -367,6 +373,10 @@ public class RemoteAbsenceRequestTest extends TestCase {
         root.put("user", user);
         root.put("token", token);
         return templateMe("claim.ftl", root);
+    }
+    
+    private Document createOutputMessage(HashMap complete) throws Exception {
+        return new XmlTooling().parseXML(templateMe("setoutput.ftl", complete));
     }
 
     /**
