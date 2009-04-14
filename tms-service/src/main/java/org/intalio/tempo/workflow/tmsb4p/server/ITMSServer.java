@@ -18,6 +18,22 @@ import com.intalio.wsHT.api.TStatus;
 import com.intalio.wsHT.api.xsd.TTime;
 
 public interface ITMSServer {
+//	public static final int TASK_INITIATOR = "TASK_INITIATOR";
+//	public static final int TASK_STAKEHOLDERS = "TASK_STAKEHOLDERS";
+//	public static final int POTENTIAL_OWNERS = "POTENTIAL_OWNERS";
+//	public static final int ACTUAL_OWNER = "ACTUAL_OWNER";
+//	public static final int EXCLUDED_OWNERS = "EXCLUDED_OWNERS";
+//	public static final int BUSINESSADMINISTRATORS = "BUSINESSADMINISTRATORS";
+//	public static final int RECIPIENTS = "RECIPIENTS";
+	
+	public static final int TASK_INITIATOR = 0;
+	public static final int TASK_STAKEHOLDERS = 1;
+	public static final int POTENTIAL_OWNERS = 2;
+	public static final int ACTUAL_OWNER = 3;
+	public static final int EXCLUDED_OWNERS = 4;
+	public static final int BUSINESSADMINISTRATORS = 5;
+	public static final int RECIPIENTS = 6;
+	
     public void create(Task task, String participantToken) throws TMSException;
     public void remove(String participantToken, String taskId) throws TMSException;
     public List<Task> getMyTasks(String participantToken, String taskType, String genericHumanRole, String workQueue, TStatus.Enum[] statusList, String whereClause, String createdOnClause, int maxTasks) throws TMSException;

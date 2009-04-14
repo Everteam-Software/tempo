@@ -187,6 +187,112 @@ public class TMSServer implements ITMSServer {
 
     }
 
+    private boolean checkPermission(UserRoles ur, OrganizationalEntity oe){
+    	int i = 0;
+   	    Principal[] s = (Principal[])oe.getPrincipals().toArray();
+    	if (oe.getEntityType().equalsIgnoreCase(OrganizationalEntity.USER_ENTITY)){
+		
+			 for (i = 0; i < s.length; i++){
+				 if (ur.getUserID().equalsIgnoreCase(s[i].getValue()))
+					 return true;
+			 }
+		}else { // group entity
+			 for (i = 0; i < s.length; i++)
+				if  (ur.getAssignedRoles().contains(s[i].getValue()))
+						return true; 
+		
+		}
+    	return false;
+    }
+    
+    protected List<Integer> checkUserTaskRoles(Task task, UserRoles ur){
+    	ArrayList<Integer> ret = new ArrayList<Integer>();
+  		OrganizationalEntity oe = null;
+
+			String ao = task.getActualOwner();			
+			if (ao != null && ao.equalsIgnoreCase(ur.getUserID()))
+				ret.add(ITMSServer.ACTUAL_OWNER);
+			
+			 oe = task.getPotentialOwners();
+			if (checkPermission(ur, oe))
+				ret.add(ITMSServer.POTENTIAL_OWNERS);
+	
+			 oe = task.getBusinessAdministrators();
+			if (checkPermission(ur, oe))
+				ret.add(ITMSServer.BUSINESSADMINISTRATORS);
+
+			 oe = task.getExcludedOwners();
+			if (checkPermission(ur, oe))
+				ret.add(ITMSServer.EXCLUDED_OWNERS);
+	
+ 			 oe = task.getNotificationRecipients();
+  			if (checkPermission(ur, oe))
+  				ret.add(ITMSServer.RECIPIENTS);
+    		
+ 			 String u = task.getTaskInitiator();
+  			if (u.equalsIgnoreCase(ur.getUserID()))
+  				ret.add(ITMSServer.TASK_INITIATOR);
+   
+			 oe = task.getTaskStakeholders();
+   			if (checkPermission(ur, oe))
+   				ret.add(ITMSServer.TASK_STAKEHOLDERS);
+     
+   			return ret;
+   			
+}
+    
+    protected void checkPermission(Task task, UserRoles ur, int[] roles) throws IllegalAccessException{
+    	
+    	for (int i = 0; i< roles.length; i++){
+    		int role = roles[i];
+    		OrganizationalEntity oe = null;
+    		switch (role){
+    		case ITMSServer.ACTUAL_OWNER:
+    			String ao = task.getActualOwner();
+    			if (ao == null || ao.length()==0)
+    				continue;
+    			if (ao.equalsIgnoreCase(ur.getUserID()))
+    				return;
+    			break;
+    		case ITMSServer.POTENTIAL_OWNERS:
+    			 oe = task.getPotentialOwners();
+    			if (checkPermission(ur, oe))
+    				return;
+    			break;
+    		case ITMSServer.BUSINESSADMINISTRATORS:
+    			 oe = task.getBusinessAdministrators();
+    			if (checkPermission(ur, oe))
+    				return;
+    			break;
+    		case ITMSServer.EXCLUDED_OWNERS:
+   			 oe = task.getExcludedOwners();
+ 			if (checkPermission(ur, oe))
+ 				return;
+    			break;
+    		case ITMSServer.RECIPIENTS:
+     			 oe = task.getNotificationRecipients();
+      			if (checkPermission(ur, oe))
+      				return;		
+    			break;
+    		case ITMSServer.TASK_INITIATOR:
+     			 String u = task.getTaskInitiator();
+      			if (u.equalsIgnoreCase(ur.getUserID()))
+      				return;
+        
+    			break;
+    		case ITMSServer.TASK_STAKEHOLDERS:
+    			 oe = task.getTaskStakeholders();
+       			if (checkPermission(ur, oe))
+       				return;
+         
+    			break;
+    		default:
+    			throw new IllegalAccessException("unknow role "+ role);
+    		}
+    	}
+    	throw new IllegalAccessException("user "+ ur.getUserID() +" have not permission for actino on task " + task.getId());
+    }
+    
     public void claim(String participantToken, String identifier) throws TMSException {
         // get user
         UserRoles ur = null;
@@ -199,14 +305,19 @@ public class TMSServer implements ITMSServer {
             this._logger.error("authenticate user failed", e);
             throw new AuthException(e);
         }
-
-        // @TODO check permission (action owner / business administrators can claim tasks
-
+        ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
+        try {
+        	Task task = dao.fetchTaskIfExists(identifier);
+        	if (task == null)
+        		throw new IllegalArgumentException("cannot find task "+ identifier);
+        	
+        // check permission (actual owner / business administrators can claim tasks
+        checkPermission(task, ur, new int[]{ITMSServer.ACTUAL_OWNER, ITMSServer.BUSINESSADMINISTRATORS});
+        
         // @TODO check status ( should be ready )
 
         // update task status
-        ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
-        try {
+
             dao.updateTaskStatus(identifier, TaskStatus.RESERVED);
             dao.commit();
         } catch (Exception e) {
@@ -231,14 +342,21 @@ public class TMSServer implements ITMSServer {
             this._logger.error("authenticate user failed", e);
             throw new AuthException(e);
         }
-
-        // @TODO check permission (action owner / business administrators can claim tasks
-
-        // @TODO check status ( should be ready )
-
-        // update task status
         ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
         try {
+        	Task task = dao.fetchTaskIfExists(identifier);
+        	
+        	// check permission (actual owner / business administrators / potential owner(only in ready states)
+        	List<Integer> r = checkUserTaskRoles(task, ur);
+        	if (r.size() == 1 && r.get(0) == ITMSServer.POTENTIAL_OWNERS && task.getStatus() == TaskStatus.READY)
+        		throw new IllegalAccessException("Potential owner can delegate task only in ready states");
+        	if (!r.contains(ITMSServer.ACTUAL_OWNER) && !r.contains(ITMSServer.BUSINESSADMINISTRATORS))
+        		throw new IllegalAccessException("User must be potential owner or business adiministrator");
+        
+        	// @TODO check status ( should be ready )
+
+        	// update task status
+        	
         	//TODO assign task to user and put him into potential owner if he is not
             dao.updateTaskStatus(identifier, TaskStatus.RESERVED);
             dao.commit();
