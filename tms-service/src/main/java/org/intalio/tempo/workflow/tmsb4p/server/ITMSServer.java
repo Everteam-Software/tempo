@@ -61,7 +61,7 @@ public interface ITMSServer {
 	public Task getTaskByIdentifier(String participantToken, String identifier) throws AuthException, UnavailableTaskException;
 
 	public void suspendUntil(String participantToken, String identifier,
-			TTime time);
+			TTime time) throws TMSException;
 	public void suspend(String participantToken, String identifier) throws TMSException;
 
 	public void activate(String participantToken, String identifier) throws AuthException, InvalidTaskStateException, UnavailableTaskException;
