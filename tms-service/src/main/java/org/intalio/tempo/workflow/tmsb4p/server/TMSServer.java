@@ -318,7 +318,8 @@ public class TMSServer implements ITMSServer {
 
         // update task status
 
-            dao.updateTaskStatus(identifier, TaskStatus.RESERVED);
+            task.setStatus(TaskStatus.RESERVED);
+            dao.updateTask(task);
             dao.commit();
         } catch (Exception e) {
             _logger.error("remove task failed, task id " + identifier, e);
@@ -345,6 +346,8 @@ public class TMSServer implements ITMSServer {
         ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
         try {
         	Task task = dao.fetchTaskIfExists(identifier);
+        	if (task == null)
+        		throw new IllegalArgumentException("cannot find task "+ identifier);
         	
         	// check permission (actual owner / business administrators / potential owner(only in ready states)
         	List<Integer> r = checkUserTaskRoles(task, ur);
@@ -358,7 +361,8 @@ public class TMSServer implements ITMSServer {
         	// update task status
         	
         	//TODO assign task to user and put him into potential owner if he is not
-            dao.updateTaskStatus(identifier, TaskStatus.RESERVED);
+            task.setStatus(TaskStatus.RESERVED);
+            dao.updateTask(task);
             dao.commit();
         } catch (Exception e) {
             _logger.error("remove task failed, task id " + identifier, e);
@@ -382,19 +386,25 @@ public class TMSServer implements ITMSServer {
             this._logger.error("authenticate user failed", e);
             throw new AuthException(e);
         }
-
-        // @TODO check permission (action owner / business administrators can claim tasks
-
-        // @TODO check status ( should be ready )
-
-        // update task 
         ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
+    
         try {
+            Task task = dao.fetchTaskIfExists(identifier);
+            if (task == null)
+        		throw new IllegalArgumentException("cannot find task "+ identifier);
+            
+            // @TODO check permission (action owner / business administrators can claim tasks
+            checkPermission(task, ur, new int[]{ITMSServer.ACTUAL_OWNER, ITMSServer.BUSINESSADMINISTRATORS});
+            
+            // @TODO check status ( should be ready )
+
+            // update task 
+       
         	// TODO impl logic
         	
         	// update status
-            dao.updateTaskStatus(identifier, TaskStatus.RESERVED);
-            
+            task.setStatus(TaskStatus.RESERVED);
+            dao.updateTask(task);
             // commit
             dao.commit();
         } catch (Exception e) {
