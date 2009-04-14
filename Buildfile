@@ -23,34 +23,6 @@ define "tempo" do
     compile.with WEB_NUTSNBOLTS, APACHE_JPA, SLF4J
     package :jar
   end
-   
-  # define "dao-tools" do
-  #     compile.with projects("security", "security-ws-client", "tms-axis", "tms-common", "tms-client", "web-nutsNbolts", "dao-nutsNbolts"), 
-  #     project("wds-service").package(:jar),
-  #     project("tms-service").package(:jar),
-  #     APACHE_DERBY, 
-  #     APACHE_JPA, 
-  #     AXIOM, 
-  #     AXIS2, 
-  #     DOM4J,
-  #     JAXEN, 
-  #     JYAML,
-  #     LOG4J, 
-  #     DB_CONNECTOR.values, 
-  #     SLF4J, 
-  #     SPRING[:core], 
-  #     SERVLET_API, 
-  #     STAX_API, 
-  #     XMLBEANS,
-  #     SECURITY_WS_CLIENT_ONLY,
-  #     WEB_NUTSNBOLTS
-  # 
-  #     test.with projects("tms-common"), APACHE_COMMONS[:pool], CASTOR, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES
-  #     unless ENV["MIGRATE"] == 'yes'
-  #       test.exclude '*JDBC2JPAConverterTest*'
-  #     end
-  #     package :war
-  #   end
 
   desc "Form Dispatcher Servlet"
   define "fds" do

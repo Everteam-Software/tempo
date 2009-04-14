@@ -1,6 +1,0 @@
-username:intalio\admin
-fakerun:true
-queries:
- - !org.intalio.tempo.persistence.delete.Query 
-   klass:org.intalio.tempo.workflow.task.PATask
-   subquery:T._id > '100'
