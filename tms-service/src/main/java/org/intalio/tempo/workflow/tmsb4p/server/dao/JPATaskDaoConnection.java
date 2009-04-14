@@ -372,14 +372,21 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
     }
 
     public boolean isRoleMember(String taskId, UserRoles ur, GenericRoleType role) {
+        boolean hasAssignedRoles = ((ur.getAssignedRoles() != null) && (!ur.getAssignedRoles().isEmpty()));
         String selectClause = "id";
         StringBuffer wClause = new StringBuffer();
         // user id clause
-        wClause.append("(").append(TaskView.USERID).append("='").append(ur.getUserID()).append("'");
-        // group clause
-        wClause.append(" or ").append(TaskView.GROUP).append("='")
-                .append(QueryUtil.joinString(ur.getAssignedRoles(), ","))
-                .append("'").append(")");
+        if (hasAssignedRoles) {
+            wClause.append("(");
+        }
+        wClause.append(TaskView.USERID).append("='").append(ur.getUserID()).append("'");
+        
+        if (hasAssignedRoles) {
+            // group clause
+            wClause.append(" or ").append(TaskView.GROUP).append("='")
+                    .append(QueryUtil.joinString(ur.getAssignedRoles(), ","))
+                    .append("'").append(")");
+        }
         // role info
         wClause.append(" and  ").append(TaskView.GENERIC_HUMAN_ROLE).append("='")
                 .append(role.name()).append("'");
