@@ -158,6 +158,7 @@ import com.intalio.wsHT.api.xsd.SuspendDocument.Suspend;
 import com.intalio.wsHT.api.xsd.SuspendResponseDocument.SuspendResponse;
 import com.intalio.wsHT.api.xsd.SuspendUntilDocument.SuspendUntil;
 import com.intalio.wsHT.api.xsd.SuspendUntilResponseDocument.SuspendUntilResponse;
+import com.intalio.wsHT.protocol.TGenericHumanRole;
 import com.intalio.wsHT.protocol.THumanTaskContext;
 
 import edu.emory.mathcs.backport.java.util.Arrays;
@@ -415,6 +416,39 @@ public class TMSRequestProcessor {
         }
 
     }
+    
+    OrganizationalEntity convertOE(TGenericHumanRole[] pos) {
+		OrganizationalEntity ret = new UserOrganizationalEntity();
+		if (pos == null || pos.length == 0)
+			return ret;
+		for (int j = 0; j < pos.length; j++) {
+			TOrganizationalEntity oe = pos[j].getOrganizationalEntity();
+
+			if (oe.isSetUsers()) {
+				TUserlist users = oe.getUsers();
+				Set<Principal> _users = new HashSet<Principal>();
+				ret.setPrincipals(_users);
+				for (int u = 0; u < users.sizeOfUserArray(); u++) {
+					Principal user = new Principal();
+					user.setValue(users.getUserArray(u));
+					user.setOrgEntity(ret);
+					_users.add(user);
+				}
+			} else if (oe.isSetUsers()) {
+				TGrouplist groups = oe.getGroups();
+				Set<Principal> _groups = new HashSet<Principal>();
+				ret.setPrincipals(_groups);
+				for (int u = 0; u < groups.sizeOfGroupArray(); u++) {
+					Principal g = new Principal();
+					g.setValue(groups.getGroupArray(u));
+					g.setOrgEntity(ret);
+					_groups.add(g);
+				}
+			}
+
+		}
+		return ret;
+	}
 
     /************************************************************************
      * Main Participant operation (most will change task status)
@@ -453,29 +487,50 @@ public class TMSRequestProcessor {
             for (int i = 0; i < tasks.length; i++) {
                 // Log.log("task "+i);
                 Task task = new Task();
-                task.setId(UUID.randomUUID().toString()); // temporary solution
-                // to generate task
-                // id
-                task.setName("test");
+                task.setId(UUID.randomUUID().toString()); // temporary solution to generate task id
+                task.setName("task");
                 task.setCreatedOn(new Date());
                 task.setPriority(tasks[i].getPriority().intValue());
                 task.setStatus(TaskStatus.CREATED);
 
-                OrganizationalEntity potentialOwner = new UserOrganizationalEntity();
-                Principal user = new Principal();
-                user.setValue("some test user");
-                user.setOrgEntity(potentialOwner);
-                Set<Principal> users = new HashSet<Principal>();
-                users.add(user);
-                potentialOwner.setPrincipals(users);
-
-                task.setPotentialOwners(potentialOwner);
+                // set potentialOwner
+                TGenericHumanRole[] pos = tasks[i].getPeopleAssignments().getPotentialOwnersArray();
+                OrganizationalEntity potentialOwner = convertOE(pos);
+                task.setPotentialOwners(potentialOwner);        		
+                
+                // set businessAdministrators
+                pos = tasks[i].getPeopleAssignments().getBusinessAdministratorsArray();
+                OrganizationalEntity businessAdministrators = convertOE(pos);
+                task.setBusinessAdministrators(businessAdministrators);
+                
+                // set notificationRecipients
+                pos = tasks[i].getPeopleAssignments().getRecipientsArray();
+                OrganizationalEntity notificationRecipients = convertOE(pos);
+                task.setNotificationRecipients(notificationRecipients);       		
+ 
+                // set taskInitiator
+//                pos = tasks[i].getPeopleAssignments().getTaskInitiatorArray();
+//                String taskInitiator = pos[0].getOrganizationalEntity().getUsers().getUserArray(0);
+//                task.setTaskInitiator(taskInitiator);       		
+ 
+                // set taskStakeholders
+                pos = tasks[i].getPeopleAssignments().getTaskStakeholdersArray();
+                OrganizationalEntity taskStakeholders = convertOE(pos);
+                task.setTaskStakeholders(taskStakeholders);       		
+ 
+                // set excludedOwners
+                pos = tasks[i].getPeopleAssignments().getExcludedOwnersArray();
+                OrganizationalEntity excludedOwners = convertOE(pos);
+                task.setExcludedOwners(excludedOwners);       		      		
+ 
+ 
                 task.setInputMessage(req.getCreate().getIn());
-                // task.setPotentialOwners(potentialOwners)(tasks[i].getPeopleAssignments().getPotentialOwnersArray()
+                
                 task.setSkipable(tasks[i].getIsSkipable());
                 task.setTaskInitiator(tasks[i].getPeopleAssignments().getTaskInitiatorArray().toString());
                 task.setTaskType(TaskType.TASK);
                 taskID = task.getId();
+                
                 _server.create(task, participantToken);
             }
 

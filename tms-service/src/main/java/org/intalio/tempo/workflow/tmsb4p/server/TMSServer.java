@@ -66,7 +66,13 @@ public class TMSServer implements ITMSServer {
 
 	private boolean checkPermission(UserRoles ur, OrganizationalEntity oe) {
 		int i = 0;
-		Principal[] s = (Principal[]) oe.getPrincipals().toArray();
+		if (oe == null)
+			return false;
+		Set<Principal> sp= oe.getPrincipals();
+		Principal[] s = new Principal[1];
+		if (sp == null)
+			return false;
+		s = sp.toArray(s);
 		if (oe.getEntityType().equalsIgnoreCase(
 				OrganizationalEntity.USER_ENTITY)) {
 
@@ -170,7 +176,7 @@ public class TMSServer implements ITMSServer {
 			}
 		}
 		throw new IllegalAccessException("user " + ur.getUserID()
-				+ " have not permission for actino on task " + task.getId());
+				+ " have not permission for actino on task " + task.getId() + "you must be role of " + roles.toString());
 	}
 	/**************************************
 	 * flow-related participant operations
@@ -182,11 +188,13 @@ public class TMSServer implements ITMSServer {
 			UserRoles ur = _authProvider.authenticate(participantToken);
 			System.out.println("userid:" + ur.getUserID());
 			task.setCreatedBy(ur.getUserID());
+			task.setTaskInitiator(ur.getUserID());
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new AuthException(e);
 		}
 
+		
 		// TODO check if this user in task initialtor
 		ITaskDAOConnection dao = _taskDAOFactory.openConnection();
 		try {
@@ -266,10 +274,10 @@ public class TMSServer implements ITMSServer {
 			if (r.size() == 1 && r.get(0) == ITMSServer.POTENTIAL_OWNERS
 					&& task.getStatus() != TaskStatus.READY)
 				throw new IllegalAccessException(
-						"Potential owner can delegate task only in ready states");
+						"Potential owner can start task only in ready states");
 			if (!r.contains(ITMSServer.ACTUAL_OWNER))
 				throw new IllegalAccessException(
-						"User must be potential owner or business adiministrator");
+						"User must be potential owner (only in ready states) or actual owner");
 
 		// @TODO check status ( should be ready )
 
@@ -398,7 +406,7 @@ public class TMSServer implements ITMSServer {
 			if (!r.contains(ITMSServer.ACTUAL_OWNER)
 					&& !r.contains(ITMSServer.BUSINESSADMINISTRATORS))
 				throw new IllegalAccessException(
-						"User must be potential owner or business adiministrator");
+						"User must be potential(only in ready states) owner or business adiministrator");
 
 			// @TODO check status ( should be ready )
 
