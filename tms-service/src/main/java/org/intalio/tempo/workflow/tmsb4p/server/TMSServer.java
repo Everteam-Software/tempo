@@ -34,6 +34,7 @@ import com.intalio.wsHT.api.TStatus;
 import com.intalio.wsHT.api.xsd.TTime;
 
 public class TMSServer implements ITMSServer {
+
 	private static final Logger _logger = LoggerFactory
 			.getLogger(TMSServer.class);
 	private IAuthProvider _authProvider;
@@ -178,6 +179,20 @@ public class TMSServer implements ITMSServer {
 		throw new IllegalAccessException("user " + ur.getUserID()
 				+ " have not permission for actino on task " + task.getId() + "you must be role of " + roles.toString());
 	}
+	
+    protected void checkPermission(String identifier, UserRoles ur, int[] roles) throws IllegalAccessException, B4PPersistException {
+        ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
+        try {
+            Task task = dao.fetchTaskIfExists(identifier);
+            checkPermission(task, ur, roles);
+        } catch (UnavailableTaskException e) {
+            _logger.error("error when retrieving task, task id " + identifier, e);
+            throw new B4PPersistException(e);
+        } finally {
+            dao.close();
+        }
+    }
+    
 	/**************************************
 	 * flow-related participant operations
 	 ***************************************/
@@ -807,126 +822,107 @@ public class TMSServer implements ITMSServer {
 
 	}
 
-	/**************************************
-	 * data operation operations
-	 * 
-	 * @throws AuthException
-	 ***************************************/
+	   /**************************************
+     * data operation operations
+     * 
+     * @throws AuthException
+     * @throws IllegalAccessException
+     ***************************************/
 
-	public void setPriority(String participantToken, String identifier,
-			int priority) throws AuthException, UnavailableTaskException {
-		UserRoles ur = _authProvider.authenticate(participantToken);
-		ITaskDAOConnection dao = _taskDAOFactory.openConnection();
-		Task task = dao.fetchTaskIfExists(identifier);
-		String actualOwner = task.getActualOwner();
+    public void setPriority(String participantToken, String identifier, int priority) throws TMSException {
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        Task task = dao.fetchTaskIfExists(identifier);
+        String actualOwner = task.getActualOwner();
 
-		// OrganizationalEntity = task.getBusinessAdministrators();
-		// TODO auth check
-		if (true) {
-			// if (ur.getUserID().equalsIgnoreCase(actualOwner)) {
-			task.setPriority(priority);
-			dao.updateTask(task);
-			dao.commit();
-			dao.close();
-		} else {
-			dao.close();
-			throw new AuthException("User:" + ur.getUserID()
-					+ "does not authorized to setPriority");
-		}
-	}
+        checkPermission(task, ur, new int[] { ITMSServer.ACTUAL_OWNER, ITMSServer.BUSINESSADMINISTRATORS });
 
-	public void addAttachment(String participantToken, String identifier,
-			String attachmentName, String accessType, String value)
-			throws AuthException, UnavailableTaskException {
-		UserRoles ur = _authProvider.authenticate(participantToken);
-		ITaskDAOConnection dao = _taskDAOFactory.openConnection();
-		try {
-			// TODO auth check
-			// TODO get contentType
-			String contentType = "plain/text";
-			if (accessType.equalsIgnoreCase("inline")) {
-				dao.addAttachment(identifier, attachmentName,
-						AttachmentAccessType.INLINE, contentType, ur
-								.getUserID(), value);
-			} else if (accessType.equalsIgnoreCase("url")) {
-				dao.addAttachment(identifier, attachmentName,
-						AttachmentAccessType.URL, contentType, ur.getUserID(),
-						value);
-			} else {
-				dao.addAttachment(identifier, attachmentName,
-						AttachmentAccessType.OTHER, contentType,
-						ur.getUserID(), value);
-			}
-			dao.commit();
-		} finally {
-			dao.close();
-		}
-	}
+        // if (ur.getUserID().equalsIgnoreCase(actualOwner)) {
+        task.setPriority(priority);
+        dao.updateTask(task);
+        dao.commit();
+        dao.close();
+    }
 
-	public List<AttachmentInfo> getAttachmentInfos(String participantToken,
-			String identifier) throws AuthException {
-		UserRoles ur = _authProvider.authenticate(participantToken);
-		// TODO auth check
-		ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+    public void addAttachment(String participantToken, String identifier, String attachmentName, String accessType, String value) throws TMSException {
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        try {
+            checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER, ITMSServer.BUSINESSADMINISTRATORS });
+            // TODO get contentType
+            String contentType = "plain/text";
+            if (accessType.equalsIgnoreCase("inline")) {
+                dao.addAttachment(identifier, attachmentName, AttachmentAccessType.INLINE, contentType, ur.getUserID(), value);
+            } else if (accessType.equalsIgnoreCase("url")) {
+                dao.addAttachment(identifier, attachmentName, AttachmentAccessType.URL, contentType, ur.getUserID(), value);
+            } else {
+                dao.addAttachment(identifier, attachmentName, AttachmentAccessType.OTHER, contentType, ur.getUserID(), value);
+            }
+            dao.commit();
+        } finally {
+            dao.close();
+        }
+    }
 
-		List<AttachmentInfo> ret = dao.getAttachmentInfos(identifier);
-		dao.close();
-		return ret;
-	}
+    public List<AttachmentInfo> getAttachmentInfos(String participantToken, String identifier) throws TMSException {
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        checkPermission(identifier, ur, new int[] { ITMSServer.POTENTIAL_OWNERS, ITMSServer.ACTUAL_OWNER, ITMSServer.BUSINESSADMINISTRATORS });
 
-	public List<Attachment> getAttachments(String participantToken,
-			String identifier, String attachmentName) throws AuthException {
-		UserRoles ur = _authProvider.authenticate(participantToken);
-		// TODO auth check
-		ITaskDAOConnection dao = _taskDAOFactory.openConnection();
-		List<Attachment> ret = dao.getAttachments(identifier, attachmentName);
-		dao.close();
-		return ret;
-	}
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
 
-	public void deleteAttachments(String participantToken, String identifier,
-			String attachmentName) throws AuthException {
-		UserRoles ur = _authProvider.authenticate(participantToken);
-		// TODO auth check
+        List<AttachmentInfo> ret = dao.getAttachmentInfos(identifier);
+        dao.close();
+        return ret;
+    }
 
-		ITaskDAOConnection dao = _taskDAOFactory.openConnection();
-		dao.deleteAttachments(identifier, attachmentName);
-		dao.commit();
-		dao.close();
-	}
+    public List<Attachment> getAttachments(String participantToken, String identifier, String attachmentName) throws TMSException {
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        checkPermission(identifier, ur, new int[] { ITMSServer.POTENTIAL_OWNERS, ITMSServer.ACTUAL_OWNER, ITMSServer.BUSINESSADMINISTRATORS });
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        List<Attachment> ret = dao.getAttachments(identifier, attachmentName);
+        dao.close();
+        return ret;
+    }
 
-	public void addComment(String participantToken, String identifier,
-			String text) throws AuthException {
-		UserRoles ur = _authProvider.authenticate(participantToken);
-		// TODO auth check
+    public void deleteAttachments(String participantToken, String identifier, String attachmentName) throws TMSException {
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER, ITMSServer.BUSINESSADMINISTRATORS });
 
-		ITaskDAOConnection dao = _taskDAOFactory.openConnection();
-		dao.addComment(identifier, ur.getUserID(), text);
-		dao.commit();
-		dao.close();
-	}
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        dao.deleteAttachments(identifier, attachmentName);
+        dao.commit();
+        dao.close();
+    }
 
-	public List<Comment> getComments(String participantToken, String identifier)
-			throws AuthException {
-		UserRoles ur = _authProvider.authenticate(participantToken);
-		// TODO auth check
+    public void addComment(String participantToken, String identifier, String text) throws TMSException {
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        checkPermission(identifier, ur, new int[] { ITMSServer.POTENTIAL_OWNERS, ITMSServer.ACTUAL_OWNER, ITMSServer.BUSINESSADMINISTRATORS });
 
-		ITaskDAOConnection dao = _taskDAOFactory.openConnection();
-		List<Comment> comments = dao.getComments(identifier);
-		dao.close();
-		return comments;
-	}
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        dao.addComment(identifier, ur.getUserID(), text);
+        dao.commit();
+        dao.close();
+    }
 
-	public Task getTaskByIdentifier(String participantToken, String identifier)
-			throws AuthException, UnavailableTaskException {
-		UserRoles ur = _authProvider.authenticate(participantToken);
-		// TODO auth check
+    public List<Comment> getComments(String participantToken, String identifier) throws TMSException {
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        checkPermission(identifier, ur, new int[] { ITMSServer.POTENTIAL_OWNERS, ITMSServer.ACTUAL_OWNER, ITMSServer.BUSINESSADMINISTRATORS });
 
-		ITaskDAOConnection dao = _taskDAOFactory.openConnection();
-		Task task = dao.fetchTaskIfExists(identifier);
-		dao.close();
-		return task;
-	}
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        List<Comment> comments = dao.getComments(identifier);
+        dao.close();
+        return comments;
+    }
+
+    public Task getTaskByIdentifier(String participantToken, String identifier) throws TMSException {
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        
+
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        Task task = dao.fetchTaskIfExists(identifier);
+        dao.close();
+        return task;
+    }
 
 	/*****************************************
 	 * administrative operation

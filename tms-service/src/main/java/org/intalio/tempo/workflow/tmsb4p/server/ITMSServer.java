@@ -50,15 +50,15 @@ public interface ITMSServer {
 	public void forward(String participantToken, String identifier) throws TMSException;
 	public void delegate(String participantToken, String identifier) throws TMSException;
 	
-	public void setPriority(String participantToken, String identifier, int priority) throws AuthException, UnavailableTaskException;
+	public void setPriority(String participantToken, String identifier, int priority) throws TMSException;
 	public void addAttachment(String participantToken, String identifier, String attachmentName, String accessType, String value)
-    throws AuthException, UnavailableTaskException;
-	public List<AttachmentInfo> getAttachmentInfos(String participantToken, String identifier) throws AuthException;
-	public List<Attachment> getAttachments(String participantToken, String identifier, String attachmentName) throws AuthException;
-	public void deleteAttachments(String participantToken, String identifier, String attachmentName) throws AuthException;
-	public void addComment(String participantToken, String identifier, String text) throws AuthException;
-	public List<Comment> getComments(String participantToken, String identifier) throws AuthException;
-	public Task getTaskByIdentifier(String participantToken, String identifier) throws AuthException, UnavailableTaskException;
+    throws TMSException;
+	public List<AttachmentInfo> getAttachmentInfos(String participantToken, String identifier) throws TMSException;
+	public List<Attachment> getAttachments(String participantToken, String identifier, String attachmentName) throws TMSException;
+	public void deleteAttachments(String participantToken, String identifier, String attachmentName) throws TMSException;
+	public void addComment(String participantToken, String identifier, String text) throws TMSException;
+	public List<Comment> getComments(String participantToken, String identifier) throws TMSException;
+	public Task getTaskByIdentifier(String participantToken, String identifier) throws TMSException;
 
 	public void suspendUntil(String participantToken, String identifier,
 			TTime time) throws TMSException;
