@@ -1,10 +1,10 @@
-<create xmlns="http://www.intalio.com/WS-HT/api/xsd" xmlns:htpt="http://www.intalio.com/WS-HT/protocol">
+<create xmlns:htd="http://www.intalio.com/WS-HT" xmlns="http://www.intalio.com/WS-HT/api/xsd" xmlns:htpt="http://www.intalio.com/WS-HT/protocol">
 	<in>test</in>
 	<htpt:humanTaskContext>
 		<htpt:priority>1</htpt:priority>
 		<htpt:peopleAssignments> 
-             <htpt:potentialOwners>intalio/admin</htpt:potentialOwners>
-             <htpt:businessAdministrators>intalio/admin</htpt:businessAdministrators> 
+             <htpt:potentialOwners><users><user>intalio/admin</user></users></htpt:potentialOwners>
+             <htpt:businessAdministrators><users><user>intalio/admin</user></users></htpt:businessAdministrators> 
         </htpt:peopleAssignments>
 		<isSkipable>false</isSkipable>
 		<htpt:expirationTime></htpt:expirationTime>
@@ -13,8 +13,8 @@
 	<htpt:humanTaskContext>
 	    <htpt:priority>1</htpt:priority>
 		<htpt:peopleAssignments>
-            <htpt:taskInitiator>intalio/admin</htpt:taskInitiator>
-            <htpt:businessAdministrators>intalio/admin</htpt:businessAdministrators> 
+            <htpt:taskInitiator><users><user>intalio/admin</user></users></htpt:taskInitiator>
+            <htpt:businessAdministrators><htd:organizationalEntity><htd:users><htd:user>intalio/admin</htd:user></htd:users></htd:organizationalEntity></htpt:businessAdministrators> 
         </htpt:peopleAssignments>
 		<isSkipable>true</isSkipable>
 		<htpt:expirationTime></htpt:expirationTime>

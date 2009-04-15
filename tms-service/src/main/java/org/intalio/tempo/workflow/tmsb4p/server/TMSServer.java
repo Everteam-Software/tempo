@@ -76,8 +76,10 @@ public class TMSServer implements ITMSServer {
 		s = sp.toArray(s);
 		if (oe.getEntityType().equalsIgnoreCase(
 				OrganizationalEntity.USER_ENTITY)) {
-
+			System.out.println("===>s size="+s.length);
+	
 			for (i = 0; i < s.length; i++) {
+				System.out.println("s["+i+"]="+s[i]);
 				if (ur.getUserID().equalsIgnoreCase(s[i].getValue()))
 					return true;
 			}

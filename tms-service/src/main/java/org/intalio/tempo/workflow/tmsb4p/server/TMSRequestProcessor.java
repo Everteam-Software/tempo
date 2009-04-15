@@ -26,6 +26,7 @@ import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.taskb4p.Attachment;
 import org.intalio.tempo.workflow.taskb4p.AttachmentInfo;
 import org.intalio.tempo.workflow.taskb4p.Comment;
+import org.intalio.tempo.workflow.taskb4p.GroupOrganizationalEntity;
 import org.intalio.tempo.workflow.taskb4p.OrganizationalEntity;
 import org.intalio.tempo.workflow.taskb4p.Principal;
 import org.intalio.tempo.workflow.taskb4p.Task;
@@ -417,35 +418,46 @@ public class TMSRequestProcessor {
 
     }
     
-    OrganizationalEntity convertOE(TGenericHumanRole[] pos) {
-		OrganizationalEntity ret = new UserOrganizationalEntity();
+    OrganizationalEntity convertOE(TGenericHumanRole[] pos) throws TMSException{
+    	// TODO should return array of OE, because request support multi-OE, but task not
+		OrganizationalEntity ret = null;
 		if (pos == null || pos.length == 0)
-			return ret;
+			return null;
+		System.out.println("pos size="+pos.length);
 		for (int j = 0; j < pos.length; j++) {
-			TOrganizationalEntity oe = pos[j].getOrganizationalEntity();
 
+			TOrganizationalEntity oe = pos[j].getOrganizationalEntity();
+			System.out.println("oe="+oe);
+			if (oe == null)
+				continue;
 			if (oe.isSetUsers()) {
+				System.out.println("is Users");
+				ret = new UserOrganizationalEntity();
 				TUserlist users = oe.getUsers();
 				Set<Principal> _users = new HashSet<Principal>();
 				ret.setPrincipals(_users);
+				System.out.println("users size "+ users.sizeOfUserArray());
 				for (int u = 0; u < users.sizeOfUserArray(); u++) {
-					Principal user = new Principal();
-					user.setValue(users.getUserArray(u));
-					user.setOrgEntity(ret);
-					_users.add(user);
+					System.out.println("users.getUserArray("+u+")="+users.getUserArray(u));
+					Principal _user = new Principal();
+					_user.setValue(users.getUserArray(u));
+					_user.setOrgEntity(ret);
+					_users.add(_user);
 				}
-			} else if (oe.isSetUsers()) {
+			} else if (oe.isSetGroups()) {
+				ret = new GroupOrganizationalEntity();
+				System.out.println("is groups");
 				TGrouplist groups = oe.getGroups();
 				Set<Principal> _groups = new HashSet<Principal>();
 				ret.setPrincipals(_groups);
 				for (int u = 0; u < groups.sizeOfGroupArray(); u++) {
-					Principal g = new Principal();
-					g.setValue(groups.getGroupArray(u));
-					g.setOrgEntity(ret);
-					_groups.add(g);
+					Principal _g = new Principal();
+					_g.setValue(groups.getGroupArray(u));
+					_g.setOrgEntity(ret);
+					_groups.add(_g);
 				}
-			}
-
+			}else
+				throw new IllegalAccessException("OrganizationalEntity is not users either groups");
 		}
 		return ret;
 	}
