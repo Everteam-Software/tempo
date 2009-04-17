@@ -186,57 +186,51 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
             } else {
                 task.setActualOwner(newUser);
             }
+            this.updateTask(task);
         } else {
-            OrganizationalEntity orgEntity = null;
-            if (GenericRoleType.business_administrators.equals(role)) {
-                orgEntity = task.getBusinessAdministrators();
-            } else if (GenericRoleType.task_stakeholders.equals(role)) {
-                orgEntity = task.getTaskStakeholders();
-            } else if (GenericRoleType.potential_owners.equals(role)) {
-                orgEntity = task.getPotentialOwners();
-            } else if (GenericRoleType.notification_recipients.equals(role)) {
-                orgEntity = task.getNotificationRecipients();
-            } else if (GenericRoleType.excluded_owners.equals(role)) {
-                orgEntity = task.getExcludedOwners();
-            }
+            OrganizationalEntity curOrg = null;
+            // create one organization
+            OrganizationalEntity newOrg = null;
             
-            boolean isNewOrg = false;
-            if ((orgEntity == null) || (!orgEntity.equals(orgType))) {
-                // create one organization
-                isNewOrg = true;
+            // add all the principals to new org
+            if ((values != null) && (!values.isEmpty())) {
                 if (OrganizationalEntity.GROUP_ENTITY.equals(orgType)) {
-                    orgEntity = new GroupOrganizationalEntity();
+                    newOrg = new GroupOrganizationalEntity();
                 } else {
-                    orgEntity = new UserOrganizationalEntity();
-                }                
-            }
-            
-            // update the principal to the organization
-            orgEntity.getPrincipals().clear();
-            
-            for (String value : values) {
-                Principal p = new Principal();
-                p.setValue(value);
-                p.setOrgEntity(orgEntity);
-            }
-            
-            if (isNewOrg) {
-                if (GenericRoleType.business_administrators.equals(role)) {
-                    task.setBusinessAdministrators(orgEntity);
-                } else if (GenericRoleType.task_stakeholders.equals(role)) {
-                    task.setTaskStakeholders(orgEntity);
-                } else if (GenericRoleType.potential_owners.equals(role)) {
-                    task.setPotentialOwners(orgEntity);
-                } else if (GenericRoleType.notification_recipients.equals(role)) {
-                    task.setNotificationRecipients(orgEntity);
-                } else if (GenericRoleType.excluded_owners.equals(role)) {
-                    task.setExcludedOwners(orgEntity);
+                    newOrg = new UserOrganizationalEntity();
+                } 
+                
+                for (String value : values) {
+                    Principal p = new Principal();
+                    p.setValue(value);
+                    p.setOrgEntity(newOrg);
+                    newOrg.addPrincipal(p);
                 }
             }
+
+            if (GenericRoleType.business_administrators.equals(role)) {
+                curOrg = task.getBusinessAdministrators();
+                task.setBusinessAdministrators(newOrg);
+            } else if (GenericRoleType.task_stakeholders.equals(role)) {
+                curOrg = task.getTaskStakeholders();
+                task.setTaskStakeholders(newOrg);
+            } else if (GenericRoleType.potential_owners.equals(role)) {
+                curOrg = task.getPotentialOwners();
+                task.setPotentialOwners(newOrg);
+            } else if (GenericRoleType.notification_recipients.equals(role)) {
+                curOrg = task.getNotificationRecipients();
+                task.setNotificationRecipients(newOrg);
+            } else if (GenericRoleType.excluded_owners.equals(role)) {
+                curOrg = task.getExcludedOwners();
+                task.setExcludedOwners(newOrg);
+            }            
+            
+            this.updateTask(task);
+            if (curOrg != null) {
+                this.entityManager.remove(curOrg);
+            }
         }
-        
-        this.updateTask(task);
-    }
+     }
 
     public List<Task> query(UserRoles ur, String selectClause, String whereClause, String orderByClause, int maxTasks, int taskIndexOffset)
                     throws InvalidQueryException {

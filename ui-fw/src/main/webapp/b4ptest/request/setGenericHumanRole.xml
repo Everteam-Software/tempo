@@ -1,0 +1,9 @@
+<setGenericHumanRole xmlns="http://www.intalio.com/WS-HT/api/xsd" xmlns:htd="http://www.intalio.com/WS-HT">
+	<identifier>test</identifier>
+	<genericHumanRole>potential_owners</genericHumanRole>
+	<organizationalEntity>
+		<htd:users>
+			<htd:user>intalio\admin</htd:user>
+		</htd:users>
+	</organizationalEntity>
+</setGenericHumanRole>

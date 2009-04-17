@@ -1,13 +1,13 @@
 package org.intalio.tempo.workflow.tmsb4p.server.dao;
 
 import java.util.List;
-import java.util.Set;
 
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.taskb4p.Attachment;
 import org.intalio.tempo.workflow.taskb4p.AttachmentAccessType;
 import org.intalio.tempo.workflow.taskb4p.AttachmentInfo;
 import org.intalio.tempo.workflow.taskb4p.Comment;
+import org.intalio.tempo.workflow.taskb4p.OrganizationalEntity;
 import org.intalio.tempo.workflow.taskb4p.Task;
 import org.intalio.tempo.workflow.taskb4p.TaskStatus;
 import org.intalio.tempo.workflow.tms.InvalidQueryException;

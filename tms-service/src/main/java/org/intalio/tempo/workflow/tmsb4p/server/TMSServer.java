@@ -1036,7 +1036,6 @@ public class TMSServer implements ITMSServer {
 		ITaskDAOConnection dao = _taskDAOFactory.openConnection();
 
 		Task task = checkAdminOperation(dao, ur, identifier);
-		OrganizationalEntity orgEntity = task.getPotentialOwners();
 		if (isUser) {
 			// user type
 			if (principals.size() == 1) {
@@ -1045,34 +1044,11 @@ public class TMSServer implements ITMSServer {
 			} else {
 				task.setStatus(TaskStatus.READY);
 			}
-
-			if ((orgEntity == null)
-					|| (!OrganizationalEntity.USER_ENTITY
-							.equalsIgnoreCase(orgEntity.getEntityType()))) {
-				orgEntity = new UserOrganizationalEntity();
-			}
-
-		} else {
-			// should be group type
-			task.setStatus(TaskStatus.READY);
-			if ((orgEntity == null)
-					|| (!OrganizationalEntity.GROUP_ENTITY
-							.equalsIgnoreCase(orgEntity.getEntityType()))) {
-				orgEntity = new GroupOrganizationalEntity();
-			}
 		}
-
-		orgEntity.getPrincipals().clear();
-		for (String principal : principals) {
-			Principal p = new Principal();
-			p.setValue(principal);
-			p.setOrgEntity(orgEntity);
-			orgEntity.addPrincipal(p);
-		}
-		task.setPotentialOwners(orgEntity);
-
+		
+		String orgType = isUser? OrganizationalEntity.USER_ENTITY: OrganizationalEntity.GROUP_ENTITY;
 		try {
-			dao.updateTask(task);
+			dao.updateTaskRole(identifier, GenericRoleType.potential_owners, principals, orgType);
 			dao.commit();
 		} catch (Exception e) {
 			_logger.error("Cannot nominate Task: ", e);
