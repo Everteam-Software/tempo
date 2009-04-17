@@ -329,6 +329,9 @@ public class TaskJPAStatement {
             }
         }
 
+        if (result.length() == 0) {
+            return "";
+        }
         return "(" + result.toString() + ")";
     }
 
@@ -419,6 +422,10 @@ public class TaskJPAStatement {
                 Map<String, Object> values = paraValues.getJPAValues();
                 m_statement.getParaValues().putAll(values);
             }
+        }
+
+        if (result.length() == 0) {
+            return "";
         }
 
         return "(" + result.toString() + ")";
@@ -649,6 +656,8 @@ public class TaskJPAStatement {
 
     public SQLStatement getStatement() throws InvalidFieldException, ParseException, SQLClauseException {
         // convert all clauses
+        m_statement.clear();
+        this.initialize();
         if (this.m_specifiedRoles) {
             this.m_statement.addSelectClause(TASK_ALIAS);
             this.convertWhereClause();
@@ -665,6 +674,7 @@ public class TaskJPAStatement {
             }
 
         } else {
+            
             this.convertSelectClause();
             this.convertWhereClause();
             this.convertOrderbyClause();

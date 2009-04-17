@@ -967,11 +967,9 @@ public class TMSServer implements ITMSServer {
 			String genericHumanRole, String workQueue,
 			TStatus.Enum[] statusList, String whereClause,
 			String createdOnClause, int maxTasks) throws TMSException {
-		System.out.println("tmsserver->getTasks");
 		UserRoles ur = null;
 		try {
 			ur = _authProvider.authenticate(participantToken);
-			System.out.println("userid:" + ur.getUserID());
 		} catch (Exception e) {
 			e.printStackTrace();
 			this._logger.error("authenticate user failed", e);
@@ -984,23 +982,14 @@ public class TMSServer implements ITMSServer {
 			for (int i = 0; i < statusList.length; i++) {
 				statuses.add(TaskStatus.valueOf(statusList[i].toString()));
 			}
-			System.out.println("==>call dao.getMyTasks");
+
 			List<Task> tasks = dao
 					.getMyTasks(ur, taskType, genericHumanRole, workQueue,
 							statuses, whereClause, createdOnClause, maxTasks);
-			_logger.info("return " + tasks.size() + " tasks.");
 
 			return tasks;
-
-			// if (_logger.isDebugEnabled())
-			// _logger.debug("Workflow Task " + task + " was created");
-			// TODO : Use credentials.getUserID() :vb
 		} catch (Exception e) {
 			_logger.error("Cannot create Workflow Tasks", e);
-			System.out.println("exception raised," + e.getMessage());
-			// TODO :
-			// TaskIDConflictException
-			// must be rethrowed :vb
 		} finally {
 			dao.close();
 		}

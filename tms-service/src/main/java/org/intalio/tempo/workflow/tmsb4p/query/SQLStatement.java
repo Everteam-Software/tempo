@@ -72,6 +72,13 @@ public class SQLStatement {
 		return paraValues.size() + 1;
 	}
 	
+	public void clear(){
+	    this.selectClause.clear();
+	    this.fromClause.clear();
+	    this.whereClause.clear();
+	    this.orderByClause.clear();
+	}
+	
 	public String toString() {
 		StringBuffer result = new StringBuffer();
 		
