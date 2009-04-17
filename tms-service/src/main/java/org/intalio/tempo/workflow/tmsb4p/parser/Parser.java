@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class Parser/*@bgen(jjtree)*/implements ParserTreeConstants, ParserConstants {/*@bgen(jjtree)*/
-  protected JJTParserState jjtree = new JJTParserState();private final static String metachars = "tnrbf\\\"";
-        private final static String chars = "\t\n\r\b\f\\\"";
+  protected JJTParserState jjtree = new JJTParserState();private final static String metachars = "tnrbf\u005c\u005c\u005c"";
+        private final static String chars = "\u005ct\u005cn\u005cr\u005cb\u005cf\u005c\u005c\u005c"";
 
     private List<String> errorList = new ArrayList<String>();
         public Node parseStream(java.io.Reader stream)
@@ -40,7 +40,7 @@ public class Parser/*@bgen(jjtree)*/implements ParserTreeConstants, ParserConsta
 
                 StringBuilder output = new StringBuilder();
 
-                while ((i = inputStr.indexOf('\\', p)) != -1) {
+                while ((i = inputStr.indexOf('\u005c\u005c', p)) != -1) {
                         output.append(inputStr.substring(p, i));
 
                         if (i+1 == len) break;
@@ -55,7 +55,7 @@ public class Parser/*@bgen(jjtree)*/implements ParserTreeConstants, ParserConsta
                                 // This code should be unreachable if the parser
                                 // is functioning properly because strings containing
                                 // unknown escape characters should not be accepted.
-                                output.append('\\');
+                                output.append('\u005c\u005c');
                                 output.append(metac);
                         } else {
                                 // its corresponding true char
@@ -1179,7 +1179,7 @@ GRAMMAR START
                 }
                 catch (Exception e) {
                         jjtn000.setValue(null);
-                        addToErrorList("Can't parse \"" + t.image + "\"");
+                        addToErrorList("Can't parse \u005c"" + t.image + "\u005c"");
                 }
         break;
       case FLOATING_POINT_LITERAL:
@@ -1191,7 +1191,7 @@ GRAMMAR START
                 }
                 catch (Exception e) {
                         jjtn000.setValue(null);
-                        addToErrorList("Can't parse \"" + t.image + "\"");
+                        addToErrorList("Can't parse \u005c"" + t.image + "\u005c"");
                 }
         break;
       default:

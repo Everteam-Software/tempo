@@ -1067,6 +1067,7 @@ public class TMSServer implements ITMSServer {
 			Principal p = new Principal();
 			p.setValue(principal);
 			p.setOrgEntity(orgEntity);
+			orgEntity.addPrincipal(p);
 		}
 		task.setPotentialOwners(orgEntity);
 
