@@ -55,7 +55,7 @@ public interface ITaskDAOConnection {
 			List<TaskStatus> statusList, String whereClause,
 			String createdOnClause, int maxTasks) throws InvalidQueryException;
 	
-	public List<Task> query(UserRoles ur, String selectClause,
+	public List query(UserRoles ur, String selectClause,
 			String whereClause, String orderByClause, int maxTasks,
 			int taskIndexOffset) throws InvalidQueryException;
 	
