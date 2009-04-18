@@ -1,10 +1,13 @@
 package org.intalio.tempo.workflow.tmsb4p.server;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.xmlbeans.GDate;
+import org.apache.xmlbeans.GDuration;
 import org.apache.xmlbeans.XmlObject;
 import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.auth.IAuthProvider;
@@ -193,9 +196,38 @@ public class TMSServer implements ITMSServer {
         }
     }
     
-    void checkTaskStatus(Task task, TaskStatus[] status) throws TMSException{
+    void checkTaskStatus(String taskId, TaskStatus[] status) throws TMSException{
+    	ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+    	Task task = null;
+    	try{
+    	 task = dao.fetchTaskIfExists(taskId);
+    	}catch(Exception e){
+    		throw new B4PPersistException(e);
+    	}finally{
+    		dao.close();
+    	}
+    	 if (task==  null)
+    		 throw new IllegalArgumentException("fetch task failed");
     	TaskStatus s = task.getStatus();
     	if (s == TaskStatus.SUSPENDED){
+    		Date st = task.getSuspendStartTime();
+    		if (st != null){
+    			Date until = new Date(st.getTime()+task.getSuspendPeriod()*1000);
+    			Date t = new Date(); // current time
+    			if (t.after(until)){  // expired 
+    				try{
+    					task.setStatus(task.getOriginalStatus());
+    					//task.setOriginalStatus(null);
+    					dao.updateTask(task);
+    					dao.commit();
+    				}catch(Exception e){
+    					throw new B4PPersistException(e);
+    		    	}finally{
+    		    		dao.close();
+    		    	}
+    			}else
+    				throw new IllegalStateException("Task suspended");
+    		}else // unlimited suspend
     		throw new IllegalStateException("Task suspended");
     	}
     	
@@ -309,8 +341,9 @@ public class TMSServer implements ITMSServer {
 				throw new IllegalAccessException(
 						"User must be potential owner (only in ready states) or actual owner");
 
-		// @TODO check status ( should be ready )
-
+		// check status ( should be ready )
+		checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.READY});
+		
 		// update task status
 			dao.updateTaskStatus(identifier, TaskStatus.IN_PROGRESS);
 			dao.commit();
@@ -350,7 +383,8 @@ public class TMSServer implements ITMSServer {
 		// stop task
 
 		// @TODO check status ( should be ready )
-
+		checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.IN_PROGRESS});
+		
 		// update task status
 			dao.updateTaskStatus(identifier, TaskStatus.RESERVED);
 			dao.commit();
@@ -390,8 +424,9 @@ public class TMSServer implements ITMSServer {
 			checkPermission(task, ur, new int[] { ITMSServer.ACTUAL_OWNER,
 					ITMSServer.BUSINESSADMINISTRATORS });
 
-			// @TODO check status ( should be ready )
-
+			// check status ( should be ready )
+			checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.READY});
+			
 			// update task status
 
 			task.setStatus(TaskStatus.RESERVED);
@@ -438,8 +473,9 @@ public class TMSServer implements ITMSServer {
 				throw new IllegalAccessException(
 						"User must be potential(only in ready states) owner or business adiministrator");
 
-			// @TODO check status ( should be ready )
-
+			// check status ( should be ready )
+			checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.READY, TaskStatus.IN_PROGRESS});
+			
 			// update task status
 
 			// TODO assign task to user and put him into potential owner if he
@@ -483,7 +519,8 @@ public class TMSServer implements ITMSServer {
 					ITMSServer.BUSINESSADMINISTRATORS });
 
 			// @TODO check status ( should be ready )
-
+			checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.READY, TaskStatus.IN_PROGRESS});
+			
 			// update task
 
 			// TODO impl logic
@@ -527,7 +564,8 @@ public class TMSServer implements ITMSServer {
 					ITMSServer.BUSINESSADMINISTRATORS,
 					ITMSServer.POTENTIAL_OWNERS });
 			// @TODO check status ( should be ready )
-
+			checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.READY, TaskStatus.IN_PROGRESS});
+			
 			// update task
 
 			// TODO impl logic
@@ -580,8 +618,8 @@ public class TMSServer implements ITMSServer {
 				throw new IllegalAccessException(
 						"User must be potential owner or business adiministrator");
 
-			// @TODO check status ( should be ready )
-
+			// @TODO check status 
+			checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.SUSPENDED});
 			// update task
 
 			// TODO impl logic
@@ -626,8 +664,9 @@ public class TMSServer implements ITMSServer {
 					ITMSServer.BUSINESSADMINISTRATORS,
 					ITMSServer.TASK_INITIATOR });
 
-			// @TODO check status ( should be ready )
-
+			// check status ( should be ready )
+			checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.READY, TaskStatus.IN_PROGRESS, TaskStatus.CREATED, TaskStatus.RESERVED});
+			
 			// update task
 
 			// TODO impl logic
@@ -669,7 +708,8 @@ public class TMSServer implements ITMSServer {
 			// check permission (actual owner)
 			checkPermission(task, ur, new int[] { ITMSServer.ACTUAL_OWNER });
 
-			// @TODO check status ( should be ready )
+			//  check status
+			checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.READY, TaskStatus.IN_PROGRESS, TaskStatus.CREATED, TaskStatus.RESERVED});
 
 			// update task
 
@@ -712,7 +752,8 @@ public class TMSServer implements ITMSServer {
 			// check permission (actual owner)
 			checkPermission(task, ur, new int[] { ITMSServer.ACTUAL_OWNER });
 
-			// @TODO check status ( should be ready )
+			// check status ( should be ready )
+			checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.READY, TaskStatus.IN_PROGRESS, TaskStatus.CREATED, TaskStatus.RESERVED});
 
 			// update task
 			// TODO impl logic
@@ -766,7 +807,8 @@ public class TMSServer implements ITMSServer {
 				throw new IllegalAccessException(
 						"User must be potential owner or business adiministrator");
 
-			// @TODO check status ( should be ready )
+			// check status 
+			checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.READY, TaskStatus.IN_PROGRESS, TaskStatus.RESERVED});
 
 			// update task
 			// TODO impl logic
@@ -818,16 +860,35 @@ public class TMSServer implements ITMSServer {
 				throw new IllegalAccessException(
 						"User must be potential owner or business adiministrator");
 
-			// @TODO check status ( should be ready )
-			
+			// check status ( should be ready )
+			checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.READY, TaskStatus.IN_PROGRESS, TaskStatus.RESERVED});
+		
 			// update task
-			
+			Date t_now = new Date();
+			int t_p = 0;
+			if (time.isSetPointOfTime()){
+				Date tt = time.getPointOfTime().getTime();		
+			}else if (time.isSetTimePeriod()){
+				// convert stupid GDuration to second
+				GDuration gd = time.getTimePeriod();
+				GDuration gDuration = new GDuration(gd);  
+				Calendar cal = Calendar.getInstance();  
+				cal.setTimeInMillis(0);  
+				GDate base = new GDate(cal);  
+				GDate d = base.add(gDuration);
+				
+				t_p = (int)d.getDate().getTime()/1000;
+			}
+			task.setSuspendStartTime(t_now);
+			task.setSuspendPeriod(t_p);
 			
 			// TODO impl logic
 
 			// update status
-			dao.updateTaskStatus(identifier, TaskStatus.SUSPENDED);
+			task.setStatus(TaskStatus.SUSPENDED);
 
+			dao.updateTask(task);
+			
 			// commit
 			dao.commit();
 		} catch (Exception e) {
