@@ -1,0 +1,9 @@
+<getMyTaskAbstracts xmlns="http://www.intalio.com/WS-HT/api/xsd" xmlns:htpt="http://www.intalio.com/WS-HT/protocol">
+	<taskType></taskType>
+    <genericHumanRole></genericHumanRole>
+    <workQueue></workQueue>
+    <status>CREATED</status>
+    <whereClause></whereClause>
+    <createdOnClause></createdOnClause>
+    <maxTasks>10</maxTasks>
+</getMyTaskAbstracts>
