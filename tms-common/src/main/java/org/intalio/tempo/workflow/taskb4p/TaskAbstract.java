@@ -62,7 +62,7 @@ public abstract class TaskAbstract {
 	@Basic
 	private Date suspendStartTime;
     @Basic
-	private Date suspendPeriod;
+	private int suspendPeriod;
 
 	public String getId() {
 		return id;
@@ -224,11 +224,11 @@ public abstract class TaskAbstract {
         this.suspendStartTime = suspendStartTime;
     }
 
-    public Date getSuspendPeriod() {
+    public int getSuspendPeriod() {
         return suspendPeriod;
     }
 
-    public void setSuspendPeriod(Date suspendPeriod) {
+    public void setSuspendPeriod(int suspendPeriod) {
         this.suspendPeriod = suspendPeriod;
     }
 }
