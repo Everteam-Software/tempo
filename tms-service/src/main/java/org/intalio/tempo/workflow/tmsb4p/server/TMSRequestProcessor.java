@@ -34,6 +34,7 @@ import org.intalio.tempo.workflow.taskb4p.TaskStatus;
 import org.intalio.tempo.workflow.taskb4p.TaskType;
 import org.intalio.tempo.workflow.taskb4p.UserOrganizationalEntity;
 import org.intalio.tempo.workflow.tms.TMSException;
+import org.intalio.tempo.workflow.tmsb4p.query.QueryUtil;
 import org.intalio.tempo.workflow.tmsb4p.server.dao.GenericRoleType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -349,15 +350,16 @@ public class TMSRequestProcessor {
         
     }
 
-    private void marshalTaskQueryResultRow(int i, Task t, TTaskQueryResultRow tt) {
-        tt.setIdArray(i,t.getId());
-//        if (t == null || tt == null)
-//            return;
+    private void marshalTaskQueryResultRow(String[] columns, Object data, TTaskQueryResultRow tt) {
+        if (tt == null)
+            return;
+        
 //        if (t.getActivationTime() != null) {
-//            tt.setActivationTime(convertDateToCalendar(t.getActivationTime()));
+//            tt.setActivationTimeArray(new Calendar[]{convertDateToCalendar(t.getActivationTime())});
 //        }
-//        tt.setActualOwner(t.getActualOwner());
-//
+//        if (t.getActualOwner() != null) {
+//            tt.setActualOwnerArray(new String[]{t.getActualOwner()});
+//        }
 //        // Business Administrators
 //        tt.setBusinessAdministrators(marshalOrgEntity(t.getBusinessAdministrators()));
 //
@@ -1564,7 +1566,7 @@ public class TMSRequestProcessor {
             Query req = QueryDocument.Factory.parse(requestElement.getXMLStreamReader()).getQuery();
 
             // call server
-            List<Task> ret = _server.query(participantToken, req.getSelectClause(), req.getWhereClause(), req.getOrderByClause(), req.getMaxTasks(), req
+            List ret = _server.query(participantToken, req.getSelectClause(), req.getWhereClause(), req.getOrderByClause(), req.getMaxTasks(), req
                             .getTaskIndexOffset());
 
             // marshal response
@@ -1577,10 +1579,11 @@ public class TMSRequestProcessor {
                 result.addNewRow();
             }
             
+            String[] queryColumn = QueryUtil.parseSelectClause(req.getSelectClause());
             for (int i = 0; i < ret.size(); i++) {
-                Task t = ret.get(i);
+                Object data = ret.get(i);
                 TTaskQueryResultRow tt = result.getRowArray(i);
-                this.marshalTaskQueryResultRow(i, t, tt); 
+                this.marshalTaskQueryResultRow(queryColumn, data, tt); 
             }
             return XmlTooling.convertDocument(resp);
         } catch (Exception e) {

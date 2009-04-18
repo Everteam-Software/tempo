@@ -101,7 +101,7 @@ public class TaskJPAStatement {
 
     private void convertSelectClause() throws InvalidFieldException {
         String[] clauses = QueryUtil.parseSelectClause(this.m_selectClause);
-        if (clauses.length == 0) {
+        if ((clauses == null) || (clauses.length == 0)) {
             m_statement.addSelectClause(TASK_ALIAS);
             return;
         }
@@ -129,7 +129,7 @@ public class TaskJPAStatement {
     }
 
     private void convertWhereClause() throws ParseException, InvalidFieldException {
-        if (this.m_whereClause == null) {
+        if ((this.m_whereClause == null) || (this.m_whereClause.trim().length() == 0)) {
             return;
         }
         Reader reader = new StringReader(this.m_whereClause);

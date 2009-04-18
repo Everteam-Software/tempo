@@ -1,0 +1,5 @@
+<query xmlns="http://www.intalio.com/WS-HT/api/xsd" xmlns:htpt="http://www.intalio.com/WS-HT/protocol">
+    <selectClause></selectClause>
+    <whereClause></whereClause>
+    <maxTasks>10</maxTasks>
+</query>

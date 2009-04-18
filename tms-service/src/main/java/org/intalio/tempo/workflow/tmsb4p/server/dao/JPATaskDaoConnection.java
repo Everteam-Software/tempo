@@ -233,7 +233,7 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
         }
      }
 
-    public List<Task> query(UserRoles ur, String selectClause, String whereClause, String orderByClause, int maxTasks, int taskIndexOffset)
+    public List query(UserRoles ur, String selectClause, String whereClause, String orderByClause, int maxTasks, int taskIndexOffset)
                     throws InvalidQueryException {
         TaskJPAStatement taskStatement = new TaskJPAStatement(selectClause, whereClause, orderByClause);
 
@@ -242,7 +242,7 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
         query.setFirstResult(taskIndexOffset);
         query.setMaxResults(maxTasks);
 
-        return (List<Task>) query.getResultList();
+        return query.getResultList();
     }
 
     public List<Task> getMyTasks(UserRoles ur, String taskType, String genericHumanRole, String workQueue, List<TaskStatus> statusList,

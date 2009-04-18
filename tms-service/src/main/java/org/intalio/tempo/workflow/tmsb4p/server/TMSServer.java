@@ -1010,7 +1010,7 @@ public class TMSServer implements ITMSServer {
 	 * Query operation
 	 *****************************************/
 
-	public List<Task> query(String participantToken, String selectClause,
+	public List query(String participantToken, String selectClause,
 			String whereClause, String orderByClause, int maxTasks,
 			int taskIndexOffset) throws TMSException {
 		// get user
