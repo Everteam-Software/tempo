@@ -195,6 +195,21 @@ public class TMSServer implements ITMSServer {
         }
     }
     
+    void checkTaskStatus(Task task, TaskStatus[] status) throws TMSException{
+    	TaskStatus s = task.getStatus();
+    	if (s == TaskStatus.SUSPENDED){
+    		throw new IllegalStateException("Task suspended");
+    	}
+    	
+    	for (int i =0; i< status.length; i++){
+    		if (s == status[i])
+    			return;
+    	}
+    	
+    	throw new IllegalStateException("status error, task must be in (" + status.toString()+")");
+    	
+    }
+    
 	/**************************************
 	 * flow-related participant operations
 	 ***************************************/
@@ -806,8 +821,10 @@ public class TMSServer implements ITMSServer {
 						"User must be potential owner or business adiministrator");
 
 			// @TODO check status ( should be ready )
-
+			
 			// update task
+			
+			
 			// TODO impl logic
 
 			// update status
