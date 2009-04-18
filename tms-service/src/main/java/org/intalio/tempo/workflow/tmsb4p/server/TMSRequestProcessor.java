@@ -48,6 +48,7 @@ import com.intalio.wsHT.api.TAttachmentInfo;
 import com.intalio.wsHT.api.TComment;
 import com.intalio.wsHT.api.TStatus;
 import com.intalio.wsHT.api.TTask;
+import com.intalio.wsHT.api.TTaskAbstract;
 import com.intalio.wsHT.api.TTaskQueryResultRow;
 import com.intalio.wsHT.api.TTaskQueryResultSet;
 import com.intalio.wsHT.api.xsd.ActivateDocument;
@@ -76,6 +77,8 @@ import com.intalio.wsHT.api.xsd.GetAttachmentsDocument;
 import com.intalio.wsHT.api.xsd.GetAttachmentsResponseDocument;
 import com.intalio.wsHT.api.xsd.GetCommentsDocument;
 import com.intalio.wsHT.api.xsd.GetCommentsResposneDocument;
+import com.intalio.wsHT.api.xsd.GetMyTaskAbstractsDocument;
+import com.intalio.wsHT.api.xsd.GetMyTaskAbstractsResponseDocument;
 import com.intalio.wsHT.api.xsd.GetMyTasksDocument;
 import com.intalio.wsHT.api.xsd.GetMyTasksResponseDocument;
 import com.intalio.wsHT.api.xsd.GetTaskDescriptionDocument;
@@ -132,6 +135,8 @@ import com.intalio.wsHT.api.xsd.GetAttachmentsDocument.GetAttachments;
 import com.intalio.wsHT.api.xsd.GetAttachmentsResponseDocument.GetAttachmentsResponse;
 import com.intalio.wsHT.api.xsd.GetCommentsDocument.GetComments;
 import com.intalio.wsHT.api.xsd.GetCommentsResposneDocument.GetCommentsResposne;
+import com.intalio.wsHT.api.xsd.GetMyTaskAbstractsDocument.GetMyTaskAbstracts;
+import com.intalio.wsHT.api.xsd.GetMyTaskAbstractsResponseDocument.GetMyTaskAbstractsResponse;
 import com.intalio.wsHT.api.xsd.GetMyTasksDocument.GetMyTasks;
 import com.intalio.wsHT.api.xsd.GetMyTasksResponseDocument.GetMyTasksResponse;
 import com.intalio.wsHT.api.xsd.GetTaskDescriptionDocument.GetTaskDescription;
@@ -344,6 +349,145 @@ public class TMSRequestProcessor {
         
     }
 
+    private void marshalTaskQueryResultRow(int i, Task t, TTaskQueryResultRow tt) {
+        tt.setIdArray(i,t.getId());
+//        if (t == null || tt == null)
+//            return;
+//        if (t.getActivationTime() != null) {
+//            tt.setActivationTime(convertDateToCalendar(t.getActivationTime()));
+//        }
+//        tt.setActualOwner(t.getActualOwner());
+//
+//        // Business Administrators
+//        tt.setBusinessAdministrators(marshalOrgEntity(t.getBusinessAdministrators()));
+//
+//        tt.setCreatedBy(t.getCreatedBy());
+//        if (t.getCreatedOn() != null) {
+//            tt.setCreatedOn(convertDateToCalendar(t.getCreatedOn()));
+//        }
+//        tt.setEscalated(t.isEscalated());
+//
+//        tt.setExpirationTime(convertDateToCalendar(t.getExpirationTime()));
+//        
+//        if (t.getAttachments() != null && t.getAttachments().size() > 0) {
+//            tt.setHasAttachments(true);
+//        } else {
+//            tt.setHasAttachments(false);
+//        }
+//
+//        if (t.getComments() != null && t.getComments().size() > 0) {
+//            tt.setHasComments(true);
+//        } else {
+//            tt.setHasComments(false);
+//        }
+//        if (t.getFaultMessage() != null){
+//            tt.setHasFault(true);
+//        }else{
+//            tt.setHasFault(false);
+//        }
+//        if (t.getOutputMessage() != null){
+//            tt.setHasOutput(true);
+//        }else{
+//            tt.setHasOutput(false);
+//        }
+//        if (t.getPotentialOwners() != null && t.getPotentialOwners().getPrincipals() != null && t.getPotentialOwners().getPrincipals().size() > 0) {
+//            tt.setHasPotentialOwners(true);
+//        } else {
+//            tt.setHasPotentialOwners(false);
+//        }
+//        tt.setId(t.getId());
+//        
+//        tt.setIsSkipable(t.isSkipable());
+//        tt.setName(new javax.xml.namespace.QName(t.getName()));
+//        tt.setNotificationRecipients(marshalOrgEntity(t.getNotificationRecipients()));
+//        tt.setPotentialOwners(marshalOrgEntity(t.getPotentialOwners()));
+//        tt.setPresentationName(t.getPresentationName());
+//        tt.setPresentationSubject(t.getPresentationSubject());
+//        tt.setPrimarySearchBy(t.getPrimarySearchBy());
+//        tt.setPriority(BigInteger.valueOf(t.getPriority()));
+//        
+//        if (t.getRenderingMethName() != null)
+//            tt.setRenderingMethodExists(true);
+//        else
+//            tt.setRenderingMethodExists(false);
+//
+//        if (t.getStartBy() != null)
+//            tt.setStartByExists(true);
+//        else
+//            tt.setStartByExists(false);
+//
+//        tt.setTaskInitiator(t.getTaskInitiator());
+//        tt.setTaskStakeholders(marshalOrgEntity(t.getTaskStakeholders()));
+//
+//        if (t.getStatus() != null)
+//            tt.setStatus(TStatus.Enum.forString(t.getStatus().toString()));
+//        if (t.getTaskType() != null)
+//            tt.setTaskType(t.getTaskType().toString());
+        
+    }
+
+    
+    private void marshalTaskAbstract(Task t, TTaskAbstract tt) {
+        if (t == null || tt == null)
+            return;
+        if (t.getActivationTime() != null) {
+            tt.setActivationTime(convertDateToCalendar(t.getActivationTime()));
+        }
+
+        tt.setExpirationTime(convertDateToCalendar(t.getExpirationTime()));
+        
+        if (t.getAttachments() != null && t.getAttachments().size() > 0) {
+            tt.setHasAttachments(true);
+        } else {
+            tt.setHasAttachments(false);
+        }
+
+        if (t.getComments() != null && t.getComments().size() > 0) {
+            tt.setHasComments(true);
+        } else {
+            tt.setHasComments(false);
+        }
+        if (t.getFaultMessage() != null){
+            tt.setHasFault(true);
+        }else{
+            tt.setHasFault(false);
+        }
+        if (t.getOutputMessage() != null){
+            tt.setHasOutput(true);
+        }else{
+            tt.setHasOutput(false);
+        }
+        if (t.getPotentialOwners() != null && t.getPotentialOwners().getPrincipals() != null && t.getPotentialOwners().getPrincipals().size() > 0) {
+            tt.setHasPotentialOwners(true);
+        } else {
+            tt.setHasPotentialOwners(false);
+        }
+        tt.setId(t.getId());
+        
+        tt.setIsSkipable(t.isSkipable());
+        tt.setName(new javax.xml.namespace.QName(t.getName()));
+        tt.setPresentationName(t.getPresentationName());
+        tt.setPresentationSubject(t.getPresentationSubject());
+        tt.setPriority(BigInteger.valueOf(t.getPriority()));
+        
+        if (t.getRenderingMethName() != null)
+            tt.setRenderingMethodExists(true);
+        else
+            tt.setRenderingMethodExists(false);
+
+        if (t.getStartBy() != null)
+            tt.setStartByExists(true);
+        else
+            tt.setStartByExists(false);
+
+        if (t.getStatus() != null)
+            tt.setStatus(TStatus.Enum.forString(t.getStatus().toString()));
+        if (t.getTaskType() != null)
+            tt.setTaskType(t.getTaskType().toString());
+        
+    }
+
+    
     private void marshalAttachmentInfo(AttachmentInfo attInfo, TAttachmentInfo tAttInfo) {
         tAttInfo.setAccessType(attInfo.getAccessType().name());
 
@@ -1365,6 +1509,42 @@ public class TMSRequestProcessor {
 
     }
 
+    public OMElement getMyTaskAbstracts(OMElement requestElement) throws AxisFault {
+        try {
+            // check participant token
+            String participantToken = getParticipantToken();
+            if (participantToken == null)
+                throw makeFault(new Exception("Cannot get participant toke in soap header"));
+
+            // unmarshal request
+            GetMyTaskAbstractsDocument reqDoc = GetMyTaskAbstractsDocument.Factory.parse(requestElement.getXMLStreamReader());
+            GetMyTaskAbstracts req = reqDoc.getGetMyTaskAbstracts();
+
+            // process request
+            List<Task> tasks = _server.getMyTasks(participantToken, req.getTaskType(), req.getGenericHumanRole(), req.getWorkQueue(), req.getStatusArray(), req
+                            .getWhereClause(), req.getCreatedOnClause(), req.getMaxTasks());
+
+            if (tasks == null) {
+                throw makeFault(new Exception("No task found with current search criteria")); 
+            }
+            // marshal response
+            GetMyTaskAbstractsResponseDocument retDoc = GetMyTaskAbstractsResponseDocument.Factory.newInstance();
+            GetMyTaskAbstractsResponse ret = retDoc.addNewGetMyTaskAbstractsResponse();
+            for (int i = 0; i < tasks.size(); i++) {
+                TTaskAbstract tt = ret.addNewTaskAbstract();
+                Task t = tasks.get(i);
+                this.marshalTaskAbstract(t, tt);
+            }
+
+            // convert to OMElment
+            return convertXML(retDoc);
+        } catch (Exception e) {
+            throw makeFault(e);
+        }
+
+    }
+
+    
     /**
      * advanced query
      * 
@@ -1374,7 +1554,6 @@ public class TMSRequestProcessor {
      * @author Jackie Ju, Michael Zhu
      */
     public OMElement query(OMElement requestElement) throws AxisFault {
-        System.out.print("=======query\n");
         // check participant token
         String participantToken = getParticipantToken();
         if (participantToken == null)
@@ -1390,16 +1569,18 @@ public class TMSRequestProcessor {
 
             // marshal response
             QueryResponseDocument resp = QueryResponseDocument.Factory.newInstance();
+            QueryResponse qr = resp.addNewQueryResponse();
+            TTaskQueryResultSet result = qr.addNewQuery();
+            
+            // add all the necessary rows
             for (int i = 0; i < ret.size(); i++) {
-                Task r = ret.get(i);
-                QueryResponse qr = resp.addNewQueryResponse();
-                TTaskQueryResultSet result = qr.addNewQuery();
-                TTaskQueryResultRow row = result.addNewRow();
-                row.addActivationTime(convertDateToCalendar(r.getActivationTime()));
-                row.addActualOwner(r.getActualOwner());
-                // ? row.addCompleteByExists(r.)
-                // ...
-
+                result.addNewRow();
+            }
+            
+            for (int i = 0; i < ret.size(); i++) {
+                Task t = ret.get(i);
+                TTaskQueryResultRow tt = result.getRowArray(i);
+                this.marshalTaskQueryResultRow(i, t, tt); 
             }
             return XmlTooling.convertDocument(resp);
         } catch (Exception e) {

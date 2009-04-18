@@ -4,14 +4,19 @@ import java.util.Date;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Lob;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Table;
 
-@MappedSuperclass
+@Entity
+@Table(name = "tempob4p_task")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn
 public abstract class TaskAbstract {
 	@Id
 	private String id;
@@ -54,6 +59,10 @@ public abstract class TaskAbstract {
 	private String outputMessage;
 	@Basic
 	private String renderingMethName;
+	@Basic
+	private Date suspendStartTime;
+    @Basic
+	private Date suspendPeriod;
 
 	public String getId() {
 		return id;
@@ -206,4 +215,20 @@ public abstract class TaskAbstract {
 	public void setRenderingMethName(String renderingMethName) {
 		this.renderingMethName = renderingMethName;
 	}
+
+    public Date getSuspendStartTime() {
+        return suspendStartTime;
+    }
+
+    public void setSuspendStartTime(Date suspendStartTime) {
+        this.suspendStartTime = suspendStartTime;
+    }
+
+    public Date getSuspendPeriod() {
+        return suspendPeriod;
+    }
+
+    public void setSuspendPeriod(Date suspendPeriod) {
+        this.suspendPeriod = suspendPeriod;
+    }
 }

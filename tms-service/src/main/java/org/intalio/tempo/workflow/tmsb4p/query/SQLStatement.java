@@ -12,6 +12,8 @@ public class SQLStatement {
 	private List<String> orderByClause = new ArrayList<String>();
 	private Map<String, Object> paraValues = null;
 	
+	private boolean initialized = true;
+	
 	public List<String> getSelectClause() {
 		return selectClause;
 	}
@@ -78,8 +80,14 @@ public class SQLStatement {
 	    this.whereClause.clear();
 	    this.orderByClause.clear();
 	}
-	
-	public String toString() {
+
+	public boolean isInitialized() {
+        return initialized;
+    }
+    public void setInitialized(boolean initialized) {
+        this.initialized = initialized;
+    }
+    public String toString() {
 		StringBuffer result = new StringBuffer();
 		
 		result.append("select distinct ");

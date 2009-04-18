@@ -23,6 +23,7 @@ import org.intalio.tempo.workflow.taskb4p.GroupOrganizationalEntity;
 import org.intalio.tempo.workflow.taskb4p.OrganizationalEntity;
 import org.intalio.tempo.workflow.taskb4p.Principal;
 import org.intalio.tempo.workflow.taskb4p.Task;
+import org.intalio.tempo.workflow.taskb4p.TaskAbstract;
 import org.intalio.tempo.workflow.taskb4p.TaskStatus;
 import org.intalio.tempo.workflow.taskb4p.UserOrganizationalEntity;
 import org.intalio.tempo.workflow.tms.InvalidQueryException;
@@ -244,9 +245,8 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
         return (List<Task>) query.getResultList();
     }
 
-    public List<Task> getMyTasks(UserRoles ur, String taskType, String genericHumanRole, String workQueue, List<TaskStatus> statusList, String whereClause,
-                    String createdOnClause, int maxTasks) throws InvalidQueryException {
-
+    public List<Task> getMyTasks(UserRoles ur, String taskType, String genericHumanRole, String workQueue, List<TaskStatus> statusList,
+                    String whereClause, String createdOnClause, int maxTasks) throws InvalidQueryException {
         List<String> genRoles = QueryUtil.parseString(genericHumanRole, ",");
         if (genRoles == null) {
             throw new InvalidQueryException("No role has been specifed");
@@ -258,7 +258,7 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
         
         TaskJPAStatement taskStatement = null;
         if (workQueue != null && workQueue.length() > 0) {
-        	
+            
             List<String> groups = new ArrayList<String>();
             // check whether the user belongs the work queue, if not, empty
             // result returned.
@@ -290,10 +290,10 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
 
         Query query = this.createJPAQuery(taskStatement);
         query.setMaxResults(maxTasks);
-
-        return (List<Task>) query.getResultList();
+        
+        return (List<Task>)query.getResultList();
     }
-
+    
     private String assembleWhereClause(String taskType, List<TaskStatus> statusList, String whereClause, String createdOnClause) {
         StringBuffer result = new StringBuffer();
 

@@ -1,7 +1,6 @@
 package org.intalio.tempo.workflow.tmsb4p.server;
 
 import java.util.List;
-import java.util.Set;
 
 import org.apache.xmlbeans.XmlObject;
 import org.intalio.tempo.workflow.auth.AuthException;
@@ -9,6 +8,7 @@ import org.intalio.tempo.workflow.taskb4p.Attachment;
 import org.intalio.tempo.workflow.taskb4p.AttachmentInfo;
 import org.intalio.tempo.workflow.taskb4p.Comment;
 import org.intalio.tempo.workflow.taskb4p.Task;
+import org.intalio.tempo.workflow.taskb4p.TaskAbstract;
 import org.intalio.tempo.workflow.tms.InvalidTaskStateException;
 import org.intalio.tempo.workflow.tms.TMSException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
