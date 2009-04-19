@@ -3,6 +3,7 @@ package org.intalio.tempo.workflow.tmsb4p.server.dao;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -23,7 +24,6 @@ import org.intalio.tempo.workflow.taskb4p.GroupOrganizationalEntity;
 import org.intalio.tempo.workflow.taskb4p.OrganizationalEntity;
 import org.intalio.tempo.workflow.taskb4p.Principal;
 import org.intalio.tempo.workflow.taskb4p.Task;
-import org.intalio.tempo.workflow.taskb4p.TaskAbstract;
 import org.intalio.tempo.workflow.taskb4p.TaskStatus;
 import org.intalio.tempo.workflow.taskb4p.UserOrganizationalEntity;
 import org.intalio.tempo.workflow.tms.InvalidQueryException;
@@ -240,9 +240,16 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
         Query query = this.createJPAQuery(taskStatement);
 
         query.setFirstResult(taskIndexOffset);
-        query.setMaxResults(maxTasks);
-
-        return query.getResultList();
+        if (maxTasks > 0) {
+            query.setMaxResults(maxTasks);
+        }
+        
+        List result =  query.getResultList();
+        // needs to convert the result with the query columns
+        String[] columns = taskStatement.getQueryColumns();
+        
+        result = convertResult(result, columns);
+        return result;
     }
 
     public List<Task> getMyTasks(UserRoles ur, String taskType, String genericHumanRole, String workQueue, List<TaskStatus> statusList,
@@ -289,7 +296,9 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
         }
 
         Query query = this.createJPAQuery(taskStatement);
-        query.setMaxResults(maxTasks);
+        if (maxTasks > 0) {
+            query.setMaxResults(maxTasks);
+        }
         
         return (List<Task>)query.getResultList();
     }
@@ -390,6 +399,43 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
         int size = query.getResultList().size();
         
         return (size > 0);
+    }
+    
+    private List convertResult(List data, String[] columns) {
+        if ((data == null) || (data.isEmpty())) {
+            return Collections.EMPTY_LIST;
+        }
+        
+        boolean isTaskInstance = (data.get(0) instanceof Task);
+        if (isTaskInstance) {
+            return data;
+        }
+        
+        boolean isArray = data.get(0).getClass().isArray();
+        if (isArray) {
+            if (((Object[])data.get(0)).length != columns.length) {
+                // the length should be equal
+                // TODO: throw exception here.
+            } 
+        }
+
+        List<Map> result = new ArrayList<Map>();
+        for (int i = 0; i < data.size(); i++) {
+            Map<String, Object> row = new HashMap<String, Object>();
+            if (isArray) {
+                Object[] rowValues = (Object[])data.get(i);
+                for (int j = 0; j < columns.length; j++) {
+                    row.put(columns[j], rowValues[j]); 
+                }
+            } else {
+                // only column in the search result
+                row.put(columns[0], data.get(i));
+            }
+            
+            result.add(row);
+        }
+        
+        return result;
     }
     
     // TODO: below method will be removed

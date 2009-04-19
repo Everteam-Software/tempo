@@ -33,4 +33,5 @@ public interface TaskView {
 	
 	// extends field
 	public static String ATTACHMENTS = "attachments";
+	public static String TASK = "task";
 }

@@ -25,7 +25,7 @@ import org.intalio.tempo.workflow.tmsb4p.server.dao.GenericRoleType;
 public class TaskJPAStatement {
     private static final String TASK_ALIAS = "t";
 
-    // for the attachment info
+    // for the attachment info(the alias may be used in the select clause).
     static final String ATT_ALIAS = "a";
     static final String ATT_FROM_CLAUSE = "in (t.attachments) a";
 
@@ -42,7 +42,11 @@ public class TaskJPAStatement {
     // for the notification recipient
     static final String NOTIFY_RECIPIENT_ALIAS = "tr";
     static final String NOTIFY_RECIPIENT_FROM_CLAUSE = "in (t.notificationRecipients.principals) tr";
+    // for the excluded owners
+    static final String EXCLUDED_OWNERS_ALIAS = "te";
+    static final String EXCLUDED_OWNERS_FROM_CLAUSE = "in (t.excludedOwners.principals) tr";
 
+    
     private static final String SELECT_ALL_CLAUSE = "*";
     private static final String ORDER_BY_ASC = "asc";
     private static final String ORDER_BY_DESC = "desc";
@@ -112,10 +116,9 @@ public class TaskJPAStatement {
         }
 
         for (int i = 0; i < clauses.length; i++) {
-            String viewField = TaskFieldConverter.getTaskViewField(clauses[i]);
+            String viewField = TaskFieldConverter.getTaskViewSelectField(clauses[i]);
 
             if ((TaskView.ATTACHMENT_TYPE.equals(viewField)) || (TaskView.ATTACHMENT_NAME.equals(viewField))) {
-
                 m_statement.addFromClause(TaskJPAStatement.ATT_FROM_CLAUSE);
                 m_statement.addSelectClause(TaskJPAStatement.ATT_ALIAS);
 
@@ -126,7 +129,7 @@ public class TaskJPAStatement {
                 }
             }
         }
-    }
+     }
 
     private void convertWhereClause() throws ParseException, InvalidFieldException {
         if ((this.m_whereClause == null) || (this.m_whereClause.trim().length() == 0)) {
@@ -148,7 +151,7 @@ public class TaskJPAStatement {
 
         if (!this.m_specifiedRoles) {
             // output the user query information
-            outputUserQuerInfo(output);
+            outputGroupOrUserQuery(output);
         }
 
         if (output.length() > 0) {
@@ -156,7 +159,7 @@ public class TaskJPAStatement {
         }
     }
 
-    private void outputUserQuerInfo(StringBuffer output) throws InvalidFieldException {
+    private void outputGroupOrUserQuery(StringBuffer output) throws InvalidFieldException {
         // if the group or user query is defined , the role query must be
         // defined.
         if ((this.m_groupIdNode != null) || (this.m_userIdNode != null)) {
@@ -202,11 +205,6 @@ public class TaskJPAStatement {
     }
 
     private void outputRoleNullQuery(String roleName, String operatorName, StringBuffer output) {
-        if (roleName.equalsIgnoreCase(GenericRoleType.excluded_owners.name())) {
-            // TODO: ignore it, should model this role in the task entity?
-            return;
-        }
-
         int start = output.indexOf(ROLE_PLACE_HOLDER);
         int end = start + ROLE_PLACE_HOLDER.length();
         String mappingRole = TaskFieldConverter.getRoleMappingField(roleName);
@@ -291,7 +289,15 @@ public class TaskJPAStatement {
             } else if (role.equalsIgnoreCase(GenericRoleType.actual_owner.name())) {
                 // ignore it, only worked for the user type.
             } else if (role.equalsIgnoreCase(GenericRoleType.excluded_owners.name())) {
-                // ignore it, should model this role in the task entity?
+                this.m_statement.addFromClause(EXCLUDED_OWNERS_FROM_CLAUSE);
+
+                ParameterValues paraValues = new ParameterValues("and");
+                // Assemble the sql like
+                // "(te.value in (?5) and t.excludedOwners.entityType=?6)"
+                paraValues.addPara(new SinglePara(EXCLUDED_OWNERS_ALIAS + ".value", collectionOp, groups));
+                paraValues.addPara(new SinglePara(TASK_ALIAS + ".excludedOwners.entityType", QueryOperator.EQUALS, OrganizationalEntity.GROUP_ENTITY));
+
+                roleQueries.add(paraValues);
             } else if (role.equalsIgnoreCase(GenericRoleType.business_administrators.name())) {
                 this.m_statement.addFromClause(BUSINESS_ADMIN_FROM_CLAUSE);
 
@@ -386,7 +392,15 @@ public class TaskJPAStatement {
                 paraValues.addPara(new SinglePara(TASK_ALIAS + ".actualOwner", collectionOp, users));
                 roleQueries.add(paraValues);
             } else if (role.equalsIgnoreCase(GenericRoleType.excluded_owners.name())) {
-                // ignore it, should model this role in the task entity?
+                this.m_statement.addFromClause(EXCLUDED_OWNERS_FROM_CLAUSE);
+
+                ParameterValues paraValues = new ParameterValues("and");
+                // Assemble the sql like
+                // "(te.value in (?5) and t.excludedOwners.entityType=?6)"
+                paraValues.addPara(new SinglePara(EXCLUDED_OWNERS_ALIAS + ".value", collectionOp, users));
+                paraValues.addPara(new SinglePara(TASK_ALIAS + ".excludedOwners.entityType", QueryOperator.EQUALS, OrganizationalEntity.USER_ENTITY));
+
+                roleQueries.add(paraValues);            
             } else if (role.equalsIgnoreCase(GenericRoleType.business_administrators.name())) {
                 this.m_statement.addFromClause(BUSINESS_ADMIN_FROM_CLAUSE);
 
@@ -682,7 +696,6 @@ public class TaskJPAStatement {
             if ((roleQuery != null) && (roleQuery.length() > 0)) {
                 this.m_statement.addWhereClause(roleQuery);
             }
-
         } else {
             
             this.convertSelectClause();
@@ -693,8 +706,29 @@ public class TaskJPAStatement {
         this.m_statement.setInitialized(false);        
         return this.m_statement;
     }
+       
+    public String[] getQueryColumns() {        
+        String[] columns = this.m_statement.getSelectColumns();
+        
+        // remove the alias from the column name
+        for (int i = 0; i < columns.length; i++) {
+            String column = columns[i];
+            if (column.startsWith(TASK_ALIAS + ".")) {
+                column = column.substring((TASK_ALIAS + ".").length());
+            }
+            
+            if (ATT_ALIAS.equals(column)) {
+                column = TaskView.ATTACHMENTS;
+            } else if (ATT_ALIAS.equals(TASK_ALIAS)) {
+                column = TaskView.TASK;
+            }
+            columns[i] = column;
+        }
+        
+        return columns;
+    }
 
-    static class ParaValuesWithAlias {
+    private static class ParaValuesWithAlias {
         private ParameterValues paraValues = null;
         private String jpaAlias = null;
 

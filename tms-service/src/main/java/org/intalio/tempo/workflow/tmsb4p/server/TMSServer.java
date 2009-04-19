@@ -21,6 +21,7 @@ import org.intalio.tempo.workflow.taskb4p.Principal;
 import org.intalio.tempo.workflow.taskb4p.Task;
 import org.intalio.tempo.workflow.taskb4p.TaskStatus;
 import org.intalio.tempo.workflow.tms.B4PPersistException;
+import org.intalio.tempo.workflow.tms.InvalidQueryException;
 import org.intalio.tempo.workflow.tms.InvalidTaskStateException;
 import org.intalio.tempo.workflow.tms.TMSException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
@@ -1003,10 +1004,6 @@ public class TMSServer implements ITMSServer {
     }
 
 	/*****************************************
-	 * administrative operation
-	 *****************************************/
-
-	/*****************************************
 	 * Query operation
 	 *****************************************/
 
@@ -1032,11 +1029,10 @@ public class TMSServer implements ITMSServer {
 					maxTasks, taskIndexOffset);
 		} catch (Exception e) {
 			_logger.error("Query failed", e);
+			throw new InvalidQueryException(e);
 		} finally {
 			dao.close();
 		}
-
-		return null;
 	}
 
 	public List<Task> getMyTasks(String participantToken, String taskType,
@@ -1047,9 +1043,8 @@ public class TMSServer implements ITMSServer {
 		try {
 			ur = _authProvider.authenticate(participantToken);
 		} catch (Exception e) {
-			e.printStackTrace();
 			this._logger.error("authenticate user failed", e);
-			return null;
+			throw new InvalidQueryException(e);
 		}
 
 		ITaskDAOConnection dao = _taskDAOFactory.openConnection();
@@ -1066,13 +1061,15 @@ public class TMSServer implements ITMSServer {
 			return tasks;
 		} catch (Exception e) {
 			_logger.error("Cannot get MyTasks: ", e);
+			throw new InvalidQueryException(e);
 		} finally {
 			dao.close();
 		}
-
-		return null;
-
 	}
+
+	/*****************************************
+     * administrative operation
+     *****************************************/
 	public void activate(String participantToken, String identifier)
 			throws AuthException, InvalidTaskStateException,
 			UnavailableTaskException {
@@ -1088,6 +1085,7 @@ public class TMSServer implements ITMSServer {
 			dao.commit();
 		} catch (Exception e) {
 			_logger.error("Cannot activate Task: ", e);
+			throw new AuthException(e);
 		} finally {
 			dao.close();
 		}
@@ -1116,6 +1114,7 @@ public class TMSServer implements ITMSServer {
 			dao.commit();
 		} catch (Exception e) {
 			_logger.error("Cannot nominate Task: ", e);
+			throw new AuthException(e);
 		} finally {
 			dao.close();
 		}
@@ -1195,6 +1194,7 @@ public class TMSServer implements ITMSServer {
 			dao.commit();
 		} catch (Exception e) {
 			_logger.error("Cannot set generic role: ", e);
+			throw new AuthException(e);
 		} finally {
 			dao.close();
 		}

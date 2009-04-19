@@ -87,6 +87,14 @@ public class SQLStatement {
     public void setInitialized(boolean initialized) {
         this.initialized = initialized;
     }
+    
+    public String[] getSelectColumns() {
+        if (this.selectClause == null) {
+            return new String[0];
+        }
+        
+        return this.selectClause.toArray(new String[0]);
+    }
     public String toString() {
 		StringBuffer result = new StringBuffer();
 		
