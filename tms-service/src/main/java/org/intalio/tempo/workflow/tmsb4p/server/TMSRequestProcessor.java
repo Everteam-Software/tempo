@@ -2,6 +2,7 @@ package org.intalio.tempo.workflow.tmsb4p.server;
 
 import java.io.InputStream;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -211,6 +212,21 @@ public class TMSRequestProcessor {
      * Internal function
      ************************************************************************/
 
+	private String makeString(Object[] ar){
+		if (ar==null)
+			return "";
+		
+		StringBuffer buf = new StringBuffer("[");
+		for (int i= 0; i< ar.length; i++)
+			if (i == 0) 
+				buf.append(ar[i].toString());
+			else
+				buf.append(", "+ar[i].toString());
+		buf.append("]");
+		return buf.toString();
+	}
+
+	
     /**
      * @TODO need to be improved
      */
@@ -788,6 +804,7 @@ public class TMSRequestProcessor {
 
             THumanTaskContext tasks[] = req.getCreate().getHumanTaskContextArray();
 
+            ArrayList<String> taskIds = new ArrayList<String>();
             // call server
             for (int i = 0; i < tasks.length; i++) {
                 // Log.log("task "+i);
@@ -800,16 +817,19 @@ public class TMSRequestProcessor {
                 task.setStatus(TaskStatus.CREATED);
 
                 // set potentialOwner
+                System.out.println("set potentialOwner");
                 TGenericHumanRole[] pos = tasks[i].getPeopleAssignments().getPotentialOwnersArray();
                 OrganizationalEntity potentialOwner = convertOE(pos);
                 task.setPotentialOwners(potentialOwner);
 
                 // set businessAdministrators
+                System.out.println("set businessAdministrators");
                 pos = tasks[i].getPeopleAssignments().getBusinessAdministratorsArray();
                 OrganizationalEntity businessAdministrators = convertOE(pos);
                 task.setBusinessAdministrators(businessAdministrators);
 
                 // set notificationRecipients
+                System.out.println("set notificationRecipients");
                 pos = tasks[i].getPeopleAssignments().getRecipientsArray();
                 OrganizationalEntity notificationRecipients = convertOE(pos);
                 task.setNotificationRecipients(notificationRecipients);
@@ -822,11 +842,13 @@ public class TMSRequestProcessor {
                 // task.setTaskInitiator(taskInitiator);
 
                 // set taskStakeholders
+                System.out.println("set taskStakeholders");
                 pos = tasks[i].getPeopleAssignments().getTaskStakeholdersArray();
                 OrganizationalEntity taskStakeholders = convertOE(pos);
                 task.setTaskStakeholders(taskStakeholders);
 
                 // set excludedOwners
+                System.out.println("set excludedOwners");
                 pos = tasks[i].getPeopleAssignments().getExcludedOwnersArray();
                 OrganizationalEntity excludedOwners = convertOE(pos);
                 task.setExcludedOwners(excludedOwners);
@@ -836,14 +858,15 @@ public class TMSRequestProcessor {
                 task.setSkipable(tasks[i].getIsSkipable());
                 task.setTaskInitiator(tasks[i].getPeopleAssignments().getTaskInitiatorArray().toString());
                 task.setTaskType(TaskType.TASK);
-                taskID = task.getId();
-
+               
                 _server.create(task, participantToken);
+                
+                taskIds.add(task.getId());
             }
 
             // marshal response
             CreateResponseDocument resp = CreateResponseDocument.Factory.newInstance();
-            resp.addNewCreateResponse().setOut(taskID);
+            resp.addNewCreateResponse().setOut(taskIds.toString());
 
             // convert to OMElment
             return this.convertXML(resp);

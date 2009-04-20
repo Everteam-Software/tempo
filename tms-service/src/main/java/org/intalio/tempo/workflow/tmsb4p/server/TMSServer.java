@@ -83,6 +83,7 @@ public class TMSServer implements ITMSServer {
 		buf.append("]");
 		return buf.toString();
 	}
+	
 	private String makeString(int[] ar){
 		if (ar==null)
 			return "";
@@ -111,7 +112,7 @@ public class TMSServer implements ITMSServer {
 			System.out.println("===>s size="+s.length);
 	
 			for (i = 0; i < s.length; i++) {
-				System.out.println("s["+i+"]="+s[i]);
+				System.out.println("s["+i+"]="+s[i].getValue());
 				if (ur.getUserID().equalsIgnoreCase(s[i].getValue()))
 					return true;
 			}
@@ -156,6 +157,7 @@ public class TMSServer implements ITMSServer {
 		if (checkPermission(ur, oe))
 			ret.add(ITMSServer.TASK_STAKEHOLDERS);
 
+		System.out.println("user in roles " + ret.toString());
 		return ret;
 
 	}
@@ -267,7 +269,7 @@ public class TMSServer implements ITMSServer {
     			return;
     	}
     	
-    	throw new IllegalStateException("status error, task must be in (" + status.toString()+")");
+    	throw new IllegalStateException("status error, task must be in (" + makeString(status)+")");
     	
     }
     
@@ -370,12 +372,13 @@ public class TMSServer implements ITMSServer {
 					&& task.getStatus() != TaskStatus.READY)
 				throw new IllegalAccessException(
 						"Potential owner can start task only in ready states");
-			if (!r.contains(ITMSServer.ACTUAL_OWNER))
+			if (!(r.contains(ITMSServer.POTENTIAL_OWNERS) && task.getStatus() == TaskStatus.READY)
+					&& !r.contains(ITMSServer.ACTUAL_OWNER))
 				throw new IllegalAccessException(
 						"User must be potential owner (only in ready states) or actual owner");
 
 		// check status ( should be ready )
-		checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.READY});
+		checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.READY, TaskStatus.RESERVED});
 		
 		// update task status
 			dao.updateTaskStatus(identifier, TaskStatus.IN_PROGRESS);
@@ -409,7 +412,7 @@ public class TMSServer implements ITMSServer {
 						+ identifier);
 
 			// check permission (actual owner / business administrators can
-			// claim tasks
+			// stop tasks
 			checkPermission(task, ur, new int[] { ITMSServer.ACTUAL_OWNER,
 					ITMSServer.BUSINESSADMINISTRATORS });
 
@@ -453,16 +456,23 @@ public class TMSServer implements ITMSServer {
 						+ identifier);
 
 			// check permission (actual owner / business administrators can
-			// claim tasks
+
 			checkPermission(task, ur, new int[] { ITMSServer.ACTUAL_OWNER,
 					ITMSServer.BUSINESSADMINISTRATORS });
 
 			// check status ( should be ready )
 			checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.READY});
 			
+			// set actual owner
+			//task.setActualOwner(ur.getUserID());
+			ArrayList<String> users = new ArrayList<String>();
+			users.add(ur.getUserID());
+			dao.updateTaskRole(identifier, GenericRoleType.actual_owner, users, OrganizationalEntity.USER_ENTITY); 
+			dao.updateTask(task);
+			
 			// update task status
-
 			task.setStatus(TaskStatus.RESERVED);
+			
 			dao.updateTask(task);
 			dao.commit();
 		} catch (NoResultException e) {
