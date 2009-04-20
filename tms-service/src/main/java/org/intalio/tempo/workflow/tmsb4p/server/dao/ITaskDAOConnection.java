@@ -1,6 +1,8 @@
 package org.intalio.tempo.workflow.tmsb4p.server.dao;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.taskb4p.Attachment;
@@ -8,7 +10,6 @@ import org.intalio.tempo.workflow.taskb4p.AttachmentAccessType;
 import org.intalio.tempo.workflow.taskb4p.AttachmentInfo;
 import org.intalio.tempo.workflow.taskb4p.Comment;
 import org.intalio.tempo.workflow.taskb4p.Task;
-import org.intalio.tempo.workflow.taskb4p.TaskAbstract;
 import org.intalio.tempo.workflow.taskb4p.TaskStatus;
 import org.intalio.tempo.workflow.tms.InvalidQueryException;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
@@ -55,7 +56,7 @@ public interface ITaskDAOConnection {
 			List<TaskStatus> statusList, String whereClause,
 			String createdOnClause, int maxTasks) throws InvalidQueryException;
 	
-	public List query(UserRoles ur, String selectClause,
+	public Collection<Map<String, Object>> query(UserRoles ur, String selectClause,
 			String whereClause, String orderByClause, int maxTasks,
 			int taskIndexOffset) throws InvalidQueryException;
 	

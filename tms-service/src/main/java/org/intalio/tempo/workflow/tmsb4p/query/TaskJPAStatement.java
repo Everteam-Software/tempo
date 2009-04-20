@@ -27,7 +27,7 @@ public class TaskJPAStatement {
 
     // for the attachment info(the alias may be used in the select clause).
     static final String ATT_ALIAS = "a";
-    static final String ATT_FROM_CLAUSE = "in (t.attachments) a";
+    static final String ATT_FROM_CLAUSE = "left join t.attachments a";
 
     // for user and role info
     // for the task stake holders
@@ -104,33 +104,74 @@ public class TaskJPAStatement {
     }
 
     private void convertSelectClause() throws InvalidFieldException {
-        String[] clauses = QueryUtil.parseSelectClause(this.m_selectClause);
-        if ((clauses == null) || (clauses.length == 0)) {
-            m_statement.addSelectClause(TASK_ALIAS);
-            return;
-        }
+		List<String> viewFields = TaskFieldConverter
+				.getSelectViewFields(this.m_selectClause);
+		
+		if (viewFields.contains(TaskView.TASK)) {
+			viewFields.clear();
+			viewFields.add(TaskView.TASK);
+		}
+		
+		for (String viewField : viewFields) {
+			if ((TaskView.ATTACHMENT_TYPE.equals(viewField))
+					|| (TaskView.ATTACHMENT_NAME.equals(viewField))
+					|| (TaskView.ATTACHMENTS.equals(viewField))) {
+//				m_statement.addFromClause(TaskJPAStatement.ATT_FROM_CLAUSE);
+				String temp = m_statement.getFromClause().get(0); 
+				m_statement.getFromClause().set(0, temp + " " + ATT_FROM_CLAUSE);
+				m_statement.addSelectClause(TaskJPAStatement.ATT_ALIAS);
+			} else if (TaskView.TASK.equals(viewField)){
+				m_statement.addSelectClause(TaskJPAStatement.TASK_ALIAS);
+			} else {
+				String mappingField = TaskFieldConverter
+						.getQueryColumn(viewField);
+				if (mappingField != null) {
+					m_statement
+							.addSelectClause(TASK_ALIAS + "." + mappingField);
+				}
+			}
+		}
+		
+		if (m_statement.getSelectClause().isEmpty()) {
+			throw new InvalidFieldException(
+					"The select clause is invalide or field isn't supported yet.");
+		}
+			
+		// always include the id in the select clauses.
+		boolean existIdField = viewFields.contains(TaskView.ID)
+				|| viewFields.contains(TaskView.TASK);
+		if (!existIdField) {
+			m_statement.addSelectClause(TASK_ALIAS + "." + TaskFieldConverter
+					.getQueryColumn(TaskView.ID));
+		}
+	}
 
-        if ((clauses.length == 1) && (SELECT_ALL_CLAUSE.equals(clauses[0]))) {
-            m_statement.addSelectClause(TASK_ALIAS);
-            return;
-        }
-
-        for (int i = 0; i < clauses.length; i++) {
-            String viewField = TaskFieldConverter.getTaskViewSelectField(clauses[i]);
-
-            if ((TaskView.ATTACHMENT_TYPE.equals(viewField)) || (TaskView.ATTACHMENT_NAME.equals(viewField))) {
-                m_statement.addFromClause(TaskJPAStatement.ATT_FROM_CLAUSE);
-                m_statement.addSelectClause(TaskJPAStatement.ATT_ALIAS);
-
-            } else {
-                String mappingField = TaskFieldConverter.getFieldForSelectClause(clauses[i]);
-                if (mappingField != null) {
-                    m_statement.addSelectClause(TASK_ALIAS + "." + mappingField);
-                }
+    public List<String> getQueryColumns() {        
+        List<String> columns = this.m_statement.getSelectColumns();
+        
+        // remove the alias from the column name
+        List<String> result = new ArrayList<String>();
+        for (String column : columns) {
+            if (column.startsWith(TASK_ALIAS + ".")) {
+                column = column.substring((TASK_ALIAS + ".").length());
             }
+            
+            try {
+				if (ATT_ALIAS.equals(column)) {
+					column = TaskFieldConverter
+							.getQueryColumn(TaskView.ATTACHMENTS);
+				} else if (TASK_ALIAS.equals(column)) {
+					column = TaskFieldConverter.getQueryColumn(TaskView.TASK);
+				}
+				result.add(column);
+			} catch (Exception e) {
+				// ignore it
+			}
         }
-     }
-
+        
+        return result;
+    }
+        
     private void convertWhereClause() throws ParseException, InvalidFieldException {
         if ((this.m_whereClause == null) || (this.m_whereClause.trim().length() == 0)) {
             return;
@@ -489,16 +530,6 @@ public class TaskJPAStatement {
         return result;
     }
 
-    private boolean validateRoleFun(String funName) {
-        // the function name can only be "=", "<>", "!=" and "in"
-        if ((QueryOperator.EQUALS.equals(funName)) || (QueryOperator.NOT_EQUALS.equals(funName)) || (QueryOperator.NOT_EQUALS2.equals(funName))
-                        || (QueryOperator.IN.equals(funName))) {
-            return true;
-        }
-
-        return false;
-    }
-
     private void outputNode(ASTFunNode node, StringBuffer output) throws InvalidFieldException {
         if (isAtomNode(node)) {
             outputAtomNode(node, output);
@@ -696,8 +727,7 @@ public class TaskJPAStatement {
             if ((roleQuery != null) && (roleQuery.length() > 0)) {
                 this.m_statement.addWhereClause(roleQuery);
             }
-        } else {
-            
+        } else {            
             this.convertSelectClause();
             this.convertWhereClause();
             this.convertOrderbyClause();
@@ -707,40 +737,6 @@ public class TaskJPAStatement {
         return this.m_statement;
     }
        
-    public String[] getQueryColumns() {        
-        String[] columns = this.m_statement.getSelectColumns();
-        
-        // remove the alias from the column name
-        for (int i = 0; i < columns.length; i++) {
-            String column = columns[i];
-            if (column.startsWith(TASK_ALIAS + ".")) {
-                column = column.substring((TASK_ALIAS + ".").length());
-            }
-            
-            if (ATT_ALIAS.equals(column)) {
-                column = TaskView.ATTACHMENTS;
-            } else if (ATT_ALIAS.equals(TASK_ALIAS)) {
-                column = TaskView.TASK;
-            }
-            columns[i] = column;
-        }
-        
-        return columns;
-    }
-
-    private static class ParaValuesWithAlias {
-        private ParameterValues paraValues = null;
-        private String jpaAlias = null;
-
-        public ParaValuesWithAlias(ParameterValues paraValues, String alias) {
-            this.paraValues = paraValues;
-            this.jpaAlias = alias;
-        }
-
-        public String getJPAClause(int startParaIdx) {
-            return paraValues.toJPAClause(jpaAlias, startParaIdx);
-        }
-    }
 
     public static void main(String[] args) throws Exception {
         String selectClause = "select id, tasktype, activationtime, startbyexists";

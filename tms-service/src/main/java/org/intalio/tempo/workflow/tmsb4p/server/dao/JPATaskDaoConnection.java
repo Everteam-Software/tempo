@@ -1,11 +1,13 @@
 package org.intalio.tempo.workflow.tmsb4p.server.dao;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,9 +31,11 @@ import org.intalio.tempo.workflow.taskb4p.UserOrganizationalEntity;
 import org.intalio.tempo.workflow.tms.InvalidQueryException;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
+import org.intalio.tempo.workflow.tmsb4p.query.InvalidFieldException;
 import org.intalio.tempo.workflow.tmsb4p.query.QueryOperator;
 import org.intalio.tempo.workflow.tmsb4p.query.QueryUtil;
 import org.intalio.tempo.workflow.tmsb4p.query.SQLStatement;
+import org.intalio.tempo.workflow.tmsb4p.query.TaskFieldConverter;
 import org.intalio.tempo.workflow.tmsb4p.query.TaskJPAStatement;
 import org.intalio.tempo.workflow.tmsb4p.query.TaskView;
 
@@ -177,10 +181,10 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
         List<Task> tasks = query.getResultList();
         return tasks;
     }
-    
+
     public void updateTaskRole(String taskId, GenericRoleType role, List<String> values, String orgType) throws UnavailableTaskException {
         Task task = this.fetchTaskIfExists(taskId);
-        if (GenericRoleType.task_initiator.equals(role) || GenericRoleType.actual_owner.equals(role)) {            
+        if (GenericRoleType.task_initiator.equals(role) || GenericRoleType.actual_owner.equals(role)) {
             String newUser = values.iterator().next();
             if (GenericRoleType.task_initiator.equals(role)) {
                 task.setTaskInitiator(newUser);
@@ -192,15 +196,15 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
             OrganizationalEntity curOrg = null;
             // create one organization
             OrganizationalEntity newOrg = null;
-            
+
             // add all the principals to new org
             if ((values != null) && (!values.isEmpty())) {
                 if (OrganizationalEntity.GROUP_ENTITY.equals(orgType)) {
                     newOrg = new GroupOrganizationalEntity();
                 } else {
                     newOrg = new UserOrganizationalEntity();
-                } 
-                
+                }
+
                 for (String value : values) {
                     Principal p = new Principal();
                     p.setValue(value);
@@ -224,16 +228,16 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
             } else if (GenericRoleType.excluded_owners.equals(role)) {
                 curOrg = task.getExcludedOwners();
                 task.setExcludedOwners(newOrg);
-            }            
-            
+            }
+
             this.updateTask(task);
             if (curOrg != null) {
                 this.entityManager.remove(curOrg);
             }
         }
-     }
+    }
 
-    public List query(UserRoles ur, String selectClause, String whereClause, String orderByClause, int maxTasks, int taskIndexOffset)
+    public Collection<Map<String, Object>> query(UserRoles ur, String selectClause, String whereClause, String orderByClause, int maxTasks, int taskIndexOffset)
                     throws InvalidQueryException {
         TaskJPAStatement taskStatement = new TaskJPAStatement(selectClause, whereClause, orderByClause);
 
@@ -243,17 +247,17 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
         if (maxTasks > 0) {
             query.setMaxResults(maxTasks);
         }
-        
-        List result =  query.getResultList();
+
+        List queryRet = query.getResultList();
         // needs to convert the result with the query columns
-        String[] columns = taskStatement.getQueryColumns();
-        
-        result = convertResult(result, columns);
+        List<String> columns = taskStatement.getQueryColumns();
+
+        Collection result = convertResult(queryRet, columns);
         return result;
     }
 
-    public List<Task> getMyTasks(UserRoles ur, String taskType, String genericHumanRole, String workQueue, List<TaskStatus> statusList,
-                    String whereClause, String createdOnClause, int maxTasks) throws InvalidQueryException {
+    public List<Task> getMyTasks(UserRoles ur, String taskType, String genericHumanRole, String workQueue, List<TaskStatus> statusList, String whereClause,
+                    String createdOnClause, int maxTasks) throws InvalidQueryException {
         List<String> genRoles = QueryUtil.parseString(genericHumanRole, ",");
         if (genRoles == null) {
             throw new InvalidQueryException("No role has been specifed");
@@ -262,10 +266,10 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
         // Avoid the duplicate roles.
         Set<String> queryRoles = new HashSet<String>();
         queryRoles.addAll(genRoles);
-        
+
         TaskJPAStatement taskStatement = null;
         if (workQueue != null && workQueue.length() > 0) {
-            
+
             List<String> groups = new ArrayList<String>();
             // check whether the user belongs the work queue, if not, empty
             // result returned.
@@ -299,10 +303,10 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
         if (maxTasks > 0) {
             query.setMaxResults(maxTasks);
         }
-        
-        return (List<Task>)query.getResultList();
+
+        return (List<Task>) query.getResultList();
     }
-    
+
     private String assembleWhereClause(String taskType, List<TaskStatus> statusList, String whereClause, String createdOnClause) {
         StringBuffer result = new StringBuffer();
 
@@ -358,7 +362,7 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
 
         if (data != null) {
             Set<String> keys = data.keySet();
-            for (String key: keys) {
+            for (String key : keys) {
                 query.setParameter(key, data.get(key));
             }
         }
@@ -375,21 +379,18 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
             wClause.append("(");
         }
         wClause.append(TaskView.USERID).append("='").append(ur.getUserID()).append("'");
-        
+
         if (hasAssignedRoles) {
             // group clause
-            wClause.append(" or ").append(TaskView.GROUP).append("='")
-                    .append(QueryUtil.joinString(ur.getAssignedRoles(), ","))
-                    .append("'").append(")");
+            wClause.append(" or ").append(TaskView.GROUP).append("='").append(QueryUtil.joinString(ur.getAssignedRoles(), ",")).append("'").append(")");
         }
         // role info
-        wClause.append(" and  ").append(TaskView.GENERIC_HUMAN_ROLE).append("='")
-                .append(role.name()).append("'");
+        wClause.append(" and  ").append(TaskView.GENERIC_HUMAN_ROLE).append("='").append(role.name()).append("'");
         // task id clause
         wClause.append(" and  ").append("id='").append(taskId).append("'");
-         
+
         TaskJPAStatement taskStatement = new TaskJPAStatement(selectClause, wClause.toString(), null);
-        
+
         Query query = null;
         try {
             query = this.createJPAQuery(taskStatement);
@@ -397,47 +398,86 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
             // ignore it, it shouldn't happen.
         }
         int size = query.getResultList().size();
-        
+
         return (size > 0);
     }
-    
-    private List convertResult(List data, String[] columns) {
+
+    private Collection<Map<String, Object>> convertResult(List data, List<String> columns) {
         if ((data == null) || (data.isEmpty())) {
             return Collections.EMPTY_LIST;
         }
-        
-        boolean isTaskInstance = (data.get(0) instanceof Task);
-        if (isTaskInstance) {
-            return data;
-        }
-        
+
         boolean isArray = data.get(0).getClass().isArray();
-        if (isArray) {
-            if (((Object[])data.get(0)).length != columns.length) {
-                // the length should be equal
-                // TODO: throw exception here.
-            } 
+
+        List<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
+        if (!isArray) {
+            for (int i = 0; i < data.size(); i++) {
+                Map<String, Object> row = new HashMap<String, Object>();
+                // only one column in the search result
+                row.put(columns.get(0), data.get(i));
+                listData.add(row);
+            }
+
+            return listData;
         }
 
-        List<Map> result = new ArrayList<Map>();
+        if (isArray) {
+            if (((Object[]) data.get(0)).length != columns.size()) {
+                // the length should be equal
+                // TODO: throw exception here.
+            }
+        }
+
+        Map<String, Map<String, Object>> result = new LinkedHashMap<String, Map<String, Object>>();
+
+        // it is because the attachments data in task is one collection, the
+        // attachments
+        // should be aggregated in one list.
+        Map<String, List<Object>> attMap = new LinkedHashMap<String, List<Object>>();
+        String idCol = null;
+        String attachmentCol = null;
+
+        try {
+            idCol = TaskFieldConverter.getQueryColumn(TaskView.ID);
+            attachmentCol = TaskFieldConverter.getQueryColumn(TaskView.ATTACHMENTS);
+        } catch (InvalidFieldException e) {
+            // ignore it
+        }
+
         for (int i = 0; i < data.size(); i++) {
             Map<String, Object> row = new HashMap<String, Object>();
-            if (isArray) {
-                Object[] rowValues = (Object[])data.get(i);
-                for (int j = 0; j < columns.length; j++) {
-                    row.put(columns[j], rowValues[j]); 
-                }
-            } else {
-                // only column in the search result
-                row.put(columns[0], data.get(i));
+
+            Object[] rowValues = (Object[]) data.get(i);
+            for (int j = 0; j < columns.size(); j++) {
+                row.put(columns.get(j), rowValues[j]);
             }
-            
-            result.add(row);
+
+            String id = (String) row.get(idCol);
+            Object att = row.get(attachmentCol);
+
+            if (att != null) {
+                if (attMap.get(id) == null) {
+                    attMap.put(id, new ArrayList<Object>());
+                }
+                attMap.get(id).add(att);
+            }
+
+            if (result.get(id) == null) {
+                result.put(id, row);
+            }
         }
-        
-        return result;
+
+        // put in the attachments data
+        if (!attMap.isEmpty()) {
+            for (String id : attMap.keySet()) {
+                Map<String, Object> row = result.get(id);
+                row.put(attachmentCol, attMap.get(id));
+            }
+        }
+
+        return result.values();
     }
-    
+
     // TODO: below method will be removed
     public EntityManager getEntityManager() {
         return this.entityManager;

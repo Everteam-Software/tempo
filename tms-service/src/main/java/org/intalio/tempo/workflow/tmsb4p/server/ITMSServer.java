@@ -1,6 +1,8 @@
 package org.intalio.tempo.workflow.tmsb4p.server;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.xmlbeans.XmlObject;
 import org.intalio.tempo.workflow.auth.AuthException;
@@ -8,7 +10,6 @@ import org.intalio.tempo.workflow.taskb4p.Attachment;
 import org.intalio.tempo.workflow.taskb4p.AttachmentInfo;
 import org.intalio.tempo.workflow.taskb4p.Comment;
 import org.intalio.tempo.workflow.taskb4p.Task;
-import org.intalio.tempo.workflow.taskb4p.TaskAbstract;
 import org.intalio.tempo.workflow.tms.InvalidTaskStateException;
 import org.intalio.tempo.workflow.tms.TMSException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
@@ -37,7 +38,7 @@ public interface ITMSServer {
     public void create(Task task, String participantToken) throws TMSException;
     public void remove(String participantToken, String taskId) throws TMSException;
     public List<Task> getMyTasks(String participantToken, String taskType, String genericHumanRole, String workQueue, TStatus.Enum[] statusList, String whereClause, String createdOnClause, int maxTasks) throws TMSException;
-    public List<Task> query(String participantToken, String selectClause, String whereClause, String orderByClause, int maxTasks, int taskIndexOffset) throws TMSException;
+    public Collection<Map<String, Object>> query(String participantToken, String selectClause, String whereClause, String orderByClause, int maxTasks, int taskIndexOffset) throws TMSException;
 	public void stop(String participantToken, String identifier) throws TMSException;
 	public void start(String participantToken, String identifier) throws TMSException;
 	public void claim(String participantToken, String identifier) throws TMSException;
@@ -64,8 +65,8 @@ public interface ITMSServer {
 			TTime time) throws TMSException;
 	public void suspend(String participantToken, String identifier) throws TMSException;
 
-	public void activate(String participantToken, String identifier) throws AuthException, InvalidTaskStateException, UnavailableTaskException;
-	public void nominate(String participantToken, String identifier, List<String> principals, boolean isUser) throws AuthException, InvalidTaskStateException, UnavailableTaskException;
-	public void setGenericHumanRole(String participantToken, String identifier, GenericRoleType roleType, List<String> principals, boolean isUser) throws AuthException, UnavailableTaskException;
+	public void activate(String participantToken, String identifier) throws TMSException;
+	public void nominate(String participantToken, String identifier, List<String> principals, boolean isUser) throws TMSException;
+	public void setGenericHumanRole(String participantToken, String identifier, GenericRoleType roleType, List<String> principals, boolean isUser) throws TMSException;
 
 }

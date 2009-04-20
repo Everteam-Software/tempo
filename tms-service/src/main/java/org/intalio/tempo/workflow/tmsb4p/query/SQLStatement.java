@@ -1,6 +1,7 @@
 package org.intalio.tempo.workflow.tmsb4p.query;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,12 +89,12 @@ public class SQLStatement {
         this.initialized = initialized;
     }
     
-    public String[] getSelectColumns() {
+    public List<String> getSelectColumns() {
         if (this.selectClause == null) {
-            return new String[0];
+            return Collections.EMPTY_LIST;
         }
         
-        return this.selectClause.toArray(new String[0]);
+        return this.selectClause;
     }
     public String toString() {
 		StringBuffer result = new StringBuffer();

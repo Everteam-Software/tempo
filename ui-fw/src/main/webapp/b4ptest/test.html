@@ -13,11 +13,10 @@ td.ndone {width:10px;height:6px;}
 
 td.title {font-size:10pt;text-align:center;}
 td.operation {font-size:8pt;width:51;text-align:center;}
-td.description {font-size:10pt;background:#d1ffc1;width:500px;text-align:center;}
+td.description {font-size:10pt;background:#d1ffc1;width:272;text-align:center;}
 td.action {font-size:10pt;width:126;text-align:center;}
 td.status {font-size:10pt;width:296;text-align:center;}
-td.state_transition{font-size:10pt;text-align:center;}
-td.error_handling{font-size:10pt;text-align:center;}
+
 </style>
 <!--
 <link rel="stylesheet" href="flora.tabs.css" />
@@ -102,12 +101,7 @@ function Get_Cookie( check_name ) {
 }
 
 function test(str){
-	 //$("#output").empty();
-       $("#output").css("display", "none");
-$("#input").css("display", "block");
-$("#token").css("display", "block");
-$("#content").css("display", "block");
-//$("#"+str).dialog("destroy").remove();
+$("#"+str).dialog("destroy").remove();
 var url_template = "/ui-fw/b4ptest/request/"+str+".xml?r="+ Math.random();
 
 var op = {type:'GET',async: false,url:url_template,contentType:"text/xml; charset=utf-8"};
@@ -116,17 +110,14 @@ var contentAjax = $.ajax(op);
 var content = contentAjax.responseText;			
 var token = Get_Cookie("singleLogin");
 //alert("token="+token);
-//var html='<div id="'+str+'" class="flora" title="'+str+'" style="display:none;" ><div id="'+str+'_input" style="display:block;" ><span style="font-weight:500;">Request:</span><br/>Your Token:<br/><textArea id="token" rows=8 cols=70>'+token+'</textArea><br/><textArea id="content" rows=10 cols=70>'+content+'</textArea><br/><!--<button id="upload" onclick="alert(\'not supported\');" >read from file</button>--><button id="submit" onclick="callws(\''+str+'\', \'\');">submit</button></div><div id="'+str+'_output" style="display:none;"><img src="ajax_load.gif"/></div></div>';
-var obj = $('#request');
-$("#token").get(0).innerHTML=token;
-$("#content").text(content);
-g_ws_method = str;
+var html='<div id="'+str+'" class="flora" title="'+str+'" style="display:none;" ><div id="'+str+'_input" style="display:block;" ><span style="font-weight:500;">Request:</span><br/>Your Token:<br/><textArea id="token" rows=8 cols=70>'+token+'</textArea><br/><textArea id="content" rows=10 cols=70>'+content+'</textArea><br/><!--<button id="upload" onclick="alert(\'not supported\');" >read from file</button>--><button id="submit" onclick="callws(\''+str+'\', \'\');">submit</button></div><div id="'+str+'_output" style="display:none;"><img src="ajax_load.gif"/></div></div>';
+//var obj = $('#_request');
 
 //alert(obj.get(0).innerHTML);
 //obj.get(0).innerHTML=html;
   // alert(html);
 //var obj = $("#"+str);
-//var obj = $(html);
+var obj = $(html);
 obj.css("display", "block");
 //$("#"+str+" #input").css("display", "block");
 //$("#"+str+" #output").css("display", "none");
@@ -136,12 +127,12 @@ obj.css("display", "block");
       width: 600,
       height:390,
    //   open:	function (Event, ui){alert("open");},
-    // close:function (event1, ui1){alert("destroy");obj.remove();},
+     close:function (event1, ui1){alert("destroy");obj.remove();},
       overlay: { opacity: 0.5, background: "black" },// 半透明背景
       title: "b4p test"//,   // 对话框标题
       //buttons: { "Close": function(){ $(this).dialog("destory").remove(); obj.remove();} }  // 对话框按钮
-});//.bind('close', function (e, a){alert("destroy");obj.remove();});;
-//obj.bind('close', function (e, a){alert("destroy");obj.remove();});
+}).bind('close', function (e, a){alert("destroy");obj.remove();});;
+obj.bind('close', function (e, a){alert("destroy");obj.remove();});
 
 }
 </script>
@@ -151,253 +142,59 @@ obj.css("display", "block");
 <script src="call_tempo_ws.js" type="text/javascript"></script>
 
 </head>
-<body style="font-size:10pt;color:#112222;font-family:"rebuchet MS,Trebuchet,Verdana,Helvetica,Arial,sans-serif;">
-	<div id="request" class="flora" title="" style="display:none;" >
-			<div id="input" style="display:block;" >
-				<span style="font-weight:500;">Request:</span><br/>Your Token:<br/>
-				<textArea id="token" rows=8 cols=70></textArea><br/>
-				<textArea id="content" rows=10 cols=70></textArea><br/>
-				<!--<button id="upload" onclick="alert('not supported');" >read from file</button>-->
-				<button id="submit" onclick="callws(g_ws_method);">submit</button>
-			</div>
-			<div id="output" style="display:none;"><img src="ajax_load.gif"/>
-			</div>
+<body style="font-size:10pt;color:#112222;font-family:"Trebuchet MS",Trebuchet,Verdana,Helvetica,Arial,sans-serif;>
+	<div id="_request" style="display:none" >
+		DDSS
 	</div>
 <!-- 定义Tabs头部 -->
 <div style="position:relative;z-index:99;border:0px dotted red;">
 <ul id="tabs" style="z-index:99;">
-  <li><a href="#participant_operations">Participant Operation</a></li>
-  <li><a href="#admin_operations">Admin Operation</a></li>
-  <li><a href="#query_operations">Query</a></li> 
-  <li><a href="#task_manipulation">Task Manapulation</a></li>
-  <li><a href="#integration_test">integration test</a></li>
+  <li><a href="#tab-1">Normal Operation</a></li>
+  <li><a href="#tab-2">Admin Operation</a></li>
+  <li><a href="#tab-3">Query</a></li>
 </ul>
 </div>
 
 
 <!-- 定义Tabs内容 -->
-<div id="participant_operations" style="position:relative;z-index:1;border:0px dotted red;">
-  <table width="1000" cellpadding="5" cellspacing="1" border="0" bgcolor="#999999">
+<div id="tab-1" style="position:relative;z-index:1;border:0px dotted red;">
+  <table width="750" cellpadding="5" cellspacing="1" border="0" bgcolor="#999999">
   <tr>
     <td width="51"  align="center" ><h5>Operation</h5></td>
     <td width="272"  bgcolor="#d1ffc1" align="center"><h5>Description</h5></td>
-    <td width="272"  bgcolor="#d1ffc1" align="center"><h5>Error Handling</h5></td>
-	<td align="center"><h5>State Transition</h5></td>
     <td width="126"  align="center"><h5>Action</h5></td>
-    <td width="296"  align="center"><h5>Status</h5><br/><span style="font-size:9pt;">WebService|serviceImpl|OperationImpl|Persist|security|ErrHandling</span></td>
+    <td width="296"  align="center"><h5>Status</h5><br/><span style="font-size:9pt;">WebService|serviceImpl|OperationImpl|Persist|security</span></td>
   </tr>
   <tr>
     <td class="operation" >Create</td>
     <td class="description">Create a Human Task</td>
-    <td class="error_handling"></td>
-	<td class="state_transition" > Created</td>
     <td class="action">
     <a href="#" onclick="test('create');" ><img width=30 src="test.png" alt="test it"/></a>
     </td>
     <td class="status">
     <table align="center">
     <tr>
-    <td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" />
+    <td class="done" /><td class="done" /><td class="ndone" /><td class="ndone" /><td class="ndone" />
     </tr>
     </table>
     
     </td>
   </tr>
- 
+  <tr>
+    <td width="51"  align="center">getMyTasks</td>
+    <td class="description">getMyTasks</td>
+    <td class="action"> <a href="#" onclick="test('getMyTasks');" ><img width=30 src="test.png" alt="test it"/></a></td>
+    <td class="status">
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /></tr></table>
+    </td>
+  </tr>
   <tr>
     <td class="operation" >remove</td>
-    <td class="description">Applies to notifications 
-	only. 
-	Used by notification 
-	recipients to remove the 
-	notification permanently 
-	from their task list client. 
-	It will not be returned on 
-	any subsequent retrieval 
-	operation invoked by the 
-	same user.  
-	
-
-	</td> <td class="error_handling"></td>
-	<td class="state_transition" >--- </td>
+    <td class="description">remove</td>
     <td class="action"><a href="#" onclick="test('remove');" ><img width=30 src="test.png" alt="test it"/></a></td>
     <td class="status"> 
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /></td><td class="done" /></tr></table>
+    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
     </td>
-  </tr>
-
-   <tr>
-    <td class="operation" >start</td>
-    <td class="description">Start the execution of the 
-	taskIn 
-	Actual Owner 
-	</td> <td class="error_handling"></td>
-	<td class="state_transition" >IN_PROGRESS </td>
-    <td class="action"><a href="#" onclick="test('start');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
-    <td class="status"> 
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /></tr></table>
-    </td>
-  </tr>
-  <tr>
-    <td class="operation" >stop</td>
-    <td class="description">Cancel/stop the 
-	processing of the taskIn 
-	Actual Owner 
-	</td> <td class="error_handling"></td>
-	<td class="state_transition" >RESERVED </td>
-    <td class="action"><a href="#" onclick="test('stop');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
-    <td class="status"> 
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /></tr></table>
-    </td>
-  </tr>
-  <tr>
-    <td class="operation" >claim</td>
-    <td class="description">Claim responsibility for a 
-	task
-	</td> <td class="error_handling"></td>
-	<td class="state_transition" > Reserved</td>
-    <td class="action"><a href="#" onclick="test('claim');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
-    <td class="status"> 
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /></tr></table>
-    </td>
-  </tr>
-  <tr>
-    <td class="operation" >complete</td>
-    <td class="description">Execution of the task 
-	finished successfully. 
-
-	</td> 
-	<td class="error_handling">If no 
-	output data is set the 
-	operation returns 
-	illegalArgumentFault.</td>
-	<td class="state_transition" >Completed</td>
-    <td class="action"><a href="#" onclick="test('complete');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
-    <td class="status"> 
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /></tr></table>
-    </td>
-  </tr>
-  <tr>
-    <td class="operation" >skip</td>
-    <td class="description"></td> <td class="error_handling"></td>
-	<td class="state_transition" >--- </td>
-    <td class="action"><a href="#" onclick="test('skip');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
-    <td class="status"> 
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /></tr></table>
-    </td>
-  </tr>
-  <tr>
-    <td class="operation" >release</td>
-    <td class="description">Release the task</td> <td class="error_handling"></td>
-	<td class="state_transition" >Ready</td>
-    <td class="action"><a href="#" onclick="test('release');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
-    <td class="status"> 
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /></tr></table>
-    </td>
-  </tr>
-  <tr>
-    <td class="operation" >suspend</td>
-    <td class="description">Suspend the task</td> <td class="error_handling"></td>
-	<td class="state_transition" >--- </td>
-    <td class="action"><a href="#" onclick="test('suspend');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
-    <td class="status"> 
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /></tr></table>
-    </td>
-  </tr>
-  <tr>
-    <td class="operation" >suspendUntil</td>
-    <td class="description">Suspend the task for a 
-	given period of time or 
-	until a fixed point in time. 
-	The caller has to specify 
-	either a period of time or 
-	a fixed point in time.
-	</td> <td class="error_handling"></td>
-	<td class="state_transition" >--- </td>
-    <td class="action"><a href="#" onclick="test('suspendUntil');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
-    <td class="status"> 
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /></tr></table>
-    </td>
-  </tr>
-<tr>
-    <td class="operation" >resume</td>
-    <td class="description">Resume a suspended 
-	task. 
-	</td> <td class="error_handling"></td>
-	<td class="state_transition" >--- </td>
-    <td class="action"><a href="#" onclick="test('suspendUntil');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
-    <td class="status"> 
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /></tr></table>
-    </td>
-  </tr>
-  <tr>
-    <td class="operation" >fail</td>
-    <td class="description">Actual owner completes 
-	the execution of the task 
-	raising a fault.  
-	</td> <td class="error_handling"></td>
-	<td class="state_transition" >Failed </td>
-    <td class="action"><a href="#" onclick="test('fail');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
-    <td class="status"> 
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /></tr></table>
-    </td>
-  </tr>
-  <tr>
-    <td class="operation" >forward</td>
-    <td class="description">Forward the task to 
-	another organization 
-	entity. The caller has to 
-	specify the receiving 
-	organizational entity. 
-	Potential owners can only 
-	forward a task while the 
-	task is in the Ready state.  
-	For details on forwarding 
-	human tasks refer to 
-	section 4.7.3
-	</td> <td class="error_handling"></td>
-	<td class="state_transition" > not changed | error </td>
-    <td class="action"><a href="#" onclick="test('forward');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
-    <td class="status"> 
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /></tr></table>
-    </td>
-  </tr>
-  <tr>
-    <td class="operation" >delegate</td>
-    <td class="description">Assign the task to one 
-	user and set the task to 
-	state Reserved. If the 
-	recipient was not a 
-	potential owner then this 
-	person is added to the set 
-	of potential owners.  
-	For details on delegating  
-	human tasks refer to 
-	section 4.7.3. 
-	
-	</td> <td class="error_handling"></td>
-	<td class="state_transition" >Reserved</td>
-    <td class="action"><a href="#" onclick="test('delegate');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
-    <td class="status"> 
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /></td><td class="done" /></tr></table>
-    </td>
-  </tr>
-
- 
-
- 
- 
-
-</table>
-
-</div>
-<div id="admin_operations">
-<table width="750" cellpadding="5" cellspacing="1" border="0" bgcolor="#999999">
-  <tr>
-    <td width="51"  align="center" ><h5>Operation</h5></td>
-    <td width="272"  bgcolor="#d1ffc1" align="center"><h5>Description</h5></td>
-    <td width="126"  align="center"><h5>Action</h5></td>
-    <td width="296"  align="center"><h5>Status</h5><br/><span style="font-size:9pt;">WebService|serviceImpl|OperationImpl|Persist|security</span></td>
   </tr>
   <tr>
     <td class="operation" >activate</td>
@@ -407,122 +204,156 @@ obj.css("display", "block");
     <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
     </td>
   </tr>
-  <tr>
-    <td class="operation" >nominate</td>
+   <tr>
+    <td class="operation" >start</td>
     <td class="description"></td>
-    <td class="action"><a href="#" onclick="test('nominate');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
+    <td class="action"><a href="#" onclick="test('start');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
     <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
     </td>
   </tr>
   <tr>
-    <td class="operation" >setGenericHumanRole</td>
+    <td class="operation" >stop</td>
     <td class="description"></td>
-    <td class="action"><a href="#" onclick="test('setGenericHumanRole');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
-    <td class="status"> 
-    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
-    </td>
-  </tr>
-</table>
-</div>
-<div id="query_operations">
-<table width="750" cellpadding="5" cellspacing="1" border="0" bgcolor="#999999">
-  <tr>
-    <td width="51"  align="center" ><h5>Operation</h5></td>
-    <td width="272"  bgcolor="#d1ffc1" align="center"><h5>Description</h5></td>
-    <td width="126"  align="center"><h5>Action</h5></td>
-    <td width="296"  align="center"><h5>Status</h5><br/><span style="font-size:9pt;">WebService|serviceImpl|OperationImpl|Persist|security</span></td>
-  </tr>
-  <tr>
-    <td width="51"  align="center">getMyTasks</td>
-    <td class="description">getMyTasks</td>
-    <td class="action"> <a href="#" onclick="test('getMyTasks');" ><img width=30 src="test.png" alt="test it"/></a></td>
-    <td class="status">
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></tr></table>
-    </td>
-  </tr>
- <tr>
-    <td class="operation" >getMyTaskAbstracts</td>
-    <td class="description"></td>
-    <td class="action"><a href="#" onclick="test('getMyTaskAbstracts');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
+    <td class="action"><a href="#" onclick="test('stop');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
     <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
     </td>
   </tr>
   <tr>
-    <td class="operation" >query</td>
+    <td class="operation" >claim</td>
     <td class="description"></td>
-    <td class="action"><a href="#" onclick="test('query');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
+    <td class="action"><a href="#" onclick="test('claim');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
     <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
     </td>
   </tr>
-	
-</table>
-</div>
-<div id="task_manipulation">
-  <table width="750" cellpadding="5" cellspacing="1" border="0" bgcolor="#999999">
   <tr>
-    <td width="51"  align="center" ><h5>Operation</h5></td>
-    <td width="272"  bgcolor="#d1ffc1" align="center"><h5>Description</h5></td>
-    <td width="126"  align="center"><h5>Action</h5></td>
-    <td width="296"  align="center"><h5>Status</h5><br/><span style="font-size:9pt;">WebService|serviceImpl|OperationImpl|Persist|security</span></td>
+    <td class="operation" >complete</td>
+    <td class="description"></td>
+    <td class="action"><a href="#" onclick="test('complete');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
+    <td class="status"> 
+    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
+    </td>
   </tr>
-
+  <tr>
+    <td class="operation" >skip</td>
+    <td class="description"></td>
+    <td class="action"><a href="#" onclick="test('skip');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
+    <td class="status"> 
+    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
+    </td>
+  </tr>
+  <tr>
+    <td class="operation" >release</td>
+    <td class="description"></td>
+    <td class="action"><a href="#" onclick="test('release');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
+    <td class="status"> 
+    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
+    </td>
+  </tr>
+  <tr>
+    <td class="operation" >suspend</td>
+    <td class="description"></td>
+    <td class="action"><a href="#" onclick="test('suspend');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
+    <td class="status"> 
+    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
+    </td>
+  </tr>
+  <tr>
+    <td class="operation" >suspendUntil</td>
+    <td class="description"></td>
+    <td class="action"><a href="#" onclick="test('suspendUntil');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
+    <td class="status"> 
+    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
+    </td>
+  </tr>
+  <tr>
+    <td class="operation" >fail</td>
+    <td class="description"></td>
+    <td class="action"><a href="#" onclick="test('fail');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
+    <td class="status"> 
+    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
+    </td>
+  </tr>
   <tr>
     <td class="operation" >setPriority</td>
-    <td class="description">Change the priority of the task.</td>
+    <td class="description"></td>
     <td class="action"><a href="#" onclick="test('setPriority');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /></td></tr></table>
+    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
     </td>
   </tr>
   <tr>
     <td class="operation" >addAttachment</td>
-    <td class="description">Add attachment to a task.</td>
+    <td class="description"></td>
     <td class="action"><a href="#" onclick="test('addAttachment');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /></td></tr></table>
+    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
     </td>
   </tr>
   <tr>
     <td class="operation" >getAttachmentInfos</td>
-    <td class="description">Get attachment information for all attachments associated with the task.</td>
+    <td class="description"></td>
     <td class="action"><a href="#" onclick="test('getAttachmentInfos');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /></td></tr></table>
+    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
     </td>
   </tr>
   <tr>
     <td class="operation" >getAttachments</td>
-    <td class="description">Get all attachments of a task with a given name.</td>
+    <td class="description"></td>
     <td class="action"><a href="#" onclick="test('getAttachments');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /></td></tr></table>
+    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
     </td>
   </tr>
   <tr>
-    <td class="operation" >deleteAttachments</td>
-    <td class="description">Delete the attachments with the specified name from the task.</td>
-    <td class="action"><a href="#" onclick="test('deleteAttachments');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
+    <td class="operation" >Attachments</td>
+    <td class="description"></td>
+    <td class="action"><a href="#" onclick="test('Attachments');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /></td></tr></table>
+    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
     </td>
   </tr>
   <tr>
     <td class="operation" >addComment</td>
-    <td class="description">Add a comment to a task.</td>
+    <td class="description"></td>
     <td class="action"><a href="#" onclick="test('addComment');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /></td></tr></table>
+    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
     </td>
   </tr>
   <tr>
     <td class="operation" >getComments</td>
-    <td class="description">Get all comments of a task.</td>
+    <td class="description"></td>
     <td class="action"><a href="#" onclick="test('getComments');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /></td></tr></table>
+    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
+    </td>
+  </tr>
+  <tr>
+    <td class="operation" >skip</td>
+    <td class="description"></td>
+    <td class="action"><a href="#" onclick="test('skip');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
+    <td class="status"> 
+    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
+    </td>
+  </tr>
+  <tr>
+    <td class="operation" >forward</td>
+    <td class="description"></td>
+    <td class="action"><a href="#" onclick="test('forward');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
+    <td class="status"> 
+    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
+    </td>
+  </tr>
+  <tr>
+    <td class="operation" >delegate</td>
+    <td class="description"></td>
+    <td class="action"><a href="#" onclick="test('delegate');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
+    <td class="status"> 
+    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
     </td>
   </tr>
   <tr>
@@ -535,18 +366,18 @@ obj.css("display", "block");
   </tr>
   <tr>
     <td class="operation" >getTaskInfo</td>
-    <td class="description">Applies to both tasks and notifications. Returns a data object of type tTask</td>
+    <td class="description"></td>
     <td class="action"><a href="#" onclick="test('getTaskInfo');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /></td></tr></table>
+    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
     </td>
   </tr>
   <tr>
     <td class="operation" >getTaskDescription</td>
-    <td class="description">Applies to both tasks and notifications. Returns the presentation description in the specified mime type</td>
+    <td class="description"></td>
     <td class="action"><a href="#" onclick="test('getTaskDescription');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /></td></tr></table>
+    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
     </td>
   </tr>
   <tr>
@@ -605,11 +436,61 @@ obj.css("display", "block");
     <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
     </td>
   </tr>
+  <tr>
+    <td class="operation" >getMyTaskAbstracts</td>
+    <td class="description"></td>
+    <td class="action"><a href="#" onclick="test('getMyTaskAbstracts');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
+    <td class="status"> 
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /></td></tr></table>
+    </td>
+  </tr>
+  <tr>
+    <td class="operation" >query</td>
+    <td class="description"></td>
+    <td class="action"><a href="#" onclick="test('query');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
+    <td class="status"> 
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /></td></tr></table>
+    </td>
+  </tr>
+  <tr>
+    <td class="operation" >activate</td>
+    <td class="description"></td>
+    <td class="action"><a href="#" onclick="test('activate');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
+    <td class="status"> 
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /></td></tr></table>
+    </td>
+  </tr>
+  <tr>
+    <td class="operation" >nominate</td>
+    <td class="description"></td>
+    <td class="action"><a href="#" onclick="test('nominate');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
+    <td class="status"> 
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /></td></tr></table>
+    </td>
+  </tr>
+  <tr>
+    <td class="operation" >setGenericHumanRole</td>
+    <td class="description"></td>
+    <td class="action"><a href="#" onclick="test('setGenericHumanRole');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
+    <td class="status"> 
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /></td></tr></table>
+    </td>
+  </tr>
+
+ 
+ 
+
 </table>
+
+</div>
+<div id="tab-2">
+  Second Tab
+</div>
+<div id="tab-3">
+  Third Tab
 </div>
 
-<div id="integration_test">
-	
-</div>
+
+
 </body>
 </html>

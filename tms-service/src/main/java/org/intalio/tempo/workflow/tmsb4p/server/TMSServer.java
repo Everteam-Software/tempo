@@ -2,8 +2,11 @@ package org.intalio.tempo.workflow.tmsb4p.server;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.xmlbeans.GDate;
@@ -995,7 +998,6 @@ public class TMSServer implements ITMSServer {
 
     public Task getTaskByIdentifier(String participantToken, String identifier) throws TMSException {
         UserRoles ur = _authProvider.authenticate(participantToken);
-        
 
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         Task task = dao.fetchTaskIfExists(identifier);
@@ -1007,20 +1009,11 @@ public class TMSServer implements ITMSServer {
 	 * Query operation
 	 *****************************************/
 
-	public List query(String participantToken, String selectClause,
+	public Collection<Map<String, Object>> query(String participantToken, String selectClause,
 			String whereClause, String orderByClause, int maxTasks,
 			int taskIndexOffset) throws TMSException {
 		// get user
-		UserRoles ur = null;
-		try {
-			ur = _authProvider.authenticate(participantToken);
-
-			System.out.println("userid:" + ur.getUserID());
-		} catch (Exception e) {
-			e.printStackTrace();
-			this._logger.error("authenticate user failed", e);
-			return null;
-		}
+		UserRoles ur = _authProvider.authenticate(participantToken);
 
 		// do query
 		ITaskDAOConnection dao = _taskDAOFactory.openConnection();
@@ -1039,21 +1032,14 @@ public class TMSServer implements ITMSServer {
 			String genericHumanRole, String workQueue,
 			TStatus.Enum[] statusList, String whereClause,
 			String createdOnClause, int maxTasks) throws TMSException {
-		UserRoles ur = null;
-		try {
-			ur = _authProvider.authenticate(participantToken);
-		} catch (Exception e) {
-			this._logger.error("authenticate user failed", e);
-			throw new InvalidQueryException(e);
-		}
+		UserRoles ur = _authProvider.authenticate(participantToken);
 
+        List<TaskStatus> statuses = new ArrayList<TaskStatus>();
+        for (int i = 0; i < statusList.length; i++) {
+            statuses.add(TaskStatus.valueOf(statusList[i].toString()));
+        }
 		ITaskDAOConnection dao = _taskDAOFactory.openConnection();
 		try {
-			List<TaskStatus> statuses = new ArrayList<TaskStatus>();
-			for (int i = 0; i < statusList.length; i++) {
-				statuses.add(TaskStatus.valueOf(statusList[i].toString()));
-			}
-
 			List<Task> tasks = dao
 					.getMyTasks(ur, taskType, genericHumanRole, workQueue,
 							statuses, whereClause, createdOnClause, maxTasks);
@@ -1071,29 +1057,26 @@ public class TMSServer implements ITMSServer {
      * administrative operation
      *****************************************/
 	public void activate(String participantToken, String identifier)
-			throws AuthException, InvalidTaskStateException,
-			UnavailableTaskException {
+			throws TMSException {
 		UserRoles ur = _authProvider.authenticate(participantToken);
 		ITaskDAOConnection dao = _taskDAOFactory.openConnection();
 
 		Task task = checkAdminOperation(dao, ur, identifier);
+        task.setActivationTime(new Date(System.currentTimeMillis()));
+        task.setStatus(TaskStatus.READY);		
 		try {
-			task.setActivationTime(new Date(System.currentTimeMillis()));
-			task.setStatus(TaskStatus.READY);
-
 			dao.updateTask(task);
 			dao.commit();
 		} catch (Exception e) {
 			_logger.error("Cannot activate Task: ", e);
-			throw new AuthException(e);
+			throw new B4PPersistException(e);
 		} finally {
 			dao.close();
 		}
 	}
 
 	public void nominate(String participantToken, String identifier,
-			List<String> principals, boolean isUser) throws AuthException,
-			InvalidTaskStateException, UnavailableTaskException {
+			List<String> principals, boolean isUser) throws TMSException {
 		UserRoles ur = _authProvider.authenticate(participantToken);
 		ITaskDAOConnection dao = _taskDAOFactory.openConnection();
 
@@ -1114,7 +1097,7 @@ public class TMSServer implements ITMSServer {
 			dao.commit();
 		} catch (Exception e) {
 			_logger.error("Cannot nominate Task: ", e);
-			throw new AuthException(e);
+			throw new B4PPersistException(e);
 		} finally {
 			dao.close();
 		}
@@ -1149,7 +1132,7 @@ public class TMSServer implements ITMSServer {
 
 	public void setGenericHumanRole(String participantToken, String identifier,
 			GenericRoleType roleType, List<String> principals, boolean isUser)
-			throws AuthException, UnavailableTaskException {
+			throws TMSException {
 		UserRoles ur = _authProvider.authenticate(participantToken);
 		ITaskDAOConnection dao = _taskDAOFactory.openConnection();
 
@@ -1194,7 +1177,7 @@ public class TMSServer implements ITMSServer {
 			dao.commit();
 		} catch (Exception e) {
 			_logger.error("Cannot set generic role: ", e);
-			throw new AuthException(e);
+			throw new B4PPersistException(e);
 		} finally {
 			dao.close();
 		}

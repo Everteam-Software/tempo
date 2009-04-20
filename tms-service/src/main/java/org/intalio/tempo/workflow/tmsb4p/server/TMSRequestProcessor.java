@@ -3,13 +3,17 @@ package org.intalio.tempo.workflow.tmsb4p.server;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+
+import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
@@ -34,7 +38,8 @@ import org.intalio.tempo.workflow.taskb4p.TaskStatus;
 import org.intalio.tempo.workflow.taskb4p.TaskType;
 import org.intalio.tempo.workflow.taskb4p.UserOrganizationalEntity;
 import org.intalio.tempo.workflow.tms.TMSException;
-import org.intalio.tempo.workflow.tmsb4p.query.QueryUtil;
+import org.intalio.tempo.workflow.tmsb4p.query.TaskFieldConverter;
+import org.intalio.tempo.workflow.tmsb4p.query.TaskView;
 import org.intalio.tempo.workflow.tmsb4p.server.dao.GenericRoleType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -291,8 +296,10 @@ public class TMSRequestProcessor {
         }
         tt.setEscalated(t.isEscalated());
 
-        tt.setExpirationTime(convertDateToCalendar(t.getExpirationTime()));
-        
+        if (t.getExpirationTime() != null) {
+            tt.setExpirationTime(convertDateToCalendar(t.getExpirationTime()));
+        }
+
         if (t.getAttachments() != null && t.getAttachments().size() > 0) {
             tt.setHasAttachments(true);
         } else {
@@ -304,14 +311,14 @@ public class TMSRequestProcessor {
         } else {
             tt.setHasComments(false);
         }
-        if (t.getFaultMessage() != null){
+        if (t.getFaultMessage() != null) {
             tt.setHasFault(true);
-        }else{
+        } else {
             tt.setHasFault(false);
         }
-        if (t.getOutputMessage() != null){
+        if (t.getOutputMessage() != null) {
             tt.setHasOutput(true);
-        }else{
+        } else {
             tt.setHasOutput(false);
         }
         if (t.getPotentialOwners() != null && t.getPotentialOwners().getPrincipals() != null && t.getPotentialOwners().getPrincipals().size() > 0) {
@@ -320,7 +327,7 @@ public class TMSRequestProcessor {
             tt.setHasPotentialOwners(false);
         }
         tt.setId(t.getId());
-        
+
         tt.setIsSkipable(t.isSkipable());
         tt.setName(new javax.xml.namespace.QName(t.getName()));
         tt.setNotificationRecipients(marshalOrgEntity(t.getNotificationRecipients()));
@@ -329,7 +336,8 @@ public class TMSRequestProcessor {
         tt.setPresentationSubject(t.getPresentationSubject());
         tt.setPrimarySearchBy(t.getPrimarySearchBy());
         tt.setPriority(BigInteger.valueOf(t.getPriority()));
-        
+        tt.setCompleteByExists((t.getCompleteBy() != null));
+
         if (t.getRenderingMethName() != null)
             tt.setRenderingMethodExists(true);
         else
@@ -347,97 +355,214 @@ public class TMSRequestProcessor {
             tt.setStatus(TStatus.Enum.forString(t.getStatus().toString()));
         if (t.getTaskType() != null)
             tt.setTaskType(t.getTaskType().toString());
-        
+
     }
 
-    private void marshalTaskQueryResultRow(String[] columns, Object data, TTaskQueryResultRow tt) {
-        if (tt == null)
-            return;
-        
-//        if (t.getActivationTime() != null) {
-//            tt.setActivationTimeArray(new Calendar[]{convertDateToCalendar(t.getActivationTime())});
-//        }
-//        if (t.getActualOwner() != null) {
-//            tt.setActualOwnerArray(new String[]{t.getActualOwner()});
-//        }
-//        // Business Administrators
-//        tt.setBusinessAdministrators(marshalOrgEntity(t.getBusinessAdministrators()));
-//
-//        tt.setCreatedBy(t.getCreatedBy());
-//        if (t.getCreatedOn() != null) {
-//            tt.setCreatedOn(convertDateToCalendar(t.getCreatedOn()));
-//        }
-//        tt.setEscalated(t.isEscalated());
-//
-//        tt.setExpirationTime(convertDateToCalendar(t.getExpirationTime()));
-//        
-//        if (t.getAttachments() != null && t.getAttachments().size() > 0) {
-//            tt.setHasAttachments(true);
-//        } else {
-//            tt.setHasAttachments(false);
-//        }
-//
-//        if (t.getComments() != null && t.getComments().size() > 0) {
-//            tt.setHasComments(true);
-//        } else {
-//            tt.setHasComments(false);
-//        }
-//        if (t.getFaultMessage() != null){
-//            tt.setHasFault(true);
-//        }else{
-//            tt.setHasFault(false);
-//        }
-//        if (t.getOutputMessage() != null){
-//            tt.setHasOutput(true);
-//        }else{
-//            tt.setHasOutput(false);
-//        }
-//        if (t.getPotentialOwners() != null && t.getPotentialOwners().getPrincipals() != null && t.getPotentialOwners().getPrincipals().size() > 0) {
-//            tt.setHasPotentialOwners(true);
-//        } else {
-//            tt.setHasPotentialOwners(false);
-//        }
-//        tt.setId(t.getId());
-//        
-//        tt.setIsSkipable(t.isSkipable());
-//        tt.setName(new javax.xml.namespace.QName(t.getName()));
-//        tt.setNotificationRecipients(marshalOrgEntity(t.getNotificationRecipients()));
-//        tt.setPotentialOwners(marshalOrgEntity(t.getPotentialOwners()));
-//        tt.setPresentationName(t.getPresentationName());
-//        tt.setPresentationSubject(t.getPresentationSubject());
-//        tt.setPrimarySearchBy(t.getPrimarySearchBy());
-//        tt.setPriority(BigInteger.valueOf(t.getPriority()));
-//        
-//        if (t.getRenderingMethName() != null)
-//            tt.setRenderingMethodExists(true);
-//        else
-//            tt.setRenderingMethodExists(false);
-//
-//        if (t.getStartBy() != null)
-//            tt.setStartByExists(true);
-//        else
-//            tt.setStartByExists(false);
-//
-//        tt.setTaskInitiator(t.getTaskInitiator());
-//        tt.setTaskStakeholders(marshalOrgEntity(t.getTaskStakeholders()));
-//
-//        if (t.getStatus() != null)
-//            tt.setStatus(TStatus.Enum.forString(t.getStatus().toString()));
-//        if (t.getTaskType() != null)
-//            tt.setTaskType(t.getTaskType().toString());
-        
+    private void marshalTaskQueryResultRow(Task t, TTaskQueryResultRow tt) {
+        if (t.getActivationTime() != null) {
+            tt.addActivationTime(convertDateToCalendar(t.getActivationTime()));
+        }
+        if (t.getActualOwner() != null) {
+            tt.addActualOwner(t.getActualOwner());
+        }
+        if (t.getCreatedBy() != null) {
+            tt.addCreatedBy(t.getCreatedBy());
+        }
+
+        tt.addCompleteByExists((t.getCompleteBy() != null));
+        if (t.getCreatedOn() != null) {
+            tt.addCreatedOn(convertDateToCalendar(t.getCreatedOn()));
+        }
+        tt.addEscalated(t.isEscalated());
+        if (t.getExpirationTime() != null) {
+            tt.addExpirationTime(convertDateToCalendar(t.getExpirationTime()));
+        }
+
+        tt.addHasAttachments(t.getAttachments() != null);
+        tt.addHasComments(t.getComments() != null);
+        tt.addHasFault(t.getFaultMessage() != null);
+        tt.addHasOutput(t.getOutputMessage() != null);
+        tt.addHasPotentialOwners(t.getPotentialOwners() != null);
+        tt.addId(t.getId());
+        tt.addIsSkipable(t.isSkipable());
+        if (t.getName() != null) {
+            tt.addName(QName.valueOf(t.getName()));
+        }
+
+        // TODO: for the presentation description
+        // tt.addPresentationDescription(presentationDescription)
+
+        if (t.getPresentationName() != null) {
+            tt.addPresentationName(t.getPresentationName());
+        }
+        if (t.getPresentationSubject() != null) {
+            tt.addPresentationSubject(t.getPresentationSubject());
+        }
+        if (t.getPrimarySearchBy() != null) {
+            tt.addPrimarySearchBy(t.getPrimarySearchBy());
+        }
+
+        tt.addPriority(BigInteger.valueOf(t.getPriority()));
+
+        tt.addRenderingMethodExists(t.getRenderingMethName() != null);
+        tt.addStartByExists(t.getStartBy() != null);
+        if (t.getStatus() != null) {
+            tt.addStatus(TStatus.Enum.forString(t.getStatus().name()));
+        }
+        if (t.getTaskType() != null) {
+            tt.addTaskType(t.getTaskType().name());
+        }
+        if (t.getTaskInitiator() != null) {
+            tt.setTaskInitiatorArray(new TOrganizationalEntity[] { this.marshalOrgEntity(new String[] { t.getTaskInitiator() }) });
+        }
+
+        if (t.getTaskStakeholders() != null) {
+            tt.setTaskStakeholdersArray(new TOrganizationalEntity[] { marshalOrgEntity(t.getTaskStakeholders()) });
+        }
+        if (t.getPotentialOwners() != null) {
+            tt.setPotentialOwnersArray(new TOrganizationalEntity[] { marshalOrgEntity(t.getPotentialOwners()) });
+        }
+        if (t.getBusinessAdministrators() != null) {
+            tt.setBusinessAdministratorsArray(new TOrganizationalEntity[] { marshalOrgEntity(t.getBusinessAdministrators()) });
+        }
+        if (t.getNotificationRecipients() != null) {
+            tt.setNotificationRecipientsArray(new TOrganizationalEntity[] { marshalOrgEntity(t.getNotificationRecipients()) });
+        }
     }
 
-    
+    private void marshalTaskQueryResultRow(Map<String, String> viewToColumns, Map<String, Object> data, TTaskQueryResultRow tt) {
+        for (String viewField : viewToColumns.keySet()) {
+            String column = viewToColumns.get(viewField);
+            if ((column == null) || (data.get(column) == null)) {
+                continue;
+            }
+
+            Object val = data.get(column);
+
+            if (TaskView.TASK.equals(viewField)) {
+                if (val != null) {
+                    marshalTaskQueryResultRow((Task) val, tt);
+                }
+                continue;
+            } else if (TaskView.ID.equalsIgnoreCase(viewField)) {
+                tt.addId((String) val);
+            } else if (TaskView.TASK_TYPE.equalsIgnoreCase(viewField)) {
+                if (val != null) {
+                    tt.addTaskType(((TaskType) val).name());
+                }
+            } else if (TaskView.NAME.equalsIgnoreCase(viewField)) {
+                if (val != null) {
+                    tt.addName(QName.valueOf((String) val));
+                }
+            } else if (TaskView.STATUS.equalsIgnoreCase(viewField)) {
+                if (val != null) {
+                    tt.addStatus(TStatus.Enum.forString(((TaskStatus) val).name()));
+                }
+            } else if (TaskView.PRIORITY.equalsIgnoreCase(viewField)) {
+                if (val != null) {
+                    tt.addPriority(BigInteger.valueOf((Integer) val));
+                }
+            } else if (TaskView.CREATED_ON.equalsIgnoreCase(viewField)) {
+                if (val != null) {
+                    tt.addCreatedOn(convertDateToCalendar((Date) val));
+                }
+            } else if (TaskView.ACTIVATION_TIME.equalsIgnoreCase(viewField)) {
+                if (val != null) {
+                    tt.addActivationTime(convertDateToCalendar((Date) val));
+                }
+            } else if (TaskView.EXPIRATION_TIME.equalsIgnoreCase(viewField)) {
+                if (val != null) {
+                    tt.addExpirationTime(convertDateToCalendar((Date) val));
+                }
+            } else if (TaskView.HAS_POTENTIAL_OWNERS.equalsIgnoreCase(viewField)) {
+                tt.addHasPotentialOwners(val != null);
+            } else if (TaskView.STARTBYEXISTS.equalsIgnoreCase(viewField)) {
+                tt.addStartByExists(val != null);
+            } else if (TaskView.COMPLETE_BY_EXISTS.equalsIgnoreCase(viewField)) {
+                tt.addCompleteByExists(val != null);
+            } else if (TaskView.RENDER_METH_EXISTS.equalsIgnoreCase(viewField)) {
+                tt.addRenderingMethodExists(val != null);
+            } else if (TaskView.USERID.equalsIgnoreCase(viewField)) {
+                // ignore
+            } else if (TaskView.GROUP.equalsIgnoreCase(viewField)) {
+                // ignore
+            } else if (TaskView.GENERIC_HUMAN_ROLE.equalsIgnoreCase(viewField)) {
+                // ignore
+            } else if (TaskView.SKIPABLE.equalsIgnoreCase(viewField)) {
+                tt.addIsSkipable((val != null) ? (Boolean) val : false);
+            } else if (TaskView.STARTBY.equalsIgnoreCase(viewField)) {
+                tt.addStartByExists((val != null) ? (Boolean) val : false);
+            } else if (TaskView.COMPLETE_BY.equalsIgnoreCase(viewField)) {
+                tt.addCompleteByExists((val != null) ? (Boolean) val : false);
+            } else if (TaskView.PRES_NAME.equalsIgnoreCase(viewField)) {
+                if (val != null) {
+                    tt.addPresentationName((String) val);
+                }
+            } else if (TaskView.PRES_SUBJECT.equalsIgnoreCase(viewField)) {
+                if (val != null) {
+                    tt.addPresentationSubject((String) val);
+                }
+            } else if (TaskView.RENDERING_METH_NAME.equalsIgnoreCase(viewField)) {
+                tt.addRenderingMethodExists((val != null) ? (Boolean) val : false);
+            } else if (TaskView.FAULT_MESSAGE.equalsIgnoreCase(viewField)) {
+                tt.addHasFault(val != null);
+            } else if (TaskView.INPUT_MESSAGE.equalsIgnoreCase(viewField)) {
+                // no such field in the row
+            } else if (TaskView.OUTPUT_MESSAGE.equalsIgnoreCase(viewField)) {
+                tt.addHasOutput(val != null);
+            } else if ((TaskView.ATTACHMENT_NAME.equalsIgnoreCase(viewField)) || (TaskView.ATTACHMENT_TYPE.equalsIgnoreCase(viewField))
+                            || (TaskView.ATTACHMENTS.equalsIgnoreCase(viewField))) {
+                tt.setHasAttachmentsArray(new boolean[] { (val != null) });
+            } else if (TaskView.ESCALATED.equalsIgnoreCase(viewField)) {
+                tt.addEscalated((val != null) ? (Boolean) val : false);
+            } else if (TaskView.PRIMARY_SEARCH_BY.equalsIgnoreCase(viewField)) {
+                if (val != null) {
+                    tt.addPrimarySearchBy((String) val);
+                }
+            } else if (TaskView.TASK_INITIATOR.equalsIgnoreCase(viewField)) {
+                if (val != null) {
+                    tt.setTaskInitiatorArray(new TOrganizationalEntity[] { this.marshalOrgEntity(new String[] { (String) val }) });
+                }
+            } else if (TaskView.TASK_STAKEHOLDERS.equalsIgnoreCase(viewField)) {
+                if (val != null) {
+                    tt.setTaskStakeholdersArray(new TOrganizationalEntity[] { marshalOrgEntity((OrganizationalEntity) val) });
+                }
+            } else if (TaskView.POTENTIAL_OWNERS.equalsIgnoreCase(viewField)) {
+                if (val != null) {
+                    tt.setPotentialOwnersArray(new TOrganizationalEntity[] { marshalOrgEntity((OrganizationalEntity) val) });
+                }
+            } else if (TaskView.ACTUAL_OWNER.equalsIgnoreCase(viewField)) {
+                if (val != null) {
+                    tt.addActualOwner((String) val);
+                }
+            } else if (TaskView.EXCLUDED_OWNERS.equalsIgnoreCase(viewField)) {
+                // no such field in the row
+            } else if (TaskView.BUSINESS_ADMINISTRATORS.equalsIgnoreCase(viewField)) {
+                if (val != null) {
+                    tt.setBusinessAdministratorsArray(new TOrganizationalEntity[] { marshalOrgEntity((OrganizationalEntity) val) });
+                }
+            } else if (TaskView.NOTIFICATION_RECIPIENTS.equalsIgnoreCase(viewField)) {
+                if (val != null) {
+                    tt.setNotificationRecipientsArray(new TOrganizationalEntity[] { marshalOrgEntity((OrganizationalEntity) val) });
+                }
+            }
+        }
+    }
+
     private void marshalTaskAbstract(Task t, TTaskAbstract tt) {
         if (t == null || tt == null)
             return;
         if (t.getActivationTime() != null) {
             tt.setActivationTime(convertDateToCalendar(t.getActivationTime()));
         }
+        if (t.getCreatedOn() != null) {
+            tt.setCreatedOn(convertDateToCalendar(t.getCreatedOn()));
+        }
 
-        tt.setExpirationTime(convertDateToCalendar(t.getExpirationTime()));
-        
+        if (t.getExpirationTime() != null) {
+            tt.setExpirationTime(convertDateToCalendar(t.getExpirationTime()));
+        }
+
         if (t.getAttachments() != null && t.getAttachments().size() > 0) {
             tt.setHasAttachments(true);
         } else {
@@ -449,14 +574,14 @@ public class TMSRequestProcessor {
         } else {
             tt.setHasComments(false);
         }
-        if (t.getFaultMessage() != null){
+        if (t.getFaultMessage() != null) {
             tt.setHasFault(true);
-        }else{
+        } else {
             tt.setHasFault(false);
         }
-        if (t.getOutputMessage() != null){
+        if (t.getOutputMessage() != null) {
             tt.setHasOutput(true);
-        }else{
+        } else {
             tt.setHasOutput(false);
         }
         if (t.getPotentialOwners() != null && t.getPotentialOwners().getPrincipals() != null && t.getPotentialOwners().getPrincipals().size() > 0) {
@@ -465,13 +590,15 @@ public class TMSRequestProcessor {
             tt.setHasPotentialOwners(false);
         }
         tt.setId(t.getId());
-        
+
         tt.setIsSkipable(t.isSkipable());
+        tt.setEscalated(t.isEscalated());
         tt.setName(new javax.xml.namespace.QName(t.getName()));
         tt.setPresentationName(t.getPresentationName());
         tt.setPresentationSubject(t.getPresentationSubject());
         tt.setPriority(BigInteger.valueOf(t.getPriority()));
-        
+        tt.setCompleteByExists((t.getCompleteBy() != null));
+
         if (t.getRenderingMethName() != null)
             tt.setRenderingMethodExists(true);
         else
@@ -486,10 +613,9 @@ public class TMSRequestProcessor {
             tt.setStatus(TStatus.Enum.forString(t.getStatus().toString()));
         if (t.getTaskType() != null)
             tt.setTaskType(t.getTaskType().toString());
-        
+
     }
 
-    
     private void marshalAttachmentInfo(AttachmentInfo attInfo, TAttachmentInfo tAttInfo) {
         tAttInfo.setAccessType(attInfo.getAccessType().name());
 
@@ -553,27 +679,41 @@ public class TMSRequestProcessor {
         return tOE;
     }
 
+    private TOrganizationalEntity marshalOrgEntity(String[] users) {
+        TOrganizationalEntity tOE = TOrganizationalEntity.Factory.newInstance();
+        if (users != null) {
+            TUserlist tUL = tOE.addNewUsers();
+            for (int i = 0; i < users.length; i++) {
+                TUser tUser = tUL.addNewUser();
+                tUser.setStringValue(users[i]);
+            }
+        }
+
+        return tOE;
+    }
+
     private Calendar convertDateToCalendar(Date date) {
         if (date != null) {
             Calendar cal = Calendar.getInstance();
             cal.setTime(date);
             return cal;
-        }else{
+        } else {
             return null;
         }
 
     }
-    
-    OrganizationalEntity convertOE(TGenericHumanRole[] pos) throws TMSException{
-        // TODO should return array of OE, because request support multi-OE, but task not
+
+    OrganizationalEntity convertOE(TGenericHumanRole[] pos) throws TMSException {
+        // TODO should return array of OE, because request support multi-OE, but
+        // task not
         OrganizationalEntity ret = null;
         if (pos == null || pos.length == 0)
             return null;
-        System.out.println("pos size="+pos.length);
+        System.out.println("pos size=" + pos.length);
         for (int j = 0; j < pos.length; j++) {
 
             TOrganizationalEntity oe = pos[j].getOrganizationalEntity();
-            System.out.println("oe="+oe);
+            System.out.println("oe=" + oe);
             if (oe == null)
                 continue;
             if (oe.isSetUsers()) {
@@ -582,9 +722,9 @@ public class TMSRequestProcessor {
                 TUserlist users = oe.getUsers();
                 Set<Principal> _users = new HashSet<Principal>();
                 ret.setPrincipals(_users);
-                System.out.println("users size "+ users.sizeOfUserArray());
+                System.out.println("users size " + users.sizeOfUserArray());
                 for (int u = 0; u < users.sizeOfUserArray(); u++) {
-                    System.out.println("users.getUserArray("+u+")="+users.getUserArray(u));
+                    System.out.println("users.getUserArray(" + u + ")=" + users.getUserArray(u));
                     Principal _user = new Principal();
                     _user.setValue(users.getUserArray(u));
                     _user.setOrgEntity(ret);
@@ -602,7 +742,7 @@ public class TMSRequestProcessor {
                     _g.setOrgEntity(ret);
                     _groups.add(_g);
                 }
-            }else
+            } else
                 throw new IllegalAccessException("OrganizationalEntity is not users either groups");
         }
         return ret;
@@ -638,14 +778,15 @@ public class TMSRequestProcessor {
             // unmarshal request
             CreateDocument req = CreateDocument.Factory.parse(requestElement.getXMLStreamReader());
             Create r = req.getCreate();
-            
+
             THumanTaskContext tasks[] = req.getCreate().getHumanTaskContextArray();
 
             // call server
             for (int i = 0; i < tasks.length; i++) {
                 // Log.log("task "+i);
                 Task task = new Task();
-                task.setId(UUID.randomUUID().toString()); // temporary solution to generate task id
+                task.setId(UUID.randomUUID().toString()); // temporary solution
+                                                          // to generate task id
                 task.setName("task");
                 task.setCreatedOn(new Date());
                 task.setPriority(tasks[i].getPriority().intValue());
@@ -654,41 +795,42 @@ public class TMSRequestProcessor {
                 // set potentialOwner
                 TGenericHumanRole[] pos = tasks[i].getPeopleAssignments().getPotentialOwnersArray();
                 OrganizationalEntity potentialOwner = convertOE(pos);
-                task.setPotentialOwners(potentialOwner);                
-                
+                task.setPotentialOwners(potentialOwner);
+
                 // set businessAdministrators
                 pos = tasks[i].getPeopleAssignments().getBusinessAdministratorsArray();
                 OrganizationalEntity businessAdministrators = convertOE(pos);
                 task.setBusinessAdministrators(businessAdministrators);
-                
+
                 // set notificationRecipients
                 pos = tasks[i].getPeopleAssignments().getRecipientsArray();
                 OrganizationalEntity notificationRecipients = convertOE(pos);
-                task.setNotificationRecipients(notificationRecipients);             
- 
+                task.setNotificationRecipients(notificationRecipients);
+
                 // set taskInitiator
-//                pos = tasks[i].getPeopleAssignments().getTaskInitiatorArray();
-//                String taskInitiator = pos[0].getOrganizationalEntity().getUsers().getUserArray(0);
-//                task.setTaskInitiator(taskInitiator);             
- 
+                // pos =
+                // tasks[i].getPeopleAssignments().getTaskInitiatorArray();
+                // String taskInitiator =
+                // pos[0].getOrganizationalEntity().getUsers().getUserArray(0);
+                // task.setTaskInitiator(taskInitiator);
+
                 // set taskStakeholders
                 pos = tasks[i].getPeopleAssignments().getTaskStakeholdersArray();
                 OrganizationalEntity taskStakeholders = convertOE(pos);
-                task.setTaskStakeholders(taskStakeholders);             
- 
+                task.setTaskStakeholders(taskStakeholders);
+
                 // set excludedOwners
                 pos = tasks[i].getPeopleAssignments().getExcludedOwnersArray();
                 OrganizationalEntity excludedOwners = convertOE(pos);
-                task.setExcludedOwners(excludedOwners);                         
- 
- 
+                task.setExcludedOwners(excludedOwners);
+
                 task.setInputMessage(req.getCreate().getIn());
-                
+
                 task.setSkipable(tasks[i].getIsSkipable());
                 task.setTaskInitiator(tasks[i].getPeopleAssignments().getTaskInitiatorArray().toString());
                 task.setTaskType(TaskType.TASK);
                 taskID = task.getId();
-                
+
                 _server.create(task, participantToken);
             }
 
@@ -728,10 +870,10 @@ public class TMSRequestProcessor {
 
             // check request
             String taskId = req.getIdentifier();
-            if (taskId == null  || taskId.length() == 0){               
+            if (taskId == null || taskId.length() == 0) {
                 throw new IllegalArgumentException();
             }
-  
+
             // call TMSServer to process request
             this._server.remove(participantToken, req.getIdentifier());
 
@@ -771,10 +913,10 @@ public class TMSRequestProcessor {
 
             // check request
             String taskId = req.getIdentifier();
-            if (taskId == null  || taskId.length() == 0){               
+            if (taskId == null || taskId.length() == 0) {
                 throw new IllegalArgumentException();
             }
-  
+
             // call TMSServer to process request
             this._server.claim(participantToken, req.getIdentifier());
 
@@ -812,10 +954,10 @@ public class TMSRequestProcessor {
 
             // check request
             String taskId = req.getIdentifier();
-            if (taskId == null  || taskId.length() == 0){               
+            if (taskId == null || taskId.length() == 0) {
                 throw new IllegalArgumentException();
             }
-            
+
             // call TMSServer to process request
             this._server.start(participantToken, req.getIdentifier());
 
@@ -854,10 +996,10 @@ public class TMSRequestProcessor {
 
             // check request
             String taskId = req.getIdentifier();
-            if (taskId == null  || taskId.length() == 0){               
-                    throw new IllegalArgumentException();
+            if (taskId == null || taskId.length() == 0) {
+                throw new IllegalArgumentException();
             }
-            
+
             // call TMSServer to process request
             this._server.stop(participantToken, req.getIdentifier());
 
@@ -896,10 +1038,10 @@ public class TMSRequestProcessor {
 
             // check request
             String taskId = req.getIdentifier();
-            if (taskId == null  || taskId.length() == 0){               
-                    throw new IllegalArgumentException();
+            if (taskId == null || taskId.length() == 0) {
+                throw new IllegalArgumentException();
             }
-            
+
             // call TMSServer to process request
             this._server.release(participantToken, req.getIdentifier());
 
@@ -936,18 +1078,17 @@ public class TMSRequestProcessor {
             Complete req = reqDoc.getComplete();
 
             XmlObject taskData = req.getTaskData();
-            
+
             // check request
             String taskId = req.getIdentifier();
-            if (taskId == null  || taskId.length() == 0){               
-                    throw new IllegalArgumentException();
+            if (taskId == null || taskId.length() == 0) {
+                throw new IllegalArgumentException();
             }
 
-            if (taskData == null){              
-                    throw new IllegalArgumentException();
+            if (taskData == null) {
+                throw new IllegalArgumentException();
             }
-  
-            
+
             // call TMSServer to process request
             this._server.complete(participantToken, taskId, taskData);
 
@@ -987,10 +1128,10 @@ public class TMSRequestProcessor {
 
             // check request
             String taskId = req.getIdentifier();
-            if (taskId == null  || taskId.length() == 0){               
-                    throw new IllegalArgumentException();
+            if (taskId == null || taskId.length() == 0) {
+                throw new IllegalArgumentException();
             }
-  
+
             // call TMSServer to process request
             this._server.fail(participantToken, req.getIdentifier(), req.getFaultName(), req.getFaultData());
 
@@ -1029,10 +1170,10 @@ public class TMSRequestProcessor {
 
             // check request
             String taskId = req.getIdentifier();
-            if (taskId == null  || taskId.length() == 0){               
-                    throw new IllegalArgumentException();
+            if (taskId == null || taskId.length() == 0) {
+                throw new IllegalArgumentException();
             }
-  
+
             // call TMSServer to process request
             this._server.skip(participantToken, req.getIdentifier());
 
@@ -1061,10 +1202,10 @@ public class TMSRequestProcessor {
 
             // check request
             String taskId = req.getIdentifier();
-            if (taskId == null  || taskId.length() == 0){               
-                    throw new IllegalArgumentException();
+            if (taskId == null || taskId.length() == 0) {
+                throw new IllegalArgumentException();
             }
-  
+
             // call TMSServer to process request
             this._server.suspend(participantToken, req.getIdentifier());
 
@@ -1093,10 +1234,10 @@ public class TMSRequestProcessor {
 
             // check request
             String taskId = req.getIdentifier();
-            if (taskId == null  || taskId.length() == 0){               
-                    throw new IllegalArgumentException();
+            if (taskId == null || taskId.length() == 0) {
+                throw new IllegalArgumentException();
             }
-  
+
             // call TMSServer to process request
             this._server.suspendUntil(participantToken, req.getIdentifier(), req.getTime());
 
@@ -1110,7 +1251,7 @@ public class TMSRequestProcessor {
         }
         return this.convertXML(retDoc);
     }
-    
+
     /**
      * Resume a suspended task. In 锟�task identifier Out 锟�void
      * 
@@ -1135,10 +1276,10 @@ public class TMSRequestProcessor {
 
             // check request
             String taskId = req.getIdentifier();
-            if (taskId == null  || taskId.length() == 0){               
-                    throw new IllegalArgumentException();
+            if (taskId == null || taskId.length() == 0) {
+                throw new IllegalArgumentException();
             }
-  
+
             // call TMSServer to process request
             this._server.resume(participantToken, req.getIdentifier());
 
@@ -1156,9 +1297,10 @@ public class TMSRequestProcessor {
     /**
      * Forward the task to another organization entity. The caller has to
      * specify the receiving organizational entity. Potential owners can only
-     * forward a task while the task is in the Ready state. In 锟�task identifier
-     * 锟�organizational entity (htd:tOrganization alEntity) Out 锟�void
-     * Authorization Potential Owners Actual Owner Business Administrator
+     * forward a task while the task is in the Ready state. In 锟�task
+     * identifier 锟�organizational entity (htd:tOrganization alEntity) Out
+     * 锟�void Authorization Potential Owners Actual Owner Business
+     * Administrator
      * 
      * @param requestElement
      * @return
@@ -1178,10 +1320,10 @@ public class TMSRequestProcessor {
 
             // check request
             String taskId = req.getIdentifier();
-            if (taskId == null  || taskId.length() == 0){               
-                    throw new IllegalArgumentException();
+            if (taskId == null || taskId.length() == 0) {
+                throw new IllegalArgumentException();
             }
-  
+
             // call TMSServer to process request
             this._server.forward(participantToken, req.getIdentifier());
 
@@ -1221,10 +1363,10 @@ public class TMSRequestProcessor {
 
             // check request
             String taskId = req.getIdentifier();
-            if (taskId == null  || taskId.length() == 0){               
-                    throw new IllegalArgumentException();
+            if (taskId == null || taskId.length() == 0) {
+                throw new IllegalArgumentException();
             }
-  
+
             // call TMSServer to process request
             this._server.delegate(participantToken, req.getIdentifier());
 
@@ -1492,7 +1634,7 @@ public class TMSRequestProcessor {
                             .getWhereClause(), req.getCreatedOnClause(), req.getMaxTasks());
 
             if (tasks == null) {
-                throw makeFault(new Exception("No task found with current search criteria")); 
+                throw makeFault(new Exception("No task found with current search criteria"));
             }
             // marshal response
             GetMyTasksResponseDocument retDoc = GetMyTasksResponseDocument.Factory.newInstance();
@@ -1527,7 +1669,7 @@ public class TMSRequestProcessor {
                             .getWhereClause(), req.getCreatedOnClause(), req.getMaxTasks());
 
             if (tasks == null) {
-                throw makeFault(new Exception("No task found with current search criteria")); 
+                throw makeFault(new Exception("No task found with current search criteria"));
             }
             // marshal response
             GetMyTaskAbstractsResponseDocument retDoc = GetMyTaskAbstractsResponseDocument.Factory.newInstance();
@@ -1546,7 +1688,6 @@ public class TMSRequestProcessor {
 
     }
 
-    
     /**
      * advanced query
      * 
@@ -1566,24 +1707,31 @@ public class TMSRequestProcessor {
             Query req = QueryDocument.Factory.parse(requestElement.getXMLStreamReader()).getQuery();
 
             // call server
-            List ret = _server.query(participantToken, req.getSelectClause(), req.getWhereClause(), req.getOrderByClause(), req.getMaxTasks(), req
-                            .getTaskIndexOffset());
+            Collection<Map<String, Object>> ret = _server.query(participantToken, req.getSelectClause(), req.getWhereClause(), req.getOrderByClause(), req
+                            .getMaxTasks(), req.getTaskIndexOffset());
 
             // marshal response
             QueryResponseDocument resp = QueryResponseDocument.Factory.newInstance();
             QueryResponse qr = resp.addNewQueryResponse();
             TTaskQueryResultSet result = qr.addNewQuery();
-            
+
             // add all the necessary rows
             for (int i = 0; i < ret.size(); i++) {
                 result.addNewRow();
             }
-            
-            String[] queryColumn = QueryUtil.parseSelectClause(req.getSelectClause());
-            for (int i = 0; i < ret.size(); i++) {
-                Object data = ret.get(i);
+
+            // mapping between the view field and the query column
+            List<String> viewFields = TaskFieldConverter.getSelectViewFields(req.getSelectClause());
+            Map<String, String> viewToColumns = new HashMap<String, String>();
+            for (String viewField : viewFields) {
+                viewToColumns.put(viewField, TaskFieldConverter.getQueryColumn(viewField));
+            }
+
+            int i = 0;
+            for (Map<String, Object> data : ret) {
                 TTaskQueryResultRow tt = result.getRowArray(i);
-                this.marshalTaskQueryResultRow(queryColumn, data, tt); 
+                this.marshalTaskQueryResultRow(viewToColumns, data, tt);
+                i++;
             }
             return XmlTooling.convertDocument(resp);
         } catch (Exception e) {
@@ -1598,27 +1746,27 @@ public class TMSRequestProcessor {
     public OMElement activate(OMElement requestElement) throws AxisFault {
         String participantToken = getParticipantToken();
         try {
-            Activate req =  ActivateDocument.Factory.parse(requestElement.getXMLStreamReader()).getActivate();
-            
+            Activate req = ActivateDocument.Factory.parse(requestElement.getXMLStreamReader()).getActivate();
+
             // call the server
             _server.activate(participantToken, req.getIdentifier());
-            
+
             ActivateResponseDocument retDoc = ActivateResponseDocument.Factory.newInstance();
             retDoc.addNewActivateResponse();
-            
+
             return this.convertXML(retDoc);
         } catch (Exception e) {
             throw makeFault(e);
-        }        
+        }
     }
-    
+
     public OMElement nominate(OMElement requestElement) throws AxisFault {
         String participantToken = getParticipantToken();
         try {
-            Nominate req =  NominateDocument.Factory.parse(requestElement.getXMLStreamReader()).getNominate();
-            
-            TOrganizationalEntity  orgEntity = req.getOrganizationalEntity();
-            
+            Nominate req = NominateDocument.Factory.parse(requestElement.getXMLStreamReader()).getNominate();
+
+            TOrganizationalEntity orgEntity = req.getOrganizationalEntity();
+
             List<String> principals = null;
             if (orgEntity.isSetUsers()) {
                 TUserlist userList = orgEntity.getUsers();
@@ -1630,26 +1778,26 @@ public class TMSRequestProcessor {
             }
             // call the server
             _server.nominate(participantToken, req.getIdentifier(), principals, orgEntity.isSetUsers());
-            
+
             NominateResponseDocument retDoc = NominateResponseDocument.Factory.newInstance();
             retDoc.addNewNominateResponse();
-            
+
             return this.convertXML(retDoc);
         } catch (Exception e) {
             throw makeFault(e);
         }
     }
-    
+
     public OMElement setGenericHumanRole(OMElement requestElement) throws AxisFault {
         String participantToken = getParticipantToken();
         try {
-            SetGenericHumanRole req =  SetGenericHumanRoleDocument.Factory.parse(requestElement.getXMLStreamReader()).getSetGenericHumanRole();
-            
+            SetGenericHumanRole req = SetGenericHumanRoleDocument.Factory.parse(requestElement.getXMLStreamReader()).getSetGenericHumanRole();
+
             GenericRoleType roleType = GenericRoleType.valueOf(req.getGenericHumanRole());
-            
-            TOrganizationalEntity  orgEntity = req.getOrganizationalEntity();
+
+            TOrganizationalEntity orgEntity = req.getOrganizationalEntity();
             List<String> principals = null;
-            
+
             if (orgEntity.isSetUsers()) {
                 TUserlist userList = orgEntity.getUsers();
                 principals = Arrays.asList(userList.getUserArray());
@@ -1658,12 +1806,12 @@ public class TMSRequestProcessor {
                 TGrouplist groupList = orgEntity.getGroups();
                 principals = Arrays.asList(groupList.getGroupArray());
             }
-            
+
             _server.setGenericHumanRole(participantToken, req.getIdentifier(), roleType, principals, orgEntity.isSetUsers());
 
             SetGenericHumanRoleResponseDocument retDoc = SetGenericHumanRoleResponseDocument.Factory.newInstance();
             retDoc.addNewSetGenericHumanRoleResponse();
-            
+
             return this.convertXML(retDoc);
         } catch (Exception e) {
             throw makeFault(e);

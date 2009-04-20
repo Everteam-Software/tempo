@@ -18,6 +18,9 @@ import org.intalio.tempo.workflow.tmsb4p.server.dao.TaskQueryType;
 
 public class TaskFieldConverter {
 
+    public static final String SELECT_ALL_FIELD = "*";
+
+    // view fields => actual query columns
     private static Map<String, String> FIELDS_MAP = new HashMap<String, String>();
     private static Map<String, String> ROLES_MAP = new HashMap<String, String>();
     private static Map<String, String> SELECT_ROLES_MAP = new HashMap<String, String>();
@@ -45,8 +48,9 @@ public class TaskFieldConverter {
         FIELDS_MAP.put(TaskView.INPUT_MESSAGE, "inputMessage");
         FIELDS_MAP.put(TaskView.OUTPUT_MESSAGE, "outputMessage");
 
-        FIELDS_MAP.put(TaskView.ATTACHMENT_NAME, "attachmentInfo.name");
-        FIELDS_MAP.put(TaskView.ATTACHMENT_TYPE, "attachmentInfo.contentType");
+        // attachments
+        FIELDS_MAP.put(TaskView.ATTACHMENT_NAME, "attachments");
+        FIELDS_MAP.put(TaskView.ATTACHMENT_TYPE, "attachments");
 
         // field will be converted like "potentialOwners is null"
         FIELDS_MAP.put(TaskView.HAS_POTENTIAL_OWNERS, "potentialOwners");
@@ -55,12 +59,13 @@ public class TaskFieldConverter {
         FIELDS_MAP.put(TaskView.RENDER_METH_EXISTS, "renderingMethName");
 
         // search the specific role which includes the specific userid or group.
-        FIELDS_MAP.put(TaskView.USERID, "");
-        FIELDS_MAP.put(TaskView.GROUP, "");
-        FIELDS_MAP.put(TaskView.GENERIC_HUMAN_ROLE, "");
+        FIELDS_MAP.put(TaskView.USERID, null);
+        FIELDS_MAP.put(TaskView.GROUP, null);
+        FIELDS_MAP.put(TaskView.GENERIC_HUMAN_ROLE, null);
 
         // extends field
         FIELDS_MAP.put(TaskView.ATTACHMENTS, "attachments");
+        FIELDS_MAP.put(TaskView.TASK, TaskView.TASK);
     }
 
     static {
@@ -75,13 +80,13 @@ public class TaskFieldConverter {
 
     static {
         SELECT_ROLES_MAP.putAll(ROLES_MAP);
-        SELECT_ROLES_MAP.put("taskinitiator", "taskInitiator");
-        SELECT_ROLES_MAP.put("taskstakeholders", "taskStakeholders");
-        SELECT_ROLES_MAP.put("potentialowners", "potentialOwners");
-        SELECT_ROLES_MAP.put("actualowner", "actualOwner");
-        SELECT_ROLES_MAP.put("excludedowners", "excludedOwners");
-        SELECT_ROLES_MAP.put("businessadministrators", "businessAdministrators");
-        SELECT_ROLES_MAP.put("notificationrecipients", "notificationRecipients");
+        SELECT_ROLES_MAP.put(TaskView.TASK_INITIATOR, "taskInitiator");
+        SELECT_ROLES_MAP.put(TaskView.TASK_STAKEHOLDERS, "taskStakeholders");
+        SELECT_ROLES_MAP.put(TaskView.POTENTIAL_OWNERS, "potentialOwners");
+        SELECT_ROLES_MAP.put(TaskView.ACTUAL_OWNER, "actualOwner");
+        SELECT_ROLES_MAP.put(TaskView.EXCLUDED_OWNERS, "excludedOwners");
+        SELECT_ROLES_MAP.put(TaskView.BUSINESS_ADMINISTRATORS, "businessAdministrators");
+        SELECT_ROLES_MAP.put(TaskView.NOTIFICATION_RECIPIENTS, "notificationRecipients");
     }
 
     static {
@@ -99,7 +104,7 @@ public class TaskFieldConverter {
 
     private static String ATTRIBUTE_PREFIX = "task.";
 
-    public static String getFieldForSelectClause(String viewField) throws InvalidFieldException {
+    public static String getQueryColumn(String viewField) throws InvalidFieldException {
         if ((TaskView.USERID.equals(viewField)) || (TaskView.GROUP.equals(viewField)) || (TaskView.GENERIC_HUMAN_ROLE.equals(viewField))) {
             return null;
         }
@@ -112,6 +117,48 @@ public class TaskFieldConverter {
         }
 
         return result;
+    }
+
+    public static List<String> getSelectViewFields(String selectClause) {
+        String[] clauses = QueryUtil.parseSelectClause(selectClause);
+        List<String> result = new ArrayList<String>();
+        if ((clauses == null) || (clauses.length == 0)) {
+            result.add(TaskView.TASK);
+            return result;
+        }
+
+        for (int i = 0; i < clauses.length; i++) {
+            try {
+                String viewField = getSelectViewField(clauses[i]);
+                if (viewField != null) {
+                    result.add(viewField);
+                }
+            } catch (InvalidFieldException e) {
+                // ignore it.
+            }
+        }
+
+        return result;
+    }
+
+    private static String getSelectViewField(String field) throws InvalidFieldException {
+        if (SELECT_ALL_FIELD.equals(field)) {
+            return TaskView.TASK;
+        }
+
+        String newField = field;
+        if (field.startsWith(ATTRIBUTE_PREFIX)) {
+            newField = field.substring(ATTRIBUTE_PREFIX.length());
+        }
+
+        newField = newField.toLowerCase();
+        // To check the field is valid.
+        if ((!FIELDS_MAP.containsKey(newField)) && (!SELECT_ROLES_MAP.containsKey(newField))) {
+            // try to search the values of the
+            throw new InvalidFieldException("Task query can't support the field: " + field);
+        }
+
+        return newField;
     }
 
     public static ParameterValues convertWhereClause(String viewField, String funName, Object value) throws InvalidFieldException {
@@ -312,23 +359,7 @@ public class TaskFieldConverter {
 
         newField = newField.toLowerCase();
         // To check the field is valid.
-        if (FIELDS_MAP.get(newField) == null) {
-            throw new InvalidFieldException("Task query can't support the field: " + field);
-        }
-
-        return newField;
-    }
-
-    public static String getTaskViewSelectField(String field) throws InvalidFieldException {
-        String newField = field;
-        if (field.startsWith(ATTRIBUTE_PREFIX)) {
-            newField = field.substring(ATTRIBUTE_PREFIX.length());
-        }
-
-        newField = newField.toLowerCase();
-        // To check the field is valid.
-        if ((FIELDS_MAP.get(newField) == null) && (SELECT_ROLES_MAP.get(newField) == null)) {
-            // try to search the values of the
+        if (!FIELDS_MAP.containsKey(newField)) {
             throw new InvalidFieldException("Task query can't support the field: " + field);
         }
 
