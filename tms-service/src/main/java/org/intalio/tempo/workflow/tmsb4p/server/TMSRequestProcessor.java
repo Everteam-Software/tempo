@@ -23,6 +23,7 @@ import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPHeader;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
+import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 import org.intalio.tempo.workflow.task.xml.TaskXMLConstants;
@@ -218,7 +219,7 @@ public class TMSRequestProcessor {
             if (_logger.isDebugEnabled())
                 _logger.debug(e.getMessage(), e);
             OMElement response = null;
-            if (e instanceof IllegalArgumentException)
+            if (e instanceof IllegalArgumentException )
                 response = this.convertXML(IllegalArgumentDocument.Factory.newInstance());
             else if (e instanceof IllegalAccessException)
                 response = convertXML(IllegalAccessDocument.Factory.newInstance());
@@ -776,7 +777,13 @@ public class TMSRequestProcessor {
 
         try {
             // unmarshal request
-            CreateDocument req = CreateDocument.Factory.parse(requestElement.getXMLStreamReader());
+        	CreateDocument req = null;
+        	try{
+        		req = CreateDocument.Factory.parse(requestElement.getXMLStreamReader());
+        	}catch(XmlException e){
+        		throw new IllegalArgumentException("Parse request xml failed", e);
+        	}
+        	
             Create r = req.getCreate();
 
             THumanTaskContext tasks[] = req.getCreate().getHumanTaskContextArray();
@@ -865,7 +872,13 @@ public class TMSRequestProcessor {
                 throw makeFault(new Exception("Cannot get participant toke in soap header"));
 
             // unmarshal request
-            RemoveDocument reqDoc = RemoveDocument.Factory.parse(requestElement.getXMLStreamReader());
+        	RemoveDocument reqDoc = null;
+        	try{
+        		reqDoc = RemoveDocument.Factory.parse(requestElement.getXMLStreamReader());
+        	}catch(XmlException e){
+        		throw new IllegalArgumentException("Parse request xml failed", e);
+        	}
+        	
             Remove req = reqDoc.getRemove();
 
             // check request
@@ -908,8 +921,13 @@ public class TMSRequestProcessor {
                 throw makeFault(new Exception("Cannot get participant toke in soap header"));
 
             // unmarshal request
-            ClaimDocument reqDoc = ClaimDocument.Factory.parse(requestElement.getXMLStreamReader());
-            Claim req = reqDoc.getClaim();
+            ClaimDocument reqDoc = null;
+        	try{
+        		reqDoc = ClaimDocument.Factory.parse(requestElement.getXMLStreamReader());
+        	}catch(XmlException e){
+        		throw new IllegalArgumentException("Parse request xml failed", e);
+        	}
+        	Claim req = reqDoc.getClaim();
 
             // check request
             String taskId = req.getIdentifier();
@@ -949,8 +967,13 @@ public class TMSRequestProcessor {
                 throw makeFault(new Exception("Cannot get participant toke in soap header"));
 
             // unmarshal request
-            StartDocument reqDoc = StartDocument.Factory.parse(requestElement.getXMLStreamReader());
-            Start req = reqDoc.getStart();
+            StartDocument reqDoc = 	null;
+            try{
+        		reqDoc = StartDocument.Factory.parse(requestElement.getXMLStreamReader());
+        	}catch(XmlException e){
+        		throw new IllegalArgumentException("Parse request xml failed", e);
+        	}
+        	Start req = reqDoc.getStart();
 
             // check request
             String taskId = req.getIdentifier();
@@ -991,7 +1014,12 @@ public class TMSRequestProcessor {
                 throw makeFault(new Exception("Cannot get participant toke in soap header"));
 
             // unmarshal request
-            StopDocument reqDoc = StopDocument.Factory.parse(requestElement.getXMLStreamReader());
+            StopDocument reqDoc = null;
+            try{
+        		reqDoc = StopDocument.Factory.parse(requestElement.getXMLStreamReader());
+        	}catch(XmlException e){
+        		throw new IllegalArgumentException("Parse request xml failed", e);
+        	}
             Stop req = reqDoc.getStop();
 
             // check request
@@ -1033,7 +1061,12 @@ public class TMSRequestProcessor {
                 throw makeFault(new Exception("Cannot get participant toke in soap header"));
 
             // unmarshal request
-            ReleaseDocument reqDoc = ReleaseDocument.Factory.parse(requestElement.getXMLStreamReader());
+            ReleaseDocument reqDoc = null;
+            try{
+        		reqDoc = ReleaseDocument.Factory.parse(requestElement.getXMLStreamReader());
+        	}catch(XmlException e){
+        		throw new IllegalArgumentException("Parse request xml failed", e);
+        	}
             Release req = reqDoc.getRelease();
 
             // check request
@@ -1074,7 +1107,12 @@ public class TMSRequestProcessor {
                 throw makeFault(new Exception("Cannot get participant toke in soap header"));
 
             // unmarshal request
-            CompleteDocument reqDoc = CompleteDocument.Factory.parse(requestElement.getXMLStreamReader());
+            CompleteDocument reqDoc = null;
+            try{
+        		reqDoc = CompleteDocument.Factory.parse(requestElement.getXMLStreamReader());
+        	}catch(XmlException e){
+        		throw new IllegalArgumentException("Parse request xml failed", e);
+        	}
             Complete req = reqDoc.getComplete();
 
             XmlObject taskData = req.getTaskData();
@@ -1123,7 +1161,12 @@ public class TMSRequestProcessor {
                 throw makeFault(new Exception("Cannot get participant toke in soap header"));
 
             // unmarshal request
-            FailDocument reqDoc = FailDocument.Factory.parse(requestElement.getXMLStreamReader());
+            FailDocument reqDoc = null;
+            try{
+        		reqDoc = FailDocument.Factory.parse(requestElement.getXMLStreamReader());
+        	}catch(XmlException e){
+        		throw new IllegalArgumentException("Parse request xml failed", e);
+        	}
             Fail req = reqDoc.getFail();
 
             // check request
@@ -1165,7 +1208,12 @@ public class TMSRequestProcessor {
                 throw makeFault(new Exception("Cannot get participant toke in soap header"));
 
             // unmarshal request
-            SkipDocument reqDoc = SkipDocument.Factory.parse(requestElement.getXMLStreamReader());
+            SkipDocument reqDoc = null;
+            try{
+        		reqDoc = SkipDocument.Factory.parse(requestElement.getXMLStreamReader());
+        	}catch(XmlException e){
+        		throw new IllegalArgumentException("Parse request xml failed", e);
+        	}
             Skip req = reqDoc.getSkip();
 
             // check request
@@ -1197,7 +1245,12 @@ public class TMSRequestProcessor {
                 throw makeFault(new Exception("Cannot get participant toke in soap header"));
 
             // unmarshal request
-            SuspendDocument reqDoc = SuspendDocument.Factory.parse(requestElement.getXMLStreamReader());
+            SuspendDocument reqDoc = null;
+            try{
+        		reqDoc = SuspendDocument.Factory.parse(requestElement.getXMLStreamReader());
+        	}catch(XmlException e){
+        		throw new IllegalArgumentException("Parse request xml failed", e);
+        	}
             Suspend req = reqDoc.getSuspend();
 
             // check request
@@ -1229,7 +1282,12 @@ public class TMSRequestProcessor {
                 throw makeFault(new Exception("Cannot get participant toke in soap header"));
 
             // unmarshal request
-            SuspendUntilDocument reqDoc = SuspendUntilDocument.Factory.parse(requestElement.getXMLStreamReader());
+            SuspendUntilDocument reqDoc = null;
+            try{
+        		reqDoc = SuspendUntilDocument.Factory.parse(requestElement.getXMLStreamReader());
+        	}catch(XmlException e){
+        		throw new IllegalArgumentException("Parse request xml failed", e);
+        	}
             SuspendUntil req = reqDoc.getSuspendUntil();
 
             // check request
@@ -1271,7 +1329,12 @@ public class TMSRequestProcessor {
                 throw makeFault(new Exception("Cannot get participant toke in soap header"));
 
             // unmarshal request
-            ResumeDocument reqDoc = ResumeDocument.Factory.parse(requestElement.getXMLStreamReader());
+            ResumeDocument reqDoc = null;
+            try{
+        		reqDoc = ResumeDocument.Factory.parse(requestElement.getXMLStreamReader());
+        	}catch(XmlException e){
+        		throw new IllegalArgumentException("Parse request xml failed", e);
+        	}
             Resume req = reqDoc.getResume();
 
             // check request
@@ -1299,7 +1362,7 @@ public class TMSRequestProcessor {
      * specify the receiving organizational entity. Potential owners can only
      * forward a task while the task is in the Ready state. In 锟�task
      * identifier 锟�organizational entity (htd:tOrganization alEntity) Out
-     * 锟�void Authorization Potential Owners Actual Owner Business
+     * void Authorization Potential Owners Actual Owner Business
      * Administrator
      * 
      * @param requestElement
@@ -1315,7 +1378,12 @@ public class TMSRequestProcessor {
                 throw makeFault(new Exception("Cannot get participant toke in soap header"));
 
             // unmarshal request
-            ForwardDocument reqDoc = ForwardDocument.Factory.parse(requestElement.getXMLStreamReader());
+            ForwardDocument reqDoc = null;
+            try{
+        		reqDoc = ForwardDocument.Factory.parse(requestElement.getXMLStreamReader());
+        	}catch(XmlException e){
+        		throw new IllegalArgumentException("Parse request xml failed", e);
+        	}
             Forward req = reqDoc.getForward();
 
             // check request
@@ -1358,7 +1426,12 @@ public class TMSRequestProcessor {
                 throw makeFault(new Exception("Cannot get participant toke in soap header"));
 
             // unmarshal request
-            DelegateDocument reqDoc = DelegateDocument.Factory.parse(requestElement.getXMLStreamReader());
+            DelegateDocument reqDoc = null;
+            try{
+        		reqDoc = DelegateDocument.Factory.parse(requestElement.getXMLStreamReader());
+        	}catch(XmlException e){
+        		throw new IllegalArgumentException("Parse request xml failed", e);
+        	}
             Delegate req = reqDoc.getDelegate();
 
             // check request
