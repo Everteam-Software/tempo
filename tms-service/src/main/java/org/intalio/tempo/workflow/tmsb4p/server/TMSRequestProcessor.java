@@ -75,6 +75,10 @@ import com.intalio.wsHT.api.xsd.DelegateDocument;
 import com.intalio.wsHT.api.xsd.DelegateResponseDocument;
 import com.intalio.wsHT.api.xsd.DeleteAttachmentsDocument;
 import com.intalio.wsHT.api.xsd.DeleteAttachmentsResponseDocument;
+import com.intalio.wsHT.api.xsd.DeleteFaultDocument;
+import com.intalio.wsHT.api.xsd.DeleteFaultResponseDocument;
+import com.intalio.wsHT.api.xsd.DeleteOutputDocument;
+import com.intalio.wsHT.api.xsd.DeleteOutputResponseDocument;
 import com.intalio.wsHT.api.xsd.FailDocument;
 import com.intalio.wsHT.api.xsd.FailResponseDocument;
 import com.intalio.wsHT.api.xsd.ForwardDocument;
@@ -85,10 +89,16 @@ import com.intalio.wsHT.api.xsd.GetAttachmentsDocument;
 import com.intalio.wsHT.api.xsd.GetAttachmentsResponseDocument;
 import com.intalio.wsHT.api.xsd.GetCommentsDocument;
 import com.intalio.wsHT.api.xsd.GetCommentsResposneDocument;
+import com.intalio.wsHT.api.xsd.GetFaultDocument;
+import com.intalio.wsHT.api.xsd.GetFaultResponseDocument;
+import com.intalio.wsHT.api.xsd.GetInputDocument;
+import com.intalio.wsHT.api.xsd.GetInputResponseDocument;
 import com.intalio.wsHT.api.xsd.GetMyTaskAbstractsDocument;
 import com.intalio.wsHT.api.xsd.GetMyTaskAbstractsResponseDocument;
 import com.intalio.wsHT.api.xsd.GetMyTasksDocument;
 import com.intalio.wsHT.api.xsd.GetMyTasksResponseDocument;
+import com.intalio.wsHT.api.xsd.GetOutputDocument;
+import com.intalio.wsHT.api.xsd.GetOutputResponseDocument;
 import com.intalio.wsHT.api.xsd.GetTaskDescriptionDocument;
 import com.intalio.wsHT.api.xsd.GetTaskDescriptionResponseDocument;
 import com.intalio.wsHT.api.xsd.GetTaskInfoDocument;
@@ -108,8 +118,12 @@ import com.intalio.wsHT.api.xsd.RemoveDocument;
 import com.intalio.wsHT.api.xsd.RemoveResponseDocument;
 import com.intalio.wsHT.api.xsd.ResumeDocument;
 import com.intalio.wsHT.api.xsd.ResumeResponseDocument;
+import com.intalio.wsHT.api.xsd.SetFaultDocument;
+import com.intalio.wsHT.api.xsd.SetFaultResponseDocument;
 import com.intalio.wsHT.api.xsd.SetGenericHumanRoleDocument;
 import com.intalio.wsHT.api.xsd.SetGenericHumanRoleResponseDocument;
+import com.intalio.wsHT.api.xsd.SetOutputDocument;
+import com.intalio.wsHT.api.xsd.SetOutputResponseDocument;
 import com.intalio.wsHT.api.xsd.SetPriorityDocument;
 import com.intalio.wsHT.api.xsd.SetPriorityResponseDocument;
 import com.intalio.wsHT.api.xsd.SkipDocument;
@@ -133,6 +147,10 @@ import com.intalio.wsHT.api.xsd.CreateDocument.Create;
 import com.intalio.wsHT.api.xsd.DelegateDocument.Delegate;
 import com.intalio.wsHT.api.xsd.DelegateResponseDocument.DelegateResponse;
 import com.intalio.wsHT.api.xsd.DeleteAttachmentsDocument.DeleteAttachments;
+import com.intalio.wsHT.api.xsd.DeleteFaultDocument.DeleteFault;
+import com.intalio.wsHT.api.xsd.DeleteFaultResponseDocument.DeleteFaultResponse;
+import com.intalio.wsHT.api.xsd.DeleteOutputDocument.DeleteOutput;
+import com.intalio.wsHT.api.xsd.DeleteOutputResponseDocument.DeleteOutputResponse;
 import com.intalio.wsHT.api.xsd.FailDocument.Fail;
 import com.intalio.wsHT.api.xsd.FailResponseDocument.FailResponse;
 import com.intalio.wsHT.api.xsd.ForwardDocument.Forward;
@@ -143,10 +161,16 @@ import com.intalio.wsHT.api.xsd.GetAttachmentsDocument.GetAttachments;
 import com.intalio.wsHT.api.xsd.GetAttachmentsResponseDocument.GetAttachmentsResponse;
 import com.intalio.wsHT.api.xsd.GetCommentsDocument.GetComments;
 import com.intalio.wsHT.api.xsd.GetCommentsResposneDocument.GetCommentsResposne;
+import com.intalio.wsHT.api.xsd.GetFaultDocument.GetFault;
+import com.intalio.wsHT.api.xsd.GetFaultResponseDocument.GetFaultResponse;
+import com.intalio.wsHT.api.xsd.GetInputDocument.GetInput;
+import com.intalio.wsHT.api.xsd.GetInputResponseDocument.GetInputResponse;
 import com.intalio.wsHT.api.xsd.GetMyTaskAbstractsDocument.GetMyTaskAbstracts;
 import com.intalio.wsHT.api.xsd.GetMyTaskAbstractsResponseDocument.GetMyTaskAbstractsResponse;
 import com.intalio.wsHT.api.xsd.GetMyTasksDocument.GetMyTasks;
 import com.intalio.wsHT.api.xsd.GetMyTasksResponseDocument.GetMyTasksResponse;
+import com.intalio.wsHT.api.xsd.GetOutputDocument.GetOutput;
+import com.intalio.wsHT.api.xsd.GetOutputResponseDocument.GetOutputResponse;
 import com.intalio.wsHT.api.xsd.GetTaskDescriptionDocument.GetTaskDescription;
 import com.intalio.wsHT.api.xsd.GetTaskDescriptionResponseDocument.GetTaskDescriptionResponse;
 import com.intalio.wsHT.api.xsd.GetTaskInfoDocument.GetTaskInfo;
@@ -160,7 +184,11 @@ import com.intalio.wsHT.api.xsd.RemoveDocument.Remove;
 import com.intalio.wsHT.api.xsd.RemoveResponseDocument.RemoveResponse;
 import com.intalio.wsHT.api.xsd.ResumeDocument.Resume;
 import com.intalio.wsHT.api.xsd.ResumeResponseDocument.ResumeResponse;
+import com.intalio.wsHT.api.xsd.SetFaultDocument.SetFault;
+import com.intalio.wsHT.api.xsd.SetFaultResponseDocument.SetFaultResponse;
 import com.intalio.wsHT.api.xsd.SetGenericHumanRoleDocument.SetGenericHumanRole;
+import com.intalio.wsHT.api.xsd.SetOutputDocument.SetOutput;
+import com.intalio.wsHT.api.xsd.SetOutputResponseDocument.SetOutputResponse;
 import com.intalio.wsHT.api.xsd.SetPriorityDocument.SetPriority;
 import com.intalio.wsHT.api.xsd.SkipDocument.Skip;
 import com.intalio.wsHT.api.xsd.SkipResponseDocument.SkipResponse;
@@ -212,21 +240,20 @@ public class TMSRequestProcessor {
      * Internal function
      ************************************************************************/
 
-	private String makeString(Object[] ar){
-		if (ar==null)
-			return "";
-		
-		StringBuffer buf = new StringBuffer("[");
-		for (int i= 0; i< ar.length; i++)
-			if (i == 0) 
-				buf.append(ar[i].toString());
-			else
-				buf.append(", "+ar[i].toString());
-		buf.append("]");
-		return buf.toString();
-	}
+    private String makeString(Object[] ar) {
+        if (ar == null)
+            return "";
 
-	
+        StringBuffer buf = new StringBuffer("[");
+        for (int i = 0; i < ar.length; i++)
+            if (i == 0)
+                buf.append(ar[i].toString());
+            else
+                buf.append(", " + ar[i].toString());
+        buf.append("]");
+        return buf.toString();
+    }
+
     /**
      * @TODO need to be improved
      */
@@ -235,7 +262,7 @@ public class TMSRequestProcessor {
             if (_logger.isDebugEnabled())
                 _logger.debug(e.getMessage(), e);
             OMElement response = null;
-            if (e instanceof IllegalArgumentException )
+            if (e instanceof IllegalArgumentException)
                 response = this.convertXML(IllegalArgumentDocument.Factory.newInstance());
             else if (e instanceof IllegalAccessException)
                 response = convertXML(IllegalAccessDocument.Factory.newInstance());
@@ -793,13 +820,13 @@ public class TMSRequestProcessor {
 
         try {
             // unmarshal request
-        	CreateDocument req = null;
-        	try{
-        		req = CreateDocument.Factory.parse(requestElement.getXMLStreamReader());
-        	}catch(XmlException e){
-        		throw new IllegalArgumentException("Parse request xml failed", e);
-        	}
-        	
+            CreateDocument req = null;
+            try {
+                req = CreateDocument.Factory.parse(requestElement.getXMLStreamReader());
+            } catch (XmlException e) {
+                throw new IllegalArgumentException("Parse request xml failed", e);
+            }
+
             Create r = req.getCreate();
 
             THumanTaskContext tasks[] = req.getCreate().getHumanTaskContextArray();
@@ -810,7 +837,7 @@ public class TMSRequestProcessor {
                 // Log.log("task "+i);
                 Task task = new Task();
                 task.setId(UUID.randomUUID().toString()); // temporary solution
-                                                          // to generate task id
+                // to generate task id
                 task.setName("task");
                 task.setCreatedOn(new Date());
                 task.setPriority(tasks[i].getPriority().intValue());
@@ -858,9 +885,9 @@ public class TMSRequestProcessor {
                 task.setSkipable(tasks[i].getIsSkipable());
                 task.setTaskInitiator(tasks[i].getPeopleAssignments().getTaskInitiatorArray().toString());
                 task.setTaskType(TaskType.TASK);
-               
+
                 _server.create(task, participantToken);
-                
+
                 taskIds.add(task.getId());
             }
 
@@ -895,13 +922,13 @@ public class TMSRequestProcessor {
                 throw makeFault(new Exception("Cannot get participant toke in soap header"));
 
             // unmarshal request
-        	RemoveDocument reqDoc = null;
-        	try{
-        		reqDoc = RemoveDocument.Factory.parse(requestElement.getXMLStreamReader());
-        	}catch(XmlException e){
-        		throw new IllegalArgumentException("Parse request xml failed", e);
-        	}
-        	
+            RemoveDocument reqDoc = null;
+            try {
+                reqDoc = RemoveDocument.Factory.parse(requestElement.getXMLStreamReader());
+            } catch (XmlException e) {
+                throw new IllegalArgumentException("Parse request xml failed", e);
+            }
+
             Remove req = reqDoc.getRemove();
 
             // check request
@@ -945,12 +972,12 @@ public class TMSRequestProcessor {
 
             // unmarshal request
             ClaimDocument reqDoc = null;
-        	try{
-        		reqDoc = ClaimDocument.Factory.parse(requestElement.getXMLStreamReader());
-        	}catch(XmlException e){
-        		throw new IllegalArgumentException("Parse request xml failed", e);
-        	}
-        	Claim req = reqDoc.getClaim();
+            try {
+                reqDoc = ClaimDocument.Factory.parse(requestElement.getXMLStreamReader());
+            } catch (XmlException e) {
+                throw new IllegalArgumentException("Parse request xml failed", e);
+            }
+            Claim req = reqDoc.getClaim();
 
             // check request
             String taskId = req.getIdentifier();
@@ -990,13 +1017,13 @@ public class TMSRequestProcessor {
                 throw makeFault(new Exception("Cannot get participant toke in soap header"));
 
             // unmarshal request
-            StartDocument reqDoc = 	null;
-            try{
-        		reqDoc = StartDocument.Factory.parse(requestElement.getXMLStreamReader());
-        	}catch(XmlException e){
-        		throw new IllegalArgumentException("Parse request xml failed", e);
-        	}
-        	Start req = reqDoc.getStart();
+            StartDocument reqDoc = null;
+            try {
+                reqDoc = StartDocument.Factory.parse(requestElement.getXMLStreamReader());
+            } catch (XmlException e) {
+                throw new IllegalArgumentException("Parse request xml failed", e);
+            }
+            Start req = reqDoc.getStart();
 
             // check request
             String taskId = req.getIdentifier();
@@ -1038,11 +1065,11 @@ public class TMSRequestProcessor {
 
             // unmarshal request
             StopDocument reqDoc = null;
-            try{
-        		reqDoc = StopDocument.Factory.parse(requestElement.getXMLStreamReader());
-        	}catch(XmlException e){
-        		throw new IllegalArgumentException("Parse request xml failed", e);
-        	}
+            try {
+                reqDoc = StopDocument.Factory.parse(requestElement.getXMLStreamReader());
+            } catch (XmlException e) {
+                throw new IllegalArgumentException("Parse request xml failed", e);
+            }
             Stop req = reqDoc.getStop();
 
             // check request
@@ -1085,11 +1112,11 @@ public class TMSRequestProcessor {
 
             // unmarshal request
             ReleaseDocument reqDoc = null;
-            try{
-        		reqDoc = ReleaseDocument.Factory.parse(requestElement.getXMLStreamReader());
-        	}catch(XmlException e){
-        		throw new IllegalArgumentException("Parse request xml failed", e);
-        	}
+            try {
+                reqDoc = ReleaseDocument.Factory.parse(requestElement.getXMLStreamReader());
+            } catch (XmlException e) {
+                throw new IllegalArgumentException("Parse request xml failed", e);
+            }
             Release req = reqDoc.getRelease();
 
             // check request
@@ -1114,8 +1141,8 @@ public class TMSRequestProcessor {
 
     /**
      * Execution of the task finished successfully. If no output data is set the
-     * operation returns illegalArgumentFault. In 锟�task identifier 锟�output
-     * data of task Out 锟�void Authorization 锟�Actual Owner
+     * operation returns illegalArgumentFault. In 锟�task identifier
+     * 锟�output data of task Out 锟�void Authorization 锟�Actual Owner
      * 
      * @param requestElement
      * @return
@@ -1131,11 +1158,11 @@ public class TMSRequestProcessor {
 
             // unmarshal request
             CompleteDocument reqDoc = null;
-            try{
-        		reqDoc = CompleteDocument.Factory.parse(requestElement.getXMLStreamReader());
-        	}catch(XmlException e){
-        		throw new IllegalArgumentException("Parse request xml failed", e);
-        	}
+            try {
+                reqDoc = CompleteDocument.Factory.parse(requestElement.getXMLStreamReader());
+            } catch (XmlException e) {
+                throw new IllegalArgumentException("Parse request xml failed", e);
+            }
             Complete req = reqDoc.getComplete();
 
             XmlObject taskData = req.getTaskData();
@@ -1165,11 +1192,11 @@ public class TMSRequestProcessor {
     }
 
     /**
-     * Actual owner completes the execution of the task raising a fault. In 锟�
-     * task identifier 锟�fault name 锟�fault data Out 锟�void Authorization 锟�
-     * Actual Owner The fault illegalOperationFault is returned if the task
-     * interface defines no faults. If fault name or fault data is not set the
-     * operation returns illegalArgumentFault.
+     * Actual owner completes the execution of the task raising a fault. In
+     * 锟� task identifier 锟�fault name 锟�fault data Out 锟�void
+     * Authorization 锟� Actual Owner The fault illegalOperationFault is
+     * returned if the task interface defines no faults. If fault name or fault
+     * data is not set the operation returns illegalArgumentFault.
      * 
      * @param requestElement
      * @return
@@ -1185,11 +1212,11 @@ public class TMSRequestProcessor {
 
             // unmarshal request
             FailDocument reqDoc = null;
-            try{
-        		reqDoc = FailDocument.Factory.parse(requestElement.getXMLStreamReader());
-        	}catch(XmlException e){
-        		throw new IllegalArgumentException("Parse request xml failed", e);
-        	}
+            try {
+                reqDoc = FailDocument.Factory.parse(requestElement.getXMLStreamReader());
+            } catch (XmlException e) {
+                throw new IllegalArgumentException("Parse request xml failed", e);
+            }
             Fail req = reqDoc.getFail();
 
             // check request
@@ -1214,7 +1241,8 @@ public class TMSRequestProcessor {
 
     /**
      * Skip the task. If the task is not skipable then the fault
-     * illegalOperationFault is returned. In 锟�task identifier Out 锟�void
+     * illegalOperationFault is returned. In 锟�task identifier Out
+     * 锟�void
      * 
      * Authorization Task Initiator Actual Owner Business Administrator
      * 
@@ -1232,11 +1260,11 @@ public class TMSRequestProcessor {
 
             // unmarshal request
             SkipDocument reqDoc = null;
-            try{
-        		reqDoc = SkipDocument.Factory.parse(requestElement.getXMLStreamReader());
-        	}catch(XmlException e){
-        		throw new IllegalArgumentException("Parse request xml failed", e);
-        	}
+            try {
+                reqDoc = SkipDocument.Factory.parse(requestElement.getXMLStreamReader());
+            } catch (XmlException e) {
+                throw new IllegalArgumentException("Parse request xml failed", e);
+            }
             Skip req = reqDoc.getSkip();
 
             // check request
@@ -1269,11 +1297,11 @@ public class TMSRequestProcessor {
 
             // unmarshal request
             SuspendDocument reqDoc = null;
-            try{
-        		reqDoc = SuspendDocument.Factory.parse(requestElement.getXMLStreamReader());
-        	}catch(XmlException e){
-        		throw new IllegalArgumentException("Parse request xml failed", e);
-        	}
+            try {
+                reqDoc = SuspendDocument.Factory.parse(requestElement.getXMLStreamReader());
+            } catch (XmlException e) {
+                throw new IllegalArgumentException("Parse request xml failed", e);
+            }
             Suspend req = reqDoc.getSuspend();
 
             // check request
@@ -1306,11 +1334,11 @@ public class TMSRequestProcessor {
 
             // unmarshal request
             SuspendUntilDocument reqDoc = null;
-            try{
-        		reqDoc = SuspendUntilDocument.Factory.parse(requestElement.getXMLStreamReader());
-        	}catch(XmlException e){
-        		throw new IllegalArgumentException("Parse request xml failed", e);
-        	}
+            try {
+                reqDoc = SuspendUntilDocument.Factory.parse(requestElement.getXMLStreamReader());
+            } catch (XmlException e) {
+                throw new IllegalArgumentException("Parse request xml failed", e);
+            }
             SuspendUntil req = reqDoc.getSuspendUntil();
 
             // check request
@@ -1353,11 +1381,11 @@ public class TMSRequestProcessor {
 
             // unmarshal request
             ResumeDocument reqDoc = null;
-            try{
-        		reqDoc = ResumeDocument.Factory.parse(requestElement.getXMLStreamReader());
-        	}catch(XmlException e){
-        		throw new IllegalArgumentException("Parse request xml failed", e);
-        	}
+            try {
+                reqDoc = ResumeDocument.Factory.parse(requestElement.getXMLStreamReader());
+            } catch (XmlException e) {
+                throw new IllegalArgumentException("Parse request xml failed", e);
+            }
             Resume req = reqDoc.getResume();
 
             // check request
@@ -1385,8 +1413,7 @@ public class TMSRequestProcessor {
      * specify the receiving organizational entity. Potential owners can only
      * forward a task while the task is in the Ready state. In 锟�task
      * identifier 锟�organizational entity (htd:tOrganization alEntity) Out
-     * void Authorization Potential Owners Actual Owner Business
-     * Administrator
+     * void Authorization Potential Owners Actual Owner Business Administrator
      * 
      * @param requestElement
      * @return
@@ -1402,11 +1429,11 @@ public class TMSRequestProcessor {
 
             // unmarshal request
             ForwardDocument reqDoc = null;
-            try{
-        		reqDoc = ForwardDocument.Factory.parse(requestElement.getXMLStreamReader());
-        	}catch(XmlException e){
-        		throw new IllegalArgumentException("Parse request xml failed", e);
-        	}
+            try {
+                reqDoc = ForwardDocument.Factory.parse(requestElement.getXMLStreamReader());
+            } catch (XmlException e) {
+                throw new IllegalArgumentException("Parse request xml failed", e);
+            }
             Forward req = reqDoc.getForward();
 
             // check request
@@ -1433,8 +1460,8 @@ public class TMSRequestProcessor {
      * Assign the task to one user and set the task to state Reserved. If the
      * recipient was not a potential owner then this person is added to the set
      * of potential owners. In 锟�task identifier 锟�organizational entity
-     * (htd:tOrganization alEntity) Out 锟�void Authorization Potential Owners
-     * (only in Ready state) Actual Owner Business Administrator
+     * (htd:tOrganization alEntity) Out 锟�void Authorization Potential
+     * Owners (only in Ready state) Actual Owner Business Administrator
      * 
      * @param requestElement
      * @return
@@ -1450,11 +1477,11 @@ public class TMSRequestProcessor {
 
             // unmarshal request
             DelegateDocument reqDoc = null;
-            try{
-        		reqDoc = DelegateDocument.Factory.parse(requestElement.getXMLStreamReader());
-        	}catch(XmlException e){
-        		throw new IllegalArgumentException("Parse request xml failed", e);
-        	}
+            try {
+                reqDoc = DelegateDocument.Factory.parse(requestElement.getXMLStreamReader());
+            } catch (XmlException e) {
+                throw new IllegalArgumentException("Parse request xml failed", e);
+            }
             Delegate req = reqDoc.getDelegate();
 
             // check request
@@ -1702,6 +1729,169 @@ public class TMSRequestProcessor {
         }
     }
 
+    /**
+     * Set the data for the part of the task's output message. In task
+     * identifier Actual Owner
+     */
+    public OMElement setOutput(OMElement requestElement) throws AxisFault {
+        String participantToken = getParticipantToken();
+
+        try {
+            SetOutputDocument sod = SetOutputDocument.Factory.parse(requestElement.getXMLStreamReader());
+            SetOutput so = sod.getSetOutput();
+
+            _server.setOutput(participantToken, so.getIdentifier(), so.getPart(), so.getTaskData());
+
+            SetOutputResponseDocument sord = SetOutputResponseDocument.Factory.newInstance();
+            SetOutputResponse sor = sord.addNewSetOutputResponse();
+
+            return convertXML(sord);
+        } catch (Exception e) {
+            throw makeFault(e);
+        }
+    }
+    
+    /**
+     * Deletes the output data of the task 
+     */
+    public OMElement deleteOutput(OMElement requestElement) throws AxisFault {
+        String participantToken = getParticipantToken();
+
+        try {
+            DeleteOutputDocument dod = DeleteOutputDocument.Factory.parse(requestElement.getXMLStreamReader());
+            DeleteOutput delo = dod.getDeleteOutput();
+
+            _server.deleteOutput(participantToken, delo.getIdentifier());
+
+            DeleteOutputResponseDocument dord = DeleteOutputResponseDocument.Factory.newInstance();
+            DeleteOutputResponse sor = dord.addNewDeleteOutputResponse();
+
+            return convertXML(dord);
+        } catch (Exception e) {
+            throw makeFault(e);
+        }
+    }
+    
+    /**
+     * Set the fault data of the task
+     * @param requestElement
+     * @return
+     * @throws AxisFault
+     */
+    public OMElement setFault(OMElement requestElement) throws AxisFault {
+        String participantToken = getParticipantToken();
+
+        try {
+            SetFaultDocument sfd = SetFaultDocument.Factory.parse(requestElement.getXMLStreamReader());
+            SetFault sf = sfd.getSetFault();
+
+            _server.setOutput(participantToken, sf.getIdentifier(), sf.getFaultName(), sf.getFaultData());
+
+            SetFaultResponseDocument sfrd = SetFaultResponseDocument.Factory.newInstance();
+            SetFaultResponse sor = sfrd.addNewSetFaultResponse();
+
+            return convertXML(sfrd);
+        } catch (Exception e) {
+            throw makeFault(e);
+        }
+    }
+    
+    /**
+     * Deletes the fault name and fault data of the task.
+     * @param requestElement
+     * @return
+     * @throws AxisFault
+     */
+    public OMElement deleteFault(OMElement requestElement) throws AxisFault {
+        String participantToken = getParticipantToken();
+
+        try {
+            DeleteFaultDocument dfd = DeleteFaultDocument.Factory.parse(requestElement.getXMLStreamReader());
+            DeleteFault df = dfd.getDeleteFault();
+
+            _server.deleteOutput(participantToken, df.getIdentifier());
+
+            DeleteFaultResponseDocument dfrd = DeleteFaultResponseDocument.Factory.newInstance();
+            DeleteFaultResponse dfr = dfrd.addNewDeleteFaultResponse();
+
+            return convertXML(dfrd);
+        } catch (Exception e) {
+            throw makeFault(e);
+        }
+    }
+    
+    
+    /**
+     * Get the data for the part of the task's input message.
+     * @param requestElement
+     * @return
+     * @throws AxisFault
+     */
+    public OMElement getInput(OMElement requestElement) throws AxisFault {
+        String participantToken = getParticipantToken();
+        
+        try{
+            GetInputDocument gid = GetInputDocument.Factory.parse(requestElement.getXMLStreamReader());
+            GetInput gi = gid.getGetInput();
+            
+            String message = _server.getInput(participantToken, gi.getIdentifier(), gi.getPart());
+            
+            GetInputResponseDocument gird = GetInputResponseDocument.Factory.newInstance();
+            GetInputResponse gir = gird.addNewGetInputResponse();
+            gir.setTaskData(XmlObject.Factory.parse(message));
+            
+            return convertXML(gird);
+        }catch (Exception e) {
+            throw makeFault(e);
+        }
+    }
+    
+    
+    /**
+     * Get the data for the part of the task's output message.
+     * @param requestElement
+     * @return
+     * @throws AxisFault
+     */
+    public OMElement getOutput(OMElement requestElement) throws AxisFault {
+        String participantToken = getParticipantToken();
+        
+        try{
+            GetOutputDocument gid = GetOutputDocument.Factory.parse(requestElement.getXMLStreamReader());
+            GetOutput go = gid.getGetOutput();
+            
+            String message = _server.getOutput(participantToken, go.getIdentifier(), go.getPart());
+            
+            GetOutputResponseDocument gord = GetOutputResponseDocument.Factory.newInstance();
+            GetOutputResponse gor = gord.addNewGetOutputResponse();
+            gor.setTaskData(XmlObject.Factory.parse(message));
+            
+            return convertXML(gord);
+        }catch (Exception e) {
+            throw makeFault(e);
+        }
+    }
+    
+    public OMElement getFault(OMElement requestElement) throws AxisFault {
+        String participantToken = getParticipantToken();
+        
+        try{
+            GetFaultDocument gfd = GetFaultDocument.Factory.parse(requestElement.getXMLStreamReader());
+            GetFault gf = gfd.addNewGetFault();
+            
+            String message = _server.getFault(participantToken, gf.getIdentifier(), gf.getFaultName());
+            
+            GetFaultResponseDocument gfrd = GetFaultResponseDocument.Factory.newInstance();
+            GetFaultResponse gfr = gfrd.addNewGetFaultResponse();
+            gfr.setFaultData(XmlObject.Factory.parse(message));
+            gfr.setFaultName(gf.getFaultName());
+            
+            return convertXML(gfrd);
+        }catch (Exception e) {
+            throw makeFault(e);
+        }
+    }
+    
     /*****************************************
      * Query operation
      *****************************************/

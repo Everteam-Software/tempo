@@ -8,6 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.xml.namespace.QName;
+
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.openjpa.persistence.NoResultException;
 import org.apache.xmlbeans.GDate;
 import org.apache.xmlbeans.GDuration;
@@ -29,6 +33,7 @@ import org.intalio.tempo.workflow.tms.InvalidTaskStateException;
 import org.intalio.tempo.workflow.tms.TMSException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.intalio.tempo.workflow.tms.server.permissions.TaskPermissions;
+import org.intalio.tempo.workflow.tmsb4p.message.MessageData;
 import org.intalio.tempo.workflow.tmsb4p.server.dao.GenericRoleType;
 import org.intalio.tempo.workflow.tmsb4p.server.dao.ITaskDAOConnection;
 import org.intalio.tempo.workflow.tmsb4p.server.dao.ITaskDAOConnectionFactory;
@@ -40,182 +45,179 @@ import com.intalio.wsHT.api.xsd.TTime;
 
 public class TMSServer implements ITMSServer {
 
-	private static final Logger _logger = LoggerFactory
-			.getLogger(TMSServer.class);
-	private IAuthProvider _authProvider;
-	private ITaskDAOConnectionFactory _taskDAOFactory;
-	private TaskPermissions _permissions;
+    private static final Logger _logger = LoggerFactory.getLogger(TMSServer.class);
+    private IAuthProvider _authProvider;
+    private ITaskDAOConnectionFactory _taskDAOFactory;
+    private TaskPermissions _permissions;
 
-	public IAuthProvider getAuthProvider() {
-		return _authProvider;
-	}
+    public IAuthProvider getAuthProvider() {
+        return _authProvider;
+    }
 
-	public void setAuthProvider(IAuthProvider provider) {
-		_authProvider = provider;
-	}
+    public void setAuthProvider(IAuthProvider provider) {
+        _authProvider = provider;
+    }
 
-	public ITaskDAOConnectionFactory getTaskDAOFactory() {
-		return _taskDAOFactory;
-	}
+    public ITaskDAOConnectionFactory getTaskDAOFactory() {
+        return _taskDAOFactory;
+    }
 
-	public void setTaskDAOFactory(ITaskDAOConnectionFactory factory) {
-		_taskDAOFactory = factory;
-	}
+    public void setTaskDAOFactory(ITaskDAOConnectionFactory factory) {
+        _taskDAOFactory = factory;
+    }
 
-	public TaskPermissions getPermissions() {
-		return _permissions;
-	}
+    public TaskPermissions getPermissions() {
+        return _permissions;
+    }
 
-	public void setPermissions(TaskPermissions _permissions) {
-		this._permissions = _permissions;
-	}
+    public void setPermissions(TaskPermissions _permissions) {
+        this._permissions = _permissions;
+    }
 
-	private String makeString(Object[] ar){
-		if (ar==null)
-			return "";
-		
-		StringBuffer buf = new StringBuffer("[");
-		for (int i= 0; i< ar.length; i++)
-			if (i == 0) 
-				buf.append(ar[i].toString());
-			else
-				buf.append(", "+ar[i].toString());
-		buf.append("]");
-		return buf.toString();
-	}
-	
-	private String makeString(int[] ar){
-		if (ar==null)
-			return "";
-		
-		StringBuffer buf = new StringBuffer("[");
-		for (int i= 0; i< ar.length; i++)
-			if (i == 0) 
-				buf.append(ar[i]);
-			else
-				buf.append(", "+ar[i]);
-		buf.append("]");
-		return buf.toString();
-	}
-	
-	private boolean checkPermission(UserRoles ur, OrganizationalEntity oe) {
-		int i = 0;
-		if (oe == null)
-			return false;
-		Set<Principal> sp= oe.getPrincipals();
-		Principal[] s = new Principal[1];
-		if (sp == null)
-			return false;
-		s = sp.toArray(s);
-		if (oe.getEntityType().equalsIgnoreCase(
-				OrganizationalEntity.USER_ENTITY)) {
-			System.out.println("===>s size="+s.length);
-	
-			for (i = 0; i < s.length; i++) {
-				System.out.println("s["+i+"]="+s[i].getValue());
-				if (ur.getUserID().equalsIgnoreCase(s[i].getValue()))
-					return true;
-			}
-		} else { // group entity
-			for (i = 0; i < s.length; i++)
-				if (ur.getAssignedRoles().contains(s[i].getValue()))
-					return true;
+    private String makeString(Object[] ar) {
+        if (ar == null)
+            return "";
 
-		}
-		return false;
-	}
+        StringBuffer buf = new StringBuffer("[");
+        for (int i = 0; i < ar.length; i++)
+            if (i == 0)
+                buf.append(ar[i].toString());
+            else
+                buf.append(", " + ar[i].toString());
+        buf.append("]");
+        return buf.toString();
+    }
 
-	protected List<Integer> checkUserTaskRoles(Task task, UserRoles ur) {
-		ArrayList<Integer> ret = new ArrayList<Integer>();
-		OrganizationalEntity oe = null;
+    private String makeString(int[] ar) {
+        if (ar == null)
+            return "";
 
-		String ao = task.getActualOwner();
-		if (ao != null && ao.equalsIgnoreCase(ur.getUserID()))
-			ret.add(ITMSServer.ACTUAL_OWNER);
+        StringBuffer buf = new StringBuffer("[");
+        for (int i = 0; i < ar.length; i++)
+            if (i == 0)
+                buf.append(ar[i]);
+            else
+                buf.append(", " + ar[i]);
+        buf.append("]");
+        return buf.toString();
+    }
 
-		oe = task.getPotentialOwners();
-		if (checkPermission(ur, oe))
-			ret.add(ITMSServer.POTENTIAL_OWNERS);
+    private boolean checkPermission(UserRoles ur, OrganizationalEntity oe) {
+        int i = 0;
+        if (oe == null)
+            return false;
+        Set<Principal> sp = oe.getPrincipals();
+        Principal[] s = new Principal[1];
+        if (sp == null)
+            return false;
+        s = sp.toArray(s);
+        if (oe.getEntityType().equalsIgnoreCase(OrganizationalEntity.USER_ENTITY)) {
+            System.out.println("===>s size=" + s.length);
 
-		oe = task.getBusinessAdministrators();
-		if (checkPermission(ur, oe))
-			ret.add(ITMSServer.BUSINESSADMINISTRATORS);
+            for (i = 0; i < s.length; i++) {
+                System.out.println("s[" + i + "]=" + s[i].getValue());
+                if (ur.getUserID().equalsIgnoreCase(s[i].getValue()))
+                    return true;
+            }
+        } else { // group entity
+            for (i = 0; i < s.length; i++)
+                if (ur.getAssignedRoles().contains(s[i].getValue()))
+                    return true;
 
-		oe = task.getExcludedOwners();
-		if (checkPermission(ur, oe))
-			ret.add(ITMSServer.EXCLUDED_OWNERS);
+        }
+        return false;
+    }
 
-		oe = task.getNotificationRecipients();
-		if (checkPermission(ur, oe))
-			ret.add(ITMSServer.RECIPIENTS);
+    protected List<Integer> checkUserTaskRoles(Task task, UserRoles ur) {
+        ArrayList<Integer> ret = new ArrayList<Integer>();
+        OrganizationalEntity oe = null;
 
-		String u = task.getTaskInitiator();
-		if (u.equalsIgnoreCase(ur.getUserID()))
-			ret.add(ITMSServer.TASK_INITIATOR);
+        String ao = task.getActualOwner();
+        if (ao != null && ao.equalsIgnoreCase(ur.getUserID()))
+            ret.add(ITMSServer.ACTUAL_OWNER);
 
-		oe = task.getTaskStakeholders();
-		if (checkPermission(ur, oe))
-			ret.add(ITMSServer.TASK_STAKEHOLDERS);
+        oe = task.getPotentialOwners();
+        if (checkPermission(ur, oe))
+            ret.add(ITMSServer.POTENTIAL_OWNERS);
 
-		System.out.println("user in roles " + ret.toString());
-		return ret;
+        oe = task.getBusinessAdministrators();
+        if (checkPermission(ur, oe))
+            ret.add(ITMSServer.BUSINESSADMINISTRATORS);
 
-	}
+        oe = task.getExcludedOwners();
+        if (checkPermission(ur, oe))
+            ret.add(ITMSServer.EXCLUDED_OWNERS);
 
-	protected void checkPermission(Task task, UserRoles ur, int[] roles)
-			throws IllegalAccessException {
+        oe = task.getNotificationRecipients();
+        if (checkPermission(ur, oe))
+            ret.add(ITMSServer.RECIPIENTS);
 
-		for (int i = 0; i < roles.length; i++) {
-			int role = roles[i];
-			OrganizationalEntity oe = null;
-			switch (role) {
-			case ITMSServer.ACTUAL_OWNER:
-				String ao = task.getActualOwner();
-				if (ao == null || ao.length() == 0)
-					continue;
-				if (ao.equalsIgnoreCase(ur.getUserID()))
-					return;
-				break;
-			case ITMSServer.POTENTIAL_OWNERS:
-				oe = task.getPotentialOwners();
-				if (checkPermission(ur, oe))
-					return;
-				break;
-			case ITMSServer.BUSINESSADMINISTRATORS:
-				oe = task.getBusinessAdministrators();
-				if (checkPermission(ur, oe))
-					return;
-				break;
-			case ITMSServer.EXCLUDED_OWNERS:
-				oe = task.getExcludedOwners();
-				if (checkPermission(ur, oe))
-					return;
-				break;
-			case ITMSServer.RECIPIENTS:
-				oe = task.getNotificationRecipients();
-				if (checkPermission(ur, oe))
-					return;
-				break;
-			case ITMSServer.TASK_INITIATOR:
-				String u = task.getTaskInitiator();
-				if (u.equalsIgnoreCase(ur.getUserID()))
-					return;
+        String u = task.getTaskInitiator();
+        if (u.equalsIgnoreCase(ur.getUserID()))
+            ret.add(ITMSServer.TASK_INITIATOR);
 
-				break;
-			case ITMSServer.TASK_STAKEHOLDERS:
-				oe = task.getTaskStakeholders();
-				if (checkPermission(ur, oe))
-					return;
+        oe = task.getTaskStakeholders();
+        if (checkPermission(ur, oe))
+            ret.add(ITMSServer.TASK_STAKEHOLDERS);
 
-				break;
-			default:
-				throw new IllegalAccessException("unknow role " + role);
-			}
-		}
-		throw new IllegalAccessException("user " + ur.getUserID()
-				+ " have not permission for actino on task " + task.getId() + "you must be role of " + makeString(roles));
-	}
-	
+        System.out.println("user in roles " + ret.toString());
+        return ret;
+
+    }
+
+    protected void checkPermission(Task task, UserRoles ur, int[] roles) throws IllegalAccessException {
+
+        for (int i = 0; i < roles.length; i++) {
+            int role = roles[i];
+            OrganizationalEntity oe = null;
+            switch (role) {
+                case ITMSServer.ACTUAL_OWNER:
+                    String ao = task.getActualOwner();
+                    if (ao == null || ao.length() == 0)
+                        continue;
+                    if (ao.equalsIgnoreCase(ur.getUserID()))
+                        return;
+                    break;
+                case ITMSServer.POTENTIAL_OWNERS:
+                    oe = task.getPotentialOwners();
+                    if (checkPermission(ur, oe))
+                        return;
+                    break;
+                case ITMSServer.BUSINESSADMINISTRATORS:
+                    oe = task.getBusinessAdministrators();
+                    if (checkPermission(ur, oe))
+                        return;
+                    break;
+                case ITMSServer.EXCLUDED_OWNERS:
+                    oe = task.getExcludedOwners();
+                    if (checkPermission(ur, oe))
+                        return;
+                    break;
+                case ITMSServer.RECIPIENTS:
+                    oe = task.getNotificationRecipients();
+                    if (checkPermission(ur, oe))
+                        return;
+                    break;
+                case ITMSServer.TASK_INITIATOR:
+                    String u = task.getTaskInitiator();
+                    if (u.equalsIgnoreCase(ur.getUserID()))
+                        return;
+
+                    break;
+                case ITMSServer.TASK_STAKEHOLDERS:
+                    oe = task.getTaskStakeholders();
+                    if (checkPermission(ur, oe))
+                        return;
+
+                    break;
+                default:
+                    throw new IllegalAccessException("unknow role " + role);
+            }
+        }
+        throw new IllegalAccessException("user " + ur.getUserID() + " have not permission for actino on task " + task.getId() + "you must be role of "
+                        + makeString(roles));
+    }
+
     protected void checkPermission(String identifier, UserRoles ur, int[] roles) throws IllegalAccessException, B4PPersistException {
         ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
         try {
@@ -228,6 +230,7 @@ public class TMSServer implements ITMSServer {
             dao.close();
         }
     }
+
     /**
      * check status, if suspended and timeout, will change status back to states before suspending.
      * Please notice that task status maybe changed after calling checkTaskStatus
@@ -961,7 +964,7 @@ public class TMSServer implements ITMSServer {
 
 	}
 
-	   /**************************************
+	/**************************************
      * data operation operations
      * 
      * @throws AuthException
@@ -972,7 +975,7 @@ public class TMSServer implements ITMSServer {
         UserRoles ur = _authProvider.authenticate(participantToken);
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         Task task = dao.fetchTaskIfExists(identifier);
-       // String actualOwner = task.getActualOwner();
+        // String actualOwner = task.getActualOwner();
 
         checkPermission(task, ur, new int[] { ITMSServer.ACTUAL_OWNER, ITMSServer.BUSINESSADMINISTRATORS });
 
@@ -1054,7 +1057,7 @@ public class TMSServer implements ITMSServer {
     }
 
     public Task getTaskByIdentifier(String participantToken, String identifier) throws TMSException {
-      //  UserRoles ur = _authProvider.authenticate(participantToken);
+        // UserRoles ur = _authProvider.authenticate(participantToken);
 
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         Task task = dao.fetchTaskIfExists(identifier);
@@ -1062,206 +1065,343 @@ public class TMSServer implements ITMSServer {
         return task;
     }
 
-	/*****************************************
-	 * Query operation
-	 *****************************************/
+    public void setOutput(String participantToken, String identifier, String partName, XmlObject data) throws TMSException {
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER });
 
-	public Collection<Map<String, Object>> query(String participantToken, String selectClause,
-			String whereClause, String orderByClause, int maxTasks,
-			int taskIndexOffset) throws TMSException {
-		// get user
-		UserRoles ur = _authProvider.authenticate(participantToken);
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        Task task = dao.fetchTaskIfExists(identifier);
 
-		// do query
-		ITaskDAOConnection dao = _taskDAOFactory.openConnection();
-		try {
-			return dao.query(ur, selectClause, whereClause, orderByClause,
-					maxTasks, taskIndexOffset);
-		} catch (Exception e) {
-			_logger.error("Query failed", e);
-			throw new InvalidQueryException(e);
-		} finally {
-			dao.close();
-		}
-	}
+        try {
+            if (partName == null || partName.trim().length() == 0) {
+                task.setOutputMessage(data.xmlText());
+            } else {
+                try {
+                    QName partQName = new QName("http://schemas.xmlsoap.org/wsdl/", "part");
+                    StAXOMBuilder builder = new StAXOMBuilder(task.getOutputMessage());
+                    OMElement parts = builder.getDocumentElement();
 
-	public List<Task> getMyTasks(String participantToken, String taskType,
-			String genericHumanRole, String workQueue,
-			TStatus.Enum[] statusList, String whereClause,
-			String createdOnClause, int maxTasks) throws TMSException {
-		UserRoles ur = _authProvider.authenticate(participantToken);
+                    MessageData messageData = new MessageData(partQName, parts);
+
+                    messageData.setData(partName, data.xmlText());
+                    task.setOutputMessage(messageData.toXML());
+                } catch (Exception e) {
+                    new IllegalAccessException("Error when parsing the output data");
+                }
+            }
+        } finally {
+            dao.updateTask(task);
+            dao.commit();
+            dao.close();
+        }
+
+    }
+
+    public void deleteOutput(String participantToken, String identifier) throws TMSException {
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER });
+
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        Task task = dao.fetchTaskIfExists(identifier);
+
+        try {
+            task.setOutputMessage(null);
+        } finally {
+            dao.updateTask(task);
+            dao.commit();
+            dao.close();
+        }
+    }
+
+    public void setFault(String participantToken, String identifier, String faultName, XmlObject data) throws TMSException {
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER });
+
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        Task task = dao.fetchTaskIfExists(identifier);
+
+        try {
+            if (faultName == null || faultName.trim().length() == 0) {
+                task.setFaultMessage(data.xmlText());
+            } else {
+                try {
+                    QName partQName = new QName("http://schemas.xmlsoap.org/wsdl/", "part");
+                    StAXOMBuilder builder = new StAXOMBuilder(task.getFaultMessage());
+                    OMElement parts = builder.getDocumentElement();
+
+                    MessageData messageData = new MessageData(partQName, parts);
+
+                    messageData.setData(faultName, data.xmlText());
+                    task.setFaultMessage(messageData.toXML());
+                } catch (Exception e) {
+                    new IllegalAccessException("Error when parsing the fault data");
+                }
+            }
+        } finally {
+            dao.updateTask(task);
+            dao.commit();
+            dao.close();
+        }
+
+    }
+
+    public void deleteFault(String participantToken, String identifier) throws TMSException {
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER });
+
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        Task task = dao.fetchTaskIfExists(identifier);
+
+        try {
+            task.setFaultMessage(null);
+        } finally {
+            dao.updateTask(task);
+            dao.commit();
+            dao.close();
+        }
+    }
+
+    public String getInput(String participantToken, String identifier, String partName) throws TMSException {
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER, ITMSServer.POTENTIAL_OWNERS, ITMSServer.BUSINESSADMINISTRATORS });
+
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        try {
+            Task task = dao.fetchTaskIfExists(identifier);
+
+            return getMessagePart(task.getInputMessage(), partName);
+        } finally {
+            dao.close();
+        }
+    }
+
+    public String getOutput(String participantToken, String identifier, String partName) throws TMSException {
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER, ITMSServer.POTENTIAL_OWNERS, ITMSServer.BUSINESSADMINISTRATORS });
+
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        try {
+
+            Task task = dao.fetchTaskIfExists(identifier);
+
+            return getMessagePart(task.getOutputMessage(), partName);
+        } finally {
+            dao.close();
+        }
+    }
+
+    public String getFault(String participantToken, String identifier, String faultName) throws TMSException {
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER, ITMSServer.POTENTIAL_OWNERS, ITMSServer.BUSINESSADMINISTRATORS });
+
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        try{
+            Task task = dao.fetchTaskIfExists(identifier);
+            
+            return getMessagePart(task.getOutputMessage(), faultName);
+        }finally {
+            dao.close();
+        }
+    }
+
+    private String getMessagePart(String message, String partName) {
+        if (partName == null || partName.trim().length() == 0) {
+            return message;
+        } else {
+            try {
+                QName partQName = new QName("http://schemas.xmlsoap.org/wsdl/", "part");
+                StAXOMBuilder builder = new StAXOMBuilder(message);
+                OMElement parts = builder.getDocumentElement();
+
+                MessageData messageData = new MessageData(partQName, parts);
+                return messageData.getData(partName).toString();
+            } catch (Exception e) {
+                new IllegalAccessException("Error when parsing the fault data");
+            }
+        }
+        return null;
+    }
+
+    /*****************************************
+     * Query operation
+     *****************************************/
+
+    public Collection<Map<String, Object>> query(String participantToken, String selectClause, String whereClause, String orderByClause, int maxTasks,
+                    int taskIndexOffset) throws TMSException {
+        // get user
+        UserRoles ur = _authProvider.authenticate(participantToken);
+
+        // do query
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        try {
+            return dao.query(ur, selectClause, whereClause, orderByClause, maxTasks, taskIndexOffset);
+        } catch (Exception e) {
+            _logger.error("Query failed", e);
+            throw new InvalidQueryException(e);
+        } finally {
+            dao.close();
+        }
+    }
+
+    public List<Task> getMyTasks(String participantToken, String taskType, String genericHumanRole, String workQueue, TStatus.Enum[] statusList,
+                    String whereClause, String createdOnClause, int maxTasks) throws TMSException {
+        UserRoles ur = _authProvider.authenticate(participantToken);
 
         List<TaskStatus> statuses = new ArrayList<TaskStatus>();
         for (int i = 0; i < statusList.length; i++) {
             statuses.add(TaskStatus.valueOf(statusList[i].toString()));
         }
-		ITaskDAOConnection dao = _taskDAOFactory.openConnection();
-		try {
-			List<Task> tasks = dao
-					.getMyTasks(ur, taskType, genericHumanRole, workQueue,
-							statuses, whereClause, createdOnClause, maxTasks);
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        try {
+            List<Task> tasks = dao.getMyTasks(ur, taskType, genericHumanRole, workQueue, statuses, whereClause, createdOnClause, maxTasks);
 
-			return tasks;
-		} catch (Exception e) {
-			_logger.error("Cannot get MyTasks: ", e);
-			throw new InvalidQueryException(e);
-		} finally {
-			dao.close();
-		}
-	}
+            return tasks;
+        } catch (Exception e) {
+            _logger.error("Cannot get MyTasks: ", e);
+            throw new InvalidQueryException(e);
+        } finally {
+            dao.close();
+        }
+    }
 
-	/*****************************************
+    /*****************************************
      * administrative operation
      *****************************************/
-	public void activate(String participantToken, String identifier)
-			throws TMSException {
-		UserRoles ur = _authProvider.authenticate(participantToken);
-		ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+    public void activate(String participantToken, String identifier) throws TMSException {
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
 
-		Task task = checkAdminOperation(dao, ur, identifier);
+        Task task = checkAdminOperation(dao, ur, identifier);
         task.setActivationTime(new Date(System.currentTimeMillis()));
-        task.setStatus(TaskStatus.READY);		
-		try {
-			dao.updateTask(task);
-			dao.commit();
-		} catch (Exception e) {
-			_logger.error("Cannot activate Task: ", e);
-			throw new B4PPersistException(e);
-		} finally {
-			dao.close();
-		}
-	}
+        task.setStatus(TaskStatus.READY);
+        try {
+            dao.updateTask(task);
+            dao.commit();
+        } catch (Exception e) {
+            _logger.error("Cannot activate Task: ", e);
+            throw new B4PPersistException(e);
+        } finally {
+            dao.close();
+        }
+    }
 
-	public void nominate(String participantToken, String identifier,
-			List<String> principals, boolean isUser) throws TMSException {
-		UserRoles ur = _authProvider.authenticate(participantToken);
-		ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+    public void nominate(String participantToken, String identifier, List<String> principals, boolean isUser) throws TMSException {
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
 
-		Task task = checkAdminOperation(dao, ur, identifier);
-		if (isUser) {
-			// user type
-			if (principals.size() == 1) {
-				// status -> reserved
-				task.setStatus(TaskStatus.RESERVED);
-			} else {
-				task.setStatus(TaskStatus.READY);
-			}
-		}
-		
-		String orgType = isUser? OrganizationalEntity.USER_ENTITY: OrganizationalEntity.GROUP_ENTITY;
-		try {
-			dao.updateTaskRole(identifier, GenericRoleType.potential_owners, principals, orgType);
-			dao.commit();
-		} catch (Exception e) {
-			_logger.error("Cannot nominate Task: ", e);
-			throw new B4PPersistException(e);
-		} finally {
-			dao.close();
-		}
-	}
+        Task task = checkAdminOperation(dao, ur, identifier);
+        if (isUser) {
+            // user type
+            if (principals.size() == 1) {
+                // status -> reserved
+                task.setStatus(TaskStatus.RESERVED);
+            } else {
+                task.setStatus(TaskStatus.READY);
+            }
+        }
 
-	private Task checkAdminOperation(ITaskDAOConnection dao, UserRoles ur,
-			String identifier) throws AuthException, UnavailableTaskException,
-			InvalidTaskStateException {
-		// check whether the user has the business administrator role
-		boolean isRightPerson = dao.isRoleMember(identifier, ur,
-				GenericRoleType.business_administrators);
-		if (!isRightPerson) {
-			throw new AuthException(
-					"Only business administrator can activate the task.");
-		}
+        String orgType = isUser ? OrganizationalEntity.USER_ENTITY : OrganizationalEntity.GROUP_ENTITY;
+        try {
+            dao.updateTaskRole(identifier, GenericRoleType.potential_owners, principals, orgType);
+            dao.commit();
+        } catch (Exception e) {
+            _logger.error("Cannot nominate Task: ", e);
+            throw new B4PPersistException(e);
+        } finally {
+            dao.close();
+        }
+    }
 
-		Task task = null;
-		try {
-			task = dao.fetchTaskIfExists(identifier);
+    private Task checkAdminOperation(ITaskDAOConnection dao, UserRoles ur, String identifier) throws AuthException, UnavailableTaskException,
+                    InvalidTaskStateException {
+        // check whether the user has the business administrator role
+        boolean isRightPerson = dao.isRoleMember(identifier, ur, GenericRoleType.business_administrators);
+        if (!isRightPerson) {
+            throw new AuthException("Only business administrator can activate the task.");
+        }
 
-			if (!TaskStatus.CREATED.equals(task.getStatus())) {
-				throw new InvalidTaskStateException(
-						"Only created status's Task can be activated or nominated!");
-			}
-		} catch (UnavailableTaskException e) {
-			_logger.error("Cannot activate Task: ", e);
-			throw e;
-		}
+        Task task = null;
+        try {
+            task = dao.fetchTaskIfExists(identifier);
 
-		return task;
-	}
+            if (!TaskStatus.CREATED.equals(task.getStatus())) {
+                throw new InvalidTaskStateException("Only created status's Task can be activated or nominated!");
+            }
+        } catch (UnavailableTaskException e) {
+            _logger.error("Cannot activate Task: ", e);
+            throw e;
+        }
 
-	public void setGenericHumanRole(String participantToken, String identifier,
-			GenericRoleType roleType, List<String> principals, boolean isUser)
-			throws TMSException {
-		UserRoles ur = _authProvider.authenticate(participantToken);
-		ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        return task;
+    }
 
-		boolean isRightPerson = dao.isRoleMember(identifier, ur,
-				GenericRoleType.business_administrators);
-		if (!isRightPerson) {
-			throw new AuthException(
-					"Only business administrator can update roles.");
-		}
+    public void setGenericHumanRole(String participantToken, String identifier, GenericRoleType roleType, List<String> principals, boolean isUser)
+                    throws TMSException {
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
 
-	//	Task task = dao.fetchTaskIfExists(identifier);
+        boolean isRightPerson = dao.isRoleMember(identifier, ur, GenericRoleType.business_administrators);
+        if (!isRightPerson) {
+            throw new AuthException("Only business administrator can update roles.");
+        }
 
-		if (GenericRoleType.business_administrators.equals(roleType)) {
-			// the operator must be one member of the business parter
-			boolean isMember = isMemeber(ur, principals, isUser);
-			if (!isMember) {
-				if (isUser) {
-					// add the operator the user list auto
-					principals.add(ur.getUserID());
-				} else {
-					throw new AuthException(
-							"The user should be one memeber of the Business Parter.");
-				}
-			}
-		}
+        // Task task = dao.fetchTaskIfExists(identifier);
 
-		// update the generic role data to task
-		if (GenericRoleType.task_initiator.equals(roleType)
-				|| GenericRoleType.actual_owner.equals(roleType)) {
-			// can be one user
-			if ((isUser) && (principals.size() == 1)) {
-			} else {
-				throw new AuthException("Only one user can be: "
-						+ roleType.name());
-			}
-		}
+        if (GenericRoleType.business_administrators.equals(roleType)) {
+            // the operator must be one member of the business parter
+            boolean isMember = isMemeber(ur, principals, isUser);
+            if (!isMember) {
+                if (isUser) {
+                    // add the operator the user list auto
+                    principals.add(ur.getUserID());
+                } else {
+                    throw new AuthException("The user should be one memeber of the Business Parter.");
+                }
+            }
+        }
 
-		String orgType = isUser ? OrganizationalEntity.USER_ENTITY
-				: OrganizationalEntity.GROUP_ENTITY;
-		try {
-			dao.updateTaskRole(identifier, roleType, principals, orgType);
-			dao.commit();
-		} catch (Exception e) {
-			_logger.error("Cannot set generic role: ", e);
-			throw new B4PPersistException(e);
-		} finally {
-			dao.close();
-		}
-	}
+        // update the generic role data to task
+        if (GenericRoleType.task_initiator.equals(roleType) || GenericRoleType.actual_owner.equals(roleType)) {
+            // can be one user
+            if ((isUser) && (principals.size() == 1)) {
+            } else {
+                throw new AuthException("Only one user can be: " + roleType.name());
+            }
+        }
 
-	/**
-	 * check whether the user belongs to one set of principals.
-	 * 
-	 * @param ur
-	 * @param principals
-	 * @param isUser
-	 * @return
-	 */
-	private boolean isMemeber(UserRoles ur, List<String> principals,
-			boolean isUser) {
-		String uId = ur.getUserID();
-		if (isUser) {
-			return principals.contains(uId);
-		}
+        String orgType = isUser ? OrganizationalEntity.USER_ENTITY : OrganizationalEntity.GROUP_ENTITY;
+        try {
+            dao.updateTaskRole(identifier, roleType, principals, orgType);
+            dao.commit();
+        } catch (Exception e) {
+            _logger.error("Cannot set generic role: ", e);
+            throw new B4PPersistException(e);
+        } finally {
+            dao.close();
+        }
+    }
 
-		Set<String> roles = ur.getAssignedRoles();
-		for (String role : roles) {
-			if (principals.contains(role)) {
-				return true;
-			}
-		}
+    /**
+     * check whether the user belongs to one set of principals.
+     * 
+     * @param ur
+     * @param principals
+     * @param isUser
+     * @return
+     */
+    private boolean isMemeber(UserRoles ur, List<String> principals, boolean isUser) {
+        String uId = ur.getUserID();
+        if (isUser) {
+            return principals.contains(uId);
+        }
 
-		return false;
-	}
+        Set<String> roles = ur.getAssignedRoles();
+        for (String role : roles) {
+            if (principals.contains(role)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
