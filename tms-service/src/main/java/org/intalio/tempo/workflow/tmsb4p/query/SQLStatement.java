@@ -1,6 +1,7 @@
 package org.intalio.tempo.workflow.tmsb4p.query;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,8 @@ public class SQLStatement {
 	private List<String> whereClause = new ArrayList<String>();
 	private List<String> orderByClause = new ArrayList<String>();
 	private Map<String, Object> paraValues = null;
+	
+	private boolean initialized = true;
 	
 	public List<String> getSelectClause() {
 		return selectClause;
@@ -72,7 +75,28 @@ public class SQLStatement {
 		return paraValues.size() + 1;
 	}
 	
-	public String toString() {
+	public void clear(){
+	    this.selectClause.clear();
+	    this.fromClause.clear();
+	    this.whereClause.clear();
+	    this.orderByClause.clear();
+	}
+
+	public boolean isInitialized() {
+        return initialized;
+    }
+    public void setInitialized(boolean initialized) {
+        this.initialized = initialized;
+    }
+    
+    public List<String> getSelectColumns() {
+        if (this.selectClause == null) {
+            return Collections.EMPTY_LIST;
+        }
+        
+        return this.selectClause;
+    }
+    public String toString() {
 		StringBuffer result = new StringBuffer();
 		
 		result.append("select distinct ");

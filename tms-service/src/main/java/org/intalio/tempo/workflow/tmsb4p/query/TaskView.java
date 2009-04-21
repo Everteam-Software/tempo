@@ -33,4 +33,12 @@ public interface TaskView {
 	
 	// extends field
 	public static String ATTACHMENTS = "attachments";
+	public static String TASK = "task";
+	public static String TASK_INITIATOR = "taskinitiator";
+	public static String TASK_STAKEHOLDERS = "taskstakeholders";
+	public static String POTENTIAL_OWNERS = "potentialowners";
+	public static String ACTUAL_OWNER = "actualowner";
+	public static String EXCLUDED_OWNERS = "excludedowners";
+	public static String BUSINESS_ADMINISTRATORS = "businessadministrators";
+	public static String NOTIFICATION_RECIPIENTS = "notificationrecipients";
 }

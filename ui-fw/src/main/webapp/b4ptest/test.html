@@ -197,59 +197,14 @@ obj.css("display", "block");
     <td class="status">
     <table align="center">
     <tr>
-    <td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /><td class="ndone" />
+    <td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" />
     </tr>
     </table>
     
     </td>
   </tr>
  
-  <tr>
-    <td class="operation" >remove</td>
-    <td class="description">Applies to notifications 
-	only. 
-	Used by notification 
-	recipients to remove the 
-	notification permanently 
-	from their task list client. 
-	It will not be returned on 
-	any subsequent retrieval 
-	operation invoked by the 
-	same user.  
-	
 
-	</td> <td class="error_handling"></td>
-	<td class="state_transition" >--- </td>
-    <td class="action"><a href="#" onclick="test('remove');" ><img width=30 src="test.png" alt="test it"/></a></td>
-    <td class="status"> 
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /></td><td class="ndone" /></tr></table>
-    </td>
-  </tr>
-
-   <tr>
-    <td class="operation" >start</td>
-    <td class="description">Start the execution of the 
-	taskIn 
-	Actual Owner 
-	</td> <td class="error_handling"></td>
-	<td class="state_transition" >IN_PROGRESS </td>
-    <td class="action"><a href="#" onclick="test('start');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
-    <td class="status"> 
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /><td class="ndone" /></tr></table>
-    </td>
-  </tr>
-  <tr>
-    <td class="operation" >stop</td>
-    <td class="description">Cancel/stop the 
-	processing of the taskIn 
-	Actual Owner 
-	</td> <td class="error_handling"></td>
-	<td class="state_transition" >RESERVED </td>
-    <td class="action"><a href="#" onclick="test('stop');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
-    <td class="status"> 
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /><td class="ndone" /></tr></table>
-    </td>
-  </tr>
   <tr>
     <td class="operation" >claim</td>
     <td class="description">Claim responsibility for a 
@@ -258,9 +213,34 @@ obj.css("display", "block");
 	<td class="state_transition" > Reserved</td>
     <td class="action"><a href="#" onclick="test('claim');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /><td class="ndone" /></tr></table>
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /></tr></table>
     </td>
   </tr>
+   <tr>
+    <td class="operation" >start</td>
+    <td class="description">Start the execution of the 
+	taskIn 
+	Actual Owner 
+	</td> <td class="error_handling"></td>
+	<td class="state_transition" >reserved=>IN_PROGRESS </td>
+    <td class="action"><a href="#" onclick="test('start');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
+    <td class="status"> 
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /></tr></table>
+    </td>
+  </tr>
+  <tr>
+    <td class="operation" >stop</td>
+    <td class="description">Cancel/stop the 
+	processing of the taskIn 
+	Actual Owner 
+	</td> <td class="error_handling"></td>
+	<td class="state_transition" >IN_PROGRESS=>Reserved </td>
+    <td class="action"><a href="#" onclick="test('stop');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
+    <td class="status"> 
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /></tr></table>
+    </td>
+  </tr>
+
   <tr>
     <td class="operation" >complete</td>
     <td class="description">Execution of the task 
@@ -274,7 +254,7 @@ obj.css("display", "block");
 	<td class="state_transition" >Completed</td>
     <td class="action"><a href="#" onclick="test('complete');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /><td class="ndone" /></tr></table>
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /></tr></table>
     </td>
   </tr>
   <tr>
@@ -283,7 +263,7 @@ obj.css("display", "block");
 	<td class="state_transition" >--- </td>
     <td class="action"><a href="#" onclick="test('skip');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /><td class="ndone" /></tr></table>
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /></tr></table>
     </td>
   </tr>
   <tr>
@@ -292,7 +272,7 @@ obj.css("display", "block");
 	<td class="state_transition" >Ready</td>
     <td class="action"><a href="#" onclick="test('release');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /><td class="ndone" /></tr></table>
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /></tr></table>
     </td>
   </tr>
   <tr>
@@ -301,7 +281,7 @@ obj.css("display", "block");
 	<td class="state_transition" >--- </td>
     <td class="action"><a href="#" onclick="test('suspend');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /><td class="ndone" /></tr></table>
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /></tr></table>
     </td>
   </tr>
   <tr>
@@ -316,7 +296,7 @@ obj.css("display", "block");
 	<td class="state_transition" >--- </td>
     <td class="action"><a href="#" onclick="test('suspendUntil');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /><td class="ndone" /></tr></table>
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /></tr></table>
     </td>
   </tr>
 <tr>
@@ -327,7 +307,7 @@ obj.css("display", "block");
 	<td class="state_transition" >--- </td>
     <td class="action"><a href="#" onclick="test('suspendUntil');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /><td class="ndone" /></tr></table>
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /></tr></table>
     </td>
   </tr>
   <tr>
@@ -339,7 +319,7 @@ obj.css("display", "block");
 	<td class="state_transition" >Failed </td>
     <td class="action"><a href="#" onclick="test('fail');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /><td class="ndone" /></tr></table>
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /></tr></table>
     </td>
   </tr>
   <tr>
@@ -359,7 +339,7 @@ obj.css("display", "block");
 	<td class="state_transition" > not changed | error </td>
     <td class="action"><a href="#" onclick="test('forward');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /><td class="ndone" /></tr></table>
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /></tr></table>
     </td>
   </tr>
   <tr>
@@ -379,11 +359,31 @@ obj.css("display", "block");
 	<td class="state_transition" >Reserved</td>
     <td class="action"><a href="#" onclick="test('delegate');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /></td><td class="ndone" /></tr></table>
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /></td><td class="done" /></tr></table>
     </td>
   </tr>
 
- 
+  <tr>
+    <td class="operation" >remove</td>
+    <td class="description">Applies to notifications 
+	only. 
+	Used by notification 
+	recipients to remove the 
+	notification permanently 
+	from their task list client. 
+	It will not be returned on 
+	any subsequent retrieval 
+	operation invoked by the 
+	same user.  
+	
+
+	</td> <td class="error_handling"></td>
+	<td class="state_transition" >--- </td>
+    <td class="action"><a href="#" onclick="test('remove');" ><img width=30 src="test.png" alt="test it"/></a></td>
+    <td class="status"> 
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /></td><td class="done" /></tr></table>
+    </td>
+  </tr>
 
  
  
@@ -404,7 +404,7 @@ obj.css("display", "block");
     <td class="description"></td>
     <td class="action"><a href="#" onclick="test('activate');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
-    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /></td></tr></table>
     </td>
   </tr>
   <tr>
@@ -412,7 +412,7 @@ obj.css("display", "block");
     <td class="description"></td>
     <td class="action"><a href="#" onclick="test('nominate');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
-    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /></td></tr></table>
     </td>
   </tr>
   <tr>
@@ -420,7 +420,7 @@ obj.css("display", "block");
     <td class="description"></td>
     <td class="action"><a href="#" onclick="test('setGenericHumanRole');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
-    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /></td></tr></table>
     </td>
   </tr>
 </table>
@@ -434,11 +434,11 @@ obj.css("display", "block");
     <td width="296"  align="center"><h5>Status</h5><br/><span style="font-size:9pt;">WebService|serviceImpl|OperationImpl|Persist|security</span></td>
   </tr>
   <tr>
-    <td width="51"  align="center">getMyTasks</td>
+    <td class="operation">getMyTasks</td>
     <td class="description">getMyTasks</td>
     <td class="action"> <a href="#" onclick="test('getMyTasks');" ><img width=30 src="test.png" alt="test it"/></a></td>
     <td class="status">
-    <table align="center"><tr><td class="done" /><td class="done" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></tr></table>
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /><td class="done" /></tr></table>
     </td>
   </tr>
  <tr>
@@ -446,7 +446,7 @@ obj.css("display", "block");
     <td class="description"></td>
     <td class="action"><a href="#" onclick="test('getMyTaskAbstracts');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
-    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /><td class="done" /></td></tr></table>
     </td>
   </tr>
   <tr>
@@ -454,7 +454,7 @@ obj.css("display", "block");
     <td class="description"></td>
     <td class="action"><a href="#" onclick="test('query');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
-    <table align="center"><tr><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /><td class="ndone" /></td></tr></table>
+    <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="ndone" /><td class="done" /></td></tr></table>
     </td>
   </tr>
 	
@@ -609,7 +609,11 @@ obj.css("display", "block");
 </div>
 
 <div id="integration_test">
-	
+	<pre>
+	create --> activate/anominate => ready		--> claim=>Reserved  --> start=> inProgress	--> stop=>
+								\                                   /
+								  => reserved   -->                  
+	</pre>
 </div>
 </body>
 </html>

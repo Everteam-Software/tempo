@@ -1,0 +1,5 @@
+<query xmlns="http://www.intalio.com/WS-HT/api/xsd" xmlns:htpt="http://www.intalio.com/WS-HT/protocol">
+    <selectClause>id,name, priority,attachments, potentialowners,outputmessage</selectClause>
+    <whereClause>priority=1 and generichumanrole='potential_owners' and group in (g1,g2)</whereClause>
+    <maxTasks>10</maxTasks>
+</query>

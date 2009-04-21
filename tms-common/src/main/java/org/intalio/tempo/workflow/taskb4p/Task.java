@@ -4,6 +4,7 @@ import java.util.Set;
 
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.NamedQueries;
@@ -15,7 +16,7 @@ import javax.persistence.Table;
 import org.apache.openjpa.persistence.Persistent;
 
 @Entity
-@Table(name = "tempob4p_task")
+@DiscriminatorValue("Task")
 @NamedQueries( { @NamedQuery(name = Task.FIND_BY_ID, query = "select m from Task m where m.id=?1", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }),
 	@NamedQuery(name = Task.FIND_BY_NAME, query = "select m from Task m where m.name=?1")})
 public class Task extends TaskAbstract {
