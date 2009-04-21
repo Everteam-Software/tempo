@@ -99,6 +99,8 @@ import com.intalio.wsHT.api.xsd.ResumeDocument;
 import com.intalio.wsHT.api.xsd.ResumeResponseDocument;
 import com.intalio.wsHT.api.xsd.SetGenericHumanRoleDocument;
 import com.intalio.wsHT.api.xsd.SetGenericHumanRoleResponseDocument;
+import com.intalio.wsHT.api.xsd.SetOutputDocument;
+import com.intalio.wsHT.api.xsd.SetOutputResponseDocument;
 import com.intalio.wsHT.api.xsd.SetPriorityDocument;
 import com.intalio.wsHT.api.xsd.SetPriorityResponseDocument;
 import com.intalio.wsHT.api.xsd.SkipDocument;
@@ -148,6 +150,8 @@ import com.intalio.wsHT.api.xsd.RemoveResponseDocument.RemoveResponse;
 import com.intalio.wsHT.api.xsd.ResumeDocument.Resume;
 import com.intalio.wsHT.api.xsd.ResumeResponseDocument.ResumeResponse;
 import com.intalio.wsHT.api.xsd.SetGenericHumanRoleDocument.SetGenericHumanRole;
+import com.intalio.wsHT.api.xsd.SetOutputDocument.SetOutput;
+import com.intalio.wsHT.api.xsd.SetOutputResponseDocument.SetOutputResponse;
 import com.intalio.wsHT.api.xsd.SetPriorityDocument.SetPriority;
 import com.intalio.wsHT.api.xsd.SkipDocument.Skip;
 import com.intalio.wsHT.api.xsd.SkipResponseDocument.SkipResponse;
@@ -1314,6 +1318,28 @@ public class TMSRequestProcessor {
 
             return convertXML(gtdrd);
         } catch (Exception e) {
+            throw makeFault(e);
+        }
+    }
+    
+    /**
+     * Set the data for the part of the task's output message.
+     * In task identifier Actual Owner 
+     */
+    public OMElement setOutput(OMElement requestElement) throws AxisFault {
+        String participantToken = getParticipantToken();
+        
+        try {
+            SetOutputDocument sod = SetOutputDocument.Factory.parse(requestElement.getXMLStreamReader());
+            SetOutput so = sod.getSetOutput();
+ 
+            _server.setOutput(participantToken, so.getIdentifier(), so.getPart(), so.getTaskData());
+            
+            SetOutputResponseDocument sord = SetOutputResponseDocument.Factory.newInstance();
+            SetOutputResponse sor = sord.addNewSetOutputResponse();
+            
+            return convertXML(sor);
+        }catch (Exception e) {
             throw makeFault(e);
         }
     }

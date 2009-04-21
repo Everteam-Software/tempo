@@ -59,7 +59,8 @@ public interface ITMSServer {
 	public void addComment(String participantToken, String identifier, String text) throws TMSException;
 	public List<Comment> getComments(String participantToken, String identifier) throws TMSException;
 	public Task getTaskByIdentifier(String participantToken, String identifier) throws TMSException;
-
+	public void setOutput(String participantToken, String identifier, String partName, XmlObject data) throws TMSException;
+	
 	public void suspendUntil(String participantToken, String identifier,
 			TTime time) throws TMSException;
 	public void suspend(String participantToken, String identifier) throws TMSException;
