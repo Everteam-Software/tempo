@@ -305,7 +305,7 @@ obj.css("display", "block");
 	task. 
 	</td> <td class="error_handling"></td>
 	<td class="state_transition" >--- </td>
-    <td class="action"><a href="#" onclick="test('suspendUntil');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
+    <td class="action"><a href="#" onclick="test('resume');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
     <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /></tr></table>
     </td>
@@ -610,8 +610,8 @@ obj.css("display", "block");
 
 <div id="integration_test">
 	<pre>
-	create --> activate/anominate => ready		--> claim=>Reserved  --> start=> inProgress	--> stop=>
-								\                                   /
+	create --> activate/anominate => ready		--> claim=>Reserved  --> start=> inProgress	--> complete=>completed
+								\                                   /                       --> stop=>Ready
 								  => reserved   -->                  
 	</pre>
 </div>
