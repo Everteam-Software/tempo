@@ -5,14 +5,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.xmlbeans.XmlObject;
-import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.taskb4p.Attachment;
 import org.intalio.tempo.workflow.taskb4p.AttachmentInfo;
 import org.intalio.tempo.workflow.taskb4p.Comment;
 import org.intalio.tempo.workflow.taskb4p.Task;
-import org.intalio.tempo.workflow.tms.InvalidTaskStateException;
 import org.intalio.tempo.workflow.tms.TMSException;
-import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.intalio.tempo.workflow.tmsb4p.server.dao.GenericRoleType;
 
 import com.intalio.wsHT.api.TStatus;
@@ -61,7 +58,12 @@ public interface ITMSServer {
     public List<Comment> getComments(String participantToken, String identifier) throws TMSException;
     public Task getTaskByIdentifier(String participantToken, String identifier) throws TMSException;
     public void setOutput(String participantToken, String identifier, String partName, XmlObject data) throws TMSException;
-        
+    public void deleteOutput(String participantToken, String identifier) throws TMSException;
+    public void setFault(String participantToken, String identifier, String faultName, XmlObject data) throws TMSException;
+    public void deleteFault(String participantToken, String identifier) throws TMSException;
+    public String getInput(String participantToken, String identifier, String partName) throws TMSException;
+    public String getOutput(String participantToken, String identifier, String partName) throws TMSException;
+    public String getFault(String participantToken, String identifier, String faultName) throws TMSException;
     
     public void suspendUntil(String participantToken, String identifier,
             TTime time) throws TMSException;

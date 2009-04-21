@@ -992,6 +992,163 @@ public class TMSServer implements ITMSServer {
         return task;
     }
 
+    public void setOutput(String participantToken, String identifier, String partName, XmlObject data) throws TMSException {
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER });
+
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        Task task = dao.fetchTaskIfExists(identifier);
+
+        try {
+            if (partName == null || partName.trim().length() == 0) {
+                task.setOutputMessage(data.xmlText());
+            } else {
+                try {
+                    QName partQName = new QName("http://schemas.xmlsoap.org/wsdl/", "part");
+                    StAXOMBuilder builder = new StAXOMBuilder(task.getOutputMessage());
+                    OMElement parts = builder.getDocumentElement();
+
+                    MessageData messageData = new MessageData(partQName, parts);
+
+                    messageData.setData(partName, data.xmlText());
+                    task.setOutputMessage(messageData.toXML());
+                } catch (Exception e) {
+                    new IllegalAccessException("Error when parsing the output data");
+                }
+            }
+        } finally {
+            dao.updateTask(task);
+            dao.commit();
+            dao.close();
+        }
+
+    }
+
+    public void deleteOutput(String participantToken, String identifier) throws TMSException {
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER });
+
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        Task task = dao.fetchTaskIfExists(identifier);
+
+        try {
+            task.setOutputMessage(null);
+        } finally {
+            dao.updateTask(task);
+            dao.commit();
+            dao.close();
+        }
+    }
+
+    public void setFault(String participantToken, String identifier, String faultName, XmlObject data) throws TMSException {
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER });
+
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        Task task = dao.fetchTaskIfExists(identifier);
+
+        try {
+            if (faultName == null || faultName.trim().length() == 0) {
+                task.setFaultMessage(data.xmlText());
+            } else {
+                try {
+                    QName partQName = new QName("http://schemas.xmlsoap.org/wsdl/", "part");
+                    StAXOMBuilder builder = new StAXOMBuilder(task.getFaultMessage());
+                    OMElement parts = builder.getDocumentElement();
+
+                    MessageData messageData = new MessageData(partQName, parts);
+
+                    messageData.setData(faultName, data.xmlText());
+                    task.setFaultMessage(messageData.toXML());
+                } catch (Exception e) {
+                    new IllegalAccessException("Error when parsing the fault data");
+                }
+            }
+        } finally {
+            dao.updateTask(task);
+            dao.commit();
+            dao.close();
+        }
+
+    }
+
+    public void deleteFault(String participantToken, String identifier) throws TMSException {
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER });
+
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        Task task = dao.fetchTaskIfExists(identifier);
+
+        try {
+            task.setFaultMessage(null);
+        } finally {
+            dao.updateTask(task);
+            dao.commit();
+            dao.close();
+        }
+    }
+
+    public String getInput(String participantToken, String identifier, String partName) throws TMSException {
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER, ITMSServer.POTENTIAL_OWNERS, ITMSServer.BUSINESSADMINISTRATORS });
+
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        try {
+            Task task = dao.fetchTaskIfExists(identifier);
+
+            return getMessagePart(task.getInputMessage(), partName);
+        } finally {
+            dao.close();
+        }
+    }
+
+    public String getOutput(String participantToken, String identifier, String partName) throws TMSException {
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER, ITMSServer.POTENTIAL_OWNERS, ITMSServer.BUSINESSADMINISTRATORS });
+
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        try {
+
+            Task task = dao.fetchTaskIfExists(identifier);
+
+            return getMessagePart(task.getOutputMessage(), partName);
+        } finally {
+            dao.close();
+        }
+    }
+
+    public String getFault(String participantToken, String identifier, String faultName) throws TMSException {
+        UserRoles ur = _authProvider.authenticate(participantToken);
+        checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER, ITMSServer.POTENTIAL_OWNERS, ITMSServer.BUSINESSADMINISTRATORS });
+
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        try{
+            Task task = dao.fetchTaskIfExists(identifier);
+            
+            return getMessagePart(task.getOutputMessage(), faultName);
+        }finally {
+            dao.close();
+        }
+    }
+
+    private String getMessagePart(String message, String partName) {
+        if (partName == null || partName.trim().length() == 0) {
+            return message;
+        } else {
+            try {
+                QName partQName = new QName("http://schemas.xmlsoap.org/wsdl/", "part");
+                StAXOMBuilder builder = new StAXOMBuilder(message);
+                OMElement parts = builder.getDocumentElement();
+
+                MessageData messageData = new MessageData(partQName, parts);
+                return messageData.getData(partName).toString();
+            } catch (Exception e) {
+                new IllegalAccessException("Error when parsing the fault data");
+            }
+        }
+        return null;
+    }
+
     /*****************************************
      * Query operation
      *****************************************/
@@ -1032,38 +1189,6 @@ public class TMSServer implements ITMSServer {
         } finally {
             dao.close();
         }
-    }
-
-    public void setOutput(String participantToken, String identifier, String partName, XmlObject data) throws TMSException {
-        UserRoles ur = _authProvider.authenticate(participantToken);
-        checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER });
-
-        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
-        Task task = dao.fetchTaskIfExists(identifier);
-
-        try {
-            if (partName == null || partName.trim().length() == 0) {
-                task.setOutputMessage(data.xmlText());
-            } else {
-                try {
-                    QName partQName = new QName("http://schemas.xmlsoap.org/wsdl/", "part");
-                    StAXOMBuilder builder = new StAXOMBuilder(task.getOutputMessage());
-                    OMElement parts = builder.getDocumentElement();
-
-                    MessageData messageData = new MessageData(partQName, parts);
-
-                    messageData.setData(partName, data.xmlText());
-                    task.setOutputMessage(messageData.toXML());
-                } catch (Exception e) {
-                    new IllegalAccessException("Error when parsing the output data");
-                }
-            }
-        } finally {
-            dao.updateTask(task);
-            dao.commit();
-            dao.close();
-        }
-
     }
 
     /*****************************************

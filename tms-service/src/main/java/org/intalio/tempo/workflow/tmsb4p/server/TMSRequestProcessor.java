@@ -75,6 +75,10 @@ import com.intalio.wsHT.api.xsd.DelegateDocument;
 import com.intalio.wsHT.api.xsd.DelegateResponseDocument;
 import com.intalio.wsHT.api.xsd.DeleteAttachmentsDocument;
 import com.intalio.wsHT.api.xsd.DeleteAttachmentsResponseDocument;
+import com.intalio.wsHT.api.xsd.DeleteFaultDocument;
+import com.intalio.wsHT.api.xsd.DeleteFaultResponseDocument;
+import com.intalio.wsHT.api.xsd.DeleteOutputDocument;
+import com.intalio.wsHT.api.xsd.DeleteOutputResponseDocument;
 import com.intalio.wsHT.api.xsd.FailDocument;
 import com.intalio.wsHT.api.xsd.FailResponseDocument;
 import com.intalio.wsHT.api.xsd.ForwardDocument;
@@ -85,10 +89,16 @@ import com.intalio.wsHT.api.xsd.GetAttachmentsDocument;
 import com.intalio.wsHT.api.xsd.GetAttachmentsResponseDocument;
 import com.intalio.wsHT.api.xsd.GetCommentsDocument;
 import com.intalio.wsHT.api.xsd.GetCommentsResposneDocument;
+import com.intalio.wsHT.api.xsd.GetFaultDocument;
+import com.intalio.wsHT.api.xsd.GetFaultResponseDocument;
+import com.intalio.wsHT.api.xsd.GetInputDocument;
+import com.intalio.wsHT.api.xsd.GetInputResponseDocument;
 import com.intalio.wsHT.api.xsd.GetMyTaskAbstractsDocument;
 import com.intalio.wsHT.api.xsd.GetMyTaskAbstractsResponseDocument;
 import com.intalio.wsHT.api.xsd.GetMyTasksDocument;
 import com.intalio.wsHT.api.xsd.GetMyTasksResponseDocument;
+import com.intalio.wsHT.api.xsd.GetOutputDocument;
+import com.intalio.wsHT.api.xsd.GetOutputResponseDocument;
 import com.intalio.wsHT.api.xsd.GetTaskDescriptionDocument;
 import com.intalio.wsHT.api.xsd.GetTaskDescriptionResponseDocument;
 import com.intalio.wsHT.api.xsd.GetTaskInfoDocument;
@@ -108,6 +118,8 @@ import com.intalio.wsHT.api.xsd.RemoveDocument;
 import com.intalio.wsHT.api.xsd.RemoveResponseDocument;
 import com.intalio.wsHT.api.xsd.ResumeDocument;
 import com.intalio.wsHT.api.xsd.ResumeResponseDocument;
+import com.intalio.wsHT.api.xsd.SetFaultDocument;
+import com.intalio.wsHT.api.xsd.SetFaultResponseDocument;
 import com.intalio.wsHT.api.xsd.SetGenericHumanRoleDocument;
 import com.intalio.wsHT.api.xsd.SetGenericHumanRoleResponseDocument;
 import com.intalio.wsHT.api.xsd.SetOutputDocument;
@@ -135,6 +147,10 @@ import com.intalio.wsHT.api.xsd.CreateDocument.Create;
 import com.intalio.wsHT.api.xsd.DelegateDocument.Delegate;
 import com.intalio.wsHT.api.xsd.DelegateResponseDocument.DelegateResponse;
 import com.intalio.wsHT.api.xsd.DeleteAttachmentsDocument.DeleteAttachments;
+import com.intalio.wsHT.api.xsd.DeleteFaultDocument.DeleteFault;
+import com.intalio.wsHT.api.xsd.DeleteFaultResponseDocument.DeleteFaultResponse;
+import com.intalio.wsHT.api.xsd.DeleteOutputDocument.DeleteOutput;
+import com.intalio.wsHT.api.xsd.DeleteOutputResponseDocument.DeleteOutputResponse;
 import com.intalio.wsHT.api.xsd.FailDocument.Fail;
 import com.intalio.wsHT.api.xsd.FailResponseDocument.FailResponse;
 import com.intalio.wsHT.api.xsd.ForwardDocument.Forward;
@@ -145,10 +161,16 @@ import com.intalio.wsHT.api.xsd.GetAttachmentsDocument.GetAttachments;
 import com.intalio.wsHT.api.xsd.GetAttachmentsResponseDocument.GetAttachmentsResponse;
 import com.intalio.wsHT.api.xsd.GetCommentsDocument.GetComments;
 import com.intalio.wsHT.api.xsd.GetCommentsResposneDocument.GetCommentsResposne;
+import com.intalio.wsHT.api.xsd.GetFaultDocument.GetFault;
+import com.intalio.wsHT.api.xsd.GetFaultResponseDocument.GetFaultResponse;
+import com.intalio.wsHT.api.xsd.GetInputDocument.GetInput;
+import com.intalio.wsHT.api.xsd.GetInputResponseDocument.GetInputResponse;
 import com.intalio.wsHT.api.xsd.GetMyTaskAbstractsDocument.GetMyTaskAbstracts;
 import com.intalio.wsHT.api.xsd.GetMyTaskAbstractsResponseDocument.GetMyTaskAbstractsResponse;
 import com.intalio.wsHT.api.xsd.GetMyTasksDocument.GetMyTasks;
 import com.intalio.wsHT.api.xsd.GetMyTasksResponseDocument.GetMyTasksResponse;
+import com.intalio.wsHT.api.xsd.GetOutputDocument.GetOutput;
+import com.intalio.wsHT.api.xsd.GetOutputResponseDocument.GetOutputResponse;
 import com.intalio.wsHT.api.xsd.GetTaskDescriptionDocument.GetTaskDescription;
 import com.intalio.wsHT.api.xsd.GetTaskDescriptionResponseDocument.GetTaskDescriptionResponse;
 import com.intalio.wsHT.api.xsd.GetTaskInfoDocument.GetTaskInfo;
@@ -162,6 +184,8 @@ import com.intalio.wsHT.api.xsd.RemoveDocument.Remove;
 import com.intalio.wsHT.api.xsd.RemoveResponseDocument.RemoveResponse;
 import com.intalio.wsHT.api.xsd.ResumeDocument.Resume;
 import com.intalio.wsHT.api.xsd.ResumeResponseDocument.ResumeResponse;
+import com.intalio.wsHT.api.xsd.SetFaultDocument.SetFault;
+import com.intalio.wsHT.api.xsd.SetFaultResponseDocument.SetFaultResponse;
 import com.intalio.wsHT.api.xsd.SetGenericHumanRoleDocument.SetGenericHumanRole;
 import com.intalio.wsHT.api.xsd.SetOutputDocument.SetOutput;
 import com.intalio.wsHT.api.xsd.SetOutputResponseDocument.SetOutputResponse;
@@ -1721,12 +1745,153 @@ public class TMSRequestProcessor {
             SetOutputResponseDocument sord = SetOutputResponseDocument.Factory.newInstance();
             SetOutputResponse sor = sord.addNewSetOutputResponse();
 
-            return convertXML(sor);
+            return convertXML(sord);
         } catch (Exception e) {
             throw makeFault(e);
         }
     }
+    
+    /**
+     * Deletes the output data of the task 
+     */
+    public OMElement deleteOutput(OMElement requestElement) throws AxisFault {
+        String participantToken = getParticipantToken();
 
+        try {
+            DeleteOutputDocument dod = DeleteOutputDocument.Factory.parse(requestElement.getXMLStreamReader());
+            DeleteOutput delo = dod.getDeleteOutput();
+
+            _server.deleteOutput(participantToken, delo.getIdentifier());
+
+            DeleteOutputResponseDocument dord = DeleteOutputResponseDocument.Factory.newInstance();
+            DeleteOutputResponse sor = dord.addNewDeleteOutputResponse();
+
+            return convertXML(dord);
+        } catch (Exception e) {
+            throw makeFault(e);
+        }
+    }
+    
+    /**
+     * Set the fault data of the task
+     * @param requestElement
+     * @return
+     * @throws AxisFault
+     */
+    public OMElement setFault(OMElement requestElement) throws AxisFault {
+        String participantToken = getParticipantToken();
+
+        try {
+            SetFaultDocument sfd = SetFaultDocument.Factory.parse(requestElement.getXMLStreamReader());
+            SetFault sf = sfd.getSetFault();
+
+            _server.setOutput(participantToken, sf.getIdentifier(), sf.getFaultName(), sf.getFaultData());
+
+            SetFaultResponseDocument sfrd = SetFaultResponseDocument.Factory.newInstance();
+            SetFaultResponse sor = sfrd.addNewSetFaultResponse();
+
+            return convertXML(sfrd);
+        } catch (Exception e) {
+            throw makeFault(e);
+        }
+    }
+    
+    /**
+     * Deletes the fault name and fault data of the task.
+     * @param requestElement
+     * @return
+     * @throws AxisFault
+     */
+    public OMElement deleteFault(OMElement requestElement) throws AxisFault {
+        String participantToken = getParticipantToken();
+
+        try {
+            DeleteFaultDocument dfd = DeleteFaultDocument.Factory.parse(requestElement.getXMLStreamReader());
+            DeleteFault df = dfd.getDeleteFault();
+
+            _server.deleteOutput(participantToken, df.getIdentifier());
+
+            DeleteFaultResponseDocument dfrd = DeleteFaultResponseDocument.Factory.newInstance();
+            DeleteFaultResponse dfr = dfrd.addNewDeleteFaultResponse();
+
+            return convertXML(dfrd);
+        } catch (Exception e) {
+            throw makeFault(e);
+        }
+    }
+    
+    
+    /**
+     * Get the data for the part of the task's input message.
+     * @param requestElement
+     * @return
+     * @throws AxisFault
+     */
+    public OMElement getInput(OMElement requestElement) throws AxisFault {
+        String participantToken = getParticipantToken();
+        
+        try{
+            GetInputDocument gid = GetInputDocument.Factory.parse(requestElement.getXMLStreamReader());
+            GetInput gi = gid.getGetInput();
+            
+            String message = _server.getInput(participantToken, gi.getIdentifier(), gi.getPart());
+            
+            GetInputResponseDocument gird = GetInputResponseDocument.Factory.newInstance();
+            GetInputResponse gir = gird.addNewGetInputResponse();
+            gir.setTaskData(XmlObject.Factory.parse(message));
+            
+            return convertXML(gird);
+        }catch (Exception e) {
+            throw makeFault(e);
+        }
+    }
+    
+    
+    /**
+     * Get the data for the part of the task's output message.
+     * @param requestElement
+     * @return
+     * @throws AxisFault
+     */
+    public OMElement getOutput(OMElement requestElement) throws AxisFault {
+        String participantToken = getParticipantToken();
+        
+        try{
+            GetOutputDocument gid = GetOutputDocument.Factory.parse(requestElement.getXMLStreamReader());
+            GetOutput go = gid.getGetOutput();
+            
+            String message = _server.getOutput(participantToken, go.getIdentifier(), go.getPart());
+            
+            GetOutputResponseDocument gord = GetOutputResponseDocument.Factory.newInstance();
+            GetOutputResponse gor = gord.addNewGetOutputResponse();
+            gor.setTaskData(XmlObject.Factory.parse(message));
+            
+            return convertXML(gord);
+        }catch (Exception e) {
+            throw makeFault(e);
+        }
+    }
+    
+    public OMElement getFault(OMElement requestElement) throws AxisFault {
+        String participantToken = getParticipantToken();
+        
+        try{
+            GetFaultDocument gfd = GetFaultDocument.Factory.parse(requestElement.getXMLStreamReader());
+            GetFault gf = gfd.addNewGetFault();
+            
+            String message = _server.getFault(participantToken, gf.getIdentifier(), gf.getFaultName());
+            
+            GetFaultResponseDocument gfrd = GetFaultResponseDocument.Factory.newInstance();
+            GetFaultResponse gfr = gfrd.addNewGetFaultResponse();
+            gfr.setFaultData(XmlObject.Factory.parse(message));
+            gfr.setFaultName(gf.getFaultName());
+            
+            return convertXML(gfrd);
+        }catch (Exception e) {
+            throw makeFault(e);
+        }
+    }
+    
     /*****************************************
      * Query operation
      *****************************************/
