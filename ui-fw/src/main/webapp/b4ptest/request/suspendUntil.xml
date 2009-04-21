@@ -1,7 +1,7 @@
 <suspendUntil xmlns="http://www.intalio.com/WS-HT/api/xsd" xmlns:htpt="http://www.intalio.com/WS-HT/protocol">
 	<identifier></identifier>
 	<time>
-		<timePeriod></timePeriod>
-		<pointOfTime></pointOfTime>
+		<timePeriod>PT30S</timePeriod><!-- 30 second -->
+		<!--<pointOfTime>2001-10-26T21:32:52+02:00</pointOfTime>-->
 	</time>
 </suspendUntil>

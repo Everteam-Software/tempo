@@ -228,8 +228,15 @@ public class TMSServer implements ITMSServer {
             dao.close();
         }
     }
-    
-    void checkTaskStatus(String taskId, TaskStatus[] status) throws TMSException{
+    /**
+     * check status, if suspended and timeout, will change status back to states before suspending.
+     * Please notice that task status maybe changed after calling checkTaskStatus
+     * @param taskId
+     * @param status
+     * @return task status
+     * @throws TMSException
+     */
+    TaskStatus checkTaskStatus(String taskId, TaskStatus[] status) throws TMSException{
     	ITaskDAOConnection dao = _taskDAOFactory.openConnection();
     	Task task = null;
     	try{
@@ -244,15 +251,18 @@ public class TMSServer implements ITMSServer {
     	TaskStatus s = task.getStatus();
     	if (s == TaskStatus.SUSPENDED){
     		Date st = task.getSuspendStartTime();
+    		System.out.println("suspend start:"+ st.toString() + ", suspend period: " + task.getSuspendPeriod());
     		if (st != null){
     			Date until = new Date(st.getTime()+task.getSuspendPeriod()*1000);
     			Date t = new Date(); // current time
+    			System.out.println("current time:"+ t.toString() + ", suspend until: " + until.toString());
     			if (t.after(until)){  // expired 
     				try{
     					task.setStatus(task.getOriginalStatus());
     					//task.setOriginalStatus(null);
     					dao.updateTask(task);
     					dao.commit();
+    					s = task.getOriginalStatus();
     				}catch(Exception e){
     					throw new B4PPersistException(e);
     		    	}finally{
@@ -266,7 +276,7 @@ public class TMSServer implements ITMSServer {
     	
     	for (int i =0; i< status.length; i++){
     		if (s == status[i])
-    			return;
+    			return s;
     	}
     	
     	throw new IllegalStateException("status error, task must be in (" + makeString(status)+")");
@@ -293,7 +303,6 @@ public class TMSServer implements ITMSServer {
 		// TODO check if this user in task initialtor
 		ITaskDAOConnection dao = _taskDAOFactory.openConnection();
 		try {
-
 			dao.createTask(task);
 			dao.commit();
 			if (_logger.isDebugEnabled())
@@ -661,14 +670,16 @@ public class TMSServer implements ITMSServer {
 				throw new IllegalAccessException(
 						"User must be potential owner or business adiministrator");
 
-			// @TODO check status 
-			checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.SUSPENDED});
+			// check status 
+			if (task.getStatus() != TaskStatus.SUSPENDED)
+				throw new IllegalStateException("Task is not suspended.");
+			
 			// update task
 
 			// TODO impl logic
 
 			// update status
-			dao.updateTaskStatus(identifier, TaskStatus.IN_PROGRESS);
+			dao.updateTaskStatus(identifier, task.getOriginalStatus());
 
 			// commit
 			dao.commit();
@@ -852,13 +863,13 @@ public class TMSServer implements ITMSServer {
 
 			// check status 
 			checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.READY, TaskStatus.IN_PROGRESS, TaskStatus.RESERVED});
-
-			// update task
-			// TODO impl logic
-
+			
+			// impl logic
+			task.setOriginalStatus(task.getStatus());
+			
 			// update status
 			dao.updateTaskStatus(identifier, TaskStatus.SUSPENDED);
-
+	
 			// commit
 			dao.commit();
 		} catch (NoResultException e) {
@@ -906,27 +917,34 @@ public class TMSServer implements ITMSServer {
 			// check status ( should be ready )
 			checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.READY, TaskStatus.IN_PROGRESS, TaskStatus.RESERVED});
 		
+			// impl logic
 			// update task
 			Date t_now = new Date();
 			int t_p = 0;
 			if (time.isSetPointOfTime()){
-			//	Date tt = time.getPointOfTime().getTime();		
+				Date tt = time.getPointOfTime().getTime();	
+				t_p =  (int)(tt.getTime() - System.currentTimeMillis());
 			}else if (time.isSetTimePeriod()){
 				// convert stupid GDuration to second
 				GDuration gd = time.getTimePeriod();
+				System.out.println("gd="+gd.toString());
 				GDuration gDuration = new GDuration(gd);  
 				Calendar cal = Calendar.getInstance();  
 				cal.setTimeInMillis(0);  
-				GDate base = new GDate(cal);  
+				GDate base = new GDate(cal);
+				System.out.println("base="+base.toString());
+				System.out.println("base="+base.getDate().getTime());
 				GDate d = base.add(gDuration);
-				
+				System.out.println("d="+d.toString());
+				System.out.println("d="+d.getDate().getTime());
 				t_p = (int)d.getDate().getTime()/1000;
 			}
 			task.setSuspendStartTime(t_now);
 			task.setSuspendPeriod(t_p);
 			
-			// TODO impl logic
-
+	
+			task.setOriginalStatus(task.getStatus());
+			
 			// update status
 			task.setStatus(TaskStatus.SUSPENDED);
 

@@ -1146,8 +1146,8 @@ public class TMSRequestProcessor {
                 throw new IllegalArgumentException();
             }
 
-            if (taskData == null) {
-                throw new IllegalArgumentException();
+            if (taskData == null || taskData.isNil()) {
+                throw new IllegalArgumentException("out data cannot be empty");
             }
 
             // call TMSServer to process request
