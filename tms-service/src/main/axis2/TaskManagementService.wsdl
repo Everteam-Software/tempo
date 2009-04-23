@@ -522,11 +522,12 @@
 			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault"/>
 		</wsdl:operation>
 		<wsdl:operation name="removeAttachment">
-			<wsdl:input message="tns:removeAttachmentRequest"/>
-			<wsdl:output message="tns:okResponse"/>
-			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault"/>
-			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault"/>
-			<wsdl:fault name="InvalidInputMessage" message="tns:unavailableAttachmentFault"/>
+            <wsdl:input message="tns:removeAttachmentRequest"/>
+            <wsdl:output message="tns:okResponse"/>
+            <wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault"/>
+            <wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault"/>
+            <wsdl:fault name="UnavailableAttachmentException" message="tns:unavailableAttachmentFault"/>
+            <wsdl:fault name="UnavailableTask" message="tns:unavailableTaskFault"/>
 		</wsdl:operation>
 		<wsdl:operation name="getTaskList">
 			<wsdl:input message="tns:getTaskListRequest"/>
