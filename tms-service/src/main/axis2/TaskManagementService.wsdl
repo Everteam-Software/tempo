@@ -768,6 +768,13 @@
 			<wsdl:fault name="InvalidInputMessage">
 				<soap:fault name="InvalidInputMessage" use="literal"/>
 			</wsdl:fault>
+			
+			<wsdl:fault name="UnavailableAttachmentException">
+				<soap:fault name="UnavailableAttachmentException" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="UnavailableTask">
+				<soap:fault name="UnavailableTask" use="literal"/>
+			</wsdl:fault>
 		</wsdl:operation>
 		
 		
