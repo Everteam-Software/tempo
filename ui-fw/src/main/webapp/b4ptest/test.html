@@ -259,7 +259,9 @@ obj.css("display", "block");
   </tr>
   <tr>
     <td class="operation" >skip</td>
-    <td class="description"></td> <td class="error_handling"></td>
+    <td class="description">Skip the task. 
+	If the task is not skipable then the fault illegalOperationFault is returned. 
+	</td> <td class="error_handling"></td>
 	<td class="state_transition" >--- </td>
     <td class="action"><a href="#" onclick="test('skip');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
@@ -336,7 +338,7 @@ obj.css("display", "block");
 	human tasks refer to 
 	section 4.7.3
 	</td> <td class="error_handling"></td>
-	<td class="state_transition" > not changed | error </td>
+	<td class="state_transition" >Read|Reserved|Ready => Ready | error </td>
     <td class="action"><a href="#" onclick="test('forward');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
     <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /></tr></table>
@@ -356,7 +358,7 @@ obj.css("display", "block");
 	section 4.7.3. 
 	
 	</td> <td class="error_handling"></td>
-	<td class="state_transition" >Reserved</td>
+	<td class="state_transition" >Ready|Reserved|inProgress => Reserved</td>
     <td class="action"><a href="#" onclick="test('delegate');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
     <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /></td><td class="done" /></tr></table>
