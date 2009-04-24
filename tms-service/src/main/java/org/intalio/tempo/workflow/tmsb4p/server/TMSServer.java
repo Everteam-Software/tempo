@@ -40,6 +40,9 @@ import org.intalio.tempo.workflow.tmsb4p.server.dao.ITaskDAOConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.intalio.wsHT.TGrouplist;
+import com.intalio.wsHT.TOrganizationalEntity;
+import com.intalio.wsHT.TUserlist;
 import com.intalio.wsHT.api.TStatus;
 import com.intalio.wsHT.api.xsd.TTime;
 
@@ -496,7 +499,7 @@ public class TMSServer implements ITMSServer {
 
 	}
 
-	public void delegate(String participantToken, String identifier)
+	public void delegate(String participantToken, String identifier, TOrganizationalEntity oe)
 			throws TMSException {
 		// get user
 		UserRoles ur = null;
@@ -529,12 +532,45 @@ public class TMSServer implements ITMSServer {
 						"User must be potential(only in ready states) owner or business adiministrator");
 
 			// check status ( should be ready )
-			checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.READY, TaskStatus.IN_PROGRESS});
+			checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.READY, TaskStatus.IN_PROGRESS, TaskStatus.RESERVED});
 			
-			// update task status
 
-			// TODO assign task to user and put him into potential owner if he
-			// is not
+
+			// assign task to user and put him into potential owner if he is not
+			if (oe.isSetUsers()){
+				ArrayList<String> values = new ArrayList<String>();
+				TUserlist users = oe.getUsers();
+				for (int i = 0; i< users.sizeOfUserArray(); i ++){
+					values.add(users.getUserArray(i));
+				}
+				dao.updateTaskRole(identifier, GenericRoleType.actual_owner, values, OrganizationalEntity.USER_ENTITY);
+				
+				for (int i=0; i < values.size(); i++){
+					if  (!dao.isRoleMember(identifier, new UserRoles(values.get(i),  new String[0]), GenericRoleType.actual_owner)){
+						// TODO add to potential owners
+					}
+					
+				}
+					
+			}
+			else{
+/*				ArrayList<String> values = new ArrayList<String>();
+				TGrouplist groups = oe.getGroups();
+				for (int i = 0; i< groups.sizeOfGroupArray(); i ++){
+					values.add(groups.getGroupArray(i));
+				}
+				dao.updateTaskRole(identifier, GenericRoleType.actual_owner, values, OrganizationalEntity.GROUP_ENTITY);
+	
+				for (int i=0; i < values.size(); i++){
+//					if  (!dao.isRoleMember(identifier, new UserRoles(values.get(i),  new String[0]), GenericRoleType.actual_owner)){
+//						// TODO add to potential owners
+//					}			
+				}
+*/		
+			throw new IllegalArgumentException("Cannot delegate task to a group");
+			}
+				
+			// update task status
 			task.setStatus(TaskStatus.RESERVED);
 			dao.updateTask(task);
 			dao.commit();
@@ -547,7 +583,7 @@ public class TMSServer implements ITMSServer {
 
 	}
 
-	public void forward(String participantToken, String identifier)
+	public void forward(String participantToken, String identifier, TOrganizationalEntity oe )
 			throws TMSException {
 		// get user
 		UserRoles ur = null;
@@ -573,13 +609,45 @@ public class TMSServer implements ITMSServer {
 			checkPermission(task, ur, new int[] { ITMSServer.ACTUAL_OWNER,
 					ITMSServer.BUSINESSADMINISTRATORS });
 
-			// @TODO check status ( should be ready )
-			checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.READY, TaskStatus.IN_PROGRESS});
+			//  check status ( should be ready )
+			checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.READY, TaskStatus.IN_PROGRESS, TaskStatus.RESERVED});
+
+			// impl logic
+			if (oe.isSetUsers()){
+				ArrayList<String> values = new ArrayList<String>();
+				TUserlist users = oe.getUsers();
+				for (int i = 0; i< users.sizeOfUserArray(); i ++){
+					values.add(users.getUserArray(i));
+				}
+				dao.updateTaskRole(identifier, GenericRoleType.actual_owner, values, OrganizationalEntity.USER_ENTITY);
+				
+				for (int i=0; i < values.size(); i++){
+					if  (!dao.isRoleMember(identifier, new UserRoles(values.get(i),  new String[0]), GenericRoleType.actual_owner)){
+						// TODO add to potential owners
+					}
+					
+				}
+					
+			}
+			else{
+				ArrayList<String> values = new ArrayList<String>();
+				TGrouplist groups = oe.getGroups();
+				for (int i = 0; i< groups.sizeOfGroupArray(); i ++){
+					values.add(groups.getGroupArray(i));
+				}
+				dao.updateTaskRole(identifier, GenericRoleType.actual_owner, values, OrganizationalEntity.GROUP_ENTITY);
+	
+				for (int i=0; i < values.size(); i++){
+//					if  (!dao.isRoleMember(identifier, new UserRoles(values.get(i),  new String[0]), GenericRoleType.actual_owner)){
+//						// TODO add to potential owners
+//					}
+					
+				}
+		
+				
+			}
+				
 			
-			// update task
-
-			// TODO impl logic
-
 			// update status
 			task.setStatus(TaskStatus.RESERVED);
 			dao.updateTask(task);

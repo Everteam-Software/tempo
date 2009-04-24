@@ -1411,9 +1411,7 @@ public class TMSRequestProcessor {
     /**
      * Forward the task to another organization entity. The caller has to
      * specify the receiving organizational entity. Potential owners can only
-     * forward a task while the task is in the Ready state. In 锟�task
-     * identifier 锟�organizational entity (htd:tOrganization alEntity) Out
-     * void Authorization Potential Owners Actual Owner Business Administrator
+     * forward a task while the task is in the Ready state. 
      * 
      * @param requestElement
      * @return
@@ -1443,7 +1441,7 @@ public class TMSRequestProcessor {
             }
 
             // call TMSServer to process request
-            this._server.forward(participantToken, req.getIdentifier());
+            this._server.forward(participantToken, taskId, req.getOrganizationalEntity());
 
             // marshal response
             retDoc = ForwardResponseDocument.Factory.newInstance();
@@ -1491,7 +1489,7 @@ public class TMSRequestProcessor {
             }
 
             // call TMSServer to process request
-            this._server.delegate(participantToken, req.getIdentifier());
+            this._server.delegate(participantToken, req.getIdentifier(), req.getOrganizationalEntity());
 
             // marshal response
             retDoc = DelegateResponseDocument.Factory.newInstance();
