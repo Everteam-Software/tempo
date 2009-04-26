@@ -12,6 +12,7 @@ import org.intalio.tempo.workflow.taskb4p.Task;
 import org.intalio.tempo.workflow.tms.TMSException;
 import org.intalio.tempo.workflow.tmsb4p.server.dao.GenericRoleType;
 
+import com.intalio.wsHT.TOrganizationalEntity;
 import com.intalio.wsHT.api.TStatus;
 import com.intalio.wsHT.api.xsd.TTime;
 
@@ -45,8 +46,8 @@ public interface ITMSServer {
             String faultName, XmlObject faultData) throws TMSException;
     public void resume(String participantToken, String identifier) throws TMSException;
     public void skip(String participantToken, String identifier) throws TMSException;
-    public void forward(String participantToken, String identifier) throws TMSException;
-    public void delegate(String participantToken, String identifier) throws TMSException;
+    public void forward(String participantToken, String identifier, TOrganizationalEntity oe ) throws TMSException;
+    public void delegate(String participantToken, String identifier, TOrganizationalEntity oe) throws TMSException;
     
     public void setPriority(String participantToken, String identifier, int priority) throws TMSException;
     public void addAttachment(String participantToken, String identifier, String attachmentName, String accessType, String value)

@@ -11,6 +11,7 @@ import org.intalio.tempo.workflow.taskb4p.AttachmentInfo;
 import org.intalio.tempo.workflow.taskb4p.Comment;
 import org.intalio.tempo.workflow.taskb4p.Task;
 import org.intalio.tempo.workflow.taskb4p.TaskStatus;
+import org.intalio.tempo.workflow.tms.B4PPersistException;
 import org.intalio.tempo.workflow.tms.InvalidQueryException;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
@@ -51,6 +52,12 @@ public interface ITaskDAOConnection {
     
     public void updateTaskRole(String taskId, GenericRoleType role, List<String> value, String orgType) throws UnavailableTaskException;
 	
+    public void addUserOrGroups(String taskId, String[] usersOrGroups, boolean isUser,
+			GenericRoleType role) throws UnavailableTaskException, B4PPersistException;
+
+	public void removeUserOrGroups(String taskId, String[] usersOrGroups,
+			GenericRoleType role) throws UnavailableTaskException;
+    
 	public List<Task> getMyTasks(UserRoles ur, String taskType,
 			String genericHumanRole, String workQueue,
 			List<TaskStatus> statusList, String whereClause,
