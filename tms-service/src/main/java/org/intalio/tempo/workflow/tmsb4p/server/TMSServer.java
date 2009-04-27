@@ -690,14 +690,13 @@ public class TMSServer implements ITMSServer {
 			// check permission (action owner / business administrators can
 			// claim tasks
 			checkPermission(task, ur, new int[] { ITMSServer.ACTUAL_OWNER,
-					ITMSServer.BUSINESSADMINISTRATORS,
-					ITMSServer.POTENTIAL_OWNERS });
-			// @TODO check status ( should be ready )
-			checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.READY, TaskStatus.IN_PROGRESS});
+					ITMSServer.BUSINESSADMINISTRATORS });
 			
-			// update task
-
-			// TODO impl logic
+			// check status ( should be ready )
+			checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.RESERVED, TaskStatus.IN_PROGRESS});
+			
+			// impl logic			
+			dao.removeUserOrGroups(identifier, new String[]{ur.getUserID()}, GenericRoleType.actual_owner);
 
 			// update status
 			dao.updateTaskStatus(identifier, TaskStatus.READY);
