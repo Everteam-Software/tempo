@@ -2,8 +2,8 @@
 <xsd:schema xmlns="http://www.intalio.com/WS-HT/api/xsd"
 	xmlns:htd="http://www.intalio.com/WS-HT" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
 	targetNamespace="http://www.intalio.com/WS-HT/api/xsd" xmlns:api="http://www.intalio.com/WS-HT/api"
-	xmlns:htpt="http://www.intalio.com/WS-HT/protocol"
-	elementFormDefault="qualified" blockDefault="#all">
+	xmlns:htpt="http://www.intalio.com/WS-HT/protocol" elementFormDefault="qualified"
+	blockDefault="#all">
 
 	<xsd:import namespace="http://www.intalio.com/WS-HT/api"
 		schemaLocation="ws-humantask-api.xsd" />
@@ -18,8 +18,8 @@
 		<xsd:complexType>
 			<xsd:sequence>
 				<xsd:element name="in" type="xsd:string"></xsd:element>
-				<xsd:element ref="htpt:humanTaskContext" minOccurs="1"
-					maxOccurs="unbounded" />
+				<xsd:element name="humanTaskContext" type="htpt:tHumanTaskContext"
+					minOccurs="1" maxOccurs="unbounded" />
 			</xsd:sequence>
 		</xsd:complexType>
 	</xsd:element>

@@ -809,7 +809,7 @@ public class TMSRequestProcessor {
      */
     public OMElement create(OMElement requestElement) throws AxisFault {
 
-        System.out.print("=======created\n");
+        System.out.print("=======create\n");
         String taskID = null;
         // check participant token
         // String participantToken =
@@ -829,7 +829,7 @@ public class TMSRequestProcessor {
 
             Create r = req.getCreate();
 
-            THumanTaskContext tasks[] = req.getCreate().getHumanTaskContextArray();
+            THumanTaskContext tasks[] = r.getHumanTaskContextArray();
 
             ArrayList<String> taskIds = new ArrayList<String>();
             // call server
@@ -1598,6 +1598,7 @@ public class TMSRequestProcessor {
                 TAttachment tAtt = gar.addNewAttachment();
                 TAttachmentInfo tAttInfo = tAtt.addNewAttachmentInfo();
                 Attachment att = it.next();
+                tAtt.setValue(XmlObject.Factory.parse(att.getValue()));
                 AttachmentInfo attInfo = att.getAttachmentInfo();
 
                 marshalAttachmentInfo(attInfo, tAttInfo);
