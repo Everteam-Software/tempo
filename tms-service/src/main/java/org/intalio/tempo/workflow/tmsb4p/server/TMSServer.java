@@ -1258,7 +1258,7 @@ public class TMSServer implements ITMSServer {
         }
     }
 
-    public String getFault(String participantToken, String identifier, String faultName) throws TMSException {
+    public String getFault(String participantToken, String identifier) throws TMSException {
         UserRoles ur = _authProvider.authenticate(participantToken);
         checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER, ITMSServer.POTENTIAL_OWNERS, ITMSServer.BUSINESSADMINISTRATORS });
 
@@ -1266,7 +1266,7 @@ public class TMSServer implements ITMSServer {
         try{
             Task task = dao.fetchTaskIfExists(identifier);
             
-            return getMessagePart(task.getOutputMessage(), faultName);
+            return task.getFaultMessage();
         }finally {
             dao.close();
         }
