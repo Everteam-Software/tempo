@@ -312,8 +312,8 @@ public class TMSServer implements ITMSServer {
 			dao.createTask(task);
 			dao.commit();
 			if (_logger.isDebugEnabled())
-				_logger.debug("Workflow Task " + task + " was created");
-			System.out.println("Workflow Task " + task + " was created");
+				_logger.debug("Workflow Task " + task.getId() + " was created");
+			System.out.println("Workflow Task " + task.getId() + " was created");
 			// TODO : Use credentials.getUserID() :vb
 		} catch (NoResultException e) {
 			_logger.error("Cannot create Workflow Tasks", e); // TODO :
@@ -483,12 +483,10 @@ public class TMSServer implements ITMSServer {
 			ArrayList<String> users = new ArrayList<String>();
 			users.add(ur.getUserID());
 			dao.updateTaskRole(identifier, GenericRoleType.actual_owner, users, OrganizationalEntity.USER_ENTITY); 
-			dao.updateTask(task);
+
+			// update task status			
+			dao.updateTaskStatus(identifier, TaskStatus.RESERVED);
 			
-			// update task status
-			task.setStatus(TaskStatus.RESERVED);
-			
-			dao.updateTask(task);
 			dao.commit();
 		} catch (NoResultException e) {
 			_logger.error("remove task failed, task id " + identifier, e);
@@ -654,8 +652,7 @@ public class TMSServer implements ITMSServer {
 			dao.removeUserOrGroups(identifier, new String[]{ur.getUserID()}, GenericRoleType.potential_owners);
 			
 			// update status
-			task.setStatus(TaskStatus.RESERVED);
-			dao.updateTask(task);
+			dao.updateTaskStatus(identifier, TaskStatus.READY);
 			
 			// commit
 			dao.commit();
@@ -696,7 +693,8 @@ public class TMSServer implements ITMSServer {
 			checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.RESERVED, TaskStatus.IN_PROGRESS});
 			
 			// impl logic			
-			dao.removeUserOrGroups(identifier, new String[]{ur.getUserID()}, GenericRoleType.actual_owner);
+			task.setActualOwner(null);
+			dao.updateTask(task);
 
 			// update status
 			dao.updateTaskStatus(identifier, TaskStatus.READY);
