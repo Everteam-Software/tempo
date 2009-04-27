@@ -1598,6 +1598,7 @@ public class TMSRequestProcessor {
                 TAttachment tAtt = gar.addNewAttachment();
                 TAttachmentInfo tAttInfo = tAtt.addNewAttachmentInfo();
                 Attachment att = it.next();
+                tAtt.setValue(XmlObject.Factory.parse(att.getValue()));
                 AttachmentInfo attInfo = att.getAttachmentInfo();
 
                 marshalAttachmentInfo(attInfo, tAttInfo);

@@ -8,7 +8,7 @@
   <wsdl:types>
     <xsd:schema>
       <xsd:import namespace="http://www.intalio.com/WS-HT/protocol"
-        schemaLocation="../schema/ws-humantask-protocol.xsd" />
+        schemaLocation="ws-humantask-protocol.xsd" />
     </xsd:schema>
   </wsdl:types>
 
