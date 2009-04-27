@@ -1,4 +1,4 @@
-<delegate xmlns="http://www.intalio.com/WS-HT/api/xsd" xmlns:htpt="http://www.intalio.com/WS-HT/protocol">
+<delegate xmlns="http://www.intalio.com/WS-HT/api/xsd" xmlns:htpt="http://www.intalio.com/WS-HT/protocol" xmlns:htd="http://www.intalio.com/WS-HT">
 	<identifier></identifier>
 	<organizationalEntity><htd:users><htd:user>intalio\manager</htd:user></htd:users></organizationalEntity>
 </delegate>
