@@ -21,13 +21,30 @@ class Header < SOAP::Header::SimpleHandler
   end
 end
 
+def disp_task task
+  puts "Task ID:" + task.id.to_s
+  puts "Task Name:" + task.name.to_s
+  #TODO add more properties
+end
+
 # Set the soap security header
 token = TOKEN_SERVICE.authenticateUser(:user => ADMIN_USER, :password => ADMIN_PWD).token
 TMS_CLIENT.headerhandler << Header.new("participantToken", token)
 
+#TMS_CLIENT.wiredump_file_base = "soap-log.txt"
+
+################### Participant Operation
+
+################### Admin Operation
+
+################### Query
+
+################### Task Manapulation
 # getTaskInfo
 ## Returns a data object of type tTask
 ## Applies to both tasks and notifications.
 puts "====== Calling operation: getTaskInfo ======"
 taskInfo = TMS_CLIENT.getTaskInfo(:identifier => "d4d45313-4012-4f6e-aaa2-294a9f1c4388") #You should replace it with your own id
-p taskInfo
+disp_task taskInfo.task
+
+# blabla
