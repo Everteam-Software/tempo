@@ -881,7 +881,8 @@ public class TMSRequestProcessor {
                 task.setExcludedOwners(excludedOwners);
 
                 task.setInputMessage(req.getCreate().getIn());
-
+                
+                System.out.println("skipable="+tasks[i].getIsSkipable());
                 task.setSkipable(tasks[i].getIsSkipable());
                 task.setTaskInitiator(tasks[i].getPeopleAssignments().getTaskInitiatorArray().toString());
                 task.setTaskType(TaskType.TASK);

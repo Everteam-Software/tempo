@@ -6,7 +6,7 @@
              <htpt:potentialOwners><htd:organizationalEntity><htd:users><htd:user>intalio\manager</htd:user></htd:users></htd:organizationalEntity></htpt:potentialOwners>
              <htpt:businessAdministrators><htd:organizationalEntity><htd:users><htd:user>intalio\manager</htd:user></htd:users></htd:organizationalEntity></htpt:businessAdministrators> 
         </htpt:peopleAssignments>
-		<isSkipable>false</isSkipable>
+		<htpt:isSkipable>false</htpt:isSkipable>
 		<htpt:expirationTime></htpt:expirationTime>
 		<htpt:attachments></htpt:attachments>
 	</htpt:humanTaskContext>
@@ -17,7 +17,7 @@
             <htpt:recipients><htd:organizationalEntity><htd:users><htd:user>intalio\manager</htd:user></htd:users></htd:organizationalEntity></htpt:recipients>
 			<htpt:businessAdministrators><htd:organizationalEntity><htd:users><htd:user>intalio\manager</htd:user></htd:users></htd:organizationalEntity></htpt:businessAdministrators>
         </htpt:peopleAssignments>
-		<isSkipable>true</isSkipable>
+		<htpt:isSkipable>true</htpt:isSkipable>
 		<htpt:expirationTime></htpt:expirationTime>
 		<htpt:attachments></htpt:attachments>
 	</htpt:humanTaskContext>

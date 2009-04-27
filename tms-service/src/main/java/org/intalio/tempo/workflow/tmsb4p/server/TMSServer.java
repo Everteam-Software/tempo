@@ -533,27 +533,30 @@ public class TMSServer implements ITMSServer {
 
 			// check status ( should be ready )
 			checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.READY, TaskStatus.IN_PROGRESS, TaskStatus.RESERVED});
-			
-
 
 			// assign task to user and put him into potential owner if he is not
 			if (oe.isSetUsers()){
+				System.out.println("delegating to user");
 				ArrayList<String> values = new ArrayList<String>();
 				TUserlist users = oe.getUsers();
 				for (int i = 0; i< users.sizeOfUserArray(); i ++){
 					values.add(users.getUserArray(i));
 				}
+				
+				// set to actual owner
 				dao.updateTaskRole(identifier, GenericRoleType.actual_owner, values, OrganizationalEntity.USER_ENTITY);
 				
 				for (int i=0; i < values.size(); i++){
-					if  (!dao.isRoleMember(identifier, new UserRoles(values.get(i),  new String[0]), GenericRoleType.actual_owner)){
-						// TODO add to potential owners
+					if  (!dao.isRoleMember(identifier, new UserRoles(values.get(i),  new String[0]), GenericRoleType.potential_owners)){
+						// add to potential owners
+						dao.addUserOrGroups(identifier, new String[]{values.get(i)}, true, GenericRoleType.potential_owners);
 					}
 					
 				}
 					
 			}
 			else{
+				System.out.println("delegating to group");
 /*				ArrayList<String> values = new ArrayList<String>();
 				TGrouplist groups = oe.getGroups();
 				for (int i = 0; i< groups.sizeOfGroupArray(); i ++){
@@ -619,11 +622,13 @@ public class TMSServer implements ITMSServer {
 				for (int i = 0; i< users.sizeOfUserArray(); i ++){
 					values.add(users.getUserArray(i));
 				}
-				dao.updateTaskRole(identifier, GenericRoleType.actual_owner, values, OrganizationalEntity.USER_ENTITY);
+				// add to potential owner
+				dao.updateTaskRole(identifier, GenericRoleType.potential_owners, values, OrganizationalEntity.USER_ENTITY);
 				
 				for (int i=0; i < values.size(); i++){
-					if  (!dao.isRoleMember(identifier, new UserRoles(values.get(i),  new String[0]), GenericRoleType.actual_owner)){
-						// TODO add to potential owners
+					if  (!dao.isRoleMember(identifier, new UserRoles(values.get(i),  new String[0]), GenericRoleType.potential_owners)){
+						// Add to potential owners
+						dao.addUserOrGroups(identifier, new String[]{values.get(i)}, true, GenericRoleType.potential_owners);
 					}
 					
 				}
@@ -635,22 +640,23 @@ public class TMSServer implements ITMSServer {
 				for (int i = 0; i< groups.sizeOfGroupArray(); i ++){
 					values.add(groups.getGroupArray(i));
 				}
-				dao.updateTaskRole(identifier, GenericRoleType.actual_owner, values, OrganizationalEntity.GROUP_ENTITY);
+				dao.updateTaskRole(identifier, GenericRoleType.potential_owners, values, OrganizationalEntity.GROUP_ENTITY);
 	
 				for (int i=0; i < values.size(); i++){
-//					if  (!dao.isRoleMember(identifier, new UserRoles(values.get(i),  new String[0]), GenericRoleType.actual_owner)){
-//						// TODO add to potential owners
-//					}
+					if  (!dao.isRoleMember(identifier, new UserRoles(values.get(i),  new String[0]), GenericRoleType.potential_owners)){
+						// add to potential owners
+						dao.addUserOrGroups(identifier, new String[]{values.get(i)}, false, GenericRoleType.potential_owners);
+					}
 					
-				}
-		
-				
+				}	
 			}
-				
+			// remove himself from potential owner
+			dao.removeUserOrGroups(identifier, new String[]{ur.getUserID()}, GenericRoleType.potential_owners);
 			
 			// update status
 			task.setStatus(TaskStatus.RESERVED);
 			dao.updateTask(task);
+			
 			// commit
 			dao.commit();
 		} catch (NoResultException e) {
@@ -792,10 +798,10 @@ public class TMSServer implements ITMSServer {
 			// check status ( should be ready )
 			checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.READY, TaskStatus.IN_PROGRESS, TaskStatus.CREATED, TaskStatus.RESERVED});
 			
-			// update task
-
-			// TODO impl logic
-
+			// impl logic
+			if (!task.isSkipable()){
+				throw new IllegalArgumentException("task is not skippble.");
+			}
 			// update status
 			dao.updateTaskStatus(identifier, TaskStatus.OBSOLETE);
 

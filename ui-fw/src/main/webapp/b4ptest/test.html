@@ -328,15 +328,16 @@ obj.css("display", "block");
     <td class="operation" >forward</td>
     <td class="description">Forward the task to 
 	another organization 
-	entity. The caller has to 
-	specify the receiving 
-	organizational entity. 
+	entity. (Add it into potential owners,remove himself from potential owners) 
 	Potential owners can only 
 	forward a task while the 
-	task is in the Ready state.  
-	For details on forwarding 
-	human tasks refer to 
-	section 4.7.3
+	task is in the Ready state.  Forwarding is possible if the task has a set of individually 
+	assigned potential owners, not if its potential owners are assigned using one or many 
+	groups. If the task is in the Reserved or InProgress state then the task is implicitly 
+	released first, that is, the task is transitioned into the Ready state. Business data 
+	associated with the task is kept. 
+	
+
 	</td> <td class="error_handling"></td>
 	<td class="state_transition" >Read|Reserved|Ready => Ready | error </td>
     <td class="action"><a href="#" onclick="test('forward');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
@@ -353,9 +354,7 @@ obj.css("display", "block");
 	potential owner then this 
 	person is added to the set 
 	of potential owners.  
-	For details on delegating  
-	human tasks refer to 
-	section 4.7.3. 
+	(add it into actual owner and potential owners)
 	
 	</td> <td class="error_handling"></td>
 	<td class="state_transition" >Ready|Reserved|inProgress => Reserved</td>
