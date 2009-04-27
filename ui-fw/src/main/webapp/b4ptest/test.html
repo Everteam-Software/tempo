@@ -671,8 +671,8 @@ obj.css("display", "block");
 				obj.css("display", "block");
 					doc = XMLHttpRequest.responseXML;
 						//alert(XMLHttpRequest.responseText);
-						tasks = doc.getElementsByTagName("task");
-						id = task.getElementsByTagName('id')[0].firstChild.nodeValue;
+						var task = doc.getElementsByTagName("task")[0];
+						tid = task.getElementsByTagName('id')[0].firstChild.nodeValue;
 						createdOn = task.getElementsByTagName('createdOn')[0].firstChild.nodeValue;
 						taskInitiator = task.getElementsByTagName('taskInitiator')[0].firstChild.nodeValue;
 				actualOwner = "";
@@ -683,8 +683,6 @@ obj.css("display", "block");
 						potentialOwners2 = potentialOwners1.getElementsByTagName('user');
 						potentialOwners = "";
 					
-					
-				
 						if (potentialOwners2)
 						{
 							for ( i=0; i< potentialOwners2.length; i++){
@@ -693,7 +691,7 @@ obj.css("display", "block");
 									potentialOwners +=potentialOwners2[i].firstChild.nodeValue+",";
 							}
 						}
-						alert(potentialOwners);
+					
 						
 						potentialOwners2 = potentialOwners1.getElementsByTagName('group');
 						if (potentialOwners2){
@@ -702,13 +700,13 @@ obj.css("display", "block");
 									potentialOwners +=potentialOwners2[i].firstChild.nodeValue+",";
 							}
 						}
-						alert(potentialOwners);
+					
 						
 						status ="unknown";
 						status_node = task.getElementsByTagName('status')[0];
 						if (status_node)
 							status = status_node.firstChild.nodeValue;
-						$("#task_id").get(0).innerHTML=id;
+						$("#task_id").get(0).innerHTML=tid;
 						$("#task_status").get(0).innerHTML=status;
 						$("#task_createOn").get(0).innerHTML=createdOn;
 						$("#task_owner").get(0).innerHTML=actualOwner;
@@ -720,12 +718,12 @@ obj.css("display", "block");
 				      height:390,
 				   	  overlay: { opacity: 0.5, background: "black" },// 半透明背景
 				      title: "task detail"
-				});*/	
+				});	
 			
-			alert("dfas");
+		
 		}
 		function showTask(taskId){
-			req="<htdt:getTaskInfo xmlns:htdt=\"http://www.intalio.com/WS-HT/api/xsd\"><htdt:identifier>TaskIdentifier</htdt:identifier></htdt:getTaskInfo>";
+			req="<htdt:getTaskInfo xmlns:htdt=\"http://www.intalio.com/WS-HT/api/xsd\"><htdt:identifier>"+taskId+"</htdt:identifier></htdt:getTaskInfo>";
 			callws1("getTaskInfo", req, token, getTaskInfoResponse );
 		
 		}
