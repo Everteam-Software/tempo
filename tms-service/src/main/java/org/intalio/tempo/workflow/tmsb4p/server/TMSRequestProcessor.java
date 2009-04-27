@@ -88,7 +88,7 @@ import com.intalio.wsHT.api.xsd.GetAttachmentInfosResponseDocument;
 import com.intalio.wsHT.api.xsd.GetAttachmentsDocument;
 import com.intalio.wsHT.api.xsd.GetAttachmentsResponseDocument;
 import com.intalio.wsHT.api.xsd.GetCommentsDocument;
-import com.intalio.wsHT.api.xsd.GetCommentsResposneDocument;
+import com.intalio.wsHT.api.xsd.GetCommentsResponseDocument;
 import com.intalio.wsHT.api.xsd.GetFaultDocument;
 import com.intalio.wsHT.api.xsd.GetFaultResponseDocument;
 import com.intalio.wsHT.api.xsd.GetInputDocument;
@@ -160,7 +160,7 @@ import com.intalio.wsHT.api.xsd.GetAttachmentInfosResponseDocument.GetAttachment
 import com.intalio.wsHT.api.xsd.GetAttachmentsDocument.GetAttachments;
 import com.intalio.wsHT.api.xsd.GetAttachmentsResponseDocument.GetAttachmentsResponse;
 import com.intalio.wsHT.api.xsd.GetCommentsDocument.GetComments;
-import com.intalio.wsHT.api.xsd.GetCommentsResposneDocument.GetCommentsResposne;
+import com.intalio.wsHT.api.xsd.GetCommentsResponseDocument.GetCommentsResponse;
 import com.intalio.wsHT.api.xsd.GetFaultDocument.GetFault;
 import com.intalio.wsHT.api.xsd.GetFaultResponseDocument.GetFaultResponse;
 import com.intalio.wsHT.api.xsd.GetInputDocument.GetInput;
@@ -1662,8 +1662,8 @@ public class TMSRequestProcessor {
             List<Comment> comments = _server.getComments(participantToken, gc.getIdentifier());
             Iterator<Comment> it = comments.iterator();
 
-            GetCommentsResposneDocument gcrd = GetCommentsResposneDocument.Factory.newInstance();
-            GetCommentsResposne gcr = gcrd.addNewGetCommentsResposne();
+            GetCommentsResponseDocument gcrd = GetCommentsResponseDocument.Factory.newInstance();
+            GetCommentsResponse gcr = gcrd.addNewGetCommentsResponse();
             while (it.hasNext()) {
                 Comment comment = it.next();
                 TComment tComment = gcr.addNewComment();
@@ -1878,12 +1878,11 @@ public class TMSRequestProcessor {
             GetFaultDocument gfd = GetFaultDocument.Factory.parse(requestElement.getXMLStreamReader());
             GetFault gf = gfd.addNewGetFault();
             
-            String message = _server.getFault(participantToken, gf.getIdentifier(), gf.getFaultName());
+            String message = _server.getFault(participantToken, gf.getIdentifier());
             
             GetFaultResponseDocument gfrd = GetFaultResponseDocument.Factory.newInstance();
             GetFaultResponse gfr = gfrd.addNewGetFaultResponse();
             gfr.setFaultData(XmlObject.Factory.parse(message));
-            gfr.setFaultName(gf.getFaultName());
             
             return convertXML(gfrd);
         }catch (Exception e) {

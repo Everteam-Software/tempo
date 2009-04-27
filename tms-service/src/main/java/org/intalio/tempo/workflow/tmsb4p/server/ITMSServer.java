@@ -64,7 +64,7 @@ public interface ITMSServer {
     public void deleteFault(String participantToken, String identifier) throws TMSException;
     public String getInput(String participantToken, String identifier, String partName) throws TMSException;
     public String getOutput(String participantToken, String identifier, String partName) throws TMSException;
-    public String getFault(String participantToken, String identifier, String faultName) throws TMSException;
+    public String getFault(String participantToken, String identifier) throws TMSException;
     
     public void suspendUntil(String participantToken, String identifier,
             TTime time) throws TMSException;

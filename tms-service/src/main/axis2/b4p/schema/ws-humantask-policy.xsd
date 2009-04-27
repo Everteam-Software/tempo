@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns="http://www.intalio.com/WS-HT/protocol"
+  targetNamespace="http://www.intalio.com/WS-HT/protocol"
+  elementFormDefault="qualified" blockDefault="#all">
+
+  <!-- other namespaces used here -->
+  <xsd:import namespace="http://www.w3.org/XML/1998/namespace"
+    schemaLocation="http://www.w3.org/2001/xml.xsd" />
+
+  <!-- human task coordination protocol WS-Policy Assertion -->
+  <xsd:element name="HumanTaskPolicyAssertion">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:any namespace="##other" processContents="lax"
+          minOccurs="0" maxOccurs="unbounded" />
+      </xsd:sequence>
+      <xsd:anyAttribute namespace="##any" processContents="lax" />
+    </xsd:complexType>
+  </xsd:element>
+
+</xsd:schema>
