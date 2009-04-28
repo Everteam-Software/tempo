@@ -13,6 +13,7 @@ package org.intalio.tempo.workflow.wds.servlets;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Date;
 
@@ -25,6 +26,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.intalio.deploy.deployment.utils.DeploymentServiceRegister;
 import org.intalio.tempo.web.SysPropApplicationContextLoader;
+import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.wds.core.Item;
 import org.intalio.tempo.workflow.wds.core.UnavailableItemException;
 import org.intalio.tempo.workflow.wds.core.WDSService;
@@ -122,8 +124,18 @@ public class WDSServlet extends HttpServlet {
         throws ServletException, IOException 
     {
         String resourceUri = getResourceUri(request);
-        LOG.warn("Deleting item using HTTP DELETE is no longer supported: {}", resourceUri);
-        response.sendError(HttpServletResponse.SC_GONE);
+        String participantToken = getParticipantToken(request);
+        WDSService service = _wdsFactory.getWDSService();;
+        try {
+            LOG.debug("Deleting item: {}", resourceUri);
+            service.deleteItem(resourceUri, participantToken);
+            LOG.debug("Item {} deleted OK", resourceUri);
+        } catch (UnavailableItemException e) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            LOG.warn("Item not found: '" + resourceUri + "'");
+        } finally {
+            service.close();
+        }
     }
 
     @Override
@@ -168,8 +180,40 @@ public class WDSServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("doPut request={} contentType={} contentLength={}", 
+                       new Object[] { request, request.getContentType(), request.getContentLength() });
+        }
         String resourceUri = getResourceUri(request);
-        LOG.warn("Deploying items using HTTP PUT is no longer supported: {}", resourceUri);
-        response.sendError(HttpServletResponse.SC_GONE);
+        String contentType = request.getContentType();
+        if (contentType == null) {
+            contentType = "application/octet-stream";
+        }
+        String participantToken = getParticipantToken(request);
+        InputStream payloadStream = request.getInputStream();
+        try {
+            WDSService service =_wdsFactory.getWDSService();
+            try {
+                byte[] payload = IOUtils.toByteArray(payloadStream);
+                Item item = new Item(resourceUri, contentType, payload);
+        
+                LOG.debug("Storing the item: {}", resourceUri);
+                try {
+                    service.deleteItem(item.getURI(), participantToken);
+                } catch (UnavailableItemException except) {
+                    // ignore
+                }
+                service.storeItem(item, participantToken);
+                LOG.debug("Item {} stored OK.", resourceUri);
+            } catch (UnavailableItemException e) {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                LOG.warn("Item not found: '" + resourceUri + "'");
+            } finally {
+                service.close();
+            }
+        } finally {
+            payloadStream.close();
+        }
     }
+
 }
