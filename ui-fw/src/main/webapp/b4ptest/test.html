@@ -403,7 +403,7 @@ obj.css("display", "block");
   </tr>
   <tr>
     <td class="operation" >activate</td>
-    <td class="description"></td>
+    <td class="description"><b>Preliminary Condition:</b> The operator should be one Business Administartor and the Task should be status "Created", exception will be reported if these conditions don't satisfied. <BR><BR><B>Function:</b>Update the Task to state Ready and update the activation time to current time.</td>
     <td class="action"><a href="#" onclick="test('activate');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
     <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /></td></tr></table>
@@ -411,7 +411,7 @@ obj.css("display", "block");
   </tr>
   <tr>
     <td class="operation" >nominate</td>
-    <td class="description"></td>
+    <td class="description"><b>Preliminary Condition:</b> The operator should be one Business Administartor and the Task should be status "Created", exception will be reported if these conditions don't satisfied. <BR><BR><B>Function:</b>Nominate one organization entity to process the task, the nominated organization Entity will be as the Potentical Owners. If only one user is nominated, the Task will status Reserved, if several user or work queue(s) are nominated, the Task will status Ready. </td>
     <td class="action"><a href="#" onclick="test('nominate');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
     <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /></td></tr></table>
@@ -419,7 +419,7 @@ obj.css("display", "block");
   </tr>
   <tr>
     <td class="operation" >setGenericHumanRole</td>
-    <td class="description"></td>
+    <td class="description"><b>Preliminary Condition:</b>The operator should be one Business Administartor.<br><br><b>Function: </b>Replace the Task generic human role with the input organization entity. If it is going to update the Business Administartor human role and the input organization entity is user type and the operator doesn't belong to the input organization entity, the operator will be added to the Business Administartor automatically. And if the input organization entity is group type and the operator doesn't belong the to the input organization entity, exception will report.  </td>
     <td class="action"><a href="#" onclick="test('setGenericHumanRole');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
     <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /><td class="done" /></td></tr></table>
@@ -437,7 +437,7 @@ obj.css("display", "block");
   </tr>
   <tr>
     <td class="operation">getMyTasks</td>
-    <td class="description">getMyTasks</td>
+    <td class="description">Retrieve the task details. About which field can be used in the input where clause, please check section "Simple Task View" of the Human task spec(page 49).</td>
     <td class="action"> <a href="#" onclick="test('getMyTasks');" ><img width=30 src="test.png" alt="test it"/></a></td>
     <td class="status">
     <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /></tr></table>
@@ -445,7 +445,7 @@ obj.css("display", "block");
   </tr>
  <tr>
     <td class="operation" >getMyTaskAbstracts</td>
-    <td class="description"></td>
+    <td class="description">Retrieve the task abstracts. This operation is used to obtain the data required to display a task list. About which field can be used in the input where clause, please check section "Simple Task View" of the Human task spec(page 49).</td>
     <td class="action"><a href="#" onclick="test('getMyTaskAbstracts');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
     <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /></td></tr></table>
@@ -453,7 +453,7 @@ obj.css("display", "block");
   </tr>
   <tr>
     <td class="operation" >query</td>
-    <td class="description"></td>
+    <td class="description">Query the task with (pseudo-) SQL. About which field can be used for the (pseudo-) SQL, please check the section "Complete Task View" of the Human task spec(page 51).</td>
     <td class="action"><a href="#" onclick="test('query');" ><img width=30 src="test.png" alt="test it"/></a></td></td>
     <td class="status"> 
     <table align="center"><tr><td class="done" /><td class="done" /><td class="done" /><td class="done" /></td></tr></table>
