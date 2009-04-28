@@ -24,6 +24,7 @@ end
 def disp_task task
   puts "Task ID:" + task.id.to_s
   puts "Task Name:" + task.name.to_s
+  puts "createdOn" + task.createdOn.to_s
   #TODO add more properties
 end
 
@@ -34,7 +35,21 @@ TMS_CLIENT.headerhandler << Header.new("participantToken", token)
 #TMS_CLIENT.wiredump_file_base = "soap-log.txt"
 
 ################### Participant Operation
+puts "====== Calling operation: create ======"
+begin
+ret = TMS_CLIENT.create(:in=>"test",
+    "humanTaskContext" => #"<htpt:potentialOwners><htd:organizationalEntity><htd:users><htd:user>intalio\manager</htd:user></htd:users></htd:organizationalEntity></htpt:potentialOwners>"
+                 {
+             "priority" => 1, 
+             "peopleAssignments" => {}             
+             }
+              ) 
+rescue
+end
 
+puts "return:"
+puts "Task ID:" + ret.inspect
+puts  "====== End of operation: create ======"
 ################### Admin Operation
 
 ################### Query
@@ -44,7 +59,10 @@ TMS_CLIENT.headerhandler << Header.new("participantToken", token)
 ## Returns a data object of type tTask
 ## Applies to both tasks and notifications.
 puts "====== Calling operation: getTaskInfo ======"
-taskInfo = TMS_CLIENT.getTaskInfo(:identifier => "d4d45313-4012-4f6e-aaa2-294a9f1c4388") #You should replace it with your own id
+taskInfo = TMS_CLIENT.getTaskInfo(:identifier => "066475b8-6374-4198-8d55-bfe7f516146b") #You should replace it with your own id
 disp_task taskInfo.task
+
+
+
 
 # blabla

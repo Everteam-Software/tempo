@@ -816,7 +816,7 @@ public class TMSRequestProcessor {
         // "VE9LRU4mJnVzZXI9PWFkbWluJiZpc3N1ZWQ9PTExODA0NzY2NjUzOTMmJnJvbGVzPT1pbnRhbGlvXHByb2Nlc3NhZG1pbmlzdHJhdG9yLGV4YW1wbGVzXGVtcGxveWVlLGludGFsaW9ccHJvY2Vzc21hbmFnZXIsZXhhbXBsZXNcbWFuYWdlciYmZnVsbE5hbWU9PUFkbWluaW5pc3RyYXRvciYmZW1haWw9PWFkbWluQGV4YW1wbGUuY29tJiZub25jZT09NDMxNjAwNTE5NDM5MTk1MDMzMyYmdGltZXN0YW1wPT0xMTgwNDc2NjY1Mzk1JiZkaWdlc3Q9PTVmM1dQdDBXOEp2UlpRM2gyblJ6UkRrenRwTT0mJiYmVE9LRU4";
         String participantToken = getParticipantToken();
         if (participantToken == null)
-            throw makeFault(new Exception("Cannot get participant toke in soap header"));
+            throw makeFault(new Exception("Cannot get participant token in soap header"));
 
         try {
             // unmarshal request
@@ -837,6 +837,8 @@ public class TMSRequestProcessor {
                 // Log.log("task "+i);
                 Task task = new Task();
                 task.setId(UUID.randomUUID().toString()); // temporary solution
+                
+                System.out.println("task id "+task.getId());
                 // to generate task id
                 task.setName("task");
                 task.setCreatedOn(new Date());
