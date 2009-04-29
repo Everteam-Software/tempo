@@ -34,6 +34,7 @@ import org.apache.axis2.client.ServiceClient;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.SimpleAuthProvider;
 import org.intalio.tempo.workflow.auth.UserRoles;
+import org.intalio.tempo.workflow.taskb4p.Task;
 import org.intalio.tempo.workflow.tms.server.dao.JPATaskDaoConnectionFactory;
 import org.intalio.tempo.workflow.tms.server.dao.SimpleTaskDAOConnectionFactory;
 import org.intalio.tempo.workflow.tms.server.permissions.TaskPermissions;
@@ -87,6 +88,10 @@ public class Utils {
     public static ITMSServer createTMSServer() throws Exception {
         return new TMSServer(getMeASimpleAuthProvider(), new SimpleTaskDAOConnectionFactory(), getMeADefaultPermissionHandler());
     }
+    
+    public static org.intalio.tempo.workflow.tmsb4p.server.ITMSServer createB4PTMSServer(Map<String, Task> tasks) throws Exception {
+        return new org.intalio.tempo.workflow.tmsb4p.server.TMSServer(getMeASimpleAuthProvider(), new org.intalio.tempo.workflow.tmsb4p.server.dao.SimpleTaskDAOConnectionFactory(tasks), getMeADefaultPermissionHandler());
+    }
 
 
     public static ITMSServer createTMSServerJPA() throws Exception {
@@ -125,4 +130,5 @@ public class Utils {
         authProvider.addUserToken("system-user-token", systemUser);
         return authProvider;
     }
+    
 }

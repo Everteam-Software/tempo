@@ -1,0 +1,7 @@
+<htdt:setOutput xmlns:htdt="http://www.intalio.com/WS-HT/api/xsd">
+	<htdt:identifier>NeedToInput</htdt:identifier>
+	<htdt:part>part1</htdt:part>
+	<htdt:taskData>
+		<test-part1>Test part1</test-part1>
+	</htdt:taskData>
+</htdt:setOutput>

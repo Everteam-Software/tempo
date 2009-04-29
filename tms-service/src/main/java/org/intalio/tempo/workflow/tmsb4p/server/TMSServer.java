@@ -53,6 +53,15 @@ public class TMSServer implements ITMSServer {
     private ITaskDAOConnectionFactory _taskDAOFactory;
     private TaskPermissions _permissions;
 
+    public TMSServer(IAuthProvider authProvider, ITaskDAOConnectionFactory taskDAOFactory, TaskPermissions permissions) {
+        _logger.info("New TMS Instance");
+        assert authProvider != null : "IAuthProvider implementation is absent!";
+        assert taskDAOFactory != null : "ITaskDAOConnectionFactory implementation is absent!";
+        setAuthProvider(authProvider);
+        setTaskDAOFactory(taskDAOFactory);
+        setPermissions(permissions);
+    }
+
     public IAuthProvider getAuthProvider() {
         return _authProvider;
     }
@@ -235,807 +244,752 @@ public class TMSServer implements ITMSServer {
     }
 
     /**
-     * check status, if suspended and timeout, will change status back to states before suspending.
-     * Please notice that task status maybe changed after calling checkTaskStatus
+     * check status, if suspended and timeout, will change status back to states
+     * before suspending. Please notice that task status maybe changed after
+     * calling checkTaskStatus
+     * 
      * @param taskId
      * @param status
      * @return task status
      * @throws TMSException
      */
-    TaskStatus checkTaskStatus(String taskId, TaskStatus[] status) throws TMSException{
-    	ITaskDAOConnection dao = _taskDAOFactory.openConnection();
-    	Task task = null;
-    	try{
-    	 task = dao.fetchTaskIfExists(taskId);
-    	}catch(Exception e){
-    		throw new B4PPersistException(e);
-    	}finally{
-    		dao.close();
-    	}
-    	 if (task==  null)
-    		 throw new IllegalArgumentException("fetch task failed");
-    	TaskStatus s = task.getStatus();
-    	if (s == TaskStatus.SUSPENDED){
-    		Date st = task.getSuspendStartTime();
-    		System.out.println("suspend start:"+ st.toString() + ", suspend period: " + task.getSuspendPeriod());
-    		if (st != null){
-    			Date until = new Date(st.getTime()+task.getSuspendPeriod()*1000);
-    			Date t = new Date(); // current time
-    			System.out.println("current time:"+ t.toString() + ", suspend until: " + until.toString());
-    			if (t.after(until)){  // expired 
-    				try{
-    					task.setStatus(task.getOriginalStatus());
-    					//task.setOriginalStatus(null);
-    					dao.updateTask(task);
-    					dao.commit();
-    					s = task.getOriginalStatus();
-    				}catch(Exception e){
-    					throw new B4PPersistException(e);
-    		    	}finally{
-    		    		dao.close();
-    		    	}
-    			}else
-    				throw new IllegalStateException("Task suspended");
-    		}else // unlimited suspend
-    		throw new IllegalStateException("Task suspended");
-    	}
-    	
-    	for (int i =0; i< status.length; i++){
-    		if (s == status[i])
-    			return s;
-    	}
-    	
-    	throw new IllegalStateException("status error, task must be in (" + makeString(status)+")");
-    	
+    TaskStatus checkTaskStatus(String taskId, TaskStatus[] status) throws TMSException {
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        Task task = null;
+        try {
+            task = dao.fetchTaskIfExists(taskId);
+        } catch (Exception e) {
+            throw new B4PPersistException(e);
+        } finally {
+            dao.close();
+        }
+        if (task == null)
+            throw new IllegalArgumentException("fetch task failed");
+        TaskStatus s = task.getStatus();
+        if (s == TaskStatus.SUSPENDED) {
+            Date st = task.getSuspendStartTime();
+            System.out.println("suspend start:" + st.toString() + ", suspend period: " + task.getSuspendPeriod());
+            if (st != null) {
+                Date until = new Date(st.getTime() + task.getSuspendPeriod() * 1000);
+                Date t = new Date(); // current time
+                System.out.println("current time:" + t.toString() + ", suspend until: " + until.toString());
+                if (t.after(until)) { // expired
+                    try {
+                        task.setStatus(task.getOriginalStatus());
+                        // task.setOriginalStatus(null);
+                        dao.updateTask(task);
+                        dao.commit();
+                        s = task.getOriginalStatus();
+                    } catch (Exception e) {
+                        throw new B4PPersistException(e);
+                    } finally {
+                        dao.close();
+                    }
+                } else
+                    throw new IllegalStateException("Task suspended");
+            } else
+                // unlimited suspend
+                throw new IllegalStateException("Task suspended");
+        }
+
+        for (int i = 0; i < status.length; i++) {
+            if (s == status[i])
+                return s;
+        }
+
+        throw new IllegalStateException("status error, task must be in (" + makeString(status) + ")");
+
     }
-    
-	/**************************************
-	 * flow-related participant operations
-	 ***************************************/
-
-	public void create(Task task, String participantToken) throws TMSException {
-		System.out.println("tmsserver-> create task");
-		try {
-			UserRoles ur = _authProvider.authenticate(participantToken);
-			System.out.println("userid:" + ur.getUserID());
-			task.setCreatedBy(ur.getUserID());
-			task.setTaskInitiator(ur.getUserID());
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AuthException(e);
-		}
-
-		
-		// TODO check if this user in task initialtor
-		ITaskDAOConnection dao = _taskDAOFactory.openConnection();
-		try {
-			dao.createTask(task);
-			dao.commit();
-			if (_logger.isDebugEnabled())
-				_logger.debug("Workflow Task " + task.getId() + " was created");
-			System.out.println("Workflow Task " + task.getId() + " was created");
-			// TODO : Use credentials.getUserID() :vb
-		} catch (NoResultException e) {
-			_logger.error("Cannot create Workflow Tasks", e); // TODO :
-			// TaskIDConflictException
-			// must be rethrowed :vb
-			throw new B4PPersistException(e);
-		} finally {
-			dao.close();
-		}
-
-	}
-
-	public void remove(String participantToken, String taskId)
-			throws TMSException {
-		// get user
-		UserRoles ur = null;
-		try {
-			ur = _authProvider.authenticate(participantToken);
-		} catch (Exception e) {
-			e.printStackTrace();
-			_logger.error("authenticate user failed", e);
-			throw new AuthException(e);
-		}
-		ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
-		try {
-
-			Task task = dao.fetchTaskIfExists(taskId);
-			if (task == null)
-				throw new IllegalArgumentException("cannot find task "
-						+ taskId);
-			
-			// check permission (notification recipient)
-			checkPermission(task, ur, new int[] { ITMSServer.RECIPIENTS});
-
-			// do query
-			dao.deleteTask(taskId);
-			dao.commit();
-		} catch (NoResultException e) {
-			_logger.error("remove task failed, task id " + taskId, e);
-			
-		} finally {
-			dao.close();
-		}
-
-		return;
-
-	}
-
-	public void start(String participantToken, String identifier)
-			throws TMSException {
-		// get user
-		UserRoles ur = null;
-		try {
-			ur = _authProvider.authenticate(participantToken);
-			System.out.println("userid:" + ur.getUserID());
-		} catch (Exception e) {
-			e.printStackTrace();
-			_logger.error("authenticate user failed", e);
-			return;
-		}
-		ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
-		try {
-			Task task = dao.fetchTaskIfExists(identifier);
-			if (task == null)
-				throw new IllegalArgumentException("cannot find task "
-						+ identifier);
-
-			// check permission (actual owner / potential owner(only in ready states)
-			List<Integer> r = checkUserTaskRoles(task, ur);
-			if (r.size() == 1 && r.get(0) == ITMSServer.POTENTIAL_OWNERS
-					&& task.getStatus() != TaskStatus.READY)
-				throw new IllegalAccessException(
-						"Potential owner can start task only in ready states");
-			if (!(r.contains(ITMSServer.POTENTIAL_OWNERS) && task.getStatus() == TaskStatus.READY)
-					&& !r.contains(ITMSServer.ACTUAL_OWNER))
-				throw new IllegalAccessException(
-						"User must be potential owner (only in ready states) or actual owner");
-
-		// check status ( should be ready )
-		checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.READY, TaskStatus.RESERVED});
-		
-		// update task status
-			dao.updateTaskStatus(identifier, TaskStatus.IN_PROGRESS);
-			dao.commit();
-		} catch (NoResultException e) {
-			_logger.error("remove task failed, task id " + identifier, e);
-			throw new B4PPersistException(e);
-		} finally {
-			dao.close();
-		}
-	}
-
-	public void stop(String participantToken, String identifier)
-			throws TMSException {
-
-		// get user
-		UserRoles ur = null;
-		try {
-			ur = _authProvider.authenticate(participantToken);
-			System.out.println("userid:" + ur.getUserID());
-		} catch (Exception e) {
-			e.printStackTrace();
-			_logger.error("authenticate user failed", e);
-			throw new AuthException(e);
-		}
-		ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
-		try {
-			Task task = dao.fetchTaskIfExists(identifier);
-			if (task == null)
-				throw new IllegalArgumentException("cannot find task "
-						+ identifier);
-
-			// check permission (actual owner / business administrators can
-			// stop tasks
-			checkPermission(task, ur, new int[] { ITMSServer.ACTUAL_OWNER,
-					ITMSServer.BUSINESSADMINISTRATORS });
-
-		// stop task
-
-		// @TODO check status ( should be ready )
-		checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.IN_PROGRESS});
-		
-		// update task status
-			dao.updateTaskStatus(identifier, TaskStatus.RESERVED);
-			dao.commit();
-		} catch (NoResultException e) {
-			_logger.error("remove task failed, task id " + identifier, e);
-			throw new B4PPersistException(e);
-		} finally {
-			dao.close();
-		}
-
-	}
-
-
-
-	public void claim(String participantToken, String identifier)
-			throws TMSException {
-		// get user
-		UserRoles ur = null;
-		try {
-			ur = _authProvider.authenticate(participantToken);
-
-			System.out.println("userid:" + ur.getUserID());
-		} catch (Exception e) {
-			e.printStackTrace();
-			_logger.error("authenticate user failed", e);
-			throw new AuthException(e);
-		}
-		ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
-		try {
-			Task task = dao.fetchTaskIfExists(identifier);
-			if (task == null)
-				throw new IllegalArgumentException("cannot find task "
-						+ identifier);
-
-			// check permission (actual owner / business administrators can
-
-			checkPermission(task, ur, new int[] { ITMSServer.ACTUAL_OWNER,
-					ITMSServer.BUSINESSADMINISTRATORS });
-
-			// check status ( should be ready )
-			checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.READY});
-			
-			// set actual owner
-			//task.setActualOwner(ur.getUserID());
-			ArrayList<String> users = new ArrayList<String>();
-			users.add(ur.getUserID());
-			dao.updateTaskRole(identifier, GenericRoleType.actual_owner, users, OrganizationalEntity.USER_ENTITY); 
-
-			// update task status			
-			dao.updateTaskStatus(identifier, TaskStatus.RESERVED);
-			
-			dao.commit();
-		} catch (NoResultException e) {
-			_logger.error("remove task failed, task id " + identifier, e);
-			throw new B4PPersistException(e);
-		} finally {
-			dao.close();
-		}
-
-	}
-
-	public void delegate(String participantToken, String identifier, TOrganizationalEntity oe)
-			throws TMSException {
-		// get user
-		UserRoles ur = null;
-		try {
-			ur = _authProvider.authenticate(participantToken);
-
-			System.out.println("userid:" + ur.getUserID());
-		} catch (Exception e) {
-			e.printStackTrace();
-			_logger.error("authenticate user failed", e);
-			throw new AuthException(e);
-		}
-		ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
-		try {
-			Task task = dao.fetchTaskIfExists(identifier);
-			if (task == null)
-				throw new IllegalArgumentException("cannot find task "
-						+ identifier);
-
-			// check permission (actual owner / business administrators /
-			// potential owner(only in ready states)
-			List<Integer> r = checkUserTaskRoles(task, ur);
-			if (r.size() == 1 && r.get(0) == ITMSServer.POTENTIAL_OWNERS
-					&& task.getStatus() != TaskStatus.READY)
-				throw new IllegalAccessException(
-						"Potential owner can delegate task only in ready states");
-			if (!r.contains(ITMSServer.ACTUAL_OWNER)
-					&& !r.contains(ITMSServer.BUSINESSADMINISTRATORS))
-				throw new IllegalAccessException(
-						"User must be potential(only in ready states) owner or business adiministrator");
-
-			// check status ( should be ready )
-			checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.READY, TaskStatus.IN_PROGRESS, TaskStatus.RESERVED});
-
-			// assign task to user and put him into potential owner if he is not
-			if (oe.isSetUsers()){
-				System.out.println("delegating to user");
-				ArrayList<String> values = new ArrayList<String>();
-				TUserlist users = oe.getUsers();
-				for (int i = 0; i< users.sizeOfUserArray(); i ++){
-					values.add(users.getUserArray(i));
-				}
-				
-				// set to actual owner
-				dao.updateTaskRole(identifier, GenericRoleType.actual_owner, values, OrganizationalEntity.USER_ENTITY);
-				
-				for (int i=0; i < values.size(); i++){
-					if  (!dao.isRoleMember(identifier, new UserRoles(values.get(i),  new String[0]), GenericRoleType.potential_owners)){
-						// add to potential owners
-						dao.addUserOrGroups(identifier, new String[]{values.get(i)}, true, GenericRoleType.potential_owners);
-					}
-					
-				}
-					
-			}
-			else{
-				System.out.println("delegating to group");
-/*				ArrayList<String> values = new ArrayList<String>();
-				TGrouplist groups = oe.getGroups();
-				for (int i = 0; i< groups.sizeOfGroupArray(); i ++){
-					values.add(groups.getGroupArray(i));
-				}
-				dao.updateTaskRole(identifier, GenericRoleType.actual_owner, values, OrganizationalEntity.GROUP_ENTITY);
-	
-				for (int i=0; i < values.size(); i++){
-//					if  (!dao.isRoleMember(identifier, new UserRoles(values.get(i),  new String[0]), GenericRoleType.actual_owner)){
-//						// TODO add to potential owners
-//					}			
-				}
-*/		
-			throw new IllegalArgumentException("Cannot delegate task to a group");
-			}
-				
-			// update task status
-			task.setStatus(TaskStatus.RESERVED);
-			dao.updateTask(task);
-			dao.commit();
-		} catch (NoResultException e) {
-			_logger.error("remove task failed, task id " + identifier, e);
-			throw new B4PPersistException(e);
-		} finally {
-			dao.close();
-		}
-
-	}
-
-	public void forward(String participantToken, String identifier, TOrganizationalEntity oe )
-			throws TMSException {
-		// get user
-		UserRoles ur = null;
-		try {
-			ur = _authProvider.authenticate(participantToken);
-
-			System.out.println("userid:" + ur.getUserID());
-		} catch (Exception e) {
-			e.printStackTrace();
-			_logger.error("authenticate user failed", e);
-			throw new AuthException(e);
-		}
-		ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
-
-		try {
-			Task task = dao.fetchTaskIfExists(identifier);
-			if (task == null)
-				throw new IllegalArgumentException("cannot find task "
-						+ identifier);
-
-			// check permission (actual owner / potential owner / business
-			// administrators can forward tasks
-			checkPermission(task, ur, new int[] { ITMSServer.ACTUAL_OWNER,
-					ITMSServer.BUSINESSADMINISTRATORS });
-
-			//  check status ( should be ready )
-			checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.READY, TaskStatus.IN_PROGRESS, TaskStatus.RESERVED});
-
-			// impl logic
-			if (oe.isSetUsers()){
-				ArrayList<String> values = new ArrayList<String>();
-				TUserlist users = oe.getUsers();
-				for (int i = 0; i< users.sizeOfUserArray(); i ++){
-					values.add(users.getUserArray(i));
-				}
-				// add to potential owner
-				dao.updateTaskRole(identifier, GenericRoleType.potential_owners, values, OrganizationalEntity.USER_ENTITY);
-				
-				for (int i=0; i < values.size(); i++){
-					if  (!dao.isRoleMember(identifier, new UserRoles(values.get(i),  new String[0]), GenericRoleType.potential_owners)){
-						// Add to potential owners
-						dao.addUserOrGroups(identifier, new String[]{values.get(i)}, true, GenericRoleType.potential_owners);
-					}
-					
-				}
-					
-			}
-			else{
-				ArrayList<String> values = new ArrayList<String>();
-				TGrouplist groups = oe.getGroups();
-				for (int i = 0; i< groups.sizeOfGroupArray(); i ++){
-					values.add(groups.getGroupArray(i));
-				}
-				dao.updateTaskRole(identifier, GenericRoleType.potential_owners, values, OrganizationalEntity.GROUP_ENTITY);
-	
-				for (int i=0; i < values.size(); i++){
-					if  (!dao.isRoleMember(identifier, new UserRoles(values.get(i),  new String[0]), GenericRoleType.potential_owners)){
-						// add to potential owners
-						dao.addUserOrGroups(identifier, new String[]{values.get(i)}, false, GenericRoleType.potential_owners);
-					}
-					
-				}	
-			}
-			// remove himself from potential owner
-			dao.removeUserOrGroups(identifier, new String[]{ur.getUserID()}, GenericRoleType.potential_owners);
-			
-			// update status
-			dao.updateTaskStatus(identifier, TaskStatus.READY);
-			
-			// commit
-			dao.commit();
-		} catch (NoResultException e) {
-			_logger.error("remove task failed, task id " + identifier, e);
-			throw new B4PPersistException(e);
-		} finally {
-			dao.close();
-		}
-
-	}
-
-	public void release(String participantToken, String identifier)
-			throws TMSException {
-		// get user
-		UserRoles ur = null;
-		try {
-			ur = _authProvider.authenticate(participantToken);
-
-			System.out.println("userid:" + ur.getUserID());
-		} catch (Exception e) {
-			e.printStackTrace();
-			_logger.error("authenticate user failed", e);
-			throw new AuthException(e);
-		}
-		ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
-		try {
-			Task task = dao.fetchTaskIfExists(identifier);
-			if (task == null)
-				throw new IllegalArgumentException("cannot find task "
-						+ identifier);
-			// check permission (action owner / business administrators can
-			// claim tasks
-			checkPermission(task, ur, new int[] { ITMSServer.ACTUAL_OWNER,
-					ITMSServer.BUSINESSADMINISTRATORS });
-			
-			// check status ( should be ready )
-			checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.RESERVED, TaskStatus.IN_PROGRESS});
-			
-			// impl logic			
-			task.setActualOwner(null);
-			dao.updateTask(task);
-
-			// update status
-			dao.updateTaskStatus(identifier, TaskStatus.READY);
-
-			// commit
-			dao.commit();
-		} catch (NoResultException e) {
-			_logger.error("remove task failed, task id " + identifier, e);
-			throw new B4PPersistException(e);
-		} finally {
-			dao.close();
-		}
-
-	}
-
-	public void resume(String participantToken, String identifier)
-			throws TMSException {
-		// get user
-		UserRoles ur = null;
-		try {
-			ur = _authProvider.authenticate(participantToken);
-
-			System.out.println("userid:" + ur.getUserID());
-		} catch (Exception e) {
-			e.printStackTrace();
-			_logger.error("authenticate user failed", e);
-			throw new AuthException(e);
-		}
-		ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
-		try {
-			Task task = dao.fetchTaskIfExists(identifier);
-			if (task == null)
-				throw new IllegalArgumentException("cannot find task "
-						+ identifier);
-
-			// check permission (action owner / business administrators can
-			// claim tasks
-			// check permission (actual owner / business administrators /
-			// potential owner(only in ready states)
-			List<Integer> r = checkUserTaskRoles(task, ur);
-			if (r.size() == 1 && r.get(0) == ITMSServer.POTENTIAL_OWNERS
-					&& task.getStatus() != TaskStatus.READY)
-				throw new IllegalAccessException(
-						"Potential owner can delegate task only in ready states");
-			if (!r.contains(ITMSServer.ACTUAL_OWNER)
-					&& !r.contains(ITMSServer.BUSINESSADMINISTRATORS))
-				throw new IllegalAccessException(
-						"User must be potential owner or business adiministrator");
-
-			// check status 
-			if (task.getStatus() != TaskStatus.SUSPENDED)
-				throw new IllegalStateException("Task is not suspended.");
-			
-			// update task
-
-			// TODO impl logic
-
-			// update status
-			dao.updateTaskStatus(identifier, task.getOriginalStatus());
-
-			// commit
-			dao.commit();
-		} catch (NoResultException e) {
-			_logger.error("remove task failed, task id " + identifier, e);
-			throw new B4PPersistException(e);
-		} finally {
-			dao.close();
-		}
-
-	}
-
-	public void skip(String participantToken, String identifier)
-			throws TMSException {
-		// get user
-		UserRoles ur = null;
-		try {
-			ur = _authProvider.authenticate(participantToken);
-
-			System.out.println("userid:" + ur.getUserID());
-		} catch (Exception e) {
-			e.printStackTrace();
-			_logger.error("authenticate user failed", e);
-			throw new AuthException(e);
-		}
-		ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
-		try {
-			Task task = dao.fetchTaskIfExists(identifier);
-			if (task == null)
-				throw new IllegalArgumentException("cannot find task "
-						+ identifier);
-
-			// check permission (actual owner/ initiator / business
-			// administrators can skip tasks
-			checkPermission(task, ur, new int[] { ITMSServer.ACTUAL_OWNER,
-					ITMSServer.BUSINESSADMINISTRATORS,
-					ITMSServer.TASK_INITIATOR });
-
-			// check status ( should be ready )
-			checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.READY, TaskStatus.IN_PROGRESS, TaskStatus.CREATED, TaskStatus.RESERVED});
-			
-			// impl logic
-			if (!task.isSkipable()){
-				throw new IllegalArgumentException("task is not skippble.");
-			}
-			// update status
-			dao.updateTaskStatus(identifier, TaskStatus.OBSOLETE);
-
-			// commit
-			dao.commit();
-		} catch (NoResultException e) {
-			_logger.error("remove task failed, task id " + identifier, e);
-			throw new B4PPersistException(e);
-		} finally {
-			dao.close();
-		}
-
-	}
-
-	public void fail(String participantToken, String identifier,
-			String faultName, XmlObject faultData) throws TMSException {
-		// get user
-		UserRoles ur = null;
-		try {
-			ur = _authProvider.authenticate(participantToken);
-
-			System.out.println("userid:" + ur.getUserID());
-		} catch (Exception e) {
-			e.printStackTrace();
-			_logger.error("authenticate user failed", e);
-			throw new AuthException(e);
-		}
-		ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
-		try {
-			Task task = dao.fetchTaskIfExists(identifier);
-			if (task == null)
-				throw new IllegalArgumentException("cannot find task "
-						+ identifier);
-
-			// check permission (actual owner)
-			checkPermission(task, ur, new int[] { ITMSServer.ACTUAL_OWNER });
-
-			//  check status
-			checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.READY, TaskStatus.IN_PROGRESS, TaskStatus.CREATED, TaskStatus.RESERVED});
-
-			// update task
-
-			// TODO impl logic
-
-			// update status
-			dao.updateTaskStatus(identifier, TaskStatus.FAILED);
-
-			// commit
-			dao.commit();
-		} catch (NoResultException e) {
-			_logger.error("remove task failed, task id " + identifier, e);
-			throw new B4PPersistException(e);
-		} finally {
-			dao.close();
-		}
-
-	}
-
-	public void complete(String participantToken, String identifier,
-			XmlObject taskData) throws TMSException {
-		// get user
-		UserRoles ur = null;
-		try {
-			ur = _authProvider.authenticate(participantToken);
-
-			System.out.println("userid:" + ur.getUserID());
-		} catch (Exception e) {
-			e.printStackTrace();
-			_logger.error("authenticate user failed", e);
-			throw new AuthException(e);
-		}
-		ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
-		try {
-			Task task = dao.fetchTaskIfExists(identifier);
-			if (task == null)
-				throw new IllegalArgumentException("cannot find task "
-						+ identifier);
-
-			// check permission (actual owner)
-			checkPermission(task, ur, new int[] { ITMSServer.ACTUAL_OWNER });
-
-			// check status ( should be ready )
-			checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.READY, TaskStatus.IN_PROGRESS, TaskStatus.CREATED, TaskStatus.RESERVED});
-
-			// update task
-			// TODO impl logic
-
-			// update status
-			task.setStatus(TaskStatus.COMPLETED);
-			// update output data
-			task.setOutputMessage(taskData.toString()); // ?
-			dao.updateTask(task);
-
-			// commit
-			dao.commit();
-		} catch (NoResultException e) {
-			_logger.error("remove task failed, task id " + identifier, e);
-			throw new B4PPersistException(e);
-		} finally {
-			dao.close();
-		}
-	}
-
-	public void suspend(String participantToken, String identifier)
-			throws TMSException {
-		// get user
-		UserRoles ur = null;
-		try {
-			ur = _authProvider.authenticate(participantToken);
-
-			System.out.println("userid:" + ur.getUserID());
-		} catch (Exception e) {
-			e.printStackTrace();
-			_logger.error("authenticate user failed", e);
-			throw new AuthException(e);
-		}
-		ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
-		try {
-
-			Task task = dao.fetchTaskIfExists(identifier);
-			if (task == null)
-				throw new IllegalArgumentException("cannot find task "
-						+ identifier);
-
-			// check permission (actual owner / business administrators /
-			// potential owner(only in ready states)
-			List<Integer> r = checkUserTaskRoles(task, ur);
-			if (r.size() == 1 && r.get(0) == ITMSServer.POTENTIAL_OWNERS
-					&& task.getStatus() != TaskStatus.READY)
-				throw new IllegalAccessException(
-						"Potential owner can delegate task only in ready states");
-			if (!r.contains(ITMSServer.ACTUAL_OWNER)
-					&& !r.contains(ITMSServer.BUSINESSADMINISTRATORS))
-				throw new IllegalAccessException(
-						"User must be potential owner or business adiministrator");
-
-			// check status 
-			checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.READY, TaskStatus.IN_PROGRESS, TaskStatus.RESERVED});
-			
-			// impl logic
-			task.setOriginalStatus(task.getStatus());
-			
-			// update status
-			dao.updateTaskStatus(identifier, TaskStatus.SUSPENDED);
-	
-			// commit
-			dao.commit();
-		} catch (NoResultException e) {
-			_logger.error("remove task failed, task id " + identifier, e);
-			throw new B4PPersistException(e);
-		} finally {
-			dao.close();
-		}
-
-	}
-
-	public void suspendUntil(String participantToken, String identifier,
-			TTime time) throws TMSException {
-		// get user
-		UserRoles ur = null;
-		try {
-			ur = _authProvider.authenticate(participantToken);
-
-			System.out.println("userid:" + ur.getUserID());
-		} catch (Exception e) {
-			e.printStackTrace();
-			_logger.error("authenticate user failed", e);
-			throw new AuthException(e);
-		}
-		ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
-		try {
-
-			Task task = dao.fetchTaskIfExists(identifier);
-			if (task == null)
-				throw new IllegalArgumentException("cannot find task "
-						+ identifier);
-
-			// check permission (actual owner / business administrators /
-			// potential owner(only in ready states)
-			List<Integer> r = checkUserTaskRoles(task, ur);
-			if (r.size() == 1 && r.get(0) == ITMSServer.POTENTIAL_OWNERS
-					&& task.getStatus() != TaskStatus.READY)
-				throw new IllegalAccessException(
-						"Potential owner can delegate task only in ready states");
-			if (!r.contains(ITMSServer.ACTUAL_OWNER)
-					&& !r.contains(ITMSServer.BUSINESSADMINISTRATORS))
-				throw new IllegalAccessException(
-						"User must be potential owner or business adiministrator");
-
-			// check status ( should be ready )
-			checkTaskStatus(identifier, new TaskStatus[]{TaskStatus.READY, TaskStatus.IN_PROGRESS, TaskStatus.RESERVED});
-		
-			// impl logic
-			// update task
-			Date t_now = new Date();
-			int t_p = 0;
-			if (time.isSetPointOfTime()){
-				Date tt = time.getPointOfTime().getTime();	
-				t_p =  (int)(tt.getTime() - System.currentTimeMillis());
-			}else if (time.isSetTimePeriod()){
-				// convert stupid GDuration to second
-				GDuration gd = time.getTimePeriod();
-				System.out.println("gd="+gd.toString());
-				GDuration gDuration = new GDuration(gd);  
-				Calendar cal = Calendar.getInstance();  
-				cal.setTimeInMillis(0);  
-				GDate base = new GDate(cal);
-				System.out.println("base="+base.toString());
-				System.out.println("base="+base.getDate().getTime());
-				GDate d = base.add(gDuration);
-				System.out.println("d="+d.toString());
-				System.out.println("d="+d.getDate().getTime());
-				t_p = (int)d.getDate().getTime()/1000;
-			}
-			task.setSuspendStartTime(t_now);
-			task.setSuspendPeriod(t_p);
-			
-	
-			task.setOriginalStatus(task.getStatus());
-			
-			// update status
-			task.setStatus(TaskStatus.SUSPENDED);
-
-			dao.updateTask(task);
-			
-			// commit
-			dao.commit();
-		} catch (NoResultException e) {
-			_logger.error("remove task failed, task id " + identifier, e);
-			throw new B4PPersistException(e);
-		} finally {
-			dao.close();
-		}
-
-	}
-
-	/**************************************
+
+    /**************************************
+     * flow-related participant operations
+     ***************************************/
+
+    public void create(Task task, String participantToken) throws TMSException {
+        System.out.println("tmsserver-> create task");
+        try {
+            UserRoles ur = _authProvider.authenticate(participantToken);
+            System.out.println("userid:" + ur.getUserID());
+            task.setCreatedBy(ur.getUserID());
+            task.setTaskInitiator(ur.getUserID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new AuthException(e);
+        }
+
+        // TODO check if this user in task initialtor
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        try {
+            dao.createTask(task);
+            dao.commit();
+            if (_logger.isDebugEnabled())
+                _logger.debug("Workflow Task " + task.getId() + " was created");
+            System.out.println("Workflow Task " + task.getId() + " was created");
+            // TODO : Use credentials.getUserID() :vb
+        } catch (NoResultException e) {
+            _logger.error("Cannot create Workflow Tasks", e); // TODO :
+            // TaskIDConflictException
+            // must be rethrowed :vb
+            throw new B4PPersistException(e);
+        } finally {
+            dao.close();
+        }
+
+    }
+
+    public void remove(String participantToken, String taskId) throws TMSException {
+        // get user
+        UserRoles ur = null;
+        try {
+            ur = _authProvider.authenticate(participantToken);
+        } catch (Exception e) {
+            e.printStackTrace();
+            _logger.error("authenticate user failed", e);
+            throw new AuthException(e);
+        }
+        ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
+        try {
+
+            Task task = dao.fetchTaskIfExists(taskId);
+            if (task == null)
+                throw new IllegalArgumentException("cannot find task " + taskId);
+
+            // check permission (notification recipient)
+            checkPermission(task, ur, new int[] { ITMSServer.RECIPIENTS });
+
+            // do query
+            dao.deleteTask(taskId);
+            dao.commit();
+        } catch (NoResultException e) {
+            _logger.error("remove task failed, task id " + taskId, e);
+
+        } finally {
+            dao.close();
+        }
+
+        return;
+
+    }
+
+    public void start(String participantToken, String identifier) throws TMSException {
+        // get user
+        UserRoles ur = null;
+        try {
+            ur = _authProvider.authenticate(participantToken);
+            System.out.println("userid:" + ur.getUserID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            _logger.error("authenticate user failed", e);
+            return;
+        }
+        ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
+        try {
+            Task task = dao.fetchTaskIfExists(identifier);
+            if (task == null)
+                throw new IllegalArgumentException("cannot find task " + identifier);
+
+            // check permission (actual owner / potential owner(only in ready
+            // states)
+            List<Integer> r = checkUserTaskRoles(task, ur);
+            if (r.size() == 1 && r.get(0) == ITMSServer.POTENTIAL_OWNERS && task.getStatus() != TaskStatus.READY)
+                throw new IllegalAccessException("Potential owner can start task only in ready states");
+            if (!(r.contains(ITMSServer.POTENTIAL_OWNERS) && task.getStatus() == TaskStatus.READY) && !r.contains(ITMSServer.ACTUAL_OWNER))
+                throw new IllegalAccessException("User must be potential owner (only in ready states) or actual owner");
+
+            // check status ( should be ready )
+            checkTaskStatus(identifier, new TaskStatus[] { TaskStatus.READY, TaskStatus.RESERVED });
+
+            // update task status
+            dao.updateTaskStatus(identifier, TaskStatus.IN_PROGRESS);
+            dao.commit();
+        } catch (NoResultException e) {
+            _logger.error("remove task failed, task id " + identifier, e);
+            throw new B4PPersistException(e);
+        } finally {
+            dao.close();
+        }
+    }
+
+    public void stop(String participantToken, String identifier) throws TMSException {
+
+        // get user
+        UserRoles ur = null;
+        try {
+            ur = _authProvider.authenticate(participantToken);
+            System.out.println("userid:" + ur.getUserID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            _logger.error("authenticate user failed", e);
+            throw new AuthException(e);
+        }
+        ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
+        try {
+            Task task = dao.fetchTaskIfExists(identifier);
+            if (task == null)
+                throw new IllegalArgumentException("cannot find task " + identifier);
+
+            // check permission (actual owner / business administrators can
+            // stop tasks
+            checkPermission(task, ur, new int[] { ITMSServer.ACTUAL_OWNER, ITMSServer.BUSINESSADMINISTRATORS });
+
+            // stop task
+
+            // @TODO check status ( should be ready )
+            checkTaskStatus(identifier, new TaskStatus[] { TaskStatus.IN_PROGRESS });
+
+            // update task status
+            dao.updateTaskStatus(identifier, TaskStatus.RESERVED);
+            dao.commit();
+        } catch (NoResultException e) {
+            _logger.error("remove task failed, task id " + identifier, e);
+            throw new B4PPersistException(e);
+        } finally {
+            dao.close();
+        }
+
+    }
+
+    public void claim(String participantToken, String identifier) throws TMSException {
+        // get user
+        UserRoles ur = null;
+        try {
+            ur = _authProvider.authenticate(participantToken);
+
+            System.out.println("userid:" + ur.getUserID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            _logger.error("authenticate user failed", e);
+            throw new AuthException(e);
+        }
+        ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
+        try {
+            Task task = dao.fetchTaskIfExists(identifier);
+            if (task == null)
+                throw new IllegalArgumentException("cannot find task " + identifier);
+
+            // check permission (actual owner / business administrators can
+
+            checkPermission(task, ur, new int[] { ITMSServer.ACTUAL_OWNER, ITMSServer.BUSINESSADMINISTRATORS });
+
+            // check status ( should be ready )
+            checkTaskStatus(identifier, new TaskStatus[] { TaskStatus.READY });
+
+            // set actual owner
+            // task.setActualOwner(ur.getUserID());
+            ArrayList<String> users = new ArrayList<String>();
+            users.add(ur.getUserID());
+            dao.updateTaskRole(identifier, GenericRoleType.actual_owner, users, OrganizationalEntity.USER_ENTITY);
+
+            // update task status
+            dao.updateTaskStatus(identifier, TaskStatus.RESERVED);
+
+            dao.commit();
+        } catch (NoResultException e) {
+            _logger.error("remove task failed, task id " + identifier, e);
+            throw new B4PPersistException(e);
+        } finally {
+            dao.close();
+        }
+
+    }
+
+    public void delegate(String participantToken, String identifier, TOrganizationalEntity oe) throws TMSException {
+        // get user
+        UserRoles ur = null;
+        try {
+            ur = _authProvider.authenticate(participantToken);
+
+            System.out.println("userid:" + ur.getUserID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            _logger.error("authenticate user failed", e);
+            throw new AuthException(e);
+        }
+        ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
+        try {
+            Task task = dao.fetchTaskIfExists(identifier);
+            if (task == null)
+                throw new IllegalArgumentException("cannot find task " + identifier);
+
+            // check permission (actual owner / business administrators /
+            // potential owner(only in ready states)
+            List<Integer> r = checkUserTaskRoles(task, ur);
+            if (r.size() == 1 && r.get(0) == ITMSServer.POTENTIAL_OWNERS && task.getStatus() != TaskStatus.READY)
+                throw new IllegalAccessException("Potential owner can delegate task only in ready states");
+            if (!r.contains(ITMSServer.ACTUAL_OWNER) && !r.contains(ITMSServer.BUSINESSADMINISTRATORS))
+                throw new IllegalAccessException("User must be potential(only in ready states) owner or business adiministrator");
+
+            // check status ( should be ready )
+            checkTaskStatus(identifier, new TaskStatus[] { TaskStatus.READY, TaskStatus.IN_PROGRESS, TaskStatus.RESERVED });
+
+            // assign task to user and put him into potential owner if he is not
+            if (oe.isSetUsers()) {
+                System.out.println("delegating to user");
+                ArrayList<String> values = new ArrayList<String>();
+                TUserlist users = oe.getUsers();
+                for (int i = 0; i < users.sizeOfUserArray(); i++) {
+                    values.add(users.getUserArray(i));
+                }
+
+                // set to actual owner
+                dao.updateTaskRole(identifier, GenericRoleType.actual_owner, values, OrganizationalEntity.USER_ENTITY);
+
+                for (int i = 0; i < values.size(); i++) {
+                    if (!dao.isRoleMember(identifier, new UserRoles(values.get(i), new String[0]), GenericRoleType.potential_owners)) {
+                        // add to potential owners
+                        dao.addUserOrGroups(identifier, new String[] { values.get(i) }, true, GenericRoleType.potential_owners);
+                    }
+
+                }
+
+            } else {
+                System.out.println("delegating to group");
+                /*
+                 * ArrayList<String> values = new ArrayList<String>();
+                 * TGrouplist groups = oe.getGroups(); for (int i = 0; i<
+                 * groups.sizeOfGroupArray(); i ++){
+                 * values.add(groups.getGroupArray(i)); }
+                 * dao.updateTaskRole(identifier, GenericRoleType.actual_owner,
+                 * values, OrganizationalEntity.GROUP_ENTITY); for (int i=0; i <
+                 * values.size(); i++){ // if (!dao.isRoleMember(identifier, new
+                 * UserRoles(values.get(i), new String[0]),
+                 * GenericRoleType.actual_owner)){ // // TODO add to potential
+                 * owners // } }
+                 */
+                throw new IllegalArgumentException("Cannot delegate task to a group");
+            }
+
+            // update task status
+            task.setStatus(TaskStatus.RESERVED);
+            dao.updateTask(task);
+            dao.commit();
+        } catch (NoResultException e) {
+            _logger.error("remove task failed, task id " + identifier, e);
+            throw new B4PPersistException(e);
+        } finally {
+            dao.close();
+        }
+
+    }
+
+    public void forward(String participantToken, String identifier, TOrganizationalEntity oe) throws TMSException {
+        // get user
+        UserRoles ur = null;
+        try {
+            ur = _authProvider.authenticate(participantToken);
+
+            System.out.println("userid:" + ur.getUserID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            _logger.error("authenticate user failed", e);
+            throw new AuthException(e);
+        }
+        ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
+
+        try {
+            Task task = dao.fetchTaskIfExists(identifier);
+            if (task == null)
+                throw new IllegalArgumentException("cannot find task " + identifier);
+
+            // check permission (actual owner / potential owner / business
+            // administrators can forward tasks
+            checkPermission(task, ur, new int[] { ITMSServer.ACTUAL_OWNER, ITMSServer.BUSINESSADMINISTRATORS });
+
+            // check status ( should be ready )
+            checkTaskStatus(identifier, new TaskStatus[] { TaskStatus.READY, TaskStatus.IN_PROGRESS, TaskStatus.RESERVED });
+
+            // impl logic
+            if (oe.isSetUsers()) {
+                ArrayList<String> values = new ArrayList<String>();
+                TUserlist users = oe.getUsers();
+                for (int i = 0; i < users.sizeOfUserArray(); i++) {
+                    values.add(users.getUserArray(i));
+                }
+                // add to potential owner
+                dao.updateTaskRole(identifier, GenericRoleType.potential_owners, values, OrganizationalEntity.USER_ENTITY);
+
+                for (int i = 0; i < values.size(); i++) {
+                    if (!dao.isRoleMember(identifier, new UserRoles(values.get(i), new String[0]), GenericRoleType.potential_owners)) {
+                        // Add to potential owners
+                        dao.addUserOrGroups(identifier, new String[] { values.get(i) }, true, GenericRoleType.potential_owners);
+                    }
+
+                }
+
+            } else {
+                ArrayList<String> values = new ArrayList<String>();
+                TGrouplist groups = oe.getGroups();
+                for (int i = 0; i < groups.sizeOfGroupArray(); i++) {
+                    values.add(groups.getGroupArray(i));
+                }
+                dao.updateTaskRole(identifier, GenericRoleType.potential_owners, values, OrganizationalEntity.GROUP_ENTITY);
+
+                for (int i = 0; i < values.size(); i++) {
+                    if (!dao.isRoleMember(identifier, new UserRoles(values.get(i), new String[0]), GenericRoleType.potential_owners)) {
+                        // add to potential owners
+                        dao.addUserOrGroups(identifier, new String[] { values.get(i) }, false, GenericRoleType.potential_owners);
+                    }
+
+                }
+            }
+            // remove himself from potential owner
+            dao.removeUserOrGroups(identifier, new String[] { ur.getUserID() }, GenericRoleType.potential_owners);
+
+            // update status
+            dao.updateTaskStatus(identifier, TaskStatus.READY);
+
+            // commit
+            dao.commit();
+        } catch (NoResultException e) {
+            _logger.error("remove task failed, task id " + identifier, e);
+            throw new B4PPersistException(e);
+        } finally {
+            dao.close();
+        }
+
+    }
+
+    public void release(String participantToken, String identifier) throws TMSException {
+        // get user
+        UserRoles ur = null;
+        try {
+            ur = _authProvider.authenticate(participantToken);
+
+            System.out.println("userid:" + ur.getUserID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            _logger.error("authenticate user failed", e);
+            throw new AuthException(e);
+        }
+        ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
+        try {
+            Task task = dao.fetchTaskIfExists(identifier);
+            if (task == null)
+                throw new IllegalArgumentException("cannot find task " + identifier);
+            // check permission (action owner / business administrators can
+            // claim tasks
+            checkPermission(task, ur, new int[] { ITMSServer.ACTUAL_OWNER, ITMSServer.BUSINESSADMINISTRATORS });
+
+            // check status ( should be ready )
+            checkTaskStatus(identifier, new TaskStatus[] { TaskStatus.RESERVED, TaskStatus.IN_PROGRESS });
+
+            // impl logic
+            task.setActualOwner(null);
+            dao.updateTask(task);
+
+            // update status
+            dao.updateTaskStatus(identifier, TaskStatus.READY);
+
+            // commit
+            dao.commit();
+        } catch (NoResultException e) {
+            _logger.error("remove task failed, task id " + identifier, e);
+            throw new B4PPersistException(e);
+        } finally {
+            dao.close();
+        }
+
+    }
+
+    public void resume(String participantToken, String identifier) throws TMSException {
+        // get user
+        UserRoles ur = null;
+        try {
+            ur = _authProvider.authenticate(participantToken);
+
+            System.out.println("userid:" + ur.getUserID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            _logger.error("authenticate user failed", e);
+            throw new AuthException(e);
+        }
+        ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
+        try {
+            Task task = dao.fetchTaskIfExists(identifier);
+            if (task == null)
+                throw new IllegalArgumentException("cannot find task " + identifier);
+
+            // check permission (action owner / business administrators can
+            // claim tasks
+            // check permission (actual owner / business administrators /
+            // potential owner(only in ready states)
+            List<Integer> r = checkUserTaskRoles(task, ur);
+            if (r.size() == 1 && r.get(0) == ITMSServer.POTENTIAL_OWNERS && task.getStatus() != TaskStatus.READY)
+                throw new IllegalAccessException("Potential owner can delegate task only in ready states");
+            if (!r.contains(ITMSServer.ACTUAL_OWNER) && !r.contains(ITMSServer.BUSINESSADMINISTRATORS))
+                throw new IllegalAccessException("User must be potential owner or business adiministrator");
+
+            // check status
+            if (task.getStatus() != TaskStatus.SUSPENDED)
+                throw new IllegalStateException("Task is not suspended.");
+
+            // update task
+
+            // TODO impl logic
+
+            // update status
+            dao.updateTaskStatus(identifier, task.getOriginalStatus());
+
+            // commit
+            dao.commit();
+        } catch (NoResultException e) {
+            _logger.error("remove task failed, task id " + identifier, e);
+            throw new B4PPersistException(e);
+        } finally {
+            dao.close();
+        }
+
+    }
+
+    public void skip(String participantToken, String identifier) throws TMSException {
+        // get user
+        UserRoles ur = null;
+        try {
+            ur = _authProvider.authenticate(participantToken);
+
+            System.out.println("userid:" + ur.getUserID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            _logger.error("authenticate user failed", e);
+            throw new AuthException(e);
+        }
+        ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
+        try {
+            Task task = dao.fetchTaskIfExists(identifier);
+            if (task == null)
+                throw new IllegalArgumentException("cannot find task " + identifier);
+
+            // check permission (actual owner/ initiator / business
+            // administrators can skip tasks
+            checkPermission(task, ur, new int[] { ITMSServer.ACTUAL_OWNER, ITMSServer.BUSINESSADMINISTRATORS, ITMSServer.TASK_INITIATOR });
+
+            // check status ( should be ready )
+            checkTaskStatus(identifier, new TaskStatus[] { TaskStatus.READY, TaskStatus.IN_PROGRESS, TaskStatus.CREATED, TaskStatus.RESERVED });
+
+            // impl logic
+            if (!task.isSkipable()) {
+                throw new IllegalArgumentException("task is not skippble.");
+            }
+            // update status
+            dao.updateTaskStatus(identifier, TaskStatus.OBSOLETE);
+
+            // commit
+            dao.commit();
+        } catch (NoResultException e) {
+            _logger.error("remove task failed, task id " + identifier, e);
+            throw new B4PPersistException(e);
+        } finally {
+            dao.close();
+        }
+
+    }
+
+    public void fail(String participantToken, String identifier, String faultName, XmlObject faultData) throws TMSException {
+        // get user
+        UserRoles ur = null;
+        try {
+            ur = _authProvider.authenticate(participantToken);
+
+            System.out.println("userid:" + ur.getUserID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            _logger.error("authenticate user failed", e);
+            throw new AuthException(e);
+        }
+        ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
+        try {
+            Task task = dao.fetchTaskIfExists(identifier);
+            if (task == null)
+                throw new IllegalArgumentException("cannot find task " + identifier);
+
+            // check permission (actual owner)
+            checkPermission(task, ur, new int[] { ITMSServer.ACTUAL_OWNER });
+
+            // check status
+            checkTaskStatus(identifier, new TaskStatus[] { TaskStatus.READY, TaskStatus.IN_PROGRESS, TaskStatus.CREATED, TaskStatus.RESERVED });
+
+            // update task
+
+            // TODO impl logic
+
+            // update status
+            dao.updateTaskStatus(identifier, TaskStatus.FAILED);
+
+            // commit
+            dao.commit();
+        } catch (NoResultException e) {
+            _logger.error("remove task failed, task id " + identifier, e);
+            throw new B4PPersistException(e);
+        } finally {
+            dao.close();
+        }
+
+    }
+
+    public void complete(String participantToken, String identifier, XmlObject taskData) throws TMSException {
+        // get user
+        UserRoles ur = null;
+        try {
+            ur = _authProvider.authenticate(participantToken);
+
+            System.out.println("userid:" + ur.getUserID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            _logger.error("authenticate user failed", e);
+            throw new AuthException(e);
+        }
+        ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
+        try {
+            Task task = dao.fetchTaskIfExists(identifier);
+            if (task == null)
+                throw new IllegalArgumentException("cannot find task " + identifier);
+
+            // check permission (actual owner)
+            checkPermission(task, ur, new int[] { ITMSServer.ACTUAL_OWNER });
+
+            // check status ( should be ready )
+            checkTaskStatus(identifier, new TaskStatus[] { TaskStatus.READY, TaskStatus.IN_PROGRESS, TaskStatus.CREATED, TaskStatus.RESERVED });
+
+            // update task
+            // TODO impl logic
+
+            // update status
+            task.setStatus(TaskStatus.COMPLETED);
+            // update output data
+            task.setOutputMessage(taskData.toString()); // ?
+            dao.updateTask(task);
+
+            // commit
+            dao.commit();
+        } catch (NoResultException e) {
+            _logger.error("remove task failed, task id " + identifier, e);
+            throw new B4PPersistException(e);
+        } finally {
+            dao.close();
+        }
+    }
+
+    public void suspend(String participantToken, String identifier) throws TMSException {
+        // get user
+        UserRoles ur = null;
+        try {
+            ur = _authProvider.authenticate(participantToken);
+
+            System.out.println("userid:" + ur.getUserID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            _logger.error("authenticate user failed", e);
+            throw new AuthException(e);
+        }
+        ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
+        try {
+
+            Task task = dao.fetchTaskIfExists(identifier);
+            if (task == null)
+                throw new IllegalArgumentException("cannot find task " + identifier);
+
+            // check permission (actual owner / business administrators /
+            // potential owner(only in ready states)
+            List<Integer> r = checkUserTaskRoles(task, ur);
+            if (r.size() == 1 && r.get(0) == ITMSServer.POTENTIAL_OWNERS && task.getStatus() != TaskStatus.READY)
+                throw new IllegalAccessException("Potential owner can delegate task only in ready states");
+            if (!r.contains(ITMSServer.ACTUAL_OWNER) && !r.contains(ITMSServer.BUSINESSADMINISTRATORS))
+                throw new IllegalAccessException("User must be potential owner or business adiministrator");
+
+            // check status
+            checkTaskStatus(identifier, new TaskStatus[] { TaskStatus.READY, TaskStatus.IN_PROGRESS, TaskStatus.RESERVED });
+
+            // impl logic
+            task.setOriginalStatus(task.getStatus());
+
+            // update status
+            dao.updateTaskStatus(identifier, TaskStatus.SUSPENDED);
+
+            // commit
+            dao.commit();
+        } catch (NoResultException e) {
+            _logger.error("remove task failed, task id " + identifier, e);
+            throw new B4PPersistException(e);
+        } finally {
+            dao.close();
+        }
+
+    }
+
+    public void suspendUntil(String participantToken, String identifier, TTime time) throws TMSException {
+        // get user
+        UserRoles ur = null;
+        try {
+            ur = _authProvider.authenticate(participantToken);
+
+            System.out.println("userid:" + ur.getUserID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            _logger.error("authenticate user failed", e);
+            throw new AuthException(e);
+        }
+        ITaskDAOConnection dao = this._taskDAOFactory.openConnection();
+        try {
+
+            Task task = dao.fetchTaskIfExists(identifier);
+            if (task == null)
+                throw new IllegalArgumentException("cannot find task " + identifier);
+
+            // check permission (actual owner / business administrators /
+            // potential owner(only in ready states)
+            List<Integer> r = checkUserTaskRoles(task, ur);
+            if (r.size() == 1 && r.get(0) == ITMSServer.POTENTIAL_OWNERS && task.getStatus() != TaskStatus.READY)
+                throw new IllegalAccessException("Potential owner can delegate task only in ready states");
+            if (!r.contains(ITMSServer.ACTUAL_OWNER) && !r.contains(ITMSServer.BUSINESSADMINISTRATORS))
+                throw new IllegalAccessException("User must be potential owner or business adiministrator");
+
+            // check status ( should be ready )
+            checkTaskStatus(identifier, new TaskStatus[] { TaskStatus.READY, TaskStatus.IN_PROGRESS, TaskStatus.RESERVED });
+
+            // impl logic
+            // update task
+            Date t_now = new Date();
+            int t_p = 0;
+            if (time.isSetPointOfTime()) {
+                Date tt = time.getPointOfTime().getTime();
+                t_p = (int) (tt.getTime() - System.currentTimeMillis());
+            } else if (time.isSetTimePeriod()) {
+                // convert stupid GDuration to second
+                GDuration gd = time.getTimePeriod();
+                System.out.println("gd=" + gd.toString());
+                GDuration gDuration = new GDuration(gd);
+                Calendar cal = Calendar.getInstance();
+                cal.setTimeInMillis(0);
+                GDate base = new GDate(cal);
+                System.out.println("base=" + base.toString());
+                System.out.println("base=" + base.getDate().getTime());
+                GDate d = base.add(gDuration);
+                System.out.println("d=" + d.toString());
+                System.out.println("d=" + d.getDate().getTime());
+                t_p = (int) d.getDate().getTime() / 1000;
+            }
+            task.setSuspendStartTime(t_now);
+            task.setSuspendPeriod(t_p);
+
+            task.setOriginalStatus(task.getStatus());
+
+            // update status
+            task.setStatus(TaskStatus.SUSPENDED);
+
+            dao.updateTask(task);
+
+            // commit
+            dao.commit();
+        } catch (NoResultException e) {
+            _logger.error("remove task failed, task id " + identifier, e);
+            throw new B4PPersistException(e);
+        } finally {
+            dao.close();
+        }
+
+    }
+
+    /**************************************
      * data operation operations
      * 
      * @throws AuthException
@@ -1138,13 +1092,17 @@ public class TMSServer implements ITMSServer {
 
     public void setOutput(String participantToken, String identifier, String partName, XmlObject data) throws TMSException {
         UserRoles ur = _authProvider.authenticate(participantToken);
-        checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER });
+        // checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER
+        // });
 
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         Task task = dao.fetchTaskIfExists(identifier);
 
         try {
             if (partName == null || partName.trim().length() == 0) {
+                task.setOutputMessage(data.xmlText());
+            }
+            if (task.getOutputMessage() == null || task.getOutputMessage().trim().length() == 0) {
                 task.setOutputMessage(data.xmlText());
             } else {
                 try {
@@ -1156,13 +1114,14 @@ public class TMSServer implements ITMSServer {
 
                     messageData.setData(partName, data.xmlText());
                     task.setOutputMessage(messageData.toXML());
+
                 } catch (Exception e) {
                     new IllegalAccessException("Error when parsing the output data");
                 }
             }
-        } finally {
             dao.updateTask(task);
             dao.commit();
+        } finally {
             dao.close();
         }
 
@@ -1170,7 +1129,8 @@ public class TMSServer implements ITMSServer {
 
     public void deleteOutput(String participantToken, String identifier) throws TMSException {
         UserRoles ur = _authProvider.authenticate(participantToken);
-        checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER });
+        // checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER
+        // });
 
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         Task task = dao.fetchTaskIfExists(identifier);
@@ -1186,7 +1146,8 @@ public class TMSServer implements ITMSServer {
 
     public void setFault(String participantToken, String identifier, String faultName, XmlObject data) throws TMSException {
         UserRoles ur = _authProvider.authenticate(participantToken);
-        checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER });
+        // checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER
+        // });
 
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         Task task = dao.fetchTaskIfExists(identifier);
@@ -1218,7 +1179,8 @@ public class TMSServer implements ITMSServer {
 
     public void deleteFault(String participantToken, String identifier) throws TMSException {
         UserRoles ur = _authProvider.authenticate(participantToken);
-        checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER });
+        // checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER
+        // });
 
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         Task task = dao.fetchTaskIfExists(identifier);
@@ -1234,7 +1196,8 @@ public class TMSServer implements ITMSServer {
 
     public String getInput(String participantToken, String identifier, String partName) throws TMSException {
         UserRoles ur = _authProvider.authenticate(participantToken);
-        checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER, ITMSServer.POTENTIAL_OWNERS, ITMSServer.BUSINESSADMINISTRATORS });
+        // checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER,
+        // ITMSServer.POTENTIAL_OWNERS, ITMSServer.BUSINESSADMINISTRATORS });
 
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         try {
@@ -1248,7 +1211,8 @@ public class TMSServer implements ITMSServer {
 
     public String getOutput(String participantToken, String identifier, String partName) throws TMSException {
         UserRoles ur = _authProvider.authenticate(participantToken);
-        checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER, ITMSServer.POTENTIAL_OWNERS, ITMSServer.BUSINESSADMINISTRATORS });
+        // checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER,
+        // ITMSServer.POTENTIAL_OWNERS, ITMSServer.BUSINESSADMINISTRATORS });
 
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         try {
@@ -1263,14 +1227,15 @@ public class TMSServer implements ITMSServer {
 
     public String getFault(String participantToken, String identifier) throws TMSException {
         UserRoles ur = _authProvider.authenticate(participantToken);
-        checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER, ITMSServer.POTENTIAL_OWNERS, ITMSServer.BUSINESSADMINISTRATORS });
+        // checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER,
+        // ITMSServer.POTENTIAL_OWNERS, ITMSServer.BUSINESSADMINISTRATORS });
 
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
-        try{
+        try {
             Task task = dao.fetchTaskIfExists(identifier);
-            
+
             return task.getFaultMessage();
-        }finally {
+        } finally {
             dao.close();
         }
     }
