@@ -815,10 +815,11 @@ public class TMSRequestProcessor {
         // String participantToken =
         // "VE9LRU4mJnVzZXI9PWFkbWluJiZpc3N1ZWQ9PTExODA0NzY2NjUzOTMmJnJvbGVzPT1pbnRhbGlvXHByb2Nlc3NhZG1pbmlzdHJhdG9yLGV4YW1wbGVzXGVtcGxveWVlLGludGFsaW9ccHJvY2Vzc21hbmFnZXIsZXhhbXBsZXNcbWFuYWdlciYmZnVsbE5hbWU9PUFkbWluaW5pc3RyYXRvciYmZW1haWw9PWFkbWluQGV4YW1wbGUuY29tJiZub25jZT09NDMxNjAwNTE5NDM5MTk1MDMzMyYmdGltZXN0YW1wPT0xMTgwNDc2NjY1Mzk1JiZkaWdlc3Q9PTVmM1dQdDBXOEp2UlpRM2gyblJ6UkRrenRwTT0mJiYmVE9LRU4";
         String participantToken = getParticipantToken();
-        if (participantToken == null)
-            throw makeFault(new Exception("Cannot get participant token in soap header"));
-
+       
         try {
+        	 if (participantToken == null)
+                 throw new IllegalArgumentException("Cannot get participant token in soap header");
+
             // unmarshal request
             CreateDocument req = null;
             try {
@@ -830,6 +831,8 @@ public class TMSRequestProcessor {
             Create r = req.getCreate();
 
             THumanTaskContext tasks[] = r.getHumanTaskContextArray();
+            if (tasks.length == 0)
+            	throw new IllegalArgumentException("Create must have at least one humanTaskContext");
 
             ArrayList<String> taskIds = new ArrayList<String>();
             // call server
@@ -838,7 +841,7 @@ public class TMSRequestProcessor {
                 Task task = new Task();
                 task.setId(UUID.randomUUID().toString()); // temporary solution
                 
-                System.out.println("task id "+task.getId());
+                System.out.println("tasks["+i+"]("+tasks[i]+") task id "+task.getId());
                 // to generate task id
                 task.setName("task");
                 task.setCreatedOn(new Date());
