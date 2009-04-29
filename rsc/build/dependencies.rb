@@ -22,7 +22,7 @@ APACHE_DERBY_NET = "org.apache.derby:derbynet:jar:10.2.2.0"
 APACHE_DERBY_CLIENT = "org.apache.derby:derbyclient:jar:10.2.2.0"
 APACHE_DS = "org.apache.apacheds:noarch-installer:jar:1.5.1a"
 
-AXIOM = group("axiom-api", "axiom-dom", "axiom-impl", :under=>"org.apache.ws.commons.axiom", :version=>"1.2.7")
+AXIOM = group("axiom-api", "axiom-dom", "axiom-impl", :under=>"org.apache.ws.commons.axiom", :version=>"1.2.8")
 
 BACKPORT = "backport-util-concurrent:backport-util-concurrent:jar:3.1"
 
@@ -236,7 +236,11 @@ APACHE_ABDERA = [
 ]
 
 AXIS2 = [
-  group("axis2-kernel", "axis2-adb", "axis2-xmlbeans", "axis2-json", :under=>"org.apache.axis2", :version=>"1.4"),
+  group("axis2-adb", "axis2-xmlbeans", "axis2-json", :under=>"org.apache.axis2", :version=>"1.5-beta-2"),
+  "org.apache.axis2:axis2-kernel:jar:1.5-beta-2-i1",
+  "org.apache.axis2:axis2-transports:jar:1.0-i2",
+  "org.apache.axis2:axis2-jaxws-api:jar:1.2",
+  group("woden-api", "woden-impl-dom", :under=>"org.apache.woden", :version=>"1.0M8"),
   BACKPORT,
   NEETHI,
   SUNMAIL
