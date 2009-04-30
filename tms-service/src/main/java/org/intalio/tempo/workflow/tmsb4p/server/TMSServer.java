@@ -53,6 +53,10 @@ public class TMSServer implements ITMSServer {
     private ITaskDAOConnectionFactory _taskDAOFactory;
     private TaskPermissions _permissions;
 
+    public TMSServer(){
+    	
+    }
+    
     public TMSServer(IAuthProvider authProvider, ITaskDAOConnectionFactory taskDAOFactory, TaskPermissions permissions) {
         _logger.info("New TMS Instance");
         assert authProvider != null : "IAuthProvider implementation is absent!";
