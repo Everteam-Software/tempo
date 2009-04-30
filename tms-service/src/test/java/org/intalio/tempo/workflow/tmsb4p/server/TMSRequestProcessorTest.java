@@ -22,9 +22,22 @@ import org.intalio.tempo.workflow.tms.server.permissions.TaskPermissions;
 import org.intalio.tempo.workflow.tmsb4p.server.dao.JPATaskDaoConnectionFactory;
 
 import com.intalio.wsHT.api.xsd.ActivateDocument;
+import com.intalio.wsHT.api.xsd.ActivateResponseDocument;
 import com.intalio.wsHT.api.xsd.ClaimDocument;
 import com.intalio.wsHT.api.xsd.ClaimResponseDocument;
+import com.intalio.wsHT.api.xsd.CompleteDocument;
+import com.intalio.wsHT.api.xsd.CompleteResponseDocument;
 import com.intalio.wsHT.api.xsd.CreateResponseDocument;
+import com.intalio.wsHT.api.xsd.FailDocument;
+import com.intalio.wsHT.api.xsd.FailResponseDocument;
+import com.intalio.wsHT.api.xsd.ReleaseDocument;
+import com.intalio.wsHT.api.xsd.ReleaseResponseDocument;
+import com.intalio.wsHT.api.xsd.StartDocument;
+import com.intalio.wsHT.api.xsd.StartResponseDocument;
+import com.intalio.wsHT.api.xsd.StopDocument;
+import com.intalio.wsHT.api.xsd.StopResponseDocument;
+import com.intalio.wsHT.api.xsd.CompleteDocument.Complete;
+
 
 public class TMSRequestProcessorTest extends TestCase {
 
@@ -141,6 +154,185 @@ public class TMSRequestProcessorTest extends TestCase {
        
         System.out.println("response:"+ resDoc.xmlText());
         
+    }
+    
+    
+    public void testStart() throws Exception{
+        TMSRequestProcessor tmsRP = createRequestProcessorJPA();
+        
+        // create task
+        String taskId = createTask("/B4PRequest/create.xml");
+        
+        // activate task
+        ActivateDocument activateReq = ActivateDocument.Factory.newInstance();
+        activateReq.addNewActivate().setIdentifier(taskId);
+        OMElement  res = tmsRP.activate(genOMElement(activateReq));
+        ActivateResponseDocument activateRes = ActivateResponseDocument.Factory.parse(res.getXMLStreamReader());
+        System.out.println("response:"+ activateRes.xmlText());
+        
+        // claim
+        ClaimDocument doc = ClaimDocument.Factory.newInstance();
+        doc.addNewClaim().setIdentifier(taskId);
+        OMElement requestElement = genOMElement(doc);
+        res = tmsRP.claim(requestElement);
+        ClaimResponseDocument claimRes = ClaimResponseDocument.Factory.parse(res.getXMLStreamReader());
+        System.out.println("response:"+ claimRes.xmlText());
+        
+        // start
+        StartDocument startReq = StartDocument.Factory.newInstance();
+        startReq.addNewStart().setIdentifier(taskId);
+         res = tmsRP.start(genOMElement(startReq));
+         StartResponseDocument startRes = StartResponseDocument.Factory.parse(res.getXMLStreamReader());
+        
+       
+        System.out.println("response:"+ startRes.xmlText());
+        
+    }
+    
+    
+    public void testStop() throws Exception{
+        TMSRequestProcessor tmsRP = createRequestProcessorJPA();
+        
+        // create task
+        String taskId = createTask("/B4PRequest/create.xml");
+        
+        // activate task
+        ActivateDocument activateReq = ActivateDocument.Factory.newInstance();
+        activateReq.addNewActivate().setIdentifier(taskId);
+        OMElement  res = tmsRP.activate(genOMElement(activateReq));
+        ActivateResponseDocument activateRes = ActivateResponseDocument.Factory.parse(res.getXMLStreamReader());
+        System.out.println("response:"+ activateRes.xmlText());
+        
+        // claim
+        ClaimDocument doc = ClaimDocument.Factory.newInstance();
+        doc.addNewClaim().setIdentifier(taskId);
+        OMElement requestElement = genOMElement(doc);
+        res = tmsRP.claim(requestElement);
+        ClaimResponseDocument claimRes = ClaimResponseDocument.Factory.parse(res.getXMLStreamReader());
+        System.out.println("response:"+ claimRes.xmlText());
+        
+        // start
+        StartDocument startReq = StartDocument.Factory.newInstance();
+        startReq.addNewStart().setIdentifier(taskId);
+         res = tmsRP.start(genOMElement(startReq));
+         StartResponseDocument startRes = StartResponseDocument.Factory.parse(res.getXMLStreamReader());
+       
+        System.out.println("response:"+ startRes.xmlText());
+        
+        // stop
+        StopDocument stopReq = StopDocument.Factory.newInstance();
+        stopReq.addNewStop().setIdentifier(taskId);
+         res = tmsRP.stop(genOMElement(stopReq));
+         StopResponseDocument stopRes = StopResponseDocument.Factory.parse(res.getXMLStreamReader());
+
+        System.out.println("response:"+ stopRes.xmlText());     
+    }
+    
+    public void testComplete() throws Exception{
+        TMSRequestProcessor tmsRP = createRequestProcessorJPA();
+        
+        // create task
+        String taskId = createTask("/B4PRequest/create.xml");
+        
+        // activate task
+        ActivateDocument activateReq = ActivateDocument.Factory.newInstance();
+        activateReq.addNewActivate().setIdentifier(taskId);
+        OMElement  res = tmsRP.activate(genOMElement(activateReq));
+        ActivateResponseDocument activateRes = ActivateResponseDocument.Factory.parse(res.getXMLStreamReader());
+        System.out.println("response:"+ activateRes.xmlText());
+        
+        // claim
+        ClaimDocument doc = ClaimDocument.Factory.newInstance();
+        doc.addNewClaim().setIdentifier(taskId);
+        OMElement requestElement = genOMElement(doc);
+        res = tmsRP.claim(requestElement);
+        ClaimResponseDocument claimRes = ClaimResponseDocument.Factory.parse(res.getXMLStreamReader());
+        System.out.println("response:"+ claimRes.xmlText());
+        
+        // start
+        StartDocument startReq = StartDocument.Factory.newInstance();
+        startReq.addNewStart().setIdentifier(taskId);
+         res = tmsRP.start(genOMElement(startReq));
+         StartResponseDocument startRes = StartResponseDocument.Factory.parse(res.getXMLStreamReader());
+        System.out.println("response:"+ startRes.xmlText());
+       
+        System.out.println("response:"+ startRes.xmlText());      
+        // Complete
+        CompleteDocument completeReq = CompleteDocument.Factory.newInstance();
+        Complete complete = completeReq.addNewComplete();
+        complete.setIdentifier(taskId);
+        XmlObject taskData = XmlObject.Factory.parse("<out>sample output</out>");
+        complete.setTaskData(taskData);
+         res = tmsRP.complete(genOMElement(completeReq));
+         CompleteResponseDocument completeRes = CompleteResponseDocument.Factory.parse(res.getXMLStreamReader());
+
+        System.out.println("response:"+ completeRes.xmlText());     
+    }
+    
+    public void testFail() throws Exception{
+        TMSRequestProcessor tmsRP = createRequestProcessorJPA();
+        
+        // create task
+        String taskId = createTask("/B4PRequest/create.xml");
+        
+        // activate task
+        ActivateDocument activateReq = ActivateDocument.Factory.newInstance();
+        activateReq.addNewActivate().setIdentifier(taskId);
+        OMElement  res = tmsRP.activate(genOMElement(activateReq));
+        ActivateResponseDocument activateRes = ActivateResponseDocument.Factory.parse(res.getXMLStreamReader());
+        System.out.println("response:"+ activateRes.xmlText());
+        
+        // claim
+        ClaimDocument doc = ClaimDocument.Factory.newInstance();
+        doc.addNewClaim().setIdentifier(taskId);
+        OMElement requestElement = genOMElement(doc);
+        res = tmsRP.claim(requestElement);
+        ClaimResponseDocument claimRes = ClaimResponseDocument.Factory.parse(res.getXMLStreamReader());
+        System.out.println("response:"+ claimRes.xmlText());
+        
+        // start
+        StartDocument startReq = StartDocument.Factory.newInstance();
+        startReq.addNewStart().setIdentifier(taskId);
+         res = tmsRP.start(genOMElement(startReq));
+         StartResponseDocument startRes = StartResponseDocument.Factory.parse(res.getXMLStreamReader());
+        System.out.println("response:"+ startRes.xmlText());
+       
+        
+        // fail
+        FailDocument failReq = FailDocument.Factory.newInstance();
+        failReq.addNewFail().setIdentifier(taskId);
+        res = tmsRP.fail(genOMElement(failReq));
+        FailResponseDocument failRes = FailResponseDocument.Factory.parse(res.getXMLStreamReader());
+        System.out.println("response:"+ failRes.xmlText());     
+    }
+    
+    public void testRelease() throws Exception{
+        TMSRequestProcessor tmsRP = createRequestProcessorJPA();
+        
+        // create task
+        String taskId = createTask("/B4PRequest/create.xml");
+        
+        // activate task
+        ActivateDocument activateReq = ActivateDocument.Factory.newInstance();
+        activateReq.addNewActivate().setIdentifier(taskId);
+        OMElement  res = tmsRP.activate(genOMElement(activateReq));
+        ActivateResponseDocument activateRes = ActivateResponseDocument.Factory.parse(res.getXMLStreamReader());
+        System.out.println("response:"+ activateRes.xmlText());
+        
+        // claim
+        ClaimDocument doc = ClaimDocument.Factory.newInstance();
+        doc.addNewClaim().setIdentifier(taskId);
+        OMElement requestElement = genOMElement(doc);
+        res = tmsRP.claim(requestElement);
+        ClaimResponseDocument claimRes = ClaimResponseDocument.Factory.parse(res.getXMLStreamReader());
+        System.out.println("response:"+ claimRes.xmlText());
+     
+        // release
+        ReleaseDocument releaseReq = ReleaseDocument.Factory.newInstance();
+        releaseReq.addNewRelease().setIdentifier(taskId);
+        res = tmsRP.release(genOMElement(releaseReq));
+        ReleaseResponseDocument releaseRes = ReleaseResponseDocument.Factory.parse(res.getXMLStreamReader());
+        System.out.println("response:"+ releaseRes.xmlText());     
     }
     
     /************************************************************
