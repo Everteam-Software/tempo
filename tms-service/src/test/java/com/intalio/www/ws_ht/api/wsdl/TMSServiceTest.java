@@ -44,6 +44,16 @@ public class TMSServiceTest {
 		System.out.println(res.getOut());
 		System.out.println("============ End of testing create ==============");
 		
+		
+		// get created task id
+		String taskId = res.getOut().substring(0, res.getOut().length()-1);
+		System.out.println("task id: "+ taskId);
+		
+		// activate task
+		System.out.println("============ testing activate ==============");
+		
+	
+		System.out.println("============ End of testing activate ==============");
 
 	}
 
