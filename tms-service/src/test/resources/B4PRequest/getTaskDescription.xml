@@ -1,0 +1,4 @@
+<htdt:getTaskDescription xmlns:htdt="http://www.intalio.com/WS-HT/api/xsd">
+	<htdt:identifier>TaskIdentifier</htdt:identifier>
+	<htdt:contentType>plain/text</htdt:contentType>
+</htdt:getTaskDescription>

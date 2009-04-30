@@ -297,7 +297,7 @@ public class TMSRequestProcessor {
     //        
     // }
 
-    private static String getParticipantToken() throws AxisFault {
+    protected String getParticipantToken() throws AxisFault {
         String participantToken = null;
 
         MessageContext inMsgCtxt = MessageContext.getCurrentMessageContext();
@@ -313,7 +313,6 @@ public class TMSRequestProcessor {
             if (ele.getLocalName().equals("participantToken"))
                 // Log.event("particpant:"+ele.getText());
                 participantToken = ele.getText();
-
         }
 
         // System.out.println("participantToken=" + participantToken);
