@@ -613,7 +613,10 @@ public class TMSServer implements ITMSServer {
                 dao.updateTaskRole(identifier, GenericRoleType.potential_owners, values, OrganizationalEntity.USER_ENTITY);
 
                 for (int i = 0; i < values.size(); i++) {
-                    if (!dao.isRoleMember(identifier, new UserRoles(values.get(i), new String[0]), GenericRoleType.potential_owners)) {
+                    if (!dao.isRoleMember(identifier, new UserRoles(values.get(i), new String[0]), GenericRoleType.potential_owners)){
+                        System.out.println("-------\r\n-------\r\n-------\r\n-------\r\n-------\r\n-------\r\n");
+                        System.out.println("value:"+values.get(i));
+                        System.out.println("-------\r\n-------\r\n-------\r\n-------\r\n-------\r\n-------\r\n");
                         // Add to potential owners
                         dao.addUserOrGroups(identifier, new String[] { values.get(i) }, true, GenericRoleType.potential_owners);
                     }
