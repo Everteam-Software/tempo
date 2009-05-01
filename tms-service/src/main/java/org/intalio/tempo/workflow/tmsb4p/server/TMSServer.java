@@ -1,5 +1,6 @@
 package org.intalio.tempo.workflow.tmsb4p.server;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -7,8 +8,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
@@ -53,10 +52,10 @@ public class TMSServer implements ITMSServer {
     private ITaskDAOConnectionFactory _taskDAOFactory;
     private TaskPermissions _permissions;
 
-    public TMSServer(){
-    	
+    public TMSServer() {
+
     }
-    
+
     public TMSServer(IAuthProvider authProvider, ITaskDAOConnectionFactory taskDAOFactory, TaskPermissions permissions) {
         _logger.info("New TMS Instance");
         assert authProvider != null : "IAuthProvider implementation is absent!";
@@ -613,9 +612,9 @@ public class TMSServer implements ITMSServer {
                 dao.updateTaskRole(identifier, GenericRoleType.potential_owners, values, OrganizationalEntity.USER_ENTITY);
 
                 for (int i = 0; i < values.size(); i++) {
-                    if (!dao.isRoleMember(identifier, new UserRoles(values.get(i), new String[0]), GenericRoleType.potential_owners)){
+                    if (!dao.isRoleMember(identifier, new UserRoles(values.get(i), new String[0]), GenericRoleType.potential_owners)) {
                         System.out.println("-------\r\n-------\r\n-------\r\n-------\r\n-------\r\n-------\r\n");
-                        System.out.println("value:"+values.get(i));
+                        System.out.println("value:" + values.get(i));
                         System.out.println("-------\r\n-------\r\n-------\r\n-------\r\n-------\r\n-------\r\n");
                         // Add to potential owners
                         dao.addUserOrGroups(identifier, new String[] { values.get(i) }, true, GenericRoleType.potential_owners);
@@ -1110,14 +1109,16 @@ public class TMSServer implements ITMSServer {
                 task.setOutputMessage(data.xmlText());
             }
             if (task.getOutputMessage() == null || task.getOutputMessage().trim().length() == 0) {
-                task.setOutputMessage(data.xmlText());
+                MessageData messageData = new MessageData();
+                messageData.setData(partName, data.xmlText());
+                task.setOutputMessage(messageData.toXML());
             } else {
                 try {
-                    QName partQName = new QName("http://schemas.xmlsoap.org/wsdl/", "part");
-                    StAXOMBuilder builder = new StAXOMBuilder(task.getOutputMessage());
+
+                    StAXOMBuilder builder = new StAXOMBuilder(new ByteArrayInputStream(task.getOutputMessage().getBytes("UTF-8")));
                     OMElement parts = builder.getDocumentElement();
 
-                    MessageData messageData = new MessageData(partQName, parts);
+                    MessageData messageData = new MessageData(parts);
 
                     messageData.setData(partName, data.xmlText());
                     task.setOutputMessage(messageData.toXML());
@@ -1128,6 +1129,8 @@ public class TMSServer implements ITMSServer {
             }
             dao.updateTask(task);
             dao.commit();
+        } catch (Exception e) {
+            new IllegalAccessException("Error when parsing the output data");
         } finally {
             dao.close();
         }
@@ -1144,9 +1147,9 @@ public class TMSServer implements ITMSServer {
 
         try {
             task.setOutputMessage(null);
-        } finally {
             dao.updateTask(task);
             dao.commit();
+        } finally {
             dao.close();
         }
     }
@@ -1162,23 +1165,31 @@ public class TMSServer implements ITMSServer {
         try {
             if (faultName == null || faultName.trim().length() == 0) {
                 task.setFaultMessage(data.xmlText());
+            }
+            if (task.getFaultMessage() == null || task.getFaultMessage().trim().length() == 0) {
+                MessageData messageData = new MessageData();
+                messageData.setData(faultName, data.xmlText());
+                task.setFaultMessage(messageData.toXML());
             } else {
                 try {
-                    QName partQName = new QName("http://schemas.xmlsoap.org/wsdl/", "part");
-                    StAXOMBuilder builder = new StAXOMBuilder(task.getFaultMessage());
+
+                    StAXOMBuilder builder = new StAXOMBuilder(new ByteArrayInputStream(task.getFaultMessage().getBytes("UTF-8")));
                     OMElement parts = builder.getDocumentElement();
 
-                    MessageData messageData = new MessageData(partQName, parts);
+                    MessageData messageData = new MessageData(parts);
 
                     messageData.setData(faultName, data.xmlText());
                     task.setFaultMessage(messageData.toXML());
+
                 } catch (Exception e) {
-                    new IllegalAccessException("Error when parsing the fault data");
+                    new IllegalAccessException("Error when parsing the output data");
                 }
             }
-        } finally {
             dao.updateTask(task);
             dao.commit();
+        } catch (Exception e) {
+            new IllegalAccessException("Error when parsing the output data");
+        } finally {
             dao.close();
         }
 
@@ -1194,9 +1205,9 @@ public class TMSServer implements ITMSServer {
 
         try {
             task.setFaultMessage(null);
-        } finally {
             dao.updateTask(task);
             dao.commit();
+        } finally {
             dao.close();
         }
     }
@@ -1232,7 +1243,7 @@ public class TMSServer implements ITMSServer {
         }
     }
 
-    public String getFault(String participantToken, String identifier) throws TMSException {
+    public Map getFault(String participantToken, String identifier) throws TMSException {
         UserRoles ur = _authProvider.authenticate(participantToken);
         // checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER,
         // ITMSServer.POTENTIAL_OWNERS, ITMSServer.BUSINESSADMINISTRATORS });
@@ -1241,7 +1252,15 @@ public class TMSServer implements ITMSServer {
         try {
             Task task = dao.fetchTaskIfExists(identifier);
 
-            return task.getFaultMessage();
+            StAXOMBuilder builder = new StAXOMBuilder(new ByteArrayInputStream(task.getFaultMessage().getBytes("UTF-8")));
+
+            OMElement msg = builder.getDocumentElement();
+
+            MessageData messageData = new MessageData(msg);
+            return messageData.getMsgData();
+        } catch (Exception e) {
+            new IllegalAccessException("Error when parsing the fault data");
+            return null;
         } finally {
             dao.close();
         }
@@ -1252,14 +1271,14 @@ public class TMSServer implements ITMSServer {
             return message;
         } else {
             try {
-                QName partQName = new QName("http://schemas.xmlsoap.org/wsdl/", "part");
-                StAXOMBuilder builder = new StAXOMBuilder(message);
-                OMElement parts = builder.getDocumentElement();
+                StAXOMBuilder builder = new StAXOMBuilder(new ByteArrayInputStream(message.getBytes("UTF-8")));
 
-                MessageData messageData = new MessageData(partQName, parts);
+                OMElement msg = builder.getDocumentElement();
+
+                MessageData messageData = new MessageData(msg);
                 return messageData.getData(partName).toString();
             } catch (Exception e) {
-                new IllegalAccessException("Error when parsing the fault data");
+                new IllegalAccessException("Error when parsing the msg data");
             }
         }
         return null;

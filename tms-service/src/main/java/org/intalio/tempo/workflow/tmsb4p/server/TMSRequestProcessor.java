@@ -814,10 +814,10 @@ public class TMSRequestProcessor {
         // String participantToken =
         // "VE9LRU4mJnVzZXI9PWFkbWluJiZpc3N1ZWQ9PTExODA0NzY2NjUzOTMmJnJvbGVzPT1pbnRhbGlvXHByb2Nlc3NhZG1pbmlzdHJhdG9yLGV4YW1wbGVzXGVtcGxveWVlLGludGFsaW9ccHJvY2Vzc21hbmFnZXIsZXhhbXBsZXNcbWFuYWdlciYmZnVsbE5hbWU9PUFkbWluaW5pc3RyYXRvciYmZW1haWw9PWFkbWluQGV4YW1wbGUuY29tJiZub25jZT09NDMxNjAwNTE5NDM5MTk1MDMzMyYmdGltZXN0YW1wPT0xMTgwNDc2NjY1Mzk1JiZkaWdlc3Q9PTVmM1dQdDBXOEp2UlpRM2gyblJ6UkRrenRwTT0mJiYmVE9LRU4";
         String participantToken = getParticipantToken();
-       
+
         try {
-        	 if (participantToken == null)
-                 throw new IllegalArgumentException("Cannot get participant token in soap header");
+            if (participantToken == null)
+                throw new IllegalArgumentException("Cannot get participant token in soap header");
 
             // unmarshal request
             CreateDocument req = null;
@@ -831,7 +831,7 @@ public class TMSRequestProcessor {
 
             THumanTaskContext tasks[] = r.getHumanTaskContextArray();
             if (tasks.length == 0)
-            	throw new IllegalArgumentException("Create must have at least one humanTaskContext");
+                throw new IllegalArgumentException("Create must have at least one humanTaskContext");
 
             ArrayList<String> taskIds = new ArrayList<String>();
             // call server
@@ -839,8 +839,8 @@ public class TMSRequestProcessor {
                 // Log.log("task "+i);
                 Task task = new Task();
                 task.setId(UUID.randomUUID().toString()); // temporary solution
-                
-                System.out.println("tasks["+i+"]("+tasks[i]+") task id "+task.getId());
+
+                System.out.println("tasks[" + i + "](" + tasks[i] + ") task id " + task.getId());
                 // to generate task id
                 task.setName("task");
                 task.setCreatedOn(new Date());
@@ -885,8 +885,8 @@ public class TMSRequestProcessor {
                 task.setExcludedOwners(excludedOwners);
 
                 task.setInputMessage(req.getCreate().getIn());
-                
-                System.out.println("skipable="+tasks[i].getIsSkipable());
+
+                System.out.println("skipable=" + tasks[i].getIsSkipable());
                 task.setSkipable(tasks[i].getIsSkipable());
                 task.setTaskInitiator(tasks[i].getPeopleAssignments().getTaskInitiatorArray().toString());
                 task.setTaskType(TaskType.TASK);
@@ -1416,7 +1416,7 @@ public class TMSRequestProcessor {
     /**
      * Forward the task to another organization entity. The caller has to
      * specify the receiving organizational entity. Potential owners can only
-     * forward a task while the task is in the Ready state. 
+     * forward a task while the task is in the Ready state.
      * 
      * @param requestElement
      * @return
@@ -1754,9 +1754,9 @@ public class TMSRequestProcessor {
             throw makeFault(e);
         }
     }
-    
+
     /**
-     * Deletes the output data of the task 
+     * Deletes the output data of the task
      */
     public OMElement deleteOutput(OMElement requestElement) throws AxisFault {
         String participantToken = getParticipantToken();
@@ -1775,9 +1775,10 @@ public class TMSRequestProcessor {
             throw makeFault(e);
         }
     }
-    
+
     /**
      * Set the fault data of the task
+     * 
      * @param requestElement
      * @return
      * @throws AxisFault
@@ -1799,9 +1800,10 @@ public class TMSRequestProcessor {
             throw makeFault(e);
         }
     }
-    
+
     /**
      * Deletes the fault name and fault data of the task.
+     * 
      * @param requestElement
      * @return
      * @throws AxisFault
@@ -1823,78 +1825,82 @@ public class TMSRequestProcessor {
             throw makeFault(e);
         }
     }
-    
-    
+
     /**
      * Get the data for the part of the task's input message.
+     * 
      * @param requestElement
      * @return
      * @throws AxisFault
      */
     public OMElement getInput(OMElement requestElement) throws AxisFault {
         String participantToken = getParticipantToken();
-        
-        try{
+
+        try {
             GetInputDocument gid = GetInputDocument.Factory.parse(requestElement.getXMLStreamReader());
             GetInput gi = gid.getGetInput();
-            
+
             String message = _server.getInput(participantToken, gi.getIdentifier(), gi.getPart());
-            
+
             GetInputResponseDocument gird = GetInputResponseDocument.Factory.newInstance();
             GetInputResponse gir = gird.addNewGetInputResponse();
             gir.setTaskData(XmlObject.Factory.parse(message));
-            
+
             return convertXML(gird);
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw makeFault(e);
         }
     }
-    
-    
+
     /**
      * Get the data for the part of the task's output message.
+     * 
      * @param requestElement
      * @return
      * @throws AxisFault
      */
     public OMElement getOutput(OMElement requestElement) throws AxisFault {
         String participantToken = getParticipantToken();
-        
-        try{
+
+        try {
             GetOutputDocument gid = GetOutputDocument.Factory.parse(requestElement.getXMLStreamReader());
             GetOutput go = gid.getGetOutput();
-            
+
             String message = _server.getOutput(participantToken, go.getIdentifier(), go.getPart());
-            
+
             GetOutputResponseDocument gord = GetOutputResponseDocument.Factory.newInstance();
             GetOutputResponse gor = gord.addNewGetOutputResponse();
             gor.setTaskData(XmlObject.Factory.parse(message));
-            
+
             return convertXML(gord);
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw makeFault(e);
         }
     }
-    
+
     public OMElement getFault(OMElement requestElement) throws AxisFault {
         String participantToken = getParticipantToken();
-        
-        try{
+
+        try {
             GetFaultDocument gfd = GetFaultDocument.Factory.parse(requestElement.getXMLStreamReader());
             GetFault gf = gfd.addNewGetFault();
-            
-            String message = _server.getFault(participantToken, gf.getIdentifier());
-            
+
+            Map messages = _server.getFault(participantToken, gf.getIdentifier());
+            Iterator<String> it = messages.keySet().iterator();
+
             GetFaultResponseDocument gfrd = GetFaultResponseDocument.Factory.newInstance();
-            GetFaultResponse gfr = gfrd.addNewGetFaultResponse();
-            gfr.setFaultData(XmlObject.Factory.parse(message));
-            
+            while (it.hasNext()) {
+                String faultName = it.next();
+                GetFaultResponse gfr = gfrd.addNewGetFaultResponse();
+                gfr.setFaultName(faultName);
+                gfr.setFaultData(XmlObject.Factory.parse(messages.get(faultName).toString()));
+            }
             return convertXML(gfrd);
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw makeFault(e);
         }
     }
-    
+
     /*****************************************
      * Query operation
      *****************************************/
