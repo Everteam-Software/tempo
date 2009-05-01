@@ -1098,8 +1098,7 @@ public class TMSServer implements ITMSServer {
 
     public void setOutput(String participantToken, String identifier, String partName, XmlObject data) throws TMSException {
         UserRoles ur = _authProvider.authenticate(participantToken);
-        // checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER
-        // });
+        checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER });
 
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         Task task = dao.fetchTaskIfExists(identifier);
@@ -1139,8 +1138,7 @@ public class TMSServer implements ITMSServer {
 
     public void deleteOutput(String participantToken, String identifier) throws TMSException {
         UserRoles ur = _authProvider.authenticate(participantToken);
-        // checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER
-        // });
+        checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER });
 
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         Task task = dao.fetchTaskIfExists(identifier);
@@ -1156,8 +1154,7 @@ public class TMSServer implements ITMSServer {
 
     public void setFault(String participantToken, String identifier, String faultName, XmlObject data) throws TMSException {
         UserRoles ur = _authProvider.authenticate(participantToken);
-        // checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER
-        // });
+        checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER });
 
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         Task task = dao.fetchTaskIfExists(identifier);
@@ -1197,8 +1194,7 @@ public class TMSServer implements ITMSServer {
 
     public void deleteFault(String participantToken, String identifier) throws TMSException {
         UserRoles ur = _authProvider.authenticate(participantToken);
-        // checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER
-        // });
+        checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER });
 
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         Task task = dao.fetchTaskIfExists(identifier);
@@ -1214,8 +1210,7 @@ public class TMSServer implements ITMSServer {
 
     public String getInput(String participantToken, String identifier, String partName) throws TMSException {
         UserRoles ur = _authProvider.authenticate(participantToken);
-        // checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER,
-        // ITMSServer.POTENTIAL_OWNERS, ITMSServer.BUSINESSADMINISTRATORS });
+        checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER, ITMSServer.POTENTIAL_OWNERS, ITMSServer.BUSINESSADMINISTRATORS });
 
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         try {
@@ -1229,8 +1224,7 @@ public class TMSServer implements ITMSServer {
 
     public String getOutput(String participantToken, String identifier, String partName) throws TMSException {
         UserRoles ur = _authProvider.authenticate(participantToken);
-        // checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER,
-        // ITMSServer.POTENTIAL_OWNERS, ITMSServer.BUSINESSADMINISTRATORS });
+        checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER, ITMSServer.POTENTIAL_OWNERS, ITMSServer.BUSINESSADMINISTRATORS });
 
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         try {
@@ -1245,8 +1239,7 @@ public class TMSServer implements ITMSServer {
 
     public Map getFault(String participantToken, String identifier) throws TMSException {
         UserRoles ur = _authProvider.authenticate(participantToken);
-        // checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER,
-        // ITMSServer.POTENTIAL_OWNERS, ITMSServer.BUSINESSADMINISTRATORS });
+        checkPermission(identifier, ur, new int[] { ITMSServer.ACTUAL_OWNER, ITMSServer.POTENTIAL_OWNERS, ITMSServer.BUSINESSADMINISTRATORS });
 
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         try {
