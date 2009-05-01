@@ -185,16 +185,21 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
         return tasks;
     }
     
-public void addUserOrGroups(String taskId, String[] usersOrGroups, boolean isUser,
-GenericRoleType role) throws UnavailableTaskException, B4PPersistException {
-        if (GenericRoleType.task_initiator.equals(role) || GenericRoleType.actual_owner.equals(role)) {
-        if ((usersOrGroups == null) || (usersOrGroups.length != 1)) {
-        throw new B4PPersistException("Only one user can be the task initiator or actual owner");
-        }
-        if (isUser) {
-        throw new B4PPersistException("Only one user can be the task initiator or actual owner");
-        }
-        
+
+    public void addUserOrGroups(String taskId, String[] usersOrGroups,
+            boolean isUser, GenericRoleType role)
+            throws UnavailableTaskException, B4PPersistException {
+        if (GenericRoleType.task_initiator.equals(role)
+                || GenericRoleType.actual_owner.equals(role)) {
+            if ((usersOrGroups == null) || (usersOrGroups.length != 1)) {
+                throw new B4PPersistException(
+                        "Only one user can be the task initiator or actual owner");
+            }
+            if (isUser) {
+                throw new B4PPersistException(
+                        "Only one user can be the task initiator or actual owner");
+            }
+
             Task task = this.fetchTaskIfExists(taskId);
             String newUser = usersOrGroups[0];
             if (GenericRoleType.task_initiator.equals(role)) {
@@ -203,81 +208,91 @@ GenericRoleType role) throws UnavailableTaskException, B4PPersistException {
                 task.setActualOwner(newUser);
             }
             this.updateTask(task);
-       } else {
-       OrganizationalEntity curOrg = getOrgWithTaskId(taskId, role);
-       OrganizationalEntity newOrg = null;
+            this.entityManager.flush();
+        } else {
+            OrganizationalEntity curOrg = getOrgWithTaskId(taskId, role);
+            OrganizationalEntity newOrg = null;
 
-if (curOrg == null) {
-if (isUser) {
-newOrg = new UserOrganizationalEntity();
-} else {
-newOrg = new GroupOrganizationalEntity();
-}
-} else {
-if (curOrg.getEntityType().equals(OrganizationalEntity.USER_ENTITY) && !isUser) {
-newOrg = new GroupOrganizationalEntity();
-} else if (curOrg.getEntityType().equals(OrganizationalEntity.GROUP_ENTITY) && isUser) {
-newOrg = new UserOrganizationalEntity();
-}
-}
+            if (curOrg == null) {
+                if (isUser) {
+                    newOrg = new UserOrganizationalEntity();
+                } else {
+                    newOrg = new GroupOrganizationalEntity();
+                }
+            } else {
+                if (curOrg.getEntityType().equals(
+                        OrganizationalEntity.USER_ENTITY)
+                        && !isUser) {
+                    newOrg = new GroupOrganizationalEntity();
+                } else if (curOrg.getEntityType().equals(
+                        OrganizationalEntity.GROUP_ENTITY)
+                        && isUser) {
+                    newOrg = new UserOrganizationalEntity();
+                }
+            }
 
-Set<Principal> ps = null;
-if (newOrg != null) {
-ps = new HashSet<Principal>();
-newOrg.setPrincipals(ps);
-} else {
-ps = curOrg.getPrincipals();
-if (ps == null) {
-ps = new HashSet<Principal>();
-curOrg.setPrincipals(ps);
-}
-}
+            Set<Principal> ps = null;
+            if (newOrg != null) {
+                ps = new HashSet<Principal>();
+                newOrg.setPrincipals(ps);
+            } else {
+                ps = curOrg.getPrincipals();
+                if (ps == null) {
+                    ps = new HashSet<Principal>();
+                    curOrg.setPrincipals(ps);
+                }
+            }
 
-for (int i = 0; i < usersOrGroups.length; i++) {
-Principal p = new Principal();
-p.setValue(usersOrGroups[i]);
-ps.add(p);
+            for (int i = 0; i < usersOrGroups.length; i++) {
+                Principal p = new Principal();
+                p.setValue(usersOrGroups[i]);
+                ps.add(p);
 
-if (newOrg != null) {
-p.setOrgEntity(newOrg);
-} else {
-p.setOrgEntity(curOrg);
-}
-}
+                if (newOrg != null) {
+                    p.setOrgEntity(newOrg);
+                } else {
+                    p.setOrgEntity(curOrg);
+                }
+            }
 
-if (newOrg != null) {
-            this.updateNewOrgWithTaskId(taskId, newOrg, role);
-} else {
-checkTransactionIsActive();
-this.entityManager.merge(curOrg);
-}
-}
-}
+            if (newOrg != null) {
+                this.updateNewOrgWithTaskId(taskId, newOrg, role);
+            } else {
+                checkTransactionIsActive();
+                this.entityManager.merge(curOrg);
+            }
+            this.entityManager.flush();
+        }
+    }
 
-private OrganizationalEntity getOrgWithTaskId(String taskId, GenericRoleType role) {
-    String qStr = null;
-       if (GenericRoleType.business_administrators.equals(role)) {
-       qStr = "select t.businessAdministrators from Task t where t.id=?1";
-       } else if (GenericRoleType.task_stakeholders.equals(role)) {
-       qStr = "select t.taskStakeholders from Task t where t.id=?1";
-       } else if (GenericRoleType.potential_owners.equals(role)) {
-       qStr = "select t.potentialOwners from Task t where t.id=?1";
-       } else if (GenericRoleType.notification_recipients.equals(role)) {
-       qStr = "select t.notificationRecipients from Task t where t.id=?1";
-       } else if (GenericRoleType.excluded_owners.equals(role)) {
-       qStr = "select t.excludedOwners from Task t where t.id=?1";
-       } else {
-       throw new IllegalArgumentException("Illegal Arguement role: " + role);
-       }
-       
-       Query query = this.entityManager.createQuery(qStr);
-       query.setParameter(1, taskId);
-       
-       return (OrganizationalEntity)query.getSingleResult();
-}
+    private OrganizationalEntity getOrgWithTaskId(String taskId,
+            GenericRoleType role) {
+        String qStr = null;
+        if (GenericRoleType.business_administrators.equals(role)) {
+            qStr = "select t.businessAdministrators from Task t where t.id=?1";
+        } else if (GenericRoleType.task_stakeholders.equals(role)) {
+            qStr = "select t.taskStakeholders from Task t where t.id=?1";
+        } else if (GenericRoleType.potential_owners.equals(role)) {
+            qStr = "select t.potentialOwners from Task t where t.id=?1";
+        } else if (GenericRoleType.notification_recipients.equals(role)) {
+            qStr = "select t.notificationRecipients from Task t where t.id=?1";
+        } else if (GenericRoleType.excluded_owners.equals(role)) {
+            qStr = "select t.excludedOwners from Task t where t.id=?1";
+        } else {
+            throw new IllegalArgumentException("Illegal Arguement role: "
+                    + role);
+        }
 
-private void updateNewOrgWithTaskId(String taskId, OrganizationalEntity newOrg, GenericRoleType role) throws UnavailableTaskException {
-OrganizationalEntity curOrg = null;
+        Query query = this.entityManager.createQuery(qStr);
+        query.setParameter(1, taskId);
+
+        return (OrganizationalEntity) query.getSingleResult();
+    }
+
+    private void updateNewOrgWithTaskId(String taskId,
+            OrganizationalEntity newOrg, GenericRoleType role)
+            throws UnavailableTaskException {
+        OrganizationalEntity curOrg = null;
         Task task = this.fetchTaskIfExists(taskId);
         if (GenericRoleType.business_administrators.equals(role)) {
             curOrg = task.getBusinessAdministrators();
@@ -295,18 +310,19 @@ OrganizationalEntity curOrg = null;
             curOrg = task.getExcludedOwners();
             task.setExcludedOwners(newOrg);
         } else {
-        throw new IllegalArgumentException("Illegal Arguement role: " + role);
+            throw new IllegalArgumentException("Illegal Arguement role: "
+                    + role);
         }
 
         this.updateTask(task);
         if (curOrg != null) {
             this.entityManager.remove(curOrg);
         }
-}
+    }
 
-public void removeUserOrGroups(String taskId, String[] usersOrGroups,
-GenericRoleType role) throws UnavailableTaskException {
-if (GenericRoleType.task_initiator.equals(role)
+    public void removeUserOrGroups(String taskId, String[] usersOrGroups,
+            GenericRoleType role) throws UnavailableTaskException {
+        if (GenericRoleType.task_initiator.equals(role)
                 || GenericRoleType.actual_owner.equals(role)) {
             // this shouldn't happen because there only one user can be the
             // initiator or actual owner
@@ -325,6 +341,7 @@ if (GenericRoleType.task_initiator.equals(role)
         
         this.checkTransactionIsActive();
         q.executeUpdate();
+        this.entityManager.flush();
     }
 
     public void updateTaskRole(String taskId, GenericRoleType role, List<String> values, String orgType) throws UnavailableTaskException {
@@ -337,6 +354,7 @@ if (GenericRoleType.task_initiator.equals(role)
                 task.setActualOwner(newUser);
             }
             this.updateTask(task);
+            this.entityManager.flush();
         } else {
             OrganizationalEntity newOrg = null;
 
@@ -357,28 +375,7 @@ if (GenericRoleType.task_initiator.equals(role)
             }
             
             this.updateNewOrgWithTaskId(taskId, newOrg, role);
-
-//            if (GenericRoleType.business_administrators.equals(role)) {
-//                curOrg = task.getBusinessAdministrators();
-//                task.setBusinessAdministrators(newOrg);
-//            } else if (GenericRoleType.task_stakeholders.equals(role)) {
-//                curOrg = task.getTaskStakeholders();
-//                task.setTaskStakeholders(newOrg);
-//            } else if (GenericRoleType.potential_owners.equals(role)) {
-//                curOrg = task.getPotentialOwners();
-//                task.setPotentialOwners(newOrg);
-//            } else if (GenericRoleType.notification_recipients.equals(role)) {
-//                curOrg = task.getNotificationRecipients();
-//                task.setNotificationRecipients(newOrg);
-//            } else if (GenericRoleType.excluded_owners.equals(role)) {
-//                curOrg = task.getExcludedOwners();
-//                task.setExcludedOwners(newOrg);
-//            }
-//
-//            this.updateTask(task);
-//            if (curOrg != null) {
-//                this.entityManager.remove(curOrg);
-//            }
+            this.entityManager.flush();
         }
     }
 
