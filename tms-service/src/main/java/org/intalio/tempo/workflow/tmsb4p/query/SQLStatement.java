@@ -132,6 +132,18 @@ public class SQLStatement {
 			}
 		}
 		
+		// order by clause
+		if (!orderByClause.isEmpty()) {
+			result.append(" order by ");
+			for (int i = 0; i < this.orderByClause.size(); i++) {
+				if (i == 0) {
+					result.append(orderByClause.get(i));
+				} else {
+					result.append(" , " + orderByClause.get(i));
+				}
+			}
+		}
+		
 		return result.toString();
 	}
 }

@@ -104,47 +104,47 @@ public class TaskJPAStatement {
     }
 
     private void convertSelectClause() throws InvalidFieldException {
-		List<String> viewFields = TaskFieldConverter
-				.getSelectViewFields(this.m_selectClause);
-		
-		if (viewFields.contains(TaskView.TASK)) {
-			viewFields.clear();
-			viewFields.add(TaskView.TASK);
-		}
-		
-		for (String viewField : viewFields) {
-			if ((TaskView.ATTACHMENT_TYPE.equals(viewField))
-					|| (TaskView.ATTACHMENT_NAME.equals(viewField))
-					|| (TaskView.ATTACHMENTS.equals(viewField))) {
-//				m_statement.addFromClause(TaskJPAStatement.ATT_FROM_CLAUSE);
-				String temp = m_statement.getFromClause().get(0); 
-				m_statement.getFromClause().set(0, temp + " " + ATT_FROM_CLAUSE);
-				m_statement.addSelectClause(TaskJPAStatement.ATT_ALIAS);
-			} else if (TaskView.TASK.equals(viewField)){
-				m_statement.addSelectClause(TaskJPAStatement.TASK_ALIAS);
-			} else {
-				String mappingField = TaskFieldConverter
-						.getQueryColumn(viewField);
-				if (mappingField != null) {
-					m_statement
-							.addSelectClause(TASK_ALIAS + "." + mappingField);
-				}
-			}
-		}
-		
-		if (m_statement.getSelectClause().isEmpty()) {
-			throw new InvalidFieldException(
-					"The select clause is invalide or field isn't supported yet.");
-		}
-			
-		// always include the id in the select clauses.
-		boolean existIdField = viewFields.contains(TaskView.ID)
-				|| viewFields.contains(TaskView.TASK);
-		if (!existIdField) {
-			m_statement.addSelectClause(TASK_ALIAS + "." + TaskFieldConverter
-					.getQueryColumn(TaskView.ID));
-		}
-	}
+        List<String> viewFields = TaskFieldConverter
+                .getSelectViewFields(this.m_selectClause);
+        
+        if (viewFields.contains(TaskView.TASK)) {
+            viewFields.clear();
+            viewFields.add(TaskView.TASK);
+        }
+        
+        for (String viewField : viewFields) {
+            if ((TaskView.ATTACHMENT_TYPE.equals(viewField))
+                    || (TaskView.ATTACHMENT_NAME.equals(viewField))
+                    || (TaskView.ATTACHMENTS.equals(viewField))) {
+//                m_statement.addFromClause(TaskJPAStatement.ATT_FROM_CLAUSE);
+                String temp = m_statement.getFromClause().get(0); 
+                m_statement.getFromClause().set(0, temp + " " + ATT_FROM_CLAUSE);
+                m_statement.addSelectClause(TaskJPAStatement.ATT_ALIAS);
+            } else if (TaskView.TASK.equals(viewField)){
+                m_statement.addSelectClause(TaskJPAStatement.TASK_ALIAS);
+            } else {
+                String mappingField = TaskFieldConverter
+                        .getQueryColumn(viewField);
+                if (mappingField != null) {
+                    m_statement
+                            .addSelectClause(TASK_ALIAS + "." + mappingField);
+                }
+            }
+        }
+        
+        if (m_statement.getSelectClause().isEmpty()) {
+            throw new InvalidFieldException(
+                    "The select clause is invalide or field isn't supported yet.");
+        }
+            
+        // always include the id in the select clauses.
+        boolean existIdField = viewFields.contains(TaskView.ID)
+                || viewFields.contains(TaskView.TASK);
+        if (!existIdField) {
+            m_statement.addSelectClause(TASK_ALIAS + "." + TaskFieldConverter
+                    .getQueryColumn(TaskView.ID));
+        }
+    }
 
     public List<String> getQueryColumns() {        
         List<String> columns = this.m_statement.getSelectColumns();
@@ -157,16 +157,16 @@ public class TaskJPAStatement {
             }
             
             try {
-				if (ATT_ALIAS.equals(column)) {
-					column = TaskFieldConverter
-							.getQueryColumn(TaskView.ATTACHMENTS);
-				} else if (TASK_ALIAS.equals(column)) {
-					column = TaskFieldConverter.getQueryColumn(TaskView.TASK);
-				}
-				result.add(column);
-			} catch (Exception e) {
-				// ignore it
-			}
+                if (ATT_ALIAS.equals(column)) {
+                    column = TaskFieldConverter
+                            .getQueryColumn(TaskView.ATTACHMENTS);
+                } else if (TASK_ALIAS.equals(column)) {
+                    column = TaskFieldConverter.getQueryColumn(TaskView.TASK);
+                }
+                result.add(column);
+            } catch (Exception e) {
+                // ignore it
+            }
         }
         
         return result;
@@ -660,16 +660,16 @@ public class TaskJPAStatement {
         return result;
     }
 
-    private String convertOrderbyClause() throws InvalidFieldException, SQLClauseException {
+    private void convertOrderbyClause() throws InvalidFieldException, SQLClauseException {
         // the orderby clause maybe as
         // "order by Task.Priority asc, Task.Name desc"
         if (this.m_orderbyClause == null) {
-            return null;
+            return;
         }
 
         String[] clauses = QueryUtil.parseOrderbyClause(this.m_orderbyClause);
         if ((clauses == null) || (clauses.length == 0)) {
-            return null;
+            return;
         }
 
         String field = null;
@@ -701,7 +701,9 @@ public class TaskJPAStatement {
             orderbyOption = null;
         }
 
-        return result.toString();
+        if (result.length() > 0) {
+            this.m_statement.addOrderbyClause(result.toString());
+        }
     }
 
     public SQLStatement getStatement() throws InvalidFieldException, ParseException, SQLClauseException {

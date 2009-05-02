@@ -2,7 +2,11 @@ package org.intalio.tempo.workflow.tmsb4p.server;
 
 import java.io.InputStream;
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -18,12 +22,21 @@ import org.apache.xmlbeans.XmlObject;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.SimpleAuthProvider;
 import org.intalio.tempo.workflow.auth.UserRoles;
+import org.intalio.tempo.workflow.taskb4p.TaskStatus;
 import org.intalio.tempo.workflow.tms.server.Utils;
 import org.intalio.tempo.workflow.tms.server.permissions.TaskPermissions;
+import org.intalio.tempo.workflow.tmsb4p.query.TaskView;
+import org.intalio.tempo.workflow.tmsb4p.server.dao.GenericRoleType;
 import org.intalio.tempo.workflow.tmsb4p.server.dao.JPATaskDaoConnectionFactory;
+import org.intalio.tempo.workflow.tmsb4p.server.dao.TaskQueryType;
 
 import com.intalio.wsHT.TOrganizationalEntity;
 import com.intalio.wsHT.TUserlist;
+import com.intalio.wsHT.api.TStatus;
+import com.intalio.wsHT.api.TTask;
+import com.intalio.wsHT.api.TTaskAbstract;
+import com.intalio.wsHT.api.TTaskQueryResultRow;
+import com.intalio.wsHT.api.TTaskQueryResultSet;
 import com.intalio.wsHT.api.xsd.ActivateDocument;
 import com.intalio.wsHT.api.xsd.ActivateResponseDocument;
 import com.intalio.wsHT.api.xsd.ClaimDocument;
@@ -37,12 +50,20 @@ import com.intalio.wsHT.api.xsd.FailDocument;
 import com.intalio.wsHT.api.xsd.FailResponseDocument;
 import com.intalio.wsHT.api.xsd.ForwardDocument;
 import com.intalio.wsHT.api.xsd.ForwardResponseDocument;
+import com.intalio.wsHT.api.xsd.GetMyTaskAbstractsDocument;
+import com.intalio.wsHT.api.xsd.GetMyTaskAbstractsResponseDocument;
+import com.intalio.wsHT.api.xsd.GetMyTasksDocument;
+import com.intalio.wsHT.api.xsd.GetMyTasksResponseDocument;
+import com.intalio.wsHT.api.xsd.NominateDocument;
+import com.intalio.wsHT.api.xsd.QueryDocument;
+import com.intalio.wsHT.api.xsd.QueryResponseDocument;
 import com.intalio.wsHT.api.xsd.ReleaseDocument;
 import com.intalio.wsHT.api.xsd.ReleaseResponseDocument;
 import com.intalio.wsHT.api.xsd.RemoveDocument;
 import com.intalio.wsHT.api.xsd.RemoveResponseDocument;
 import com.intalio.wsHT.api.xsd.ResumeDocument;
 import com.intalio.wsHT.api.xsd.ResumeResponseDocument;
+import com.intalio.wsHT.api.xsd.SetGenericHumanRoleDocument;
 import com.intalio.wsHT.api.xsd.SetOutputDocument;
 import com.intalio.wsHT.api.xsd.SetOutputResponseDocument;
 import com.intalio.wsHT.api.xsd.SetPriorityDocument;
@@ -61,8 +82,12 @@ import com.intalio.wsHT.api.xsd.TTime;
 import com.intalio.wsHT.api.xsd.CompleteDocument.Complete;
 import com.intalio.wsHT.api.xsd.DelegateDocument.Delegate;
 import com.intalio.wsHT.api.xsd.ForwardDocument.Forward;
+import com.intalio.wsHT.api.xsd.GetMyTaskAbstractsDocument.GetMyTaskAbstracts;
+import com.intalio.wsHT.api.xsd.GetMyTasksDocument.GetMyTasks;
+import com.intalio.wsHT.api.xsd.NominateDocument.Nominate;
+import com.intalio.wsHT.api.xsd.QueryDocument.Query;
+import com.intalio.wsHT.api.xsd.SetGenericHumanRoleDocument.SetGenericHumanRole;
 import com.intalio.wsHT.api.xsd.SetOutputDocument.SetOutput;
-import com.intalio.wsHT.api.xsd.SetOutputResponseDocument.SetOutputResponse;
 import com.intalio.wsHT.api.xsd.SetPriorityDocument.SetPriority;
 import com.intalio.wsHT.api.xsd.SuspendUntilDocument.SuspendUntil;
 
@@ -633,5 +658,249 @@ public class TMSRequestProcessorTest extends TestCase {
     /************************************************************
      * Test case for admin/query Operation
      *************************************************************/
+    public void testActivate() throws Exception{
+        TMSRequestProcessor tmsRP = createRequestProcessorJPA();
 
+        // create task
+        String taskId = createTask("/B4PRequest/create.xml");
+        
+        // check point
+        long beforeActivateTime = System.currentTimeMillis();
+        
+        // activate task
+        ActivateDocument activateReq = ActivateDocument.Factory.newInstance();
+        activateReq.addNewActivate().setIdentifier(taskId);
+        OMElement res = tmsRP.activate(genOMElement(activateReq));
+        ActivateResponseDocument activateRes = ActivateResponseDocument.Factory.parse(res.getXMLStreamReader());
+        System.out.println("response:" + activateRes.xmlText());
+        
+        // query the task to check the task status and activate time
+        QueryDocument queryReq = QueryDocument.Factory.newInstance();
+        queryReq.addNewQuery().setWhereClause(TaskView.ID + "='" + taskId + "'");
+        OMElement queryRes = tmsRP.query(genOMElement(queryReq));
+        TTaskQueryResultSet resultSet = QueryResponseDocument.Factory.parse(
+                queryRes.getXMLStreamReader()).getQueryResponse().getQuery();
+        
+        // check the query result
+        TTaskQueryResultRow  resultRow = resultSet.getRowArray(0);
+        assertEquals(resultRow.getStatusArray(0), TStatus.READY);
+        assertTrue(resultRow.getActivationTimeArray(0).getTimeInMillis() > beforeActivateTime);
+    }
+    
+    public void testNominate() throws Exception{
+        TMSRequestProcessor tmsRP = createRequestProcessorJPA();
+
+        // create task
+        String taskId = createTask("/B4PRequest/create.xml");        
+        
+        // nominate the task with only user, the task status will be Reserved
+        NominateDocument nominateReq = NominateDocument.Factory.newInstance();
+        Nominate nominate = nominateReq.addNewNominate();
+        nominate.setIdentifier(taskId);
+        TOrganizationalEntity org = TOrganizationalEntity.Factory.newInstance();
+        org.addNewUsers().addUser("test_user1");
+        nominate.setOrganizationalEntity(org);
+        
+        tmsRP.nominate(genOMElement(nominateReq));
+        
+        // query the task to check the task status and potentical owners
+        QueryDocument queryReq = QueryDocument.Factory.newInstance();
+        queryReq.addNewQuery().setWhereClause(TaskView.ID + "='" + taskId + "'");
+        OMElement queryRes = tmsRP.query(genOMElement(queryReq));
+        TTaskQueryResultSet resultSet = QueryResponseDocument.Factory.parse(
+                queryRes.getXMLStreamReader()).getQueryResponse().getQuery();
+        
+        // check the query result
+        TTaskQueryResultRow  resultRow = resultSet.getRowArray(0);
+        assertEquals(resultRow.getStatusArray(0), TStatus.RESERVED);
+        TOrganizationalEntity queryOrg = resultRow.getPotentialOwnersArray(0);
+        assertEquals(queryOrg.getUsers().getUserArray(0), org.getUsers().getUserArray(0));
+        
+        ////////////////////////////////////////////////////////////////////
+        // nominate several users
+        String taskId2 = createTask("/B4PRequest/create.xml");
+        NominateDocument nominateReq2 = NominateDocument.Factory.newInstance();
+        Nominate nominate2 = nominateReq2.addNewNominate();
+        nominate2.setIdentifier(taskId2);
+        TOrganizationalEntity org2 = TOrganizationalEntity.Factory.newInstance();
+        TUserlist userList = org2.addNewUsers();
+        userList.setUserArray(new String[]{"test_user1", "test_user2"});
+        
+        nominate2.setOrganizationalEntity(org2);
+        tmsRP.nominate(genOMElement(nominateReq2));
+        
+        // query the task to check the task status and potentical owners
+        QueryDocument queryReq2 = QueryDocument.Factory.newInstance();
+        queryReq2.addNewQuery().setWhereClause(TaskView.ID + "='" + taskId2 + "'");
+        OMElement queryRes2 = tmsRP.query(genOMElement(queryReq2));
+        TTaskQueryResultSet resultSet2 = QueryResponseDocument.Factory.parse(
+                queryRes2.getXMLStreamReader()).getQueryResponse().getQuery();
+        
+        // check the query result
+        TTaskQueryResultRow  resultRow2 = resultSet2.getRowArray(0);
+        assertEquals(resultRow2.getStatusArray(0), TStatus.READY);
+        TOrganizationalEntity queryOrg2 = resultRow2.getPotentialOwnersArray(0);
+        
+        List expectedList = Arrays.asList(new String[]{"test_user1", "test_user2"});
+        assertTrue(expectedList.contains(queryOrg2.getUsers().getUserArray(0)));
+        assertTrue(expectedList.contains(queryOrg2.getUsers().getUserArray(1)));
+    }
+    
+    public void testSetGenericHumanRole() throws Exception{
+        TMSRequestProcessor tmsRP = createRequestProcessorJPA();
+
+        // create task
+        String taskId = createTask("/B4PRequest/create.xml");    
+        
+        // create the request
+        SetGenericHumanRoleDocument genDocReq = SetGenericHumanRoleDocument.Factory.newInstance();
+        SetGenericHumanRole genDoc = genDocReq.addNewSetGenericHumanRole();
+        genDoc.setGenericHumanRole(GenericRoleType.potential_owners.name());
+        genDoc.setIdentifier(taskId);
+        TOrganizationalEntity org = TOrganizationalEntity.Factory.newInstance();
+        TUserlist userList = org.addNewUsers();
+        userList.addUser("test_user1");
+        userList.addUser("test_user2");
+        genDoc.setOrganizationalEntity(org);
+        
+        tmsRP.setGenericHumanRole(genOMElement(genDocReq));
+        
+        // query the task and to check the potential owners
+        QueryDocument queryReq = QueryDocument.Factory.newInstance();
+        queryReq.addNewQuery().setWhereClause(TaskView.ID + "='" + taskId + "'");
+        OMElement queryRes = tmsRP.query(genOMElement(queryReq));
+        TTaskQueryResultSet resultSet = QueryResponseDocument.Factory.parse(
+                queryRes.getXMLStreamReader()).getQueryResponse().getQuery();
+        
+        // check the query result
+        TTaskQueryResultRow resultRow = resultSet.getRowArray(0);
+        TOrganizationalEntity queryOrg = resultRow.getPotentialOwnersArray(0);
+        
+        List expectedList = Arrays.asList(new String[]{"test_user1", "test_user2"});
+        assertTrue(expectedList.contains(queryOrg.getUsers().getUserArray(0)));
+        assertTrue(expectedList.contains(queryOrg.getUsers().getUserArray(1)));
+
+        ////////////////////////////////////////////////////////////////////
+        // nominate the task actualOwner
+        TOrganizationalEntity aoOrg = TOrganizationalEntity.Factory.newInstance();
+        aoOrg.addNewUsers().addUser("actual_owner");
+        genDoc.setGenericHumanRole(GenericRoleType.actual_owner.name());
+        genDoc.setOrganizationalEntity(aoOrg);
+        
+        tmsRP.setGenericHumanRole(genOMElement(genDocReq));
+        
+        // query the task again to check the actual owner
+        OMElement queryRes2 = tmsRP.query(genOMElement(queryReq));
+        TTaskQueryResultSet resultSet2 = QueryResponseDocument.Factory.parse(
+                queryRes2.getXMLStreamReader()).getQueryResponse().getQuery();
+        
+        // check the query result
+        TTaskQueryResultRow resultRow2 = resultSet2.getRowArray(0);
+        assertEquals(resultRow2.getActualOwnerArray(0), aoOrg.getUsers().getUserArray(0));
+    }
+    
+    public void testGetMyTasks() throws Exception {
+        TMSRequestProcessor tmsRP = createRequestProcessorJPA();
+
+        // create task
+        Date beforeCreatedDate = new Date(System.currentTimeMillis());
+        String taskId = createTask("/B4PRequest/create.xml");
+
+        // create the request
+        GetMyTasksDocument myTaskReq = GetMyTasksDocument.Factory.newInstance();
+        GetMyTasks myTasks = myTaskReq.addNewGetMyTasks();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
+        String qrtDate = format.format(beforeCreatedDate);
+        myTasks.setCreatedOnClause(TaskView.CREATED_ON + ">'" + qrtDate + "'");
+        myTasks.setMaxTasks(10);
+        myTasks.setStatusArray(new com.intalio.wsHT.api.TStatus.Enum[] {
+                TStatus.CREATED, TStatus.READY, TStatus.RESERVED });
+        myTasks.setTaskType(TaskQueryType.ALL.name());
+        myTasks.setWhereClause(TaskView.ID + "='" + taskId + "'");
+        myTasks.setGenericHumanRole(GenericRoleType.business_administrators.name());
+        
+        // query the task, at least one task will be found.
+        OMElement myTaskRes = tmsRP.getMyTasks(genOMElement(myTaskReq));
+        TTask[] retTasks = GetMyTasksResponseDocument.Factory.parse(
+                myTaskRes.getXMLStreamReader()).getGetMyTasksResponse()
+                .getTaskAbstractArray();
+        assertTrue(retTasks.length > 0);
+        System.out.println("getMyTasks response:" + Utils.toPrettyXML(myTaskRes));
+    }
+    
+    public void testGetMyTaskAbstracts() throws Exception {
+        TMSRequestProcessor tmsRP = createRequestProcessorJPA();
+
+        // create task
+        Date beforeCreatedDate = new Date(System.currentTimeMillis());
+        String taskId = createTask("/B4PRequest/create.xml");
+
+        // create the request
+        GetMyTaskAbstractsDocument myTaskReq = GetMyTaskAbstractsDocument.Factory.newInstance();
+        GetMyTaskAbstracts myTasks = myTaskReq.addNewGetMyTaskAbstracts();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
+        String qrtDate = format.format(beforeCreatedDate);
+        myTasks.setCreatedOnClause(TaskView.CREATED_ON + ">'" + qrtDate + "'");
+        myTasks.setMaxTasks(10);
+        myTasks.setStatusArray(new com.intalio.wsHT.api.TStatus.Enum[] {
+                TStatus.CREATED, TStatus.READY, TStatus.RESERVED });
+        myTasks.setTaskType(TaskQueryType.ALL.name());
+        myTasks.setGenericHumanRole(GenericRoleType.business_administrators.name());
+        myTasks.setWhereClause(TaskView.ID + "='" + taskId + "'");
+        
+        // query the task, at least one task will be found.
+        OMElement myTaskRes = tmsRP.getMyTaskAbstracts(genOMElement(myTaskReq));
+        TTaskAbstract[] retTasks = GetMyTaskAbstractsResponseDocument.Factory.parse(
+                myTaskRes.getXMLStreamReader()).getGetMyTaskAbstractsResponse().getTaskAbstractArray();
+        assertTrue(retTasks.length > 0);
+        System.out.println("getMyTaskAbstracts response:" + Utils.toPrettyXML(myTaskRes));
+    }
+    
+    public void testQuery() throws Exception {
+        TMSRequestProcessor tmsRP = createRequestProcessorJPA();
+
+        // create task
+        Date beforeCreatedDate = new Date(System.currentTimeMillis());
+        String taskId = createTask("/B4PRequest/create.xml");
+
+        // query the task to check the task status and potentical owners
+        QueryDocument queryReq = QueryDocument.Factory.newInstance();
+        Query qry = queryReq.addNewQuery();
+
+        // select clause;
+        String selectClause = TaskView.ID + ", " + TaskView.CREATED_ON + ","
+                + TaskView.BUSINESS_ADMINISTRATORS + ","
+                + TaskView.NAME + "," + TaskView.ATTACHMENTS;
+        qry.setSelectClause(selectClause);
+
+        // for the where clause
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
+        String qrtDate = format.format(beforeCreatedDate);
+        String whereClause = TaskView.CREATED_ON + ">'" + qrtDate + "'"
+                + " and (" + TaskView.STATUS + "='" + TaskStatus.CREATED
+                + "' or " + TaskView.STATUS + "='" + TaskStatus.READY + "')"
+                + " and " + TaskView.USERID + " in ('intalio\\manager') "
+                + " and " + TaskView.GENERIC_HUMAN_ROLE + "='"
+                + GenericRoleType.business_administrators + "'";
+
+        qry.setWhereClause(whereClause);
+
+        // order by clause
+        String orderByClause = TaskView.CREATED_ON + " asc, " + TaskView.NAME;
+        qry.setOrderByClause(orderByClause);
+
+        System.out.println("Query select  clause: " + selectClause);
+        System.out.println("Query where   clause: " + whereClause);
+        System.out.println("Query orderby clause: " + orderByClause);
+
+        OMElement queryRes = tmsRP.query(genOMElement(queryReq));
+        TTaskQueryResultSet resultSet = QueryResponseDocument.Factory.parse(
+                queryRes.getXMLStreamReader()).getQueryResponse().getQuery();
+
+        // check the query result
+        TTaskQueryResultRow[] resultRows = resultSet.getRowArray();
+        assertTrue(resultRows.length > 0);
+        System.out.println("query response: " + Utils.toPrettyXML(queryRes));
+
+    }
 }
