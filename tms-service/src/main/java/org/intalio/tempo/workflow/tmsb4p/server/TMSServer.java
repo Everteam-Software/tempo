@@ -1106,8 +1106,7 @@ public class TMSServer implements ITMSServer {
         try {
             if (partName == null || partName.trim().length() == 0) {
                 task.setOutputMessage(data.xmlText());
-            }
-            if (task.getOutputMessage() == null || task.getOutputMessage().trim().length() == 0) {
+            } else if (task.getOutputMessage() == null || task.getOutputMessage().trim().length() == 0) {
                 MessageData messageData = new MessageData();
                 messageData.setData(partName, data.xmlText());
                 task.setOutputMessage(messageData.toXML());
@@ -1162,25 +1161,10 @@ public class TMSServer implements ITMSServer {
         try {
             if (faultName == null || faultName.trim().length() == 0) {
                 task.setFaultMessage(data.xmlText());
-            }
-            if (task.getFaultMessage() == null || task.getFaultMessage().trim().length() == 0) {
+            } else {
                 MessageData messageData = new MessageData();
                 messageData.setData(faultName, data.xmlText());
                 task.setFaultMessage(messageData.toXML());
-            } else {
-                try {
-
-                    StAXOMBuilder builder = new StAXOMBuilder(new ByteArrayInputStream(task.getFaultMessage().getBytes("UTF-8")));
-                    OMElement parts = builder.getDocumentElement();
-
-                    MessageData messageData = new MessageData(parts);
-
-                    messageData.setData(faultName, data.xmlText());
-                    task.setFaultMessage(messageData.toXML());
-
-                } catch (Exception e) {
-                    new IllegalAccessException("Error when parsing the output data");
-                }
             }
             dao.updateTask(task);
             dao.commit();
@@ -1245,17 +1229,23 @@ public class TMSServer implements ITMSServer {
         try {
             Task task = dao.fetchTaskIfExists(identifier);
 
-            StAXOMBuilder builder = new StAXOMBuilder(new ByteArrayInputStream(task.getFaultMessage().getBytes("UTF-8")));
+            if (task.getFaultMessage() != null && task.getFaultMessage().trim().length() > 0) {
 
-            OMElement msg = builder.getDocumentElement();
+                StAXOMBuilder builder = new StAXOMBuilder(new ByteArrayInputStream(task.getFaultMessage().getBytes("UTF-8")));
 
-            MessageData messageData = new MessageData(msg);
-            return messageData.getMsgData();
+                OMElement msg = builder.getDocumentElement();
+
+                MessageData messageData = new MessageData(msg);
+                return messageData.getMsgData(); // should only have one entry
+            } else {
+                return null;
+            }
         } catch (Exception e) {
             new IllegalAccessException("Error when parsing the fault data");
             return null;
         } finally {
             dao.close();
+
         }
     }
 
