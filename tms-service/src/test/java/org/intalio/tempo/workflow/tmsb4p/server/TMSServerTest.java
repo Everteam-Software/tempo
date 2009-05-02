@@ -1,7 +1,6 @@
 package org.intalio.tempo.workflow.tmsb4p.server;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import junit.framework.TestCase;
@@ -68,9 +67,11 @@ public class TMSServerTest extends TestCase {
         HashMap<String, Task> tasks = new HashMap<String, Task>();
         Task task1 = new Task();
         task1.setOutputMessage("");
+        task1.setActualOwner("test\\user1");
         tasks.put("10ac46be-cb99-4a6d-8449-18414d4d52e6", task1);
 
         Task task2 = new Task();
+        task2.setActualOwner("test\\user1");
         task2.setOutputMessage("<part-data>Should be part data1</part-data>");
         tasks.put("task2", task2);
         return tasks;
