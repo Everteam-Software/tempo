@@ -1,6 +1,10 @@
 package org.intalio.tempo.workflow.tmsb4p.server;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -12,6 +16,11 @@ import java.util.Set;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
+import javax.xml.transform.Result;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 
 import junit.framework.TestCase;
 
@@ -148,6 +157,46 @@ public class TMSRequestProcessorTest extends TestCase {
 
         return builder.getDocumentElement();
     }
+    
+//    public void test1() throws Exception{
+//        testLoadElementFromResource("/B4PRequest/forward.xml", "dfafa", "/forward/identifier");
+//    }
+    
+    public static OMElement loadElementFromResource(String resource, String taskId, String pattern) throws Exception {
+        InputStream requestInputStream = Utils.class.getResourceAsStream(resource);
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~\r\n");
+       
+        TransformerFactory tf =TransformerFactory.newInstance();
+        //String xslt = "<?xml version=\"1.0\" ?>";//<xsl:template match=\""+pattern+"\"></xsl:template>";
+        String xslt = 
+            "<xsl:transform version=\"1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">" +
+//                "<xsl:template match=\"@*|node()\">" +
+//                "<xsl:copy >" +
+//                    "<xsl:apply-templates select=\"@*|node()\"/>"+
+//                "</xsl:copy>" +
+//                "</xsl:template>" +
+                "<xsl:template match=\""+"claim/identifier"+"\">" +
+                    "<xsl:copy >" +
+                	"<identifier>"+taskId+"</identifier>" +
+                	"</xsl:copy >" +
+        		    //"<xsl:apply-templates match=\"@*|node()\"/>" +
+        		"</xsl:template>" +
+            
+        	"</xsl:transform>";
+        System.out.println(xslt+"\r\n");
+        ByteArrayInputStream abis = new ByteArrayInputStream(xslt.getBytes());
+        Transformer t = tf.newTransformer(new StreamSource(abis));
+        Writer sw = new StringWriter();
+        Result result = new StreamResult(sw);
+        t.transform(new StreamSource(requestInputStream), result);  
+        System.out.println(sw);
+        XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(sw.toString()));
+        StAXOMBuilder builder = new StAXOMBuilder(parser);
+        OMElement ret = builder.getDocumentElement();
+        System.out.println("ret:"+ret);
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~\r\n");
+        return ret;
+    }
 
     private String getTaskId(OMElement res) throws Exception {
         CreateResponseDocument doc = CreateResponseDocument.Factory.parse(res.getXMLStreamReader());
@@ -200,9 +249,10 @@ public class TMSRequestProcessorTest extends TestCase {
         tmsRP.activate(genOMElement(activateReq));
 
         // claim
-        ClaimDocument doc = ClaimDocument.Factory.newInstance();
-        doc.addNewClaim().setIdentifier(taskId);
-        OMElement requestElement = genOMElement(doc);
+        ClaimDocument claimReq = ClaimDocument.Factory.newInstance();
+        claimReq.addNewClaim().setIdentifier(taskId);
+        OMElement requestElement = genOMElement(claimReq);
+        //OMElement requestElement = loadElementFromResource("/B4PRequest/claim.xml", taskId, "//claim/identifier");
         OMElement res = tmsRP.claim(requestElement);
         ClaimResponseDocument resDoc = ClaimResponseDocument.Factory.parse(res.getXMLStreamReader());
 
