@@ -1790,7 +1790,7 @@ public class TMSRequestProcessor {
             SetFaultDocument sfd = SetFaultDocument.Factory.parse(requestElement.getXMLStreamReader());
             SetFault sf = sfd.getSetFault();
 
-            _server.setOutput(participantToken, sf.getIdentifier(), sf.getFaultName(), sf.getFaultData());
+            _server.setFault(participantToken, sf.getIdentifier(), sf.getFaultName(), sf.getFaultData());
 
             SetFaultResponseDocument sfrd = SetFaultResponseDocument.Factory.newInstance();
             SetFaultResponse sor = sfrd.addNewSetFaultResponse();
@@ -1815,7 +1815,7 @@ public class TMSRequestProcessor {
             DeleteFaultDocument dfd = DeleteFaultDocument.Factory.parse(requestElement.getXMLStreamReader());
             DeleteFault df = dfd.getDeleteFault();
 
-            _server.deleteOutput(participantToken, df.getIdentifier());
+            _server.deleteFault(participantToken, df.getIdentifier());
 
             DeleteFaultResponseDocument dfrd = DeleteFaultResponseDocument.Factory.newInstance();
             DeleteFaultResponse dfr = dfrd.addNewDeleteFaultResponse();
@@ -1844,7 +1844,8 @@ public class TMSRequestProcessor {
 
             GetInputResponseDocument gird = GetInputResponseDocument.Factory.newInstance();
             GetInputResponse gir = gird.addNewGetInputResponse();
-            gir.setTaskData(XmlObject.Factory.parse(message));
+            if (message != null && message.trim().length() > 0)
+                gir.setTaskData(XmlObject.Factory.parse(message));
 
             return convertXML(gird);
         } catch (Exception e) {
@@ -1870,7 +1871,8 @@ public class TMSRequestProcessor {
 
             GetOutputResponseDocument gord = GetOutputResponseDocument.Factory.newInstance();
             GetOutputResponse gor = gord.addNewGetOutputResponse();
-            gor.setTaskData(XmlObject.Factory.parse(message));
+            if (message != null && message.trim().length() > 0)
+                gor.setTaskData(XmlObject.Factory.parse(message));
 
             return convertXML(gord);
         } catch (Exception e) {
@@ -1883,17 +1885,20 @@ public class TMSRequestProcessor {
 
         try {
             GetFaultDocument gfd = GetFaultDocument.Factory.parse(requestElement.getXMLStreamReader());
-            GetFault gf = gfd.addNewGetFault();
+            GetFault gf = gfd.getGetFault();
 
             Map messages = _server.getFault(participantToken, gf.getIdentifier());
-            Iterator<String> it = messages.keySet().iterator();
-
             GetFaultResponseDocument gfrd = GetFaultResponseDocument.Factory.newInstance();
-            while (it.hasNext()) {
-                String faultName = it.next();
-                GetFaultResponse gfr = gfrd.addNewGetFaultResponse();
-                gfr.setFaultName(faultName);
-                gfr.setFaultData(XmlObject.Factory.parse(messages.get(faultName).toString()));
+            GetFaultResponse gfr = gfrd.addNewGetFaultResponse();
+            
+            if (messages != null) {
+                Iterator<String> it = messages.keySet().iterator();
+
+                if (it.hasNext()) { //should only have one
+                    String faultName = it.next();
+                    gfr.setFaultName(faultName);
+                    gfr.setFaultData(XmlObject.Factory.parse(messages.get(faultName).toString()));
+                }
             }
             return convertXML(gfrd);
         } catch (Exception e) {

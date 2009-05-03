@@ -70,16 +70,16 @@ public class MessageData {
 	}
 
 	public String toXML() throws Exception {
-		OMElement output = mFactory.createOMElement(new QName("output"));
+		OMElement data = mFactory.createOMElement(new QName("data"));
 
 		Iterator<String> it = mPartData.keySet().iterator();
 		while (it.hasNext()) {
 			String partName = it.next();
 			OMElement part = mFactory.createOMElement(new QName("part"));
-			output.addChild(part);
+			data.addChild(part);
 			part.addAttribute("name", partName, null);
 			part.setText(mPartData.get(partName).toString());
 		}
-		return output.toString();
+		return data.toString();
 	}
 }

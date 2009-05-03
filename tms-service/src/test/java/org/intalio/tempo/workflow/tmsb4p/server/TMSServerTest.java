@@ -44,11 +44,15 @@ public class TMSServerTest extends TestCase {
     public void testSetFault() throws Exception {
         ITMSServer tms_server = Utils.createB4PTMSServer(prepareData());
         XmlObject faultData = XmlObject.Factory.parse("<fault-data>Should be fault data1, part1</fault-data>");
-        XmlObject faultData2 = XmlObject.Factory.parse("<fault-data>Should be fault data2, part2</fault-data>");
+        
         tms_server.setFault("token1", "10ac46be-cb99-4a6d-8449-18414d4d52e6", "part1", faultData);
-        tms_server.setFault("token1", "10ac46be-cb99-4a6d-8449-18414d4d52e6", "part2", faultData2);
+        
         Map fault = tms_server.getFault("token1", "10ac46be-cb99-4a6d-8449-18414d4d52e6");
         assertEquals(fault.get("part1").toString(), "<fault-data>Should be fault data1, part1</fault-data>");
+        
+        XmlObject faultData2 = XmlObject.Factory.parse("<fault-data>Should be fault data2, part2</fault-data>");
+        tms_server.setFault("token1", "10ac46be-cb99-4a6d-8449-18414d4d52e6", "part2", faultData2);
+        fault = tms_server.getFault("token1", "10ac46be-cb99-4a6d-8449-18414d4d52e6");
         assertEquals(fault.get("part2").toString(), "<fault-data>Should be fault data2, part2</fault-data>");
     }
 
