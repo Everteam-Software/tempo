@@ -170,7 +170,7 @@
 			<xsd:element name="getPipaResponse">
 				<xsd:complexType>
 					<xsd:sequence>
-						<xsd:element name="task" type="tns:task"/>
+						<xsd:element name="metadata" type="tns:metadata"/>
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
