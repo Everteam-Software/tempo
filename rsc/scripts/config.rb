@@ -2,7 +2,7 @@ include BuildSupport
 BuildSupport::BUILD_DEBUG = false
 
 BUILD_CONFIG = {
-  :directory => "../intalio",
+  :directory => "../t2",
   
   # build with ode, axis2, uifw
   #
@@ -39,15 +39,16 @@ BUILD_CONFIG = {
   # :mode => [BuildMode::REMOTE, BuildMode::TOMCAT6,BuildMode::TOKEN_SERVICE, BuildMode::UIFW,BuildMode::OPENSSO,BuildMode::AGENT],
   #
   
-  :ode => :v2_1_snapshot,
+  :ode => :v1_3_snapshot,
   :tomcat => :v5,
   :liferay => :v5_1_0,
   :alfresco => :v3_0,
   :tempo => {
-    :core => "6.0.0.43",
+    :core => "6.0.0.46-SNAPSHOT",
     # not used until we've upgraded to the new deploy and security packages
-    # :security => "6.0.0.35",
-    # :deploy => "6.0.0.35",
+    :security => "1.0.1",
+    :deploy => "1.0.3",
+    
     :processes => "6.0.6",
     :formManager => "6.0.0.40",
     :apacheds => "6.0.0.34",

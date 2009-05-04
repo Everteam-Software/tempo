@@ -381,10 +381,11 @@ module BuildSupport
 
   class OdeProcessInstaller
     def initialize(base_dir)
-      @ode_processes_folder = check_folder(File.expand_path("#{base_dir}/var/processes"))
+      check_folder(File.expand_path("#{base_dir}/var/processes")) # deprecated but still needed
+      @ode_processes_folder = check_folder(File.expand_path("#{base_dir}/var/deploy"))
     end
     def install_artifact artifact, processName
-      unzip_artifact(artifact,"#{@ode_processes_folder}/#{processName}")
+      unzip_artifact(artifact,"#{@ode_processes_folder}/#{processName}/#{processName}.ode")
     end
   end
 
@@ -448,8 +449,9 @@ BUILD_URI = {
 	:axis2 => APACHE_MIRROR + "ws/axis2/1_4_1/axis2-1.4.1-war.zip",
 	:ode => {
     :v1_2_snapshot => "http://www.intalio.org/public/ode/apache-ode-1.2-SNAPSHOT-700632.zip",
-    :v1_3_snapshot => "http://www.intalio.org/public/ode/apache-ode-1.3-SNAPSHOT-745704.zip",
-    :v2_1_snapshot => "http://www.intalio.org/public/ode/apache-ode-war-2.1-SNAPSHOT-20090303-749508.zip"
+    # :v1_3_snapshot => "http://www.intalio.org/public/ode/apache-ode-1.3-SNAPSHOT-745704.zip",
+    :v1_3_snapshot => "http://www.intalio.org/public/ode/apache-ode-war-1.3.2-SNAPSHOT.zip",
+    :v2_1_snapshot => "http://www.intalio.org/public/ode/apache-ode-war-2.1-SNAPSHOT-20090303-768496.zip"
 	}, 
 	:alfresco => {
 	  :v2_1 => "http://downloads.sourceforge.net/sourceforge/alfresco/alfresco-community-war-2.1.0.zip",
