@@ -2,7 +2,7 @@ include BuildSupport
 BuildSupport::BUILD_DEBUG = false
 
 BUILD_CONFIG = {
-  :directory => "../t2",
+  :directory => "../tempo",
   
   # build with ode, axis2, uifw
   #

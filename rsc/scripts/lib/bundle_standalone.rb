@@ -157,7 +157,7 @@ def generate_mysql_file
     f.write("-- file:#{x}\n")
     f.write(File.open(x).read)
   }
-  ode_mysql = "#{TEMPO_SVN}/rsc/tempo-sql/#{BUILD_CONFIG[:ode]}/ode-mysql.sql"
+  ode_mysql = "#{TEMPO_SVN}/rsc/ode-sql/#{BUILD_CONFIG[:ode]}/ode-mysql.sql"
   f.write("-- file:#{ode_mysql}\n")
   f.write(File.open(ode_mysql).read)
   f.close
