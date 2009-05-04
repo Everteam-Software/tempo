@@ -126,8 +126,13 @@ import com.intalio.wsHT.api.xsd.SetOutputDocument.SetOutput;
 import com.intalio.wsHT.api.xsd.SetPriorityDocument.SetPriority;
 import com.intalio.wsHT.api.xsd.SuspendUntilDocument.SuspendUntil;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class TMSRequestProcessorTest extends TestCase {
 
+    static Logger __log = LoggerFactory.getLogger(TMSRequestProcessorTest.class);
+    
     /**
      * @param args
      */
@@ -161,9 +166,14 @@ public class TMSRequestProcessorTest extends TestCase {
         authProvider.addUserToken("intalio/admin", systemUser3);
         return authProvider;
     }
+    
+    static JPATaskDaoConnectionFactory jpaCF = new JPATaskDaoConnectionFactory();
+    public static JPATaskDaoConnectionFactory getJPAConnectionFactory() {
+        return jpaCF;
+    }
 
     private TMSRequestProcessor createRequestProcessorJPA() throws Exception {
-        ITMSServer server = new TMSServer(getMeASimpleAuthProvider(), new JPATaskDaoConnectionFactory(), getMeADefaultPermissionHandler());
+        ITMSServer server = new TMSServer(getMeASimpleAuthProvider(), getJPAConnectionFactory() , getMeADefaultPermissionHandler());
         TMSRequestProcessor proc = new TMSRequestProcessor() {
             protected String getParticipantToken() throws AxisFault {
                 // return
@@ -176,7 +186,8 @@ public class TMSRequestProcessorTest extends TestCase {
     }
 
     public static OMElement loadElementFromResource(String resource) throws Exception {
-        InputStream requestInputStream = Utils.class.getResourceAsStream(resource);
+        InputStream requestInputStream = TMSRequestProcessorTest.class.getResourceAsStream(resource);
+        if(requestInputStream==null) throw new RuntimeException("Could not find resource:"+resource);
 
         XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(requestInputStream);
         StAXOMBuilder builder = new StAXOMBuilder(parser);
@@ -228,7 +239,7 @@ public class TMSRequestProcessorTest extends TestCase {
         CreateResponseDocument doc = CreateResponseDocument.Factory.parse(res.getXMLStreamReader());
         String out = doc.getCreateResponse().getOut();
         String taskId = out.substring(1, out.length() - 1);
-        System.out.println("task id: " + taskId);
+        __log.debug("task id: " + taskId);
         return taskId;
     }
 
@@ -259,7 +270,7 @@ public class TMSRequestProcessorTest extends TestCase {
         TMSRequestProcessor tmsRP = createRequestProcessorJPA();
         OMElement requestElement = loadElementFromResource("/B4PRequest/create.xml");
         OMElement res = tmsRP.create(requestElement);
-        System.out.println("taskid:" + getTaskId(res));
+        __log.debug("taskid:" + getTaskId(res));
 
     }
 
@@ -282,7 +293,7 @@ public class TMSRequestProcessorTest extends TestCase {
         OMElement res = tmsRP.claim(requestElement);
         ClaimResponseDocument resDoc = ClaimResponseDocument.Factory.parse(res.getXMLStreamReader());
 
-        System.out.println("response:" + resDoc.xmlText());
+        __log.debug("response:" + resDoc.xmlText());
 
     }
 
@@ -297,7 +308,7 @@ public class TMSRequestProcessorTest extends TestCase {
         activateReq.addNewActivate().setIdentifier(taskId);
         OMElement res = tmsRP.activate(genOMElement(activateReq));
         ActivateResponseDocument activateRes = ActivateResponseDocument.Factory.parse(res.getXMLStreamReader());
-        System.out.println("response:" + activateRes.xmlText());
+        __log.debug("response:" + activateRes.xmlText());
 
         // claim
         ClaimDocument doc = ClaimDocument.Factory.newInstance();
@@ -305,7 +316,7 @@ public class TMSRequestProcessorTest extends TestCase {
         OMElement requestElement = genOMElement(doc);
         res = tmsRP.claim(requestElement);
         ClaimResponseDocument claimRes = ClaimResponseDocument.Factory.parse(res.getXMLStreamReader());
-        System.out.println("response:" + claimRes.xmlText());
+        __log.debug("response:" + claimRes.xmlText());
 
         // start
         StartDocument startReq = StartDocument.Factory.newInstance();
@@ -313,7 +324,7 @@ public class TMSRequestProcessorTest extends TestCase {
         res = tmsRP.start(genOMElement(startReq));
         StartResponseDocument startRes = StartResponseDocument.Factory.parse(res.getXMLStreamReader());
 
-        System.out.println("response:" + startRes.xmlText());
+        __log.debug("response:" + startRes.xmlText());
 
     }
 
@@ -328,7 +339,7 @@ public class TMSRequestProcessorTest extends TestCase {
         activateReq.addNewActivate().setIdentifier(taskId);
         OMElement res = tmsRP.activate(genOMElement(activateReq));
         ActivateResponseDocument activateRes = ActivateResponseDocument.Factory.parse(res.getXMLStreamReader());
-        System.out.println("response:" + activateRes.xmlText());
+        __log.debug("response:" + activateRes.xmlText());
 
         // claim
         ClaimDocument doc = ClaimDocument.Factory.newInstance();
@@ -336,7 +347,7 @@ public class TMSRequestProcessorTest extends TestCase {
         OMElement requestElement = genOMElement(doc);
         res = tmsRP.claim(requestElement);
         ClaimResponseDocument claimRes = ClaimResponseDocument.Factory.parse(res.getXMLStreamReader());
-        System.out.println("response:" + claimRes.xmlText());
+        __log.debug("response:" + claimRes.xmlText());
 
         // start
         StartDocument startReq = StartDocument.Factory.newInstance();
@@ -344,7 +355,7 @@ public class TMSRequestProcessorTest extends TestCase {
         res = tmsRP.start(genOMElement(startReq));
         StartResponseDocument startRes = StartResponseDocument.Factory.parse(res.getXMLStreamReader());
 
-        System.out.println("response:" + startRes.xmlText());
+        __log.debug("response:" + startRes.xmlText());
 
         // stop
         StopDocument stopReq = StopDocument.Factory.newInstance();
@@ -352,7 +363,7 @@ public class TMSRequestProcessorTest extends TestCase {
         res = tmsRP.stop(genOMElement(stopReq));
         StopResponseDocument stopRes = StopResponseDocument.Factory.parse(res.getXMLStreamReader());
 
-        System.out.println("response:" + stopRes.xmlText());
+        __log.debug("response:" + stopRes.xmlText());
     }
 
     public void testComplete() throws Exception {
@@ -366,7 +377,7 @@ public class TMSRequestProcessorTest extends TestCase {
         activateReq.addNewActivate().setIdentifier(taskId);
         OMElement res = tmsRP.activate(genOMElement(activateReq));
         ActivateResponseDocument activateRes = ActivateResponseDocument.Factory.parse(res.getXMLStreamReader());
-        System.out.println("response:" + activateRes.xmlText());
+        __log.debug("response:" + activateRes.xmlText());
 
         // claim
         ClaimDocument doc = ClaimDocument.Factory.newInstance();
@@ -374,16 +385,16 @@ public class TMSRequestProcessorTest extends TestCase {
         OMElement requestElement = genOMElement(doc);
         res = tmsRP.claim(requestElement);
         ClaimResponseDocument claimRes = ClaimResponseDocument.Factory.parse(res.getXMLStreamReader());
-        System.out.println("response:" + claimRes.xmlText());
+        __log.debug("response:" + claimRes.xmlText());
 
         // start
         StartDocument startReq = StartDocument.Factory.newInstance();
         startReq.addNewStart().setIdentifier(taskId);
         res = tmsRP.start(genOMElement(startReq));
         StartResponseDocument startRes = StartResponseDocument.Factory.parse(res.getXMLStreamReader());
-        System.out.println("response:" + startRes.xmlText());
+        __log.debug("response:" + startRes.xmlText());
 
-        System.out.println("response:" + startRes.xmlText());
+        __log.debug("response:" + startRes.xmlText());
         // Complete
         CompleteDocument completeReq = CompleteDocument.Factory.newInstance();
         Complete complete = completeReq.addNewComplete();
@@ -393,7 +404,7 @@ public class TMSRequestProcessorTest extends TestCase {
         res = tmsRP.complete(genOMElement(completeReq));
         CompleteResponseDocument completeRes = CompleteResponseDocument.Factory.parse(res.getXMLStreamReader());
 
-        System.out.println("response:" + completeRes.xmlText());
+        __log.debug("response:" + completeRes.xmlText());
     }
 
     public void testFail() throws Exception {
@@ -407,7 +418,7 @@ public class TMSRequestProcessorTest extends TestCase {
         activateReq.addNewActivate().setIdentifier(taskId);
         OMElement res = tmsRP.activate(genOMElement(activateReq));
         ActivateResponseDocument activateRes = ActivateResponseDocument.Factory.parse(res.getXMLStreamReader());
-        System.out.println("response:" + activateRes.xmlText());
+        __log.debug("response:" + activateRes.xmlText());
 
         // claim
         ClaimDocument doc = ClaimDocument.Factory.newInstance();
@@ -415,21 +426,21 @@ public class TMSRequestProcessorTest extends TestCase {
         OMElement requestElement = genOMElement(doc);
         res = tmsRP.claim(requestElement);
         ClaimResponseDocument claimRes = ClaimResponseDocument.Factory.parse(res.getXMLStreamReader());
-        System.out.println("response:" + claimRes.xmlText());
+        __log.debug("response:" + claimRes.xmlText());
 
         // start
         StartDocument startReq = StartDocument.Factory.newInstance();
         startReq.addNewStart().setIdentifier(taskId);
         res = tmsRP.start(genOMElement(startReq));
         StartResponseDocument startRes = StartResponseDocument.Factory.parse(res.getXMLStreamReader());
-        System.out.println("response:" + startRes.xmlText());
+        __log.debug("response:" + startRes.xmlText());
 
         // fail
         FailDocument failReq = FailDocument.Factory.newInstance();
         failReq.addNewFail().setIdentifier(taskId);
         res = tmsRP.fail(genOMElement(failReq));
         FailResponseDocument failRes = FailResponseDocument.Factory.parse(res.getXMLStreamReader());
-        System.out.println("response:" + failRes.xmlText());
+        __log.debug("response:" + failRes.xmlText());
     }
 
     public void testRelease() throws Exception {
@@ -443,7 +454,7 @@ public class TMSRequestProcessorTest extends TestCase {
         activateReq.addNewActivate().setIdentifier(taskId);
         OMElement res = tmsRP.activate(genOMElement(activateReq));
         ActivateResponseDocument activateRes = ActivateResponseDocument.Factory.parse(res.getXMLStreamReader());
-        System.out.println("response:" + activateRes.xmlText());
+        __log.debug("response:" + activateRes.xmlText());
 
         // claim
         ClaimDocument doc = ClaimDocument.Factory.newInstance();
@@ -451,14 +462,14 @@ public class TMSRequestProcessorTest extends TestCase {
         OMElement requestElement = genOMElement(doc);
         res = tmsRP.claim(requestElement);
         ClaimResponseDocument claimRes = ClaimResponseDocument.Factory.parse(res.getXMLStreamReader());
-        System.out.println("response:" + claimRes.xmlText());
+        __log.debug("response:" + claimRes.xmlText());
 
         // release
         ReleaseDocument releaseReq = ReleaseDocument.Factory.newInstance();
         releaseReq.addNewRelease().setIdentifier(taskId);
         res = tmsRP.release(genOMElement(releaseReq));
         ReleaseResponseDocument releaseRes = ReleaseResponseDocument.Factory.parse(res.getXMLStreamReader());
-        System.out.println("response:" + releaseRes.xmlText());
+        __log.debug("response:" + releaseRes.xmlText());
     }
 
     public void testSkip() throws Exception {
@@ -472,7 +483,7 @@ public class TMSRequestProcessorTest extends TestCase {
         activateReq.addNewActivate().setIdentifier(taskId);
         OMElement res = tmsRP.activate(genOMElement(activateReq));
         ActivateResponseDocument activateRes = ActivateResponseDocument.Factory.parse(res.getXMLStreamReader());
-        System.out.println("response:" + activateRes.xmlText());
+        __log.debug("response:" + activateRes.xmlText());
 
         // claim
         ClaimDocument doc = ClaimDocument.Factory.newInstance();
@@ -480,14 +491,14 @@ public class TMSRequestProcessorTest extends TestCase {
         OMElement requestElement = genOMElement(doc);
         res = tmsRP.claim(requestElement);
         ClaimResponseDocument claimRes = ClaimResponseDocument.Factory.parse(res.getXMLStreamReader());
-        System.out.println("response:" + claimRes.xmlText());
+        __log.debug("response:" + claimRes.xmlText());
 
         // skip
         SkipDocument skipReq = SkipDocument.Factory.newInstance();
         skipReq.addNewSkip().setIdentifier(taskId);
         res = tmsRP.skip(genOMElement(skipReq));
         SkipResponseDocument skipRes = SkipResponseDocument.Factory.parse(res.getXMLStreamReader());
-        System.out.println("response:" + skipRes.xmlText());
+        __log.debug("response:" + skipRes.xmlText());
     }
 
     public void testRemove() throws Exception {
@@ -501,7 +512,7 @@ public class TMSRequestProcessorTest extends TestCase {
         activateReq.addNewActivate().setIdentifier(taskId);
         OMElement res = tmsRP.activate(genOMElement(activateReq));
         ActivateResponseDocument activateRes = ActivateResponseDocument.Factory.parse(res.getXMLStreamReader());
-        System.out.println("response:" + activateRes.xmlText());
+        __log.debug("response:" + activateRes.xmlText());
 
         // claim
         ClaimDocument doc = ClaimDocument.Factory.newInstance();
@@ -509,14 +520,14 @@ public class TMSRequestProcessorTest extends TestCase {
         OMElement requestElement = genOMElement(doc);
         res = tmsRP.claim(requestElement);
         ClaimResponseDocument claimRes = ClaimResponseDocument.Factory.parse(res.getXMLStreamReader());
-        System.out.println("response:" + claimRes.xmlText());
+        __log.debug("response:" + claimRes.xmlText());
 
         // remove
         RemoveDocument removeReq = RemoveDocument.Factory.newInstance();
         removeReq.addNewRemove().setIdentifier(taskId);
         res = tmsRP.remove(genOMElement(removeReq));
         RemoveResponseDocument removeRes = RemoveResponseDocument.Factory.parse(res.getXMLStreamReader());
-        System.out.println("response:" + removeRes.xmlText());
+        __log.debug("response:" + removeRes.xmlText());
     }
 
     public void testSuspendAndResume() throws Exception {
@@ -530,7 +541,7 @@ public class TMSRequestProcessorTest extends TestCase {
         activateReq.addNewActivate().setIdentifier(taskId);
         OMElement res = tmsRP.activate(genOMElement(activateReq));
         ActivateResponseDocument activateRes = ActivateResponseDocument.Factory.parse(res.getXMLStreamReader());
-        System.out.println("response:" + activateRes.xmlText());
+        __log.debug("response:" + activateRes.xmlText());
 
         // claim
         ClaimDocument doc = ClaimDocument.Factory.newInstance();
@@ -538,21 +549,21 @@ public class TMSRequestProcessorTest extends TestCase {
         OMElement requestElement = genOMElement(doc);
         res = tmsRP.claim(requestElement);
         ClaimResponseDocument claimRes = ClaimResponseDocument.Factory.parse(res.getXMLStreamReader());
-        System.out.println("response:" + claimRes.xmlText());
+        __log.debug("response:" + claimRes.xmlText());
 
         // suspend
         SuspendDocument suspendReq = SuspendDocument.Factory.newInstance();
         suspendReq.addNewSuspend().setIdentifier(taskId);
         res = tmsRP.suspend(genOMElement(suspendReq));
         SuspendResponseDocument suspendRes = SuspendResponseDocument.Factory.parse(res.getXMLStreamReader());
-        System.out.println("response:" + suspendRes.xmlText());
+        __log.debug("response:" + suspendRes.xmlText());
 
         // resume
         ResumeDocument resumeReq = ResumeDocument.Factory.newInstance();
         resumeReq.addNewResume().setIdentifier(taskId);
         res = tmsRP.resume(genOMElement(resumeReq));
         ResumeResponseDocument resumeRes = ResumeResponseDocument.Factory.parse(res.getXMLStreamReader());
-        System.out.println("response:" + resumeRes.xmlText());
+        __log.debug("response:" + resumeRes.xmlText());
     }
 
     public void testSuspendUntillAndResume() throws Exception {
@@ -566,7 +577,7 @@ public class TMSRequestProcessorTest extends TestCase {
         activateReq.addNewActivate().setIdentifier(taskId);
         OMElement res = tmsRP.activate(genOMElement(activateReq));
         ActivateResponseDocument activateRes = ActivateResponseDocument.Factory.parse(res.getXMLStreamReader());
-        System.out.println("response:" + activateRes.xmlText());
+        __log.debug("response:" + activateRes.xmlText());
 
         // claim
         ClaimDocument doc = ClaimDocument.Factory.newInstance();
@@ -574,7 +585,7 @@ public class TMSRequestProcessorTest extends TestCase {
         OMElement requestElement = genOMElement(doc);
         res = tmsRP.claim(requestElement);
         ClaimResponseDocument claimRes = ClaimResponseDocument.Factory.parse(res.getXMLStreamReader());
-        System.out.println("response:" + claimRes.xmlText());
+        __log.debug("response:" + claimRes.xmlText());
 
         // suspendUntil
         SuspendUntilDocument suspendUntilReq = SuspendUntilDocument.Factory.newInstance();
@@ -584,14 +595,14 @@ public class TMSRequestProcessorTest extends TestCase {
         s.setTime(tm);
         res = tmsRP.suspendUntil(genOMElement(suspendUntilReq));
         SuspendUntilResponseDocument suspendUntilRes = SuspendUntilResponseDocument.Factory.parse(res.getXMLStreamReader());
-        System.out.println("response:" + suspendUntilRes.xmlText());
+        __log.debug("response:" + suspendUntilRes.xmlText());
 
         // resume
         ResumeDocument resumeReq = ResumeDocument.Factory.newInstance();
         resumeReq.addNewResume().setIdentifier(taskId);
         res = tmsRP.resume(genOMElement(resumeReq));
         ResumeResponseDocument resumeRes = ResumeResponseDocument.Factory.parse(res.getXMLStreamReader());
-        System.out.println("response:" + resumeRes.xmlText());
+        __log.debug("response:" + resumeRes.xmlText());
     }
 
     public void testForward() throws Exception {
@@ -605,7 +616,7 @@ public class TMSRequestProcessorTest extends TestCase {
         activateReq.addNewActivate().setIdentifier(taskId);
         OMElement res = tmsRP.activate(genOMElement(activateReq));
         ActivateResponseDocument activateRes = ActivateResponseDocument.Factory.parse(res.getXMLStreamReader());
-        System.out.println("response:" + activateRes.xmlText());
+        __log.debug("response:" + activateRes.xmlText());
 
         // claim
         ClaimDocument doc = ClaimDocument.Factory.newInstance();
@@ -613,7 +624,7 @@ public class TMSRequestProcessorTest extends TestCase {
         OMElement requestElement = genOMElement(doc);
         res = tmsRP.claim(requestElement);
         ClaimResponseDocument claimRes = ClaimResponseDocument.Factory.parse(res.getXMLStreamReader());
-        System.out.println("response:" + claimRes.xmlText());
+        __log.debug("response:" + claimRes.xmlText());
 
         // forward
         ForwardDocument forwardReq = ForwardDocument.Factory.newInstance();
@@ -627,7 +638,7 @@ public class TMSRequestProcessorTest extends TestCase {
 
         res = tmsRP.forward(genOMElement(forwardReq));
         ForwardResponseDocument forwardRes = ForwardResponseDocument.Factory.parse(res.getXMLStreamReader());
-        System.out.println("response:" + forwardRes.xmlText());
+        __log.debug("response:" + forwardRes.xmlText());
 
     }
 
@@ -642,7 +653,7 @@ public class TMSRequestProcessorTest extends TestCase {
         activateReq.addNewActivate().setIdentifier(taskId);
         OMElement res = tmsRP.activate(genOMElement(activateReq));
         ActivateResponseDocument activateRes = ActivateResponseDocument.Factory.parse(res.getXMLStreamReader());
-        System.out.println("response:" + activateRes.xmlText());
+        __log.debug("response:" + activateRes.xmlText());
 
         // claim
         ClaimDocument doc = ClaimDocument.Factory.newInstance();
@@ -650,7 +661,7 @@ public class TMSRequestProcessorTest extends TestCase {
         OMElement requestElement = genOMElement(doc);
         res = tmsRP.claim(requestElement);
         ClaimResponseDocument claimRes = ClaimResponseDocument.Factory.parse(res.getXMLStreamReader());
-        System.out.println("response:" + claimRes.xmlText());
+        __log.debug("response:" + claimRes.xmlText());
 
         // delegate
         DelegateDocument delegate = DelegateDocument.Factory.newInstance();
@@ -665,7 +676,7 @@ public class TMSRequestProcessorTest extends TestCase {
 
         res = tmsRP.delegate(genOMElement(delegate));
         DelegateResponseDocument delegateRes = DelegateResponseDocument.Factory.parse(res.getXMLStreamReader());
-        System.out.println("response:" + delegateRes.xmlText());
+        __log.debug("response:" + delegateRes.xmlText());
 
     }
 
@@ -695,7 +706,7 @@ public class TMSRequestProcessorTest extends TestCase {
         sp.setPriority(BigInteger.valueOf(1));
         OMElement resp = tmsRP.setPriority(genOMElement(spdReq));
         SetPriorityResponseDocument sprd = SetPriorityResponseDocument.Factory.parse(resp.getXMLStreamReader());
-        System.out.println("setOutput response:" + sprd.xmlText());
+        __log.debug("setOutput response:" + sprd.xmlText());
 
         // check the query result
         TTaskQueryResultRow resultRow = getTask(tmsRP, taskId);
@@ -729,7 +740,7 @@ public class TMSRequestProcessorTest extends TestCase {
 
         OMElement resp = tmsRP.addAttachment(genOMElement(aadReq));
         AddAttachmentResponseDocument aard = AddAttachmentResponseDocument.Factory.parse(resp.getXMLStreamReader());
-        System.out.println("AddAttachment response:" + aard.xmlText());
+        __log.debug("AddAttachment response:" + aard.xmlText());
 
         GetAttachmentInfosDocument req = GetAttachmentInfosDocument.Factory.newInstance();
         GetAttachmentInfos gai = req.addNewGetAttachmentInfos();
@@ -737,7 +748,7 @@ public class TMSRequestProcessorTest extends TestCase {
 
         resp = tmsRP.getAttachmentInfos(genOMElement(req));
         GetAttachmentInfosResponseDocument gaird = GetAttachmentInfosResponseDocument.Factory.parse(resp.getXMLStreamReader());
-        System.out.println("Get attachmentInfos response:" + gaird.xmlText());
+        __log.debug("Get attachmentInfos response:" + gaird.xmlText());
     }
 
     public void testGetAttachmentInfos() throws Exception {
@@ -767,7 +778,7 @@ public class TMSRequestProcessorTest extends TestCase {
 
         OMElement resp = tmsRP.addAttachment(genOMElement(aadReq));
         AddAttachmentResponseDocument aard = AddAttachmentResponseDocument.Factory.parse(resp.getXMLStreamReader());
-        System.out.println("AddAttachment response:" + aard.xmlText());
+        __log.debug("AddAttachment response:" + aard.xmlText());
 
         GetAttachmentInfosDocument req = GetAttachmentInfosDocument.Factory.newInstance();
         GetAttachmentInfos gai = req.addNewGetAttachmentInfos();
@@ -775,7 +786,7 @@ public class TMSRequestProcessorTest extends TestCase {
 
         resp = tmsRP.getAttachmentInfos(genOMElement(req));
         GetAttachmentInfosResponseDocument gaird = GetAttachmentInfosResponseDocument.Factory.parse(resp.getXMLStreamReader());
-        System.out.println("Get attachmentInfos response:" + gaird.xmlText());
+        __log.debug("Get attachmentInfos response:" + gaird.xmlText());
     }
 
     public void testGetAttachments() throws Exception {
@@ -815,7 +826,7 @@ public class TMSRequestProcessorTest extends TestCase {
         OMElement resp = tmsRP.getAttachments(genOMElement(gadReq));
         com.intalio.wsHT.api.xsd.GetAttachmentsResponseDocument gard = com.intalio.wsHT.api.xsd.GetAttachmentsResponseDocument.Factory.parse(resp
                         .getXMLStreamReader());
-        System.out.println("GetAttachments response:" + gard.xmlText());
+        __log.debug("GetAttachments response:" + gard.xmlText());
 
     }
 
@@ -862,7 +873,7 @@ public class TMSRequestProcessorTest extends TestCase {
         OMElement resp = tmsRP.getAttachments(genOMElement(gadReq));
         com.intalio.wsHT.api.xsd.GetAttachmentsResponseDocument gard = com.intalio.wsHT.api.xsd.GetAttachmentsResponseDocument.Factory.parse(resp
                         .getXMLStreamReader());
-        System.out.println("GetAttachments test_attachment_2 response:" + gard.xmlText());
+        __log.debug("GetAttachments test_attachment_2 response:" + gard.xmlText());
 
     }
 
@@ -890,14 +901,14 @@ public class TMSRequestProcessorTest extends TestCase {
         OMElement resp = tmsRP.addComment(genOMElement(acdReq));
         AddCommentResponseDocument acrd = AddCommentResponseDocument.Factory.parse(resp.getXMLStreamReader());
 
-        System.out.println("AddComment response: " + acrd.xmlText());
+        __log.debug("AddComment response: " + acrd.xmlText());
 
         GetCommentsDocument gcdReq = GetCommentsDocument.Factory.newInstance();
         gcdReq.addNewGetComments().setIdentifier(taskId);
 
         resp = tmsRP.getComments(genOMElement(gcdReq));
         GetCommentsResponseDocument gcrd = GetCommentsResponseDocument.Factory.parse(resp.getXMLStreamReader());
-        System.out.println("GetComments response:" + gcrd.xmlText());
+        __log.debug("GetComments response:" + gcrd.xmlText());
     }
 
     public void testGetComments() throws Exception {
@@ -930,7 +941,7 @@ public class TMSRequestProcessorTest extends TestCase {
 
         OMElement resp = tmsRP.getComments(genOMElement(gcdReq));
         GetCommentsResponseDocument gcrd = GetCommentsResponseDocument.Factory.parse(resp.getXMLStreamReader());
-        System.out.println("GetComments response(shoud be 2):" + gcrd.xmlText());
+        __log.debug("GetComments response(shoud be 2):" + gcrd.xmlText());
     }
 
     public void testGetTaskInfo() throws Exception {
@@ -943,7 +954,7 @@ public class TMSRequestProcessorTest extends TestCase {
         gtiReq.addNewGetTaskInfo().setIdentifier(taskId);
 
         OMElement resp = tmsRP.getTaskInfo(genOMElement(gtiReq));
-        System.out.println("GetTaskInfo response:" + resp.toString());
+        __log.debug("GetTaskInfo response:" + resp.toString());
     }
 
     public void testGetTaskDescription() throws Exception {
@@ -958,7 +969,7 @@ public class TMSRequestProcessorTest extends TestCase {
         gtd.setContentType("plain/text");
 
         OMElement resp = tmsRP.getTaskDescription(genOMElement(gtdReq));
-        System.out.println("GetTaskDescription response:" + resp.toString());
+        __log.debug("GetTaskDescription response:" + resp.toString());
     }
 
     public void testSetOutput() throws Exception {
@@ -987,7 +998,7 @@ public class TMSRequestProcessorTest extends TestCase {
         OMElement requestElement = genOMElement(sodReq);
         OMElement resp = tmsRP.setOutput(requestElement);
         SetOutputResponseDocument sord = SetOutputResponseDocument.Factory.parse(resp.getXMLStreamReader());
-        System.out.println("setOutput response:" + sord.xmlText());
+        __log.debug("setOutput response:" + sord.xmlText());
 
         // check with getOuput
         GetOutputDocument godReq = GetOutputDocument.Factory.newInstance();
@@ -996,7 +1007,7 @@ public class TMSRequestProcessorTest extends TestCase {
         go.setPart("part1");
 
         resp = tmsRP.getOutput(genOMElement(godReq));
-        System.out.println("GetOutput response: " + resp.toString());
+        __log.debug("GetOutput response: " + resp.toString());
     }
 
     public void testDeleteOutput() throws Exception {
@@ -1029,7 +1040,7 @@ public class TMSRequestProcessorTest extends TestCase {
         dodReq.addNewDeleteOutput().setIdentifier(taskId);
 
         OMElement resp = tmsRP.deleteOutput(genOMElement(dodReq));
-        System.out.println("DeleteOutput response: " + resp.toString());
+        __log.debug("DeleteOutput response: " + resp.toString());
 
         // check with getOuput
         GetOutputDocument godReq = GetOutputDocument.Factory.newInstance();
@@ -1038,7 +1049,7 @@ public class TMSRequestProcessorTest extends TestCase {
         go.setPart("part1");
 
         resp = tmsRP.getOutput(genOMElement(godReq));
-        System.out.println("GetOutput response: " + resp.toString());
+        __log.debug("GetOutput response: " + resp.toString());
 
     }
 
@@ -1066,13 +1077,13 @@ public class TMSRequestProcessorTest extends TestCase {
         sf.setFaultData(XmlObject.Factory.parse("<fault-data>This is the first fault</fault-data>"));
 
         OMElement resp = tmsRP.setFault(genOMElement(sfd));
-        System.out.println("SetFault response:" + resp.toString());
+        __log.debug("SetFault response:" + resp.toString());
 
         GetFaultDocument gfdReq = GetFaultDocument.Factory.newInstance();
         gfdReq.addNewGetFault().setIdentifier(taskId);
 
         resp = tmsRP.getFault(genOMElement(gfdReq));
-        System.out.println("GetFault response: " + resp.toString());
+        __log.debug("GetFault response: " + resp.toString());
     }
 
     public void testDeleteFault() throws Exception {
@@ -1104,13 +1115,13 @@ public class TMSRequestProcessorTest extends TestCase {
         dfdReq.addNewDeleteFault().setIdentifier(taskId);
         
         OMElement resp = tmsRP.deleteFault(genOMElement(dfdReq));
-        System.out.println("DeleteFault response:" + resp.toString());
+        __log.debug("DeleteFault response:" + resp.toString());
         
         GetFaultDocument gfdReq = GetFaultDocument.Factory.newInstance();
         gfdReq.addNewGetFault().setIdentifier(taskId);
 
         resp = tmsRP.getFault(genOMElement(gfdReq));
-        System.out.println("GetFault response: " + resp.toString());
+        __log.debug("GetFault response: " + resp.toString());
     }
     
     public void testGetInput() throws Exception{
@@ -1153,7 +1164,7 @@ public class TMSRequestProcessorTest extends TestCase {
         go.setPart("part2");
 
         OMElement resp = tmsRP.getOutput(genOMElement(godReq));
-        System.out.println("GetOutput response part2: " + resp.toString());
+        __log.debug("GetOutput response part2: " + resp.toString());
     }
     
     public void testGetFault() throws Exception {
@@ -1185,7 +1196,7 @@ public class TMSRequestProcessorTest extends TestCase {
         gfdReq.addNewGetFault().setIdentifier(taskId);
 
         OMElement resp = tmsRP.getFault(genOMElement(gfdReq));
-        System.out.println("GetFault response(should be 2): " + resp.toString());
+        __log.debug("GetFault response(should be 2): " + resp.toString());
     }
 
     /************************************************************
@@ -1205,7 +1216,7 @@ public class TMSRequestProcessorTest extends TestCase {
         activateReq.addNewActivate().setIdentifier(taskId);
         OMElement res = tmsRP.activate(genOMElement(activateReq));
         ActivateResponseDocument activateRes = ActivateResponseDocument.Factory.parse(res.getXMLStreamReader());
-        System.out.println("response:" + activateRes.xmlText());
+        __log.debug("response:" + activateRes.xmlText());
 
         // query the task to check the task status and activate time
         QueryDocument queryReq = QueryDocument.Factory.newInstance();
@@ -1350,7 +1361,7 @@ public class TMSRequestProcessorTest extends TestCase {
         OMElement myTaskRes = tmsRP.getMyTasks(genOMElement(myTaskReq));
         TTask[] retTasks = GetMyTasksResponseDocument.Factory.parse(myTaskRes.getXMLStreamReader()).getGetMyTasksResponse().getTaskAbstractArray();
         assertTrue(retTasks.length > 0);
-        System.out.println("getMyTasks response:" + Utils.toPrettyXML(myTaskRes));
+        __log.debug("getMyTasks response:" + Utils.toPrettyXML(myTaskRes));
     }
 
     public void testGetMyTaskAbstracts() throws Exception {
@@ -1377,7 +1388,7 @@ public class TMSRequestProcessorTest extends TestCase {
         TTaskAbstract[] retTasks = GetMyTaskAbstractsResponseDocument.Factory.parse(myTaskRes.getXMLStreamReader()).getGetMyTaskAbstractsResponse()
                         .getTaskAbstractArray();
         assertTrue(retTasks.length > 0);
-        System.out.println("getMyTaskAbstracts response:" + Utils.toPrettyXML(myTaskRes));
+        __log.debug("getMyTaskAbstracts response:" + Utils.toPrettyXML(myTaskRes));
     }
 
     public void testQuery() throws Exception {
@@ -1409,9 +1420,9 @@ public class TMSRequestProcessorTest extends TestCase {
         String orderByClause = TaskView.CREATED_ON + " asc, " + TaskView.NAME;
         qry.setOrderByClause(orderByClause);
 
-        System.out.println("Query select  clause: " + selectClause);
-        System.out.println("Query where   clause: " + whereClause);
-        System.out.println("Query orderby clause: " + orderByClause);
+        __log.debug("Query select  clause: " + selectClause);
+        __log.debug("Query where   clause: " + whereClause);
+        __log.debug("Query orderby clause: " + orderByClause);
 
         OMElement queryRes = tmsRP.query(genOMElement(queryReq));
         TTaskQueryResultSet resultSet = QueryResponseDocument.Factory.parse(queryRes.getXMLStreamReader()).getQueryResponse().getQuery();
@@ -1419,7 +1430,7 @@ public class TMSRequestProcessorTest extends TestCase {
         // check the query result
         TTaskQueryResultRow[] resultRows = resultSet.getRowArray();
         assertTrue(resultRows.length > 0);
-        System.out.println("query response: " + Utils.toPrettyXML(queryRes));
+        __log.debug("query response: " + Utils.toPrettyXML(queryRes));
 
     }
 
