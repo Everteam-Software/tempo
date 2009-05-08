@@ -1,0 +1,4 @@
+<htdt:addComment xmlns:htdt="http://www.intalio.com/WS-HT/api/xsd">
+	<htdt:identifier>NeedInput</htdt:identifier>
+	<htdt:text>This is the comment for test!</htdt:text>
+</htdt:addComment>

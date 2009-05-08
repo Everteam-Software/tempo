@@ -1,0 +1,6 @@
+<htdt:addAttachment xmlns:htdt="http://www.intalio.com/WS-HT/api/xsd">
+	<htdt:identifier>NeedInput</htdt:identifier>
+	<htdt:name>TestAttachment1</htdt:name>
+	<htdt:accessType>inline</htdt:accessType>
+	<htdt:attachment>TESTVAlue should be in base64</htdt:attachment>
+</htdt:addAttachment>

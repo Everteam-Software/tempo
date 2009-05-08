@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://geronimo.apache.org/xml/ns/j2ee/web-1.1">
+    <environment xmlns="http://geronimo.apache.org/xml/ns/deployment-1.1">
+        <moduleId>
+            <groupId>liftApps</groupId>
+            <artifactId>quepasa</artifactId>
+            <version>0.1</version>
+            <type>war</type>
+        </moduleId>
+    </environment>
+    <context-root>/ui-fw-lift</context-root>
+</web-app>

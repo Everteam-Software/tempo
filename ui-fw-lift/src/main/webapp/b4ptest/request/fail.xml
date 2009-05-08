@@ -1,0 +1,5 @@
+<fail xmlns="http://www.intalio.com/WS-HT/api/xsd" xmlns:htpt="http://www.intalio.com/WS-HT/protocol">
+	<identifier></identifier>
+	<faultName></faultName>
+	<faultData></faultData>
+</fail>

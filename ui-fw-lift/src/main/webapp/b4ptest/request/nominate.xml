@@ -1,0 +1,8 @@
+<nominate xmlns="http://www.intalio.com/WS-HT/api/xsd" xmlns:htd="http://www.intalio.com/WS-HT">
+	<identifier>test</identifier>
+	<organizationalEntity>
+		<htd:users>
+			<htd:user>intalio\admin</htd:user>
+		</htd:users>
+	</organizationalEntity>
+</nominate>
