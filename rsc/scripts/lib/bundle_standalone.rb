@@ -37,6 +37,7 @@ def setup_ode
   # http://github.com/intalio/ode-ext/tree/master
   
   # copy the necessary ode deployer files
+  # those should be in the ode war file that we are downloading
   deployment_jars = [
     "org.intalio.ode-ext:deploy:jar:1.0.0",
     "org.slf4j:jcl-over-slf4j:jar:1.5.6",

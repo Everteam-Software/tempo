@@ -44,7 +44,7 @@ BUILD_CONFIG = {
   :liferay => :v5_1_0,
   :alfresco => :v3_0,
   :tempo => {
-    :core => "6.0.0.46-SNAPSHOT",
+    :core => "6.0.0.47",
     # not used until we've upgraded to the new deploy and security packages
     :security => "1.0.1",
     :deploy => "1.0.3",
