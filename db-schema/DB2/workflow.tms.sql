@@ -8,7 +8,7 @@ CREATE TABLE tempo_notification (id BIGINT NOT NULL, failure_code VARCHAR(254), 
 CREATE TABLE tempo_pa (id BIGINT NOT NULL, complete_soap_action VARCHAR(254), deadline TIMESTAMP, failure_code VARCHAR(254), failure_reason VARCHAR(254), input_xml CLOB(1M), is_chained_before SMALLINT, output_xml CLOB(1M), previous_task_id VARCHAR(254), priority INTEGER, process_id VARCHAR(254), state SMALLINT, PRIMARY KEY (id));
 CREATE TABLE tempo_pipa (id BIGINT NOT NULL, init_message VARCHAR(254), init_soap VARCHAR(254), process_endpoint VARCHAR(254), PRIMARY KEY (id));
 CREATE TABLE tempo_role (ACL_ID BIGINT, element VARCHAR(254), TASK_ID BIGINT);
-CREATE TABLE tempo_task (id BIGINT NOT NULL, creation_date TIMESTAMP, description VARCHAR(254), form_url VARCHAR(254), tid VARCHAR(254), internal_id INTEGER, PRIMARY KEY (id));
+CREATE TABLE tempo_task (id BIGINT NOT NULL, creation_date TIMESTAMP, description VARCHAR(254), form_url VARCHAR(254), task_idVARCHAR(254), internal_id INTEGER, PRIMARY KEY (id));
 CREATE TABLE tempo_user (ACL_ID BIGINT, element VARCHAR(254), TASK_ID BIGINT);
 CREATE UNIQUE INDEX OPENJPA_SEQUENCE_TABLE_IDX ON OPENJPA_SEQUENCE_TABLE (ID);
 CREATE INDEX I_TMPO_CL_DTYPE ON tempo_acl (DTYPE);

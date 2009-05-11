@@ -8,7 +8,7 @@ CREATE TABLE tempo_notification (id NUMBER NOT NULL, failure_code VARCHAR2(255),
 CREATE TABLE tempo_pa (id NUMBER NOT NULL, complete_soap_action VARCHAR2(255), deadline TIMESTAMP, failure_code VARCHAR2(255), failure_reason VARCHAR2(255), input_xml CLOB, is_chained_before NUMBER, output_xml CLOB, previous_task_id VARCHAR2(255), priority NUMBER, process_id VARCHAR2(255), state NUMBER, PRIMARY KEY (id));
 CREATE TABLE tempo_pipa (id NUMBER NOT NULL, init_message VARCHAR2(255), init_soap VARCHAR2(255), process_endpoint VARCHAR2(255), PRIMARY KEY (id));
 CREATE TABLE tempo_role (ACL_ID NUMBER, element VARCHAR2(255), TASK_ID NUMBER);
-CREATE TABLE tempo_task (id NUMBER NOT NULL, creation_date TIMESTAMP, description VARCHAR2(255), form_url VARCHAR2(255), tid VARCHAR2(255), internal_id NUMBER, PRIMARY KEY (id));
+CREATE TABLE tempo_task (id NUMBER NOT NULL, creation_date TIMESTAMP, description VARCHAR2(255), form_url VARCHAR2(255), task_idVARCHAR2(255), internal_id NUMBER, PRIMARY KEY (id));
 CREATE TABLE tempo_user (ACL_ID NUMBER, element VARCHAR2(255), TASK_ID NUMBER);
 CREATE INDEX I_TMPO_CL_DTYPE ON tempo_acl (DTYPE);
 CREATE INDEX I_TMP__MP_ELEMENT ON tempo_acl_map (ELEMENT_ID);

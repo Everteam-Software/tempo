@@ -19,7 +19,7 @@ CREATE TABLE tempo_pipa -- PIPATask
 CREATE TABLE tempo_role (ACL_ID BIGINT, element VARCHAR(255), TASK_ID BIGINT);
 CREATE TABLE tempo_task -- Task
     (id BIGINT NOT NULL, -- datastore id
-    creation_date TIMESTAMP, description VARCHAR(255), form_url VARCHAR(255), tid VARCHAR(255), internal_id INTEGER, PRIMARY KEY (id));
+    creation_date TIMESTAMP, description VARCHAR(255), form_url VARCHAR(255), task_idVARCHAR(255), internal_id INTEGER, PRIMARY KEY (id));
 CREATE TABLE tempo_user (ACL_ID BIGINT, element VARCHAR(255), TASK_ID BIGINT);
 CREATE INDEX I_TMPO_CL_DTYPE ON tempo_acl (DTYPE);
 CREATE INDEX I_TMP__MP_ELEMENT ON tempo_acl_map (ELEMENT_ID);
