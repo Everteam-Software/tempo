@@ -25,6 +25,6 @@
         name="org.intalio.tempo.wds"
         transaction-type="RESOURCE_LOCAL">
         <class>org.intalio.tempo.workflow.wds.core.Item</class>
-        <properties />
+        <properties></properties>
     </persistence-unit>
 </persistence>

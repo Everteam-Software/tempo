@@ -68,7 +68,7 @@ define "tempo" do
     compile.with projects("tms-axis"), SECURITY_WS_CLIENT_ONLY, APACHE_JPA, APACHE_COMMONS[:pool], APACHE_COMMONS[:collections], AXIS2, AXIOM, DOM4J, JAXEN, SLF4J, SPRING[:core], STAX_API, XERCES, XMLBEANS
     
     compile { open_jpa_enhance }
-    # task "package" => generate_sql([project], "workflow.tms")
+    task "package" => generate_sql([project], "workflow.tms")
     
     test.with APACHE_DERBY, LOG4J, DB_CONNECTOR.values, XMLUNIT, WOODSTOX, INSTINCT, SECURITY_WS_COMMON
     test.exclude '*TestUtils*'
@@ -143,7 +143,7 @@ define "tempo" do
            ITEXT,
            ICAL,
            INTALIO_STATS, 
-           JODATIME,
+           # JODATIME,
            JSON,
            JSON_NAGGIT,
            JSTL,
@@ -185,7 +185,7 @@ define "tempo" do
     compile { open_jpa_enhance }
     test.with APACHE_DERBY, LOG4J
     resources.filter.using "version" => VERSION_NUMBER
-    # task "package" => generate_sql([project], "workflow.deployment")
+    task "package" => generate_sql([project], "workflow.deployment")
     
     package :jar
     package(:war).with(:libs=>libs)

@@ -59,7 +59,7 @@ public abstract class Task extends BaseRestrictedEntity {
     @Basic
     private int _internalId;
 
-    @Column(name = "tid")
+    @Column(name = "task_id")
     @Basic
     private String _id;
 
