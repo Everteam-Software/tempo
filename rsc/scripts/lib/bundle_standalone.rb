@@ -39,7 +39,7 @@ def setup_ode
   # copy the necessary ode deployer files
   # those should be in the ode war file that we are downloading
   deployment_jars = [
-    "org.intalio.ode-ext:deploy:jar:1.0.0",
+    "org.intalio.ode-ext:ode-ext-deploy:jar:1.0.0",
     "org.slf4j:jcl-over-slf4j:jar:1.5.6",
     "org.intalio.deploy:deploy-api:jar:#{BUILD_CONFIG[:tempo][:deploy]}"
     ]

@@ -7,7 +7,7 @@ CREATE TABLE tempo_notification (id BIGINT NOT NULL, failure_code VARCHAR(255), 
 CREATE TABLE tempo_pa (id BIGINT NOT NULL, complete_soap_action VARCHAR(255), deadline DATETIME, failure_code VARCHAR(255), failure_reason VARCHAR(255), input_xml TEXT, is_chained_before BIT, output_xml TEXT, previous_task_id VARCHAR(255), priority INTEGER, process_id VARCHAR(255), state SMALLINT, PRIMARY KEY (id)) TYPE = innodb;
 CREATE TABLE tempo_pipa (id BIGINT NOT NULL, init_message VARCHAR(255), init_soap VARCHAR(255), process_endpoint VARCHAR(255), PRIMARY KEY (id)) TYPE = innodb;
 CREATE TABLE tempo_role (ACL_ID BIGINT, element VARCHAR(255), TASK_ID BIGINT) TYPE = innodb;
-CREATE TABLE tempo_task (id BIGINT NOT NULL, creation_date DATETIME, description VARCHAR(255), form_url VARCHAR(255), task_idVARCHAR(255), internal_id INTEGER, PRIMARY KEY (id)) TYPE = innodb;
+CREATE TABLE tempo_task (id BIGINT NOT NULL, creation_date DATETIME, description VARCHAR(255), form_url VARCHAR(255), taskid VARCHAR(255), internal_id INTEGER, PRIMARY KEY (id)) TYPE = innodb;
 CREATE TABLE tempo_user (ACL_ID BIGINT, element VARCHAR(255), TASK_ID BIGINT) TYPE = innodb;
 CREATE INDEX I_TMPO_CL_DTYPE ON tempo_acl (DTYPE);
 CREATE INDEX I_TMP__MP_ELEMENT ON tempo_acl_map (ELEMENT_ID);
