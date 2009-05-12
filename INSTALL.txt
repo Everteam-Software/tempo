@@ -64,6 +64,16 @@ Congratulation, tempo is now running!
 The TaskList or Task inbox is at this URL: http://localhost:8080/ui-fw/
 And you can start the sample "AbsenceRequest" process.
 
+You can log in straight away with users admin/changeit. You can define other users
+as described in the page:
+http://www.intalio.org/confluence/display/TEMPO/Pull+Users+and+roles+from+a+different+service
+
+and you can find more examples on:
+http://bpms.intalio.com/
+
+The technical FAQ is located at:
+http://tempo.intalio.org/
+
 ======================================
  Useful links
 ======================================
