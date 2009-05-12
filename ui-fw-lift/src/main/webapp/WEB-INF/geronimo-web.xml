@@ -1,12 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns="http://geronimo.apache.org/xml/ns/j2ee/web-1.1">
-    <environment xmlns="http://geronimo.apache.org/xml/ns/deployment-1.1">
+    <environment xmlns="http://geronimo.apache.org/xml/ns/deployment-1.1" xmlns:dep="http://geronimo.apache.org/xml/ns/deployment-1.1">
         <moduleId>
-            <groupId>liftApps</groupId>
-            <artifactId>quepasa</artifactId>
-            <version>0.1</version>
+            <groupId>org.intalio.tempo</groupId>
+            <artifactId>ui-fw-lift</artifactId>
+            <version>SANPSHOT_0.1</version>
             <type>war</type>
         </moduleId>
+		<!--	<dep:dependencies>
+			<dependency>
+	                <groupId>cas</groupId>
+	                <artifactId>casclient</artifactId>
+	                <version>2.1.1</version>
+	                <type>jar</type>
+	            </dependency>
+	            <dependency>
+	                <groupId>org.codehaus.castor</groupId>
+	                <artifactId>castor</artifactId>
+	                <version>1.0.5</version>
+	                <type>jar</type>
+	            </dependency>
+			</dep:dependencies>-->
+			<hidden-classes>
+				<filter>org.intalio.tempo</filter>
+				<filter>org.springframework</filter>
+				<filter>META-INF/spring</filter>
+			</hidden-classes>
     </environment>
     <context-root>/ui-fw-lift</context-root>
 </web-app>

@@ -4,6 +4,7 @@ require "rubygems"
 require "buildr"
 require "buildr/xmlbeans"
 require "buildr/cobertura"
+require "buildr/scala/compiler.rb"
 
 # Keep this structure to allow the build system to update version numbers.
 VERSION_NUMBER = "6.0.0.23-SNAPSHOT"
@@ -340,6 +341,59 @@ define "tempo" do
     resources.filter.using "version" => VERSION_NUMBER
     test.with JAXEN, XMLUNIT, INSTINCT
     package(:war).include(web_xml, :as=>'WEB-INF/web.xml').with(:libs=>libs)
+  end
+
+  desc 'ui-fw-lift'
+	define 'ui-fw-lift' do
+	libs = projects("security", "security-ws-client", "security-ws-common",
+                    "tms-axis", "tms-client", "tms-common", "web-nutsNbolts"),
+           APACHE_ABDERA,
+           APACHE_COMMONS[:io],
+           APACHE_COMMONS[:httpclient],
+           APACHE_COMMONS[:codec],
+           APACHE_JPA,
+           AXIOM, 
+           AXIS2, 
+           CSV,
+           CASTOR,
+           DOM4J,
+           ICAL,
+           INTALIO_STATS, 
+           JODATIME,
+           JSON,
+           JSON_NAGGIT,
+           JSTL,
+           LOG4J,
+           PLUTO,
+           SPRING[:core], 
+           SPRING[:webmvc],
+           SPRING[:webmvc_portlet],
+           SLF4J, 
+           STAX_API, 
+           TAGLIBS, 
+           URLREWRITE,
+           WOODSTOX, 
+           WSDL4J,
+           WS_COMMONS_SCHEMA,
+           XERCES, 
+           XMLBEANS
+    
+
+		#compile.using(:scalac)
+  		compile.with libs, JSP_API, SERVLET_API, CAS_CLIENT, PORTLET_API, 'com.rabbitmq:rabbitmq-client:jar:1.2.0', 'commons-codec:commons-codec:jar:1.2', 'commons-codec:commons-codec:jar:1.2', 'commons-codec:commons-codec:jar:1.2', 'commons-codec:commons-codec:jar:1.3', 'commons-codec:commons-codec:jar:1.3', 'commons-codec:commons-codec:jar:1.3', 'commons-collections:commons-collections:jar:3.2', 'commons-collections:commons-collections:jar:3.2', 'commons-collections:commons-collections:jar:3.2', 'commons-fileupload:commons-fileupload:jar:1.2', 'commons-fileupload:commons-fileupload:jar:1.2', 'commons-fileupload:commons-fileupload:jar:1.2', 'commons-httpclient:commons-httpclient:jar:3.0.1', 'commons-httpclient:commons-httpclient:jar:3.0.1', 'commons-httpclient:commons-httpclient:jar:3.0.1', 'commons-logging:commons-logging:jar:1.0.3', 'commons-logging:commons-logging:jar:1.0.3', 'commons-logging:commons-logging:jar:1.0.3', 'javax.activation:activation:jar:1.1', 'javax.activation:activation:jar:1.1', 'javax.activation:activation:jar:1.1', 'javax.activation:activation:jar:1.1', 'javax.activation:activation:jar:1.1', 'javax.activation:activation:jar:1.1', 'javax.mail:mail:jar:1.4', 'javax.mail:mail:jar:1.4', 'javax.mail:mail:jar:1.4', 'javax.servlet:servlet-api:jar:2.5', 'junit:junit:jar:3.8.1', 'junit:junit:jar:3.8.1', 'junit:junit:jar:3.8.1', 'log4j:log4j:jar:1.2.12', 'log4j:log4j:jar:1.2.12', 'log4j:log4j:jar:1.2.12', 'net.liftweb:lift-amqp:jar:0.9', 'net.liftweb:lift-core:jar:0.9', 'net.liftweb:lift-facebook:jar:0.9', 'net.liftweb:lift-textile:jar:0.9', 'net.liftweb:lift-webkit:jar:0.9', 'net.liftweb:lift-webkit:jar:0.9', 'net.liftweb:lift-webkit:jar:0.9', 'net.liftweb:lift-widgets:jar:0.9', 'net.liftweb:lift-xmpp:jar:0.9', 'org.apache.commons:commons-io:jar:1.3.2', 'org.apache.derby:derby:jar:10.2.2.0', 'org.igniterealtime.smack:smack:jar:3.0.4', 'org.igniterealtime.smack:smackx:jar:3.0.4', 'org.scala-lang:scala-library:jar:2.7.1', 'org.scala-lang:scala-library:jar:2.7.1', 'org.scala-lang:scala-library:jar:2.7.1', 'org.scala-lang:scala-library:jar:2.7.1', 'org.scala-lang:scala-library:jar:2.7.1', 'org.scala-lang:scala-library:jar:2.7.1', 'org.scala-lang:scala-library:jar:2.7.1', 'org.scala-lang:scala-library:jar:2.7.1', 'org.scala-lang:scala-library:jar:2.7.1', 'apache.incubator:abdera:jar:0.4.0-incubating'
+  		test.with 'org.mortbay.jetty:jetty-util:jar:6.1.6', 'org.mortbay.jetty:jetty:jar:6.1.6', 'org.mortbay.jetty:servlet-api-2.5:jar:6.1.6', 'org.scala-lang:scala-compiler:jar:2.7.1'
+
+
+	    # use the following command to build the prepared portlet version
+	    # buildr install -e portlet
+	    #
+	    # this just copies over the configured web.xml for portlet 
+	    web_xml = (ENV['BUILDR_ENV'] == 'portlet' ? 'web-cas.xml' : 'web.xml')
+	    web_xml = _("src/main/webapp/WEB-INF/"+web_xml) 
+
+	    resources.filter.using "version" => VERSION_NUMBER
+	    test.with JAXEN, XMLUNIT, INSTINCT
+	    package(:war, :id=>'ui-fw-lift').include(web_xml, :as=>'WEB-INF/web.xml')#.with(:libs=>libs)
   end
 
   define "registry" do
