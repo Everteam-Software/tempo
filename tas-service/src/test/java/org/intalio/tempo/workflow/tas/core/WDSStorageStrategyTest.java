@@ -40,7 +40,7 @@ public class WDSStorageStrategyTest extends TestCase {
         assertSanitize("\\foo", "foo" );
         assertSanitize("\\foo foo", "foo%20foo" );
         // @note(alex) we have encoding problems on release.intalio.com
-        assertSanitize("ŽŽŽ", "%C3%A9%C3%A9%C3%A9" );
+        assertSanitize("Ã©Ã©Ã©", "%C3%A9%C3%A9%C3%A9" );
     }
     
     void assertSanitize(String filename, String expected) throws Exception {
