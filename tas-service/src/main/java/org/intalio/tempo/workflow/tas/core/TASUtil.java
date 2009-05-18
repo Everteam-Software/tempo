@@ -2,7 +2,8 @@ package org.intalio.tempo.workflow.tas.core;
 
 import java.net.InetAddress;
 import java.net.URL;
-import java.net.URLEncoder;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,8 +20,21 @@ public class TASUtil {
         Matcher match = regex.matcher(filename);
         if (match.find()) {
             try {
+                // String localname = match.group(2);
+                // return URLEncoder.encode(localname, "UTF-8");
+            
                 String localname = match.group(2);
-                return URLEncoder.encode(localname, "UTF-8");
+
+                //@note URLEncoder is not to be used for URIs, only for
+                // 'application/x-www-form-urlencoded' data.
+                // the main difference is " " being encoded to "%20" instead of
+                // "+"
+                return new URI(null, null, localname, null).toASCIIString();
+
+            } catch (URISyntaxException e1) {
+                throw new IllegalArgumentException("Invalid filename: "
+                    + filename, e1);
+
             } catch (Exception e) {
                 throw new IllegalStateException(e);
             }
