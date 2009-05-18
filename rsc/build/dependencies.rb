@@ -40,7 +40,7 @@ FOP = "fop:fop:jar:0.20.5"
 GERONIMO_SPECS = {
   "jta" => "org.apache.geronimo.specs:geronimo-jta_1.1_spec:jar:1.1",
   "jpa" => "org.apache.geronimo.specs:geronimo-jpa_3.0_spec:jar:1.0",
-#  "jms" => "org.apache.geronimo.specs:geronimo-jms_1.1_spec:jar:1.0.1"
+  "jms" => "org.apache.geronimo.specs:geronimo-jms_1.1_spec:jar:1.0.1"
 }
 
 ICAL = "ical4j:ical4j:jar:0.9.20"
@@ -248,8 +248,9 @@ MY_FACES = [
 APACHE_JPA = [
   APACHE_COMMONS[:lang],
   APACHE_COMMONS[:collections],
-  GERONIMO_SPECS.values,
-  "org.apache.openjpa:openjpa:jar:1.1.0-645340",
+  GERONIMO_SPECS["jta"],
+  GERONIMO_SPECS["jpa"],
+#  "org.apache.openjpa:openjpa:jar:1.1.0-645340",
   "org.apache.openjpa:openjpa:jar:1.2.1",
   "serp:serp:jar:1.13.1"
 ]
