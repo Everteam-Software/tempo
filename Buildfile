@@ -12,6 +12,9 @@ require "rsc/build/repositories.rb"
 require "rsc/buildr-tasks/openjpa"
 require "rsc/buildr-tasks/generate_sql"
 
+ENV['JAVA_OPTS'] ||= '-Dfile.encoding=UTF-8'
+
+
 desc "Tempo Workflow"
 define "tempo" do
   project.version = VERSION_NUMBER
