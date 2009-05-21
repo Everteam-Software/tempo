@@ -389,6 +389,7 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             String subQuery = requireElementValue(rootQueue, "subQuery");
             String first = expectElementValue(rootQueue, "first");
             String max = expectElementValue(rootQueue, "max");
+            Boolean fullMarshall = Boolean.valueOf(expectElementValue(rootQueue, "full"));
             HashMap map = new HashMap();
             map.put(TaskFetcher.FETCH_CLASS_NAME, taskType);
             map.put(TaskFetcher.FETCH_SUB_QUERY, subQuery);
@@ -396,13 +397,14 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             map.put(TaskFetcher.FETCH_MAX, max);
             final UserRoles user = _server.getUserRoles(participantToken);
             Task[] tasks = _server.getAvailableTasks(participantToken, map);
-            return marshalTasksList(user, tasks, "getAvailableTasksResponse");
+            return marshalTasksList(user, tasks, "getAvailableTasksResponse", fullMarshall);
         } catch (Exception e) {
             throw makeFault(e);
         }
     }
     
-    public OMElement countAvailableTasks(final OMElement requestElement) throws AxisFault {
+
+	public OMElement countAvailableTasks(final OMElement requestElement) throws AxisFault {
         try {
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
             String participantToken = requireElementValue(rootQueue, "participantToken");
@@ -426,18 +428,18 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             throw makeFault(e);
         }
     }
-
-    /**
-     * This is used in both <code>getAvailableTasks</code> and
-     * <code>getTaskList</code>
-     */
-    private OMElement marshalTasksList(final UserRoles user, final Task[] tasks, final String responseTag) {
-        OMElement response = new TMSResponseMarshaller(OM_FACTORY) {
+	
+    private OMElement marshalTasksList(final UserRoles user, final Task[] tasks,
+			final String responseTag, final Boolean fullMarshall) {
+    	OMElement response = new TMSResponseMarshaller(OM_FACTORY) {
             public OMElement marshalResponse(Task[] tasks) {
                 OMElement response = createElement(responseTag);
                 for (Task task : tasks) {
                     try {
-                        response.addChild(new TaskMarshaller().marshalTaskMetadata(task, user));
+                    	if(fullMarshall)
+                    		response.addChild(new TaskMarshaller().marshalFullTask(task, user));
+                    	else
+                    		response.addChild(new TaskMarshaller().marshalTaskMetadata(task, user));
                     } catch (Exception e) {
                         // marshalling of that task failed.
                         // let's not fail fast, but provide info in the logs.
@@ -450,6 +452,14 @@ public class TMSRequestProcessor extends OMUnmarshaller {
         if (_logger.isDebugEnabled())
             _logger.debug(response.toString());
         return response;
+	}
+
+    /**
+     * This is used in both <code>getAvailableTasks</code> and
+     * <code>getTaskList</code>
+     */
+    private OMElement marshalTasksList(final UserRoles user, final Task[] tasks, final String responseTag) {
+     return marshalTasksList(user, tasks, responseTag, false);   
     }
 
     private AxisFault makeFault(Exception e) {

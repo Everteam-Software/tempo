@@ -310,15 +310,14 @@
 			<xsd:element name="getAvailableTasksRequest">
 				<xsd:complexType>
 					<xsd:sequence>
-						<xsd:element name="participantToken"
-							type="xsd:string">
+						<xsd:element name="participantToken" type="xsd:string">
 						</xsd:element>
-						<xsd:element name="taskType"
-							type="xsd:string">
+						<xsd:element name="taskType" type="xsd:string">
 						</xsd:element>
 						<xsd:element name="subQuery" type="xsd:string"/>
 						<xsd:element name="first" type="xsd:string"/>
 						<xsd:element name="max" type="xsd:string"/>
+						<xsd:element name="full" type="xsd:boolean" minOccurs="0" maxOccurs="1" />
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>

@@ -35,7 +35,7 @@ public interface ITaskManagementService {
     
     Long countAvailableTasks(final String taskType, final String subQuery) throws AuthException;
     
-    Task[] getAvailableTasks(final String taskType, final String subQuery, final String first, final String max) throws AuthException;
+    Task[] getAvailableTasks(final String taskType, final String subQuery, final String first, final String max, final boolean collectFull) throws AuthException;
 
     Task getTask(String taskID) throws AuthException, UnavailableTaskException;
 

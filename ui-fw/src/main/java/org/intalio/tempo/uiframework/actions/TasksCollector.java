@@ -56,6 +56,7 @@ public class TasksCollector {
             put("query", null);
             put("qtype", null);
             put("type", "PATask");
+            put("full", "");
             init();
         }
 
@@ -119,7 +120,7 @@ public class TasksCollector {
     }
 
     private void collect(final FormManager fmanager, final ArrayList<TaskHolder<Task>> _tasks, final ITaskManagementService taskManager, ParameterMap params,
-                    String type, StringBuffer query) throws AuthException {
+                    String type, StringBuffer query) throws AuthException { 
         // do we have a valid query
         boolean validQuery = params.isSet("qtype") && params.isSet("query");
         // if yes, append it
@@ -138,11 +139,11 @@ public class TasksCollector {
         if (params.isSet("sortorder"))
             query.append(" " + params.get("sortorder"));
         // count total and get those tasks
-        collectTasks(_token, _user, fmanager, taskManager, type, countQuery, query, _tasks, params.get("rp"), params.get("page"));
+        collectTasks(_token, _user, fmanager, taskManager, type, countQuery, query, _tasks, params.get("rp"), params.get("page"), Boolean.valueOf(params.get("full")));
     }
 
     private void collectTasks(final String token, final String user, FormManager fmanager, ITaskManagementService taskManager, String taskType,
-                    String countQuery, StringBuffer query, List<TaskHolder<Task>> tasksHolder, final String taskPerPage, final String page)
+                    String countQuery, StringBuffer query, List<TaskHolder<Task>> tasksHolder, final String taskPerPage, final String page, final boolean collectFull)
                     throws AuthException {
         // get total number of tasks
         long total = taskManager.countAvailableTasks(taskType, countQuery);
@@ -164,7 +165,7 @@ public class TasksCollector {
         _request.setAttribute("totalPage", total);
         _request.setAttribute("currentPage", page);
 
-        Task[] tasks = taskManager.getAvailableTasks(taskType, query.toString(), String.valueOf(index), String.valueOf(itasksPerPage));
+        Task[] tasks = taskManager.getAvailableTasks(taskType, query.toString(), String.valueOf(index), String.valueOf(itasksPerPage), collectFull);
         for (Task task : tasks) {
             tasksHolder.add(new TaskHolder<Task>(task, URIUtils.getResolvedTaskURLAsString(_request, fmanager, task, token, user)));
         }
