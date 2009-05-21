@@ -54,7 +54,12 @@
 
 		function clearFrame() {
     	var loc = window.frames['taskform'].location;
-		  if(loc.toString().match("empty.jsp")!=null) return ;
+    	try {
+    	  if(loc.toString().match("empty.jsp")!=null) return ;
+    	} catch(err) {
+    	  $('#taskform').animate({height:"0px"},speed);
+        window.open("/ui-fw/script/empty.jsp", "taskform");
+    	}
 		  
 			$('#taskform').animate({height:"0px"},speed);
       window.open("/ui-fw/script/empty.jsp", "taskform");
@@ -496,9 +501,17 @@
 		});
 		
 		$('#taskform').load(function(){
-			var elo = $('html', window.frames['taskform'].document);
+			
 			var loc = window.frames['taskform'].location;
-			if(loc == "about:blank") return;
+			try {
+			  if(loc == "about:blank") return;
+			} catch(err) {
+			  $('#taskform').animate({height:height},speed);
+		    refresh(false);
+			  return;
+			}
+			
+			var elo = $('html', window.frames['taskform'].document);
 			
 			var visible = $('#taskform').height() != 0;
 			if(visible) {

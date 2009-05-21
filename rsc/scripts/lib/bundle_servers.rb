@@ -3,6 +3,7 @@ def install_server server_zip_url, build_folder="tempo-build-#{time_now}"
   @@webapp_folder = "#{@@server_folder}/webapps"
   @@wi = WarInstaller.new @@webapp_folder, true, true
   @@lib_folder = "#{@@server_folder}/common/lib" # tomcat5
+  @@log_folder = check_folder("#{@@server_folder}/var/logs") # tomcat5
 end
 
 def install_tomcat6 build_folder="tempo-tomcat6-#{time_now}"

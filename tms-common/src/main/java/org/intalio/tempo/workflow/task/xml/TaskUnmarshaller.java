@@ -62,6 +62,8 @@ import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
 public class TaskUnmarshaller extends XmlBeanUnmarshaller {
 
     private static final Logger _logger = LoggerFactory.getLogger(TaskUnmarshaller.class);
+    private static final String[] actions = new String[] {"claim", "revoke", "save", "complete", "dismiss"};
+    
 
     public TaskUnmarshaller() {
         super(TaskXMLConstants.TASK_NAMESPACE, TaskXMLConstants.TASK_NAMESPACE_PREFIX);
@@ -111,10 +113,6 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
         if (taskMetadata.xgetPriority() != null && taskMetadata.xgetPriority().validate()) {
             priority = taskMetadata.getPriority();
         }
-        ACL claim = readACL(taskMetadata, "claim");
-        ACL revoke = readACL(taskMetadata, "revoke");
-        ACL save = readACL(taskMetadata, "save");
-        ACL complete = readACL(taskMetadata, "complete");
 
         String formURLStr = taskMetadata.getFormUrl();
         URI formURL = null;
@@ -191,12 +189,11 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
             resultTask.setCreationDate(new Date());
         }
 		 
-				
-        authorize(resultTask, "claim", claim);
-        authorize(resultTask, "revoke", revoke);
-        authorize(resultTask, "save", save);
-        authorize(resultTask, "complete", complete);
-
+		for(String action : actions ) {
+           ACL acl = readACL(taskMetadata, action);    
+           authorize(resultTask, action, acl);
+		}
+		
         if (ITaskWithState.class.isAssignableFrom(taskClass)) {
             ITaskWithState taskWithState = (ITaskWithState) resultTask;
             taskWithState.setState(taskState);

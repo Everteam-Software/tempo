@@ -3,16 +3,7 @@
 # Versions are defined in the config file
 def setup_axis_and_ode
   setup_axis
-  @@ode_folder = download_unzip(BUILD_URI[:ode][BUILD_CONFIG[:ode]])
-  ode_war = @@finder.find_war( @@ode_folder )
-  @@ode_war_folder   = @@wi.install ode_war, "ode.war"
-  
-  # copy required xpath extension for ode
-  # see: http://www.intalio.org/confluence/display/PXE/Custom+XPath+Functions
-  locate_and_copy("org.intalio.tempo:tempo-processes-xpath-extensions:jar:#{BUILD_CONFIG[:tempo][:processes]}", "#{@@ode_war_folder}/WEB-INF/lib")
-
-  # copy ode related configuration
-  File.copy "#{TEMPO_SVN}/rsc/bundle-config/ode-axis2.properties", @@config_folder
+  setup_ode
 end
 
 def setup_axis
@@ -29,16 +20,41 @@ def setup_axis
   @@si = ServiceInstaller.new( @@axis2_war_folder )
 end
 
+
+def setup_ode
+  @@ode_folder = download_unzip(BUILD_URI[:ode][BUILD_CONFIG[:ode]])
+  ode_war = @@finder.find_war( @@ode_folder )
+  @@ode_war_folder   = @@wi.install ode_war, "ode.war"
+  
+  # copy required xpath extension for ode, this is used in TMP
+  # see: http://www.intalio.org/confluence/display/PXE/Custom+XPath+Functions
+  locate_and_copy("org.intalio.tempo:tempo-processes-xpath-extensions:jar:#{BUILD_CONFIG[:tempo][:processes]}", "#{@@ode_war_folder}/WEB-INF/lib")
+
+  # copy ode related configuration
+  File.copy "#{TEMPO_SVN}/rsc/bundle-config/ode-axis2.properties", @@config_folder
+  
+  # setup of common deployment service, needs ode-ext from the following project:
+  # http://github.com/intalio/ode-ext/tree/master
+  
+  # copy the necessary ode deployer files
+  # those should be in the ode war file that we are downloading
+  deployment_jars = [
+    "org.intalio.ode-ext:ode-ext-deploy:jar:1.0.0",
+    "org.slf4j:jcl-over-slf4j:jar:1.5.6",
+    "org.intalio.deploy:deploy-api:jar:#{BUILD_CONFIG[:tempo][:deploy]}"
+    ]
+  locate_and_copy(deployment_jars, "#{@@ode_war_folder}/WEB-INF/lib")
+end
+
 def install_token_service
-  @@si.install_artifact_aar("org.intalio.tempo:tempo-security-ws-service:aar:#{BUILD_CONFIG[:tempo][:core]}")
+  @@si.install_artifact_aar("org.intalio.security:security-ws-service:aar:#{BUILD_CONFIG[:tempo][:security]}")
 end
 
 # Install and copy tempo axis services
 # the version values are taken from the config file
 def install_tempo_services 
-  # @@si.install_artifact_aar("org.intalio.deploy:deploy-ws-service:aar:#{BUILD_CONFIG[:tempo][:deploy]}")
-  # @@si.install_artifact_aar("org.intalio.security:security-ws-service:aar:#{BUILD_CONFIG[:tempo][:security]}")
-  @@si.install_artifact_aar("org.intalio.tempo:tempo-deploy-ws-service:aar:#{BUILD_CONFIG[:tempo][:core]}")
+  @@si.install_artifact_aar("org.intalio.deploy:deploy-ws-service:aar:#{BUILD_CONFIG[:tempo][:deploy]}")
+  # @@si.install_artifact_aar("org.intalio.tempo:tempo-deploy-ws-service:aar:#{BUILD_CONFIG[:tempo][:core]}")
   install_token_service
   @@si.install_artifact_aar("org.intalio.tempo:tempo-tas-service:aar:#{BUILD_CONFIG[:tempo][:core]}")
   @@si.install_artifact_aar("org.intalio.tempo:tempo-tms-service:aar:#{BUILD_CONFIG[:tempo][:core]}")
@@ -92,7 +108,7 @@ def copy_missing_lib
     SLF4J,
     LOG4J,
     XERCES,
-    "org.intalio.tempo:tempo-registry:jar:#{BUILD_CONFIG[:tempo][:core]}"
+    "org.intalio.deploy:deploy-registry:jar:#{BUILD_CONFIG[:tempo][:deploy]}"
   ]
   missing_libs.each {|lib| locate_and_copy( lib, @@lib_folder )}
 end
@@ -130,6 +146,7 @@ def clean_unused_files
   Dir.glob(File.join("#{@@webapp_folder}", "**/slf4j*.jar")) {|x| File.delete x}
   Dir.glob(File.join("#{@@server_folder}/common/endorsed", "*.jar")) {|x| File.delete x}
   Dir.glob(File.join("#{@@server_folder}/", "**/.DS_Store")) {|x| File.delete x}
+  Dir.glob(File.join("#{@@ode_war_folder}/", "**/xercesImpl-2*.jar")) {|x| File.delete x}
 
   check_folder "#{@@server_folder}/temp"
 end
@@ -141,7 +158,7 @@ def generate_mysql_file
     f.write("-- file:#{x}\n")
     f.write(File.open(x).read)
   }
-  ode_mysql = "#{TEMPO_SVN}/rsc/tempo-sql/#{BUILD_CONFIG[:ode]}/ode-mysql.sql"
+  ode_mysql = "#{TEMPO_SVN}/rsc/ode-sql/#{BUILD_CONFIG[:ode]}/ode-mysql.sql"
   f.write("-- file:#{ode_mysql}\n")
   f.write(File.open(ode_mysql).read)
   f.close
@@ -172,7 +189,7 @@ def setup_java_options
   options << " -Xms128m -Xmx1024m"
   options << " -Dorg.intalio.tempo.configDirectory=$CATALINA_HOME/var/config"
   options << " -Dorg.apache.ode.configDir=$CATALINA_HOME/var/config"
-  options << " -Dorg.intalio.deploy.configDirectory=$CATALINA_HOME/var/deploy"
+  options << " -Dorg.intalio.deploy.configDirectory=$CATALINA_HOME/var/config"
   setenv "#{@@server_folder}/bin", options
 end
 

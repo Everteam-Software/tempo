@@ -34,12 +34,13 @@ public class WDSStorageStrategyTest extends TestCase {
         assertSanitize("ok", "ok" );
         assertSanitize("myDocument.doc", "myDocument.doc" );
         assertSanitize("/some/unix/path/myDocument.doc", "myDocument.doc" );
-        assertSanitize("c:\\some\\windows\\path\\my Document.doc", "my+Document.doc" );
+        assertSanitize("c:\\some\\windows\\path\\my Document.doc", "my%20Document.doc" );
+        
         assertSanitize("./foo", "foo" );
         assertSanitize("\\foo", "foo" );
-        assertSanitize("\\foo foo", "foo+foo" );
+        assertSanitize("\\foo foo", "foo%20foo" );
         // @note(alex) we have encoding problems on release.intalio.com
-        //assertSanitize("ééé", "%C3%A9%C3%A9%C3%A9" );
+        assertSanitize("ééé", "%C3%A9%C3%A9%C3%A9" );
     }
     
     void assertSanitize(String filename, String expected) throws Exception {

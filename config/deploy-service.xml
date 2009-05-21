@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+<!-- Un-comment this block for configuration if using clustering with more than one server
+    <bean id="clusterConfig" class="org.intalio.deploy.deployment.impl.QuorumBasedCluster">
+        <property name="groupName" value="test"/>
+        <property name="serverId" value="server-01"/>
+        <property name="clusterSize" value="3"/>
+        <property name="listener" ref="deploymentService"/>
+    </bean>
+-->
+
+    <bean id="deploymentService" class="org.intalio.deploy.deployment.impl.DeploymentServiceImpl">
+        <property name="scanPeriod" value="5" />
+        <property name="requiredComponentManagers">
+            <list>
+<!-- Un-comment these as each is implemented
+                <value>aar</value>
+                <value>database</value>
+                <value>formmanager</value>
+                <value>gi</value>
+                <value>webreport</value>
+-->
+                <value>pipa</value>
+                <value>xform</value>
+                <value>ode</value>
+            </list>
+        </property>
+<!-- Un-comment this block for configuration if using clustering with more than one server
+        <property name="cluster" ref="clusterConfig"/>
+-->
+    </bean>
+</beans>
