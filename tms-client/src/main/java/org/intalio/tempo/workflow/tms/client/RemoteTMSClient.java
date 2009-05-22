@@ -551,8 +551,10 @@ public class RemoteTMSClient implements ITaskManagementService {
                 break;
 
             try {
-                Task task = new TaskUnmarshaller().unmarshalTaskFromMetadata(taskElement);
-                tasks.add(task);
+            	if(full)
+            		tasks.add(new TaskUnmarshaller().unmarshalFullTask((taskElement)));
+            	else
+            		tasks.add(new TaskUnmarshaller().unmarshalTaskFromMetadata(taskElement));
             } catch (Exception e) {
                 _log.error("Error reading task: " + taskElement, e);
             }

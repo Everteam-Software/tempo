@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
  */
 public class TasksCollector {
 
-    final String[] parameters = new String[] { "page", "rp", "sortname", "sortorder", "query", "qtype", "type" };
+    final String[] parameters = new String[] { "page", "rp", "sortname", "sortorder", "query", "qtype", "type", "full" };
 
     /**
      * Parameters that can come from the user interface
@@ -49,14 +49,13 @@ public class TasksCollector {
     final class ParameterMap extends HashMap<String, String> {
         public ParameterMap() {
             super(parameters.length);
+            put("full", "false");
             put("page", "1");
-            put("page", "3");
             put("sortname", "_creationDate");
             put("sortorder", "DESC");
             put("query", null);
             put("qtype", null);
             put("type", "PATask");
-            put("full", "");
             init();
         }
 
@@ -67,7 +66,7 @@ public class TasksCollector {
             for (String param : parameters) {
                 String value = _request.getParameter(param);
                 if (value != null && !value.trim().equalsIgnoreCase("") && !value.equalsIgnoreCase("undefined"))
-                    put(param, value);
+                	put(param, value);
             }
         }
 

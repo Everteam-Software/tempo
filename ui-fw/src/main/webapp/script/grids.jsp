@@ -400,6 +400,7 @@
         params: [
 			 { name : 'type', value : 'PATask' }
 			,{ name : 'update', value : true }
+			,{ name : 'full', value : true }
 		],
 		colModel : [
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description', width : width*0.44, sortable : true, align: 'left'},
