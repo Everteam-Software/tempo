@@ -60,6 +60,7 @@ public class iCalServletTest extends TestCase {
 			  one(req).getParameter("sortname");
 			  one(req).getParameter("sortorder");
 			  one(req).getParameter("query");
+			  one(req).getParameter("full");
 			  one(req).getParameter("qtype");
 			  one(req).getParameter("type");
 			  one(tc).getTokenProperties("The quick brown fox jumps over the lazy dog.");will(returnValue(prop));
