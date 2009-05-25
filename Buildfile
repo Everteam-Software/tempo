@@ -114,6 +114,7 @@ define "tempo" do
 
     # require live Axis2 instance
     unless ENV["LIVE"] == 'yes'
+      test.exclude '*SitaTaskListTest*'
       test.exclude '*TMSAxis2RemoteTest*'
       test.exclude '*RemoteReassginTaskTest*'
       test.exclude "*ReassignTaskLiveTest*"
