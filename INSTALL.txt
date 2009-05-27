@@ -20,7 +20,7 @@ implementation.
 # rubygems
 # buildr gem (version 1.3.3 or later)
 # git for checking out the source of tempo
-# mysql for the database
+# mysql for the database (tried on version 5)
 
 ======================================
  Check out tempo
