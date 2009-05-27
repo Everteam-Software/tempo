@@ -46,6 +46,7 @@ public class iCalServlet extends ExternalTasksServlet {
         calendar.getProperties().add(new ProdId("-//Ben Fortuna//iCal4j 1.0//EN"));
         calendar.getProperties().add(Version.VERSION_2_0);
         calendar.getProperties().add(CalScale.GREGORIAN);
+        
 
         for (TaskHolder<Task> t : tasks) {
             Task task = t.getTask();
@@ -62,7 +63,7 @@ public class iCalServlet extends ExternalTasksServlet {
 
             calendar.getComponents().add(vtask);
         }
-        new CalendarOutputter().output(calendar, outputStream);
+        new CalendarOutputter(false).output(calendar, outputStream);
     }
 
     public String getFileMimeType() {
