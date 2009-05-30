@@ -17,11 +17,20 @@ module Buildr
         properties = file(options[:properties]).tap { |task| task.invoke }.to_s
 
         Buildr.ant "openjpa" do |ant|
+           # workaround way for openjpa 1.2.1
+          ant.path(:id =>"required_classpath"){ |ant|
+            ant.pathelement(:path => requires.join(File::PATH_SEPARATOR))
+            ant.pathelement(:path => artifacts.join(File::PATH_SEPARATOR).to_s)
+          }
+
           ant.taskdef :name=>"enhancer", :classname=>"org.apache.openjpa.ant.PCEnhancerTask",
-            :classpath=>requires.join(File::PATH_SEPARATOR)
-          ant.enhancer :directory=>options[:output].to_s do
+          :classpathref=>"required_classpath"
+#            :classpath=>requires.join(File::PATH_SEPARATOR)            
+            ant.enhancer :directory=>options[:output].to_s, :tmpClassLoader=>"false" do
             ant.config :propertiesFile=>properties
-            ant.classpath :path=>artifacts.join(File::PATH_SEPARATOR)
+            ant.classpath :refid=>"required_classpath"
+#            ant.fileset :dir=>options[:output].to_s, :includes=>"**/taskb4p/*.class"
+#            ant.classpath :path=>artifacts.join(File::PATH_SEPARATOR)
           end
         end
       end
@@ -32,11 +41,19 @@ module Buildr
         properties = file(options[:properties].to_s).tap { |task| task.invoke }.to_s
 
         Buildr.ant("openjpa") do |ant|
+           # workaround way for openjpa 1.2.1
+          ant.path(:id =>"required_classpath"){ |ant|
+            ant.pathelement(:path => requires.join(File::PATH_SEPARATOR))
+            ant.pathelement(:path => artifacts.join(File::PATH_SEPARATOR).to_s)
+          }
+          
           ant.taskdef :name=>"mapping", :classname=>"org.apache.openjpa.jdbc.ant.MappingToolTask",
-            :classpath=>requires.join(File::PATH_SEPARATOR)
-          ant.mapping :schemaAction=>options[:action], :sqlFile=>options[:sql].to_s, :ignoreErrors=>"true" do
+            :classpathref=>"required_classpath"
+#            :classpath=>requires.join(File::PATH_SEPARATOR)
+          ant.mapping :schemaAction=>options[:action], :sqlFile=>options[:sql].to_s, :ignoreErrors=>"true", :tmpClassLoader=>"false" do
             ant.config :propertiesFile=>properties
-            ant.classpath :path=>artifacts.join(File::PATH_SEPARATOR)
+            ant.classpath :refid=>"required_classpath"
+#            ant.classpath :path=>artifacts.join(File::PATH_SEPARATOR)
           end
         end
       end
