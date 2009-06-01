@@ -21,8 +21,8 @@
 				
 				// If error checking is enabled
 				if(showErrors){
-					if(!$(navDiv).attr('title')){
-						alert("ERROR: The elements in your mainLinkTag paramater need a 'title' attribute.\n ("+navDiv+")");	
+					if(!$(navDiv).attr('tabtitle')){
+						alert("ERROR: The elements in your mainLinkTag paramater need a 'tabtitle' attribute.\n ("+navDiv+")");	
 						return false;
 					}
 					else if(!$("."+hiddenContentDiv).attr('id')){
@@ -51,7 +51,7 @@
 						
 						// now lets show the desired information
 						$(this).addClass(selectedClass);
-						var contentDivId = $(this).attr('title');
+						var contentDivId = $(this).attr('tabtitle');
 						
 						if(effect != null){
 							

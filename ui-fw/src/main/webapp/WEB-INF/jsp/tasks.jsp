@@ -55,17 +55,17 @@
     <div id="container">			
       <ul id="tabnav">
         <li>
-          <a href="#" id="tabTasks" title="com_intalio_bpms_workflow_tab_tasks">
+          <a href="#" id="tabTasks" tabtitle="com_intalio_bpms_workflow_tab_tasks" title="<fmt:message key="com_intalio_bpms_workflow_tab_tasks"/>">
             <fmt:message key="com_intalio_bpms_workflow_tab_tasks"/>
           </a>
         </li>
         <li>
-          <a href="#" id="tabNotif" title="com_intalio_bpms_workflow_tab_notifications">
+          <a href="#" id="tabNotif" tabtitle="com_intalio_bpms_workflow_tab_notifications" title="<fmt:message key="com_intalio_bpms_workflow_tab_notifications"/>">
             <fmt:message key="com_intalio_bpms_workflow_tab_notifications"/>
           </a>
         </li>
         <li>
-          <a href="#" id="tabPipa" title="com_intalio_bpms_workflow_tab_processes">
+          <a href="#" id="tabPipa" tabtitle="com_intalio_bpms_workflow_tab_processes" title="<fmt:message key="com_intalio_bpms_workflow_tab_processes"/>">
             <fmt:message key="com_intalio_bpms_workflow_tab_processes"/>
           </a>
         </li>
