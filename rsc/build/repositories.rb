@@ -4,7 +4,7 @@ repositories.remote = [
   "http://dist.codehaus.org/mule/dependencies/maven2/", 
   "http://repo1.maven.org/maven2",
   "http://scala-tools.org/repo-releases",
-  "http://developers.ja-sig.org/maven2"
+  "http://developer.jasig.org/repo/content/repositories/m2/"
 ]
 
 repositories.release_to[:username] ||= "release"
