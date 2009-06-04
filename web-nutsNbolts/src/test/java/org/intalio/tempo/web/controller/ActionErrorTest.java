@@ -7,6 +7,20 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 public class ActionErrorTest extends TestCase{
+    private Locale oldLocale;
+    
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        oldLocale = Locale.getDefault();
+        Locale.setDefault(Locale.ENGLISH);
+    }
+
+    @Override
+    public void tearDown() throws Exception {
+        Locale.setDefault(oldLocale);
+        super.tearDown();
+    }
     
     @Test
     public void testActionErrorSimple() throws Exception {
