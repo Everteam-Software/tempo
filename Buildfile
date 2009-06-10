@@ -243,6 +243,7 @@ define "tempo" do
     test.exclude '*TestUtils*'
     unless ENV["LIVE"] == 'yes'
       test.exclude '*N3AuthProviderLiveTest*'
+      test.exclude '*JPATaskTest*'
     end
     
     package :jar
@@ -286,6 +287,8 @@ define "tempo" do
       test.exclude '*TMSAxis2RemoteTest*'
       test.exclude '*RemoteReassginTaskTest*'
       test.exclude "*ReassignTaskLiveTest*"
+      test.exclude "*JPAFactoriesTest*"
+      test.exclude "*TMSRequestProcessorTest*"
     end
     test.exclude '*TestUtils*'
 
