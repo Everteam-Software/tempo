@@ -119,22 +119,18 @@ public class XFormComponentManager implements org.intalio.deploy.deployment.spi.
 
 	public void activate(ComponentId name, File path, List<String> deployedResources) {
 		// TODO implement this
-		throw new RuntimeException("Not implemented yet!!");
 	}
 
 	public void retire(ComponentId name, File path, List<String> deployedResources) {
 		// TODO implement this
-		throw new RuntimeException("Not implemented yet!!");
 	}
 	
 	public void activated(ComponentId name, File path, List<String> deployedResources) {
 		// TODO implement this
-		throw new RuntimeException("Not implemented yet!!");
 	}
 
 	public void retired(ComponentId name, File path, List<String> deployedResources) {
 		// TODO implement this
-		throw new RuntimeException("Not implemented yet!!");
 	}
 
 	// ------------------ Common deployment methods ------------------------
