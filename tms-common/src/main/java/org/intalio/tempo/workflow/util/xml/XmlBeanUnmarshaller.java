@@ -24,6 +24,8 @@ import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
 public abstract class XmlBeanUnmarshaller {
 
+    private static final Logger _logger = LoggerFactory.getLogger(XmlBeanUnmarshaller.class);
+    
 	private String _namespaceURI;
 
 	private String _namespacePrefix;
@@ -109,8 +111,7 @@ public abstract class XmlBeanUnmarshaller {
 	protected void forbidParameter(Object parameter, String name)
 			throws InvalidInputFormatException {
 		if (parameter != null) {
-			throw new InvalidInputFormatException(
-					"A forbidden parameter was specified: " + name);
+			log.debug("A forbidden parameter was specified: " + name);
 		}
 	}
 
