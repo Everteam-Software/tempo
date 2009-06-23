@@ -21,6 +21,8 @@ import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class XmlBeanUnmarshaller {
 
@@ -111,7 +113,7 @@ public abstract class XmlBeanUnmarshaller {
 	protected void forbidParameter(Object parameter, String name)
 			throws InvalidInputFormatException {
 		if (parameter != null) {
-			log.debug("A forbidden parameter was specified: " + name);
+			_logger.debug("A forbidden parameter was specified: " + name);
 		}
 	}
 
