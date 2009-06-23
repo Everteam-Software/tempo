@@ -114,12 +114,10 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
 
 	public void activate(ComponentId name, File path, List<String> deployedResources) {
 		// TODO Implement this
-		throw new RuntimeException("Not implemented yet!!");
 	}
 
 	public void retire(ComponentId name, File path, List<String> deployedResources) {
 		// TODO Implement this
-		throw new RuntimeException("Not implemented yet!!");
 	}
 
     public void deployed(ComponentId name, File path, List<String> deployedResources, boolean active) {
@@ -132,12 +130,10 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
 
 	public void activated(ComponentId name, File path, List<String> deployedResources) {
 		// TODO Implement this
-		throw new RuntimeException("Not implemented yet!!");
 	}
 
 	public void retired(ComponentId name, File path, List<String> deployedResources) {
 		// TODO Implement this
-		throw new RuntimeException("Not implemented yet!!");
 	}
 
 	// ------------------ Common deployment methods ------------------------

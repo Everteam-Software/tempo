@@ -46,7 +46,7 @@ public class PIPATask extends Task implements InitTask {
     @Persistent
     @Factory("URI.create")
     @Externalizer("toString")
-    @Column(name = "process_endpoint")
+    @Column(name = "process_endpoint", length = 1024)
     private URI _processEndpoint;
 
     @Persistent
