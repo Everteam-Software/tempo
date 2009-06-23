@@ -1,5 +1,5 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
 <%@page import="org.intalio.tempo.uiframework.Configuration"%>
 <%@page import="org.intalio.tempo.security.ws.TokenClient"%>
 
@@ -34,10 +34,22 @@
 		     height = $(window).height() - 130;
 		  }
 		var height2 = height - 80;
+		var needResize = false;
+		
 		$(window).resize(function() {
 			if(navigator.appName != "Microsoft Internet Explorer") {
-				location.href=location.href;
-		    }
+			
+			var loc = window.frames['taskform'].location;
+			 try {
+			  if(loc.toString().indexOf("empty.jsp")>0) {
+			    location.href=location.href;
+			  } else {
+			    needResize = true;
+			  }
+			 } catch(err) {
+			    return;
+			 }
+		  }
 		});
 
 		function preProcess(data) {
@@ -444,10 +456,14 @@
 
 		// visible == hide all
 		function refresh(visible) {
+		if(needResize) {
+		  location.href=location.href;
+		}
 		if(visible==false){
 			t1.parent().parent().hide(speed);
 			t2.parent().parent().hide(speed);
 			t3.parent().parent().hide(speed);
+			current==null;
 		}
 		else {
 		if(current==null) {
@@ -499,7 +515,7 @@
 		$("#filterbutt").click(function() {
 			refresh(true);
 		});
-		
+
 		$('#taskform').load(function(){
 			
 			var loc = window.frames['taskform'].location;
@@ -519,7 +535,7 @@
 	    		var content = (loc.toString().indexOf('type=PATask')!=-1) || (elo.html().substring(0,6).toLowerCase() == '<head>' && elo.html().length > 700);
 			  if(!content) {
      			clearFrame();
-				refresh(true);
+				  refresh(true);
 			  } else {
 			    $('#taskform').animate({height:height},speed);
 				  refresh(false);
