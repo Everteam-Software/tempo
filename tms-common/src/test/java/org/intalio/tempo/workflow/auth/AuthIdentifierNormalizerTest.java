@@ -33,12 +33,14 @@ public class AuthIdentifierNormalizerTest extends TestCase {
         String idWithColon = "test:test";
         String idWithForwardSlash = "test/test";
         String idWithDot = "test.test";
+        String idWithAFewThings = "logra\\francisco.ramirez";
 
         Assert.assertEquals(idWithBackslash, AuthIdentifierNormalizer.normalizeAuthIdentifier(idWithBackslash));
         Assert.assertEquals(idWithBackslash, AuthIdentifierNormalizer.normalizeAuthIdentifier(idWithBar));
         Assert.assertEquals(idWithBackslash, AuthIdentifierNormalizer.normalizeAuthIdentifier(idWithColon));
         Assert.assertEquals(idWithBackslash, AuthIdentifierNormalizer.normalizeAuthIdentifier(idWithForwardSlash));
         Assert.assertEquals(idWithDot, AuthIdentifierNormalizer.normalizeAuthIdentifier(idWithDot));
+        Assert.assertEquals(idWithAFewThings, AuthIdentifierNormalizer.normalizeAuthIdentifier(idWithAFewThings));
 
         String[] multipleIDs = {idWithForwardSlash, idWithBar, idWithColon, idWithBackslash};
         String[] normalizedIDs = AuthIdentifierNormalizer.normalizeAuthIdentifiers(multipleIDs);

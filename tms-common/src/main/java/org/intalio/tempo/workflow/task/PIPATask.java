@@ -143,7 +143,7 @@ public class PIPATask extends Task implements InitTask {
      * 
      * @param sourceIdentifiers
      *            An array of auth (user or role) identifiers, such as
-     *            "group&#0092;user", "group/user", "group.user".
+     *            "group&#0092;user", "group/user"
      * @return The array of the same length which contains the same identifiers,
      *         normalized, such as "group&#0092;user".
      */
@@ -152,7 +152,8 @@ public class PIPATask extends Task implements InitTask {
             return null;
         AuthIdentifierSet set = new AuthIdentifierSet();
         for (int i = 0; i < sourceIdentifiers.length; ++i)
-            set.add(sourceIdentifiers[i].replace('/', '\\').replace('.', '\\'));
+            //set.add(sourceIdentifiers[i].replace('/', '\\').replace('.', '\\'));
+            set.add(sourceIdentifiers[i].replace('/', '\\'));
         return set;
     }
 

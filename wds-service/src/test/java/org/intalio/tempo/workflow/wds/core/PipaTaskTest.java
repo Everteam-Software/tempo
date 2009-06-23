@@ -46,7 +46,7 @@ public class PipaTaskTest {
 	public void UserNamesAreNormalized() throws Exception {
 		PIPATask task1 = getSamplePipa();
         String[] unnormalizedUsers = {"abc/abc", "def\\def", "ghi.ghi"};
-        String[] normalizedUsers = {"abc\\abc", "def\\def", "ghi\\ghi"};
+        String[] normalizedUsers = {"abc\\abc", "def\\def", "ghi.ghi"};
         task1.setUserOwners(unnormalizedUsers);
         expect.that(Arrays.asList(normalizedUsers).containsAll(task1.getUserOwners()));
 	}
@@ -55,7 +55,7 @@ public class PipaTaskTest {
 	public void RoleNamesAreNormalized() throws Exception {
 		PIPATask task1 = getSamplePipa();
         String[] unnormalizedRoles = {"jkl/jkl", "mno\\mno", "pqr.pqr"};
-        String[] normalizedRoles = {"jkl\\jkl", "mno\\mno", "pqr\\pqr"};
+        String[] normalizedRoles = {"jkl\\jkl", "mno\\mno", "pqr.pqr"};
         
         task1.setRoleOwners(unnormalizedRoles);
         
