@@ -32,6 +32,7 @@ import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.task.attachments.AttachmentMetadata;
 import org.intalio.tempo.workflow.task.traits.IChainableTask;
 import org.intalio.tempo.workflow.task.traits.ICompleteReportingTask;
+import org.intalio.tempo.workflow.task.traits.IInstanceBoundTask;
 import org.intalio.tempo.workflow.task.traits.IProcessBoundTask;
 import org.intalio.tempo.workflow.task.traits.ITaskWithAttachments;
 import org.intalio.tempo.workflow.task.traits.ITaskWithDeadline;
@@ -43,6 +44,7 @@ import org.intalio.tempo.workflow.task.traits.InitTask;
 import org.intalio.tempo.workflow.util.xml.XsdDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.InvalidIsolationLevelException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -77,7 +79,9 @@ public class TaskMarshaller {
         if (task instanceof IProcessBoundTask) {
             taskMetadataElement.setProcessId(((IProcessBoundTask) task).getProcessID());
         }
-
+        if (task instanceof IInstanceBoundTask) {
+            taskMetadataElement.setInstanceId(((IInstanceBoundTask) task).getInstanceId());
+        }
         if (task instanceof InitTask) {
             InitTask itask = (InitTask) task;
             taskMetadataElement.setInitMessageNamespaceURI(itask.getInitMessageNamespaceURI().toString());

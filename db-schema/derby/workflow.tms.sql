@@ -11,11 +11,11 @@ CREATE TABLE tempo_attachment_meta -- AttachmentMetadata
     (id BIGINT NOT NULL, -- datastore id
     creation_date TIMESTAMP, description VARCHAR(255), file_name VARCHAR(255), mime_type VARCHAR(255), title VARCHAR(255), widget VARCHAR(255), PRIMARY KEY (id));
 CREATE TABLE tempo_notification -- Notification
-    (id BIGINT NOT NULL, failure_code VARCHAR(255), failure_reason VARCHAR(255), input_xml CLOB, priority INTEGER, state SMALLINT, PRIMARY KEY (id));
+    (id BIGINT NOT NULL, failure_code VARCHAR(255), failure_reason VARCHAR(255), input_xml CLOB, instanceId VARCHAR(255), priority INTEGER, process_id VARCHAR(255), state SMALLINT, PRIMARY KEY (id));
 CREATE TABLE tempo_pa -- PATask
-    (id BIGINT NOT NULL, complete_soap_action VARCHAR(255), deadline TIMESTAMP, failure_code VARCHAR(255), failure_reason VARCHAR(255), input_xml CLOB, is_chained_before SMALLINT, output_xml CLOB, previous_task_id VARCHAR(255), priority INTEGER, process_id VARCHAR(255), state SMALLINT, PRIMARY KEY (id));
+    (id BIGINT NOT NULL, complete_soap_action VARCHAR(255), deadline TIMESTAMP, failure_code VARCHAR(255), failure_reason VARCHAR(255), input_xml CLOB, instance_id VARCHAR(255), is_chained_before SMALLINT, output_xml CLOB, previous_task_id VARCHAR(255), priority INTEGER, process_id VARCHAR(255), state SMALLINT, PRIMARY KEY (id));
 CREATE TABLE tempo_pipa -- PIPATask
-    (id BIGINT NOT NULL, init_message VARCHAR(255), init_soap VARCHAR(255), process_endpoint VARCHAR(255), PRIMARY KEY (id));
+    (id BIGINT NOT NULL, init_message VARCHAR(255), init_soap VARCHAR(255), process_endpoint VARCHAR(1024), PRIMARY KEY (id));
 CREATE TABLE tempo_role (ACL_ID BIGINT, element VARCHAR(255), TASK_ID BIGINT);
 CREATE TABLE tempo_task -- Task
     (id BIGINT NOT NULL, -- datastore id

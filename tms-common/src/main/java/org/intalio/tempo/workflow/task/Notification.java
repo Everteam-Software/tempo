@@ -24,6 +24,8 @@ import javax.persistence.Table;
 import javax.persistence.Lob;
 
 import org.apache.openjpa.persistence.Persistent;
+import org.intalio.tempo.workflow.task.traits.IProcessBoundTask;
+import org.intalio.tempo.workflow.task.traits.IInstanceBoundTask;
 import org.intalio.tempo.workflow.task.traits.ITaskWithInput;
 import org.intalio.tempo.workflow.task.traits.ITaskWithPriority;
 import org.intalio.tempo.workflow.task.traits.ITaskWithState;
@@ -36,7 +38,7 @@ import org.w3c.dom.Document;
  */
 @Entity
 @Table(name = "tempo_notification")
-public class Notification extends Task implements ITaskWithState, ITaskWithInput, ITaskWithPriority {
+public class Notification extends Task implements ITaskWithState, ITaskWithInput, IProcessBoundTask,IInstanceBoundTask{
 
     @Column(name = "state")
     @Persistent
@@ -59,6 +61,14 @@ public class Notification extends Task implements ITaskWithState, ITaskWithInput
     @Column(name = "priority")
     private Integer _priority;
 
+    @Persistent (fetch = FetchType.LAZY)
+    @Column(name = "instanceId")
+    private String _instanceId;
+    
+    @Persistent
+    @Column(name = "process_id")
+    private String _processID;
+    
     public Notification() {
         super();
     }
@@ -72,6 +82,17 @@ public class Notification extends Task implements ITaskWithState, ITaskWithInput
 
     public Notification(String id, URI formURL) {
         super(id, formURL);
+    }
+    
+    public String getProcessID() {
+        return _processID;
+    }
+
+    public void setProcessID(String processID) {
+        if (processID == null) {
+            throw new RequiredArgumentException("processID");
+        }
+        _processID = processID;
     }
 
     public TaskState getState() {
@@ -144,4 +165,14 @@ public class Notification extends Task implements ITaskWithState, ITaskWithInput
     public void setPriority(Integer _priority) {
         this._priority = _priority;
     }
+
+	public String getInstanceId() {
+		
+		return _instanceId;
+	}
+
+	public void setInstanceId(String instanceId) {
+		_instanceId=instanceId;
+		
+	}
 }

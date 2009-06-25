@@ -259,6 +259,7 @@
 					<xsd:element name="taskType" type="xsd:token"/>
 					<xsd:element name="description" type="xsd:string" maxOccurs="1" minOccurs="0"/>
 					<xsd:element name="processId" type="xsd:string" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="instanceId" type="xsd:string" maxOccurs="1" minOccurs="0"/>
 					<xsd:element name="creationDate" type="xsd:dateTime" maxOccurs="1" minOccurs="0"/>
 					<xsd:element name="deadline" type="xsd:dateTime" maxOccurs="1" minOccurs="0" />
 					<xsd:element name="priority" type="xsd:int" nillable="true" maxOccurs="1" minOccurs="0" />
