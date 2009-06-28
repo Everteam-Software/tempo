@@ -54,77 +54,87 @@
 					<row id="pa${status.index}">
 						<%-- update --%>
 						<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform">
-								<x:out select="$FormModel/*[name()='Activity']/*[name()='update']" />
+								<c:set var="update"><x:out select="$FormModel/*[local-name()='Activity']/*[local-name()='update']" /></c:set>
+								<c:if test="${update=='1'}">
+									<img height="${iconSize}" width="${iconSize}" title="<fmt:message key="org_intalio_uifw_tasks_ready"/>" border="0px" src="images/icons/icon.notclaimed.gif"/>
+								</c:if>
 							</a>]]>
 						</cell>
 						<%-- aircraft ID --%>
 						<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform">
-								<x:out select="$FormModel/*[name()='Activity']/*[name()='AircraftID']" />
+								<x:out select="$FormModel/*[local-name()='Activity']/*[local-name()='AircraftID']" />
 							</a>]]>
 						</cell>
 						<%-- Arrival Flight Number --%>
 						<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform">
-								<x:out select="$FormModel/*[name()='ArrivalDeparture']/*[name()='ArrivalFlightNumber']" />
+								<x:out select="$FormModel/*[local-name()='ArrivalDeparture']/*[local-name()='ArrivalFlightNumber']" />
 							</a>]]>
 						</cell>
 						<%-- Scheduled Arrival Date --%>
 						<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform">
-								<x:out select="$FormModel/*[name()='ArrivalDeparture']/*[name()='ScheduledArrivalDate']" />
+								<x:out select="substring($FormModel/*[local-name()='ArrivalDeparture']/*[local-name()='ScheduledArrivalDate'], 6, 10)" />
 							</a>]]>
 						</cell>
 						<%-- STA --%>
 						<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform">
-								<x:out select="substring($FormModel/*[name()='ArrivalDeparture']/*[name()='STA'], 1, 5)" />
+								<x:out select="substring($FormModel/*[local-name()='ArrivalDeparture']/*[local-name()='STA'], 1, 5)" />
 							</a>]]>
 						</cell>
 						<%-- ATA --%>
 						<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform">
-								<x:out select="substring($FormModel/*[name()='ArrivalDeparture']/*[name()='ATA'], 1, 5)" />
+								<c:set var="ActualArrivalDate"><x:out select="$FormModel/*[local-name()='ArrivalDeparture']/*[local-name()='ActualArrivalDate']" /></c:set>
+								<c:if test="${ActualArrivalDate!='1970-01-01'}"><x:out select="substring($FormModel/*[local-name()='ArrivalDeparture']/*[local-name()='ATA'], 1, 5)" /></c:if>
 							</a>]]>
 						</cell>
 						<%-- Type --%>
 						<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform">
-								<x:out select="$FormModel/*[name()='Inspection']/*[name()='InspectionType']" />
+								<x:out select="$FormModel/*[local-name()='Inspection']/*[local-name()='InspectionType']" />
 							</a>]]>
 						</cell>
 						<%-- Departure Flight Number --%>
 						<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform">
-								<x:out select="$FormModel/*[name()='ArrivalDeparture']/*[name()='DepartureFlightNumber']" />
+								<x:out select="$FormModel/*[local-name()='ArrivalDeparture']/*[local-name()='DepartureFlightNumber']" />
 							</a>]]>
 						</cell>
 						<%-- Scheduled Departure Date --%>
 						<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform">
-								<x:out select="$FormModel/*[name()='ArrivalDeparture']/*[name()='ScheduledDepartureDate']" />
+								<x:out select="substring($FormModel/*[local-name()='ArrivalDeparture']/*[local-name()='ScheduledDepartureDate'], 6, 10)" />
 							</a>]]>
 						</cell>
 						<%-- STD --%>
 						<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform">
-								<x:out select="substring($FormModel/*[name()='ArrivalDeparture']/*[name()='STD'], 1, 5)" />
+								<x:out select="substring($FormModel/*[local-name()='ArrivalDeparture']/*[local-name()='STD'], 1, 5)" />
 							</a>]]>
 						</cell>
 						<%-- ATD --%>
 						<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform">
-								<x:out select="substring($FormModel/*[name()='ArrivalDeparture']/*[name()='ATD'], 1, 5)" />
+								<c:set var="ActualDepartureDate"><x:out select="$FormModel/*[local-name()='ArrivalDeparture']/*[local-name()='ActualDepartureDate']" /></c:set>
+								<c:if test="${ActualDepartureDate!='1970-01-01'}"><x:out select="substring($FormModel/*[local-name()='ArrivalDeparture']/*[local-name()='ATD'], 1, 5)" /></c:if>
 							</a>]]>
 						</cell>
 						<%-- Stand --%>
 						<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform">
-								<x:out select="$FormModel/*[name()='Inspection']/*[name()='Stand']" />
+								<x:out select="$FormModel/*[local-name()='Inspection']/*[local-name()='Stand']" />
 							</a>]]>
 						</cell>
 						<%-- Coordinator --%>
 						<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform">
-								<x:out select="$FormModel/*[name()='Inspection']/*[name()='coordinator']" />
+								<x:out select="$FormModel/*[local-name()='Inspection']/*[local-name()='coordinator']" />
 							</a>]]>
 						</cell>
 						<%-- Mechanics --%>
 						<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform">
-								<i>TBD</i>
+								<x:forEach var="mech" select="$FormModel/*[local-name()='Inspection']/*[local-name()='assignedMechanics']" varStatus="mechStatus">
+									<c:set var="releaser"><x:out select="$mech/*[local-name()='entitledToRelease']" /></c:set>
+									<c:if test="${releaser=='1'}"><span style='color:red'></c:if><x:out select="$mech/*[local-name()='assignedMechanicName']" /><c:if test="${releaser=='1'}"></span></c:if><c:if test="${!mechStatus.last}"><br/></c:if>
+								</x:forEach>
 							</a>]]>
 						</cell>
 						<%-- Avionics --%>
 						<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform">
-								<i>TBD</i>
+								<x:forEach var="avi" select="$FormModel/*[local-name()='Inspection']/*[local-name()='assignedAvionics']" varStatus="aviStatus">
+									<x:out select="$avi/*[local-name()='assignedAvionicName']" /><c:if test="${!aviStatus.last}"><br/></c:if>
+								</x:forEach>
 							</a>]]>
 						</cell>
 						<%-- HIL --%>
@@ -134,40 +144,64 @@
 						</cell>
 						<%-- RTR --%>
 						<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform">
-								<i>TBD</i>
+								<x:forEach var="rtr" select="$FormModel/*[local-name()='Inspection']/*[local-name()='RTR']" varStatus="rtrStatus">
+									<x:out select="$rtr/*[local-name()='RTRid']" /><c:if test="${!rtrStatus.last}"><br/></c:if>
+								</x:forEach>
+							</a>]]>
+						</cell>
+						<%-- Comments --%>
+						<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform">
+								<x:out select="$FormModel/*[local-name()='DC']/*[local-name()='Comments']" />
 							</a>]]>
 						</cell>
 						<%-- State --%>
 						<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform">
-								<x:out select="$FormModel/*[name()='Inspection']/*[name()='InspectionStatus']" />
+								<c:set var="TAstatus"><x:out select="$FormModel/*[local-name()='Inspection']/*[local-name()='InspectionStatus']"/></c:set>
+								<c:choose>
+									<c:when test="${TAstatus=='problem'}">
+										<span style='background-color:red;color:white'><c:out value="${TAstatus}" /></span>
+									</c:when>
+									<c:when test="${TAstatus=='stopped'}">
+										<span style='background-color:yellow'><c:out value="${TAstatus}" /></span>
+									</c:when>
+									<c:when test="${TAstatus=='released'}">
+										<span style='background-color:green;color:white'><c:out value="${TAstatus}" /></span>
+									</c:when>
+									<c:when test="${TAstatus=='started'}">
+										<span style='background-color:skyblue'><c:out value="${TAstatus}" /></span>
+									</c:when>
+									<c:otherwise>
+										<c:out value="${TAstatus}" />
+									</c:otherwise>
+								</c:choose>
 							</a>]]>
 						</cell>
 						<%-- Resources --%>
 						<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform">
-								<x:out select="$FormModel/*[name()='Inspection']/*[name()='resources']" />
+								<span style='background-color:red;color:white'><x:out select="$FormModel/*[local-name()='Inspection']/*[local-name()='resources']" /></span>
 							</a>]]>
 						</cell>
 						<%-- Start Time --%>
 						<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform">
-								<x:out select="substring($FormModel/*[name()='Activity']/*[name()='startTime'], 1, 5)" />
+								<x:out select="substring($FormModel/*[local-name()='Activity']/*[local-name()='startTime'], 1, 5)" />
 							</a>]]>
 						</cell>
 						<%-- End Time --%>
 						<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform">
-								<x:out select="substring($FormModel/*[name()='Activity']/*[name()='finishTime'], 1, 5)" />
+								<x:out select="substring($FormModel/*[local-name()='Activity']/*[local-name()='finishTime'], 1, 5)" />
 							</a>]]>
 						</cell>
 						<%-- Release Time --%>
 						<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform">
-								<x:out select="substring($FormModel/*[name()='Activity']/*[name()='releaseTime'], 1, 5)" />
+								<x:out select="substring($FormModel/*[local-name()='Activity']/*[local-name()='releaseTime'], 1, 5)" />
 							</a>]]>
 						</cell>
 						<%-- Late --%>
 						<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform">
-								<x:out select="$FormModel/*[name()='Activity']/*[name()='late']" />
 							</a>]]>
 						</cell>
 					</row>
+				</c:if>
 			</c:forEach>
 		</c:otherwise>
 	</c:choose>

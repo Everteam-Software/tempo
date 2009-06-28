@@ -11,12 +11,18 @@
  */
 package org.intalio.tempo.uiframework.actions;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequestWrapper;
+import javax.xml.namespace.QName;
 
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.impl.llom.util.AXIOMUtil;
 import org.intalio.tempo.uiframework.Configuration;
 import org.intalio.tempo.uiframework.URIUtils;
 import org.intalio.tempo.uiframework.forms.FormManager;
@@ -41,138 +47,248 @@ import org.slf4j.LoggerFactory;
  */
 public class TasksCollector {
 
-    final String[] parameters = new String[] { "page", "rp", "sortname", "sortorder", "query", "qtype", "type", "full" };
+	final String[] parameters = new String[] { "page", "rp", "sortname",
+			"sortorder", "query", "qtype", "type", "full" };
 
-    /**
-     * Parameters that can come from the user interface
-     */
-    final class ParameterMap extends HashMap<String, String> {
-        public ParameterMap() {
-            super(parameters.length);
-            put("full", "false");
-            put("page", "1");
-            put("sortname", "_creationDate");
-            put("sortorder", "DESC");
-            put("query", null);
-            put("qtype", null);
-            put("type", "PATask");
-            init();
-        }
+	final String TAMANAGEMENT_URI = "http://www.intalio.com/gi/forms/TAmanagement.gi";
 
-        /**
-         * Do not copy over null values and empty values for parameters
-         */
-        public void init() {
-            for (String param : parameters) {
-                String value = _request.getParameter(param);
-                if (value != null && !value.trim().equalsIgnoreCase("") && !value.equalsIgnoreCase("undefined"))
-                	put(param, value);
-            }
-        }
+	/**
+	 * Parameters that can come from the user interface
+	 */
+	final class ParameterMap extends HashMap<String, String> {
+		public ParameterMap() {
+			super(parameters.length);
+			put("full", "false");
+			put("page", "1");
+			put("sortname", "_creationDate");
+			put("sortorder", "ASC");
+			put("query", null);
+			put("qtype", null);
+			put("type", "PATask");
+			init();
+		}
 
-        /**
-         * Tells whether a parameter is defined and has a non-null value
-         */
-        public boolean isSet(String param) {
-            return this.containsKey(param) && this.get(param) != null;
-        }
-    }
+		/**
+		 * Do not copy over null values and empty values for parameters
+		 */
+		public void init() {
+			for (String param : parameters) {
+				String value = _request.getParameter(param);
+				if (value != null && !value.trim().equalsIgnoreCase("")
+						&& !value.equalsIgnoreCase("undefined"))
+					put(param, value);
+			}
+		}
 
-    private static final Logger _log = LoggerFactory.getLogger(TasksCollector.class);
-    private final Configuration conf = Configuration.getInstance();
+		/**
+		 * Tells whether a parameter is defined and has a non-null value
+		 */
+		public boolean isSet(String param) {
+			return this.containsKey(param) && this.get(param) != null;
+		}
+	}
 
-    private HttpServletRequestWrapper _request;
-    private String _user;
-    private String _endpoint;
-    private String _token;
+	private static final Logger _log = LoggerFactory
+			.getLogger(TasksCollector.class);
+	private final Configuration conf = Configuration.getInstance();
 
-    public TasksCollector(HttpServletRequestWrapper request, String user, String token) {
-        this._request = request;
-        this._user = user;
-        this._token = token;
-        this._endpoint = conf.getServiceEndpoint();
-    }
+	private HttpServletRequestWrapper _request;
+	private String _user;
+	private String _endpoint;
+	private String _token;
 
-    protected ITaskManagementService getTaskManager(String endpoint, String token) {
-        return new RemoteTMSFactory(endpoint, token).getService();
-    }
+	public TasksCollector(HttpServletRequestWrapper request, String user,
+			String token) {
+		this._request = request;
+		this._user = user;
+		this._token = token;
+		this._endpoint = conf.getServiceEndpoint();
+	}
 
-    public ArrayList<TaskHolder<Task>> retrieveTasks() throws Exception {
-        final FormManager fmanager = FormManagerBroker.getInstance().getFormManager();
-        final ArrayList<TaskHolder<Task>> _tasks = new ArrayList<TaskHolder<Task>>();
-        final String endpoint = URIUtils.resolveURI(_request, _endpoint);
-        final ITaskManagementService taskManager = getTaskManager(endpoint, _token);
+	protected ITaskManagementService getTaskManager(String endpoint,
+			String token) {
+		return new RemoteTMSFactory(endpoint, token).getService();
+	}
 
-        ParameterMap params = new ParameterMap();
-        String type = params.get("type");
+	public ArrayList<TaskHolder<Task>> retrieveTasks() throws Exception {
+		final FormManager fmanager = FormManagerBroker.getInstance()
+				.getFormManager();
+		final ArrayList<TaskHolder<Task>> _tasks = new ArrayList<TaskHolder<Task>>();
+		final String endpoint = URIUtils.resolveURI(_request, _endpoint);
+		final ITaskManagementService taskManager = getTaskManager(endpoint,
+				_token);
 
-        if (type.equals(Notification.class.getSimpleName()) || type.equals(PATask.class.getSimpleName())) {
-            StringBuffer baseQuery = new StringBuffer("(T._state = TaskState.READY OR T._state = TaskState.CLAIMED) ");
-            collect(fmanager, _tasks, taskManager, params, type, baseQuery);
-        } else if (type.equals(PIPATask.class.getSimpleName())) {
-            StringBuffer baseQuery = new StringBuffer("");
-            collect(fmanager, _tasks, taskManager, params, type, baseQuery);
-        } else {
-            _log.error("Cannot collect task of type:" + type);
-        }
-        return _tasks;
-    }
+		ParameterMap params = new ParameterMap();
+		String type = params.get("type");
 
-    private void collect(final FormManager fmanager, final ArrayList<TaskHolder<Task>> _tasks, final ITaskManagementService taskManager, ParameterMap params,
-                    String type, StringBuffer query) throws AuthException { 
-        // do we have a valid query
-        boolean validQuery = params.isSet("qtype") && params.isSet("query");
-        // if yes, append it
-        if (validQuery) {
-            // PIPA have no base query, since they have no state.
-            // so we don't need the keyword AND here.
-            if (query.length()!=0) {query.append(" AND ");}
-            query.append(" T." + params.get("qtype") + " like '%" + params.get("query") + "%'");
-        }
-        // keep this for counting total tasks
-        String countQuery = query.toString();
-        // set the order column
-        if (params.isSet("sortname"))
-            query.append(" ORDER BY T." + params.get("sortname"));
-        // set the sort order
-        if (params.isSet("sortorder"))
-            query.append(" " + params.get("sortorder"));
-        // count total and get those tasks
-        collectTasks(_token, _user, fmanager, taskManager, type, countQuery, query, _tasks, params.get("rp"), params.get("page"), Boolean.valueOf(params.get("full")));
-    }
+		if (type.equals(Notification.class.getSimpleName())
+				|| type.equals(PATask.class.getSimpleName())) {
+			StringBuffer baseQuery = new StringBuffer(
+					"(T._state = TaskState.READY OR T._state = TaskState.CLAIMED) ");
+			collect(fmanager, _tasks, taskManager, params, type, baseQuery);
+		} else if (type.equals(PIPATask.class.getSimpleName())) {
+			StringBuffer baseQuery = new StringBuffer("");
+			collect(fmanager, _tasks, taskManager, params, type, baseQuery);
+		} else {
+			_log.error("Cannot collect task of type:" + type);
+		}
+		return _tasks;
+	}
 
-    private void collectTasks(final String token, final String user, FormManager fmanager, ITaskManagementService taskManager, String taskType,
-                    String countQuery, StringBuffer query, List<TaskHolder<Task>> tasksHolder, final String taskPerPage, final String page, final boolean collectFull)
-                    throws AuthException {
-        // get total number of tasks
-        long total = taskManager.countAvailableTasks(taskType, countQuery);
+	private void collect(final FormManager fmanager,
+			final ArrayList<TaskHolder<Task>> _tasks,
+			final ITaskManagementService taskManager, ParameterMap params,
+			String type, StringBuffer query) throws AuthException {
+		// do we have a valid query
+		boolean validQuery = params.isSet("qtype") && params.isSet("query");
+		// if yes, append it
+		if (validQuery) {
+			// PIPA have no base query, since they have no state.
+			// so we don't need the keyword AND here.
+			if (query.length() != 0) {
+				query.append(" AND ");
+			}
+			query.append(" T." + params.get("qtype") + " like '%"
+					+ params.get("query") + "%'");
+		}
+		// keep this for counting total tasks
+		String countQuery = query.toString();
+		// set the order column
+		if (params.isSet("sortname"))
+			query.append(" ORDER BY T." + params.get("sortname"));
+		// set the sort order
+		if (params.isSet("sortorder"))
+			query.append(" " + params.get("sortorder"));
+		// count total and get those tasks
+		collectTasks(_token, _user, fmanager, taskManager, type, countQuery,
+				query, _tasks, params.get("rp"), params.get("page"), Boolean
+						.valueOf(params.get("full")));
+	}
 
-        int itasksPerPage = 0;
-        try {
-            itasksPerPage = Integer.parseInt(taskPerPage);
-        } catch (Exception e) {
-        }
-        int ipage = 1;
-        try {
-            ipage = Integer.parseInt(page);
-        } catch (Exception e) {
-        }
-        int index = (ipage - 1) * itasksPerPage;
-        long toIndex = index + itasksPerPage;
-        if (toIndex > total)
-            toIndex = total;
-        _request.setAttribute("totalPage", total);
-        _request.setAttribute("currentPage", page);
+	private void collectTasks(final String token, final String user,
+			FormManager fmanager, ITaskManagementService taskManager,
+			String taskType, String countQuery, StringBuffer query,
+			List<TaskHolder<Task>> tasksHolder, final String taskPerPage,
+			final String page, final boolean collectFull) throws AuthException {
+		// get total number of tasks
+		long total = taskManager.countAvailableTasks(taskType, countQuery);
 
-        Task[] tasks = taskManager.getAvailableTasks(taskType, query.toString(), String.valueOf(index), String.valueOf(itasksPerPage), collectFull);
-        for (Task task : tasks) {
-            tasksHolder.add(new TaskHolder<Task>(task, URIUtils.getResolvedTaskURLAsString(_request, fmanager, task, token, user)));
-        }
+		int itasksPerPage = 0;
+		try {
+			// itasksPerPage = Integer.parseInt(taskPerPage);
+			itasksPerPage = (int) total;
+		} catch (Exception e) {
+		}
+		// int ipage = 1;
+		// try {
+		// ipage = Integer.parseInt(page);
+		// } catch (Exception e) {
+		// }
+		// int index = (ipage - 1) * itasksPerPage;
+		// long toIndex = index + itasksPerPage;
+		// if (toIndex > total)
+		// toIndex = total;
+		// _request.setAttribute("totalPage", total);
+		// _request.setAttribute("currentPage", page);
 
-        if (_log.isDebugEnabled()) {
-            _log.debug("DEBUG\n" + taskType + "\n" + query + "\n" + tasks.length);
-            _log.debug("(" + tasks.length + ") tasks were retrieved for participant token " + _token);
-        }
-    }
+		// Task[] tasks = taskManager.getAvailableTasks(taskType,
+		// query.toString(), String.valueOf(index), String
+		// .valueOf(itasksPerPage), collectFull);
+
+		Task[] tasks = taskManager.getAvailableTasks(taskType,
+				query.toString(), "0", String.valueOf(itasksPerPage),
+				collectFull);
+
+		ArrayList<Task> tempList = new ArrayList<Task>();
+
+		for (Task task : tasks) {
+			if (task instanceof PATask && collectFull
+					&& !user.equals("intalio\\admin")) {
+				PATask currentTA = (PATask) task;
+				try {
+					OMElement el = AXIOMUtil.stringToOM(currentTA
+							.getOutputAsXmlString());
+					OMElement ad = el.getFirstChildWithName(new QName(
+							TAMANAGEMENT_URI, "ArrivalDeparture"));
+
+					String date = "";
+
+					String ActualDepartureDate = ad.getFirstChildWithName(
+							new QName(TAMANAGEMENT_URI, "ActualDepartureDate"))
+							.getText();
+
+					if (!ActualDepartureDate.equals("1970-01-01")) {
+						date = ActualDepartureDate
+								+ " "
+								+ ad.getFirstChildWithName(
+										new QName(TAMANAGEMENT_URI, "ATD"))
+										.getText();
+					} else {
+						date = ad.getFirstChildWithName(
+								new QName(TAMANAGEMENT_URI,
+										"ScheduledDepartureDate")).getText()
+								+ " "
+								+ ad.getFirstChildWithName(
+										new QName(TAMANAGEMENT_URI, "STD"))
+										.getText();
+					}
+
+					if (toDisplay(date))
+						tempList.add(task);
+
+				} catch (Exception e) {
+					// Dunno: this would be a PATask with no data, which
+					// shouldn't exist...
+				}
+			} else {
+				tempList.add(task);
+			}
+		}
+
+		total = tempList.size();
+
+		_request.setAttribute("totalPage", total);
+		_request.setAttribute("currentPage", "1");
+
+		// for (Task task : tasks) {
+		for (int i = 0; i < total; i++) {
+			tasksHolder.add(new TaskHolder<Task>(tempList.get(i), URIUtils
+					.getResolvedTaskURLAsString(_request, fmanager, tempList
+							.get(i), token, user)));
+		}
+
+		if (_log.isDebugEnabled()) {
+			_log.error("DEBUG\n" + taskType + "\n" + query + "\n"
+					+ tasks.length);
+			_log.error("(" + tasks.length
+					+ ") tasks were retrieved for participant token " + _token);
+		}
+	}
+
+	private static boolean toDisplay(String date) {
+
+		Calendar today = Calendar.getInstance();
+
+		today.add(Calendar.HOUR_OF_DAY, -8);
+
+		SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+		try {
+			Calendar TADate = Calendar.getInstance();
+			TADate.setTime(f.parse(date.replace("T", " ").replace("Z", "")));
+
+			if (TADate.after(today)) {
+				return true;
+			} else {
+				return false;
+			}
+
+		} catch (ParseException e) {
+			_log.error("Unparsable date");
+		}
+
+		// if the dateCheck fails, display the date
+		return true;
+	}
 
 }
