@@ -158,9 +158,9 @@ public class TasksCollector {
         } catch (Exception e) {
         }
         int index = (ipage - 1) * itasksPerPage;
-        long toIndex = index + itasksPerPage;
-        if (toIndex > total)
-            toIndex = total;
+//        long toIndex = index + itasksPerPage;
+//        if (toIndex > total)
+//            toIndex = total;
         _request.setAttribute("totalPage", total);
         _request.setAttribute("currentPage", page);
 
