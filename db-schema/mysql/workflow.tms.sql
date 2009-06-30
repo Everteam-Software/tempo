@@ -1,11 +1,12 @@
+CREATE TABLE OPENJPA_SEQUENCE_TABLE (ID TINYINT NOT NULL, SEQUENCE_VALUE BIGINT, PRIMARY KEY (ID)) TYPE = innodb;
 CREATE TABLE tempo_acl (id BIGINT NOT NULL, action VARCHAR(255), DTYPE VARCHAR(255), PRIMARY KEY (id)) TYPE = innodb;
 CREATE TABLE tempo_acl_map (TASK_ID BIGINT, ELEMENT_ID BIGINT) TYPE = innodb;
 CREATE TABLE tempo_attachment (id BIGINT NOT NULL, payload_url VARCHAR(255), METADATA_ID BIGINT, PRIMARY KEY (id)) TYPE = innodb;
 CREATE TABLE tempo_attachment_map (PATASK_ID BIGINT, ELEMENT_ID BIGINT) TYPE = innodb;
 CREATE TABLE tempo_attachment_meta (id BIGINT NOT NULL, creation_date DATETIME, description VARCHAR(255), file_name VARCHAR(255), mime_type VARCHAR(255), title VARCHAR(255), widget VARCHAR(255), PRIMARY KEY (id)) TYPE = innodb;
-CREATE TABLE tempo_notification (id BIGINT NOT NULL, failure_code VARCHAR(255), failure_reason VARCHAR(255), input_xml TEXT, priority INTEGER, state SMALLINT, PRIMARY KEY (id)) TYPE = innodb;
-CREATE TABLE tempo_pa (id BIGINT NOT NULL, complete_soap_action VARCHAR(255), deadline DATETIME, failure_code VARCHAR(255), failure_reason VARCHAR(255), input_xml TEXT, is_chained_before BIT, output_xml TEXT, previous_task_id VARCHAR(255), priority INTEGER, process_id VARCHAR(255), state SMALLINT, PRIMARY KEY (id)) TYPE = innodb;
-CREATE TABLE tempo_pipa (id BIGINT NOT NULL, init_message VARCHAR(255), init_soap VARCHAR(255), process_endpoint VARCHAR(255), PRIMARY KEY (id)) TYPE = innodb;
+CREATE TABLE tempo_notification (id BIGINT NOT NULL, failure_code VARCHAR(255), failure_reason VARCHAR(255), input_xml TEXT, instanceId VARCHAR(255), priority INTEGER, process_id VARCHAR(255), state SMALLINT, PRIMARY KEY (id)) TYPE = innodb;
+CREATE TABLE tempo_pa (id BIGINT NOT NULL, complete_soap_action VARCHAR(255), deadline DATETIME, failure_code VARCHAR(255), failure_reason VARCHAR(255), input_xml TEXT, instance_id VARCHAR(255), is_chained_before BIT, output_xml TEXT, previous_task_id VARCHAR(255), priority INTEGER, process_id VARCHAR(255), state SMALLINT, PRIMARY KEY (id)) TYPE = innodb;
+CREATE TABLE tempo_pipa (id BIGINT NOT NULL, init_message VARCHAR(255), init_soap VARCHAR(255), process_endpoint VARCHAR(1024), PRIMARY KEY (id)) TYPE = innodb;
 CREATE TABLE tempo_role (ACL_ID BIGINT, element VARCHAR(255), TASK_ID BIGINT) TYPE = innodb;
 CREATE TABLE tempo_task (id BIGINT NOT NULL, creation_date DATETIME, description VARCHAR(255), form_url VARCHAR(255), taskid VARCHAR(255), internal_id INTEGER, PRIMARY KEY (id)) TYPE = innodb;
 CREATE TABLE tempo_user (ACL_ID BIGINT, element VARCHAR(255), TASK_ID BIGINT) TYPE = innodb;
