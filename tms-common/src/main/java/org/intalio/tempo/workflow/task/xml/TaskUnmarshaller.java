@@ -40,6 +40,7 @@ import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.task.attachments.AttachmentMetadata;
 import org.intalio.tempo.workflow.task.traits.IChainableTask;
 import org.intalio.tempo.workflow.task.traits.ICompleteReportingTask;
+import org.intalio.tempo.workflow.task.traits.IInstanceBoundTask;
 import org.intalio.tempo.workflow.task.traits.IProcessBoundTask;
 import org.intalio.tempo.workflow.task.traits.ITaskWithAttachments;
 import org.intalio.tempo.workflow.task.traits.ITaskWithDeadline;
@@ -105,7 +106,7 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
         String taskTypeStr = taskMetadata.getTaskType();
         String description = taskMetadata.getDescription();
         String processID = taskMetadata.getProcessId();
-
+        String instanceID = taskMetadata.getInstanceId();
         AuthIdentifierSet userOwners = new AuthIdentifierSet(Arrays.asList(taskMetadata.getUserOwnerArray()));
         AuthIdentifierSet roleOwners = new AuthIdentifierSet(Arrays.asList(taskMetadata.getRoleOwnerArray()));
 
@@ -153,10 +154,21 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
             }
         }
         if (IProcessBoundTask.class.isAssignableFrom(taskClass)) {
-            if(taskMetadata.xgetProcessId()==null)
-                throw new InvalidInputFormatException("ProcessID not specified");
+            if(taskMetadata.xgetProcessId()==null){
+            	/* The following line will be commented to support versions of designer that do not generate the processId*/
+            	
+            	//throw new InvalidInputFormatException("ProcessID not specified");
+            }
         } else {
             forbidParameter(processID, "processID");
+        }
+        if (IInstanceBoundTask.class.isAssignableFrom(taskClass)) {
+            if(taskMetadata.xgetInstanceId()==null){
+            	/* The following line will be commented to support versions of designer that do not generate the InstanceId*/
+               // throw new InvalidInputFormatException("instanceID not specified");
+            }
+        } else {
+            forbidParameter(instanceID, "instanceID");
         }
         if (ICompleteReportingTask.class.isAssignableFrom(taskClass)) {
             requireParameter(completeSOAPAction, "completion SOAPAction");
@@ -220,9 +232,16 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
                 task.setProcessEndpoint(URI.create(uri2));
         }
         if (IProcessBoundTask.class.isAssignableFrom(taskClass)) {
-            if (processID != null)
+            if (taskMetadata.xgetProcessId()!=null && processID != null)
                 ((IProcessBoundTask) resultTask).setProcessID(processID);
         }
+        if (IInstanceBoundTask.class.isAssignableFrom(taskClass)) {
+        	 if(taskMetadata.xgetInstanceId()!=null &&taskMetadata.getInstanceId()!=null){
+        		 ((IInstanceBoundTask) resultTask).setInstanceId(instanceID);
+              }
+        }
+       
+
         if (ICompleteReportingTask.class.isAssignableFrom(taskClass)) {
             ((ICompleteReportingTask) resultTask).setCompleteSOAPAction(completeSOAPAction);
         }

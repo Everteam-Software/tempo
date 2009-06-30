@@ -42,7 +42,7 @@ public class PIPATask extends Task implements InitTask {
 
     public static final String FIND_BY_URL = "find_by_url";
     public static final String FIND_BY_PIPA_USER_ROLE = "find_by_pipa_user_role";
-
+    
     @Persistent
     @Factory("URI.create")
     @Externalizer("toString")
@@ -58,7 +58,7 @@ public class PIPATask extends Task implements InitTask {
     @Persistent
     @Column(name = "init_soap")
     private String _initOperationSOAPAction;
-
+    
     public PIPATask() {
         super();
     }
@@ -121,7 +121,7 @@ public class PIPATask extends Task implements InitTask {
     public void setProcessEndpoint(URI processEndpoint) {
         _processEndpoint = processEndpoint;
     }
-
+    
     /**
      * Returns <code>true</code> if this instance has all necessary properties
      * specified.<br />

@@ -41,6 +41,7 @@ import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.task.traits.IChainableTask;
 import org.intalio.tempo.workflow.task.traits.ICompleteReportingTask;
+import org.intalio.tempo.workflow.task.traits.IInstanceBoundTask;
 import org.intalio.tempo.workflow.task.traits.IProcessBoundTask;
 import org.intalio.tempo.workflow.task.traits.ITaskWithAttachments;
 import org.intalio.tempo.workflow.task.traits.ITaskWithDeadline;
@@ -60,16 +61,13 @@ import org.w3c.dom.Document;
 @NamedQueries( {
         @NamedQuery(name = PATask.FIND_BY_STATES, query = "select m from PATask m where m._state=?1", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") })})
 public class PATask extends Task implements ITaskWithState, IProcessBoundTask, ITaskWithInput, ITaskWithOutput,
-        ICompleteReportingTask, ITaskWithAttachments, IChainableTask, ITaskWithPriority, ITaskWithDeadline {
+        ICompleteReportingTask, ITaskWithAttachments, IChainableTask, ITaskWithPriority, ITaskWithDeadline ,IInstanceBoundTask{
 
     public static final String FIND_BY_STATES = "find_by_ps_states";
     public static final String FIND_BY_PA_USER_ROLE = "find_by_pa_user_role";
     public static final String FIND_BY_PA_USER_ROLE_GENERIC = "find_by_pa_user_role_generic";
 
-    @Persistent
-    @Column(name = "process_id")
-    private String _processID;
-
+    
     @Persistent
     @Column(name = "state")
     private TaskState _state = TaskState.READY;
@@ -116,7 +114,15 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
     @Persistent
     @Column(name = "priority")
     private Integer _priority;
+    
+    @Persistent
+    @Column(name = "process_id")
+    private String _processID;
 
+    @Persistent
+    @Column(name = "instance_id")
+    private String _instanceId;
+    
     public PATask() {
         super();
     }
@@ -132,7 +138,6 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
         if (input != null)
             this.setInput(input);
     }
-
     public String getProcessID() {
         return _processID;
     }
@@ -143,7 +148,7 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
         }
         _processID = processID;
     }
-
+    
     public TaskState getState() {
         return _state;
     }
@@ -317,5 +322,13 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
 			return super.isAvailableTo(credentials);
 		}
     }
+
+	public String getInstanceId() {
+		return _instanceId;
+	}
+
+	public void setInstanceId(String instanceId) {
+		_instanceId=instanceId;
+	}
 
 }
