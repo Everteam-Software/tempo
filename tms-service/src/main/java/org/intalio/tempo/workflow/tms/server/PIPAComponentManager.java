@@ -198,6 +198,8 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
 
     private void checkDir(File base, File dir, List<DeploymentMessage> msgs, String token) {
         File[] files = dir.listFiles();
+        if( files == null ) return;
+        
         for (File f : files) {
             LOG.debug("Check: {}", f);
             String itemURL = relativePath(base, f);
