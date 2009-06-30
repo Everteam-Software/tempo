@@ -11,18 +11,12 @@
  */
 package org.intalio.tempo.uiframework.actions;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequestWrapper;
-import javax.xml.namespace.QName;
 
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.impl.llom.util.AXIOMUtil;
 import org.intalio.tempo.uiframework.Configuration;
 import org.intalio.tempo.uiframework.URIUtils;
 import org.intalio.tempo.uiframework.forms.FormManager;
@@ -175,120 +169,35 @@ public class TasksCollector {
 
 		int itasksPerPage = 0;
 		try {
-			// itasksPerPage = Integer.parseInt(taskPerPage);
-			itasksPerPage = (int) total;
+			itasksPerPage = Integer.parseInt(taskPerPage);
 		} catch (Exception e) {
 		}
-		// int ipage = 1;
-		// try {
-		// ipage = Integer.parseInt(page);
-		// } catch (Exception e) {
-		// }
-		// int index = (ipage - 1) * itasksPerPage;
-		// long toIndex = index + itasksPerPage;
-		// if (toIndex > total)
-		// toIndex = total;
-		// _request.setAttribute("totalPage", total);
-		// _request.setAttribute("currentPage", page);
-
-		// Task[] tasks = taskManager.getAvailableTasks(taskType,
-		// query.toString(), String.valueOf(index), String
-		// .valueOf(itasksPerPage), collectFull);
+		int ipage = 1;
+		try {
+			ipage = Integer.parseInt(page);
+		} catch (Exception e) {
+		}
+		int index = (ipage - 1) * itasksPerPage;
+		long toIndex = index + itasksPerPage;
+		if (toIndex > total)
+			toIndex = total;
+		_request.setAttribute("totalPage", total);
+		_request.setAttribute("currentPage", page);
 
 		Task[] tasks = taskManager.getAvailableTasks(taskType,
-				query.toString(), "0", String.valueOf(itasksPerPage),
-				collectFull);
-
-		ArrayList<Task> tempList = new ArrayList<Task>();
-
+				query.toString(), String.valueOf(index), String
+						.valueOf(itasksPerPage), collectFull);
 		for (Task task : tasks) {
-			if (task instanceof PATask && collectFull
-					&& !user.equals("intalio\\admin")) {
-				PATask currentTA = (PATask) task;
-				try {
-					OMElement el = AXIOMUtil.stringToOM(currentTA
-							.getOutputAsXmlString());
-					OMElement ad = el.getFirstChildWithName(new QName(
-							TAMANAGEMENT_URI, "ArrivalDeparture"));
-
-					String date = "";
-
-					String ActualDepartureDate = ad.getFirstChildWithName(
-							new QName(TAMANAGEMENT_URI, "ActualDepartureDate"))
-							.getText();
-
-					if (!ActualDepartureDate.equals("1970-01-01")) {
-						date = ActualDepartureDate
-								+ " "
-								+ ad.getFirstChildWithName(
-										new QName(TAMANAGEMENT_URI, "ATD"))
-										.getText();
-					} else {
-						date = ad.getFirstChildWithName(
-								new QName(TAMANAGEMENT_URI,
-										"ScheduledDepartureDate")).getText()
-								+ " "
-								+ ad.getFirstChildWithName(
-										new QName(TAMANAGEMENT_URI, "STD"))
-										.getText();
-					}
-
-					if (toDisplay(date))
-						tempList.add(task);
-
-				} catch (Exception e) {
-					// Dunno: this would be a PATask with no data, which
-					// shouldn't exist...
-				}
-			} else {
-				tempList.add(task);
-			}
-		}
-
-		total = tempList.size();
-
-		_request.setAttribute("totalPage", total);
-		_request.setAttribute("currentPage", "1");
-
-		// for (Task task : tasks) {
-		for (int i = 0; i < total; i++) {
-			tasksHolder.add(new TaskHolder<Task>(tempList.get(i), URIUtils
-					.getResolvedTaskURLAsString(_request, fmanager, tempList
-							.get(i), token, user)));
+			tasksHolder.add(new TaskHolder<Task>(task, URIUtils
+					.getResolvedTaskURLAsString(_request, fmanager, task,
+							token, user)));
 		}
 
 		if (_log.isDebugEnabled()) {
-			_log.error("DEBUG\n" + taskType + "\n" + query + "\n"
+			_log.debug("DEBUG\n" + taskType + "\n" + query + "\n"
 					+ tasks.length);
-			_log.error("(" + tasks.length
+			_log.debug("(" + tasks.length
 					+ ") tasks were retrieved for participant token " + _token);
 		}
 	}
-
-	private static boolean toDisplay(String date) {
-
-		Calendar today = Calendar.getInstance();
-
-		today.add(Calendar.HOUR_OF_DAY, -8);
-
-		SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-		try {
-			Calendar TADate = Calendar.getInstance();
-			TADate.setTime(f.parse(date.replace("T", " ").replace("Z", "")));
-
-			if (TADate.after(today)) {
-				return true;
-			} else {
-				return false;
-			}
-
-		} catch (ParseException e) {
-			_log.error("Unparsable date");
-		}
-
-		// if the dateCheck fails, display the date
-		return true;
-	}
-
 }
