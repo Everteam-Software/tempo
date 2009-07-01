@@ -459,7 +459,13 @@
                     <xsd:element name="dismissAction" type="tns:accessControlType" maxOccurs="1" minOccurs="0"/>
                     <xsd:element name="completeAction" type="tns:accessControlType" maxOccurs="1" minOccurs="0"/>
 					<xsd:element name="attachments" type="tns:attachments" maxOccurs="1" minOccurs="0"/>
-					<xsd:element name="SITAMetadata" type="gi:FormModel" />
+					<xsd:element name="output">
+					  <xsd:complexType>
+					   <xsd:sequence>
+						<xsd:element ref="gi:FormModel" />
+					   </xsd:sequence>
+					  </xsd:complexType>
+					 </xsd:element>
   				</xsd:sequence>
 			</xsd:complexType>
 			<xsd:complexType name="task">
