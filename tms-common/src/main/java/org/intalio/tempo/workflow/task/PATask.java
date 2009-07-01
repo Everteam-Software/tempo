@@ -17,6 +17,8 @@ package org.intalio.tempo.workflow.task;
 
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -31,12 +33,18 @@ import javax.persistence.Lob;
 import javax.persistence.MapKey;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.QueryHint;
 import javax.persistence.Table;
 
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.impl.OMNamespaceImpl;
+import org.apache.axiom.om.impl.llom.util.AXIOMUtil;
 import org.apache.openjpa.persistence.Persistent;
 import org.apache.openjpa.persistence.PersistentMap;
 import org.apache.openjpa.persistence.jdbc.ContainerTable;
+import org.apache.xmlbeans.XmlException;
+import javax.xml.stream.XMLStreamException;
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.task.traits.IChainableTask;
@@ -52,6 +60,11 @@ import org.intalio.tempo.workflow.task.traits.ITaskWithState;
 import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 import org.w3c.dom.Document;
+
+import com.intalio.gi.forms.tAmanagement.ArrivalDepartureType;
+import com.intalio.gi.forms.tAmanagement.FormModel;
+import com.intalio.gi.forms.tAmanagement.InspectionType;
+import com.intalio.gi.forms.tAmanagement.impl.FormModelImpl;
 
 /**
  * Activity task
@@ -123,6 +136,39 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
     @Column(name = "instance_id")
     private String _instanceId;
     
+    /****************************/
+	/** Begin Extra metadata for SITA **/
+	@Persistent
+	@Column(name = "STA")
+	private Calendar _STA;
+
+	@Persistent
+	@Column(name = "STD")
+	private Calendar _STD;
+
+	@Persistent
+	@Column(name = "ETD")
+	private Calendar _ETD;
+
+	@Persistent
+	@Column(name = "ETA")
+	private Calendar _ETA;
+
+	@Persistent
+	@Column(name = "ATA")
+	private Calendar _ATA;
+
+	@Persistent
+	@Column(name = "ATD")
+	private Calendar _ATD;
+
+
+	@OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+	Collection<org.intalio.tempo.workflow.task.AssignedMechanics> _assignedMechanics;
+
+	/** End Extra metadata for SITA **/
+	/****************************/
+	
     public PATask() {
         super();
     }
@@ -295,8 +341,54 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
     }
 
     public void setOutput(String output) {
-        _output = output;
-    }
+		_output = output;
+		System.out.println(output);
+		try {
+			OMElement om = AXIOMUtil.stringToOM(output);
+			om.setLocalName("xml-fragment");
+			om.setNamespace(new OMNamespaceImpl("", "k"));
+			FormModelImpl outputXML = (FormModelImpl) FormModel.Factory
+					.parse(om.getXMLStreamReaderWithoutCaching());
+			setMetadata(outputXML);
+		} catch (XmlException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (XMLStreamException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private void setMetadata(FormModelImpl outputXML) {
+		if (outputXML.getArrivalDeparture() != null) {
+
+			ArrivalDepartureType arrival = outputXML.getArrivalDeparture();
+			if (arrival.xgetSTD() != null && arrival.getSTD() != null) {
+
+				_STD = outputXML.getArrivalDeparture().getSTD();
+			}
+			if (arrival.xgetATD() != null && arrival.getATD() != null) {
+
+				_ATD = outputXML.getArrivalDeparture().getATD();
+			}
+			if (arrival.xgetETD() != null && arrival.getETD() != null) {
+
+				_ETD = outputXML.getArrivalDeparture().getETD();
+			}
+		}
+		if (outputXML.getInspection() != null) {
+			 InspectionType inspection = outputXML.getInspection();
+			 com.intalio.gi.forms.tAmanagement.InspectionType.AssignedMechanics[] mechanics =inspection.getAssignedMechanicsArray();
+			_assignedMechanics = new ArrayList<org.intalio.tempo.workflow.task.AssignedMechanics>();
+			for (com.intalio.gi.forms.tAmanagement.InspectionType.AssignedMechanics mechanic : mechanics) {
+				org.intalio.tempo.workflow.task.AssignedMechanics newMechanic = new org.intalio.tempo.workflow.task.AssignedMechanics();
+				newMechanic.setMechanicID(mechanic.getAssignedMechanicID());
+				newMechanic.setName(mechanic.getAssignedMechanicName());
+				_assignedMechanics.add(newMechanic);
+			}
+		}
+
+	}
 
     public Integer getPriority() {
         return _priority;
@@ -330,5 +422,61 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
 	public void setInstanceId(String instanceId) {
 		_instanceId=instanceId;
 	}
+	
+	public Calendar get_STA() {
+		return _STA;
+	}
 
+	public void set_STA(Calendar _sta) {
+		_STA = _sta;
+	}
+
+	public Calendar get_STD() {
+		return _STD;
+	}
+
+	public void set_STD(Calendar _std) {
+		_STD = _std;
+	}
+
+	public Calendar get_ETD() {
+		return _ETD;
+	}
+
+	public void set_ETD(Calendar _etd) {
+		_ETD = _etd;
+	}
+
+	public Calendar get_ETA() {
+		return _ETA;
+	}
+
+	public void set_ETA(Calendar _eta) {
+		_ETA = _eta;
+	}
+
+	public Calendar get_ATA() {
+		return _ATA;
+	}
+
+	public void set_ATA(Calendar _ata) {
+		_ATA = _ata;
+	}
+
+	public Calendar get_ATD() {
+		return _ATD;
+	}
+
+	public void set_ATD(Calendar _atd) {
+		_ATD = _atd;
+	}
+
+	public Collection<org.intalio.tempo.workflow.task.AssignedMechanics> get_assignedMechanics() {
+		return _assignedMechanics;
+	}
+
+	public void set_assignedMechanics(
+			Collection<org.intalio.tempo.workflow.task.AssignedMechanics> mechanics) {
+		_assignedMechanics = mechanics;
+	}
 }
