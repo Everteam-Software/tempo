@@ -174,13 +174,19 @@ public class TaskMarshaller {
         	FormModel formModel = FormModel.Factory.newInstance();
         	InspectionType inspection = InspectionType.Factory.newInstance();
         	ArrivalDepartureType arrivalDeparture=ArrivalDepartureType.Factory.newInstance();
-        	
-        	arrivalDeparture.setATA(paTask.get_ATA());
-        	arrivalDeparture.setATD(paTask.get_ATD());
-        	arrivalDeparture.setETD(paTask.get_ETD());
-        	arrivalDeparture.setETA(paTask.get_ETA());
-        	arrivalDeparture.setSTA(paTask.get_STA());
-        	arrivalDeparture.setSTD(paTask.get_STD());
+        	Calendar calendar=Calendar.getInstance();
+        	calendar.setTime(paTask.get_ATA());
+        	arrivalDeparture.setATA((Calendar) calendar.clone());
+        	calendar.setTime(paTask.get_ATD());
+        	arrivalDeparture.setATD((Calendar) calendar.clone());
+        	calendar.setTime(paTask.get_ETD());
+        	arrivalDeparture.setETD((Calendar) calendar.clone());
+        	calendar.setTime(paTask.get_ETA());
+        	arrivalDeparture.setETA((Calendar) calendar.clone());
+        	calendar.setTime(paTask.get_STA());
+        	arrivalDeparture.setSTA((Calendar) calendar.clone());
+        	calendar.setTime(paTask.get_STD());
+        	arrivalDeparture.setSTD((Calendar) calendar.clone());
         	
         	AssignedMechanics[] assignedMechanicsArray=new AssignedMechanics[paTask.get_assignedMechanics().size()];
         	org.intalio.tempo.workflow.task.AssignedMechanics[] mechanics = paTask.get_assignedMechanics().toArray(new org.intalio.tempo.workflow.task.AssignedMechanics[0]);

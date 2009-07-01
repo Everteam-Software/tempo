@@ -61,6 +61,7 @@ import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 import org.w3c.dom.Document;
 
+import com.intalio.gi.forms.tAmanagement.ActivityType;
 import com.intalio.gi.forms.tAmanagement.ArrivalDepartureType;
 import com.intalio.gi.forms.tAmanagement.FormModel;
 import com.intalio.gi.forms.tAmanagement.InspectionType;
@@ -138,53 +139,56 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
     
     /****************************/
 	/** Begin Extra metadata for SITA **/
+    /** Activity data*/
+    
+    /** ArrivalDeparture data*/
     @Persistent
 	@Column(name = "ScheduledArrivalDate")
-	private Calendar _ScheduledArrivalDate;
+	private Date _ScheduledArrivalDate;
 
 	@Persistent
 	@Column(name = "STA")
-	private Calendar _STA;
+	private Date _STA;
 	
     @Persistent
 	@Column(name = "ScheduledDepartureDate")
-	private Calendar _ScheduledDepartureDate;
+	private Date _ScheduledDepartureDate;
     
 	@Persistent
 	@Column(name = "STD")
-	private Calendar _STD;
+	private Date _STD;
 	
     @Persistent
 	@Column(name = "EstimatedArrivalDate")
-	private Calendar _EstimatedArrivalDate;
+	private Date _EstimatedArrivalDate;
 
 	@Persistent
 	@Column(name = "ETD")
-	private Calendar _ETD;
+	private Date _ETD;
 	
     @Persistent
 	@Column(name = "EstimatedDepartureDate")
-	private Calendar _EstimatedDepartureDate;
+	private Date _EstimatedDepartureDate;
 
 	@Persistent
 	@Column(name = "ETA")
-	private Calendar _ETA;
+	private Date _ETA;
 	
     @Persistent
 	@Column(name = "ActualArrivalDate")
-	private Calendar _ActualArrivalDate;
+	private Date _ActualArrivalDate;
 
 	@Persistent
 	@Column(name = "ATA")
-	private Calendar _ATA;
+	private Date _ATA;
 	
     @Persistent
 	@Column(name = "ActualDepartureDate")
-	private Calendar _ActualDepartureDate;
+	private Date _ActualDepartureDate;
 
 	@Persistent
 	@Column(name = "ATD")
-	private Calendar _ATD;
+	private Date _ATD;
 	
 	 @Persistent
 	 @Column(name = "ArrivalFlightNumber")
@@ -414,71 +418,81 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
 
 	private void setMetadata(FormModelImpl outputXML) {
 //		System.out.println("setMEtadata1");
+		/****************Activity Data Departure DATA****************/
+		if (outputXML.getActivity() != null) {
+			ActivityType activity = outputXML.getActivity();
+			if (activity.xgetAircraftID() != null && activity.xgetAircraftID().validate() && activity.getAircraftID() != null ) {
+				//set_A( activity.getAircraftID() );
+			}
+		}
+		/****************Arrival Departure DATA****************/
 		if (outputXML.getArrivalDeparture() != null) {
 //			System.out.println("setMEtadata12");
 			ArrivalDepartureType arrival = outputXML.getArrivalDeparture();
 			
+			
+			/****************Arrival Departure DATA****************/
 			/**Scheduled departure*/
 			if (arrival.xgetScheduledDepartureDate() != null && arrival.xgetScheduledDepartureDate().validate() && arrival.getScheduledDepartureDate() != null ) {
-				set_ScheduledDepartureDate( outputXML.getArrivalDeparture().getScheduledDepartureDate() );
+				set_ScheduledDepartureDate( arrival.getScheduledDepartureDate().getTime() );
 			}
 
 //			System.out.println("STD "+ arrival.xgetSTD()+" end");
 //			System.out.println("STD "+ arrival.xgetSTD().validate());
 			if (arrival.xgetSTD() != null &&  arrival.xgetSTD().validate() && arrival.getSTD() != null ) {
 
-				set_STD( outputXML.getArrivalDeparture().getSTD());
+				set_STD( arrival.getSTD().getTime());
 			}
-			
+
 			/**scheduled arrival*/
 			if (arrival.xgetScheduledArrivalDate() != null && arrival.xgetScheduledArrivalDate().validate() && arrival.getScheduledArrivalDate() != null ) {
-				set_ScheduledArrivalDate( outputXML.getArrivalDeparture().getScheduledArrivalDate() );
+				set_ScheduledArrivalDate( arrival.getScheduledArrivalDate().getTime() );
 			}
 			
 			if (arrival.xgetSTA() != null &&  arrival.xgetSTA().validate() && arrival.getSTA() != null ) {
 
-				set_STA( outputXML.getArrivalDeparture().getSTA());
+				set_STA( arrival.getSTA().getTime());
 			}
 			/**Estimated departure*/
 			if (arrival.xgetEstimatedDepartureDate() != null && arrival.xgetEstimatedDepartureDate().validate() && arrival.getEstimatedDepartureDate() != null ) {
-				set_EstimatedDepartureDate( outputXML.getArrivalDeparture().getEstimatedDepartureDate() );
+				set_EstimatedDepartureDate( arrival.getEstimatedDepartureDate().getTime() );
 			}
 
 			if (arrival.xgetETD() != null &&  arrival.xgetETD().validate() && arrival.getETD() != null ) {
 
-				set_ETD( outputXML.getArrivalDeparture().getETD());
+				set_ETD( arrival.getETD().getTime());
 			}
 			
 			/**Estimated arrival */
 			
 			if (arrival.xgetEstimatedArrivalDate() != null && arrival.xgetEstimatedArrivalDate().validate() && arrival.getEstimatedArrivalDate() != null ) {
-				set_EstimatedArrivalDate( outputXML.getArrivalDeparture().getEstimatedArrivalDate() );
+				set_EstimatedArrivalDate( arrival.getEstimatedArrivalDate().getTime() );
 			}
 
 			if (arrival.xgetETA() != null &&  arrival.xgetETA().validate() && arrival.getETA() != null ) {
 
-				set_ETA( outputXML.getArrivalDeparture().getETA());
+				set_ETA( arrival.getETA().getTime());
 			}
 			
 			/**Actual departure*/
 			if (arrival.xgetActualDepartureDate() != null && arrival.xgetActualDepartureDate().validate() && arrival.getActualDepartureDate() != null ) {
-				set_ActualDepartureDate( outputXML.getArrivalDeparture().getActualDepartureDate() );
+				set_ActualDepartureDate( arrival.getActualDepartureDate().getTime() );
 			}
 
 			if (arrival.xgetATD() != null &&  arrival.xgetATD().validate() && arrival.getATD() != null ) {
 
-				set_ATD( outputXML.getArrivalDeparture().getATD());
+				set_ATD( arrival.getATD().getTime());
 			}
 			
 			/**Actual arrival */
 			
 			if (arrival.xgetActualArrivalDate() != null && arrival.xgetActualArrivalDate().validate() && arrival.getActualArrivalDate() != null ) {
-				set_ActualArrivalDate( outputXML.getArrivalDeparture().getActualArrivalDate() );
+				set_ActualArrivalDate( arrival.getActualArrivalDate().getTime() );
 			}
 
 			if (arrival.xgetATA() != null &&  arrival.xgetATA().validate() && arrival.getATA() != null ) {
 
-				set_ATA( outputXML.getArrivalDeparture().getATA());
+				set_ATA( arrival.getATA().getTime());
 			}
 			
 		}
@@ -496,19 +510,19 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
 
 	}
 
-    public Calendar get_EstimatedArrivalDate() {
+    public Date get_EstimatedArrivalDate() {
 		return _EstimatedArrivalDate;
 	}
 
-	public void set_EstimatedArrivalDate(Calendar estimatedArrivalDate) {
+	public void set_EstimatedArrivalDate(Date estimatedArrivalDate) {
 		_EstimatedArrivalDate = estimatedArrivalDate;
 	}
 
-	public Calendar get_EstimatedDepartureDate() {
+	public Date get_EstimatedDepartureDate() {
 		return _EstimatedDepartureDate;
 	}
 
-	public void set_EstimatedDepartureDate(Calendar estimatedDepartureDate) {
+	public void set_EstimatedDepartureDate(Date estimatedDepartureDate) {
 		_EstimatedDepartureDate = estimatedDepartureDate;
 	}
 
@@ -545,51 +559,51 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
 		_instanceId=instanceId;
 	}
 	
-	public Calendar get_STA() {
+	public Date get_STA() {
 		return _STA;
 	}
 
-	public void set_STA(Calendar _sta) {
+	public void set_STA(Date _sta) {
 		_STA = _sta;
 	}
 
-	public Calendar get_STD() {
+	public Date get_STD() {
 		return _STD;
 	}
 
-	public void set_STD(Calendar _std) {
+	public void set_STD(Date _std) {
 		_STD = _std;
 	}
 
-	public Calendar get_ETD() {
+	public Date get_ETD() {
 		return _ETD;
 	}
 
-	public void set_ETD(Calendar _etd) {
+	public void set_ETD(Date _etd) {
 		_ETD = _etd;
 	}
 
-	public Calendar get_ETA() {
+	public Date get_ETA() {
 		return _ETA;
 	}
 
-	public void set_ETA(Calendar _eta) {
+	public void set_ETA(Date _eta) {
 		_ETA = _eta;
 	}
 
-	public Calendar get_ATA() {
+	public Date get_ATA() {
 		return _ATA;
 	}
 
-	public void set_ATA(Calendar _ata) {
+	public void set_ATA(Date _ata) {
 		_ATA = _ata;
 	}
 
-	public Calendar get_ATD() {
+	public Date get_ATD() {
 		return _ATD;
 	}
 
-	public void set_ATD(Calendar _atd) {
+	public void set_ATD(Date _atd) {
 		_ATD = _atd;
 	}
 
@@ -610,35 +624,35 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
 		this._state = _state;
 	}
 
-	public Calendar get_ScheduledArrivalDate() {
+	public Date get_ScheduledArrivalDate() {
 		return _ScheduledArrivalDate;
 	}
 
-	public void set_ScheduledArrivalDate(Calendar scheduledArrivalDate) {
+	public void set_ScheduledArrivalDate(Date scheduledArrivalDate) {
 		_ScheduledArrivalDate = scheduledArrivalDate;
 	}
 
-	public Calendar get_ScheduledDepartureDate() {
+	public Date get_ScheduledDepartureDate() {
 		return _ScheduledDepartureDate;
 	}
 
-	public void set_ScheduledDepartureDate(Calendar scheduledDepartureDate) {
+	public void set_ScheduledDepartureDate(Date scheduledDepartureDate) {
 		_ScheduledDepartureDate = scheduledDepartureDate;
 	}
 
-	public Calendar get_ActualArrivalDate() {
+	public Date get_ActualArrivalDate() {
 		return _ActualArrivalDate;
 	}
 
-	public void set_ActualArrivalDate(Calendar actualArrivalDate) {
+	public void set_ActualArrivalDate(Date actualArrivalDate) {
 		_ActualArrivalDate = actualArrivalDate;
 	}
 
-	public Calendar get_ActualDepartureDate() {
+	public Date get_ActualDepartureDate() {
 		return _ActualDepartureDate;
 	}
 
-	public void set_ActualDepartureDate(Calendar actualDepartureDate) {
+	public void set_ActualDepartureDate(Date actualDepartureDate) {
 		_ActualDepartureDate = actualDepartureDate;
 	}
 
