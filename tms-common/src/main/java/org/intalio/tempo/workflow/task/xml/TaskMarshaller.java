@@ -26,6 +26,7 @@ import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 import org.apache.xmlbeans.XmlString;
 import org.intalio.tempo.workflow.auth.UserRoles;
+import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.TaskState;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
@@ -52,6 +53,10 @@ import org.w3c.dom.Node;
 import com.intalio.bpms.workflow.taskManagementServices20051109.AccessControlType;
 import com.intalio.bpms.workflow.taskManagementServices20051109.Attachments;
 import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
+import com.intalio.gi.forms.tAmanagement.ArrivalDepartureType;
+import com.intalio.gi.forms.tAmanagement.FormModel;
+import com.intalio.gi.forms.tAmanagement.InspectionType;
+import com.intalio.gi.forms.tAmanagement.InspectionType.AssignedMechanics;
 
 public class TaskMarshaller {
     final static Logger _log = LoggerFactory.getLogger(TaskMarshaller.class);
@@ -163,7 +168,33 @@ public class TaskMarshaller {
                 taskMetadataElement.setPreviousTaskId(chainableTask.getPreviousTaskID());
             }
         }
-
+        
+        if (task.getClass().equals(PATask.class)){
+        	PATask paTask=(PATask) task;
+        	FormModel formModel = FormModel.Factory.newInstance();
+        	InspectionType inspection = InspectionType.Factory.newInstance();
+        	ArrivalDepartureType arrivalDeparture=ArrivalDepartureType.Factory.newInstance();
+        	
+        	arrivalDeparture.setATA(paTask.get_ATA());
+        	arrivalDeparture.setATD(paTask.get_ATD());
+        	arrivalDeparture.setETD(paTask.get_ETD());
+        	arrivalDeparture.setETA(paTask.get_ETA());
+        	arrivalDeparture.setSTA(paTask.get_STA());
+        	arrivalDeparture.setSTD(paTask.get_STD());
+        	
+        	AssignedMechanics[] assignedMechanicsArray=new AssignedMechanics[paTask.get_assignedMechanics().size()];
+        	org.intalio.tempo.workflow.task.AssignedMechanics[] mechanics = paTask.get_assignedMechanics().toArray(new org.intalio.tempo.workflow.task.AssignedMechanics[0]);
+        	for(int i=0;i<mechanics.length;i++){
+        		assignedMechanicsArray[i]=AssignedMechanics.Factory.newInstance();
+        		assignedMechanicsArray[i].setAssignedMechanicID(mechanics[i].getMechanicID());
+        		assignedMechanicsArray[i].setAssignedMechanicName(mechanics[i].getName());
+        	}
+			inspection.setAssignedMechanicsArray(assignedMechanicsArray);
+        	formModel.setInspection(inspection);
+        	formModel.setArrivalDeparture(arrivalDeparture);
+        	taskMetadataElement.setSITAMetadata(formModel);
+        }
+        
         return taskMetadataElement;
     }
 

@@ -16,8 +16,199 @@
  */
  -->
 <!-- $Id: service.wsdl 3848 2006-04-13 12:35:58Z imemruk $ -->
-<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" name="TaskManagementServices">
+<wsdl:definitions xmlns:gi="http://www.intalio.com/gi/forms/TAmanagement.gi" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" name="TaskManagementServices">
 	<wsdl:types>
+	<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+			xmlns:us="http://www.intalio.com/UserSchema" xmlns:TAmanagement="http://www.intalio.com/gi/forms/TAmanagement.gi"
+			targetNamespace="http://www.intalio.com/gi/forms/TAmanagement.gi"
+			elementFormDefault="qualified">
+
+			<xs:complexType name="FormModel">
+				<xs:sequence>
+					<xs:element name="Activity" type="TAmanagement:ActivityType" />
+					<xs:element name="ArrivalDeparture" type="TAmanagement:ArrivalDepartureType" />
+					<xs:element name="Inspection" type="TAmanagement:InspectionType" />
+					<xs:element name="HIL" type="TAmanagement:HILType" />
+					<xs:element name="DC" type="TAmanagement:DCType" />
+					<xs:sequence>
+						<xs:any maxOccurs="unbounded" minOccurs="0" />
+					</xs:sequence>
+				</xs:sequence>
+			</xs:complexType>
+
+			<xs:complexType name="ActivityType">
+				<xs:sequence>
+					<xs:element type="xs:string" name="AircraftID"
+						minOccurs="0" />
+					<xs:element type="xs:time" name="startTime" minOccurs="0" />
+					<xs:element type="xs:time" name="finishTime" minOccurs="0" />
+					<xs:element type="xs:time" name="releaseTime" minOccurs="0" />
+					<xs:element type="xs:boolean" name="late" minOccurs="0" />
+					<xs:element type="xs:boolean" name="update" minOccurs="0" />
+				</xs:sequence>
+			</xs:complexType>
+
+			<xs:complexType name="ArrivalDepartureType">
+				<xs:sequence>
+					<xs:element type="xs:date" name="ScheduledArrivalDate"
+						minOccurs="0" />
+					<xs:element type="xs:time" name="STA" minOccurs="0" />
+					<xs:element type="xs:date" name="ScheduledDepartureDate"
+						minOccurs="0" />
+					<xs:element type="xs:time" name="STD" minOccurs="0" />
+					<xs:element type="xs:date" name="EstimatedArrivalDate"
+						minOccurs="0" />
+					<xs:element type="xs:time" name="ETA" minOccurs="0" />
+					<xs:element type="xs:date" name="EstimatedDepartureDate"
+						minOccurs="0" />
+					<xs:element type="xs:time" name="ETD" minOccurs="0" />
+					<xs:element type="xs:date" name="ActualArrivalDate"
+						minOccurs="0" />
+					<xs:element type="xs:time" name="ATA" minOccurs="0" />
+					<xs:element type="xs:date" name="ActualDepartureDate"
+						minOccurs="0" />
+					<xs:element type="xs:time" name="ATD" minOccurs="0" />
+					<xs:element type="xs:string" name="ArrivalFlightNumber"
+						minOccurs="0" />
+					<xs:element type="xs:string" name="DepartureFlightNumber"
+						minOccurs="0" />
+				</xs:sequence>
+			</xs:complexType>
+
+			<xs:complexType name="InspectionType">
+				<xs:sequence>
+					<xs:element type="xs:string" name="assigned" minOccurs="0" />
+					<xs:element type="xs:string" name="Stand" minOccurs="0" />
+					<xs:element type="xs:string" name="InspectionType"
+						minOccurs="0" />
+					<xs:element name="InspectionStatus" minOccurs="0">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="open" />
+								<xs:enumeration value="started" />
+								<xs:enumeration value="finished" />
+								<xs:enumeration value="released" />
+								<xs:enumeration value="stopped" />
+								<xs:enumeration value="problem" />
+								<xs:enumeration value="aborted" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element type="xs:string" name="resources" minOccurs="0" />
+					<xs:element type="xs:string" name="coordinator"
+						minOccurs="0" />
+					<xs:element name="RTR" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element type="xs:string" name="RTRid" minOccurs="0" />
+								<xs:element type="xs:string" name="RTRdescription"
+									minOccurs="0" />
+								<xs:element name="RTRstatus" minOccurs="0">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="open" />
+											<xs:enumeration value="resolved" />
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+								<xs:element type="xs:boolean" name="RTRad" minOccurs="0" />
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="assignedMechanics" minOccurs="0"
+						maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element type="xs:string" name="assignedMechanicName"
+									minOccurs="0" />
+								<xs:element type="xs:string" name="assignedMechanicID"
+									minOccurs="0" />
+								<xs:element type="xs:string" name="assignedMechanicCert"
+									minOccurs="0" />
+								<xs:element type="xs:boolean" name="entitledToRelease"
+									default="false" minOccurs="0" />
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="assignedAvionics" minOccurs="0"
+						maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element type="xs:string" name="assignedAvionicName"
+									minOccurs="0" />
+								<xs:element type="xs:string" name="assignedAvionicID"
+									minOccurs="0" />
+								<xs:element type="xs:string" name="assignedAvionicCert"
+									minOccurs="0" />
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:complexType>
+
+			<xs:complexType name="HILType">
+				<xs:sequence>
+					<xs:element name="TAHIL" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element type="xs:string" name="TAHILid"
+									minOccurs="0" />
+								<xs:element type="xs:string" name="TAHILtype"
+									minOccurs="0" />
+								<xs:element type="xs:date" name="TAHILopeningDate"
+									minOccurs="0" />
+								<xs:element type="xs:string" name="TAHILCL"
+									minOccurs="0" />
+								<xs:element type="xs:date" name="TAHILlimitDate"
+									minOccurs="0" />
+								<xs:element type="xs:date" name="TAHILclosingDate"
+									minOccurs="0" />
+								<xs:element type="xs:string" name="TAHILATA100"
+									minOccurs="0" />
+								<xs:element type="xs:string" name="TAHILdescription"
+									minOccurs="0" />
+								<xs:element name="TAHILstatus" minOccurs="0">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="open" />
+											<xs:enumeration value="fixed" />
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+								<xs:element type="xs:string" name="TAHILpartNr"
+									minOccurs="0" />
+								<xs:element type="xs:string" name="TAHILcomments"
+									minOccurs="0" />
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:complexType>
+
+			<xs:complexType name="DCType">
+				<xs:sequence>
+					<xs:element type="xs:time" name="ExpectedStartTime"
+						minOccurs="0" />
+					<xs:element type="xs:time" name="ExpectedFinishTime"
+						minOccurs="0" />
+					<xs:element type="xs:time" name="ExpectedReleaseTime"
+						minOccurs="0" />
+					<xs:element type="xs:string" name="CompassInspectionType"
+						minOccurs="0" />
+					<xs:element name="Comments" minOccurs="0">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:whiteSpace value="preserve" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+				</xs:sequence>
+			</xs:complexType>
+
+
+			<xs:element name="FormModel" type="TAmanagement:FormModel"></xs:element>
+		</xs:schema>
+		
 		<xsd:schema 
 			elementFormDefault="qualified"
 			targetNamespace="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" 			
@@ -56,13 +247,7 @@
 				<xsd:complexType>
 					<xsd:sequence>
 						<xsd:element name="taskId" type="xsd:string"/>
-						<xsd:element name="data">
-							<xsd:complexType>
-								<xsd:sequence>
-									<xsd:any maxOccurs="unbounded" minOccurs="0" />
-								</xsd:sequence>
-							</xsd:complexType>
-						</xsd:element>						
+						<xsd:element name="data" type="gi:FormModel" />				
 						<xsd:element name="participantToken" type="xsd:string">
 						</xsd:element>
 					</xsd:sequence>
@@ -90,13 +275,7 @@
 				<xsd:complexType>
 					<xsd:sequence>
 						<xsd:element name="taskId" type="xsd:string"/>
-						<xsd:element name="data">
-							<xsd:complexType>
-								<xsd:sequence>
-									<xsd:any maxOccurs="unbounded" minOccurs="0" />
-								</xsd:sequence>
-							</xsd:complexType>
-						</xsd:element>
+						<xsd:element name="data" type="gi:FormModel" />
 						<xsd:element name="participantToken" type="xsd:string">
 						</xsd:element>
 					</xsd:sequence>
@@ -280,6 +459,7 @@
                     <xsd:element name="dismissAction" type="tns:accessControlType" maxOccurs="1" minOccurs="0"/>
                     <xsd:element name="completeAction" type="tns:accessControlType" maxOccurs="1" minOccurs="0"/>
 					<xsd:element name="attachments" type="tns:attachments" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="SITAMetadata" type="gi:FormModel" />
   				</xsd:sequence>
 			</xsd:complexType>
 			<xsd:complexType name="task">
