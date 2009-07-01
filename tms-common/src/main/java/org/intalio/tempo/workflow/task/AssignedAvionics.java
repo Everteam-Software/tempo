@@ -6,8 +6,8 @@ import javax.persistence.Table;
 import org.apache.openjpa.persistence.Persistent;
 
 @Entity
-@Table(name = "tempo_sita_assignedAvionics")
-public class AssignedMechanics {
+@Table(name = "tempo_sita_assignedMechanis")
+public class AssignedAvionics {
 	@Persistent
 	@Column(name = "name")
 	String _name;

@@ -186,7 +186,7 @@ public class TaskMarshaller {
         	org.intalio.tempo.workflow.task.AssignedMechanics[] mechanics = paTask.get_assignedMechanics().toArray(new org.intalio.tempo.workflow.task.AssignedMechanics[0]);
         	for(int i=0;i<mechanics.length;i++){
         		assignedMechanicsArray[i]=AssignedMechanics.Factory.newInstance();
-        		assignedMechanicsArray[i].setAssignedMechanicID(mechanics[i].getMechanicID());
+        		//assignedMechanicsArray[i].setAssignedMechanicID(mechanics[i].getMechanicID());
         		assignedMechanicsArray[i].setAssignedMechanicName(mechanics[i].getName());
         	}
 			inspection.setAssignedMechanicsArray(assignedMechanicsArray);
