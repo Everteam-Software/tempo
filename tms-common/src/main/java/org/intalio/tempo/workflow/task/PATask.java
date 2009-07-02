@@ -72,334 +72,365 @@ import com.intalio.gi.forms.tAmanagement.impl.FormModelImpl;
  */
 @Entity
 @Table(name = "tempo_pa")
-@NamedQueries( {
-        @NamedQuery(name = PATask.FIND_BY_STATES, query = "select m from PATask m where m._state=?1", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") })})
-public class PATask extends Task implements ITaskWithState, IProcessBoundTask, ITaskWithInput, ITaskWithOutput,
-        ICompleteReportingTask, ITaskWithAttachments, IChainableTask, ITaskWithPriority, ITaskWithDeadline ,IInstanceBoundTask{
+@NamedQueries( { @NamedQuery(name = PATask.FIND_BY_STATES, query = "select m from PATask m where m._state=?1", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }) })
+public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
+		ITaskWithInput, ITaskWithOutput, ICompleteReportingTask,
+		ITaskWithAttachments, IChainableTask, ITaskWithPriority,
+		ITaskWithDeadline, IInstanceBoundTask {
 
-    public static final String FIND_BY_STATES = "find_by_ps_states";
-    public static final String FIND_BY_PA_USER_ROLE = "find_by_pa_user_role";
-    public static final String FIND_BY_PA_USER_ROLE_GENERIC = "find_by_pa_user_role_generic";
+	public static final String FIND_BY_STATES = "find_by_ps_states";
+	public static final String FIND_BY_PA_USER_ROLE = "find_by_pa_user_role";
+	public static final String FIND_BY_PA_USER_ROLE_GENERIC = "find_by_pa_user_role_generic";
 
-    
-    @Persistent
-    @Column(name = "state")
-    private TaskState _state = TaskState.READY;
+	@Persistent
+	@Column(name = "state")
+	private TaskState _state = TaskState.READY;
 
-    @Persistent(fetch=FetchType.LAZY)
-    @Column(name = "failure_code")
-    private String _failureCode = "";
+	@Persistent(fetch = FetchType.LAZY)
+	@Column(name = "failure_code")
+	private String _failureCode = "";
 
-    @Persistent(fetch=FetchType.LAZY)
-    @Column(name = "failure_reason")
-    private String _failureReason = "";
+	@Persistent(fetch = FetchType.LAZY)
+	@Column(name = "failure_reason")
+	private String _failureReason = "";
 
-    @Persistent
-    @Column(name = "complete_soap_action")
-    private String _completeSOAPAction;
+	@Persistent
+	@Column(name = "complete_soap_action")
+	private String _completeSOAPAction;
 
-    @Persistent(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
-    @Lob
-    @Column(name = "input_xml")
-    private String _input;
+	@Persistent(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@Lob
+	@Column(name = "input_xml")
+	private String _input;
 
-    @Persistent(cascade = CascadeType.ALL, fetch= FetchType.LAZY)
-    @Column(name = "output_xml")
-    @Lob
-    private String _output;
+	@Persistent(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@Column(name = "output_xml")
+	@Lob
+	private String _output;
 
-    @PersistentMap(keyCascade = CascadeType.ALL, elementCascade = CascadeType.ALL, keyType = String.class, elementType = Attachment.class, fetch=FetchType.LAZY)
-    @MapKey(name = "payloadURLAsString")
-    @ContainerTable(name = "tempo_attachment_map")
-    private Map<String, Attachment> _attachments = new HashMap<String, Attachment>();
+	@PersistentMap(keyCascade = CascadeType.ALL, elementCascade = CascadeType.ALL, keyType = String.class, elementType = Attachment.class, fetch = FetchType.LAZY)
+	@MapKey(name = "payloadURLAsString")
+	@ContainerTable(name = "tempo_attachment_map")
+	private Map<String, Attachment> _attachments = new HashMap<String, Attachment>();
 
-    @Persistent(fetch= FetchType.EAGER)
-    @Column(name = "is_chained_before")
-    private Boolean _isChainedBefore = false;
+	@Persistent(fetch = FetchType.EAGER)
+	@Column(name = "is_chained_before")
+	private Boolean _isChainedBefore = false;
 
-    @Persistent(fetch= FetchType.EAGER)
-    @Column(name = "previous_task_id")
-    private String _previousTaskID = null;
+	@Persistent(fetch = FetchType.EAGER)
+	@Column(name = "previous_task_id")
+	private String _previousTaskID = null;
 
-    @Persistent
-    @Column(name = "deadline")
-    private Date _deadline;
+	@Persistent
+	@Column(name = "deadline")
+	private Date _deadline;
 
-    @Persistent
-    @Column(name = "priority")
-    private Integer _priority;
-    
-    @Persistent
-    @Column(name = "process_id")
-    private String _processID;
+	@Persistent
+	@Column(name = "priority")
+	private Integer _priority;
 
-    @Persistent
-    @Column(name = "instance_id")
-    private String _instanceId;
-    
-    /****************************/
+	@Persistent
+	@Column(name = "process_id")
+	private String _processID;
+
+	@Persistent
+	@Column(name = "instance_id")
+	private String _instanceId;
+
+	/****************************/
 	/** Begin Extra metadata for SITA **/
-    /** Activity data*/
-    
-    /** ArrivalDeparture data*/
-    @Persistent
+	/** Activity data */
+
+	@Persistent
+	@Column(name = "startTime")
+	private Date _startTime;
+
+	@Persistent
+	@Column(name = "finishTime")
+	private Date _finishTime;
+
+	@Persistent
+	@Column(name = "releaseTime")
+	private Date _releaseTime;
+	
+	@Persistent
+	@Column(name = "late")
+	private Boolean _late;
+
+	@Persistent
+	@Column(name = "update")
+	private Boolean _update;
+
+	/** ArrivalDeparture data */
+	@Persistent
 	@Column(name = "ScheduledArrivalDate")
 	private Date _ScheduledArrivalDate;
 
 	@Persistent
 	@Column(name = "STA")
 	private Date _STA;
-	
-    @Persistent
+
+	@Persistent
 	@Column(name = "ScheduledDepartureDate")
 	private Date _ScheduledDepartureDate;
-    
+
 	@Persistent
 	@Column(name = "STD")
 	private Date _STD;
-	
-    @Persistent
+
+	@Persistent
 	@Column(name = "EstimatedArrivalDate")
 	private Date _EstimatedArrivalDate;
 
 	@Persistent
 	@Column(name = "ETD")
 	private Date _ETD;
-	
-    @Persistent
+
+	@Persistent
 	@Column(name = "EstimatedDepartureDate")
 	private Date _EstimatedDepartureDate;
 
 	@Persistent
 	@Column(name = "ETA")
 	private Date _ETA;
-	
-    @Persistent
+
+	@Persistent
 	@Column(name = "ActualArrivalDate")
 	private Date _ActualArrivalDate;
 
 	@Persistent
 	@Column(name = "ATA")
 	private Date _ATA;
-	
-    @Persistent
+
+	@Persistent
 	@Column(name = "ActualDepartureDate")
 	private Date _ActualDepartureDate;
 
 	@Persistent
 	@Column(name = "ATD")
 	private Date _ATD;
-	
-	 @Persistent
-	 @Column(name = "ArrivalFlightNumber")
-	 private String _ArrivalFlightNumber;
-	 
-	 @Persistent
-	 @Column(name = "Stand")
-	 private String _Stand;
 
-	 @Persistent
-	 @Column(name = "InspectionType")
-	 private String _InspectionType;
-	 
-	 @Persistent
-	 @Column(name = "InspectionStatus")
-	 private String _InspectionStatus;
-	 
-	 @Persistent
-	 @Column(name = "resources")
-	 private String _resources;
-	 
-	 @Persistent
-	 @Column(name = "coordinator")
-	 private String _coordinator;
-	 
-	 @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-	 Collection<org.intalio.tempo.workflow.task.RTR> _RTR;
-	 
-	 @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-	 Collection<org.intalio.tempo.workflow.task.AssignedMechanics> _assignedMechanics;
-	 
-	 @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-	 Collection<org.intalio.tempo.workflow.task.AssignedAvionics> _assignedAvionics;
+	@Persistent
+	@Column(name = "ArrivalFlightNumber")
+	private String _ArrivalFlightNumber;
+
+	@Persistent
+	@Column(name = "DepartureFlightNumber")
+	private String _DepartureFlightNumber;
+	/***Inspection metadata */
+	@Persistent
+	@Column(name = "Stand")
+	private String _Stand;
+
+	@Persistent
+	@Column(name = "InspectionType")
+	private String _InspectionType;
+
+	@Persistent
+	@Column(name = "InspectionStatus")
+	private String _InspectionStatus;
+
+	@Persistent
+	@Column(name = "resources")
+	private String _resources;
+
+	@Persistent
+	@Column(name = "coordinator")
+	private String _coordinator;
+
+	@OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+	Collection<org.intalio.tempo.workflow.task.RTR> _RTR;
+
+	@OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+	Collection<org.intalio.tempo.workflow.task.AssignedMechanics> _assignedMechanics;
+
+	@OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+	Collection<org.intalio.tempo.workflow.task.AssignedAvionics> _assignedAvionics;
 
 	/** End Extra metadata for SITA **/
 	/****************************/
-	
-    public PATask() {
-        super();
-    }
 
-    public PATask(String id, URI formURL) {
-        super(id, formURL);
-    }
+	public PATask() {
+		super();
+	}
 
-    public PATask(String id, URI formURL, String processID, String completeSOAPAction, Document input) {
-        super(id, formURL);
-        this.setProcessID(processID);
-        this.setCompleteSOAPAction(completeSOAPAction);
-        if (input != null)
-            this.setInput(input);
-    }
-    public String getProcessID() {
-        return _processID;
-    }
+	public PATask(String id, URI formURL) {
+		super(id, formURL);
+	}
 
-    public void setProcessID(String processID) {
-        if (processID == null) {
-            throw new RequiredArgumentException("processID");
-        }
-        _processID = processID;
-    }
-    
-    public TaskState getState() {
-        return _state;
-    }
+	public PATask(String id, URI formURL, String processID,
+			String completeSOAPAction, Document input) {
+		super(id, formURL);
+		this.setProcessID(processID);
+		this.setCompleteSOAPAction(completeSOAPAction);
+		if (input != null)
+			this.setInput(input);
+	}
 
-    public void setState(TaskState state) {
-        if (state == null) {
-            throw new RequiredArgumentException("state");
-        }
-        _state = state;
-    }
+	public String getProcessID() {
+		return _processID;
+	}
 
-    public String getFailureCode() {
-        if (_state.equals(TaskState.FAILED)) {
-            return _failureCode;
-        } else {
-            throw new IllegalStateException("Task ID '" + getID() + "': "
-                    + "Attempt to get the failure code at task state " + _state);
-        }
-    }
+	public void setProcessID(String processID) {
+		if (processID == null) {
+			throw new RequiredArgumentException("processID");
+		}
+		_processID = processID;
+	}
 
-    public void setFailureCode(String failureCode) {
-        if (failureCode == null) {
-            throw new RequiredArgumentException("failureCode");
-        }
+	public TaskState getState() {
+		return _state;
+	}
 
-        if (_state.equals(TaskState.FAILED)) {
-            _failureCode = failureCode;
-        } else {
-            throw new IllegalStateException("Task ID '" + getID() + "': "
-                    + "Attempt to set the failure code at task state " + _state);
-        }
-    }
+	public void setState(TaskState state) {
+		if (state == null) {
+			throw new RequiredArgumentException("state");
+		}
+		_state = state;
+	}
 
-    public String getFailureReason() {
-        if (_state.equals(TaskState.FAILED)) {
-            return _failureReason;
-        } else {
-            throw new IllegalStateException("Task ID '" + getID() + "': "
-                    + "Attempt to get the failure reason at task state " + _state);
-        }
-    }
+	public String getFailureCode() {
+		if (_state.equals(TaskState.FAILED)) {
+			return _failureCode;
+		} else {
+			throw new IllegalStateException("Task ID '" + getID() + "': "
+					+ "Attempt to get the failure code at task state " + _state);
+		}
+	}
 
-    public void setFailureReason(String failureReason) {
-        if (failureReason == null) {
-            throw new RequiredArgumentException("failureReason");
-        }
+	public void setFailureCode(String failureCode) {
+		if (failureCode == null) {
+			throw new RequiredArgumentException("failureCode");
+		}
 
-        if (_state.equals(TaskState.FAILED)) {
-            _failureReason = failureReason;
-        } else {
-            throw new IllegalStateException("Task ID '" + getID() + "': "
-                    + "Attempt to set the failure reason at task state " + _state);
-        }
-    }
+		if (_state.equals(TaskState.FAILED)) {
+			_failureCode = failureCode;
+		} else {
+			throw new IllegalStateException("Task ID '" + getID() + "': "
+					+ "Attempt to set the failure code at task state " + _state);
+		}
+	}
 
-    public String getCompleteSOAPAction() {
-        return _completeSOAPAction;
-    }
+	public String getFailureReason() {
+		if (_state.equals(TaskState.FAILED)) {
+			return _failureReason;
+		} else {
+			throw new IllegalStateException("Task ID '" + getID() + "': "
+					+ "Attempt to get the failure reason at task state "
+					+ _state);
+		}
+	}
 
-    public void setCompleteSOAPAction(String soapAction) {
-        if (soapAction == null) {
-            throw new RequiredArgumentException("soapAction");
-        }
-        _completeSOAPAction = soapAction;
-    }
+	public void setFailureReason(String failureReason) {
+		if (failureReason == null) {
+			throw new RequiredArgumentException("failureReason");
+		}
 
-    public boolean isInputAvailable() {
-        return _input != null;
-    }
+		if (_state.equals(TaskState.FAILED)) {
+			_failureReason = failureReason;
+		} else {
+			throw new IllegalStateException("Task ID '" + getID() + "': "
+					+ "Attempt to set the failure reason at task state "
+					+ _state);
+		}
+	}
 
-    public Document getInput() {
-        if (!this.isInputAvailable()) {
-            throw new IllegalStateException("Task input not available (e.g. was not retrieved).");
-        }
-        return XmlTooling.deserializeDocument(_input);
-    }
+	public String getCompleteSOAPAction() {
+		return _completeSOAPAction;
+	}
 
-    public void setInput(Document inputDocument) {
-        if (inputDocument == null) {
-            throw new RequiredArgumentException("inputDocument");
-        }
-        _input = XmlTooling.serializeDocument(inputDocument);
-    }
+	public void setCompleteSOAPAction(String soapAction) {
+		if (soapAction == null) {
+			throw new RequiredArgumentException("soapAction");
+		}
+		_completeSOAPAction = soapAction;
+	}
 
-    public Document getOutput() {
-        return XmlTooling.deserializeDocument(_output);
-    }
+	public boolean isInputAvailable() {
+		return _input != null;
+	}
 
-    public String getInputAsXmlString() {
-        return _input;
-    }
+	public Document getInput() {
+		if (!this.isInputAvailable()) {
+			throw new IllegalStateException(
+					"Task input not available (e.g. was not retrieved).");
+		}
+		return XmlTooling.deserializeDocument(_input);
+	}
 
-    public String getOutputAsXmlString() {
-        return _output;
-    }
+	public void setInput(Document inputDocument) {
+		if (inputDocument == null) {
+			throw new RequiredArgumentException("inputDocument");
+		}
+		_input = XmlTooling.serializeDocument(inputDocument);
+	}
 
-    public void setOutput(Document outputDocument) {
-        if (outputDocument == null) {
-            throw new RequiredArgumentException("outputDocument");
-        }
-        _output = XmlTooling.serializeDocument(outputDocument);
-    }
+	public Document getOutput() {
+		return XmlTooling.deserializeDocument(_output);
+	}
 
-    public Attachment addAttachment(Attachment attachment) {
-        return _attachments.put(attachment.getPayloadURL().toExternalForm(), attachment);
-    }
+	public String getInputAsXmlString() {
+		return _input;
+	}
 
-    public Attachment removeAttachment(URL attachmentURL) {
-        return _attachments.remove(attachmentURL.toExternalForm());
-    }
+	public String getOutputAsXmlString() {
+		return _output;
+	}
 
-    public Collection<Attachment> getAttachments() {
-        return Collections.unmodifiableCollection(_attachments.values());
-    }
+	public void setOutput(Document outputDocument) {
+		if (outputDocument == null) {
+			throw new RequiredArgumentException("outputDocument");
+		}
+		_output = XmlTooling.serializeDocument(outputDocument);
+	}
 
-    public boolean isChainedBefore() {
-        return _isChainedBefore;
-    }
+	public Attachment addAttachment(Attachment attachment) {
+		return _attachments.put(attachment.getPayloadURL().toExternalForm(),
+				attachment);
+	}
 
-    public void setChainedBefore(boolean isChainedBefore) {
-        if (!isChainedBefore) {
-            _previousTaskID = null;
-        } else {
-            if (_previousTaskID == null) {
-                throw new IllegalStateException("Set previousTaskID before setting isChainedBefore to true");
-            }
-        }
-        _isChainedBefore = isChainedBefore;
-    }
+	public Attachment removeAttachment(URL attachmentURL) {
+		return _attachments.remove(attachmentURL.toExternalForm());
+	}
 
-    public String getPreviousTaskID() {
-        return _previousTaskID;
-    }
+	public Collection<Attachment> getAttachments() {
+		return Collections.unmodifiableCollection(_attachments.values());
+	}
 
-    public void setPreviousTaskID(String previousTaskID) {
-        if (previousTaskID == null) {
-            throw new RequiredArgumentException("previousTaskID");
-        }
-        _previousTaskID = previousTaskID;
-    }
+	public boolean isChainedBefore() {
+		return _isChainedBefore;
+	}
 
-    public void setInput(String input) {
-        _input = input;
-    }
+	public void setChainedBefore(boolean isChainedBefore) {
+		if (!isChainedBefore) {
+			_previousTaskID = null;
+		} else {
+			if (_previousTaskID == null) {
+				throw new IllegalStateException(
+						"Set previousTaskID before setting isChainedBefore to true");
+			}
+		}
+		_isChainedBefore = isChainedBefore;
+	}
 
-    public void setOutput(String output) {
+	public String getPreviousTaskID() {
+		return _previousTaskID;
+	}
+
+	public void setPreviousTaskID(String previousTaskID) {
+		if (previousTaskID == null) {
+			throw new RequiredArgumentException("previousTaskID");
+		}
+		_previousTaskID = previousTaskID;
+	}
+
+	public void setInput(String input) {
+		_input = input;
+	}
+
+	public void setOutput(String output) {
 		_output = output;
-	//	System.out.println(output);
+		// System.out.println(output);
 		try {
 			OMElement om = AXIOMUtil.stringToOM(output);
 			om.setLocalName("xml-fragment");
@@ -416,93 +447,153 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
 		}
 	}
 
+//	   <xs:element type="xs:string" name="AircraftID" minOccurs="0"/>
+//	      <xs:element type="xs:time" name="startTime" minOccurs="0"/>
+//	      <xs:element type="xs:time" name="finishTime" minOccurs="0"/>
+//	      <xs:element type="xs:time" name="releaseTime" minOccurs="0"/>
+//	      <xs:element type="xs:boolean" name="late" minOccurs="0"/>
+//	      <xs:element type="xs:boolean" name="update" minOccurs="0"/>
 	private void setMetadata(FormModelImpl outputXML) {
-//		System.out.println("setMEtadata1");
-		/****************Activity Data Departure DATA****************/
+		// System.out.println("setMEtadata1");
+		/**************** Activity Data Departure DATA ****************/
 		if (outputXML.getActivity() != null) {
 			ActivityType activity = outputXML.getActivity();
-			if (activity.xgetAircraftID() != null && activity.xgetAircraftID().validate() && activity.getAircraftID() != null ) {
-				//set_A( activity.getAircraftID() );
+			if (activity.xgetAircraftID() != null
+					&& activity.xgetAircraftID().validate()
+					&& activity.getAircraftID() != null) {
+				 set_AircraftID( activity.getAircraftID() );
 			}
+			if (activity.xgetStartTime() != null
+					&& activity.xgetStartTime().validate()
+					&& activity.getStartTime() != null) {
+				 set_startTime( activity.getStartTime().getTime() );
+			}
+			if (activity.xgetFinishTime() != null
+					&& activity.xgetFinishTime().validate()
+					&& activity.getFinishTime() != null) {
+				 set_finishTime( activity.getFinishTime().getTime() );
+			}
+			if (activity.xgetReleaseTime() != null
+					&& activity.xgetReleaseTime().validate()
+					&& activity.xgetReleaseTime() != null) {
+				 set_releaseTime( activity.getReleaseTime().getTime() );
+			}
+			
+			
 		}
-		/****************Arrival Departure DATA****************/
+		/**************** Arrival Departure DATA ****************/
 		if (outputXML.getArrivalDeparture() != null) {
-//			System.out.println("setMEtadata12");
+			// System.out.println("setMEtadata12");
 			ArrivalDepartureType arrival = outputXML.getArrivalDeparture();
-			
-			
-			/****************Arrival Departure DATA****************/
-			/**Scheduled departure*/
-			if (arrival.xgetScheduledDepartureDate() != null && arrival.xgetScheduledDepartureDate().validate() && arrival.getScheduledDepartureDate() != null ) {
-				set_ScheduledDepartureDate( arrival.getScheduledDepartureDate().getTime() );
+
+			/**************** Arrival Departure DATA ****************/
+			/** Scheduled departure */
+			if (arrival.xgetScheduledDepartureDate() != null
+					&& arrival.xgetScheduledDepartureDate().validate()
+					&& arrival.getScheduledDepartureDate() != null) {
+				set_ScheduledDepartureDate(arrival.getScheduledDepartureDate()
+						.getTime());
 			}
 
-//			System.out.println("STD "+ arrival.xgetSTD()+" end");
-//			System.out.println("STD "+ arrival.xgetSTD().validate());
-			if (arrival.xgetSTD() != null &&  arrival.xgetSTD().validate() && arrival.getSTD() != null ) {
+			// System.out.println("STD "+ arrival.xgetSTD()+" end");
+			// System.out.println("STD "+ arrival.xgetSTD().validate());
+			if (arrival.xgetSTD() != null && arrival.xgetSTD().validate()
+					&& arrival.getSTD() != null) {
 
-				set_STD( arrival.getSTD().getTime());
+				set_STD(arrival.getSTD().getTime());
 			}
 
-			/**scheduled arrival*/
-			if (arrival.xgetScheduledArrivalDate() != null && arrival.xgetScheduledArrivalDate().validate() && arrival.getScheduledArrivalDate() != null ) {
-				set_ScheduledArrivalDate( arrival.getScheduledArrivalDate().getTime() );
-			}
-			
-			if (arrival.xgetSTA() != null &&  arrival.xgetSTA().validate() && arrival.getSTA() != null ) {
-
-				set_STA( arrival.getSTA().getTime());
-			}
-			/**Estimated departure*/
-			if (arrival.xgetEstimatedDepartureDate() != null && arrival.xgetEstimatedDepartureDate().validate() && arrival.getEstimatedDepartureDate() != null ) {
-				set_EstimatedDepartureDate( arrival.getEstimatedDepartureDate().getTime() );
+			/** scheduled arrival */
+			if (arrival.xgetScheduledArrivalDate() != null
+					&& arrival.xgetScheduledArrivalDate().validate()
+					&& arrival.getScheduledArrivalDate() != null) {
+				set_ScheduledArrivalDate(arrival.getScheduledArrivalDate()
+						.getTime());
 			}
 
-			if (arrival.xgetETD() != null &&  arrival.xgetETD().validate() && arrival.getETD() != null ) {
+			if (arrival.xgetSTA() != null && arrival.xgetSTA().validate()
+					&& arrival.getSTA() != null) {
 
-				set_ETD( arrival.getETD().getTime());
+				set_STA(arrival.getSTA().getTime());
 			}
-			
-			/**Estimated arrival */
-			
-			if (arrival.xgetEstimatedArrivalDate() != null && arrival.xgetEstimatedArrivalDate().validate() && arrival.getEstimatedArrivalDate() != null ) {
-				set_EstimatedArrivalDate( arrival.getEstimatedArrivalDate().getTime() );
-			}
-
-			if (arrival.xgetETA() != null &&  arrival.xgetETA().validate() && arrival.getETA() != null ) {
-
-				set_ETA( arrival.getETA().getTime());
-			}
-			
-			/**Actual departure*/
-			if (arrival.xgetActualDepartureDate() != null && arrival.xgetActualDepartureDate().validate() && arrival.getActualDepartureDate() != null ) {
-				set_ActualDepartureDate( arrival.getActualDepartureDate().getTime() );
+			/** Estimated departure */
+			if (arrival.xgetEstimatedDepartureDate() != null
+					&& arrival.xgetEstimatedDepartureDate().validate()
+					&& arrival.getEstimatedDepartureDate() != null) {
+				set_EstimatedDepartureDate(arrival.getEstimatedDepartureDate()
+						.getTime());
 			}
 
-			if (arrival.xgetATD() != null &&  arrival.xgetATD().validate() && arrival.getATD() != null ) {
+			if (arrival.xgetETD() != null && arrival.xgetETD().validate()
+					&& arrival.getETD() != null) {
 
-				set_ATD( arrival.getATD().getTime());
-			}
-			
-			/**Actual arrival */
-			
-			if (arrival.xgetActualArrivalDate() != null && arrival.xgetActualArrivalDate().validate() && arrival.getActualArrivalDate() != null ) {
-				set_ActualArrivalDate( arrival.getActualArrivalDate().getTime() );
+				set_ETD(arrival.getETD().getTime());
 			}
 
-			if (arrival.xgetATA() != null &&  arrival.xgetATA().validate() && arrival.getATA() != null ) {
+			/** Estimated arrival */
 
-				set_ATA( arrival.getATA().getTime());
+			if (arrival.xgetEstimatedArrivalDate() != null
+					&& arrival.xgetEstimatedArrivalDate().validate()
+					&& arrival.getEstimatedArrivalDate() != null) {
+				set_EstimatedArrivalDate(arrival.getEstimatedArrivalDate()
+						.getTime());
 			}
-			
+
+			if (arrival.xgetETA() != null && arrival.xgetETA().validate()
+					&& arrival.getETA() != null) {
+
+				set_ETA(arrival.getETA().getTime());
+			}
+
+			/** Actual departure */
+			if (arrival.xgetActualDepartureDate() != null
+					&& arrival.xgetActualDepartureDate().validate()
+					&& arrival.getActualDepartureDate() != null) {
+				set_ActualDepartureDate(arrival.getActualDepartureDate()
+						.getTime());
+			}
+
+			if (arrival.xgetATD() != null && arrival.xgetATD().validate()
+					&& arrival.getATD() != null) {
+
+				set_ATD(arrival.getATD().getTime());
+			}
+
+			/** Actual arrival */
+
+			if (arrival.xgetActualArrivalDate() != null
+					&& arrival.xgetActualArrivalDate().validate()
+					&& arrival.getActualArrivalDate() != null) {
+				set_ActualArrivalDate(arrival.getActualArrivalDate().getTime());
+			}
+
+			if (arrival.xgetATA() != null && arrival.xgetATA().validate()
+					&& arrival.getATA() != null) {
+
+				set_ATA(arrival.getATA().getTime());
+			}
+			/**Flight numbers*/
+			if (arrival.xgetArrivalFlightNumber() != null
+					&& arrival.xgetArrivalFlightNumber().validate()
+					&& arrival.getArrivalFlightNumber() != null) {
+				set_ArrivalFlightNumber(arrival.getArrivalFlightNumber());
+			}
+			if (arrival.xgetDepartureFlightNumber() != null
+					&& arrival.xgetDepartureFlightNumber().validate()
+					&& arrival.getDepartureFlightNumber() != null) {
+				set_DepartureFlightNumber(arrival.getArrivalFlightNumber());
+			}
+		
+		
 		}
 		if (outputXML.getInspection() != null) {
-			 InspectionType inspection = outputXML.getInspection();
-			 com.intalio.gi.forms.tAmanagement.InspectionType.AssignedMechanics[] mechanics =inspection.getAssignedMechanicsArray();
+			InspectionType inspection = outputXML.getInspection();
+			com.intalio.gi.forms.tAmanagement.InspectionType.AssignedMechanics[] mechanics = inspection
+					.getAssignedMechanicsArray();
 			_assignedMechanics = new ArrayList<org.intalio.tempo.workflow.task.AssignedMechanics>();
 			for (com.intalio.gi.forms.tAmanagement.InspectionType.AssignedMechanics mechanic : mechanics) {
 				org.intalio.tempo.workflow.task.AssignedMechanics newMechanic = new org.intalio.tempo.workflow.task.AssignedMechanics();
-				//newMechanic.setMechanicID(mechanic.getAssignedMechanicID());
+				// newMechanic.setMechanicID(mechanic.getAssignedMechanicID());
 				newMechanic.setName(mechanic.getAssignedMechanicName());
 				_assignedMechanics.add(newMechanic);
 			}
@@ -510,7 +601,7 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
 
 	}
 
-    public Date get_EstimatedArrivalDate() {
+	public Date get_EstimatedArrivalDate() {
 		return _EstimatedArrivalDate;
 	}
 
@@ -527,38 +618,40 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
 	}
 
 	public Integer getPriority() {
-        return _priority;
-    }
+		return _priority;
+	}
 
-    public void setPriority(Integer priority) {
-        _priority = priority;
-    }
+	public void setPriority(Integer priority) {
+		_priority = priority;
+	}
 
-    public Date getDeadline() {
-        return _deadline;
-    }
+	public Date getDeadline() {
+		return _deadline;
+	}
 
-    public void setDeadline(Date deadline) {
-        _deadline = deadline;
-    }
-    
-    public boolean isAvailableTo(UserRoles credentials) {
-		if(_state.equals(TaskState.CLAIMED)) {
-			for (String userOwner : this.getUserOwners()) if (credentials.getUserID().equals(userOwner)) return true;
+	public void setDeadline(Date deadline) {
+		_deadline = deadline;
+	}
+
+	public boolean isAvailableTo(UserRoles credentials) {
+		if (_state.equals(TaskState.CLAIMED)) {
+			for (String userOwner : this.getUserOwners())
+				if (credentials.getUserID().equals(userOwner))
+					return true;
 			return false;
 		} else {
 			return super.isAvailableTo(credentials);
 		}
-    }
+	}
 
 	public String getInstanceId() {
 		return _instanceId;
 	}
 
 	public void setInstanceId(String instanceId) {
-		_instanceId=instanceId;
+		_instanceId = instanceId;
 	}
-	
+
 	public Date get_STA() {
 		return _STA;
 	}
@@ -615,7 +708,7 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
 			Collection<org.intalio.tempo.workflow.task.AssignedMechanics> mechanics) {
 		_assignedMechanics = mechanics;
 	}
-	
+
 	public TaskState get_state() {
 		return _state;
 	}
@@ -678,5 +771,65 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
 
 	public void set_RTR(Collection<org.intalio.tempo.workflow.task.RTR> _rtr) {
 		_RTR = _rtr;
+	}
+
+	@Persistent
+	@Column(name = "AircraftID")
+	private String _AircraftID;
+
+	public String get_AircraftID() {
+		return _AircraftID;
+	}
+
+	public void set_AircraftID(String aircraftID) {
+		_AircraftID = aircraftID;
+	}
+
+	public Date get_startTime() {
+		return _startTime;
+	}
+
+	public void set_startTime(Date time) {
+		_startTime = time;
+	}
+
+	public Date get_finishTime() {
+		return _finishTime;
+	}
+
+	public void set_finishTime(Date time) {
+		_finishTime = time;
+	}
+
+	public Boolean get_late() {
+		return _late;
+	}
+
+	public void set_late(Boolean _late) {
+		this._late = _late;
+	}
+
+	public Boolean get_update() {
+		return _update;
+	}
+
+	public void set_update(Boolean _update) {
+		this._update = _update;
+	}
+
+	public Date get_releaseTime() {
+		return _releaseTime;
+	}
+
+	public void set_releaseTime(Date time) {
+		_releaseTime = time;
+	}
+
+	public String get_DepartureFlightNumber() {
+		return _DepartureFlightNumber;
+	}
+
+	public void set_DepartureFlightNumber(String departureFlightNumber) {
+		_DepartureFlightNumber = departureFlightNumber;
 	}
 }
