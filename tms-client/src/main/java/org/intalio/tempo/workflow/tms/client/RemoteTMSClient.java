@@ -59,9 +59,9 @@ public class RemoteTMSClient implements ITaskManagementService {
 
     private static final Logger _log = LoggerFactory.getLogger(OMUnmarshaller.class);
 
-    private EndpointReference _endpoint;
-    private String _participantToken;
-    private OMFactory _omFactory;
+    protected EndpointReference _endpoint;
+    protected String _participantToken;
+    protected OMFactory _omFactory;
 
     private class TMSMarshaller extends OMMarshaller {
         protected TMSMarshaller() {
