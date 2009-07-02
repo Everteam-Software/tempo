@@ -158,7 +158,7 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 	private Boolean _late;
 
 	@Persistent
-	@Column(name = "update")
+	@Column(name = "updateField")
 	private Boolean _update;
 
 	/** ArrivalDeparture data */
@@ -588,14 +588,36 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 		}
 		if (outputXML.getInspection() != null) {
 			InspectionType inspection = outputXML.getInspection();
+			/**RTR*/
+			com.intalio.gi.forms.tAmanagement.InspectionType.RTR[] RTRs = inspection
+					.getRTRArray();
+			set_RTR(new ArrayList<org.intalio.tempo.workflow.task.RTR>());
+			for (com.intalio.gi.forms.tAmanagement.InspectionType.RTR RTR : RTRs) {
+				org.intalio.tempo.workflow.task.RTR newRTR = new org.intalio.tempo.workflow.task.RTR();
+				// newMechanic.setMechanicID(mechanic.getAssignedMechanicID());
+				newRTR.setRTRID(RTR.getRTRid());
+				get_RTR().add(newRTR);
+			}
+			
+			/**mechanics*/
 			com.intalio.gi.forms.tAmanagement.InspectionType.AssignedMechanics[] mechanics = inspection
 					.getAssignedMechanicsArray();
-			_assignedMechanics = new ArrayList<org.intalio.tempo.workflow.task.AssignedMechanics>();
+			set_assignedMechanics( new ArrayList<org.intalio.tempo.workflow.task.AssignedMechanics>());
 			for (com.intalio.gi.forms.tAmanagement.InspectionType.AssignedMechanics mechanic : mechanics) {
 				org.intalio.tempo.workflow.task.AssignedMechanics newMechanic = new org.intalio.tempo.workflow.task.AssignedMechanics();
 				// newMechanic.setMechanicID(mechanic.getAssignedMechanicID());
 				newMechanic.setName(mechanic.getAssignedMechanicName());
-				_assignedMechanics.add(newMechanic);
+				get_assignedMechanics().add(newMechanic);
+			}
+			/**avionics*/
+			com.intalio.gi.forms.tAmanagement.InspectionType.AssignedAvionics[] avionics = inspection
+					.getAssignedAvionicsArray();
+			set_assignedAvionics(new ArrayList<org.intalio.tempo.workflow.task.AssignedAvionics>());
+			for (com.intalio.gi.forms.tAmanagement.InspectionType.AssignedAvionics avionic : avionics) {
+				org.intalio.tempo.workflow.task.AssignedAvionics newAvioninc = new org.intalio.tempo.workflow.task.AssignedAvionics();
+				// newMechanic.setMechanicID(mechanic.getAssignedMechanicID());
+				newAvioninc.setName(avionic.getAssignedAvionicName());
+				get_assignedAvionics().add(newAvioninc);
 			}
 		}
 
@@ -831,5 +853,14 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 
 	public void set_DepartureFlightNumber(String departureFlightNumber) {
 		_DepartureFlightNumber = departureFlightNumber;
+	}
+
+	public Collection<org.intalio.tempo.workflow.task.AssignedAvionics> get_assignedAvionics() {
+		return _assignedAvionics;
+	}
+
+	public void set_assignedAvionics(
+			Collection<org.intalio.tempo.workflow.task.AssignedAvionics> avionics) {
+		_assignedAvionics = avionics;
 	}
 }
