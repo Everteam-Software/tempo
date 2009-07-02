@@ -52,7 +52,7 @@ public class TasksCollector {
             put("page", "1");
             put("page", "3");
             put("sortname", "_creationDate");
-            put("sortorder", "DESC");
+            put("sortorder", "ASC");
             put("query", null);
             put("qtype", null);
             put("type", "PATask");

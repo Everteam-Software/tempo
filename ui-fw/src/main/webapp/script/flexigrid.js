@@ -35,8 +35,8 @@
 			 page: 1, //current page
 			 total: 1, //total pages
 			 useRp: true, //use the results per page select box
-			 rp: 15, // results per page
-			 rpOptions: [5,10,15,20],
+			 rp: 50, // results per page
+			 rpOptions: [50,100,150,200],
 			 title: false,
 			 pagestat: 'Displaying {from} to {to} of {total} items',
 			 procmsg: 'Processing, please wait ...',

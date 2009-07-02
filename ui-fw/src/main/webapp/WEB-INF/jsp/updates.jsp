@@ -47,10 +47,77 @@
       <c:forEach items="${tasks}" var="taskHolder" varStatus="status">
         <c:set var="taskFullURL" value="${taskHolder.formManagerURL}" />
         <row id="pa${status.index}">
+			<%-- update --%>
+			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"></a>]]>
+			</cell>
+			<%-- aircraft ID --%>
+			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"></a>]]>
+			</cell>
+			<%-- Arrival Flight Number --%>
+			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"></a>]]>
+			</cell>
 			<%-- Scheduled Arrival Date --%>
-			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"><c:out value="${taskHolder.task._ScheduledArrivalDate}" /></a>]]></cell>
+			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"><fmt:formatDate value="${taskHolder.task._ScheduledArrivalDate}" type="date" dateStyle="short" /></a>]]></cell>
 			<%-- STA --%>
-			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"><fmt:formatDate value="${taskHolder.task._STA}" type="both" timeStyle="short" dateStyle="short" /></a>]]>
+			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"><fmt:formatDate value="${taskHolder.task._STA}" type="time" timeStyle="short" /></a>]]></cell>
+			<%-- ATA --%>
+			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"></a>]]>
+			</cell>
+			<%-- Type --%>
+			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"></a>]]>
+			</cell>
+			<%-- Departure Flight Number --%>
+			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"></a>]]>
+			</cell>
+			<%-- Scheduled Departure Date --%>
+			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"></a>]]>
+			</cell>
+			<%-- STD --%>
+			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"></a>]]>
+			</cell>
+			<%-- ATD --%>
+			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"></a>]]>
+			</cell>
+			<%-- Stand --%>
+			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"></a>]]>
+			</cell>
+			<%-- Coordinator --%>
+			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"></a>]]>
+			</cell>
+			<%-- Mechanics --%>
+			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"></a>]]>
+			</cell>
+			<%-- Avionics --%>
+			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"></a>]]>
+			</cell>
+			<%-- HIL --%>
+			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform">
+					<i>TBD</i>
+				</a>]]>
+			</cell>
+			<%-- RTR --%>
+			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"></a>]]>
+			</cell>
+			<%-- Comments --%>
+			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"></a>]]>
+			</cell>
+			<%-- State --%>
+			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"></a>]]>
+			</cell>
+			<%-- Resources --%>
+			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"></a>]]>
+			</cell>
+			<%-- Start Time --%>
+			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"></a>]]>
+			</cell>
+			<%-- End Time --%>
+			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"></a>]]>
+			</cell>
+			<%-- Release Time --%>
+			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"></a>]]>
+			</cell>
+			<%-- Late --%>
+			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"></a>]]>
 			</cell>
         </row>
       </c:forEach>
