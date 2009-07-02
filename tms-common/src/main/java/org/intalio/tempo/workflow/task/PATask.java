@@ -392,7 +392,7 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 		if (outputDocument == null) {
 			throw new RequiredArgumentException("outputDocument");
 		}
-		_output = XmlTooling.serializeDocument(outputDocument);
+		setOutput(XmlTooling.serializeDocument(outputDocument));
 	}
 
 	public Attachment addAttachment(Attachment attachment) {
