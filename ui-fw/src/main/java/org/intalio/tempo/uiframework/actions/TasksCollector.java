@@ -164,7 +164,7 @@ public class TasksCollector {
         _request.setAttribute("totalPage", total);
         _request.setAttribute("currentPage", page);
 
-        Task[] tasks = taskManager.getAvailableTasks(taskType, query.toString(), String.valueOf(index), String.valueOf(itasksPerPage));
+        Task[] tasks = taskManager.getAvailableTasksWithInputOutput(taskType, query.toString(), String.valueOf(index), String.valueOf(itasksPerPage));
         for (Task task : tasks) {
             tasksHolder.add(new TaskHolder<Task>(task, URIUtils.getResolvedTaskURLAsString(_request, fmanager, task, token, user)));
         }

@@ -558,4 +558,43 @@ public class RemoteTMSClient implements ITaskManagementService {
         return tasks.toArray(new Task[tasks.size()]);
     }
 
+
+	public Task[] getAvailableTasksWithInputOutput(String taskType,
+			String subQuery) throws AuthException {
+		return getAvailableTasksWithInputOutput(taskType, subQuery, null, null);
+	}
+
+
+	public Task[] getAvailableTasksWithInputOutput(final String taskType,final String subQuery,
+			final String first,final String max) throws AuthException {
+		OMElement request = new TMSMarshaller() {
+            public OMElement marshalRequest() {
+                OMElement request = createElement("getTaskListRequest");
+                createElement(request, "participantToken", _participantToken);
+                createElement(request, "taskType", taskType);
+                createElement(request, "subQuery", subQuery);
+                if(first!=null) createElement(request, "first", first);
+                if(max!=null) createElement(request, "max", max);
+                return request;
+            }
+        }.marshalRequest();
+        OMElement response = sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "getAvailableTasksWithInputOutput");
+
+        List<Task> tasks = new ArrayList<Task>();
+        OMElementQueue rootQueue = new OMElementQueue(response);
+        while (true) {
+            OMElement taskElement = expectElement(rootQueue, "task");
+            if (taskElement == null)
+                break;
+
+            try {
+                Task task = new TaskUnmarshaller().unmarshalFullTask(taskElement);
+                tasks.add(task);
+            } catch (Exception e) {
+                _log.error("Error reading task: " + taskElement, e);
+            }
+        }
+        return tasks.toArray(new Task[tasks.size()]);
+	}
+
 }

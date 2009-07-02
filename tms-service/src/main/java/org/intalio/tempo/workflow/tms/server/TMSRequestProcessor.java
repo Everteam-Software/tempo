@@ -402,6 +402,27 @@ public class TMSRequestProcessor extends OMUnmarshaller {
         }
     }
     
+    public OMElement getAvailableTasksWithInputOutput(final OMElement requestElement) throws AxisFault {
+        try {
+            OMElementQueue rootQueue = new OMElementQueue(requestElement);
+            String participantToken = requireElementValue(rootQueue, "participantToken");
+            String taskType = requireElementValue(rootQueue, "taskType");
+            String subQuery = requireElementValue(rootQueue, "subQuery");
+            String first = expectElementValue(rootQueue, "first");
+            String max = expectElementValue(rootQueue, "max");
+            HashMap map = new HashMap();
+            map.put(TaskFetcher.FETCH_CLASS_NAME, taskType);
+            map.put(TaskFetcher.FETCH_SUB_QUERY, subQuery);
+            map.put(TaskFetcher.FETCH_FIRST, first);
+            map.put(TaskFetcher.FETCH_MAX, max);
+            final UserRoles user = _server.getUserRoles(participantToken);
+            Task[] tasks = _server.getAvailableTasks(participantToken, map);
+            return marshalTasksListWithInputOutput(user, tasks, "getAvailableTasksResponse");
+        } catch (Exception e) {
+            throw makeFault(e);
+        }
+    }
+    
     public OMElement countAvailableTasks(final OMElement requestElement) throws AxisFault {
         try {
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
@@ -438,6 +459,26 @@ public class TMSRequestProcessor extends OMUnmarshaller {
                 for (Task task : tasks) {
                     try {
                         response.addChild(new TaskMarshaller().marshalTaskMetadata(task, user));
+                    } catch (Exception e) {
+                        // marshalling of that task failed.
+                        // let's not fail fast, but provide info in the logs.
+                        _logger.error(task.getID() + "could not be serialized to xml", e);
+                    }
+                }
+                return response;
+            }
+        }.marshalResponse(tasks);
+        if (_logger.isDebugEnabled())
+            _logger.debug(response.toString());
+        return response;
+    }
+    private OMElement marshalTasksListWithInputOutput(final UserRoles user, final Task[] tasks, final String responseTag) {
+        OMElement response = new TMSResponseMarshaller(OM_FACTORY) {
+            public OMElement marshalResponse(Task[] tasks) {
+                OMElement response = createElement(responseTag);
+                for (Task task : tasks) {
+                    try {
+                        response.addChild(new TaskMarshaller().marshalFullTask(task, user));
                     } catch (Exception e) {
                         // marshalling of that task failed.
                         // let's not fail fast, but provide info in the logs.
