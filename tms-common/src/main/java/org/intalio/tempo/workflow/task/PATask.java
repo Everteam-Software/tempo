@@ -63,6 +63,7 @@ import org.w3c.dom.Document;
 
 import com.intalio.gi.forms.tAmanagement.ActivityType;
 import com.intalio.gi.forms.tAmanagement.ArrivalDepartureType;
+import com.intalio.gi.forms.tAmanagement.DCType;
 import com.intalio.gi.forms.tAmanagement.FormModel;
 import com.intalio.gi.forms.tAmanagement.InspectionType;
 import com.intalio.gi.forms.tAmanagement.impl.FormModelImpl;
@@ -160,7 +161,7 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 	@Persistent
 	@Column(name = "updateField")
 	private Boolean _update;
-
+    /********************************************/
 	/** ArrivalDeparture data */
 	@Persistent
 	@Column(name = "ScheduledArrivalDate")
@@ -217,7 +218,11 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 	@Persistent
 	@Column(name = "DepartureFlightNumber")
 	private String _DepartureFlightNumber;
+	
+	 /********************************************/
 	/***Inspection metadata */
+	
+	
 	@Persistent
 	@Column(name = "Stand")
 	private String _Stand;
@@ -246,6 +251,12 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 
 	@OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
 	Collection<org.intalio.tempo.workflow.task.AssignedAvionics> _assignedAvionics;
+	 /********************************************/
+	 /********DC metadata**********/
+	@Persistent
+	@Column(name = "comments")
+	private String _comments;
+	
 
 	/** End Extra metadata for SITA **/
 	/****************************/
@@ -586,8 +597,36 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 		
 		
 		}
+		
+		/**************** Inspection DATA ****************/
 		if (outputXML.getInspection() != null) {
 			InspectionType inspection = outputXML.getInspection();
+			if (inspection.xgetStand() != null
+					&& inspection.xgetStand().validate()
+					&& inspection.getStand() != null) {
+				set_Stand(inspection.getStand());
+			}
+			if (inspection.xgetInspectionType() != null
+					&& inspection.xgetInspectionType().validate()
+					&& inspection.getInspectionType() != null) {
+				set_InspectionType(inspection.getInspectionType());
+			}
+			if (inspection.xgetInspectionStatus() != null
+					&& inspection.xgetInspectionStatus().validate()
+					&& inspection.getInspectionStatus() != null) {
+				set_InspectionStatus(inspection.getInspectionStatus().toString());
+			}
+			if (inspection.xgetResources() != null
+					&& inspection.xgetResources().validate()
+					&& inspection.getResources() != null) {
+				set_resources(inspection.getResources());
+			}
+			if (inspection.xgetCoordinator() != null
+					&& inspection.xgetCoordinator().validate()
+					&& inspection.getCoordinator() != null) {
+				set_resources(inspection.getCoordinator());
+			}
+			
 			/**RTR*/
 			com.intalio.gi.forms.tAmanagement.InspectionType.RTR[] RTRs = inspection
 					.getRTRArray();
@@ -620,7 +659,15 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 				get_assignedAvionics().add(newAvioninc);
 			}
 		}
-
+		/**************** DC DATA ****************/
+		if (outputXML.getDC() != null) {
+			DCType dc = outputXML.getDC();
+			if (dc.xgetComments() != null
+					&& dc.xgetComments().validate()
+					&& dc.getComments() != null) {
+				set_comments(dc.getComments());
+			}
+		}
 	}
 
 	public Date get_EstimatedArrivalDate() {
@@ -862,5 +909,44 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 	public void set_assignedAvionics(
 			Collection<org.intalio.tempo.workflow.task.AssignedAvionics> avionics) {
 		_assignedAvionics = avionics;
+	}
+
+	public String get_InspectionType() {
+		return _InspectionType;
+	}
+
+	public void set_InspectionType(String inspectionType) {
+		_InspectionType = inspectionType;
+	}
+
+	public String get_InspectionStatus() {
+		return _InspectionStatus;
+	}
+
+	public void set_InspectionStatus(String inspectionStatus) {
+		_InspectionStatus = inspectionStatus;
+	}
+
+	public String get_resources() {
+		return _resources;
+	}
+
+	public void set_resources(String _resources) {
+		this._resources = _resources;
+	}
+
+	public String get_coordinator() {
+		return _coordinator;
+	}
+
+	public void set_coordinator(String _coordinator) {
+		this._coordinator = _coordinator;
+	}
+	public String get_comments() {
+		return _comments;
+	}
+
+	public void set_comments(String _comments) {
+		this._comments = _comments;
 	}
 }
