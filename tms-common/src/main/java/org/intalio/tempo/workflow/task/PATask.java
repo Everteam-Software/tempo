@@ -399,7 +399,7 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
 
     public void setOutput(String output) {
 		_output = output;
-		System.out.println(output);
+	//	System.out.println(output);
 		try {
 			OMElement om = AXIOMUtil.stringToOM(output);
 			om.setLocalName("xml-fragment");
