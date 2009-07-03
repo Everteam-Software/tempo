@@ -94,8 +94,19 @@
 						</xs:simpleType>
 					</xs:element>
 					<xs:element type="xs:string" name="resources" minOccurs="0" />
-					<xs:element type="xs:string" name="coordinator"
-						minOccurs="0" />
+					<xs:element name="assignedCoord" minOccurs="0"
+						maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element type="xs:string" name="assignedCoordName"
+									minOccurs="0" />
+								<xs:element type="xs:string" name="assignedCoordID"
+									minOccurs="0" />
+								<xs:element type="xs:string" name="assignedCoordCert"
+									minOccurs="0" />
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 					<xs:element name="RTR" minOccurs="0" maxOccurs="unbounded">
 						<xs:complexType>
 							<xs:sequence>

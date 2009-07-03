@@ -10,10 +10,22 @@ import org.apache.openjpa.persistence.Persistent;
 public class AssignedMechanics {
 	@Persistent
 	@Column(name = "name")
-	String _name;
+	private String _name;
 //	@Persistent
 //	@Column(name = "mechanicID")
 //	String _mechanicID;
+
+	@Persistent
+	@Column(name = "entitledToRelease")
+	private Boolean _entitledToRelease;
+	
+	public Boolean get_entitledToRelease() {
+		return _entitledToRelease;
+	}
+
+	public void set_entitledToRelease(Boolean toRelease) {
+		_entitledToRelease = toRelease;
+	}
 
 	public String getName() {
 		return _name;
@@ -23,11 +35,5 @@ public class AssignedMechanics {
 		this._name = _name;
 	}
 
-//	public String getMechanicID() {
-//		return _mechanicID;
-//	}
-//
-//	public void setMechanicID(String _mechanicid) {
-//		_mechanicID = _mechanicid;
-//	}
+
 }
