@@ -451,6 +451,7 @@ public class TMSServer implements ITMSServer {
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         try {
             parameters.put(TaskFetcher.FETCH_USER, credentials);
+            parameters.put(TaskFetcher.FETCH_FILTER, true);
             String klass = (String)parameters.get(TaskFetcher.FETCH_CLASS_NAME);
             if(klass!=null) parameters.put(TaskFetcher.FETCH_CLASS, Class.forName("org.intalio.tempo.workflow.task." + klass));
             return dao.countAvailableTasks(parameters);
@@ -465,6 +466,7 @@ public class TMSServer implements ITMSServer {
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         try {
             parameters.put(TaskFetcher.FETCH_USER, credentials);
+            parameters.put(TaskFetcher.FETCH_FILTER, true);
             String klass = (String)parameters.get(TaskFetcher.FETCH_CLASS_NAME);
             if(klass!=null) parameters.put(TaskFetcher.FETCH_CLASS, Class.forName("org.intalio.tempo.workflow.task." + klass));
             return dao.fetchAvailableTasks(parameters);
