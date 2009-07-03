@@ -40,7 +40,8 @@ public class TaskFetcher {
     public static final String FETCH_CLASS_NAME = ":classname";
     public static final String FETCH_USER = ":user";
     public static final String FETCH_COUNT = ":count";
-
+    public static final String FETCH_FILTER = ":filter";
+    
     final static Logger _logger = LoggerFactory.getLogger(TaskFetcher.class);
     private EntityManager _entityManager;
     private Query find_by_id;
@@ -134,6 +135,7 @@ public class TaskFetcher {
     private Query buildQuery(Map parameters) {
         UserRoles user = (UserRoles) parameters.get(FETCH_USER);
         Class taskClass = (Class) parameters.get(FETCH_CLASS);
+        boolean filter= (Boolean) parameters.get(FETCH_FILTER);
         String subQuery = MapUtils.getString(parameters, FETCH_SUB_QUERY, "");
 
         ArrayList userIdList = new ArrayList();
