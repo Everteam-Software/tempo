@@ -57,9 +57,9 @@
 			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"></a>]]>
 			</cell>
 			<%-- Scheduled Arrival Date --%>
-			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"><fmt:formatDate value="${taskHolder.task._ScheduledArrivalDate}" type="date" dateStyle="short" /></a>]]></cell>
+			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"><fmt:formatDate value="${taskHolder.task._ScheduledArrival}" type="date" dateStyle="short" /></a>]]></cell>
 			<%-- STA --%>
-			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"><fmt:formatDate value="${taskHolder.task._STA}" type="time" pattern="HH:mm" /></a>]]></cell>
+			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"><fmt:formatDate value="${taskHolder.task._ScheduledArrival}" type="time" pattern="HH:mm" /></a>]]></cell>
 			<%-- ATA --%>
 			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"></a>]]>
 			</cell>
