@@ -36,6 +36,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.QueryHint;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.OMNamespaceImpl;
@@ -153,7 +155,7 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 	@Persistent
 	@Column(name = "releaseTime")
 	private Date _releaseTime;
-	
+
 	@Persistent
 	@Column(name = "late")
 	private Boolean _late;
@@ -161,55 +163,33 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 	@Persistent
 	@Column(name = "updateField")
 	private Boolean _update;
-    /********************************************/
+	/********************************************/
 	/** ArrivalDeparture data */
 	@Persistent
-	@Column(name = "ScheduledArrivalDate")
-	private Date _ScheduledArrivalDate;
+	@Column(name = "ScheduledArrival")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date _ScheduledArrival;
 
 	@Persistent
-	@Column(name = "STA")
-	private Date _STA;
+	@Column(name = "ScheduledDeparture")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date _ScheduledDeparture;
 
 	@Persistent
-	@Column(name = "ScheduledDepartureDate")
-	private Date _ScheduledDepartureDate;
+	@Column(name = "EstimatedArrival")
+	private Date _EstimatedArrival;
 
 	@Persistent
-	@Column(name = "STD")
-	private Date _STD;
+	@Column(name = "EstimatedDeparture")
+	private Date _EstimatedDeparture;
 
 	@Persistent
-	@Column(name = "EstimatedArrivalDate")
-	private Date _EstimatedArrivalDate;
+	@Column(name = "ActualArrival")
+	private Date _ActualArrival;
 
 	@Persistent
-	@Column(name = "ETD")
-	private Date _ETD;
-
-	@Persistent
-	@Column(name = "EstimatedDepartureDate")
-	private Date _EstimatedDepartureDate;
-
-	@Persistent
-	@Column(name = "ETA")
-	private Date _ETA;
-
-	@Persistent
-	@Column(name = "ActualArrivalDate")
-	private Date _ActualArrivalDate;
-
-	@Persistent
-	@Column(name = "ATA")
-	private Date _ATA;
-
-	@Persistent
-	@Column(name = "ActualDepartureDate")
-	private Date _ActualDepartureDate;
-
-	@Persistent
-	@Column(name = "ATD")
-	private Date _ATD;
+	@Column(name = "ActualDeparture")
+	private Date _ActualDeparture;
 
 	@Persistent
 	@Column(name = "ArrivalFlightNumber")
@@ -218,11 +198,10 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 	@Persistent
 	@Column(name = "DepartureFlightNumber")
 	private String _DepartureFlightNumber;
-	
-	 /********************************************/
-	/***Inspection metadata */
-	
-	
+
+	/********************************************/
+	/*** Inspection metadata */
+
 	@Persistent
 	@Column(name = "Stand")
 	private String _Stand;
@@ -251,12 +230,11 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 
 	@OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
 	Collection<org.intalio.tempo.workflow.task.AssignedAvionics> _assignedAvionics;
-	 /********************************************/
-	 /********DC metadata**********/
+	/********************************************/
+	/******** DC metadata **********/
 	@Persistent
 	@Column(name = "comments")
 	private String _comments;
-	
 
 	/** End Extra metadata for SITA **/
 	/****************************/
@@ -458,13 +436,15 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 		}
 	}
 
-//	   <xs:element type="xs:string" name="AircraftID" minOccurs="0"/>
-//	      <xs:element type="xs:time" name="startTime" minOccurs="0"/>
-//	      <xs:element type="xs:time" name="finishTime" minOccurs="0"/>
-//	      <xs:element type="xs:time" name="releaseTime" minOccurs="0"/>
-//	      <xs:element type="xs:boolean" name="late" minOccurs="0"/>
-//	      <xs:element type="xs:boolean" name="update" minOccurs="0"/>
+	// <xs:element type="xs:string" name="AircraftID" minOccurs="0"/>
+	// <xs:element type="xs:time" name="startTime" minOccurs="0"/>
+	// <xs:element type="xs:time" name="finishTime" minOccurs="0"/>
+	// <xs:element type="xs:time" name="releaseTime" minOccurs="0"/>
+	// <xs:element type="xs:boolean" name="late" minOccurs="0"/>
+	// <xs:element type="xs:boolean" name="update" minOccurs="0"/>
 	private void setMetadata(FormModelImpl outputXML) {
+		/** calendar is an object for time+date calculation **/
+		Calendar calendar = Calendar.getInstance();
 		// System.out.println("setMEtadata1");
 		/**************** Activity Data Departure DATA ****************/
 		if (outputXML.getActivity() != null) {
@@ -472,25 +452,24 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 			if (activity.xgetAircraftID() != null
 					&& activity.xgetAircraftID().validate()
 					&& activity.getAircraftID() != null) {
-				 set_AircraftID( activity.getAircraftID() );
+				set_AircraftID(activity.getAircraftID());
 			}
 			if (activity.xgetStartTime() != null
 					&& activity.xgetStartTime().validate()
 					&& activity.getStartTime() != null) {
-				 set_startTime( activity.getStartTime().getTime() );
+				set_startTime(activity.getStartTime().getTime());
 			}
 			if (activity.xgetFinishTime() != null
 					&& activity.xgetFinishTime().validate()
 					&& activity.getFinishTime() != null) {
-				 set_finishTime( activity.getFinishTime().getTime() );
+				set_finishTime(activity.getFinishTime().getTime());
 			}
 			if (activity.xgetReleaseTime() != null
 					&& activity.xgetReleaseTime().validate()
 					&& activity.xgetReleaseTime() != null) {
-				 set_releaseTime( activity.getReleaseTime().getTime() );
+				set_releaseTime(activity.getReleaseTime().getTime());
 			}
-			
-			
+
 		}
 		/**************** Arrival Departure DATA ****************/
 		if (outputXML.getArrivalDeparture() != null) {
@@ -501,89 +480,75 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 			/** Scheduled departure */
 			if (arrival.xgetScheduledDepartureDate() != null
 					&& arrival.xgetScheduledDepartureDate().validate()
-					&& arrival.getScheduledDepartureDate() != null) {
-				set_ScheduledDepartureDate(arrival.getScheduledDepartureDate()
-						.getTime());
-			}
-
-			// System.out.println("STD "+ arrival.xgetSTD()+" end");
-			// System.out.println("STD "+ arrival.xgetSTD().validate());
-			if (arrival.xgetSTD() != null && arrival.xgetSTD().validate()
-					&& arrival.getSTD() != null) {
-
-				set_STD(arrival.getSTD().getTime());
+					&& arrival.getScheduledDepartureDate() != null
+					&& arrival.xgetSTD() != null
+					&& arrival.xgetSTD().validate() && arrival.getSTD() != null) {
+				calendar = arrival.getScheduledDepartureDate();
+				addTimeToDate(arrival.getSTD().getTime(), calendar);
+				set_ScheduledDeparture(calendar.getTime());
 			}
 
 			/** scheduled arrival */
+
 			if (arrival.xgetScheduledArrivalDate() != null
 					&& arrival.xgetScheduledArrivalDate().validate()
-					&& arrival.getScheduledArrivalDate() != null) {
-				set_ScheduledArrivalDate(arrival.getScheduledArrivalDate()
-						.getTime());
-			}
-
-			if (arrival.xgetSTA() != null && arrival.xgetSTA().validate()
-					&& arrival.getSTA() != null) {
-
-				set_STA(arrival.getSTA().getTime());
+					&& arrival.getScheduledArrivalDate() != null
+					&& arrival.xgetSTA() != null
+					&& arrival.xgetSTA().validate() && arrival.getSTA() != null) {
+				calendar = arrival.getScheduledArrivalDate();
+				addTimeToDate(arrival.getSTA().getTime(), calendar);
+				set_ScheduledArrival(calendar.getTime());
 			}
 			/** Estimated departure */
 			if (arrival.xgetEstimatedDepartureDate() != null
 					&& arrival.xgetEstimatedDepartureDate().validate()
-					&& arrival.getEstimatedDepartureDate() != null) {
-				set_EstimatedDepartureDate(arrival.getEstimatedDepartureDate()
-						.getTime());
+					&& arrival.getEstimatedDepartureDate() != null
+					&& arrival.xgetETD() != null
+					&& arrival.xgetETD().validate() && arrival.getETD() != null)
+
+			{
+				calendar = arrival.getEstimatedDepartureDate();
+				addTimeToDate(arrival.getETD().getTime(), calendar);
+				set_EstimatedDeparture(calendar.getTime());
 			}
-
-			if (arrival.xgetETD() != null && arrival.xgetETD().validate()
-					&& arrival.getETD() != null) {
-
-				set_ETD(arrival.getETD().getTime());
-			}
-
-			/** Estimated arrival */
-
+			/** Estimated Arrival */
 			if (arrival.xgetEstimatedArrivalDate() != null
 					&& arrival.xgetEstimatedArrivalDate().validate()
-					&& arrival.getEstimatedArrivalDate() != null) {
-				set_EstimatedArrivalDate(arrival.getEstimatedArrivalDate()
-						.getTime());
+					&& arrival.getEstimatedArrivalDate() != null
+					&& arrival.xgetETA() != null
+					&& arrival.xgetETA().validate() && arrival.getETA() != null)
+
+			{
+				calendar = arrival.getEstimatedArrivalDate();
+				addTimeToDate(arrival.getETA().getTime(), calendar);
+				set_EstimatedArrival(calendar.getTime());
 			}
-
-			if (arrival.xgetETA() != null && arrival.xgetETA().validate()
-					&& arrival.getETA() != null) {
-
-				set_ETA(arrival.getETA().getTime());
-			}
-
 			/** Actual departure */
 			if (arrival.xgetActualDepartureDate() != null
 					&& arrival.xgetActualDepartureDate().validate()
-					&& arrival.getActualDepartureDate() != null) {
-				set_ActualDepartureDate(arrival.getActualDepartureDate()
-						.getTime());
+					&& arrival.getActualDepartureDate() != null
+					&& arrival.xgetATD() != null
+					&& arrival.xgetATD().validate() && arrival.getATD() != null)
+
+			{
+				calendar = arrival.getActualDepartureDate();
+				addTimeToDate(arrival.getATD().getTime(), calendar);
+				set_ActualDeparture(calendar.getTime());
 			}
-
-			if (arrival.xgetATD() != null && arrival.xgetATD().validate()
-					&& arrival.getATD() != null) {
-
-				set_ATD(arrival.getATD().getTime());
-			}
-
-			/** Actual arrival */
-
+			/** Actual Arrival */
 			if (arrival.xgetActualArrivalDate() != null
 					&& arrival.xgetActualArrivalDate().validate()
-					&& arrival.getActualArrivalDate() != null) {
-				set_ActualArrivalDate(arrival.getActualArrivalDate().getTime());
+					&& arrival.getActualArrivalDate() != null
+					&& arrival.xgetATA() != null
+					&& arrival.xgetATA().validate() && arrival.getATA() != null)
+
+			{
+				calendar = arrival.getActualArrivalDate();
+				addTimeToDate(arrival.getATA().getTime(), calendar);
+				set_ActualArrival(calendar.getTime());
 			}
 
-			if (arrival.xgetATA() != null && arrival.xgetATA().validate()
-					&& arrival.getATA() != null) {
-
-				set_ATA(arrival.getATA().getTime());
-			}
-			/**Flight numbers*/
+			/** Flight numbers */
 			if (arrival.xgetArrivalFlightNumber() != null
 					&& arrival.xgetArrivalFlightNumber().validate()
 					&& arrival.getArrivalFlightNumber() != null) {
@@ -594,10 +559,9 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 					&& arrival.getDepartureFlightNumber() != null) {
 				set_DepartureFlightNumber(arrival.getArrivalFlightNumber());
 			}
-		
-		
+
 		}
-		
+
 		/**************** Inspection DATA ****************/
 		if (outputXML.getInspection() != null) {
 			InspectionType inspection = outputXML.getInspection();
@@ -614,7 +578,8 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 			if (inspection.xgetInspectionStatus() != null
 					&& inspection.xgetInspectionStatus().validate()
 					&& inspection.getInspectionStatus() != null) {
-				set_InspectionStatus(inspection.getInspectionStatus().toString());
+				set_InspectionStatus(inspection.getInspectionStatus()
+						.toString());
 			}
 			if (inspection.xgetResources() != null
 					&& inspection.xgetResources().validate()
@@ -626,8 +591,8 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 					&& inspection.getCoordinator() != null) {
 				set_resources(inspection.getCoordinator());
 			}
-			
-			/**RTR*/
+
+			/** RTR */
 			com.intalio.gi.forms.tAmanagement.InspectionType.RTR[] RTRs = inspection
 					.getRTRArray();
 			set_RTR(new ArrayList<org.intalio.tempo.workflow.task.RTR>());
@@ -637,18 +602,18 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 				newRTR.setRTRID(RTR.getRTRid());
 				get_RTR().add(newRTR);
 			}
-			
-			/**mechanics*/
+
+			/** mechanics */
 			com.intalio.gi.forms.tAmanagement.InspectionType.AssignedMechanics[] mechanics = inspection
 					.getAssignedMechanicsArray();
-			set_assignedMechanics( new ArrayList<org.intalio.tempo.workflow.task.AssignedMechanics>());
+			set_assignedMechanics(new ArrayList<org.intalio.tempo.workflow.task.AssignedMechanics>());
 			for (com.intalio.gi.forms.tAmanagement.InspectionType.AssignedMechanics mechanic : mechanics) {
 				org.intalio.tempo.workflow.task.AssignedMechanics newMechanic = new org.intalio.tempo.workflow.task.AssignedMechanics();
 				// newMechanic.setMechanicID(mechanic.getAssignedMechanicID());
 				newMechanic.setName(mechanic.getAssignedMechanicName());
 				get_assignedMechanics().add(newMechanic);
 			}
-			/**avionics*/
+			/** avionics */
 			com.intalio.gi.forms.tAmanagement.InspectionType.AssignedAvionics[] avionics = inspection
 					.getAssignedAvionicsArray();
 			set_assignedAvionics(new ArrayList<org.intalio.tempo.workflow.task.AssignedAvionics>());
@@ -662,28 +627,11 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 		/**************** DC DATA ****************/
 		if (outputXML.getDC() != null) {
 			DCType dc = outputXML.getDC();
-			if (dc.xgetComments() != null
-					&& dc.xgetComments().validate()
+			if (dc.xgetComments() != null && dc.xgetComments().validate()
 					&& dc.getComments() != null) {
 				set_comments(dc.getComments());
 			}
 		}
-	}
-
-	public Date get_EstimatedArrivalDate() {
-		return _EstimatedArrivalDate;
-	}
-
-	public void set_EstimatedArrivalDate(Date estimatedArrivalDate) {
-		_EstimatedArrivalDate = estimatedArrivalDate;
-	}
-
-	public Date get_EstimatedDepartureDate() {
-		return _EstimatedDepartureDate;
-	}
-
-	public void set_EstimatedDepartureDate(Date estimatedDepartureDate) {
-		_EstimatedDepartureDate = estimatedDepartureDate;
 	}
 
 	public Integer getPriority() {
@@ -721,54 +669,6 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 		_instanceId = instanceId;
 	}
 
-	public Date get_STA() {
-		return _STA;
-	}
-
-	public void set_STA(Date _sta) {
-		_STA = _sta;
-	}
-
-	public Date get_STD() {
-		return _STD;
-	}
-
-	public void set_STD(Date _std) {
-		_STD = _std;
-	}
-
-	public Date get_ETD() {
-		return _ETD;
-	}
-
-	public void set_ETD(Date _etd) {
-		_ETD = _etd;
-	}
-
-	public Date get_ETA() {
-		return _ETA;
-	}
-
-	public void set_ETA(Date _eta) {
-		_ETA = _eta;
-	}
-
-	public Date get_ATA() {
-		return _ATA;
-	}
-
-	public void set_ATA(Date _ata) {
-		_ATA = _ata;
-	}
-
-	public Date get_ATD() {
-		return _ATD;
-	}
-
-	public void set_ATD(Date _atd) {
-		_ATD = _atd;
-	}
-
 	public Collection<org.intalio.tempo.workflow.task.AssignedMechanics> get_assignedMechanics() {
 		return _assignedMechanics;
 	}
@@ -784,38 +684,6 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 
 	public void set_state(TaskState _state) {
 		this._state = _state;
-	}
-
-	public Date get_ScheduledArrivalDate() {
-		return _ScheduledArrivalDate;
-	}
-
-	public void set_ScheduledArrivalDate(Date scheduledArrivalDate) {
-		_ScheduledArrivalDate = scheduledArrivalDate;
-	}
-
-	public Date get_ScheduledDepartureDate() {
-		return _ScheduledDepartureDate;
-	}
-
-	public void set_ScheduledDepartureDate(Date scheduledDepartureDate) {
-		_ScheduledDepartureDate = scheduledDepartureDate;
-	}
-
-	public Date get_ActualArrivalDate() {
-		return _ActualArrivalDate;
-	}
-
-	public void set_ActualArrivalDate(Date actualArrivalDate) {
-		_ActualArrivalDate = actualArrivalDate;
-	}
-
-	public Date get_ActualDepartureDate() {
-		return _ActualDepartureDate;
-	}
-
-	public void set_ActualDepartureDate(Date actualDepartureDate) {
-		_ActualDepartureDate = actualDepartureDate;
 	}
 
 	public String get_ArrivalFlightNumber() {
@@ -942,6 +810,7 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 	public void set_coordinator(String _coordinator) {
 		this._coordinator = _coordinator;
 	}
+
 	public String get_comments() {
 		return _comments;
 	}
@@ -949,4 +818,59 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 	public void set_comments(String _comments) {
 		this._comments = _comments;
 	}
+
+	public Date get_ScheduledArrival() {
+		return _ScheduledArrival;
+	}
+
+	public void set_ScheduledArrival(Date scheduledArrival) {
+		_ScheduledArrival = scheduledArrival;
+	}
+
+	public Date get_ScheduledDeparture() {
+		return _ScheduledDeparture;
+	}
+
+	public void set_ScheduledDeparture(Date scheduledDeparture) {
+		_ScheduledDeparture = scheduledDeparture;
+	}
+
+	public Date get_EstimatedArrival() {
+		return _EstimatedArrival;
+	}
+
+	public void set_EstimatedArrival(Date estimatedArrival) {
+		_EstimatedArrival = estimatedArrival;
+	}
+
+	public Date get_EstimatedDeparture() {
+		return _EstimatedDeparture;
+	}
+
+	public void set_EstimatedDeparture(Date estimatedDeparture) {
+		_EstimatedDeparture = estimatedDeparture;
+	}
+
+	public Date get_ActualArrival() {
+		return _ActualArrival;
+	}
+
+	public void set_ActualArrival(Date actualArrival) {
+		_ActualArrival = actualArrival;
+	}
+
+	public Date get_ActualDeparture() {
+		return _ActualDeparture;
+	}
+
+	public void set_ActualDeparture(Date actualDeparture) {
+		_ActualDeparture = actualDeparture;
+	}
+
+	private void addTimeToDate(Date time, Calendar date) {
+		date.add(Calendar.HOUR, time.getHours());
+		date.add(Calendar.MINUTE, time.getMinutes());
+		date.add(Calendar.SECOND, time.getSeconds());
+	}
+
 }

@@ -80,7 +80,7 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
     }
 
     public Task[] fetchAvailableTasks(UserRoles user, Class className, String subQuery) {
-        return _fetcher.fetchAvailableTasks(user, className, subQuery);
+        return _fetcher.fetchAvailableTasks_With_Filter(user, className, subQuery);
     }
 
     public Task[] fetchAvailableTasks(HashMap parameters) {

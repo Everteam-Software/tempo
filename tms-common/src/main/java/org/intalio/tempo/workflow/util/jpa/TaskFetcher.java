@@ -1,6 +1,8 @@
 package org.intalio.tempo.workflow.util.jpa;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,10 +10,12 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
+import javax.persistence.TemporalType;
 
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.intalio.tempo.workflow.auth.UserRoles;
+import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
@@ -41,8 +45,15 @@ public class TaskFetcher {
     private EntityManager _entityManager;
     private Query find_by_id;
     private final String QUERY_GENERIC1 = "select DISTINCT T from ";
-    private final String QUERY_GENERIC_COUNT = "select COUNT(T) from ";
+    private final String QUERY_GENERIC_COUNT = "select COUNT(DISTINCT T) from ";
     private final String QUERY_GENERIC2 = " T where (T._userOwners in (?1) or T._roleOwners in (?2)) ";
+    /**display if atd!=null and atd>now-8h
+    [2:35:16 AM] Pierre Pavageau: or if atd==null and std>now-8h
+    [2:35:27 AM] Pierre Pavageau: or if atd==null and std==null*/
+    private final String SITA_FILTER1="(T._ActualDeparture IS NOT NULL AND (T._ActualDeparture > (?3)))";
+    private final String SITA_FILTER2="(T._ActualDeparture IS NULL AND (T._ScheduledDeparture > (?3)))";
+    private final String SITA_FILTER3="(T._ActualDeparture IS NULL AND T._ScheduledDeparture IS NULL)";
+    private final String QUERY_WITH_FILTER = " AND ("+SITA_FILTER1 +" OR "+ SITA_FILTER2 +" OR " + SITA_FILTER3 +")";
     // private final String DELETE_TASKS =
     // "delete from Task m where m._userOwners in (?1) or m._roleOwners in (?2) "
     // ;
@@ -106,6 +117,13 @@ public class TaskFetcher {
         params.put(FETCH_SUB_QUERY, subQuery);
         return fetchAvailableTasks(params);
     }
+    public Task[] fetchAvailableTasks_With_Filter(UserRoles user, Class taskClass, String subQuery) {
+        HashMap params = new HashMap(3);
+        params.put(FETCH_USER, user);
+        params.put(FETCH_CLASS, taskClass);
+        params.put(FETCH_SUB_QUERY, subQuery);
+        return fetchAvailableTasks(params);
+    }
 
     public Long countTasks(Map parameters) {
         parameters.put(TaskFetcher.FETCH_COUNT, StringUtils.EMPTY);
@@ -123,12 +141,28 @@ public class TaskFetcher {
         String baseQuery = parameters.containsKey(FETCH_COUNT) ? QUERY_GENERIC_COUNT : QUERY_GENERIC1;
         Query q;
         if (StringUtils.isEmpty(subQuery)) {
-            q = _entityManager.createQuery(baseQuery + taskClass.getSimpleName() + QUERY_GENERIC2).setParameter(1, userIdList).setParameter(2,
-                            user.getAssignedRoles());
+        	if(taskClass.equals(PATask.class)){
+        		
+           
+           	 Date dateBefore8Hours=new Date();
+                Calendar calendar=Calendar.getInstance();
+                calendar.setTime(dateBefore8Hours);
+                calendar.add(Calendar.HOUR, -8);
+                dateBefore8Hours=calendar.getTime();
+
+           	 q= _entityManager.createQuery(baseQuery + taskClass.getSimpleName() + QUERY_GENERIC2 + QUERY_WITH_FILTER).setParameter(1, userIdList).setParameter(2, user.getAssignedRoles()).setParameter(3, dateBefore8Hours, TemporalType.TIMESTAMP);
+            }
+            else{
+           	 q= _entityManager.createQuery(baseQuery + taskClass.getSimpleName() + QUERY_GENERIC2 ).setParameter(1, userIdList).setParameter(2, user.getAssignedRoles());
+            }
         } else {
             StringBuffer buffer = new StringBuffer();
-            buffer.append(baseQuery).append(taskClass.getSimpleName()).append(QUERY_GENERIC2);
-
+            if(taskClass.equals(PATask.class)){
+            buffer.append(baseQuery).append(taskClass.getSimpleName()).append(QUERY_GENERIC2+ QUERY_WITH_FILTER);
+            }
+            else{
+            	buffer.append(baseQuery).append(taskClass.getSimpleName()).append(QUERY_GENERIC2);
+            }
             String trim = subQuery.toLowerCase().trim();
             int orderIndex = trim.indexOf("order");
             if (orderIndex == -1) {
@@ -142,7 +176,19 @@ public class TaskFetcher {
             }
             if (_logger.isDebugEnabled())
                 _logger.debug(buffer.toString());
-            q = _entityManager.createQuery(buffer.toString()).setParameter(1, userIdList).setParameter(2, user.getAssignedRoles());
+            if(taskClass.equals(PATask.class)){
+           	 
+           	 Date dateBefore8Hours=new Date();
+                Calendar calendar=Calendar.getInstance();
+                calendar.setTime(dateBefore8Hours);
+                calendar.add(Calendar.HOUR, -8);
+                dateBefore8Hours=calendar.getTime();
+           	 q= _entityManager.createQuery(buffer.toString()).setParameter(1, userIdList).setParameter(2, user.getAssignedRoles()).setParameter(3, dateBefore8Hours, TemporalType.TIMESTAMP);
+            }
+            else{
+           	 q= _entityManager.createQuery(buffer.toString()).setParameter(1, userIdList).setParameter(2, user.getAssignedRoles());
+            }
+            
         }
         return q;
     }
@@ -158,6 +204,7 @@ public class TaskFetcher {
         List result = q.getResultList();
         return (Task[]) result.toArray(new Task[result.size()]);
     }
+    
 
     /**
      * Fetch the tasks for a given user

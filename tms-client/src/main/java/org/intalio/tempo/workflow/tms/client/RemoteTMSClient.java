@@ -579,11 +579,11 @@ public class RemoteTMSClient implements ITaskManagementService {
             }
         }.marshalRequest();
         OMElement response = sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "getAvailableTasksWithInputOutput");
-
         List<Task> tasks = new ArrayList<Task>();
         OMElementQueue rootQueue = new OMElementQueue(response);
         while (true) {
             OMElement taskElement = expectElement(rootQueue, "task");
+            
             if (taskElement == null)
                 break;
 
