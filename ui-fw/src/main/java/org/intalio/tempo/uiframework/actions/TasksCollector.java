@@ -51,7 +51,7 @@ public class TasksCollector {
             super(parameters.length);
             put("page", "1");
             put("page", "3");
-            put("sortname", "_creationDate");
+            put("sortname", "_description");
             put("sortorder", "ASC");
             put("query", null);
             put("qtype", null);
