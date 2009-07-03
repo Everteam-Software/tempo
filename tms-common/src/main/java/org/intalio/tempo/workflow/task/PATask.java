@@ -218,9 +218,8 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 	@Column(name = "resources")
 	private String _resources;
 
-	@Persistent
-	@Column(name = "coordinator")
-	private String _coordinator;
+	@OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+	Collection<org.intalio.tempo.workflow.task.AssignedCoords> _assignedCoord;
 
 	@OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
 	Collection<org.intalio.tempo.workflow.task.RTR> _RTR;
@@ -469,6 +468,15 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 					&& activity.xgetReleaseTime() != null) {
 				set_releaseTime(activity.getReleaseTime().getTime());
 			}
+			if (activity.xgetLate() != null && activity.xgetLate().validate()
+					&& activity.xgetLate() != null) {
+				set_late(activity.getLate());
+			}
+			if (activity.xgetUpdate() != null
+					&& activity.xgetUpdate().validate()
+					&& activity.xgetUpdate() != null) {
+				set_update(activity.getUpdate());
+			}
 
 		}
 		/**************** Arrival Departure DATA ****************/
@@ -586,19 +594,21 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 					&& inspection.getResources() != null) {
 				set_resources(inspection.getResources());
 			}
-			if (inspection.xgetCoordinator() != null
-					&& inspection.xgetCoordinator().validate()
-					&& inspection.getCoordinator() != null) {
-				set_resources(inspection.getCoordinator());
+			/** Coords */
+			com.intalio.gi.forms.tAmanagement.InspectionType.AssignedCoord[] coords = inspection
+					.getAssignedCoordArray();
+			set_assignedCoord(new ArrayList<org.intalio.tempo.workflow.task.AssignedCoords>());
+			for (com.intalio.gi.forms.tAmanagement.InspectionType.AssignedCoord coord : coords) {
+				org.intalio.tempo.workflow.task.AssignedCoords newCoord = new org.intalio.tempo.workflow.task.AssignedCoords();
+				newCoord.setName(coord.getAssignedCoordName());
+				get_assignedCoord().add(newCoord);
 			}
-
 			/** RTR */
 			com.intalio.gi.forms.tAmanagement.InspectionType.RTR[] RTRs = inspection
 					.getRTRArray();
 			set_RTR(new ArrayList<org.intalio.tempo.workflow.task.RTR>());
 			for (com.intalio.gi.forms.tAmanagement.InspectionType.RTR RTR : RTRs) {
 				org.intalio.tempo.workflow.task.RTR newRTR = new org.intalio.tempo.workflow.task.RTR();
-				// newMechanic.setMechanicID(mechanic.getAssignedMechanicID());
 				newRTR.setRTRID(RTR.getRTRid());
 				get_RTR().add(newRTR);
 			}
@@ -610,6 +620,8 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 			for (com.intalio.gi.forms.tAmanagement.InspectionType.AssignedMechanics mechanic : mechanics) {
 				org.intalio.tempo.workflow.task.AssignedMechanics newMechanic = new org.intalio.tempo.workflow.task.AssignedMechanics();
 				// newMechanic.setMechanicID(mechanic.getAssignedMechanicID());
+				newMechanic.set_entitledToRelease(mechanic
+						.getEntitledToRelease());
 				newMechanic.setName(mechanic.getAssignedMechanicName());
 				get_assignedMechanics().add(newMechanic);
 			}
@@ -803,14 +815,6 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 		this._resources = _resources;
 	}
 
-	public String get_coordinator() {
-		return _coordinator;
-	}
-
-	public void set_coordinator(String _coordinator) {
-		this._coordinator = _coordinator;
-	}
-
 	public String get_comments() {
 		return _comments;
 	}
@@ -865,6 +869,15 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 
 	public void set_ActualDeparture(Date actualDeparture) {
 		_ActualDeparture = actualDeparture;
+	}
+
+	public Collection<org.intalio.tempo.workflow.task.AssignedCoords> get_assignedCoord() {
+		return _assignedCoord;
+	}
+
+	public void set_assignedCoord(
+			Collection<org.intalio.tempo.workflow.task.AssignedCoords> coord) {
+		_assignedCoord = coord;
 	}
 
 	private void addTimeToDate(Date time, Calendar date) {
