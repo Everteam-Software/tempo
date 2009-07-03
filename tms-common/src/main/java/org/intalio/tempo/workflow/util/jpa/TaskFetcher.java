@@ -177,7 +177,7 @@ public class TaskFetcher {
 			}
 		} else {
 			StringBuffer buffer = new StringBuffer();
-			if (taskClass.equals(PATask.class)) {
+			if (taskClass.equals(PATask.class) && filter) {
 				buffer.append(baseQuery).append(taskClass.getSimpleName())
 						.append(QUERY_GENERIC2 + QUERY_WITH_FILTER);
 			} else {

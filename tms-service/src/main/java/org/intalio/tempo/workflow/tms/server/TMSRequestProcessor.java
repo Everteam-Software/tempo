@@ -389,11 +389,14 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             String subQuery = requireElementValue(rootQueue, "subQuery");
             String first = expectElementValue(rootQueue, "first");
             String max = expectElementValue(rootQueue, "max");
+            boolean filter = Boolean.valueOf(expectElementValue(rootQueue, "filter"));
             HashMap map = new HashMap();
             map.put(TaskFetcher.FETCH_CLASS_NAME, taskType);
             map.put(TaskFetcher.FETCH_SUB_QUERY, subQuery);
             map.put(TaskFetcher.FETCH_FIRST, first);
             map.put(TaskFetcher.FETCH_MAX, max);
+            map.put(TaskFetcher.FETCH_FILTER, filter);
+            
             final UserRoles user = _server.getUserRoles(participantToken);
             Task[] tasks = _server.getAvailableTasks(participantToken, map);
             return marshalTasksList(user, tasks, "getAvailableTasksResponse");
@@ -410,11 +413,13 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             String subQuery = requireElementValue(rootQueue, "subQuery");
             String first = expectElementValue(rootQueue, "first");
             String max = expectElementValue(rootQueue, "max");
+            Boolean filter = Boolean.valueOf(expectElementValue(rootQueue, "filter"));
             HashMap map = new HashMap();
             map.put(TaskFetcher.FETCH_CLASS_NAME, taskType);
             map.put(TaskFetcher.FETCH_SUB_QUERY, subQuery);
             map.put(TaskFetcher.FETCH_FIRST, first);
             map.put(TaskFetcher.FETCH_MAX, max);
+            map.put(TaskFetcher.FETCH_FILTER, filter);
             final UserRoles user = _server.getUserRoles(participantToken);
             Task[] tasks = _server.getAvailableTasks(participantToken, map);
             return marshalTasksListWithInputOutput(user, tasks, "getAvailableTasksResponse");
@@ -431,9 +436,11 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             String subQuery = requireElementValue(rootQueue, "subQuery");
             String first = expectElementValue(rootQueue, "first");
             String max = expectElementValue(rootQueue, "max");
+            Boolean filter = Boolean.valueOf(expectElementValue(rootQueue, "filter"));
             HashMap map = new HashMap();
             map.put(TaskFetcher.FETCH_CLASS_NAME, taskType);
             map.put(TaskFetcher.FETCH_SUB_QUERY, subQuery);
+            map.put(TaskFetcher.FETCH_FILTER, filter);
             final UserRoles user = _server.getUserRoles(participantToken);
             final Long taskCount = _server.countAvailableTasks(participantToken, map);
             return new TMSResponseMarshaller(OM_FACTORY) {

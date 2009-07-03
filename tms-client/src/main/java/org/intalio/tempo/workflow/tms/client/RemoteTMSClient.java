@@ -510,16 +510,17 @@ public class RemoteTMSClient implements ITaskManagementService {
     }
 
     public Task[] getAvailableTasks(final String taskType, final String subQuery) throws AuthException {
-        return getAvailableTasks(taskType, subQuery, null, null);
+        return getAvailableTasks(taskType, subQuery, null, null,null);
     }
     
-    public Long countAvailableTasks(final String taskType, final String subQuery) throws AuthException {
+    public Long countAvailableTasks(final String taskType, final String subQuery, final Boolean filter) throws AuthException {
         OMElement request = new TMSMarshaller() {
             public OMElement marshalRequest() {
                 OMElement request = createElement("getTaskListRequest");
                 createElement(request, "participantToken", _participantToken);
                 createElement(request, "taskType", taskType);
                 createElement(request, "subQuery", subQuery);
+                if(filter!=null)createElement(request, "filter", String.valueOf(filter));
                 return request;
             }
         }.marshalRequest();
@@ -527,7 +528,7 @@ public class RemoteTMSClient implements ITaskManagementService {
         return Long.parseLong(response.getText());
     }
 
-    public Task[] getAvailableTasks(final String taskType, final String subQuery, final String first, final String max) throws AuthException {
+    public Task[] getAvailableTasks(final String taskType, final String subQuery, final String first, final String max, final Boolean filter) throws AuthException {
         OMElement request = new TMSMarshaller() {
             public OMElement marshalRequest() {
                 OMElement request = createElement("getTaskListRequest");
@@ -536,6 +537,7 @@ public class RemoteTMSClient implements ITaskManagementService {
                 createElement(request, "subQuery", subQuery);
                 if(first!=null) createElement(request, "first", first);
                 if(max!=null) createElement(request, "max", max);
+                if(filter!=null)createElement(request, "filter", String.valueOf(filter));
                 return request;
             }
         }.marshalRequest();
@@ -561,12 +563,12 @@ public class RemoteTMSClient implements ITaskManagementService {
 
 	public Task[] getAvailableTasksWithInputOutput(String taskType,
 			String subQuery) throws AuthException {
-		return getAvailableTasksWithInputOutput(taskType, subQuery, null, null);
+		return getAvailableTasksWithInputOutput(taskType, subQuery, null, null,null);
 	}
 
 
 	public Task[] getAvailableTasksWithInputOutput(final String taskType,final String subQuery,
-			final String first,final String max) throws AuthException {
+			final String first,final String max,final Boolean filter) throws AuthException {
 		OMElement request = new TMSMarshaller() {
             public OMElement marshalRequest() {
                 OMElement request = createElement("getTaskListRequest");
@@ -575,6 +577,7 @@ public class RemoteTMSClient implements ITaskManagementService {
                 createElement(request, "subQuery", subQuery);
                 if(first!=null) createElement(request, "first", first);
                 if(max!=null) createElement(request, "max", max);
+                if(filter!=null)createElement(request, "filter", String.valueOf(filter));
                 return request;
             }
         }.marshalRequest();

@@ -34,10 +34,10 @@ public interface ITaskManagementService {
     Task[] getAvailableTasks(final String taskType, final String subQuery) throws AuthException;
     Task[] getAvailableTasksWithInputOutput(final String taskType, final String subQuery) throws AuthException;
     
-    Long countAvailableTasks(final String taskType, final String subQuery) throws AuthException;
+    Long countAvailableTasks(final String taskType, final String subQuery,final Boolean filter) throws AuthException;
     
-    Task[] getAvailableTasks(final String taskType, final String subQuery, final String first, final String max) throws AuthException;
-    Task[] getAvailableTasksWithInputOutput(final String taskType, final String subQuery, final String first, final String max) throws AuthException;
+    Task[] getAvailableTasks(final String taskType, final String subQuery, final String first, final String max,final Boolean filter) throws AuthException;
+    Task[] getAvailableTasksWithInputOutput(final String taskType, final String subQuery, final String first, final String max,final Boolean filter) throws AuthException;
 
     Task getTask(String taskID) throws AuthException, UnavailableTaskException;
 
