@@ -41,7 +41,7 @@ public class TaskFetcher {
     private EntityManager _entityManager;
     private Query find_by_id;
     private final String QUERY_GENERIC1 = "select DISTINCT T from ";
-    private final String QUERY_GENERIC_COUNT = "select COUNT(T) from ";
+    private final String QUERY_GENERIC_COUNT = "select COUNT(DISTINCT T) from ";
     private final String QUERY_GENERIC2 = " T where (T._userOwners in (?1) or T._roleOwners in (?2)) ";
     // private final String DELETE_TASKS =
     // "delete from Task m where m._userOwners in (?1) or m._roleOwners in (?2) "

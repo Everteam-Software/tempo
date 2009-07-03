@@ -65,6 +65,7 @@ public class TasksCollector {
         public void init() {
             for (String param : parameters) {
                 String value = _request.getParameter(param);
+                System.out.println("param " +param + " value "+ value);
                 if (value != null && !value.trim().equalsIgnoreCase("") && !value.equalsIgnoreCase("undefined"))
                     put(param, value);
             }
@@ -166,6 +167,7 @@ public class TasksCollector {
 
         Task[] tasks = taskManager.getAvailableTasksWithInputOutput(taskType, query.toString(), String.valueOf(index), String.valueOf(itasksPerPage));
         for (Task task : tasks) {
+        	System.out.println("task type " + task.getClass());
             tasksHolder.add(new TaskHolder<Task>(task, URIUtils.getResolvedTaskURLAsString(_request, fmanager, task, token, user)));
         }
 

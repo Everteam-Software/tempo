@@ -20,6 +20,8 @@ import java.net.URL;
 import java.util.Calendar;
 import java.util.HashMap;
 
+import javax.xml.namespace.QName;
+
 import org.apache.axiom.om.OMElement;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
@@ -310,6 +312,12 @@ public class TaskMarshaller {
         if (om.getLocalName().equalsIgnoreCase("xml-fragment")) {
             om.setLocalName(TaskXMLConstants.TASK_LOCAL_NAME);
             om.setNamespace(TaskXMLConstants.TASK_OM_NAMESPACE);
+        }
+        else{
+        	OMElement omParent=om.getOMFactory().createOMElement(new QName(TaskXMLConstants.TASK_OM_NAMESPACE.getName(),TaskXMLConstants.TASK_LOCAL_NAME));
+        	omParent.addChild(om);
+        	om=omParent;
+        	
         }
         return om;
     }
