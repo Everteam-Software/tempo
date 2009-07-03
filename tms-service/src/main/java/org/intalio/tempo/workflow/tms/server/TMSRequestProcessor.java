@@ -170,8 +170,9 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             String taskType = expectElementValue(rootQueue, "taskType");
             String subquery = expectElementValue(rootQueue, "subQuery");
             boolean fakeDelete = Boolean.valueOf(requireElementValue(rootQueue, "fakeDelete"));
+            boolean filter = Boolean.valueOf(requireElementValue(rootQueue, "filter"));
             String participantToken = requireElementValue(rootQueue, "participantToken");
-            _server.deleteAll(fakeDelete, subquery, taskType, participantToken);
+            _server.deleteAll(fakeDelete, subquery, taskType, participantToken,filter);
             return createOkResponse();
         } catch (Exception e) {
             throw makeFault(e);

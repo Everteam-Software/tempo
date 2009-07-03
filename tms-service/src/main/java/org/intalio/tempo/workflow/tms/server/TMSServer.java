@@ -518,10 +518,11 @@ public class TMSServer implements ITMSServer {
 	}
 
 	public Task[] getAvailableTasks(String participantToken, String taskType,
-			String subQuery) throws AuthException {
+			String subQuery,boolean filter) throws AuthException {
 		HashMap map = new HashMap(3);
 		map.put(TaskFetcher.FETCH_CLASS_NAME, taskType);
 		map.put(TaskFetcher.FETCH_SUB_QUERY, subQuery);
+		map.put(TaskFetcher.FETCH_FILTER, filter);
 		return this.getAvailableTasks(participantToken, map);
 	}
 
@@ -569,12 +570,12 @@ public class TMSServer implements ITMSServer {
 	 * delete method
 	 */
 	public void deleteAll(boolean fakeDelete, String subquery, String taskType,
-			String participantToken) throws AuthException,
+			String participantToken, boolean filter) throws AuthException,
 			UnavailableTaskException {
 		Task[] tasks = null;
 		if (taskType != null && taskType.length() != 0 && subquery != null
 				&& subquery.length() != 0) {
-			tasks = getAvailableTasks(participantToken, taskType, subquery);
+			tasks = getAvailableTasks(participantToken, taskType, subquery, filter);
 		} else {
 			tasks = getTaskList(participantToken);
 		}

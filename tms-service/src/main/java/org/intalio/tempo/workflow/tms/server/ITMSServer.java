@@ -30,7 +30,7 @@ public interface ITMSServer {
 
     Task[] getTaskList(String participantToken) throws TMSException;
 
-    Task[] getAvailableTasks(String participantToken, String taskType, String subQuery) throws TMSException;
+    Task[] getAvailableTasks(String participantToken, String taskType, String subQuery, boolean filter) throws TMSException;
 
     void skip(String taskID, String participantToken) throws TMSException;
     
@@ -66,7 +66,7 @@ public interface ITMSServer {
 
     void create(Task task, String participantToken) throws TMSException;
 
-    void deleteAll(boolean fakeDelete, String subquery, String subqueryClass, String participantToken) throws TMSException;
+    void deleteAll(boolean fakeDelete, String subquery, String subqueryClass, String participantToken, boolean filter) throws TMSException;
 
     Task[] getAvailableTasks(String participantToken, HashMap parameters) throws Exception;
 
