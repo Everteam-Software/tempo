@@ -152,6 +152,9 @@
 				</a>]]></cell>
 			<%-- Late --%>
 			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform">
+					<c:if test="${taskHolder.task._late}">
+							<img height="${iconSize}" width="${iconSize}" title="<fmt:message key="org_intalio_uifw_tasks_ready"/>" border="0px" src="images/icons/icon.notclaimed.gif"/>
+					</c:if>
 				</a>]]></cell>
         </row>
       </c:forEach>
