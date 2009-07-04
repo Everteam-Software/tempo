@@ -146,14 +146,17 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 
 	@Persistent
 	@Column(name = "startTime")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date _startTime;
 
 	@Persistent
 	@Column(name = "finishTime")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date _finishTime;
 
 	@Persistent
 	@Column(name = "releaseTime")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date _releaseTime;
 
 	@Persistent
@@ -453,6 +456,7 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 					&& activity.getAircraftID() != null) {
 				set_AircraftID(activity.getAircraftID());
 			}
+
 			if (activity.xgetStartTime() != null
 					&& activity.xgetStartTime().validate()
 					&& activity.getStartTime() != null) {
@@ -465,16 +469,14 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 			}
 			if (activity.xgetReleaseTime() != null
 					&& activity.xgetReleaseTime().validate()
-					&& activity.xgetReleaseTime() != null) {
+					&& activity.getReleaseTime() != null) {
 				set_releaseTime(activity.getReleaseTime().getTime());
 			}
-			if (activity.xgetLate() != null && activity.xgetLate().validate()
-					&& activity.xgetLate() != null) {
+			if (activity.xgetLate() != null && activity.xgetLate().validate()) {
 				set_late(activity.getLate());
 			}
 			if (activity.xgetUpdate() != null
-					&& activity.xgetUpdate().validate()
-					&& activity.xgetUpdate() != null) {
+					&& activity.xgetUpdate().validate()) {
 				set_update(activity.getUpdate());
 			}
 

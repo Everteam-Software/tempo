@@ -23,7 +23,7 @@ public class PDFServlet extends ExternalTasksServlet {
     public void generateFile(HttpServletRequest request, String token, String user, ServletOutputStream outputStream) throws Exception {
 
         // sort tasks
-        ArrayList<Map<ExportKey, String>> tasks = sortTasks();
+        ArrayList<Map<ExportKey.ExportGLobalKey, String>> tasks = sortTasks();
 
         // do nothing if no tasks
         if (tasks.size() < 1)
@@ -37,14 +37,14 @@ public class PDFServlet extends ExternalTasksServlet {
         BaseFont helvetica = BaseFont.createFont("Helvetica", BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
         Font font = new Font(helvetica, 9);
 
-        Set<ExportKey> keySet = tasks.get(0).keySet();
+        Set<ExportKey.ExportGLobalKey> keySet = tasks.get(0).keySet();
 
         PdfPTable table = new PdfPTable(keySet.size());
         table.setWidthPercentage((float)100);
 
         // write headers
         if (tasks.size() > 1) {
-            for (ExportKey key : keySet) {
+            for (ExportKey.ExportGLobalKey key : keySet) {
                 PdfPCell cell = new PdfPCell();
                 cell.setBackgroundColor(Color.GRAY);
                 cell.setPhrase(new Phrase(key.name().toUpperCase()));
@@ -53,7 +53,7 @@ public class PDFServlet extends ExternalTasksServlet {
         }
 
         // write entries
-        for (Map<ExportKey, String> entry : tasks) {
+        for (Map<ExportKey.ExportGLobalKey, String> entry : tasks) {
             Collection<String> en = entry.values();
             for (String value : en) table.addCell(new Phrase(value, font));
         }

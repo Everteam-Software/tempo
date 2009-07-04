@@ -12,54 +12,65 @@
 
 package org.intalio.tempo.uiframework.export;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 
+import org.intalio.tempo.uiframework.export.ExportKey.ExportSITAKey;
+
 import com.Ostermiller.util.CSVPrinter;
 
 public class CSVServlet extends ExternalTasksServlet {
 
-    private static final long serialVersionUID = 4204605680520386297L;
+	private static final long serialVersionUID = 4204605680520386297L;
 
-    public void generateFile(HttpServletRequest request, String token, String user, ServletOutputStream outputStream)
-                    throws Exception {
-        
-        // open csv stream
-        CSVPrinter csvp = new CSVPrinter(outputStream);
-        
-        // sort tasks
-        ArrayList<Map<ExportKey, String>> tasks = sortTasks();
-        
-        // write headers
-        if(tasks.size()>1) {
-            Set<ExportKey> keySet = tasks.get(0).keySet();
-            for(ExportKey key : keySet) csvp.write(key.name());
-            csvp.println();
-        }
+	public void generateFile(HttpServletRequest request, String token,
+			String user, ServletOutputStream outputStream) throws Exception {
 
-        // write values
-        for(Map<ExportKey, String> entry : tasks) {
-            Collection<String> en = entry.values();
-            csvp.writeln(en.toArray(new String[en.size()]));
-        }
+		// open csv stream
+		CSVPrinter csvp = new CSVPrinter(outputStream);
 
-        // close csv file
-        csvp.close();
-    }
+		// sort tasks
+		ArrayList<LinkedHashMap<String, String>> tasks = sortSITAIntalioTasks();
+System.out.println("tasks " +tasks.size());
+		// write headers
+		if (tasks.size() > 0) {
+			Set<String> keySet = tasks.get(0).keySet();
+			for (String key : keySet)
+				csvp.write(key);
+			csvp.println();
 
-    @Override
-    public String getFileExt() {
-        return ".csv";
-    }
+			// write values
+			for (LinkedHashMap<String, String> entry : tasks) {
+				Set<String> keySet1 = tasks.get(0).keySet();
+				for (String key : keySet1) {
+					csvp.write(entry.get(key));
+				}
 
-    @Override
-    public String getFileMimeType() {
-        return "application/csv";
-    }
+				csvp.println();
+			}
+		} else {
+			csvp.writeln("No items are available");
+		}
+
+		// close csv file
+		csvp.close();
+	}
+
+	@Override
+	public String getFileExt() {
+		return ".csv";
+	}
+
+	@Override
+	public String getFileMimeType() {
+		return "application/csv";
+	}
 
 }
