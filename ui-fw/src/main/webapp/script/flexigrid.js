@@ -462,6 +462,8 @@
 							
 							var tr = document.createElement('tr');
 							if (i % 2 && p.striped) tr.className = 'erow';
+							
+							//This line is added by Ihab for the highlight late tasks feature
 							if($(this).attr("highlight") == "true" ) {tr.className = 'highlight';	}
 							var nid =$(this).attr('id');
 							if (nid) tr.id = 'row' + nid;

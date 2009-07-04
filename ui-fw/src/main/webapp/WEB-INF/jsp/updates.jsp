@@ -46,7 +46,10 @@
     <c:otherwise>
       <c:forEach items="${tasks}" var="taskHolder" varStatus="status">
         <c:set var="taskFullURL" value="${taskHolder.formManagerURL}" />
-        <row id="pa${status.index}">
+		<c:choose>
+							<c:when test="${taskHolder.task._late}"><row id="pa${status.index}" highlight="true"></c:when>
+							<c:otherwise><row id="pa${status.index}"></c:otherwise>
+						</c:choose>
 			<%-- update --%>
 			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform">
 					<c:if test="${taskHolder.task._update}">
