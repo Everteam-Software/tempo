@@ -38,7 +38,6 @@ public class CSVServlet extends ExternalTasksServlet {
 
 		// sort tasks
 		ArrayList<LinkedHashMap<String, String>> tasks = sortSITAIntalioTasks();
-System.out.println("tasks " +tasks.size());
 		// write headers
 		if (tasks.size() > 0) {
 			Set<String> keySet = tasks.get(0).keySet();
