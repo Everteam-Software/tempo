@@ -206,4 +206,12 @@ define "tempo" do
 	  compile.with(ALFRESCO, APACHE_COMMONS[:logging], APACHE_COMMONS[:fileupload], SERVLET_API, CAS_CLIENT, SPRING[:core], MY_FACES, PORTLET_API, LIFERAY)
     package :jar
   end
+  
+  desc "Workflow Deployment Service"
+  define "automatic-startup" do |project|
+  libs= AXIS2, AXIOM, WSDL4J,WS_COMMONS_SCHEMA, APACHE_COMMONS[:beanutils],  APACHE_COMMONS[:codec],  APACHE_COMMONS[:collections],  APACHE_COMMONS[:httpclient], APACHE_COMMONS[:lang],  APACHE_COMMONS[:logging]
+  compile.with [SERVLET_API , libs ]
+    resources.filter.using "version" => VERSION_NUMBER
+    package(:war).with(:libs=>libs)
+  end
 end
