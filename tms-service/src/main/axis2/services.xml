@@ -44,6 +44,11 @@
             <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
             <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/setOutput</actionMapping>
         </operation>
+        
+        <operation name="updateTasks">
+            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+            <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/updateTasks</actionMapping>
+        </operation>
 
         <operation name="setOutputAndComplete">
             <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>

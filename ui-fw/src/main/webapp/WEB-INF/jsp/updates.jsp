@@ -51,7 +51,7 @@
 							<c:otherwise><row id="pa${status.index}"></c:otherwise>
 						</c:choose>
 			<%-- update --%>
-			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform">
+			<cell><![CDATA[<a class="taskd" tid="${taskHolder.task.ID}" href="${taskFullURL}" title="" target="taskform">
 					<c:if test="${taskHolder.task._update}">
 						<img height="${iconSize}" width="${iconSize}" title="<fmt:message key="org_intalio_uifw_tasks_ready"/>" border="0px" src="images/icons/icon.notclaimed.gif"/>
 					</c:if>

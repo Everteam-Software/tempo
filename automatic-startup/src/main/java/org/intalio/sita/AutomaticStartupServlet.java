@@ -30,8 +30,12 @@ public class AutomaticStartupServlet extends HttpServlet {
 	@Override
 	public void init() throws ServletException {
 		System.out.println("Servlet started");
-
-		File root = new File("").getAbsoluteFile();
+//try {
+//	Thread.sleep(120000);
+//} catch (InterruptedException e) {
+//	e.printStackTrace();
+//}
+		File root = new File("s").getAbsoluteFile();
 		System.out.println(root.getParentFile());
 		File ODEDirectory = new File(root.getParentFile().getAbsolutePath() + "\\var\\deploy");
 		System.out.println("file" + ODEDirectory.getAbsolutePath());

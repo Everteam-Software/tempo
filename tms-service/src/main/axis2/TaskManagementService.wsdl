@@ -263,6 +263,22 @@
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
+			<xsd:element name="updateTasksRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="task" maxOccurs="unbounded"
+							minOccurs="0">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="taskId" type="xsd:string" />
+									<xsd:element name="participantToken" type="xsd:string">
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
 			<xsd:element name="skipRequest">
 				<xsd:complexType>
 					<xsd:sequence>
@@ -320,11 +336,11 @@
 							maxOccurs="1" minOccurs="0" />
 						<xsd:element name="fakeDelete" type="xsd:boolean"
 							maxOccurs="1" minOccurs="1" />
-							<xsd:element name="filter" type="xsd:boolean"
+						<xsd:element name="filter" type="xsd:boolean"
 							maxOccurs="1" minOccurs="0" />
 						<xsd:element name="participantToken" type="xsd:string"
 							maxOccurs="1" minOccurs="1" />
-							
+
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
@@ -563,7 +579,7 @@
 					<xsd:element name="first" type="xsd:string" />
 					<xsd:element name="max" type="xsd:string" />
 					<xsd:element name="filter" type="xsd:boolean"
-							maxOccurs="1" minOccurs="0" />
+						maxOccurs="1" minOccurs="0" />
 				</xsd:sequence>
 			</xsd:complexType>
 			<xsd:element name="countAvailableTasksRequest">
@@ -657,6 +673,9 @@
 	</wsdl:message>
 	<wsdl:message name="setOutputRequest">
 		<wsdl:part name="setOutputRequest" element="tns:setOutputRequest" />
+	</wsdl:message>
+	<wsdl:message name="updateTasksRequest">
+		<wsdl:part name="updateTasksRequest" element="tns:updateTasksRequest" />
 	</wsdl:message>
 	<wsdl:message name="unavailableTaskFault">
 		<wsdl:part name="unavailableTaskFault" element="tns:unavailableTaskFault" />
@@ -804,6 +823,13 @@
 		</wsdl:operation>
 		<wsdl:operation name="setOutput">
 			<wsdl:input message="tns:setOutputRequest" />
+			<wsdl:output message="tns:okResponse" />
+			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault" />
+			<wsdl:fault name="UnavailableTask" message="tns:unavailableTaskFault" />
+			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault" />
+		</wsdl:operation>
+		<wsdl:operation name="updateTasks">
+			<wsdl:input message="tns:updateTasksRequest" />
 			<wsdl:output message="tns:okResponse" />
 			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault" />
 			<wsdl:fault name="UnavailableTask" message="tns:unavailableTaskFault" />
@@ -1091,6 +1117,25 @@
 		<wsdl:operation name="setOutput">
 			<soap:operation
 				soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/setOutput" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="InvalidParticipantToken">
+				<soap:fault name="InvalidParticipantToken" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="UnavailableTask">
+				<soap:fault name="UnavailableTask" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="InvalidInputMessage">
+				<soap:fault name="InvalidInputMessage" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="updateTasks">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/updateTasks" />
 			<wsdl:input>
 				<soap:body use="literal" />
 			</wsdl:input>

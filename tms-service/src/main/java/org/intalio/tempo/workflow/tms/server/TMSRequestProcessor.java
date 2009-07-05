@@ -15,6 +15,7 @@
 
 package org.intalio.tempo.workflow.tms.server;
 
+import java.io.ByteArrayInputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ import org.intalio.deploy.deployment.utils.DeploymentServiceRegister;
 import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.UserRoles;
+import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.TaskState;
@@ -51,512 +53,623 @@ import org.intalio.tempo.workflow.util.xml.OMUnmarshaller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+
+import com.intalio.bpms.workflow.taskManagementServices20051109.UpdateTasksRequestDocument;
+import com.intalio.bpms.workflow.taskManagementServices20051109.Task.Output;
+import com.intalio.gi.forms.tAmanagement.FormModel;
+import com.intalio.gi.forms.tAmanagement.FormModelDocument;
 
 public class TMSRequestProcessor extends OMUnmarshaller {
-    final static Logger _logger = LoggerFactory.getLogger(TMSRequestProcessor.class);
+	final static Logger _logger = LoggerFactory
+			.getLogger(TMSRequestProcessor.class);
 
-    private ITMSServer _server;
-    private PIPAComponentManager _pipa;
-    private DeploymentServiceRegister _registerPipa;
-    private static final OMFactory OM_FACTORY = OMAbstractFactory.getOMFactory();
+	private ITMSServer _server;
+	private PIPAComponentManager _pipa;
+	private DeploymentServiceRegister _registerPipa;
+	private static final OMFactory OM_FACTORY = OMAbstractFactory
+			.getOMFactory();
 
-    public TMSRequestProcessor() {
-        super(TaskXMLConstants.TASK_NAMESPACE, TaskXMLConstants.TASK_NAMESPACE_PREFIX);
-        _logger.debug("Created TMSRequestProcessor");
-    }
+	public TMSRequestProcessor() {
+		super(TaskXMLConstants.TASK_NAMESPACE,
+				TaskXMLConstants.TASK_NAMESPACE_PREFIX);
+		_logger.debug("Created TMSRequestProcessor");
+	}
 
-    // unify desctroy pipa behaviour make it easy to be covered by test.
-    protected void destroyRegisterPipa() {
-        if (_registerPipa != null) {
-            _registerPipa.destroy();
-            _registerPipa = null;
-        }
-    }
+	// unify desctroy pipa behaviour make it easy to be covered by test.
+	protected void destroyRegisterPipa() {
+		if (_registerPipa != null) {
+			_registerPipa.destroy();
+			_registerPipa = null;
+		}
+	}
 
-    public void setServer(ITMSServer server) {
-        // if (_registerPipa != null) {
-        // _registerPipa.destroy();
-        // }
-        destroyRegisterPipa();
-        _logger.debug("TMSRequestProcessor.setServer:" + server.getClass().getSimpleName());
-        _server = server;
-        _pipa = new PIPAComponentManager(_server);
-        _registerPipa = new DeploymentServiceRegister(_pipa);
-        _registerPipa.init();
-    }
+	public void setServer(ITMSServer server) {
+		// if (_registerPipa != null) {
+		// _registerPipa.destroy();
+		// }
+		destroyRegisterPipa();
+		_logger.debug("TMSRequestProcessor.setServer:"
+				+ server.getClass().getSimpleName());
+		_server = server;
+		_pipa = new PIPAComponentManager(_server);
+		_registerPipa = new DeploymentServiceRegister(_pipa);
+		_registerPipa.init();
+	}
 
-    public OMElement getTaskList(final OMElement requestElement) throws AxisFault {
-        try {
-            OMElementQueue rootQueue = new OMElementQueue(requestElement);
-            String participantToken = requireElementValue(rootQueue, "participantToken");
-            final UserRoles user = _server.getUserRoles(participantToken);
-            Task[] tasks = _server.getTaskList(participantToken);
-            return marshalTasksList(user, tasks, "getTaskListResponse");
-        } catch (Exception e) {
-            throw makeFault(e);
-        }
-    }
+	public OMElement getTaskList(final OMElement requestElement)
+			throws AxisFault {
+		try {
+			OMElementQueue rootQueue = new OMElementQueue(requestElement);
+			String participantToken = requireElementValue(rootQueue,
+					"participantToken");
+			final UserRoles user = _server.getUserRoles(participantToken);
+			Task[] tasks = _server.getTaskList(participantToken);
+			return marshalTasksList(user, tasks, "getTaskListResponse");
+		} catch (Exception e) {
+			throw makeFault(e);
+		}
+	}
 
-    public OMElement getTask(OMElement requestElement) throws AxisFault {
-        try {
-            OMElementQueue rootQueue = new OMElementQueue(requestElement);
-            String taskID = requireElementValue(rootQueue, "taskId");
-            String participantToken = requireElementValue(rootQueue, "participantToken");
-            final UserRoles user = _server.getUserRoles(participantToken);
-            Task task = _server.getTask(taskID, participantToken);
-            OMElement response = new TMSResponseMarshaller(OM_FACTORY) {
-                public OMElement marshalResponse(Task task) {
-                    OMElement response = createElement("getTaskResponse");
-                    response.addChild(new TaskMarshaller().marshalFullTask(task, user));
-                    return response;
-                }
-            }.marshalResponse(task);
-            return response;
-        } catch (Exception e) {
-            throw makeFault(e);
-        }
-    }
+	public OMElement getTask(OMElement requestElement) throws AxisFault {
+		try {
+			OMElementQueue rootQueue = new OMElementQueue(requestElement);
+			String taskID = requireElementValue(rootQueue, "taskId");
+			String participantToken = requireElementValue(rootQueue,
+					"participantToken");
+			final UserRoles user = _server.getUserRoles(participantToken);
+			Task task = _server.getTask(taskID, participantToken);
+			OMElement response = new TMSResponseMarshaller(OM_FACTORY) {
+				public OMElement marshalResponse(Task task) {
+					OMElement response = createElement("getTaskResponse");
+					response.addChild(new TaskMarshaller().marshalFullTask(
+							task, user));
+					return response;
+				}
+			}.marshalResponse(task);
+			return response;
+		} catch (Exception e) {
+			throw makeFault(e);
+		}
+	}
 
-    private OMElement createOkResponse() {
-        return new TMSResponseMarshaller(OM_FACTORY) {
-            public OMElement createOkResponse() {
-                OMElement okResponse = createElement("okResponse");
-                return okResponse;
-            }
-        }.createOkResponse();
-    }
+	private OMElement createOkResponse() {
+		return new TMSResponseMarshaller(OM_FACTORY) {
+			public OMElement createOkResponse() {
+				OMElement okResponse = createElement("okResponse");
+				return okResponse;
+			}
+		}.createOkResponse();
+	}
 
-    public OMElement create(OMElement requestElement) throws AxisFault {
-        try {
-            OMElementQueue rootQueue = new OMElementQueue(requestElement);
-            OMElement taskElement = requireElement(rootQueue, "task");
-            Task task = new TaskUnmarshaller().unmarshalFullTask(taskElement);
-            if (task instanceof PIPATask) {
-                throw new InvalidInputFormatException("Not allowed to create() PIPA tasks");
-            }
-            String participantToken = requireElementValue(rootQueue, "participantToken");
-            _server.create(task, participantToken);
-            return createOkResponse();
-        } catch (Exception e) {
-            throw makeFault(e);
-        }
-    }
+	public OMElement create(OMElement requestElement) throws AxisFault {
+		try {
+			OMElementQueue rootQueue = new OMElementQueue(requestElement);
+			OMElement taskElement = requireElement(rootQueue, "task");
+			Task task = new TaskUnmarshaller().unmarshalFullTask(taskElement);
+			if (task instanceof PIPATask) {
+				throw new InvalidInputFormatException(
+						"Not allowed to create() PIPA tasks");
+			}
+			String participantToken = requireElementValue(rootQueue,
+					"participantToken");
+			_server.create(task, participantToken);
+			return createOkResponse();
+		} catch (Exception e) {
+			throw makeFault(e);
+		}
+	}
 
-    public OMElement delete(OMElement requestElement) throws AxisFault {
-        try {
-            OMElementQueue rootQueue = new OMElementQueue(requestElement);
-            List<String> taskIDs = new ArrayList<String>();
-            while (true) {
-                String taskID = expectElementValue(rootQueue, "taskId");
-                if (taskID != null)
-                    taskIDs.add(taskID);
-                else
-                    break;
-            }
-            if (taskIDs.isEmpty()) {
-                throw new InvalidInputFormatException("At least one taskId element must be present");
-            }
-            String participantToken = requireElementValue(rootQueue, "participantToken");
-            _server.delete(taskIDs.toArray(new String[] {}), participantToken);
-            return createOkResponse();
-        } catch (Exception e) {
-            throw makeFault(e);
-        }
-    }
+	public OMElement delete(OMElement requestElement) throws AxisFault {
+		try {
+			OMElementQueue rootQueue = new OMElementQueue(requestElement);
+			List<String> taskIDs = new ArrayList<String>();
+			while (true) {
+				String taskID = expectElementValue(rootQueue, "taskId");
+				if (taskID != null)
+					taskIDs.add(taskID);
+				else
+					break;
+			}
+			if (taskIDs.isEmpty()) {
+				throw new InvalidInputFormatException(
+						"At least one taskId element must be present");
+			}
+			String participantToken = requireElementValue(rootQueue,
+					"participantToken");
+			_server.delete(taskIDs.toArray(new String[] {}), participantToken);
+			return createOkResponse();
+		} catch (Exception e) {
+			throw makeFault(e);
+		}
+	}
 
-    public OMElement deleteAll(OMElement requestElement) throws AxisFault {
-        try {
-            OMElementQueue rootQueue = new OMElementQueue(requestElement);
-            String taskType = expectElementValue(rootQueue, "taskType");
-            String subquery = expectElementValue(rootQueue, "subQuery");
-            boolean fakeDelete = Boolean.valueOf(requireElementValue(rootQueue, "fakeDelete"));
-            boolean filter = Boolean.valueOf(expectElementValue(rootQueue, "filter"));
-            String participantToken = requireElementValue(rootQueue, "participantToken");
-            _server.deleteAll(fakeDelete, subquery, taskType, participantToken,filter);
-            return createOkResponse();
-        } catch (Exception e) {
-            throw makeFault(e);
-        }
-    }
+	public OMElement deleteAll(OMElement requestElement) throws AxisFault {
+		try {
+			OMElementQueue rootQueue = new OMElementQueue(requestElement);
+			String taskType = expectElementValue(rootQueue, "taskType");
+			String subquery = expectElementValue(rootQueue, "subQuery");
+			boolean fakeDelete = Boolean.valueOf(requireElementValue(rootQueue,
+					"fakeDelete"));
+			boolean filter = Boolean.valueOf(expectElementValue(rootQueue,
+					"filter"));
+			String participantToken = requireElementValue(rootQueue,
+					"participantToken");
+			_server.deleteAll(fakeDelete, subquery, taskType, participantToken,
+					filter);
+			return createOkResponse();
+		} catch (Exception e) {
+			throw makeFault(e);
+		}
+	}
 
-    public OMElement setOutput(OMElement requestElement) throws AxisFault {
-        try {
-            OMElementQueue rootQueue = new OMElementQueue(requestElement);
-            String taskID = requireElementValue(rootQueue, "taskId");
-            OMElement omOutputContainer = requireElement(rootQueue, "data");
-            Document domOutput = null;
-            if (omOutputContainer.getFirstElement() != null) {
-                domOutput = new TaskUnmarshaller().unmarshalTaskOutput(omOutputContainer);
-            }
-            String participantToken = requireElementValue(rootQueue, "participantToken");
-            _server.setOutput(taskID, domOutput, participantToken);
-            return createOkResponse();
-        } catch (Exception e) {
-            throw makeFault(e);
-        }
-    }
+	public OMElement setOutput(OMElement requestElement) throws AxisFault {
+		try {
+			OMElementQueue rootQueue = new OMElementQueue(requestElement);
+			String taskID = requireElementValue(rootQueue, "taskId");
+			OMElement omOutputContainer = requireElement(rootQueue, "data");
+			Document domOutput = null;
+			if (omOutputContainer.getFirstElement() != null) {
+				domOutput = new TaskUnmarshaller()
+						.unmarshalTaskOutput(omOutputContainer);
+			}
+			String participantToken = requireElementValue(rootQueue,
+					"participantToken");
+			_server.setOutput(taskID, domOutput, participantToken);
+			return createOkResponse();
+		} catch (Exception e) {
+			throw makeFault(e);
+		}
+	}
 
-    public OMElement setOutputAndComplete(OMElement requestElement) throws AxisFault {
-        try {
-            OMElementQueue rootQueue = new OMElementQueue(requestElement);
-            String taskID = requireElementValue(rootQueue, "taskId");
-            OMElement omOutputContainer = requireElement(rootQueue, "data");
-            Document domOutput = null;
-            if (omOutputContainer.getFirstElement() != null) {
-                domOutput = new TaskUnmarshaller().unmarshalTaskOutput(omOutputContainer);
-            }
-            String participantToken = requireElementValue(rootQueue, "participantToken");
-            _server.setOutputAndComplete(taskID, domOutput, participantToken);
-            return createOkResponse();
-        } catch (Exception e) {
-            throw makeFault(e);
-        }
-    }
+	public OMElement updateTasks(OMElement requestElement) throws AxisFault {
+		try {
 
-    public OMElement complete(OMElement requestElement) throws AxisFault {
-        try {
-            OMElementQueue rootQueue = new OMElementQueue(requestElement);
-            String taskID = requireElementValue(rootQueue, "taskId");
-            String participantToken = requireElementValue(rootQueue, "participantToken");
-            _server.complete(taskID, participantToken);
-            return createOkResponse();
-        } catch (Exception e) {
-            throw makeFault(e);
-        }
-    }
+			for (com.intalio.bpms.workflow.taskManagementServices20051109.UpdateTasksRequestDocument.UpdateTasksRequest.Task nextTask : UpdateTasksRequestDocument.Factory
+					.parse(requestElement.getXMLStreamReader())
+					.getUpdateTasksRequest().getTaskArray()) {
 
-    public OMElement fail(OMElement requestElement) throws AxisFault {
-        try {
-            OMElementQueue rootQueue = new OMElementQueue(requestElement);
-            String taskID = requireElementValue(rootQueue, "taskId");
-            String failureCode = requireElementValue(rootQueue, "code");
-            String failureReason = requireElementValue(rootQueue, "message");
-            String participantToken = requireElementValue(rootQueue, "participantToken");
-            _server.fail(taskID, failureCode, failureReason, participantToken);
-            return createOkResponse();
-        } catch (Exception e) {
-            throw makeFault(e);
-        }
-    }
+				PATask task = (PATask) _server.getTask(nextTask.getTaskId(),
+						nextTask.getParticipantToken());
 
-    public OMElement initProcess(final OMElement requestElement) throws AxisFault {
-        try {
-            OMElementQueue rootQueue = new OMElementQueue(requestElement);
-            String taskID = requireElementValue(rootQueue, "taskId");
-            OMElement omInputContainer = requireElement(rootQueue, "input");
-            Document domInput = null;
-            if (omInputContainer.getFirstElement() != null) {
-                domInput = new TaskUnmarshaller().unmarshalTaskOutput(omInputContainer);
-            }
-            final String participantToken = requireElementValue(rootQueue, "participantToken");
-            final UserRoles ur = _server.getUserRoles(participantToken);
-            final String user = ur.getUserID();            
-            final String formUrl = expectElementValue(rootQueue, "formUrl");
+				// task.getOutput().setPrefix("xml-fragment");
+				FormModelDocument documentmodel = FormModelDocument.Factory
+						.parse(task.getOutput());
+				FormModel model = documentmodel.getFormModel();
+				Document domOutput = null;
+				if (model.getActivity().getUpdate())
+					model.getActivity().setUpdate(false);
+				domOutput = (new XmlTooling()).parseXml(new InputSource(
+						new ByteArrayInputStream(documentmodel.toString()
+								.getBytes("UTF-8"))));
+				_server.setOutput(task.getID(), domOutput, nextTask
+						.getParticipantToken());
+				
+			}
+			return createOkResponse();
+		} catch (Exception e) {
+			throw makeFault(e);
+		}
+	}
 
-            Document userProcessResponse = _server.initProcess(taskID, user, formUrl, domInput, participantToken);
-            if (userProcessResponse == null)
-                throw new RuntimeException("TMP did not return a correct message while calling init");
-            OMElement response = new TMSResponseMarshaller(OM_FACTORY) {
-                public OMElement marshalResponse(Document userProcessResponse) {
-                    OMElement response = createElement("initProcessResponse");
-                    OMElement userProcessResponseWrapper = createElement(response, "userProcessResponse");
-                    userProcessResponseWrapper.addChild(new XmlTooling().convertDOMToOM(userProcessResponse, this.getOMFactory()));
-                    return response;
-                }
-            }.marshalResponse(userProcessResponse);
-            return response;
-        } catch (Exception e) {
-            throw makeFault(e);
-        }
-    }
+	public OMElement setOutputAndComplete(OMElement requestElement)
+			throws AxisFault {
+		try {
+			OMElementQueue rootQueue = new OMElementQueue(requestElement);
+			String taskID = requireElementValue(rootQueue, "taskId");
+			OMElement omOutputContainer = requireElement(rootQueue, "data");
+			Document domOutput = null;
+			if (omOutputContainer.getFirstElement() != null) {
+				domOutput = new TaskUnmarshaller()
+						.unmarshalTaskOutput(omOutputContainer);
+			}
+			String participantToken = requireElementValue(rootQueue,
+					"participantToken");
+			_server.setOutputAndComplete(taskID, domOutput, participantToken);
+			return createOkResponse();
+		} catch (Exception e) {
+			throw makeFault(e);
+		}
+	}
 
-    public OMElement getAttachments(OMElement requestElement) throws AxisFault {
-        try {
-            OMElementQueue rootQueue = new OMElementQueue(requestElement);
-            String taskID = requireElementValue(rootQueue, "taskId");
-            String participantToken = requireElementValue(rootQueue, "participantToken");
-            Attachment[] attachments = _server.getAttachments(taskID, participantToken);
+	public OMElement complete(OMElement requestElement) throws AxisFault {
+		try {
+			OMElementQueue rootQueue = new OMElementQueue(requestElement);
+			String taskID = requireElementValue(rootQueue, "taskId");
+			String participantToken = requireElementValue(rootQueue,
+					"participantToken");
+			_server.complete(taskID, participantToken);
+			return createOkResponse();
+		} catch (Exception e) {
+			throw makeFault(e);
+		}
+	}
 
-            return AttachmentMarshaller.marshalAttachments(attachments);
-        } catch (Exception e) {
-            throw makeFault(e);
-        }
-    }
+	public OMElement fail(OMElement requestElement) throws AxisFault {
+		try {
+			OMElementQueue rootQueue = new OMElementQueue(requestElement);
+			String taskID = requireElementValue(rootQueue, "taskId");
+			String failureCode = requireElementValue(rootQueue, "code");
+			String failureReason = requireElementValue(rootQueue, "message");
+			String participantToken = requireElementValue(rootQueue,
+					"participantToken");
+			_server.fail(taskID, failureCode, failureReason, participantToken);
+			return createOkResponse();
+		} catch (Exception e) {
+			throw makeFault(e);
+		}
+	}
 
-    public OMElement addAttachment(OMElement requestElement) throws AxisFault {
-        try {
-            OMElementQueue rootQueue = new OMElementQueue(requestElement);
-            String taskID = requireElementValue(rootQueue, "taskId");
-            OMElement attachmentElement = requireElement(rootQueue, "attachment");
-            Attachment attachment = new AttachmentUnmarshaller().unmarshalAttachment(attachmentElement);
-            String participantToken = requireElementValue(rootQueue, "participantToken");
-            _server.addAttachment(taskID, attachment, participantToken);
-            return createOkResponse();
-        } catch (Exception e) {
-            throw makeFault(e);
-        }
-    }
+	public OMElement initProcess(final OMElement requestElement)
+			throws AxisFault {
+		try {
+			OMElementQueue rootQueue = new OMElementQueue(requestElement);
+			String taskID = requireElementValue(rootQueue, "taskId");
+			OMElement omInputContainer = requireElement(rootQueue, "input");
+			Document domInput = null;
+			if (omInputContainer.getFirstElement() != null) {
+				domInput = new TaskUnmarshaller()
+						.unmarshalTaskOutput(omInputContainer);
+			}
+			final String participantToken = requireElementValue(rootQueue,
+					"participantToken");
+			final UserRoles ur = _server.getUserRoles(participantToken);
+			final String user = ur.getUserID();
+			final String formUrl = expectElementValue(rootQueue, "formUrl");
 
-    public OMElement removeAttachment(OMElement requestElement) throws AxisFault {
-        try {
-            OMElementQueue rootQueue = new OMElementQueue(requestElement);
-            String taskID = requireElementValue(rootQueue, "taskId");
-            String attachmentURL = requireElementValue(rootQueue, "attachmentUrl");
-            String participantToken = requireElementValue(rootQueue, "participantToken");
-            try {
-                _server.removeAttachment(taskID, new URL(attachmentURL), participantToken);
-            } catch (MalformedURLException e) {
-                throw new InvalidInputFormatException(e);
-            }
-            return createOkResponse();
-        } catch (Exception e) {
-            throw makeFault(e);
-        }
-    }
+			Document userProcessResponse = _server.initProcess(taskID, user,
+					formUrl, domInput, participantToken);
+			if (userProcessResponse == null)
+				throw new RuntimeException(
+						"TMP did not return a correct message while calling init");
+			OMElement response = new TMSResponseMarshaller(OM_FACTORY) {
+				public OMElement marshalResponse(Document userProcessResponse) {
+					OMElement response = createElement("initProcessResponse");
+					OMElement userProcessResponseWrapper = createElement(
+							response, "userProcessResponse");
+					userProcessResponseWrapper.addChild(new XmlTooling()
+							.convertDOMToOM(userProcessResponse, this
+									.getOMFactory()));
+					return response;
+				}
+			}.marshalResponse(userProcessResponse);
+			return response;
+		} catch (Exception e) {
+			throw makeFault(e);
+		}
+	}
 
-    public OMElement reassign(OMElement requestElement) throws AxisFault {
-        try {
-            OMElementQueue rootQueue = new OMElementQueue(requestElement);
-            String taskID = requireElementValue(rootQueue, "taskId");
-            AuthIdentifierSet users = expectAuthIdentifiers(rootQueue, "userOwner");
-            AuthIdentifierSet roles = expectAuthIdentifiers(rootQueue, "roleOwner");
-            TaskState taskState;
-            String taskStateStr = requireElementValue(rootQueue, "taskState");
-            try {
-                taskState = TaskState.valueOf(taskStateStr.toUpperCase());
-            } catch (IllegalArgumentException e) {
-                throw new InvalidInputFormatException("Unknown task state: '" + taskStateStr + "'");
-            }
-            String participantToken = requireElementValue(rootQueue, "participantToken");
-            _server.reassign(taskID, users, roles, taskState, participantToken);
-            return createOkResponse();
-        } catch (Exception e) {
-            throw makeFault(e);
-        }
-    }
+	public OMElement getAttachments(OMElement requestElement) throws AxisFault {
+		try {
+			OMElementQueue rootQueue = new OMElementQueue(requestElement);
+			String taskID = requireElementValue(rootQueue, "taskId");
+			String participantToken = requireElementValue(rootQueue,
+					"participantToken");
+			Attachment[] attachments = _server.getAttachments(taskID,
+					participantToken);
 
-    public OMElement getPipa(OMElement requestElement) throws AxisFault {
-        try {
-            OMElementQueue rootQueue = new OMElementQueue(requestElement);
-            String taskID = requireElementValue(rootQueue, "pipaurl");
-            String participantToken = requireElementValue(rootQueue, "participantToken");
-            final UserRoles user = _server.getUserRoles(participantToken);
-            Task task = _server.getPipa(taskID, participantToken);
-            OMElement response = new TMSResponseMarshaller(OM_FACTORY) {
-                public OMElement marshalResponse(Task task) {
-                    OMElement response = createElement("getPipaResponse");
-                    response.addChild(new TaskMarshaller().marshalFullTask(task, user));
-                    return response;
-                }
-            }.marshalResponse(task);
-            return response;
-        } catch (Exception e) {
-            throw makeFault(e);
-        }
-    }
+			return AttachmentMarshaller.marshalAttachments(attachments);
+		} catch (Exception e) {
+			throw makeFault(e);
+		}
+	}
 
-    public OMElement storePipa(OMElement requestElement) throws AxisFault {
-        try {
-            OMElementQueue rootQueue = new OMElementQueue(requestElement);
-            OMElement taskElement = requireElement(rootQueue, "task");
-            PIPATask task = (PIPATask) new TaskUnmarshaller().unmarshalFullTask(taskElement);
-            String participantToken = requireElementValue(rootQueue, "participantToken");
-            // final UserRoles user = _server.getUserRoles(participantToken);
-            _server.storePipa(task, participantToken);
-            return createOkResponse();
-        } catch (Exception e) {
-            throw makeFault(e);
-        }
-    }
+	public OMElement addAttachment(OMElement requestElement) throws AxisFault {
+		try {
+			OMElementQueue rootQueue = new OMElementQueue(requestElement);
+			String taskID = requireElementValue(rootQueue, "taskId");
+			OMElement attachmentElement = requireElement(rootQueue,
+					"attachment");
+			Attachment attachment = new AttachmentUnmarshaller()
+					.unmarshalAttachment(attachmentElement);
+			String participantToken = requireElementValue(rootQueue,
+					"participantToken");
+			_server.addAttachment(taskID, attachment, participantToken);
+			return createOkResponse();
+		} catch (Exception e) {
+			throw makeFault(e);
+		}
+	}
 
-    public OMElement deletePipa(OMElement requestElement) throws AxisFault {
-        try {
-            OMElementQueue rootQueue = new OMElementQueue(requestElement);
-            String taskID = requireElementValue(rootQueue, "pipaurl");
-            String participantToken = requireElementValue(rootQueue, "participantToken");
-            // final UserRoles user = _server.getUserRoles(participantToken);
-            _server.deletePipa(taskID, participantToken);
-            return createOkResponse();
-        } catch (Exception e) {
-            throw makeFault(e);
-        }
-    }
+	public OMElement removeAttachment(OMElement requestElement)
+			throws AxisFault {
+		try {
+			OMElementQueue rootQueue = new OMElementQueue(requestElement);
+			String taskID = requireElementValue(rootQueue, "taskId");
+			String attachmentURL = requireElementValue(rootQueue,
+					"attachmentUrl");
+			String participantToken = requireElementValue(rootQueue,
+					"participantToken");
+			try {
+				_server.removeAttachment(taskID, new URL(attachmentURL),
+						participantToken);
+			} catch (MalformedURLException e) {
+				throw new InvalidInputFormatException(e);
+			}
+			return createOkResponse();
+		} catch (Exception e) {
+			throw makeFault(e);
+		}
+	}
 
-    public OMElement getAvailableTasks(final OMElement requestElement) throws AxisFault {
-        try {
-            OMElementQueue rootQueue = new OMElementQueue(requestElement);
-            String participantToken = requireElementValue(rootQueue, "participantToken");
-            String taskType = requireElementValue(rootQueue, "taskType");
-            String subQuery = requireElementValue(rootQueue, "subQuery");
-            String first = expectElementValue(rootQueue, "first");
-            String max = expectElementValue(rootQueue, "max");
-            boolean filter = Boolean.valueOf(expectElementValue(rootQueue, "filter"));
-            HashMap map = new HashMap();
-            map.put(TaskFetcher.FETCH_CLASS_NAME, taskType);
-            map.put(TaskFetcher.FETCH_SUB_QUERY, subQuery);
-            map.put(TaskFetcher.FETCH_FIRST, first);
-            map.put(TaskFetcher.FETCH_MAX, max);
-            map.put(TaskFetcher.FETCH_FILTER, filter);
-            
-            final UserRoles user = _server.getUserRoles(participantToken);
-            Task[] tasks = _server.getAvailableTasks(participantToken, map);
-            return marshalTasksList(user, tasks, "getAvailableTasksResponse");
-        } catch (Exception e) {
-            throw makeFault(e);
-        }
-    }
-    
-    public OMElement getAvailableTasksWithInputOutput(final OMElement requestElement) throws AxisFault {
-        try {
-            OMElementQueue rootQueue = new OMElementQueue(requestElement);
-            String participantToken = requireElementValue(rootQueue, "participantToken");
-            String taskType = requireElementValue(rootQueue, "taskType");
-            String subQuery = requireElementValue(rootQueue, "subQuery");
-            String first = expectElementValue(rootQueue, "first");
-            String max = expectElementValue(rootQueue, "max");
-            Boolean filter = Boolean.valueOf(expectElementValue(rootQueue, "filter"));
-            HashMap map = new HashMap();
-            map.put(TaskFetcher.FETCH_CLASS_NAME, taskType);
-            map.put(TaskFetcher.FETCH_SUB_QUERY, subQuery);
-            map.put(TaskFetcher.FETCH_FIRST, first);
-            map.put(TaskFetcher.FETCH_MAX, max);
-            map.put(TaskFetcher.FETCH_FILTER, filter);
-            final UserRoles user = _server.getUserRoles(participantToken);
-            Task[] tasks = _server.getAvailableTasks(participantToken, map);
-            return marshalTasksListWithInputOutput(user, tasks, "getAvailableTasksWithInputOutputResponse");
-        } catch (Exception e) {
-            throw makeFault(e);
-        }
-    }
-    
-    public OMElement countAvailableTasks(final OMElement requestElement) throws AxisFault {
-        try {
-            OMElementQueue rootQueue = new OMElementQueue(requestElement);
-            String participantToken = requireElementValue(rootQueue, "participantToken");
-            String taskType = requireElementValue(rootQueue, "taskType");
-            String subQuery = requireElementValue(rootQueue, "subQuery");
-            String first = expectElementValue(rootQueue, "first");
-            String max = expectElementValue(rootQueue, "max");
-            Boolean filter = Boolean.valueOf(expectElementValue(rootQueue, "filter"));
-            HashMap map = new HashMap();
-            map.put(TaskFetcher.FETCH_CLASS_NAME, taskType);
-            map.put(TaskFetcher.FETCH_SUB_QUERY, subQuery);
-            map.put(TaskFetcher.FETCH_FILTER, filter);
-            final UserRoles user = _server.getUserRoles(participantToken);
-            final Long taskCount = _server.countAvailableTasks(participantToken, map);
-            return new TMSResponseMarshaller(OM_FACTORY) {
-                public OMElement createOkResponse() {
-                    OMElement response = createElement("countAvailableTasksResponse");
-                    response.setText(Long.toString(taskCount));
-                    return response;
-                }
-            }.createOkResponse();
-        } catch (Exception e) {
-            throw makeFault(e);
-        }
-    }
+	public OMElement reassign(OMElement requestElement) throws AxisFault {
+		try {
+			OMElementQueue rootQueue = new OMElementQueue(requestElement);
+			String taskID = requireElementValue(rootQueue, "taskId");
+			AuthIdentifierSet users = expectAuthIdentifiers(rootQueue,
+					"userOwner");
+			AuthIdentifierSet roles = expectAuthIdentifiers(rootQueue,
+					"roleOwner");
+			TaskState taskState;
+			String taskStateStr = requireElementValue(rootQueue, "taskState");
+			try {
+				taskState = TaskState.valueOf(taskStateStr.toUpperCase());
+			} catch (IllegalArgumentException e) {
+				throw new InvalidInputFormatException("Unknown task state: '"
+						+ taskStateStr + "'");
+			}
+			String participantToken = requireElementValue(rootQueue,
+					"participantToken");
+			_server.reassign(taskID, users, roles, taskState, participantToken);
+			return createOkResponse();
+		} catch (Exception e) {
+			throw makeFault(e);
+		}
+	}
 
-    /**
-     * This is used in both <code>getAvailableTasks</code> and
-     * <code>getTaskList</code>
-     */
-    private OMElement marshalTasksList(final UserRoles user, final Task[] tasks, final String responseTag) {
-        OMElement response = new TMSResponseMarshaller(OM_FACTORY) {
-            public OMElement marshalResponse(Task[] tasks) {
-                OMElement response = createElement(responseTag);
-                for (Task task : tasks) {
-                    try {
-                        response.addChild(new TaskMarshaller().marshalTaskMetadata(task, user));
-                    } catch (Exception e) {
-                        // marshalling of that task failed.
-                        // let's not fail fast, but provide info in the logs.
-                        _logger.error(task.getID() + "could not be serialized to xml", e);
-                    }
-                }
-                return response;
-            }
-        }.marshalResponse(tasks);
-        if (_logger.isDebugEnabled())
-            _logger.debug(response.toString());
-        return response;
-    }
-    private OMElement marshalTasksListWithInputOutput(final UserRoles user, final Task[] tasks, final String responseTag) {
-        OMElement response = new TMSResponseMarshaller(OM_FACTORY) {
-            public OMElement marshalResponse(Task[] tasks) {
-                OMElement response = createElement(responseTag);
-                for (Task task : tasks) {
-                    try {
-                        response.addChild(new TaskMarshaller().marshalFullTask(task, user));
-                    } catch (Exception e) {
-                        // marshalling of that task failed.
-                        // let's not fail fast, but provide info in the logs.
-                        _logger.error(task.getID() + "could not be serialized to xml", e);
-                    }
-                }
-                return response;
-            }
-        }.marshalResponse(tasks);
-        if (_logger.isDebugEnabled())
-            _logger.debug(response.toString());
-        return response;
-    }
+	public OMElement getPipa(OMElement requestElement) throws AxisFault {
+		try {
+			OMElementQueue rootQueue = new OMElementQueue(requestElement);
+			String taskID = requireElementValue(rootQueue, "pipaurl");
+			String participantToken = requireElementValue(rootQueue,
+					"participantToken");
+			final UserRoles user = _server.getUserRoles(participantToken);
+			Task task = _server.getPipa(taskID, participantToken);
+			OMElement response = new TMSResponseMarshaller(OM_FACTORY) {
+				public OMElement marshalResponse(Task task) {
+					OMElement response = createElement("getPipaResponse");
+					response.addChild(new TaskMarshaller().marshalFullTask(
+							task, user));
+					return response;
+				}
+			}.marshalResponse(task);
+			return response;
+		} catch (Exception e) {
+			throw makeFault(e);
+		}
+	}
 
-    private AxisFault makeFault(Exception e) {
-        if (e instanceof TMSException) {
-            if (_logger.isDebugEnabled())
-                _logger.debug(e.getMessage(), e);
-            OMElement response = null;
-            if (e instanceof InvalidInputFormatException)
-                response = OM_FACTORY.createOMElement(TMSConstants.INVALID_INPUT_FORMAT);
-            else if (e instanceof AccessDeniedException)
-                response = OM_FACTORY.createOMElement(TMSConstants.ACCESS_DENIED);
-            else if (e instanceof UnavailableTaskException)
-                response = OM_FACTORY.createOMElement(TMSConstants.UNAVAILABLE_TASK);
-            else if (e instanceof UnavailableAttachmentException)
-                response = OM_FACTORY.createOMElement(TMSConstants.UNAVAILABLE_ATTACHMENT);
-            else if (e instanceof AuthException)
-                response = OM_FACTORY.createOMElement(TMSConstants.INVALID_TOKEN);
+	public OMElement storePipa(OMElement requestElement) throws AxisFault {
+		try {
+			OMElementQueue rootQueue = new OMElementQueue(requestElement);
+			OMElement taskElement = requireElement(rootQueue, "task");
+			PIPATask task = (PIPATask) new TaskUnmarshaller()
+					.unmarshalFullTask(taskElement);
+			String participantToken = requireElementValue(rootQueue,
+					"participantToken");
+			// final UserRoles user = _server.getUserRoles(participantToken);
+			_server.storePipa(task, participantToken);
+			return createOkResponse();
+		} catch (Exception e) {
+			throw makeFault(e);
+		}
+	}
 
-            else
-                return AxisFault.makeFault(e);
+	public OMElement deletePipa(OMElement requestElement) throws AxisFault {
+		try {
+			OMElementQueue rootQueue = new OMElementQueue(requestElement);
+			String taskID = requireElementValue(rootQueue, "pipaurl");
+			String participantToken = requireElementValue(rootQueue,
+					"participantToken");
+			// final UserRoles user = _server.getUserRoles(participantToken);
+			_server.deletePipa(taskID, participantToken);
+			return createOkResponse();
+		} catch (Exception e) {
+			throw makeFault(e);
+		}
+	}
 
-            response.setText(e.getMessage());
-            AxisFault axisFault = new AxisFault(e.getMessage(), e);
-            axisFault.setDetail(response);
-            return axisFault;
-        } else if (e instanceof AxisFault) {
-            _logger.error(e.getMessage(), e);
-            return (AxisFault) e;
-        } else {
-            _logger.error(e.getMessage(), e);
-            return AxisFault.makeFault(e);
-        }
-    }
+	public OMElement getAvailableTasks(final OMElement requestElement)
+			throws AxisFault {
+		try {
+			OMElementQueue rootQueue = new OMElementQueue(requestElement);
+			String participantToken = requireElementValue(rootQueue,
+					"participantToken");
+			String taskType = requireElementValue(rootQueue, "taskType");
+			String subQuery = requireElementValue(rootQueue, "subQuery");
+			String first = expectElementValue(rootQueue, "first");
+			String max = expectElementValue(rootQueue, "max");
+			boolean filter = Boolean.valueOf(expectElementValue(rootQueue,
+					"filter"));
+			HashMap map = new HashMap();
+			map.put(TaskFetcher.FETCH_CLASS_NAME, taskType);
+			map.put(TaskFetcher.FETCH_SUB_QUERY, subQuery);
+			map.put(TaskFetcher.FETCH_FIRST, first);
+			map.put(TaskFetcher.FETCH_MAX, max);
+			map.put(TaskFetcher.FETCH_FILTER, filter);
 
-    public OMElement skip(OMElement requestElement) throws AxisFault {
-        try {
-            OMElementQueue rootQueue = new OMElementQueue(requestElement);
-            String taskID = requireElementValue(rootQueue, "taskId");
-            String participantToken = requireElementValue(rootQueue, "participantToken");
-            _server.skip(taskID, participantToken);
-            return createOkResponse();
-        } catch (Exception e) {
-            throw makeFault(e);
-        }
-    }
+			final UserRoles user = _server.getUserRoles(participantToken);
+			Task[] tasks = _server.getAvailableTasks(participantToken, map);
+			return marshalTasksList(user, tasks, "getAvailableTasksResponse");
+		} catch (Exception e) {
+			throw makeFault(e);
+		}
+	}
 
-    protected void finalize() throws Throwable {
-        // if (_registerPipa != null) {
-        // _registerPipa.destroy();
-        // _registerPipa = null;
-        // }
-        destroyRegisterPipa();
-        super.finalize();
-    }
+	public OMElement getAvailableTasksWithInputOutput(
+			final OMElement requestElement) throws AxisFault {
+		try {
+			OMElementQueue rootQueue = new OMElementQueue(requestElement);
+			String participantToken = requireElementValue(rootQueue,
+					"participantToken");
+			String taskType = requireElementValue(rootQueue, "taskType");
+			String subQuery = requireElementValue(rootQueue, "subQuery");
+			String first = expectElementValue(rootQueue, "first");
+			String max = expectElementValue(rootQueue, "max");
+			Boolean filter = Boolean.valueOf(expectElementValue(rootQueue,
+					"filter"));
+			HashMap map = new HashMap();
+			map.put(TaskFetcher.FETCH_CLASS_NAME, taskType);
+			map.put(TaskFetcher.FETCH_SUB_QUERY, subQuery);
+			map.put(TaskFetcher.FETCH_FIRST, first);
+			map.put(TaskFetcher.FETCH_MAX, max);
+			map.put(TaskFetcher.FETCH_FILTER, filter);
+			final UserRoles user = _server.getUserRoles(participantToken);
+			Task[] tasks = _server.getAvailableTasks(participantToken, map);
+			return marshalTasksListWithInputOutput(user, tasks,
+					"getAvailableTasksWithInputOutputResponse");
+		} catch (Exception e) {
+			throw makeFault(e);
+		}
+	}
 
-    private abstract class TMSResponseMarshaller extends OMMarshaller {
-        public TMSResponseMarshaller(OMFactory omFactory) {
-            super(omFactory, omFactory.createOMNamespace(TaskXMLConstants.TASK_NAMESPACE, TaskXMLConstants.TASK_NAMESPACE_PREFIX));
-        }
-    }
+	public OMElement countAvailableTasks(final OMElement requestElement)
+			throws AxisFault {
+		try {
+			OMElementQueue rootQueue = new OMElementQueue(requestElement);
+			String participantToken = requireElementValue(rootQueue,
+					"participantToken");
+			String taskType = requireElementValue(rootQueue, "taskType");
+			String subQuery = requireElementValue(rootQueue, "subQuery");
+			String first = expectElementValue(rootQueue, "first");
+			String max = expectElementValue(rootQueue, "max");
+			Boolean filter = Boolean.valueOf(expectElementValue(rootQueue,
+					"filter"));
+			HashMap map = new HashMap();
+			map.put(TaskFetcher.FETCH_CLASS_NAME, taskType);
+			map.put(TaskFetcher.FETCH_SUB_QUERY, subQuery);
+			map.put(TaskFetcher.FETCH_FILTER, filter);
+			final UserRoles user = _server.getUserRoles(participantToken);
+			final Long taskCount = _server.countAvailableTasks(
+					participantToken, map);
+			return new TMSResponseMarshaller(OM_FACTORY) {
+				public OMElement createOkResponse() {
+					OMElement response = createElement("countAvailableTasksResponse");
+					response.setText(Long.toString(taskCount));
+					return response;
+				}
+			}.createOkResponse();
+		} catch (Exception e) {
+			throw makeFault(e);
+		}
+	}
+
+	/**
+	 * This is used in both <code>getAvailableTasks</code> and
+	 * <code>getTaskList</code>
+	 */
+	private OMElement marshalTasksList(final UserRoles user,
+			final Task[] tasks, final String responseTag) {
+		OMElement response = new TMSResponseMarshaller(OM_FACTORY) {
+			public OMElement marshalResponse(Task[] tasks) {
+				OMElement response = createElement(responseTag);
+				for (Task task : tasks) {
+					try {
+						response.addChild(new TaskMarshaller()
+								.marshalTaskMetadata(task, user));
+					} catch (Exception e) {
+						// marshalling of that task failed.
+						// let's not fail fast, but provide info in the logs.
+						_logger.error(task.getID()
+								+ "could not be serialized to xml", e);
+					}
+				}
+				return response;
+			}
+		}.marshalResponse(tasks);
+		if (_logger.isDebugEnabled())
+			_logger.debug(response.toString());
+		return response;
+	}
+
+	private OMElement marshalTasksListWithInputOutput(final UserRoles user,
+			final Task[] tasks, final String responseTag) {
+		OMElement response = new TMSResponseMarshaller(OM_FACTORY) {
+			public OMElement marshalResponse(Task[] tasks) {
+				OMElement response = createElement(responseTag);
+				for (Task task : tasks) {
+					try {
+						response.addChild(new TaskMarshaller().marshalFullTask(
+								task, user));
+					} catch (Exception e) {
+						// marshalling of that task failed.
+						// let's not fail fast, but provide info in the logs.
+						_logger.error(task.getID()
+								+ "could not be serialized to xml", e);
+					}
+				}
+				return response;
+			}
+		}.marshalResponse(tasks);
+		if (_logger.isDebugEnabled())
+			_logger.debug(response.toString());
+		return response;
+	}
+
+	private AxisFault makeFault(Exception e) {
+		if (e instanceof TMSException) {
+			if (_logger.isDebugEnabled())
+				_logger.debug(e.getMessage(), e);
+			OMElement response = null;
+			if (e instanceof InvalidInputFormatException)
+				response = OM_FACTORY
+						.createOMElement(TMSConstants.INVALID_INPUT_FORMAT);
+			else if (e instanceof AccessDeniedException)
+				response = OM_FACTORY
+						.createOMElement(TMSConstants.ACCESS_DENIED);
+			else if (e instanceof UnavailableTaskException)
+				response = OM_FACTORY
+						.createOMElement(TMSConstants.UNAVAILABLE_TASK);
+			else if (e instanceof UnavailableAttachmentException)
+				response = OM_FACTORY
+						.createOMElement(TMSConstants.UNAVAILABLE_ATTACHMENT);
+			else if (e instanceof AuthException)
+				response = OM_FACTORY
+						.createOMElement(TMSConstants.INVALID_TOKEN);
+
+			else
+				return AxisFault.makeFault(e);
+
+			response.setText(e.getMessage());
+			AxisFault axisFault = new AxisFault(e.getMessage(), e);
+			axisFault.setDetail(response);
+			return axisFault;
+		} else if (e instanceof AxisFault) {
+			_logger.error(e.getMessage(), e);
+			return (AxisFault) e;
+		} else {
+			_logger.error(e.getMessage(), e);
+			return AxisFault.makeFault(e);
+		}
+	}
+
+	public OMElement skip(OMElement requestElement) throws AxisFault {
+		try {
+			OMElementQueue rootQueue = new OMElementQueue(requestElement);
+			String taskID = requireElementValue(rootQueue, "taskId");
+			String participantToken = requireElementValue(rootQueue,
+					"participantToken");
+			_server.skip(taskID, participantToken);
+			return createOkResponse();
+		} catch (Exception e) {
+			throw makeFault(e);
+		}
+	}
+
+	protected void finalize() throws Throwable {
+		// if (_registerPipa != null) {
+		// _registerPipa.destroy();
+		// _registerPipa = null;
+		// }
+		destroyRegisterPipa();
+		super.finalize();
+	}
+
+	private abstract class TMSResponseMarshaller extends OMMarshaller {
+		public TMSResponseMarshaller(OMFactory omFactory) {
+			super(omFactory, omFactory.createOMNamespace(
+					TaskXMLConstants.TASK_NAMESPACE,
+					TaskXMLConstants.TASK_NAMESPACE_PREFIX));
+		}
+	}
 }

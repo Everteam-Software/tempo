@@ -217,6 +217,33 @@
                 
         }; // end function claims
         
+        function updateTasks(com,grid)
+        {
+        	 // update
+            var soapBody = new SOAPObject("updateTasksRequest");
+            soapBody.ns = "http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/";
+          $('.trSelected',grid).each(function()
+          {
+          var task = $('a.taskd',$(this));
+          
+            
+             
+			  var taskbody = new SOAPObject("task");
+              taskbody.appendChild(new SOAPObject("taskId")).val(task.attr('tid'));
+              taskbody.appendChild(new SOAPObject("claimerUser")).val(currentUser);
+              taskbody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
+			  soapBody.appendChild(taskbody);
+              
+			  
+              
+ 
+          }); // end each
+          var sr = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/updateTasks", soapBody);
+          SOAPClient.Proxy = proxy;
+          SOAPClient.SOAPServer = tmsService;
+          SOAPClient.SendRequest(sr, update); 
+        }; // end function updateTasks
+        
         // update the current task list after sending some request to the server
         function update(object)
         {
@@ -406,7 +433,8 @@
            {name: '<fmt:message key="org_intalio_uifw_toolbar_button_claimrevoke"/>', bclass: 'claim', onpress : claimTask},
            {name: '<fmt:message key="org_intalio_uifw_toolbar_button_reassign"/>', bclass: 'reassign', onpress : clickReassign},
            {name: '<fmt:message key="org_intalio_uifw_toolbar_button_skip"/>', bclass: 'skip', onpress : skipTask},
-           {name: '<fmt:message key="org_intalio_uifw_toolbar_button_export"/>', bclass: 'export', onpress : exportTasks}
+           {name: '<fmt:message key="org_intalio_uifw_toolbar_button_export"/>', bclass: 'export', onpress : exportTasks},
+           {name: '<fmt:message key="org_intalio_uifw_toolbar_button_update"/>', bclass: 'update', onpress : updateTasks}
         ],
         <%} %>
         params: [
