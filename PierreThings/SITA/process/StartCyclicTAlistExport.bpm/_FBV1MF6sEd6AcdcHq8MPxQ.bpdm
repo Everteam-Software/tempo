@@ -1,0 +1,39 @@
+﻿<bpel:process xmlns:bpdm="http://www.intalio/designer/business-process-data-modeling" xmlns:mapper="http://www.intalio.com/designer/mapper" xmlns:attachments="http://www.intalio.com/gi/forms/TAlistExport.gi/attachments" xmlns:TAlistCyclicExport="http://www.intalio.com/gi/forms/TAlistCyclicExport.gi/attachments" xmlns:this="http://thisdiagram/User" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:TAlistExport="http://www.intalio.com/gi/forms/TAlistExport.gi" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:process="http://thisdiagram/process" xmlns:TAlistCyclicExport1="http://www.intalio.com/gi/forms/TAlistCyclicExport.gi" xmlns:diag="http://thisdiagram" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ode="http://www.apache.org/ode/type/extension" targetNamespace="http://thisdiagram/User">
+    <bpdm:dependencies version="6000076">
+        <bpdm:namespaceDefinition bpdm:uri="http://www.intalio.com/gi/forms/TAlistExport.gi/attachments" bpdm:prefix="attachments" bpdm:comment="contrib=&apos;project:///forms/TAlistExport.gi.wsdl"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.intalio.com/gi/forms/TAlistCyclicExport.gi/attachments" bpdm:prefix="TAlistCyclicExport" bpdm:comment="contrib=&apos;project:///forms/TAlistCyclicExport.gi.wsdl"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram/User" bpdm:prefix="this" bpdm:type="this_process"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/2001/XMLSchema" bpdm:prefix="xs"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.intalio.com/gi/forms/TAlistExport.gi" bpdm:prefix="TAlistExport" bpdm:comment="contrib=&apos;project:///forms/TAlistExport.gi.wsdl"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/2001/XMLSchema-instance" bpdm:prefix="xsi"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram/process" bpdm:prefix="process" bpdm:comment="contrib=&apos;partner-pool:///_IjiJkF6sEd6AcdcHq8MPxQ"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.intalio.com/gi/forms/TAlistCyclicExport.gi" bpdm:prefix="TAlistCyclicExport1" bpdm:comment="contrib=&apos;project:///forms/TAlistCyclicExport.gi.wsdl"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram" bpdm:prefix="diag" bpdm:comment="contrib=&apos;partner-pool:///_IjiJkF6sEd6AcdcHq8MPxQ"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/XML/1998/namespace" bpdm:prefix="xml"></bpdm:namespaceDefinition>
+        <bpdm:namespaceContributor bpdm:url="thisprocess://this-process-types" bpdm:label="process defined this-process-types"></bpdm:namespaceContributor>
+        <bpdm:namespaceContributor bpdm:url="project:///forms/TAlistExport.gi.wsdl"/>
+        <bpdm:namespaceContributor bpdm:url="project:///forms/TAlistExport.gi/IntalioInternal/FormModel.xsd"/>
+        <bpdm:namespaceContributor bpdm:url="partner-pool:///_IjiJkF6sEd6AcdcHq8MPxQ" bpdm:label="process"/>
+        <bpdm:namespaceContributor bpdm:url="project:///forms/TAlistCyclicExport.gi.wsdl"/>
+        <bpdm:namespaceContributor bpdm:url="project:///forms/TAlistCyclicExport.gi/IntalioInternal/FormModel.xsd"/>
+    </bpdm:dependencies>
+    <bpel:scope bpdm:label="User" bpdm:ID="_FBV1MF6sEd6AcdcHq8MPxQ">
+        <bpel:partnerLinks>
+            <bpel:partnerLink name="processAndUserForPortTypeProcessPlkVar" partnerLinkType="diag:processAndUserForPortTypeProcessPlk" initializePartnerRole="yes" partnerRole="process_for_User" bpdm:invokedService="process:processAndUserForPortTypeProcessPlkService" bpdm:invokedPort="process_for_UserPort" bpdm:invokedSOAPAddress="${deploy_serverUrl}${deploy_baseSoapServicesUrl}/${deploy_bundleNcName}/${diagram_relativeURL}/process/User/processAndUserForPortTypeProcessPlk" bpdm:invokedIsDefault="true" bpdm:clientTasks="_FBV1MF6sEd6AcdcHq8MPxQ:_qFSFIF6wEd6AcdcHq8MPxQ" bpdm:isManaged="true" bpdm:otherPoolId="_IjiJkF6sEd6AcdcHq8MPxQ"/>
+        </bpel:partnerLinks>
+        <bpel:variables>
+            <bpel:variable name="tAlistCyclicExport1InitProcessRequestMsg" messageType="TAlistCyclicExport1:initProcessRequest" bpdm:id="_rEdqMl6wEd6AcdcHq8MPxQ" bpdm:messageIds=" out:_rET5MF6wEd6AcdcHq8MPxQ">
+                <bpel:from bpdm:toPart="root">
+                    <bpel:literal bpdm:linkedMessageType="TAlistCyclicExport1:initProcessRequest" bpdm:linkedPart="root"></bpel:literal>
+                </bpel:from>
+            </bpel:variable>
+            <bpel:variable name="tAlistCyclicExport1InitProcessResponseMsg" messageType="TAlistCyclicExport1:initProcessResponse" bpdm:id="_rS6V516wEd6AcdcHq8MPxQ" bpdm:messageIds="inc:_rSna8F6wEd6AcdcHq8MPxQ"/>
+        </bpel:variables>
+        <bpel:sequence>
+            <bpdm:messagingtask operation="initProcess" partnerLink="processAndUserForPortTypeProcessPlkVar" portType="TAlistCyclicExport1:Process" isMyRole="false" enableSharing="false" bpdm:label="TAlistCyclicExport-init request" bpdm:ID="_qFSFIF6wEd6AcdcHq8MPxQ">
+                <bpdm:linkset bpdm:type="outgoingMessage" bpdm:bpeltype="invoke-request" bpdm:messageVariable="tAlistCyclicExport1InitProcessRequestMsg" bpdm:msgVarScopeId="_FBV1MF6sEd6AcdcHq8MPxQ" bpdm:variableIsManaged="true" bpdm:messageType="TAlistCyclicExport1:initProcessRequest" bpdm:ID="_rET5MF6wEd6AcdcHq8MPxQ"></bpdm:linkset>
+                <bpdm:linkset bpdm:type="incomingMessage" bpdm:bpeltype="invoke-receive" bpdm:messageVariable="tAlistCyclicExport1InitProcessResponseMsg" bpdm:msgVarScopeId="_FBV1MF6sEd6AcdcHq8MPxQ" bpdm:variableIsManaged="true" bpdm:messageType="TAlistCyclicExport1:initProcessResponse" bpdm:ID="_rSna8F6wEd6AcdcHq8MPxQ"></bpdm:linkset>
+            </bpdm:messagingtask>
+        </bpel:sequence>
+    </bpel:scope>
+</bpel:process>

@@ -1,0 +1,57 @@
+﻿<bpel:process xmlns:bpdm="http://www.intalio/designer/business-process-data-modeling" xmlns:mapper="http://www.intalio.com/designer/mapper" xmlns:attachments="http://www.intalio.com/gi/forms/TAlistExport.gi/attachments" xmlns:User="http://thisdiagram/User" xmlns:TAlistToAMI-TAlistExportProcess="http://example.com/process/TAlistToAMI/TAlistExportProcess" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:TAlistExport="http://www.intalio.com/gi/forms/TAlistExport.gi" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="http://thisdiagram/process" xmlns:diag="http://thisdiagram" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ode="http://www.apache.org/ode/type/extension" targetNamespace="http://thisdiagram/process">
+    <bpdm:dependencies version="6000076">
+        <bpdm:namespaceDefinition bpdm:uri="http://www.intalio.com/gi/forms/TAlistExport.gi/attachments" bpdm:prefix="attachments" bpdm:comment="contrib=&apos;project:///forms/TAlistExport.gi.wsdl"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram/User" bpdm:prefix="User" bpdm:comment="contrib=&apos;partner-pool:///_41fI0Fp4Ed6_s_3Qrqj1Qg"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://example.com/process/TAlistToAMI/TAlistExportProcess" bpdm:prefix="TAlistToAMI-TAlistExportProcess" bpdm:comment="contrib=&apos;project:///process/TAlistToAMI-TAlistExportProcess.wsdl"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/2001/XMLSchema" bpdm:prefix="xs"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.intalio.com/gi/forms/TAlistExport.gi" bpdm:prefix="TAlistExport" bpdm:comment="contrib=&apos;project:///forms/TAlistExport.gi.wsdl"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/2001/XMLSchema-instance" bpdm:prefix="xsi"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram/process" bpdm:prefix="this" bpdm:type="this_process"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram" bpdm:prefix="diag" bpdm:comment="contrib=&apos;partner-pool:///_41fI0Fp4Ed6_s_3Qrqj1Qg"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/XML/1998/namespace" bpdm:prefix="xml"></bpdm:namespaceDefinition>
+        <bpdm:namespaceContributor bpdm:url="thisprocess://this-process-types" bpdm:label="process defined this-process-types">
+            <wsdl:service name="processAndUserForPortTypeProcessPlkService">
+                <wsdl:port name="process_for_UserPort" binding="this:processAndUserForPortTypeProcessPlkServiceBinding">
+                    <address location="${deploy_serverUrl}${deploy_baseSoapServicesUrl}/${deploy_bundleNcName}/${diagram_relativeURL}/process/User/processAndUserForPortTypeProcessPlk"/>
+                </wsdl:port>
+            </wsdl:service>
+            <bpel:binding name="processAndUserForPortTypeProcessPlkServiceBinding" type="TAlistExport:Process" bpdm:isSynchronized="true"/>
+        </bpdm:namespaceContributor>
+        <bpdm:namespaceContributor bpdm:url="project:///forms/TAlistExport.gi.wsdl"/>
+        <bpdm:namespaceContributor bpdm:url="project:///forms/TAlistExport.gi/IntalioInternal/FormModel.xsd"/>
+        <bpdm:namespaceContributor bpdm:url="partner-pool:///_41fI0Fp4Ed6_s_3Qrqj1Qg" bpdm:label="User"/>
+        <bpdm:namespaceContributor bpdm:url="partner-pool:///_5ybSMFp4Ed6_s_3Qrqj1QgimplicitPartner" bpdm:label="processimplicitPartner"/>
+        <bpdm:namespaceContributor bpdm:url="project:///process/TAlistToAMI-TAlistExportProcess.wsdl"/>
+    </bpdm:dependencies>
+    <bpel:scope bpdm:label="process" bpdm:ID="_5ybSMFp4Ed6_s_3Qrqj1Qg">
+        <bpel:partnerLinks>
+            <bpel:partnerLink name="processAndUserForPortTypeProcessPlkVar" partnerLinkType="diag:processAndUserForPortTypeProcessPlk" myRole="process_for_User" bpdm:enableSharing="false" bpdm:providedService="this:processAndUserForPortTypeProcessPlkService" bpdm:providedPort="process_for_UserPort" bpdm:provideSOAPAddress="${deploy_serverUrl}${deploy_baseSoapServicesUrl}/${deploy_bundleNcName}/${diagram_relativeURL}/process/User/processAndUserForPortTypeProcessPlk" bpdm:providedIsDefault="true" bpdm:clientTasks="_5ybSMFp4Ed6_s_3Qrqj1Qg:_QXGZAFp5Ed6_s_3Qrqj1Qg" bpdm:isManaged="true" bpdm:otherPoolId="_41fI0Fp4Ed6_s_3Qrqj1Qg"/>
+            <bpel:partnerLink name="processimplicitPartnerAndProcessForCanonicPortPlkVar" partnerLinkType="diag:processimplicitPartnerAndProcessForCanonicPortPlk" initializePartnerRole="yes" partnerRole="processimplicitPartner_for_process" bpdm:invokedService="TAlistToAMI-TAlistExportProcess:CanonicServiceForTAinterface" bpdm:invokedPort="canonicPort" bpdm:invokedSOAPAddress="epr" bpdm:invokedIsDefault="true" bpdm:clientTasks="_5ybSMFp4Ed6_s_3Qrqj1Qg:_mSfSSFp5Ed6_s_3Qrqj1Qg" bpdm:isManaged="true" bpdm:otherPoolId="_5ybSMFp4Ed6_s_3Qrqj1QgimplicitPartner"/>
+        </bpel:partnerLinks>
+        <bpel:variables>
+            <bpel:variable name="tAlistExportInitProcessRequestMsg" messageType="TAlistExport:initProcessRequest" bpdm:id="_QX1_61p5Ed6_s_3Qrqj1Qg" bpdm:messageIds="inc:_QXPi8Fp5Ed6_s_3Qrqj1Qg"/>
+            <bpel:variable name="tAlistExportInitProcessResponseMsg" messageType="TAlistExport:initProcessResponse" bpdm:id="_XLGcYFp5Ed6_s_3Qrqj1Qg" bpdm:messageIds=" out:_XK9ScFp5Ed6_s_3Qrqj1Qg">
+                <bpel:from bpdm:toPart="root">
+                    <bpel:literal bpdm:linkedMessageType="TAlistExport:initProcessResponse" bpdm:linkedPart="root"></bpel:literal>
+                </bpel:from>
+            </bpel:variable>
+            <bpel:variable name="tAlistToAMI-TAlistExportProcessStartResponseMsg" messageType="TAlistToAMI-TAlistExportProcess:startResponse" binding="TAlistToAMI-TAlistExportProcess:TAlistExportProcessAndTAinterfaceServiceBinding" operation="start" opMsgType="0" bpdm:messageIds="inc:_mSfSSFp5Ed6_s_3Qrqj1QgIncoming"/>
+            <bpel:variable name="tAlistToAMI-TAlistExportProcessStartMsg" messageType="TAlistToAMI-TAlistExportProcess:startRequest" binding="TAlistToAMI-TAlistExportProcess:TAlistExportProcessAndTAinterfaceServiceBinding" operation="start" opMsgType="1" bpdm:messageIds=" out:_mSfSSFp5Ed6_s_3Qrqj1QgOutgoing">
+                <bpel:from bpdm:toPart="body">
+                    <bpel:literal bpdm:linkedMessageType="TAlistToAMI-TAlistExportProcess:startRequest" bpdm:linkedPart="body" bpdm:binding="TAlistToAMI-TAlistExportProcess:TAlistExportProcessAndTAinterfaceServiceBinding" bpdm:opMsgType="1" bpdm:operation="start"></bpel:literal>
+                </bpel:from>
+            </bpel:variable>
+        </bpel:variables>
+        <bpel:sequence>
+            <bpdm:messagingtask eventType="start: message" operation="initProcess" partnerLink="processAndUserForPortTypeProcessPlkVar" portType="TAlistExport:Process" isMyRole="true" enableSharing="false" bpdm:label="start" bpdm:ID="_QXGZAFp5Ed6_s_3Qrqj1Qg">
+                <bpdm:linkset bpdm:type="incomingMessage" bpdm:bpeltype="receive" bpdm:messageVariable="tAlistExportInitProcessRequestMsg" bpdm:msgVarScopeId="_5ybSMFp4Ed6_s_3Qrqj1Qg" bpdm:variableIsManaged="true" bpdm:messageType="TAlistExport:initProcessRequest" bpdm:ID="_QXPi8Fp5Ed6_s_3Qrqj1Qg"></bpdm:linkset>
+                <bpdm:linkset bpdm:type="outgoingMessage" bpdm:bpeltype="reply" bpdm:messageVariable="tAlistExportInitProcessResponseMsg" bpdm:msgVarScopeId="_5ybSMFp4Ed6_s_3Qrqj1Qg" bpdm:variableIsManaged="true" bpdm:messageType="TAlistExport:initProcessResponse" bpdm:ID="_XK9ScFp5Ed6_s_3Qrqj1Qg"></bpdm:linkset>
+            </bpdm:messagingtask>
+            <bpdm:messagingtask operation="start" partnerLink="processimplicitPartnerAndProcessForCanonicPortPlkVar" portType="TAlistToAMI-TAlistExportProcess:ForTAinterface" isMyRole="false" enableSharing="false" bpdm:label="Invoke" bpdm:ID="_mSfSSFp5Ed6_s_3Qrqj1Qg">
+                <bpdm:linkset bpdm:type="outgoingMessage" bpdm:bpeltype="invoke-request" bpdm:messageVariable="tAlistToAMI-TAlistExportProcessStartMsg" bpdm:variableIsManaged="true" bpdm:messageType="TAlistToAMI-TAlistExportProcess:startRequest" bpdm:binding="TAlistToAMI-TAlistExportProcess:TAlistExportProcessAndTAinterfaceServiceBinding" bpdm:ID="_mSfSSFp5Ed6_s_3Qrqj1QgOutgoing"></bpdm:linkset>
+                <bpdm:linkset bpdm:type="incomingMessage" bpdm:bpeltype="invoke-receive" bpdm:messageVariable="tAlistToAMI-TAlistExportProcessStartResponseMsg" bpdm:variableIsManaged="true" bpdm:messageType="TAlistToAMI-TAlistExportProcess:startResponse" bpdm:binding="TAlistToAMI-TAlistExportProcess:TAlistExportProcessAndTAinterfaceServiceBinding" bpdm:ID="_mSfSSFp5Ed6_s_3Qrqj1QgIncoming"></bpdm:linkset>
+            </bpdm:messagingtask>
+            <bpdm:messagingtask eventType="end: empty" bpdm:label="Empty_End_Event" bpdm:ID="_SMOHkFp5Ed6_s_3Qrqj1Qg"></bpdm:messagingtask>
+        </bpel:sequence>
+    </bpel:scope>
+</bpel:process>

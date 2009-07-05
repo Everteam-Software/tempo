@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data>
+  <record jsxid="version" type="string">1.0</record>
+  <record jsxid="jsxversion" type="string">3.2</record>
+  <record jsxid="caption" type="string">TAmanagement</record>
+  <record jsxid="mode" type="boolean">true</record>
+  <record jsxid="namespace" type="string">TAmanagement</record>
+  <record jsxid="cancelerror" type="boolean">true</record>
+  <record jsxid="cancelrightclick" type="boolean">true</record>
+  <record jsxid="left" type="number">0</record>
+  <record jsxid="top" type="number">0</record>
+  <record jsxid="width" type="string">100%</record>
+  <record jsxid="height" type="string">100%</record>
+  <record jsxid="position" type="number">0</record>
+  <record jsxid="overflow" type="string">3</record>
+  <record jsxid="eventsvers" type="number">3.1</record>
+  <record jsxid="default_locale" type="string">en_US</record>
+  <record jsxid="onload" type="string">ackUpdate();</record>
+  <record jsxid="objectseturl" type="string">components/appCanvas.xml</record>
+  <record jsxid="includes" type="array">
+    <record jsxid="0" type="map">
+      <record jsxid="id" type="string">style_css</record>
+      <record jsxid="type" type="string">css</record>
+      <record jsxid="load" type="number">1</record>
+      <record jsxid="src" type="string">css/style.css</record>
+    </record>
+    <record jsxid="1" type="map">
+      <record jsxid="id" type="string">appCanvas_component</record>
+      <record jsxid="type" type="string">component</record>
+      <record jsxid="load" type="null"/>
+      <record jsxid="src" type="string">components/appCanvas.xml</record>
+    </record>
+    <record jsxid="2" type="map">
+      <record jsxid="id" type="string">logic_js</record>
+      <record jsxid="type" type="string">script</record>
+      <record jsxid="load" type="number">1</record>
+      <record jsxid="src" type="string">js/logic.js</record>
+    </record>
+    <record jsxid="3" type="map">
+      <record jsxid="id" type="string">mechanics_js</record>
+      <record jsxid="type" type="string">script</record>
+      <record jsxid="load" type="number">1</record>
+      <record jsxid="src" type="string">js/mechanics.js</record>
+    </record>
+    <record jsxid="4" type="map">
+      <record jsxid="id" type="string">avionics_js</record>
+      <record jsxid="type" type="string">script</record>
+      <record jsxid="load" type="number">1</record>
+      <record jsxid="src" type="string">js/avionics.js</record>
+    </record>
+    <record jsxid="5" type="map">
+      <record jsxid="id" type="string">getMechanics_xml</record>
+      <record jsxid="type" type="string">services</record>
+      <record jsxid="load" type="number">0</record>
+      <record jsxid="src" type="string">rules/getMechanics.xml</record>
+    </record>
+    <record jsxid="6" type="map">
+      <record jsxid="id" type="string">getAvionics_xml</record>
+      <record jsxid="type" type="string">services</record>
+      <record jsxid="load" type="number">0</record>
+      <record jsxid="src" type="string">rules/getAvionics.xml</record>
+    </record>
+    <record jsxid="7" type="map">
+      <record jsxid="id" type="string">sendNotif_xml</record>
+      <record jsxid="type" type="string">services</record>
+      <record jsxid="load" type="number">0</record>
+      <record jsxid="src" type="string">rules/sendNotif.xml</record>
+    </record>
+    <record jsxid="8" type="map">
+      <record jsxid="id" type="string">notif_js</record>
+      <record jsxid="type" type="string">script</record>
+      <record jsxid="load" type="number">1</record>
+      <record jsxid="src" type="string">js/notif.js</record>
+    </record>
+    <record jsxid="9" type="map">
+      <record jsxid="id" type="string">getCoord_xml</record>
+      <record jsxid="type" type="string">services</record>
+      <record jsxid="load" type="number">0</record>
+      <record jsxid="src" type="string">rules/getCoord.xml</record>
+    </record>
+    <record jsxid="10" type="map">
+      <record jsxid="id" type="string">coord_js</record>
+      <record jsxid="type" type="string">script</record>
+      <record jsxid="load" type="number">1</record>
+      <record jsxid="src" type="string">js/coord.js</record>
+    </record>
+    <record jsxid="11" type="map">
+      <record jsxid="id" type="string">exportTAlist_xml</record>
+      <record jsxid="type" type="string">services</record>
+      <record jsxid="load" type="number">0</record>
+      <record jsxid="src" type="string">rules/exportTAlist.xml</record>
+    </record>
+    <record jsxid="12" type="map">
+      <record jsxid="id" type="string">export_js</record>
+      <record jsxid="type" type="string">script</record>
+      <record jsxid="load" type="number">1</record>
+      <record jsxid="src" type="string">js/export.js</record>
+    </record>
+  </record>
+  <record jsxid="addins" type="array">
+    <record jsxid="0" type="string">intalioajax-addins</record>
+  </record>
+  <record jsxid="bodyhotkeys" type="boolean">false</record>
+  <record jsxid="onunload" type="string"/>
+</data>

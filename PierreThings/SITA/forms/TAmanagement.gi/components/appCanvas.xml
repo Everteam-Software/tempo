@@ -1,0 +1,884 @@
+<serialization xmlns="urn:tibco.com/v3.0" jsxversion="3.7">
+  <name/>
+  <icon/>
+  <description/>
+  <onBeforeDeserialize/>
+  <onAfterDeserialize/>
+  <object type="jsx3.gui.Block">
+    <variants jsxoverflow="1"/>
+    <strings jsxheight="100%" jsxwidth="100%" jsxname="root"/>
+    <object type="jsx3.gui.Block">
+      <variants/>
+      <strings jsxwidth="100%" jsxpadding="5 10 0 10" jsxname="header" jsxrelativeposition="1"/>
+      <object type="jsx3.gui.Block">
+        <variants jsxrelativeposition="1"/>
+        <strings jsxwidth="100%" jsxname="form-title" jsxclassname="form-title" jsxtext="Turn-around activity"/>
+      </object>
+    </object>
+    <object type="com.intalio.ria.Section">
+      <variants/>
+      <strings riaTitleText="Activity" jsxname="Activity"/>
+      <object type="com.intalio.ria.Field">
+        <variants/>
+        <strings jsxname="AircraftID-field" riaLabelText="Tail Number" riaHelpImageSrc="images/help.gif" riaErrorImageSrc="images/error.gif" riaCssClass="field"/>
+        <object type="jsx3.gui.TextBox">
+          <variants/>
+          <strings jsxname="AircraftID" jsxmargin="0 4 0 0" jsxvalue=""/>
+          <events jsxfocus="com.intalio.ria.highlightTextInput(this, false);" jsxblur="com.intalio.ria.highlightTextInput(this, true);" jsxchange="com.intalio.ria.validate(this, objEVENT);" jsxincchange="com.intalio.ria.validate(this, objEVENT);"/>
+        </object>
+      </object>
+      <object type="com.intalio.ria.Field">
+        <variants/>
+        <strings jsxname="Time-field" riaLabelText="Start Time" riaHelpImageSrc="images/help.gif" riaErrorImageSrc="images/error.gif" riaCssClass="field"/>
+        <object type="jsx3.gui.TimePicker">
+          <variants jsxrelativeposition="1" jsxheight="18" jsxhours="0" jsxminutes="0" jsxseconds="0" jsxmillis="0" jsxshowsecs="0" jsxshowmillis="0" jsx24hour="1"/>
+          <strings jsxname="startTime" jsxmargin="0 4 0 0"/>
+        </object>
+        <object type="jsx3.gui.Block">
+          <variants jsxrelativeposition="1" jsxoverflow="3"/>
+          <strings jsxname="finishTimeLabel" jsxtext="Finish Time" jsxfontweight="bold" jsxmargin="0 0 0 20"/>
+        </object>
+        <object type="jsx3.gui.TimePicker">
+          <variants jsxrelativeposition="1" jsxheight="18" jsxhours="0" jsxminutes="0" jsxseconds="0" jsxmillis="0" jsxshowsecs="0" jsxshowmillis="0" jsx24hour="1"/>
+          <strings jsxname="finishTime" jsxmargin="0 4 0 0"/>
+        </object>
+        <object type="jsx3.gui.Block">
+          <variants jsxrelativeposition="1" jsxoverflow="3"/>
+          <strings jsxname="releaseTimeLabel" jsxtext="Release Time" jsxfontweight="bold" jsxmargin="0 0 0 20"/>
+        </object>
+        <object type="jsx3.gui.TimePicker">
+          <variants jsxrelativeposition="1" jsxheight="18" jsxhours="0" jsxminutes="0" jsxseconds="0" jsxmillis="0" jsxshowsecs="0" jsxshowmillis="0" jsx24hour="1"/>
+          <strings jsxname="releaseTime" jsxmargin="0 4 0 0"/>
+        </object>
+      </object>
+      <object type="com.intalio.ria.Field">
+        <variants/>
+        <strings jsxname="late-field" riaLabelText="Late" riaHelpImageSrc="images/help.gif" riaErrorImageSrc="images/error.gif" riaLayoutDirection="horizontal" riaCssClass="field"/>
+        <object type="jsx3.gui.CheckBox">
+          <variants jsxheight="18"/>
+          <strings jsxname="late" jsxtext="" jsxmargin="0 4 0 0"/>
+          <events jsxtoggle="com.intalio.ria.validate(this, objEVENT, intCHECKED);"/>
+        </object>
+        <object type="jsx3.gui.Block">
+          <variants jsxrelativeposition="1" jsxoverflow="3"/>
+          <strings jsxname="updateLabel" jsxtext="Updated" jsxcolor="" jsxfontweight="bold" jsxmargin="0 0 0 80"/>
+        </object>
+        <object type="jsx3.gui.CheckBox">
+          <variants jsxheight="18" jsxchecked="0"/>
+          <strings jsxname="update" jsxtext="" jsxmargin="0 4 0 0"/>
+          <events jsxtoggle="com.intalio.ria.validate(this, objEVENT, intCHECKED);"/>
+        </object>
+      </object>
+    </object>
+    <object type="com.intalio.ria.Section">
+      <variants/>
+      <strings jsxname="ArrivalDeparture" riaTitleText="Arrival/Departure"/>
+      <object type="com.intalio.ria.Field">
+        <variants/>
+        <strings jsxname="ScheduledArrivalDate-field" riaLabelText="STA" riaHelpImageSrc="images/help.gif" riaErrorImageSrc="images/error.gif" riaCssClass="field" riaLayoutDirection="horizontal"/>
+        <object type="jsx3.gui.DatePicker">
+          <variants jsxwidth="100" jsxrelativeposition="1" jsxheight="18" jsxenabled="1"/>
+          <strings jsxname="ScheduledArrivalDate" jsxmargin="0 4 0 0" jsxformat="yyyy-MM-dd"/>
+          <events jsxhide="com.intalio.ria.validate(this);"/>
+        </object>
+        <object type="jsx3.gui.TimePicker">
+          <variants jsxrelativeposition="1" jsxheight="18" jsxhours="0" jsxminutes="0" jsxseconds="0" jsxmillis="0" jsxshowsecs="0" jsxshowmillis="0" jsx24hour="1"/>
+          <strings jsxname="STA" jsxmargin="0 4 0 0"/>
+        </object>
+        <object type="jsx3.gui.Block">
+          <variants jsxrelativeposition="1" jsxoverflow="3"/>
+          <strings jsxname="ScheduledDepartureDateLabel" jsxtext="STD" jsxfontweight="bold" jsxmargin="0 0 0 134"/>
+        </object>
+        <object type="jsx3.gui.DatePicker">
+          <variants jsxwidth="100" jsxrelativeposition="1" jsxheight="18" jsxenabled="1"/>
+          <strings jsxname="ScheduledDepartureDate" jsxmargin="0 4 0 0" jsxformat="yyyy-MM-dd"/>
+          <events jsxhide="com.intalio.ria.validate(this);"/>
+        </object>
+        <object type="jsx3.gui.TimePicker">
+          <variants jsxrelativeposition="1" jsxheight="18" jsxhours="0" jsxminutes="0" jsxseconds="0" jsxmillis="0" jsxshowsecs="0" jsxshowmillis="0" jsx24hour="1"/>
+          <strings jsxname="STD" jsxmargin="0 4 0 0"/>
+        </object>
+      </object>
+      <object type="com.intalio.ria.Field">
+        <variants/>
+        <strings jsxname="EstimatedArrivalDate-field" riaLabelText="ETA" riaHelpImageSrc="images/help.gif" riaErrorImageSrc="images/error.gif" riaCssClass="field" riaLayoutDirection="horizontal"/>
+        <object type="jsx3.gui.DatePicker">
+          <variants jsxwidth="100" jsxrelativeposition="1" jsxheight="18" jsxenabled="1"/>
+          <strings jsxname="EstimatedArrivalDate" jsxmargin="0 4 0 0" jsxformat="yyyy-MM-dd"/>
+          <events jsxhide="com.intalio.ria.validate(this);"/>
+        </object>
+        <object type="jsx3.gui.TimePicker">
+          <variants jsxrelativeposition="1" jsxheight="18" jsxhours="0" jsxminutes="0" jsxseconds="0" jsxmillis="0" jsxshowsecs="0" jsxshowmillis="0" jsx24hour="1"/>
+          <strings jsxname="ETA" jsxmargin="0 4 0 0"/>
+        </object>
+        <object type="jsx3.gui.Block">
+          <variants jsxrelativeposition="1" jsxoverflow="3"/>
+          <strings jsxname="EstimatedDepartureDateLabel" jsxtext="ETD" jsxfontweight="bold" jsxmargin="0 0 0 134"/>
+        </object>
+        <object type="jsx3.gui.DatePicker">
+          <variants jsxwidth="100" jsxrelativeposition="1" jsxheight="18"/>
+          <strings jsxname="EstimatedDepartureDate" jsxmargin="0 4 0 0" jsxformat="yyyy-MM-dd"/>
+          <events jsxhide="com.intalio.ria.validate(this);"/>
+        </object>
+        <object type="jsx3.gui.TimePicker">
+          <variants jsxrelativeposition="1" jsxheight="18" jsxhours="0" jsxminutes="0" jsxseconds="0" jsxmillis="0" jsxshowsecs="0" jsxshowmillis="0" jsx24hour="1"/>
+          <strings jsxname="ETD" jsxmargin="0 4 0 0"/>
+        </object>
+      </object>
+      <object type="com.intalio.ria.Field">
+        <variants/>
+        <strings jsxname="ActualArrivalDate-field" riaLabelText="ATA" riaHelpImageSrc="images/help.gif" riaErrorImageSrc="images/error.gif" riaCssClass="field" riaLayoutDirection="horizontal"/>
+        <object type="jsx3.gui.DatePicker">
+          <variants jsxwidth="100" jsxrelativeposition="1" jsxheight="18"/>
+          <strings jsxname="ActualArrivalDate" jsxmargin="0 4 0 0" jsxformat="yyyy-MM-dd"/>
+          <events jsxhide="com.intalio.ria.validate(this);"/>
+        </object>
+        <object type="jsx3.gui.TimePicker">
+          <variants jsxrelativeposition="1" jsxheight="18" jsxhours="0" jsxminutes="0" jsxseconds="0" jsxmillis="0" jsxshowsecs="0" jsxshowmillis="0" jsx24hour="1"/>
+          <strings jsxname="ATA" jsxmargin="0 4 0 0"/>
+        </object>
+        <object type="jsx3.gui.Block">
+          <variants jsxrelativeposition="1" jsxoverflow="3"/>
+          <strings jsxname="ActualDepartureDateLabel" jsxtext="ATD" jsxfontweight="bold" jsxmargin="0 0 0 132"/>
+        </object>
+        <object type="jsx3.gui.DatePicker">
+          <variants jsxwidth="100" jsxrelativeposition="1" jsxheight="18"/>
+          <strings jsxname="ActualDepartureDate" jsxmargin="0 4 0 0" jsxformat="yyyy-MM-dd"/>
+          <events jsxhide="com.intalio.ria.validate(this);"/>
+        </object>
+        <object type="jsx3.gui.TimePicker">
+          <variants jsxrelativeposition="1" jsxheight="18" jsxhours="0" jsxminutes="0" jsxseconds="0" jsxmillis="0" jsxshowsecs="0" jsxshowmillis="0" jsx24hour="1"/>
+          <strings jsxname="ATD" jsxmargin="0 4 0 0"/>
+        </object>
+      </object>
+      <object type="com.intalio.ria.Field">
+        <variants/>
+        <strings jsxname="ArrivalFlightNumber-field" riaLabelText="Arrival Flight Number" riaHelpImageSrc="images/help.gif" riaErrorImageSrc="images/error.gif" riaCssClass="field"/>
+        <object type="jsx3.gui.TextBox">
+          <variants jsxwidth="150"/>
+          <strings jsxname="ArrivalFlightNumber" jsxmargin="0 4 0 0" jsxvalue=""/>
+          <events jsxfocus="com.intalio.ria.highlightTextInput(this, false);" jsxblur="com.intalio.ria.highlightTextInput(this, true);" jsxchange="com.intalio.ria.validate(this, objEVENT);" jsxincchange="com.intalio.ria.validate(this, objEVENT);"/>
+        </object>
+        <object type="jsx3.gui.Block">
+          <variants jsxrelativeposition="1" jsxoverflow="3"/>
+          <strings jsxname="DepartureFlightNumberLabel" jsxtext="Departure Flight Number" jsxfontweight="bold" jsxwidth="" jsxmargin="0 0 0 40"/>
+        </object>
+        <object type="jsx3.gui.TextBox">
+          <variants jsxwidth="150"/>
+          <strings jsxname="DepartureFlightNumber" jsxmargin="0 4 0 0" jsxvalue=""/>
+          <events jsxfocus="com.intalio.ria.highlightTextInput(this, false);" jsxblur="com.intalio.ria.highlightTextInput(this, true);" jsxchange="com.intalio.ria.validate(this, objEVENT);" jsxincchange="com.intalio.ria.validate(this, objEVENT);"/>
+        </object>
+      </object>
+    </object>
+    <object type="com.intalio.ria.Section">
+      <variants/>
+      <strings jsxname="Inspection" riaTitleText="Inspection"/>
+      <object type="com.intalio.ria.Field">
+        <variants/>
+        <strings jsxname="shift-field" riaLabelText="" riaHelpImageSrc="images/help.gif" riaErrorImageSrc="images/error.gif" riaCssClass="field" riaDisplay="none"/>
+        <object type="jsx3.gui.TextBox">
+          <variants/>
+          <strings jsxname="shift-nomap" jsxmargin="0 4 0 0" jsxvalue="" jsxvisibility="hidden" jsxdisplay="none"/>
+          <events jsxfocus="com.intalio.ria.highlightTextInput(this, false);" jsxblur="com.intalio.ria.highlightTextInput(this, true);" jsxchange="com.intalio.ria.validate(this, objEVENT);" jsxincchange="com.intalio.ria.validate(this, objEVENT);"/>
+        </object>
+        <object type="jsx3.gui.TextBox">
+          <variants/>
+          <strings jsxname="assigned" jsxmargin="0 4 0 0" jsxvalue="" jsxvisibility="hidden" jsxdisplay="none"/>
+          <events jsxfocus="com.intalio.ria.highlightTextInput(this, false);" jsxblur="com.intalio.ria.highlightTextInput(this, true);" jsxchange="com.intalio.ria.validate(this, objEVENT);" jsxincchange="com.intalio.ria.validate(this, objEVENT);"/>
+        </object>
+        <object type="jsx3.gui.TextBox">
+          <variants/>
+          <strings jsxname="notifUsers-nomap" jsxmargin="0 4 0 0" jsxvalue="" jsxvisibility="hidden" jsxdisplay="none"/>
+          <events jsxfocus="com.intalio.ria.highlightTextInput(this, false);" jsxblur="com.intalio.ria.highlightTextInput(this, true);" jsxchange="com.intalio.ria.validate(this, objEVENT);" jsxincchange="com.intalio.ria.validate(this, objEVENT);"/>
+        </object>
+      </object>
+      <object type="com.intalio.ria.Field">
+        <variants/>
+        <strings jsxname="stand-field" riaLabelText="Stand" riaHelpImageSrc="images/help.gif" riaErrorImageSrc="images/error.gif" riaCssClass="field"/>
+        <object type="jsx3.gui.TextBox">
+          <variants/>
+          <strings jsxname="Stand" jsxmargin="0 4 0 0" jsxvalue=""/>
+          <events jsxfocus="com.intalio.ria.highlightTextInput(this, false);" jsxblur="com.intalio.ria.highlightTextInput(this, true);" jsxchange="com.intalio.ria.validate(this, objEVENT);" jsxincchange="com.intalio.ria.validate(this, objEVENT);"/>
+        </object>
+      </object>
+      <object type="com.intalio.ria.Field">
+        <variants/>
+        <strings jsxname="InspectionType-field" riaLabelText="Inspection Type" riaHelpImageSrc="images/help.gif" riaErrorImageSrc="images/error.gif" riaCssClass="field"/>
+        <object type="jsx3.gui.TextBox">
+          <variants/>
+          <strings jsxname="InspectionType" jsxmargin="0 4 0 0" jsxvalue=""/>
+          <events jsxfocus="com.intalio.ria.highlightTextInput(this, false);" jsxblur="com.intalio.ria.highlightTextInput(this, true);" jsxchange="com.intalio.ria.validate(this, objEVENT);" jsxincchange="com.intalio.ria.validate(this, objEVENT);"/>
+        </object>
+      </object>
+      <object type="com.intalio.ria.Field">
+        <variants/>
+        <strings jsxname="InspectionStatus-field" riaLabelText="TA Status" riaHelpImageSrc="images/help.gif" riaErrorImageSrc="images/error.gif" riaCssClass="field"/>
+        <object type="jsx3.gui.Select">
+          <variants jsxwidth="150" jsxheight="18" jsxxmlasync="1" _isfocusing="true"/>
+          <strings jsxname="InspectionStatus" jsxmargin="0 4 0 0" jsxxml="&lt;data jsxid=&quot;jsxroot&quot;&gt;    &lt;record jsxid=&quot;open&quot; jsxtext=&quot;Open&quot;/&gt;    &lt;record jsxid=&quot;started&quot; jsxtext=&quot;Started&quot;/&gt;    &lt;record jsxid=&quot;released&quot; jsxtext=&quot;Released&quot;/&gt;    &lt;record jsxid=&quot;stopped&quot; jsxtext=&quot;Stopped&quot;/&gt;    &lt;record jsxid=&quot;problem&quot; jsxtext=&quot;Problem&quot;/&gt;    &lt;record jsxid=&quot;aborted&quot; jsxtext=&quot;Aborted&quot;/&gt; &lt;/data&gt;"/>
+          <events jsxselect="com.intalio.ria.validate(this, objEVENT);updateTime(this);"/>
+        </object>
+      </object>
+      <object type="com.intalio.ria.Field">
+        <variants/>
+        <strings jsxname="resources-field" riaLabelText="Help Request" riaHelpImageSrc="images/help.gif" riaErrorImageSrc="images/error.gif" riaCssClass="field"/>
+        <object type="jsx3.gui.TextBox">
+          <variants/>
+          <strings jsxname="resources" jsxmargin="0 4 0 0" jsxvalue=""/>
+          <events jsxfocus="com.intalio.ria.highlightTextInput(this, false);" jsxblur="com.intalio.ria.highlightTextInput(this, true);" jsxchange="com.intalio.ria.validate(this, objEVENT);" jsxincchange="com.intalio.ria.validate(this, objEVENT);"/>
+        </object>
+      </object>
+      <object type="com.intalio.ria.Field">
+        <variants/>
+        <strings jsxname="RTR-table-field" riaLabelText="RTR" riaHelpImageSrc="images/help.gif" riaErrorImageSrc="images/error.gif" riaCssClass="field"/>
+        <object type="jsx3.gui.Block">
+          <variants jsxwidth="730" jsxheight="110" jsxoverflow="1"/>
+          <strings jsxname="RTR-block" jsxrelativeposition="1" jsxmargin="0 0 0 0"/>
+          <object type="jsx3.gui.Matrix">
+            <variants jsxpagingmodel="1" jsxselectionmodel="0" jsxjsxxmlasync="1" jsxautorow="1"/>
+            <strings jsxname="RTR" jsxbodyborder="1px solid #dfdfef" jsxheaderborder="1px solid #dfdfef" jsxbgcolor="#efefff"/>
+            <events jsxaftercommit="this.getParent().getParent().validate(this, objEVENT);"/>
+            <xslparameters jsx_rowbg1="#ffffff" jsx_rowbg2="#efefff"/>
+            <object type="jsx3.gui.Matrix.Column">
+              <variants jsxwidth="96"/>
+              <strings jsxname="RTRid-column" jsxtext="RTR ID" jsxpadding="2" jsxcellpadding="3" jsxpath="jsxRTRid"/>
+              <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+              <object type="jsx3.gui.TextBox">
+                <variants jsxheight="18" jsxrelativeposition="0" jsxleft="0" jsxtop="0" jsxwidth="96" jsxzindex="10"/>
+                <strings jsxname="RTRid" jsxmargin="0 4 0 0" jsxdisplay="none" jsxvalue=""/>
+                <events jsxkeydown="1;"/>
+              </object>
+            </object>
+            <object type="jsx3.gui.Matrix.Column">
+              <variants jsxwidth="412"/>
+              <strings jsxname="RTRdescription-column" jsxtext="Description" jsxpadding="2" jsxcellpadding="3" jsxpath="RTRdescription"/>
+              <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+              <object type="jsx3.gui.TextBox">
+                <variants jsxrelativeposition="0" jsxleft="179" jsxtop="0" jsxwidth="412" jsxheight="20" jsxzindex="10"/>
+                <strings jsxname="RTRdescription" jsxdisplay="none" jsxvalue=""/>
+                <events jsxkeydown="1;"/>
+              </object>
+            </object>
+            <object type="jsx3.gui.Matrix.Column">
+              <variants/>
+              <strings jsxname="RTRstatus-column" jsxwidth="*" jsxtext="Status" jsxpadding="2" jsxcellpadding="3" jsxpath="jsxRTRstatus"/>
+              <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+              <object type="jsx3.gui.Select">
+                <variants jsxwidth="100" jsxheight="18" jsxxmlasync="1" jsxrelativeposition="0" jsxleft="591" jsxtop="0" jsxzindex="10" _isfocusing="true"/>
+                <strings jsxname="RTRstatus" jsxmargin="0 4 0 0" jsxxml="&lt;data&gt;&lt;record jsxid=&quot;open&quot; jsxtext=&quot;Open&quot;/&gt;&lt;record jsxid=&quot;resolved&quot; jsxtext=&quot;Fixed&quot;/&gt;&lt;/data&gt;" jsxdisplay="none"/>
+              </object>
+            </object>
+            <object type="jsx3.gui.Matrix.Column">
+              <variants/>
+              <strings jsxname="RTRad-column" jsxwidth="100" jsxtext="Text" jsxpadding="2" jsxcellpadding="3" jsxpath="jsxRTRad" jsxdisplay="none"/>
+              <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+              <object type="jsx3.gui.CheckBox">
+                <variants jsxheight="18"/>
+                <strings jsxname="RTRad" jsxtext="" jsxmargin="0 4 0 0"/>
+              </object>
+            </object>
+          </object>
+        </object>
+      </object>
+      <object type="jsx3.gui.Block">
+        <variants jsxoverflow="1"/>
+        <strings jsxname="buttonblock" jsxwidth="100%" jsxheight="100%" jsxrelativeposition="1"/>
+        <object type="jsx3.gui.Button">
+          <variants jsxindex="0" jsxheight="18"/>
+          <strings jsxname="aButton" jsxtext="Shift A" jsxmargin="0 4 5 220"/>
+          <events jsxexecute="available('A');"/>
+        </object>
+        <object type="jsx3.gui.Button">
+          <variants jsxindex="0" jsxheight="18"/>
+          <strings jsxname="bButton" jsxtext="Shift B" jsxmargin="0 4 5 0"/>
+          <events jsxexecute="available('B');"/>
+        </object>
+        <object type="jsx3.gui.Button">
+          <variants jsxindex="0" jsxheight="18"/>
+          <strings jsxname="cButton" jsxtext="Shift C" jsxmargin="0 4 5 0"/>
+          <events jsxexecute="available('C');"/>
+        </object>
+        <object type="jsx3.gui.Button">
+          <variants jsxindex="0" jsxheight="18"/>
+          <strings jsxname="dButton" jsxtext="Shift D" jsxmargin="0 4 5 0"/>
+          <events jsxexecute="available('D');"/>
+        </object>
+        <object type="jsx3.gui.Button">
+          <variants jsxindex="0" jsxheight="18"/>
+          <strings jsxname="eButton" jsxtext="Shift E" jsxmargin="0 4 5 0"/>
+          <events jsxexecute="available('E');"/>
+        </object>
+        <object type="jsx3.gui.Button">
+          <variants jsxindex="0" jsxheight="18"/>
+          <strings jsxname="fButton" jsxtext="Shift F" jsxmargin="0 4 5 0"/>
+          <events jsxexecute="available('F');"/>
+        </object>
+      </object>
+      <object type="jsx3.gui.Block">
+        <variants jsxoverflow="1"/>
+        <strings jsxname="coordBlock" jsxwidth="100%" jsxheight="100%" jsxrelativeposition="1" jsxmargin="0 0 20 0"/>
+        <object type="com.intalio.ria.Field">
+          <variants/>
+          <strings jsxname="coordLabel-field" riaLabelText="" riaHelpImageSrc="images/help.gif" riaErrorImageSrc="images/error.gif" riaCssClass="field"/>
+          <object type="jsx3.gui.Block">
+            <variants jsxrelativeposition="1" jsxoverflow="3"/>
+            <strings jsxname="availableCoordLabel" jsxtext="Available Coordinators" jsxcolor="" jsxfontweight="bold"/>
+          </object>
+          <object type="jsx3.gui.Block">
+            <variants jsxrelativeposition="1" jsxoverflow="3"/>
+            <strings jsxname="assignedCoordLabel" jsxtext="Assigned Coordinators" jsxfontweight="bold" jsxmargin="0 0 0 242"/>
+          </object>
+        </object>
+        <object type="com.intalio.ria.Field">
+          <variants/>
+          <strings jsxname="availableCoord-field" riaLabelText="" riaHelpImageSrc="images/help.gif" riaErrorImageSrc="images/error.gif" riaCssClass="field"/>
+          <object type="jsx3.gui.Block">
+            <variants jsxwidth="350" jsxheight="110" jsxoverflow="1"/>
+            <strings jsxname="availableCoord-block" jsxrelativeposition="1" jsxmargin="0 0 -115 0"/>
+            <object type="jsx3.gui.Matrix">
+              <variants jsxpagingmodel="1" jsxselectionmodel="0" jsxjsxxmlasync="1" jsxautorow="0"/>
+              <strings jsxname="availableCoord-nomap" jsxbodyborder="1px solid #dfdfef" jsxheaderborder="1px solid #dfdfef" jsxbgcolor="#efefff" jsxxmlid="coordsInDB"/>
+              <events jsxaftercommit="this.getParent().getParent().validate(this, objEVENT);"/>
+              <xslparameters jsx_rowbg1="#ffffff" jsx_rowbg2="#efefff"/>
+              <object type="jsx3.gui.Matrix.Column">
+                <variants jsxwidth="281"/>
+                <strings jsxname="availableCoordName-column" jsxtext="Name" jsxpadding="2" jsxcellpadding="3" jsxpath="dbCoordName"/>
+                <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+                <object type="jsx3.gui.TextBox">
+                  <variants jsxheight="18" jsxrelativeposition="0" jsxleft="46" jsxtop="0" jsxwidth="232" jsxzindex="10" jsxreadonly="1" jsxenabled="0"/>
+                  <strings jsxname="availableCoordName-nomap" jsxmargin="0 4 0 0" jsxdisplay="none" jsxvalue=""/>
+                  <events jsxkeydown="1;"/>
+                </object>
+              </object>
+              <object type="jsx3.gui.Matrix.Column">
+                <variants jsxwidth="281"/>
+                <strings jsxname="availableCoordID-column" jsxtext="" jsxpadding="2" jsxcellpadding="3" jsxpath="dbCoordID" jsxdisplay="none"/>
+                <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+                <object type="jsx3.gui.TextBox">
+                  <variants jsxheight="18" jsxrelativeposition="0" jsxleft="46" jsxtop="0" jsxwidth="232" jsxzindex="10"/>
+                  <strings jsxname="availableCoordID-nomap" jsxmargin="0 4 0 0" jsxdisplay="none"/>
+                  <events jsxkeydown="1;"/>
+                </object>
+              </object>
+              <object type="jsx3.gui.Matrix.Column">
+                <variants jsxwidth="281"/>
+                <strings jsxname="availableCoordCert-column" jsxtext="" jsxpadding="2" jsxcellpadding="3" jsxpath="dbCoordCert" jsxdisplay="none"/>
+                <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+                <object type="jsx3.gui.TextBox">
+                  <variants jsxheight="18" jsxrelativeposition="0" jsxleft="46" jsxtop="0" jsxwidth="232" jsxzindex="10"/>
+                  <strings jsxname="availableCoordCert-nomap" jsxmargin="0 4 0 0" jsxdisplay="none"/>
+                  <events jsxkeydown="1;"/>
+                </object>
+              </object>
+              <object type="jsx3.gui.Matrix.Column">
+                <variants jsxwidth="50"/>
+                <strings jsxname="deleteButtonColumn" jsxtext="Assign" jsxpadding="2" jsxcellpadding="1" jsxvaluetemplate="@empty" jsxtextalign="center" jsxcelltextalign="center"/>
+                <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+                <object type="jsx3.gui.ImageButton">
+                  <variants jsxwidth="16" jsxheight="16" jsxenabled="1" jsxstate="0" jsxprefetch="1" jsxtype="0"/>
+                  <strings jsxname="deleteButtonMask" jsximage="jsx:///images/list/right.gif"/>
+                  <events jsxexecute="assignCoord(this);this.getParent().getParent().deleteRecord(this.emGetSession().recordId, true);this.getParent().getParent().getParent().getParent().validate(this, objEVENT);"/>
+                </object>
+              </object>
+            </object>
+          </object>
+        </object>
+        <object type="com.intalio.ria.Field">
+          <variants/>
+          <strings jsxname="assignedCoord-table-field" riaLabelText="" riaHelpImageSrc="images/help.gif" riaErrorImageSrc="images/error.gif" riaCssClass="field"/>
+          <object type="jsx3.gui.Block">
+            <variants jsxwidth="350" jsxheight="110" jsxoverflow="1"/>
+            <strings jsxname="assignedCoord-block" jsxrelativeposition="1" jsxmargin="0 0 0 380"/>
+            <object type="jsx3.gui.Matrix">
+              <variants jsxpagingmodel="1" jsxselectionmodel="0" jsxjsxxmlasync="1" jsxautorow="0"/>
+              <strings jsxname="assignedCoord" jsxbodyborder="1px solid #dfdfef" jsxheaderborder="1px solid #dfdfef" jsxbgcolor="#efefff" jsxcdfid=""/>
+              <events jsxaftercommit="this.getParent().getParent().validate(this, objEVENT);"/>
+              <xslparameters jsx_rowbg1="#ffffff" jsx_rowbg2="#efefff"/>
+              <object type="jsx3.gui.Matrix.Column">
+                <variants jsxwidth="60"/>
+                <strings jsxname="deleteButtonColumn" jsxtext="Unassign" jsxpadding="2" jsxcellpadding="1" jsxvaluetemplate="@empty" jsxtextalign="center" jsxcelltextalign="center"/>
+                <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+                <object type="jsx3.gui.ImageButton">
+                  <variants jsxwidth="16" jsxheight="16" jsxenabled="1" jsxstate="0" jsxprefetch="1" jsxtype="0"/>
+                  <strings jsxname="deleteButtonMask" jsximage="jsx:///images/list/left.gif"/>
+                  <events jsxexecute="unassignCoord(this);this.getParent().getParent().deleteRecord(this.emGetSession().recordId, true);this.getParent().getParent().getParent().getParent().validate(this, objEVENT);"/>
+                </object>
+              </object>
+              <object type="jsx3.gui.Matrix.Column">
+                <variants jsxwidth="210"/>
+                <strings jsxname="assignedCoordName-column" jsxtext="Name" jsxpadding="2" jsxcellpadding="3" jsxpath="jsxAssignedCoordName"/>
+                <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+                <object type="jsx3.gui.TextBox">
+                  <variants jsxheight="18" jsxrelativeposition="0" jsxleft="46" jsxtop="0" jsxwidth="232" jsxzindex="10" jsxenabled="0" jsxreadonly="1"/>
+                  <strings jsxname="assignedCoordName" jsxmargin="0 4 0 0" jsxdisplay="none" jsxvalue=""/>
+                  <events jsxkeydown="1;"/>
+                </object>
+              </object>
+              <object type="jsx3.gui.Matrix.Column">
+                <variants jsxwidth="210"/>
+                <strings jsxname="assignedCoordID-column" jsxtext="" jsxpadding="2" jsxcellpadding="3" jsxpath="jsxAssignedCoordID" jsxdisplay="none"/>
+                <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+                <object type="jsx3.gui.TextBox">
+                  <variants jsxheight="18" jsxrelativeposition="0" jsxleft="46" jsxtop="0" jsxwidth="232" jsxzindex="10"/>
+                  <strings jsxname="assignedCoordID" jsxmargin="0 4 0 0" jsxdisplay="none"/>
+                  <events jsxkeydown="1;"/>
+                </object>
+              </object>
+              <object type="jsx3.gui.Matrix.Column">
+                <variants jsxwidth="210"/>
+                <strings jsxname="assignedCoordCert-column" jsxtext="" jsxpadding="2" jsxcellpadding="3" jsxpath="jsxAssignedCoordCert" jsxdisplay="none"/>
+                <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+                <object type="jsx3.gui.TextBox">
+                  <variants jsxheight="18" jsxrelativeposition="0" jsxleft="46" jsxtop="0" jsxwidth="232" jsxzindex="10"/>
+                  <strings jsxname="assignedCoordCert" jsxmargin="0 4 0 0" jsxdisplay="none"/>
+                  <events jsxkeydown="1;"/>
+                </object>
+              </object>
+            </object>
+          </object>
+        </object>
+      </object>
+      <object type="jsx3.gui.Block">
+        <variants jsxoverflow="1"/>
+        <strings jsxname="mechanicsBlock" jsxwidth="100%" jsxheight="100%" jsxrelativeposition="1" jsxmargin="0 0 20 0"/>
+        <object type="com.intalio.ria.Field">
+          <variants/>
+          <strings jsxname="mechanicsLabel-field" riaLabelText="" riaHelpImageSrc="images/help.gif" riaErrorImageSrc="images/error.gif" riaCssClass="field"/>
+          <object type="jsx3.gui.Block">
+            <variants jsxrelativeposition="1" jsxoverflow="3"/>
+            <strings jsxname="availableMechanicsLabel" jsxtext="Available Mechanics" jsxcolor="" jsxfontweight="bold"/>
+          </object>
+          <object type="jsx3.gui.Block">
+            <variants jsxrelativeposition="1" jsxoverflow="3"/>
+            <strings jsxname="assignedMechanicsLabel" jsxtext="Assigned Mechanics" jsxfontweight="bold" jsxmargin="0 0 0 257"/>
+          </object>
+        </object>
+        <object type="com.intalio.ria.Field">
+          <variants/>
+          <strings jsxname="availableMechanics-field" riaLabelText="" riaHelpImageSrc="images/help.gif" riaErrorImageSrc="images/error.gif" riaCssClass="field"/>
+          <object type="jsx3.gui.Block">
+            <variants jsxwidth="350" jsxheight="110" jsxoverflow="1"/>
+            <strings jsxname="availableMechanics-block" jsxrelativeposition="1" jsxmargin="0 0 -115 0"/>
+            <object type="jsx3.gui.Matrix">
+              <variants jsxpagingmodel="1" jsxselectionmodel="0" jsxjsxxmlasync="1" jsxautorow="0"/>
+              <strings jsxname="availableMechanics-nomap" jsxbodyborder="1px solid #dfdfef" jsxheaderborder="1px solid #dfdfef" jsxbgcolor="#efefff" jsxxmlid="mechanicsInDB"/>
+              <events jsxaftercommit="this.getParent().getParent().validate(this, objEVENT);"/>
+              <xslparameters jsx_rowbg1="#ffffff" jsx_rowbg2="#efefff"/>
+              <object type="jsx3.gui.Matrix.Column">
+                <variants jsxwidth="281"/>
+                <strings jsxname="availableMechanicName-column" jsxtext="Name" jsxpadding="2" jsxcellpadding="3" jsxpath="dbMechanicName"/>
+                <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+                <object type="jsx3.gui.TextBox">
+                  <variants jsxheight="18" jsxrelativeposition="0" jsxleft="46" jsxtop="0" jsxwidth="232" jsxzindex="10" jsxreadonly="1" jsxenabled="0"/>
+                  <strings jsxname="availableMechanicName-nomap" jsxmargin="0 4 0 0" jsxdisplay="none" jsxvalue=""/>
+                  <events jsxkeydown="1;"/>
+                </object>
+              </object>
+              <object type="jsx3.gui.Matrix.Column">
+                <variants jsxwidth="281"/>
+                <strings jsxname="availableMechanicID-column" jsxtext="" jsxpadding="2" jsxcellpadding="3" jsxpath="dbMechanicID" jsxdisplay="none"/>
+                <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+                <object type="jsx3.gui.TextBox">
+                  <variants jsxheight="18" jsxrelativeposition="0" jsxleft="46" jsxtop="0" jsxwidth="232" jsxzindex="10"/>
+                  <strings jsxname="availableMechanicID-nomap" jsxmargin="0 4 0 0" jsxdisplay="none"/>
+                  <events jsxkeydown="1;"/>
+                </object>
+              </object>
+              <object type="jsx3.gui.Matrix.Column">
+                <variants jsxwidth="281"/>
+                <strings jsxname="availableMechanicCert-column" jsxtext="" jsxpadding="2" jsxcellpadding="3" jsxpath="dbMechanicCert" jsxdisplay="none"/>
+                <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+                <object type="jsx3.gui.TextBox">
+                  <variants jsxheight="18" jsxrelativeposition="0" jsxleft="46" jsxtop="0" jsxwidth="232" jsxzindex="10"/>
+                  <strings jsxname="availableMechanicCert-nomap" jsxmargin="0 4 0 0" jsxdisplay="none"/>
+                  <events jsxkeydown="1;"/>
+                </object>
+              </object>
+              <object type="jsx3.gui.Matrix.Column">
+                <variants jsxwidth="50"/>
+                <strings jsxname="deleteButtonColumn" jsxtext="Assign" jsxpadding="2" jsxcellpadding="1" jsxvaluetemplate="@empty" jsxtextalign="center" jsxcelltextalign="center"/>
+                <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+                <object type="jsx3.gui.ImageButton">
+                  <variants jsxwidth="16" jsxheight="16" jsxenabled="1" jsxstate="0" jsxprefetch="1" jsxtype="0"/>
+                  <strings jsxname="deleteButtonMask" jsximage="jsx:///images/list/right.gif"/>
+                  <events jsxexecute="assignMechanic(this);this.getParent().getParent().deleteRecord(this.emGetSession().recordId, true);this.getParent().getParent().getParent().getParent().validate(this, objEVENT);"/>
+                </object>
+              </object>
+            </object>
+          </object>
+        </object>
+        <object type="com.intalio.ria.Field">
+          <variants/>
+          <strings jsxname="assignedMechancics-table-field" riaLabelText="" riaHelpImageSrc="images/help.gif" riaErrorImageSrc="images/error.gif" riaCssClass="field"/>
+          <object type="jsx3.gui.Block">
+            <variants jsxwidth="350" jsxheight="110" jsxoverflow="1"/>
+            <strings jsxname="assignedMechanics-block" jsxrelativeposition="1" jsxmargin="0 0 0 380"/>
+            <object type="jsx3.gui.Matrix">
+              <variants jsxpagingmodel="1" jsxselectionmodel="0" jsxjsxxmlasync="1" jsxautorow="0"/>
+              <strings jsxname="assignedMechanics" jsxbodyborder="1px solid #dfdfef" jsxheaderborder="1px solid #dfdfef" jsxbgcolor="#efefff" jsxcdfid=""/>
+              <events jsxaftercommit="this.getParent().getParent().validate(this, objEVENT);"/>
+              <xslparameters jsx_rowbg1="#ffffff" jsx_rowbg2="#efefff"/>
+              <object type="jsx3.gui.Matrix.Column">
+                <variants jsxwidth="60"/>
+                <strings jsxname="deleteButtonColumn" jsxtext="Unassign" jsxpadding="2" jsxcellpadding="1" jsxvaluetemplate="@empty" jsxtextalign="center" jsxcelltextalign="center"/>
+                <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+                <object type="jsx3.gui.ImageButton">
+                  <variants jsxwidth="16" jsxheight="16" jsxenabled="1" jsxstate="0" jsxprefetch="1" jsxtype="0"/>
+                  <strings jsxname="deleteButtonMask" jsximage="jsx:///images/list/left.gif"/>
+                  <events jsxexecute="unassignMechanic(this);this.getParent().getParent().deleteRecord(this.emGetSession().recordId, true);this.getParent().getParent().getParent().getParent().validate(this, objEVENT);"/>
+                </object>
+              </object>
+              <object type="jsx3.gui.Matrix.Column">
+                <variants jsxwidth="210"/>
+                <strings jsxname="assignedMechanicName-column" jsxtext="Name" jsxpadding="2" jsxcellpadding="3" jsxpath="jsxAssignedMechanicName"/>
+                <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+                <object type="jsx3.gui.TextBox">
+                  <variants jsxheight="18" jsxrelativeposition="0" jsxleft="46" jsxtop="0" jsxwidth="232" jsxzindex="10" jsxenabled="0" jsxreadonly="1"/>
+                  <strings jsxname="assignedMechanicName" jsxmargin="0 4 0 0" jsxdisplay="none" jsxvalue=""/>
+                  <events jsxkeydown="1;"/>
+                </object>
+              </object>
+              <object type="jsx3.gui.Matrix.Column">
+                <variants jsxwidth="210"/>
+                <strings jsxname="assignedMechanicID-column" jsxtext="" jsxpadding="2" jsxcellpadding="3" jsxpath="jsxAssignedMechanicID" jsxdisplay="none"/>
+                <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+                <object type="jsx3.gui.TextBox">
+                  <variants jsxheight="18" jsxrelativeposition="0" jsxleft="46" jsxtop="0" jsxwidth="232" jsxzindex="10"/>
+                  <strings jsxname="assignedMechanicID" jsxmargin="0 4 0 0" jsxdisplay="none"/>
+                  <events jsxkeydown="1;"/>
+                </object>
+              </object>
+              <object type="jsx3.gui.Matrix.Column">
+                <variants jsxwidth="210"/>
+                <strings jsxname="assignedMechanicCert-column" jsxtext="" jsxpadding="2" jsxcellpadding="3" jsxpath="jsxAssignedMechanicCert" jsxdisplay="none"/>
+                <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+                <object type="jsx3.gui.TextBox">
+                  <variants jsxheight="18" jsxrelativeposition="0" jsxleft="46" jsxtop="0" jsxwidth="232" jsxzindex="10"/>
+                  <strings jsxname="assignedMechanicCert" jsxmargin="0 4 0 0" jsxdisplay="none"/>
+                  <events jsxkeydown="1;"/>
+                </object>
+              </object>
+              <object type="jsx3.gui.Matrix.Column">
+                <variants jsxwidth="54"/>
+                <strings jsxname="entitledToRelease-column" jsxtext="Releaser" jsxpath="jsxRelease" jsxcelltextalign="center" jsxpadding="3" jsxcellpadding="1" jsxvaluetemplate="@empty"/>
+                <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+                <object type="jsx3.gui.CheckBox">
+                  <variants jsxchecked="0" jsxenabled="1"/>
+                  <strings jsxname="entitledToRelease" jsxtext=""/>
+                </object>
+              </object>
+            </object>
+          </object>
+        </object>
+      </object>
+      <object type="jsx3.gui.Block">
+        <variants jsxoverflow="1"/>
+        <strings jsxname="avionicsBlock" jsxwidth="100%" jsxheight="100%" jsxrelativeposition="1"/>
+        <object type="com.intalio.ria.Field">
+          <variants/>
+          <strings jsxname="avionicsLabel-field" riaLabelText="" riaHelpImageSrc="images/help.gif" riaErrorImageSrc="images/error.gif" riaCssClass="field"/>
+          <object type="jsx3.gui.Block">
+            <variants jsxrelativeposition="1" jsxoverflow="3"/>
+            <strings jsxname="availableAvionicsLabel" jsxtext="Available Avionics" jsxcolor="" jsxfontweight="bold"/>
+          </object>
+          <object type="jsx3.gui.Block">
+            <variants jsxrelativeposition="1" jsxoverflow="3"/>
+            <strings jsxname="assignedAvionicsLabel" jsxtext="Assigned Avionics" jsxfontweight="bold" jsxmargin="0 0 0 267"/>
+          </object>
+        </object>
+        <object type="com.intalio.ria.Field">
+          <variants/>
+          <strings jsxname="availableAvionics-field" riaLabelText="" riaHelpImageSrc="images/help.gif" riaErrorImageSrc="images/error.gif" riaCssClass="field"/>
+          <object type="jsx3.gui.Block">
+            <variants jsxwidth="350" jsxheight="110" jsxoverflow="1"/>
+            <strings jsxname="availableAvionics-block" jsxrelativeposition="1" jsxmargin="0 0 -115 0"/>
+            <object type="jsx3.gui.Matrix">
+              <variants jsxpagingmodel="1" jsxselectionmodel="0" jsxjsxxmlasync="1" jsxautorow="0"/>
+              <strings jsxname="availableAvionics-nomap" jsxbodyborder="1px solid #dfdfef" jsxheaderborder="1px solid #dfdfef" jsxbgcolor="#efefff" jsxxmlid="avionicsInDB"/>
+              <events jsxaftercommit="this.getParent().getParent().validate(this, objEVENT);"/>
+              <xslparameters jsx_rowbg1="#ffffff" jsx_rowbg2="#efefff"/>
+              <object type="jsx3.gui.Matrix.Column">
+                <variants jsxwidth="279"/>
+                <strings jsxname="availableAvionicName-column" jsxtext="Name" jsxpadding="2" jsxcellpadding="3" jsxpath="dbAvionicName"/>
+                <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+                <object type="jsx3.gui.TextBox">
+                  <variants jsxheight="18" jsxrelativeposition="0" jsxleft="46" jsxtop="0" jsxwidth="232" jsxzindex="10" jsxenabled="0" jsxreadonly="1"/>
+                  <strings jsxname="availableAvionicName-nomap" jsxmargin="0 4 0 0" jsxdisplay="none" jsxvalue=""/>
+                  <events jsxkeydown="1;"/>
+                </object>
+              </object>
+              <object type="jsx3.gui.Matrix.Column">
+                <variants jsxwidth="279"/>
+                <strings jsxname="availableAvionicID-column" jsxtext="" jsxpadding="2" jsxcellpadding="3" jsxpath="dbAvionicID" jsxdisplay="none"/>
+                <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+                <object type="jsx3.gui.TextBox">
+                  <variants jsxheight="18" jsxrelativeposition="0" jsxleft="46" jsxtop="0" jsxwidth="232" jsxzindex="10"/>
+                  <strings jsxname="availableAvionicID-nomap" jsxmargin="0 4 0 0" jsxdisplay="none"/>
+                  <events jsxkeydown="1;"/>
+                </object>
+              </object>
+              <object type="jsx3.gui.Matrix.Column">
+                <variants jsxwidth="279"/>
+                <strings jsxname="availableAvionicCert-column" jsxtext="" jsxpadding="2" jsxcellpadding="3" jsxpath="dbAvionicCert" jsxdisplay="none"/>
+                <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+                <object type="jsx3.gui.TextBox">
+                  <variants jsxheight="18" jsxrelativeposition="0" jsxleft="46" jsxtop="0" jsxwidth="232" jsxzindex="10"/>
+                  <strings jsxname="availableAvionicCert-nomap" jsxmargin="0 4 0 0" jsxdisplay="none"/>
+                  <events jsxkeydown="1;"/>
+                </object>
+              </object>
+              <object type="jsx3.gui.Matrix.Column">
+                <variants jsxwidth="50"/>
+                <strings jsxname="deleteButtonColumn" jsxtext="Assign" jsxpadding="2" jsxcellpadding="1" jsxvaluetemplate="@empty" jsxtextalign="center" jsxcelltextalign="center"/>
+                <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+                <object type="jsx3.gui.ImageButton">
+                  <variants jsxwidth="16" jsxheight="16" jsxenabled="1" jsxstate="0" jsxprefetch="1" jsxtype="0"/>
+                  <strings jsxname="deleteButtonMask" jsximage="jsx:///images/list/right.gif"/>
+                  <events jsxexecute="assignAvionic(this);this.getParent().getParent().deleteRecord(this.emGetSession().recordId, true);this.getParent().getParent().getParent().getParent().validate(this, objEVENT);"/>
+                </object>
+              </object>
+            </object>
+          </object>
+        </object>
+        <object type="com.intalio.ria.Field">
+          <variants/>
+          <strings jsxname="assignedAvionics-field" riaLabelText="" riaHelpImageSrc="images/help.gif" riaErrorImageSrc="images/error.gif" riaCssClass="field"/>
+          <object type="jsx3.gui.Block">
+            <variants jsxwidth="350" jsxheight="110" jsxoverflow="1"/>
+            <strings jsxname="assignedAvionics-block" jsxrelativeposition="1" jsxmargin="0 0 0 380"/>
+            <object type="jsx3.gui.Matrix">
+              <variants jsxpagingmodel="1" jsxselectionmodel="0" jsxjsxxmlasync="1" jsxautorow="0"/>
+              <strings jsxname="assignedAvionics" jsxbodyborder="1px solid #dfdfef" jsxheaderborder="1px solid #dfdfef" jsxbgcolor="#efefff"/>
+              <events jsxaftercommit="this.getParent().getParent().validate(this, objEVENT);"/>
+              <xslparameters jsx_rowbg1="#ffffff" jsx_rowbg2="#efefff"/>
+              <object type="jsx3.gui.Matrix.Column">
+                <variants jsxwidth="59"/>
+                <strings jsxname="deleteButtonColumn" jsxtext="Unassign" jsxpadding="2" jsxcellpadding="1" jsxvaluetemplate="@empty" jsxtextalign="center" jsxcelltextalign="center"/>
+                <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+                <object type="jsx3.gui.ImageButton">
+                  <variants jsxwidth="16" jsxheight="16" jsxenabled="1" jsxstate="0" jsxprefetch="1" jsxtype="0"/>
+                  <strings jsxname="deleteButtonMask" jsximage="jsx:///images/list/left.gif"/>
+                  <events jsxexecute="unassignAvionic(this);this.getParent().getParent().deleteRecord(this.emGetSession().recordId, true);this.getParent().getParent().getParent().getParent().validate(this, objEVENT);"/>
+                </object>
+              </object>
+              <object type="jsx3.gui.Matrix.Column">
+                <variants/>
+                <strings jsxname="assignedAvionicName-column" jsxwidth="*" jsxtext="Name" jsxpadding="2" jsxcellpadding="3" jsxpath="jsxAssignedAvionicName"/>
+                <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+                <object type="jsx3.gui.TextBox">
+                  <variants jsxheight="18" jsxrelativeposition="0" jsxleft="46" jsxtop="0" jsxwidth="232" jsxzindex="10" jsxenabled="0" jsxreadonly="1"/>
+                  <strings jsxname="assignedAvionicName" jsxmargin="0 4 0 0" jsxdisplay="none" jsxvalue=""/>
+                  <events jsxkeydown="1;"/>
+                </object>
+              </object>
+              <object type="jsx3.gui.Matrix.Column">
+                <variants/>
+                <strings jsxname="assignedAvionicID-column" jsxwidth="*" jsxtext="" jsxpadding="2" jsxcellpadding="3" jsxpath="jsxAssignedAvionicID" jsxdisplay="none"/>
+                <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+                <object type="jsx3.gui.TextBox">
+                  <variants jsxheight="18" jsxrelativeposition="0" jsxleft="46" jsxtop="0" jsxwidth="232" jsxzindex="10"/>
+                  <strings jsxname="assignedAvionicID" jsxmargin="0 4 0 0" jsxdisplay="none"/>
+                  <events jsxkeydown="1;"/>
+                </object>
+              </object>
+              <object type="jsx3.gui.Matrix.Column">
+                <variants/>
+                <strings jsxname="assignedAvionicCert-column" jsxwidth="*" jsxtext="" jsxpadding="2" jsxcellpadding="3" jsxpath="jsxAssignedAvionicCert" jsxdisplay="none"/>
+                <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+                <object type="jsx3.gui.TextBox">
+                  <variants jsxheight="18" jsxrelativeposition="0" jsxleft="46" jsxtop="0" jsxwidth="232" jsxzindex="10"/>
+                  <strings jsxname="assignedAvionicCert" jsxmargin="0 4 0 0" jsxdisplay="none"/>
+                  <events jsxkeydown="1;"/>
+                </object>
+              </object>
+            </object>
+          </object>
+        </object>
+      </object>
+      <object type="com.intalio.ria.Field">
+        <variants/>
+        <strings jsxname="freetext-field" riaLabelText="Notification Message" riaHelpImageSrc="images/help.gif" riaErrorImageSrc="images/error.gif" riaCssClass="field" riaLayoutDirection="horizontal"/>
+        <object type="jsx3.gui.TextBox">
+          <variants jsxtype="1" jsxwidth="730"/>
+          <strings jsxname="freetext-nomap" jsxmargin="0 4 0 0" jsxvalue=""/>
+          <events jsxfocus="com.intalio.ria.highlightTextInput(this, false);" jsxblur="com.intalio.ria.highlightTextInput(this, true);" jsxchange="com.intalio.ria.validate(this, objEVENT);" jsxincchange="com.intalio.ria.validate(this, objEVENT);"/>
+        </object>
+      </object>
+      <object type="jsx3.gui.Button">
+        <variants jsxindex="0" jsxheight="30"/>
+        <strings jsxname="Notifbutton" jsxtext="Notify assigned&lt;br/&gt;mechanics and avionics" jsxmargin="0 4 0 220"/>
+        <events jsxexecute="TAexport.service.callstart();notif.service.callstart();"/>
+      </object>
+    </object>
+    <object type="com.intalio.ria.Section">
+      <variants/>
+      <strings jsxname="HIL" riaTitleText="HIL"/>
+      <object type="com.intalio.ria.Field">
+        <variants/>
+        <strings jsxname="TAHIL-table-field" riaLabelText="" riaHelpImageSrc="images/help.gif" riaErrorImageSrc="images/error.gif" riaCssClass="field"/>
+        <object type="jsx3.gui.Block">
+          <variants jsxwidth="1200" jsxheight="110" jsxoverflow="1"/>
+          <strings jsxname="TAHIL-block" jsxrelativeposition="1"/>
+          <object type="jsx3.gui.Matrix">
+            <variants jsxpagingmodel="1" jsxselectionmodel="0" jsxjsxxmlasync="1" jsxautorow="1"/>
+            <strings jsxname="TAHIL" jsxbodyborder="1px solid #dfdfef" jsxheaderborder="1px solid #dfdfef" jsxbgcolor="#efefff"/>
+            <events jsxaftercommit="this.getParent().getParent().validate(this, objEVENT);"/>
+            <xslparameters jsx_rowbg1="#ffffff" jsx_rowbg2="#efefff"/>
+            <object type="jsx3.gui.Matrix.Column">
+              <variants jsxwidth="74"/>
+              <strings jsxname="TAHILid-column" jsxtext="HIL ID" jsxpadding="2" jsxcellpadding="3" jsxpath="jsxtTAHILid"/>
+              <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+              <object type="jsx3.gui.TextBox">
+                <variants jsxheight="18" jsxrelativeposition="0" jsxleft="46" jsxtop="0" jsxwidth="232" jsxzindex="10"/>
+                <strings jsxname="TAHILid" jsxmargin="0 4 0 0" jsxdisplay="none"/>
+                <events jsxkeydown="1;"/>
+              </object>
+            </object>
+            <object type="jsx3.gui.Matrix.Column">
+              <variants jsxwidth="66"/>
+              <strings jsxname="TAHILtype-column" jsxtext="Type" jsxpadding="2" jsxcellpadding="3" jsxpath="jsxtTAHILtype"/>
+              <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+              <object type="jsx3.gui.TextBox">
+                <variants jsxheight="18" jsxrelativeposition="0" jsxleft="46" jsxtop="0" jsxwidth="232" jsxzindex="10"/>
+                <strings jsxname="TAHILtype" jsxmargin="0 4 0 0" jsxdisplay="none"/>
+                <events jsxkeydown="1;"/>
+              </object>
+            </object>
+            <object type="jsx3.gui.Matrix.Column">
+              <variants/>
+              <strings jsxname="TAHILOpeningDate-column" jsxwidth="100" jsxtext="Opening Date" jsxpadding="2" jsxcellpadding="3" jsxpath="jsxTAHILopeningDate"/>
+              <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+              <object type="jsx3.gui.DatePicker">
+                <variants jsxwidth="100" jsxrelativeposition="0" jsxheight="18" jsxleft="0" jsxtop="0"/>
+                <strings jsxname="TAHILopeningDate" jsxmargin="0 4 0 0" jsxformat="yyyy-MM-dd" jsxdisplay="none"/>
+              </object>
+            </object>
+            <object type="jsx3.gui.Matrix.Column">
+              <variants jsxwidth="40"/>
+              <strings jsxname="TAHILCL-column" jsxtext="CL" jsxpadding="2" jsxcellpadding="3" jsxpath="jsxtTAHILCL"/>
+              <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+              <object type="jsx3.gui.TextBox">
+                <variants jsxheight="18" jsxrelativeposition="0" jsxleft="46" jsxtop="0" jsxwidth="232" jsxzindex="10"/>
+                <strings jsxname="TAHILCL" jsxmargin="0 4 0 0" jsxdisplay="none"/>
+                <events jsxkeydown="1;"/>
+              </object>
+            </object>
+            <object type="jsx3.gui.Matrix.Column">
+              <variants/>
+              <strings jsxname="TAHILlimitDate-column" jsxwidth="100" jsxtext="Limit Date" jsxpadding="2" jsxcellpadding="3" jsxpath="jsxTAHILlimitDate"/>
+              <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+              <object type="jsx3.gui.DatePicker">
+                <variants jsxwidth="100" jsxrelativeposition="0" jsxheight="18" jsxleft="0" jsxtop="0"/>
+                <strings jsxname="TAHILlimitDate" jsxmargin="0 4 0 0" jsxformat="yyyy-MM-dd" jsxdisplay="none"/>
+              </object>
+            </object>
+            <object type="jsx3.gui.Matrix.Column">
+              <variants/>
+              <strings jsxname="TAHILclosingDate-column" jsxwidth="100" jsxtext="Closing Date" jsxpadding="2" jsxcellpadding="3" jsxpath="jsxTAHILclosingDate"/>
+              <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+              <object type="jsx3.gui.DatePicker">
+                <variants jsxwidth="100" jsxrelativeposition="0" jsxheight="18" jsxleft="0" jsxtop="0"/>
+                <strings jsxname="TAHILclosingDate" jsxmargin="0 4 0 0" jsxformat="yyyy-MM-dd" jsxdisplay="none"/>
+              </object>
+            </object>
+            <object type="jsx3.gui.Matrix.Column">
+              <variants jsxwidth="54"/>
+              <strings jsxname="TAHILATA100-column" jsxtext="ATA100" jsxpadding="2" jsxcellpadding="3" jsxpath="jsxtTAHILATA100"/>
+              <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+              <object type="jsx3.gui.TextBox">
+                <variants jsxheight="18" jsxrelativeposition="0" jsxleft="46" jsxtop="0" jsxwidth="232" jsxzindex="10"/>
+                <strings jsxname="TAHILATA100" jsxmargin="0 4 0 0" jsxdisplay="none"/>
+                <events jsxkeydown="1;"/>
+              </object>
+            </object>
+            <object type="jsx3.gui.Matrix.Column">
+              <variants jsxwidth="218"/>
+              <strings jsxname="TAHILdescription-column" jsxtext="Description" jsxpadding="2" jsxcellpadding="3" jsxpath="jsxTAHILdescription"/>
+              <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+              <object type="jsx3.gui.TextBox">
+                <variants jsxrelativeposition="0" jsxleft="0" jsxtop="0"/>
+                <strings jsxname="TAHILdescription" jsxdisplay="none"/>
+                <events jsxkeydown="1;"/>
+              </object>
+            </object>
+            <object type="jsx3.gui.Matrix.Column">
+              <variants jsxwidth="64"/>
+              <strings jsxname="TAHILstatus-column" jsxtext="Status" jsxpadding="2" jsxcellpadding="3" jsxpath="jsxTAHILstatus"/>
+              <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+              <object type="jsx3.gui.Select">
+                <variants jsxwidth="150" jsxheight="18" jsxxmlasync="1" jsxrelativeposition="0" jsxleft="0" jsxtop="0"/>
+                <strings jsxname="TAHILstatus" jsxmargin="0 4 0 0" jsxxml="&lt;data&gt;&lt;record jsxid=&quot;open&quot; jsxtext=&quot;Open&quot;/&gt;&lt;record jsxid=&quot;fixed&quot; jsxtext=&quot;Fixed&quot;/&gt;&lt;/data&gt;" jsxdisplay="none"/>
+              </object>
+            </object>
+            <object type="jsx3.gui.Matrix.Column">
+              <variants jsxwidth="68"/>
+              <strings jsxname="TAHILpartNr-column" jsxtext="Part Num" jsxpadding="2" jsxcellpadding="3" jsxpath="jsxTAHILpartNr"/>
+              <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+              <object type="jsx3.gui.TextBox">
+                <variants jsxrelativeposition="0" jsxleft="0" jsxtop="0"/>
+                <strings jsxname="TAHILpartNr" jsxdisplay="none"/>
+                <events jsxkeydown="1;"/>
+              </object>
+            </object>
+            <object type="jsx3.gui.Matrix.Column">
+              <variants jsxwidth="188"/>
+              <strings jsxname="TAHILcomments-column" jsxtext="Comments" jsxpadding="2" jsxcellpadding="3" jsxpath="jsxTAHILcomments"/>
+              <dynamics jsxborder="@Outset" jsxbg="@Bevel TopDown" jsxbgcolor="@Solid Disabled"/>
+              <object type="jsx3.gui.TextBox">
+                <variants jsxrelativeposition="0" jsxleft="0" jsxtop="0"/>
+                <strings jsxname="TAHILcomments" jsxdisplay="none"/>
+                <events jsxkeydown="1;"/>
+              </object>
+            </object>
+          </object>
+        </object>
+      </object>
+    </object>
+    <object type="com.intalio.ria.Section">
+      <variants/>
+      <strings jsxname="DC" riaTitleText="Dispatch Coordinator additional information"/>
+      <object type="com.intalio.ria.Field">
+        <variants/>
+        <strings jsxname="ExpectedStartTime-field" riaLabelText="Expected Start Time" riaHelpImageSrc="images/help.gif" riaErrorImageSrc="images/error.gif" riaCssClass="field"/>
+        <object type="jsx3.gui.TimePicker">
+          <variants jsxrelativeposition="1" jsxheight="18" jsxhours="0" jsxminutes="0" jsxseconds="0" jsxmillis="0" jsxshowsecs="0" jsxshowmillis="0" jsx24hour="1"/>
+          <strings jsxname="ExpectedStartTime" jsxmargin="0 4 0 0"/>
+        </object>
+        <object type="jsx3.gui.Block">
+          <variants jsxrelativeposition="1" jsxoverflow="3"/>
+          <strings jsxname="EFTlabel" jsxtext="Expected Finish Time" jsxfontweight="bold" jsxmargin="0 0 0 20"/>
+        </object>
+        <object type="jsx3.gui.TimePicker">
+          <variants jsxrelativeposition="1" jsxheight="18" jsxhours="0" jsxminutes="0" jsxseconds="0" jsxmillis="0" jsxshowsecs="0" jsxshowmillis="0" jsx24hour="1"/>
+          <strings jsxname="ExpectedFinishTime" jsxmargin="0 4 0 0"/>
+        </object>
+        <object type="jsx3.gui.Block">
+          <variants jsxrelativeposition="1" jsxoverflow="3"/>
+          <strings jsxname="ERTlabel" jsxtext="Expected Release Time" jsxfontweight="bold" jsxmargin="0 0 0 20"/>
+        </object>
+        <object type="jsx3.gui.TimePicker">
+          <variants jsxrelativeposition="1" jsxheight="18" jsxhours="0" jsxminutes="0" jsxseconds="0" jsxmillis="0" jsxshowsecs="0" jsxshowmillis="0" jsx24hour="1"/>
+          <strings jsxname="ExpectedReleaseTime" jsxmargin="0 4 0 0"/>
+        </object>
+      </object>
+      <object type="com.intalio.ria.Field">
+        <variants/>
+        <strings jsxname="CompassInspectionType-field" riaLabelText="Compass Inspection Type" riaHelpImageSrc="images/help.gif" riaErrorImageSrc="images/error.gif" riaCssClass="field"/>
+        <object type="jsx3.gui.TextBox">
+          <variants/>
+          <strings jsxname="CompassInspectionType" jsxmargin="0 4 0 0" jsxvalue=""/>
+          <events jsxfocus="com.intalio.ria.highlightTextInput(this, false);" jsxblur="com.intalio.ria.highlightTextInput(this, true);" jsxchange="com.intalio.ria.validate(this, objEVENT);" jsxincchange="com.intalio.ria.validate(this, objEVENT);"/>
+        </object>
+      </object>
+      <object type="com.intalio.ria.Field">
+        <variants/>
+        <strings jsxname="comments-field" riaLabelText="Comments" riaHelpImageSrc="images/help.gif" riaErrorImageSrc="images/error.gif" riaCssClass="field"/>
+        <object type="jsx3.gui.TextBox">
+          <variants jsxtype="1"/>
+          <strings jsxname="Comments" jsxmargin="0 4 0 0" jsxvalue=""/>
+          <events jsxfocus="com.intalio.ria.highlightTextInput(this, false);" jsxblur="com.intalio.ria.highlightTextInput(this, true);" jsxchange="com.intalio.ria.validate(this, objEVENT);" jsxincchange="com.intalio.ria.validate(this, objEVENT);"/>
+        </object>
+      </object>
+    </object>
+  </object>
+</serialization>

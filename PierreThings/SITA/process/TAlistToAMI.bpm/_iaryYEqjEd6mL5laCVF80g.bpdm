@@ -1,0 +1,31 @@
+﻿<bpel:process xmlns:bpdm="http://www.intalio/designer/business-process-data-modeling" xmlns:mapper="http://www.intalio.com/designer/mapper" xmlns:TAlistExportProcess="http://thisdiagram/TAlistExportProcess" xmlns:this="http://thisdiagram/TAinterface" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diag="http://thisdiagram" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ode="http://www.apache.org/ode/type/extension" targetNamespace="http://thisdiagram/TAinterface">
+    <bpdm:dependencies version="6000076">
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram/TAlistExportProcess" bpdm:prefix="TAlistExportProcess" bpdm:comment="contrib=&apos;partner-pool:///_kTFecEqjEd6mL5laCVF80g"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram/TAinterface" bpdm:prefix="this" bpdm:type="this_process"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/2001/XMLSchema" bpdm:prefix="xs"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/2001/XMLSchema-instance" bpdm:prefix="xsi"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram" bpdm:prefix="diag" bpdm:comment="contrib=&apos;partner-pool:///_kTFecEqjEd6mL5laCVF80g"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/XML/1998/namespace" bpdm:prefix="xml"></bpdm:namespaceDefinition>
+        <bpdm:namespaceContributor bpdm:url="thisprocess://this-process-types" bpdm:label="process defined this-process-types"></bpdm:namespaceContributor>
+        <bpdm:namespaceContributor bpdm:url="partner-pool:///_kTFecEqjEd6mL5laCVF80g" bpdm:label="TAlistExportProcess"/>
+    </bpdm:dependencies>
+    <bpel:scope bpdm:label="TAinterface" bpdm:ID="_iaryYEqjEd6mL5laCVF80g">
+        <bpel:partnerLinks>
+            <bpel:partnerLink name="tAlistExportProcessAndTAinterfacePlkVar" partnerLinkType="diag:TAlistExportProcessAndTAinterface" initializePartnerRole="yes" partnerRole="TAlistExportProcess_for_TAinterface" bpdm:invokedService="TAlistExportProcess:CanonicServiceForTAinterface" bpdm:invokedPort="canonicPort" bpdm:invokedSOAPAddress="${deploy_serverUrl}${deploy_baseSoapServicesUrl}/${deploy_bundleNcName}/${diagram_relativeURL}/TAlistExportProcess/TAinterface" bpdm:invokedIsDefault="true" bpdm:clientTasks="_iaryYEqjEd6mL5laCVF80g:_ia08UEqjEd6mL5laCVF80g" bpdm:isManaged="true" bpdm:otherPoolId="_kTFecEqjEd6mL5laCVF80g"/>
+        </bpel:partnerLinks>
+        <bpel:variables>
+            <bpel:variable name="tAlistExportProcessStartRequestMsg" messageType="TAlistExportProcess:startRequest" bpdm:id="_nXoNgEqjEd6mL5laCVF80g" bpdm:messageIds=" out:_nXecgEqjEd6mL5laCVF80g">
+                <bpel:from bpdm:toPart="body">
+                    <bpel:literal bpdm:linkedMessageType="TAlistExportProcess:startRequest" bpdm:linkedPart="body"></bpel:literal>
+                </bpel:from>
+            </bpel:variable>
+            <bpel:variable name="tAlistExportProcessStartResponseMsg" messageType="TAlistExportProcess:startResponse" bpdm:id="_oJP3xkqjEd6mL5laCVF80g" bpdm:messageIds="inc:_oJGGsEqjEd6mL5laCVF80g"/>
+        </bpel:variables>
+        <bpel:sequence>
+            <bpdm:messagingtask operation="start" partnerLink="tAlistExportProcessAndTAinterfacePlkVar" portType="TAlistExportProcess:ForTAinterface" isMyRole="false" enableSharing="false" bpdm:label="Invoke" bpdm:ID="_ia08UEqjEd6mL5laCVF80g">
+                <bpdm:linkset bpdm:type="outgoingMessage" bpdm:bpeltype="invoke-request" bpdm:messageVariable="tAlistExportProcessStartRequestMsg" bpdm:msgVarScopeId="_iaryYEqjEd6mL5laCVF80g" bpdm:variableIsManaged="true" bpdm:messageType="TAlistExportProcess:startRequest" bpdm:ID="_nXecgEqjEd6mL5laCVF80g"></bpdm:linkset>
+                <bpdm:linkset bpdm:type="incomingMessage" bpdm:bpeltype="invoke-receive" bpdm:messageVariable="tAlistExportProcessStartResponseMsg" bpdm:msgVarScopeId="_iaryYEqjEd6mL5laCVF80g" bpdm:variableIsManaged="true" bpdm:messageType="TAlistExportProcess:startResponse" bpdm:ID="_oJGGsEqjEd6mL5laCVF80g"></bpdm:linkset>
+            </bpdm:messagingtask>
+        </bpel:sequence>
+    </bpel:scope>
+</bpel:process>

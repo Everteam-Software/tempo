@@ -1,0 +1,26 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<wsdl:definitions xmlns:tns="http://www.example.org/UploadResponse" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:process="http://thisdiagram/process" xmlns:b4p="http://www.intalio.com/bpms/workflow/ib4p_20051115" xmlns:diag="http://thisdiagram" xmlns:Interface="http://thisdiagram/Interface" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:bpdm="http://www.intalio/designer/business-process-data-modeling" targetNamespace="http://thisdiagram" bpdm:version="6000076" bpdm:canid="_hLLuQGUOEd6uuIjDUjj8XQ" bpdm:displayName="diag">
+  <pnlk:partnerLinkType name="TMpAndProcess" bpdm:poolOneId="_ja_NsGUOEd6uuIjDUjj8XQ" bpdm:poolOneIsExecutable="false" bpdm:poolOneName="TMP" bpdm:poolTwoId="_ijQUcGUOEd6uuIjDUjj8XQ" bpdm:poolTwoIsExecutable="true" bpdm:poolTwoName="process">
+    <pnlk:role name="TMP_for_process" portType="{http://thisdiagram/TMP}Forprocess" bpdm:thisPoolId="_ja_NsGUOEd6uuIjDUjj8XQ">
+      <wsdl:portType name="Forprocess">
+        <wsdl:operation name="completeTask" bpdm:canid="_ROCfp2UPEd6uuIjDUjj8XQ._qTTwYGUOEd6uuIjDUjj8XQ." bpdm:dataobjectPointer="project:///services/TaskManagerProcess.wsdl?wsdloperationbound={http://www.intalio.com/bpms/workflow/ib4p_20051115}UIFWService/UIFWPort/completeTask">
+          <wsdl:input message="b4p:completeTaskRequest" name="completeTask" bpdm:canid="_R3BLMGUPEd6uuIjDUjj8XQ" bpdm:senderId="_qTTwYGUOEd6uuIjDUjj8XQ" bpdm:receiverId="_ROCfp2UPEd6uuIjDUjj8XQ" bpdm:senderName="complete" bpdm:receiverName="completeTask" bpdm:receiverPoolId="_ja_NsGUOEd6uuIjDUjj8XQ" bpdm:dataobjectPointer="project:///services/TaskManagerProcess.wsdl?messageForBoundOperation={http://www.intalio.com/bpms/workflow/ib4p_20051115}UIFWService/UIFWPort/completeTask/input/completeTaskRequest"></wsdl:input>
+          <wsdl:output message="b4p:completeTaskResponse" name="completeTaskResponse" bpdm:canid="_SEu3EGUPEd6uuIjDUjj8XQ" bpdm:senderId="_ROCfp2UPEd6uuIjDUjj8XQ" bpdm:receiverId="_qTTwYGUOEd6uuIjDUjj8XQ" bpdm:senderName="completeTask" bpdm:receiverName="complete" bpdm:receiverPoolId="_ijQUcGUOEd6uuIjDUjj8XQ" bpdm:dataobjectPointer="project:///services/TaskManagerProcess.wsdl?messageForBoundOperation={http://www.intalio.com/bpms/workflow/ib4p_20051115}UIFWService/UIFWPort/completeTask/output/completeTaskResponse"></wsdl:output>
+        </wsdl:operation>
+      </wsdl:portType>
+    </pnlk:role>
+  </pnlk:partnerLinkType>
+  <pnlk:partnerLinkType name="TMpAndProcessForUIFWPortPlk" bpdm:canPlkId="_ja_NsGUOEd6uuIjDUjj8XQ-_ijQUcGUOEd6uuIjDUjj8XQ">
+    <pnlk:role name="TMP_for_process" portType="b4p:UIFWPortType"></pnlk:role>
+  </pnlk:partnerLinkType>
+  <pnlk:partnerLinkType name="processAndInterface" bpdm:poolOneId="_ijQUcGUOEd6uuIjDUjj8XQ" bpdm:poolOneIsExecutable="true" bpdm:poolOneName="process" bpdm:poolTwoId="_hMhyEGUOEd6uuIjDUjj8XQ" bpdm:poolTwoIsExecutable="false" bpdm:poolTwoName="Interface">
+    <pnlk:role name="process_for_Interface" portType="process:ForInterface" bpdm:thisPoolId="_ijQUcGUOEd6uuIjDUjj8XQ">
+      <wsdl:portType name="ForInterface">
+        <wsdl:operation name="EventStartMessage" bpdm:canid="_kyArAGUOEd6uuIjDUjj8XQ._pPzsAGUOEd6uuIjDUjj8XQ.">
+          <wsdl:input message="process:EventStartMessageRequest" name="EventStartMessage" bpdm:canid="_pP9dAGUOEd6uuIjDUjj8XQ" bpdm:senderId="_kyArAGUOEd6uuIjDUjj8XQ" bpdm:receiverId="_pPzsAGUOEd6uuIjDUjj8XQ" bpdm:senderName="invoke" bpdm:receiverName="EventStartMessage" bpdm:receiverPoolId="_ijQUcGUOEd6uuIjDUjj8XQ" bpdm:dataobjectPointer="project:///services/b4p.xsd?xsdelement={http://www.intalio.com/bpms/workflow/ib4p_20051115}completeTaskRequest"></wsdl:input>
+          <wsdl:output message="process:EventStartMessageResponse" name="EventStartMessageResponse" bpdm:canid="_pkYN0GUOEd6uuIjDUjj8XQ" bpdm:senderId="_pPzsAGUOEd6uuIjDUjj8XQ" bpdm:receiverId="_kyArAGUOEd6uuIjDUjj8XQ" bpdm:senderName="EventStartMessage" bpdm:receiverName="invoke" bpdm:receiverPoolId="_hMhyEGUOEd6uuIjDUjj8XQ" bpdm:dataobjectPointer="project:///schema/UploadResponse.xsd?xsdelement={http://www.example.org/UploadResponse}uploadReponse"></wsdl:output>
+        </wsdl:operation>
+      </wsdl:portType>
+    </pnlk:role>
+  </pnlk:partnerLinkType>
+</wsdl:definitions>

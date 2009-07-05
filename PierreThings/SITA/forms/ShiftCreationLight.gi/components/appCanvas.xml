@@ -1,0 +1,37 @@
+<serialization xmlns="urn:tibco.com/v3.0" jsxversion="3.7">
+  <name/>
+  <icon/>
+  <description/>
+  <onBeforeDeserialize/>
+  <onAfterDeserialize/>
+  <object type="jsx3.gui.Block">
+    <variants jsxoverflow="1"/>
+    <strings jsxheight="100%" jsxwidth="100%" jsxname="root"/>
+    <object type="jsx3.gui.Block">
+      <variants/>
+      <strings jsxwidth="100%" jsxpadding="5 10 0 10" jsxname="header" jsxrelativeposition="1"/>
+      <object type="jsx3.gui.Block">
+        <variants jsxrelativeposition="1"/>
+        <strings jsxwidth="100%" jsxname="form-title" jsxclassname="form-title" jsxtext="TA Population"/>
+      </object>
+    </object>
+    <object type="com.intalio.ria.Section">
+      <variants/>
+      <strings riaTitleText="Your shift" jsxname="fieldset"/>
+      <object type="com.intalio.ria.Field">
+        <variants/>
+        <strings jsxname="startDate-field" riaLabelText="Theoretical Start time" riaHelpImageSrc="images/help.gif" riaErrorImageSrc="images/error.gif" riaCssClass="field"/>
+        <object type="jsx3.gui.DatePicker">
+          <variants jsxwidth="100" jsxrelativeposition="1" jsxheight="18" jsxrequired="1"/>
+          <strings jsxname="startDate" jsxmargin="0 4 0 0" jsxformat="yyyy-MM-dd"/>
+          <events jsxhide="com.intalio.ria.validate(this);"/>
+        </object>
+        <object type="jsx3.gui.Select">
+          <variants jsxwidth="70" jsxheight="18" jsxtype="1" jsxxmlasync="1" _isfocusing="true" jsxrequired="1"/>
+          <strings jsxname="startTime" jsxmargin="0 4 0 0" jsxxml="&lt;data&gt;&lt;record jsxid=&quot;00:00:00&quot; jsxtext=&quot;00:00&quot;/&gt;&lt;record jsxid=&quot;08:00:00&quot; jsxtext=&quot;08:00&quot;/&gt;&lt;record jsxid=&quot;16:00:00&quot; jsxtext=&quot;16:00&quot;/&gt;&lt;/data&gt;"/>
+          <events onmousedown="this.style.backgroundColor='';" onkeyup="jsx3.out('a server call could be made here to perform a lookup on the value, ' + this.childNodes[0].value + '.');" jsxselect="com.intalio.ria.validate(this, objEVENT);"/>
+        </object>
+      </object>
+    </object>
+  </object>
+</serialization>

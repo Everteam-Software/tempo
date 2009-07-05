@@ -1,0 +1,22 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<wsdl:definitions xmlns:TaskManagementProcess="http://example.com/TMP/TaskManagementProcess" xmlns:tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diag="http://example.com/TMP" xmlns:b4p="http://www.intalio.com/bpms/workflow/ib4p_20051115" xmlns:b4px="java:org.intalio.tempo.workflow.processes.xpath.UID" xmlns:b4px1="http://oracle.com/the/custom/functions" xmlns:UserBusinessProcess="http://www.intalio.com/bpms/ubp" xmlns:PreviousProcessTaskManager="http://example.com/TMP/PreviousProcessTaskManager" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:bpdm="http://www.intalio/designer/business-process-data-modeling" targetNamespace="http://example.com/TMP">
+    <wsdl:import namespace="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" location="TaskManagementSystem.wsdl"/>
+    <wsdl:import namespace="http://www.intalio.com/bpms/ubp" location="UserBusinessProcess.wsdl"/>
+    <wsdl:import namespace="http://www.intalio.com/bpms/workflow/ib4p_20051115" location="TaskManagerProcess.wsdl"/>
+    <pnlk:partnerLinkType name="TaskManagementProcessAndNextTaskManagerForTMPPortPlk">
+        <pnlk:role name="TaskManagementProcess_for_NextTaskManager" portType="b4p:TMPPortType"/>
+    </pnlk:partnerLinkType>
+    <pnlk:partnerLinkType name="TaskManagementProcessAndTaskManagementSystemForPortTaskManagementServicesSOAPPlk">
+        <pnlk:role name="TaskManagementSystem_for_TaskManagementProcess" portType="tns:TaskManagementServices"/>
+    </pnlk:partnerLinkType>
+    <pnlk:partnerLinkType name="TMPAndUBP">
+        <pnlk:role name="TaskManagementProcess_for_UserBusinessProcessForUserBusinessProcessPort" portType="b4p:UserBusinessProcessPortType"/>
+        <pnlk:role name="UserBusinessProcess_for_TaskManagementProcessForUserProcessPort" portType="UserBusinessProcess:userProcessPortType"/>
+    </pnlk:partnerLinkType>
+    <pnlk:partnerLinkType name="TaskManagementProcessAndUIFWForUIFWPortPlk">
+        <pnlk:role name="TaskManagementProcess_for_UIFW" portType="b4p:UIFWPortType"/>
+    </pnlk:partnerLinkType>
+    <pnlk:partnerLinkType name="TaskManagementProcessAndPreviousProcessTaskManagerForTMPPortPlk">
+        <pnlk:role name="PreviousProcessTaskManager_for_TaskManagementProcess" portType="b4p:TMPPortType"/>
+    </pnlk:partnerLinkType>
+</wsdl:definitions>

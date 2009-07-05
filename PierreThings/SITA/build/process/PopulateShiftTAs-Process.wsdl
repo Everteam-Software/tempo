@@ -1,0 +1,30 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<wsdl:definitions xmlns:fmr="http://www.example.org/FMRupload" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:DC="http://example.com/process/PopulateShiftTAs/DC" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:as="http://www.example.org/assignment" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:SITAservice="http://example.com/process/PopulateShiftTAs/SITAservice" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:diag="http://example.com/process/PopulateShiftTAs" xmlns:p="http://www.example.org/prop" xmlns:SITAservice1="http://www.intalio.com/gi/forms/TAmanagement.gi" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:attachments="http://www.intalio.com/gi/forms/ShiftCreationLight.gi/attachments" xmlns:ShiftCreationLight="http://www.intalio.com/gi/forms/ShiftCreationLight.gi" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:this="http://example.com/process/PopulateShiftTAs/Process" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="http://example.com/process/PopulateShiftTAs/Process">
+    <wsdl:import namespace="http://www.intalio.com/gi/forms/ShiftCreationLight.gi" location="../forms/ShiftCreationLight.gi.wsdl"/>
+    <wsdl:binding name="ProcessAndDCForPortTypeProcessPlkServiceBinding" type="ShiftCreationLight:Process">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="initProcess">
+            <soap:operation style="document" soapAction="http://www.intalio.com/gi/forms/ShiftCreationLight.gi/Process/initProcess"/>
+            <wsdl:input name="initProcessRequest">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="initProcessResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="notifyTaskCompletion">
+            <soap:operation style="document" soapAction="http://www.intalio.com/gi/forms/ShiftCreationLight.gi/Process/notifyTaskCompletion"/>
+            <wsdl:input name="notifyTaskCompletionRequest">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="notifyTaskCompletionResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="ProcessAndDCForPortTypeProcessPlkService">
+        <wsdl:port name="Process_for_DCPort" binding="this:ProcessAndDCForPortTypeProcessPlkServiceBinding">
+            <soap:address location="http://localhost:9080/ode/processes/SITA/process/PopulateShiftTAs/Process/DC/ProcessAndDCForPortTypeProcessPlk"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

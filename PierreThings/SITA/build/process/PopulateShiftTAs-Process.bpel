@@ -1,0 +1,71 @@
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<bpel:process xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ode="http://www.apache.org/ode/type/extension" xmlns:as="http://www.example.org/assignment" xmlns:ShiftCreationLight="http://www.intalio.com/gi/forms/ShiftCreationLight.gi" xmlns:DC="http://example.com/process/PopulateShiftTAs/DC" xmlns:diag="http://example.com/process/PopulateShiftTAs" xmlns:p="http://www.example.org/prop" xmlns:attachments="http://www.intalio.com/gi/forms/ShiftCreationLight.gi/attachments" xmlns:SITAservice="http://example.com/process/PopulateShiftTAs/SITAservice" xmlns:this="http://example.com/process/PopulateShiftTAs/Process" xmlns:SITAservice1="http://www.intalio.com/gi/forms/TAmanagement.gi" xmlns:fmr="http://www.example.org/FMRupload" xmlns:bpmn="http://www.intalio.com/bpms" xmlns:atomic="http://ode.apache.org/atomicScope" queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0" bpmn:label="Process" name="Process" bpmn:id="_tpABcFg3Ed6KULKWaznjDA" targetNamespace="http://example.com/process/PopulateShiftTAs/Process">
+  <bpel:import namespace="http://example.com/process/PopulateShiftTAs" location="PopulateShiftTAs.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"></bpel:import>
+  <bpel:import namespace="http://www.intalio.com/gi/forms/ShiftCreationLight.gi" location="../forms/ShiftCreationLight.gi.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"></bpel:import>
+  <bpel:import namespace="http://www.intalio.com/gi/forms/TAmanagement.gi" location="../services/SITAservice.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"></bpel:import>
+  <bpel:partnerLinks>
+    <bpel:partnerLink name="processAndDCForPortTypeProcessPlkVar" partnerLinkType="diag:ProcessAndDCForPortTypeProcessPlk" myRole="Process_for_DC"></bpel:partnerLink>
+    <bpel:partnerLink name="sITAserviceAndProcessForSITAservicePortPlkVar" partnerLinkType="diag:SITAserviceAndProcessForSITAservicePortPlk" initializePartnerRole="yes" partnerRole="SITAservice_for_Process"></bpel:partnerLink>
+  </bpel:partnerLinks>
+  <bpel:variables>
+    <bpel:variable name="shiftCreationLightInitProcessRequestMsg" messageType="ShiftCreationLight:initProcessRequest"></bpel:variable>
+    <bpel:variable name="shiftCreationLightInitProcessResponseMsg" messageType="ShiftCreationLight:initProcessResponse"></bpel:variable>
+    <bpel:variable name="sITAservice1InputMessage" messageType="SITAservice1:AssignTAtoShiftRequest"></bpel:variable>
+    <bpel:variable name="sITAservice1OuputMessage" messageType="SITAservice1:AssignTAtoShiftResponse"></bpel:variable>
+  </bpel:variables>
+  <bpel:sequence>
+    <bpel:receive partnerLink="processAndDCForPortTypeProcessPlkVar" portType="ShiftCreationLight:Process" operation="initProcess" variable="shiftCreationLightInitProcessRequestMsg" createInstance="yes" bpmn:label="start" name="start" bpmn:id="_0sM-cFg3Ed6KULKWaznjDA"></bpel:receive>
+    <bpel:assign name="init-variables-Process" bpmn:id="_0sM-cFg3Ed6KULKWaznjDA">
+      <bpel:copy bpmn:label="$shiftCreationLightInitProcessResponseMsg">
+        <bpel:from>
+          <bpel:literal>
+<ShiftCreationLight:initProcessResponse>
+  <ShiftCreationLight:status>OK</ShiftCreationLight:status>
+  <ShiftCreationLight:errorCode></ShiftCreationLight:errorCode>
+  <ShiftCreationLight:errorReason></ShiftCreationLight:errorReason>
+  <ShiftCreationLight:taskMetaData>
+    <ShiftCreationLight:nextTaskId></ShiftCreationLight:nextTaskId>
+    <ShiftCreationLight:nextTaskURL></ShiftCreationLight:nextTaskURL>
+    <ShiftCreationLight:instanceId></ShiftCreationLight:instanceId>
+  </ShiftCreationLight:taskMetaData>
+</ShiftCreationLight:initProcessResponse></bpel:literal>
+        </bpel:from>
+        <bpel:to>$shiftCreationLightInitProcessResponseMsg.root</bpel:to>
+      </bpel:copy>
+      <bpel:copy bpmn:label="$sITAservice1InputMessage">
+        <bpel:from>
+          <bpel:literal>
+<as:ShiftInfo>
+  <user></user>
+  <startDate></startDate>
+  <startTime></startTime>
+</as:ShiftInfo></bpel:literal>
+        </bpel:from>
+        <bpel:to>$sITAservice1InputMessage.body</bpel:to>
+      </bpel:copy>
+    </bpel:assign>
+    <bpel:assign>
+    <bpel:copy>
+        <bpel:from>$ode:pid</bpel:from>
+        <bpel:to>$shiftCreationLightInitProcessResponseMsg.root/ShiftCreationLight:taskMetaData/ShiftCreationLight:instanceId</bpel:to>
+    </bpel:copy>
+  </bpel:assign>
+  <bpel:reply partnerLink="processAndDCForPortTypeProcessPlkVar" portType="ShiftCreationLight:Process" operation="initProcess" variable="shiftCreationLightInitProcessResponseMsg" bpmn:label="start" name="start-1" bpmn:id="_0sM-cFg3Ed6KULKWaznjDA"></bpel:reply>
+    <bpel:assign bpmn:label="call SITAservice" name="call_SITAservice" bpmn:id="_2HZxIFg3Ed6KULKWaznjDA">
+      <bpel:copy>
+        <bpel:from>$shiftCreationLightInitProcessRequestMsg.root/ShiftCreationLight:user</bpel:from>
+        <bpel:to>$sITAservice1InputMessage.body/user</bpel:to>
+      </bpel:copy>
+      <bpel:copy>
+        <bpel:from>$shiftCreationLightInitProcessRequestMsg.root/ShiftCreationLight:taskOutput/ShiftCreationLight:FormModel/startDate</bpel:from>
+        <bpel:to>$sITAservice1InputMessage.body/startDate</bpel:to>
+      </bpel:copy>
+      <bpel:copy>
+        <bpel:from>$shiftCreationLightInitProcessRequestMsg.root/ShiftCreationLight:taskOutput/ShiftCreationLight:FormModel/startTime</bpel:from>
+        <bpel:to>$sITAservice1InputMessage.body/startTime</bpel:to>
+      </bpel:copy>
+    </bpel:assign>
+    <bpel:invoke partnerLink="sITAserviceAndProcessForSITAservicePortPlkVar" portType="SITAservice1:SITAservicePortType" operation="AssignTAtoShift" inputVariable="sITAservice1InputMessage" outputVariable="sITAservice1OuputMessage" bpmn:label="call SITAservice" name="call_SITAservice-1" bpmn:id="_2HZxIFg3Ed6KULKWaznjDA"></bpel:invoke>
+    <bpel:empty bpmn:label="end" name="end" bpmn:id="__HLvkFg3Ed6KULKWaznjDA"></bpel:empty>
+  </bpel:sequence>
+</bpel:process>

@@ -1,0 +1,38 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:this="http://example.com/process/TAlistToAMI/TAlistExportProcess" xmlns:TokenService1="http://example.com/process/TAlistToAMI/TokenService" xmlns:TaskManagementSystem="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:TAinterface="http://example.com/process/TAlistToAMI/TAinterface" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:TokenService="http://tempo.intalio.org/security/tokenService/" xmlns:ta="http://www.example.org/ta" xmlns:diag="http://example.com/process/TAlistToAMI" xmlns:TAlistService="http://example.com/process/TAlistToAMI/TAlistService" xmlns:tns="http://ode/bpel/unit-test.wsdl" xmlns:TMS="http://example.com/process/TAlistToAMI/TMS" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:TAmanagement="http://www.intalio.com/gi/forms/TAmanagement.gi" xmlns:xml="http://www.w3.org/XML/1998/namespace" targetNamespace="http://example.com/process/TAlistToAMI/TAlistExportProcess">
+    <wsdl:types>
+        <xs:schema elementFormDefault="qualified" targetNamespace="http://example.com/process/TAlistToAMI/TAlistExportProcess">
+            <xs:element name="startRequest" type="xs:string"/>
+            <xs:element name="startResponse" type="xs:string"/>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="startRequest">
+        <wsdl:part name="body" element="this:startRequest"/>
+    </wsdl:message>
+    <wsdl:message name="startResponse">
+        <wsdl:part name="body" element="this:startResponse"/>
+    </wsdl:message>
+    <wsdl:portType name="ForTAinterface">
+        <wsdl:operation name="start">
+            <wsdl:input message="this:startRequest" name="start"/>
+            <wsdl:output message="this:startResponse" name="startResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="CanonicBindingForTAinterface" type="this:ForTAinterface">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="start">
+            <soap:operation style="document" soapAction="http://example.com/process/TAlistToAMI/TAlistExportProcess/ForTAinterface/start"/>
+            <wsdl:input name="start">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="startResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="CanonicServiceForTAinterface">
+        <wsdl:port name="canonicPort" binding="this:CanonicBindingForTAinterface">
+            <soap:address location="http://localhost:9080/ode/processes/SITA/process/TAlistToAMI/TAlistExportProcess/TAinterface"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

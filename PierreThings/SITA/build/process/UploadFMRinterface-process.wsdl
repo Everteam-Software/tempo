@@ -1,0 +1,30 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<wsdl:definitions xmlns:User="http://example.com/process/UploadFMRinterface/User" xmlns:fmr="http://www.example.org/fmr" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:hil="http://www.example.org/hil" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:diag="http://example.com/process/UploadFMRinterface" xmlns:Upload-UploadProcess="http://example.com/process/Upload/UploadProcess" xmlns:tns="http://www.example.org/UploadResponse" xmlns:processimplicitPartner="http://example.com/process/UploadFMRinterface/processimplicitPartner" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:attachments="http://www.intalio.com/gi/forms/uploadFMR.gi/attachments" xmlns:uploadFMR="http://www.intalio.com/gi/forms/uploadFMR.gi" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:this="http://example.com/process/UploadFMRinterface/process" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="http://example.com/process/UploadFMRinterface/process">
+    <wsdl:import namespace="http://www.intalio.com/gi/forms/uploadFMR.gi" location="../forms/uploadFMR.gi.wsdl"/>
+    <wsdl:binding name="processAndUserForPortTypeProcessPlkServiceBinding" type="uploadFMR:Process">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="initProcess">
+            <soap:operation style="document" soapAction="http://www.intalio.com/gi/forms/uploadFMR.gi/Process/initProcess"/>
+            <wsdl:input name="initProcessRequest">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="initProcessResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="notifyTaskCompletion">
+            <soap:operation style="document" soapAction="http://www.intalio.com/gi/forms/uploadFMR.gi/Process/notifyTaskCompletion"/>
+            <wsdl:input name="notifyTaskCompletionRequest">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="notifyTaskCompletionResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="processAndUserForPortTypeProcessPlkService">
+        <wsdl:port name="process_for_UserPort" binding="this:processAndUserForPortTypeProcessPlkServiceBinding">
+            <soap:address location="http://localhost:9080/ode/processes/SITA/process/UploadFMRinterface/process/User/processAndUserForPortTypeProcessPlk"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

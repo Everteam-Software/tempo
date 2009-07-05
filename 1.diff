@@ -1,0 +1,435 @@
+diff --git a/tms-common/src/main/java/org/intalio/tempo/workflow/task/PATask.java b/tms-common/src/main/java/org/intalio/tempo/workflow/task/PATask.java
+index d1f7586..0fc8ccc 100644
+--- a/tms-common/src/main/java/org/intalio/tempo/workflow/task/PATask.java
++++ b/tms-common/src/main/java/org/intalio/tempo/workflow/task/PATask.java
+@@ -17,6 +17,7 @@ package org.intalio.tempo.workflow.task;
+ 
+ import java.net.URI;
+ import java.net.URL;
++import java.util.Calendar;
+ import java.util.Collection;
+ import java.util.Collections;
+ import java.util.Date;
+@@ -31,6 +32,7 @@ import javax.persistence.Lob;
+ import javax.persistence.MapKey;
+ import javax.persistence.NamedQueries;
+ import javax.persistence.NamedQuery;
++import javax.persistence.OneToMany;
+ import javax.persistence.QueryHint;
+ import javax.persistence.Table;
+ 
+@@ -123,6 +125,39 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
+     @Column(name = "instance_id")
+     private String _instanceId;
+     
++    /****************************/
++	/** Begin Extra metadata for SITA **/
++	@Persistent
++	@Column(name = "STA")
++	private Calendar _STA;
++
++	@Persistent
++	@Column(name = "STD")
++	private Calendar _STD;
++
++	@Persistent
++	@Column(name = "ETD")
++	private Calendar _ETD;
++
++	@Persistent
++	@Column(name = "ETA")
++	private Calendar _ETA;
++
++	@Persistent
++	@Column(name = "ATA")
++	private Calendar _ATA;
++
++	@Persistent
++	@Column(name = "ATD")
++	private Calendar _ATD;
++
++
++	@OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
++	Collection<org.intalio.tempo.workflow.task.AssignedMechanics> _assignedMechanics;
++
++	/** End Extra metadata for SITA **/
++	/****************************/
++	
+     public PATask() {
+         super();
+     }
+@@ -330,5 +365,61 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
+ 	public void setInstanceId(String instanceId) {
+ 		_instanceId=instanceId;
+ 	}
++	
++	public Calendar get_STA() {
++		return _STA;
++	}
++
++	public void set_STA(Calendar _sta) {
++		_STA = _sta;
++	}
++
++	public Calendar get_STD() {
++		return _STD;
++	}
++
++	public void set_STD(Calendar _std) {
++		_STD = _std;
++	}
++
++	public Calendar get_ETD() {
++		return _ETD;
++	}
+ 
++	public void set_ETD(Calendar _etd) {
++		_ETD = _etd;
++	}
++
++	public Calendar get_ETA() {
++		return _ETA;
++	}
++
++	public void set_ETA(Calendar _eta) {
++		_ETA = _eta;
++	}
++
++	public Calendar get_ATA() {
++		return _ATA;
++	}
++
++	public void set_ATA(Calendar _ata) {
++		_ATA = _ata;
++	}
++
++	public Calendar get_ATD() {
++		return _ATD;
++	}
++
++	public void set_ATD(Calendar _atd) {
++		_ATD = _atd;
++	}
++
++	public Collection<org.intalio.tempo.workflow.task.AssignedMechanics> get_assignedMechanics() {
++		return _assignedMechanics;
++	}
++
++	public void set_assignedMechanics(
++			Collection<org.intalio.tempo.workflow.task.AssignedMechanics> mechanics) {
++		_assignedMechanics = mechanics;
++	}
+ }
+diff --git a/tms-common/src/main/java/org/intalio/tempo/workflow/task/xml/TaskMarshaller.java b/tms-common/src/main/java/org/intalio/tempo/workflow/task/xml/TaskMarshaller.java
+index 0d1930d..bfe386b 100644
+--- a/tms-common/src/main/java/org/intalio/tempo/workflow/task/xml/TaskMarshaller.java
++++ b/tms-common/src/main/java/org/intalio/tempo/workflow/task/xml/TaskMarshaller.java
+@@ -26,6 +26,7 @@ import org.apache.xmlbeans.XmlObject;
+ import org.apache.xmlbeans.XmlOptions;
+ import org.apache.xmlbeans.XmlString;
+ import org.intalio.tempo.workflow.auth.UserRoles;
++import org.intalio.tempo.workflow.task.PATask;
+ import org.intalio.tempo.workflow.task.Task;
+ import org.intalio.tempo.workflow.task.TaskState;
+ import org.intalio.tempo.workflow.task.attachments.Attachment;
+@@ -52,6 +53,10 @@ import org.w3c.dom.Node;
+ import com.intalio.bpms.workflow.taskManagementServices20051109.AccessControlType;
+ import com.intalio.bpms.workflow.taskManagementServices20051109.Attachments;
+ import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
++import com.intalio.gi.forms.tAmanagement.ArrivalDepartureType;
++import com.intalio.gi.forms.tAmanagement.FormModel;
++import com.intalio.gi.forms.tAmanagement.InspectionType;
++import com.intalio.gi.forms.tAmanagement.InspectionType.AssignedMechanics;
+ 
+ public class TaskMarshaller {
+     final static Logger _log = LoggerFactory.getLogger(TaskMarshaller.class);
+@@ -163,7 +168,33 @@ public class TaskMarshaller {
+                 taskMetadataElement.setPreviousTaskId(chainableTask.getPreviousTaskID());
+             }
+         }
+-
++        
++        if (task.getClass().equals(PATask.class)){
++        	PATask paTask=(PATask) task;
++        	FormModel formModel = FormModel.Factory.newInstance();
++        	InspectionType inspection = InspectionType.Factory.newInstance();
++        	ArrivalDepartureType arrivalDeparture=ArrivalDepartureType.Factory.newInstance();
++        	
++        	arrivalDeparture.setATA(paTask.get_ATA());
++        	arrivalDeparture.setATD(paTask.get_ATD());
++        	arrivalDeparture.setETD(paTask.get_ETD());
++        	arrivalDeparture.setETA(paTask.get_ETA());
++        	arrivalDeparture.setSTA(paTask.get_STA());
++        	arrivalDeparture.setSTD(paTask.get_STD());
++        	
++        	AssignedMechanics[] assignedMechanicsArray=new AssignedMechanics[paTask.get_assignedMechanics().size()];
++        	org.intalio.tempo.workflow.task.AssignedMechanics[] mechanics = paTask.get_assignedMechanics().toArray(new org.intalio.tempo.workflow.task.AssignedMechanics[0]);
++        	for(int i=0;i<mechanics.length;i++){
++        		assignedMechanicsArray[i]=AssignedMechanics.Factory.newInstance();
++        		assignedMechanicsArray[i].setAssignedMechanicID(mechanics[i].getMechanicID());
++        		assignedMechanicsArray[i].setAssignedMechanicName(mechanics[i].getName());
++        	}
++			inspection.setAssignedMechanicsArray(assignedMechanicsArray);
++        	formModel.setInspection(inspection);
++        	formModel.setArrivalDeparture(arrivalDeparture);
++        	taskMetadataElement.setSITAMetadata(formModel);
++        }
++        
+         return taskMetadataElement;
+     }
+ 
+diff --git a/tms-common/src/main/resources/META-INF/persistence.xml b/tms-common/src/main/resources/META-INF/persistence.xml
+index 20cda3e..fa7b6a8 100644
+--- a/tms-common/src/main/resources/META-INF/persistence.xml
++++ b/tms-common/src/main/resources/META-INF/persistence.xml
+@@ -25,6 +25,7 @@
+         name="org.intalio.tempo.tms"
+         transaction-type="RESOURCE_LOCAL">
+         <!-- <mapping-file>orm.xml</mapping-file> -->
++        <class>org.intalio.tempo.workflow.task.AssignedMechanics</class>
+         <class>org.intalio.tempo.workflow.task.PATask</class>
+         <class>org.intalio.tempo.workflow.task.Task</class>
+         <class>org.intalio.tempo.workflow.task.PIPATask</class>
+diff --git a/tms-service/src/main/axis2/TaskManagementService.wsdl b/tms-service/src/main/axis2/TaskManagementService.wsdl
+index 0605b20..ec832bf 100644
+--- a/tms-service/src/main/axis2/TaskManagementService.wsdl
++++ b/tms-service/src/main/axis2/TaskManagementService.wsdl
+@@ -16,8 +16,199 @@
+  */
+  -->
+ <!-- $Id: service.wsdl 3848 2006-04-13 12:35:58Z imemruk $ -->
+-<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" name="TaskManagementServices">
++<wsdl:definitions xmlns:gi="http://www.intalio.com/gi/forms/TAmanagement.gi" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" name="TaskManagementServices">
+ 	<wsdl:types>
++	<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
++			xmlns:us="http://www.intalio.com/UserSchema" xmlns:TAmanagement="http://www.intalio.com/gi/forms/TAmanagement.gi"
++			targetNamespace="http://www.intalio.com/gi/forms/TAmanagement.gi"
++			elementFormDefault="qualified">
++
++			<xs:complexType name="FormModel">
++				<xs:sequence>
++					<xs:element name="Activity" type="TAmanagement:ActivityType" />
++					<xs:element name="ArrivalDeparture" type="TAmanagement:ArrivalDepartureType" />
++					<xs:element name="Inspection" type="TAmanagement:InspectionType" />
++					<xs:element name="HIL" type="TAmanagement:HILType" />
++					<xs:element name="DC" type="TAmanagement:DCType" />
++					<xs:sequence>
++						<xs:any maxOccurs="unbounded" minOccurs="0" />
++					</xs:sequence>
++				</xs:sequence>
++			</xs:complexType>
++
++			<xs:complexType name="ActivityType">
++				<xs:sequence>
++					<xs:element type="xs:string" name="AircraftID"
++						minOccurs="0" />
++					<xs:element type="xs:time" name="startTime" minOccurs="0" />
++					<xs:element type="xs:time" name="finishTime" minOccurs="0" />
++					<xs:element type="xs:time" name="releaseTime" minOccurs="0" />
++					<xs:element type="xs:boolean" name="late" minOccurs="0" />
++					<xs:element type="xs:boolean" name="update" minOccurs="0" />
++				</xs:sequence>
++			</xs:complexType>
++
++			<xs:complexType name="ArrivalDepartureType">
++				<xs:sequence>
++					<xs:element type="xs:date" name="ScheduledArrivalDate"
++						minOccurs="0" />
++					<xs:element type="xs:time" name="STA" minOccurs="0" />
++					<xs:element type="xs:date" name="ScheduledDepartureDate"
++						minOccurs="0" />
++					<xs:element type="xs:time" name="STD" minOccurs="0" />
++					<xs:element type="xs:date" name="EstimatedArrivalDate"
++						minOccurs="0" />
++					<xs:element type="xs:time" name="ETA" minOccurs="0" />
++					<xs:element type="xs:date" name="EstimatedDepartureDate"
++						minOccurs="0" />
++					<xs:element type="xs:time" name="ETD" minOccurs="0" />
++					<xs:element type="xs:date" name="ActualArrivalDate"
++						minOccurs="0" />
++					<xs:element type="xs:time" name="ATA" minOccurs="0" />
++					<xs:element type="xs:date" name="ActualDepartureDate"
++						minOccurs="0" />
++					<xs:element type="xs:time" name="ATD" minOccurs="0" />
++					<xs:element type="xs:string" name="ArrivalFlightNumber"
++						minOccurs="0" />
++					<xs:element type="xs:string" name="DepartureFlightNumber"
++						minOccurs="0" />
++				</xs:sequence>
++			</xs:complexType>
++
++			<xs:complexType name="InspectionType">
++				<xs:sequence>
++					<xs:element type="xs:string" name="assigned" minOccurs="0" />
++					<xs:element type="xs:string" name="Stand" minOccurs="0" />
++					<xs:element type="xs:string" name="InspectionType"
++						minOccurs="0" />
++					<xs:element name="InspectionStatus" minOccurs="0">
++						<xs:simpleType>
++							<xs:restriction base="xs:string">
++								<xs:enumeration value="open" />
++								<xs:enumeration value="started" />
++								<xs:enumeration value="finished" />
++								<xs:enumeration value="released" />
++								<xs:enumeration value="stopped" />
++								<xs:enumeration value="problem" />
++								<xs:enumeration value="aborted" />
++							</xs:restriction>
++						</xs:simpleType>
++					</xs:element>
++					<xs:element type="xs:string" name="resources" minOccurs="0" />
++					<xs:element type="xs:string" name="coordinator"
++						minOccurs="0" />
++					<xs:element name="RTR" minOccurs="0" maxOccurs="unbounded">
++						<xs:complexType>
++							<xs:sequence>
++								<xs:element type="xs:string" name="RTRid" minOccurs="0" />
++								<xs:element type="xs:string" name="RTRdescription"
++									minOccurs="0" />
++								<xs:element name="RTRstatus" minOccurs="0">
++									<xs:simpleType>
++										<xs:restriction base="xs:string">
++											<xs:enumeration value="open" />
++											<xs:enumeration value="resolved" />
++										</xs:restriction>
++									</xs:simpleType>
++								</xs:element>
++								<xs:element type="xs:boolean" name="RTRad" minOccurs="0" />
++							</xs:sequence>
++						</xs:complexType>
++					</xs:element>
++					<xs:element name="assignedMechanics" minOccurs="0"
++						maxOccurs="unbounded">
++						<xs:complexType>
++							<xs:sequence>
++								<xs:element type="xs:string" name="assignedMechanicName"
++									minOccurs="0" />
++								<xs:element type="xs:string" name="assignedMechanicID"
++									minOccurs="0" />
++								<xs:element type="xs:string" name="assignedMechanicCert"
++									minOccurs="0" />
++								<xs:element type="xs:boolean" name="entitledToRelease"
++									default="false" minOccurs="0" />
++							</xs:sequence>
++						</xs:complexType>
++					</xs:element>
++					<xs:element name="assignedAvionics" minOccurs="0"
++						maxOccurs="unbounded">
++						<xs:complexType>
++							<xs:sequence>
++								<xs:element type="xs:string" name="assignedAvionicName"
++									minOccurs="0" />
++								<xs:element type="xs:string" name="assignedAvionicID"
++									minOccurs="0" />
++								<xs:element type="xs:string" name="assignedAvionicCert"
++									minOccurs="0" />
++							</xs:sequence>
++						</xs:complexType>
++					</xs:element>
++				</xs:sequence>
++			</xs:complexType>
++
++			<xs:complexType name="HILType">
++				<xs:sequence>
++					<xs:element name="TAHIL" minOccurs="0" maxOccurs="unbounded">
++						<xs:complexType>
++							<xs:sequence>
++								<xs:element type="xs:string" name="TAHILid"
++									minOccurs="0" />
++								<xs:element type="xs:string" name="TAHILtype"
++									minOccurs="0" />
++								<xs:element type="xs:date" name="TAHILopeningDate"
++									minOccurs="0" />
++								<xs:element type="xs:string" name="TAHILCL"
++									minOccurs="0" />
++								<xs:element type="xs:date" name="TAHILlimitDate"
++									minOccurs="0" />
++								<xs:element type="xs:date" name="TAHILclosingDate"
++									minOccurs="0" />
++								<xs:element type="xs:string" name="TAHILATA100"
++									minOccurs="0" />
++								<xs:element type="xs:string" name="TAHILdescription"
++									minOccurs="0" />
++								<xs:element name="TAHILstatus" minOccurs="0">
++									<xs:simpleType>
++										<xs:restriction base="xs:string">
++											<xs:enumeration value="open" />
++											<xs:enumeration value="fixed" />
++										</xs:restriction>
++									</xs:simpleType>
++								</xs:element>
++								<xs:element type="xs:string" name="TAHILpartNr"
++									minOccurs="0" />
++								<xs:element type="xs:string" name="TAHILcomments"
++									minOccurs="0" />
++							</xs:sequence>
++						</xs:complexType>
++					</xs:element>
++				</xs:sequence>
++			</xs:complexType>
++
++			<xs:complexType name="DCType">
++				<xs:sequence>
++					<xs:element type="xs:time" name="ExpectedStartTime"
++						minOccurs="0" />
++					<xs:element type="xs:time" name="ExpectedFinishTime"
++						minOccurs="0" />
++					<xs:element type="xs:time" name="ExpectedReleaseTime"
++						minOccurs="0" />
++					<xs:element type="xs:string" name="CompassInspectionType"
++						minOccurs="0" />
++					<xs:element name="Comments" minOccurs="0">
++						<xs:simpleType>
++							<xs:restriction base="xs:string">
++								<xs:whiteSpace value="preserve" />
++							</xs:restriction>
++						</xs:simpleType>
++					</xs:element>
++				</xs:sequence>
++			</xs:complexType>
++
++
++			<xs:element name="FormModel" type="TAmanagement:FormModel"></xs:element>
++		</xs:schema>
++		
+ 		<xsd:schema 
+ 			elementFormDefault="qualified"
+ 			targetNamespace="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" 			
+@@ -56,13 +247,7 @@
+ 				<xsd:complexType>
+ 					<xsd:sequence>
+ 						<xsd:element name="taskId" type="xsd:string"/>
+-						<xsd:element name="data">
+-							<xsd:complexType>
+-								<xsd:sequence>
+-									<xsd:any maxOccurs="unbounded" minOccurs="0" />
+-								</xsd:sequence>
+-							</xsd:complexType>
+-						</xsd:element>						
++						<xsd:element name="data" type="gi:FormModel" />				
+ 						<xsd:element name="participantToken" type="xsd:string">
+ 						</xsd:element>
+ 					</xsd:sequence>
+@@ -90,13 +275,7 @@
+ 				<xsd:complexType>
+ 					<xsd:sequence>
+ 						<xsd:element name="taskId" type="xsd:string"/>
+-						<xsd:element name="data">
+-							<xsd:complexType>
+-								<xsd:sequence>
+-									<xsd:any maxOccurs="unbounded" minOccurs="0" />
+-								</xsd:sequence>
+-							</xsd:complexType>
+-						</xsd:element>
++						<xsd:element name="data" type="gi:FormModel" />
+ 						<xsd:element name="participantToken" type="xsd:string">
+ 						</xsd:element>
+ 					</xsd:sequence>
+@@ -280,6 +459,7 @@
+                     <xsd:element name="dismissAction" type="tns:accessControlType" maxOccurs="1" minOccurs="0"/>
+                     <xsd:element name="completeAction" type="tns:accessControlType" maxOccurs="1" minOccurs="0"/>
+ 					<xsd:element name="attachments" type="tns:attachments" maxOccurs="1" minOccurs="0"/>
++					<xsd:element name="SITAMetadata" type="gi:FormModel" />
+   				</xsd:sequence>
+ 			</xsd:complexType>
+ 			<xsd:complexType name="task">

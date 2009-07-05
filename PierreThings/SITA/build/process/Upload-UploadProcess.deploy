@@ -1,0 +1,23 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<dd:process xmlns:FlightMovementRecord07="__project:///schema/FlightMovementRecord06.xsd" xmlns:fmr="http://www.example.org/fmr" xmlns:TMP="http://example.com/process/Upload/TMP" xmlns:countExistingTAs="urn:intalio.com:connectors:database:sita:countexistingtasservice" xmlns:TokenService="http://example.com/process/Upload/TokenService" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:as="http://www.example.org/assignment" xmlns:DB="http://example.com/process/Upload/DB" xmlns:TMS="http://example.com/process/Upload/TMS" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:TAdata="http://www.intalio.com/gi/forms/TAmanagement.gi" xmlns:b4p="http://www.intalio.com/bpms/workflow/ib4p_20051115" xmlns:hil="http://www.example.org/hil" xmlns:SITAservice="http://example.com/process/Upload/SITAservice" xmlns:AppearNetworks="http://example.com/process/Upload/AppearNetworks" xmlns:dd="http://www.apache.org/ode/schemas/dd/2007/03" xmlns:diag="http://example.com/process/Upload" xmlns:tns="http://www.example.org/UploadResponse" xmlns:TaskManagementSystem="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:p="http://www.example.org/prop" xmlns:SITAservice1="http://www.example.org/FMRupload" xmlns:this="http://example.com/process/Upload/UploadProcess" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:TokenService1="http://tempo.intalio.org/security/tokenService/" name="this:UploadProcess" fileName="process/Upload-UploadProcess.bpel">
+  <dd:property name="PATH">process/Upload</dd:property>
+  <dd:property name="SVG">process/Upload.svg</dd:property>
+  <dd:provide partnerLink="uploadProcessAndAppearNetworksPlkVar">
+    <dd:service name="this:CanonicServiceForAppearNetworks" port="canonicPort"></dd:service>
+  </dd:provide>
+  <dd:invoke partnerLink="uploadProcessAndTMPForUserBusinessProcessPortPlkVar">
+    <dd:service name="b4p:UserBusinessProcessService" port="UserBusinessProcessPort"/>
+  </dd:invoke>
+  <dd:invoke partnerLink="dbAndUploadProcessForCountExistingTAsPortPlkVar">
+    <dd:service name="countExistingTAs:countExistingTAsService" port="countExistingTAsPort"/>
+  </dd:invoke>
+  <dd:invoke partnerLink="tMsAndUploadProcessForPortTaskManagementServicesSOAPPlkVar">
+    <dd:service name="TaskManagementSystem:TaskManagementServices" port="TaskManagementServicesSOAP"/>
+  </dd:invoke>
+  <dd:invoke partnerLink="uploadProcessAndSITAserviceForSITAservicePortPlkVar">
+    <dd:service name="TAdata:SITAservice" port="SITAservicePort"/>
+  </dd:invoke>
+  <dd:invoke partnerLink="uploadProcessAndTokenServiceForTokenServiceHttpportPlkVar">
+    <dd:service name="TokenService1:TokenService" port="TokenServiceSOAP11port_http"/>
+  </dd:invoke>
+</dd:process>

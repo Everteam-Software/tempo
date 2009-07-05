@@ -1,0 +1,1396 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2001-2008, TIBCO Software Inc.
+  ~ 
+  ~ The program(s) herein may be used and/or copied only with the
+  ~ written permission of Intalio Inc. or in accordance with the terms
+  ~ and conditions stipulated in the agreement/contract under which the
+  ~ program(s) have been supplied.
+  -->
+<data jsxid="jsxroot" jsxnamespace="jsx3.ide.mapper.Mapper"
+jsxversion="1.0">
+  <record jsxid="x82736"
+  jsxtext="WSDL (IntalioInternal/TaskManagementService-new.wsdl)"
+  jsxopen="1" src="IntalioInternal/TaskManagementService-new.wsdl"
+  type="W" path="/jsx1:definitions">
+    <record jsxid="x82575"
+    jsxtext="Service (http://localhost:8080/axi...mentServices)"
+    jsxopen="1"
+    path="/jsx1:definitions/jsx1:service/jsx1:port/jsx4:address"
+    type="S" soapstyle="document">
+      <record jsxid="x2540" jsxtext="getTaskList"
+      opname="getTaskList"
+      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      method="POST" type="P"
+      path="/jsx1:definitions/jsx1:binding/jsx1:operation">
+        <headers jsxid="x59347">
+          <record jsxid="x22784" name="SOAPAction"
+          value="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getTaskList" />
+          <record jsxid="x15785" name="Content-Type"
+          value="text/xml" />
+        </headers>
+        <record jsxid="x27511" jsxtext="Input (request)" type="I"
+        stubsrc="jsx://xml/stubs/soap.xml"
+        stubpath="/SOAP-ENV:Envelope/SOAP-ENV:Body"
+        soapuse="literal" path="/jsx1:definitions/jsx1:message[2]">
+          <record jsxid="x92988" jsxtext="getTaskListRequest"
+          jsxopen="1" type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='getTaskListRequest']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+        <record jsxid="x64729" jsxtext="Output (response)" type="O"
+        soapuse="literal" path="/jsx1:definitions/jsx1:message">
+          <record jsxid="x66726" jsxtext="getTaskListResponse"
+          jsxopen="1" type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='getTaskListResponse']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+        <record jsxid="x89590" jsxtext="Fault (response variant)"
+        type="F" path="/jsx1:definitions/jsx1:message[8]">
+          <record jsxid="x91713"
+          jsxtext="invalidParticipantTokenFault" jsxopen="1"
+          type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='invalidParticipantTokenFault']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+      </record>
+      <record jsxid="x74372" jsxtext="skip" opname="skip"
+      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      method="POST" type="P"
+      path="/jsx1:definitions/jsx1:binding/jsx1:operation[2]">
+        <headers jsxid="x47626">
+          <record jsxid="x76683" name="SOAPAction"
+          value="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/skip" />
+          <record jsxid="x5356" name="Content-Type"
+          value="text/xml" />
+        </headers>
+        <record jsxid="x97184" jsxtext="Input (request)" type="I"
+        stubsrc="jsx://xml/stubs/soap.xml"
+        stubpath="/SOAP-ENV:Envelope/SOAP-ENV:Body"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[12]">
+          <record jsxid="x48378" jsxtext="skipRequest" jsxopen="1"
+          type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='skipRequest']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+        <record jsxid="x61523" jsxtext="Output (response)" type="O"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[22]">
+          <record jsxid="x86648" jsxtext="okResponse" jsxopen="1"
+          type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='okResponse']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+        <record jsxid="x59622" jsxtext="Fault (response variant)"
+        type="F" path="/jsx1:definitions/jsx1:message[8]">
+          <record jsxid="x71585"
+          jsxtext="invalidParticipantTokenFault" jsxopen="1"
+          type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='invalidParticipantTokenFault']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+      </record>
+      <record jsxid="x83660" jsxtext="getAvailableTasks"
+      opname="getAvailableTasks"
+      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      method="POST" type="P"
+      path="/jsx1:definitions/jsx1:binding/jsx1:operation[3]">
+        <headers jsxid="x38294">
+          <record jsxid="x46347" name="SOAPAction"
+          value="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getAvailableTasks" />
+          <record jsxid="x63423" name="Content-Type"
+          value="text/xml" />
+        </headers>
+        <record jsxid="x88563" jsxtext="Input (request)" type="I"
+        stubsrc="jsx://xml/stubs/soap.xml"
+        stubpath="/SOAP-ENV:Envelope/SOAP-ENV:Body"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[24]">
+          <record jsxid="x77339" jsxtext="getAvailableTasksRequest"
+          jsxopen="1" type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='getAvailableTasksRequest']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+        <record jsxid="x13150" jsxtext="Output (response)" type="O"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[25]">
+          <record jsxid="x21435"
+          jsxtext="getAvailableTasksResponse" jsxopen="1" type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='getAvailableTasksResponse']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+        <record jsxid="x5383" jsxtext="Fault (response variant)"
+        type="F" path="/jsx1:definitions/jsx1:message[8]">
+          <record jsxid="x4413"
+          jsxtext="invalidParticipantTokenFault" jsxopen="1"
+          type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='invalidParticipantTokenFault']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+      </record>
+      <record jsxid="x24026" jsxtext="reassign" opname="reassign"
+      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      method="POST" type="P"
+      path="/jsx1:definitions/jsx1:binding/jsx1:operation[4]">
+        <headers jsxid="x14786">
+          <record jsxid="x6322" name="SOAPAction"
+          value="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/reassign" />
+          <record jsxid="x65184" name="Content-Type"
+          value="text/xml" />
+        </headers>
+        <record jsxid="x20018" jsxtext="Input (request)" type="I"
+        stubsrc="jsx://xml/stubs/soap.xml"
+        stubpath="/SOAP-ENV:Envelope/SOAP-ENV:Body"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[26]">
+          <record jsxid="x22495" jsxtext="reassignRequest"
+          jsxopen="1" type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='reassignRequest']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+        <record jsxid="x92619" jsxtext="Output (response)" type="O"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[22]">
+          <record jsxid="x56672" jsxtext="okResponse" jsxopen="1"
+          type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='okResponse']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+        <record jsxid="x37388" jsxtext="Fault (response variant)"
+        type="F" path="/jsx1:definitions/jsx1:message[6]">
+          <record jsxid="x80825" jsxtext="unavailableTaskFault"
+          jsxopen="1" type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='unavailableTaskFault']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+      </record>
+      <record jsxid="x94848" jsxtext="getAttachments"
+      opname="getAttachments"
+      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      method="POST" type="P"
+      path="/jsx1:definitions/jsx1:binding/jsx1:operation[5]"
+      jsxopen="1">
+        <headers jsxid="x62031">
+          <record jsxid="x93090" name="SOAPAction"
+          value="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getAttachments" />
+          <record jsxid="x32294" name="Content-Type"
+          value="text/xml" />
+        </headers>
+        <record jsxid="x58513" jsxtext="Input (request)" type="I"
+        stubsrc="jsx://xml/stubs/soap.xml"
+        stubpath="/SOAP-ENV:Envelope/SOAP-ENV:Body"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[27]">
+          <record jsxid="x93987" jsxtext="getAttachmentsRequest"
+          type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='getAttachmentsRequest']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
+          jsxSelectMask="Script">
+            <record jsxid="x423" jsxtext="taskId" jsxopen="1"
+            type="E"
+            path="/jsx1:definitions/jsx1:types/jsx3:schema/jsx3:element[19]/jsx3:complexType/jsx3:sequence/jsx3:element"
+            datatype="string" simple="1"
+            tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
+            jsxSelectMask="Script">
+              <mappings jsxid="x69993">
+                <record jsxid="jsx_3o" name="Script"
+                value="setValue(Intalio.Internal.Utilities.getTaskId());" />
+              </mappings>
+            </record>
+            <record jsxid="x20605" jsxtext="participantToken"
+            jsxopen="1" type="E"
+            path="/jsx1:definitions/jsx1:types/jsx3:schema/jsx3:element[19]/jsx3:complexType/jsx3:sequence/jsx3:element[2]"
+            datatype="string" simple="1"
+            tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
+            jsxSelectMask="Script">
+              <mappings jsxid="x45125">
+                <record jsxid="jsx_3n" name="Script"
+                value="setValue(Intalio.Internal.Utilities.getParticipantToken());" />
+              </mappings>
+            </record>
+          </record>
+        </record>
+        <record jsxid="x46694" jsxtext="Output (response)" type="O"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[28]">
+          <record jsxid="x85620" jsxtext="getAttachmentsResponse"
+          type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='getAttachmentsResponse']"
+          datatype="attachments"
+          ttns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
+          jsxSelectMask="CDF Record">
+            <record jsxid="x31531" jsxtext="attachment" type="C"
+            path="/jsx1:definitions/jsx1:types/jsx3:schema/jsx3:complexType/jsx3:sequence/jsx3:element"
+            datatype="attachment"
+            ttns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
+            tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
+            jsxSelectMask="CDF Record">
+              <restrictions jsxid="x36161">
+                <record jsxid="x90744" name="maxoccur"
+                value="unbounded" />
+                <record jsxid="x57072" name="minoccur" value="0" />
+              </restrictions>
+              <record jsxid="x51103" jsxtext="attachmentMetadata"
+              type="C"
+              path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='attachmentMetadata']"
+              datatype="attachmentMetadata"
+              ttns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
+              tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
+              jsxSelectMask="CDF Record">
+                <record jsxid="x2696" jsxtext="mimeType"
+                jsxopen="1" type="E"
+                path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='mimeType']"
+                datatype="string" simple="1"
+                tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
+                jsxSelectMask="CDF Record">
+                  <mappings jsxid="x62304">
+                    <record jsxid="jsx_3r" name="CDF Attribute"
+                    value="IntalioInternal_MimeType" />
+                  </mappings>
+                </record>
+                <record jsxid="x25498" jsxtext="fileName"
+                jsxopen="1" type="E"
+                path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='fileName']"
+                datatype="string" simple="1"
+                tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
+                jsxSelectMask="CDF Record" />
+                <record jsxid="x93242" jsxtext="title" jsxopen="1"
+                type="E"
+                path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='title']"
+                datatype="string" simple="1"
+                tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
+                jsxSelectMask="CDF Record">
+                  <mappings jsxid="x39850">
+                    <record jsxid="jsx_3s" name="CDF Attribute"
+                    value="IntalioInternal_Title" />
+                  </mappings>
+                </record>
+                <record jsxid="x769" jsxtext="description"
+                jsxopen="1" type="E"
+                path="/jsx1:definitions/jsx1:types/jsx3:schema/jsx3:complexType[2]/jsx3:sequence/jsx3:element[4]"
+                datatype="string" simple="1"
+                tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+                <record jsxid="x80159" jsxtext="creationDate"
+                jsxopen="1" type="E"
+                path="/jsx1:definitions/jsx1:types/jsx3:schema/jsx3:complexType[2]/jsx3:sequence/jsx3:element[5]"
+                datatype="dateTime" simple="1"
+                tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+
+                  <mappings jsxid="x24533">
+                    <record jsxid="jsx_3t" name="CDF Attribute"
+                    value="IntalioInternal_CreationDate" />
+                  </mappings>
+                </record>
+              </record>
+              <record jsxid="x18176" jsxtext="payloadUrl"
+              jsxopen="1" type="E"
+              path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='payloadUrl']"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
+              jsxSelectMask="CDF Record">
+                <mappings jsxid="x68729">
+                  <record jsxid="jsx_3u" name="CDF Attribute"
+                  value="IntalioInternal_PayloadUrl" />
+                  <record jsxid="jsx_3v" name="Script"
+                  value="Intalio.Internal.Attachments.updateCDFNode(CDFCONTEXT);" />
+                </mappings>
+              </record>
+              <mappings jsxid="x50758">
+                <record jsxid="jsx_3q" name="CDF Record"
+                value="" />
+              </mappings>
+            </record>
+            <mappings jsxid="x5540">
+              <record jsxid="jsx_1" name="CDF Document"
+              value="IntalioInternal_Attachments" />
+            </mappings>
+          </record>
+        </record>
+        <record jsxid="x9841" jsxtext="Fault (response variant)"
+        type="F" path="/jsx1:definitions/jsx1:message[6]">
+          <record jsxid="x89340" jsxtext="unavailableTaskFault"
+          jsxopen="1" type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='unavailableTaskFault']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+      </record>
+      <record jsxid="x29606" jsxtext="addAttachment"
+      opname="addAttachment"
+      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      method="POST" type="P"
+      path="/jsx1:definitions/jsx1:binding/jsx1:operation[6]">
+        <headers jsxid="x28485">
+          <record jsxid="x61249" name="SOAPAction"
+          value="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/addAttachment" />
+          <record jsxid="x24741" name="Content-Type"
+          value="text/xml" />
+        </headers>
+        <record jsxid="x4807" jsxtext="Input (request)" type="I"
+        stubsrc="jsx://xml/stubs/soap.xml"
+        stubpath="/SOAP-ENV:Envelope/SOAP-ENV:Body"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[29]">
+          <record jsxid="x83116" jsxtext="addAttachmentRequest"
+          jsxopen="1" type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='addAttachmentRequest']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+        <record jsxid="x21127" jsxtext="Output (response)" type="O"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[22]">
+          <record jsxid="x17459" jsxtext="okResponse" jsxopen="1"
+          type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='okResponse']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+        <record jsxid="x83329" jsxtext="Fault (response variant)"
+        type="F" path="/jsx1:definitions/jsx1:message[6]">
+          <record jsxid="x58451" jsxtext="unavailableTaskFault"
+          jsxopen="1" type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='unavailableTaskFault']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+      </record>
+      <record jsxid="x18360" jsxtext="removeAttachment"
+      opname="removeAttachment"
+      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      method="POST" type="P"
+      path="/jsx1:definitions/jsx1:binding/jsx1:operation[7]"
+      jsxopen="1">
+        <headers jsxid="x33878">
+          <record jsxid="x77294" name="SOAPAction"
+          value="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/removeAttachment" />
+          <record jsxid="x32069" name="Content-Type"
+          value="text/xml" />
+        </headers>
+        <record jsxid="x38474" jsxtext="Input (request)" type="I"
+        stubsrc="jsx://xml/stubs/soap.xml"
+        stubpath="/SOAP-ENV:Envelope/SOAP-ENV:Body"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[30]">
+          <record jsxid="x53221" jsxtext="removeAttachmentRequest"
+          type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='removeAttachmentRequest']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+
+            <record jsxid="x5846" jsxtext="taskId" jsxopen="1"
+            type="E"
+            path="/jsx1:definitions/jsx1:types/jsx3:schema/jsx3:element[22]/jsx3:complexType/jsx3:sequence/jsx3:element"
+            datatype="string" simple="1"
+            tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+
+              <mappings jsxid="x4821">
+                <record jsxid="jsx_3j" name="Script"
+                value="setValue(Intalio.Internal.Utilities.getTaskId());" />
+              </mappings>
+            </record>
+            <record jsxid="x39045" jsxtext="attachmentUrl"
+            jsxopen="1" type="E"
+            path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='attachmentUrl']"
+            datatype="string" simple="1"
+            tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+
+              <mappings jsxid="x25594">
+                <record jsxid="jsx_3k" name="DOM"
+                value="IntalioInternal_AttachmentsUrl" />
+              </mappings>
+            </record>
+            <record jsxid="x43243" jsxtext="participantToken"
+            jsxopen="1" type="E"
+            path="/jsx1:definitions/jsx1:types/jsx3:schema/jsx3:element[22]/jsx3:complexType/jsx3:sequence/jsx3:element[3]"
+            datatype="string" simple="1"
+            tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+
+              <mappings jsxid="x50907">
+                <record jsxid="jsx_3m"
+                value="setValue(Intalio.Internal.Utilities.getParticipantToken());"
+                name="Script" />
+              </mappings>
+            </record>
+          </record>
+        </record>
+        <record jsxid="x13564" jsxtext="Output (response)" type="O"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[22]">
+          <record jsxid="x90073" jsxtext="okResponse" jsxopen="1"
+          type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='okResponse']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+        <record jsxid="x95307" jsxtext="Fault (response variant)"
+        type="F" path="/jsx1:definitions/jsx1:message[8]">
+          <record jsxid="x24302"
+          jsxtext="invalidParticipantTokenFault" jsxopen="1"
+          type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='invalidParticipantTokenFault']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+      </record>
+      <record jsxid="x66955" jsxtext="getTask" opname="getTask"
+      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      method="POST" type="P"
+      path="/jsx1:definitions/jsx1:binding/jsx1:operation[8]"
+      jsxopen="1">
+        <headers jsxid="x63745">
+          <record jsxid="x29813" name="SOAPAction"
+          value="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getTask" />
+          <record jsxid="x9067" name="Content-Type"
+          value="text/xml" />
+        </headers>
+        <record jsxid="x97399" jsxtext="Input (request)" type="I"
+        stubsrc="jsx://xml/stubs/soap.xml"
+        stubpath="/SOAP-ENV:Envelope/SOAP-ENV:Body"
+        soapuse="literal" path="/jsx1:definitions/jsx1:message[4]">
+          <record jsxid="x28101" jsxtext="getTaskRequest" type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='getTaskRequest']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+
+            <record jsxid="x37119" jsxtext="taskId" jsxopen="1"
+            type="E"
+            path="/jsx1:definitions/jsx1:types/jsx3:schema/jsx3:element[4]/jsx3:complexType/jsx3:sequence/jsx3:element"
+            datatype="string" simple="1"
+            tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
+            jsxComboMask="nillable" jsxTextMask="true">
+              <mappings jsxid="x50510">
+                <record jsxid="jsx_38" name="Script"
+                value="setValue(Intalio.Internal.Utilities.getTaskId());" />
+              </mappings>
+            </record>
+            <record jsxid="x92817" jsxtext="participantToken"
+            jsxopen="1" type="E"
+            path="/jsx1:definitions/jsx1:types/jsx3:schema/jsx3:element[4]/jsx3:complexType/jsx3:sequence/jsx3:element[2]"
+            datatype="string" simple="1"
+            tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
+            jsxComboMask="nillable" jsxTextMask="true">
+              <mappings jsxid="x57937">
+                <record jsxid="jsx_39" name="Script"
+                value="setValue(Intalio.Internal.Utilities.getParticipantToken());" />
+              </mappings>
+            </record>
+          </record>
+        </record>
+        <record jsxid="x35875" jsxtext="Output (response)" type="O"
+        soapuse="literal" path="/jsx1:definitions/jsx1:message[3]">
+          <record jsxid="x28278" jsxtext="getTaskResponse" type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='getTaskResponse']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
+          jsxselected="1">
+            <record jsxid="x34199" jsxtext="task" type="C"
+            path="/jsx1:definitions/jsx1:types/jsx3:schema/jsx3:element[3]/jsx3:complexType/jsx3:sequence/jsx3:element"
+            datatype="task"
+            ttns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
+            tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+
+              <record jsxid="x10843" jsxtext="metadata" type="C"
+              path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='metadata']"
+              datatype="taskMetadata"
+              ttns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
+              tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+
+                <record jsxid="x85035" jsxtext="taskId" jsxopen="1"
+                type="E"
+                path="/jsx1:definitions/jsx1:types/jsx3:schema/jsx3:complexType[5]/jsx3:sequence/jsx3:element"
+                datatype="string" simple="1"
+                tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+                <record jsxid="x93690" jsxtext="taskState"
+                jsxopen="1" type="E"
+                path="/jsx1:definitions/jsx1:types/jsx3:schema/jsx3:complexType[5]/jsx3:sequence/jsx3:element[2]"
+                datatype="token" simple="1"
+                tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+
+                  <restrictions jsxid="x76551">
+                    <record jsxid="x41427" name="maxoccur"
+                    value="1" />
+                    <record jsxid="x69843" name="minoccur"
+                    value="0" />
+                  </restrictions>
+                </record>
+                <record jsxid="x60866" jsxtext="taskType"
+                jsxopen="1" type="E"
+                path="/jsx1:definitions/jsx1:types/jsx3:schema/jsx3:complexType[5]/jsx3:sequence/jsx3:element[3]"
+                datatype="token" simple="1"
+                tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+                <record jsxid="x8706" jsxtext="description"
+                jsxopen="1" type="E"
+                path="/jsx1:definitions/jsx1:types/jsx3:schema/jsx3:complexType[5]/jsx3:sequence/jsx3:element[4]"
+                datatype="string" simple="1"
+                tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+
+                  <restrictions jsxid="x99579">
+                    <record jsxid="x10132" name="maxoccur"
+                    value="1" />
+                    <record jsxid="x88492" name="minoccur"
+                    value="0" />
+                  </restrictions>
+                </record>
+                <record jsxid="x96256" jsxtext="processId"
+                jsxopen="1" type="E"
+                path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='processId']"
+                datatype="string" simple="1"
+                tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+
+                  <restrictions jsxid="x34849">
+                    <record jsxid="x96034" name="maxoccur"
+                    value="1" />
+                    <record jsxid="x8203" name="minoccur"
+                    value="0" />
+                  </restrictions>
+                </record>
+                <record jsxid="x5598" jsxtext="creationDate"
+                jsxopen="1" type="E"
+                path="/jsx1:definitions/jsx1:types/jsx3:schema/jsx3:complexType[5]/jsx3:sequence/jsx3:element[6]"
+                datatype="dateTime" simple="1"
+                tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+
+                  <restrictions jsxid="x61565">
+                    <record jsxid="x46015" name="maxoccur"
+                    value="1" />
+                    <record jsxid="x61100" name="minoccur"
+                    value="0" />
+                  </restrictions>
+                </record>
+                <record jsxid="x43450" jsxtext="deadline"
+                jsxopen="1" type="E"
+                path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='deadline']"
+                datatype="dateTime" simple="1"
+                tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+
+                  <restrictions jsxid="x75425">
+                    <record jsxid="x45046" name="maxoccur"
+                    value="1" />
+                    <record jsxid="x9515" name="minoccur"
+                    value="0" />
+                  </restrictions>
+                </record>
+                <record jsxid="x59655" jsxtext="priority"
+                jsxopen="1" type="E"
+                path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='priority']"
+                datatype="int" simple="1"
+                tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+
+                  <restrictions jsxid="x1123">
+                    <record jsxid="x6961" name="maxoccur"
+                    value="1" />
+                    <record jsxid="x29989" name="minoccur"
+                    value="0" />
+                    <record jsxid="x72695" name="minoccur"
+                    value="0" />
+                    <record jsxid="x5175" name="nillable"
+                    value="true" />
+                  </restrictions>
+                </record>
+                <record jsxid="x98245" jsxtext="userOwner"
+                jsxopen="1" type="E"
+                path="/jsx1:definitions/jsx1:types/jsx3:schema/jsx3:complexType[5]/jsx3:sequence/jsx3:element[9]"
+                datatype="string" simple="1"
+                tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+
+                  <restrictions jsxid="x84860">
+                    <record jsxid="x96819" name="maxoccur"
+                    value="unbounded" />
+                    <record jsxid="x69636" name="minoccur"
+                    value="0" />
+                  </restrictions>
+                </record>
+                <record jsxid="x47656" jsxtext="roleOwner"
+                jsxopen="1" type="E"
+                path="/jsx1:definitions/jsx1:types/jsx3:schema/jsx3:complexType[5]/jsx3:sequence/jsx3:element[10]"
+                datatype="string" simple="1"
+                tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+
+                  <restrictions jsxid="x76607">
+                    <record jsxid="x7154" name="maxoccur"
+                    value="unbounded" />
+                    <record jsxid="x11966" name="minoccur"
+                    value="0" />
+                  </restrictions>
+                </record>
+                <record jsxid="x18969" jsxtext="formUrl"
+                jsxopen="1" type="E"
+                path="/jsx1:definitions/jsx1:types/jsx3:schema/jsx3:complexType[5]/jsx3:sequence/jsx3:element[11]"
+                datatype="anyURI" simple="1"
+                tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+                <record jsxid="x86444" jsxtext="failureCode"
+                jsxopen="1" type="E"
+                path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='failureCode']"
+                datatype="string" simple="1"
+                tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+
+                  <restrictions jsxid="x52345">
+                    <record jsxid="x66449" name="maxoccur"
+                    value="1" />
+                    <record jsxid="x42535" name="minoccur"
+                    value="0" />
+                  </restrictions>
+                </record>
+                <record jsxid="x86679" jsxtext="failureReason"
+                jsxopen="1" type="E"
+                path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='failureReason']"
+                datatype="string" simple="1"
+                tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+
+                  <restrictions jsxid="x13034">
+                    <record jsxid="x13394" name="maxoccur"
+                    value="1" />
+                    <record jsxid="x85476" name="minoccur"
+                    value="0" />
+                  </restrictions>
+                </record>
+                <record jsxid="x94913"
+                jsxtext="userProcessCompleteSOAPAction" jsxopen="1"
+                type="E"
+                path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='userProcessCompleteSOAPAction']"
+                datatype="string" simple="1"
+                tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+
+                  <restrictions jsxid="x8861">
+                    <record jsxid="x53770" name="maxoccur"
+                    value="1" />
+                    <record jsxid="x90007" name="minoccur"
+                    value="0" />
+                  </restrictions>
+                </record>
+                <record jsxid="x7457" jsxtext="processEndpoint"
+                jsxopen="1" type="E"
+                path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='processEndpoint']"
+                datatype="anyURI" simple="1"
+                tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+
+                  <restrictions jsxid="x76740">
+                    <record jsxid="x78965" name="maxoccur"
+                    value="1" />
+                    <record jsxid="x24744" name="minoccur"
+                    value="0" />
+                  </restrictions>
+                </record>
+                <record jsxid="x9144"
+                jsxtext="initMessageNamespaceURI" jsxopen="1"
+                type="E"
+                path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='initMessageNamespaceURI']"
+                datatype="anyURI" simple="1"
+                tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+
+                  <restrictions jsxid="x78735">
+                    <record jsxid="x78044" name="maxoccur"
+                    value="1" />
+                    <record jsxid="x74766" name="minoccur"
+                    value="0" />
+                  </restrictions>
+                </record>
+                <record jsxid="x7253"
+                jsxtext="initOperationSOAPAction" jsxopen="1"
+                type="E"
+                path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='initOperationSOAPAction']"
+                datatype="string" simple="1"
+                tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+
+                  <restrictions jsxid="x49203">
+                    <record jsxid="x58182" name="maxoccur"
+                    value="1" />
+                    <record jsxid="x42845" name="minoccur"
+                    value="0" />
+                  </restrictions>
+                </record>
+                <record jsxid="x78346" jsxtext="isChainedBefore"
+                jsxopen="1" type="E"
+                path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='isChainedBefore']"
+                datatype="string" simple="1"
+                tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+
+                  <restrictions jsxid="x57719">
+                    <record jsxid="x27878" name="maxoccur"
+                    value="1" />
+                    <record jsxid="x46393" name="minoccur"
+                    value="0" />
+                  </restrictions>
+                </record>
+                <record jsxid="x48566" jsxtext="previousTaskId"
+                jsxopen="1" type="E"
+                path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='previousTaskId']"
+                datatype="string" simple="1"
+                tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+
+                  <restrictions jsxid="x46825">
+                    <record jsxid="x7086" name="maxoccur"
+                    value="1" />
+                    <record jsxid="x72576" name="minoccur"
+                    value="0" />
+                  </restrictions>
+                </record>
+                <record jsxid="x50307" jsxtext="claimAction"
+                jsxopen="1" type="C"
+                path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='claimAction']"
+                datatype="accessControlType"
+                ttns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
+                tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+
+                  <restrictions jsxid="x1817">
+                    <record jsxid="x83606" name="maxoccur"
+                    value="1" />
+                    <record jsxid="x97448" name="minoccur"
+                    value="0" />
+                  </restrictions>
+                </record>
+                <record jsxid="x11156" jsxtext="revokeAction"
+                jsxopen="1" type="C"
+                path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='revokeAction']"
+                datatype="accessControlType"
+                ttns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
+                tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+
+                  <restrictions jsxid="x23505">
+                    <record jsxid="x30853" name="maxoccur"
+                    value="1" />
+                    <record jsxid="x84067" name="minoccur"
+                    value="0" />
+                  </restrictions>
+                </record>
+                <record jsxid="x34615" jsxtext="saveAction"
+                jsxopen="1" type="C"
+                path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='saveAction']"
+                datatype="accessControlType"
+                ttns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
+                tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+
+                  <restrictions jsxid="x4329">
+                    <record jsxid="x38557" name="maxoccur"
+                    value="1" />
+                    <record jsxid="x49266" name="minoccur"
+                    value="0" />
+                  </restrictions>
+                </record>
+                <record jsxid="x26365" jsxtext="completeAction"
+                jsxopen="1" type="C"
+                path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='completeAction']"
+                datatype="accessControlType"
+                ttns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
+                tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+
+                  <restrictions jsxid="x53190">
+                    <record jsxid="x85007" name="maxoccur"
+                    value="1" />
+                    <record jsxid="x29058" name="minoccur"
+                    value="0" />
+                  </restrictions>
+                </record>
+                <record jsxid="x4670" jsxtext="attachments"
+                jsxopen="1" type="C"
+                path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='attachments']"
+                datatype="attachments"
+                ttns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
+                tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+
+                  <restrictions jsxid="x75024">
+                    <record jsxid="x97111" name="maxoccur"
+                    value="1" />
+                    <record jsxid="x78646" name="minoccur"
+                    value="0" />
+                  </restrictions>
+                </record>
+              </record>
+              <record jsxid="x64297" jsxtext="input" jsxopen="1"
+              type="C"
+              path="/jsx1:definitions/jsx1:types/jsx3:schema/jsx3:complexType[6]/jsx3:sequence/jsx3:element[2]"
+              datatype=""
+              tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+              <record jsxid="x52946" jsxtext="output" jsxopen="1"
+              type="C"
+              path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='output']"
+              datatype=""
+              tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+            </record>
+          </record>
+        </record>
+        <record jsxid="x91606" jsxtext="Fault (response variant)"
+        type="F" path="/jsx1:definitions/jsx1:message[6]">
+          <record jsxid="x69323" jsxtext="unavailableTaskFault"
+          jsxopen="1" type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='unavailableTaskFault']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+      </record>
+      <record jsxid="x61959" jsxtext="setOutput" opname="setOutput"
+      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      method="POST" type="P"
+      path="/jsx1:definitions/jsx1:binding/jsx1:operation[9]"
+      jsxopen="1">
+        <headers jsxid="x11896">
+          <record jsxid="x16484" name="SOAPAction"
+          value="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/setOutput" />
+          <record jsxid="x85588" name="Content-Type"
+          value="text/xml" />
+        </headers>
+        <record jsxid="x26975" jsxtext="Input (request)" type="I"
+        stubsrc="jsx://xml/stubs/soap.xml"
+        stubpath="/SOAP-ENV:Envelope/SOAP-ENV:Body"
+        soapuse="literal" path="/jsx1:definitions/jsx1:message[5]">
+          <record jsxid="x9534" jsxtext="setOutputRequest" type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='setOutputRequest']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+
+            <record jsxid="x87366" jsxtext="taskId" jsxopen="1"
+            type="E"
+            path="/jsx1:definitions/jsx1:types/jsx3:schema/jsx3:element[5]/jsx3:complexType/jsx3:sequence/jsx3:element"
+            datatype="string" simple="1"
+            tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
+            jsxSelectMask="Script">
+              <mappings jsxid="x15949">
+                <record jsxid="jsx_3e" name="Script"
+                value="setValue(Intalio.Internal.Utilities.getTaskId());" />
+              </mappings>
+            </record>
+            <record jsxid="x88627" jsxtext="data" jsxopen="1"
+            type="C"
+            path="/jsx1:definitions/jsx1:types/jsx3:schema/jsx3:element[5]/jsx3:complexType/jsx3:sequence/jsx3:element[2]"
+            datatype=""
+            tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
+            jsxComboMask="nillable" jsxTextMask="true">
+              <mappings jsxid="x15714">
+                <record jsxid="jsx_3f" name="Script"
+                value="Intalio.Internal.Utilities.appendOutboundFormModelNode(MESSAGENODE);" />
+              </mappings>
+              <restrictions jsxid="x55165">
+                <record jsxid="jsx_37" name="nillable"
+                value="true" />
+              </restrictions>
+            </record>
+            <record jsxid="x79569" jsxtext="participantToken"
+            jsxopen="1" type="E"
+            path="/jsx1:definitions/jsx1:types/jsx3:schema/jsx3:element[5]/jsx3:complexType/jsx3:sequence/jsx3:element[3]"
+            datatype="string" simple="1"
+            tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
+            jsxSelectMask="Script">
+              <mappings jsxid="x51888">
+                <record jsxid="jsx_3g" name="Script"
+                value="setValue(Intalio.Internal.Utilities.getParticipantToken());" />
+              </mappings>
+            </record>
+          </record>
+        </record>
+        <record jsxid="x88938" jsxtext="Output (response)" type="O"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[22]">
+          <record jsxid="x58970" jsxtext="okResponse" jsxopen="1"
+          type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='okResponse']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+        <record jsxid="x18890" jsxtext="Fault (response variant)"
+        type="F" path="/jsx1:definitions/jsx1:message[8]">
+          <record jsxid="x34848"
+          jsxtext="invalidParticipantTokenFault" jsxopen="1"
+          type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='invalidParticipantTokenFault']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+      </record>
+      <record jsxid="x54684" jsxtext="complete" opname="complete"
+      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      method="POST" type="P"
+      path="/jsx1:definitions/jsx1:binding/jsx1:operation[10]"
+      jsxopen="1">
+        <headers jsxid="x24829">
+          <record jsxid="x15434" name="SOAPAction"
+          value="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/complete" />
+          <record jsxid="x1769" name="Content-Type"
+          value="text/xml" />
+        </headers>
+        <record jsxid="x47291" jsxtext="Input (request)" type="I"
+        stubsrc="jsx://xml/stubs/soap.xml"
+        stubpath="/SOAP-ENV:Envelope/SOAP-ENV:Body"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[11]">
+          <record jsxid="x69521" jsxtext="completeRequest" type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='completeRequest']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
+          jsxSelectMask="Script">
+            <record jsxid="x62710" jsxtext="taskId" jsxopen="1"
+            type="E"
+            path="/jsx1:definitions/jsx1:types/jsx3:schema/jsx3:element[7]/jsx3:complexType/jsx3:sequence/jsx3:element"
+            datatype="string" simple="1"
+            tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
+            jsxSelectMask="Script">
+              <mappings jsxid="x1223">
+                <record jsxid="jsx_3i" name="Script"
+                value="setValue(Intalio.Internal.Utilities.getTaskId());" />
+              </mappings>
+            </record>
+            <record jsxid="x59154" jsxtext="participantToken"
+            jsxopen="1" type="E"
+            path="/jsx1:definitions/jsx1:types/jsx3:schema/jsx3:element[7]/jsx3:complexType/jsx3:sequence/jsx3:element[2]"
+            datatype="string" simple="1"
+            tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
+            jsxSelectMask="Script">
+              <mappings jsxid="x38130">
+                <record jsxid="jsx_3h" name="Script"
+                value="setValue(Intalio.Internal.Utilities.getParticipantToken());" />
+              </mappings>
+            </record>
+          </record>
+        </record>
+        <record jsxid="x77686" jsxtext="Output (response)" type="O"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[22]">
+          <record jsxid="x60220" jsxtext="okResponse" jsxopen="1"
+          type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='okResponse']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+        <record jsxid="x67931" jsxtext="Fault (response variant)"
+        type="F" path="/jsx1:definitions/jsx1:message[8]">
+          <record jsxid="x7276"
+          jsxtext="invalidParticipantTokenFault" jsxopen="1"
+          type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='invalidParticipantTokenFault']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+      </record>
+      <record jsxid="x19343" jsxtext="setOutputAndComplete"
+      opname="setOutputAndComplete"
+      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      method="POST" type="P"
+      path="/jsx1:definitions/jsx1:binding/jsx1:operation[11]">
+        <headers jsxid="x54279">
+          <record jsxid="x86166" name="SOAPAction"
+          value="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/setOutputAndComplete" />
+          <record jsxid="x22729" name="Content-Type"
+          value="text/xml" />
+        </headers>
+        <record jsxid="x47187" jsxtext="Input (request)" type="I"
+        stubsrc="jsx://xml/stubs/soap.xml"
+        stubpath="/SOAP-ENV:Envelope/SOAP-ENV:Body"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[13]">
+          <record jsxid="x6715"
+          jsxtext="setOutputAndCompleteRequest" jsxopen="1"
+          type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='setOutputAndCompleteRequest']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+        <record jsxid="x12595" jsxtext="Output (response)" type="O"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[22]">
+          <record jsxid="x16865" jsxtext="okResponse" jsxopen="1"
+          type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='okResponse']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+        <record jsxid="x1545" jsxtext="Fault (response variant)"
+        type="F" path="/jsx1:definitions/jsx1:message[6]">
+          <record jsxid="x80389" jsxtext="unavailableTaskFault"
+          jsxopen="1" type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='unavailableTaskFault']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+      </record>
+      <record jsxid="x35294" jsxtext="fail" opname="fail"
+      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      method="POST" type="P"
+      path="/jsx1:definitions/jsx1:binding/jsx1:operation[12]">
+        <headers jsxid="x61038">
+          <record jsxid="x99456" name="SOAPAction"
+          value="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/fail" />
+          <record jsxid="x79240" name="Content-Type"
+          value="text/xml" />
+        </headers>
+        <record jsxid="x43720" jsxtext="Input (request)" type="I"
+        stubsrc="jsx://xml/stubs/soap.xml"
+        stubpath="/SOAP-ENV:Envelope/SOAP-ENV:Body"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[14]">
+          <record jsxid="x46222" jsxtext="failRequest" jsxopen="1"
+          type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='failRequest']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+        <record jsxid="x97844" jsxtext="Output (response)" type="O"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[22]">
+          <record jsxid="x29403" jsxtext="okResponse" jsxopen="1"
+          type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='okResponse']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+        <record jsxid="x86114" jsxtext="Fault (response variant)"
+        type="F" path="/jsx1:definitions/jsx1:message[9]">
+          <record jsxid="x12831" jsxtext="accessDeniedFault"
+          jsxopen="1" type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='accessDeniedFault']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+      </record>
+      <record jsxid="x49123" jsxtext="delete" opname="delete"
+      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      method="POST" type="P"
+      path="/jsx1:definitions/jsx1:binding/jsx1:operation[13]">
+        <headers jsxid="x24438">
+          <record jsxid="x19436" name="SOAPAction"
+          value="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/delete" />
+          <record jsxid="x60184" name="Content-Type"
+          value="text/xml" />
+        </headers>
+        <record jsxid="x17507" jsxtext="Input (request)" type="I"
+        stubsrc="jsx://xml/stubs/soap.xml"
+        stubpath="/SOAP-ENV:Envelope/SOAP-ENV:Body"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[15]">
+          <record jsxid="x27780" jsxtext="deleteRequest"
+          jsxopen="1" type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='deleteRequest']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+        <record jsxid="x14456" jsxtext="Output (response)" type="O"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[22]">
+          <record jsxid="x64097" jsxtext="okResponse" jsxopen="1"
+          type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='okResponse']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+        <record jsxid="x60693" jsxtext="Fault (response variant)"
+        type="F" path="/jsx1:definitions/jsx1:message[8]">
+          <record jsxid="x174"
+          jsxtext="invalidParticipantTokenFault" jsxopen="1"
+          type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='invalidParticipantTokenFault']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+      </record>
+      <record jsxid="x72885" jsxtext="deleteAll" opname="deleteAll"
+      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      method="POST" type="P"
+      path="/jsx1:definitions/jsx1:binding/jsx1:operation[14]">
+        <headers jsxid="x76110">
+          <record jsxid="x58644" name="SOAPAction"
+          value="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/deleteAll" />
+          <record jsxid="x60227" name="Content-Type"
+          value="text/xml" />
+        </headers>
+        <record jsxid="x98287" jsxtext="Input (request)" type="I"
+        stubsrc="jsx://xml/stubs/soap.xml"
+        stubpath="/SOAP-ENV:Envelope/SOAP-ENV:Body"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[16]">
+          <record jsxid="x38488" jsxtext="deleteAllRequest"
+          jsxopen="1" type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='deleteAllRequest']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+        <record jsxid="x88890" jsxtext="Output (response)" type="O"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[22]">
+          <record jsxid="x92163" jsxtext="okResponse" jsxopen="1"
+          type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='okResponse']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+        <record jsxid="x37985" jsxtext="Fault (response variant)"
+        type="F" path="/jsx1:definitions/jsx1:message[8]">
+          <record jsxid="x25417"
+          jsxtext="invalidParticipantTokenFault" jsxopen="1"
+          type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='invalidParticipantTokenFault']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+      </record>
+      <record jsxid="x6034" jsxtext="create" opname="create"
+      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      method="POST" type="P"
+      path="/jsx1:definitions/jsx1:binding/jsx1:operation[15]">
+        <headers jsxid="x86418">
+          <record jsxid="x79326" name="SOAPAction"
+          value="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/create" />
+          <record jsxid="x12703" name="Content-Type"
+          value="text/xml" />
+        </headers>
+        <record jsxid="x82114" jsxtext="Input (request)" type="I"
+        stubsrc="jsx://xml/stubs/soap.xml"
+        stubpath="/SOAP-ENV:Envelope/SOAP-ENV:Body"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[17]">
+          <record jsxid="x35964" jsxtext="createRequest"
+          jsxopen="1" type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='createRequest']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+        <record jsxid="x40359" jsxtext="Output (response)" type="O"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[22]">
+          <record jsxid="x85803" jsxtext="okResponse" jsxopen="1"
+          type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='okResponse']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+        <record jsxid="x3987" jsxtext="Fault (response variant)"
+        type="F" path="/jsx1:definitions/jsx1:message[8]">
+          <record jsxid="x14048"
+          jsxtext="invalidParticipantTokenFault" jsxopen="1"
+          type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='invalidParticipantTokenFault']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+      </record>
+      <record jsxid="x42377" jsxtext="initProcess"
+      opname="initProcess"
+      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      method="POST" type="P"
+      path="/jsx1:definitions/jsx1:binding/jsx1:operation[16]"
+      jsxopen="1">
+        <headers jsxid="x19162">
+          <record jsxid="x4102" name="SOAPAction"
+          value="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/init" />
+          <record jsxid="x27512" name="Content-Type"
+          value="text/xml" />
+        </headers>
+        <record jsxid="x89766" jsxtext="Input (request)" type="I"
+        stubsrc="jsx://xml/stubs/soap.xml"
+        stubpath="/SOAP-ENV:Envelope/SOAP-ENV:Body"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[23]">
+          <record jsxid="x98606" jsxtext="initRequest" type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='initRequest']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+
+            <record jsxid="x23080" jsxtext="taskId" jsxopen="1"
+            type="E"
+            path="/jsx1:definitions/jsx1:types/jsx3:schema/jsx3:element[17]/jsx3:complexType/jsx3:sequence/jsx3:element"
+            datatype="string" simple="1"
+            tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
+            jsxComboMask="nillable" jsxTextMask="true">
+              <mappings jsxid="x54794">
+                <record jsxid="jsx_3c" name="Script"
+                value="setValue(Intalio.Internal.Utilities.getTaskId());" />
+              </mappings>
+            </record>
+            <record jsxid="x56558" jsxtext="input" jsxopen="1"
+            type="C"
+            path="/jsx1:definitions/jsx1:types/jsx3:schema/jsx3:element[17]/jsx3:complexType/jsx3:sequence/jsx3:element[2]"
+            datatype=""
+            tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+
+              <mappings jsxid="x37292">
+                <record jsxid="jsx_3a" name="Script"
+                value="Intalio.Internal.Utilities.appendOutboundFormModelNode(MESSAGENODE);" />
+              </mappings>
+              <restrictions jsxid="x25787">
+                <record jsxid="jsx_36" name="nillable"
+                value="true" />
+              </restrictions>
+            </record>
+            <record jsxid="x49711" jsxtext="participantToken"
+            jsxopen="1" type="E"
+            path="/jsx1:definitions/jsx1:types/jsx3:schema/jsx3:element[17]/jsx3:complexType/jsx3:sequence/jsx3:element[3]"
+            datatype="string" simple="1"
+            tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
+            jsxComboMask="nillable" jsxTextMask="true">
+              <mappings jsxid="x31535">
+                <record jsxid="jsx_3b" name="Script"
+                value="setValue(Intalio.Internal.Utilities.getParticipantToken());" />
+              </mappings>
+            </record>
+            <record jsxid="x42763" jsxtext="formUrl" jsxopen="1"
+            type="E"
+            path="/jsx1:definitions/jsx1:types/jsx3:schema/jsx3:element[17]/jsx3:complexType/jsx3:sequence/jsx3:element[4]"
+            datatype="string" simple="1"
+            tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/"
+            jsxComboMask="nillable" jsxTextMask="true">
+              <restrictions jsxid="x96286">
+                <record jsxid="x61501" name="minoccur" value="0" />
+              </restrictions>
+              <mappings jsxid="x99442">
+                <record jsxid="jsx_3d" name="Script"
+                value="setValue(Intalio.Internal.Utilities.getFormUrl());" />
+              </mappings>
+            </record>
+          </record>
+        </record>
+        <record jsxid="x21816" jsxtext="Output (response)" type="O"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[22]">
+          <record jsxid="x73914" jsxtext="okResponse" jsxopen="1"
+          type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='okResponse']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+        <record jsxid="x11180" jsxtext="Fault (response variant)"
+        type="F" path="/jsx1:definitions/jsx1:message[8]">
+          <record jsxid="x12916"
+          jsxtext="invalidParticipantTokenFault" jsxopen="1"
+          type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='invalidParticipantTokenFault']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+      </record>
+      <record jsxid="x53848" jsxtext="getPipa" opname="getPipa"
+      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      method="POST" type="P"
+      path="/jsx1:definitions/jsx1:binding/jsx1:operation[17]">
+        <headers jsxid="x30422">
+          <record jsxid="x35348" name="SOAPAction"
+          value="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getPipa" />
+          <record jsxid="x10757" name="Content-Type"
+          value="text/xml" />
+        </headers>
+        <record jsxid="x54488" jsxtext="Input (request)" type="I"
+        stubsrc="jsx://xml/stubs/soap.xml"
+        stubpath="/SOAP-ENV:Envelope/SOAP-ENV:Body"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[20]">
+          <record jsxid="x67731" jsxtext="getPipaRequest"
+          jsxopen="1" type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='getPipaRequest']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+        <record jsxid="x84640" jsxtext="Output (response)" type="O"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[21]">
+          <record jsxid="x4752" jsxtext="getPipaResponse"
+          jsxopen="1" type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='getPipaResponse']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+        <record jsxid="x88889" jsxtext="Fault (response variant)"
+        type="F" path="/jsx1:definitions/jsx1:message[8]">
+          <record jsxid="x13253"
+          jsxtext="invalidParticipantTokenFault" jsxopen="1"
+          type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='invalidParticipantTokenFault']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+      </record>
+      <record jsxid="x70034" jsxtext="storePipa" opname="storePipa"
+      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      method="POST" type="P"
+      path="/jsx1:definitions/jsx1:binding/jsx1:operation[18]">
+        <headers jsxid="x5775">
+          <record jsxid="x26047" name="SOAPAction"
+          value="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/storePipa" />
+          <record jsxid="x84394" name="Content-Type"
+          value="text/xml" />
+        </headers>
+        <record jsxid="x62236" jsxtext="Input (request)" type="I"
+        stubsrc="jsx://xml/stubs/soap.xml"
+        stubpath="/SOAP-ENV:Envelope/SOAP-ENV:Body"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[18]">
+          <record jsxid="x87442" jsxtext="storePipaRequest"
+          jsxopen="1" type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='storePipaRequest']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+        <record jsxid="x82006" jsxtext="Output (response)" type="O"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[22]">
+          <record jsxid="x74935" jsxtext="okResponse" jsxopen="1"
+          type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='okResponse']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+        <record jsxid="x95420" jsxtext="Fault (response variant)"
+        type="F" path="/jsx1:definitions/jsx1:message[8]">
+          <record jsxid="x13260"
+          jsxtext="invalidParticipantTokenFault" jsxopen="1"
+          type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='invalidParticipantTokenFault']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+      </record>
+      <record jsxid="x88379" jsxtext="deletePipa"
+      opname="deletePipa"
+      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      method="POST" type="P"
+      path="/jsx1:definitions/jsx1:binding/jsx1:operation[19]">
+        <headers jsxid="x5376">
+          <record jsxid="x32458" name="SOAPAction"
+          value="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/deletePipa" />
+          <record jsxid="x7096" name="Content-Type"
+          value="text/xml" />
+        </headers>
+        <record jsxid="x66445" jsxtext="Input (request)" type="I"
+        stubsrc="jsx://xml/stubs/soap.xml"
+        stubpath="/SOAP-ENV:Envelope/SOAP-ENV:Body"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[19]">
+          <record jsxid="x41561" jsxtext="deletePipaRequest"
+          jsxopen="1" type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='deletePipaRequest']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+        <record jsxid="x83459" jsxtext="Output (response)" type="O"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[22]">
+          <record jsxid="x11337" jsxtext="okResponse" jsxopen="1"
+          type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='okResponse']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+        <record jsxid="x32895" jsxtext="Fault (response variant)"
+        type="F" path="/jsx1:definitions/jsx1:message[8]">
+          <record jsxid="x44968"
+          jsxtext="invalidParticipantTokenFault" jsxopen="1"
+          type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/']//jsx3:element[@name='invalidParticipantTokenFault']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" />
+        </record>
+      </record>
+    </record>
+  </record>
+</data>

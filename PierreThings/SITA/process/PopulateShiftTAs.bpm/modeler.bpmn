@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:BpmnDiagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:bpmn="http://stp.eclipse.org/bpmn" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmi:id="_rM-q8Vg3Ed6KULKWaznjDA" iD="_rM-q8Fg3Ed6KULKWaznjDA">
+  <pools xmi:type="bpmn:Pool" xmi:id="_rOxasVg3Ed6KULKWaznjDA" iD="_rOxasFg3Ed6KULKWaznjDA" name="DC">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_sf-j4Fg3Ed6KULKWaznjDA" source="executablepool">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_sf-j4Vg3Ed6KULKWaznjDA" key="poolIsExecutable" value="false"/>
+    </eAnnotations>
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_zDJ9AFg3Ed6KULKWaznjDA" source="participant">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_zDJ9AVg3Ed6KULKWaznjDA" key="users" value="intalio\admin"/>
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_zDJ9Alg3Ed6KULKWaznjDA" key="roles" value="intalio\coordinatorA,intalio\coordinatorB,intalio\coordinatorC,intalio\coordinatorD,intalio\coordinatorE,intalio\coordinatorF"/>
+    </eAnnotations>
+    <artifacts xmi:type="bpmn:DataObject" xmi:id="_0tQHUVg3Ed6KULKWaznjDA" iD="_0tQHUFg3Ed6KULKWaznjDA">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_0tQHUlg3Ed6KULKWaznjDA" source="attachedDataobject">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_0tQHU1g3Ed6KULKWaznjDA" key="isBpelDeclaration" value="true"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_0tZRSFg3Ed6KULKWaznjDA" key="defaultDeclarationName" value="shiftCreationLightInitProcessRequestMsg"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_0tZRTFg3Ed6KULKWaznjDA" key="douri2" value="builtin:///diagram?wsdlmessage={http://www.intalio.com/gi/forms/ShiftCreationLight.gi}initProcessRequest"/>
+      </eAnnotations>
+      <associations xmi:type="bpmn:Association" xmi:id="_0tZRSVg3Ed6KULKWaznjDA" direction="To">
+        <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_0tZRSlg3Ed6KULKWaznjDA" source="dataObjectAssociationTypeSource">
+          <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_0tZRS1g3Ed6KULKWaznjDA" key="dataObjectAssociationTypeValue" value="outgoingMesssageVariable"/>
+        </eAnnotations>
+      </associations>
+    </artifacts>
+    <artifacts xmi:type="bpmn:DataObject" xmi:id="_08TQB1g3Ed6KULKWaznjDA" iD="_08TQBlg3Ed6KULKWaznjDA">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_08TQCFg3Ed6KULKWaznjDA" source="attachedDataobject">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_08TQCVg3Ed6KULKWaznjDA" key="isBpelDeclaration" value="true"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_08TQElg3Ed6KULKWaznjDA" key="defaultDeclarationName" value="shiftCreationLightInitProcessResponseMsg"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_08cZ4lg3Ed6KULKWaznjDA" key="douri2" value="builtin:///diagram?wsdlmessage={http://www.intalio.com/gi/forms/ShiftCreationLight.gi}initProcessResponse"/>
+      </eAnnotations>
+      <associations xmi:type="bpmn:Association" xmi:id="_08TQE1g3Ed6KULKWaznjDA" direction="From">
+        <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_08cZ4Fg3Ed6KULKWaznjDA" source="dataObjectAssociationTypeSource">
+          <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_08cZ4Vg3Ed6KULKWaznjDA" key="dataObjectAssociationTypeValue" value="incomingMesssageVariable"/>
+        </eAnnotations>
+      </associations>
+    </artifacts>
+    <vertices xmi:type="bpmn:Activity" xmi:id="_w-FG71g3Ed6KULKWaznjDA" iD="_w9788lg3Ed6KULKWaznjDA" associations="_0tZRSVg3Ed6KULKWaznjDA _08TQE1g3Ed6KULKWaznjDA" name="ShiftCreationLight-init request" activityType="Task">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_w-FG8Fg3Ed6KULKWaznjDA" source="genericFile">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_w-FG8Vg3Ed6KULKWaznjDA" key="projectRelativePath" value="forms/ShiftCreationLight.gi"/>
+      </eAnnotations>
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_w-FG8lg3Ed6KULKWaznjDA" source="humanTask">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_w-FG81g3Ed6KULKWaznjDA" key="factoryId" value="gi"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_w-FG9Fg3Ed6KULKWaznjDA" key="taskType" value="init"/>
+      </eAnnotations>
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_w-FG9Vg3Ed6KULKWaznjDA" source="attachedDataobject">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_w-FG9lg3Ed6KULKWaznjDA" key="douri" value="project:///forms/ShiftCreationLight.gi.wsdl?invokerequestresponse={http://www.intalio.com/gi/forms/ShiftCreationLight.gi}Process/initProcess"/>
+      </eAnnotations>
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_YAtN4Fg4Ed6KULKWaznjDA" source="pipa">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_YBAv4Fg4Ed6KULKWaznjDA" key="description" value="Populate TAs for your shift"/>
+      </eAnnotations>
+      <outgoingMessages xmi:type="bpmn:MessagingEdge" href="#_0sWvcVg3Ed6KULKWaznjDA"/>
+      <incomingMessages xmi:type="bpmn:MessagingEdge" href="#_08Je8Vg3Ed6KULKWaznjDA"/>
+    </vertices>
+  </pools>
+  <pools xmi:type="bpmn:Pool" xmi:id="_tpABcVg3Ed6KULKWaznjDA" iD="_tpABcFg3Ed6KULKWaznjDA" name="Process">
+    <artifacts xmi:type="bpmn:DataObject" xmi:id="_0tjCRlg3Ed6KULKWaznjDA" iD="_0tjCRVg3Ed6KULKWaznjDA">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_0tjCR1g3Ed6KULKWaznjDA" source="attachedDataobject">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_0tjCSFg3Ed6KULKWaznjDA" key="isBpelDeclaration" value="true"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_0tjCUVg3Ed6KULKWaznjDA" key="defaultDeclarationName" value="shiftCreationLightInitProcessRequestMsg"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_0tsMMlg3Ed6KULKWaznjDA" key="douri2" value="builtin:///diagram?wsdlmessage={http://www.intalio.com/gi/forms/ShiftCreationLight.gi}initProcessRequest"/>
+      </eAnnotations>
+      <associations xmi:type="bpmn:Association" xmi:id="_0tjCUlg3Ed6KULKWaznjDA" direction="From">
+        <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_0tsMMFg3Ed6KULKWaznjDA" source="dataObjectAssociationTypeSource">
+          <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_0tsMMVg3Ed6KULKWaznjDA" key="dataObjectAssociationTypeValue" value="incomingMesssageVariable"/>
+        </eAnnotations>
+      </associations>
+    </artifacts>
+    <artifacts xmi:type="bpmn:DataObject" xmi:id="_08TP8Vg3Ed6KULKWaznjDA" iD="_08TP8Fg3Ed6KULKWaznjDA">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_08TP8lg3Ed6KULKWaznjDA" source="attachedDataobject">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_08TP81g3Ed6KULKWaznjDA" key="isBpelDeclaration" value="true"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_08TP_Fg3Ed6KULKWaznjDA" key="defaultDeclarationName" value="shiftCreationLightInitProcessResponseMsg"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_08TQAFg3Ed6KULKWaznjDA" key="douri2" value="builtin:///diagram?wsdlmessage={http://www.intalio.com/gi/forms/ShiftCreationLight.gi}initProcessResponse"/>
+      </eAnnotations>
+      <associations xmi:type="bpmn:Association" xmi:id="_08TP_Vg3Ed6KULKWaznjDA" direction="To">
+        <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_08TP_lg3Ed6KULKWaznjDA" source="dataObjectAssociationTypeSource">
+          <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_08TP_1g3Ed6KULKWaznjDA" key="dataObjectAssociationTypeValue" value="outgoingMesssageVariable"/>
+        </eAnnotations>
+      </associations>
+    </artifacts>
+    <artifacts xmi:type="bpmn:DataObject" xmi:id="_vkJbUVg-Ed6KULKWaznjDA" iD="_vkJbUFg-Ed6KULKWaznjDA">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_vkJbUlg-Ed6KULKWaznjDA" source="attachedDataobject">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_vkJbU1g-Ed6KULKWaznjDA" key="isBpelDeclaration" value="true"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_vkTMWFg-Ed6KULKWaznjDA" key="defaultDeclarationName" value="sITAservice1InputMessage"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_vkc9Ulg-Ed6KULKWaznjDA" key="douri2" value="builtin:///diagram?wsdlmessage={http://www.intalio.com/gi/forms/TAmanagement.gi}AssignTAtoShiftRequest"/>
+      </eAnnotations>
+      <associations xmi:type="bpmn:Association" xmi:id="_vkTMWVg-Ed6KULKWaznjDA" direction="To">
+        <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_vkc9UFg-Ed6KULKWaznjDA" source="dataObjectAssociationTypeSource">
+          <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_vkc9UVg-Ed6KULKWaznjDA" key="dataObjectAssociationTypeValue" value="outgoingMesssageVariable"/>
+        </eAnnotations>
+      </associations>
+    </artifacts>
+    <artifacts xmi:type="bpmn:DataObject" xmi:id="_v2oSfVg-Ed6KULKWaznjDA" iD="_v2oSfFg-Ed6KULKWaznjDA">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_v2oSflg-Ed6KULKWaznjDA" source="attachedDataobject">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_v2oSf1g-Ed6KULKWaznjDA" key="isBpelDeclaration" value="true"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_v2xcaFg-Ed6KULKWaznjDA" key="defaultDeclarationName" value="sITAservice1OuputMessage"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_v3E-YVg-Ed6KULKWaznjDA" key="douri2" value="builtin:///diagram?wsdlmessage={http://www.intalio.com/gi/forms/TAmanagement.gi}AssignTAtoShiftResponse"/>
+      </eAnnotations>
+      <associations xmi:type="bpmn:Association" xmi:id="_v27NYFg-Ed6KULKWaznjDA" direction="From">
+        <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_v27NYVg-Ed6KULKWaznjDA" source="dataObjectAssociationTypeSource">
+          <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_v3E-YFg-Ed6KULKWaznjDA" key="dataObjectAssociationTypeValue" value="incomingMesssageVariable"/>
+        </eAnnotations>
+      </associations>
+    </artifacts>
+    <vertices xmi:type="bpmn:Activity" xmi:id="_0sM-cVg3Ed6KULKWaznjDA" iD="_0sM-cFg3Ed6KULKWaznjDA" associations="_0tjCUlg3Ed6KULKWaznjDA _08TP_Vg3Ed6KULKWaznjDA" outgoingEdges="_rKObsWFoEd6-cejfCj4nlw" name="start" activityType="EventStartMessage">
+      <incomingMessages xmi:type="bpmn:MessagingEdge" href="#_0sWvcVg3Ed6KULKWaznjDA"/>
+      <outgoingMessages xmi:type="bpmn:MessagingEdge" href="#_08Je8Vg3Ed6KULKWaznjDA"/>
+    </vertices>
+    <vertices xmi:type="bpmn:Activity" xmi:id="_2HZxIVg3Ed6KULKWaznjDA" iD="_2HZxIFg3Ed6KULKWaznjDA" associations="_vkTMWVg-Ed6KULKWaznjDA _v27NYFg-Ed6KULKWaznjDA" outgoingEdges="__HU5iFg3Ed6KULKWaznjDA" incomingEdges="_rKObsWFoEd6-cejfCj4nlw" name="call SITAservice" activityType="Task">
+      <outgoingMessages xmi:type="bpmn:MessagingEdge" href="#_vj2gYVg-Ed6KULKWaznjDA"/>
+      <incomingMessages xmi:type="bpmn:MessagingEdge" href="#_v14rkVg-Ed6KULKWaznjDA"/>
+    </vertices>
+    <vertices xmi:type="bpmn:Activity" xmi:id="__HLvkVg3Ed6KULKWaznjDA" iD="__HLvkFg3Ed6KULKWaznjDA" incomingEdges="__HU5iFg3Ed6KULKWaznjDA" name="end" activityType="EventEndEmpty"/>
+    <sequenceEdges xmi:type="bpmn:SequenceEdge" xmi:id="__HU5iFg3Ed6KULKWaznjDA" iD="__HU5h1g3Ed6KULKWaznjDA"/>
+    <sequenceEdges xmi:type="bpmn:SequenceEdge" xmi:id="_rKObsWFoEd6-cejfCj4nlw" iD="_rKObsGFoEd6-cejfCj4nlw"/>
+  </pools>
+  <pools xmi:type="bpmn:Pool" xmi:id="_usgF0Vg3Ed6KULKWaznjDA" iD="_usgF0Fg3Ed6KULKWaznjDA" name="SITAservice">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_vn9BcFg3Ed6KULKWaznjDA" source="executablepool">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_vn9BcVg3Ed6KULKWaznjDA" key="poolIsExecutable" value="false"/>
+    </eAnnotations>
+    <artifacts xmi:type="bpmn:DataObject" xmi:id="_vkc9WVg-Ed6KULKWaznjDA" iD="_vkc9WFg-Ed6KULKWaznjDA">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_vkc9Wlg-Ed6KULKWaznjDA" source="attachedDataobject">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_vkc9W1g-Ed6KULKWaznjDA" key="isBpelDeclaration" value="true"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_vkc9ZFg-Ed6KULKWaznjDA" key="defaultDeclarationName" value="sITAserviceInputMessage"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_vkmHQ1g-Ed6KULKWaznjDA" key="douri2" value="builtin:///diagram?wsdlmessage={http://www.intalio.com/gi/forms/TAmanagement.gi}AssignTAtoShiftRequest"/>
+      </eAnnotations>
+      <associations xmi:type="bpmn:Association" xmi:id="_vkmHQFg-Ed6KULKWaznjDA" direction="From">
+        <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_vkmHQVg-Ed6KULKWaznjDA" source="dataObjectAssociationTypeSource">
+          <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_vkmHQlg-Ed6KULKWaznjDA" key="dataObjectAssociationTypeValue" value="incomingMesssageVariable"/>
+        </eAnnotations>
+      </associations>
+    </artifacts>
+    <artifacts xmi:type="bpmn:DataObject" xmi:id="_v2ehcVg-Ed6KULKWaznjDA" iD="_v2ehcFg-Ed6KULKWaznjDA">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_v2ehclg-Ed6KULKWaznjDA" source="attachedDataobject">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_v2ehc1g-Ed6KULKWaznjDA" key="isBpelDeclaration" value="true"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_v2oSclg-Ed6KULKWaznjDA" key="defaultDeclarationName" value="sITAserviceOuputMessage"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_v2oSdlg-Ed6KULKWaznjDA" key="douri2" value="builtin:///diagram?wsdlmessage={http://www.intalio.com/gi/forms/TAmanagement.gi}AssignTAtoShiftResponse"/>
+      </eAnnotations>
+      <associations xmi:type="bpmn:Association" xmi:id="_v2oSc1g-Ed6KULKWaznjDA" direction="To">
+        <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_v2oSdFg-Ed6KULKWaznjDA" source="dataObjectAssociationTypeSource">
+          <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_v2oSdVg-Ed6KULKWaznjDA" key="dataObjectAssociationTypeValue" value="outgoingMesssageVariable"/>
+        </eAnnotations>
+      </associations>
+    </artifacts>
+    <vertices xmi:type="bpmn:Activity" xmi:id="_u6302Vg-Ed6KULKWaznjDA" iD="_u6uq6Fg-Ed6KULKWaznjDA" associations="_vkmHQFg-Ed6KULKWaznjDA _v2oSc1g-Ed6KULKWaznjDA" name="AssignTAtoShift" activityType="Task">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_u6302lg-Ed6KULKWaznjDA" source="attachedDataobject">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_u63021g-Ed6KULKWaznjDA" key="douri" value="project:///services/SITAservice.wsdl?wsdloperationbound={http://www.intalio.com/gi/forms/TAmanagement.gi}SITAservice/SITAservicePort/AssignTAtoShift"/>
+      </eAnnotations>
+      <incomingMessages xmi:type="bpmn:MessagingEdge" href="#_vj2gYVg-Ed6KULKWaznjDA"/>
+      <outgoingMessages xmi:type="bpmn:MessagingEdge" href="#_v14rkVg-Ed6KULKWaznjDA"/>
+    </vertices>
+  </pools>
+  <messages xmi:type="bpmn:MessagingEdge" xmi:id="_0sWvcVg3Ed6KULKWaznjDA" iD="_0sWvcFg3Ed6KULKWaznjDA" source="_w-FG71g3Ed6KULKWaznjDA" target="_0sM-cVg3Ed6KULKWaznjDA">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_0sf5YFg3Ed6KULKWaznjDA" source="attachedDataobject">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_0sf5YVg3Ed6KULKWaznjDA" key="douri" value="project:///forms/ShiftCreationLight.gi.wsdl?messageForOperation={http://www.intalio.com/gi/forms/ShiftCreationLight.gi}Process/initProcess/input/initProcessRequest"/>
+    </eAnnotations>
+  </messages>
+  <messages xmi:type="bpmn:MessagingEdge" xmi:id="_08Je8Vg3Ed6KULKWaznjDA" iD="_08Je8Fg3Ed6KULKWaznjDA" source="_0sM-cVg3Ed6KULKWaznjDA" target="_w-FG71g3Ed6KULKWaznjDA">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_08Je8lg3Ed6KULKWaznjDA" source="attachedDataobject">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_08Je81g3Ed6KULKWaznjDA" key="douri" value="project:///forms/ShiftCreationLight.gi.wsdl?messageForOperation={http://www.intalio.com/gi/forms/ShiftCreationLight.gi}Process/initProcess/output/initProcessResponse"/>
+    </eAnnotations>
+  </messages>
+  <messages xmi:type="bpmn:MessagingEdge" xmi:id="_vj2gYVg-Ed6KULKWaznjDA" iD="_vj2gYFg-Ed6KULKWaznjDA" source="_2HZxIVg3Ed6KULKWaznjDA" target="_u6302Vg-Ed6KULKWaznjDA">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_vkARYFg-Ed6KULKWaznjDA" source="attachedDataobject">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_vkARYVg-Ed6KULKWaznjDA" key="douri" value="project:///services/SITAservice.wsdl?messageForBoundOperation={http://www.intalio.com/gi/forms/TAmanagement.gi}SITAservice/SITAservicePort/AssignTAtoShift/input/inputMessage"/>
+    </eAnnotations>
+  </messages>
+  <messages xmi:type="bpmn:MessagingEdge" xmi:id="_v14rkVg-Ed6KULKWaznjDA" iD="_v14rkFg-Ed6KULKWaznjDA" source="_u6302Vg-Ed6KULKWaznjDA" target="_2HZxIVg3Ed6KULKWaznjDA">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_v2LmgFg-Ed6KULKWaznjDA" source="attachedDataobject">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_v2LmgVg-Ed6KULKWaznjDA" key="douri" value="project:///services/SITAservice.wsdl?messageForBoundOperation={http://www.intalio.com/gi/forms/TAmanagement.gi}SITAservice/SITAservicePort/AssignTAtoShift/output/ouputMessage"/>
+    </eAnnotations>
+  </messages>
+</bpmn:BpmnDiagram>

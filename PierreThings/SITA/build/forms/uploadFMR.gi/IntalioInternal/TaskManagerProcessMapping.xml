@@ -1,0 +1,1410 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2001-2008, TIBCO Software Inc.
+  ~ 
+  ~ The program(s) herein may be used and/or copied only with the
+  ~ written permission of Intalio Inc. or in accordance with the terms
+  ~ and conditions stipulated in the agreement/contract under which the
+  ~ program(s) have been supplied.
+  -->
+<data jsxid="jsxroot" jsxnamespace="jsx3.ide.mapper.Mapper"
+jsxversion="1.0">
+  <record jsxid="x37479"
+  jsxtext="WSDL (IntalioInternal/TaskManagerProcess.wsdl)"
+  jsxopen="1" src="IntalioInternal/TaskManagerProcess.wsdl"
+  type="W" path="/jsx1:definitions">
+    <record jsxid="x48313"
+    jsxtext="Service (http://localhost:8080/ode...orkflow/ib4p)"
+    path="/jsx1:definitions/jsx1:service/jsx1:port/jsx5:address"
+    type="S" soapstyle="document">
+      <record jsxid="x13586" jsxtext="createTask"
+      opname="createTask"
+      endpoint="http://localhost:9080/ode/processes/workflow/ib4p"
+      method="POST" type="P"
+      path="/jsx1:definitions/jsx1:binding/jsx1:operation">
+        <headers jsxid="x91007">
+          <record jsxid="x44024" name="SOAPAction"
+          value="createTask" />
+          <record jsxid="x40193" name="Content-Type"
+          value="text/xml" />
+        </headers>
+        <record jsxid="x55384" jsxtext="Input (request)" type="I"
+        stubsrc="jsx://xml/stubs/soap.xml"
+        stubpath="/SOAP-ENV:Envelope/SOAP-ENV:Body"
+        soapuse="literal" path="/jsx1:definitions/jsx1:message">
+          <record jsxid="x49354" jsxtext="createTaskRequest"
+          type="C"
+          path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='createTaskRequest']"
+          datatype=""
+          tns="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+          jsxSelectMask="Script">
+            <record jsxid="x14411" jsxtext="taskMetaData" type="C"
+            path="/jsx1:definitions/jsx1:types/jsx4:schema/jsx4:element[4]/jsx4:complexType/jsx4:sequence/jsx4:element"
+            datatype="taskMetaDataType"
+            ttns="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+            tns="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+            jsxSelectMask="Script">
+              <record jsxid="x26753" jsxtext="taskId" jsxopen="1"
+              type="E"
+              path="/jsx1:definitions/jsx1:types/jsx4:schema/jsx4:complexType[3]/jsx4:sequence/jsx4:element"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x86088">
+                  <record jsxid="x80823" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x96490" jsxtext="taskState"
+              jsxopen="1" type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='taskState']"
+              datatype="token" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x6591">
+                  <record jsxid="x97758" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x88760" jsxtext="taskType" jsxopen="1"
+              type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='taskType']"
+              datatype="token" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x37294">
+                  <record jsxid="x75118" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x96570" jsxtext="description"
+              jsxopen="1" type="E"
+              path="/jsx1:definitions/jsx1:types/jsx4:schema/jsx4:complexType[3]/jsx4:sequence/jsx4:element[4]"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x45669">
+                  <record jsxid="x56095" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x31015" jsxtext="processId"
+              jsxopen="1" type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='processId']"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x25800">
+                  <record jsxid="x38499" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x24669" jsxtext="creationDate"
+              jsxopen="1" type="E"
+              path="/jsx1:definitions/jsx1:types/jsx4:schema/jsx4:complexType[3]/jsx4:sequence/jsx4:element[6]"
+              datatype="dateTime" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x55515">
+                  <record jsxid="x12774" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x6273" jsxtext="userOwner" jsxopen="1"
+              type="E"
+              path="/jsx1:definitions/jsx1:types/jsx4:schema/jsx4:complexType[3]/jsx4:sequence/jsx4:element[7]"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x44073">
+                  <record jsxid="x50683" name="maxoccur"
+                  value="unbounded" />
+                  <record jsxid="x63961" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x67876" jsxtext="roleOwner"
+              jsxopen="1" type="E"
+              path="/jsx1:definitions/jsx1:types/jsx4:schema/jsx4:complexType[3]/jsx4:sequence/jsx4:element[8]"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x55453">
+                  <record jsxid="x49909" name="maxoccur"
+                  value="unbounded" />
+                  <record jsxid="x89611" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x7392" jsxtext="claimAction"
+              jsxopen="1" type="C"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='claimAction']"
+              datatype="accessControlType"
+              ttns="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x46375">
+                  <record jsxid="x24069" name="maxoccur"
+                  value="1" />
+                  <record jsxid="x92083" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x83881" jsxtext="revokeAction"
+              jsxopen="1" type="C"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='revokeAction']"
+              datatype="accessControlType"
+              ttns="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x69695">
+                  <record jsxid="x75668" name="maxoccur"
+                  value="1" />
+                  <record jsxid="x30997" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x77871" jsxtext="saveAction"
+              jsxopen="1" type="C"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='saveAction']"
+              datatype="accessControlType"
+              ttns="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x10009">
+                  <record jsxid="x60254" name="maxoccur"
+                  value="1" />
+                  <record jsxid="x60472" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x60382" jsxtext="completeAction"
+              jsxopen="1" type="C"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='completeAction']"
+              datatype="accessControlType"
+              ttns="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x3957">
+                  <record jsxid="x99487" name="maxoccur"
+                  value="1" />
+                  <record jsxid="x18986" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x71963" jsxtext="deferAction"
+              jsxopen="1" type="C"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='deferAction']"
+              datatype="accessControlType"
+              ttns="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x44929">
+                  <record jsxid="x53461" name="maxoccur"
+                  value="1" />
+                  <record jsxid="x40737" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x29008" jsxtext="formUrl" jsxopen="1"
+              type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='formUrl']"
+              datatype="anyURI" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x80200">
+                  <record jsxid="x1238" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x48920" jsxtext="failureCode"
+              jsxopen="1" type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='failureCode']"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x32520">
+                  <record jsxid="x39065" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x38018" jsxtext="failureReason"
+              jsxopen="1" type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='failureReason']"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x85962">
+                  <record jsxid="x40536" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x14244" jsxtext="priority" jsxopen="1"
+              type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='priority']"
+              datatype="int" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x34976">
+                  <record jsxid="x33472" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x79583" jsxtext="scheduledActions"
+              jsxopen="1" type="C"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='scheduledActions']"
+              datatype=""
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x55635">
+                  <record jsxid="x23492" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x75606" jsxtext="userEndpoint"
+              jsxopen="1" type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='userEndpoint']"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x12814">
+                  <record jsxid="x25461" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x59399" jsxtext="userProcessEndpoint"
+              jsxopen="1" type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='userProcessEndpoint']"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x63490">
+                  <record jsxid="x52893" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x6877"
+              jsxtext="userProcessNamespaceURI" jsxopen="1"
+              type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='userProcessNamespaceURI']"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x94778">
+                  <record jsxid="x45509" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x6229"
+              jsxtext="userProcessCompleteSOAPAction" jsxopen="1"
+              type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='userProcessCompleteSOAPAction']"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x54341">
+                  <record jsxid="x35005" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x38521" jsxtext="isChainedBefore"
+              jsxopen="1" type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='isChainedBefore']"
+              datatype="boolean" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x61816">
+                  <record jsxid="x23346" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x86898" jsxtext="previousTaskId"
+              jsxopen="1" type="E"
+              path="/jsx1:definitions/jsx1:types/jsx4:schema/jsx4:complexType[3]/jsx4:sequence/jsx4:element[24]"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x28407">
+                  <record jsxid="x92730" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x19551" jsxtext="nextTaskId"
+              jsxopen="1" type="E"
+              path="/jsx1:definitions/jsx1:types/jsx4:schema/jsx4:complexType[3]/jsx4:sequence/jsx4:element[25]"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x10225">
+                  <record jsxid="x4914" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x21225" jsxtext="session" jsxopen="1"
+              type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='session']"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x62916">
+                  <record jsxid="x69277" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x55339" jsxtext="nextTaskURL"
+              jsxopen="1" type="E"
+              path="/jsx1:definitions/jsx1:types/jsx4:schema/jsx4:complexType[3]/jsx4:sequence/jsx4:element[27]"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x9435">
+                  <record jsxid="x71158" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x43788" jsxtext="attachments"
+              jsxopen="1" type="C"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='attachments']"
+              datatype=""
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115" />
+            </record>
+            <record jsxid="x53121" jsxtext="participantToken"
+            jsxopen="1" type="E"
+            path="/jsx1:definitions/jsx1:types/jsx4:schema/jsx4:element[4]/jsx4:complexType/jsx4:sequence/jsx4:element[2]"
+            datatype="string" simple="1"
+            tns="http://www.intalio.com/bpms/workflow/ib4p_20051115" />
+            <record jsxid="x7473" jsxtext="taskInput" jsxopen="1"
+            type="C"
+            path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='taskInput']"
+            datatype=""
+            tns="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+            jsxSelectMask="Script" />
+          </record>
+        </record>
+        <record jsxid="x56133" jsxtext="Output (response)" type="O"
+        soapuse="literal" path="/jsx1:definitions/jsx1:message[2]">
+          <record jsxid="x98675" jsxtext="response" jsxopen="1"
+          type="C"
+          path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='response']"
+          datatype=""
+          tns="http://www.intalio.com/bpms/workflow/ib4p_20051115" />
+        </record>
+      </record>
+      <record jsxid="x90928" jsxtext="escalateTask"
+      opname="escalateTask"
+      endpoint="http://localhost:9080/ode/processes/workflow/ib4p"
+      method="POST" type="P"
+      path="/jsx1:definitions/jsx1:binding/jsx1:operation[2]">
+        <headers jsxid="x95249">
+          <record jsxid="x66652" name="SOAPAction"
+          value="escalateTask" />
+          <record jsxid="x66544" name="Content-Type"
+          value="text/xml" />
+        </headers>
+        <record jsxid="x51642" jsxtext="Input (request)" type="I"
+        stubsrc="jsx://xml/stubs/soap.xml"
+        stubpath="/SOAP-ENV:Envelope/SOAP-ENV:Body"
+        soapuse="literal" path="/jsx1:definitions/jsx1:message[3]">
+          <record jsxid="x75706" jsxtext="escalateTaskRequest"
+          jsxopen="1" type="C"
+          path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='escalateTaskRequest']"
+          datatype=""
+          tns="http://www.intalio.com/bpms/workflow/ib4p_20051115" />
+        </record>
+        <record jsxid="x99723" jsxtext="Output (response)" type="O"
+        soapuse="literal" path="/jsx1:definitions/jsx1:message[4]">
+          <record jsxid="x6708" jsxtext="escalateTaskResponse"
+          jsxopen="1" type="C"
+          path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='escalateTaskResponse']"
+          datatype=""
+          tns="http://www.intalio.com/bpms/workflow/ib4p_20051115" />
+        </record>
+      </record>
+      <record jsxid="x60844" jsxtext="skipTask" opname="skipTask"
+      endpoint="http://localhost:9080/ode/processes/workflow/ib4p"
+      method="POST" type="P"
+      path="/jsx1:definitions/jsx1:binding/jsx1:operation[3]">
+        <headers jsxid="x89287">
+          <record jsxid="x33213" name="SOAPAction"
+          value="skipTask" />
+          <record jsxid="x97262" name="Content-Type"
+          value="text/xml" />
+        </headers>
+        <record jsxid="x49582" jsxtext="Input (request)" type="I"
+        stubsrc="jsx://xml/stubs/soap.xml"
+        stubpath="/SOAP-ENV:Envelope/SOAP-ENV:Body"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[11]">
+          <record jsxid="x99924" jsxtext="skipTaskRequest"
+          jsxopen="1" type="C"
+          path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='skipTaskRequest']"
+          datatype=""
+          tns="http://www.intalio.com/bpms/workflow/ib4p_20051115" />
+        </record>
+        <record jsxid="x98674" jsxtext="Output (response)" type="O"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[12]">
+          <record jsxid="x41973" jsxtext="response" jsxopen="1"
+          type="C"
+          path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='response']"
+          datatype=""
+          tns="http://www.intalio.com/bpms/workflow/ib4p_20051115" />
+        </record>
+      </record>
+    </record>
+    <record jsxid="x76567"
+    jsxtext="Service (http://localhost:8080/ode...completeTask)"
+    jsxopen="1"
+    path="/jsx1:definitions/jsx1:service[2]/jsx1:port/jsx5:address"
+    type="S" soapstyle="document">
+      <record jsxid="x91824" jsxtext="completeTask"
+      opname="completeTask"
+      endpoint="http://localhost:9080/ode/processes/completeTask"
+      method="POST" type="P"
+      path="/jsx1:definitions/jsx1:binding[2]/jsx1:operation">
+        <headers jsxid="x71188">
+          <record jsxid="x26452" name="SOAPAction"
+          value="completeTask" />
+          <record jsxid="x74004" name="Content-Type"
+          value="text/xml" />
+        </headers>
+        <record jsxid="x10208" jsxtext="Input (request)" type="I"
+        stubsrc="jsx://xml/stubs/soap.xml"
+        stubpath="/SOAP-ENV:Envelope/SOAP-ENV:Body"
+        soapuse="literal" path="/jsx1:definitions/jsx1:message[9]"
+        jsxopen="1">
+          <record jsxid="x18585" jsxtext="completeTaskRequest"
+          jsxopen="1" type="C"
+          path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='completeTaskRequest']"
+          datatype=""
+          tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+            <record jsxid="x14198" jsxtext="taskMetaData" type="C"
+            path="/jsx1:definitions/jsx1:types/jsx4:schema/jsx4:element[2]/jsx4:complexType/jsx4:sequence/jsx4:element"
+            datatype="taskMetaDataType"
+            ttns="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+            tns="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+            jsxopen="1">
+              <record jsxid="x14770" jsxtext="taskId" jsxopen="1"
+              type="E"
+              path="/jsx1:definitions/jsx1:types/jsx4:schema/jsx4:complexType[3]/jsx4:sequence/jsx4:element"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+              jsxSelectMask="Script">
+                <restrictions jsxid="x63325">
+                  <record jsxid="x20168" name="minoccur"
+                  value="0" />
+                </restrictions>
+                <mappings jsxid="x87891">
+                  <record jsxid="jsx_36" name="Script"
+                  value="setValue(Intalio.Internal.Utilities.getTaskId());" />
+                </mappings>
+              </record>
+              <record jsxid="x87058" jsxtext="taskState"
+              jsxopen="1" type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='taskState']"
+              datatype="token" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x68189">
+                  <record jsxid="x32" name="minoccur" value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x75389" jsxtext="taskType" jsxopen="1"
+              type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='taskType']"
+              datatype="token" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x56643">
+                  <record jsxid="x42726" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x9523" jsxtext="description"
+              jsxopen="1" type="E"
+              path="/jsx1:definitions/jsx1:types/jsx4:schema/jsx4:complexType[3]/jsx4:sequence/jsx4:element[4]"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x78490">
+                  <record jsxid="x73929" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x48804" jsxtext="processId"
+              jsxopen="1" type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='processId']"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x99671">
+                  <record jsxid="x10988" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x47545" jsxtext="creationDate"
+              jsxopen="1" type="E"
+              path="/jsx1:definitions/jsx1:types/jsx4:schema/jsx4:complexType[3]/jsx4:sequence/jsx4:element[6]"
+              datatype="dateTime" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x33319">
+                  <record jsxid="x58109" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x6950" jsxtext="userOwner" jsxopen="1"
+              type="E"
+              path="/jsx1:definitions/jsx1:types/jsx4:schema/jsx4:complexType[3]/jsx4:sequence/jsx4:element[7]"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x98018">
+                  <record jsxid="x11226" name="maxoccur"
+                  value="unbounded" />
+                  <record jsxid="x51302" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x65796" jsxtext="roleOwner"
+              jsxopen="1" type="E"
+              path="/jsx1:definitions/jsx1:types/jsx4:schema/jsx4:complexType[3]/jsx4:sequence/jsx4:element[8]"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x94699">
+                  <record jsxid="x44145" name="maxoccur"
+                  value="unbounded" />
+                  <record jsxid="x13775" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x46" jsxtext="claimAction" jsxopen="1"
+              type="C"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='claimAction']"
+              datatype="accessControlType"
+              ttns="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x13014">
+                  <record jsxid="x76421" name="maxoccur"
+                  value="1" />
+                  <record jsxid="x82779" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x94913" jsxtext="revokeAction"
+              jsxopen="1" type="C"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='revokeAction']"
+              datatype="accessControlType"
+              ttns="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x70114">
+                  <record jsxid="x22803" name="maxoccur"
+                  value="1" />
+                  <record jsxid="x71303" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x54402" jsxtext="saveAction"
+              jsxopen="1" type="C"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='saveAction']"
+              datatype="accessControlType"
+              ttns="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x11185">
+                  <record jsxid="x38687" name="maxoccur"
+                  value="1" />
+                  <record jsxid="x88053" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x9473" jsxtext="completeAction"
+              jsxopen="1" type="C"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='completeAction']"
+              datatype="accessControlType"
+              ttns="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x60927">
+                  <record jsxid="x93833" name="maxoccur"
+                  value="1" />
+                  <record jsxid="x6860" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x67785" jsxtext="deferAction"
+              jsxopen="1" type="C"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='deferAction']"
+              datatype="accessControlType"
+              ttns="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x25161">
+                  <record jsxid="x13514" name="maxoccur"
+                  value="1" />
+                  <record jsxid="x59971" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x91715" jsxtext="formUrl" jsxopen="1"
+              type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='formUrl']"
+              datatype="anyURI" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x26023">
+                  <record jsxid="x47272" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x79748" jsxtext="failureCode"
+              jsxopen="1" type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='failureCode']"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x1570">
+                  <record jsxid="x80892" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x74742" jsxtext="failureReason"
+              jsxopen="1" type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='failureReason']"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x41546">
+                  <record jsxid="x14300" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x89963" jsxtext="priority" jsxopen="1"
+              type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='priority']"
+              datatype="int" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x60467">
+                  <record jsxid="x66876" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x44519" jsxtext="scheduledActions"
+              jsxopen="1" type="C"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='scheduledActions']"
+              datatype=""
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x80302">
+                  <record jsxid="x25189" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x30441" jsxtext="userEndpoint"
+              jsxopen="1" type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='userEndpoint']"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x14280">
+                  <record jsxid="x65241" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x9789" jsxtext="userProcessEndpoint"
+              jsxopen="1" type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='userProcessEndpoint']"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x77212">
+                  <record jsxid="x40783" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x17150"
+              jsxtext="userProcessNamespaceURI" jsxopen="1"
+              type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='userProcessNamespaceURI']"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x69864">
+                  <record jsxid="x96463" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x97104"
+              jsxtext="userProcessCompleteSOAPAction" jsxopen="1"
+              type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='userProcessCompleteSOAPAction']"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x18881">
+                  <record jsxid="x53884" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x18499" jsxtext="isChainedBefore"
+              jsxopen="1" type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='isChainedBefore']"
+              datatype="boolean" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x70004">
+                  <record jsxid="x54620" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x85915" jsxtext="previousTaskId"
+              jsxopen="1" type="E"
+              path="/jsx1:definitions/jsx1:types/jsx4:schema/jsx4:complexType[3]/jsx4:sequence/jsx4:element[24]"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x96810">
+                  <record jsxid="x71040" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x24392" jsxtext="nextTaskId"
+              jsxopen="1" type="E"
+              path="/jsx1:definitions/jsx1:types/jsx4:schema/jsx4:complexType[3]/jsx4:sequence/jsx4:element[25]"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x95107">
+                  <record jsxid="x13475" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x92416" jsxtext="session" jsxopen="1"
+              type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='session']"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x18144">
+                  <record jsxid="x8454" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x98841" jsxtext="nextTaskURL"
+              jsxopen="1" type="E"
+              path="/jsx1:definitions/jsx1:types/jsx4:schema/jsx4:complexType[3]/jsx4:sequence/jsx4:element[27]"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x37427">
+                  <record jsxid="x65098" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x50771" jsxtext="attachments"
+              jsxopen="1" type="C"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='attachments']"
+              datatype=""
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115" />
+            </record>
+            <record jsxid="x41021" jsxtext="participantToken"
+            jsxopen="1" type="E"
+            path="/jsx1:definitions/jsx1:types/jsx4:schema/jsx4:element[2]/jsx4:complexType/jsx4:sequence/jsx4:element[2]"
+            datatype="string" simple="1"
+            tns="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+            jsxSelectMask="Script">
+              <mappings jsxid="x96832">
+                <record jsxid="jsx_37" name="Script"
+                value="setValue(Intalio.Internal.Utilities.getParticipantToken());" />
+              </mappings>
+            </record>
+            <record jsxid="x6529" jsxtext="user" jsxopen="1"
+            type="E"
+            path="/jsx1:definitions/jsx1:types/jsx4:schema/jsx4:element[2]/jsx4:complexType/jsx4:sequence/jsx4:element[3]"
+            datatype="string" simple="1"
+            tns="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+            jsxSelectMask="Script">
+              <mappings jsxid="x76400">
+                <record jsxid="jsx_38" name="Script"
+                value="setValue(Intalio.Internal.Utilities.getUser());" />
+              </mappings>
+            </record>
+            <record jsxid="x46751" jsxtext="taskOutput" jsxopen="1"
+            type="C"
+            path="/jsx1:definitions/jsx1:types/jsx4:schema/jsx4:element[2]/jsx4:complexType/jsx4:sequence/jsx4:element[4]"
+            datatype=""
+            tns="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+            jsxselected="1" jsxComboMask="nillable"
+            jsxTextMask="true">
+              <mappings jsxid="x87122">
+                <record jsxid="jsx_39" name="Script"
+                value="Intalio.Internal.Utilities.appendOutboundFormModelNode(MESSAGENODE);" />
+              </mappings>
+              <restrictions jsxid="x89600">
+                <record jsxid="jsx_38" name="nillable"
+                value="true" />
+              </restrictions>
+            </record>
+          </record>
+        </record>
+        <record jsxid="x98771" jsxtext="Output (response)" type="O"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[10]">
+          <record jsxid="x87268" jsxtext="response" type="C"
+          path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='response']"
+          datatype=""
+          tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+            <record jsxid="x40814" jsxtext="taskMetaData" type="C"
+            path="/jsx1:definitions/jsx1:types/jsx4:schema/jsx4:element[12]/jsx4:complexType/jsx4:sequence/jsx4:element"
+            datatype="taskMetaDataType"
+            ttns="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+            tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+              <record jsxid="x35112" jsxtext="taskId" jsxopen="1"
+              type="E"
+              path="/jsx1:definitions/jsx1:types/jsx4:schema/jsx4:complexType[3]/jsx4:sequence/jsx4:element"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x26658">
+                  <record jsxid="x9695" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x39635" jsxtext="taskState"
+              jsxopen="1" type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='taskState']"
+              datatype="token" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x50194">
+                  <record jsxid="x63502" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x11943" jsxtext="taskType" jsxopen="1"
+              type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='taskType']"
+              datatype="token" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x1998">
+                  <record jsxid="x10439" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x53498" jsxtext="description"
+              jsxopen="1" type="E"
+              path="/jsx1:definitions/jsx1:types/jsx4:schema/jsx4:complexType[3]/jsx4:sequence/jsx4:element[4]"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x55714">
+                  <record jsxid="x85869" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x4960" jsxtext="processId" jsxopen="1"
+              type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='processId']"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x40917">
+                  <record jsxid="x48224" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x67927" jsxtext="creationDate"
+              jsxopen="1" type="E"
+              path="/jsx1:definitions/jsx1:types/jsx4:schema/jsx4:complexType[3]/jsx4:sequence/jsx4:element[6]"
+              datatype="dateTime" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x65322">
+                  <record jsxid="x24852" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x37715" jsxtext="userOwner"
+              jsxopen="1" type="E"
+              path="/jsx1:definitions/jsx1:types/jsx4:schema/jsx4:complexType[3]/jsx4:sequence/jsx4:element[7]"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x39134">
+                  <record jsxid="x48490" name="maxoccur"
+                  value="unbounded" />
+                  <record jsxid="x79555" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x14585" jsxtext="roleOwner"
+              jsxopen="1" type="E"
+              path="/jsx1:definitions/jsx1:types/jsx4:schema/jsx4:complexType[3]/jsx4:sequence/jsx4:element[8]"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x86299">
+                  <record jsxid="x27449" name="maxoccur"
+                  value="unbounded" />
+                  <record jsxid="x33419" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x17613" jsxtext="claimAction"
+              jsxopen="1" type="C"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='claimAction']"
+              datatype="accessControlType"
+              ttns="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x39631">
+                  <record jsxid="x42560" name="maxoccur"
+                  value="1" />
+                  <record jsxid="x97672" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x40165" jsxtext="revokeAction"
+              jsxopen="1" type="C"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='revokeAction']"
+              datatype="accessControlType"
+              ttns="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x96151">
+                  <record jsxid="x7424" name="maxoccur"
+                  value="1" />
+                  <record jsxid="x61752" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x98586" jsxtext="saveAction"
+              jsxopen="1" type="C"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='saveAction']"
+              datatype="accessControlType"
+              ttns="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x43767">
+                  <record jsxid="x81880" name="maxoccur"
+                  value="1" />
+                  <record jsxid="x1281" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x20360" jsxtext="completeAction"
+              jsxopen="1" type="C"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='completeAction']"
+              datatype="accessControlType"
+              ttns="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x78877">
+                  <record jsxid="x21735" name="maxoccur"
+                  value="1" />
+                  <record jsxid="x76743" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x33177" jsxtext="deferAction"
+              jsxopen="1" type="C"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='deferAction']"
+              datatype="accessControlType"
+              ttns="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x31589">
+                  <record jsxid="x89918" name="maxoccur"
+                  value="1" />
+                  <record jsxid="x36190" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x87686" jsxtext="formUrl" jsxopen="1"
+              type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='formUrl']"
+              datatype="anyURI" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x86916">
+                  <record jsxid="x66987" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x73679" jsxtext="failureCode"
+              jsxopen="1" type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='failureCode']"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x26530">
+                  <record jsxid="x17781" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x30243" jsxtext="failureReason"
+              jsxopen="1" type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='failureReason']"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x36675">
+                  <record jsxid="x20131" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x26221" jsxtext="priority" jsxopen="1"
+              type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='priority']"
+              datatype="int" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x80188">
+                  <record jsxid="x20249" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x25756" jsxtext="scheduledActions"
+              jsxopen="1" type="C"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='scheduledActions']"
+              datatype=""
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x22871">
+                  <record jsxid="x80681" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x33675" jsxtext="userEndpoint"
+              jsxopen="1" type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='userEndpoint']"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x90544">
+                  <record jsxid="x61622" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x44827" jsxtext="userProcessEndpoint"
+              jsxopen="1" type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='userProcessEndpoint']"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x75907">
+                  <record jsxid="x11459" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x86296"
+              jsxtext="userProcessNamespaceURI" jsxopen="1"
+              type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='userProcessNamespaceURI']"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x42525">
+                  <record jsxid="x10410" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x85553"
+              jsxtext="userProcessCompleteSOAPAction" jsxopen="1"
+              type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='userProcessCompleteSOAPAction']"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x39243">
+                  <record jsxid="x27540" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x86965" jsxtext="isChainedBefore"
+              jsxopen="1" type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='isChainedBefore']"
+              datatype="boolean" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x32433">
+                  <record jsxid="x27954" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x82082" jsxtext="previousTaskId"
+              jsxopen="1" type="E"
+              path="/jsx1:definitions/jsx1:types/jsx4:schema/jsx4:complexType[3]/jsx4:sequence/jsx4:element[24]"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x18306">
+                  <record jsxid="x47538" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x45106" jsxtext="nextTaskId"
+              jsxopen="1" type="E"
+              path="/jsx1:definitions/jsx1:types/jsx4:schema/jsx4:complexType[3]/jsx4:sequence/jsx4:element[25]"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x55099">
+                  <record jsxid="x82827" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x49539" jsxtext="session" jsxopen="1"
+              type="E"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='session']"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x89893">
+                  <record jsxid="x26811" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x91124" jsxtext="nextTaskURL"
+              jsxopen="1" type="E"
+              path="/jsx1:definitions/jsx1:types/jsx4:schema/jsx4:complexType[3]/jsx4:sequence/jsx4:element[27]"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+                <restrictions jsxid="x18175">
+                  <record jsxid="x44062" name="minoccur"
+                  value="0" />
+                </restrictions>
+              </record>
+              <record jsxid="x66522" jsxtext="attachments"
+              jsxopen="1" type="C"
+              path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='attachments']"
+              datatype=""
+              tns="http://www.intalio.com/bpms/workflow/ib4p_20051115" />
+            </record>
+            <record jsxid="x5253" jsxtext="status" jsxopen="1"
+            type="E"
+            path="/jsx1:definitions/jsx1:types/jsx4:schema/jsx4:element[12]/jsx4:complexType/jsx4:sequence/jsx4:element[2]"
+            datatype="string" simple="1"
+            tns="http://www.intalio.com/bpms/workflow/ib4p_20051115" />
+            <record jsxid="x44261" jsxtext="errorCode" jsxopen="1"
+            type="E"
+            path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='errorCode']"
+            datatype="string" simple="1"
+            tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+              <restrictions jsxid="x78656">
+                <record jsxid="x59141" name="minoccur" value="0" />
+              </restrictions>
+            </record>
+            <record jsxid="x13124" jsxtext="errorReason"
+            jsxopen="1" type="E"
+            path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='errorReason']"
+            datatype="string" simple="1"
+            tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+              <restrictions jsxid="x71172">
+                <record jsxid="x99998" name="minoccur" value="0" />
+              </restrictions>
+            </record>
+            <record jsxid="x40945" jsxtext="isChainedAfter"
+            jsxopen="1" type="E"
+            path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='isChainedAfter']"
+            datatype="boolean" simple="1"
+            tns="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+
+              <restrictions jsxid="x52806">
+                <record jsxid="x23530" name="minoccur" value="0" />
+              </restrictions>
+            </record>
+          </record>
+        </record>
+      </record>
+      <record jsxid="x32751" jsxtext="claimTask" opname="claimTask"
+      endpoint="http://localhost:9080/ode/processes/completeTask"
+      method="POST" type="P"
+      path="/jsx1:definitions/jsx1:binding[2]/jsx1:operation[2]">
+        <headers jsxid="x39766">
+          <record jsxid="x30008" name="SOAPAction"
+          value="claimTask" />
+          <record jsxid="x75737" name="Content-Type"
+          value="text/xml" />
+        </headers>
+        <record jsxid="x94774" jsxtext="Input (request)" type="I"
+        stubsrc="jsx://xml/stubs/soap.xml"
+        stubpath="/SOAP-ENV:Envelope/SOAP-ENV:Body"
+        soapuse="literal" path="/jsx1:definitions/jsx1:message[5]"
+        jsxopen="1">
+          <record jsxid="x85265" jsxtext="claimTaskRequest"
+          jsxopen="1" type="C"
+          path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='claimTaskRequest']"
+          datatype=""
+          tns="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+          jsxSelectMask="Script">
+            <record jsxid="x28620" jsxtext="taskId" jsxopen="1"
+            type="E"
+            path="/jsx1:definitions/jsx1:types/jsx4:schema/jsx4:element[7]/jsx4:complexType/jsx4:sequence/jsx4:element"
+            datatype="string" simple="1"
+            tns="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+            jsxSelectMask="Script">
+              <mappings jsxid="x12826">
+                <record jsxid="jsx_3a" name="Script"
+                value="setValue(Intalio.Internal.Utilities.getTaskId());" />
+              </mappings>
+            </record>
+            <record jsxid="x99269" jsxtext="claimerUser"
+            jsxopen="1" type="E"
+            path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='claimerUser']"
+            datatype="string" simple="1"
+            tns="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+            jsxSelectMask="Script">
+              <mappings jsxid="x35590">
+                <record jsxid="jsx_3b" name="Script"
+                value="setValue(Intalio.Internal.Utilities.getUser());" />
+              </mappings>
+            </record>
+            <record jsxid="x93343" jsxtext="participantToken"
+            jsxopen="1" type="E"
+            path="/jsx1:definitions/jsx1:types/jsx4:schema/jsx4:element[7]/jsx4:complexType/jsx4:sequence/jsx4:element[3]"
+            datatype="string" simple="1"
+            tns="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+            jsxSelectMask="Script">
+              <mappings jsxid="x89480">
+                <record jsxid="jsx_3c" name="Script"
+                value="setValue(Intalio.Internal.Utilities.getParticipantToken());" />
+              </mappings>
+            </record>
+          </record>
+        </record>
+        <record jsxid="x14926" jsxtext="Output (response)" type="O"
+        soapuse="literal" path="/jsx1:definitions/jsx1:message[6]">
+          <record jsxid="x94491" jsxtext="claimTaskResponse"
+          jsxopen="1" type="C"
+          path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='claimTaskResponse']"
+          datatype=""
+          tns="http://www.intalio.com/bpms/workflow/ib4p_20051115" />
+        </record>
+      </record>
+      <record jsxid="x47632" jsxtext="revokeTask"
+      opname="revokeTask"
+      endpoint="http://localhost:9080/ode/processes/completeTask"
+      method="POST" type="P"
+      path="/jsx1:definitions/jsx1:binding[2]/jsx1:operation[3]">
+        <headers jsxid="x19650">
+          <record jsxid="x5934" name="SOAPAction"
+          value="revokeTask" />
+          <record jsxid="x82191" name="Content-Type"
+          value="text/xml" />
+        </headers>
+        <record jsxid="x64175" jsxtext="Input (request)" type="I"
+        stubsrc="jsx://xml/stubs/soap.xml"
+        stubpath="/SOAP-ENV:Envelope/SOAP-ENV:Body"
+        soapuse="literal" path="/jsx1:definitions/jsx1:message[7]"
+        jsxopen="1">
+          <record jsxid="x55038" jsxtext="revokeTaskRequest"
+          jsxopen="1" type="C"
+          path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='revokeTaskRequest']"
+          datatype=""
+          tns="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+          jsxSelectMask="Script">
+            <record jsxid="x61287" jsxtext="taskId" jsxopen="1"
+            type="E"
+            path="/jsx1:definitions/jsx1:types/jsx4:schema/jsx4:element[9]/jsx4:complexType/jsx4:sequence/jsx4:element"
+            datatype="string" simple="1"
+            tns="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+            jsxSelectMask="Script">
+              <mappings jsxid="x18973">
+                <record jsxid="jsx_3d" name="Script"
+                value="setValue(Intalio.Internal.Utilities.getTaskId());" />
+              </mappings>
+            </record>
+            <record jsxid="x63334" jsxtext="participantToken"
+            jsxopen="1" type="E"
+            path="/jsx1:definitions/jsx1:types/jsx4:schema/jsx4:element[9]/jsx4:complexType/jsx4:sequence/jsx4:element[2]"
+            datatype="string" simple="1"
+            tns="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+            jsxSelectMask="Script">
+              <mappings jsxid="x23463">
+                <record jsxid="jsx_3e" name="Script"
+                value="setValue(Intalio.Internal.Utilities.getParticipantToken());" />
+              </mappings>
+            </record>
+          </record>
+        </record>
+        <record jsxid="x34523" jsxtext="Output (response)" type="O"
+        soapuse="literal" path="/jsx1:definitions/jsx1:message[8]">
+          <record jsxid="x39109" jsxtext="revokeTaskResponse"
+          jsxopen="1" type="C"
+          path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='revokeTaskResponse']"
+          datatype=""
+          tns="http://www.intalio.com/bpms/workflow/ib4p_20051115" />
+        </record>
+      </record>
+      <record jsxid="x17792" jsxtext="skipTask" opname="skipTask"
+      endpoint="http://localhost:9080/ode/processes/completeTask"
+      method="POST" type="P"
+      path="/jsx1:definitions/jsx1:binding[2]/jsx1:operation[4]">
+        <headers jsxid="x57708">
+          <record jsxid="x63492" name="SOAPAction"
+          value="skipTask" />
+          <record jsxid="x91129" name="Content-Type"
+          value="text/xml" />
+        </headers>
+        <record jsxid="x52233" jsxtext="Input (request)" type="I"
+        stubsrc="jsx://xml/stubs/soap.xml"
+        stubpath="/SOAP-ENV:Envelope/SOAP-ENV:Body"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[11]">
+          <record jsxid="x5709" jsxtext="skipTaskRequest"
+          jsxopen="1" type="C"
+          path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='skipTaskRequest']"
+          datatype=""
+          tns="http://www.intalio.com/bpms/workflow/ib4p_20051115" />
+        </record>
+        <record jsxid="x30607" jsxtext="Output (response)" type="O"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[12]">
+          <record jsxid="x445" jsxtext="response" jsxopen="1"
+          type="C"
+          path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='response']"
+          datatype=""
+          tns="http://www.intalio.com/bpms/workflow/ib4p_20051115" />
+        </record>
+      </record>
+    </record>
+    <record jsxid="x28289"
+    jsxtext="Service (http://localhost:8080/ode/processes/TMP)"
+    path="/jsx1:definitions/jsx1:service[3]/jsx1:port/jsx5:address"
+    type="S" soapstyle="document">
+      <record jsxid="x54349" jsxtext="nextTaskReady"
+      opname="nextTaskReady"
+      endpoint="http://localhost:9080/ode/processes/TMP"
+      method="POST" type="P"
+      path="/jsx1:definitions/jsx1:binding[3]/jsx1:operation">
+        <headers jsxid="x89711">
+          <record jsxid="x1795" name="SOAPAction"
+          value="nextTaskReady" />
+          <record jsxid="x80356" name="Content-Type"
+          value="text/xml" />
+        </headers>
+        <record jsxid="x48577" jsxtext="Input (request)" type="I"
+        stubsrc="jsx://xml/stubs/soap.xml"
+        stubpath="/SOAP-ENV:Envelope/SOAP-ENV:Body"
+        soapuse="literal"
+        path="/jsx1:definitions/jsx1:message[15]">
+          <record jsxid="x28867" jsxtext="chainedExecution"
+          jsxopen="1" type="C"
+          path="//jsx4:schema[@targetNamespace='http://www.intalio.com/bpms/workflow/ib4p_20051115']//jsx4:element[@name='chainedExecution']"
+          datatype=""
+          tns="http://www.intalio.com/bpms/workflow/ib4p_20051115" />
+        </record>
+      </record>
+    </record>
+  </record>
+</data>

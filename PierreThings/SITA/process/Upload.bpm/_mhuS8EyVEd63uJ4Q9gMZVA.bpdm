@@ -1,0 +1,34 @@
+﻿<bpel:process xmlns:bpdm="http://www.intalio/designer/business-process-data-modeling" xmlns:mapper="http://www.intalio.com/designer/mapper" xmlns:getTaskForUpdate="urn:intalio.com:connectors:database:sita:gettaskforupdateservice" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="http://thisdiagram/DB" xmlns:diag="http://thisdiagram" xmlns:UploadProcess="http://thisdiagram/UploadProcess" xmlns:countExistingTAs="urn:intalio.com:connectors:database:sita:countexistingtasservice" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ode="http://www.apache.org/ode/type/extension" targetNamespace="http://thisdiagram/DB">
+    <bpdm:dependencies version="6000076">
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/2001/XMLSchema" bpdm:prefix="xs"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/2001/XMLSchema-instance" bpdm:prefix="xsi"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram/DB" bpdm:prefix="this" bpdm:type="this_process"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram" bpdm:prefix="diag" bpdm:comment="contrib=&apos;partner-pool:///_VbNFwD7SEd6K2cgYiBoOqg"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram/UploadProcess" bpdm:prefix="UploadProcess" bpdm:comment="contrib=&apos;partner-pool:///_VbNFwD7SEd6K2cgYiBoOqg"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="urn:intalio.com:connectors:database:sita:countexistingtasservice" bpdm:prefix="countExistingTAs" bpdm:comment="contrib=&apos;project:///database/countExistingTAs.sql/countExistingTAs.sql.wsdl"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/XML/1998/namespace" bpdm:prefix="xml"></bpdm:namespaceDefinition>
+        <bpdm:namespaceContributor bpdm:url="thisprocess://this-process-types" bpdm:label="process defined this-process-types"></bpdm:namespaceContributor>
+        <bpdm:namespaceContributor bpdm:url="partner-pool:///_VbNFwD7SEd6K2cgYiBoOqg" bpdm:label="UploadProcess"/>
+        <bpdm:namespaceContributor bpdm:url="project:///database/countExistingTAs.sql/countExistingTAs.sql.wsdl"/>
+        <bpdm:namespaceContributor bpdm:url="project:///database/countExistingTAs.sql/countExistingTAs.xsd"/>
+    </bpdm:dependencies>
+    <bpel:scope bpdm:label="DB" bpdm:ID="_mhuS8EyVEd63uJ4Q9gMZVA">
+        <bpel:partnerLinks>
+            <bpel:partnerLink name="dbAndUploadProcessForCountExistingTAsPortPlkVar" partnerLinkType="diag:DbAndUploadProcessForCountExistingTAsPortPlk" myRole="DB_for_UploadProcess" bpdm:enableSharing="false" bpdm:providedService="countExistingTAs:countExistingTAsService" bpdm:providedPort="countExistingTAsPort" bpdm:provideSOAPAddress="http://localhost:9080/ode/processes/SITA/database/countExistingTAs" bpdm:providedIsDefault="true" bpdm:clientTasks="_mhuS8EyVEd63uJ4Q9gMZVA:_b6Oc5lZmEd6OBK2EwaAgcw" bpdm:isManaged="true" bpdm:otherPoolId="_VbNFwD7SEd6K2cgYiBoOqg"/>
+        </bpel:partnerLinks>
+        <bpel:variables>
+            <bpel:variable name="countExistingTAsCountExistingTAsRequestMsg" messageType="countExistingTAs:countExistingTAsInput" binding="countExistingTAs:countExistingTAsPortSoapBinding" operation="countExistingTAs" opMsgType="0" bpdm:id="_f3PsEFZmEd6OBK2EwaAgcw" bpdm:messageIds="inc:_f2NKQFZmEd6OBK2EwaAgcw"/>
+            <bpel:variable name="countExistingTAsCountExistingTAsResponseMsg" messageType="countExistingTAs:countExistingTAsOutput" binding="countExistingTAs:countExistingTAsPortSoapBinding" operation="countExistingTAs" opMsgType="1" bpdm:id="_gFQS4FZmEd6OBK2EwaAgcw" bpdm:messageIds=" out:_gE9X8FZmEd6OBK2EwaAgcw">
+                <bpel:from bpdm:toPart="parameters">
+                    <bpel:literal bpdm:linkedMessageType="countExistingTAs:countExistingTAsOutput" bpdm:linkedPart="parameters" bpdm:binding="countExistingTAs:countExistingTAsPortSoapBinding" bpdm:opMsgType="1" bpdm:operation="countExistingTAs"></bpel:literal>
+                </bpel:from>
+            </bpel:variable>
+        </bpel:variables>
+        <bpel:sequence>
+            <bpdm:messagingtask operation="countExistingTAs" partnerLink="dbAndUploadProcessForCountExistingTAsPortPlkVar" portType="countExistingTAs:countExistingTAsPort" isMyRole="true" enableSharing="false" bpdm:label="Provide-Service-Countexistingtas" bpdm:ID="_b6Oc5lZmEd6OBK2EwaAgcw">
+                <bpdm:linkset bpdm:type="incomingMessage" bpdm:bpeltype="receive" bpdm:messageVariable="countExistingTAsCountExistingTAsRequestMsg" bpdm:msgVarScopeId="_mhuS8EyVEd63uJ4Q9gMZVA" bpdm:variableIsManaged="true" bpdm:messageType="countExistingTAs:countExistingTAsInput" bpdm:binding="countExistingTAs:countExistingTAsPortSoapBinding" bpdm:ID="_f2NKQFZmEd6OBK2EwaAgcw"></bpdm:linkset>
+                <bpdm:linkset bpdm:type="outgoingMessage" bpdm:bpeltype="reply" bpdm:messageVariable="countExistingTAsCountExistingTAsResponseMsg" bpdm:msgVarScopeId="_mhuS8EyVEd63uJ4Q9gMZVA" bpdm:variableIsManaged="true" bpdm:messageType="countExistingTAs:countExistingTAsOutput" bpdm:binding="countExistingTAs:countExistingTAsPortSoapBinding" bpdm:ID="_gE9X8FZmEd6OBK2EwaAgcw"></bpdm:linkset>
+            </bpdm:messagingtask>
+        </bpel:sequence>
+    </bpel:scope>
+</bpel:process>

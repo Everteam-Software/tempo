@@ -1,0 +1,53 @@
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<bpel:process xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ode="http://www.apache.org/ode/type/extension" xmlns:attachments="http://www.intalio.com/gi/forms/TAlistExport.gi/attachments" xmlns:processimplicitPartner="http://example.com/process/StartTAlistExport/processimplicitPartner" xmlns:TAlistToAMI-TAlistExportProcess="http://example.com/process/TAlistToAMI/TAlistExportProcess" xmlns:User="http://example.com/process/StartTAlistExport/User" xmlns:TAlistExport="http://www.intalio.com/gi/forms/TAlistExport.gi" xmlns:this="http://example.com/process/StartTAlistExport/process" xmlns:diag="http://example.com/process/StartTAlistExport" xmlns:bpmn="http://www.intalio.com/bpms" xmlns:atomic="http://ode.apache.org/atomicScope" queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0" bpmn:label="process" name="process" bpmn:id="_5ybSMFp4Ed6_s_3Qrqj1Qg" targetNamespace="http://example.com/process/StartTAlistExport/process">
+  <bpel:import namespace="http://example.com/process/TAlistToAMI/TAlistExportProcess" location="TAlistToAMI-TAlistExportProcess.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"></bpel:import>
+  <bpel:import namespace="http://example.com/process/StartTAlistExport" location="StartTAlistExport.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"></bpel:import>
+  <bpel:import namespace="http://www.intalio.com/gi/forms/TAlistExport.gi" location="../forms/TAlistExport.gi.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"></bpel:import>
+  <bpel:partnerLinks>
+    <bpel:partnerLink name="processAndUserForPortTypeProcessPlkVar" partnerLinkType="diag:processAndUserForPortTypeProcessPlk" myRole="process_for_User"></bpel:partnerLink>
+    <bpel:partnerLink name="processimplicitPartnerAndProcessForCanonicPortPlkVar" partnerLinkType="diag:processimplicitPartnerAndProcessForCanonicPortPlk" initializePartnerRole="yes" partnerRole="processimplicitPartner_for_process"></bpel:partnerLink>
+  </bpel:partnerLinks>
+  <bpel:variables>
+    <bpel:variable name="tAlistExportInitProcessRequestMsg" messageType="TAlistExport:initProcessRequest"></bpel:variable>
+    <bpel:variable name="tAlistExportInitProcessResponseMsg" messageType="TAlistExport:initProcessResponse"></bpel:variable>
+    <bpel:variable name="tAlistToAMI-TAlistExportProcessStartResponseMsg" messageType="TAlistToAMI-TAlistExportProcess:startResponse"></bpel:variable>
+    <bpel:variable name="tAlistToAMI-TAlistExportProcessStartMsg" messageType="TAlistToAMI-TAlistExportProcess:startRequest"></bpel:variable>
+  </bpel:variables>
+  <bpel:sequence>
+    <bpel:receive partnerLink="processAndUserForPortTypeProcessPlkVar" portType="TAlistExport:Process" operation="initProcess" variable="tAlistExportInitProcessRequestMsg" createInstance="yes" bpmn:label="start" name="start" bpmn:id="_QXGZAFp5Ed6_s_3Qrqj1Qg"></bpel:receive>
+    <bpel:assign name="init-variables-process" bpmn:id="_QXGZAFp5Ed6_s_3Qrqj1Qg">
+      <bpel:copy bpmn:label="$tAlistExportInitProcessResponseMsg">
+        <bpel:from>
+          <bpel:literal>
+<TAlistExport:initProcessResponse>
+  <TAlistExport:status>OK</TAlistExport:status>
+  <TAlistExport:errorCode></TAlistExport:errorCode>
+  <TAlistExport:errorReason></TAlistExport:errorReason>
+  <TAlistExport:taskMetaData>
+    <TAlistExport:nextTaskId></TAlistExport:nextTaskId>
+    <TAlistExport:nextTaskURL></TAlistExport:nextTaskURL>
+    <TAlistExport:instanceId></TAlistExport:instanceId>
+  </TAlistExport:taskMetaData>
+</TAlistExport:initProcessResponse></bpel:literal>
+        </bpel:from>
+        <bpel:to>$tAlistExportInitProcessResponseMsg.root</bpel:to>
+      </bpel:copy>
+      <bpel:copy bpmn:label="$tAlistToAMI-TAlistExportProcessStartMsg">
+        <bpel:from>
+          <bpel:literal>
+<TAlistToAMI-TAlistExportProcess:startRequest></TAlistToAMI-TAlistExportProcess:startRequest></bpel:literal>
+        </bpel:from>
+        <bpel:to>$tAlistToAMI-TAlistExportProcessStartMsg.body</bpel:to>
+      </bpel:copy>
+    </bpel:assign>
+    <bpel:assign>
+    <bpel:copy>
+        <bpel:from>$ode:pid</bpel:from>
+        <bpel:to>$tAlistExportInitProcessResponseMsg.root/TAlistExport:taskMetaData/TAlistExport:instanceId</bpel:to>
+    </bpel:copy>
+  </bpel:assign>
+  <bpel:reply partnerLink="processAndUserForPortTypeProcessPlkVar" portType="TAlistExport:Process" operation="initProcess" variable="tAlistExportInitProcessResponseMsg" bpmn:label="start" name="start-1" bpmn:id="_QXGZAFp5Ed6_s_3Qrqj1Qg"></bpel:reply>
+    <bpel:invoke partnerLink="processimplicitPartnerAndProcessForCanonicPortPlkVar" portType="TAlistToAMI-TAlistExportProcess:ForTAinterface" operation="start" inputVariable="tAlistToAMI-TAlistExportProcessStartMsg" outputVariable="tAlistToAMI-TAlistExportProcessStartResponseMsg" bpmn:label="Invoke" name="Invoke" bpmn:id="_mSfSSFp5Ed6_s_3Qrqj1Qg"></bpel:invoke>
+    <bpel:empty bpmn:label="Empty_End_Event" name="Empty_End_Event" bpmn:id="_SMOHkFp5Ed6_s_3Qrqj1Qg"></bpel:empty>
+  </bpel:sequence>
+</bpel:process>

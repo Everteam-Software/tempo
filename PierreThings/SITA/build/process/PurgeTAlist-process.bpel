@@ -1,0 +1,98 @@
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<bpel:process xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ode="http://www.apache.org/ode/type/extension" xmlns:TaskManagementSystem="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:User="http://example.com/process/PurgeTAlist/User" xmlns:tns="http://tempo.intalio.org/security/tokenService/" xmlns:PurgeTAlist="http://www.intalio.com/gi/forms/PurgeTAlist.gi" xmlns:diag="http://example.com/process/PurgeTAlist" xmlns:TMS="http://example.com/process/PurgeTAlist/TMS" xmlns:Token="http://example.com/process/PurgeTAlist/Token" xmlns:this="http://example.com/process/PurgeTAlist/process" xmlns:TAdata="http://www.intalio.com/gi/forms/TAmanagement.gi" xmlns:attachments="http://www.intalio.com/gi/forms/PurgeTAlist.gi/attachments" xmlns:bpmn="http://www.intalio.com/bpms" xmlns:atomic="http://ode.apache.org/atomicScope" queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0" bpmn:label="process" name="process" bpmn:id="_RmjU8FwJEd6Tl-z0gbmSaA" targetNamespace="http://example.com/process/PurgeTAlist/process">
+  <bpel:import namespace="http://tempo.intalio.org/security/tokenService/" location="../services/TokenService.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"></bpel:import>
+  <bpel:import namespace="http://example.com/process/PurgeTAlist" location="PurgeTAlist.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"></bpel:import>
+  <bpel:import namespace="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" location="../services/TaskManagementSystem.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"></bpel:import>
+  <bpel:import namespace="http://www.intalio.com/gi/forms/PurgeTAlist.gi" location="../forms/PurgeTAlist.gi.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"></bpel:import>
+  <bpel:partnerLinks>
+    <bpel:partnerLink name="processAndUserForPortTypeProcessPlkVar" partnerLinkType="diag:processAndUserForPortTypeProcessPlk" myRole="process_for_User"></bpel:partnerLink>
+    <bpel:partnerLink name="tokenAndProcessForTokenServiceHttpportPlkVar" partnerLinkType="diag:TokenAndProcessForTokenServiceHttpportPlk" initializePartnerRole="yes" partnerRole="Token_for_process"></bpel:partnerLink>
+    <bpel:partnerLink name="tMsAndProcessForPortTaskManagementServicesSOAPPlkVar" partnerLinkType="diag:TMsAndProcessForPortTaskManagementServicesSOAPPlk" initializePartnerRole="yes" partnerRole="TMS_for_process"></bpel:partnerLink>
+  </bpel:partnerLinks>
+  <bpel:variables>
+    <bpel:variable name="purgeTAlistInitProcessRequestMsg" messageType="PurgeTAlist:initProcessRequest"></bpel:variable>
+    <bpel:variable name="purgeTAlistInitProcessResponseMsg" messageType="PurgeTAlist:initProcessResponse"></bpel:variable>
+    <bpel:variable name="tnsAuthenticateUserRequestMsg" messageType="tns:authenticateUser"></bpel:variable>
+    <bpel:variable name="tnsAuthenticateUserResponseMsg" messageType="tns:authenticateUserResponse"></bpel:variable>
+    <bpel:variable name="taskManagementSystemDeleteAllRequestMsg" messageType="TaskManagementSystem:deleteAllRequest"></bpel:variable>
+    <bpel:variable name="taskManagementSystemDeleteAllResponseMsg" messageType="TaskManagementSystem:okResponse"></bpel:variable>
+  </bpel:variables>
+  <bpel:sequence>
+    <bpel:receive partnerLink="processAndUserForPortTypeProcessPlkVar" portType="PurgeTAlist:Process" operation="initProcess" variable="purgeTAlistInitProcessRequestMsg" createInstance="yes" bpmn:label="start" name="start" bpmn:id="_1pZ4IFwJEd6Tl-z0gbmSaA"></bpel:receive>
+    <bpel:assign name="init-variables-process" bpmn:id="_1pZ4IFwJEd6Tl-z0gbmSaA">
+      <bpel:copy bpmn:label="$purgeTAlistInitProcessResponseMsg">
+        <bpel:from>
+          <bpel:literal>
+<PurgeTAlist:initProcessResponse>
+  <PurgeTAlist:status>OK</PurgeTAlist:status>
+  <PurgeTAlist:errorCode></PurgeTAlist:errorCode>
+  <PurgeTAlist:errorReason></PurgeTAlist:errorReason>
+  <PurgeTAlist:taskMetaData>
+    <PurgeTAlist:nextTaskId></PurgeTAlist:nextTaskId>
+    <PurgeTAlist:nextTaskURL></PurgeTAlist:nextTaskURL>
+    <PurgeTAlist:instanceId></PurgeTAlist:instanceId>
+  </PurgeTAlist:taskMetaData>
+</PurgeTAlist:initProcessResponse></bpel:literal>
+        </bpel:from>
+        <bpel:to>$purgeTAlistInitProcessResponseMsg.root</bpel:to>
+      </bpel:copy>
+      <bpel:copy bpmn:label="$tnsAuthenticateUserRequestMsg">
+        <bpel:from>
+          <bpel:literal>
+<tns:authenticateUser>
+  <tns:user></tns:user>
+  <tns:password></tns:password>
+</tns:authenticateUser></bpel:literal>
+        </bpel:from>
+        <bpel:to>$tnsAuthenticateUserRequestMsg.payload</bpel:to>
+      </bpel:copy>
+      <bpel:copy bpmn:label="$taskManagementSystemDeleteAllRequestMsg">
+        <bpel:from>
+          <bpel:literal>
+<TaskManagementSystem:deleteAllRequest>
+  <TaskManagementSystem:taskType></TaskManagementSystem:taskType>
+  <TaskManagementSystem:subQuery></TaskManagementSystem:subQuery>
+  <TaskManagementSystem:filter></TaskManagementSystem:filter>
+  <TaskManagementSystem:fakeDelete></TaskManagementSystem:fakeDelete>
+  <TaskManagementSystem:participantToken></TaskManagementSystem:participantToken>
+</TaskManagementSystem:deleteAllRequest></bpel:literal>
+        </bpel:from>
+        <bpel:to>$taskManagementSystemDeleteAllRequestMsg.deleteAllRequest</bpel:to>
+      </bpel:copy>
+    </bpel:assign>
+    <bpel:assign>
+    <bpel:copy>
+        <bpel:from>$ode:pid</bpel:from>
+        <bpel:to>$purgeTAlistInitProcessResponseMsg.root/PurgeTAlist:taskMetaData/PurgeTAlist:instanceId</bpel:to>
+    </bpel:copy>
+  </bpel:assign>
+  <bpel:reply partnerLink="processAndUserForPortTypeProcessPlkVar" portType="PurgeTAlist:Process" operation="initProcess" variable="purgeTAlistInitProcessResponseMsg" bpmn:label="start" name="start-1" bpmn:id="_1pZ4IFwJEd6Tl-z0gbmSaA"></bpel:reply>
+    <bpel:assign bpmn:label="authenticate" name="authenticate" bpmn:id="_212dIFwJEd6Tl-z0gbmSaA">
+      <bpel:copy>
+        <bpel:from>"intalio\admin"</bpel:from>
+        <bpel:to>$tnsAuthenticateUserRequestMsg.payload/tns:user</bpel:to>
+      </bpel:copy>
+      <bpel:copy>
+        <bpel:from>"changeit"</bpel:from>
+        <bpel:to>$tnsAuthenticateUserRequestMsg.payload/tns:password</bpel:to>
+      </bpel:copy>
+    </bpel:assign>
+    <bpel:invoke partnerLink="tokenAndProcessForTokenServiceHttpportPlkVar" portType="tns:TokenServicePortType" operation="authenticateUser" inputVariable="tnsAuthenticateUserRequestMsg" outputVariable="tnsAuthenticateUserResponseMsg" bpmn:label="authenticate" name="authenticate-1" bpmn:id="_212dIFwJEd6Tl-z0gbmSaA"></bpel:invoke>
+    <bpel:assign bpmn:label="delete TAs" name="delete_TAs" bpmn:id="_3nBbYFwJEd6Tl-z0gbmSaA">
+      <bpel:copy>
+        <bpel:from>"PATask"</bpel:from>
+        <bpel:to>$taskManagementSystemDeleteAllRequestMsg.deleteAllRequest/TaskManagementSystem:taskType</bpel:to>
+      </bpel:copy>
+      <bpel:copy>
+        <bpel:from>"1=1"</bpel:from>
+        <bpel:to>$taskManagementSystemDeleteAllRequestMsg.deleteAllRequest/TaskManagementSystem:subQuery</bpel:to>
+      </bpel:copy>
+      <bpel:copy>
+        <bpel:from>$tnsAuthenticateUserResponseMsg.payload/tns:token</bpel:from>
+        <bpel:to>$taskManagementSystemDeleteAllRequestMsg.deleteAllRequest/TaskManagementSystem:participantToken</bpel:to>
+      </bpel:copy>
+    </bpel:assign>
+    <bpel:invoke partnerLink="tMsAndProcessForPortTaskManagementServicesSOAPPlkVar" portType="TaskManagementSystem:TaskManagementServices" operation="deleteAll" inputVariable="taskManagementSystemDeleteAllRequestMsg" outputVariable="taskManagementSystemDeleteAllResponseMsg" bpmn:label="delete TAs" name="delete_TAs-1" bpmn:id="_3nBbYFwJEd6Tl-z0gbmSaA"></bpel:invoke>
+    <bpel:empty bpmn:label="Empty_End_Event" name="Empty_End_Event" bpmn:id="_43yfsFwJEd6Tl-z0gbmSaA"></bpel:empty>
+  </bpel:sequence>
+</bpel:process>

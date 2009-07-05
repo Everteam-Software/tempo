@@ -1,0 +1,52 @@
+﻿<bpel:process xmlns:bpdm="http://www.intalio/designer/business-process-data-modeling" xmlns:mapper="http://www.intalio.com/designer/mapper" xmlns:tns="http://www.example.org/UploadResponse" xmlns:FlightMovementRecord07="__project:///schema/FlightMovementRecord06.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:hil="http://www.example.org/hil" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:fmr="http://www.example.org/fmr" xmlns:this="http://thisdiagram/AppearNetworks" xmlns:diag="http://thisdiagram" xmlns:UploadProcess="http://thisdiagram/UploadProcess" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ode="http://www.apache.org/ode/type/extension" targetNamespace="http://thisdiagram/AppearNetworks">
+    <bpdm:dependencies version="6000076">
+        <bpdm:namespaceDefinition bpdm:uri="http://www.example.org/UploadResponse" bpdm:prefix="tns" bpdm:comment="contrib=&apos;project:///schema/UploadResponse.xsd"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="__project:///schema/FlightMovementRecord06.xsd" bpdm:prefix="FlightMovementRecord07" bpdm:comment="contrib=&apos;project:///schema/FlightMovementRecord06.xsd"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/2001/XMLSchema" bpdm:prefix="xs"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.example.org/hil" bpdm:prefix="hil" bpdm:comment="contrib=&apos;project:///schema/HIL03.xsd"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/2001/XMLSchema-instance" bpdm:prefix="xsi"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.example.org/fmr" bpdm:prefix="fmr" bpdm:comment="contrib=&apos;project:///schema/FlightMovementRecord06.xsd"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram/AppearNetworks" bpdm:prefix="this" bpdm:type="this_process"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram" bpdm:prefix="diag" bpdm:comment="contrib=&apos;partner-pool:///_VbNFwD7SEd6K2cgYiBoOqg"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram/UploadProcess" bpdm:prefix="UploadProcess" bpdm:comment="contrib=&apos;partner-pool:///_VbNFwD7SEd6K2cgYiBoOqg"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/XML/1998/namespace" bpdm:prefix="xml"></bpdm:namespaceDefinition>
+        <bpdm:namespaceContributor bpdm:url="thisprocess://this-process-types" bpdm:label="process defined this-process-types"></bpdm:namespaceContributor>
+        <bpdm:namespaceContributor bpdm:url="partner-pool:///_VbNFwD7SEd6K2cgYiBoOqg" bpdm:label="UploadProcess"/>
+        <bpdm:namespaceContributor bpdm:url="project:///schema/UploadResponse.xsd"/>
+        <bpdm:namespaceContributor bpdm:url="project:///schema/FlightMovementRecord06.xsd"/>
+        <bpdm:namespaceContributor bpdm:url="project:///schema/HIL03.xsd"/>
+    </bpdm:dependencies>
+    <bpel:scope bpdm:label="AppearNetworks" bpdm:ID="_VEsqQD7SEd6K2cgYiBoOqg">
+        <bpel:partnerLinks>
+            <bpel:partnerLink name="uploadProcessAndAppearNetworksPlkVar" partnerLinkType="diag:UploadProcessAndAppearNetworks" initializePartnerRole="yes" partnerRole="UploadProcess_for_AppearNetworks" bpdm:invokedService="UploadProcess:CanonicServiceForAppearNetworks" bpdm:invokedPort="canonicPort" bpdm:invokedSOAPAddress="${deploy_serverUrl}${deploy_baseSoapServicesUrl}/${deploy_bundleNcName}/${diagram_relativeURL}/UploadProcess/AppearNetworks" bpdm:invokedIsDefault="true" bpdm:clientTasks="_VEsqQD7SEd6K2cgYiBoOqg:_VEsqQj7SEd6K2cgYiBoOqg, _VEsqQD7SEd6K2cgYiBoOqg:_ZFoJED7SEd6K2cgYiBoOqg" bpdm:isManaged="true" bpdm:otherPoolId="_VbNFwD7SEd6K2cgYiBoOqg"/>
+        </bpel:partnerLinks>
+        <bpel:variables>
+            <bpel:variable name="uploadProcessUploadFMRRequestMsg" messageType="UploadProcess:uploadFMRRequest" bpdm:id="_lb8lgj7SEd6K2cgYiBoOqg" bpdm:messageIds=" out:_lb8lgD7SEd6K2cgYiBoOqg">
+                <bpel:from bpdm:toPart="body">
+                    <bpel:literal bpdm:linkedMessageType="UploadProcess:uploadFMRRequest" bpdm:linkedPart="body"></bpel:literal>
+                </bpel:from>
+            </bpel:variable>
+            <bpel:variable name="uploadProcessUploadHILRequestMsg" messageType="UploadProcess:uploadHILRequest" bpdm:id="_n8J4cD7SEd6K2cgYiBoOqg" bpdm:messageIds=" out:_n8AHcD7SEd6K2cgYiBoOqg">
+                <bpel:from bpdm:toPart="body">
+                    <bpel:literal bpdm:linkedMessageType="UploadProcess:uploadHILRequest" bpdm:linkedPart="body"></bpel:literal>
+                </bpel:from>
+            </bpel:variable>
+            <bpel:variable name="uploadProcessUploadHILResponseMsg" messageType="UploadProcess:uploadHILResponse" bpdm:id="_oO7qhz7SEd6K2cgYiBoOqg" bpdm:messageIds="inc:_oOoIgD7SEd6K2cgYiBoOqg"/>
+            <bpel:variable name="uploadProcessUploadFMRResponseMsg" messageType="UploadProcess:uploadFMRResponse" bpdm:id="_1Pq4tWQ8Ed6CyL9tOhgdig" bpdm:messageIds="inc:_luRroD7SEd6K2cgYiBoOqg"/>
+        </bpel:variables>
+        <bpel:flow>
+            <bpel:sequence>
+                <bpdm:messagingtask operation="uploadFMR" partnerLink="uploadProcessAndAppearNetworksPlkVar" portType="UploadProcess:ForAppearNetworks" isMyRole="false" enableSharing="false" bpdm:label="Upload FMR" bpdm:ID="_VEsqQj7SEd6K2cgYiBoOqg">
+                    <bpdm:linkset bpdm:type="outgoingMessage" bpdm:bpeltype="invoke-request" bpdm:messageVariable="uploadProcessUploadFMRRequestMsg" bpdm:msgVarScopeId="_VEsqQD7SEd6K2cgYiBoOqg" bpdm:variableIsManaged="true" bpdm:messageType="UploadProcess:uploadFMRRequest" bpdm:ID="_lb8lgD7SEd6K2cgYiBoOqg"></bpdm:linkset>
+                    <bpdm:linkset bpdm:type="incomingMessage" bpdm:bpeltype="invoke-receive" bpdm:messageVariable="uploadProcessUploadFMRResponseMsg" bpdm:msgVarScopeId="_VEsqQD7SEd6K2cgYiBoOqg" bpdm:variableIsManaged="true" bpdm:messageType="UploadProcess:uploadFMRResponse" bpdm:ID="_luRroD7SEd6K2cgYiBoOqg"></bpdm:linkset>
+                </bpdm:messagingtask>
+            </bpel:sequence>
+            <bpel:sequence>
+                <bpdm:messagingtask operation="uploadHIL" partnerLink="uploadProcessAndAppearNetworksPlkVar" portType="UploadProcess:ForAppearNetworks" isMyRole="false" enableSharing="false" bpdm:label="Upload HIL" bpdm:ID="_ZFoJED7SEd6K2cgYiBoOqg">
+                    <bpdm:linkset bpdm:type="outgoingMessage" bpdm:bpeltype="invoke-request" bpdm:messageVariable="uploadProcessUploadHILRequestMsg" bpdm:msgVarScopeId="_VEsqQD7SEd6K2cgYiBoOqg" bpdm:variableIsManaged="true" bpdm:messageType="UploadProcess:uploadHILRequest" bpdm:ID="_n8AHcD7SEd6K2cgYiBoOqg"></bpdm:linkset>
+                    <bpdm:linkset bpdm:type="incomingMessage" bpdm:bpeltype="invoke-receive" bpdm:messageVariable="uploadProcessUploadHILResponseMsg" bpdm:msgVarScopeId="_VEsqQD7SEd6K2cgYiBoOqg" bpdm:variableIsManaged="true" bpdm:messageType="UploadProcess:uploadHILResponse" bpdm:ID="_oOoIgD7SEd6K2cgYiBoOqg"></bpdm:linkset>
+                </bpdm:messagingtask>
+            </bpel:sequence>
+        </bpel:flow>
+    </bpel:scope>
+</bpel:process>

@@ -1,0 +1,23 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<dd:process xmlns:UploadResponse="http://www.example.org/UploadResponse" xmlns:HHTupdateService="http://example.com/process/ReceiveHHupdate/HHTupdateService" xmlns:fmr="http://www.example.org/FMRupload" xmlns:TokenService="http://example.com/process/ReceiveHHupdate/TokenService" xmlns:as="http://www.example.org/assignment" xmlns:DB="http://example.com/process/ReceiveHHupdate/DB" xmlns:TMS="http://example.com/process/ReceiveHHupdate/TMS" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:ReceiveUpdateProcessimplicitPartner="http://example.com/process/ReceiveHHupdate/ReceiveUpdateProcessimplicitPartner" xmlns:TAdata="http://www.intalio.com/gi/forms/TAmanagement.gi" xmlns:b4p="http://www.intalio.com/bpms/workflow/ib4p_20051115" xmlns:SITAservice="http://example.com/process/ReceiveHHupdate/SITAservice" xmlns:completeTA-process="http://example.com/process/completeTA/process" xmlns:dd="http://www.apache.org/ode/schemas/dd/2007/03" xmlns:diag="http://example.com/process/ReceiveHHupdate" xmlns:tns="http://ode/bpel/unit-test.wsdl" xmlns:TaskManagementSystem="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:p="http://www.example.org/prop" xmlns:this="http://example.com/process/ReceiveHHupdate/ReceiveUpdateProcess" xmlns:hht="http://www.example.org/hht" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:TokenService1="http://tempo.intalio.org/security/tokenService/" name="this:ReceiveUpdateProcess" fileName="process/ReceiveHHupdate-ReceiveUpdateProcess.bpel">
+  <dd:property name="PATH">process/ReceiveHHupdate</dd:property>
+  <dd:property name="SVG">process/ReceiveHHupdate.svg</dd:property>
+  <dd:invoke partnerLink="receiveUpdateProcessAndTMSForPortTaskManagementServicesSOAPPlkVar">
+    <dd:service name="TaskManagementSystem:TaskManagementServices" port="TaskManagementServicesSOAP"/>
+  </dd:invoke>
+  <dd:invoke partnerLink="tokenServiceAndReceiveUpdateProcessForTokenServiceHttpportPlkVar">
+    <dd:service name="TokenService1:TokenService" port="TokenServiceSOAP11port_http"/>
+  </dd:invoke>
+  <dd:provide partnerLink="hHTupdateServiceAndReceiveUpdateProcessForHHTupdatePortPlkVar">
+    <dd:service name="tns:HHTUpdateService" port="HHTupdatePort"></dd:service>
+  </dd:provide>
+  <dd:invoke partnerLink="sITAserviceAndReceiveUpdateProcessForSITAservicePortPlkVar">
+    <dd:service name="TAdata:SITAservice" port="SITAservicePort"/>
+  </dd:invoke>
+  <dd:invoke partnerLink="receiveUpdateProcessimplicitPartnerAndReceiveUpdateProcessForCanonicPortPlkVar">
+    <dd:service name="completeTA-process:CanonicServiceForInterface" port="canonicPort"/>
+  </dd:invoke>
+  <dd:invoke partnerLink="dbAndReceiveUpdateProcessForPortTaskManagementServicesSOAPPlkVar">
+    <dd:service name="TaskManagementSystem:TaskManagementServices" port="TaskManagementServicesSOAP"/>
+  </dd:invoke>
+</dd:process>

@@ -1,0 +1,9 @@
+
+bundleExportPath=C\:\\Documents and Settings\\Intalio\\Desktop
+deploy_bundleNcName=SITA
+deploy_bundleShouldBeArchived=false
+deploy_bundleShouldBeDeployed=true
+deploy_gi_serverUrl=http\://localhost\:9080/gi
+deploy_serverUrl=http\://localhost\:9080/ode
+diagram_baseUri=http\://example.com
+eclipse.preferences.version=1

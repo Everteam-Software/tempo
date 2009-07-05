@@ -1,0 +1,107 @@
+﻿<bpel:process xmlns:bpdm="http://www.intalio/designer/business-process-data-modeling" xmlns:mapper="http://www.intalio.com/designer/mapper" xmlns:TaskManagementSystem="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:User="http://thisdiagram/User" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tns="http://tempo.intalio.org/security/tokenService/" xmlns:PurgeTAlist="http://www.intalio.com/gi/forms/PurgeTAlist.gi" xmlns:diag="http://thisdiagram" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:this="http://thisdiagram/process" xmlns:TAdata="http://www.intalio.com/gi/forms/TAmanagement.gi" xmlns:attachments="http://www.intalio.com/gi/forms/PurgeTAlist.gi/attachments" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ode="http://www.apache.org/ode/type/extension" targetNamespace="http://thisdiagram/process">
+    <bpdm:dependencies version="6000076">
+        <bpdm:namespaceDefinition bpdm:uri="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" bpdm:prefix="TaskManagementSystem" bpdm:comment="contrib=&apos;project:///services/TaskManagementSystem.wsdl"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram/User" bpdm:prefix="User" bpdm:comment="contrib=&apos;partner-pool:///_PPA10FwJEd6Tl-z0gbmSaA"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/2001/XMLSchema-instance" bpdm:prefix="xsi"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://tempo.intalio.org/security/tokenService/" bpdm:prefix="tns" bpdm:comment="contrib=&apos;project:///services/TokenService.wsdl"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.intalio.com/gi/forms/PurgeTAlist.gi" bpdm:prefix="PurgeTAlist" bpdm:comment="contrib=&apos;project:///forms/PurgeTAlist.gi.wsdl"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram" bpdm:prefix="diag" bpdm:comment="contrib=&apos;partner-pool:///_PPA10FwJEd6Tl-z0gbmSaA"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/2001/XMLSchema" bpdm:prefix="xs"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram/process" bpdm:prefix="this" bpdm:type="this_process"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.intalio.com/gi/forms/TAmanagement.gi" bpdm:prefix="TAdata" bpdm:comment="contrib=&apos;project:///schema/TAdata.xsd"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.intalio.com/gi/forms/PurgeTAlist.gi/attachments" bpdm:prefix="attachments" bpdm:comment="contrib=&apos;project:///forms/PurgeTAlist.gi.wsdl"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/XML/1998/namespace" bpdm:prefix="xml"></bpdm:namespaceDefinition>
+        <bpdm:namespaceContributor bpdm:url="thisprocess://this-process-types" bpdm:label="process defined this-process-types">
+            <wsdl:service name="processAndUserForPortTypeProcessPlkService">
+                <wsdl:port name="process_for_UserPort" binding="this:processAndUserForPortTypeProcessPlkServiceBinding">
+                    <address location="${deploy_serverUrl}${deploy_baseSoapServicesUrl}/${deploy_bundleNcName}/${diagram_relativeURL}/process/User/processAndUserForPortTypeProcessPlk"/>
+                </wsdl:port>
+            </wsdl:service>
+            <bpel:binding name="processAndUserForPortTypeProcessPlkServiceBinding" type="PurgeTAlist:Process" bpdm:isSynchronized="true"/>
+        </bpdm:namespaceContributor>
+        <bpdm:namespaceContributor bpdm:url="partner-pool:///_PPA10FwJEd6Tl-z0gbmSaA" bpdm:label="User"/>
+        <bpdm:namespaceContributor bpdm:url="project:///forms/PurgeTAlist.gi.wsdl"/>
+        <bpdm:namespaceContributor bpdm:url="project:///forms/PurgeTAlist.gi/IntalioInternal/FormModel.xsd"/>
+        <bpdm:namespaceContributor bpdm:url="partner-pool:///_TP54YFwJEd6Tl-z0gbmSaA" bpdm:label="Token"/>
+        <bpdm:namespaceContributor bpdm:url="project:///services/TokenService.wsdl"/>
+        <bpdm:namespaceContributor bpdm:url="partner-pool:///_STtV4FwJEd6Tl-z0gbmSaA" bpdm:label="TMS"/>
+        <bpdm:namespaceContributor bpdm:url="project:///services/TaskManagementSystem.wsdl"/>
+        <bpdm:namespaceContributor bpdm:url="project:///schema/TAdata.xsd"/>
+    </bpdm:dependencies>
+    <bpel:scope bpdm:label="process" bpdm:ID="_RmjU8FwJEd6Tl-z0gbmSaA">
+        <bpel:partnerLinks>
+            <bpel:partnerLink name="processAndUserForPortTypeProcessPlkVar" partnerLinkType="diag:processAndUserForPortTypeProcessPlk" myRole="process_for_User" bpdm:enableSharing="false" bpdm:providedService="this:processAndUserForPortTypeProcessPlkService" bpdm:providedPort="process_for_UserPort" bpdm:provideSOAPAddress="${deploy_serverUrl}${deploy_baseSoapServicesUrl}/${deploy_bundleNcName}/${diagram_relativeURL}/process/User/processAndUserForPortTypeProcessPlk" bpdm:providedIsDefault="true" bpdm:clientTasks="_RmjU8FwJEd6Tl-z0gbmSaA:_1pZ4IFwJEd6Tl-z0gbmSaA" bpdm:isManaged="true" bpdm:otherPoolId="_PPA10FwJEd6Tl-z0gbmSaA"/>
+            <bpel:partnerLink name="tokenAndProcessForTokenServiceHttpportPlkVar" partnerLinkType="diag:TokenAndProcessForTokenServiceHttpportPlk" initializePartnerRole="yes" partnerRole="Token_for_process" bpdm:invokedService="tns:TokenService" bpdm:invokedPort="TokenServiceSOAP11port_http" bpdm:invokedSOAPAddress="http://localhost:9080/axis2/services/TokenService" bpdm:invokedIsDefault="true" bpdm:clientTasks="_RmjU8FwJEd6Tl-z0gbmSaA:_212dIFwJEd6Tl-z0gbmSaA" bpdm:isManaged="true" bpdm:otherPoolId="_TP54YFwJEd6Tl-z0gbmSaA"/>
+            <bpel:partnerLink name="tMsAndProcessForPortTaskManagementServicesSOAPPlkVar" partnerLinkType="diag:TMsAndProcessForPortTaskManagementServicesSOAPPlk" initializePartnerRole="yes" partnerRole="TMS_for_process" bpdm:invokedService="TaskManagementSystem:TaskManagementServices" bpdm:invokedPort="TaskManagementServicesSOAP" bpdm:invokedSOAPAddress="http://localhost:9080/axis2/services/TaskManagementServices" bpdm:invokedIsDefault="true" bpdm:clientTasks="_RmjU8FwJEd6Tl-z0gbmSaA:_3nBbYFwJEd6Tl-z0gbmSaA" bpdm:isManaged="true" bpdm:otherPoolId="_STtV4FwJEd6Tl-z0gbmSaA"/>
+        </bpel:partnerLinks>
+        <bpel:variables>
+            <bpel:variable name="purgeTAlistInitProcessRequestMsg" messageType="PurgeTAlist:initProcessRequest" bpdm:id="_1rMA1lwJEd6Tl-z0gbmSaA" bpdm:messageIds="inc:_1pjpIFwJEd6Tl-z0gbmSaA"/>
+            <bpel:variable name="purgeTAlistInitProcessResponseMsg" messageType="PurgeTAlist:initProcessResponse" bpdm:id="_2UUdYlwJEd6Tl-z0gbmSaA" bpdm:messageIds=" out:_2UBicFwJEd6Tl-z0gbmSaA">
+                <bpel:from bpdm:toPart="root">
+                    <bpel:literal bpdm:linkedMessageType="PurgeTAlist:initProcessResponse" bpdm:linkedPart="root"></bpel:literal>
+                </bpel:from>
+            </bpel:variable>
+            <bpel:variable name="tnsAuthenticateUserRequestMsg" messageType="tns:authenticateUser" binding="tns:TokenServiceHttpBinding" operation="authenticateUser" opMsgType="0" bpdm:id="_BTp4wFwKEd6Tl-z0gbmSaA" bpdm:messageIds=" out:_BTgHwFwKEd6Tl-z0gbmSaA">
+                <bpel:from bpdm:toPart="payload">
+                    <bpel:literal bpdm:linkedMessageType="tns:authenticateUser" bpdm:linkedPart="payload" bpdm:binding="tns:TokenServiceHttpBinding" bpdm:opMsgType="0" bpdm:operation="authenticateUser"></bpel:literal>
+                </bpel:from>
+            </bpel:variable>
+            <bpel:variable name="tnsAuthenticateUserResponseMsg" messageType="tns:authenticateUserResponse" binding="tns:TokenServiceHttpBinding" operation="authenticateUser" opMsgType="1" bpdm:id="_Bi2ydlwKEd6Tl-z0gbmSaA" bpdm:messageIds="inc:_BijQYFwKEd6Tl-z0gbmSaA"/>
+            <bpel:variable name="taskManagementSystemDeleteAllRequestMsg" messageType="TaskManagementSystem:deleteAllRequest" binding="TaskManagementSystem:TaskManagementServicesSOAP" operation="deleteAll" opMsgType="0" bpdm:id="_DqJ2EFwKEd6Tl-z0gbmSaA" bpdm:messageIds=" out:_DqAsIFwKEd6Tl-z0gbmSaA">
+                <bpel:from bpdm:toPart="deleteAllRequest">
+                    <bpel:literal bpdm:linkedMessageType="TaskManagementSystem:deleteAllRequest" bpdm:linkedPart="deleteAllRequest" bpdm:binding="TaskManagementSystem:TaskManagementServicesSOAP" bpdm:opMsgType="0" bpdm:operation="deleteAll"></bpel:literal>
+                </bpel:from>
+            </bpel:variable>
+            <bpel:variable name="taskManagementSystemDeleteAllResponseMsg" messageType="TaskManagementSystem:okResponse" binding="TaskManagementSystem:TaskManagementServicesSOAP" operation="deleteAll" opMsgType="1" bpdm:id="_D4Ar8lwKEd6Tl-z0gbmSaA" bpdm:messageIds="inc:_D3j_8FwKEd6Tl-z0gbmSaA"/>
+        </bpel:variables>
+        <bpel:sequence>
+            <bpdm:messagingtask eventType="start: message" operation="initProcess" partnerLink="processAndUserForPortTypeProcessPlkVar" portType="PurgeTAlist:Process" isMyRole="true" enableSharing="false" bpdm:label="start" bpdm:ID="_1pZ4IFwJEd6Tl-z0gbmSaA">
+                <bpdm:linkset bpdm:type="incomingMessage" bpdm:bpeltype="receive" bpdm:messageVariable="purgeTAlistInitProcessRequestMsg" bpdm:msgVarScopeId="_RmjU8FwJEd6Tl-z0gbmSaA" bpdm:variableIsManaged="true" bpdm:messageType="PurgeTAlist:initProcessRequest" bpdm:ID="_1pjpIFwJEd6Tl-z0gbmSaA"></bpdm:linkset>
+                <bpdm:linkset bpdm:type="outgoingMessage" bpdm:bpeltype="reply" bpdm:messageVariable="purgeTAlistInitProcessResponseMsg" bpdm:msgVarScopeId="_RmjU8FwJEd6Tl-z0gbmSaA" bpdm:variableIsManaged="true" bpdm:messageType="PurgeTAlist:initProcessResponse" bpdm:ID="_2UBicFwJEd6Tl-z0gbmSaA"></bpdm:linkset>
+            </bpdm:messagingtask>
+            <bpdm:messagingtask operation="authenticateUser" partnerLink="tokenAndProcessForTokenServiceHttpportPlkVar" portType="tns:TokenServicePortType" isMyRole="false" enableSharing="false" bpdm:label="authenticate" bpdm:ID="_212dIFwJEd6Tl-z0gbmSaA">
+                <bpdm:linkset bpdm:type="assignments">
+                    <bpel:copy>
+                        <bpel:from>"intalio\admin"</bpel:from>
+                        <bpel:to>$tnsAuthenticateUserRequestMsg.payload/tns:user</bpel:to><mapper:mapperLink><mapper:vertice id="31648910" targetPath="$tnsAuthenticateUserRequestMsg.payload/tns:user" targetedBy="20706123-arg0"></mapper:vertice><mapper:vertice id="20706123" dimension="78x24" location="402,44"><mapper:value>"intalio\admin"</mapper:value></mapper:vertice></mapper:mapperLink>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from>"changeit"</bpel:from>
+                        <bpel:to>$tnsAuthenticateUserRequestMsg.payload/tns:password</bpel:to><mapper:mapperLink><mapper:vertice id="15385141" targetPath="$tnsAuthenticateUserRequestMsg.payload/tns:password" targetedBy="30674594-arg0"></mapper:vertice><mapper:vertice id="30674594" dimension="78x24" location="396,84"><mapper:value>"changeit"</mapper:value></mapper:vertice></mapper:mapperLink>
+                    </bpel:copy>
+                </bpdm:linkset>
+                <bpdm:linkset bpdm:type="outgoingMessage" bpdm:bpeltype="invoke-request" bpdm:messageVariable="tnsAuthenticateUserRequestMsg" bpdm:msgVarScopeId="_RmjU8FwJEd6Tl-z0gbmSaA" bpdm:variableIsManaged="true" bpdm:messageType="tns:authenticateUser" bpdm:binding="tns:TokenServiceHttpBinding" bpdm:ID="_BTgHwFwKEd6Tl-z0gbmSaA"></bpdm:linkset>
+                <bpdm:linkset bpdm:type="incomingMessage" bpdm:bpeltype="invoke-receive" bpdm:messageVariable="tnsAuthenticateUserResponseMsg" bpdm:msgVarScopeId="_RmjU8FwJEd6Tl-z0gbmSaA" bpdm:variableIsManaged="true" bpdm:messageType="tns:authenticateUserResponse" bpdm:binding="tns:TokenServiceHttpBinding" bpdm:ID="_BijQYFwKEd6Tl-z0gbmSaA"></bpdm:linkset>
+            </bpdm:messagingtask>
+            <bpdm:messagingtask operation="deleteAll" partnerLink="tMsAndProcessForPortTaskManagementServicesSOAPPlkVar" portType="TaskManagementSystem:TaskManagementServices" isMyRole="false" enableSharing="false" bpdm:label="delete TAs" bpdm:ID="_3nBbYFwJEd6Tl-z0gbmSaA">
+                <bpdm:linkset bpdm:type="assignments">
+                    <bpel:copy>
+                        <bpel:from>"PATask"</bpel:from>
+                        <bpel:to>$taskManagementSystemDeleteAllRequestMsg.deleteAllRequest/TaskManagementSystem:taskType</bpel:to><mapper:mapperLink><mapper:vertice id="2784572" targetPath="$taskManagementSystemDeleteAllRequestMsg.deleteAllRequest/TaskManagementSystem:taskType" targetedBy="14020837-arg0"></mapper:vertice><mapper:vertice id="14020837" dimension="78x24" location="456,456"><mapper:value>"PATask"</mapper:value></mapper:vertice></mapper:mapperLink>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from>"1=1"</bpel:from>
+                        <bpel:to>$taskManagementSystemDeleteAllRequestMsg.deleteAllRequest/TaskManagementSystem:subQuery</bpel:to>
+<mapper:mapperLink>
+  <mapper:vertice id="25519147" targetPath="$taskManagementSystemDeleteAllRequestMsg.deleteAllRequest/TaskManagementSystem:subQuery" targetedBy="1095386-arg0"></mapper:vertice>
+  <mapper:vertice id="1095386" dimension="157x24" location="312,552">
+    <mapper:value>"1=1"</mapper:value>
+  </mapper:vertice>
+</mapper:mapperLink>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from>$tnsAuthenticateUserResponseMsg.payload/tns:token</bpel:from>
+                        <bpel:to>$taskManagementSystemDeleteAllRequestMsg.deleteAllRequest/TaskManagementSystem:participantToken</bpel:to><mapper:mapperLink><mapper:vertice id="29788072" targetPath="$taskManagementSystemDeleteAllRequestMsg.deleteAllRequest/TaskManagementSystem:participantToken" targetedBy="20760418-arg0"></mapper:vertice><mapper:vertice id="20760418" sourcePath="$tnsAuthenticateUserResponseMsg.payload/tns:token"></mapper:vertice></mapper:mapperLink>
+                    </bpel:copy>
+                </bpdm:linkset>
+                <bpdm:linkset bpdm:type="outgoingMessage" bpdm:bpeltype="invoke-request" bpdm:messageVariable="taskManagementSystemDeleteAllRequestMsg" bpdm:msgVarScopeId="_RmjU8FwJEd6Tl-z0gbmSaA" bpdm:variableIsManaged="true" bpdm:messageType="TaskManagementSystem:deleteAllRequest" bpdm:binding="TaskManagementSystem:TaskManagementServicesSOAP" bpdm:ID="_DqAsIFwKEd6Tl-z0gbmSaA"></bpdm:linkset>
+                <bpdm:linkset bpdm:type="incomingMessage" bpdm:bpeltype="invoke-receive" bpdm:messageVariable="taskManagementSystemDeleteAllResponseMsg" bpdm:msgVarScopeId="_RmjU8FwJEd6Tl-z0gbmSaA" bpdm:variableIsManaged="true" bpdm:messageType="TaskManagementSystem:okResponse" bpdm:binding="TaskManagementSystem:TaskManagementServicesSOAP" bpdm:ID="_D3j_8FwKEd6Tl-z0gbmSaA"></bpdm:linkset>
+                <bpdm:thrownFault msgFaultNcName="InvalidParticipantToken" msgFaultTypeQname="TaskManagementSystem:invalidParticipantTokenFault"/>
+                <bpdm:thrownFault msgFaultNcName="InvalidInputMessage" msgFaultTypeQname="TaskManagementSystem:invalidInputMessageFault"/>
+                <bpdm:thrownFault msgFaultNcName="UnavailableTasks" msgFaultTypeQname="TaskManagementSystem:unavailableTaskFault"/>
+                <bpdm:thrownFault msgFaultNcName="AccessDenied" msgFaultTypeQname="TaskManagementSystem:accessDeniedFault"/>
+            </bpdm:messagingtask>
+            <bpdm:messagingtask eventType="end: empty" bpdm:label="Empty_End_Event" bpdm:ID="_43yfsFwJEd6Tl-z0gbmSaA"></bpdm:messagingtask>
+        </bpel:sequence>
+    </bpel:scope>
+</bpel:process>

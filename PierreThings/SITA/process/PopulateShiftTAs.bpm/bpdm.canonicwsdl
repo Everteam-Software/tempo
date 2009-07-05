@@ -1,0 +1,29 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<wsdl:definitions xmlns:attachments="http://www.intalio.com/gi/forms/ShiftCreationLight.gi/attachments" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ShiftCreationLight="http://www.intalio.com/gi/forms/ShiftCreationLight.gi" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Process="http://thisdiagram/Process" xmlns:diag="http://thisdiagram" xmlns:as="http://www.example.org/assignment" xmlns:DC="http://thisdiagram/DC" xmlns:p="http://www.example.org/prop" xmlns:SITAservice1="http://www.intalio.com/gi/forms/TAmanagement.gi" xmlns:fmr="http://www.example.org/FMRupload" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:bpdm="http://www.intalio/designer/business-process-data-modeling" targetNamespace="http://thisdiagram" bpdm:version="6000076" bpdm:canid="_rM-q8Fg3Ed6KULKWaznjDA" bpdm:displayName="diag">
+  <pnlk:partnerLinkType name="SITAserviceAndProcess" bpdm:poolOneId="_usgF0Fg3Ed6KULKWaznjDA" bpdm:poolOneIsExecutable="false" bpdm:poolOneName="SITAservice" bpdm:poolTwoId="_tpABcFg3Ed6KULKWaznjDA" bpdm:poolTwoIsExecutable="true" bpdm:poolTwoName="Process">
+    <pnlk:role name="SITAservice_for_Process" portType="{http://thisdiagram/SITAservice}ForProcess" bpdm:thisPoolId="_usgF0Fg3Ed6KULKWaznjDA">
+      <wsdl:portType name="ForProcess">
+        <wsdl:operation name="AssignTAtoShift" bpdm:canid="_2HZxIFg3Ed6KULKWaznjDA._u6uq6Fg-Ed6KULKWaznjDA." bpdm:dataobjectPointer="project:///services/SITAservice.wsdl?wsdloperationbound={http://www.intalio.com/gi/forms/TAmanagement.gi}SITAservice/SITAservicePort/AssignTAtoShift">
+          <wsdl:input message="SITAservice1:inputMessage" name="AssignTAtoShift" bpdm:canid="_vj2gYFg-Ed6KULKWaznjDA" bpdm:senderId="_2HZxIFg3Ed6KULKWaznjDA" bpdm:receiverId="_u6uq6Fg-Ed6KULKWaznjDA" bpdm:senderName="call SITAservice" bpdm:receiverName="AssignTAtoShift" bpdm:receiverPoolId="_usgF0Fg3Ed6KULKWaznjDA" bpdm:dataobjectPointer="project:///services/SITAservice.wsdl?messageForBoundOperation={http://www.intalio.com/gi/forms/TAmanagement.gi}SITAservice/SITAservicePort/AssignTAtoShift/input/inputMessage"></wsdl:input>
+          <wsdl:output message="SITAservice1:ouputMessage" name="AssignTAtoShiftResponse" bpdm:canid="_v14rkFg-Ed6KULKWaznjDA" bpdm:senderId="_u6uq6Fg-Ed6KULKWaznjDA" bpdm:receiverId="_2HZxIFg3Ed6KULKWaznjDA" bpdm:senderName="AssignTAtoShift" bpdm:receiverName="call SITAservice" bpdm:receiverPoolId="_tpABcFg3Ed6KULKWaznjDA" bpdm:dataobjectPointer="project:///services/SITAservice.wsdl?messageForBoundOperation={http://www.intalio.com/gi/forms/TAmanagement.gi}SITAservice/SITAservicePort/AssignTAtoShift/output/ouputMessage"></wsdl:output>
+        </wsdl:operation>
+      </wsdl:portType>
+    </pnlk:role>
+  </pnlk:partnerLinkType>
+  <pnlk:partnerLinkType name="SITAserviceAndProcessForSITAservicePortPlk" bpdm:canPlkId="_usgF0Fg3Ed6KULKWaznjDA-_tpABcFg3Ed6KULKWaznjDA">
+    <pnlk:role name="SITAservice_for_Process" portType="SITAservice1:SITAservicePortType"></pnlk:role>
+  </pnlk:partnerLinkType>
+  <pnlk:partnerLinkType name="ProcessAndDC" bpdm:poolOneId="_tpABcFg3Ed6KULKWaznjDA" bpdm:poolOneIsExecutable="true" bpdm:poolOneName="Process" bpdm:poolTwoId="_rOxasFg3Ed6KULKWaznjDA" bpdm:poolTwoIsExecutable="false" bpdm:poolTwoName="DC">
+    <pnlk:role name="Process_for_DC" portType="Process:ForDC" bpdm:thisPoolId="_tpABcFg3Ed6KULKWaznjDA">
+      <wsdl:portType name="ForDC">
+        <wsdl:operation name="start" bpdm:canid="_0sM-cFg3Ed6KULKWaznjDA._w9788lg3Ed6KULKWaznjDA." bpdm:dataobjectPointer="project:///forms/ShiftCreationLight.gi.wsdl?wsdloperation={http://www.intalio.com/gi/forms/ShiftCreationLight.gi}Process/initProcess">
+          <wsdl:input message="ShiftCreationLight:initProcessRequest" name="start" bpdm:canid="_0sWvcFg3Ed6KULKWaznjDA" bpdm:senderId="_w9788lg3Ed6KULKWaznjDA" bpdm:receiverId="_0sM-cFg3Ed6KULKWaznjDA" bpdm:senderName="ShiftCreationLight-init request" bpdm:receiverName="start" bpdm:receiverPoolId="_tpABcFg3Ed6KULKWaznjDA" bpdm:dataobjectPointer="project:///forms/ShiftCreationLight.gi.wsdl?messageForOperation={http://www.intalio.com/gi/forms/ShiftCreationLight.gi}Process/initProcess/input/initProcessRequest"></wsdl:input>
+          <wsdl:output message="ShiftCreationLight:initProcessResponse" name="startResponse" bpdm:canid="_08Je8Fg3Ed6KULKWaznjDA" bpdm:senderId="_0sM-cFg3Ed6KULKWaznjDA" bpdm:receiverId="_w9788lg3Ed6KULKWaznjDA" bpdm:senderName="start" bpdm:receiverName="ShiftCreationLight-init request" bpdm:receiverPoolId="_rOxasFg3Ed6KULKWaznjDA" bpdm:dataobjectPointer="project:///forms/ShiftCreationLight.gi.wsdl?messageForOperation={http://www.intalio.com/gi/forms/ShiftCreationLight.gi}Process/initProcess/output/initProcessResponse"></wsdl:output>
+        </wsdl:operation>
+      </wsdl:portType>
+    </pnlk:role>
+  </pnlk:partnerLinkType>
+  <pnlk:partnerLinkType name="ProcessAndDCForPortTypeProcessPlk" bpdm:canPlkId="_tpABcFg3Ed6KULKWaznjDA-_rOxasFg3Ed6KULKWaznjDA">
+    <pnlk:role name="Process_for_DC" portType="ShiftCreationLight:Process"></pnlk:role>
+  </pnlk:partnerLinkType>
+</wsdl:definitions>

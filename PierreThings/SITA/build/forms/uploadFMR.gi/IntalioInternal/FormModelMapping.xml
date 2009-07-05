@@ -1,0 +1,256 @@
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<data jsxid="jsxroot" jsxnamespace="jsx3.ide.mapper.Mapper" jsxversion="1.0">
+  <record jsxid="mi_1" jxstext="Operation (Transaction)" type="T" jsxopen="1" opname="jsxtransaction">
+    <headers jsxid="mi_2">
+      <record jsxid="mi_3" name="Content-Type" value="text/xml"/>
+    </headers>
+    <record jsxid="mi_4" jsxtext="Input (request)" type="I" jsxopen="1" src="../../../forms/uploadFMR.gi/IntalioInternal/FormModel.xsd">
+      <record jsxid="mi_5" jsxtext="FormModel" type="C" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/uploadFMR.gi']//jsx1:element[@name='FormModel']" datatype="" tns="http://www.intalio.com/gi/forms/uploadFMR.gi">
+        <record jsxid="mi_6" jsxtext="aircraft" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/uploadFMR.gi']//jsx1:element[@name='aircraft']">
+          <restrictions>
+            <record jsxid="mi_7" name="nillable" value="true"/>
+          </restrictions>
+          <mappings jsxid="mi_8">
+            <record jsxid="mi_9" name="DOM" value="aircraft"/>
+          </mappings>
+        </record>
+        <record jsxid="mi_10" jsxtext="ScheduledArrivalDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/uploadFMR.gi']//jsx1:element[@name='ScheduledArrivalDate']">
+          <restrictions>
+            <record jsxid="mi_11" name="nillable" value="true"/>
+          </restrictions>
+          <mappings jsxid="mi_12">
+            <record jsxid="mi_13" name="Script" value="setValue(Intalio.Internal.Utilities.fixDateOutput(jsx3.GO('ScheduledArrivalDate', my.getNamespace())));"/>
+          </mappings>
+        </record>
+        <record jsxid="mi_14" jsxtext="STA" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/uploadFMR.gi']//jsx1:element[@name='STA']">
+          <restrictions>
+            <record jsxid="mi_15" name="nillable" value="true"/>
+          </restrictions>
+          <mappings jsxid="mi_16">
+            <record jsxid="mi_17" name="Script" value="setValue(Intalio.Internal.Utilities.fixTimeOutput(jsx3.GO('STA', my.getNamespace())));"/>
+          </mappings>
+        </record>
+        <record jsxid="mi_18" jsxtext="ArrivalFlightNumber" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/uploadFMR.gi']//jsx1:element[@name='ArrivalFlightNumber']">
+          <restrictions>
+            <record jsxid="mi_19" name="nillable" value="true"/>
+          </restrictions>
+          <mappings jsxid="mi_20">
+            <record jsxid="mi_21" name="DOM" value="ArrivalFlightNumber"/>
+          </mappings>
+        </record>
+        <record jsxid="mi_22" jsxtext="ActualArrivalDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/uploadFMR.gi']//jsx1:element[@name='ActualArrivalDate']">
+          <restrictions>
+            <record jsxid="mi_23" name="minoccur" value="0"/>
+          </restrictions>
+          <mappings jsxid="mi_24">
+            <record jsxid="mi_25" name="Script" value="setValue(Intalio.Internal.Utilities.fixDateOutput(jsx3.GO('ActualArrivalDate', my.getNamespace())));"/>
+          </mappings>
+        </record>
+        <record jsxid="mi_26" jsxtext="ATA" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/uploadFMR.gi']//jsx1:element[@name='ATA']">
+          <restrictions>
+            <record jsxid="mi_27" name="minoccur" value="0"/>
+          </restrictions>
+          <mappings jsxid="mi_28">
+            <record jsxid="mi_29" name="Script" value="setValue(Intalio.Internal.Utilities.fixTimeOutput(jsx3.GO('ATA', my.getNamespace())));"/>
+          </mappings>
+        </record>
+        <record jsxid="mi_30" jsxtext="ScheduledDepartureDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/uploadFMR.gi']//jsx1:element[@name='ScheduledDepartureDate']">
+          <restrictions>
+            <record jsxid="mi_31" name="nillable" value="true"/>
+          </restrictions>
+          <mappings jsxid="mi_32">
+            <record jsxid="mi_33" name="Script" value="setValue(Intalio.Internal.Utilities.fixDateOutput(jsx3.GO('ScheduledDepartureDate', my.getNamespace())));"/>
+          </mappings>
+        </record>
+        <record jsxid="mi_34" jsxtext="STD" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/uploadFMR.gi']//jsx1:element[@name='STD']">
+          <restrictions>
+            <record jsxid="mi_35" name="nillable" value="true"/>
+          </restrictions>
+          <mappings jsxid="mi_36">
+            <record jsxid="mi_37" name="Script" value="setValue(Intalio.Internal.Utilities.fixTimeOutput(jsx3.GO('STD', my.getNamespace())));"/>
+          </mappings>
+        </record>
+        <record jsxid="mi_38" jsxtext="ActualDepartureDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/uploadFMR.gi']//jsx1:element[@name='ActualDepartureDate']">
+          <restrictions>
+            <record jsxid="mi_39" name="minoccur" value="0"/>
+          </restrictions>
+          <mappings jsxid="mi_40">
+            <record jsxid="mi_41" name="Script" value="setValue(Intalio.Internal.Utilities.fixDateOutput(jsx3.GO('ActualDepartureDate', my.getNamespace())));"/>
+          </mappings>
+        </record>
+        <record jsxid="mi_42" jsxtext="ATD" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/uploadFMR.gi']//jsx1:element[@name='ATD']">
+          <restrictions>
+            <record jsxid="mi_43" name="minoccur" value="0"/>
+          </restrictions>
+          <mappings jsxid="mi_44">
+            <record jsxid="mi_45" name="Script" value="setValue(Intalio.Internal.Utilities.fixTimeOutput(jsx3.GO('ATD', my.getNamespace())));"/>
+          </mappings>
+        </record>
+        <record jsxid="mi_46" jsxtext="Stand" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/uploadFMR.gi']//jsx1:element[@name='Stand']">
+          <restrictions>
+            <record jsxid="mi_47" name="minoccur" value="0"/>
+          </restrictions>
+          <mappings jsxid="mi_48">
+            <record jsxid="mi_49" name="DOM" value="Stand"/>
+          </mappings>
+        </record>
+        <record jsxid="mi_50" jsxtext="InspectionType" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/uploadFMR.gi']//jsx1:element[@name='InspectionType']">
+          <restrictions>
+            <record jsxid="mi_51" name="minoccur" value="0"/>
+          </restrictions>
+          <mappings jsxid="mi_52">
+            <record jsxid="mi_53" name="DOM" value="InspectionType"/>
+          </mappings>
+        </record>
+        <record jsxid="mi_54" jsxtext="DepartureFlightNumber" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/uploadFMR.gi']//jsx1:element[@name='DepartureFlightNumber']">
+          <restrictions>
+            <record jsxid="mi_55" name="minoccur" value="0"/>
+          </restrictions>
+          <mappings jsxid="mi_56">
+            <record jsxid="mi_57" name="DOM" value="DepartureFlightNumber"/>
+          </mappings>
+        </record>
+        <record jsxid="mi_58" jsxtext="RTRid" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/uploadFMR.gi']//jsx1:element[@name='RTRid']">
+          <restrictions>
+            <record jsxid="mi_59" name="minoccur" value="0"/>
+          </restrictions>
+          <mappings jsxid="mi_60">
+            <record jsxid="mi_61" name="DOM" value="RTRid"/>
+          </mappings>
+        </record>
+        <record jsxid="mi_62" jsxtext="filepath" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/uploadFMR.gi']//jsx1:element[@name='filepath']">
+          <restrictions>
+            <record jsxid="mi_63" name="minoccur" value="0"/>
+          </restrictions>
+          <mappings jsxid="mi_64">
+            <record jsxid="mi_65" name="DOM" value="filepath"/>
+          </mappings>
+        </record>
+      </record>
+    </record>
+    <record jsxid="mi_66" jsxtext="Output (response)" type="O" jsxopen="1" src="../../../forms/uploadFMR.gi/IntalioInternal/FormModel.xsd">
+      <record jsxid="mi_67" jsxtext="FormModel" type="C" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/uploadFMR.gi']//jsx1:element[@name='FormModel']" datatype="" tns="http://www.intalio.com/gi/forms/uploadFMR.gi">
+        <record jsxid="mi_68" jsxtext="aircraft" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/uploadFMR.gi']//jsx1:element[@name='aircraft']">
+          <restrictions>
+            <record jsxid="mi_69" name="nillable" value="true"/>
+          </restrictions>
+          <mappings jsxid="mi_70">
+            <record jsxid="mi_71" name="DOM" value="aircraft"/>
+          </mappings>
+        </record>
+        <record jsxid="mi_72" jsxtext="ScheduledArrivalDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/uploadFMR.gi']//jsx1:element[@name='ScheduledArrivalDate']">
+          <restrictions>
+            <record jsxid="mi_73" name="nillable" value="true"/>
+          </restrictions>
+          <mappings jsxid="mi_74">
+            <record jsxid="mi_75" name="Script" value="Intalio.Internal.Utilities.fixDateInput(jsx3.GO('ScheduledArrivalDate', my.getNamespace()), MESSAGENODE.getValue());"/>
+          </mappings>
+        </record>
+        <record jsxid="mi_76" jsxtext="STA" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/uploadFMR.gi']//jsx1:element[@name='STA']">
+          <restrictions>
+            <record jsxid="mi_77" name="nillable" value="true"/>
+          </restrictions>
+          <mappings jsxid="mi_78">
+            <record jsxid="mi_79" name="Script" value="Intalio.Internal.Utilities.fixTimeInput(jsx3.GO('STA', my.getNamespace()), MESSAGENODE.getValue());"/>
+          </mappings>
+        </record>
+        <record jsxid="mi_80" jsxtext="ArrivalFlightNumber" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/uploadFMR.gi']//jsx1:element[@name='ArrivalFlightNumber']">
+          <restrictions>
+            <record jsxid="mi_81" name="nillable" value="true"/>
+          </restrictions>
+          <mappings jsxid="mi_82">
+            <record jsxid="mi_83" name="DOM" value="ArrivalFlightNumber"/>
+          </mappings>
+        </record>
+        <record jsxid="mi_84" jsxtext="ActualArrivalDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/uploadFMR.gi']//jsx1:element[@name='ActualArrivalDate']">
+          <restrictions>
+            <record jsxid="mi_85" name="minoccur" value="0"/>
+          </restrictions>
+          <mappings jsxid="mi_86">
+            <record jsxid="mi_87" name="Script" value="Intalio.Internal.Utilities.fixDateInput(jsx3.GO('ActualArrivalDate', my.getNamespace()), MESSAGENODE.getValue());"/>
+          </mappings>
+        </record>
+        <record jsxid="mi_88" jsxtext="ATA" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/uploadFMR.gi']//jsx1:element[@name='ATA']">
+          <restrictions>
+            <record jsxid="mi_89" name="minoccur" value="0"/>
+          </restrictions>
+          <mappings jsxid="mi_90">
+            <record jsxid="mi_91" name="Script" value="Intalio.Internal.Utilities.fixTimeInput(jsx3.GO('ATA', my.getNamespace()), MESSAGENODE.getValue());"/>
+          </mappings>
+        </record>
+        <record jsxid="mi_92" jsxtext="ScheduledDepartureDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/uploadFMR.gi']//jsx1:element[@name='ScheduledDepartureDate']">
+          <restrictions>
+            <record jsxid="mi_93" name="nillable" value="true"/>
+          </restrictions>
+          <mappings jsxid="mi_94">
+            <record jsxid="mi_95" name="Script" value="Intalio.Internal.Utilities.fixDateInput(jsx3.GO('ScheduledDepartureDate', my.getNamespace()), MESSAGENODE.getValue());"/>
+          </mappings>
+        </record>
+        <record jsxid="mi_96" jsxtext="STD" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/uploadFMR.gi']//jsx1:element[@name='STD']">
+          <restrictions>
+            <record jsxid="mi_97" name="nillable" value="true"/>
+          </restrictions>
+          <mappings jsxid="mi_98">
+            <record jsxid="mi_99" name="Script" value="Intalio.Internal.Utilities.fixTimeInput(jsx3.GO('STD', my.getNamespace()), MESSAGENODE.getValue());"/>
+          </mappings>
+        </record>
+        <record jsxid="mi_100" jsxtext="ActualDepartureDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/uploadFMR.gi']//jsx1:element[@name='ActualDepartureDate']">
+          <restrictions>
+            <record jsxid="mi_101" name="minoccur" value="0"/>
+          </restrictions>
+          <mappings jsxid="mi_102">
+            <record jsxid="mi_103" name="Script" value="Intalio.Internal.Utilities.fixDateInput(jsx3.GO('ActualDepartureDate', my.getNamespace()), MESSAGENODE.getValue());"/>
+          </mappings>
+        </record>
+        <record jsxid="mi_104" jsxtext="ATD" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/uploadFMR.gi']//jsx1:element[@name='ATD']">
+          <restrictions>
+            <record jsxid="mi_105" name="minoccur" value="0"/>
+          </restrictions>
+          <mappings jsxid="mi_106">
+            <record jsxid="mi_107" name="Script" value="Intalio.Internal.Utilities.fixTimeInput(jsx3.GO('ATD', my.getNamespace()), MESSAGENODE.getValue());"/>
+          </mappings>
+        </record>
+        <record jsxid="mi_108" jsxtext="Stand" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/uploadFMR.gi']//jsx1:element[@name='Stand']">
+          <restrictions>
+            <record jsxid="mi_109" name="minoccur" value="0"/>
+          </restrictions>
+          <mappings jsxid="mi_110">
+            <record jsxid="mi_111" name="DOM" value="Stand"/>
+          </mappings>
+        </record>
+        <record jsxid="mi_112" jsxtext="InspectionType" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/uploadFMR.gi']//jsx1:element[@name='InspectionType']">
+          <restrictions>
+            <record jsxid="mi_113" name="minoccur" value="0"/>
+          </restrictions>
+          <mappings jsxid="mi_114">
+            <record jsxid="mi_115" name="DOM" value="InspectionType"/>
+          </mappings>
+        </record>
+        <record jsxid="mi_116" jsxtext="DepartureFlightNumber" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/uploadFMR.gi']//jsx1:element[@name='DepartureFlightNumber']">
+          <restrictions>
+            <record jsxid="mi_117" name="minoccur" value="0"/>
+          </restrictions>
+          <mappings jsxid="mi_118">
+            <record jsxid="mi_119" name="DOM" value="DepartureFlightNumber"/>
+          </mappings>
+        </record>
+        <record jsxid="mi_120" jsxtext="RTRid" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/uploadFMR.gi']//jsx1:element[@name='RTRid']">
+          <restrictions>
+            <record jsxid="mi_121" name="minoccur" value="0"/>
+          </restrictions>
+          <mappings jsxid="mi_122">
+            <record jsxid="mi_123" name="DOM" value="RTRid"/>
+          </mappings>
+        </record>
+        <record jsxid="mi_124" jsxtext="filepath" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/uploadFMR.gi']//jsx1:element[@name='filepath']">
+          <restrictions>
+            <record jsxid="mi_125" name="minoccur" value="0"/>
+          </restrictions>
+          <mappings jsxid="mi_126">
+            <record jsxid="mi_127" name="DOM" value="filepath"/>
+          </mappings>
+        </record>
+      </record>
+    </record>
+  </record>
+</data>

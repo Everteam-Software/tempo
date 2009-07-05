@@ -1,0 +1,39 @@
+diff --git a/tms-common/src/main/java/org/intalio/tempo/workflow/task/AssignedMechanics.java b/tms-common/src/main/java/org/intalio/tempo/workflow/task/AssignedMechanics.java
+new file mode 100644
+index 0000000..aa7e716
+--- /dev/null
++++ b/tms-common/src/main/java/org/intalio/tempo/workflow/task/AssignedMechanics.java
+@@ -0,0 +1,33 @@
++package org.intalio.tempo.workflow.task;
++
++import javax.persistence.Column;
++import javax.persistence.Entity;
++import javax.persistence.Table;
++import org.apache.openjpa.persistence.Persistent;
++
++@Entity
++@Table(name = "tempo_assignedMechanisB")
++public class AssignedMechanics {
++	@Persistent
++	@Column(name = "name")
++	String _name;
++	@Persistent
++	@Column(name = "mechanicID")
++	String _mechanicID;
++
++	public String getName() {
++		return _name;
++	}
++
++	public void setName(String _name) {
++		this._name = _name;
++	}
++
++	public String getMechanicID() {
++		return _mechanicID;
++	}
++
++	public void setMechanicID(String _mechanicid) {
++		_mechanicID = _mechanicid;
++	}
++}

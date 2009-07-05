@@ -1,0 +1,139 @@
+﻿<bpel:process xmlns:bpdm="http://www.intalio/designer/business-process-data-modeling" xmlns:mapper="http://www.intalio.com/designer/mapper" xmlns:TaskManagementSystem="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:TokenService="http://tempo.intalio.org/security/tokenService/" xmlns:ta="http://www.example.org/ta" xmlns:diag="http://thisdiagram" xmlns:TAlistService="http://thisdiagram/TAlistService" xmlns:tns="http://ode/bpel/unit-test.wsdl" xmlns:this="http://thisdiagram/TAlistExportProcess" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:TAmanagement="http://www.intalio.com/gi/forms/TAmanagement.gi" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ode="http://www.apache.org/ode/type/extension" targetNamespace="http://thisdiagram/TAlistExportProcess">
+    <bpdm:dependencies version="6000076">
+        <bpdm:namespaceDefinition bpdm:uri="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" bpdm:prefix="TaskManagementSystem" bpdm:comment="contrib=&apos;project:///services/TaskManagementSystem.wsdl"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/2001/XMLSchema-instance" bpdm:prefix="xsi"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://tempo.intalio.org/security/tokenService/" bpdm:prefix="TokenService" bpdm:comment="contrib=&apos;project:///services/TokenService.wsdl"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.example.org/ta" bpdm:prefix="ta" bpdm:comment="contrib=&apos;project:///schema/ami-ta-list.xsd"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram" bpdm:prefix="diag" bpdm:comment="contrib=&apos;partner-pool:///_iaryYEqjEd6mL5laCVF80g"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram/TAlistService" bpdm:prefix="TAlistService" bpdm:comment="contrib=&apos;partner-pool:///_tvegYEqjEd6mL5laCVF80g"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://ode/bpel/unit-test.wsdl" bpdm:prefix="tns" bpdm:comment="contrib=&apos;project:///services/TAlistToAMI.wsdl"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram/TAlistExportProcess" bpdm:prefix="this" bpdm:type="this_process"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/2001/XMLSchema" bpdm:prefix="xs"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.intalio.com/gi/forms/TAmanagement.gi" bpdm:prefix="TAmanagement" bpdm:comment="contrib=&apos;project:///services/TaskManagementSystem.wsdl"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/XML/1998/namespace" bpdm:prefix="xml"></bpdm:namespaceDefinition>
+        <bpdm:namespaceContributor bpdm:url="thisprocess://this-process-types" bpdm:label="process defined this-process-types">
+            <wsdl:portType name="ForTAinterface">
+                <wsdl:operation name="start" bpdm:source="partner-pool:///_iaryYEqjEd6mL5laCVF80g">
+                    <wsdl:input message="this:startRequest" name="start"/>
+                    <wsdl:output message="this:startResponse" name="startResponse"/>
+                </wsdl:operation>
+            </wsdl:portType>
+            <xs:element name="startRequest" type="xs:string" bpdm:source="partner-pool:///_iaryYEqjEd6mL5laCVF80g"/>
+            <wsdl:message name="startRequest" bpdm:source="partner-pool:///_iaryYEqjEd6mL5laCVF80g">
+                <wsdl:part name="body" element="this:startRequest"/>
+            </wsdl:message>
+            <xs:element name="startResponse" type="xs:string" bpdm:source="partner-pool:///_iaryYEqjEd6mL5laCVF80g"/>
+            <wsdl:message name="startResponse" bpdm:source="partner-pool:///_iaryYEqjEd6mL5laCVF80g">
+                <wsdl:part name="body" element="this:startResponse"/>
+            </wsdl:message>
+            <bpel:binding name="CanonicBindingForTAinterface" type="this:ForTAinterface" bpdm:isSynchronized="true"/>
+        </bpdm:namespaceContributor>
+        <bpdm:namespaceContributor bpdm:url="partner-pool:///_iaryYEqjEd6mL5laCVF80g" bpdm:label="TAinterface"/>
+        <bpdm:namespaceContributor bpdm:url="project:///services/TAlistToAMI.wsdl"/>
+        <bpdm:namespaceContributor bpdm:url="project:///schema/ami-ta-list.xsd"/>
+        <bpdm:namespaceContributor bpdm:url="project:///services/TokenService.wsdl"/>
+        <bpdm:namespaceContributor bpdm:url="project:///services/TaskManagementSystem.wsdl"/>
+        <bpdm:namespaceContributor bpdm:url="partner-pool:///_DMu_YEulEd6z2tE8GIqf2g" bpdm:label="TokenService"/>
+        <bpdm:namespaceContributor bpdm:url="partner-pool:///_tvegYEqjEd6mL5laCVF80g" bpdm:label="TAlistService"/>
+        <bpdm:namespaceContributor bpdm:url="project:///schema/TAdata.xsd"/>
+        <bpdm:namespaceContributor bpdm:url="partner-pool:///_HSZNMEulEd6z2tE8GIqf2g" bpdm:label="TMS"/>
+    </bpdm:dependencies>
+    <bpel:scope bpdm:label="TAlistExportProcess" bpdm:ID="_kTFecEqjEd6mL5laCVF80g">
+        <bpel:partnerLinks>
+            <bpel:partnerLink name="tAlistExportProcessAndTAinterfacePlkVar" partnerLinkType="diag:TAlistExportProcessAndTAinterface" myRole="TAlistExportProcess_for_TAinterface" bpdm:enableSharing="false" bpdm:providedService="this:CanonicServiceForTAinterface" bpdm:providedPort="canonicPort" bpdm:provideSOAPAddress="${deploy_serverUrl}${deploy_baseSoapServicesUrl}/${deploy_bundleNcName}/${diagram_relativeURL}/TAlistExportProcess/TAinterface" bpdm:providedIsDefault="true" bpdm:clientTasks="_kTFecEqjEd6mL5laCVF80g:_nXLhkEqjEd6mL5laCVF80g" bpdm:isManaged="true" bpdm:otherPoolId="_iaryYEqjEd6mL5laCVF80g"/>
+            <bpel:partnerLink name="tAlistServiceAndTAlistExportProcessForTAlistPortPlkVar" partnerLinkType="diag:TAlistServiceAndTAlistExportProcessForTAlistPortPlk" initializePartnerRole="yes" partnerRole="TAlistService_for_TAlistExportProcess" bpdm:invokedService="tns:TAlistService" bpdm:invokedPort="TAlistPort" bpdm:invokedSOAPAddress="jms:/so.tasks.queue?transport.jms.ConnectionFactoryJNDIName=QueueConnectionFactory&amp;java.naming.factory.initial=org.apache.activemq.jndi.ActiveMQInitialContextFactory&amp;java.naming.provider.url=tcp://localhost:61616&amp;transport.jms.ReplyDestinationType=queue&amp;transport.jms.DestinationType=queue" bpdm:invokedIsDefault="true" bpdm:clientTasks="_kTFecEqjEd6mL5laCVF80g:_v3c0YExiEd6915gSCg-TBg" bpdm:isManaged="true" bpdm:otherPoolId="_tvegYEqjEd6mL5laCVF80g"/>
+            <bpel:partnerLink name="tAlistExportProcessAndTokenServiceForTokenServiceHttpportPlkVar" partnerLinkType="diag:TAlistExportProcessAndTokenServiceForTokenServiceHttpportPlk" initializePartnerRole="yes" partnerRole="TokenService_for_TAlistExportProcess" bpdm:invokedService="TokenService:TokenService" bpdm:invokedPort="TokenServiceSOAP11port_http" bpdm:invokedSOAPAddress="http://localhost:9080/axis2/services/TokenService" bpdm:invokedIsDefault="true" bpdm:clientTasks="_kTFecEqjEd6mL5laCVF80g:_hnNB4ExiEd6915gSCg-TBg" bpdm:isManaged="true" bpdm:otherPoolId="_DMu_YEulEd6z2tE8GIqf2g"/>
+            <bpel:partnerLink name="tAlistExportProcessAndTMSForPortTaskManagementServicesSOAPPlkVar" partnerLinkType="diag:TAlistExportProcessAndTMSForPortTaskManagementServicesSOAPPlk" initializePartnerRole="yes" partnerRole="TMS_for_TAlistExportProcess" bpdm:invokedService="TaskManagementSystem:TaskManagementServices" bpdm:invokedPort="TaskManagementServicesSOAP" bpdm:invokedSOAPAddress="http://localhost:8080/axis2/services/TaskManagementServices" bpdm:invokedIsDefault="true" bpdm:clientTasks="_kTFecEqjEd6mL5laCVF80g:_sWvtwExiEd6915gSCg-TBg" bpdm:isManaged="true" bpdm:otherPoolId="_HSZNMEulEd6z2tE8GIqf2g"/>
+        </bpel:partnerLinks>
+        <bpel:variables>
+            <bpel:variable name="thisStartRequestMsg" messageType="this:startRequest" bpdm:id="_nX7IdUqjEd6mL5laCVF80g" bpdm:messageIds="inc:_nXecgEqjEd6mL5laCVF80g"/>
+            <bpel:variable name="thisStartResponseMsg" messageType="this:startResponse" bpdm:id="_oJP3sEqjEd6mL5laCVF80g" bpdm:messageIds=" out:_oJGGsEqjEd6mL5laCVF80g">
+                <bpel:from bpdm:toPart="body">
+                    <bpel:literal bpdm:linkedMessageType="this:startResponse" bpdm:linkedPart="body"></bpel:literal>
+                </bpel:from>
+            </bpel:variable>
+            <bpel:variable name="tnsInputMessage" messageType="tns:TAlist" binding="tns:TAlistSoapBinding" operation="sendTAlist" opMsgType="0" bpdm:id="_xQRBcExiEd6915gSCg-TBg" bpdm:messageIds=" out:_xQHQcExiEd6915gSCg-TBg">
+                <bpel:from bpdm:toPart="body">
+                    <bpel:literal bpdm:linkedMessageType="tns:TAlist" bpdm:linkedPart="body" bpdm:binding="tns:TAlistSoapBinding" bpdm:opMsgType="0" bpdm:operation="sendTAlist"></bpel:literal>
+                </bpel:from>
+            </bpel:variable>
+            <bpel:variable name="tokenServiceAuthenticateUserResponseMsg" messageType="TokenService:authenticateUserResponse" binding="TokenService:TokenServiceHttpBinding" operation="authenticateUser" opMsgType="1" bpdm:id="_nggXpkxiEd6915gSCg-TBg" bpdm:messageIds="inc:_ngWmkExiEd6915gSCg-TBg"/>
+            <bpel:variable name="tokenServiceAuthenticateUserRequestMsg" messageType="TokenService:authenticateUser" binding="TokenService:TokenServiceHttpBinding" operation="authenticateUser" opMsgType="0" bpdm:id="_nRdO8ExiEd6915gSCg-TBg" bpdm:messageIds=" out:_nQj3EExiEd6915gSCg-TBg">
+                <bpel:from bpdm:toPart="payload">
+                    <bpel:literal bpdm:linkedMessageType="TokenService:authenticateUser" bpdm:linkedPart="payload" bpdm:binding="TokenService:TokenServiceHttpBinding" bpdm:opMsgType="0" bpdm:operation="authenticateUser"></bpel:literal>
+                </bpel:from>
+            </bpel:variable>
+            <bpel:variable name="taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg" messageType="TaskManagementSystem:getAvailableTasksWithInputOutputRequest" binding="TaskManagementSystem:TaskManagementServicesSOAP" operation="getAvailableTasksWithInputOutput" opMsgType="0" bpdm:id="_vpKf0Gj1Ed6bUI2_5ObXdA" bpdm:messageIds=" out:_tggLIExiEd6915gSCg-TBg">
+                <bpel:from bpdm:toPart="getAvailableTasksWithInputOutputRequest">
+                    <bpel:literal bpdm:linkedMessageType="TaskManagementSystem:getAvailableTasksWithInputOutputRequest" bpdm:linkedPart="getAvailableTasksWithInputOutputRequest" bpdm:binding="TaskManagementSystem:TaskManagementServicesSOAP" bpdm:opMsgType="0" bpdm:operation="getAvailableTasksWithInputOutput"></bpel:literal>
+                </bpel:from>
+            </bpel:variable>
+            <bpel:variable name="taskManagementSystemGetAvailableTasksWithInputOutputResponseMsg" messageType="TaskManagementSystem:getAvailableTasksWithInputOutputResponse" binding="TaskManagementSystem:TaskManagementServicesSOAP" operation="getAvailableTasksWithInputOutput" opMsgType="1" bpdm:id="_v4NodWj1Ed6bUI2_5ObXdA" bpdm:messageIds="inc:_twJwsExiEd6915gSCg-TBg"/>
+        </bpel:variables>
+        <bpel:sequence>
+            <bpdm:messagingtask eventType="start: message" operation="start" partnerLink="tAlistExportProcessAndTAinterfacePlkVar" portType="this:ForTAinterface" isMyRole="true" enableSharing="false" bpdm:label="start" bpdm:ID="_nXLhkEqjEd6mL5laCVF80g">
+                <bpdm:linkset bpdm:type="incomingMessage" bpdm:bpeltype="receive" bpdm:messageVariable="thisStartRequestMsg" bpdm:msgVarScopeId="_kTFecEqjEd6mL5laCVF80g" bpdm:variableIsManaged="true" bpdm:messageType="this:startRequest" bpdm:ID="_nXecgEqjEd6mL5laCVF80g"></bpdm:linkset>
+                <bpdm:linkset bpdm:type="outgoingMessage" bpdm:bpeltype="reply" bpdm:messageVariable="thisStartResponseMsg" bpdm:msgVarScopeId="_kTFecEqjEd6mL5laCVF80g" bpdm:variableIsManaged="true" bpdm:messageType="this:startResponse" bpdm:ID="_oJGGsEqjEd6mL5laCVF80g"></bpdm:linkset>
+            </bpdm:messagingtask>
+            <bpdm:messagingtask operation="authenticateUser" partnerLink="tAlistExportProcessAndTokenServiceForTokenServiceHttpportPlkVar" portType="TokenService:TokenServicePortType" isMyRole="false" enableSharing="false" bpdm:label="authenticate" bpdm:ID="_hnNB4ExiEd6915gSCg-TBg">
+                <bpdm:linkset bpdm:type="assignments">
+                    <bpel:copy>
+                        <bpel:from>"intalio\admin"</bpel:from>
+                        <bpel:to>$tokenServiceAuthenticateUserRequestMsg.payload/TokenService:user</bpel:to><mapper:mapperLink><mapper:vertice id="16689443" targetPath="$tokenServiceAuthenticateUserRequestMsg.payload/TokenService:user" targetedBy="22157696-arg0"></mapper:vertice><mapper:vertice id="22157696" dimension="78x24" location="696,24"><mapper:value>"intalio\admin"</mapper:value></mapper:vertice></mapper:mapperLink>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from>"changeit"</bpel:from>
+                        <bpel:to>$tokenServiceAuthenticateUserRequestMsg.payload/TokenService:password</bpel:to><mapper:mapperLink><mapper:vertice id="10346581" targetPath="$tokenServiceAuthenticateUserRequestMsg.payload/TokenService:password" targetedBy="27499178-arg0"></mapper:vertice><mapper:vertice id="27499178" dimension="78x24" location="696,60"><mapper:value>"changeit"</mapper:value></mapper:vertice></mapper:mapperLink>
+                    </bpel:copy>
+                </bpdm:linkset>
+                <bpdm:linkset bpdm:type="outgoingMessage" bpdm:bpeltype="invoke-request" bpdm:messageVariable="tokenServiceAuthenticateUserRequestMsg" bpdm:msgVarScopeId="_kTFecEqjEd6mL5laCVF80g" bpdm:variableIsManaged="true" bpdm:messageType="TokenService:authenticateUser" bpdm:binding="TokenService:TokenServiceHttpBinding" bpdm:ID="_nQj3EExiEd6915gSCg-TBg"></bpdm:linkset>
+                <bpdm:linkset bpdm:type="incomingMessage" bpdm:bpeltype="invoke-receive" bpdm:messageVariable="tokenServiceAuthenticateUserResponseMsg" bpdm:msgVarScopeId="_kTFecEqjEd6mL5laCVF80g" bpdm:variableIsManaged="true" bpdm:messageType="TokenService:authenticateUserResponse" bpdm:binding="TokenService:TokenServiceHttpBinding" bpdm:ID="_ngWmkExiEd6915gSCg-TBg"></bpdm:linkset>
+            </bpdm:messagingtask>
+            <bpdm:messagingtask operation="getAvailableTasksWithInputOutput" partnerLink="tAlistExportProcessAndTMSForPortTaskManagementServicesSOAPPlkVar" portType="TaskManagementSystem:TaskManagementServices" isMyRole="false" enableSharing="false" bpdm:label="get TAs" bpdm:ID="_sWvtwExiEd6915gSCg-TBg">
+                <bpdm:linkset bpdm:type="assignments">
+                    <bpel:copy>
+                        <bpel:from>"PATask"</bpel:from>
+                        <bpel:to>$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest/TaskManagementSystem:taskType</bpel:to><mapper:mapperLink><mapper:vertice id="8031825" targetPath="$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest/TaskManagementSystem:taskType" targetedBy="30038464-arg0"></mapper:vertice><mapper:vertice id="30038464" dimension="78x24" location="408,84"><mapper:value>"PATask"</mapper:value></mapper:vertice></mapper:mapperLink>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from>$tokenServiceAuthenticateUserResponseMsg.payload/TokenService:token</bpel:from>
+                        <bpel:to>$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest/TaskManagementSystem:participantToken</bpel:to><mapper:mapperLink><mapper:vertice id="2117503" targetPath="$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest/TaskManagementSystem:participantToken" targetedBy="28741315-arg0"></mapper:vertice><mapper:vertice id="28741315" sourcePath="$tokenServiceAuthenticateUserResponseMsg.payload/TokenService:token"></mapper:vertice></mapper:mapperLink>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from>"ORDER BY T._ScheduledArrival"</bpel:from>
+                        <bpel:to>$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest/TaskManagementSystem:subQuery</bpel:to>
+<mapper:mapperLink>
+  <mapper:vertice id="23178713" targetPath="$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest/TaskManagementSystem:subQuery" targetedBy="21047829-arg0"></mapper:vertice>
+  <mapper:vertice id="21047829" dimension="181x24" location="204,240">
+    <mapper:value>"ORDER BY T._ScheduledArrival"</mapper:value>
+  </mapper:vertice>
+</mapper:mapperLink>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from>true()</bpel:from>
+                        <bpel:to>$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest/TaskManagementSystem:filter</bpel:to>
+<mapper:mapperLink>
+  <mapper:vertice id="16051985" targetPath="$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest/TaskManagementSystem:filter" targetedBy="25716720-arg0"></mapper:vertice>
+  <mapper:vertice id="25716720" dimension="78x24" location="528,204">
+    <mapper:value>true()</mapper:value>
+  </mapper:vertice>
+</mapper:mapperLink>
+                    </bpel:copy>
+                </bpdm:linkset>
+                <bpdm:linkset bpdm:type="outgoingMessage" bpdm:bpeltype="invoke-request" bpdm:messageVariable="taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg" bpdm:msgVarScopeId="_kTFecEqjEd6mL5laCVF80g" bpdm:variableIsManaged="true" bpdm:messageType="TaskManagementSystem:getAvailableTasksWithInputOutputRequest" bpdm:binding="TaskManagementSystem:TaskManagementServicesSOAP" bpdm:ID="_tggLIExiEd6915gSCg-TBg"></bpdm:linkset>
+                <bpdm:linkset bpdm:type="incomingMessage" bpdm:bpeltype="invoke-receive" bpdm:messageVariable="taskManagementSystemGetAvailableTasksWithInputOutputResponseMsg" bpdm:msgVarScopeId="_kTFecEqjEd6mL5laCVF80g" bpdm:variableIsManaged="true" bpdm:messageType="TaskManagementSystem:getAvailableTasksWithInputOutputResponse" bpdm:binding="TaskManagementSystem:TaskManagementServicesSOAP" bpdm:ID="_twJwsExiEd6915gSCg-TBg"></bpdm:linkset>
+                <bpdm:thrownFault msgFaultNcName="InvalidParticipantToken" msgFaultTypeQname="TaskManagementSystem:invalidParticipantTokenFault"/>
+                <bpdm:thrownFault msgFaultNcName="InvalidInputMessage" msgFaultTypeQname="TaskManagementSystem:invalidInputMessageFault"/>
+            </bpdm:messagingtask>
+            <bpdm:messagingtask eventType="end: message" operation="sendTAlist" partnerLink="tAlistServiceAndTAlistExportProcessForTAlistPortPlkVar" portType="tns:TAlistPortType" isMyRole="false" enableSharing="false" bpdm:label="Message_End_Event" bpdm:ID="_v3c0YExiEd6915gSCg-TBg">
+                <bpdm:linkset bpdm:type="assignments">
+                    <bpel:copy>
+                        <bpel:from>bpel:doXslTransform("TaskListTransform.xsl", $taskManagementSystemGetAvailableTasksWithInputOutputResponseMsg.getAvailableTasksWithInputOutputResponse)</bpel:from>
+                        <bpel:to>$tnsInputMessage.body</bpel:to><mapper:mapperLink><mapper:vertice id="3590374" targetPath="$tnsInputMessage.body" targetedBy="5530300-arg2"></mapper:vertice><mapper:vertice id="5530300" dimension="78x24" location="300,156"><mapper:value>bpel:doXslTransform()</mapper:value></mapper:vertice><mapper:vertice id="10767157" dimension="78x24" location="183,109" targetedBy="5530300-arg0"><mapper:value>"TaskListTransform.xsl"</mapper:value></mapper:vertice><mapper:vertice id="20395713" sourcePath="$taskManagementSystemGetAvailableTasksWithInputOutputResponseMsg.getAvailableTasksWithInputOutputResponse" targetedBy="5530300-arg1"></mapper:vertice></mapper:mapperLink>
+                    </bpel:copy>
+                </bpdm:linkset>
+                <bpdm:linkset bpdm:type="outgoingMessage" bpdm:bpeltype="invoke-request" bpdm:messageVariable="tnsInputMessage" bpdm:msgVarScopeId="_kTFecEqjEd6mL5laCVF80g" bpdm:variableIsManaged="true" bpdm:messageType="tns:TAlist" bpdm:binding="tns:TAlistSoapBinding" bpdm:ID="_xQHQcExiEd6915gSCg-TBg"></bpdm:linkset>
+            </bpdm:messagingtask>
+        </bpel:sequence>
+    </bpel:scope>
+</bpel:process>

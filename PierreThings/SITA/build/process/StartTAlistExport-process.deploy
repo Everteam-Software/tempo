@@ -1,0 +1,11 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<dd:process xmlns:User="http://example.com/process/StartTAlistExport/User" xmlns:dd="http://www.apache.org/ode/schemas/dd/2007/03" xmlns:TAlistExport="http://www.intalio.com/gi/forms/TAlistExport.gi" xmlns:diag="http://example.com/process/StartTAlistExport" xmlns:TAlistToAMI-TAlistExportProcess="http://example.com/process/TAlistToAMI/TAlistExportProcess" xmlns:processimplicitPartner="http://example.com/process/StartTAlistExport/processimplicitPartner" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:attachments="http://www.intalio.com/gi/forms/TAlistExport.gi/attachments" xmlns:this="http://example.com/process/StartTAlistExport/process" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="this:process" fileName="process/StartTAlistExport-process.bpel">
+  <dd:property name="PATH">process/StartTAlistExport</dd:property>
+  <dd:property name="SVG">process/StartTAlistExport.svg</dd:property>
+  <dd:provide partnerLink="processAndUserForPortTypeProcessPlkVar">
+    <dd:service name="this:processAndUserForPortTypeProcessPlkService" port="process_for_UserPort"></dd:service>
+  </dd:provide>
+  <dd:invoke partnerLink="processimplicitPartnerAndProcessForCanonicPortPlkVar">
+    <dd:service name="TAlistToAMI-TAlistExportProcess:CanonicServiceForTAinterface" port="canonicPort"/>
+  </dd:invoke>
+</dd:process>

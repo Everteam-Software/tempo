@@ -1,0 +1,35 @@
+﻿<bpel:process xmlns:bpdm="http://www.intalio/designer/business-process-data-modeling" xmlns:mapper="http://www.intalio.com/designer/mapper" xmlns:ReceiveUpdateProcess="http://thisdiagram/ReceiveUpdateProcess" xmlns:tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:TAmanagement="http://www.intalio.com/gi/forms/TAmanagement.gi" xmlns:this="http://thisdiagram/DB" xmlns:diag="http://thisdiagram" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ode="http://www.apache.org/ode/type/extension" targetNamespace="http://thisdiagram/DB">
+    <bpdm:dependencies version="6000076">
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram/ReceiveUpdateProcess" bpdm:prefix="ReceiveUpdateProcess" bpdm:comment="contrib=&apos;partner-pool:///_2DxcYEqkEd6mL5laCVF80g"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" bpdm:prefix="tns" bpdm:comment="contrib=&apos;project:///services/TaskManagementSystem.wsdl"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/2001/XMLSchema" bpdm:prefix="xs"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/2001/XMLSchema-instance" bpdm:prefix="xsi"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.intalio.com/gi/forms/TAmanagement.gi" bpdm:prefix="TAmanagement" bpdm:comment="contrib=&apos;project:///services/TaskManagementSystem.wsdl"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram/DB" bpdm:prefix="this" bpdm:type="this_process"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram" bpdm:prefix="diag" bpdm:comment="contrib=&apos;partner-pool:///_2DxcYEqkEd6mL5laCVF80g"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/XML/1998/namespace" bpdm:prefix="xml"></bpdm:namespaceDefinition>
+        <bpdm:namespaceContributor bpdm:url="thisprocess://this-process-types" bpdm:label="process defined this-process-types"></bpdm:namespaceContributor>
+        <bpdm:namespaceContributor bpdm:url="project:///services/TaskManagementSystem.wsdl"/>
+        <bpdm:namespaceContributor bpdm:url="project:///schema/TAdata.xsd"/>
+        <bpdm:namespaceContributor bpdm:url="partner-pool:///_2DxcYEqkEd6mL5laCVF80g" bpdm:label="ReceiveUpdateProcess"/>
+    </bpdm:dependencies>
+    <bpel:scope bpdm:label="DB" bpdm:ID="_vVRLwE-AEd6KwPKiXhvAhA">
+        <bpel:partnerLinks>
+            <bpel:partnerLink name="dbAndReceiveUpdateProcessForPortTaskManagementServicesSOAPPlkVar" partnerLinkType="diag:DbAndReceiveUpdateProcessForPortTaskManagementServicesSOAPPlk" myRole="DB_for_ReceiveUpdateProcess" bpdm:enableSharing="false" bpdm:providedService="tns:TaskManagementServices" bpdm:providedPort="TaskManagementServicesSOAP" bpdm:provideSOAPAddress="http://localhost:8080/axis2/services/TaskManagementServices" bpdm:providedIsDefault="true" bpdm:clientTasks="_vVRLwE-AEd6KwPKiXhvAhA:_xe0ExmjzEd6vjemy71XIWg" bpdm:isManaged="true" bpdm:otherPoolId="_2DxcYEqkEd6mL5laCVF80g"/>
+        </bpel:partnerLinks>
+        <bpel:variables>
+            <bpel:variable name="tnsGetAvailableTasksWithInputOutputResponseMsg" messageType="tns:getAvailableTasksWithInputOutputResponse" binding="tns:TaskManagementServicesSOAP" operation="getAvailableTasksWithInputOutput" opMsgType="0" bpdm:id="_1af3MGjzEd6vjemy71XIWg" bpdm:messageIds=" out:_1aM8QGjzEd6vjemy71XIWg">
+                <bpel:from bpdm:toPart="getAvailableTasksWithInputOutputResponse">
+                    <bpel:literal bpdm:linkedMessageType="tns:getAvailableTasksWithInputOutputResponse" bpdm:linkedPart="getAvailableTasksWithInputOutputResponse" bpdm:binding="tns:TaskManagementServicesSOAP" bpdm:opMsgType="0" bpdm:operation="getAvailableTasksWithInputOutput"></bpel:literal>
+                </bpel:from>
+            </bpel:variable>
+            <bpel:variable name="tnsGetAvailableTasksWithInputOutputRequestMsg" messageType="tns:getAvailableTasksWithInputOutputRequest" binding="tns:TaskManagementServicesSOAP" operation="getAvailableTasksWithInputOutput" opMsgType="1" bpdm:id="_1GO3Z2jzEd6vjemy71XIWg" bpdm:messageIds="inc:_1ES9sGjzEd6vjemy71XIWg"/>
+        </bpel:variables>
+        <bpel:sequence>
+            <bpdm:messagingtask operation="getAvailableTasksWithInputOutput" partnerLink="dbAndReceiveUpdateProcessForPortTaskManagementServicesSOAPPlkVar" portType="tns:TaskManagementServices" isMyRole="true" enableSharing="false" bpdm:label="getAvailableTasksWithInputOutput" bpdm:ID="_xe0ExmjzEd6vjemy71XIWg">
+                <bpdm:linkset bpdm:type="incomingMessage" bpdm:bpeltype="receive" bpdm:messageVariable="tnsGetAvailableTasksWithInputOutputRequestMsg" bpdm:msgVarScopeId="_vVRLwE-AEd6KwPKiXhvAhA" bpdm:variableIsManaged="true" bpdm:messageType="tns:getAvailableTasksWithInputOutputRequest" bpdm:binding="tns:TaskManagementServicesSOAP" bpdm:ID="_1ES9sGjzEd6vjemy71XIWg"></bpdm:linkset>
+                <bpdm:linkset bpdm:type="outgoingMessage" bpdm:bpeltype="reply" bpdm:messageVariable="tnsGetAvailableTasksWithInputOutputResponseMsg" bpdm:msgVarScopeId="_vVRLwE-AEd6KwPKiXhvAhA" bpdm:variableIsManaged="true" bpdm:messageType="tns:getAvailableTasksWithInputOutputResponse" bpdm:binding="tns:TaskManagementServicesSOAP" bpdm:ID="_1aM8QGjzEd6vjemy71XIWg"></bpdm:linkset>
+            </bpdm:messagingtask>
+        </bpel:sequence>
+    </bpel:scope>
+</bpel:process>

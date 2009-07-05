@@ -1,0 +1,27 @@
+﻿<bpel:process xmlns:bpdm="http://www.intalio/designer/business-process-data-modeling" xmlns:mapper="http://www.intalio.com/designer/mapper" xmlns:nf="http://www.example.org/notif" xmlns:NotifToAMIprocess="http://thisdiagram/NotifToAMIprocess" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:this="http://thisdiagram/RMAnotifService" xmlns:diag="http://thisdiagram" xmlns:tns="http://ode/bpel/unit-test.wsdl" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ode="http://www.apache.org/ode/type/extension" targetNamespace="http://thisdiagram/RMAnotifService">
+    <bpdm:dependencies version="6000076">
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram/NotifToAMIprocess" bpdm:prefix="NotifToAMIprocess" bpdm:comment="contrib=&apos;partner-pool:///_EbSxAEqkEd6mL5laCVF80g"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/2001/XMLSchema" bpdm:prefix="xs"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/2001/XMLSchema-instance" bpdm:prefix="xsi"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram/RMAnotifService" bpdm:prefix="this" bpdm:type="this_process"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram" bpdm:prefix="diag" bpdm:comment="contrib=&apos;partner-pool:///_EbSxAEqkEd6mL5laCVF80g"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://ode/bpel/unit-test.wsdl" bpdm:prefix="tns" bpdm:comment="contrib=&apos;project:///services/RMAnotif.wsdl"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/XML/1998/namespace" bpdm:prefix="xml"></bpdm:namespaceDefinition>
+        <bpdm:namespaceContributor bpdm:url="thisprocess://this-process-types" bpdm:label="process defined this-process-types"></bpdm:namespaceContributor>
+        <bpdm:namespaceContributor bpdm:url="partner-pool:///_EbSxAEqkEd6mL5laCVF80g" bpdm:label="NotifToAMIprocess"/>
+        <bpdm:namespaceContributor bpdm:url="project:///services/RMAnotif.wsdl"/>
+    </bpdm:dependencies>
+    <bpel:scope bpdm:label="RMAnotifService" bpdm:ID="_Gek3YEqkEd6mL5laCVF80g">
+        <bpel:partnerLinks>
+            <bpel:partnerLink name="rMAnotifServiceAndNotifToAMIprocessForRMAnotifPortPlkVar" partnerLinkType="diag:RMAnotifServiceAndNotifToAMIprocessForRMAnotifPortPlk" myRole="RMAnotifService_for_NotifToAMIprocess" bpdm:enableSharing="false" bpdm:providedService="tns:RMAnotifService" bpdm:providedPort="RMAnotifPort" bpdm:provideSOAPAddress="jms:/RMAnotif?transport.jms.ConnectionFactoryJNDIName=QueueConnectionFactory&amp;java.naming.factory.initial=org.apache.activemq.jndi.ActiveMQInitialContextFactory&amp;java.naming.provider.url=tcp://localhost:61616&amp;transport.jms.ReplyDestinationType=queue&amp;transport.jms.DestinationType=queue" bpdm:providedIsDefault="true" bpdm:clientTasks="_Gek3YEqkEd6mL5laCVF80g:_spxAGEqkEd6mL5laCVF80g" bpdm:isManaged="true" bpdm:otherPoolId="_EbSxAEqkEd6mL5laCVF80g"/>
+        </bpel:partnerLinks>
+        <bpel:variables>
+            <bpel:variable name="tnsInputMessage" messageType="tns:RMAnotif" binding="tns:RMAnotifSoapBinding" operation="sendRMAnotif" opMsgType="0" bpdm:id="_tdeU9UqkEd6mL5laCVF80g" bpdm:messageIds="inc:_tdLaAEqkEd6mL5laCVF80g"/>
+        </bpel:variables>
+        <bpel:sequence>
+            <bpdm:messagingtask operation="sendRMAnotif" partnerLink="rMAnotifServiceAndNotifToAMIprocessForRMAnotifPortPlkVar" portType="tns:RMAnotifPortType" isMyRole="true" enableSharing="false" bpdm:label="sendRMAnotif" bpdm:ID="_spxAGEqkEd6mL5laCVF80g">
+                <bpdm:linkset bpdm:type="incomingMessage" bpdm:bpeltype="receive" bpdm:messageVariable="tnsInputMessage" bpdm:msgVarScopeId="_Gek3YEqkEd6mL5laCVF80g" bpdm:variableIsManaged="true" bpdm:messageType="tns:RMAnotif" bpdm:binding="tns:RMAnotifSoapBinding" bpdm:ID="_tdLaAEqkEd6mL5laCVF80g"></bpdm:linkset>
+            </bpdm:messagingtask>
+        </bpel:sequence>
+    </bpel:scope>
+</bpel:process>

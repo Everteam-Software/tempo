@@ -1,0 +1,32 @@
+﻿<bpel:process xmlns:bpdm="http://www.intalio/designer/business-process-data-modeling" xmlns:mapper="http://www.intalio.com/designer/mapper" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:b4p="http://www.intalio.com/bpms/workflow/ib4p_20051115" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:TaskManagementProcess="http://thisdiagram/TaskManagementProcess" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:diag="http://thisdiagram" xmlns:this="http://thisdiagram/NextTaskManager" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ode="http://www.apache.org/ode/type/extension" targetNamespace="http://thisdiagram/NextTaskManager">
+    <bpdm:dependencies version="6000031">
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/XML/1998/namespace" bpdm:prefix="xml"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.intalio.com/bpms/workflow/ib4p_20051115" bpdm:prefix="b4p" bpdm:comment="contrib=&apos;project:///TaskManagerProcess.wsdl"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/2001/XMLSchema-instance" bpdm:prefix="xsi"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram/TaskManagementProcess" bpdm:prefix="TaskManagementProcess" bpdm:comment="contrib=&apos;partner-pool:///_opUVQKdvEdyId4P63ChZuw"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/2001/XMLSchema" bpdm:prefix="xs"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram" bpdm:prefix="diag" bpdm:comment="contrib=&apos;partner-pool:///_opUVQKdvEdyId4P63ChZuw"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram/NextTaskManager" bpdm:prefix="this" bpdm:type="this_process"></bpdm:namespaceDefinition>
+        <bpdm:namespaceContributor bpdm:url="thisprocess://this-process-types" bpdm:label="process defined this-process-types"></bpdm:namespaceContributor>
+        <bpdm:namespaceContributor bpdm:url="project:///TaskManagerProcess.wsdl"/>
+        <bpdm:namespaceContributor bpdm:url="project:///b4p.xsd"/>
+        <bpdm:namespaceContributor bpdm:url="partner-pool:///_opUVQKdvEdyId4P63ChZuw" bpdm:label="TaskManagementProcess"/>
+    </bpdm:dependencies>
+    <bpel:scope bpdm:label="NextTaskManager" bpdm:ID="_7ssnEKhVEdyQFMjeTyvJzg">
+        <bpel:partnerLinks>
+            <bpel:partnerLink name="taskManagementProcessAndNextTaskManagerForTMPPortPlkVar" partnerLinkType="diag:TaskManagementProcessAndNextTaskManagerForTMPPortPlk" initializePartnerRole="yes" partnerRole="TaskManagementProcess_for_NextTaskManager" bpdm:invokedService="b4p:TMPService" bpdm:invokedPort="TMPPort" bpdm:invokedSOAPAddress="http://localhost:8080/ode/processes/TMP" bpdm:invokedIsDefault="true" bpdm:clientTasks="_7ssnEKhVEdyQFMjeTyvJzg:_VvurIKhWEdyQFMjeTyvJzg" bpdm:isManaged="true" bpdm:otherPoolId="_opUVQKdvEdyId4P63ChZuw"/>
+        </bpel:partnerLinks>
+        <bpel:variables>
+            <bpel:variable name="b4pNextTaskReadyMsg" messageType="b4p:nextTaskReady" binding="b4p:TMPBinding" operation="nextTaskReady" opMsgType="0" bpdm:id="_vm-acAGaEd6CLNy4DDKnXw" bpdm:messageIds=" out:_ejTZkKhWEdyQFMjeTyvJzg">
+                <bpel:from bpdm:toPart="root">
+                    <bpel:literal bpdm:linkedMessageType="b4p:nextTaskReady" bpdm:linkedPart="root" bpdm:binding="b4p:TMPBinding" bpdm:opMsgType="0" bpdm:operation="nextTaskReady"></bpel:literal>
+                </bpel:from>
+            </bpel:variable>
+        </bpel:variables>
+        <bpel:sequence>
+            <bpdm:messagingtask operation="nextTaskReady" partnerLink="taskManagementProcessAndNextTaskManagerForTMPPortPlkVar" portType="b4p:TMPPortType" isMyRole="false" enableSharing="false" bpdm:label="Notify Previous TMP new Task Created" bpdm:ID="_VvurIKhWEdyQFMjeTyvJzg">
+                <bpdm:linkset bpdm:type="outgoingMessage" bpdm:bpeltype="invoke-request" bpdm:messageVariable="b4pNextTaskReadyMsg" bpdm:msgVarScopeId="_7ssnEKhVEdyQFMjeTyvJzg" bpdm:variableIsManaged="true" bpdm:messageType="b4p:nextTaskReady" bpdm:binding="b4p:TMPBinding" bpdm:ID="_ejTZkKhWEdyQFMjeTyvJzg"></bpdm:linkset>
+            </bpdm:messagingtask>
+        </bpel:sequence>
+    </bpel:scope>
+</bpel:process>

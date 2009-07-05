@@ -1,0 +1,8 @@
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:us="http://www.intalio.com/UserSchema" xmlns:TAlistCyclicExport="http://www.intalio.com/gi/forms/TAlistCyclicExport.gi" targetNamespace="http://www.intalio.com/gi/forms/TAlistCyclicExport.gi" elementFormDefault="unqualified">
+  <xs:element name="FormModel">
+    <xs:complexType>
+      <xs:sequence></xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -1,0 +1,16 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<bpt:template xmlns:bpt="http://www.intalio/designer/business-process-data-modeling/template" ID="_9d6MEFT_Ed6dgsqoOu2u1Q" displayName="uploadHIL" ownerPoolId="_VEsqQD7SEd6K2cgYiBoOqg" ownerPoolNcName="AppearNetworks" ownerPoolIsExecutable="false" version="6000076">
+    <bpt:partnerPool ID="_VbNFwD7SEd6K2cgYiBoOqg" ncName="UploadProcess" isExecutable="true"/>
+    <bpt:container displayName="sequence" containerType="sequence">
+        <bpt:activity ID="_ZFoJED7SEd6K2cgYiBoOqg" displayName="Upload HIL" activityType="Task" messaging="invokerequestresponsebound">
+            <bpt:generatedOperation providingPoolId="_VbNFwD7SEd6K2cgYiBoOqg" generatedPartnerLinkTypeLocalName="UploadProcessAndAppearNetworks" generatedService="CanonicServiceForAppearNetworks" generatedOperation="uploadHIL" generatedPort="canonicPort">
+                <bpt:input name="uploadHIL" generatedMessageTypeLocalName="uploadHILRequest">
+                    <bpt:part name="body" attachedSchemaObject="project:///schema/HIL03.xsd?xsdelement={http://www.example.org/hil}HIL"/>
+                </bpt:input>
+                <bpt:output name="uploadHILResponse" generatedMessageTypeLocalName="uploadHILResponse">
+                    <bpt:part name="body" attachedSchemaObject="project:///schema/UploadResponse.xsd?xsdelement={http://www.example.org/UploadResponse}uploadReponse"/>
+                </bpt:output>
+            </bpt:generatedOperation>
+        </bpt:activity>
+    </bpt:container>
+</bpt:template>

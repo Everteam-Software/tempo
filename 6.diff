@@ -1,0 +1,81 @@
+diff --git a/tms-common/src/main/java/org/intalio/tempo/workflow/task/xml/TaskMarshaller.java b/tms-common/src/main/java/org/intalio/tempo/workflow/task/xml/TaskMarshaller.java
+index a7fcbef..a2abb90 100644
+--- a/tms-common/src/main/java/org/intalio/tempo/workflow/task/xml/TaskMarshaller.java
++++ b/tms-common/src/main/java/org/intalio/tempo/workflow/task/xml/TaskMarshaller.java
+@@ -53,6 +53,7 @@ import org.w3c.dom.Node;
+ import com.intalio.bpms.workflow.taskManagementServices20051109.AccessControlType;
+ import com.intalio.bpms.workflow.taskManagementServices20051109.Attachments;
+ import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
++import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata.Output;
+ import com.intalio.gi.forms.tAmanagement.ArrivalDepartureType;
+ import com.intalio.gi.forms.tAmanagement.FormModel;
+ import com.intalio.gi.forms.tAmanagement.InspectionType;
+@@ -174,13 +175,31 @@ public class TaskMarshaller {
+         	FormModel formModel = FormModel.Factory.newInstance();
+         	InspectionType inspection = InspectionType.Factory.newInstance();
+         	ArrivalDepartureType arrivalDeparture=ArrivalDepartureType.Factory.newInstance();
+-        	
+-        	arrivalDeparture.setATA(paTask.get_ATA());
+-        	arrivalDeparture.setATD(paTask.get_ATD());
+-        	arrivalDeparture.setETD(paTask.get_ETD());
+-        	arrivalDeparture.setETA(paTask.get_ETA());
+-        	arrivalDeparture.setSTA(paTask.get_STA());
+-        	arrivalDeparture.setSTD(paTask.get_STD());
++        	Calendar calendar=Calendar.getInstance();
++        	if(paTask.get_ATA()!=null){
++        	calendar.setTime(paTask.get_ATA());
++        	arrivalDeparture.setATA((Calendar) calendar.clone());
++        	}
++        	if(paTask.get_ATD()!=null){
++        	calendar.setTime(paTask.get_ATD());
++        	arrivalDeparture.setATD((Calendar) calendar.clone());
++        	}
++        	if(paTask.get_ETD()!=null){
++        	calendar.setTime(paTask.get_ETD());
++        	arrivalDeparture.setETD((Calendar) calendar.clone());
++        	}
++        	if(paTask.get_ETA()!=null){
++        	calendar.setTime(paTask.get_ETA());
++        	arrivalDeparture.setETA((Calendar) calendar.clone());
++        	}
++        	if(paTask.get_STA()!=null){
++        	calendar.setTime(paTask.get_STA());
++        	arrivalDeparture.setSTA((Calendar) calendar.clone());
++        	}
++        	if(paTask.get_STD()!=null){
++        	calendar.setTime(paTask.get_STD());
++        	arrivalDeparture.setSTD((Calendar) calendar.clone());
++        	}
+         	
+         	AssignedMechanics[] assignedMechanicsArray=new AssignedMechanics[paTask.get_assignedMechanics().size()];
+         	org.intalio.tempo.workflow.task.AssignedMechanics[] mechanics = paTask.get_assignedMechanics().toArray(new org.intalio.tempo.workflow.task.AssignedMechanics[0]);
+@@ -192,7 +211,9 @@ public class TaskMarshaller {
+ 			inspection.setAssignedMechanicsArray(assignedMechanicsArray);
+         	formModel.setInspection(inspection);
+         	formModel.setArrivalDeparture(arrivalDeparture);
+-        	taskMetadataElement.setSITAMetadata(formModel);
++        	Output output=Output.Factory.newInstance();
++        	output.setFormModel(formModel);
++        	taskMetadataElement.setOutput(output);
+         }
+         
+         return taskMetadataElement;
+diff --git a/tms-service/src/main/axis2/TaskManagementService.wsdl b/tms-service/src/main/axis2/TaskManagementService.wsdl
+index ec832bf..c3ceacd 100644
+--- a/tms-service/src/main/axis2/TaskManagementService.wsdl
++++ b/tms-service/src/main/axis2/TaskManagementService.wsdl
+@@ -459,7 +459,13 @@
+                     <xsd:element name="dismissAction" type="tns:accessControlType" maxOccurs="1" minOccurs="0"/>
+                     <xsd:element name="completeAction" type="tns:accessControlType" maxOccurs="1" minOccurs="0"/>
+ 					<xsd:element name="attachments" type="tns:attachments" maxOccurs="1" minOccurs="0"/>
+-					<xsd:element name="SITAMetadata" type="gi:FormModel" />
++					<xsd:element name="output">
++						<xsd:complexType>
++							<xsd:sequence>
++								<xsd:element ref="gi:FormModel" />
++							</xsd:sequence>
++						</xsd:complexType>
++					</xsd:element>
+   				</xsd:sequence>
+ 			</xsd:complexType>
+ 			<xsd:complexType name="task">

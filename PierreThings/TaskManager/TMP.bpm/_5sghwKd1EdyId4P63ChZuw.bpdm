@@ -1,0 +1,119 @@
+﻿<bpel:process xmlns:bpdm="http://www.intalio/designer/business-process-data-modeling" xmlns:mapper="http://www.intalio.com/designer/mapper" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:TaskManagementProcess="http://thisdiagram/TaskManagementProcess" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:diag="http://thisdiagram" xmlns:this="http://thisdiagram/TaskManagementSystem" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ode="http://www.apache.org/ode/type/extension" targetNamespace="http://thisdiagram/TaskManagementSystem">
+    <bpdm:dependencies version="6000052">
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/XML/1998/namespace" bpdm:prefix="xml"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/2001/XMLSchema-instance" bpdm:prefix="xsi"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" bpdm:prefix="tns" bpdm:comment="contrib=&apos;project:///TaskManagementSystem.wsdl"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram/TaskManagementProcess" bpdm:prefix="TaskManagementProcess" bpdm:comment="contrib=&apos;partner-pool:///_opUVQKdvEdyId4P63ChZuw"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/2001/XMLSchema" bpdm:prefix="xs"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram" bpdm:prefix="diag" bpdm:comment="contrib=&apos;partner-pool:///_opUVQKdvEdyId4P63ChZuw"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram/TaskManagementSystem" bpdm:prefix="this" bpdm:type="this_process"></bpdm:namespaceDefinition>
+        <bpdm:namespaceContributor bpdm:url="thisprocess://this-process-types" bpdm:label="process defined this-process-types"></bpdm:namespaceContributor>
+        <bpdm:namespaceContributor bpdm:url="project:///TaskManagementSystem.wsdl"/>
+        <bpdm:namespaceContributor bpdm:url="partner-pool:///_opUVQKdvEdyId4P63ChZuw" bpdm:label="TaskManagementProcess"/>
+    </bpdm:dependencies>
+    <bpel:scope bpdm:label="TaskManagementSystem" bpdm:ID="_5sghwKd1EdyId4P63ChZuw">
+        <bpel:partnerLinks>
+            <bpel:partnerLink name="taskManagementProcessAndTaskManagementSystemForPortTaskManagementServicesSOAPPlkVar" partnerLinkType="diag:TaskManagementProcessAndTaskManagementSystemForPortTaskManagementServicesSOAPPlk" myRole="TaskManagementSystem_for_TaskManagementProcess" bpdm:enableSharing="false" bpdm:providedService="tns:TaskManagementServices" bpdm:providedPort="TaskManagementServicesSOAP" bpdm:provideSOAPAddress="http://localhost:8080/axis2/services/TaskManagementServices" bpdm:providedIsDefault="true" bpdm:clientTasks="_5sghwKd1EdyId4P63ChZuw:_sAH-OMI4EdyR9_IVnPh8Pg, _5sghwKd1EdyId4P63ChZuw:_SKjN2KhOEdyQFMjeTyvJzg, _5sghwKd1EdyId4P63ChZuw:_jqmBWHB5Ed2pTYDSDTVx7Q, _5sghwKd1EdyId4P63ChZuw:_uKFNGKhJEdyQFMjeTyvJzg, _5sghwKd1EdyId4P63ChZuw:_oEYtOKklEdyFPr8ebhWveQ, _5sghwKd1EdyId4P63ChZuw:_ACvgRqgUEdylDI4yblkdQQ, _5sghwKd1EdyId4P63ChZuw:_GXYueKkiEdyFPr8ebhWveQ, _5sghwKd1EdyId4P63ChZuw:_96_cdmmpEd2XUv0nLeGoVg" bpdm:isManaged="true" bpdm:otherPoolId="_opUVQKdvEdyId4P63ChZuw"/>
+        </bpel:partnerLinks>
+        <bpel:variables>
+            <bpel:variable name="createTMSTaskRequest" messageType="tns:createRequest" bpdm:id="_CdK7VagUEdylDI4yblkdQQ" bpdm:messageIds="inc:_CbjKsKgUEdylDI4yblkdQQ"/>
+            <bpel:variable name="crateTMSTaskResponse" messageType="tns:okResponse" bpdm:id="_CuLLwKgUEdylDI4yblkdQQ" bpdm:messageIds=" out:_CtOJgKgUEdylDI4yblkdQQ">
+                <bpel:from bpdm:toPart="okResponse">
+                    <bpel:literal bpdm:linkedMessageType="tns:okResponse" bpdm:linkedPart="okResponse"></bpel:literal>
+                </bpel:from>
+            </bpel:variable>
+            <bpel:variable name="reassignTMSEscalateRequest" messageType="tns:reassignRequest" bpdm:id="_xaem1ahJEdyQFMjeTyvJzg" bpdm:messageIds="inc:_xZtKwKhJEdyQFMjeTyvJzg"/>
+            <bpel:variable name="reassignTMSEscalateResponse" messageType="tns:okResponse" bpdm:id="_1JPXkKhJEdyQFMjeTyvJzg" bpdm:messageIds=" out:_1IFhAKhJEdyQFMjeTyvJzg">
+                <bpel:from bpdm:toPart="okResponse">
+                    <bpel:literal bpdm:linkedMessageType="tns:okResponse" bpdm:linkedPart="okResponse"></bpel:literal>
+                </bpel:from>
+            </bpel:variable>
+            <bpel:variable name="completeTMSTaskRequest" messageType="tns:setOutputAndCompleteRequest" bpdm:id="_UW8M4KhOEdyQFMjeTyvJzg" bpdm:messageIds="inc:_UV_KoKhOEdyQFMjeTyvJzg"/>
+            <bpel:variable name="completeTMSTaskResponse" messageType="tns:okResponse" bpdm:id="_Um5UcKhOEdyQFMjeTyvJzg" bpdm:messageIds=" out:_UmUFoKhOEdyQFMjeTyvJzg">
+                <bpel:from bpdm:toPart="okResponse">
+                    <bpel:literal bpdm:linkedMessageType="tns:okResponse" bpdm:linkedPart="okResponse"></bpel:literal>
+                </bpel:from>
+            </bpel:variable>
+            <bpel:variable name="ReassignClaimesResponse" messageType="tns:okResponse" bpdm:id="_IEphgKkiEdyFPr8ebhWveQ" bpdm:messageIds=" out:_IEE5wKkiEdyFPr8ebhWveQ">
+                <bpel:from bpdm:toPart="okResponse">
+                    <bpel:literal bpdm:linkedMessageType="tns:okResponse" bpdm:linkedPart="okResponse"></bpel:literal>
+                </bpel:from>
+            </bpel:variable>
+            <bpel:variable name="ReassignClaimesRequestMsg" messageType="tns:reassignRequest" bpdm:id="_HvP5RakiEdyFPr8ebhWveQ" bpdm:messageIds="inc:_HuAjIKkiEdyFPr8ebhWveQ"/>
+            <bpel:variable name="reassignRevokedRequest" messageType="tns:reassignRequest" bpdm:id="_qq8fxaklEdyFPr8ebhWveQ" bpdm:messageIds="inc:_qnzFIKklEdyFPr8ebhWveQ"/>
+            <bpel:variable name="reassignRevokedResponse" messageType="tns:okResponse" bpdm:id="_rVpCkKklEdyFPr8ebhWveQ" bpdm:messageIds=" out:_rU-UMKklEdyFPr8ebhWveQ">
+                <bpel:from bpdm:toPart="okResponse">
+                    <bpel:literal bpdm:linkedMessageType="tns:okResponse" bpdm:linkedPart="okResponse"></bpel:literal>
+                </bpel:from>
+            </bpel:variable>
+            <bpel:variable name="tnsFailRequestMsg" messageType="tns:failRequest" bpdm:id="_tv9kJsI4EdyR9_IVnPh8Pg" bpdm:messageIds="inc:_tsnVMMI4EdyR9_IVnPh8Pg"/>
+            <bpel:variable name="tnsFailResponseMsg" messageType="tns:okResponse" bpdm:id="_uFQesMI4EdyR9_IVnPh8Pg" bpdm:messageIds=" out:_uEBIkMI4EdyR9_IVnPh8Pg">
+                <bpel:from bpdm:toPart="okResponse">
+                    <bpel:literal bpdm:linkedMessageType="tns:okResponse" bpdm:linkedPart="okResponse"></bpel:literal>
+                </bpel:from>
+            </bpel:variable>
+            <bpel:variable name="tnsGetAttachmentsRequestMsg" messageType="tns:getAttachmentsRequest" binding="tns:TaskManagementServicesSOAP" operation="getAttachments" opMsgType="0" bpdm:id="__XOw92mpEd2XUv0nLeGoVg" bpdm:messageIds="inc:__V4tIGmpEd2XUv0nLeGoVg"/>
+            <bpel:variable name="tnsGetAttachmentsResponseMsg" messageType="tns:getAttachmentsResponse" binding="tns:TaskManagementServicesSOAP" operation="getAttachments" opMsgType="1" bpdm:id="_Awoz4GmqEd2XUv0nLeGoVg" bpdm:messageIds=" out:_AwV48GmqEd2XUv0nLeGoVg">
+                <bpel:from bpdm:toPart="getAttachmentsResponse">
+                    <bpel:literal bpdm:linkedMessageType="tns:getAttachmentsResponse" bpdm:linkedPart="getAttachmentsResponse" bpdm:binding="tns:TaskManagementServicesSOAP" bpdm:opMsgType="1" bpdm:operation="getAttachments"></bpel:literal>
+                </bpel:from>
+            </bpel:variable>
+            <bpel:variable name="tnsSkipRequestMsg" messageType="tns:skipRequest" binding="tns:TaskManagementServicesSOAP" operation="skip" opMsgType="0" bpdm:id="_oa35eHB5Ed2pTYDSDTVx7Q" bpdm:messageIds="inc:_oaISkHB5Ed2pTYDSDTVx7Q"/>
+            <bpel:variable name="tnsSkipResponseMsg" messageType="tns:okResponse" binding="tns:TaskManagementServicesSOAP" operation="skip" opMsgType="1" bpdm:id="_tObvEHB5Ed2pTYDSDTVx7Q" bpdm:messageIds=" out:_tOI0IHB5Ed2pTYDSDTVx7Q">
+                <bpel:from bpdm:toPart="okResponse">
+                    <bpel:literal bpdm:linkedMessageType="tns:okResponse" bpdm:linkedPart="okResponse" bpdm:binding="tns:TaskManagementServicesSOAP" bpdm:opMsgType="1" bpdm:operation="skip"></bpel:literal>
+                </bpel:from>
+            </bpel:variable>
+        </bpel:variables>
+        <bpel:flow>
+            <bpel:sequence>
+                <bpdm:messagingtask operation="skip" partnerLink="taskManagementProcessAndTaskManagementSystemForPortTaskManagementServicesSOAPPlkVar" portType="tns:TaskManagementServices" isMyRole="true" enableSharing="false" bpdm:label="skip Task" bpdm:ID="_jqmBWHB5Ed2pTYDSDTVx7Q">
+                    <bpdm:linkset bpdm:type="incomingMessage" bpdm:bpeltype="receive" bpdm:messageVariable="tnsSkipRequestMsg" bpdm:msgVarScopeId="_5sghwKd1EdyId4P63ChZuw" bpdm:variableIsManaged="true" bpdm:messageType="tns:skipRequest" bpdm:binding="tns:TaskManagementServicesSOAP" bpdm:ID="_oaISkHB5Ed2pTYDSDTVx7Q"></bpdm:linkset>
+                    <bpdm:linkset bpdm:type="outgoingMessage" bpdm:bpeltype="reply" bpdm:messageVariable="tnsSkipResponseMsg" bpdm:msgVarScopeId="_5sghwKd1EdyId4P63ChZuw" bpdm:variableIsManaged="true" bpdm:messageType="tns:okResponse" bpdm:binding="tns:TaskManagementServicesSOAP" bpdm:ID="_tOI0IHB5Ed2pTYDSDTVx7Q"></bpdm:linkset>
+                </bpdm:messagingtask>
+            </bpel:sequence>
+            <bpel:sequence>
+                <bpdm:messagingtask operation="reassign" partnerLink="taskManagementProcessAndTaskManagementSystemForPortTaskManagementServicesSOAPPlkVar" portType="tns:TaskManagementServices" isMyRole="true" enableSharing="false" bpdm:label="reassign revoked Task" bpdm:ID="_oEYtOKklEdyFPr8ebhWveQ">
+                    <bpdm:linkset bpdm:type="incomingMessage" bpdm:bpeltype="receive" bpdm:messageVariable="reassignRevokedRequest" bpdm:msgVarScopeId="_5sghwKd1EdyId4P63ChZuw" bpdm:variableIsManaged="true" bpdm:messageType="tns:reassignRequest" bpdm:ID="_qnzFIKklEdyFPr8ebhWveQ"></bpdm:linkset>
+                    <bpdm:linkset bpdm:type="outgoingMessage" bpdm:bpeltype="reply" bpdm:messageVariable="reassignRevokedResponse" bpdm:msgVarScopeId="_5sghwKd1EdyId4P63ChZuw" bpdm:variableIsManaged="true" bpdm:messageType="tns:okResponse" bpdm:ID="_rU-UMKklEdyFPr8ebhWveQ"></bpdm:linkset>
+                </bpdm:messagingtask>
+            </bpel:sequence>
+            <bpel:sequence>
+                <bpdm:messagingtask operation="reassign" partnerLink="taskManagementProcessAndTaskManagementSystemForPortTaskManagementServicesSOAPPlkVar" portType="tns:TaskManagementServices" isMyRole="true" enableSharing="false" bpdm:label="Reassign escalated Task" bpdm:ID="_uKFNGKhJEdyQFMjeTyvJzg">
+                    <bpdm:linkset bpdm:type="incomingMessage" bpdm:bpeltype="receive" bpdm:messageVariable="reassignTMSEscalateRequest" bpdm:msgVarScopeId="_5sghwKd1EdyId4P63ChZuw" bpdm:variableIsManaged="true" bpdm:messageType="tns:reassignRequest" bpdm:ID="_xZtKwKhJEdyQFMjeTyvJzg"></bpdm:linkset>
+                    <bpdm:linkset bpdm:type="outgoingMessage" bpdm:bpeltype="reply" bpdm:messageVariable="reassignTMSEscalateResponse" bpdm:msgVarScopeId="_5sghwKd1EdyId4P63ChZuw" bpdm:variableIsManaged="true" bpdm:messageType="tns:okResponse" bpdm:ID="_1IFhAKhJEdyQFMjeTyvJzg"></bpdm:linkset>
+                </bpdm:messagingtask>
+            </bpel:sequence>
+            <bpel:sequence>
+                <bpdm:messagingtask operation="setOutputAndComplete" partnerLink="taskManagementProcessAndTaskManagementSystemForPortTaskManagementServicesSOAPPlkVar" portType="tns:TaskManagementServices" isMyRole="true" enableSharing="false" bpdm:label="Mark Task as completed in Database" bpdm:ID="_SKjN2KhOEdyQFMjeTyvJzg">
+                    <bpdm:linkset bpdm:type="incomingMessage" bpdm:bpeltype="receive" bpdm:messageVariable="completeTMSTaskRequest" bpdm:msgVarScopeId="_5sghwKd1EdyId4P63ChZuw" bpdm:variableIsManaged="true" bpdm:messageType="tns:setOutputAndCompleteRequest" bpdm:ID="_UV_KoKhOEdyQFMjeTyvJzg"></bpdm:linkset>
+                    <bpdm:linkset bpdm:type="outgoingMessage" bpdm:bpeltype="reply" bpdm:messageVariable="completeTMSTaskResponse" bpdm:msgVarScopeId="_5sghwKd1EdyId4P63ChZuw" bpdm:variableIsManaged="true" bpdm:messageType="tns:okResponse" bpdm:ID="_UmUFoKhOEdyQFMjeTyvJzg"></bpdm:linkset>
+                </bpdm:messagingtask>
+            </bpel:sequence>
+            <bpel:sequence>
+                <bpdm:messagingtask operation="reassign" partnerLink="taskManagementProcessAndTaskManagementSystemForPortTaskManagementServicesSOAPPlkVar" portType="tns:TaskManagementServices" isMyRole="true" enableSharing="false" bpdm:label="reassign claimed Task" bpdm:ID="_GXYueKkiEdyFPr8ebhWveQ">
+                    <bpdm:linkset bpdm:type="incomingMessage" bpdm:bpeltype="receive" bpdm:messageVariable="ReassignClaimesRequestMsg" bpdm:msgVarScopeId="_5sghwKd1EdyId4P63ChZuw" bpdm:variableIsManaged="true" bpdm:messageType="tns:reassignRequest" bpdm:ID="_HuAjIKkiEdyFPr8ebhWveQ"></bpdm:linkset>
+                    <bpdm:linkset bpdm:type="outgoingMessage" bpdm:bpeltype="reply" bpdm:messageVariable="ReassignClaimesResponse" bpdm:msgVarScopeId="_5sghwKd1EdyId4P63ChZuw" bpdm:variableIsManaged="true" bpdm:messageType="tns:okResponse" bpdm:ID="_IEE5wKkiEdyFPr8ebhWveQ"></bpdm:linkset>
+                </bpdm:messagingtask>
+            </bpel:sequence>
+            <bpel:sequence>
+                <bpdm:messagingtask operation="create" partnerLink="taskManagementProcessAndTaskManagementSystemForPortTaskManagementServicesSOAPPlkVar" portType="tns:TaskManagementServices" isMyRole="true" enableSharing="false" bpdm:label="create Task in Database" bpdm:ID="_ACvgRqgUEdylDI4yblkdQQ">
+                    <bpdm:linkset bpdm:type="incomingMessage" bpdm:bpeltype="receive" bpdm:messageVariable="createTMSTaskRequest" bpdm:msgVarScopeId="_5sghwKd1EdyId4P63ChZuw" bpdm:variableIsManaged="true" bpdm:messageType="tns:createRequest" bpdm:ID="_CbjKsKgUEdylDI4yblkdQQ"></bpdm:linkset>
+                    <bpdm:linkset bpdm:type="outgoingMessage" bpdm:bpeltype="reply" bpdm:messageVariable="crateTMSTaskResponse" bpdm:msgVarScopeId="_5sghwKd1EdyId4P63ChZuw" bpdm:variableIsManaged="true" bpdm:messageType="tns:okResponse" bpdm:ID="_CtOJgKgUEdylDI4yblkdQQ"></bpdm:linkset>
+                </bpdm:messagingtask>
+            </bpel:sequence>
+            <bpel:sequence>
+                <bpdm:messagingtask operation="fail" partnerLink="taskManagementProcessAndTaskManagementSystemForPortTaskManagementServicesSOAPPlkVar" portType="tns:TaskManagementServices" isMyRole="true" enableSharing="false" bpdm:label="fail" bpdm:ID="_sAH-OMI4EdyR9_IVnPh8Pg">
+                    <bpdm:linkset bpdm:type="incomingMessage" bpdm:bpeltype="receive" bpdm:messageVariable="tnsFailRequestMsg" bpdm:msgVarScopeId="_5sghwKd1EdyId4P63ChZuw" bpdm:variableIsManaged="true" bpdm:messageType="tns:failRequest" bpdm:ID="_tsnVMMI4EdyR9_IVnPh8Pg"></bpdm:linkset>
+                    <bpdm:linkset bpdm:type="outgoingMessage" bpdm:bpeltype="reply" bpdm:messageVariable="tnsFailResponseMsg" bpdm:msgVarScopeId="_5sghwKd1EdyId4P63ChZuw" bpdm:variableIsManaged="true" bpdm:messageType="tns:okResponse" bpdm:ID="_uEBIkMI4EdyR9_IVnPh8Pg"></bpdm:linkset>
+                </bpdm:messagingtask>
+            </bpel:sequence>
+            <bpel:sequence>
+                <bpdm:messagingtask operation="getAttachments" partnerLink="taskManagementProcessAndTaskManagementSystemForPortTaskManagementServicesSOAPPlkVar" portType="tns:TaskManagementServices" isMyRole="true" enableSharing="false" bpdm:label="getAttachments" bpdm:ID="_96_cdmmpEd2XUv0nLeGoVg">
+                    <bpdm:linkset bpdm:type="incomingMessage" bpdm:bpeltype="receive" bpdm:messageVariable="tnsGetAttachmentsRequestMsg" bpdm:msgVarScopeId="_5sghwKd1EdyId4P63ChZuw" bpdm:variableIsManaged="true" bpdm:messageType="tns:getAttachmentsRequest" bpdm:binding="tns:TaskManagementServicesSOAP" bpdm:ID="__V4tIGmpEd2XUv0nLeGoVg"></bpdm:linkset>
+                    <bpdm:linkset bpdm:type="outgoingMessage" bpdm:bpeltype="reply" bpdm:messageVariable="tnsGetAttachmentsResponseMsg" bpdm:msgVarScopeId="_5sghwKd1EdyId4P63ChZuw" bpdm:variableIsManaged="true" bpdm:messageType="tns:getAttachmentsResponse" bpdm:binding="tns:TaskManagementServicesSOAP" bpdm:ID="_AwV48GmqEd2XUv0nLeGoVg"></bpdm:linkset>
+                </bpdm:messagingtask>
+            </bpel:sequence>
+        </bpel:flow>
+    </bpel:scope>
+</bpel:process>

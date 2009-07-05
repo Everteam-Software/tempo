@@ -1,0 +1,584 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<bpel:process xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ode="http://www.apache.org/ode/type/extension" xmlns:TokenService="http://example.com/process/ReceiveHHupdate/TokenService" xmlns:this="http://example.com/process/ReceiveHHupdate/ReceiveUpdateProcess" xmlns:UploadResponse="http://www.example.org/UploadResponse" xmlns:TaskManagementSystem="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:as="http://www.example.org/assignment" xmlns:TokenService1="http://tempo.intalio.org/security/tokenService/" xmlns:DB="http://example.com/process/ReceiveHHupdate/DB" xmlns:diag="http://example.com/process/ReceiveHHupdate" xmlns:tns="http://ode/bpel/unit-test.wsdl" xmlns:p="http://www.example.org/prop" xmlns:completeTA-process="http://example.com/process/completeTA/process" xmlns:TMS="http://example.com/process/ReceiveHHupdate/TMS" xmlns:SITAservice="http://example.com/process/ReceiveHHupdate/SITAservice" xmlns:HHTupdateService="http://example.com/process/ReceiveHHupdate/HHTupdateService" xmlns:b4p="http://www.intalio.com/bpms/workflow/ib4p_20051115" xmlns:hht="http://www.example.org/hht" xmlns:ReceiveUpdateProcessimplicitPartner="http://example.com/process/ReceiveHHupdate/ReceiveUpdateProcessimplicitPartner" xmlns:TAdata="http://www.intalio.com/gi/forms/TAmanagement.gi" xmlns:fmr="http://www.example.org/FMRupload" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:bpmn="http://www.intalio.com/bpms" xmlns:atomic="http://ode.apache.org/atomicScope" queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0" bpmn:label="ReceiveUpdateProcess" name="ReceiveUpdateProcess" bpmn:id="_2DxcYEqkEd6mL5laCVF80g" targetNamespace="http://example.com/process/ReceiveHHupdate/ReceiveUpdateProcess">
+  <bpel:import namespace="http://example.com/process/completeTA/process" location="completeTA-process.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+  <bpel:import namespace="http://ode/bpel/unit-test.wsdl" location="../services/HHTtoRMA.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+  <bpel:import namespace="http://tempo.intalio.org/security/tokenService/" location="../services/TokenService.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+  <bpel:import namespace="http://example.com/process/ReceiveHHupdate" location="ReceiveHHupdate.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+  <bpel:import namespace="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" location="../services/TaskManagementSystem.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+  <bpel:import namespace="http://www.intalio.com/gi/forms/TAmanagement.gi" location="../services/SITAservice.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+  <bpel:import namespace="http://www.intalio.com/gi/forms/TAmanagement.gi" location="../schema/TAdata.xsd" importType="http://www.w3.org/2001/XMLSchema"></bpel:import>
+  <bpel:partnerLinks>
+    <bpel:partnerLink name="receiveUpdateProcessAndTMSForPortTaskManagementServicesSOAPPlkVar" partnerLinkType="diag:ReceiveUpdateProcessAndTMSForPortTaskManagementServicesSOAPPlk" initializePartnerRole="yes" partnerRole="TMS_for_ReceiveUpdateProcess"/>
+    <bpel:partnerLink name="tokenServiceAndReceiveUpdateProcessForTokenServiceHttpportPlkVar" partnerLinkType="diag:TokenServiceAndReceiveUpdateProcessForTokenServiceHttpportPlk" initializePartnerRole="yes" partnerRole="TokenService_for_ReceiveUpdateProcess"/>
+    <bpel:partnerLink name="hHTupdateServiceAndReceiveUpdateProcessForHHTupdatePortPlkVar" partnerLinkType="diag:HHTupdateServiceAndReceiveUpdateProcessForHHTupdatePortPlk" myRole="ReceiveUpdateProcess_for_HHTupdateService"/>
+    <bpel:partnerLink name="sITAserviceAndReceiveUpdateProcessForSITAservicePortPlkVar" partnerLinkType="diag:SITAserviceAndReceiveUpdateProcessForSITAservicePortPlk" initializePartnerRole="yes" partnerRole="SITAservice_for_ReceiveUpdateProcess"/>
+    <bpel:partnerLink name="receiveUpdateProcessimplicitPartnerAndReceiveUpdateProcessForCanonicPortPlkVar" partnerLinkType="diag:ReceiveUpdateProcessimplicitPartnerAndReceiveUpdateProcessForCanonicPortPlk" initializePartnerRole="yes" partnerRole="ReceiveUpdateProcessimplicitPartner_for_ReceiveUpdateProcess"/>
+    <bpel:partnerLink name="dbAndReceiveUpdateProcessForPortTaskManagementServicesSOAPPlkVar" partnerLinkType="diag:DbAndReceiveUpdateProcessForPortTaskManagementServicesSOAPPlk" initializePartnerRole="yes" partnerRole="DB_for_ReceiveUpdateProcess"/>
+  </bpel:partnerLinks>
+  <bpel:variables>
+    <bpel:variable name="tokenService1AuthenticateUserRequestMsg" messageType="TokenService1:authenticateUser"/>
+    <bpel:variable name="tnsInputMessage" messageType="tns:update"/>
+    <bpel:variable name="tokenService1AuthenticateUserResponseMsg" messageType="TokenService1:authenticateUserResponse"/>
+    <bpel:variable name="data" element="TAdata:data"/>
+    <bpel:variable name="taskManagementSystemSetOutputRequestMsg" messageType="TaskManagementSystem:setOutputRequest"/>
+    <bpel:variable name="taskManagementSystemSetOutputResponseMsg" messageType="TaskManagementSystem:okResponse"/>
+    <bpel:variable name="tAdataInputMessage" messageType="TAdata:UpdateHILandRTRrequest"/>
+    <bpel:variable name="tAdataOutputMessage" messageType="TAdata:UpdateHILandRTRresponse"/>
+    <bpel:variable name="completeTA-processEventStartMessageResponse" messageType="completeTA-process:EventStartMessageResponse"/>
+    <bpel:variable name="completeTA-processEventStartMessage" messageType="completeTA-process:EventStartMessageRequest"/>
+    <bpel:variable name="taskManagementSystemGetAvailableTasksWithInputOutputResponseMsg" messageType="TaskManagementSystem:getAvailableTasksWithInputOutputResponse"/>
+    <bpel:variable name="taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg" messageType="TaskManagementSystem:getAvailableTasksWithInputOutputRequest"/>
+  </bpel:variables>
+  <bpel:sequence>
+    <bpel:receive partnerLink="hHTupdateServiceAndReceiveUpdateProcessForHHTupdatePortPlkVar" portType="tns:HHTupdatePortType" operation="receiveHHTupdate" variable="tnsInputMessage" createInstance="yes" bpmn:label="Message_Start_Event" name="Message_Start_Event" bpmn:id="_5_Ai4EqkEd6mL5laCVF80g"></bpel:receive>
+    <bpel:assign name="init-variables-ReceiveUpdateProcess" bpmn:id="_5_Ai4EqkEd6mL5laCVF80g">
+      <bpel:copy bpmn:label="$tokenService1AuthenticateUserRequestMsg">
+        <bpel:from>
+          <bpel:literal>
+<TokenService1:authenticateUser>
+  <TokenService1:user></TokenService1:user>
+  <TokenService1:password></TokenService1:password>
+</TokenService1:authenticateUser></bpel:literal>
+        </bpel:from>
+        <bpel:to>$tokenService1AuthenticateUserRequestMsg.payload</bpel:to>
+      </bpel:copy>
+      <bpel:copy bpmn:label="$data">
+        <bpel:from>
+          <bpel:literal>
+<TAdata:data>
+  <TAdata:FormModel>
+    <TAdata:Activity>
+      <TAdata:AircraftID></TAdata:AircraftID>
+      <TAdata:startTime></TAdata:startTime>
+      <TAdata:finishTime></TAdata:finishTime>
+      <TAdata:releaseTime></TAdata:releaseTime>
+      <TAdata:late></TAdata:late>
+      <TAdata:update></TAdata:update>
+    </TAdata:Activity>
+    <TAdata:ArrivalDeparture>
+      <TAdata:ScheduledArrivalDate></TAdata:ScheduledArrivalDate>
+      <TAdata:STA></TAdata:STA>
+      <TAdata:ScheduledDepartureDate></TAdata:ScheduledDepartureDate>
+      <TAdata:STD></TAdata:STD>
+      <TAdata:EstimatedArrivalDate></TAdata:EstimatedArrivalDate>
+      <TAdata:ETA></TAdata:ETA>
+      <TAdata:EstimatedDepartureDate></TAdata:EstimatedDepartureDate>
+      <TAdata:ETD></TAdata:ETD>
+      <TAdata:ActualArrivalDate></TAdata:ActualArrivalDate>
+      <TAdata:ATA></TAdata:ATA>
+      <TAdata:ActualDepartureDate></TAdata:ActualDepartureDate>
+      <TAdata:ATD></TAdata:ATD>
+      <TAdata:ArrivalFlightNumber></TAdata:ArrivalFlightNumber>
+      <TAdata:DepartureFlightNumber></TAdata:DepartureFlightNumber>
+    </TAdata:ArrivalDeparture>
+    <TAdata:Inspection>
+      <TAdata:assigned></TAdata:assigned>
+      <TAdata:Stand></TAdata:Stand>
+      <TAdata:InspectionType></TAdata:InspectionType>
+      <TAdata:InspectionStatus></TAdata:InspectionStatus>
+      <TAdata:resources></TAdata:resources>
+      <TAdata:RTR>
+        <TAdata:RTRid></TAdata:RTRid>
+        <TAdata:RTRdescription></TAdata:RTRdescription>
+        <TAdata:RTRstatus></TAdata:RTRstatus>
+        <TAdata:RTRad></TAdata:RTRad>
+      </TAdata:RTR>
+      <TAdata:assignedCoord>
+        <TAdata:assignedCoordName></TAdata:assignedCoordName>
+        <TAdata:assignedCoordID></TAdata:assignedCoordID>
+        <TAdata:assignedCoordCert></TAdata:assignedCoordCert>
+      </TAdata:assignedCoord>
+      <TAdata:assignedMechanics>
+        <TAdata:assignedMechanicName></TAdata:assignedMechanicName>
+        <TAdata:assignedMechanicID></TAdata:assignedMechanicID>
+        <TAdata:assignedMechanicCert></TAdata:assignedMechanicCert>
+        <TAdata:entitledToRelease>false</TAdata:entitledToRelease>
+      </TAdata:assignedMechanics>
+      <TAdata:assignedAvionics>
+        <TAdata:assignedAvionicName></TAdata:assignedAvionicName>
+        <TAdata:assignedAvionicID></TAdata:assignedAvionicID>
+        <TAdata:assignedAvionicCert></TAdata:assignedAvionicCert>
+      </TAdata:assignedAvionics>
+    </TAdata:Inspection>
+    <TAdata:HIL>
+      <TAdata:TAHIL>
+        <TAdata:TAHILid></TAdata:TAHILid>
+        <TAdata:TAHILtype></TAdata:TAHILtype>
+        <TAdata:TAHILopeningDate></TAdata:TAHILopeningDate>
+        <TAdata:TAHILCL></TAdata:TAHILCL>
+        <TAdata:TAHILlimitDate></TAdata:TAHILlimitDate>
+        <TAdata:TAHILclosingDate></TAdata:TAHILclosingDate>
+        <TAdata:TAHILATA100></TAdata:TAHILATA100>
+        <TAdata:TAHILdescription></TAdata:TAHILdescription>
+        <TAdata:TAHILstatus></TAdata:TAHILstatus>
+        <TAdata:TAHILpartNr></TAdata:TAHILpartNr>
+        <TAdata:TAHILcomments></TAdata:TAHILcomments>
+      </TAdata:TAHIL>
+    </TAdata:HIL>
+    <TAdata:DC>
+      <TAdata:ExpectedStartTime></TAdata:ExpectedStartTime>
+      <TAdata:ExpectedFinishTime></TAdata:ExpectedFinishTime>
+      <TAdata:ExpectedReleaseTime></TAdata:ExpectedReleaseTime>
+      <TAdata:CompassInspectionType></TAdata:CompassInspectionType>
+      <TAdata:Comments></TAdata:Comments>
+    </TAdata:DC>
+  </TAdata:FormModel>
+</TAdata:data></bpel:literal>
+        </bpel:from>
+        <bpel:to>$data</bpel:to>
+      </bpel:copy>
+      <bpel:copy bpmn:label="$taskManagementSystemSetOutputRequestMsg">
+        <bpel:from>
+          <bpel:literal>
+<TaskManagementSystem:setOutputRequest>
+  <TaskManagementSystem:taskId></TaskManagementSystem:taskId>
+  <TaskManagementSystem:data>
+    <TAdata:Activity>
+      <TAdata:AircraftID></TAdata:AircraftID>
+      <TAdata:startTime></TAdata:startTime>
+      <TAdata:finishTime></TAdata:finishTime>
+      <TAdata:releaseTime></TAdata:releaseTime>
+      <TAdata:late></TAdata:late>
+      <TAdata:update></TAdata:update>
+    </TAdata:Activity>
+    <TAdata:ArrivalDeparture>
+      <TAdata:ScheduledArrivalDate></TAdata:ScheduledArrivalDate>
+      <TAdata:STA></TAdata:STA>
+      <TAdata:ScheduledDepartureDate></TAdata:ScheduledDepartureDate>
+      <TAdata:STD></TAdata:STD>
+      <TAdata:EstimatedArrivalDate></TAdata:EstimatedArrivalDate>
+      <TAdata:ETA></TAdata:ETA>
+      <TAdata:EstimatedDepartureDate></TAdata:EstimatedDepartureDate>
+      <TAdata:ETD></TAdata:ETD>
+      <TAdata:ActualArrivalDate></TAdata:ActualArrivalDate>
+      <TAdata:ATA></TAdata:ATA>
+      <TAdata:ActualDepartureDate></TAdata:ActualDepartureDate>
+      <TAdata:ATD></TAdata:ATD>
+      <TAdata:ArrivalFlightNumber></TAdata:ArrivalFlightNumber>
+      <TAdata:DepartureFlightNumber></TAdata:DepartureFlightNumber>
+    </TAdata:ArrivalDeparture>
+    <TAdata:Inspection>
+      <TAdata:assigned></TAdata:assigned>
+      <TAdata:Stand></TAdata:Stand>
+      <TAdata:InspectionType></TAdata:InspectionType>
+      <TAdata:InspectionStatus></TAdata:InspectionStatus>
+      <TAdata:resources></TAdata:resources>
+      <TAdata:RTR>
+        <TAdata:RTRid></TAdata:RTRid>
+        <TAdata:RTRdescription></TAdata:RTRdescription>
+        <TAdata:RTRstatus></TAdata:RTRstatus>
+        <TAdata:RTRad></TAdata:RTRad>
+      </TAdata:RTR>
+      <TAdata:assignedCoord>
+        <TAdata:assignedCoordName></TAdata:assignedCoordName>
+        <TAdata:assignedCoordID></TAdata:assignedCoordID>
+        <TAdata:assignedCoordCert></TAdata:assignedCoordCert>
+      </TAdata:assignedCoord>
+      <TAdata:assignedMechanics>
+        <TAdata:assignedMechanicName></TAdata:assignedMechanicName>
+        <TAdata:assignedMechanicID></TAdata:assignedMechanicID>
+        <TAdata:assignedMechanicCert></TAdata:assignedMechanicCert>
+        <TAdata:entitledToRelease>false</TAdata:entitledToRelease>
+      </TAdata:assignedMechanics>
+      <TAdata:assignedAvionics>
+        <TAdata:assignedAvionicName></TAdata:assignedAvionicName>
+        <TAdata:assignedAvionicID></TAdata:assignedAvionicID>
+        <TAdata:assignedAvionicCert></TAdata:assignedAvionicCert>
+      </TAdata:assignedAvionics>
+    </TAdata:Inspection>
+    <TAdata:HIL>
+      <TAdata:TAHIL>
+        <TAdata:TAHILid></TAdata:TAHILid>
+        <TAdata:TAHILtype></TAdata:TAHILtype>
+        <TAdata:TAHILopeningDate></TAdata:TAHILopeningDate>
+        <TAdata:TAHILCL></TAdata:TAHILCL>
+        <TAdata:TAHILlimitDate></TAdata:TAHILlimitDate>
+        <TAdata:TAHILclosingDate></TAdata:TAHILclosingDate>
+        <TAdata:TAHILATA100></TAdata:TAHILATA100>
+        <TAdata:TAHILdescription></TAdata:TAHILdescription>
+        <TAdata:TAHILstatus></TAdata:TAHILstatus>
+        <TAdata:TAHILpartNr></TAdata:TAHILpartNr>
+        <TAdata:TAHILcomments></TAdata:TAHILcomments>
+      </TAdata:TAHIL>
+    </TAdata:HIL>
+    <TAdata:DC>
+      <TAdata:ExpectedStartTime></TAdata:ExpectedStartTime>
+      <TAdata:ExpectedFinishTime></TAdata:ExpectedFinishTime>
+      <TAdata:ExpectedReleaseTime></TAdata:ExpectedReleaseTime>
+      <TAdata:CompassInspectionType></TAdata:CompassInspectionType>
+      <TAdata:Comments></TAdata:Comments>
+    </TAdata:DC>
+  </TaskManagementSystem:data>
+  <TaskManagementSystem:participantToken></TaskManagementSystem:participantToken>
+</TaskManagementSystem:setOutputRequest></bpel:literal>
+        </bpel:from>
+        <bpel:to>$taskManagementSystemSetOutputRequestMsg.setOutputRequest</bpel:to>
+      </bpel:copy>
+      <bpel:copy bpmn:label="$tAdataInputMessage">
+        <bpel:from>
+          <bpel:literal>
+<TAdata:complexData>
+  <TAdata:data>
+    <TAdata:FormModel>
+      <TAdata:Activity>
+        <TAdata:AircraftID></TAdata:AircraftID>
+        <TAdata:startTime></TAdata:startTime>
+        <TAdata:finishTime></TAdata:finishTime>
+        <TAdata:releaseTime></TAdata:releaseTime>
+        <TAdata:late></TAdata:late>
+        <TAdata:update></TAdata:update>
+      </TAdata:Activity>
+      <TAdata:ArrivalDeparture>
+        <TAdata:ScheduledArrivalDate></TAdata:ScheduledArrivalDate>
+        <TAdata:STA></TAdata:STA>
+        <TAdata:ScheduledDepartureDate></TAdata:ScheduledDepartureDate>
+        <TAdata:STD></TAdata:STD>
+        <TAdata:EstimatedArrivalDate></TAdata:EstimatedArrivalDate>
+        <TAdata:ETA></TAdata:ETA>
+        <TAdata:EstimatedDepartureDate></TAdata:EstimatedDepartureDate>
+        <TAdata:ETD></TAdata:ETD>
+        <TAdata:ActualArrivalDate></TAdata:ActualArrivalDate>
+        <TAdata:ATA></TAdata:ATA>
+        <TAdata:ActualDepartureDate></TAdata:ActualDepartureDate>
+        <TAdata:ATD></TAdata:ATD>
+        <TAdata:ArrivalFlightNumber></TAdata:ArrivalFlightNumber>
+        <TAdata:DepartureFlightNumber></TAdata:DepartureFlightNumber>
+      </TAdata:ArrivalDeparture>
+      <TAdata:Inspection>
+        <TAdata:assigned></TAdata:assigned>
+        <TAdata:Stand></TAdata:Stand>
+        <TAdata:InspectionType></TAdata:InspectionType>
+        <TAdata:InspectionStatus></TAdata:InspectionStatus>
+        <TAdata:resources></TAdata:resources>
+        <TAdata:RTR>
+          <TAdata:RTRid></TAdata:RTRid>
+          <TAdata:RTRdescription></TAdata:RTRdescription>
+          <TAdata:RTRstatus></TAdata:RTRstatus>
+          <TAdata:RTRad></TAdata:RTRad>
+        </TAdata:RTR>
+        <TAdata:assignedCoord>
+          <TAdata:assignedCoordName></TAdata:assignedCoordName>
+          <TAdata:assignedCoordID></TAdata:assignedCoordID>
+          <TAdata:assignedCoordCert></TAdata:assignedCoordCert>
+        </TAdata:assignedCoord>
+        <TAdata:assignedMechanics>
+          <TAdata:assignedMechanicName></TAdata:assignedMechanicName>
+          <TAdata:assignedMechanicID></TAdata:assignedMechanicID>
+          <TAdata:assignedMechanicCert></TAdata:assignedMechanicCert>
+          <TAdata:entitledToRelease>false</TAdata:entitledToRelease>
+        </TAdata:assignedMechanics>
+        <TAdata:assignedAvionics>
+          <TAdata:assignedAvionicName></TAdata:assignedAvionicName>
+          <TAdata:assignedAvionicID></TAdata:assignedAvionicID>
+          <TAdata:assignedAvionicCert></TAdata:assignedAvionicCert>
+        </TAdata:assignedAvionics>
+      </TAdata:Inspection>
+      <TAdata:HIL>
+        <TAdata:TAHIL>
+          <TAdata:TAHILid></TAdata:TAHILid>
+          <TAdata:TAHILtype></TAdata:TAHILtype>
+          <TAdata:TAHILopeningDate></TAdata:TAHILopeningDate>
+          <TAdata:TAHILCL></TAdata:TAHILCL>
+          <TAdata:TAHILlimitDate></TAdata:TAHILlimitDate>
+          <TAdata:TAHILclosingDate></TAdata:TAHILclosingDate>
+          <TAdata:TAHILATA100></TAdata:TAHILATA100>
+          <TAdata:TAHILdescription></TAdata:TAHILdescription>
+          <TAdata:TAHILstatus></TAdata:TAHILstatus>
+          <TAdata:TAHILpartNr></TAdata:TAHILpartNr>
+          <TAdata:TAHILcomments></TAdata:TAHILcomments>
+        </TAdata:TAHIL>
+      </TAdata:HIL>
+      <TAdata:DC>
+        <TAdata:ExpectedStartTime></TAdata:ExpectedStartTime>
+        <TAdata:ExpectedFinishTime></TAdata:ExpectedFinishTime>
+        <TAdata:ExpectedReleaseTime></TAdata:ExpectedReleaseTime>
+        <TAdata:CompassInspectionType></TAdata:CompassInspectionType>
+        <TAdata:Comments></TAdata:Comments>
+      </TAdata:DC>
+    </TAdata:FormModel>
+  </TAdata:data>
+  <TAdata:incidents>
+    <TAdata:rtr rtr-id=""></TAdata:rtr>
+    <TAdata:hil hil-slip-id=""></TAdata:hil>
+  </TAdata:incidents>
+</TAdata:complexData></bpel:literal>
+        </bpel:from>
+        <bpel:to>$tAdataInputMessage.body</bpel:to>
+      </bpel:copy>
+      <bpel:copy bpmn:label="$completeTA-processEventStartMessage">
+        <bpel:from>
+          <bpel:literal>
+<b4p:completeTaskRequest>
+  <b4p:taskMetaData>
+    <b4p:taskId></b4p:taskId>
+    <b4p:taskState></b4p:taskState>
+    <b4p:taskType></b4p:taskType>
+    <b4p:description></b4p:description>
+    <b4p:processId></b4p:processId>
+    <b4p:creationDate></b4p:creationDate>
+    <b4p:userOwner></b4p:userOwner>
+    <b4p:roleOwner></b4p:roleOwner>
+    <b4p:claimAction>
+      <b4p:user></b4p:user>
+      <b4p:role></b4p:role>
+    </b4p:claimAction>
+    <b4p:revokeAction>
+      <b4p:user></b4p:user>
+      <b4p:role></b4p:role>
+    </b4p:revokeAction>
+    <b4p:saveAction>
+      <b4p:user></b4p:user>
+      <b4p:role></b4p:role>
+    </b4p:saveAction>
+    <b4p:dismissAction>
+      <b4p:user></b4p:user>
+      <b4p:role></b4p:role>
+    </b4p:dismissAction>
+    <b4p:completeAction>
+      <b4p:user></b4p:user>
+      <b4p:role></b4p:role>
+    </b4p:completeAction>
+    <b4p:deferAction>
+      <b4p:user></b4p:user>
+      <b4p:role></b4p:role>
+    </b4p:deferAction>
+    <b4p:formUrl></b4p:formUrl>
+    <b4p:failureCode></b4p:failureCode>
+    <b4p:failureReason></b4p:failureReason>
+    <b4p:priority></b4p:priority>
+    <b4p:scheduledActions>
+      <b4p:expiration>
+        <b4p:until></b4p:until>
+        <b4p:for></b4p:for>
+      </b4p:expiration>
+      <b4p:deferActivation>
+        <b4p:until></b4p:until>
+        <b4p:for></b4p:for>
+      </b4p:deferActivation>
+    </b4p:scheduledActions>
+    <b4p:userEndpoint></b4p:userEndpoint>
+    <b4p:userProcessEndpoint></b4p:userProcessEndpoint>
+    <b4p:userProcessNamespaceURI></b4p:userProcessNamespaceURI>
+    <b4p:userProcessCompleteSOAPAction></b4p:userProcessCompleteSOAPAction>
+    <b4p:isChainedBefore></b4p:isChainedBefore>
+    <b4p:previousTaskId></b4p:previousTaskId>
+    <b4p:nextTaskId></b4p:nextTaskId>
+    <b4p:session></b4p:session>
+    <b4p:nextTaskURL></b4p:nextTaskURL>
+    <b4p:attachments>
+      <attachment>
+        <attachmentMetadata>
+          <mimeType></mimeType>
+          <fileName></fileName>
+          <title></title>
+          <description></description>
+          <creationDate></creationDate>
+        </attachmentMetadata>
+        <payloadUrl></payloadUrl>
+      </attachment>
+    </b4p:attachments>
+  </b4p:taskMetaData>
+  <b4p:participantToken></b4p:participantToken>
+  <b4p:user></b4p:user>
+  <b4p:taskOutput></b4p:taskOutput>
+</b4p:completeTaskRequest></bpel:literal>
+        </bpel:from>
+        <bpel:to>$completeTA-processEventStartMessage.body</bpel:to>
+      </bpel:copy>
+      <bpel:copy bpmn:label="$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg">
+        <bpel:from>
+          <bpel:literal>
+<TaskManagementSystem:getAvailableTasksWithInputOutputRequest>
+  <TaskManagementSystem:participantToken></TaskManagementSystem:participantToken>
+  <TaskManagementSystem:taskType></TaskManagementSystem:taskType>
+  <TaskManagementSystem:subQuery></TaskManagementSystem:subQuery>
+  <TaskManagementSystem:filter></TaskManagementSystem:filter>
+  <TaskManagementSystem:first></TaskManagementSystem:first>
+  <TaskManagementSystem:max></TaskManagementSystem:max>
+</TaskManagementSystem:getAvailableTasksWithInputOutputRequest></bpel:literal>
+        </bpel:from>
+        <bpel:to>$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest</bpel:to>
+      </bpel:copy>
+    </bpel:assign>
+    <bpel:if>
+      <bpel:condition>((($tnsInputMessage.body/@action = "start") or ($tnsInputMessage.body/@action = "stop")) or (($tnsInputMessage.body/@action = "release") or ($tnsInputMessage.body/@action = "abort"))) or ($tnsInputMessage.body/@action = "problem")</bpel:condition>
+      <bpel:sequence>
+        <bpel:assign bpmn:label="authenticate" name="authenticate" bpmn:id="_92Q2IFAnEd614NRMaCQE2Q">
+          <bpel:copy>
+            <bpel:from>"intalio\admin"</bpel:from>
+            <bpel:to>$tokenService1AuthenticateUserRequestMsg.payload/TokenService1:user</bpel:to>
+          </bpel:copy>
+          <bpel:copy>
+            <bpel:from>"changeit"</bpel:from>
+            <bpel:to>$tokenService1AuthenticateUserRequestMsg.payload/TokenService1:password</bpel:to>
+          </bpel:copy>
+        </bpel:assign>
+        <bpel:invoke partnerLink="tokenServiceAndReceiveUpdateProcessForTokenServiceHttpportPlkVar" portType="TokenService1:TokenServicePortType" operation="authenticateUser" inputVariable="tokenService1AuthenticateUserRequestMsg" outputVariable="tokenService1AuthenticateUserResponseMsg" bpmn:label="authenticate" name="authenticate-1" bpmn:id="_92Q2IFAnEd614NRMaCQE2Q"></bpel:invoke>
+        <bpel:assign bpmn:label="getTask" name="getTask" bpmn:id="_2DYIoFAnEd614NRMaCQE2Q">
+          <bpel:copy>
+            <bpel:from>$tokenService1AuthenticateUserResponseMsg.payload/TokenService1:token</bpel:from>
+            <bpel:to>$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest/TaskManagementSystem:participantToken</bpel:to>
+          </bpel:copy>
+          <bpel:copy>
+            <bpel:from>"PATask"</bpel:from>
+            <bpel:to>$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest/TaskManagementSystem:taskType</bpel:to>
+          </bpel:copy>
+          <bpel:copy>
+            <bpel:from>bpel:doXslTransform("PrepareQueryForUpdate.xsl", $tnsInputMessage.body)</bpel:from>
+            <bpel:to>$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest/TaskManagementSystem:subQuery</bpel:to>
+          </bpel:copy>
+        </bpel:assign>
+        <bpel:invoke partnerLink="dbAndReceiveUpdateProcessForPortTaskManagementServicesSOAPPlkVar" portType="TaskManagementSystem:TaskManagementServices" operation="getAvailableTasksWithInputOutput" inputVariable="taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg" outputVariable="taskManagementSystemGetAvailableTasksWithInputOutputResponseMsg" bpmn:label="getTask" name="getTask-1" bpmn:id="_2DYIoFAnEd614NRMaCQE2Q"></bpel:invoke>
+        <bpel:assign bpmn:label="setVar" name="setVar" bpmn:id="_QfjFcFAoEd614NRMaCQE2Q">
+          <bpel:copy>
+            <bpel:from>bpel:doXslTransform("copyTA.xsl", $taskManagementSystemGetAvailableTasksWithInputOutputResponseMsg.getAvailableTasksWithInputOutputResponse)</bpel:from>
+            <bpel:to>$data/TAdata:FormModel</bpel:to>
+          </bpel:copy>
+        </bpel:assign>
+        <bpel:if>
+          <bpel:condition>$tnsInputMessage.body/@action = "start"</bpel:condition>
+          <bpel:sequence>
+            <bpel:assign bpmn:label="start" name="start" bpmn:id="_cxx7EFH0Ed6Yk40k_wFJog">
+              <bpel:copy>
+                <bpel:from>"started"</bpel:from>
+                <bpel:to>$data/TAdata:FormModel/TAdata:Inspection/TAdata:InspectionStatus</bpel:to>
+              </bpel:copy>
+              <bpel:copy>
+                <bpel:from>bpel:doXslTransform("HHTupdateFieldTime.xsl", $tnsInputMessage.body, "fieldName", "startTime")</bpel:from>
+                <bpel:to>$data/TAdata:FormModel/TAdata:Activity/TAdata:startTime</bpel:to>
+              </bpel:copy>
+            </bpel:assign>
+          </bpel:sequence>
+          <bpel:elseif>
+            <bpel:condition>$tnsInputMessage.body/@action = "abort"</bpel:condition>
+            <bpel:sequence>
+              <bpel:assign bpmn:label="abort" name="abort" bpmn:id="_t-FPAFH0Ed6Yk40k_wFJog">
+                <bpel:copy>
+                  <bpel:from>"aborted"</bpel:from>
+                  <bpel:to>$data/TAdata:FormModel/TAdata:Inspection/TAdata:InspectionStatus</bpel:to>
+                </bpel:copy>
+              </bpel:assign>
+            </bpel:sequence>
+          </bpel:elseif>
+          <bpel:elseif>
+            <bpel:condition>$tnsInputMessage.body/@action = "problem"</bpel:condition>
+            <bpel:sequence>
+              <bpel:assign bpmn:label="problem" name="problem" bpmn:id="_vTT8kFH0Ed6Yk40k_wFJog">
+                <bpel:copy>
+                  <bpel:from>"problem"</bpel:from>
+                  <bpel:to>$data/TAdata:FormModel/TAdata:Inspection/TAdata:InspectionStatus</bpel:to>
+                </bpel:copy>
+                <bpel:copy>
+                  <bpel:from>bpel:doXslTransform("RecipientsToResources.xsl", $tnsInputMessage.body)</bpel:from>
+                  <bpel:to>$data/TAdata:FormModel/TAdata:Inspection/TAdata:resources</bpel:to>
+                </bpel:copy>
+              </bpel:assign>
+            </bpel:sequence>
+          </bpel:elseif>
+          <bpel:else>
+            <bpel:sequence>
+              <bpel:assign bpmn:label="updateHILandRTR" name="updateHILandRTR" bpmn:id="_HM62AFH1Ed6Yk40k_wFJog">
+                <bpel:copy>
+                  <bpel:from>$data/TAdata:FormModel</bpel:from>
+                  <bpel:to>$tAdataInputMessage.body/TAdata:data/TAdata:FormModel</bpel:to>
+                </bpel:copy>
+                <bpel:copy>
+                  <bpel:from>$tnsInputMessage.body/hht:report/hht:incidents</bpel:from>
+                  <bpel:to>$tAdataInputMessage.body/TAdata:incidents</bpel:to>
+                </bpel:copy>
+              </bpel:assign>
+              <bpel:invoke partnerLink="sITAserviceAndReceiveUpdateProcessForSITAservicePortPlkVar" portType="TAdata:SITAservicePortType" operation="UpdateHILandRTR" inputVariable="tAdataInputMessage" outputVariable="tAdataOutputMessage" bpmn:label="updateHILandRTR" name="updateHILandRTR-1" bpmn:id="_HM62AFH1Ed6Yk40k_wFJog"></bpel:invoke>
+              <bpel:assign bpmn:label="set" name="set" bpmn:id="_OyQPsFH1Ed6Yk40k_wFJog">
+                <bpel:copy>
+                  <bpel:from>$tAdataOutputMessage.body/TAdata:FormModel</bpel:from>
+                  <bpel:to>$data/TAdata:FormModel</bpel:to>
+                </bpel:copy>
+              </bpel:assign>
+              <bpel:if>
+                <bpel:condition>$tnsInputMessage.body/@action = "release"</bpel:condition>
+                <bpel:sequence>
+                  <bpel:assign bpmn:label="release" name="release" bpmn:id="_CEDewFH1Ed6Yk40k_wFJog">
+                    <bpel:copy>
+                      <bpel:from>bpel:doXslTransform("HHTupdateFieldTime.xsl", $tnsInputMessage.body, "fieldName", "releaseTime")</bpel:from>
+                      <bpel:to>$data/TAdata:FormModel/TAdata:Activity/TAdata:releaseTime</bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                      <bpel:from>"released"</bpel:from>
+                      <bpel:to>$data/TAdata:FormModel/TAdata:Inspection/TAdata:InspectionStatus</bpel:to>
+                    </bpel:copy>
+                  </bpel:assign>
+                  <bpel:assign bpmn:label="invoke" name="invoke" bpmn:id="_ixS7AGUPEd6uuIjDUjj8XQ">
+                    <bpel:copy>
+                      <bpel:from>$taskManagementSystemGetAvailableTasksWithInputOutputResponseMsg.getAvailableTasksWithInputOutputResponse/TaskManagementSystem:task/TaskManagementSystem:metadata/TaskManagementSystem:taskId</bpel:from>
+                      <bpel:to>$completeTA-processEventStartMessage.body/b4p:taskMetaData/b4p:taskId</bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                      <bpel:from>$tokenService1AuthenticateUserResponseMsg.payload/TokenService1:token</bpel:from>
+                      <bpel:to>$completeTA-processEventStartMessage.body/b4p:participantToken</bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                      <bpel:from>"intalio\admin"</bpel:from>
+                      <bpel:to>$completeTA-processEventStartMessage.body/b4p:user</bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                      <bpel:from>$data</bpel:from>
+                      <bpel:to>$completeTA-processEventStartMessage.body/b4p:taskOutput</bpel:to>
+                    </bpel:copy>
+                  </bpel:assign>
+                  <bpel:invoke partnerLink="receiveUpdateProcessimplicitPartnerAndReceiveUpdateProcessForCanonicPortPlkVar" portType="completeTA-process:ForInterface" operation="EventStartMessage" inputVariable="completeTA-processEventStartMessage" outputVariable="completeTA-processEventStartMessageResponse" bpmn:label="invoke" name="invoke-1" bpmn:id="_ixS7AGUPEd6uuIjDUjj8XQ"></bpel:invoke>
+                </bpel:sequence>
+                <bpel:else>
+                  <bpel:sequence>
+                    <bpel:assign bpmn:label="stop" name="stop" bpmn:id="_AO7JIFH1Ed6Yk40k_wFJog">
+                      <bpel:copy>
+                        <bpel:from>"stopped"</bpel:from>
+                        <bpel:to>$data/TAdata:FormModel/TAdata:Inspection/TAdata:InspectionStatus</bpel:to>
+                      </bpel:copy>
+                      <bpel:copy>
+                        <bpel:from>bpel:doXslTransform("HHTupdateFieldTime.xsl", $tnsInputMessage.body, "fieldName", "finishTime")</bpel:from>
+                        <bpel:to>$data/TAdata:FormModel/TAdata:Activity/TAdata:finishTime</bpel:to>
+                      </bpel:copy>
+                    </bpel:assign>
+                  </bpel:sequence>
+                </bpel:else>
+              </bpel:if>
+              <bpel:empty>
+                <bpel:links>
+                  <bpel:sources>
+                    <bpel:source linkName="_9Z4OoFH0Ed6Yk40k_wFJog_to__GMi-IFH1Ed6Yk40k_wFJog"/>
+                  </bpel:sources>
+                </bpel:links>
+              </bpel:empty>
+            </bpel:sequence>
+          </bpel:else>
+        </bpel:if>
+        <bpel:empty bpmn:label="merge" name="merge" bpmn:id="_XWd6MFH6Ed6Yk40k_wFJog">
+          <bpel:links>
+            <bpel:targets></bpel:targets>
+          </bpel:links>
+        </bpel:empty>
+        <bpel:assign bpmn:label="updateTask" name="updateTask" bpmn:id="_dSmhcFH6Ed6Yk40k_wFJog">
+          <bpel:copy>
+            <bpel:from>$data</bpel:from>
+            <bpel:to>$taskManagementSystemSetOutputRequestMsg.setOutputRequest/TaskManagementSystem:data</bpel:to>
+          </bpel:copy>
+          <bpel:copy>
+            <bpel:from>$tokenService1AuthenticateUserResponseMsg.payload/TokenService1:token</bpel:from>
+            <bpel:to>$taskManagementSystemSetOutputRequestMsg.setOutputRequest/TaskManagementSystem:participantToken</bpel:to>
+          </bpel:copy>
+          <bpel:copy>
+            <bpel:from>$taskManagementSystemGetAvailableTasksWithInputOutputResponseMsg.getAvailableTasksWithInputOutputResponse/TaskManagementSystem:task/TaskManagementSystem:metadata/TaskManagementSystem:taskId</bpel:from>
+            <bpel:to>$taskManagementSystemSetOutputRequestMsg.setOutputRequest/TaskManagementSystem:taskId</bpel:to>
+          </bpel:copy>
+        </bpel:assign>
+        <bpel:invoke partnerLink="receiveUpdateProcessAndTMSForPortTaskManagementServicesSOAPPlkVar" portType="TaskManagementSystem:TaskManagementServices" operation="setOutput" inputVariable="taskManagementSystemSetOutputRequestMsg" outputVariable="taskManagementSystemSetOutputResponseMsg" bpmn:label="updateTask" name="updateTask-1" bpmn:id="_dSmhcFH6Ed6Yk40k_wFJog"></bpel:invoke>
+        <bpel:empty bpmn:label="end" name="end" bpmn:id="_em73IFH6Ed6Yk40k_wFJog"/>
+      </bpel:sequence>
+      <bpel:else>
+        <bpel:sequence>
+          <bpel:empty bpmn:label="invalid action" name="invalid_action" bpmn:id="_1dJHsFKbEd6ax5t49mKp9g"/>
+        </bpel:sequence>
+      </bpel:else>
+    </bpel:if>
+  </bpel:sequence>
+</bpel:process>

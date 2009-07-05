@@ -1,0 +1,16 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<bpt:template xmlns:bpt="http://www.intalio/designer/business-process-data-modeling/template" ID="_xIcrQFT_Ed6dgsqoOu2u1Q" displayName="uploadFMR" ownerPoolId="_VEsqQD7SEd6K2cgYiBoOqg" ownerPoolNcName="AppearNetworks" ownerPoolIsExecutable="false" version="6000076">
+    <bpt:partnerPool ID="_VbNFwD7SEd6K2cgYiBoOqg" ncName="UploadProcess" isExecutable="true"/>
+    <bpt:container displayName="sequence" containerType="sequence">
+        <bpt:activity ID="_VEsqQj7SEd6K2cgYiBoOqg" displayName="Upload FMR" activityType="Task" messaging="invokerequestresponsebound">
+            <bpt:generatedOperation providingPoolId="_VbNFwD7SEd6K2cgYiBoOqg" generatedPartnerLinkTypeLocalName="UploadProcessAndAppearNetworks" generatedService="CanonicServiceForAppearNetworks" generatedOperation="uploadFMR" generatedPort="canonicPort">
+                <bpt:input name="uploadFMR" generatedMessageTypeLocalName="uploadFMRRequest">
+                    <bpt:part name="body" attachedSchemaObject="project:///schema/FlightMovementRecord06.xsd?xsdelement={http://www.example.org/fmr}FMR"/>
+                </bpt:input>
+                <bpt:output name="uploadFMRResponse" generatedMessageTypeLocalName="uploadFMRResponse">
+                    <bpt:part name="body" attachedSchemaObject="project:///schema/UploadResponse.xsd?xsdelement={http://www.example.org/UploadResponse}uploadReponse"/>
+                </bpt:output>
+            </bpt:generatedOperation>
+        </bpt:activity>
+    </bpt:container>
+</bpt:template>

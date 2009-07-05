@@ -1,0 +1,33 @@
+﻿<bpel:process xmlns:bpdm="http://www.intalio/designer/business-process-data-modeling" xmlns:mapper="http://www.intalio.com/designer/mapper" xmlns:this="http://thisdiagram/TokenService" xmlns:ReceiveUpdateProcess="http://thisdiagram/ReceiveUpdateProcess" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tns="http://tempo.intalio.org/security/tokenService/" xmlns:diag="http://thisdiagram" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ode="http://www.apache.org/ode/type/extension" targetNamespace="http://thisdiagram/TokenService">
+    <bpdm:dependencies version="6000076">
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram/TokenService" bpdm:prefix="this" bpdm:type="this_process"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram/ReceiveUpdateProcess" bpdm:prefix="ReceiveUpdateProcess" bpdm:comment="contrib=&apos;partner-pool:///_2DxcYEqkEd6mL5laCVF80g"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/2001/XMLSchema" bpdm:prefix="xs"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/2001/XMLSchema-instance" bpdm:prefix="xsi"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://tempo.intalio.org/security/tokenService/" bpdm:prefix="tns" bpdm:comment="contrib=&apos;project:///services/TokenService.wsdl"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram" bpdm:prefix="diag" bpdm:comment="contrib=&apos;partner-pool:///_2DxcYEqkEd6mL5laCVF80g"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/XML/1998/namespace" bpdm:prefix="xml"></bpdm:namespaceDefinition>
+        <bpdm:namespaceContributor bpdm:url="thisprocess://this-process-types" bpdm:label="process defined this-process-types"></bpdm:namespaceContributor>
+        <bpdm:namespaceContributor bpdm:url="project:///services/TokenService.wsdl"/>
+        <bpdm:namespaceContributor bpdm:url="partner-pool:///_2DxcYEqkEd6mL5laCVF80g" bpdm:label="ReceiveUpdateProcess"/>
+    </bpdm:dependencies>
+    <bpel:scope bpdm:label="TokenService" bpdm:ID="__kPa4FAnEd614NRMaCQE2Q">
+        <bpel:partnerLinks>
+            <bpel:partnerLink name="tokenServiceAndReceiveUpdateProcessForTokenServiceHttpportPlkVar" partnerLinkType="diag:TokenServiceAndReceiveUpdateProcessForTokenServiceHttpportPlk" myRole="TokenService_for_ReceiveUpdateProcess" bpdm:enableSharing="false" bpdm:providedService="tns:TokenService" bpdm:providedPort="TokenServiceSOAP11port_http" bpdm:provideSOAPAddress="http://localhost:8080/axis2/services/TokenService" bpdm:providedIsDefault="true" bpdm:clientTasks="__kPa4FAnEd614NRMaCQE2Q:_CynbaFAoEd614NRMaCQE2Q" bpdm:isManaged="true" bpdm:otherPoolId="_2DxcYEqkEd6mL5laCVF80g"/>
+        </bpel:partnerLinks>
+        <bpel:variables>
+            <bpel:variable name="tnsAuthenticateUserRequestMsg" messageType="tns:authenticateUser" binding="tns:TokenServiceHttpBinding" operation="authenticateUser" opMsgType="0" bpdm:id="_DyinXlAoEd614NRMaCQE2Q" bpdm:messageIds="inc:_DyPsYFAoEd614NRMaCQE2Q"/>
+            <bpel:variable name="tnsAuthenticateUserResponseMsg" messageType="tns:authenticateUserResponse" binding="tns:TokenServiceHttpBinding" operation="authenticateUser" opMsgType="1" bpdm:id="_EDraoFAoEd614NRMaCQE2Q" bpdm:messageIds=" out:_EDiQsFAoEd614NRMaCQE2Q">
+                <bpel:from bpdm:toPart="payload">
+                    <bpel:literal bpdm:linkedMessageType="tns:authenticateUserResponse" bpdm:linkedPart="payload" bpdm:binding="tns:TokenServiceHttpBinding" bpdm:opMsgType="1" bpdm:operation="authenticateUser"></bpel:literal>
+                </bpel:from>
+            </bpel:variable>
+        </bpel:variables>
+        <bpel:sequence>
+            <bpdm:messagingtask operation="authenticateUser" partnerLink="tokenServiceAndReceiveUpdateProcessForTokenServiceHttpportPlkVar" portType="tns:TokenServicePortType" isMyRole="true" enableSharing="false" bpdm:label="authenticateUser" bpdm:ID="_CynbaFAoEd614NRMaCQE2Q">
+                <bpdm:linkset bpdm:type="incomingMessage" bpdm:bpeltype="receive" bpdm:messageVariable="tnsAuthenticateUserRequestMsg" bpdm:msgVarScopeId="__kPa4FAnEd614NRMaCQE2Q" bpdm:variableIsManaged="true" bpdm:messageType="tns:authenticateUser" bpdm:binding="tns:TokenServiceHttpBinding" bpdm:ID="_DyPsYFAoEd614NRMaCQE2Q"></bpdm:linkset>
+                <bpdm:linkset bpdm:type="outgoingMessage" bpdm:bpeltype="reply" bpdm:messageVariable="tnsAuthenticateUserResponseMsg" bpdm:msgVarScopeId="__kPa4FAnEd614NRMaCQE2Q" bpdm:variableIsManaged="true" bpdm:messageType="tns:authenticateUserResponse" bpdm:binding="tns:TokenServiceHttpBinding" bpdm:ID="_EDiQsFAoEd614NRMaCQE2Q"></bpdm:linkset>
+            </bpdm:messagingtask>
+        </bpel:sequence>
+    </bpel:scope>
+</bpel:process>

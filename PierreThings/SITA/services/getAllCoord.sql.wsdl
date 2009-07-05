@@ -1,0 +1,36 @@
+﻿<wsdl:definitions targetNamespace="urn:intalio.com:connectors:database:sita:getallcoordservice" xmlns:tns="urn:intalio.com:connectors:database:sita:getallcoordservice" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns="urn:intalio.com:connectors:database:sita:getallcoordservice">
+    <wsdl:types>
+        <xsd:schema>
+            <xsd:import schemaLocation="getAllCoord.xsd" namespace="urn:intalio.com:connectors:database:sita:getallcoordservice"/>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="getAllCoordInput">
+        <wsdl:part name="parameters" element="ns:getAllCoordParameterSet"/>
+    </wsdl:message>
+    <wsdl:message name="getAllCoordOutput">
+        <wsdl:part name="parameters" element="ns:getAllCoordResultSet"/>
+    </wsdl:message>
+    <wsdl:portType name="getAllCoordPort">
+        <wsdl:operation name="getAllCoord">
+            <wsdl:input message="tns:getAllCoordInput"/>
+            <wsdl:output message="tns:getAllCoordOutput"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="getAllCoordPortSoapBinding" type="tns:getAllCoordPort">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="getAllCoord">
+            <soap:operation style="document" soapAction="urn:intalio:connector:jdbc:query:getAllCoord"/>
+            <wsdl:input>
+                <soap:body namespace="urn:intalio.com:connectors:database:sita:getallcoordservice" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body namespace="urn:intalio.com:connectors:database:sita:getallcoordservice" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="getAllCoordService">
+        <wsdl:port binding="tns:getAllCoordPortSoapBinding" name="getAllCoordPort">
+            <soap:address location="http://localhost:9080/ode/processes/SITA/database/getAllCoord"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

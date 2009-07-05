@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/assignment"
+	xmlns:tns="http://www.example.org/assignment" elementFormDefault="qualified">
+	<element name="ShiftInfo">
+		<complexType>
+			<sequence>
+				<element name="ShiftName" type="string" />
+				<element name="Start" type="tns:utcDateTime" />
+				<element name="End" type="tns:utcDateTime" />
+			</sequence>
+		</complexType>
+	</element>
+
+	<simpleType name="utcDateTime">
+		<restriction base="dateTime">
+			<pattern value=".+T.+Z" />
+		</restriction>
+	</simpleType>
+
+
+</schema>

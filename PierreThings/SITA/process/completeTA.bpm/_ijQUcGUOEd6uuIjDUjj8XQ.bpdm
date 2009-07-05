@@ -1,0 +1,74 @@
+﻿<bpel:process xmlns:bpdm="http://www.intalio/designer/business-process-data-modeling" xmlns:mapper="http://www.intalio.com/designer/mapper" xmlns:Interface="http://thisdiagram/Interface" xmlns:tns="http://www.example.org/UploadResponse" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:b4p="http://www.intalio.com/bpms/workflow/ib4p_20051115" xmlns:this="http://thisdiagram/process" xmlns:diag="http://thisdiagram" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ode="http://www.apache.org/ode/type/extension" targetNamespace="http://thisdiagram/process">
+    <bpdm:dependencies version="6000076">
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram/Interface" bpdm:prefix="Interface" bpdm:comment="contrib=&apos;partner-pool:///_hMhyEGUOEd6uuIjDUjj8XQ"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.example.org/UploadResponse" bpdm:prefix="tns" bpdm:comment="contrib=&apos;project:///schema/UploadResponse.xsd"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/2001/XMLSchema" bpdm:prefix="xs"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/2001/XMLSchema-instance" bpdm:prefix="xsi"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.intalio.com/bpms/workflow/ib4p_20051115" bpdm:prefix="b4p" bpdm:comment="contrib=&apos;project:///services/b4p.xsd"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram/process" bpdm:prefix="this" bpdm:type="this_process"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://thisdiagram" bpdm:prefix="diag" bpdm:comment="contrib=&apos;partner-pool:///_hMhyEGUOEd6uuIjDUjj8XQ"></bpdm:namespaceDefinition>
+        <bpdm:namespaceDefinition bpdm:uri="http://www.w3.org/XML/1998/namespace" bpdm:prefix="xml"></bpdm:namespaceDefinition>
+        <bpdm:namespaceContributor bpdm:url="thisprocess://this-process-types" bpdm:label="process defined this-process-types">
+            <wsdl:portType name="ForInterface">
+                <wsdl:operation name="EventStartMessage" bpdm:source="partner-pool:///_hMhyEGUOEd6uuIjDUjj8XQ">
+                    <wsdl:input message="this:EventStartMessageRequest" name="EventStartMessage"/>
+                    <wsdl:output message="this:EventStartMessageResponse" name="EventStartMessageResponse"/>
+                </wsdl:operation>
+            </wsdl:portType>
+            <wsdl:message name="EventStartMessageRequest" bpdm:source="partner-pool:///_hMhyEGUOEd6uuIjDUjj8XQ">
+                <wsdl:part name="body" element="b4p:completeTaskRequest"/>
+            </wsdl:message>
+            <wsdl:message name="EventStartMessageResponse" bpdm:source="partner-pool:///_hMhyEGUOEd6uuIjDUjj8XQ">
+                <wsdl:part name="body" element="tns:uploadReponse"/>
+            </wsdl:message>
+            <bpel:binding name="CanonicBindingForInterface" type="this:ForInterface" bpdm:isSynchronized="true"/>
+        </bpdm:namespaceContributor>
+        <bpdm:namespaceContributor bpdm:url="partner-pool:///_hMhyEGUOEd6uuIjDUjj8XQ" bpdm:label="Interface"/>
+        <bpdm:namespaceContributor bpdm:url="project:///services/b4p.xsd"/>
+        <bpdm:namespaceContributor bpdm:url="partner-pool:///_ja_NsGUOEd6uuIjDUjj8XQ" bpdm:label="TMP"/>
+        <bpdm:namespaceContributor bpdm:url="project:///services/TaskManagerProcess.wsdl"/>
+        <bpdm:namespaceContributor bpdm:url="project:///schema/UploadResponse.xsd"/>
+    </bpdm:dependencies>
+    <bpel:scope bpdm:label="process" bpdm:ID="_ijQUcGUOEd6uuIjDUjj8XQ">
+        <bpel:partnerLinks>
+            <bpel:partnerLink name="processAndInterfacePlkVar" partnerLinkType="diag:processAndInterface" myRole="process_for_Interface" bpdm:enableSharing="false" bpdm:providedService="this:CanonicServiceForInterface" bpdm:providedPort="canonicPort" bpdm:provideSOAPAddress="${deploy_serverUrl}${deploy_baseSoapServicesUrl}/${deploy_bundleNcName}/${diagram_relativeURL}/process/Interface" bpdm:providedIsDefault="true" bpdm:clientTasks="_ijQUcGUOEd6uuIjDUjj8XQ:_pPzsAGUOEd6uuIjDUjj8XQ" bpdm:isManaged="true" bpdm:otherPoolId="_hMhyEGUOEd6uuIjDUjj8XQ"/>
+            <bpel:partnerLink name="tMpAndProcessForUIFWPortPlkVar" partnerLinkType="diag:TMpAndProcessForUIFWPortPlk" initializePartnerRole="yes" partnerRole="TMP_for_process" bpdm:invokedService="b4p:UIFWService" bpdm:invokedPort="UIFWPort" bpdm:invokedSOAPAddress="http://localhost:9080/ode/processes/completeTask" bpdm:invokedIsDefault="true" bpdm:clientTasks="_ijQUcGUOEd6uuIjDUjj8XQ:_qTTwYGUOEd6uuIjDUjj8XQ" bpdm:isManaged="true" bpdm:otherPoolId="_ja_NsGUOEd6uuIjDUjj8XQ"/>
+        </bpel:partnerLinks>
+        <bpel:variables>
+            <bpel:variable name="thisEventStartMessageRequest" messageType="this:EventStartMessageRequest" bpdm:id="_pQHOBWUOEd6uuIjDUjj8XQ" bpdm:messageIds="inc:_pP9dAGUOEd6uuIjDUjj8XQ"/>
+            <bpel:variable name="thisEventStartMessageResponse" messageType="this:EventStartMessageResponse" bpdm:id="_pkhXwGUOEd6uuIjDUjj8XQ" bpdm:messageIds=" out:_pkYN0GUOEd6uuIjDUjj8XQ">
+                <bpel:from bpdm:toPart="body">
+                    <bpel:literal bpdm:linkedMessageType="this:EventStartMessageResponse" bpdm:linkedPart="body"></bpel:literal>
+                </bpel:from>
+            </bpel:variable>
+            <bpel:variable name="b4pCompleteTaskRequestMsg" messageType="b4p:completeTaskRequest" binding="b4p:UIFWBinding" operation="completeTask" opMsgType="0" bpdm:id="_R3K8MGUPEd6uuIjDUjj8XQ" bpdm:messageIds=" out:_R3BLMGUPEd6uuIjDUjj8XQ">
+                <bpel:from bpdm:toPart="root">
+                    <bpel:literal bpdm:linkedMessageType="b4p:completeTaskRequest" bpdm:linkedPart="root" bpdm:binding="b4p:UIFWBinding" bpdm:opMsgType="0" bpdm:operation="completeTask"></bpel:literal>
+                </bpel:from>
+            </bpel:variable>
+            <bpel:variable name="b4pCompleteTaskResponseMsg" messageType="b4p:completeTaskResponse" binding="b4p:UIFWBinding" operation="completeTask" opMsgType="1" bpdm:id="_SFByFmUPEd6uuIjDUjj8XQ" bpdm:messageIds="inc:_SEu3EGUPEd6uuIjDUjj8XQ"/>
+        </bpel:variables>
+        <bpel:sequence>
+            <bpdm:messagingtask eventType="start: message" operation="EventStartMessage" partnerLink="processAndInterfacePlkVar" portType="this:ForInterface" isMyRole="true" enableSharing="false" bpdm:label="Message_Start_Event" bpdm:ID="_pPzsAGUOEd6uuIjDUjj8XQ">
+                <bpdm:linkset bpdm:type="incomingMessage" bpdm:bpeltype="receive" bpdm:messageVariable="thisEventStartMessageRequest" bpdm:msgVarScopeId="_ijQUcGUOEd6uuIjDUjj8XQ" bpdm:variableIsManaged="true" bpdm:messageType="this:EventStartMessageRequest" bpdm:ID="_pP9dAGUOEd6uuIjDUjj8XQ"></bpdm:linkset>
+                <bpdm:linkset bpdm:type="outgoingMessage" bpdm:bpeltype="reply" bpdm:messageVariable="thisEventStartMessageResponse" bpdm:msgVarScopeId="_ijQUcGUOEd6uuIjDUjj8XQ" bpdm:variableIsManaged="true" bpdm:messageType="this:EventStartMessageResponse" bpdm:ID="_pkYN0GUOEd6uuIjDUjj8XQ"></bpdm:linkset>
+            </bpdm:messagingtask>
+            <bpdm:messagingtask eventType="intermediate: timer" bpdm:label="wait 8 hours" bpdm:ID="_rQtMwGUOEd6uuIjDUjj8XQ">
+                <bpdm:linkset bpdm:type="timer">
+                    <bpel:for>"PT8H"<mapper:mapperLink><mapper:vertice id="5429724" targetPath="$duration" targetedBy="10628166-arg0"></mapper:vertice><mapper:vertice id="10628166" dimension="78x24" location="432,108"><mapper:value>"PT8H"</mapper:value></mapper:vertice></mapper:mapperLink></bpel:for>
+                </bpdm:linkset>
+            </bpdm:messagingtask>
+            <bpdm:messagingtask operation="completeTask" partnerLink="tMpAndProcessForUIFWPortPlkVar" portType="b4p:UIFWPortType" isMyRole="false" enableSharing="false" bpdm:label="complete" bpdm:ID="_qTTwYGUOEd6uuIjDUjj8XQ">
+                <bpdm:linkset bpdm:type="assignments">
+                    <bpel:copy>
+                        <bpel:from>$thisEventStartMessageRequest.body</bpel:from>
+                        <bpel:to>$b4pCompleteTaskRequestMsg.root</bpel:to><mapper:mapperLink><mapper:vertice id="30845827" targetPath="$b4pCompleteTaskRequestMsg.root" targetedBy="19488717-arg0"></mapper:vertice><mapper:vertice id="19488717" sourcePath="$thisEventStartMessageRequest.body"></mapper:vertice></mapper:mapperLink>
+                    </bpel:copy>
+                </bpdm:linkset>
+                <bpdm:linkset bpdm:type="outgoingMessage" bpdm:bpeltype="invoke-request" bpdm:messageVariable="b4pCompleteTaskRequestMsg" bpdm:msgVarScopeId="_ijQUcGUOEd6uuIjDUjj8XQ" bpdm:variableIsManaged="true" bpdm:messageType="b4p:completeTaskRequest" bpdm:binding="b4p:UIFWBinding" bpdm:ID="_R3BLMGUPEd6uuIjDUjj8XQ"></bpdm:linkset>
+                <bpdm:linkset bpdm:type="incomingMessage" bpdm:bpeltype="invoke-receive" bpdm:messageVariable="b4pCompleteTaskResponseMsg" bpdm:msgVarScopeId="_ijQUcGUOEd6uuIjDUjj8XQ" bpdm:variableIsManaged="true" bpdm:messageType="b4p:completeTaskResponse" bpdm:binding="b4p:UIFWBinding" bpdm:ID="_SEu3EGUPEd6uuIjDUjj8XQ"></bpdm:linkset>
+            </bpdm:messagingtask>
+            <bpdm:messagingtask eventType="end: empty" bpdm:label="end" bpdm:ID="_uTdzIGUOEd6uuIjDUjj8XQ"></bpdm:messagingtask>
+        </bpel:sequence>
+    </bpel:scope>
+</bpel:process>

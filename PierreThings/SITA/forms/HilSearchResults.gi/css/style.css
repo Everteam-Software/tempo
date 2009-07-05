@@ -1,0 +1,114 @@
+fieldset {
+  margin: 15px 10px;
+  border: 1px solid #DDD;
+}
+
+legend {
+  font-size: 1.5em;
+  font-weight: bolder;
+  color: #444;
+}
+
+label {
+  font-weight: bolder;
+  vertical-align: top;
+}
+
+/* padding inside fieldset (IE bug workaround) */
+div.fieldset-padding {
+  margin: 15px 10px;
+}
+
+div.field {
+  margin: 0.5em 0em;   
+}
+
+table.field {
+  empty-cells: show;   
+  font-size: 1em;
+}
+
+td.label-column {
+  width: 20em;
+  text-align: right;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+td.required-column {
+  width: 2em;
+  text-align: center;
+  vertical-align: top;
+}
+
+td.input-column {
+  width: auto;
+  vertical-align: top;
+}
+
+span.required {
+  color: red;
+}
+
+img.error, img.help {
+  margin-right: 1em;
+  vertical-align: middle;
+}
+
+span.nowrap {
+  white-space: nowrap;
+}
+
+span.horizontal-layout,
+span.vertical-layout,
+span.error {
+  margin-bottom: 0.5em;
+}
+
+span.horizontal-layout {
+  display: inline-block;
+  margin-right: 1em;
+  vertical-align: top;
+}    
+
+span.vertical-layout {
+  display: block;
+}
+
+span.error {
+  display: block;
+  margin-top: -0.5em;
+  color: red;
+}
+
+span.value {
+  margin-left: 0.6em;
+  margin-right: 0.6em;
+  color: FireBrick;
+}
+
+#JSX div.form-title {
+  margin-bottom: 15px;
+  border-bottom: #DDD 2px solid;
+  font-size: 2em;
+  font-weight: bolder;
+  color: DarkCyan;
+}
+
+/* override the default GI CSS */
+#JSX input.jsx30textbox {
+  height: 1.8em;
+  width: 25em;
+}
+
+#JSX textarea.jsx30textbox {
+  height: 6em;
+  width: 25em;
+}
+
+/*
+#JSX .readOnlyLabel {
+    color: FireBrick;
+    margin: 0 7 0 0;    
+}
+*/

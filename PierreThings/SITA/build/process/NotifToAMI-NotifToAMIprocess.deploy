@@ -1,0 +1,11 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<dd:process xmlns:dd="http://www.apache.org/ode/schemas/dd/2007/03" xmlns:diag="http://example.com/process/NotifToAMI" xmlns:tns="http://ode/bpel/unit-test.wsdl" xmlns:nf="http://www.example.org/notif" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:NotifInterface="http://example.com/process/NotifToAMI/NotifInterface" xmlns:this="http://example.com/process/NotifToAMI/NotifToAMIprocess" xmlns:RMAnotifService="http://example.com/process/NotifToAMI/RMAnotifService" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="this:NotifToAMIprocess" fileName="process/NotifToAMI-NotifToAMIprocess.bpel">
+  <dd:property name="PATH">process/NotifToAMI</dd:property>
+  <dd:property name="SVG">process/NotifToAMI.svg</dd:property>
+  <dd:provide partnerLink="notifToAMIprocessAndNotifInterfacePlkVar">
+    <dd:service name="this:CanonicServiceForNotifInterface" port="canonicPort"></dd:service>
+  </dd:provide>
+  <dd:invoke partnerLink="rMAnotifServiceAndNotifToAMIprocessForRMAnotifPortPlkVar">
+    <dd:service name="tns:RMAnotifService" port="RMAnotifPort"/>
+  </dd:invoke>
+</dd:process>

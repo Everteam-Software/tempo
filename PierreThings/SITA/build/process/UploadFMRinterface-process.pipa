@@ -1,0 +1,9 @@
+﻿#
+#Sun Jul 05 05:41:23 CEST 2009
+formURI=http\://localhost\:9080/gi/apppath/SITA/forms/uploadFMR.gi/IntalioInternal/ServerLaunch.html
+userProcessInitSOAPAction=http\://www.intalio.com/gi/forms/uploadFMR.gi/Process/initProcess
+processEndpoint=http\://localhost\:9080/ode/processes/SITA/process/UploadFMRinterface/process/User/processAndUserForPortTypeProcessPlk
+task-description=Upload an FMR
+task-role-owners=
+task-user-owners=intalio\\admin
+formNamespace=http\://www.intalio.com/gi/forms/uploadFMR.gi
