@@ -143,7 +143,10 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 	/****************************/
 	/** Begin Extra metadata for SITA **/
 	/** Activity data */
-
+	@Persistent
+	@Column(name = "AircraftID")
+	private String _AircraftID;
+	
 	@Persistent
 	@Column(name = "startTime")
 	@Temporal(TemporalType.TIMESTAMP)
@@ -723,10 +726,6 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 	public void set_RTR(Collection<org.intalio.tempo.workflow.task.RTR> _rtr) {
 		_RTR = _rtr;
 	}
-
-	@Persistent
-	@Column(name = "AircraftID")
-	private String _AircraftID;
 
 	public String get_AircraftID() {
 		return _AircraftID;
