@@ -423,7 +423,7 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             map.put(TaskFetcher.FETCH_FILTER, filter);
             final UserRoles user = _server.getUserRoles(participantToken);
             Task[] tasks = _server.getAvailableTasks(participantToken, map);
-            return marshalTasksListWithInputOutput(user, tasks, "getAvailableTasksWithInputOutputsResponse");
+            return marshalTasksListWithInputOutput(user, tasks, "getAvailableTasksWithInputOutputResponse");
         } catch (Exception e) {
             throw makeFault(e);
         }
