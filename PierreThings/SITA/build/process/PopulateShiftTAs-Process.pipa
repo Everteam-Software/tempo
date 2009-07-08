@@ -1,8 +1,8 @@
 ﻿#
-#Sun Jul 05 05:41:24 CEST 2009
-formURI=http\://localhost\:9080/gi/apppath/SITA/forms/ShiftCreationLight.gi/IntalioInternal/ServerLaunch.html
+#Wed Jul 08 23:52:56 CEST 2009
+formURI=http\://172.17.128.120\:9080/gi/apppath/SITA/forms/ShiftCreationLight.gi/IntalioInternal/ServerLaunch.html
 userProcessInitSOAPAction=http\://www.intalio.com/gi/forms/ShiftCreationLight.gi/Process/initProcess
-processEndpoint=http\://localhost\:9080/ode/processes/SITA/process/PopulateShiftTAs/Process/DC/ProcessAndDCForPortTypeProcessPlk
+processEndpoint=http\://172.17.128.120\:9080/ode/processes/SITA/process/PopulateShiftTAs/Process/DC/ProcessAndDCForPortTypeProcessPlk
 task-description=Populate TAs for your shift
 task-role-owners=intalio\\coordinatorA,intalio\\coordinatorB,intalio\\coordinatorC,intalio\\coordinatorD,intalio\\coordinatorE,intalio\\coordinatorF
 task-user-owners=intalio\\admin

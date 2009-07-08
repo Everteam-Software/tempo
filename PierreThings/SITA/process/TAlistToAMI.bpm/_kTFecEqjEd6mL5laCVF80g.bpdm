@@ -43,7 +43,7 @@
             <bpel:partnerLink name="tAlistExportProcessAndTAinterfacePlkVar" partnerLinkType="diag:TAlistExportProcessAndTAinterface" myRole="TAlistExportProcess_for_TAinterface" bpdm:enableSharing="false" bpdm:providedService="this:CanonicServiceForTAinterface" bpdm:providedPort="canonicPort" bpdm:provideSOAPAddress="${deploy_serverUrl}${deploy_baseSoapServicesUrl}/${deploy_bundleNcName}/${diagram_relativeURL}/TAlistExportProcess/TAinterface" bpdm:providedIsDefault="true" bpdm:clientTasks="_kTFecEqjEd6mL5laCVF80g:_nXLhkEqjEd6mL5laCVF80g" bpdm:isManaged="true" bpdm:otherPoolId="_iaryYEqjEd6mL5laCVF80g"/>
             <bpel:partnerLink name="tAlistServiceAndTAlistExportProcessForTAlistPortPlkVar" partnerLinkType="diag:TAlistServiceAndTAlistExportProcessForTAlistPortPlk" initializePartnerRole="yes" partnerRole="TAlistService_for_TAlistExportProcess" bpdm:invokedService="tns:TAlistService" bpdm:invokedPort="TAlistPort" bpdm:invokedSOAPAddress="jms:/so.tasks.queue?transport.jms.ConnectionFactoryJNDIName=QueueConnectionFactory&amp;java.naming.factory.initial=org.apache.activemq.jndi.ActiveMQInitialContextFactory&amp;java.naming.provider.url=tcp://localhost:61616&amp;transport.jms.ReplyDestinationType=queue&amp;transport.jms.DestinationType=queue" bpdm:invokedIsDefault="true" bpdm:clientTasks="_kTFecEqjEd6mL5laCVF80g:_v3c0YExiEd6915gSCg-TBg" bpdm:isManaged="true" bpdm:otherPoolId="_tvegYEqjEd6mL5laCVF80g"/>
             <bpel:partnerLink name="tAlistExportProcessAndTokenServiceForTokenServiceHttpportPlkVar" partnerLinkType="diag:TAlistExportProcessAndTokenServiceForTokenServiceHttpportPlk" initializePartnerRole="yes" partnerRole="TokenService_for_TAlistExportProcess" bpdm:invokedService="TokenService:TokenService" bpdm:invokedPort="TokenServiceSOAP11port_http" bpdm:invokedSOAPAddress="http://localhost:9080/axis2/services/TokenService" bpdm:invokedIsDefault="true" bpdm:clientTasks="_kTFecEqjEd6mL5laCVF80g:_hnNB4ExiEd6915gSCg-TBg" bpdm:isManaged="true" bpdm:otherPoolId="_DMu_YEulEd6z2tE8GIqf2g"/>
-            <bpel:partnerLink name="tAlistExportProcessAndTMSForPortTaskManagementServicesSOAPPlkVar" partnerLinkType="diag:TAlistExportProcessAndTMSForPortTaskManagementServicesSOAPPlk" initializePartnerRole="yes" partnerRole="TMS_for_TAlistExportProcess" bpdm:invokedService="TaskManagementSystem:TaskManagementServices" bpdm:invokedPort="TaskManagementServicesSOAP" bpdm:invokedSOAPAddress="http://localhost:8080/axis2/services/TaskManagementServices" bpdm:invokedIsDefault="true" bpdm:clientTasks="_kTFecEqjEd6mL5laCVF80g:_sWvtwExiEd6915gSCg-TBg" bpdm:isManaged="true" bpdm:otherPoolId="_HSZNMEulEd6z2tE8GIqf2g"/>
+            <bpel:partnerLink name="tAlistExportProcessAndTMSForPortTaskManagementServicesSOAPPlkVar" partnerLinkType="diag:TAlistExportProcessAndTMSForPortTaskManagementServicesSOAPPlk" initializePartnerRole="yes" partnerRole="TMS_for_TAlistExportProcess" bpdm:invokedService="TaskManagementSystem:TaskManagementServices" bpdm:invokedPort="TaskManagementServicesSOAP" bpdm:invokedSOAPAddress="http://localhost:9080/axis2/services/TaskManagementServices" bpdm:invokedIsDefault="true" bpdm:clientTasks="_kTFecEqjEd6mL5laCVF80g:_sWvtwExiEd6915gSCg-TBg" bpdm:isManaged="true" bpdm:otherPoolId="_HSZNMEulEd6z2tE8GIqf2g"/>
         </bpel:partnerLinks>
         <bpel:variables>
             <bpel:variable name="thisStartRequestMsg" messageType="this:startRequest" bpdm:id="_nX7IdUqjEd6mL5laCVF80g" bpdm:messageIds="inc:_nXecgEqjEd6mL5laCVF80g"/>
@@ -100,24 +100,18 @@
                         <bpel:to>$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest/TaskManagementSystem:participantToken</bpel:to><mapper:mapperLink><mapper:vertice id="2117503" targetPath="$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest/TaskManagementSystem:participantToken" targetedBy="28741315-arg0"></mapper:vertice><mapper:vertice id="28741315" sourcePath="$tokenServiceAuthenticateUserResponseMsg.payload/TokenService:token"></mapper:vertice></mapper:mapperLink>
                     </bpel:copy>
                     <bpel:copy>
-                        <bpel:from>"ORDER BY T._ScheduledArrival"</bpel:from>
+                        <bpel:from>"T._output NOT LIKE '%InspectionStatus_released%' ORDER BY T._ScheduledArrival"</bpel:from>
                         <bpel:to>$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest/TaskManagementSystem:subQuery</bpel:to>
 <mapper:mapperLink>
-  <mapper:vertice id="23178713" targetPath="$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest/TaskManagementSystem:subQuery" targetedBy="21047829-arg0"></mapper:vertice>
-  <mapper:vertice id="21047829" dimension="181x24" location="204,240">
-    <mapper:value>"ORDER BY T._ScheduledArrival"</mapper:value>
+  <mapper:vertice id="29865907" targetPath="$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest/TaskManagementSystem:subQuery" targetedBy="3614092-arg0"></mapper:vertice>
+  <mapper:vertice id="3614092" dimension="409x24" location="60,228">
+    <mapper:value>"T._output NOT LIKE '%InspectionStatus_released%' ORDER BY T._ScheduledArrival"</mapper:value>
   </mapper:vertice>
 </mapper:mapperLink>
                     </bpel:copy>
                     <bpel:copy>
                         <bpel:from>true()</bpel:from>
-                        <bpel:to>$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest/TaskManagementSystem:filter</bpel:to>
-<mapper:mapperLink>
-  <mapper:vertice id="16051985" targetPath="$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest/TaskManagementSystem:filter" targetedBy="25716720-arg0"></mapper:vertice>
-  <mapper:vertice id="25716720" dimension="78x24" location="528,204">
-    <mapper:value>true()</mapper:value>
-  </mapper:vertice>
-</mapper:mapperLink>
+                        <bpel:to>$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest/TaskManagementSystem:filter</bpel:to><mapper:mapperLink><mapper:vertice id="16051985" targetPath="$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest/TaskManagementSystem:filter" targetedBy="25716720-arg0"></mapper:vertice><mapper:vertice id="25716720" dimension="78x24" location="528,204"><mapper:value>true()</mapper:value></mapper:vertice></mapper:mapperLink>
                     </bpel:copy>
                 </bpdm:linkset>
                 <bpdm:linkset bpdm:type="outgoingMessage" bpdm:bpeltype="invoke-request" bpdm:messageVariable="taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg" bpdm:msgVarScopeId="_kTFecEqjEd6mL5laCVF80g" bpdm:variableIsManaged="true" bpdm:messageType="TaskManagementSystem:getAvailableTasksWithInputOutputRequest" bpdm:binding="TaskManagementSystem:TaskManagementServicesSOAP" bpdm:ID="_tggLIExiEd6915gSCg-TBg"></bpdm:linkset>

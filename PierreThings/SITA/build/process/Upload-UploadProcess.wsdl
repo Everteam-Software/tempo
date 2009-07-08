@@ -56,7 +56,7 @@
     </wsdl:binding>
     <wsdl:service name="CanonicServiceForAppearNetworks">
         <wsdl:port name="canonicPort" binding="this:CanonicBindingForAppearNetworks">
-            <soap:address location="http://localhost:9080/ode/processes/SITA/process/Upload/UploadProcess/AppearNetworks"/>
+            <soap:address location="http://172.17.128.120:9080/ode/processes/SITA/process/Upload/UploadProcess/AppearNetworks"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

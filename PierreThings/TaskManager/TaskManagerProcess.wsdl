@@ -523,7 +523,7 @@
 			binding="b4p:UserBusinessProcessBinding">
 
 			<soap:address
-				location="http://localhost:9080/ode/processes/workflow/ib4p" />
+				location="http://172.17.128.120:9080/ode/processes/workflow/ib4p" />
 
 		</wsdl:port>
 
@@ -535,7 +535,7 @@
 		<wsdl:port name="UIFWPort" binding="b4p:UIFWBinding">
 
 			<soap:address
-				location="http://localhost:9080/ode/processes/completeTask" />
+				location="http://172.17.128.120:9080/ode/processes/completeTask" />
 
 		</wsdl:port>
 
@@ -545,7 +545,7 @@
 		<wsdl:port name="TMPPort" binding="b4p:TMPBinding">
 
 			<soap:address
-				location="http://localhost:9080/ode/processes/TMP" />
+				location="http://172.17.128.120:9080/ode/processes/TMP" />
 
 		</wsdl:port>
 

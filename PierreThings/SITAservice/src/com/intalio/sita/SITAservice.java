@@ -1091,6 +1091,11 @@ public class SITAservice {
 							+ " "
 							+ AD.getFirstChildWithName(
 									new QName(namespace, "STD")).getText();
+					// If the STD wasn't populated in the TA, add time (the date
+					// has to be there
+					if (dateTime.length() < 19) {
+						dateTime += "00:00:00";
+					}
 				} else {
 					dateTime = AD.getFirstChildWithName(
 							new QName(namespace, "ActualDepartureDate"))

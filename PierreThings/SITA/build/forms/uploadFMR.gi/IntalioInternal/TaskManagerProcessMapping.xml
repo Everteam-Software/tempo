@@ -19,7 +19,7 @@ jsxversion="1.0">
     type="S" soapstyle="document">
       <record jsxid="x13586" jsxtext="createTask"
       opname="createTask"
-      endpoint="http://localhost:9080/ode/processes/workflow/ib4p"
+      endpoint="http://172.17.128.120:9080/ode/processes/workflow/ib4p"
       method="POST" type="P"
       path="/jsx1:definitions/jsx1:binding/jsx1:operation">
         <headers jsxid="x91007">
@@ -392,7 +392,7 @@ jsxversion="1.0">
       </record>
       <record jsxid="x90928" jsxtext="escalateTask"
       opname="escalateTask"
-      endpoint="http://localhost:9080/ode/processes/workflow/ib4p"
+      endpoint="http://172.17.128.120:9080/ode/processes/workflow/ib4p"
       method="POST" type="P"
       path="/jsx1:definitions/jsx1:binding/jsx1:operation[2]">
         <headers jsxid="x95249">
@@ -421,7 +421,7 @@ jsxversion="1.0">
         </record>
       </record>
       <record jsxid="x60844" jsxtext="skipTask" opname="skipTask"
-      endpoint="http://localhost:9080/ode/processes/workflow/ib4p"
+      endpoint="http://172.17.128.120:9080/ode/processes/workflow/ib4p"
       method="POST" type="P"
       path="/jsx1:definitions/jsx1:binding/jsx1:operation[3]">
         <headers jsxid="x89287">
@@ -459,7 +459,7 @@ jsxversion="1.0">
     type="S" soapstyle="document">
       <record jsxid="x91824" jsxtext="completeTask"
       opname="completeTask"
-      endpoint="http://localhost:9080/ode/processes/completeTask"
+      endpoint="http://172.17.128.120:9080/ode/processes/completeTask"
       method="POST" type="P"
       path="/jsx1:definitions/jsx1:binding[2]/jsx1:operation">
         <headers jsxid="x71188">
@@ -1227,7 +1227,7 @@ jsxversion="1.0">
         </record>
       </record>
       <record jsxid="x32751" jsxtext="claimTask" opname="claimTask"
-      endpoint="http://localhost:9080/ode/processes/completeTask"
+      endpoint="http://172.17.128.120:9080/ode/processes/completeTask"
       method="POST" type="P"
       path="/jsx1:definitions/jsx1:binding[2]/jsx1:operation[2]">
         <headers jsxid="x39766">
@@ -1293,7 +1293,7 @@ jsxversion="1.0">
       </record>
       <record jsxid="x47632" jsxtext="revokeTask"
       opname="revokeTask"
-      endpoint="http://localhost:9080/ode/processes/completeTask"
+      endpoint="http://172.17.128.120:9080/ode/processes/completeTask"
       method="POST" type="P"
       path="/jsx1:definitions/jsx1:binding[2]/jsx1:operation[3]">
         <headers jsxid="x19650">
@@ -1347,7 +1347,7 @@ jsxversion="1.0">
         </record>
       </record>
       <record jsxid="x17792" jsxtext="skipTask" opname="skipTask"
-      endpoint="http://localhost:9080/ode/processes/completeTask"
+      endpoint="http://172.17.128.120:9080/ode/processes/completeTask"
       method="POST" type="P"
       path="/jsx1:definitions/jsx1:binding[2]/jsx1:operation[4]">
         <headers jsxid="x57708">
@@ -1384,7 +1384,7 @@ jsxversion="1.0">
     type="S" soapstyle="document">
       <record jsxid="x54349" jsxtext="nextTaskReady"
       opname="nextTaskReady"
-      endpoint="http://localhost:9080/ode/processes/TMP"
+      endpoint="http://172.17.128.120:9080/ode/processes/TMP"
       method="POST" type="P"
       path="/jsx1:definitions/jsx1:binding[3]/jsx1:operation">
         <headers jsxid="x89711">

@@ -30,7 +30,7 @@
     </wsdl:binding>
     <wsdl:service name="getAllCoordService">
         <wsdl:port binding="tns:getAllCoordPortSoapBinding" name="getAllCoordPort">
-            <soap:address location="http://localhost:9080/ode/processes/SITA/database/getAllCoord"/>
+            <soap:address location="http://172.17.128.120:9080/ode/processes/SITA/database/getAllCoord"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

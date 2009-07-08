@@ -30,7 +30,7 @@
     </wsdl:binding>
     <wsdl:service name="countExistingTAsService">
         <wsdl:port binding="tns:countExistingTAsPortSoapBinding" name="countExistingTAsPort">
-            <soap:address location="http://localhost:9080/ode/processes/SITA/database/countExistingTAs"/>
+            <soap:address location="http://172.17.128.120:9080/ode/processes/SITA/database/countExistingTAs"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

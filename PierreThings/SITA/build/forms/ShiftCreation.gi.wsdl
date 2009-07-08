@@ -343,7 +343,7 @@
 
   <wsdl:service name="WorkflowSoapService">
     <wsdl:port name="ShiftCreationPort" binding="ShiftCreation:WorkflowSoapBinding">
-      <soap:address location="http://localhost:9080/fds/workflow/ShiftCreation"/>
+      <soap:address location="http://172.17.128.120:9080/fds/workflow/ShiftCreation"/>
     </wsdl:port>
   </wsdl:service>
 

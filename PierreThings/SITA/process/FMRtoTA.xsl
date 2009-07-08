@@ -1,5 +1,4 @@
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xdt="http://www.w3.org/2005/02/xpath-datatypes"
-	version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="2.0">
 	<xsl:output method="xml" omit-xml-declaration="yes" />
 	
 	<xsl:template name="timeFromDateTime">
@@ -88,7 +87,7 @@
 									<xsl:with-param name="dateTime" select="@STD" />
 								</xsl:call-template>
 							</xsl:when>
-							<xsl:otherwise>3000-12-12</xsl:otherwise>
+							<xsl:otherwise>2100-01-01</xsl:otherwise>
 						</xsl:choose>
 					</xsl:element>
 					<xsl:element name="STD">
@@ -166,9 +165,27 @@
 					</xsl:if>
 				</xsl:element>
 				<xsl:element name="DC">
-					<xsl:element name="ExpectedStartTime"></xsl:element>
-					<xsl:element name="ExpectedFinishTime"></xsl:element>
-					<xsl:element name="ExpectedReleaseTime"></xsl:element>
+					<xsl:element name="ExpectedStartTime">
+						<xsl:if test="@STD!=''">
+							<xsl:call-template name="timeFromDateTime">
+								<xsl:with-param name="dateTime"><xsl:value-of select="xs:dateTime(@STD) - xs:dayTimeDuration('PT8H')" /></xsl:with-param>
+							</xsl:call-template>
+						</xsl:if>
+					</xsl:element>
+					<xsl:element name="ExpectedFinishTime">
+						<xsl:if test="@STD!=''">
+							<xsl:call-template name="timeFromDateTime">
+								<xsl:with-param name="dateTime"><xsl:value-of select="xs:dateTime(@STD) - xs:dayTimeDuration('PT4H')" /></xsl:with-param>
+							</xsl:call-template>
+						</xsl:if>
+					</xsl:element>
+					<xsl:element name="ExpectedReleaseTime">
+						<xsl:if test="@STD!=''">
+							<xsl:call-template name="timeFromDateTime">
+								<xsl:with-param name="dateTime"><xsl:value-of select="xs:dateTime(@STD) - xs:dayTimeDuration('PT2H')" /></xsl:with-param>
+							</xsl:call-template>
+						</xsl:if>
+					</xsl:element>
 					<xsl:element name="CompassInspectionType"></xsl:element>
 					<xsl:element name="Comments"></xsl:element>
 				</xsl:element>

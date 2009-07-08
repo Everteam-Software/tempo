@@ -14,7 +14,7 @@ jsxversion="1.0">
     path="/jsx1:definitions/jsx1:service/jsx1:port/jsx5:address"
     type="S" soapstyle="document">
       <record jsxid="x63570" jsxtext="add" opname="add"
-      endpoint="http://localhost:9080/axis2/services/tas"
+      endpoint="http://172.17.128.120:9080/axis2/services/tas"
       method="POST" type="P"
       path="/jsx1:definitions/jsx1:binding/jsx1:operation">
         <headers jsxid="x19429">
@@ -140,7 +140,7 @@ jsxversion="1.0">
         </record>
       </record>
       <record jsxid="x62089" jsxtext="delete" opname="delete"
-      endpoint="http://localhost:9080/axis2/services/tas"
+      endpoint="http://172.17.128.120:9080/axis2/services/tas"
       method="POST" type="P"
       path="/jsx1:definitions/jsx1:binding/jsx1:operation[2]">
         <headers jsxid="x21935">

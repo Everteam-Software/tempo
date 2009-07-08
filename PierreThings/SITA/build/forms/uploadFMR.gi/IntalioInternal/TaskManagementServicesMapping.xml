@@ -20,7 +20,7 @@ jsxversion="1.0">
     type="S" soapstyle="document">
       <record jsxid="x2540" jsxtext="getTaskList"
       opname="getTaskList"
-      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      endpoint="http://172.17.128.120:9080/axis2/services/TaskManagementServices"
       method="POST" type="P"
       path="/jsx1:definitions/jsx1:binding/jsx1:operation">
         <headers jsxid="x59347">
@@ -58,7 +58,7 @@ jsxversion="1.0">
         </record>
       </record>
       <record jsxid="x74372" jsxtext="skip" opname="skip"
-      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      endpoint="http://172.17.128.120:9080/axis2/services/TaskManagementServices"
       method="POST" type="P"
       path="/jsx1:definitions/jsx1:binding/jsx1:operation[2]">
         <headers jsxid="x47626">
@@ -99,7 +99,7 @@ jsxversion="1.0">
       </record>
       <record jsxid="x83660" jsxtext="getAvailableTasks"
       opname="getAvailableTasks"
-      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      endpoint="http://172.17.128.120:9080/axis2/services/TaskManagementServices"
       method="POST" type="P"
       path="/jsx1:definitions/jsx1:binding/jsx1:operation[3]">
         <headers jsxid="x38294">
@@ -139,7 +139,7 @@ jsxversion="1.0">
         </record>
       </record>
       <record jsxid="x24026" jsxtext="reassign" opname="reassign"
-      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      endpoint="http://172.17.128.120:9080/axis2/services/TaskManagementServices"
       method="POST" type="P"
       path="/jsx1:definitions/jsx1:binding/jsx1:operation[4]">
         <headers jsxid="x14786">
@@ -179,7 +179,7 @@ jsxversion="1.0">
       </record>
       <record jsxid="x94848" jsxtext="getAttachments"
       opname="getAttachments"
-      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      endpoint="http://172.17.128.120:9080/axis2/services/TaskManagementServices"
       method="POST" type="P"
       path="/jsx1:definitions/jsx1:binding/jsx1:operation[5]"
       jsxopen="1">
@@ -332,7 +332,7 @@ jsxversion="1.0">
       </record>
       <record jsxid="x29606" jsxtext="addAttachment"
       opname="addAttachment"
-      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      endpoint="http://172.17.128.120:9080/axis2/services/TaskManagementServices"
       method="POST" type="P"
       path="/jsx1:definitions/jsx1:binding/jsx1:operation[6]">
         <headers jsxid="x28485">
@@ -372,7 +372,7 @@ jsxversion="1.0">
       </record>
       <record jsxid="x18360" jsxtext="removeAttachment"
       opname="removeAttachment"
-      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      endpoint="http://172.17.128.120:9080/axis2/services/TaskManagementServices"
       method="POST" type="P"
       path="/jsx1:definitions/jsx1:binding/jsx1:operation[7]"
       jsxopen="1">
@@ -449,7 +449,7 @@ jsxversion="1.0">
         </record>
       </record>
       <record jsxid="x66955" jsxtext="getTask" opname="getTask"
-      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      endpoint="http://172.17.128.120:9080/axis2/services/TaskManagementServices"
       method="POST" type="P"
       path="/jsx1:definitions/jsx1:binding/jsx1:operation[8]"
       jsxopen="1">
@@ -835,7 +835,7 @@ jsxversion="1.0">
         </record>
       </record>
       <record jsxid="x61959" jsxtext="setOutput" opname="setOutput"
-      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      endpoint="http://172.17.128.120:9080/axis2/services/TaskManagementServices"
       method="POST" type="P"
       path="/jsx1:definitions/jsx1:binding/jsx1:operation[9]"
       jsxopen="1">
@@ -913,7 +913,7 @@ jsxversion="1.0">
         </record>
       </record>
       <record jsxid="x54684" jsxtext="complete" opname="complete"
-      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      endpoint="http://172.17.128.120:9080/axis2/services/TaskManagementServices"
       method="POST" type="P"
       path="/jsx1:definitions/jsx1:binding/jsx1:operation[10]"
       jsxopen="1">
@@ -978,7 +978,7 @@ jsxversion="1.0">
       </record>
       <record jsxid="x19343" jsxtext="setOutputAndComplete"
       opname="setOutputAndComplete"
-      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      endpoint="http://172.17.128.120:9080/axis2/services/TaskManagementServices"
       method="POST" type="P"
       path="/jsx1:definitions/jsx1:binding/jsx1:operation[11]">
         <headers jsxid="x54279">
@@ -1018,7 +1018,7 @@ jsxversion="1.0">
         </record>
       </record>
       <record jsxid="x35294" jsxtext="fail" opname="fail"
-      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      endpoint="http://172.17.128.120:9080/axis2/services/TaskManagementServices"
       method="POST" type="P"
       path="/jsx1:definitions/jsx1:binding/jsx1:operation[12]">
         <headers jsxid="x61038">
@@ -1057,7 +1057,7 @@ jsxversion="1.0">
         </record>
       </record>
       <record jsxid="x49123" jsxtext="delete" opname="delete"
-      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      endpoint="http://172.17.128.120:9080/axis2/services/TaskManagementServices"
       method="POST" type="P"
       path="/jsx1:definitions/jsx1:binding/jsx1:operation[13]">
         <headers jsxid="x24438">
@@ -1097,7 +1097,7 @@ jsxversion="1.0">
         </record>
       </record>
       <record jsxid="x72885" jsxtext="deleteAll" opname="deleteAll"
-      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      endpoint="http://172.17.128.120:9080/axis2/services/TaskManagementServices"
       method="POST" type="P"
       path="/jsx1:definitions/jsx1:binding/jsx1:operation[14]">
         <headers jsxid="x76110">
@@ -1137,7 +1137,7 @@ jsxversion="1.0">
         </record>
       </record>
       <record jsxid="x6034" jsxtext="create" opname="create"
-      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      endpoint="http://172.17.128.120:9080/axis2/services/TaskManagementServices"
       method="POST" type="P"
       path="/jsx1:definitions/jsx1:binding/jsx1:operation[15]">
         <headers jsxid="x86418">
@@ -1178,7 +1178,7 @@ jsxversion="1.0">
       </record>
       <record jsxid="x42377" jsxtext="initProcess"
       opname="initProcess"
-      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      endpoint="http://172.17.128.120:9080/axis2/services/TaskManagementServices"
       method="POST" type="P"
       path="/jsx1:definitions/jsx1:binding/jsx1:operation[16]"
       jsxopen="1">
@@ -1271,7 +1271,7 @@ jsxversion="1.0">
         </record>
       </record>
       <record jsxid="x53848" jsxtext="getPipa" opname="getPipa"
-      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      endpoint="http://172.17.128.120:9080/axis2/services/TaskManagementServices"
       method="POST" type="P"
       path="/jsx1:definitions/jsx1:binding/jsx1:operation[17]">
         <headers jsxid="x30422">
@@ -1311,7 +1311,7 @@ jsxversion="1.0">
         </record>
       </record>
       <record jsxid="x70034" jsxtext="storePipa" opname="storePipa"
-      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      endpoint="http://172.17.128.120:9080/axis2/services/TaskManagementServices"
       method="POST" type="P"
       path="/jsx1:definitions/jsx1:binding/jsx1:operation[18]">
         <headers jsxid="x5775">
@@ -1352,7 +1352,7 @@ jsxversion="1.0">
       </record>
       <record jsxid="x88379" jsxtext="deletePipa"
       opname="deletePipa"
-      endpoint="http://localhost:9080/axis2/services/TaskManagementServices"
+      endpoint="http://172.17.128.120:9080/axis2/services/TaskManagementServices"
       method="POST" type="P"
       path="/jsx1:definitions/jsx1:binding/jsx1:operation[19]">
         <headers jsxid="x5376">

@@ -10,7 +10,7 @@
         <styles xmi:type="notation:FillStyle" xmi:id="_91dsRlnoEd6hfv5shTSh4g"/>
         <styles xmi:type="notation:LineStyle" xmi:id="_91dsR1noEd6hfv5shTSh4g" lineColor="0"/>
         <element xmi:type="bpmn:Activity" href="modeler.bpmn#_91dsSVnoEd6hfv5shTSh4g"/>
-        <layoutConstraint xmi:type="notation:Bounds" xmi:id="_91dsSFnoEd6hfv5shTSh4g" x="62" y="60"/>
+        <layoutConstraint xmi:type="notation:Bounds" xmi:id="_91dsSFnoEd6hfv5shTSh4g" x="61" y="58"/>
       </children>
       <children xmi:type="notation:Node" xmi:id="_BX9ioFnpEd6hfv5shTSh4g" type="2005">
         <children xmi:type="notation:Node" xmi:id="_BX9iplnpEd6hfv5shTSh4g" type="4004"/>

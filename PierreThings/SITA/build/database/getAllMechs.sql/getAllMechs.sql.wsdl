@@ -30,7 +30,7 @@
     </wsdl:binding>
     <wsdl:service name="getAllMechsService">
         <wsdl:port binding="tns:getAllMechsPortSoapBinding" name="getAllMechsPort">
-            <soap:address location="http://localhost:9080/ode/processes/SITA/database/getAllMechs"/>
+            <soap:address location="http://172.17.128.120:9080/ode/processes/SITA/database/getAllMechs"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

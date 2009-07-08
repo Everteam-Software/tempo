@@ -48,23 +48,23 @@
   </bpel:assign>
   <bpel:reply partnerLink="processAndUserForPortTypeProcessPlkVar" portType="uploadFMR:Process" operation="initProcess" variable="uploadFMRInitProcessResponseMsg" bpmn:label="start" name="start-1" bpmn:id="_BVuuAFnpEd6hfv5shTSh4g"></bpel:reply>
     <bpel:assign bpmn:label="Upload FMR" name="Upload_FMR" bpmn:id="_Hii1mFnpEd6hfv5shTSh4g">
-      <bpel:copy>
+      <bpel:copy ignoreUninitializedFromVariable="yes" ignoreMissingFromData="yes">
         <bpel:from>$uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/aircraft</bpel:from>
         <bpel:to>$upload-UploadProcessUploadFMRMsg.body/@Aircraft</bpel:to>
       </bpel:copy>
-      <bpel:copy>
+      <bpel:copy ignoreUninitializedFromVariable="yes" ignoreMissingFromData="yes">
         <bpel:from>$uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/RTRid</bpel:from>
         <bpel:to>$upload-UploadProcessUploadFMRMsg.body/@Rtr-id</bpel:to>
       </bpel:copy>
-      <bpel:copy>
+      <bpel:copy ignoreUninitializedFromVariable="yes" ignoreMissingFromData="yes">
         <bpel:from>$uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/DepartureFlightNumber</bpel:from>
         <bpel:to>$upload-UploadProcessUploadFMRMsg.body/@DepartureFlightNumber</bpel:to>
       </bpel:copy>
-      <bpel:copy>
+      <bpel:copy ignoreUninitializedFromVariable="yes" ignoreMissingFromData="yes">
         <bpel:from>$uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/InspectionType</bpel:from>
         <bpel:to>$upload-UploadProcessUploadFMRMsg.body/@InspectionType</bpel:to>
       </bpel:copy>
-      <bpel:copy>
+      <bpel:copy ignoreUninitializedFromVariable="yes" ignoreMissingFromData="yes">
         <bpel:from>$uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/Stand</bpel:from>
         <bpel:to>$upload-UploadProcessUploadFMRMsg.body/@Stand</bpel:to>
       </bpel:copy>

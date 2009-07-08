@@ -16,7 +16,7 @@
 					<xsl:otherwise>
 						<xsl:choose>
 							<xsl:when test="@STD!=''"><xsl:value-of select="@STD" /></xsl:when>
-							<xsl:otherwise>3000-12-12T00:00:00Z</xsl:otherwise>
+							<xsl:otherwise>2100-01-01T00:00:00</xsl:otherwise>
 						</xsl:choose>
 					</xsl:otherwise>
 				</xsl:choose>

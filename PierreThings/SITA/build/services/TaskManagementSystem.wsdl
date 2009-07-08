@@ -118,12 +118,12 @@
 							maxOccurs="1" minOccurs="0" />
 						<xsd:element name="subQuery" type="xsd:string"
 							maxOccurs="1" minOccurs="0" />
-						<xsd:element name="filter" type="xsd:boolean"
-							maxOccurs="1" minOccurs="0" />
 						<xsd:element name="fakeDelete" type="xsd:boolean"
 							maxOccurs="1" minOccurs="1" />
 						<xsd:element name="participantToken" type="xsd:string"
 							maxOccurs="1" minOccurs="1" />
+						<xsd:element name="filter" type="xsd:boolean"
+							maxOccurs="1" minOccurs="0" />
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>

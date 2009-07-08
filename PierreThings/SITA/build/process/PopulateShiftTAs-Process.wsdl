@@ -24,7 +24,7 @@
     </wsdl:binding>
     <wsdl:service name="ProcessAndDCForPortTypeProcessPlkService">
         <wsdl:port name="Process_for_DCPort" binding="this:ProcessAndDCForPortTypeProcessPlkServiceBinding">
-            <soap:address location="http://localhost:9080/ode/processes/SITA/process/PopulateShiftTAs/Process/DC/ProcessAndDCForPortTypeProcessPlk"/>
+            <soap:address location="http://172.17.128.120:9080/ode/processes/SITA/process/PopulateShiftTAs/Process/DC/ProcessAndDCForPortTypeProcessPlk"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

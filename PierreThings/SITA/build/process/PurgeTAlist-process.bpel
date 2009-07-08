@@ -52,9 +52,9 @@
 <TaskManagementSystem:deleteAllRequest>
   <TaskManagementSystem:taskType></TaskManagementSystem:taskType>
   <TaskManagementSystem:subQuery></TaskManagementSystem:subQuery>
-  <TaskManagementSystem:filter></TaskManagementSystem:filter>
   <TaskManagementSystem:fakeDelete></TaskManagementSystem:fakeDelete>
   <TaskManagementSystem:participantToken></TaskManagementSystem:participantToken>
+  <TaskManagementSystem:filter></TaskManagementSystem:filter>
 </TaskManagementSystem:deleteAllRequest></bpel:literal>
         </bpel:from>
         <bpel:to>$taskManagementSystemDeleteAllRequestMsg.deleteAllRequest</bpel:to>

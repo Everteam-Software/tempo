@@ -24,7 +24,7 @@
     </wsdl:binding>
     <wsdl:service name="processAndUserForPortTypeProcessPlkService">
         <wsdl:port name="process_for_UserPort" binding="this:processAndUserForPortTypeProcessPlkServiceBinding">
-            <soap:address location="http://localhost:9080/ode/processes/SITA/process/StartTAlistExport/process/User/processAndUserForPortTypeProcessPlk"/>
+            <soap:address location="http://172.17.128.120:9080/ode/processes/SITA/process/StartTAlistExport/process/User/processAndUserForPortTypeProcessPlk"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

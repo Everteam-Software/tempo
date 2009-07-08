@@ -81,13 +81,7 @@
                     </bpel:copy>
                     <bpel:copy>
                         <bpel:from>"1=1"</bpel:from>
-                        <bpel:to>$taskManagementSystemDeleteAllRequestMsg.deleteAllRequest/TaskManagementSystem:subQuery</bpel:to>
-<mapper:mapperLink>
-  <mapper:vertice id="25519147" targetPath="$taskManagementSystemDeleteAllRequestMsg.deleteAllRequest/TaskManagementSystem:subQuery" targetedBy="1095386-arg0"></mapper:vertice>
-  <mapper:vertice id="1095386" dimension="157x24" location="312,552">
-    <mapper:value>"1=1"</mapper:value>
-  </mapper:vertice>
-</mapper:mapperLink>
+                        <bpel:to>$taskManagementSystemDeleteAllRequestMsg.deleteAllRequest/TaskManagementSystem:subQuery</bpel:to><mapper:mapperLink><mapper:vertice id="25519147" targetPath="$taskManagementSystemDeleteAllRequestMsg.deleteAllRequest/TaskManagementSystem:subQuery" targetedBy="1095386-arg0"></mapper:vertice><mapper:vertice id="1095386" dimension="157x24" location="312,552"><mapper:value>"1=1"</mapper:value></mapper:vertice></mapper:mapperLink>
                     </bpel:copy>
                     <bpel:copy>
                         <bpel:from>$tnsAuthenticateUserResponseMsg.payload/tns:token</bpel:from>

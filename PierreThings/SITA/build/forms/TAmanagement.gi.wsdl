@@ -343,7 +343,7 @@
 
   <wsdl:service name="WorkflowSoapService">
     <wsdl:port name="TAmanagementPort" binding="TAmanagement:WorkflowSoapBinding">
-      <soap:address location="http://localhost:9080/fds/workflow/TAmanagement"/>
+      <soap:address location="http://172.17.128.120:9080/fds/workflow/TAmanagement"/>
     </wsdl:port>
   </wsdl:service>
 

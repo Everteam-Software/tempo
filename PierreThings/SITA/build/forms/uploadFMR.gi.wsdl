@@ -343,7 +343,7 @@
 
   <wsdl:service name="WorkflowSoapService">
     <wsdl:port name="uploadFMRPort" binding="uploadFMR:WorkflowSoapBinding">
-      <soap:address location="http://localhost:9080/fds/workflow/uploadFMR"/>
+      <soap:address location="http://172.17.128.120:9080/fds/workflow/uploadFMR"/>
     </wsdl:port>
   </wsdl:service>
 

@@ -95,7 +95,7 @@
         <bpel:to>$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest/TaskManagementSystem:participantToken</bpel:to>
       </bpel:copy>
       <bpel:copy>
-        <bpel:from>"ORDER BY T._ScheduledArrival"</bpel:from>
+        <bpel:from>"T._output NOT LIKE '%InspectionStatus_released%' ORDER BY T._ScheduledArrival"</bpel:from>
         <bpel:to>$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest/TaskManagementSystem:subQuery</bpel:to>
       </bpel:copy>
       <bpel:copy>

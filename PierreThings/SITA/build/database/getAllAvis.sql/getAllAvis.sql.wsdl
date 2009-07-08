@@ -30,7 +30,7 @@
     </wsdl:binding>
     <wsdl:service name="getAllAvisService">
         <wsdl:port binding="tns:getAllAvisPortSoapBinding" name="getAllAvisPort">
-            <soap:address location="http://localhost:9080/ode/processes/SITA/database/getAllAvis"/>
+            <soap:address location="http://172.17.128.120:9080/ode/processes/SITA/database/getAllAvis"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

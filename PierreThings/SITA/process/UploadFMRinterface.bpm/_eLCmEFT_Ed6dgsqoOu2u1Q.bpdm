@@ -55,23 +55,23 @@
             </bpdm:messagingtask>
             <bpdm:messagingtask operation="uploadFMR" partnerLink="processimplicitPartnerAndProcessForCanonicPortPlkVar" portType="Upload-UploadProcess:ForAppearNetworks" isMyRole="false" enableSharing="false" bpdm:label="Upload FMR" bpdm:ID="_Hii1mFnpEd6hfv5shTSh4g">
                 <bpdm:linkset bpdm:type="assignments">
-                    <bpel:copy>
+                    <bpel:copy ignoreMissingFromData="yes">
                         <bpel:from>$uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/aircraft</bpel:from>
                         <bpel:to>$upload-UploadProcessUploadFMRMsg.body/@Aircraft</bpel:to><mapper:mapperLink><mapper:vertice id="1673621" targetPath="$upload-UploadProcessUploadFMRMsg.body/@Aircraft" targetedBy="29011748-arg0"></mapper:vertice><mapper:vertice id="29011748" sourcePath="$uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/aircraft"></mapper:vertice></mapper:mapperLink>
                     </bpel:copy>
-                    <bpel:copy>
+                    <bpel:copy ignoreMissingFromData="yes">
                         <bpel:from>$uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/RTRid</bpel:from>
                         <bpel:to>$upload-UploadProcessUploadFMRMsg.body/@Rtr-id</bpel:to><mapper:mapperLink><mapper:vertice id="19749837" targetPath="$upload-UploadProcessUploadFMRMsg.body/@Rtr-id" targetedBy="186471-arg0"></mapper:vertice><mapper:vertice id="186471" sourcePath="$uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/RTRid"></mapper:vertice></mapper:mapperLink>
                     </bpel:copy>
-                    <bpel:copy>
+                    <bpel:copy ignoreMissingFromData="yes">
                         <bpel:from>$uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/DepartureFlightNumber</bpel:from>
                         <bpel:to>$upload-UploadProcessUploadFMRMsg.body/@DepartureFlightNumber</bpel:to><mapper:mapperLink><mapper:vertice id="7301005" targetPath="$upload-UploadProcessUploadFMRMsg.body/@DepartureFlightNumber" targetedBy="25190647-arg0"></mapper:vertice><mapper:vertice id="25190647" sourcePath="$uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/DepartureFlightNumber"></mapper:vertice></mapper:mapperLink>
                     </bpel:copy>
-                    <bpel:copy>
+                    <bpel:copy ignoreMissingFromData="yes">
                         <bpel:from>$uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/InspectionType</bpel:from>
                         <bpel:to>$upload-UploadProcessUploadFMRMsg.body/@InspectionType</bpel:to><mapper:mapperLink><mapper:vertice id="4448372" targetPath="$upload-UploadProcessUploadFMRMsg.body/@InspectionType" targetedBy="32859382-arg0"></mapper:vertice><mapper:vertice id="32859382" sourcePath="$uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/InspectionType"></mapper:vertice></mapper:mapperLink>
                     </bpel:copy>
-                    <bpel:copy>
+                    <bpel:copy ignoreMissingFromData="yes">
                         <bpel:from>$uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/Stand</bpel:from>
                         <bpel:to>$upload-UploadProcessUploadFMRMsg.body/@Stand</bpel:to><mapper:mapperLink><mapper:vertice id="21601060" targetPath="$upload-UploadProcessUploadFMRMsg.body/@Stand" targetedBy="13052122-arg0"></mapper:vertice><mapper:vertice id="13052122" sourcePath="$uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/Stand"></mapper:vertice></mapper:mapperLink>
                     </bpel:copy>
@@ -85,7 +85,21 @@
                     </bpel:copy>
                     <bpel:copy>
                         <bpel:from>concat($uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/ScheduledArrivalDate, "T", $uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/STA, "Z")</bpel:from>
-                        <bpel:to>$upload-UploadProcessUploadFMRMsg.body/@STA</bpel:to><mapper:mapperLink><mapper:vertice id="27853839" targetPath="$upload-UploadProcessUploadFMRMsg.body/@STA" targetedBy="9575842-arg4"></mapper:vertice><mapper:vertice id="9575842" dimension="78x37" location="312,24"><mapper:value>concat()</mapper:value></mapper:vertice><mapper:vertice id="20496505" sourcePath="$uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/ScheduledArrivalDate" targetedBy="9575842-arg0"></mapper:vertice><mapper:vertice id="2049113" dimension="78x24" location="132,72" targetedBy="9575842-arg1"><mapper:value>"T"</mapper:value></mapper:vertice><mapper:vertice id="17247899" sourcePath="$uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/STA" targetedBy="9575842-arg2"></mapper:vertice><mapper:vertice id="33002274" dimension="78x24" location="132,108" targetedBy="9575842-arg3"><mapper:value>"Z"</mapper:value></mapper:vertice></mapper:mapperLink>
+                        <bpel:to>$upload-UploadProcessUploadFMRMsg.body/@STA</bpel:to>
+<mapper:mapperLink>
+  <mapper:vertice id="21210752" targetPath="$upload-UploadProcessUploadFMRMsg.body/@STA" targetedBy="1173285-arg4"></mapper:vertice>
+  <mapper:vertice id="1173285" dimension="78x37" location="384,48">
+    <mapper:value>concat()</mapper:value>
+  </mapper:vertice>
+  <mapper:vertice id="1652182" sourcePath="$uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/ScheduledArrivalDate" targetedBy="1173285-arg0"></mapper:vertice>
+  <mapper:vertice id="11332052" dimension="78x24" location="132,72" targetedBy="1173285-arg1">
+    <mapper:value>"T"</mapper:value>
+  </mapper:vertice>
+  <mapper:vertice id="24001150" sourcePath="$uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/STA" targetedBy="1173285-arg2"></mapper:vertice>
+  <mapper:vertice id="27562046" dimension="78x24" location="132,108" targetedBy="1173285-arg3">
+    <mapper:value>"Z"</mapper:value>
+  </mapper:vertice>
+</mapper:mapperLink>
                     </bpel:copy>
                     <bpel:copy>
                         <bpel:from>concat($uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/ScheduledDepartureDate, "T", $uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/STD, "Z")</bpel:from>
@@ -95,69 +109,39 @@
                         <bpel:from>if (xs:string($uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/ActualDepartureDate) = "1970-01-01") then ("") else (concat($uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/ActualDepartureDate, "T", $uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/ATD, "Z"))</bpel:from>
                         <bpel:to>$upload-UploadProcessUploadFMRMsg.body/@ATD</bpel:to>
 <mapper:mapperLink>
-  <mapper:vertice id="2092874" targetPath="$upload-UploadProcessUploadFMRMsg.body/@ATD" targetedBy="166860-arg3"></mapper:vertice>
-  <mapper:vertice id="166860" dimension="78x24" location="612,504">
+  <mapper:vertice id="22428221" targetPath="$upload-UploadProcessUploadFMRMsg.body/@ATD" targetedBy="9261456-arg3"></mapper:vertice>
+  <mapper:vertice id="9261456" dimension="78x24" location="612,504">
     <mapper:value>if-then-else</mapper:value>
   </mapper:vertice>
-  <mapper:vertice id="23275808" dimension="78x24" location="336,480" targetedBy="166860-arg0">
+  <mapper:vertice id="628787" dimension="78x24" location="336,480" targetedBy="9261456-arg0">
     <mapper:value>=</mapper:value>
   </mapper:vertice>
-  <mapper:vertice id="11542315" dimension="78x24" location="75,448" targetedBy="23275808-arg0">
+  <mapper:vertice id="31941445" dimension="78x24" location="75,448" targetedBy="628787-arg0">
     <mapper:value>xs:string()</mapper:value>
   </mapper:vertice>
-  <mapper:vertice id="28722328" sourcePath="$uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/ActualDepartureDate" targetedBy="11542315-arg0"></mapper:vertice>
-  <mapper:vertice id="6039151" dimension="78x24" location="48,576" targetedBy="23275808-arg1">
+  <mapper:vertice id="5084615" sourcePath="$uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/ActualDepartureDate" targetedBy="31941445-arg0"></mapper:vertice>
+  <mapper:vertice id="18314597" dimension="78x24" location="48,576" targetedBy="628787-arg1">
     <mapper:value>"1970-01-01"</mapper:value>
   </mapper:vertice>
-  <mapper:vertice id="23568287" dimension="78x24" location="408,540" targetedBy="166860-arg1">
+  <mapper:vertice id="25434853" dimension="78x24" location="408,540" targetedBy="9261456-arg1">
     <mapper:value>""</mapper:value>
   </mapper:vertice>
-  <mapper:vertice id="28532176" dimension="78x24" location="336,612" targetedBy="166860-arg2">
+  <mapper:vertice id="126384" dimension="78x24" location="432,672" targetedBy="9261456-arg2">
     <mapper:value>concat()</mapper:value>
   </mapper:vertice>
-  <mapper:vertice id="17434922" sourcePath="$uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/ActualDepartureDate" targetedBy="28532176-arg0"></mapper:vertice>
-  <mapper:vertice id="27889298" dimension="78x24" location="168,624" targetedBy="28532176-arg1">
+  <mapper:vertice id="17710220" sourcePath="$uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/ActualDepartureDate" targetedBy="126384-arg0"></mapper:vertice>
+  <mapper:vertice id="30471550" dimension="78x24" location="168,624" targetedBy="126384-arg1">
     <mapper:value>"T"</mapper:value>
   </mapper:vertice>
-  <mapper:vertice id="12868361" sourcePath="$uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/ATD" targetedBy="28532176-arg2"></mapper:vertice>
-  <mapper:vertice id="33448862" dimension="78x24" location="180,696" targetedBy="28532176-arg3">
+  <mapper:vertice id="8001796" sourcePath="$uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/ATD" targetedBy="126384-arg2"></mapper:vertice>
+  <mapper:vertice id="17950701" dimension="78x24" location="180,696" targetedBy="126384-arg3">
     <mapper:value>"Z"</mapper:value>
   </mapper:vertice>
 </mapper:mapperLink>
                     </bpel:copy>
                     <bpel:copy>
                         <bpel:from>if (xs:string($uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/ActualArrivalDate) = "1970-01-01") then ("") else (concat($uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/ActualArrivalDate, "T", $uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/ATA, "Z"))</bpel:from>
-                        <bpel:to>$upload-UploadProcessUploadFMRMsg.body/@ATA</bpel:to>
-<mapper:mapperLink>
-  <mapper:vertice id="24790756" targetPath="$upload-UploadProcessUploadFMRMsg.body/@ATA" targetedBy="4408461-arg3"></mapper:vertice>
-  <mapper:vertice id="4408461" dimension="78x24" location="528,360">
-    <mapper:value>if-then-else</mapper:value>
-  </mapper:vertice>
-  <mapper:vertice id="20707299" dimension="78x24" location="348,360" targetedBy="4408461-arg0">
-    <mapper:value>=</mapper:value>
-  </mapper:vertice>
-  <mapper:vertice id="15692217" dimension="78x24" location="156,384" targetedBy="20707299-arg0">
-    <mapper:value>xs:string()</mapper:value>
-  </mapper:vertice>
-  <mapper:vertice id="25028732" sourcePath="$uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/ActualArrivalDate" targetedBy="15692217-arg0"></mapper:vertice>
-  <mapper:vertice id="31455649" dimension="78x24" location="240,408" targetedBy="20707299-arg1">
-    <mapper:value>"1970-01-01"</mapper:value>
-  </mapper:vertice>
-  <mapper:vertice id="9494735" dimension="78x24" location="360,396" targetedBy="4408461-arg1">
-    <mapper:value>""</mapper:value>
-  </mapper:vertice>
-  <mapper:vertice id="78021" dimension="78x33" location="264,192" targetedBy="4408461-arg2">
-    <mapper:value>concat()</mapper:value>
-  </mapper:vertice>
-  <mapper:vertice id="15160076" sourcePath="$uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/ActualArrivalDate" targetedBy="78021-arg0"></mapper:vertice>
-  <mapper:vertice id="2611151" dimension="78x24" location="60,228" targetedBy="78021-arg1">
-    <mapper:value>"T"</mapper:value>
-  </mapper:vertice>
-  <mapper:vertice id="27987779" sourcePath="$uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/ATA" targetedBy="78021-arg2"></mapper:vertice>
-  <mapper:vertice id="27075678" dimension="78x24" location="48,252" targetedBy="78021-arg3">
-    <mapper:value>"Z"</mapper:value>
-  </mapper:vertice>
-</mapper:mapperLink>
+                        <bpel:to>$upload-UploadProcessUploadFMRMsg.body/@ATA</bpel:to><mapper:mapperLink><mapper:vertice id="24790756" targetPath="$upload-UploadProcessUploadFMRMsg.body/@ATA" targetedBy="4408461-arg3"></mapper:vertice><mapper:vertice id="4408461" dimension="78x24" location="528,360"><mapper:value>if-then-else</mapper:value></mapper:vertice><mapper:vertice id="20707299" dimension="78x24" location="348,360" targetedBy="4408461-arg0"><mapper:value>=</mapper:value></mapper:vertice><mapper:vertice id="15692217" dimension="78x24" location="156,384" targetedBy="20707299-arg0"><mapper:value>xs:string()</mapper:value></mapper:vertice><mapper:vertice id="25028732" sourcePath="$uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/ActualArrivalDate" targetedBy="15692217-arg0"></mapper:vertice><mapper:vertice id="31455649" dimension="78x24" location="240,408" targetedBy="20707299-arg1"><mapper:value>"1970-01-01"</mapper:value></mapper:vertice><mapper:vertice id="9494735" dimension="78x24" location="360,396" targetedBy="4408461-arg1"><mapper:value>""</mapper:value></mapper:vertice><mapper:vertice id="78021" dimension="78x33" location="264,192" targetedBy="4408461-arg2"><mapper:value>concat()</mapper:value></mapper:vertice><mapper:vertice id="15160076" sourcePath="$uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/ActualArrivalDate" targetedBy="78021-arg0"></mapper:vertice><mapper:vertice id="2611151" dimension="78x24" location="60,228" targetedBy="78021-arg1"><mapper:value>"T"</mapper:value></mapper:vertice><mapper:vertice id="27987779" sourcePath="$uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/ATA" targetedBy="78021-arg2"></mapper:vertice><mapper:vertice id="27075678" dimension="78x24" location="48,252" targetedBy="78021-arg3"><mapper:value>"Z"</mapper:value></mapper:vertice></mapper:mapperLink>
                     </bpel:copy>
                 </bpdm:linkset>
                 <bpdm:linkset bpdm:type="outgoingMessage" bpdm:bpeltype="invoke-request" bpdm:messageVariable="upload-UploadProcessUploadFMRMsg" bpdm:variableIsManaged="true" bpdm:messageType="Upload-UploadProcess:uploadFMRRequest" bpdm:binding="Upload-UploadProcess:UploadProcessAndAppearNetworksServiceBinding" bpdm:ID="_Hii1mFnpEd6hfv5shTSh4gOutgoing"></bpdm:linkset>
