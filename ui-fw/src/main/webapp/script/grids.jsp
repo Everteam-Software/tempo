@@ -87,7 +87,7 @@
 		
 		function resetTimer() {
 		    time = 0;
-        $("#timer").text("");
+            $("#timer").text("");
 		}
 		
 		$.timer(timeCount,function(timer) {
@@ -103,8 +103,8 @@
 			}
 			   
 			if(time > sessionTimeout) {
-        log_me_out();
-        timer.stop();
+            log_me_out();
+            timer.stop();
 			}
 		});
 		
@@ -493,11 +493,16 @@
 
 		}
 
+        $("html").mousemove(function(e){
+            resetTimer();
+        });
+	    
+
 		//
 		// change tab on click, refresh frame, refresh task list
 		//
 		$('#tabnav li a').click(function(){
-      resetTimer();
+            resetTimer();
 			clearFrame();
 			$("#filter").val("");
 			if(current==null)  {
@@ -541,6 +546,10 @@
 				  refresh(false);
 			  }
 			}
+			
+      $('#taskform').contents().mousemove(function(e){ resetTimer();});
+      $("#taskform").contents().keypress(function (e){ resetTimer();});
+	
 		});
 		
 		$.jcorners("#intro",{radius:20});
