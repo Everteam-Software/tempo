@@ -1,1 +1,0 @@
-select name, identifier, certified from rma_avionic where shift = ? ;
