@@ -30,7 +30,8 @@ APACHE_MIRROR = find_apache_mirror
 TOMCAT_5_DOWNLOAD = APACHE_MIRROR + "tomcat/tomcat-5/v5.5.27/bin/apache-tomcat-5.5.27.zip"
 TOMCAT_6_DOWNLOAD = APACHE_MIRROR + "tomcat/tomcat-6/v6.0.16/bin/apache-tomcat-6.0.16.zip"
 TOMCAT_ADMIN_DOWNLOAD = APACHE_MIRROR + "tomcat/tomcat-5/v5.5.26/bin/apache-tomcat-5.5.26-admin.zip"
-AXIS_DOWNLOAD = APACHE_MIRROR + "ws/axis2/1_4/axis2-1.4-war.zip"
+AXIS_DOWNLOAD = APACHE_MIRROR + "ws/axis2/1_4_1/axis2-1.4.1-war.zip"
+
 ODE_RELEASES = {
   :v1_2 => APACHE_MIRROR + "ode/apache-ode-war-1.2.zip",
   :v1_2_snapshot => "http://www.intalio.org/public/ode/apache-ode-1.2-SNAPSHOT-700632.zip",
