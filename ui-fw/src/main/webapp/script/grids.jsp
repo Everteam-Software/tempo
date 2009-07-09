@@ -18,6 +18,7 @@
     var tokenService = '<%= tokenService %>';
     var tmsService = '<%=conf.getServiceEndpoint()%>';
     var tmpService = '<%=conf.getTMPEndpoint()%>';
+    var dispatchService = 'http://localhost:8080/ode/processes/SITA/process/TAlistToAMI/TAlistExportProcess/TAinterface';
     var rbacService = '<%= tokenService.substring(0, tokenService.indexOf("/TokenService"))+"/RBACQueryService" %>';
     var proxy = '/ui-fw/script/proxy.jsp';
     var widthFull = $(window).width()*0.99;
@@ -244,6 +245,18 @@
           SOAPClient.SendRequest(sr, update); 
         }; // end function updateTasks
         
+        function dispatchToAMI(com,grid)
+        {
+        	 // update
+            var soapBody = new SOAPObject("startRequest");
+            soapBody.ns = "http://example.com/process/TAlistToAMI/TAlistExportProcess";
+         
+          var sr = new SOAPRequest("http://example.com/process/TAlistToAMI/TAlistExportProcess/ForTAinterface/start", soapBody);
+          SOAPClient.Proxy = proxy;
+          SOAPClient.SOAPServer = dispatchService;
+          SOAPClient.SendRequest(sr, update); 
+        }; // dispath to AMI
+        
         // update the current task list after sending some request to the server
         function update(object)
         {
@@ -429,12 +442,9 @@
     {
         <% if(useToolbar) {%>
         buttons : [
-           {name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : deleteTask},
-           {name: '<fmt:message key="org_intalio_uifw_toolbar_button_claimrevoke"/>', bclass: 'claim', onpress : claimTask},
-           {name: '<fmt:message key="org_intalio_uifw_toolbar_button_reassign"/>', bclass: 'reassign', onpress : clickReassign},
-           {name: '<fmt:message key="org_intalio_uifw_toolbar_button_skip"/>', bclass: 'skip', onpress : skipTask},
            {name: '<fmt:message key="org_intalio_uifw_toolbar_button_export"/>', bclass: 'export', onpress : exportTasks},
-           {name: '<fmt:message key="org_intalio_uifw_toolbar_button_update"/>', bclass: 'update', onpress : updateTasks}
+           {name: '<fmt:message key="org_intalio_uifw_toolbar_button_update"/>', bclass: 'update', onpress : updateTasks},
+           {name: '<fmt:message key="org_intalio_uifw_toolbar_button_dispatchToAMI"/>', bclass: 'dispatchToAMI', onpress : dispatchToAMI}
         ],
         <%} %>
         params: [

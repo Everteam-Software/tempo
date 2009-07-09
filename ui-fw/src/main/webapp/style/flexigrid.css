@@ -20,6 +20,10 @@
 {
     background: url(../images/icons/icon.update.gif) no-repeat center left;
 }
+.flexigrid div.fbutton .dispatchToAMI
+{
+    background: url(../images/icons/icon.dispatchToAMI.gif) no-repeat center left;
+}
 .flexigrid div.fbutton .export
 {
     background: url(../images/icons/icon.export.gif) no-repeat center left;
