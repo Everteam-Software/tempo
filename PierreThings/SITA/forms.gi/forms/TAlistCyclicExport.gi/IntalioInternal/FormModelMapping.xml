@@ -1,0 +1,14 @@
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<data jsxid="jsxroot" jsxnamespace="jsx3.ide.mapper.Mapper" jsxversion="1.0">
+  <record jsxid="mi_1" jxstext="Operation (Transaction)" type="T" jsxopen="1" opname="jsxtransaction">
+    <headers jsxid="mi_2">
+      <record jsxid="mi_3" name="Content-Type" value="text/xml"/>
+    </headers>
+    <record jsxid="mi_4" jsxtext="Input (request)" type="I" jsxopen="1" src="../../../forms/TAlistCyclicExport.gi/IntalioInternal/FormModel.xsd">
+      <record jsxid="mi_5" jsxtext="FormModel" type="C" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAlistCyclicExport.gi']//jsx1:element[@name='FormModel']" datatype="" tns="http://www.intalio.com/gi/forms/TAlistCyclicExport.gi"></record>
+    </record>
+    <record jsxid="mi_6" jsxtext="Output (response)" type="O" jsxopen="1" src="../../../forms/TAlistCyclicExport.gi/IntalioInternal/FormModel.xsd">
+      <record jsxid="mi_7" jsxtext="FormModel" type="C" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAlistCyclicExport.gi']//jsx1:element[@name='FormModel']" datatype="" tns="http://www.intalio.com/gi/forms/TAlistCyclicExport.gi"></record>
+    </record>
+  </record>
+</data>

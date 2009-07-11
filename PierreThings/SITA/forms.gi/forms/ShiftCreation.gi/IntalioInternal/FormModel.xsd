@@ -1,0 +1,32 @@
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:us="http://www.intalio.com/UserSchema" xmlns:ShiftCreation="http://www.intalio.com/gi/forms/ShiftCreation.gi" targetNamespace="http://www.intalio.com/gi/forms/ShiftCreation.gi" elementFormDefault="unqualified">
+  <xs:element name="FormModel">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Shift" type="ShiftCreation:ShiftType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="ShiftType">
+    <xs:sequence>
+      <xs:element name="shiftID" minOccurs="0">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="A"/>
+            <xs:enumeration value="B"/>
+            <xs:enumeration value="C"/>
+            <xs:enumeration value="D"/>
+            <xs:enumeration value="E"/>
+            <xs:enumeration value="F"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element type="xs:date" name="StartDate" minOccurs="0"/>
+      <xs:element type="xs:time" name="startTime" minOccurs="0"/>
+      <xs:element type="xs:date" name="endDate" minOccurs="0"/>
+      <xs:element type="xs:time" name="endTime" minOccurs="0"/>
+      <xs:element type="xs:string" name="DispatchCoordinator" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

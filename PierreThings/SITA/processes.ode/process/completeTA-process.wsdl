@@ -1,0 +1,40 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<wsdl:definitions xmlns:UploadResponse="http://www.example.org/UploadResponse" xmlns:TMP="http://example.com/process/completeTA/TMP" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:b4p="http://www.intalio.com/bpms/workflow/ib4p_20051115" xmlns:Interface="http://example.com/process/completeTA/Interface" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:diag="http://example.com/process/completeTA" xmlns:tns="http://www.example.org/UploadResponse" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:this="http://example.com/process/completeTA/process" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="http://example.com/process/completeTA/process">
+    <wsdl:types>
+        <xs:schema targetNamespace="http://www.example.org/UploadResponse">
+            <xs:include schemaLocation="../schema/UploadResponse.xsd"/>
+        </xs:schema>
+        <xs:schema targetNamespace="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+            <xs:include schemaLocation="../services/b4p.xsd"/>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="EventStartMessageRequest">
+        <wsdl:part name="body" element="b4p:completeTaskRequest"/>
+    </wsdl:message>
+    <wsdl:message name="EventStartMessageResponse">
+        <wsdl:part name="body" element="tns:uploadReponse"/>
+    </wsdl:message>
+    <wsdl:portType name="ForInterface">
+        <wsdl:operation name="EventStartMessage">
+            <wsdl:input message="this:EventStartMessageRequest" name="EventStartMessage"/>
+            <wsdl:output message="this:EventStartMessageResponse" name="EventStartMessageResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="CanonicBindingForInterface" type="this:ForInterface">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="EventStartMessage">
+            <soap:operation style="document" soapAction="http://example.com/process/completeTA/process/ForInterface/EventStartMessage"/>
+            <wsdl:input name="EventStartMessage">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="EventStartMessageResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="CanonicServiceForInterface">
+        <wsdl:port name="canonicPort" binding="this:CanonicBindingForInterface">
+            <soap:address location="http://172.17.128.120:9080/ode/processes/SITA/process/completeTA/process/Interface"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

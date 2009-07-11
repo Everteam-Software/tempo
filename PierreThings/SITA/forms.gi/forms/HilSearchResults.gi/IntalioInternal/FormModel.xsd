@@ -1,0 +1,33 @@
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:us="http://www.intalio.com/UserSchema" xmlns:HilSearchResults="http://www.intalio.com/gi/forms/HilSearchResults.gi" targetNamespace="http://www.intalio.com/gi/forms/HilSearchResults.gi" elementFormDefault="unqualified">
+  <xs:element name="FormModel">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="HILs" type="HilSearchResults:HILsType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="HILsType">
+    <xs:sequence>
+      <xs:element name="HILs0" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element type="xs:string" name="HILslipID" minOccurs="0"/>
+            <xs:element type="xs:string" name="AircraftID" minOccurs="0"/>
+            <xs:element name="HILtype" minOccurs="0">
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:enumeration value="cabin"/>
+                  <xs:enumeration value="cockpit"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <xs:element type="xs:date" name="CreationDate" minOccurs="0"/>
+            <xs:element type="xs:date" name="DueDate" minOccurs="0"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

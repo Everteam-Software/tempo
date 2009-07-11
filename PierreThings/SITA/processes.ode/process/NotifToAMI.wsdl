@@ -1,0 +1,11 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<wsdl:definitions xmlns:nf="http://www.example.org/notif" xmlns:NotifToAMIprocess="http://example.com/process/NotifToAMI/NotifToAMIprocess" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diag="http://example.com/process/NotifToAMI" xmlns:NotifInterface="http://example.com/process/NotifToAMI/NotifInterface" xmlns:tns="http://ode/bpel/unit-test.wsdl" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:bpdm="http://www.intalio/designer/business-process-data-modeling" targetNamespace="http://example.com/process/NotifToAMI">
+    <wsdl:import namespace="http://ode/bpel/unit-test.wsdl" location="../services/RMAnotif.wsdl"/>
+    <wsdl:import namespace="http://example.com/process/NotifToAMI/NotifToAMIprocess" location="NotifToAMI-NotifToAMIprocess.wsdl"/>
+    <pnlk:partnerLinkType name="RMAnotifServiceAndNotifToAMIprocessForRMAnotifPortPlk">
+        <pnlk:role name="RMAnotifService_for_NotifToAMIprocess" portType="tns:RMAnotifPortType"/>
+    </pnlk:partnerLinkType>
+    <pnlk:partnerLinkType name="NotifToAMIprocessAndNotifInterface">
+        <pnlk:role name="NotifToAMIprocess_for_NotifInterface" portType="NotifToAMIprocess:ForNotifInterface"/>
+    </pnlk:partnerLinkType>
+</wsdl:definitions>

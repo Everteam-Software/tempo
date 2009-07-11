@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<wsdl:definitions xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:process="http://example.com/process/PurgeTAlist/process" xmlns:PurgeTAlist="http://www.intalio.com/gi/forms/PurgeTAlist.gi" xmlns:diag="http://example.com/process/PurgeTAlist" xmlns:attachments="http://www.intalio.com/gi/forms/PurgeTAlist.gi/attachments" xmlns:TaskManagementSystem="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:User="http://example.com/process/PurgeTAlist/User" xmlns:tns="http://tempo.intalio.org/security/tokenService/" xmlns:TAdata="http://www.intalio.com/gi/forms/TAmanagement.gi" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:bpdm="http://www.intalio/designer/business-process-data-modeling" targetNamespace="http://example.com/process/PurgeTAlist">
+    <wsdl:import namespace="http://tempo.intalio.org/security/tokenService/" location="../services/TokenService.wsdl"/>
+    <wsdl:import namespace="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" location="../services/TaskManagementSystem.wsdl"/>
+    <wsdl:import namespace="http://www.intalio.com/gi/forms/PurgeTAlist.gi" location="../forms/PurgeTAlist.gi.wsdl"/>
+    <pnlk:partnerLinkType name="TMsAndProcessForPortTaskManagementServicesSOAPPlk">
+        <pnlk:role name="TMS_for_process" portType="TaskManagementSystem:TaskManagementServices"/>
+    </pnlk:partnerLinkType>
+    <pnlk:partnerLinkType name="processAndUserForPortTypeProcessPlk">
+        <pnlk:role name="process_for_User" portType="PurgeTAlist:Process"/>
+    </pnlk:partnerLinkType>
+    <pnlk:partnerLinkType name="TokenAndProcessForTokenServiceHttpportPlk">
+        <pnlk:role name="Token_for_process" portType="tns:TokenServicePortType"/>
+    </pnlk:partnerLinkType>
+</wsdl:definitions>

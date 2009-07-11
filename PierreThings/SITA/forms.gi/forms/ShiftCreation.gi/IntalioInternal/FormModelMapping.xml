@@ -1,0 +1,122 @@
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<data jsxid="jsxroot" jsxnamespace="jsx3.ide.mapper.Mapper" jsxversion="1.0">
+  <record jsxid="mi_1" jxstext="Operation (Transaction)" type="T" jsxopen="1" opname="jsxtransaction">
+    <headers jsxid="mi_2">
+      <record jsxid="mi_3" name="Content-Type" value="text/xml"/>
+    </headers>
+    <record jsxid="mi_4" jsxtext="Input (request)" type="I" jsxopen="1" src="../../../forms/ShiftCreation.gi/IntalioInternal/FormModel.xsd">
+      <record jsxid="mi_5" jsxtext="FormModel" type="C" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreation.gi']//jsx1:element[@name='FormModel']" datatype="" tns="http://www.intalio.com/gi/forms/ShiftCreation.gi">
+        <record jsxid="mi_6" jsxtext="Shift" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreation.gi']//jsx1:element[@name='Shift']">
+          <restrictions>
+            <record jsxid="mi_7" name="nillable" value="true"/>
+          </restrictions>
+          <record jsxid="mi_8" jsxtext="shiftID" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreation.gi']//jsx1:element[@name='shiftID']">
+            <restrictions>
+              <record jsxid="mi_9" name="minoccur" value="0"/>
+            </restrictions>
+            <mappings jsxid="mi_10">
+              <record jsxid="mi_11" name="DOM" value="shiftID"/>
+            </mappings>
+          </record>
+          <record jsxid="mi_12" jsxtext="StartDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreation.gi']//jsx1:element[@name='StartDate']">
+            <restrictions>
+              <record jsxid="mi_13" name="minoccur" value="0"/>
+            </restrictions>
+            <mappings jsxid="mi_14">
+              <record jsxid="mi_15" name="Script" value="setValue(Intalio.Internal.Utilities.fixDateOutput(jsx3.GO('StartDate', my.getNamespace())));"/>
+            </mappings>
+          </record>
+          <record jsxid="mi_16" jsxtext="startTime" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreation.gi']//jsx1:element[@name='startTime']">
+            <restrictions>
+              <record jsxid="mi_17" name="minoccur" value="0"/>
+            </restrictions>
+            <mappings jsxid="mi_18">
+              <record jsxid="mi_19" name="Script" value="setValue(Intalio.Internal.Utilities.fixTimeOutput(jsx3.GO('startTime', my.getNamespace())));"/>
+            </mappings>
+          </record>
+          <record jsxid="mi_20" jsxtext="endDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreation.gi']//jsx1:element[@name='endDate']">
+            <restrictions>
+              <record jsxid="mi_21" name="minoccur" value="0"/>
+            </restrictions>
+            <mappings jsxid="mi_22">
+              <record jsxid="mi_23" name="Script" value="setValue(Intalio.Internal.Utilities.fixDateOutput(jsx3.GO('endDate', my.getNamespace())));"/>
+            </mappings>
+          </record>
+          <record jsxid="mi_24" jsxtext="endTime" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreation.gi']//jsx1:element[@name='endTime']">
+            <restrictions>
+              <record jsxid="mi_25" name="minoccur" value="0"/>
+            </restrictions>
+            <mappings jsxid="mi_26">
+              <record jsxid="mi_27" name="Script" value="setValue(Intalio.Internal.Utilities.fixTimeOutput(jsx3.GO('endTime', my.getNamespace())));"/>
+            </mappings>
+          </record>
+          <record jsxid="mi_28" jsxtext="DispatchCoordinator" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreation.gi']//jsx1:element[@name='DispatchCoordinator']">
+            <restrictions>
+              <record jsxid="mi_29" name="minoccur" value="0"/>
+            </restrictions>
+            <mappings jsxid="mi_30">
+              <record jsxid="mi_31" name="DOM" value="DispatchCoordinator"/>
+            </mappings>
+          </record>
+        </record>
+      </record>
+    </record>
+    <record jsxid="mi_32" jsxtext="Output (response)" type="O" jsxopen="1" src="../../../forms/ShiftCreation.gi/IntalioInternal/FormModel.xsd">
+      <record jsxid="mi_33" jsxtext="FormModel" type="C" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreation.gi']//jsx1:element[@name='FormModel']" datatype="" tns="http://www.intalio.com/gi/forms/ShiftCreation.gi">
+        <record jsxid="mi_34" jsxtext="Shift" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreation.gi']//jsx1:element[@name='Shift']">
+          <restrictions>
+            <record jsxid="mi_35" name="nillable" value="true"/>
+          </restrictions>
+          <record jsxid="mi_36" jsxtext="shiftID" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreation.gi']//jsx1:element[@name='shiftID']">
+            <restrictions>
+              <record jsxid="mi_37" name="minoccur" value="0"/>
+            </restrictions>
+            <mappings jsxid="mi_38">
+              <record jsxid="mi_39" name="DOM" value="shiftID"/>
+            </mappings>
+          </record>
+          <record jsxid="mi_40" jsxtext="StartDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreation.gi']//jsx1:element[@name='StartDate']">
+            <restrictions>
+              <record jsxid="mi_41" name="minoccur" value="0"/>
+            </restrictions>
+            <mappings jsxid="mi_42">
+              <record jsxid="mi_43" name="Script" value="Intalio.Internal.Utilities.fixDateInput(jsx3.GO('StartDate', my.getNamespace()), MESSAGENODE.getValue());"/>
+            </mappings>
+          </record>
+          <record jsxid="mi_44" jsxtext="startTime" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreation.gi']//jsx1:element[@name='startTime']">
+            <restrictions>
+              <record jsxid="mi_45" name="minoccur" value="0"/>
+            </restrictions>
+            <mappings jsxid="mi_46">
+              <record jsxid="mi_47" name="Script" value="Intalio.Internal.Utilities.fixTimeInput(jsx3.GO('startTime', my.getNamespace()), MESSAGENODE.getValue());"/>
+            </mappings>
+          </record>
+          <record jsxid="mi_48" jsxtext="endDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreation.gi']//jsx1:element[@name='endDate']">
+            <restrictions>
+              <record jsxid="mi_49" name="minoccur" value="0"/>
+            </restrictions>
+            <mappings jsxid="mi_50">
+              <record jsxid="mi_51" name="Script" value="Intalio.Internal.Utilities.fixDateInput(jsx3.GO('endDate', my.getNamespace()), MESSAGENODE.getValue());"/>
+            </mappings>
+          </record>
+          <record jsxid="mi_52" jsxtext="endTime" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreation.gi']//jsx1:element[@name='endTime']">
+            <restrictions>
+              <record jsxid="mi_53" name="minoccur" value="0"/>
+            </restrictions>
+            <mappings jsxid="mi_54">
+              <record jsxid="mi_55" name="Script" value="Intalio.Internal.Utilities.fixTimeInput(jsx3.GO('endTime', my.getNamespace()), MESSAGENODE.getValue());"/>
+            </mappings>
+          </record>
+          <record jsxid="mi_56" jsxtext="DispatchCoordinator" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreation.gi']//jsx1:element[@name='DispatchCoordinator']">
+            <restrictions>
+              <record jsxid="mi_57" name="minoccur" value="0"/>
+            </restrictions>
+            <mappings jsxid="mi_58">
+              <record jsxid="mi_59" name="DOM" value="DispatchCoordinator"/>
+            </mappings>
+          </record>
+        </record>
+      </record>
+    </record>
+  </record>
+</data>

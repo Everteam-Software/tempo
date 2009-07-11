@@ -1,0 +1,9 @@
+﻿#
+#Thu Jul 09 04:11:45 CEST 2009
+formURI=http\://172.17.128.120\:9080/gi/apppath/SITA/forms/TAlistCyclicExport.gi/IntalioInternal/ServerLaunch.html
+userProcessInitSOAPAction=http\://www.intalio.com/gi/forms/TAlistCyclicExport.gi/Process/initProcess
+processEndpoint=http\://172.17.128.120\:9080/ode/processes/SITA/process/StartCyclicTAlistExport/process/User/processAndUserForPortTypeProcessPlk
+task-description=Start Cyclic TA List Export
+task-role-owners=
+task-user-owners=intalio\\admin
+formNamespace=http\://www.intalio.com/gi/forms/TAlistCyclicExport.gi

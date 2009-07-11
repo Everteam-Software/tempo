@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jdbc:descriptor wsdlLocation="getAllCoord.sql.wsdl" targetNamespace="urn:intalio.com:connectors:database:sita:getallcoordservice" xmlns:jdbc="http://bpms.intalio.com/connectors/jdbc/">
+    <jdbc:service name="getAllCoordService">
+        <jdbc:operation name="urn:getAllCoord" sqlStatement="select name, identifier, certified from rma_coordinator where shift = ? ;" event="false" dynamicCredentials="true" xmlns:urn="urn:intalio.com:connectors:database:sita:getallcoordservice">
+            <jdbc:input>
+                <jdbc:parameter>
+                    <jdbc:mode>1</jdbc:mode>
+                    <jdbc:name>shift</jdbc:name>
+                    <jdbc:type>40</jdbc:type>
+                    <jdbc:length>10</jdbc:length>
+                    <jdbc:typeName xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
+                    <jdbc:precision>0</jdbc:precision>
+                    <jdbc:scale>0</jdbc:scale>
+                    <jdbc:nullable>false</jdbc:nullable>
+                </jdbc:parameter>
+            </jdbc:input>
+            <jdbc:filter rowsToSendService="1" rowsToFetch="-1" duration="-PT1S">
+                <jdbc:unique scope="none"/>
+            </jdbc:filter>
+            <jdbc:output/>
+        </jdbc:operation>
+        <jdbc:port>
+            <jdbc:address location="http://localhost:8080/ode/processes/getAllCoordService"/>
+        </jdbc:port>
+        <jdbc:connection jndiName="java:comp/env/jdbc/">
+            <jdbc:databaseProductName>MySql</jdbc:databaseProductName>
+            <jdbc:databaseProductVersion>5.1</jdbc:databaseProductVersion>
+            <jdbc:driverClass>com.mysql.jdbc.Driver</jdbc:driverClass>
+            <jdbc:databaseUrl>jdbc:mysql://localhost:3306/tap2</jdbc:databaseUrl>
+            <jdbc:databaseName>tap2</jdbc:databaseName>
+            <jdbc:userName>root</jdbc:userName>
+            <jdbc:password>appear</jdbc:password>
+        </jdbc:connection>
+    </jdbc:service>
+</jdbc:descriptor>
