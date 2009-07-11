@@ -20,8 +20,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
+import org.intalio.deploy.deployment.AssemblyId;
 import org.intalio.deploy.deployment.ComponentId;
 import org.intalio.deploy.deployment.DeploymentMessage;
 import org.intalio.deploy.deployment.DeploymentMessage.Level;
@@ -35,6 +38,8 @@ public class XFormComponentManager implements org.intalio.deploy.deployment.spi.
     private static final Logger LOG = LoggerFactory.getLogger(XFormComponentManager.class);
 
     private WDSServiceFactory _wdsFactory;
+
+    private HashMap<String, HashSet<AssemblyId>> _versions = new HashMap<String, HashSet<AssemblyId>>();
 
     public XFormComponentManager(WDSServiceFactory wdsFactory) {
         _wdsFactory = wdsFactory;
@@ -90,23 +95,37 @@ public class XFormComponentManager implements org.intalio.deploy.deployment.spi.
     public void undeploy(ComponentId name, File path, List<String> deployedObjects) {
         WDSService wds = _wdsFactory.getWDSService();
         String token = "x"; // TODO
-        for (String url: deployedObjects) {
-            try {
-                wds.deleteItem(url, token);
-            } catch (UnavailableItemException e) {
-                LOG.warn("Undeploy - XForm not found: "+url);
-            } catch (Exception e) {
-                LOG.warn("Error during XForm undeploy: "+url, e);
+
+        // only undeploy if this is the last version of this assembly
+        String assembly = name.getAssemblyId().getAssemblyName();
+        HashSet<AssemblyId> set = _versions.get(assembly);
+        if (set == null || set.size() <= 1) {
+            for (String url: deployedObjects) {
+                try {
+                    wds.deleteItem(url, token);
+                } catch (UnavailableItemException e) {
+                    LOG.warn("Undeploy - XForm not found: "+url);
+                } catch (Exception e) {
+                    LOG.warn("Error during XForm undeploy: "+url, e);
+                }
             }
         }
     }
 
     public void deployed(ComponentId name, File path, List<String> deployedResources, boolean active) {
-        // nothing
+        // increment number of versions for the given assembly
+        String assembly = name.getAssemblyId().getAssemblyName();
+        HashSet<AssemblyId> set = _versions.get(assembly);
+        if (set == null) set = new HashSet<AssemblyId>();
+        set.add(name.getAssemblyId());
+        _versions.put(assembly, set);
     }
 
     public void undeployed(ComponentId name, File path, List<String> deployedResources) {
-        // nothing
+        // decrement number of versions for the given assembly
+        String assembly = name.getAssemblyId().getAssemblyName();
+        HashSet<AssemblyId> set = _versions.get(assembly);
+        if (set != null) set.remove(name.getAssemblyId());
     }
 
     public void start(ComponentId name, File path, List<String> deployedResources, boolean active) {
@@ -118,19 +137,19 @@ public class XFormComponentManager implements org.intalio.deploy.deployment.spi.
     }
 
 	public void activate(ComponentId name, File path, List<String> deployedResources) {
-		// TODO implement this
+        // nothing
 	}
 
 	public void retire(ComponentId name, File path, List<String> deployedResources) {
-		// TODO implement this
+        // nothing
 	}
 	
 	public void activated(ComponentId name, File path, List<String> deployedResources) {
-		// TODO implement this
+        // nothing
 	}
 
 	public void retired(ComponentId name, File path, List<String> deployedResources) {
-		// TODO implement this
+        // nothing
 	}
 
 	// ------------------ Common deployment methods ------------------------

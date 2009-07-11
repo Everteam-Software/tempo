@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2008 Intalio inc.
  *
  * All rights reserved. This program and the accompanying materials
@@ -18,9 +18,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 
+import org.intalio.deploy.deployment.AssemblyId;
 import org.intalio.deploy.deployment.ComponentId;
 import org.intalio.deploy.deployment.DeploymentMessage;
 import org.intalio.deploy.deployment.DeploymentMessage.Level;
@@ -38,6 +41,8 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
 
     ITMSServer _tms;
     
+    private HashMap<String, HashSet<AssemblyId>> _versions = new HashMap<String, HashSet<AssemblyId>>();
+
     public PIPAComponentManager(ITMSServer tms) {
         _tms = tms;
     }
@@ -89,18 +94,24 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
 
     public void undeploy(ComponentId name, File path, List<String> deployedResources) {
         String token = "x"; // TODO
-        for (String url: deployedResources) {
-            try {
-                _tms.deletePipa(url, token);
-            } catch (UnavailableTaskException e) {
-                LOG.warn("Undeploy - PIPA not found: "+url);
-            } catch (AuthException e) {
-                LOG.warn("Undeploy - AuthException: "+url, e);
-                break; // fail-fast
-            } catch (TMSException e) {
-                LOG.warn("Undeploy - TMSException: "+url, e);
-                break; // fail-fast
-			}
+
+        // only undeploy if this is the last version of this assembly
+        String assembly = name.getAssemblyId().getAssemblyName();
+        HashSet<AssemblyId> set = _versions.get(assembly);
+        if (set == null || set.size() <= 1) {
+            for (String url: deployedResources) {
+                try {
+                    _tms.deletePipa(url, token);
+                } catch (UnavailableTaskException e) {
+                    LOG.warn("Undeploy - PIPA not found: "+url);
+                } catch (AuthException e) {
+                    LOG.warn("Undeploy - AuthException: "+url, e);
+                    break; // fail-fast
+                } catch (TMSException e) {
+                    LOG.warn("Undeploy - TMSException: "+url, e);
+                    break; // fail-fast
+                }
+            }
         }
     }
 
@@ -121,11 +132,19 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
 	}
 
     public void deployed(ComponentId name, File path, List<String> deployedResources, boolean active) {
-        // nothing
+        // increment number of versions for the given assembly
+        String assembly = name.getAssemblyId().getAssemblyName();
+        HashSet<AssemblyId> set = _versions.get(assembly);
+        if (set == null) set = new HashSet<AssemblyId>();
+        set.add(name.getAssemblyId());
+        _versions.put(assembly, set);
     }
 
     public void undeployed(ComponentId name, File path, List<String> deployedResources) {
-        // nothing
+        // decrement number of versions for the given assembly
+        String assembly = name.getAssemblyId().getAssemblyName();
+        HashSet<AssemblyId> set = _versions.get(assembly);
+        if (set != null) set.remove(name.getAssemblyId());
     }
 
 	public void activated(ComponentId name, File path, List<String> deployedResources) {
