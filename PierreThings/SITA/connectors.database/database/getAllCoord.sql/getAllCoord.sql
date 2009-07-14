@@ -1,0 +1,1 @@
+select name, identifier, certified from rma_coordinator where shift = ? ;

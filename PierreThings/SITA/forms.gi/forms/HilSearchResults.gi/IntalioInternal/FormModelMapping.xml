@@ -1,0 +1,126 @@
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<data jsxid="jsxroot" jsxnamespace="jsx3.ide.mapper.Mapper" jsxversion="1.0">
+  <record jsxid="mi_1" jxstext="Operation (Transaction)" type="T" jsxopen="1" opname="jsxtransaction">
+    <headers jsxid="mi_2">
+      <record jsxid="mi_3" name="Content-Type" value="text/xml"/>
+    </headers>
+    <record jsxid="mi_4" jsxtext="Input (request)" type="I" jsxopen="1" src="../../../forms/HilSearchResults.gi/IntalioInternal/FormModel.xsd">
+      <record jsxid="mi_5" jsxtext="FormModel" type="C" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/HilSearchResults.gi']//jsx1:element[@name='FormModel']" datatype="" tns="http://www.intalio.com/gi/forms/HilSearchResults.gi">
+        <record jsxid="mi_6" jsxtext="HILs" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/HilSearchResults.gi']//jsx1:element[@name='HILs']">
+          <restrictions>
+            <record jsxid="mi_7" name="nillable" value="true"/>
+          </restrictions>
+          <record jsxid="mi_8" jsxtext="HILs0" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/HilSearchResults.gi']//jsx1:element[@name='HILs0']">
+            <restrictions>
+              <record jsxid="mi_9" name="maxoccur" value="unbounded"/>
+              <record jsxid="mi_10" name="minoccur" value="0"/>
+            </restrictions>
+            <record jsxid="mi_11" jsxtext="HILslipID" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/HilSearchResults.gi']//jsx1:element[@name='HILslipID']">
+              <restrictions>
+                <record jsxid="mi_12" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_13">
+                <record jsxid="mi_14" name="CDF Attribute" value="jsxHILid"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_15" jsxtext="AircraftID" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/HilSearchResults.gi']//jsx1:element[@name='AircraftID']">
+              <restrictions>
+                <record jsxid="mi_16" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_17">
+                <record jsxid="mi_18" name="CDF Attribute" value="jsxAircraftID"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_19" jsxtext="HILtype" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/HilSearchResults.gi']//jsx1:element[@name='HILtype']">
+              <restrictions>
+                <record jsxid="mi_20" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_21">
+                <record jsxid="mi_22" name="CDF Attribute" value="HILtype"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_23" jsxtext="CreationDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/HilSearchResults.gi']//jsx1:element[@name='CreationDate']">
+              <restrictions>
+                <record jsxid="mi_24" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_25">
+                <record jsxid="mi_26" name="Script" value="setValue(Intalio.Internal.Utilities.fixDateOutputMatrix(CDFCONTEXT.getAttribute('CreationDate')));"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_27" jsxtext="DueDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/HilSearchResults.gi']//jsx1:element[@name='DueDate']">
+              <restrictions>
+                <record jsxid="mi_28" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_29">
+                <record jsxid="mi_30" name="Script" value="setValue(Intalio.Internal.Utilities.fixDateOutputMatrix(CDFCONTEXT.getAttribute('DueDate')));"/>
+              </mappings>
+            </record>
+            <mappings jsxid="mi_31">
+              <record jsxid="mi_32" name="Script" value="if(typeof(this._i_32)=='undefined'){this._i_32=-1;my.getCDFDocument('HILs0','OUTBOUND');}"/>
+              <record jsxid="mi_33" name="CDF Record"/>
+            </mappings>
+          </record>
+        </record>
+      </record>
+    </record>
+    <record jsxid="mi_34" jsxtext="Output (response)" type="O" jsxopen="1" src="../../../forms/HilSearchResults.gi/IntalioInternal/FormModel.xsd">
+      <record jsxid="mi_35" jsxtext="FormModel" type="C" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/HilSearchResults.gi']//jsx1:element[@name='FormModel']" datatype="" tns="http://www.intalio.com/gi/forms/HilSearchResults.gi">
+        <record jsxid="mi_36" jsxtext="HILs" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/HilSearchResults.gi']//jsx1:element[@name='HILs']">
+          <restrictions>
+            <record jsxid="mi_37" name="nillable" value="true"/>
+          </restrictions>
+          <record jsxid="mi_38" jsxtext="HILs0" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/HilSearchResults.gi']//jsx1:element[@name='HILs0']">
+            <restrictions>
+              <record jsxid="mi_39" name="maxoccur" value="unbounded"/>
+              <record jsxid="mi_40" name="minoccur" value="0"/>
+            </restrictions>
+            <record jsxid="mi_41" jsxtext="HILslipID" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/HilSearchResults.gi']//jsx1:element[@name='HILslipID']">
+              <restrictions>
+                <record jsxid="mi_42" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_43">
+                <record jsxid="mi_44" name="CDF Attribute" value="jsxHILid"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_45" jsxtext="AircraftID" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/HilSearchResults.gi']//jsx1:element[@name='AircraftID']">
+              <restrictions>
+                <record jsxid="mi_46" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_47">
+                <record jsxid="mi_48" name="CDF Attribute" value="jsxAircraftID"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_49" jsxtext="HILtype" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/HilSearchResults.gi']//jsx1:element[@name='HILtype']">
+              <restrictions>
+                <record jsxid="mi_50" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_51">
+                <record jsxid="mi_52" name="CDF Attribute" value="HILtype"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_53" jsxtext="CreationDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/HilSearchResults.gi']//jsx1:element[@name='CreationDate']">
+              <restrictions>
+                <record jsxid="mi_54" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_55">
+                <record jsxid="mi_56" name="Script" value="CDFCONTEXT.setAttribute('CreationDate', Intalio.Internal.Utilities.fixDateInputMatrix(MESSAGENODE.getValue()));"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_57" jsxtext="DueDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/HilSearchResults.gi']//jsx1:element[@name='DueDate']">
+              <restrictions>
+                <record jsxid="mi_58" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_59">
+                <record jsxid="mi_60" name="Script" value="CDFCONTEXT.setAttribute('DueDate', Intalio.Internal.Utilities.fixDateInputMatrix(MESSAGENODE.getValue()));"/>
+              </mappings>
+            </record>
+            <mappings jsxid="mi_61">
+              <record jsxid="mi_62" name="Script" value="if(typeof(this._i_62)=='undefined'){this._i_62=-1;my.getCDFDocument('HILs0','INBOUND');}"/>
+              <record jsxid="mi_63" name="CDF Record"/>
+            </mappings>
+          </record>
+        </record>
+      </record>
+    </record>
+  </record>
+</data>

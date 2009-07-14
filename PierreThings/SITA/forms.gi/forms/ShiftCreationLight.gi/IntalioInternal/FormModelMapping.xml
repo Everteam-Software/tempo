@@ -1,0 +1,48 @@
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<data jsxid="jsxroot" jsxnamespace="jsx3.ide.mapper.Mapper" jsxversion="1.0">
+  <record jsxid="mi_1" jxstext="Operation (Transaction)" type="T" jsxopen="1" opname="jsxtransaction">
+    <headers jsxid="mi_2">
+      <record jsxid="mi_3" name="Content-Type" value="text/xml"/>
+    </headers>
+    <record jsxid="mi_4" jsxtext="Input (request)" type="I" jsxopen="1" src="../../../forms/ShiftCreationLight.gi/IntalioInternal/FormModel.xsd">
+      <record jsxid="mi_5" jsxtext="FormModel" type="C" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='FormModel']" datatype="" tns="http://www.intalio.com/gi/forms/ShiftCreationLight.gi">
+        <record jsxid="mi_6" jsxtext="startDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='startDate']">
+          <restrictions>
+            <record jsxid="mi_7" name="nillable" value="true"/>
+          </restrictions>
+          <mappings jsxid="mi_8">
+            <record jsxid="mi_9" name="Script" value="setValue(Intalio.Internal.Utilities.fixDateOutput(jsx3.GO('startDate', my.getNamespace())));"/>
+          </mappings>
+        </record>
+        <record jsxid="mi_10" jsxtext="startTime" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='startTime']">
+          <restrictions>
+            <record jsxid="mi_11" name="nillable" value="true"/>
+          </restrictions>
+          <mappings jsxid="mi_12">
+            <record jsxid="mi_13" name="DOM" value="startTime"/>
+          </mappings>
+        </record>
+      </record>
+    </record>
+    <record jsxid="mi_14" jsxtext="Output (response)" type="O" jsxopen="1" src="../../../forms/ShiftCreationLight.gi/IntalioInternal/FormModel.xsd">
+      <record jsxid="mi_15" jsxtext="FormModel" type="C" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='FormModel']" datatype="" tns="http://www.intalio.com/gi/forms/ShiftCreationLight.gi">
+        <record jsxid="mi_16" jsxtext="startDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='startDate']">
+          <restrictions>
+            <record jsxid="mi_17" name="nillable" value="true"/>
+          </restrictions>
+          <mappings jsxid="mi_18">
+            <record jsxid="mi_19" name="Script" value="Intalio.Internal.Utilities.fixDateInput(jsx3.GO('startDate', my.getNamespace()), MESSAGENODE.getValue());"/>
+          </mappings>
+        </record>
+        <record jsxid="mi_20" jsxtext="startTime" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='startTime']">
+          <restrictions>
+            <record jsxid="mi_21" name="nillable" value="true"/>
+          </restrictions>
+          <mappings jsxid="mi_22">
+            <record jsxid="mi_23" name="DOM" value="startTime"/>
+          </mappings>
+        </record>
+      </record>
+    </record>
+  </record>
+</data>

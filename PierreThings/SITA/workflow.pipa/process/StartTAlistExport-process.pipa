@@ -1,0 +1,9 @@
+﻿#
+#Thu Jul 09 04:11:45 CEST 2009
+formURI=http\://172.17.128.120\:9080/gi/apppath/SITA/forms/TAlistExport.gi/IntalioInternal/ServerLaunch.html
+userProcessInitSOAPAction=http\://www.intalio.com/gi/forms/TAlistExport.gi/Process/initProcess
+processEndpoint=http\://172.17.128.120\:9080/ode/processes/SITA/process/StartTAlistExport/process/User/processAndUserForPortTypeProcessPlk
+task-description=Export TA list to AMI
+task-role-owners=intalio\\coordinatorA,intalio\\coordinatorB,intalio\\coordinatorC,intalio\\coordinatorD,intalio\\coordinatorE,intalio\\coordinatorF
+task-user-owners=intalio\\admin
+formNamespace=http\://www.intalio.com/gi/forms/TAlistExport.gi

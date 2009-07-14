@@ -1,0 +1,11 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<wsdl:definitions xmlns:tns="http://www.example.org/UploadResponse" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:process="http://example.com/process/completeTA/process" xmlns:b4p="http://www.intalio.com/bpms/workflow/ib4p_20051115" xmlns:diag="http://example.com/process/completeTA" xmlns:Interface="http://example.com/process/completeTA/Interface" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:bpdm="http://www.intalio/designer/business-process-data-modeling" targetNamespace="http://example.com/process/completeTA">
+    <wsdl:import namespace="http://example.com/process/completeTA/process" location="completeTA-process.wsdl"/>
+    <wsdl:import namespace="http://www.intalio.com/bpms/workflow/ib4p_20051115" location="../services/TaskManagerProcess.wsdl"/>
+    <pnlk:partnerLinkType name="TMpAndProcessForUIFWPortPlk">
+        <pnlk:role name="TMP_for_process" portType="b4p:UIFWPortType"/>
+    </pnlk:partnerLinkType>
+    <pnlk:partnerLinkType name="processAndInterface">
+        <pnlk:role name="process_for_Interface" portType="process:ForInterface"/>
+    </pnlk:partnerLinkType>
+</wsdl:definitions>

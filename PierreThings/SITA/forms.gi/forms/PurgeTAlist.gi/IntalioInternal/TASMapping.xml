@@ -1,0 +1,256 @@
+﻿<?xml version="1.0"?>
+<!--
+  ~ Copyright (c) 2001-2007, TIBCO Software Inc.
+  ~ Use, modification, and distribution subject to terms of license.
+  -->
+<data jsxid="jsxroot" jsxnamespace="jsx3.ide.mapper.Mapper"
+jsxversion="1.0">
+  <record jsxid="x76132" jsxtext="WSDL (IntalioInternal/tas.wsdl)"
+  jsxopen="1" src="IntalioInternal/tas.wsdl" type="W"
+  path="/jsx1:definitions">
+    <record jsxid="x82799"
+    jsxtext="Service (http://localhost:8080/axis2/services/tas)"
+    jsxopen="1"
+    path="/jsx1:definitions/jsx1:service/jsx1:port/jsx5:address"
+    type="S" soapstyle="document">
+      <record jsxid="x63570" jsxtext="add" opname="add"
+      endpoint="http://172.17.128.120:9080/axis2/services/tas"
+      method="POST" type="P"
+      path="/jsx1:definitions/jsx1:binding/jsx1:operation">
+        <headers jsxid="x19429">
+          <record jsxid="x51526" name="SOAPAction"
+          value="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/add" />
+          <record jsxid="x73109" name="Content-Type"
+          value="text/xml" />
+        </headers>
+        <record jsxid="x80719" jsxtext="Input (request)" type="I"
+        stubsrc="jsx://xml/stubs/soap.xml"
+        stubpath="/SOAP-ENV:Envelope/SOAP-ENV:Body"
+        soapuse="literal" path="/jsx1:definitions/jsx1:message">
+          <record jsxid="x86216" jsxtext="addRequest" type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/']//jsx3:element[@name='addRequest']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/">
+
+            <record jsxid="x38546" jsxtext="authCredentials"
+            type="C"
+            path="/jsx1:definitions/jsx1:types/jsx3:schema/jsx3:element/jsx3:complexType/jsx3:sequence/jsx3:element"
+            datatype="authCredentials"
+            ttns="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/"
+            tns="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/">
+
+              <record jsxid="x92728" jsxtext="participantToken"
+              jsxopen="1" type="E"
+              path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/']//jsx3:element[@name='participantToken']"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/" />
+              <record jsxid="x97307" jsxtext="authorizedUsers"
+              type="C"
+              path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/']//jsx3:element[@name='authorizedUsers']"
+              datatype=""
+              tns="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/">
+
+                <restrictions jsxid="x6556">
+                  <record jsxid="x83703" name="minoccur"
+                  value="0" />
+                </restrictions>
+                <record jsxid="x89267" jsxtext="user" jsxopen="1"
+                type="E"
+                path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/']//jsx3:element[@name='user']"
+                datatype="string" simple="1"
+                tns="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/">
+
+                  <restrictions jsxid="x76075">
+                    <record jsxid="x6889" name="maxoccur"
+                    value="unbounded" />
+                    <record jsxid="x11957" name="minoccur"
+                    value="0" />
+                  </restrictions>
+                </record>
+              </record>
+              <record jsxid="x15453" jsxtext="authorizedRoles"
+              type="C"
+              path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/']//jsx3:element[@name='authorizedRoles']"
+              datatype=""
+              tns="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/">
+
+                <restrictions jsxid="x56837">
+                  <record jsxid="x79909" name="minoccur"
+                  value="0" />
+                </restrictions>
+                <record jsxid="x84320" jsxtext="role" jsxopen="1"
+                type="E"
+                path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/']//jsx3:element[@name='role']"
+                datatype="string" simple="1"
+                tns="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/">
+
+                  <restrictions jsxid="x97096">
+                    <record jsxid="x95204" name="maxoccur"
+                    value="unbounded" />
+                    <record jsxid="x27798" name="minoccur"
+                    value="0" />
+                  </restrictions>
+                </record>
+              </record>
+            </record>
+            <record jsxid="x92273" jsxtext="attachmentMetadata"
+            type="C"
+            path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/']//jsx3:element[@name='attachmentMetadata']"
+            datatype="attachmentMetadata"
+            ttns="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/"
+            tns="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/">
+
+              <record jsxid="x52873" jsxtext="mimeType" jsxopen="1"
+              type="E"
+              path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/']//jsx3:element[@name='mimeType']"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/" />
+            </record>
+            <record jsxid="x65357" jsxtext="localFileURL"
+            jsxopen="1" type="E"
+            path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/']//jsx3:element[@name='localFileURL']"
+            datatype="anyURI" simple="1"
+            tns="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/" />
+            <record jsxid="x73162" jsxtext="payload" jsxopen="1"
+            type="E"
+            path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/']//jsx3:element[@name='payload']"
+            datatype="base64Binary" simple="1"
+            tns="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/" />
+            <record jsxid="x26506" jsxtext="plaintext" jsxopen="1"
+            type="E"
+            path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/']//jsx3:element[@name='plaintext']"
+            datatype="string" simple="1"
+            tns="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/" />
+          </record>
+        </record>
+        <record jsxid="x98577" jsxtext="Output (response)" type="O"
+        soapuse="literal" path="/jsx1:definitions/jsx1:message[2]">
+          <record jsxid="x78905" jsxtext="addResponse" type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/']//jsx3:element[@name='addResponse']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/">
+
+            <record jsxid="x47525" jsxtext="url" jsxopen="1"
+            type="E"
+            path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/']//jsx3:element[@name='url']"
+            datatype="anyURI" simple="1"
+            tns="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/"
+            jsxselected="1" />
+          </record>
+        </record>
+      </record>
+      <record jsxid="x62089" jsxtext="delete" opname="delete"
+      endpoint="http://172.17.128.120:9080/axis2/services/tas"
+      method="POST" type="P"
+      path="/jsx1:definitions/jsx1:binding/jsx1:operation[2]">
+        <headers jsxid="x21935">
+          <record jsxid="x83097" name="SOAPAction"
+          value="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/delete" />
+          <record jsxid="x54456" name="Content-Type"
+          value="text/xml" />
+        </headers>
+        <record jsxid="x66158" jsxtext="Input (request)" type="I"
+        stubsrc="jsx://xml/stubs/soap.xml"
+        stubpath="/SOAP-ENV:Envelope/SOAP-ENV:Body"
+        soapuse="literal" path="/jsx1:definitions/jsx1:message[3]">
+          <record jsxid="x39260" jsxtext="deleteRequest" type="C"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/']//jsx3:element[@name='deleteRequest']"
+          datatype=""
+          tns="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/">
+
+            <record jsxid="x7960" jsxtext="authCredentials"
+            type="C"
+            path="/jsx1:definitions/jsx1:types/jsx3:schema/jsx3:element[3]/jsx3:complexType/jsx3:sequence/jsx3:element"
+            datatype="authCredentials"
+            ttns="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/"
+            tns="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/">
+
+              <record jsxid="x60297" jsxtext="participantToken"
+              jsxopen="1" type="E"
+              path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/']//jsx3:element[@name='participantToken']"
+              datatype="string" simple="1"
+              tns="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/">
+
+                <mappings jsxid="x44803">
+                  <record jsxid="jsx_36" name="Script"
+                  value="setValue(Intalio.Internal.Utilities.getParticipantToken());" />
+                </mappings>
+              </record>
+              <record jsxid="x744" jsxtext="authorizedUsers"
+              type="C"
+              path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/']//jsx3:element[@name='authorizedUsers']"
+              datatype=""
+              tns="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/">
+
+                <restrictions jsxid="x88978">
+                  <record jsxid="x26249" name="minoccur"
+                  value="0" />
+                </restrictions>
+                <record jsxid="x82458" jsxtext="user" jsxopen="1"
+                type="E"
+                path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/']//jsx3:element[@name='user']"
+                datatype="string" simple="1"
+                tns="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/">
+
+                  <restrictions jsxid="x80557">
+                    <record jsxid="x48786" name="maxoccur"
+                    value="unbounded" />
+                    <record jsxid="x86168" name="minoccur"
+                    value="0" />
+                  </restrictions>
+                  <mappings jsxid="x34384">
+                    <record jsxid="jsx_37" name="Script"
+                    value="setValue(Intalio.Internal.Utilities.getUser());" />
+                  </mappings>
+                </record>
+              </record>
+              <record jsxid="x26398" jsxtext="authorizedRoles"
+              type="C"
+              path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/']//jsx3:element[@name='authorizedRoles']"
+              datatype=""
+              tns="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/">
+
+                <restrictions jsxid="x43005">
+                  <record jsxid="x70491" name="minoccur"
+                  value="0" />
+                </restrictions>
+                <record jsxid="x2610" jsxtext="role" jsxopen="1"
+                type="E"
+                path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/']//jsx3:element[@name='role']"
+                datatype="string" simple="1"
+                tns="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/">
+
+                  <restrictions jsxid="x77271">
+                    <record jsxid="x41301" name="maxoccur"
+                    value="unbounded" />
+                    <record jsxid="x22243" name="minoccur"
+                    value="0" />
+                  </restrictions>
+                </record>
+              </record>
+            </record>
+            <record jsxid="x80367" jsxtext="attachmentURL"
+            jsxopen="1" type="E"
+            path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/']//jsx3:element[@name='attachmentURL']"
+            datatype="anyURI" simple="1"
+            tns="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/">
+
+              <mappings jsxid="x40407">
+                <record jsxid="x78583" name="DOM"
+                value="IntalioInternal_AttachmentsUrl" />
+              </mappings>
+            </record>
+          </record>
+        </record>
+        <record jsxid="x41885" jsxtext="Output (response)" type="O"
+        soapuse="literal" path="/jsx1:definitions/jsx1:message[4]">
+          <record jsxid="x2355" jsxtext="okResponse" jsxopen="1"
+          type="E"
+          path="//jsx3:schema[@targetNamespace='http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/']//jsx3:element[@name='okResponse']"
+          datatype="string" simple="1"
+          tns="http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/" />
+        </record>
+      </record>
+    </record>
+  </record>
+</data>

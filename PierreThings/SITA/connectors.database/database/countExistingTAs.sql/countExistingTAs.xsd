@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace="urn:intalio.com:connectors:database:sita:countexistingtasservice" elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:intalio.com:connectors:database:sita:countexistingtasservice">
+  <xsd:element name="countExistingTAsParameterSet">
+    <xsd:annotation>
+      <xsd:documentation>Main element in request message for operation - countExistingTAs</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="connection">
+          <xsd:annotation>
+            <xsd:documentation>The database credentials</xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="user">
+                <xsd:annotation>
+                  <xsd:documentation>The type definition for  user</xsd:documentation>
+                </xsd:annotation>
+                <xsd:simpleType>
+                  <xsd:restriction base="xsd:string"/>
+                </xsd:simpleType>
+              </xsd:element>
+              <xsd:element name="password">
+                <xsd:annotation>
+                  <xsd:documentation>The type definition for  password</xsd:documentation>
+                </xsd:annotation>
+                <xsd:simpleType>
+                  <xsd:restriction base="xsd:string"/>
+                </xsd:simpleType>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="execute">
+          <xsd:annotation>
+            <xsd:documentation>Execution with input parameter</xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element form="qualified" name="parameters">
+                <xsd:annotation>
+                  <xsd:documentation>The query parameters</xsd:documentation>
+                </xsd:annotation>
+                <xsd:complexType>
+                  <xsd:sequence>
+                    <xsd:element name="like">
+                      <xsd:annotation>
+                        <xsd:documentation>The parameter value</xsd:documentation>
+                      </xsd:annotation>
+                      <xsd:simpleType>
+                        <xsd:restriction base="xsd:string">
+                          <xsd:maxLength value="100"/>
+                        </xsd:restriction>
+                      </xsd:simpleType>
+                    </xsd:element>
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="countExistingTAsResultSet">
+    <xsd:annotation>
+      <xsd:documentation>Main element in response message for operation - countExistingTAs</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="rows">
+          <xsd:annotation>
+            <xsd:documentation/>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element form="qualified" name="row" maxOccurs="unbounded">
+                <xsd:annotation>
+                  <xsd:documentation>The row taken from database query</xsd:documentation>
+                </xsd:annotation>
+                <xsd:complexType>
+                  <xsd:sequence>
+                    <xsd:element name="COL1">
+                      <xsd:annotation>
+                        <xsd:documentation>The type definition for  COL1</xsd:documentation>
+                      </xsd:annotation>
+                      <xsd:simpleType>
+                        <xsd:restriction base="xsd:decimal">
+                          <xsd:totalDigits value="21"/>
+                          <xsd:fractionDigits value="0"/>
+                        </xsd:restriction>
+                      </xsd:simpleType>
+                    </xsd:element>
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>

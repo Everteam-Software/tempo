@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<bpel:process xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ode="http://www.apache.org/ode/type/extension" xmlns:nf="http://www.example.org/notif" xmlns:NotifInterface="http://example.com/process/NotifToAMI/NotifInterface" xmlns:this="http://example.com/process/NotifToAMI/NotifToAMIprocess" xmlns:RMAnotifService="http://example.com/process/NotifToAMI/RMAnotifService" xmlns:diag="http://example.com/process/NotifToAMI" xmlns:tns="http://ode/bpel/unit-test.wsdl" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:bpmn="http://www.intalio.com/bpms" xmlns:atomic="http://ode.apache.org/atomicScope" queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0" bpmn:label="NotifToAMIprocess" name="NotifToAMIprocess" bpmn:id="_EbSxAEqkEd6mL5laCVF80g" targetNamespace="http://example.com/process/NotifToAMI/NotifToAMIprocess">
+  <bpel:import namespace="http://ode/bpel/unit-test.wsdl" location="../services/RMAnotif.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+  <bpel:import namespace="http://example.com/process/NotifToAMI" location="NotifToAMI.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+  <bpel:import namespace="http://example.com/process/NotifToAMI/NotifToAMIprocess" location="NotifToAMI-NotifToAMIprocess.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+  <bpel:partnerLinks>
+    <bpel:partnerLink name="notifToAMIprocessAndNotifInterfacePlkVar" partnerLinkType="diag:NotifToAMIprocessAndNotifInterface" myRole="NotifToAMIprocess_for_NotifInterface"/>
+    <bpel:partnerLink name="rMAnotifServiceAndNotifToAMIprocessForRMAnotifPortPlkVar" partnerLinkType="diag:RMAnotifServiceAndNotifToAMIprocessForRMAnotifPortPlk" initializePartnerRole="yes" partnerRole="RMAnotifService_for_NotifToAMIprocess"/>
+  </bpel:partnerLinks>
+  <bpel:variables>
+    <bpel:variable name="thisStartRequestMsg" messageType="this:startRequest"/>
+    <bpel:variable name="tnsInputMessage" messageType="tns:RMAnotif"/>
+    <bpel:variable name="thisStartResponseMsg" messageType="this:startResponse"/>
+  </bpel:variables>
+  <bpel:sequence>
+    <bpel:receive partnerLink="notifToAMIprocessAndNotifInterfacePlkVar" portType="this:ForNotifInterface" operation="start" variable="thisStartRequestMsg" createInstance="yes" bpmn:label="start" name="start" bpmn:id="_pi1rYEqkEd6mL5laCVF80g"></bpel:receive>
+    <bpel:assign name="init-variables-NotifToAMIprocess" bpmn:id="_pi1rYEqkEd6mL5laCVF80g">
+      <bpel:copy bpmn:label="$tnsInputMessage">
+        <bpel:from>
+          <bpel:literal>
+<nf:notification subject="" type="" user=""></nf:notification></bpel:literal>
+        </bpel:from>
+        <bpel:to>$tnsInputMessage.body</bpel:to>
+      </bpel:copy>
+      <bpel:copy bpmn:label="$thisStartResponseMsg">
+        <bpel:from>
+          <bpel:literal>
+<this:startResponse></this:startResponse></bpel:literal>
+        </bpel:from>
+        <bpel:to>$thisStartResponseMsg.body</bpel:to>
+      </bpel:copy>
+    </bpel:assign>
+    <bpel:reply partnerLink="notifToAMIprocessAndNotifInterfacePlkVar" portType="this:ForNotifInterface" operation="start" variable="thisStartResponseMsg" bpmn:label="start" name="start-1" bpmn:id="_pi1rYEqkEd6mL5laCVF80g"></bpel:reply>
+    <bpel:assign bpmn:label="end" name="end" bpmn:id="_rIdlYEqkEd6mL5laCVF80g">
+      <bpel:copy>
+        <bpel:from>"TAP.FMR.UPDATE"</bpel:from>
+        <bpel:to>$tnsInputMessage.body/@type</bpel:to>
+      </bpel:copy>
+      <bpel:copy>
+        <bpel:from>concat($thisStartRequestMsg.body/nf:freetext, "")</bpel:from>
+        <bpel:to>$tnsInputMessage.body</bpel:to>
+      </bpel:copy>
+      <bpel:copy>
+        <bpel:from>$thisStartRequestMsg.body/nf:users</bpel:from>
+        <bpel:to>$tnsInputMessage.body/@user</bpel:to>
+      </bpel:copy>
+      <bpel:copy>
+        <bpel:from>concat($thisStartRequestMsg.body/nf:aircraft, " UPDATE")</bpel:from>
+        <bpel:to>$tnsInputMessage.body/@subject</bpel:to>
+      </bpel:copy>
+    </bpel:assign>
+    <bpel:invoke partnerLink="rMAnotifServiceAndNotifToAMIprocessForRMAnotifPortPlkVar" portType="tns:RMAnotifPortType" operation="sendRMAnotif" inputVariable="tnsInputMessage" bpmn:label="end" name="end-1" bpmn:id="_rIdlYEqkEd6mL5laCVF80g"></bpel:invoke>
+  </bpel:sequence>
+</bpel:process>
