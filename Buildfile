@@ -215,3 +215,19 @@ define "tempo" do
     package(:war).with(:libs=>libs)
   end
 end
+
+desc "SITA Service"
+	define "sita" do
+	project.version = VERSION_NUMBER
+	project.group = "com.intalio.sita"
+	compile.options.target = "1.6"
+	define "sita-service" do
+		libs_common= []
+		libs = libs_common, APACHE_JPA, APACHE_COMMONS[:pool], AXIOM, AXIS2, JAXEN, SLF4J, SPRING[:core], STAX_API, XMLBEANS, DB_CONNECTOR.values, DEPLOY_API, SECURITY_WS_CLIENT_ONLY, WEB_NUTSNBOLTS
+		libs_pack = libs_common
+		compile.with libs
+		package :jar
+		package(:aar).with( :wsdls=>_('src/main/axis2/*.xsd'),:libs=>libs)
+	end
+	
+end

@@ -53,11 +53,21 @@ public class TaskFetcher {
 	 * atd==null and std>now-8h [2:35:27 AM] Pierre Pavageau: or if atd==null
 	 * and std==null
 	 */
-	private final String SITA_FILTER1 = "(T._ActualDeparture IS NOT NULL AND (T._ActualDeparture > (?3)))";
-	private final String SITA_FILTER2 = "(T._ActualDeparture IS NULL AND (T._ScheduledDeparture > (?3)))";
-	private final String SITA_FILTER3 = "(T._ActualDeparture IS NULL AND T._ScheduledDeparture IS NULL)";
-	private final String QUERY_WITH_FILTER = " AND (" + SITA_FILTER1 + " OR "
-			+ SITA_FILTER2 + " OR " + SITA_FILTER3 + ")";
+	private final String SITA_FILTER_ATD = "(T._ActualDeparture > (?3))";
+	private final String SITA_FILTER_STD = "(T._ActualDeparture IS NULL AND (T._ScheduledDeparture > (?3)) )";
+	private final String SITA_FILTER_ETD = "(T._ActualDeparture IS NULL AND  T._ScheduledDeparture IS NULL AND T._EstimatedDeparture >(?3) )";
+	private final String SITA_FILTER_xTD_NULL = "(T._ActualDeparture IS NULL AND T._ScheduledDeparture IS NULL AND T._EstimatedDeparture IS NULL)";
+	private final String SITA_FILTER_xTD = "( "+ SITA_FILTER_ATD + " OR " + SITA_FILTER_STD + " OR " + SITA_FILTER_ETD + " OR " + SITA_FILTER_xTD_NULL+ " )";
+	private final String SITA_FILTER_ATA = "(T._ActualArrival < (?4))";
+	private final String SITA_FILTER_STA = "(T._ActualArrival IS NULL AND (T._ScheduledArrival <(?4)) )";
+	private final String SITA_FILTER_ETA = "(T._ActualArrival IS NULL AND T._ScheduledArrival IS NULL AND (T._EstimatedArrival < (?4) ) )";
+	private final String SITA_FILTER_xTA_NULL = "(T._ActualArrival IS NULL AND T._ScheduledArrival IS NULL AND T._EstimatedArrival IS NULL)";
+	private final String SITA_FILTER_xTA = "( "+ SITA_FILTER_ATA + " OR " + SITA_FILTER_STA + " OR " + SITA_FILTER_ETA + " OR " + SITA_FILTER_xTA_NULL+ " )";
+	private final String QUERY_WITH_FILTER = ""
+	+ " AND ( " + SITA_FILTER_xTD 
+	+ " AND "+ SITA_FILTER_xTA 
+	+ ")"
+	;
 	// private final String DELETE_TASKS =
 	// "delete from Task m where m._userOwners in (?1) or m._roleOwners in (?2) "
 	// ;
@@ -162,13 +172,20 @@ public class TaskFetcher {
 				calendar.setTime(dateBefore8Hours);
 				calendar.add(Calendar.HOUR, -8);
 				dateBefore8Hours = calendar.getTime();
-
+				
+				Date dateAfter8Hours = new Date();
+				Calendar calendar2 = Calendar.getInstance();
+				calendar2.setTime(dateAfter8Hours);
+				calendar2.add(Calendar.HOUR, 8);
+				dateAfter8Hours = calendar2.getTime();
+				
 				q = _entityManager.createQuery(
 						baseQuery + taskClass.getSimpleName() + QUERY_GENERIC2
 								+ QUERY_WITH_FILTER)
 						.setParameter(1, userIdList).setParameter(2,
 								user.getAssignedRoles()).setParameter(3,
-								dateBefore8Hours, TemporalType.TIMESTAMP);
+								dateBefore8Hours, TemporalType.TIMESTAMP).setParameter(4, dateAfter8Hours, TemporalType.TIMESTAMP);
+				
 			} else {
 				q = _entityManager.createQuery(
 						baseQuery + taskClass.getSimpleName() + QUERY_GENERIC2)
@@ -180,6 +197,7 @@ public class TaskFetcher {
 			if (taskClass.equals(PATask.class) && filter) {
 				buffer.append(baseQuery).append(taskClass.getSimpleName())
 						.append(QUERY_GENERIC2 + QUERY_WITH_FILTER);
+			
 			} else {
 				buffer.append(baseQuery).append(taskClass.getSimpleName())
 						.append(QUERY_GENERIC2);
@@ -207,10 +225,20 @@ public class TaskFetcher {
 				calendar.setTime(dateBefore8Hours);
 				calendar.add(Calendar.HOUR, -8);
 				dateBefore8Hours = calendar.getTime();
+				
+				Date dateAfter8Hours = new Date();
+				Calendar calendar2 = Calendar.getInstance();
+				calendar2.setTime(dateAfter8Hours);
+				calendar2.add(Calendar.HOUR, 8);
+				dateAfter8Hours = calendar2.getTime();
+				
 				q = _entityManager.createQuery(buffer.toString()).setParameter(
 						1, userIdList).setParameter(2, user.getAssignedRoles())
 						.setParameter(3, dateBefore8Hours,
-								TemporalType.TIMESTAMP);
+								TemporalType.TIMESTAMP).setParameter(4, dateAfter8Hours,
+										TemporalType.TIMESTAMP)
+										;
+
 			} else {
 				q = _entityManager.createQuery(buffer.toString()).setParameter(
 						1, userIdList).setParameter(2, user.getAssignedRoles());

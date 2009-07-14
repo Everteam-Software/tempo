@@ -165,8 +165,12 @@ public class TasksCollector {
         _request.setAttribute("currentPage", page);
 
         Task[] tasks = taskManager.getAvailableTasksWithInputOutput(taskType, query.toString(), String.valueOf(index), String.valueOf(itasksPerPage),true);
+        
         for (Task task : tasks) {
             tasksHolder.add(new TaskHolder<Task>(task, URIUtils.getResolvedTaskURLAsString(_request, fmanager, task, token, user)));
+            if(task instanceof PATask){
+            	System.out.println(((PATask) task).get_assignedCoord());
+            }
         }
 
         if (_log.isDebugEnabled()) {

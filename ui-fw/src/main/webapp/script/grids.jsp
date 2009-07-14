@@ -18,7 +18,7 @@
     var tokenService = '<%= tokenService %>';
     var tmsService = '<%=conf.getServiceEndpoint()%>';
     var tmpService = '<%=conf.getTMPEndpoint()%>';
-    var dispatchService = 'http://localhost:8080/ode/processes/SITA/process/TAlistToAMI/TAlistExportProcess/TAinterface';
+    var dispatchService = 'http://localhost:9080/ode/processes/SITA/process/TAlistToAMI/TAlistExportProcess/TAinterface';
     var rbacService = '<%= tokenService.substring(0, tokenService.indexOf("/TokenService"))+"/RBACQueryService" %>';
     var proxy = '/ui-fw/script/proxy.jsp';
     var widthFull = $(window).width()*0.99;
@@ -395,7 +395,12 @@
         }
         
         function exportTasks() {
-           $('#exportdialog').dialog('open');
+           //$('#exportdialog').dialog('open');
+        	var format = "csv";
+            var type = "PATask";
+        	 var export_url = format+"?";
+             export_url += "type="+type;
+        	  window.open(export_url,"_new");
         }
         
         function exportTasksAction() {
@@ -457,13 +462,13 @@
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_afn"/>', name : '_ArrivalFlightNumber', width : width*0.025, sortable : true, align: 'center'},
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_sad"/>', name : '_ScheduledArrival', width : width*0.040, sortable : true, align: 'center'},
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_sta"/>', name : '_ScheduledArrival', width : width*0.025, sortable : true, align: 'center'},
-		// {display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_eta"/>', name : '_eta', width : width*0.025, sortable : false, align: 'center'},
+		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_eta"/>', name : '_eta', width : width*0.025, sortable : false, align: 'center'},
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_ata"/>', name : '_ActualArrival', width : width*0.035, sortable : true, align: 'center'},
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_type"/>', name : '_InspectionType', width : width*0.025, sortable : true, align: 'center'},
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_dfn"/>', name : '_DepartureFlightNumber', width : width*0.025, sortable : true, align: 'center'},
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_sdd"/>', name : '_ScheduledDeparture', width : width*0.040, sortable : true, align: 'center'},
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_std"/>', name : '_ScheduledDeparture', width : width*0.025, sortable : true, align: 'center'},
-		// {display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_etd"/>', name : '_etd', width : width*0.025, sortable : false, align: 'center'},
+		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_etd"/>', name : '_etd', width : width*0.025, sortable : false, align: 'center'},
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_atd"/>', name : '_ActualDeparture', width : width*0.035, sortable : true, align: 'center'},
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_stand"/>', name : '_Stand', width : width*0.020, sortable : true, align: 'center'},
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_coord"/>', name : '_coord', width : width*0.045, sortable : false, align: 'center'},
