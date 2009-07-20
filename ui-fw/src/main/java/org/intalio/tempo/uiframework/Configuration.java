@@ -21,7 +21,7 @@ public class Configuration {
     private static Configuration INSTANCE = new Configuration();
 
     private String _serviceEndpoint;
-    private String _tmpEndpoint = "http://localhost:8080/ode/processes/completeTask";
+    private String _tmpEndpoint = "http://localhost:9080/ode/processes/completeTask";
     private int _pagingLength;
     private int _refreshTime = 5;
     private int _sessionTimeout = 10;

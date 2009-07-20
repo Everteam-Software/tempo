@@ -60,11 +60,6 @@
           </a>
         </li>
         <li>
-          <a href="#" id="tabNotif" tabtitle="com_intalio_bpms_workflow_tab_notifications" title="<fmt:message key="com_intalio_bpms_workflow_tab_notifications"/>">
-            <fmt:message key="com_intalio_bpms_workflow_tab_notifications"/>
-          </a>
-        </li>
-        <li>
           <a href="#" id="tabPipa" tabtitle="com_intalio_bpms_workflow_tab_processes" title="<fmt:message key="com_intalio_bpms_workflow_tab_processes"/>">
             <fmt:message key="com_intalio_bpms_workflow_tab_processes"/>
           </a>
@@ -89,9 +84,6 @@
       <div id ="tasktables">
         <div class="hiddencontent" id="com_intalio_bpms_workflow_tab_tasks">
           <table id="table1" style="display:none"></table>
-        </div>
-        <div class="hiddencontent" id="com_intalio_bpms_workflow_tab_notifications">
-          <table id="table2" style="display:none"></table>
         </div>
         <div class="hiddencontent" id="com_intalio_bpms_workflow_tab_processes">
           <table id="table3" style="display:none"></table>

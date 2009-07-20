@@ -15,6 +15,7 @@
 
 package org.intalio.tempo.workflow.tms.server.dao;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 import org.intalio.tempo.workflow.auth.UserRoles;
@@ -40,4 +41,5 @@ public interface ITaskDAOConnection {
     public void storePipaTask(PIPATask task);
     public void deletePipaTask(String formUrl);
     public PIPATask fetchPipa(String formUrl);
+	public Collection<String> updateLateTasks();
 }

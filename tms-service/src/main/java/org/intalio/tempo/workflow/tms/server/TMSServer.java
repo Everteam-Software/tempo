@@ -16,6 +16,7 @@
 package org.intalio.tempo.workflow.tms.server;
 
 import java.net.URL;
+import java.util.Collection;
 import java.util.HashMap;
 
 import org.apache.axiom.om.OMAbstractFactory;
@@ -119,6 +120,19 @@ public class TMSServer implements ITMSServer {
 		}
 	}
 
+	public Task getTaskWithoutAuth(String taskID) throws UnavailableTaskException{
+		
+		ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+		Task task = dao.fetchTaskIfExists(taskID);
+		if ((task != null)) {
+			
+			return task;
+		} else {
+			throw new UnavailableTaskException("No task with" + taskID
+					+ " has been found");
+		}
+	}
+
 	protected ServiceClient getServiceClient() throws AxisFault {
 		return new ServiceClient();
 	}
@@ -150,6 +164,21 @@ public class TMSServer implements ITMSServer {
 					+ " cannot set output for Workflow Task " + task);
 	}
 
+	public void setOutputWithoutAuth(String taskID, Document output) throws AuthException,
+			UnavailableTaskException, AccessDeniedException {
+	
+		ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+		Task task = dao.fetchTaskIfExists(taskID);
+		
+		if (task instanceof ITaskWithOutput) {
+			ITaskWithOutput taskWithOutput = (ITaskWithOutput) task;
+			taskWithOutput.setOutput(output);
+			dao.updateTask(task);
+			dao.commit();
+
+		} else
+			throw new UnavailableTaskException(" cannot set output for Workflow Task " + task);
+	}
 	public void complete(String taskID, String participantToken)
 			throws AuthException, UnavailableTaskException,
 			InvalidTaskStateException, AccessDeniedException {
@@ -518,7 +547,7 @@ public class TMSServer implements ITMSServer {
 	}
 
 	public Task[] getAvailableTasks(String participantToken, String taskType,
-			String subQuery,boolean filter) throws AuthException {
+			String subQuery, boolean filter) throws AuthException {
 		HashMap map = new HashMap(3);
 		map.put(TaskFetcher.FETCH_CLASS_NAME, taskType);
 		map.put(TaskFetcher.FETCH_SUB_QUERY, subQuery);
@@ -575,7 +604,8 @@ public class TMSServer implements ITMSServer {
 		Task[] tasks = null;
 		if (taskType != null && taskType.length() != 0 && subquery != null
 				&& subquery.length() != 0) {
-			tasks = getAvailableTasks(participantToken, taskType, subquery, filter);
+			tasks = getAvailableTasks(participantToken, taskType, subquery,
+					filter);
 		} else {
 			tasks = getTaskList(participantToken);
 		}
@@ -613,4 +643,12 @@ public class TMSServer implements ITMSServer {
 					+ " cannot skip Workflow Task " + task);
 		}
 	}
+
+	@Override
+	public Collection<String> checkLateTasks() {
+		ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+		return dao.updateLateTasks();
+
+	}
+
 }

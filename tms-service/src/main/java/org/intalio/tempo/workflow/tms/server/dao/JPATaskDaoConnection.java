@@ -9,7 +9,9 @@
  */
 package org.intalio.tempo.workflow.tms.server.dao;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -90,5 +92,10 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
     public Long countAvailableTasks(HashMap parameters) {
         return _fetcher.countTasks(parameters);
     }
+
+
+	public Collection<String> updateLateTasks() {
+		return _fetcher.updateLateTasks();
+	}
 
 }

@@ -55,6 +55,7 @@ public abstract class Task extends BaseRestrictedEntity {
     public static final String FIND_BY_ROLE_USER = "find_by_role_user";
     public static final String FIND_BY_USER = "find_by_user";
     public static final String FIND_BY_ROLE = "find_by_role";
+	
     
     @Column(name = "internal_id")
     @Basic

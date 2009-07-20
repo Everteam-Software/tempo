@@ -1,0 +1,6 @@
+=~=~=~=~=~=~=~=~=~=~=~= PuTTY log 2009.07.15 15:34:51 =~=~=~=~=~=~=~=~=~=~=~=
+Event Log: Writing new session log (SSH raw data mode) to file: putty.log
+Event Log: Looking up host "github.com"
+Event Log: Connecting to 65.74.177.129 port 22
+Event Log: Failed to connect to 65.74.177.129: Network error: Connection timed out
+Event Log: Network error: Connection timed out

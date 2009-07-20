@@ -134,5 +134,10 @@
             <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
             <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/countAvailableTasks</actionMapping>
         </operation>
+        
+        <operation name="checkLateTasks">
+            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+            <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/checkLateTasks</actionMapping>
+        </operation>
     </service>
 </serviceGroup>

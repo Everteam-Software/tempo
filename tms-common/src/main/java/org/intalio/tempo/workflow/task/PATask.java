@@ -23,6 +23,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.persistence.CascadeType;
@@ -75,7 +77,9 @@ import com.intalio.gi.forms.tAmanagement.impl.FormModelImpl;
  */
 @Entity
 @Table(name = "tempo_pa")
-@NamedQueries( { @NamedQuery(name = PATask.FIND_BY_STATES, query = "select m from PATask m where m._state=?1", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }) })
+@NamedQueries( { @NamedQuery(name = PATask.FIND_BY_STATES, query = "select m from PATask m where m._state=?1", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }) 
+  
+})
 public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 		ITaskWithInput, ITaskWithOutput, ICompleteReportingTask,
 		ITaskWithAttachments, IChainableTask, ITaskWithPriority,
@@ -84,7 +88,7 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 	public static final String FIND_BY_STATES = "find_by_ps_states";
 	public static final String FIND_BY_PA_USER_ROLE = "find_by_pa_user_role";
 	public static final String FIND_BY_PA_USER_ROLE_GENERIC = "find_by_pa_user_role_generic";
-
+	public static final String UPDATE_LATE_TASKS = "update_late_pa ";
 	@Persistent
 	@Column(name = "state")
 	private TaskState _state = TaskState.READY;
@@ -240,6 +244,20 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 	@Persistent
 	@Column(name = "comments")
 	private String _comments;
+	
+	@Column(name = "ExpectedStartTime")
+	@Temporal(TemporalType.TIME)
+	private Calendar _ExpectedStartTime;
+	
+	@Column(name = "ExpectedFinishTime")
+	@Temporal(TemporalType.TIME)
+	private Calendar _ExpectedFinishTime;
+	
+
+	@Column(name = "ExpectedReleaseTime")
+	@Temporal(TemporalType.TIME)
+	private Calendar _ExpectedReleaseTime;
+
 
 	/** End Extra metadata for SITA **/
 	/****************************/
@@ -428,7 +446,15 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 		try {
 			OMElement om = AXIOMUtil.stringToOM(output);
 			om.setLocalName("xml-fragment");
-			om.setNamespace(new OMNamespaceImpl("", "k"));
+			/////////Ajax forms do not qualify the elements, this section is to make sure all of the elements are qualified and have the same as the FormElementParent
+			String mainNameSpace = om.getNamespace().getNamespaceURI();
+			Collection<OMElement> allNodes=getAllNodes(om);
+			for(OMElement node:allNodes){
+				node.declareDefaultNamespace(mainNameSpace);
+			}
+			///////END fix forAjax bug
+			
+			om.setNamespace(new OMNamespaceImpl("","k"));
 			FormModelImpl outputXML = (FormModelImpl) FormModel.Factory
 					.parse(om.getXMLStreamReaderWithoutCaching());
 			setMetadata(outputXML);
@@ -441,6 +467,16 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 		}
 	}
 
+	private Collection<OMElement> getAllNodes(OMElement om) {
+	Collection<OMElement> response=new HashSet<OMElement>();
+	Iterator<OMElement> iter=om.getChildElements();
+	while(iter.hasNext()){
+		response.addAll(getAllNodes(iter.next()));
+	}
+	response.add(om);
+		return response;
+	}
+
 	// <xs:element type="xs:string" name="AircraftID" minOccurs="0"/>
 	// <xs:element type="xs:time" name="startTime" minOccurs="0"/>
 	// <xs:element type="xs:time" name="finishTime" minOccurs="0"/>
@@ -450,6 +486,7 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 	private void setMetadata(FormModelImpl outputXML) {
 		/** calendar is an object for time+date calculation **/
 		Calendar calendar = Calendar.getInstance();
+		
 		// System.out.println("setMEtadata1");
 		/**************** Activity Data Departure DATA ****************/
 		if (outputXML.getActivity() != null) {
@@ -570,7 +607,7 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 			if (arrival.xgetDepartureFlightNumber() != null
 					&& arrival.xgetDepartureFlightNumber().validate()
 					&& arrival.getDepartureFlightNumber() != null) {
-				set_DepartureFlightNumber(arrival.getArrivalFlightNumber());
+				set_DepartureFlightNumber(arrival.getDepartureFlightNumber());
 			}
 
 		}
@@ -648,6 +685,20 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 					&& dc.getComments() != null) {
 				set_comments(dc.getComments());
 			}
+			if (dc.xgetExpectedStartTime() != null && dc.xgetExpectedStartTime().validate()
+					&& dc.getExpectedStartTime() != null) {
+				set_ExpectedStartTime(dc.getExpectedStartTime());
+			}
+			if (dc.xgetExpectedFinishTime() != null && dc.xgetExpectedFinishTime().validate()
+					&& dc.getExpectedFinishTime() != null) {
+				set_ExpectedFinishTime(dc.getExpectedFinishTime());
+			}
+			if (dc.xgetExpectedReleaseTime() != null && dc.xgetExpectedReleaseTime().validate()
+					&& dc.getExpectedReleaseTime() != null) {
+				set_ExpectedReleaseTime(dc.getExpectedReleaseTime());
+			}
+			
+			
 		}
 	}
 
@@ -879,6 +930,30 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 	public void set_assignedCoord(
 			Collection<org.intalio.tempo.workflow.task.AssignedCoords> coord) {
 		_assignedCoord = coord;
+	}
+
+	public Calendar get_ExpectedStartTime() {
+		return _ExpectedStartTime;
+	}
+
+	public void set_ExpectedStartTime(Calendar expectedStartTime) {
+		_ExpectedStartTime = expectedStartTime;
+	}
+
+	public Calendar get_ExpectedFinishTime() {
+		return _ExpectedFinishTime;
+	}
+
+	public void set_ExpectedFinishTime(Calendar expectedFinishTime) {
+		_ExpectedFinishTime = expectedFinishTime;
+	}
+
+	public Calendar get_ExpectedReleaseTime() {
+		return _ExpectedReleaseTime;
+	}
+
+	public void set_ExpectedReleaseTime(Calendar expectedReleaseTime) {
+		_ExpectedReleaseTime = expectedReleaseTime;
 	}
 
 	private void addTimeToDate(Date time, Calendar date) {

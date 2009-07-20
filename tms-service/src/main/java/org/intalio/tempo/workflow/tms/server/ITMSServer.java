@@ -13,17 +13,20 @@
 package org.intalio.tempo.workflow.tms.server;
 
 import java.net.URL;
+import java.util.Collection;
 import java.util.HashMap;
 
 import org.apache.axis2.AxisFault;
 import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.UserRoles;
+import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.TaskState;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.tms.TMSException;
+import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.w3c.dom.Document;
 
 public interface ITMSServer {
@@ -55,6 +58,7 @@ public interface ITMSServer {
     void deletePipa(String formUrl, String participantToken) throws TMSException;
 
     void setOutput(String taskID, Document output, String participantToken) throws TMSException;
+    void setOutputWithoutAuth(String taskID, Document output) throws TMSException;
 
     void complete(String taskID, String participantToken) throws TMSException;
 
@@ -71,4 +75,8 @@ public interface ITMSServer {
     Task[] getAvailableTasks(String participantToken, HashMap parameters) throws Exception;
 
     Long countAvailableTasks(String participantToken, HashMap map) throws AuthException;
+
+    Collection<String> checkLateTasks();
+
+	Task getTaskWithoutAuth(String taskID) throws UnavailableTaskException;
 }
