@@ -16,6 +16,7 @@
 package org.intalio.tempo.workflow.tms.server.dao;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -118,5 +119,11 @@ public class SimpleTaskDAOConnection implements ITaskDAOConnection {
     public Long countAvailableTasks(HashMap parameters) {
         throw new RuntimeException("Not Implemented");
     }
+
+	@Override
+	public Collection<String> updateLateTasks() {
+		throw new RuntimeException("Not Implemented");
+		
+	}
 
 }

@@ -5,12 +5,12 @@
 	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:as="http://www.example.org/assignment" xmlns:fmr="http://www.example.org/FMRupload"
 	xmlns:p="http://www.example.org/prop" xmlns:u="http://www.example.org/fmr">
 	<types>
-		<xsd:schema targetNamespace="http://www.intalio.com/gi/forms/TAmanagement.gi" elementFormDefault="qualified">
+		<xsd:schema targetNamespace="http://www.intalio.com/gi/forms/TAmanagement.gi" elementFormDefault="unqualified">
 			<xsd:include schemaLocation="TAdata.xsd" />
 			<xsd:element name="updateInput">
 				<xsd:complexType>
 					<xsd:sequence>
-						<xsd:element name="FMR">
+						<xsd:element name="FMR" xmlns="">
 							<xsd:complexType>
 								<xsd:attribute name="CreationTime" type="xsd:dateTime" use="required"/>
 								<xsd:attribute name="Aircraft" use="required">
@@ -32,6 +32,8 @@
 									</xsd:simpleType>
 								</xsd:attribute>
 								<xsd:attribute name="ATA" type="xsd:dateTime" use="optional"/>
+								<xsd:attribute name="ETA" type="xsd:dateTime" use="optional"/>
+								<xsd:attribute name="ETD" type="xsd:dateTime" use="optional"/>
 								<xsd:attribute name="STD" type="xsd:dateTime" use="optional"/>
 								<xsd:attribute name="ATD" type="xsd:dateTime" use="optional"/>
 								<xsd:attribute name="Stand" type="xsd:string" use="optional"/>

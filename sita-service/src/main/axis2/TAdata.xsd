@@ -11,7 +11,7 @@
 							<element name="Activity" type="tns:ActivityType" />
 							<element name="ArrivalDeparture" type="tns:ArrivalDepartureType" />
 							<element name="Inspection" type="tns:InspectionType" />
-							<element name="HIL" type="tns:HILType" />
+							<element name="HIL" type="tns:HILType" minOccurs="0"/>
 							<element name="DC" type="tns:DCType" />
 						</sequence>
 					</complexType>
@@ -68,30 +68,38 @@
 	</complexType>
 
 	<complexType name="ArrivalDepartureType">
-		<sequence>
-			<element type="date" name="ScheduledArrivalDate" />
-			<element type="time" name="STA" />
-			<element type="date" name="ScheduledDepartureDate" />
-			<element type="time" name="STD" />
-			<element type="date" name="EstimatedArrivalDate" />
-			<element type="time" name="ETA" />
-			<element type="date" name="EstimatedDepartureDate" />
-			<element type="time" name="ETD" />
-			<element type="date" name="ActualArrivalDate" />
-			<element type="time" name="ATA" />
-			<element type="date" name="ActualDepartureDate" />
-			<element type="time" name="ATD" />
-			<element type="string" name="ArrivalFlightNumber" />
-			<element type="string" name="DepartureFlightNumber" />
-		</sequence>
+		<all>
+			<element type="date" name="ScheduledArrivalDate"
+				minOccurs="0" />
+			<element type="time" name="STA" minOccurs="0" />
+			<element type="date" name="ScheduledDepartureDate"
+				minOccurs="0" />
+			<element type="time" name="STD" minOccurs="0" />
+			<element type="date" name="EstimatedArrivalDate"
+				minOccurs="0" />
+			<element type="time" name="ETA" minOccurs="0" />
+			<element type="date" name="EstimatedDepartureDate"
+				minOccurs="0" />
+			<element type="time" name="ETD" minOccurs="0" />
+			<element type="date" name="ActualArrivalDate" minOccurs="0" />
+			<element type="time" name="ATA" minOccurs="0" />
+			<element type="date" name="ActualDepartureDate"
+				minOccurs="0" />
+			<element type="time" name="ATD" minOccurs="0" />
+			<element type="string" name="ArrivalFlightNumber"
+				minOccurs="0" />
+			<element type="string" name="DepartureFlightNumber"
+				minOccurs="0" />
+
+		</all>
 	</complexType>
 
 	<complexType name="InspectionType">
 		<sequence>
-			<element type="string" name="assigned"/>
-			<element type="string" name="Stand" />
+			<element type="string" name="assigned"  minOccurs="0"/>
+			<element type="string" name="Stand"  minOccurs="0"/>
 			<element type="string" name="InspectionType" minOccurs="0" />
-			<element name="InspectionStatus">
+			<element name="InspectionStatus"  minOccurs="0">
 				<simpleType>
 					<restriction base="string">
 						<enumeration value="open" />
@@ -104,6 +112,7 @@
 				</simpleType>
 			</element>
 			<element type="string" name="resources" minOccurs="0" />
+			<element type="string" name="coordinator" minOccurs="0" />
 			<element name="RTR" minOccurs="0" maxOccurs="unbounded">
 				<complexType>
 					<sequence>
@@ -153,7 +162,7 @@
 		</sequence>
 	</complexType>
 
-	<complexType name="HILType">
+	<complexType name="HILType" >
 		<sequence>
 			<element name="TAHIL" maxOccurs="unbounded">
 				<complexType>
@@ -197,4 +206,8 @@
 			</element>
 		</sequence>
 	</complexType>
+
+	<group name="NewGroupDefinition">
+		<sequence></sequence>
+	</group>
 </schema>

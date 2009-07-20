@@ -535,7 +535,6 @@ public class RemoteTMSClient implements ITaskManagementService {
                 createElement(request, "participantToken", _participantToken);
                 createElement(request, "taskType", taskType);
                 createElement(request, "subQuery", subQuery);
-                System.out.println("query3"+subQuery);
                 if(first!=null) createElement(request, "first", first);
                 if(max!=null) createElement(request, "max", max);
                 if(filter!=null)createElement(request, "filter", String.valueOf(filter));

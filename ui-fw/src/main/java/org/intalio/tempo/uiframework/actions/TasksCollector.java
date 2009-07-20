@@ -168,9 +168,6 @@ public class TasksCollector {
         
         for (Task task : tasks) {
             tasksHolder.add(new TaskHolder<Task>(task, URIUtils.getResolvedTaskURLAsString(_request, fmanager, task, token, user)));
-            if(task instanceof PATask){
-            	System.out.println(((PATask) task).get_assignedCoord());
-            }
         }
 
         if (_log.isDebugEnabled()) {

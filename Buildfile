@@ -222,12 +222,13 @@ desc "SITA Service"
 	project.group = "com.intalio.sita"
 	compile.options.target = "1.6"
 	define "sita-service" do
+		FileUtils.mkdir_p _('target/classes/') # workaround for bug in buildr when no classes to be compiled.
+		compile_xml_beans _("src/main/axis2")
 		libs_common= []
 		libs = libs_common, APACHE_JPA, APACHE_COMMONS[:pool], AXIOM, AXIS2, JAXEN, SLF4J, SPRING[:core], STAX_API, XMLBEANS, DB_CONNECTOR.values, DEPLOY_API, SECURITY_WS_CLIENT_ONLY, WEB_NUTSNBOLTS
 		libs_pack = libs_common
 		compile.with libs
-		package :jar
-		package(:aar).with( :wsdls=>_('src/main/axis2/*.xsd'),:libs=>libs)
+		package(:aar).with(:services_xml=>_('src/main/axis2/services.xml'),:libs=>libs_pack, :wsdls=>_('src/main/axis2/*.xsd'))
 	end
 	
 end

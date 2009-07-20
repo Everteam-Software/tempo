@@ -19,6 +19,7 @@ import java.io.ByteArrayInputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -216,6 +217,29 @@ public class TMSRequestProcessor extends OMUnmarshaller {
 			String participantToken = requireElementValue(rootQueue,
 					"participantToken");
 			_server.setOutput(taskID, domOutput, participantToken);
+			return createOkResponse();
+		} catch (Exception e) {
+			throw makeFault(e);
+		}
+	}
+	
+	public OMElement checkLateTasks(OMElement requestElement) throws AxisFault {
+		try {
+			Collection<String> lateIDs=_server.checkLateTasks();
+			for(String id:lateIDs){
+			PATask task = (PATask) _server.getTaskWithoutAuth(id);
+			FormModelDocument documentmodel = FormModelDocument.Factory
+			
+			.parse(task.getOutput());
+	FormModel model = documentmodel.getFormModel();
+	Document domOutput = null;
+	
+		model.getActivity().setLate(true);
+	domOutput = (new XmlTooling()).parseXml(new InputSource(
+			new ByteArrayInputStream(documentmodel.toString()
+					.getBytes("UTF-8"))));
+	_server.setOutputWithoutAuth(task.getID(), domOutput);
+			}
 			return createOkResponse();
 		} catch (Exception e) {
 			throw makeFault(e);

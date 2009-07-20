@@ -237,6 +237,15 @@
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
+			<xsd:element name="checkLateTasksRequest">
+				<xsd:complexType>
+					<xsd:sequence >
+					<xsd:element name="check" type="xsd:string"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="checkLateTasksResponse" type="xsd:string"/>
+
 			<xsd:element name="getTaskResponse">
 				<xsd:complexType>
 					<xsd:sequence>
@@ -659,6 +668,12 @@
 		</xsd:schema>
 	</wsdl:types>
 
+<wsdl:message name="checkLateTasksRequest">
+		<wsdl:part name="checkLateTasksRequest" element="tns:checkLateTasksRequest" />
+	</wsdl:message>
+	<wsdl:message name="checkLateTasksResponse">
+		<wsdl:part name="checkLateTasksResponse" element="tns:checkLateTasksResponse" />
+	</wsdl:message>
 	<wsdl:message name="getTaskListResponse">
 		<wsdl:part name="getTaskListResponse" element="tns:getTaskListResponse" />
 	</wsdl:message>
@@ -814,6 +829,10 @@
 			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault" />
 			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault" />
 		</wsdl:operation>
+		<wsdl:operation name="checkLateTasks">
+			<wsdl:input message="tns:checkLateTasksRequest" />
+			<wsdl:output message="tns:checkLateTasksResponse" />
+		</wsdl:operation>
 		<wsdl:operation name="getTask">
 			<wsdl:input message="tns:getTaskRequest" />
 			<wsdl:output message="tns:getTaskResponse" />
@@ -946,6 +965,17 @@
 				<soap:fault name="InvalidInputMessage" use="literal" />
 			</wsdl:fault>
 		</wsdl:operation>
+		<wsdl:operation name="checkLateTasks">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/checkLateTasks" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		
 		<wsdl:operation name="skip">
 			<soap:operation
 				soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/skip" />
