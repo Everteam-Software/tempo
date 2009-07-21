@@ -649,42 +649,20 @@ public class SITAservice {
 			UpdateInputDocumentImpl updateRequest = (UpdateInputDocumentImpl) UpdateInputDocument.Factory
 					.parse("<xml-fragment>" + requestElement
 							+ "</xml-fragment>");
-			// System.out.println("requestupdate" + requestElement);
-			// System.out.println("updateRequest UpdateInput"
-			// + updateRequest.getUpdateInput());
-			// System.out.println("updateRequest FormModel FormModel"
-			// + updateRequest.getUpdateInput().getFMR());
-			// System.out.println("updateRequest aircraft"
-			// + updateRequest.getUpdateInput().getFMR().getAircraft());
-			// System.out.println("updateRequest second aircraft ID"
-			// + updateRequest.getUpdateInput().getData().getFormModel()
-			// .getActivity().getAircraftID());
+
 
 			UpdateInput input = updateRequest.getUpdateInput();
 
 			Data data = input.getData();
 
-			// OMElement responseElement = requestElement
-			// .getFirstChildWithName(new QName(TAMANAGEMENT_URI, "data"));
+
 			ArrivalDepartureType arrivalDeparture = data.getFormModel()
 					.getArrivalDeparture();
 			ActivityType activity = data.getFormModel().getActivity();
-			// OMElement ADelement = responseElement.getFirstChildWithName(
-			// new QName(TAMANAGEMENT_URI, "FormModel"))
-			// .getFirstChildWithName(
-			// new QName(TAMANAGEMENT_URI, "ArrivalDeparture"));
+
 			FMR FMRelement = input.getFMR();
 			boolean update = false;
 
-			// Iterator<OMAttribute> attIterator =
-			// FMRelement.getAllAttributes();
-			//
-			// boolean update = false;
-			//
-			// while (attIterator.hasNext()) {
-
-			// OMAttribute current = attIterator.next();
-			// System.out.println("starting aircraft");
 			if (FMRelement.xgetAircraft() != null) {
 				String aircraft = FMRelement.getAircraft();
 				activity.setAircraftID(aircraft.substring(
@@ -695,28 +673,7 @@ public class SITAservice {
 				}
 
 			}
-			// System.out.println("finished aircraft");
 
-			// if (current.getLocalName().equals("Aircraft")) {
-			//
-			// OMElement element = responseElement.getFirstChildWithName(
-			// new QName(TAMANAGEMENT_URI, "FormModel"))
-			// .getFirstChildWithName(
-			// new QName(TAMANAGEMENT_URI, "Activity"))
-			// .getFirstChildWithName(
-			// new QName(TAMANAGEMENT_URI, "AircraftID"));
-			//
-			// // Take only the 3 last chars of the attribute
-			// String AID = current.getAttributeValue().substring(
-			// current.getAttributeValue().length() - 3,
-			// current.getAttributeValue().length());
-			//
-			// if (!element.getText().equals(AID)) {
-			// element.setText(AID);
-			// // TODO trash the TA data
-			// update = true;
-			// }
-			// } else
 			if (FMRelement.xgetATA() != null && FMRelement.xgetATA().validate()) {
 				Calendar FMR_ATA = FMRelement.getATA();
 				FMR_ATA = removeTimezone(FMR_ATA);
@@ -737,66 +694,38 @@ public class SITAservice {
 				arrivalDeparture.setATA(FMR_ATA);
 			}
 
-			// System.out.println("finished ata");
-			// if (current.getLocalName().equals("ATA")) {
-			//
-			// OMElement dateElement = ADelement
-			// .getFirstChildWithName(new QName(TAMANAGEMENT_URI,
-			// "ActualArrivalDate"));
-			//				
-			// OMElement timeElement = ADelement
-			// .getFirstChildWithName(new QName(TAMANAGEMENT_URI,
-			// "ATA"));
-			//
-			// if (current.getAttributeValue().isEmpty()) {
-			// //FIX ISSUE 30 dateElement.setText("1970-01-01");
-			// //FIX ISSUE 30 timeElement.setText("");
-			// update = true;
-			// } else {
-			// if (!dateElement.getText().equals(
-			// current.getAttributeValue().substring(0, 10))
-			// || !timeElement.getText().equals(
-			// current.getAttributeValue().substring(11,
-			// 19))) {
-			// dateElement.setText(current.getAttributeValue()
-			// .substring(0, 10));
-			// timeElement.setText(current.getAttributeValue()
-			// .substring(11, 19));
-			// update = true;
-			// }
-			// }
-			// } else
 
-			if (FMRelement.xgetSTA() != null && FMRelement.xgetSTA().validate()) {
-				Calendar FMR_STA = FMRelement.getSTA();
-				FMR_STA = removeTimezone(FMR_STA);
-				if (arrivalDeparture.xgetScheduledArrivalDate() != null
-						&& arrivalDeparture.xgetScheduledArrivalDate()
-								.validate()
-						&& arrivalDeparture.xgetSTA() != null
-						&& arrivalDeparture.xgetSTA().validate()) {
-					Calendar dateElement = arrivalDeparture
-							.getScheduledArrivalDate();
-					Calendar timeElement = arrivalDeparture.getSTA();
 
-					if (!FMR_STA.equals(add(dateElement, timeElement))) {
-						update = true;
-					}
-
-				}
-				arrivalDeparture.setScheduledArrivalDate(FMR_STA);
-				arrivalDeparture.setSTA(FMR_STA);
-			}
+//			if (FMRelement.xgetSTA() != null && FMRelement.xgetSTA().validate()) {
+//				Calendar FMR_STA = FMRelement.getSTA();
+//				FMR_STA = removeTimezone(FMR_STA);
+//				if (arrivalDeparture.xgetScheduledArrivalDate() != null
+//						&& arrivalDeparture.xgetScheduledArrivalDate()
+//								.validate()
+//						&& arrivalDeparture.xgetSTA() != null
+//						&& arrivalDeparture.xgetSTA().validate()) {
+//					Calendar dateElement = arrivalDeparture
+//							.getScheduledArrivalDate();
+//					Calendar timeElement = arrivalDeparture.getSTA();
+//
+//					if (!FMR_STA.equals(add(dateElement, timeElement))) {
+//						update = true;
+//					}
+//
+//				}
+//				arrivalDeparture.setScheduledArrivalDate(FMR_STA);
+//				arrivalDeparture.setSTA(FMR_STA);
+//			}
 			if (FMRelement.xgetSTD() != null && FMRelement.xgetSTD().validate()) {
 				Calendar FMR_STD = FMRelement.getSTD();
 				FMR_STD = removeTimezone(FMR_STD);
-				if (arrivalDeparture.xgetScheduledArrivalDate() != null
-						&& arrivalDeparture.xgetScheduledArrivalDate()
+				if (arrivalDeparture.xgetScheduledDepartureDate() != null
+						&& arrivalDeparture.xgetScheduledDepartureDate()
 								.validate()
 						&& arrivalDeparture.xgetSTD() != null
 						&& arrivalDeparture.xgetSTD().validate()) {
 					Calendar dateElement = arrivalDeparture
-							.getScheduledArrivalDate();
+							.getScheduledDepartureDate();
 					Calendar timeElement = arrivalDeparture.getSTD();
 
 					if (!FMR_STD.equals(add(dateElement, timeElement))) {
@@ -804,36 +733,10 @@ public class SITAservice {
 					}
 
 				}
-				arrivalDeparture.setScheduledArrivalDate(FMR_STD);
+				arrivalDeparture.setScheduledDepartureDate(FMR_STD);
 				arrivalDeparture.setSTD(FMR_STD);
 			}
-			// System.out.println("finished sta");
-			// if (current.getLocalName().equals("STD")) {
-			//
-			// OMElement dateElement = ADelement
-			// .getFirstChildWithName(new QName(TAMANAGEMENT_URI,
-			// "ScheduledDepartureDate"));
-			// OMElement timeElement = ADelement
-			// .getFirstChildWithName(new QName(TAMANAGEMENT_URI,
-			// "STD"));
-			// if (current.getAttributeValue().isEmpty()) {
-			// //FIX ISSUE 30 dateElement.setText("1970-01-01");
-			// //FIX ISSUE 30 timeElement.setText("");
-			// update = true;
-			// } else {
-			// if (!dateElement.getText().equals(
-			// current.getAttributeValue().substring(0, 10))
-			// || !timeElement.getText().equals(
-			// current.getAttributeValue().substring(11,
-			// 19))) {
-			// dateElement.setText(current.getAttributeValue()
-			// .substring(0, 10));
-			// timeElement.setText(current.getAttributeValue()
-			// .substring(11, 19));
-			// update = true;
-			// }
-			// }
-			// } else
+
 			if (FMRelement.xgetATD() != null && FMRelement.xgetATD().validate()) {
 				Calendar FMR_ATD = FMRelement.getATD();
 				FMR_ATD = removeTimezone(FMR_ATD);
@@ -854,33 +757,6 @@ public class SITAservice {
 				arrivalDeparture.setATD(FMR_ATD);
 			}
 
-			// if (current.getLocalName().equals("ATD")) {
-			//
-			// OMElement dateElement = ADelement
-			// .getFirstChildWithName(new QName(TAMANAGEMENT_URI,
-			// "ActualDepartureDate"));
-			// OMElement timeElement = ADelement
-			// .getFirstChildWithName(new QName(TAMANAGEMENT_URI,
-			// "ATD"));
-			//
-			// if (current.getAttributeValue().isEmpty()) {
-			// //FIX ISSUE 30 dateElement.setText("1970-01-01");
-			// //FIX ISSUE 30 timeElement.setText("");
-			// update = true;
-			// } else {
-			// if (!dateElement.getText().equals(
-			// current.getAttributeValue().substring(0, 10))
-			// || !timeElement.getText().equals(
-			// current.getAttributeValue().substring(11,
-			// 19))) {
-			// dateElement.setText(current.getAttributeValue()
-			// .substring(0, 10));
-			// timeElement.setText(current.getAttributeValue()
-			// .substring(11, 19));
-			// update = true;
-			// }
-			// }
-			// } else
 
 			if (FMRelement.xgetETD() != null && FMRelement.xgetETD().validate()) {
 				Calendar FMR_ETD = FMRelement.getETD();
@@ -903,33 +779,7 @@ public class SITAservice {
 				arrivalDeparture.setETD(FMR_ETD);
 			}
 
-			// if (current.getLocalName().equals("ETD")) {
-			//
-			// OMElement dateElement = ADelement
-			// .getFirstChildWithName(new QName(TAMANAGEMENT_URI,
-			// "EstimatedDepartureDate"));
-			// OMElement timeElement = ADelement
-			// .getFirstChildWithName(new QName(TAMANAGEMENT_URI,
-			// "ETD"));
-			//
-			// if (current.getAttributeValue().isEmpty()) {
-			// //FIX ISSUE 30 dateElement.setText("1970-01-01");
-			// //FIX ISSUE 30 timeElement.setText("");
-			// update = true;
-			// } else {
-			// if (!dateElement.getText().equals(
-			// current.getAttributeValue().substring(0, 10))
-			// || !timeElement.getText().equals(
-			// current.getAttributeValue().substring(11,
-			// 19))) {
-			// dateElement.setText(current.getAttributeValue()
-			// .substring(0, 10));
-			// timeElement.setText(current.getAttributeValue()
-			// .substring(11, 19));
-			// update = true;
-			// }
-			// }
-			// } else
+
 			if (FMRelement.xgetETA() != null && FMRelement.xgetETA().validate()) {
 				Calendar FMR_ETA = FMRelement.getETA();
 				FMR_ETA = removeTimezone(FMR_ETA);
@@ -950,34 +800,7 @@ public class SITAservice {
 				arrivalDeparture.setEstimatedArrivalDate(FMR_ETA);
 				arrivalDeparture.setETA(FMR_ETA);
 			}
-			// if (current.getLocalName().equals("ETA")) {
-			//
-			// OMElement dateElement = ADelement
-			// .getFirstChildWithName(new QName(TAMANAGEMENT_URI,
-			// "EstimatedArrivalDate"));
-			// OMElement timeElement = ADelement
-			// .getFirstChildWithName(new QName(TAMANAGEMENT_URI,
-			// "ETA"));
-			//
-			// if (current.getAttributeValue().isEmpty()) {
-			// //FIX ISSUE 30 dateElement.setText("1970-01-01");
-			// //FIX ISSUE 30 timeElement.setText("");
-			// update = true;
-			// } else {
-			// if (!dateElement.getText().equals(
-			// current.getAttributeValue().substring(0, 10))
-			// || !timeElement.getText().equals(
-			// current.getAttributeValue().substring(11,
-			// 19))) {
-			// dateElement.setText(current.getAttributeValue()
-			// .substring(0, 10));
-			// timeElement.setText(current.getAttributeValue()
-			// .substring(11, 19));
-			// update = true;
-			// }
-			// }
-			// }
-			//			
+	
 			InspectionType inspection = input.getData().getFormModel()
 					.getInspection();
 			if (FMRelement.xgetStand() != null) {
@@ -1003,117 +826,7 @@ public class SITAservice {
 				}
 
 			}
-			// else if (current.getLocalName().equals("Stand")) {
-			//
-			// OMElement element = responseElement.getFirstChildWithName(
-			// new QName(TAMANAGEMENT_URI, "FormModel"))
-			// .getFirstChildWithName(
-			// new QName(TAMANAGEMENT_URI, "Inspection"))
-			// .getFirstChildWithName(
-			// new QName(TAMANAGEMENT_URI, "Stand"));
-			//
-			// if (!element.getText().equals(current.getAttributeValue())) {
-			// element.setText(current.getAttributeValue());
-			// update = true;
-			// }
-			// } else if (current.getLocalName().equals("InspectionType")) {
-			//
-			// // InspectionType is a little tricky: have to take out the '+'
-			// String InspectionType = current.getAttributeValue().replace(
-			// "+", "");
-			//
-			// OMElement element = responseElement.getFirstChildWithName(
-			// new QName(TAMANAGEMENT_URI, "FormModel"))
-			// .getFirstChildWithName(
-			// new QName(TAMANAGEMENT_URI, "Inspection"))
-			// .getFirstChildWithName(
-			// new QName(TAMANAGEMENT_URI, "InspectionType"));
-			//
-			// if (!element.getText().equals(InspectionType)) {
-			// element.setText(InspectionType);
-			// update = true;
-			// }
-			// } else if
-			// (current.getLocalName().equals("DepartureFlightNumber")) {
-			//
-			// OMElement element = ADelement.getFirstChildWithName(new QName(
-			// TAMANAGEMENT_URI, "DepartureFlightNumber"));
-			//
-			// if (!element.getText().equals(current.getAttributeValue())) {
-			// element.setText(current.getAttributeValue());
-			// update = true;
-			// }
-			// }
-			// // else if (current.getLocalName().equals("Rtr-id")
-			// // && !current.getAttributeValue().isEmpty()) {
-			// //
-			// // Iterator<OMElement> iter = responseElement
-			// // .getFirstChildWithName(
-			// // new QName(TAMANAGEMENT_URI, "FormModel"))
-			// // .getFirstChildWithName(
-			// // new QName(TAMANAGEMENT_URI, "Inspection"))
-			// // .getChildrenWithName(new QName(TAMANAGEMENT_URI, "RTR"));
-			// //
-			// // String RTRstring = "";
-			// //
-			// // while (iter.hasNext()) {
-			// // OMElement currentRTR = iter.next();
-			// // RTRstring += currentRTR.getFirstChildWithName(
-			// // new QName(TAMANAGEMENT_URI, "RTRid")).getText()
-			// // + ";";
-			// // }
-			// //
-			// // if (RTRstring.endsWith(";")) {
-			// // RTRstring = RTRstring.substring(0, RTRstring.length() - 1);
-			// // }
-			// //
-			// // if (!RTRstring.equals(current.getAttributeValue())) {
-			// // iter = responseElement.getFirstChildWithName(
-			// // new QName(TAMANAGEMENT_URI, "FormModel"))
-			// // .getFirstChildWithName(
-			// // new QName(TAMANAGEMENT_URI, "Inspection"))
-			// // .getChildrenWithName(
-			// // new QName(TAMANAGEMENT_URI, "RTR"));
-			// //
-			// // ArrayList<OMElement> OldRTRlist = new ArrayList<OMElement>();
-			// //
-			// // while (iter.hasNext()) {
-			// // OldRTRlist.add(iter.next());
-			// // iter.remove();
-			// // }
-			// //
-			// // StringTokenizer tok = new StringTokenizer(current
-			// // .getAttributeValue(), ";");
-			// //
-			// // ArrayList<OMElement> NewRTRlist = new ArrayList<OMElement>();
-			// //
-			// // while (tok.hasMoreTokens()) {
-			// //
-			// // String currentID = tok.nextToken();
-			// // int index = contains(OldRTRlist, currentID);
-			// //
-			// // if (index != -1) {
-			// // NewRTRlist.add(OldRTRlist.get(index));
-			// // } else {
-			// // NewRTRlist.add(createRTR(currentID));
-			// // }
-			// // }
-			// //
-			// // for (int i = NewRTRlist.size() - 1; i >= 0; i--) {
-			// // responseElement.getFirstChildWithName(
-			// // new QName(TAMANAGEMENT_URI, "FormModel"))
-			// // .getFirstChildWithName(
-			// // new QName(TAMANAGEMENT_URI,
-			// // "Inspection"))
-			// // .getFirstChildWithName(
-			// // new QName(TAMANAGEMENT_URI,
-			// // "coordinator"))
-			// // .insertSiblingAfter(NewRTRlist.get(i));
-			// // }
-			// //
-			// // update = true;
-			// // }
-			// // }
+
 			String newRTR_ids;
 			if (FMRelement.xgetRtrId() != null) {
 				newRTR_ids = FMRelement.getRtrId();
