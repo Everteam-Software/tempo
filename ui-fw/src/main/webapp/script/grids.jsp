@@ -18,7 +18,7 @@
     var tokenService = '<%= tokenService %>';
     var tmsService = '<%=conf.getServiceEndpoint()%>';
     var tmpService = '<%=conf.getTMPEndpoint()%>';
-    var dispatchService = 'http://172.17.12.120:9080/ode/processes/SITA/process/TAlistToAMI/TAlistExportProcess/TAinterface';
+    var dispatchService = 'http://172.17.128.120:9080/ode/processes/SITA/process/TAlistToAMI/TAlistExportProcess/TAinterface';
     var rbacService = '<%= tokenService.substring(0, tokenService.indexOf("/TokenService"))+"/RBACQueryService" %>';
     var proxy = '/ui-fw/script/proxy.jsp';
     var widthFull = $(window).width()*0.99;
