@@ -46,10 +46,10 @@
     <c:otherwise>
       <c:forEach items="${tasks}" var="taskHolder" varStatus="status">
         <c:set var="taskFullURL" value="${taskHolder.formManagerURL}" />
-		<c:choose>
-							<c:when test="${taskHolder.task._late}"><row id="pa${status.index}" highlight="true"></c:when>
-							<c:otherwise><row id="pa${status.index}"></c:otherwise>
-						</c:choose>
+			<c:choose>
+				<c:when test="${taskHolder.task._late}"><row id="pa${status.index}" highlight="true"></c:when>
+				<c:otherwise><row id="pa${status.index}"></c:otherwise>
+			</c:choose>
 			<%-- update --%>
 			<cell><![CDATA[<a class="taskd" tid="${taskHolder.task.ID}" href="${taskFullURL}" title="" target="taskform">
 					<c:if test="${taskHolder.task._update}">
@@ -69,12 +69,10 @@
 			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"><fmt:formatDate value="${taskHolder.task._ScheduledArrival}" type="time" pattern="HH:mm" />
 				</a>]]></cell>
 			<%-- ETA --%>
-			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"><fmt:formatDate value="${taskHolder.task._EstimatedArrival}" type="date" pattern="dd-MM HH:mm" />
+			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"><fmt:formatDate value="${taskHolder.task._EstimatedArrival}" type="time" pattern="HH:mm" />
 			</a>]]></cell>
 			<%-- ATA --%>
-			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform">
-					<c:set var="date"><fmt:formatDate value="${taskHolder.task._ActualArrival}" type="time" pattern="yyyy" /></c:set>
-					<c:if test="${date!=1970}"><fmt:formatDate value="${taskHolder.task._ActualArrival}" type="time" pattern="HH:mm" /></c:if>
+			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"><fmt:formatDate value="${taskHolder.task._ActualArrival}" type="time" pattern="HH:mm" />
 				</a>]]>
 			</cell>
 			<%-- Type --%>
@@ -90,12 +88,10 @@
 			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"><fmt:formatDate value="${taskHolder.task._ScheduledDeparture}" type="time" pattern="HH:mm" />
 				</a>]]></cell>
 				<%-- ETD --%>
-			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"><fmt:formatDate value="${taskHolder.task._EstimatedDeparture}" type="date" pattern="dd-MM HH:mm" />
+			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"><fmt:formatDate value="${taskHolder.task._EstimatedDeparture}" type="time" pattern="HH:mm" />
 			</a>]]></cell>
 			<%-- ATD --%>
-			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform">
-					<c:set var="date"><fmt:formatDate value="${taskHolder.task._ActualDeparture}" type="time" pattern="yyyy" /></c:set>
-					<c:if test="${date!=1970}"><fmt:formatDate value="${taskHolder.task._ActualDeparture}" type="time" pattern="HH:mm" /></c:if>
+			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform"><fmt:formatDate value="${taskHolder.task._ActualDeparture}" type="time" pattern="HH:mm" />
 				</a>]]></cell>
 			<%-- Stand --%>
 			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform">${taskHolder.task._Stand}
@@ -162,7 +158,7 @@
 			<%-- Late was commented out by ihab by request from sita (ISSUE 102)
 			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform">
 					<c:if test="${taskHolder.task._late}">
-							<img height="${iconSize}" width="${iconSize}" title="<fmt:message key="org_intalio_uifw_tasks_ready"/>" border="0px" src="images/icons/icon.notclaimed.gif"/>
+						<img height="${iconSize}" width="${iconSize}" title="<fmt:message key="org_intalio_uifw_tasks_ready"/>" border="0px" src="images/icons/icon.notclaimed.gif"/>
 					</c:if>
 				</a>]]></cell>
 			--%>
