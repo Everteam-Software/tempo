@@ -29,6 +29,7 @@ public class Configuration {
     private String _baseUrl;
     private String _feedUrl;
     private Boolean _toolbarIcons = Boolean.TRUE;
+    private Boolean _claimTaskOnOpen = Boolean.TRUE;
     private int _ajaxTimeout = 5000;
  
     public String getFeedUrl() {
@@ -47,7 +48,15 @@ public class Configuration {
         return _ajaxTimeout;
     }
     
-    public void setUseToolbarIcons(Boolean use) {
+    public Boolean getClaimTaskOnOpen() {
+		return _claimTaskOnOpen;
+	}
+
+	public void setClaimTaskOnOpen(Boolean claimTaskOnOpen) {
+		_claimTaskOnOpen = claimTaskOnOpen;
+	}
+
+	public void setUseToolbarIcons(Boolean use) {
         _toolbarIcons=use;
     }
     

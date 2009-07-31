@@ -51,9 +51,10 @@ public class URIUtils {
             String url = fm.getURL(t);
             if(url.indexOf('?')>0) return url; // keep the url as is when it contains already a ?
             
+            
             Object[] params = new Object[] { url, t.getID(), t.getClass().getSimpleName(), URLEncoder.encode(t.getFormURLAsString(), "UTF-8"), ticket,
-                            URLEncoder.encode(user, "UTF-8") };
-            return MessageFormat.format("{0}?id={1}&type={2}&url={3}&token={4}&user={5}", params);
+                            URLEncoder.encode(user, "UTF-8"), Configuration.getInstance().getClaimTaskOnOpen() };
+            return MessageFormat.format("{0}?id={1}&type={2}&url={3}&token={4}&user={5}&claimTaskOnOpen={6}", params);
         } catch (UnsupportedEncodingException e) {
             // if utf-8 isnot available we're bad :)
             throw new RuntimeException(e);
