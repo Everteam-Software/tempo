@@ -1,13 +1,40 @@
-require "rsc/buildr-tasks/buildr_version"
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with this
+# work for additional information regarding copyright ownership.  The ASF
+# licenses this file to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+# License for the specific language governing permissions and limitations under
+# the License.
+
+
+require 'buildr/java'
+require "rsc/build/dependencies.rb"
 
 module Buildr
 
   # Provides OpenJPA bytecode enhancement and Mapping tool task. Require explicitly using <code>require "buildr/openjpa"</code>.
   module OpenJPA
 
-    REQUIRES = APACHE_JPA, APACHE_COMMONS[:pool], APACHE_COMMONS[:dbcp], APACHE_DERBY
+    VERSION = "1.2.0-patched"
 
-    update_java_classpath REQUIRES
+    REQUIRES = [ "org.apache.openjpa:openjpa:jar:#{VERSION}",
+      "commons-collections:commons-collections:jar:3.1",
+      "commons-dbcp:commons-dbcp:jar:1.2.1", 
+      "commons-lang:commons-lang:jar:2.1",
+      "commons-pool:commons-pool:jar:1.2",
+      "javax.persistence:persistence-api:jar:1.0",
+      "org.apache.geronimo.specs:geronimo-j2ee-connector_1.5_spec:jar:1.0",
+      "org.apache.geronimo.specs:geronimo-jta_1.0.1B_spec:jar:1.0",
+      "net.sourceforge.serp:serp:jar:1.11.0" ]
+
+    Java.classpath << APACHE_JPA
 
     class << self
 
@@ -50,8 +77,8 @@ module Buildr
     end
 
     def open_jpa_enhance(options = nil)
-      jpa_options = { :output=>compile.target, :classpath=>compile.classpath,
-                      :properties=>path_to("src/main/resources/META-INF/persistence.xml") }
+      jpa_options = { :output=>compile.target, :classpath=>compile.dependencies,
+                      :properties=>path_to(:source, :main, :resources, 'META-INF/persistence.xml') }
       OpenJPA.enhance jpa_options.merge(options || {})
     end
 
