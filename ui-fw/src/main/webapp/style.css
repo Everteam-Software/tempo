@@ -206,8 +206,9 @@ table {
 	float:left;
 	font-family: Arial Black; 
 	font-size: 8pt;
-	position: absolute;
+	position: relative;
 	bottom: 4px;
+	top: 4px;
 	left:0px;
 }
 

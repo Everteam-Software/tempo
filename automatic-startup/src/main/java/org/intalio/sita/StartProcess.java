@@ -28,8 +28,8 @@ public class StartProcess extends Thread {
 	private void startProcess(File file) {
 		boolean retry = true;
 
-		while (retry) {
-			retry = false;
+//		while (retry) {
+//			retry = false;
 			Properties properties = new Properties();
 			try {
 				properties.load(new FileReader(file));
@@ -72,15 +72,15 @@ public class StartProcess extends Thread {
 						.println("Warning : process with start endpoint  "
 								+ endpoint
 								+ " could not start automatically...retrying after 60 seconds");
-				retry = true;
-				try {
-					Thread.sleep(60000);
-				} catch (InterruptedException error) {
-					// TODO Auto-generated catch block
-					error.printStackTrace();
-				}
+//				retry = true;
+//				try {
+//					Thread.sleep(60000);
+//				} catch (InterruptedException error) {
+//					// TODO Auto-generated catch block
+//					error.printStackTrace();
+//				}
 			}
 		}
 
-	}
+	//}
 }
