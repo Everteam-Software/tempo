@@ -441,19 +441,20 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 	}
 
 	public void setOutput(String output) {
-		_output = output;
+		
 		// System.out.println(output);
 		try {
 			OMElement om = AXIOMUtil.stringToOM(output);
-			om.setLocalName("xml-fragment");
+			
 			/////////Ajax forms do not qualify the elements, this section is to make sure all of the elements are qualified and have the same as the FormElementParent
 			String mainNameSpace = om.getNamespace().getNamespaceURI();
 			Collection<OMElement> allNodes=getAllNodes(om);
 			for(OMElement node:allNodes){
 				node.declareDefaultNamespace(mainNameSpace);
 			}
+			_output = om.toString();
 			///////END fix forAjax bug
-			
+			om.setLocalName("xml-fragment");
 			om.setNamespace(new OMNamespaceImpl("","k"));
 			FormModelImpl outputXML = (FormModelImpl) FormModel.Factory
 					.parse(om.getXMLStreamReaderWithoutCaching());

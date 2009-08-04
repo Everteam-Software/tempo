@@ -260,9 +260,10 @@ public class TMSRequestProcessor extends OMUnmarshaller {
 				FormModelDocument documentmodel = FormModelDocument.Factory
 						.parse(task.getOutput());
 				FormModel model = documentmodel.getFormModel();
-				Document domOutput = null;
+				
 				if (model.getActivity().getUpdate())
 					model.getActivity().setUpdate(false);
+				Document domOutput = null;
 				domOutput = (new XmlTooling()).parseXml(new InputSource(
 						new ByteArrayInputStream(documentmodel.toString()
 								.getBytes("UTF-8"))));
