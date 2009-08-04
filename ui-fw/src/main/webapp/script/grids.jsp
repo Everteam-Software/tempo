@@ -32,9 +32,9 @@
     if($.browser.msie){
      height = $(window).height() - 80;
      }else{
-     height = $(window).height() - 80;
+     height = $(window).height() - 100;
      }
-    var height2 = height - 80;
+    var height2 = height - 100;
     var needResize = false;
     
     $(window).resize(function() {
