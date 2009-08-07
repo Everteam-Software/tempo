@@ -95,7 +95,6 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
     private String _output;
 
     @PersistentMap(keyCascade = CascadeType.ALL, elementCascade = CascadeType.ALL, keyType = String.class, elementType = Attachment.class, fetch=FetchType.LAZY)
-    @MapKey(name = "payloadURLAsString")
     @ContainerTable(name = "tempo_attachment_map")
     private Map<String, Attachment> _attachments = new HashMap<String, Attachment>();
 

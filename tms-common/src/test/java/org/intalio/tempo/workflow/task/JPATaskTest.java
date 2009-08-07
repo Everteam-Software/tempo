@@ -94,6 +94,39 @@ public class JPATaskTest {
     }
 
     @Test
+    public void testAttachments() throws Exception {
+        PATask task1 = new PATask(getUniqueTaskID(), new URI("http://hellonico.net"));
+        AttachmentMetadata attMetadata = new AttachmentMetadata();
+        Attachment att = new Attachment(attMetadata, new URL("file:///thisisadocument.txt"));
+        task1.addAttachment(att);
+        task1.getUserOwners().add("niko");
+        persist(task1);
+
+        PATask task2 = new PATask(getUniqueTaskID(), new URI("http://hellonico.net"));
+        task2.getUserOwners().add("niko");
+        persist(task2);
+
+        UserRoles ur = new UserRoles("niko", new String[] { "examples\\employee" });
+        final TaskFetcher taskFetcher = new TaskFetcher(em);
+        
+        // test task1 has one attachment
+        String query = "(T._id = '" + task1.getID() + "')";
+        Task[] t2 = taskFetcher.fetchAvailableTasks(ur, PATask.class, query);
+        Assert.assertTrue(t2[0] instanceof PATask);
+        PATask t = (PATask) t2[0];
+        Assert.assertEquals(1, t.getAttachments().size());
+        
+        // test task2 has no attachment
+        query = "(T._id = '" + task2.getID() + "')";
+        t2 = taskFetcher.fetchAvailableTasks(ur, PATask.class, query);
+        Assert.assertTrue(t2[0] instanceof PATask);
+        t = (PATask) t2[0];
+        Assert.assertEquals(0, t.getAttachments().size());
+
+        checkRemoved(new Task[] { task1, task2 });
+    }
+
+    @Test
     public void testUTF() throws Exception {
         PATask task1 = new PATask(getUniqueTaskID(), new URI("http://hellonico.net"));
         String someJapanese = "\u201e\u00c5\u00c7\u201e\u00c7\u00e4\u201e\u00c5\u00e5\u201e\u00c5\u00ae\u201e\u00c5\u00dc";
@@ -130,17 +163,17 @@ public class JPATaskTest {
         this._logger.debug("Testing range with :first=" + first + " and :max=" + max + " ; expected:" + expected);
         Assert.assertEquals(expected, taskFetcher.fetchAvailableTasks(map).length);
     }
-    
+
     private void testCount(long expected) throws Exception {
         final TaskFetcher taskFetcher = new TaskFetcher(em);
         HashMap map = new HashMap();
         map.put(TaskFetcher.FETCH_USER, new UserRoles("user1", new String[] { "examples\\employee" }));
         map.put(TaskFetcher.FETCH_CLASS, PATask.class);
-        Assert.assertEquals((Long)expected, (Long)taskFetcher.countTasks(map));
-        
+        Assert.assertEquals((Long) expected, (Long) taskFetcher.countTasks(map));
+
         remoteQuery();
     }
-    
+
     @Test
     public void oneMoreTestForDescriptionSearch() throws Exception {
         String query = "(T._state = TaskState.READY OR T._state = TaskState.CLAIMED) AND T._description like '%hello%' ORDER BY T._creationDate DESC";
@@ -148,18 +181,18 @@ public class JPATaskTest {
         task1.setDescription("bonjour");
         task1.getUserOwners().add("niko");
         persist(task1);
-        
+
         PATask task2 = new PATask(getUniqueTaskID(), new URI("http://hellonico.net"));
         task2.setDescription("hello");
         task2.getUserOwners().add("niko");
         persist(task2);
-        
+
         UserRoles ur = new UserRoles("niko", new String[] { "examples\\employee" });
         final TaskFetcher taskFetcher = new TaskFetcher(em);
         Task[] t1 = taskFetcher.fetchAvailableTasks(ur, PATask.class, query);
         Assert.assertEquals(1, t1.length);
-        
-        checkRemoved(new Task[]{task1,task2});
+
+        checkRemoved(new Task[] { task1, task2 });
     }
 
     @Test
@@ -286,7 +319,7 @@ public class JPATaskTest {
         TaskEquality.areTasksEquals(task1, task2);
         checkRemoved(task2);
     }
-    
+
     private void remoteQuery() throws Exception {
         Query q = em.createQuery("select COUNT(T) from PIPATask T where (T._description like '%hello%')");
         q.getSingleResult();
@@ -540,7 +573,8 @@ public class JPATaskTest {
     @Test
     public void testFetchAvailabeTasksWithCriteriaPIPA() throws Exception {
         String id = getUniqueTaskID();
-        PIPATask task1 = new PIPATask(id, new URI("http://hellonico.net"), new URI("http://hellonico.net"), new URI("http://hellonico.net"),"initOperationSOAPAction");
+        PIPATask task1 = new PIPATask(id, new URI("http://hellonico.net"), new URI("http://hellonico.net"), new URI("http://hellonico.net"),
+                        "initOperationSOAPAction");
 
         task1.getRoleOwners().add("role1");
         task1.getUserOwners().add("user1");

@@ -23,6 +23,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.*; 
 
 import org.apache.openjpa.persistence.Persistent;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
@@ -30,6 +31,9 @@ import org.intalio.tempo.workflow.util.RequiredArgumentException;
 @Entity
 @Table(name="tempo_attachment")
 public class Attachment {
+    
+    @Id @GeneratedValue 
+    public long Id;
 
     @Persistent(cascade = { CascadeType.ALL })
     private AttachmentMetadata metadata;
