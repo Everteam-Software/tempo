@@ -266,8 +266,12 @@ APACHE_JPA = [
   APACHE_COMMONS[:collections],
   GERONIMO_SPECS["jta"],
   GERONIMO_SPECS["jpa"],
-  # "org.apache.openjpa:openjpa:jar:1.1.0-645340",
-  "org.apache.openjpa:openjpa:jar:1.2.0-patched",
+  
+  "org.apache.openjpa:openjpa:jar:1.1.0-645340",
+  
+  
+  # "org.apache.openjpa:openjpa:jar:1.2.0-patched",
+  
   "serp:serp:jar:1.13.1"
 ]
 

@@ -4,8 +4,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
@@ -97,31 +99,48 @@ public class JPATaskTest {
     public void testAttachments() throws Exception {
         PATask task1 = new PATask(getUniqueTaskID(), new URI("http://hellonico.net"));
         AttachmentMetadata attMetadata = new AttachmentMetadata();
-        Attachment att = new Attachment(attMetadata, new URL("file:///thisisadocument.txt"));
+        Attachment att = new Attachment(attMetadata, new URL("file:///thisisadocument1.txt"));
+        Attachment att2 = new Attachment(attMetadata, new URL("file:///thisisadocument2.txt"));
         task1.addAttachment(att);
+        task1.addAttachment(att2);
         task1.getUserOwners().add("niko");
         persist(task1);
 
         PATask task2 = new PATask(getUniqueTaskID(), new URI("http://hellonico.net"));
         task2.getUserOwners().add("niko");
+        AttachmentMetadata attMetadata2 = new AttachmentMetadata();
+        Attachment att3 = new Attachment(attMetadata2, new URL("file:///thisisadocument3.txt"));
+        task2.addAttachment(att3);
         persist(task2);
 
         UserRoles ur = new UserRoles("niko", new String[] { "examples\\employee" });
         final TaskFetcher taskFetcher = new TaskFetcher(em);
         
-        // test task1 has one attachment
+        // test task1 has two attachments
         String query = "(T._id = '" + task1.getID() + "')";
         Task[] t2 = taskFetcher.fetchAvailableTasks(ur, PATask.class, query);
         Assert.assertTrue(t2[0] instanceof PATask);
         PATask t = (PATask) t2[0];
-        Assert.assertEquals(1, t.getAttachments().size());
+        Collection<Attachment> atts =  t.getAttachments();
+        Assert.assertEquals(2, atts.size());
         
-        // test task2 has no attachment
+        // test the two attachments are different
+        Iterator<Attachment> iter = atts.iterator();
+        Attachment a1 = iter.next();
+        Attachment a2 = iter.next();
+        Assert.assertNotSame(a1.getPayloadURL(), a2.getPayloadURL());
+        
+        // test task2 has one attachment
         query = "(T._id = '" + task2.getID() + "')";
         t2 = taskFetcher.fetchAvailableTasks(ur, PATask.class, query);
         Assert.assertTrue(t2[0] instanceof PATask);
         t = (PATask) t2[0];
-        Assert.assertEquals(0, t.getAttachments().size());
+        Assert.assertEquals(1, t.getAttachments().size());
+        
+        // task2 attachments are not the same as task1
+        URL ur1 = t.getAttachments().iterator().next().getPayloadURL();
+        Assert.assertNotSame(a1.getPayloadURL(), ur1);
+        Assert.assertNotSame(a2.getPayloadURL(), ur1);
 
         checkRemoved(new Task[] { task1, task2 });
     }

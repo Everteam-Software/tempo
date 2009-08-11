@@ -34,7 +34,7 @@ module Buildr
       "org.apache.geronimo.specs:geronimo-jta_1.0.1B_spec:jar:1.0",
       "net.sourceforge.serp:serp:jar:1.11.0" ]
 
-    Java.classpath << APACHE_JPA
+    Java.classpath << APACHE_JPA << REQUIRES << APACHE_DERBY
 
     class << self
 
