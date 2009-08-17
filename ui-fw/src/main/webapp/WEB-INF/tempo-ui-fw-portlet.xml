@@ -23,11 +23,23 @@
 		<property name="actionName" value="deletePIPA" />
 		<property name="actionClass" value="org.intalio.tempo.portlet.DeletePIPATasksAction" />
 	</bean>
-	
+
+    <!-- CAS Token -->
+    <!--
+    <bean id="tokenHandler" 
+	class="org.intalio.tempo.portlet.CASTokenHandler">
+	<property name="serviceURL" value="http://vmuser-810i386.comita.lan:8080/cas/proxyValidate"/>
+    </bean>
+
+    <!-- OpenSSO ticket -->    
+    <bean id="tokenHandler"
+	class="org.intalio.tempo.portlet.SSOTokenHandler"/>
+
 	<bean id="tasksController"
 		class="org.intalio.tempo.portlet.SecuredController">
 		<constructor-arg index="0" ref="tokenService" />
-		<constructor-arg index="1" value="/c/portal/login" />
+        <!-- CAS Token: to remove a comment with the following line -->
+		<!-- <constructor-arg index="1" value="/c/portal/login" /> -->
 		<property name="commandClass" value="java.lang.Object" />
 		<property name="defaultAction">
 			<ref bean="tasksDefaultAction" />
@@ -38,6 +50,9 @@
 				<ref bean="deleteAllTasksAction" />
 				<ref bean="deletePIPATasksAction" />
 			</list>
+		</property>
+		<property name="tokenHandler">
+			<ref bean="tokenHandler" />
 		</property>
 	</bean>
 

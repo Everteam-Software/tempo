@@ -40,14 +40,11 @@ import org.intalio.tempo.web.User;
 import org.springframework.validation.BindException;
 import org.springframework.web.portlet.ModelAndView;
 
-import edu.yale.its.tp.cas.client.CASReceipt;
-import edu.yale.its.tp.cas.client.filter.CASFilter;
-import edu.yale.its.tp.cas.proxy.ProxyTicketReceptor;
-
 public class SecuredController extends UIController {
 	private static final Logger LOG = LoggerFactory.getLogger(SecuredController.class);
     protected final TokenService _tokenService;
     protected String _serviceURL;
+    private TokenHandler tokenHandler;
 
     private static final String PROXY_TICKET = "TEMPO_CAS_TICKET";
 
@@ -62,41 +59,30 @@ public class SecuredController extends UIController {
         _serviceURL = serviceURL;
     }
 
-    @Override
+
+	public void setTokenHandler(TokenHandler tokenHandler) {
+		this.tokenHandler = tokenHandler;
+	}
+
+	@Override
     protected final ModelAndView showForm(RenderRequest request, RenderResponse response, BindException errors) throws Exception {
         ModelAndView mav = null;
         Method getHttpServletRequest = request.getClass().getMethod("getHttpServletRequest");
         HttpServletRequest hsr = (HttpServletRequest) getHttpServletRequest.invoke(request);
         HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(hsr);
         
-        String proxyTicket = (String) request.getAttribute(TokenService.CAS_PROXY_TICKET);
-        // For TokenFilter && Liferay
-        if (proxyTicket == null) {
-            proxyTicket = (String) request.getAttribute(PROXY_TICKET);
-            if (proxyTicket == null) {
-                // LOG.error(requestWrapper.getSession().getAttribute(CASFilter.
-                // CAS_FILTER_RECEIPT));
-                String pgtIou = null;
-                try {
-                    CASReceipt casReceipt = (CASReceipt) hsr.getSession().getAttribute(CASFilter.CAS_FILTER_RECEIPT);
-                    if (casReceipt != null) pgtIou = casReceipt.getPgtIou();
-                    if (pgtIou != null) proxyTicket = ProxyTicketReceptor.getProxyTicket(pgtIou, _serviceURL);
-                    //if(proxyTicket == null) throw new IOException("Null proxy ticket");
-                } catch (IOException e) {
-                    throw new RuntimeException("Could not get the proxy ticket", e);
-                }
-            }
-        }
-
         ApplicationState state = getApplicationState(wrapper);
+        User currentUser = state.getCurrentUser();
 
-        if (state.getCurrentUser() == null) {
-            String token = _tokenService.getTokenFromTicket(proxyTicket, _serviceURL);
+        if (currentUser == null) {
+            String ticket = tokenHandler.getTiket(request);
+            String token = tokenHandler.getToken(_tokenService, ticket);
             String[] grantedRoles = new String[0];
-            User currentUser = authenticate(token, grantedRoles);
+            currentUser = authenticate(token, grantedRoles);
             state.setCurrentUser(currentUser);
             ApplicationState.setCurrentInstance(wrapper, state);
         }
+        
         mav = new ModelAndView("portlet");
         fillAuthorization(wrapper, mav);
 

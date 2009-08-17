@@ -6,7 +6,7 @@
 <% 
 ApplicationState as = (ApplicationState)request.getSession().getAttribute(ApplicationState.PARAMETER_NAME);
 String userName = URLEncoder.encode(as.getCurrentUser().getName());
-String token = as.getCurrentUser().getToken();
+String token = as.getCurrentUser().getToken().replace("+", "%2B");
 %>
 
 <script type="text/javascript">
