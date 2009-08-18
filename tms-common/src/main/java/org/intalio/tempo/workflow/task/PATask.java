@@ -40,6 +40,7 @@ import javax.persistence.QueryHint;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.OMNamespaceImpl;
@@ -76,7 +77,8 @@ import com.intalio.gi.forms.tAmanagement.impl.FormModelImpl;
  * Activity task
  */
 @Entity
-@Table(name = "tempo_pa")
+@Table(name = "tempo_pa",
+	uniqueConstraints={@UniqueConstraint(columnNames={"ArrivalFlightNumber","ScheduledArrival"})})
 @NamedQueries( { @NamedQuery(name = PATask.FIND_BY_STATES, query = "select m from PATask m where m._state=?1", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }) 
   
 })
