@@ -197,6 +197,11 @@
 					<xsd:sequence/>
 				</xsd:complexType>
 			</xsd:element>
+			<xsd:element name="userProcessResponse">
+				<xsd:complexType>
+					<xsd:sequence/>
+				</xsd:complexType>
+			</xsd:element>
 			<xsd:element name="getAttachmentsRequest">
 			   <xsd:complexType>
 			     <xsd:sequence>
@@ -597,7 +602,7 @@
 		</wsdl:operation>
 		<wsdl:operation name="initProcess">
 			<wsdl:input message="tns:initRequest"/>
-			<wsdl:output message="tns:okResponse"/>
+			<wsdl:output message="tns:userProcessResponse"/>
 			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault"/>
 			<wsdl:fault name="UnavailableTask" message="tns:unavailableTaskFault"/>
 			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault"/>
