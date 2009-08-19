@@ -20,6 +20,7 @@ import java.net.URL;
 import java.util.Calendar;
 import java.util.HashMap;
 
+import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
@@ -44,7 +45,6 @@ import org.intalio.tempo.workflow.task.traits.InitTask;
 import org.intalio.tempo.workflow.util.xml.XsdDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.InvalidIsolationLevelException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -258,8 +258,12 @@ public class TaskMarshaller {
         if (om.getLocalName().equalsIgnoreCase("xml-fragment")) {
             om.setLocalName(TaskXMLConstants.TASK_LOCAL_NAME);
             om.setNamespace(TaskXMLConstants.TASK_OM_NAMESPACE);
+            return om;
+        } else {
+            OMElement parent = OMAbstractFactory.getOMFactory().createOMElement("task", TaskXMLConstants.TASK_NAMESPACE, TaskXMLConstants.TASK_NAMESPACE_PREFIX);
+            parent.addChild(om);
+            return parent;
         }
-        return om;
     }
 
     // for compatibility usage
