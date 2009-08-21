@@ -44,7 +44,7 @@
 			 minColToggle: 1, //minimum allowed column to be hidden
 			 showToggleBtn: true, //show or hide column toggle popup
 			 hideOnSubmit: true,
-			 autoload: true,
+			 autoload: false,
 			 blockOpacity: 0,
 			 onToggleCol: false,
 			 onChangeSort: false,
