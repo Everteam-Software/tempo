@@ -56,10 +56,15 @@
     		$("rows row", data).each(function () {
                 var elem = $(this);
                 var str = $.string(elem.text()).stripTags().strip().str
-                if(str.indexOf($("#filter").val())==-1) {
-                    // This has a friend in flexigrid.js (line 456)
-                    elem.attr("flexi","ignore");
-				}
+
+                // This has a friend in flexigrid.js (line 456)
+                if($("#caseFilter").val()=="on") {                
+                if(str.toLowerCase().indexOf($("#filter").val().toLowerCase())==-1)  elem.attr("flexi","ignore");
+                else {
+                if(str.indexOf($("#filter").val())==-1)  elem.attr("flexi","ignore");
+                }
+				        }
+				        
 		    });
 			return data;
 		}

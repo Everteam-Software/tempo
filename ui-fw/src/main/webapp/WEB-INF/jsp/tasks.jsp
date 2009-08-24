@@ -72,6 +72,8 @@
         <li>
           <div id="filterdiv" class="filtertext" style="margin-left:20px; margin-right:20px">
             <input type="text" id="filter" style="margin-left:20px" title="<fmt:message key="org_intalio_uifw_tasks_filtertext"/> "/>
+            <fmt:message key="org_intalio_uifw_tasks_filtercase"/>
+            <input checked="true" type="checkbox" id="caseFilter" title="<fmt:message key="org_intalio_uifw_tasks_filtercase"/>"/>
             <input 
               title="<fmt:message key="org_intalio_uifw_tasks_filtertext"/>" 
               id="filterbutt" 
