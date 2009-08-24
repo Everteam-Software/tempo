@@ -665,15 +665,17 @@ public class SITAservice {
 
 			if (FMRelement.xgetAircraft() != null) {
 				String aircraft = FMRelement.getAircraft();
+				String oldAircraft=activity.getAircraftID();
 				activity.setAircraftID(aircraft.substring(
 						aircraft.length() - 3, aircraft.length()));
 				if (activity.xgetAircraftID() != null
-						&& !activity.getAircraftID().equals(aircraft)) {
+						&& !activity.getAircraftID().equals(oldAircraft)) {
 					update = true;
 				}
 
 			}
 
+			
 			if (FMRelement.xgetATA() != null && FMRelement.xgetATA().validate()) {
 				Calendar FMR_ATA = FMRelement.getATA();
 				FMR_ATA = removeTimezone(FMR_ATA);
@@ -800,14 +802,24 @@ public class SITAservice {
 				arrivalDeparture.setEstimatedArrivalDate(FMR_ETA);
 				arrivalDeparture.setETA(FMR_ETA);
 			}
-	
+			
+			if (FMRelement.xgetDepartureFlightNumber() != null) {
+				String departure = FMRelement.getDepartureFlightNumber();
+				String oldDeparture=arrivalDeparture.getDepartureFlightNumber();
+				arrivalDeparture.setDepartureFlightNumber(departure);
+				if (arrivalDeparture.xgetDepartureFlightNumber() != null
+						&& !arrivalDeparture.getDepartureFlightNumber().equals(oldDeparture)) {
+					update = true;
+				}
+
+			}
+			
 			InspectionType inspection = input.getData().getFormModel()
 					.getInspection();
 			if (FMRelement.xgetStand() != null) {
 				String Stand = FMRelement.getStand();
 
-				Stand = Stand.substring(Stand.lastIndexOf(";") + 1);
-				Stand = Stand.replace("+", "");
+				
 				inspection.setStand(Stand);
 				if (inspection.xgetStand() != null
 						&& !inspection.getStand().equals(Stand)) {
@@ -817,7 +829,8 @@ public class SITAservice {
 			}
 			if (FMRelement.xgetInspectionType() != null) {
 				String inspectionType = FMRelement.getInspectionType();
-
+				inspectionType = inspectionType.substring(inspectionType.lastIndexOf(";") + 1);
+				inspectionType = inspectionType.replace("+", "");
 				inspection.setInspectionType(inspectionType);
 				if (inspection.xgetInspectionType() != null
 						&& !inspection.getInspectionType().equals(
