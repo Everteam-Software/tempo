@@ -445,13 +445,13 @@
 		},p));
 		
 		var t3 = $("#table3").flexigrid($.extend({
-		<% if(useToolbar) {%> 
-		buttons : [{name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : deleteTask}], 
-		<%} %>
 		params: [
 			 { name : 'type', value : 'PIPATask' }
 			,{ name : 'update', value : true }
 		],
+		<% if(useToolbar) {%> 
+		buttons : [{name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : deleteTask}], 
+		<%} %>
 		colModel : [
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description', width : width*0.6, sortable : true, align: 'left'},
 		{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/>', name : '_creationDate', width : width*0.4, sortable : true, align: 'left'}
@@ -573,9 +573,9 @@
 		  
 		  ping(timer);
 		  
-          if(current=='tabTasks') t1.flexReload();
-          if(current=='tabNotif') t2.flexReload();
-          if(current=='tabPipa')  t3.flexReload();
+      if(current=='tabTasks') t1.flexReload();
+      if(current=='tabNotif') t2.flexReload();
+      if(current=='tabPipa')  t3.flexReload();
 		});
 		
 		function ping(timer) {

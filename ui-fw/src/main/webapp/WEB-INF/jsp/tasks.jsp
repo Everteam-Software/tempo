@@ -33,7 +33,6 @@
     <script type="text/javascript" src="script/jquery-1.3.2.min.js"></script>
     <script type="text/javascript" src="script/jtabber.js"></script>
     <script type="text/javascript" src="script/jquery-timer.js"></script>
-    <script type="text/javascript" src="script/flexigrid.js"></script>
     <script type="text/javascript" src="script/jquery.jcorners.js"></script>
     <script type="text/javascript" src="script/jquery.demensions.js"></script>
     <script type="text/javascript" src="script/jquery.string.1.0.js"></script>
@@ -45,7 +44,8 @@
     <script type="text/javascript" src="script/ui/effects.core.js"></script>
     <script type="text/javascript" src="script/ui/effects.highlight.js"></script>
     <script type="text/javascript" src="script/ui/jquery.bgiframe.js"></script>
-
+    <script type="text/javascript" src="script/flexigrid.js"></script>
+    
     <%@ include file="/script/grids.jsp"%>
 
   </head>
