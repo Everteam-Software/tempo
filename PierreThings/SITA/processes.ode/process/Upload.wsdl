@@ -12,11 +12,11 @@
     <pnlk:partnerLinkType name="UploadProcessAndTokenServiceForTokenServiceHttpportPlk">
         <pnlk:role name="TokenService_for_UploadProcess" portType="tns1:TokenServicePortType"/>
     </pnlk:partnerLinkType>
-    <pnlk:partnerLinkType name="DbAndUploadProcessForCountExistingTAsPortPlk">
-        <pnlk:role name="DB_for_UploadProcess" portType="countExistingTAs:countExistingTAsPort"/>
-    </pnlk:partnerLinkType>
     <pnlk:partnerLinkType name="TMsAndUploadProcessForPortTaskManagementServicesSOAPPlk">
         <pnlk:role name="TMS_for_UploadProcess" portType="TaskManagementSystem:TaskManagementServices"/>
+    </pnlk:partnerLinkType>
+    <pnlk:partnerLinkType name="DbAndUploadProcessForCountExistingTAsPortPlk">
+        <pnlk:role name="DB_for_UploadProcess" portType="countExistingTAs:countExistingTAsPort"/>
     </pnlk:partnerLinkType>
     <pnlk:partnerLinkType name="UploadProcessAndTMPForUserBusinessProcessPortPlk">
         <pnlk:role name="TMP_for_UploadProcess" portType="b4p:UserBusinessProcessPortType"/>

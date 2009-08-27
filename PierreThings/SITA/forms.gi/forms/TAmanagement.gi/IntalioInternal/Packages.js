@@ -37,6 +37,8 @@ jsx3.lang.Package.definePackage(
     tms.onGetTaskSuccess = function(event) {
         Intalio.Internal.Utilities.hideLoading();
         
+        var hasAttachments = false;
+        
         var response = event.target.getResponseXML();
         jsx3.log("getTask response: " + Intalio.Internal.Utilities.tidy(response)); 
         var inDoc = Intalio.Internal.Communication.getPayload(response);
@@ -58,6 +60,16 @@ jsx3.lang.Package.definePackage(
         
         jsx3.log("getTask taskType: " + taskType);
         jsx3.log("getTask taskState: " + taskState);
+        
+        var attachNode = inDoc.selectSingleNode("//tms:attachments", tms.TMS_NS);
+        if (attachNode != null) {
+            var children = attachNode.getChildNodes();
+            if (children != null) {
+                if (children.size() > 0) {
+                    hasAttachments = true;
+                }
+            }
+        }
         
         // get the data input node
         var mapNode = inDoc.selectSingleNode("//tms:output", tms.TMS_NS);
@@ -89,7 +101,12 @@ jsx3.lang.Package.definePackage(
         Intalio.Internal.Utilities.activateButtons();       
         jsx3.log("getTask succeeded.");
         
-        Intalio.Internal.Utilities.SERVER.publish({subject:Intalio.Internal.Utilities.GET_TASK_SUCCESS});   
+        Intalio.Internal.Utilities.SERVER.publish({subject:Intalio.Internal.Utilities.GET_TASK_SUCCESS});
+        
+        if (hasAttachments) {
+            Intalio.Internal.Attachments.displayAttachmentsBlock(true);
+            Intalio.Internal.TMS.callGetAttachments();    
+        }
     };
     
     tms.onGetTaskTimeOut = function(event) {
@@ -121,15 +138,25 @@ jsx3.lang.Package.definePackage(
                     Intalio.Internal.Utilities.displayError(retval);                 
                     return;
                 }
-            } 
-                    
+            }
+            
+            Intalio.Internal.FileUpload.checkFileUploads("initProcess");
+        } catch (e) {
+            Intalio.Internal.Utilities.hideLoading();
+            Intalio.Internal.Utilities.activateButtons();
+            Intalio.Internal.Utilities.displayException(e);
+        }
+    };
+    
+    tms.callInitProcessActual = function() {
+        try {
             Intalio.Internal.Communication.sendRequest("IntalioInternal_TaskManagementServicesMapping_xml",
                 "initProcess", tms.onInitProcessSuccess, Intalio.Internal.Utilities.onTimeOut);            
         } catch (e) {
             Intalio.Internal.Utilities.hideLoading();
             Intalio.Internal.Utilities.activateButtons();
             Intalio.Internal.Utilities.displayException(e);
-        }
+        }          
     };
 
     tms.onInitProcessSuccess = function(event) {
@@ -154,6 +181,8 @@ jsx3.lang.Package.definePackage(
     // setOutput (save) //
     //////////////////////
     tms.callSetOutput = function() {
+        // FYI: save does not validate b/c it will be validated on complete
+        
         Intalio.Internal.Utilities.deactivateButtons();
         Intalio.Internal.Utilities.showLoading();
             
@@ -168,14 +197,24 @@ jsx3.lang.Package.definePackage(
                 }
             } 
                     
-            Intalio.Internal.Communication.sendRequest("IntalioInternal_TaskManagementServicesMapping_xml",
-                "setOutput", tms.onSetOutputSuccess, Intalio.Internal.Utilities.onTimeOut);             
+            Intalio.Internal.FileUpload.checkFileUploads("setOutput");
         } catch (e) {
             Intalio.Internal.Utilities.hideLoading();
             Intalio.Internal.Utilities.activateButtons();
-            Intalio.Internal.Utilities.displayException(e);            
+            Intalio.Internal.Utilities.displayException(e); 
         }
     };
+    
+    tms.callSetOutputActual = function() {
+        try {
+            Intalio.Internal.Communication.sendRequest("IntalioInternal_TaskManagementServicesMapping_xml",
+                "setOutput", tms.onSetOutputSuccess, Intalio.Internal.Utilities.onTimeOut);              
+        } catch (e) {
+            Intalio.Internal.Utilities.hideLoading();
+            Intalio.Internal.Utilities.activateButtons();
+            Intalio.Internal.Utilities.displayException(e);
+        }
+    }; 
 
     tms.onSetOutputSuccess = function(event) {
         Intalio.Internal.Utilities.hideLoading();
@@ -191,7 +230,7 @@ jsx3.lang.Package.definePackage(
         }
         
         //Intalio.Internal.Utilities.showSuccess("The task was successfully saved.", true);
-        document.location.href = "/ui-fw/script/empty.jsp";
+		document.location.href = "/ui-fw/script/empty.jsp";
         jsx3.log("setOutput succeeded.");
     };
 
@@ -436,14 +475,24 @@ jsx3.lang.Package.definePackage(
                 }
             }
                
-            Intalio.Internal.Communication.sendRequest("IntalioInternal_TaskManagerProcessMapping_xml",
-                "completeTask", tmp.onCompleteTaskSuccess, Intalio.Internal.Utilities.onTimeOut);             
+            Intalio.Internal.FileUpload.checkFileUploads("completeTask");
         } catch (e) {
             Intalio.Internal.Utilities.hideLoading();
             Intalio.Internal.Utilities.activateButtons();
             Intalio.Internal.Utilities.displayException(e);            
         }        
     };
+    
+    tmp.callCompleteTaskActual = function() {
+        try {
+            Intalio.Internal.Communication.sendRequest("IntalioInternal_TaskManagerProcessMapping_xml",
+                "completeTask", tmp.onCompleteTaskSuccess, Intalio.Internal.Utilities.onTimeOut);             
+        } catch (e) {
+            Intalio.Internal.Utilities.hideLoading();
+            Intalio.Internal.Utilities.activateButtons();
+            Intalio.Internal.Utilities.displayException(e);
+        }          
+    };    
     
     tmp.onCompleteTaskSuccess = function(event) {
         Intalio.Internal.Utilities.hideLoading();
@@ -700,6 +749,27 @@ jsx3.lang.Package.definePackage(
         }        
     };
     
+    util.ensureButtonsText = function() {
+        util.ensureButtonText("IntalioInternal_StartButton", "Start");
+        util.ensureButtonText("IntalioInternal_SaveButton", "Save");
+        util.ensureButtonText("IntalioInternal_ClaimButton", "Claim");
+        util.ensureButtonText("IntalioInternal_RevokeButton", "Revoke");
+        util.ensureButtonText("IntalioInternal_CompleteButton", "Complete");
+        util.ensureButtonText("IntalioInternal_DismissButton", "Dismiss");
+    };
+    
+    util.ensureButtonText = function(buttonName, buttonText) {
+        var button = util.SERVER.getJSXByName(buttonName);
+        if (button == null) return;
+        
+        if (button.getText() == null) {
+            jsx3.log("Adding button text: " + buttonName);
+            // must remove the dynamic property first
+            button.setDynamicProperty("jsxtext", null);
+            button.setText(buttonText, true);
+        }
+    };
+    
     // displays buttons based on task type, but doesnt enable them
     util.processTaskType = function(taskType) {
         if (taskType == null) return;
@@ -711,8 +781,12 @@ jsx3.lang.Package.definePackage(
         else if (taskType == "PATask") {
             util.SERVER.getJSXByName("IntalioInternal_SaveButton").
                 setDisplay(jsx3.gui.Block.DISPLAYBLOCK, true);
-            util.SERVER.getJSXByName("IntalioInternal_CompleteButton").
+            /*util.SERVER.getJSXByName("IntalioInternal_ClaimButton").
                 setDisplay(jsx3.gui.Block.DISPLAYBLOCK, true);
+            util.SERVER.getJSXByName("IntalioInternal_RevokeButton").
+                setDisplay(jsx3.gui.Block.DISPLAYBLOCK, true);
+            util.SERVER.getJSXByName("IntalioInternal_CompleteButton").
+                setDisplay(jsx3.gui.Block.DISPLAYBLOCK, true);*/
             
             // display the image block
             Intalio.Internal.Attachments.displayAttachmentsImageBlock(true);                
@@ -747,7 +821,17 @@ jsx3.lang.Package.definePackage(
                     util.SERVER.getJSXByName("IntalioInternal_CompleteButton").setEnabled(true, true);
                 }            
         
-
+                /*if (taskState == "READY") {
+                    if (util.getAuthorizedAction("claim")) {
+                        util.SERVER.getJSXByName("IntalioInternal_ClaimButton").setEnabled(true, true);
+                    }
+                }
+        
+                if (taskState == "CLAIMED") {
+                    if (util.getAuthorizedAction("revoke")) {
+                        util.SERVER.getJSXByName("IntalioInternal_RevokeButton").setEnabled(true, true);
+                    }
+                }*/
             }
         }
     };
@@ -827,12 +911,12 @@ jsx3.lang.Package.definePackage(
                         }
                     }
                 } catch (Exception) {
-                    // nothing to do    
+                    // nothing to do
                 }
             }
             
             if (error != null) {
-                util.displayError(error);   
+                util.displayError(error);
                 return false;
             }
         }
@@ -842,10 +926,49 @@ jsx3.lang.Package.definePackage(
     
     // initialize the form
     util.initApp = function() {
+        // determine the locale for this form 
+        util.determineLocale();
+        
+        // ensure that the buttons have text
+        util.ensureButtonsText();
+        
+        // IE window resize bug work around
+        if (jsx3.CLASS_LOADER.IE) {
+            jsx3.gui.Event.unsubscribeAll(jsx3.gui.Event.RESIZE);
+        }
+        
         var taskType = util.getType();
         jsx3.log("task type = " + taskType);
         util.processTaskType(taskType);
         Intalio.Internal.TMS.callGetTask();
+    };
+    
+    util.determineLocale = function() {
+        // determine the locale for this form        
+        var currentLocale = util.SERVER.getLocale();
+        jsx3.log("Current locale: " + currentLocale);
+        
+        // if the default locale is not set then check for the cookie
+        var localeKey = util.SERVER.getSettings().get("default_locale");
+        if (localeKey == null || localeKey.length == 0) {
+            // does the cookie exist?
+            var cookie = util.SERVER.getCookie("intalio-ajax-accept-language");
+            if (cookie != null && cookie.length > 1) {
+                jsx3.log("Locale cookie: " + cookie);
+                
+                jsx3.require("jsx3.util.Locale");
+                var locale = jsx3.util.Locale.valueOf(cookie);
+                
+                // if the new locale is different, then change it
+                if (!currentLocale.equals(locale)) {
+                    util.SERVER.setLocale(locale);
+                    util.SERVER.reloadLocalizedResources();
+                    util.SERVER.getRootBlock().repaint();
+                
+                    jsx3.log("New locale: " + util.SERVER.getLocale());
+                }
+            }
+        }
     };
 
     util.checkChained = function(inDoc) {
@@ -869,9 +992,9 @@ jsx3.lang.Package.definePackage(
             var fullUrl = nextUrl + 
                 "?id=" + nextId + 
                 "&type=PATask" + 
-                "&url=" + escape(nextUrl) +  
+                "&url=" + encodeURIComponent(nextUrl) +  
                 "&token=" + util.getParticipantToken() + 
-                "&user=" + escape(util.getUser());
+                "&user=" + encodeURIComponent(util.getUser());
                 
             document.location.href = fullUrl;
         } else {
@@ -1122,17 +1245,10 @@ jsx3.lang.Package.definePackage(
     
     util.dimForm = function() {
         util.hideForm();
-        //var mainDiv = document.getElementById("IntalioInternal_jsxmain");
-        //var div = document.getElementById("IntalioInternal_filter");
-        //div.style.height = mainDiv.offsetHeight;
-        //div.style.width = mainDiv.offsetWidth;
-        //div.style.visibility = "visible";
     };
 
     util.undimForm = function() {
         util.showForm();
-        //var div = document.getElementById("IntalioInternal_filter");
-        //div.style.visibility = "hidden";
     };
     
     util.hideForm = function() {
@@ -1232,8 +1348,8 @@ jsx3.lang.Package.definePackage(
         date.setTime(dateValue);
         
         var year = date.getFullYear();
-        var month = parseInt(date.getMonth()) + 1;
-        var day = parseInt(date.getDate());
+        var month = parseInt(date.getMonth(), 10) + 1;
+        var day = parseInt(date.getDate(), 10);
         
         if (month < 10) {
             month = "0" + month;   
@@ -1253,9 +1369,9 @@ jsx3.lang.Package.definePackage(
         }
         
         var parts = dateValue.split("-");
-        var year = parseInt(parts[0]);
-        var month = parseInt(parts[1]) - 1;
-        var day = parseInt(parts[2]);
+        var year = parseInt(parts[0], 10);
+        var month = parseInt(parts[1], 10) - 1;
+        var day = parseInt(parts[2], 10);
         
         var date = new Date();
         date.setFullYear(year);
@@ -1372,6 +1488,18 @@ jsx3.lang.Package.definePackage(
         
         return date.valueOf();        
     };
+    
+    util.handleResize = function() {
+        jsx3.log("handleResize: start");
+        
+        try {
+            util.SERVER.getRootBlock().recalcBox();
+        } catch (err) {
+            util.displayException(err);
+        }
+        
+        jsx3.log("handleResize: stop");
+    };
   }
 );
 // end package
@@ -1408,15 +1536,16 @@ jsx3.lang.Package.definePackage(
           var service = Intalio.Internal.Utilities.SERVER.loadResource(mapping);
           service.setOperationName(operation);
           var message = service.getServiceMessage();
-          jsx3.log(operation + " request: " + Intalio.Internal.Utilities.tidy(message));          
-          message = "assembly=" + assembly + "&form=" + form + "&message=" + message;
+          
+          jsx3.log(operation + " request: " + Intalio.Internal.Utilities.tidy(message));
+          message = "assembly=" + assembly + "&form=" + form + "&message=" + encodeURIComponent(message);
           
           var request = new jsx3.net.Request();
           request.subscribe(jsx3.net.Request.EVENT_ON_RESPONSE, onSuccess);
           request.subscribe(jsx3.net.Request.EVENT_ON_TIMEOUT, onTimeOut);
           
           request.open("POST", "/gi/validation", true);
-          request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");          
+          request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");     
           request.send(message, 60000);
       };
       
@@ -1488,6 +1617,121 @@ jsx3.lang.Package.definePackage(
           }
           
           return payload;
+      };
+  }
+);
+// end package
+
+/////////////////
+// File Upload //
+/////////////////
+jsx3.lang.Package.definePackage(
+  "Intalio.Internal.FileUpload",
+  function(upload) {
+      
+      upload.checkFileUploads = function(action) {
+          // clear the fileupload iframes, in case there was a previous upload
+          if (document.forms != null) {
+              for (var x = 0; x < document.forms.length; x++) {
+                  var name = document.forms[x].name;
+                  if (name == null) {
+                       continue;
+                  }
+                  
+                  if (name.indexOf("IntalioInternal_FileUploadForm_") != 0) {
+                      continue;
+                  }
+                  
+                  var id = name.substr(31);
+                  var frame = document.getElementById("IntalioInternal_FileUploadHiddenIFrame_" + id);
+                  
+                  if (frame != null) {
+                      // cross-browser method to access iframe document
+                      var doc = frame.contentWindow || frame.contentDocument;
+                      if (doc.document) {
+                          doc = doc.document;
+                      }
+                  
+                      if (doc != null) {
+                          doc.body.innerHTML = "";
+                      }
+                  }
+              }    
+          }
+          
+          window.IntalioInternal_FileUpload_action = action;
+          upload.submitNextFile();
+      };
+      
+      upload.executeAction = function() {
+          var action = window.IntalioInternal_FileUpload_action;          
+          jsx3.log("executing action: " + action);
+          if (action == "initProcess") {
+              Intalio.Internal.TMS.callInitProcessActual();
+          } else if (action == "setOutput") {
+              Intalio.Internal.TMS.callSetOutputActual();
+          } else if (action == "completeTask") {
+              Intalio.Internal.TMP.callCompleteTaskActual();
+          }
+      };
+      
+      upload.submitNextFile = function() {
+          if (document.forms != null) {
+              for (var x = 0; x < document.forms.length; x++) {
+                  var ok = false;
+                  
+                  var name = document.forms[x].name;
+                  if (name == null) {
+                       continue;
+                  }
+                  
+                  if (name.indexOf("IntalioInternal_FileUploadForm_") != 0) {
+                      continue;
+                  }
+                  
+                  var id = name.substr(31);
+                  var frame = document.getElementById("IntalioInternal_FileUploadHiddenIFrame_" + id);
+                  
+                  if (frame != null) {
+                      // cross-browser method to access iframe document
+                      var doc = frame.contentWindow || frame.contentDocument;
+                      if (doc.document) {
+                          doc = doc.document;
+                      }
+                  
+                      if (doc != null) {
+                          if (doc.body.innerHTML.length == 0) {
+                              var input = document.getElementById("IntalioInternal_FileUploadInput_" + id);
+                      
+                              // if the input has a value then submit form
+                              if (input != null && input.value.length > 0) {
+                                  var token = document.getElementById("IntalioInternal_FileUploadToken_" + id);
+                                  if (token != null) {
+                                      token.value = Intalio.Internal.Utilities.getParticipantToken();
+                                      jsx3.log("file upload start: " + id);
+                                      document.forms[x].submit();
+                                      return;
+                                  }
+                              }
+                          }
+                      }
+                  }
+              }
+          }
+          
+          upload.executeAction();
+      };
+      
+      upload.callComplete = function(result) {
+          jsx3.log("file upload complete: " + result);
+          if (result != null && result.indexOf("OK: ") == 0) {
+              upload.submitNextFile();    
+          } else {
+              Intalio.Internal.Utilities.hideLoading();
+              Intalio.Internal.Utilities.activateButtons();       
+              var msg = "Problem uploading file: " + result;
+              Intalio.Internal.Utilities.displayError(msg);              
+          }
       };
   }
 );

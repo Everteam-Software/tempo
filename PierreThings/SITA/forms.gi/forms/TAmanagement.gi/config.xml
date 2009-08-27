@@ -126,18 +126,6 @@
       <record jsxid="load" type="number">1</record>
       <record jsxid="src" type="string">js/coord.js</record>
     </record>
-    <record jsxid="11" type="map">
-      <record jsxid="id" type="string">exportTAlist_xml</record>
-      <record jsxid="type" type="string">services</record>
-      <record jsxid="load" type="number">0</record>
-      <record jsxid="src" type="string">rules/exportTAlist.xml</record>
-    </record>
-    <record jsxid="12" type="map">
-      <record jsxid="id" type="string">export_js</record>
-      <record jsxid="type" type="string">script</record>
-      <record jsxid="load" type="number">1</record>
-      <record jsxid="src" type="string">js/export.js</record>
-    </record>
   </record>
   <record jsxid="addins" type="array">
     <record jsxid="0" type="string">intalioajax-addins</record>

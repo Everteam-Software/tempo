@@ -1,11 +1,23 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<wsdl:definitions xmlns:nf="http://www.example.org/notif" xmlns:NotifToAMIprocess="http://example.com/process/NotifToAMI/NotifToAMIprocess" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diag="http://example.com/process/NotifToAMI" xmlns:NotifInterface="http://example.com/process/NotifToAMI/NotifInterface" xmlns:tns="http://ode/bpel/unit-test.wsdl" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:bpdm="http://www.intalio/designer/business-process-data-modeling" targetNamespace="http://example.com/process/NotifToAMI">
+<wsdl:definitions xmlns:nf="http://www.example.org/notif" xmlns:NotifToAMIprocess="http://example.com/process/NotifToAMI/NotifToAMIprocess" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diag="http://example.com/process/NotifToAMI" xmlns:TaskManagementSystem="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:TokenService1="http://tempo.intalio.org/security/tokenService/" xmlns:ta="http://www.example.org/ta" xmlns:tns="http://ode/bpel/unit-test.wsdl" xmlns:TMS="http://example.com/process/NotifToAMI/TMS" xmlns:TAdata="http://www.intalio.com/gi/forms/TAmanagement.gi" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:bpdm="http://www.intalio/designer/business-process-data-modeling" targetNamespace="http://example.com/process/NotifToAMI">
     <wsdl:import namespace="http://ode/bpel/unit-test.wsdl" location="../services/RMAnotif.wsdl"/>
+    <wsdl:import namespace="http://ode/bpel/unit-test.wsdl" location="../services/TAlistToAMI.wsdl"/>
+    <wsdl:import namespace="http://tempo.intalio.org/security/tokenService/" location="../services/TokenService.wsdl"/>
     <wsdl:import namespace="http://example.com/process/NotifToAMI/NotifToAMIprocess" location="NotifToAMI-NotifToAMIprocess.wsdl"/>
+    <wsdl:import namespace="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" location="../services/TaskManagementSystem.wsdl"/>
+    <pnlk:partnerLinkType name="TAlistServiceAndNotifToAMIprocessForTAlistPortPlk">
+        <pnlk:role name="TAlistService_for_NotifToAMIprocess" portType="tns:TAlistPortType"/>
+    </pnlk:partnerLinkType>
     <pnlk:partnerLinkType name="RMAnotifServiceAndNotifToAMIprocessForRMAnotifPortPlk">
         <pnlk:role name="RMAnotifService_for_NotifToAMIprocess" portType="tns:RMAnotifPortType"/>
     </pnlk:partnerLinkType>
+    <pnlk:partnerLinkType name="TokenServiceAndNotifToAMIprocessForTokenServiceHttpportPlk">
+        <pnlk:role name="TokenService_for_NotifToAMIprocess" portType="TokenService1:TokenServicePortType"/>
+    </pnlk:partnerLinkType>
     <pnlk:partnerLinkType name="NotifToAMIprocessAndNotifInterface">
         <pnlk:role name="NotifToAMIprocess_for_NotifInterface" portType="NotifToAMIprocess:ForNotifInterface"/>
+    </pnlk:partnerLinkType>
+    <pnlk:partnerLinkType name="TMsAndNotifToAMIprocessForPortTaskManagementServicesSOAPPlk">
+        <pnlk:role name="TMS_for_NotifToAMIprocess" portType="TaskManagementSystem:TaskManagementServices"/>
     </pnlk:partnerLinkType>
 </wsdl:definitions>

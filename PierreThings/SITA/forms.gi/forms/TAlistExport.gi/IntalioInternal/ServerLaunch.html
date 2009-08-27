@@ -4,7 +4,6 @@
     <!--
       body {
         background-color: white;
-        overflow: scroll;
       }
 
       li#IntalioInternal_error, 
@@ -66,6 +65,16 @@
       }
     -->
   </style>
+  
+  <script>
+  <!--
+    function handleResize() {
+        try {
+            Intalio.Internal.Utilities.handleResize();
+        } catch (err) {}
+    }
+  -->
+  </script>  
 </head>
 
 <body>
@@ -76,7 +85,7 @@
           jsxapppath="..">
   </script>
 </div>
-  
+
 <div id="IntalioInternal_loading">
   Sending request, please wait...
   <br>
@@ -89,7 +98,6 @@
 
 <div id="IntalioInternal_error">
   <center>
-    <!-- used a table because it would not properly size otherwise -->
     <table cellpadding="0" cellspacing="0" border="0">
     <tr>
       <td><div id="IntalioInternal_error_text"/></td>
@@ -108,9 +116,6 @@
   </center>
 </div>
 
-<div id="IntalioInternal_filter">
-  &nbsp;
-</div>
-
 </body>
 </html>
+

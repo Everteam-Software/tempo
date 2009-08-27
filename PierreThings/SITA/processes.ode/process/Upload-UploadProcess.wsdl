@@ -11,16 +11,16 @@
             <xs:include schemaLocation="../schema/HIL03.xsd"/>
         </xs:schema>
     </wsdl:types>
-    <wsdl:message name="uploadHILRequest">
-        <wsdl:part name="body" element="hil:HIL"/>
-    </wsdl:message>
-    <wsdl:message name="uploadHILResponse">
-        <wsdl:part name="body" element="tns:uploadReponse"/>
-    </wsdl:message>
     <wsdl:message name="uploadFMRRequest">
         <wsdl:part name="body" element="fmr:FMR"/>
     </wsdl:message>
     <wsdl:message name="uploadFMRResponse">
+        <wsdl:part name="body" element="tns:uploadReponse"/>
+    </wsdl:message>
+    <wsdl:message name="uploadHILRequest">
+        <wsdl:part name="body" element="hil:HIL"/>
+    </wsdl:message>
+    <wsdl:message name="uploadHILResponse">
         <wsdl:part name="body" element="tns:uploadReponse"/>
     </wsdl:message>
     <wsdl:portType name="ForAppearNetworks">
@@ -35,21 +35,21 @@
     </wsdl:portType>
     <wsdl:binding name="CanonicBindingForAppearNetworks" type="this:ForAppearNetworks">
         <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
-        <wsdl:operation name="uploadHIL">
-            <soap:operation style="document" soapAction="http://example.com/process/Upload/UploadProcess/ForAppearNetworks/uploadHIL"/>
-            <wsdl:input name="uploadHIL">
-                <soap:body use="literal"/>
-            </wsdl:input>
-            <wsdl:output name="uploadHILResponse">
-                <soap:body use="literal"/>
-            </wsdl:output>
-        </wsdl:operation>
         <wsdl:operation name="uploadFMR">
             <soap:operation style="document" soapAction="http://example.com/process/Upload/UploadProcess/ForAppearNetworks/uploadFMR"/>
             <wsdl:input name="uploadFMR">
                 <soap:body use="literal"/>
             </wsdl:input>
             <wsdl:output name="uploadFMRResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="uploadHIL">
+            <soap:operation style="document" soapAction="http://example.com/process/Upload/UploadProcess/ForAppearNetworks/uploadHIL"/>
+            <wsdl:input name="uploadHIL">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="uploadHILResponse">
                 <soap:body use="literal"/>
             </wsdl:output>
         </wsdl:operation>

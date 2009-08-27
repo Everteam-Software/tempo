@@ -70,71 +70,78 @@
 					<xsl:element name="update">0</xsl:element>
 				</xsl:element>
 				<xsl:element name="ArrivalDeparture">
-					<xsl:element name="ScheduledArrivalDate">
-						<xsl:call-template name="dateFromDateTime">
-							<xsl:with-param name="dateTime" select="@STA" />
-						</xsl:call-template>
-					</xsl:element>
-					<xsl:element name="STA">
-						<xsl:call-template name="timeFromDateTime">
-							<xsl:with-param name="dateTime" select="@STA" />
-						</xsl:call-template>
-					</xsl:element>
-					<xsl:element name="ScheduledDepartureDate">
-						<xsl:choose>
-							<xsl:when test="@STD!=''">
-								<xsl:call-template name="dateFromDateTime">
-									<xsl:with-param name="dateTime" select="@STD" />
-								</xsl:call-template>
-							</xsl:when>
-							<xsl:otherwise>2100-01-01</xsl:otherwise>
-						</xsl:choose>
-					</xsl:element>
-					<xsl:element name="STD">
-						<xsl:if test="@STD!=''">
+					<xsl:if test="@STA!=''">
+						<xsl:element name="ScheduledArrivalDate">
+							<xsl:call-template name="dateFromDateTime">
+								<xsl:with-param name="dateTime" select="@STA" />
+							</xsl:call-template>
+						</xsl:element>
+						<xsl:element name="STA">
 							<xsl:call-template name="timeFromDateTime">
+								<xsl:with-param name="dateTime" select="@STA" />
+							</xsl:call-template>
+						</xsl:element>
+					</xsl:if>
+					<xsl:if test="@STD!=''">
+						<xsl:element name="ScheduledDepartureDate">
+							<xsl:call-template name="dateFromDateTime">
 								<xsl:with-param name="dateTime" select="@STD" />
 							</xsl:call-template>
-						</xsl:if>
-					</xsl:element>
-					<xsl:element name="EstimatedArrivalDate">1970-01-01</xsl:element>
-					<xsl:element name="ETA"></xsl:element>
-					<xsl:element name="EstimatedDepartureDate">1970-01-01</xsl:element>
-					<xsl:element name="ETD"></xsl:element>
-					<xsl:element name="ActualArrivalDate">
-						<xsl:choose>
-							<xsl:when test="@ATA!=''">
-								<xsl:call-template name="dateFromDateTime">
-									<xsl:with-param name="dateTime" select="@ATA" />
-								</xsl:call-template>
-							</xsl:when>
-							<xsl:otherwise>1970-01-01</xsl:otherwise>
-						</xsl:choose>
-					</xsl:element>
-					<xsl:element name="ATA">
-						<xsl:if test="@ATA!=''">
+						</xsl:element>	
+						<xsl:element name="STD">
 							<xsl:call-template name="timeFromDateTime">
+								<xsl:with-param name="dateTime" select="@STD" />
+							</xsl:call-template>		
+						</xsl:element>
+					</xsl:if>
+	                <xsl:if test="@ETA!=''">
+						<xsl:element name="EstimatedArrivalDate">
+							<xsl:call-template name="dateFromDateTime">
+								<xsl:with-param name="dateTime" select="@ETA" />
+							</xsl:call-template>
+						</xsl:element>
+						<xsl:element name="ETA">
+							<xsl:call-template name="timeFromDateTime">
+								<xsl:with-param name="dateTime" select="@ETA" />
+							</xsl:call-template>
+						</xsl:element>
+					</xsl:if>
+					<xsl:if test="@ETD!=''">
+						<xsl:element name="EstimatedDepartureDate">
+							<xsl:call-template name="dateFromDateTime">
+								<xsl:with-param name="dateTime" select="@ETD" />
+							</xsl:call-template>
+						</xsl:element>
+						<xsl:element name="ETD">
+							<xsl:call-template name="timeFromDateTime">
+								<xsl:with-param name="dateTime" select="@ETD" />
+							</xsl:call-template>
+						</xsl:element>
+					</xsl:if>
+					<xsl:if test="@ATA!=''">
+						<xsl:element name="ActualArrivalDate">
+							<xsl:call-template name="dateFromDateTime">
 								<xsl:with-param name="dateTime" select="@ATA" />
 							</xsl:call-template>
-						</xsl:if>
-					</xsl:element>
-					<xsl:element name="ActualDepartureDate">
-						<xsl:choose>
-							<xsl:when test="@ATD!=''">
-								<xsl:call-template name="dateFromDateTime">
-									<xsl:with-param name="dateTime" select="@ATD" />
-								</xsl:call-template>
-							</xsl:when>
-							<xsl:otherwise>1970-01-01</xsl:otherwise>
-						</xsl:choose>
-					</xsl:element>
-					<xsl:element name="ATD">
-						<xsl:if test="@ATD!=''">
+						</xsl:element>
+						<xsl:element name="ATA">
 							<xsl:call-template name="timeFromDateTime">
+									<xsl:with-param name="dateTime" select="@ATA" />
+							</xsl:call-template>
+						</xsl:element>
+					</xsl:if>
+					<xsl:if test="@ATD!=''">
+						<xsl:element name="ActualDepartureDate">
+							<xsl:call-template name="dateFromDateTime">
 								<xsl:with-param name="dateTime" select="@ATD" />
 							</xsl:call-template>
-						</xsl:if>						
-					</xsl:element>
+						</xsl:element>
+						<xsl:element name="ATD">
+							<xsl:call-template name="timeFromDateTime">
+								<xsl:with-param name="dateTime" select="@ATD" />
+							</xsl:call-template>						
+						</xsl:element>
+					</xsl:if>
 					<xsl:element name="ArrivalFlightNumber">
 						<xsl:value-of select="@ArrivalFlightNumber" />
 					</xsl:element>
@@ -166,25 +173,19 @@
 				</xsl:element>
 				<xsl:element name="DC">
 					<xsl:element name="ExpectedStartTime">
-						<xsl:if test="@STD!=''">
-							<xsl:call-template name="timeFromDateTime">
-								<xsl:with-param name="dateTime"><xsl:value-of select="xs:dateTime(@STD) - xs:dayTimeDuration('PT8H')" /></xsl:with-param>
-							</xsl:call-template>
-						</xsl:if>
+						<xsl:call-template name="timeFromDateTime">
+							<xsl:with-param name="dateTime"><xsl:value-of select="xs:dateTime('2000-01-01T00:00:00') + xs:dayTimeDuration('PT6M')" /></xsl:with-param>
+						</xsl:call-template>
 					</xsl:element>
-					<xsl:element name="ExpectedFinishTime">
-						<xsl:if test="@STD!=''">
-							<xsl:call-template name="timeFromDateTime">
-								<xsl:with-param name="dateTime"><xsl:value-of select="xs:dateTime(@STD) - xs:dayTimeDuration('PT4H')" /></xsl:with-param>
-							</xsl:call-template>
-						</xsl:if>
+					<xsl:element name="ExpectedFinishTime">		
+						<xsl:call-template name="timeFromDateTime">
+							<xsl:with-param name="dateTime"><xsl:value-of select="xs:dateTime('2000-01-01T00:00:00') + xs:dayTimeDuration('PT20M')" /></xsl:with-param>
+						</xsl:call-template>
 					</xsl:element>
 					<xsl:element name="ExpectedReleaseTime">
-						<xsl:if test="@STD!=''">
-							<xsl:call-template name="timeFromDateTime">
-								<xsl:with-param name="dateTime"><xsl:value-of select="xs:dateTime(@STD) - xs:dayTimeDuration('PT2H')" /></xsl:with-param>
-							</xsl:call-template>
-						</xsl:if>
+						<xsl:call-template name="timeFromDateTime">
+							<xsl:with-param name="dateTime"><xsl:value-of select="xs:dateTime('2000-01-01T00:00:00') + xs:dayTimeDuration('PT20M')" /></xsl:with-param>
+						</xsl:call-template>
 					</xsl:element>
 					<xsl:element name="CompassInspectionType"></xsl:element>
 					<xsl:element name="Comments"></xsl:element>

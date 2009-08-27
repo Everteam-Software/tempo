@@ -120,7 +120,12 @@
 			</cell>
 			<%-- RTR --%>
 			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform">
-					<c:forEach items="${taskHolder.task._RTR}" var="currentRTR" varStatus="rtrStatus">${currentRTR.RTRID}<c:if test="${!rtrStatus.last}"><br/></c:if></c:forEach>
+					<c:forEach items="${taskHolder.task._RTR}" var="currentRTR" varStatus="rtrStatus">
+						<c:choose>
+							<c:when test="${currentRTR.RTRStatus=='resolved'}"><span style='background-color:lime'>${currentRTR.RTRID}</span></c:when>
+							<c:otherwise>${currentRTR.RTRID}</c:otherwise>
+						</c:choose><c:if test="${!rtrStatus.last}"><br/></c:if>
+					</c:forEach>
 				</a>]]></cell>
 			<%-- Comments --%>
 			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform">${taskHolder.task._comments}</a>]]>
@@ -135,7 +140,7 @@
 							<span style='background-color:yellow'>stopped</span>
 						</c:when>
 						<c:when test="${taskHolder.task._InspectionStatus=='released'}">
-							<span style='background-color:green;color:white'>released</span>
+							<span style='background-color:lime'>released</span>
 						</c:when>
 						<c:when test="${taskHolder.task._InspectionStatus=='started'}">
 							<span style='background-color:skyblue'>started</span>

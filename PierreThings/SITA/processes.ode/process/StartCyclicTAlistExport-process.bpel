@@ -37,12 +37,6 @@
         <bpel:to>$tAlistCyclicExport1InitProcessResponseMsg.root/TAlistCyclicExport1:taskMetaData/TAlistCyclicExport1:instanceId</bpel:to>
     </bpel:copy>
   </bpel:assign>
-  <bpel:assign>
-    <bpel:copy>
-        <bpel:from>$ode:pid</bpel:from>
-        <bpel:to>$tAlistCyclicExport1InitProcessResponseMsg.root/TAlistCyclicExport1:taskMetaData/TAlistCyclicExport1:instanceId</bpel:to>
-    </bpel:copy>
-  </bpel:assign>
   <bpel:reply partnerLink="processAndUserForPortTypeProcessPlkVar" portType="TAlistCyclicExport1:Process" operation="initProcess" variable="tAlistCyclicExport1InitProcessResponseMsg" bpmn:label="start" name="start-1" bpmn:id="_KpfwgF6sEd6AcdcHq8MPxQ"></bpel:reply>
     <bpel:scope bpmn:label="SubProcess" name="SubProcess" bpmn:id="_MdIRUF6sEd6AcdcHq8MPxQ">
       <bpel:variables>

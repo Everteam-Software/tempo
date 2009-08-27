@@ -35,6 +35,7 @@
     <b4p:taskType></b4p:taskType>
     <b4p:description></b4p:description>
     <b4p:processId></b4p:processId>
+    <b4p:instanceId></b4p:instanceId>
     <b4p:creationDate></b4p:creationDate>
     <b4p:userOwner></b4p:userOwner>
     <b4p:roleOwner></b4p:roleOwner>

@@ -5,37 +5,21 @@
   <bpel:import namespace="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" location="../services/TaskManagementSystem.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"></bpel:import>
   <bpel:import namespace="http://www.intalio.com/gi/forms/PurgeTAlist.gi" location="../forms/PurgeTAlist.gi.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"></bpel:import>
   <bpel:partnerLinks>
-    <bpel:partnerLink name="processAndUserForPortTypeProcessPlkVar" partnerLinkType="diag:processAndUserForPortTypeProcessPlk" myRole="process_for_User"></bpel:partnerLink>
     <bpel:partnerLink name="tokenAndProcessForTokenServiceHttpportPlkVar" partnerLinkType="diag:TokenAndProcessForTokenServiceHttpportPlk" initializePartnerRole="yes" partnerRole="Token_for_process"></bpel:partnerLink>
     <bpel:partnerLink name="tMsAndProcessForPortTaskManagementServicesSOAPPlkVar" partnerLinkType="diag:TMsAndProcessForPortTaskManagementServicesSOAPPlk" initializePartnerRole="yes" partnerRole="TMS_for_process"></bpel:partnerLink>
+    <bpel:partnerLink name="processAndUserForPortTypeProcessPlkVar" partnerLinkType="diag:processAndUserForPortTypeProcessPlk" myRole="process_for_User"></bpel:partnerLink>
   </bpel:partnerLinks>
   <bpel:variables>
-    <bpel:variable name="purgeTAlistInitProcessRequestMsg" messageType="PurgeTAlist:initProcessRequest"></bpel:variable>
-    <bpel:variable name="purgeTAlistInitProcessResponseMsg" messageType="PurgeTAlist:initProcessResponse"></bpel:variable>
     <bpel:variable name="tnsAuthenticateUserRequestMsg" messageType="tns:authenticateUser"></bpel:variable>
     <bpel:variable name="tnsAuthenticateUserResponseMsg" messageType="tns:authenticateUserResponse"></bpel:variable>
     <bpel:variable name="taskManagementSystemDeleteAllRequestMsg" messageType="TaskManagementSystem:deleteAllRequest"></bpel:variable>
     <bpel:variable name="taskManagementSystemDeleteAllResponseMsg" messageType="TaskManagementSystem:okResponse"></bpel:variable>
+    <bpel:variable name="purgeTAlistInitProcessRequestMsg" messageType="PurgeTAlist:initProcessRequest"></bpel:variable>
+    <bpel:variable name="purgeTAlistInitProcessResponseMsg" messageType="PurgeTAlist:initProcessResponse"></bpel:variable>
   </bpel:variables>
   <bpel:sequence>
     <bpel:receive partnerLink="processAndUserForPortTypeProcessPlkVar" portType="PurgeTAlist:Process" operation="initProcess" variable="purgeTAlistInitProcessRequestMsg" createInstance="yes" bpmn:label="start" name="start" bpmn:id="_1pZ4IFwJEd6Tl-z0gbmSaA"></bpel:receive>
     <bpel:assign name="init-variables-process" bpmn:id="_1pZ4IFwJEd6Tl-z0gbmSaA">
-      <bpel:copy bpmn:label="$purgeTAlistInitProcessResponseMsg">
-        <bpel:from>
-          <bpel:literal>
-<PurgeTAlist:initProcessResponse>
-  <PurgeTAlist:status>OK</PurgeTAlist:status>
-  <PurgeTAlist:errorCode></PurgeTAlist:errorCode>
-  <PurgeTAlist:errorReason></PurgeTAlist:errorReason>
-  <PurgeTAlist:taskMetaData>
-    <PurgeTAlist:nextTaskId></PurgeTAlist:nextTaskId>
-    <PurgeTAlist:nextTaskURL></PurgeTAlist:nextTaskURL>
-    <PurgeTAlist:instanceId></PurgeTAlist:instanceId>
-  </PurgeTAlist:taskMetaData>
-</PurgeTAlist:initProcessResponse></bpel:literal>
-        </bpel:from>
-        <bpel:to>$purgeTAlistInitProcessResponseMsg.root</bpel:to>
-      </bpel:copy>
       <bpel:copy bpmn:label="$tnsAuthenticateUserRequestMsg">
         <bpel:from>
           <bpel:literal>
@@ -59,14 +43,24 @@
         </bpel:from>
         <bpel:to>$taskManagementSystemDeleteAllRequestMsg.deleteAllRequest</bpel:to>
       </bpel:copy>
+      <bpel:copy bpmn:label="$purgeTAlistInitProcessResponseMsg">
+        <bpel:from>
+          <bpel:literal>
+<PurgeTAlist:initProcessResponse>
+  <PurgeTAlist:status>OK</PurgeTAlist:status>
+  <PurgeTAlist:errorCode></PurgeTAlist:errorCode>
+  <PurgeTAlist:errorReason></PurgeTAlist:errorReason>
+  <PurgeTAlist:taskMetaData>
+    <PurgeTAlist:nextTaskId></PurgeTAlist:nextTaskId>
+    <PurgeTAlist:nextTaskURL></PurgeTAlist:nextTaskURL>
+    <PurgeTAlist:instanceId></PurgeTAlist:instanceId>
+  </PurgeTAlist:taskMetaData>
+</PurgeTAlist:initProcessResponse></bpel:literal>
+        </bpel:from>
+        <bpel:to>$purgeTAlistInitProcessResponseMsg.root</bpel:to>
+      </bpel:copy>
     </bpel:assign>
     <bpel:assign>
-    <bpel:copy>
-        <bpel:from>$ode:pid</bpel:from>
-        <bpel:to>$purgeTAlistInitProcessResponseMsg.root/PurgeTAlist:taskMetaData/PurgeTAlist:instanceId</bpel:to>
-    </bpel:copy>
-  </bpel:assign>
-  <bpel:assign>
     <bpel:copy>
         <bpel:from>$ode:pid</bpel:from>
         <bpel:to>$purgeTAlistInitProcessResponseMsg.root/PurgeTAlist:taskMetaData/PurgeTAlist:instanceId</bpel:to>

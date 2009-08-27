@@ -9,6 +9,7 @@
   <xs:element name="roster">
     <xs:complexType>
       <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="ta:coordinator"/>
         <xs:element minOccurs="0" maxOccurs="unbounded" ref="ta:mechanic"/>
         <xs:element minOccurs="0" maxOccurs="unbounded" ref="ta:avionic"/>
       </xs:sequence>
@@ -28,6 +29,18 @@
     </xs:complexType>
   </xs:element>
   <xs:element name="avionic">
+    <xs:complexType>
+      <xs:attribute name="user-id" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="25"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="user-name" type="xs:string" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="coordinator">
     <xs:complexType>
       <xs:attribute name="user-id" use="required">
         <xs:simpleType>
@@ -115,7 +128,7 @@
           </xs:restriction>
         </xs:simpleType>
       </xs:attribute>
-	  <xs:attribute name="estimated-arrival-datetime" use="required" type="ta:utcDateTime"/>
+      <xs:attribute name="estimated-arrival-datetime" use="required" type="ta:utcDateTime"/>
       <xs:attribute name="actual-arrival-datetime" use="required" type="ta:utcDateTime"/>
       <xs:attribute name="scheduled-departure-datetime" use="required" type="ta:utcDateTime"/>
       <xs:attribute name="scheduled-departure-flight-number" use="required">

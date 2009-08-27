@@ -55,6 +55,12 @@
 						<xsl:value-of select="gi:Activity/gi:late" />
 					</xsl:attribute>
 					<xsl:element name="roster">
+						<xsl:for-each select="gi:Inspection/gi:assignedCoord">
+							<xsl:element name="coordinator">
+								<xsl:attribute name="user-id"><xsl:value-of select="gi:assignedCoordID" /></xsl:attribute>
+								<xsl:attribute name="user-name"><xsl:value-of select="gi:assignedCoordName" /></xsl:attribute>
+							</xsl:element>
+						</xsl:for-each>
 						<xsl:for-each select="gi:Inspection/gi:assignedMechanics">
 							<xsl:element name="mechanic">
 								<xsl:attribute name="user-id"><xsl:value-of select="gi:assignedMechanicID" /></xsl:attribute>
@@ -76,12 +82,14 @@
 					</xsl:element>
 					<xsl:element name="incidents">
 						<xsl:for-each select="gi:Inspection/gi:RTR">
-							<xsl:element name="rtr">
-								<xsl:attribute name="rtr-id"><xsl:value-of select="gi:RTRid" /></xsl:attribute>
-								<xsl:attribute name="limit-date"><xsl:if test="gi:RTRdate"><xsl:value-of select="gi:RTRdate" /></xsl:if></xsl:attribute>
-								<xsl:attribute name="description"><xsl:if test="gi:RTRdescription"><xsl:value-of select="gi:RTRdescription" /></xsl:if></xsl:attribute>
-								<xsl:attribute name="ad"><xsl:if test="gi:RTRad"><xsl:value-of select="gi:RTRad" /></xsl:if></xsl:attribute>
-							</xsl:element>
+							<xsl:if test="gi:RTRstatus!='resolved'">
+								<xsl:element name="rtr">
+									<xsl:attribute name="rtr-id"><xsl:value-of select="gi:RTRid" /></xsl:attribute>
+									<xsl:attribute name="limit-date"><xsl:if test="gi:RTRdate"><xsl:value-of select="gi:RTRdate" /></xsl:if></xsl:attribute>
+									<xsl:attribute name="description"><xsl:if test="gi:RTRdescription"><xsl:value-of select="gi:RTRdescription" /></xsl:if></xsl:attribute>
+									<xsl:attribute name="ad"><xsl:if test="gi:RTRad"><xsl:value-of select="gi:RTRad" /></xsl:if></xsl:attribute>
+								</xsl:element>
+							</xsl:if>
 						</xsl:for-each>
 					</xsl:element>
 				</xsl:element>
