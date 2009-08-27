@@ -655,6 +655,7 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 			for (com.intalio.gi.forms.tAmanagement.InspectionType.RTR RTR : RTRs) {
 				org.intalio.tempo.workflow.task.RTR newRTR = new org.intalio.tempo.workflow.task.RTR();
 				newRTR.setRTRID(RTR.getRTRid());
+				newRTR.setRTRStatus(RTR.getRTRstatus().toString());
 				get_RTR().add(newRTR);
 			}
 
