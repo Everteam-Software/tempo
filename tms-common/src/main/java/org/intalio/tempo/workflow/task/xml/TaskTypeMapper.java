@@ -49,6 +49,17 @@ public final class TaskTypeMapper {
         }
         return result.toString();
     }
+    
+    /**
+     * To be backward compatible, we support both finding the class from its simple name, and from the reverse map
+     */
+    public static Class<? extends Task> getTaskClassFromStringName(String klass) {
+        try {
+            return (Class<? extends Task>)Class.forName("org.intalio.tempo.workflow.task." + klass);    
+        } catch (Exception e) {
+            return TaskTypeMapper.getTypeClassByName(klass); 
+        }
+    }
 
     public static Class<? extends Task> getTypeClassByName(String name) throws InvalidInputFormatException {
         if (name == null) {

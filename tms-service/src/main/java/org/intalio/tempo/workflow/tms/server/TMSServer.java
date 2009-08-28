@@ -38,6 +38,7 @@ import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.task.traits.ITaskWithAttachments;
 import org.intalio.tempo.workflow.task.traits.ITaskWithOutput;
 import org.intalio.tempo.workflow.task.traits.ITaskWithState;
+import org.intalio.tempo.workflow.task.xml.TaskTypeMapper;
 import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.tms.AccessDeniedException;
 import org.intalio.tempo.workflow.tms.InvalidTaskStateException;
@@ -452,7 +453,7 @@ public class TMSServer implements ITMSServer {
         try {
             parameters.put(TaskFetcher.FETCH_USER, credentials);
             String klass = (String)parameters.get(TaskFetcher.FETCH_CLASS_NAME);
-            if(klass!=null) parameters.put(TaskFetcher.FETCH_CLASS, Class.forName("org.intalio.tempo.workflow.task." + klass));
+            if(klass!=null) parameters.put(TaskFetcher.FETCH_CLASS, TaskTypeMapper.getTaskClassFromStringName(klass));
             return dao.countAvailableTasks(parameters);
         } catch (Exception e) {
             _logger.error("Error while tasks list retrieval for user " + credentials.getUserID(), e);
@@ -466,7 +467,7 @@ public class TMSServer implements ITMSServer {
         try {
             parameters.put(TaskFetcher.FETCH_USER, credentials);
             String klass = (String)parameters.get(TaskFetcher.FETCH_CLASS_NAME);
-            if(klass!=null) parameters.put(TaskFetcher.FETCH_CLASS, Class.forName("org.intalio.tempo.workflow.task." + klass));
+            if(klass!=null) parameters.put(TaskFetcher.FETCH_CLASS, TaskTypeMapper.getTaskClassFromStringName(klass));
             return dao.fetchAvailableTasks(parameters);
         } catch (Exception e) {
             _logger.error("Error while tasks list retrieval for user " + credentials.getUserID(), e);
