@@ -233,10 +233,10 @@ public abstract class ExternalTasksServlet extends HttpServlet {
 	private String formatRTR(Collection<RTR> RTRs) {
 			String response="";
 			for(RTR rtr:RTRs){
-				response=rtr.getRTRID()+CVS_SEPARATOR;
+				response+=rtr.getRTRID()+CVS_SEPARATOR;
 			}
 			if(RTRs.size()>0)
-				response+=removeLastSeparator(response);
+				response=removeLastSeparator(response);
 			return response;
 	}
 
