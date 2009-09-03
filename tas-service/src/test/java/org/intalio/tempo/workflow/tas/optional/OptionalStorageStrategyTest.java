@@ -65,4 +65,11 @@ public class OptionalStorageStrategyTest extends TestCase {
         String url = _service.add(_credentials, metadata, this.getClass().getResource("/log4j.xml").toExternalForm());
         _service.delete(_credentials, url);
     }
+    
+    public void testMp3File() throws Exception {
+        AttachmentMetadata metadata = new AttachmentMetadata();
+        metadata.setMimeType("application/mp3");
+        metadata.setFilename("route.mp3");
+        String url = _service.add(_credentials, metadata, this.getClass().getResource("/route.mp3").toExternalForm());
+    }
 }

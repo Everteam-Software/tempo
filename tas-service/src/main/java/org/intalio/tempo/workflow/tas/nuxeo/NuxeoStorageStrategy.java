@@ -69,7 +69,7 @@ public class NuxeoStorageStrategy implements StorageStrategy {
     static Logger log = LoggerFactory.getLogger(SlingStorageStrategy.class);
 
     private String nuxeoBaseUrl = "http://localhost:9080/";
-    private String nuxeoUrl = nuxeoBaseUrl + "restAPI/default";
+    // private String nuxeoUrl = nuxeoBaseUrl + "restAPI/default";
     private String repoName = "tempo";
     private String userName = "Administrator";
     private String password = "Administrator";
@@ -79,23 +79,26 @@ public class NuxeoStorageStrategy implements StorageStrategy {
     // computed on init()
     private String repoId;
 
+    private boolean init = false;
+
     // NOT USED FOR NOW, but we could when we access versions
     // private String nuxeoPublicUrl = nuxeoBaseUrl +
     // "/admin/repository/default-domain/workspaces/" + repoName;
 
     public NuxeoStorageStrategy() throws Exception, IOException {
-        init();
+
     }
 
     public void init() throws HttpException, IOException {
         initHttpClient();
         try {
-            String localRepoId = getWorkspacesURL("/restAPI/default", "workspaces", "WorkspaceRoot");
+            String localRepoId = getWorkspacesURL(getNuxeoRestUrl(), "workspaces", "WorkspaceRoot");
             log.debug("LOCAL REPO" + localRepoId);
             repoId = getDocumentId(browse(localRepoId), this.repoName);
             if (repoId == null)
-                repoId = createFolder(this.nuxeoUrl + "/" + localRepoId, this.repoName);
+                repoId = createFolder(getNuxeoRestUrl() + "/" + localRepoId, this.repoName);
             log.debug("REPOURL:" + repoId);
+            init = true;
         } catch (Exception e) {
             throw new IOException(e);
         }
@@ -109,7 +112,7 @@ public class NuxeoStorageStrategy implements StorageStrategy {
     private void initHttpClient() throws URIException {
         httpclient = new HttpClient();
         HostConfiguration hostConfig = new HostConfiguration();
-        org.apache.commons.httpclient.URI uri = new org.apache.commons.httpclient.URI(nuxeoUrl, false);
+        org.apache.commons.httpclient.URI uri = new org.apache.commons.httpclient.URI(getNuxeoRestUrl(), false);
         hostConfig.setHost(uri);
         HttpConnectionManager connectionManager = new MultiThreadedHttpConnectionManager();
         HttpConnectionManagerParams params = new HttpConnectionManagerParams();
@@ -129,12 +132,16 @@ public class NuxeoStorageStrategy implements StorageStrategy {
      */
     public void deleteAttachment(Property[] props, String url) throws UnavailableAttachmentException {
         try {
+            if (!init)
+                init();
             String fileUrl = url.substring(0, url.indexOf(this.REST_DOWNLOAD));
             String newUri = fileUrl + REST_DELETE;
             log.debug("NUXEO DELETE:" + newUri);
             DeleteMethod method = new DeleteMethod(newUri);
             httpclient.executeMethod(method);
-            String value = method.getResponseBodyAsString();
+            // needed for proper httpclient handling
+            // but we do not return the value
+            // method.getResponseBodyAsString();
             method.releaseConnection();
         } catch (Exception e) {
             throw new UnavailableAttachmentException(e);
@@ -145,10 +152,12 @@ public class NuxeoStorageStrategy implements StorageStrategy {
      * Store the attachment, implement the java interface
      */
     public String storeAttachment(Property[] properties, AttachmentMetadata metadata, InputStream payload) throws IOException {
+        if (!init)
+            init();
         OMElement omEle = null;
         String encodedName = URLEncoder.encode(metadata.getFilename(), "utf-8");
         try {
-            omEle = getCreateFileEle(this.nuxeoUrl, repoId, encodedName);
+            omEle = getCreateFileEle(getNuxeoRestUrl(), repoId, encodedName);
             log.debug("NUXEO ATTACH " + omEle.toString());
         } catch (Exception e) {
             throw new IOException(e);
@@ -158,7 +167,7 @@ public class NuxeoStorageStrategy implements StorageStrategy {
         }
 
         String fileId = getDocumentRef(omEle);
-        String fileUrl = this.nuxeoUrl + "/" + fileId;
+        String fileUrl = getNuxeoRestUrl() + "/" + fileId;
         String newUri = fileUrl + "/" + encodedName;
         uploadFile(newUri + REST_UPLOAD, payload);
 
@@ -195,7 +204,7 @@ public class NuxeoStorageStrategy implements StorageStrategy {
         httpclient.executeMethod(method);
         // needed for proper httpclient handling
         // but we do not return the value
-        method.getResponseBodyAsString();
+        // method.getResponseBodyAsString();
         method.releaseConnection();
     }
 
@@ -224,7 +233,7 @@ public class NuxeoStorageStrategy implements StorageStrategy {
      * find duplicate folder. As such, we return the complete rest call xml
      */
     private OMElement browse(String folderId) throws Exception {
-        GetMethod method = new GetMethod(this.nuxeoUrl + "/" + folderId + REST_BROWSE);
+        GetMethod method = new GetMethod(getNuxeoRestUrl() + "/" + folderId + REST_BROWSE);
         httpclient.executeMethod(method);
         String value = method.getResponseBodyAsString();
         method.releaseConnection();
@@ -238,6 +247,10 @@ public class NuxeoStorageStrategy implements StorageStrategy {
 
     public void setNuxeoBaseUrl(String nuxeoBaseUrl) {
         this.nuxeoBaseUrl = nuxeoBaseUrl;
+    }
+
+    private String getNuxeoRestUrl() {
+        return this.nuxeoBaseUrl + "restAPI/default";
     }
 
     public String getUserName() {
@@ -254,6 +267,14 @@ public class NuxeoStorageStrategy implements StorageStrategy {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getRepoName() {
+        return repoName;
+    }
+
+    public void setRepoName(String repoName) {
+        this.repoName = repoName;
     }
 
     private String getWorkspacesURL(String repRootUri, String repName, String repType) throws Exception {
