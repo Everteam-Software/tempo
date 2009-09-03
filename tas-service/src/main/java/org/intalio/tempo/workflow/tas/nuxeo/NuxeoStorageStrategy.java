@@ -48,8 +48,6 @@ import org.intalio.tempo.workflow.tas.sling.SlingStorageStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ctc.wstx.util.StringUtil;
-
 public class NuxeoStorageStrategy implements StorageStrategy {
 
     private static final String NUXEO_FILE = "File";

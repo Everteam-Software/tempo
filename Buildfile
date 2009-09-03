@@ -52,7 +52,7 @@ define "tempo" do
     unless ENV["LIVE"] == 'yes'
       test.exclude '*Axis2TASService*'
       test.exclude '*WDSStorageTest*'
-      test.exclude '*SlingStorage*'
+      test.exclude '*OptionalStorage*'
     end
 
     package :jar
