@@ -1,4 +1,4 @@
-package org.intalio.tempo.workflow.tas.sling;
+package org.intalio.tempo.workflow.tas.optional;
 
 import junit.framework.TestCase;
 
@@ -8,17 +8,17 @@ import org.intalio.tempo.workflow.tas.core.AuthCredentials;
 import org.intalio.tempo.workflow.tas.core.AuthStrategy;
 import org.intalio.tempo.workflow.tas.core.TaskAttachmentService;
 import org.intalio.tempo.workflow.tas.core.TaskAttachmentServiceImpl;
-import org.intalio.tempo.workflow.tas.sling.SlingStorageStrategy;
+import org.intalio.tempo.workflow.tas.nuxeo.NuxeoStorageStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Simple test case to test attachments in Sling.
- * This requires a running server.
+ * Simple test case to test attachments in Sling. This requires a running
+ * server.
  */
-public class SlingStorageStrategyTest extends TestCase {
+public class OptionalStorageStrategyTest extends TestCase {
 
-    private static final Logger _logger = LoggerFactory.getLogger(SlingStorageStrategyTest.class);
+    private static final Logger _logger = LoggerFactory.getLogger(OptionalStorageStrategyTest.class);
 
     private TaskAttachmentService _service;
     private AuthCredentials _credentials = new AuthCredentials("token");
@@ -33,13 +33,14 @@ public class SlingStorageStrategyTest extends TestCase {
 
     @Override
     protected void setUp() throws Exception {
-        SlingStorageStrategy ass = new SlingStorageStrategy();
+        //SlingStorageStrategy ass = new SlingStorageStrategy();
+        NuxeoStorageStrategy ass = new NuxeoStorageStrategy();
         _service = new TaskAttachmentServiceImpl(new DummyAuthStrategy(), ass);
-
     }
 
     /**
-     * Stores a simple text file 
+     * Stores a simple text file
+     * 
      * @throws Exception
      */
     public void testStorage() throws Exception {
@@ -54,12 +55,14 @@ public class SlingStorageStrategyTest extends TestCase {
 
     /**
      * Stores an xml file
+     * 
      * @throws Exception
      */
     public void testStoreXmlFile() throws Exception {
         AttachmentMetadata metadata = new AttachmentMetadata();
         metadata.setMimeType("text/xml");
         metadata.setFilename("log4j.xml");
-        _service.add(_credentials, metadata, this.getClass().getResource("/log4j.xml").toExternalForm());
+        String url = _service.add(_credentials, metadata, this.getClass().getResource("/log4j.xml").toExternalForm());
+        _service.delete(_credentials, url);
     }
 }
