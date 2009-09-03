@@ -1,9 +1,9 @@
 ﻿#
-#Thu Jul 09 04:11:45 CEST 2009
+#Thu Aug 20 18:23:27 CEST 2009
 formURI=http\://172.17.128.120\:9080/gi/apppath/SITA/forms/PurgeTAlist.gi/IntalioInternal/ServerLaunch.html
 userProcessInitSOAPAction=http\://www.intalio.com/gi/forms/PurgeTAlist.gi/Process/initProcess
 processEndpoint=http\://172.17.128.120\:9080/ode/processes/SITA/process/PurgeTAlist/process/User/processAndUserForPortTypeProcessPlk
-task-description=Purge TA List
+task-description=Purge turnaround list
 task-role-owners=
 task-user-owners=intalio\\admin
 formNamespace=http\://www.intalio.com/gi/forms/PurgeTAlist.gi

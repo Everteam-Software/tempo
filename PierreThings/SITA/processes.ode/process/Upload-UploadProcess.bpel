@@ -9,11 +9,11 @@
   <bpel:import namespace="urn:intalio.com:connectors:database:sita:countexistingtasservice" location="../database/countExistingTAs.sql/countExistingTAs.sql.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
   <bpel:partnerLinks>
     <bpel:partnerLink name="uploadProcessAndAppearNetworksPlkVar" partnerLinkType="diag:UploadProcessAndAppearNetworks" myRole="UploadProcess_for_AppearNetworks"/>
-    <bpel:partnerLink name="uploadProcessAndTMPForUserBusinessProcessPortPlkVar" partnerLinkType="diag:UploadProcessAndTMPForUserBusinessProcessPortPlk" initializePartnerRole="yes" partnerRole="TMP_for_UploadProcess"/>
-    <bpel:partnerLink name="dbAndUploadProcessForCountExistingTAsPortPlkVar" partnerLinkType="diag:DbAndUploadProcessForCountExistingTAsPortPlk" initializePartnerRole="yes" partnerRole="DB_for_UploadProcess"/>
-    <bpel:partnerLink name="tMsAndUploadProcessForPortTaskManagementServicesSOAPPlkVar" partnerLinkType="diag:TMsAndUploadProcessForPortTaskManagementServicesSOAPPlk" initializePartnerRole="yes" partnerRole="TMS_for_UploadProcess"/>
     <bpel:partnerLink name="uploadProcessAndSITAserviceForSITAservicePortPlkVar" partnerLinkType="diag:UploadProcessAndSITAserviceForSITAservicePortPlk" initializePartnerRole="yes" partnerRole="SITAservice_for_UploadProcess"/>
     <bpel:partnerLink name="uploadProcessAndTokenServiceForTokenServiceHttpportPlkVar" partnerLinkType="diag:UploadProcessAndTokenServiceForTokenServiceHttpportPlk" initializePartnerRole="yes" partnerRole="TokenService_for_UploadProcess"/>
+    <bpel:partnerLink name="uploadProcessAndTMPForUserBusinessProcessPortPlkVar" partnerLinkType="diag:UploadProcessAndTMPForUserBusinessProcessPortPlk" initializePartnerRole="yes" partnerRole="TMP_for_UploadProcess"/>
+    <bpel:partnerLink name="tMsAndUploadProcessForPortTaskManagementServicesSOAPPlkVar" partnerLinkType="diag:TMsAndUploadProcessForPortTaskManagementServicesSOAPPlk" initializePartnerRole="yes" partnerRole="TMS_for_UploadProcess"/>
+    <bpel:partnerLink name="dbAndUploadProcessForCountExistingTAsPortPlkVar" partnerLinkType="diag:DbAndUploadProcessForCountExistingTAsPortPlk" initializePartnerRole="yes" partnerRole="DB_for_UploadProcess"/>
   </bpel:partnerLinks>
   <bpel:variables>
     <bpel:variable name="thisUploadFMRRequestMsg" messageType="this:uploadFMRRequest"/>
@@ -21,8 +21,6 @@
     <bpel:variable name="thisUploadHILResponseMsg" messageType="this:uploadHILResponse"/>
     <bpel:variable name="b4pCreateTaskRequestMsg" messageType="b4p:createTaskRequest"/>
     <bpel:variable name="b4pCreateTaskResponseMsg" messageType="b4p:createTaskResponse"/>
-    <bpel:variable name="countExistingTAsCountExistingTAsRequestMsg" messageType="countExistingTAs:countExistingTAsInput"/>
-    <bpel:variable name="countExistingTAsCountExistingTAsResponseMsg" messageType="countExistingTAs:countExistingTAsOutput"/>
     <bpel:variable name="taskManagementSystemSetOutputRequestMsg" messageType="TaskManagementSystem:setOutputRequest"/>
     <bpel:variable name="taskManagementSystemSetOutputResponseMsg" messageType="TaskManagementSystem:okResponse"/>
     <bpel:variable name="tAdataInputMessage" messageType="TAdata:updateTArequest"/>
@@ -36,6 +34,8 @@
     <bpel:variable name="thisUploadFMRResponseMsg" messageType="this:uploadFMRResponse"/>
     <bpel:variable name="taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg" messageType="TaskManagementSystem:getAvailableTasksWithInputOutputRequest"/>
     <bpel:variable name="taskManagementSystemGetAvailableTasksWithInputOutputResponseMsg" messageType="TaskManagementSystem:getAvailableTasksWithInputOutputResponse"/>
+    <bpel:variable name="countExistingTAsCountExistingTAsRequestMsg" messageType="countExistingTAs:countExistingTAsInput"/>
+    <bpel:variable name="countExistingTAsCountExistingTAsResponseMsg" messageType="countExistingTAs:countExistingTAsOutput"/>
   </bpel:variables>
   <bpel:pick createInstance="yes" bpmn:label="Exclusive_Event-Based_Gateway" name="Exclusive_Event-Based_Gateway" bpmn:id="_aGdT8D7SEd6K2cgYiBoOqg">
     <bpel:onMessage partnerLink="uploadProcessAndAppearNetworksPlkVar" portType="this:ForAppearNetworks" operation="uploadFMR" variable="thisUploadFMRRequestMsg" bpmn:label="uploadFMR" name="uploadFMR" bpmn:id="_bbQjsD7SEd6K2cgYiBoOqg">
@@ -60,6 +60,7 @@
     <b4p:taskType></b4p:taskType>
     <b4p:description></b4p:description>
     <b4p:processId></b4p:processId>
+    <b4p:instanceId></b4p:instanceId>
     <b4p:creationDate></b4p:creationDate>
     <b4p:userOwner></b4p:userOwner>
     <b4p:roleOwner></b4p:roleOwner>
@@ -128,23 +129,6 @@
 </b4p:createTaskRequest></bpel:literal>
             </bpel:from>
             <bpel:to>$b4pCreateTaskRequestMsg.root</bpel:to>
-          </bpel:copy>
-          <bpel:copy bpmn:label="$countExistingTAsCountExistingTAsRequestMsg">
-            <bpel:from>
-              <bpel:literal>
-<countExistingTAs:countExistingTAsParameterSet>
-  <countExistingTAs:connection>
-    <countExistingTAs:user></countExistingTAs:user>
-    <countExistingTAs:password></countExistingTAs:password>
-  </countExistingTAs:connection>
-  <countExistingTAs:execute>
-    <countExistingTAs:parameters>
-      <countExistingTAs:like></countExistingTAs:like>
-    </countExistingTAs:parameters>
-  </countExistingTAs:execute>
-</countExistingTAs:countExistingTAsParameterSet></bpel:literal>
-            </bpel:from>
-            <bpel:to>$countExistingTAsCountExistingTAsRequestMsg.parameters</bpel:to>
           </bpel:copy>
           <bpel:copy bpmn:label="$taskManagementSystemSetOutputRequestMsg">
             <bpel:from>
@@ -377,35 +361,60 @@
             </bpel:from>
             <bpel:to>$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest</bpel:to>
           </bpel:copy>
+          <bpel:copy bpmn:label="$countExistingTAsCountExistingTAsRequestMsg">
+            <bpel:from>
+              <bpel:literal>
+<countExistingTAs:countExistingTAsParameterSet>
+  <countExistingTAs:connection>
+    <countExistingTAs:user></countExistingTAs:user>
+    <countExistingTAs:password></countExistingTAs:password>
+  </countExistingTAs:connection>
+  <countExistingTAs:execute>
+    <countExistingTAs:parameters>
+      <countExistingTAs:like></countExistingTAs:like>
+    </countExistingTAs:parameters>
+  </countExistingTAs:execute>
+</countExistingTAs:countExistingTAsParameterSet></bpel:literal>
+            </bpel:from>
+            <bpel:to>$countExistingTAsCountExistingTAsRequestMsg.parameters</bpel:to>
+          </bpel:copy>
         </bpel:assign>
         <bpel:assign bpmn:label="Convert  dates to local time" name="Convert__dates_to_local_time" bpmn:id="_Io02kGwQEd66f4iq3wYOag">
           <bpel:copy ignoreUninitializedFromVariable="yes" ignoreMissingFromData="yes">
-            <bpel:from>adjust-dateTime-to-timezone(xs:dateTime($thisUploadFMRRequestMsg.body/@ATA))</bpel:from>
+            <bpel:from>adjust-dateTime-to-timezone(xs:dateTime($thisUploadFMRRequestMsg.body/@ATA)) + xs:dayTimeDuration ("PT1H")</bpel:from>
             <bpel:to>$thisUploadFMRRequestMsg.body/@ATA</bpel:to>
           </bpel:copy>
           <bpel:copy ignoreUninitializedFromVariable="yes" ignoreMissingFromData="yes">
-            <bpel:from>adjust-dateTime-to-timezone(xs:dateTime($thisUploadFMRRequestMsg.body/@ATD))</bpel:from>
+            <bpel:from>adjust-dateTime-to-timezone(xs:dateTime($thisUploadFMRRequestMsg.body/@ATD)) + xs:dayTimeDuration ("PT1H")</bpel:from>
             <bpel:to>$thisUploadFMRRequestMsg.body/@ATD</bpel:to>
           </bpel:copy>
           <bpel:copy ignoreUninitializedFromVariable="yes" ignoreMissingFromData="yes">
-            <bpel:from>adjust-dateTime-to-timezone(xs:dateTime($thisUploadFMRRequestMsg.body/@CreationTime))</bpel:from>
+            <bpel:from>adjust-dateTime-to-timezone(xs:dateTime($thisUploadFMRRequestMsg.body/@CreationTime)) + xs:dayTimeDuration ("PT1H")</bpel:from>
             <bpel:to>$thisUploadFMRRequestMsg.body/@CreationTime</bpel:to>
           </bpel:copy>
           <bpel:copy ignoreUninitializedFromVariable="yes" ignoreMissingFromData="yes">
-            <bpel:from>adjust-dateTime-to-timezone(xs:dateTime($thisUploadFMRRequestMsg.body/@STA))</bpel:from>
-            <bpel:to>$thisUploadFMRRequestMsg.body/@STA</bpel:to>
+            <bpel:from>adjust-dateTime-to-timezone(xs:dateTime($thisUploadFMRRequestMsg.body/@ETA)) + xs:dayTimeDuration ("PT1H")</bpel:from>
+            <bpel:to>$thisUploadFMRRequestMsg.body/@ETA</bpel:to>
           </bpel:copy>
           <bpel:copy ignoreUninitializedFromVariable="yes" ignoreMissingFromData="yes">
-            <bpel:from>adjust-dateTime-to-timezone(xs:dateTime($thisUploadFMRRequestMsg.body/@STD))</bpel:from>
+            <bpel:from>adjust-dateTime-to-timezone(xs:dateTime($thisUploadFMRRequestMsg.body/@ETD)) + xs:dayTimeDuration ("PT1H")</bpel:from>
+            <bpel:to>$thisUploadFMRRequestMsg.body/@ETD</bpel:to>
+          </bpel:copy>
+          <bpel:copy ignoreUninitializedFromVariable="yes" ignoreMissingFromData="yes">
+            <bpel:from>adjust-dateTime-to-timezone(xs:dateTime($thisUploadFMRRequestMsg.body/@STD)) + xs:dayTimeDuration ("PT1H")</bpel:from>
             <bpel:to>$thisUploadFMRRequestMsg.body/@STD</bpel:to>
+          </bpel:copy>
+          <bpel:copy ignoreUninitializedFromVariable="yes" ignoreMissingFromData="yes">
+            <bpel:from>xs:dayTimeDuration ("PT1H") + adjust-dateTime-to-timezone(xs:dateTime($thisUploadFMRRequestMsg.body/@STA))</bpel:from>
+            <bpel:to>$thisUploadFMRRequestMsg.body/@STA</bpel:to>
           </bpel:copy>
         </bpel:assign>
         <bpel:if>
-          <bpel:condition>bpel:doXslTransform("Discard.xsl", $thisUploadFMRRequestMsg.body) = "true"</bpel:condition>
+          <bpel:condition>((bpel:doXslTransform("Discard.xsl", $thisUploadFMRRequestMsg.body) = "true") or (bpel:doXslTransform("DiscardArrival.xsl", $thisUploadFMRRequestMsg.body) = "true")) or (bpel:doXslTransform("DiscardDeparture.xsl", $thisUploadFMRRequestMsg.body) = "true")</bpel:condition>
           <bpel:sequence>
             <bpel:assign bpmn:label="setError" name="setError" bpmn:id="_zHgtwFZkEd6OBK2EwaAgcw">
               <bpel:copy>
-                <bpel:from>"ERROR"</bpel:from>
+                <bpel:from>"RECORD MISSING SOME DATA"</bpel:from>
                 <bpel:to>$thisUploadFMRResponseMsg.body/tns:reponseMsg</bpel:to>
               </bpel:copy>
             </bpel:assign>
@@ -461,6 +470,10 @@
                       <bpel:from>bpel:doXslTransform("description.xsl", $thisUploadFMRRequestMsg.body)</bpel:from>
                       <bpel:to>$b4pCreateTaskRequestMsg.root/b4p:taskMetaData/b4p:description</bpel:to>
                     </bpel:copy>
+                    <bpel:copy>
+                      <bpel:from>$ode:pid</bpel:from>
+                      <bpel:to>$b4pCreateTaskRequestMsg.root/b4p:taskMetaData/b4p:instanceId</bpel:to>
+                    </bpel:copy>
                   </bpel:assign>
                   <bpel:invoke partnerLink="uploadProcessAndTMPForUserBusinessProcessPortPlkVar" portType="b4p:UserBusinessProcessPortType" operation="createTask" inputVariable="b4pCreateTaskRequestMsg" outputVariable="b4pCreateTaskResponseMsg" bpmn:label="Create TA" name="Create_TA-1" bpmn:id="_U8LSAEn3Ed6Rnb0wcVks_w"></bpel:invoke>
                 </bpel:sequence>
@@ -476,7 +489,7 @@
                         <bpel:to>$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest/TaskManagementSystem:participantToken</bpel:to>
                       </bpel:copy>
                       <bpel:copy>
-                        <bpel:from>concat("T._output like '", $countExistingTAsCountExistingTAsRequestMsg.parameters/countExistingTAs:execute/countExistingTAs:parameters/countExistingTAs:like, "'")</bpel:from>
+                        <bpel:from>concat("T._output like '", $countExistingTAsCountExistingTAsRequestMsg.parameters/countExistingTAs:execute/countExistingTAs:parameters/countExistingTAs:like, "'  AND NOT(T._state = TaskState.COMPLETED)")</bpel:from>
                         <bpel:to>$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest/TaskManagementSystem:subQuery</bpel:to>
                       </bpel:copy>
                     </bpel:assign>
@@ -573,6 +586,7 @@
     <b4p:taskType></b4p:taskType>
     <b4p:description></b4p:description>
     <b4p:processId></b4p:processId>
+    <b4p:instanceId></b4p:instanceId>
     <b4p:creationDate></b4p:creationDate>
     <b4p:userOwner></b4p:userOwner>
     <b4p:roleOwner></b4p:roleOwner>
@@ -641,23 +655,6 @@
 </b4p:createTaskRequest></bpel:literal>
             </bpel:from>
             <bpel:to>$b4pCreateTaskRequestMsg.root</bpel:to>
-          </bpel:copy>
-          <bpel:copy bpmn:label="$countExistingTAsCountExistingTAsRequestMsg">
-            <bpel:from>
-              <bpel:literal>
-<countExistingTAs:countExistingTAsParameterSet>
-  <countExistingTAs:connection>
-    <countExistingTAs:user></countExistingTAs:user>
-    <countExistingTAs:password></countExistingTAs:password>
-  </countExistingTAs:connection>
-  <countExistingTAs:execute>
-    <countExistingTAs:parameters>
-      <countExistingTAs:like></countExistingTAs:like>
-    </countExistingTAs:parameters>
-  </countExistingTAs:execute>
-</countExistingTAs:countExistingTAsParameterSet></bpel:literal>
-            </bpel:from>
-            <bpel:to>$countExistingTAsCountExistingTAsRequestMsg.parameters</bpel:to>
           </bpel:copy>
           <bpel:copy bpmn:label="$taskManagementSystemSetOutputRequestMsg">
             <bpel:from>
@@ -889,6 +886,23 @@
 </TaskManagementSystem:getAvailableTasksWithInputOutputRequest></bpel:literal>
             </bpel:from>
             <bpel:to>$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest</bpel:to>
+          </bpel:copy>
+          <bpel:copy bpmn:label="$countExistingTAsCountExistingTAsRequestMsg">
+            <bpel:from>
+              <bpel:literal>
+<countExistingTAs:countExistingTAsParameterSet>
+  <countExistingTAs:connection>
+    <countExistingTAs:user></countExistingTAs:user>
+    <countExistingTAs:password></countExistingTAs:password>
+  </countExistingTAs:connection>
+  <countExistingTAs:execute>
+    <countExistingTAs:parameters>
+      <countExistingTAs:like></countExistingTAs:like>
+    </countExistingTAs:parameters>
+  </countExistingTAs:execute>
+</countExistingTAs:countExistingTAsParameterSet></bpel:literal>
+            </bpel:from>
+            <bpel:to>$countExistingTAsCountExistingTAsRequestMsg.parameters</bpel:to>
           </bpel:copy>
         </bpel:assign>
         <bpel:empty bpmn:label="create HIL" name="create_HIL" bpmn:id="_fwKHYD7SEd6K2cgYiBoOqg"/>

@@ -37,6 +37,15 @@
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
+			<xsd:element name="checkLateTasksRequest">
+				<xsd:complexType>
+					<xsd:sequence maxOccurs="unbounded">
+						<xsd:element name="id" type="xsd:string"
+							maxOccurs="1" minOccurs="0"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="checkLateTasksResponse" type="xsd:string"/>
 			<xsd:element name="getTaskResponse">
 				<xsd:complexType>
 					<xsd:sequence>
@@ -447,6 +456,12 @@
 	<wsdl:message name="getTaskListRequest">
 		<wsdl:part name="getTaskListRequest" element="tns:getTaskListRequest" />
 	</wsdl:message>
+	<wsdl:message name="checkLateTasksRequest">
+		<wsdl:part name="checkLateTasksRequest" element="tns:checkLateTasksRequest" />
+	</wsdl:message>
+	<wsdl:message name="checkLateTasksResponse">
+		<wsdl:part name="checkLateTasksResponse" element="tns:checkLateTasksResponse" />
+	</wsdl:message>
 	<wsdl:message name="getTaskResponse">
 		<wsdl:part name="getTaskResponse" element="tns:getTaskResponse" />
 	</wsdl:message>
@@ -592,6 +607,10 @@
 			<wsdl:output message="tns:getTaskListResponse" />
 			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault" />
 			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault" />
+		</wsdl:operation>
+		<wsdl:operation name="checkLateTasks">
+			<wsdl:input message="tns:checkLateTasksRequest" />
+			<wsdl:output message="tns:checkLateTasksResponse" />
 		</wsdl:operation>
 		<wsdl:operation name="getTask">
 			<wsdl:input message="tns:getTaskRequest" />
@@ -752,6 +771,16 @@
 			<wsdl:fault name="InvalidInputMessage">
 				<soap:fault name="InvalidInputMessage" use="literal" />
 			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="checkLateTasks">
+			<soap:operation
+				soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/checkLateTasks" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="getAvailableTasksWithInputOutput">
 			<soap:operation

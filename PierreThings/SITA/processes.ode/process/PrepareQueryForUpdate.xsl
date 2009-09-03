@@ -26,7 +26,7 @@
 	</xsl:template>
 
 	<xsl:template match="hht:hht-ta-update" xmlns:hht="http://www.example.org/hht">
-		<xsl:element name="subQuery" xmlns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">T._output like '%ScheduledArrivalDate_<xsl:call-template name="dateFromDateTime">
+		<xsl:element name="subQuery" xmlns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">T._output like '%AircraftID_<xsl:value-of select="@aircraft-id" />%ScheduledArrivalDate_<xsl:call-template name="dateFromDateTime">
 				<xsl:with-param name="dateTime">
 					<xsl:value-of select="@scheduled-arrival-datetime" />
 				</xsl:with-param>
@@ -34,7 +34,7 @@
 				<xsl:with-param name="dateTime">
 					<xsl:value-of select="@scheduled-arrival-datetime" />
 				</xsl:with-param>
-			</xsl:call-template>%ArrivalFlightNumber_<xsl:value-of select="@scheduled-arrival-flight-number" />%'</xsl:element>
+			</xsl:call-template>%ArrivalFlightNumber_<xsl:value-of select="@scheduled-arrival-flight-number" />%' AND NOT(T._state = TaskState.COMPLETED)</xsl:element>
 	</xsl:template>
 	
 	</xsl:stylesheet>

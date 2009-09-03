@@ -30,11 +30,11 @@
     window.open("/ui-fw/script/empty.jsp", "taskform");
     
     if($.browser.msie){
-     height = $(window).height() - 80;
+     height = $(window).height() - 90;
      }else{
-     height = $(window).height() - 100;
+     height = $(window).height() - 90;
      }
-    var height2 = height - 100;
+    var height2 = height - 90;
     var needResize = false;
     
     $(window).resize(function() {

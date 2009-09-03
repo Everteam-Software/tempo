@@ -17,17 +17,63 @@
             <jdbc:filter rowsToSendService="1" rowsToFetch="-1" duration="-PT1S">
                 <jdbc:unique scope="none"/>
             </jdbc:filter>
-            <jdbc:output/>
+            <jdbc:output>
+                <jdbc:column>
+                    <jdbc:name>name</jdbc:name>
+                    <jdbc:typeName>VARCHAR</jdbc:typeName>
+                    <jdbc:precision>30</jdbc:precision>
+                    <jdbc:scale>0</jdbc:scale>
+                    <jdbc:autoIncrement>false</jdbc:autoIncrement>
+                    <jdbc:caseSensitive>false</jdbc:caseSensitive>
+                    <jdbc:currency>false</jdbc:currency>
+                    <jdbc:definitelyWritable>true</jdbc:definitelyWritable>
+                    <jdbc:nullable>true</jdbc:nullable>
+                    <jdbc:readOnly>false</jdbc:readOnly>
+                    <jdbc:searchable>true</jdbc:searchable>
+                    <jdbc:signed>false</jdbc:signed>
+                    <jdbc:writable>true</jdbc:writable>
+                </jdbc:column>
+                <jdbc:column>
+                    <jdbc:name>identifier</jdbc:name>
+                    <jdbc:typeName>VARCHAR</jdbc:typeName>
+                    <jdbc:precision>10</jdbc:precision>
+                    <jdbc:scale>0</jdbc:scale>
+                    <jdbc:autoIncrement>false</jdbc:autoIncrement>
+                    <jdbc:caseSensitive>false</jdbc:caseSensitive>
+                    <jdbc:currency>false</jdbc:currency>
+                    <jdbc:definitelyWritable>true</jdbc:definitelyWritable>
+                    <jdbc:nullable>true</jdbc:nullable>
+                    <jdbc:readOnly>false</jdbc:readOnly>
+                    <jdbc:searchable>true</jdbc:searchable>
+                    <jdbc:signed>false</jdbc:signed>
+                    <jdbc:writable>true</jdbc:writable>
+                </jdbc:column>
+                <jdbc:column>
+                    <jdbc:name>certified</jdbc:name>
+                    <jdbc:typeName>VARCHAR</jdbc:typeName>
+                    <jdbc:precision>3</jdbc:precision>
+                    <jdbc:scale>0</jdbc:scale>
+                    <jdbc:autoIncrement>false</jdbc:autoIncrement>
+                    <jdbc:caseSensitive>false</jdbc:caseSensitive>
+                    <jdbc:currency>false</jdbc:currency>
+                    <jdbc:definitelyWritable>true</jdbc:definitelyWritable>
+                    <jdbc:nullable>true</jdbc:nullable>
+                    <jdbc:readOnly>false</jdbc:readOnly>
+                    <jdbc:searchable>true</jdbc:searchable>
+                    <jdbc:signed>false</jdbc:signed>
+                    <jdbc:writable>true</jdbc:writable>
+                </jdbc:column>
+            </jdbc:output>
         </jdbc:operation>
         <jdbc:port>
-            <jdbc:address location="http://localhost:8080/ode/processes/getAllAvisService"/>
+            <jdbc:address location="http://172.17.128.120:9080/ode/processes/getAllAvisService"/>
         </jdbc:port>
         <jdbc:connection jndiName="java:comp/env/jdbc/">
             <jdbc:databaseProductName>MySql</jdbc:databaseProductName>
             <jdbc:databaseProductVersion>5.1</jdbc:databaseProductVersion>
             <jdbc:driverClass>com.mysql.jdbc.Driver</jdbc:driverClass>
-            <jdbc:databaseUrl>jdbc:mysql://localhost:3306/tap2</jdbc:databaseUrl>
-            <jdbc:databaseName>tap2</jdbc:databaseName>
+            <jdbc:databaseUrl>jdbc:mysql://localhost:3306/tap</jdbc:databaseUrl>
+            <jdbc:databaseName>tap</jdbc:databaseName>
             <jdbc:userName>root</jdbc:userName>
             <jdbc:password xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">appear</jdbc:password>
         </jdbc:connection>

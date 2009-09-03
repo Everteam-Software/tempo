@@ -3,6 +3,14 @@ fieldset {
   border: 1px solid #DDD;
 }
 
+/* padding inside fieldset (IE bug workaround) */
+div.fieldset-padding {
+  margin: 15px 10px;
+}
+
+div.fieldset, span.fieldset {
+  width: 100%;
+}
 legend {
   font-size: 1.5em;
   font-weight: bolder;
@@ -14,13 +22,9 @@ label {
   vertical-align: top;
 }
 
-/* padding inside fieldset (IE bug workaround) */
-div.fieldset-padding {
-  margin: 15px 10px;
-}
-
-div.field {
+div.field, span.field {
   margin: 0.5em 0em;
+  width: 100%;
 }
 
 table.field {
@@ -87,7 +91,17 @@ span.value {
   color: FireBrick;
 }
 
-#JSX div.form-title {
+div.horizontal-rule, span.horizontal-rule {
+  width: 100%;
+}
+
+/* h1, h2, h3, etc... title */
+div.title, span.title {
+  width: 100%;
+}
+
+/* form header */
+#JSX div.form-title, #JSX span.form-title {
   margin-bottom: 15px;
   border-bottom: #DDD 2px solid;
   font-size: 2em;

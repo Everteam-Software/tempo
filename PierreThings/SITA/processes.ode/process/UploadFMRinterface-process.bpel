@@ -4,18 +4,25 @@
   <bpel:import namespace="http://example.com/process/UploadFMRinterface" location="UploadFMRinterface.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"></bpel:import>
   <bpel:import namespace="http://www.intalio.com/gi/forms/uploadFMR.gi" location="../forms/uploadFMR.gi.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"></bpel:import>
   <bpel:partnerLinks>
-    <bpel:partnerLink name="processAndUserForPortTypeProcessPlkVar" partnerLinkType="diag:processAndUserForPortTypeProcessPlk" myRole="process_for_User"></bpel:partnerLink>
     <bpel:partnerLink name="processimplicitPartnerAndProcessForCanonicPortPlkVar" partnerLinkType="diag:processimplicitPartnerAndProcessForCanonicPortPlk" initializePartnerRole="yes" partnerRole="processimplicitPartner_for_process"></bpel:partnerLink>
+    <bpel:partnerLink name="processAndUserForPortTypeProcessPlkVar" partnerLinkType="diag:processAndUserForPortTypeProcessPlk" myRole="process_for_User"></bpel:partnerLink>
   </bpel:partnerLinks>
   <bpel:variables>
-    <bpel:variable name="uploadFMRInitProcessRequestMsg" messageType="uploadFMR:initProcessRequest"></bpel:variable>
-    <bpel:variable name="uploadFMRInitProcessResponseMsg" messageType="uploadFMR:initProcessResponse"></bpel:variable>
     <bpel:variable name="upload-UploadProcessUploadFMRResponseMsg" messageType="Upload-UploadProcess:uploadFMRResponse"></bpel:variable>
     <bpel:variable name="upload-UploadProcessUploadFMRMsg" messageType="Upload-UploadProcess:uploadFMRRequest"></bpel:variable>
+    <bpel:variable name="uploadFMRInitProcessRequestMsg" messageType="uploadFMR:initProcessRequest"></bpel:variable>
+    <bpel:variable name="uploadFMRInitProcessResponseMsg" messageType="uploadFMR:initProcessResponse"></bpel:variable>
   </bpel:variables>
   <bpel:sequence>
     <bpel:receive partnerLink="processAndUserForPortTypeProcessPlkVar" portType="uploadFMR:Process" operation="initProcess" variable="uploadFMRInitProcessRequestMsg" createInstance="yes" bpmn:label="start" name="start" bpmn:id="_BVuuAFnpEd6hfv5shTSh4g"></bpel:receive>
     <bpel:assign name="init-variables-process" bpmn:id="_BVuuAFnpEd6hfv5shTSh4g">
+      <bpel:copy bpmn:label="$upload-UploadProcessUploadFMRMsg">
+        <bpel:from>
+          <bpel:literal>
+<fmr:FMR ATA="" ATD="" Aircraft="" ArrivalFlightNumber="" CreationTime="" DepartureFlightNumber="" ETA="" ETD="" InspectionType="" Rtr-id="" STA="" STD="" Stand=""></fmr:FMR></bpel:literal>
+        </bpel:from>
+        <bpel:to>$upload-UploadProcessUploadFMRMsg.body</bpel:to>
+      </bpel:copy>
       <bpel:copy bpmn:label="$uploadFMRInitProcessResponseMsg">
         <bpel:from>
           <bpel:literal>
@@ -32,27 +39,8 @@
         </bpel:from>
         <bpel:to>$uploadFMRInitProcessResponseMsg.root</bpel:to>
       </bpel:copy>
-      <bpel:copy bpmn:label="$upload-UploadProcessUploadFMRMsg">
-        <bpel:from>
-          <bpel:literal>
-<fmr:FMR ATA="" ATD="" Aircraft="" ArrivalFlightNumber="" CreationTime="" DepartureFlightNumber="" InspectionType="" Rtr-id="" STA="" STD="" Stand=""></fmr:FMR></bpel:literal>
-        </bpel:from>
-        <bpel:to>$upload-UploadProcessUploadFMRMsg.body</bpel:to>
-      </bpel:copy>
     </bpel:assign>
-    <bpel:assign>
-    <bpel:copy>
-        <bpel:from>$ode:pid</bpel:from>
-        <bpel:to>$uploadFMRInitProcessResponseMsg.root/uploadFMR:taskMetaData/uploadFMR:instanceId</bpel:to>
-    </bpel:copy>
-  </bpel:assign>
-  <bpel:assign>
-    <bpel:copy>
-        <bpel:from>$ode:pid</bpel:from>
-        <bpel:to>$uploadFMRInitProcessResponseMsg.root/uploadFMR:taskMetaData/uploadFMR:instanceId</bpel:to>
-    </bpel:copy>
-  </bpel:assign>
-  <bpel:reply partnerLink="processAndUserForPortTypeProcessPlkVar" portType="uploadFMR:Process" operation="initProcess" variable="uploadFMRInitProcessResponseMsg" bpmn:label="start" name="start-1" bpmn:id="_BVuuAFnpEd6hfv5shTSh4g"></bpel:reply>
+    <bpel:reply partnerLink="processAndUserForPortTypeProcessPlkVar" portType="uploadFMR:Process" operation="initProcess" variable="uploadFMRInitProcessResponseMsg" bpmn:label="start" name="start-1" bpmn:id="_BVuuAFnpEd6hfv5shTSh4g"></bpel:reply>
     <bpel:assign bpmn:label="Upload FMR" name="Upload_FMR" bpmn:id="_Hii1mFnpEd6hfv5shTSh4g">
       <bpel:copy ignoreUninitializedFromVariable="yes" ignoreMissingFromData="yes">
         <bpel:from>$uploadFMRInitProcessRequestMsg.root/uploadFMR:taskOutput/uploadFMR:FormModel/aircraft</bpel:from>

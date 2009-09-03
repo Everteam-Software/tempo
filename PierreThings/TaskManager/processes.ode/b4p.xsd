@@ -1,7 +1,7 @@
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-	targetNamespace="http://www.intalio.com/bpms/workflow/ib4p_20051115"
-	xmlns:b4p="http://www.intalio.com/bpms/workflow/ib4p_20051115"
-	elementFormDefault="qualified">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:b4p="http://www.intalio.com/bpms/workflow/ib4p_20051115"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+	targetNamespace="http://www.intalio.com/bpms/workflow/ib4p_20051115">
 
 	<!-- this element is necessary for Claims -->
 	<xsd:element name="usersAndRoles" type="b4p:accessControlType" />
@@ -12,11 +12,11 @@
 	<xsd:complexType name="accessControlType">
 		<xsd:sequence>
 
-			<xsd:element name="user" type="xsd:string" minOccurs="0"
-				maxOccurs="unbounded" />
+			<xsd:element maxOccurs="unbounded" minOccurs="0" name="user"
+				type="xsd:string" />
 
-			<xsd:element name="role" type="xsd:string" minOccurs="0"
-				maxOccurs="unbounded" />
+			<xsd:element maxOccurs="unbounded" minOccurs="0" name="role"
+				type="xsd:string" />
 
 		</xsd:sequence>
 
@@ -24,13 +24,13 @@
 
 	<xsd:complexType name="scheduledActionsDetails">
 
-		<xsd:choice minOccurs="0" maxOccurs="1">
+		<xsd:choice maxOccurs="1" minOccurs="0">
 
-			<xsd:element name="until" type="xsd:dateTime" maxOccurs="1"
-				minOccurs="0" />
+			<xsd:element maxOccurs="1" minOccurs="0" name="until"
+				type="xsd:dateTime" />
 
-			<xsd:element name="for" type="xsd:duration" maxOccurs="1"
-				minOccurs="0" />
+			<xsd:element maxOccurs="1" minOccurs="0" name="for"
+				type="xsd:duration" />
 
 		</xsd:choice>
 
@@ -43,8 +43,7 @@
 
 			<xsd:sequence>
 
-				<xsd:element name="taskMetaData"
-					type="b4p:taskMetaDataType" />
+				<xsd:element name="taskMetaData" type="b4p:taskMetaDataType" />
 
 				<xsd:element name="participantToken" type="xsd:string" />
 				<xsd:element name="user" type="xsd:string" />
@@ -63,11 +62,11 @@
 			<xsd:sequence>
 
 
-<xsd:element name="taskId" type="xsd:string"/>
+				<xsd:element name="taskId" type="xsd:string" />
 
 				<xsd:element name="participantToken" type="xsd:string" />
 
-				
+
 
 			</xsd:sequence>
 
@@ -81,8 +80,7 @@
 
 			<xsd:sequence>
 
-				<xsd:element name="taskMetaData"
-					type="b4p:taskMetaDataType" />
+				<xsd:element name="taskMetaData" type="b4p:taskMetaDataType" />
 
 				<xsd:element name="participantToken" type="xsd:string" />
 
@@ -198,7 +196,7 @@
 				<xsd:element name="taskMetaData" type="b4p:taskMetaDataType" />
 
 				<xsd:element name="taskOutput" />
-				<xsd:element name="user" type="xsd:string"/>
+				<xsd:element name="user" type="xsd:string" />
 				<xsd:element name="status" type="xsd:string" />
 
 			</xsd:sequence>
@@ -213,19 +211,15 @@
 
 			<xsd:sequence>
 
-				<xsd:element name="taskMetaData"
-					type="b4p:taskMetaDataType" />
+				<xsd:element name="taskMetaData" type="b4p:taskMetaDataType" />
 
 				<xsd:element name="status" type="xsd:string" />
 
-				<xsd:element name="errorCode" type="xsd:string"
-					minOccurs="0" />
+				<xsd:element minOccurs="0" name="errorCode" type="xsd:string" />
 
-				<xsd:element name="errorReason" type="xsd:string"
-					minOccurs="0" />
+				<xsd:element minOccurs="0" name="errorReason" type="xsd:string" />
 
-				<xsd:element name="isChainedAfter" type="xsd:boolean"
-					minOccurs="0" />
+				<xsd:element minOccurs="0" name="isChainedAfter" type="xsd:boolean" />
 
 			</xsd:sequence>
 
@@ -240,14 +234,11 @@
 
 			<xsd:sequence>
 
-				<xsd:element name="previousTaskId" type="xsd:string"
-					minOccurs="0" />
+				<xsd:element minOccurs="0" name="previousTaskId" type="xsd:string" />
 
-				<xsd:element name="nextTaskId" type="xsd:string"
-					minOccurs="0" />
+				<xsd:element minOccurs="0" name="nextTaskId" type="xsd:string" />
 
-				<xsd:element name="nextTaskURL" type="xsd:string"
-					minOccurs="0" />
+				<xsd:element minOccurs="0" name="nextTaskURL" type="xsd:string" />
 
 			</xsd:sequence>
 
@@ -259,67 +250,63 @@
 
 		<xsd:sequence>
 
-			<xsd:element name="taskId" type="xsd:string" minOccurs="0" />
+			<xsd:element minOccurs="0" name="taskId" type="xsd:string" />
 
-			<xsd:element name="taskState" type="xsd:token"
-				minOccurs="0" />
+			<xsd:element minOccurs="0" name="taskState" type="xsd:token" />
 
-			<xsd:element name="taskType" type="xsd:token" minOccurs="0" />
+			<xsd:element minOccurs="0" name="taskType" type="xsd:token" />
 
-			<xsd:element name="description" type="xsd:string"
-				minOccurs="0" />
+			<xsd:element minOccurs="0" name="description" type="xsd:string" />
 
-			<xsd:element name="processId" type="xsd:string"
-				minOccurs="0" />
+			<xsd:element minOccurs="0" name="processId" type="xsd:string" />
 
-			<xsd:element name="creationDate" type="xsd:dateTime"
-				minOccurs="0" />
+			<xsd:element minOccurs="0" name="instanceId" type="xsd:string" />
+			
+			<xsd:element minOccurs="0" name="creationDate" type="xsd:dateTime" />
 
-			<xsd:element name="userOwner" type="xsd:string"
-				maxOccurs="unbounded" minOccurs="0" />
+			<xsd:element maxOccurs="unbounded" minOccurs="0" name="userOwner"
+				type="xsd:string" />
 
-			<xsd:element name="roleOwner" type="xsd:string"
-				maxOccurs="unbounded" minOccurs="0" />
+			<xsd:element maxOccurs="unbounded" minOccurs="0" name="roleOwner"
+				type="xsd:string" />
 
-			<xsd:element name="claimAction" type="b4p:accessControlType"
-				maxOccurs="1" minOccurs="0" />
+			<xsd:element maxOccurs="1" minOccurs="0" name="claimAction"
+				type="b4p:accessControlType" />
 
-			<xsd:element name="revokeAction"
-				type="b4p:accessControlType" maxOccurs="1" minOccurs="0" />
+			<xsd:element maxOccurs="1" minOccurs="0" name="revokeAction"
+				type="b4p:accessControlType" />
 
-			<xsd:element name="saveAction" type="b4p:accessControlType"
-				maxOccurs="1" minOccurs="0" />
-				
-            <xsd:element name="dismissAction" type="b4p:accessControlType"
-  				maxOccurs="1" minOccurs="0" />
+			<xsd:element maxOccurs="1" minOccurs="0" name="saveAction"
+				type="b4p:accessControlType" />
 
-			<xsd:element name="completeAction"
-				type="b4p:accessControlType" maxOccurs="1" minOccurs="0" />
+			<xsd:element maxOccurs="1" minOccurs="0" name="dismissAction"
+				type="b4p:accessControlType" />
 
-			<xsd:element name="deferAction" type="b4p:accessControlType"
-				maxOccurs="1" minOccurs="0" />
+			<xsd:element maxOccurs="1" minOccurs="0" name="completeAction"
+				type="b4p:accessControlType" />
 
-			<xsd:element name="formUrl" type="xsd:anyURI" minOccurs="0" />
+			<xsd:element maxOccurs="1" minOccurs="0" name="deferAction"
+				type="b4p:accessControlType" />
 
-			<xsd:element name="failureCode" type="xsd:string"
-				minOccurs="0" />
+			<xsd:element minOccurs="0" name="formUrl" type="xsd:anyURI" />
 
-			<xsd:element name="failureReason" type="xsd:string"
-				minOccurs="0" />
+			<xsd:element minOccurs="0" name="failureCode" type="xsd:string" />
 
-			<xsd:element name="priority" type="xsd:int" minOccurs="0" />
+			<xsd:element minOccurs="0" name="failureReason" type="xsd:string" />
 
-			<xsd:element name="scheduledActions" minOccurs="0">
+			<xsd:element minOccurs="0" name="priority" type="xsd:int" />
+
+			<xsd:element minOccurs="0" name="scheduledActions">
 
 				<xsd:complexType>
 
 					<xsd:sequence>
 
-						<xsd:element name="expiration"
-							type="b4p:scheduledActionsDetails" minOccurs="0" />
+						<xsd:element minOccurs="0" name="expiration"
+							type="b4p:scheduledActionsDetails" />
 
-						<xsd:element name="deferActivation"
-							type="b4p:scheduledActionsDetails" minOccurs="0" />
+						<xsd:element minOccurs="0" name="deferActivation"
+							type="b4p:scheduledActionsDetails" />
 
 					</xsd:sequence>
 
@@ -327,54 +314,50 @@
 
 			</xsd:element>
 
-			<xsd:element name="userEndpoint" type="xsd:string"
-				minOccurs="0" />
+			<xsd:element minOccurs="0" name="userEndpoint" type="xsd:string" />
 
-			<xsd:element name="userProcessEndpoint" type="xsd:string"
-				minOccurs="0" />
+			<xsd:element minOccurs="0" name="userProcessEndpoint"
+				type="xsd:string" />
 
-			<xsd:element name="userProcessNamespaceURI"
-				type="xsd:string" minOccurs="0" />
+			<xsd:element minOccurs="0" name="userProcessNamespaceURI"
+				type="xsd:string" />
 
-			<xsd:element name="userProcessCompleteSOAPAction"
-				type="xsd:string" minOccurs="0" />
+			<xsd:element minOccurs="0" name="userProcessCompleteSOAPAction"
+				type="xsd:string" />
 
-			<xsd:element name="isChainedBefore" type="xsd:boolean"
-				minOccurs="0" />
+			<xsd:element minOccurs="0" name="isChainedBefore" type="xsd:boolean" />
 
-			<xsd:element name="previousTaskId" type="xsd:string"
-				minOccurs="0" />
+			<xsd:element minOccurs="0" name="previousTaskId" type="xsd:string" />
 
-			<xsd:element name="nextTaskId" type="xsd:string"
-				minOccurs="0" />
-			<xsd:element name="session" type="xsd:string" minOccurs="0" />
+			<xsd:element minOccurs="0" name="nextTaskId" type="xsd:string" />
+			<xsd:element minOccurs="0" name="session" type="xsd:string" />
 
-			<xsd:element name="nextTaskURL" type="xsd:string"
-				minOccurs="0" />
+			<xsd:element minOccurs="0" name="nextTaskURL" type="xsd:string" />
 			<xsd:element name="attachments">
-					 <xsd:complexType>
-					   <xsd:sequence>
-					     <xsd:element name="attachment" type="b4p:attachment" minOccurs="0" maxOccurs="unbounded" form="unqualified"/>
-					   </xsd:sequence>
-					 </xsd:complexType>
-					</xsd:element>
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element form="unqualified" maxOccurs="unbounded"
+							minOccurs="0" name="attachment" type="b4p:attachment" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
 		</xsd:sequence>
 
 	</xsd:complexType>
 	<xsd:complexType name="attachment">
 		<xsd:sequence>
-			<xsd:element name="attachmentMetadata"
-				type="b4p:attachmentMetadata" form="unqualified"/>
-			<xsd:element name="payloadUrl" type="xsd:string" form="unqualified"/>
+			<xsd:element form="unqualified" name="attachmentMetadata"
+				type="b4p:attachmentMetadata" />
+			<xsd:element form="unqualified" name="payloadUrl" type="xsd:string" />
 		</xsd:sequence>
 	</xsd:complexType>
 	<xsd:complexType name="attachmentMetadata">
 		<xsd:sequence>
-			<xsd:element name="mimeType" type="xsd:string" form="unqualified"/>
-			<xsd:element name="fileName" type="xsd:string" form="unqualified"/>
-			<xsd:element name="title" type="xsd:string" form="unqualified"/>
-			<xsd:element name="description" type="xsd:string" form="unqualified"/>
-			<xsd:element name="creationDate" type="xsd:dateTime" form="unqualified"/>
+			<xsd:element form="unqualified" name="mimeType" type="xsd:string" />
+			<xsd:element form="unqualified" name="fileName" type="xsd:string" />
+			<xsd:element form="unqualified" name="title" type="xsd:string" />
+			<xsd:element form="unqualified" name="description" type="xsd:string" />
+			<xsd:element form="unqualified" name="creationDate" type="xsd:dateTime" />
 		</xsd:sequence>
 	</xsd:complexType>
 </xsd:schema>

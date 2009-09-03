@@ -6,10 +6,10 @@
     <pnlk:partnerLinkType name="TMsAndProcessForPortTaskManagementServicesSOAPPlk">
         <pnlk:role name="TMS_for_process" portType="TaskManagementSystem:TaskManagementServices"/>
     </pnlk:partnerLinkType>
-    <pnlk:partnerLinkType name="processAndUserForPortTypeProcessPlk">
-        <pnlk:role name="process_for_User" portType="PurgeTAlist:Process"/>
-    </pnlk:partnerLinkType>
     <pnlk:partnerLinkType name="TokenAndProcessForTokenServiceHttpportPlk">
         <pnlk:role name="Token_for_process" portType="tns:TokenServicePortType"/>
+    </pnlk:partnerLinkType>
+    <pnlk:partnerLinkType name="processAndUserForPortTypeProcessPlk">
+        <pnlk:role name="process_for_User" portType="PurgeTAlist:Process"/>
     </pnlk:partnerLinkType>
 </wsdl:definitions>

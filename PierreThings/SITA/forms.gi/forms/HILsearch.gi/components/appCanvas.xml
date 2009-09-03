@@ -6,10 +6,10 @@
   <onBeforeDeserialize/>
   <onAfterDeserialize/>
   <object type="jsx3.gui.Block">
-    <variants jsxoverflow="3"/>
-    <strings jsxheight="100%" jsxwidth="100%" jsxname="IntalioInternal_MainBlock" jsxrelativeposition="1"/>
+    <variants jsxoverflow="1"/>
+    <strings jsxheight="100%" jsxwidth="100%" jsxname="root"/>
     <object type="jsx3.gui.Block">
-      <variants jsxheight="18" jsxoverflow="3" jsxrelativeposition="1"/>
+      <variants jsxheight="18" jsxoverflow="3"/>
       <strings jsxwidth="100%" jsxdisplay="none" jsxname="IntalioInternal_AttachmentsImageBlock"/>
       <object type="jsx3.gui.LayoutGrid">
         <variants jsxtop="0" jsxleft="0" jsxoverflow="2" jsxrelativeposition="0"/>
@@ -18,8 +18,8 @@
           <variants/>
           <strings jsxheight="100%" jsxwidth="100%" jsxname="IntalioInternal_Pane"/>
           <object type="jsx3.gui.Image">
-            <variants jsxrelativeposition="1"/>
-            <strings jsxsrc="images/attachments.gif" jsxname="IntalioInternal_Image"/>
+            <variants/>
+            <strings jsxsrc="images/attachments.gif" jsxdisplay="" jsxname="IntalioInternal_Image"/>
             <events jsxclick="Intalio.Internal.Attachments.displayAttachmentsBlock(true); "/>
           </object>
         </object>
@@ -27,7 +27,7 @@
           <variants/>
           <strings jsxheight="100%" jsxwidth="100%" jsxtextalign="right" jsxname="IntalioInternal_Pane"/>
           <object type="jsx3.gui.Image">
-            <variants jsxrelativeposition="1"/>
+            <variants/>
             <strings jsxsrc="images/close.png" jsxdisplay="none" jsxname="IntalioInternal_CloseImage"/>
             <events jsxclick="Intalio.Internal.Attachments.displayAttachmentsBlock(false);"/>
           </object>
@@ -35,11 +35,11 @@
       </object>
     </object>
     <object type="jsx3.gui.Block">
-      <variants jsxoverflow="3" jsxrelativeposition="1"/>
+      <variants jsxoverflow="3"/>
       <strings jsxwidth="100%" jsxdisplay="none" jsxname="IntalioInternal_AttachmentsBlock"/>
       <object type="jsx3.gui.Block">
         <variants/>
-        <strings jsxwidth="100%" jsxname="IntalioInternal_AttachmentsMatrixBlock" jsxborder="1px solid black; 1px solid black; none; 1px solid black;" jsxrelativeposition="1"/>
+        <strings jsxwidth="100%" jsxdisplay="" jsxname="IntalioInternal_AttachmentsMatrixBlock" jsxborder="1px solid black; 1px solid black; none; 1px solid black;"/>
         <object type="jsx3.gui.Matrix">
           <variants jsxsuppressvscroll="1" jsxreorder="0" jsxselectionmodel="0" jsxpagingmodel="0" jsxjsxxmlasync="1"/>
           <strings jsxxmlid="IntalioInternal_Attachments" jsxname="IntalioInternal_AttachmentsMatrix"/>
@@ -65,111 +65,113 @@
       </object>
       <object type="jsx3.gui.Block">
         <variants jsxoverflow="3"/>
-        <strings jsxwidth="100%" jsxname="IntalioInternal_AttachmentsFormBlock" jsxrelativeposition="1"/>
+        <strings jsxwidth="100%" jsxdisplay="" jsxname="IntalioInternal_AttachmentsFormBlock"/>
         <object type="jsx3.gui.Block">
-          <variants jsxoverflow="3" jsxrelativeposition="1"/>
-          <strings jsxwidth="100%" jsxname="IntalioInternal_AttachmentsFormLabel"/>
+          <variants jsxoverflow="3"/>
+          <strings jsxwidth="100%" jsxdisplay="" jsxname="IntalioInternal_AttachmentsFormLabel"/>
         </object>
         <object type="jsx3.gui.Block">
-          <variants jsxoverflow="3" jsxrelativeposition="1"/>
+          <variants jsxoverflow="3"/>
           <strings jsxdisplay="none" jsxname="IntalioInternal_AttachmentsUrl"/>
         </object>
       </object>
     </object>
     <object type="jsx3.gui.Block">
-      <variants jsxoverflow="3" jsxrelativeposition="1"/>
-      <strings jsxwidth="100%" jsxname="IntalioInternal_ApplicationBlock"/>
+      <variants/>
+      <strings jsxwidth="100%" jsxpadding="5 10 0 10" jsxname="header" jsxrelativeposition="1"/>
       <object type="jsx3.gui.Block">
+        <variants jsxrelativeposition="1"/>
+        <strings jsxwidth="100%" jsxname="form-title" jsxclassname="form-title" jsxtext="HIL Search"/>
+      </object>
+    </object>
+    <object type="com.intalio.ria.Section">
+      <variants/>
+      <strings riaTitleText="Search Criteria" jsxname="SearchCriteria"/>
+      <object type="com.intalio.ria.Field">
         <variants/>
-        <strings jsxwidth="100%" jsxpadding="5 10 0 10" jsxname="header" jsxrelativeposition="1"/>
-        <object type="jsx3.gui.Block">
-          <variants jsxrelativeposition="1"/>
-          <strings jsxwidth="100%" jsxname="form-title" jsxclassname="form-title" jsxtext="HIL Search"/>
+        <strings riaLabelText="HIL Slip ID" jsxname="HILid-field" riaCssClass="field" riaErrorImageSrc="images/error.gif" riaHelpImageSrc="images/help.gif"/>
+        <object type="jsx3.gui.TextBox">
+          <variants/>
+          <strings jsxvalue="" jsxname="HILid" jsxmargin="0 4 0 0"/>
+          <events jsxincchange="com.intalio.ria.validate(this, objEVENT);" jsxfocus="com.intalio.ria.highlightTextInput(this, false);" jsxchange="com.intalio.ria.validate(this, objEVENT);" jsxblur="com.intalio.ria.highlightTextInput(this, true);"/>
         </object>
       </object>
-      <object type="com.intalio.ria.Section">
+      <object type="com.intalio.ria.Field">
         <variants/>
-        <strings riaTitleText="Search Criteria" jsxname="SearchCriteria"/>
-        <object type="com.intalio.ria.Field">
+        <strings riaLabelText="Aircraft ID" jsxname="AircraftID-field" riaCssClass="field" riaErrorImageSrc="images/error.gif" riaHelpImageSrc="images/help.gif"/>
+        <object type="jsx3.gui.TextBox">
           <variants/>
-          <strings riaLabelText="HIL Slip ID" jsxname="HILid-field" riaCssClass="field" riaErrorImageSrc="images/error.gif" riaHelpImageSrc="images/help.gif"/>
-          <object type="jsx3.gui.TextBox">
-            <variants/>
-            <strings jsxvalue="" jsxname="HILid" jsxmargin="0 4 0 0"/>
-            <events jsxincchange="com.intalio.ria.validate(this, objEVENT);" jsxfocus="com.intalio.ria.highlightTextInput(this, false);" jsxchange="com.intalio.ria.validate(this, objEVENT);" jsxblur="com.intalio.ria.highlightTextInput(this, true);"/>
-          </object>
+          <strings jsxvalue="" jsxname="AircraftID" jsxmargin="0 4 0 0"/>
+          <events jsxincchange="com.intalio.ria.validate(this, objEVENT);" jsxfocus="com.intalio.ria.highlightTextInput(this, false);" jsxchange="com.intalio.ria.validate(this, objEVENT);" jsxblur="com.intalio.ria.highlightTextInput(this, true);"/>
         </object>
-        <object type="com.intalio.ria.Field">
-          <variants/>
-          <strings riaLabelText="Aircraft ID" jsxname="AircraftID-field" riaCssClass="field" riaErrorImageSrc="images/error.gif" riaHelpImageSrc="images/help.gif"/>
-          <object type="jsx3.gui.TextBox">
-            <variants/>
-            <strings jsxvalue="" jsxname="AircraftID" jsxmargin="0 4 0 0"/>
-            <events jsxincchange="com.intalio.ria.validate(this, objEVENT);" jsxfocus="com.intalio.ria.highlightTextInput(this, false);" jsxchange="com.intalio.ria.validate(this, objEVENT);" jsxblur="com.intalio.ria.highlightTextInput(this, true);"/>
-          </object>
+      </object>
+      <object type="com.intalio.ria.Field">
+        <variants/>
+        <strings riaLabelText="HIL type" jsxname="HILtype-field" riaCssClass="field" riaErrorImageSrc="images/error.gif" riaHelpImageSrc="images/help.gif"/>
+        <object type="jsx3.gui.Select">
+          <variants jsxheight="18" jsxwidth="150" jsxxmlasync="1"/>
+          <strings jsxxml="&lt;data jsxid=&quot;jsxroot&quot;>              &lt;record jsxid=&quot;cabin&quot; jsxtext=&quot;Cabin&quot;/>              &lt;record jsxid=&quot;cockpit&quot; jsxtext=&quot;Cockpit&quot;/>&lt;/data>" jsxname="HILtype" jsxmargin="0 4 0 0"/>
+          <events jsxselect="com.intalio.ria.validate(this, objEVENT);"/>
         </object>
-        <object type="com.intalio.ria.Field">
-          <variants/>
-          <strings riaLabelText="HIL type" jsxname="HILtype-field" riaCssClass="field" riaErrorImageSrc="images/error.gif" riaHelpImageSrc="images/help.gif"/>
-          <object type="jsx3.gui.Select">
-            <variants jsxheight="18" jsxwidth="150" jsxxmlasync="1"/>
-            <strings jsxxml="&lt;data jsxid=&quot;jsxroot&quot;>              &lt;record jsxid=&quot;cabin&quot; jsxtext=&quot;Cabin&quot;/>              &lt;record jsxid=&quot;cockpit&quot; jsxtext=&quot;Cockpit&quot;/>&lt;/data>" jsxname="HILtype" jsxmargin="0 4 0 0"/>
-            <events jsxselect="com.intalio.ria.validate(this, objEVENT);"/>
-          </object>
+      </object>
+      <object type="com.intalio.ria.Field">
+        <variants/>
+        <strings riaLabelText="Creation Date" jsxname="CreationDate-field" riaCssClass="field" riaErrorImageSrc="images/error.gif" riaHelpImageSrc="images/help.gif"/>
+        <object type="jsx3.gui.DatePicker">
+          <variants jsxheight="18" jsxwidth="100" jsxrelativeposition="1"/>
+          <strings jsxformat="yyyy-MM-dd" jsxname="CreationDate" jsxmargin="0 4 0 0"/>
+          <events jsxhide="com.intalio.ria.validate(this);"/>
         </object>
-        <object type="com.intalio.ria.Field">
-          <variants/>
-          <strings riaLabelText="Creation Date" jsxname="CreationDate-field" riaCssClass="field" riaErrorImageSrc="images/error.gif" riaHelpImageSrc="images/help.gif"/>
-          <object type="jsx3.gui.DatePicker">
-            <variants jsxheight="18" jsxwidth="100" jsxrelativeposition="1"/>
-            <strings jsxformat="yyyy-MM-dd" jsxname="CreationDate" jsxmargin="0 4 0 0"/>
-            <events jsxhide="com.intalio.ria.validate(this);"/>
-          </object>
-        </object>
-        <object type="com.intalio.ria.Field">
-          <variants/>
-          <strings riaLabelText="Due Date" jsxname="Duedate-field" riaCssClass="field" riaErrorImageSrc="images/error.gif" riaHelpImageSrc="images/help.gif"/>
-          <object type="jsx3.gui.DatePicker">
-            <variants jsxheight="18" jsxwidth="100" jsxrelativeposition="1"/>
-            <strings jsxformat="yyyy-MM-dd" jsxname="DueDate" jsxmargin="0 4 0 0"/>
-            <events jsxhide="com.intalio.ria.validate(this);"/>
-          </object>
+      </object>
+      <object type="com.intalio.ria.Field">
+        <variants/>
+        <strings riaLabelText="Due Date" jsxname="Duedate-field" riaCssClass="field" riaErrorImageSrc="images/error.gif" riaHelpImageSrc="images/help.gif"/>
+        <object type="jsx3.gui.DatePicker">
+          <variants jsxheight="18" jsxwidth="100" jsxrelativeposition="1"/>
+          <strings jsxformat="yyyy-MM-dd" jsxname="DueDate" jsxmargin="0 4 0 0"/>
+          <events jsxhide="com.intalio.ria.validate(this);"/>
         </object>
       </object>
     </object>
     <object type="jsx3.gui.Block">
-      <variants jsxoverflow="3" jsxrelativeposition="1"/>
-      <strings jsxwidth="100%" jsxpadding="15 0 15 0" jsxname="IntalioInternal_ButtonBlock" jsxmargin="15 0 0 0" jsxborder="1px solid gray; 0px solid; 0px solid; 0px solid;"/>
-      <object type="jsx3.gui.Button">
-        <variants jsxenabled="0" jsxindex="99999" jsxheight="20"/>
-        <strings jsxpadding="3 10 3 10" jsxdisplay="none" jsxname="IntalioInternal_StartButton" jsxmargin="0 10 0 0" jsxtext="Start Process"/>
-        <events jsxexecute="Intalio.Internal.TMS.callInitProcess();"/>
-      </object>
-      <object type="jsx3.gui.Button">
-        <variants jsxenabled="0" jsxindex="99999" jsxheight="20"/>
-        <strings jsxpadding="3 10 3 10" jsxdisplay="none" jsxname="IntalioInternal_DismissButton" jsxmargin="0 10 0 0" jsxtext="Dismiss"/>
-        <events jsxexecute="Intalio.Internal.TMS.callComplete();"/>
-      </object>
-      <object type="jsx3.gui.Button">
-        <variants jsxenabled="0" jsxindex="99999" jsxheight="20"/>
-        <strings jsxpadding="3 10 3 10" jsxdisplay="none" jsxname="IntalioInternal_SaveButton" jsxmargin="0 10 0 0" jsxtext="Save"/>
-        <events jsxexecute="Intalio.Internal.TMS.callSetOutput();"/>
-      </object>
-      <object type="jsx3.gui.Button">
-        <variants jsxenabled="0" jsxindex="99999" jsxheight="20"/>
-        <strings jsxpadding="3 10 3 10" jsxdisplay="none" jsxname="IntalioInternal_ClaimButton" jsxmargin="0 10 0 0" jsxtext="Claim"/>
-        <events jsxexecute="Intalio.Internal.TMP.callClaimTask();"/>
-      </object>
-      <object type="jsx3.gui.Button">
-        <variants jsxenabled="0" jsxindex="99999" jsxheight="20"/>
-        <strings jsxpadding="3 10 3 10" jsxdisplay="none" jsxname="IntalioInternal_RevokeButton" jsxmargin="0 10 0 0" jsxtext="Revoke"/>
-        <events jsxexecute="Intalio.Internal.TMP.callRevokeTask();"/>
-      </object>
-      <object type="jsx3.gui.Button">
-        <variants jsxenabled="0" jsxindex="99999" jsxheight="20"/>
-        <strings jsxpadding="3 10 3 10" jsxdisplay="none" jsxname="IntalioInternal_CompleteButton" jsxmargin="0 10 0 0" jsxtext="Complete"/>
-        <events jsxexecute="Intalio.Internal.TMP.callCompleteTask();"/>
-      </object>
+      <variants/>
+      <strings jsxwidth="100%" jsxname="IntalioInternal_SpacerBlock" jsxmargin="15 0 0 0" jsxborder="1px solid gray; 0px solid; 0px solid; 0px solid;"/>
+    </object>
+    <object type="jsx3.gui.Button">
+      <variants jsxenabled="0" jsxheight="20"/>
+      <strings jsxpadding="3 10 3 10" jsxdisplay="none" jsxname="IntalioInternal_StartButton" jsxmargin="15 10 15 0"/>
+      <dynamics jsxtext="Intalio Start Button"/>
+      <events jsxexecute="Intalio.Internal.TMS.callInitProcess();"/>
+    </object>
+    <object type="jsx3.gui.Button">
+      <variants jsxenabled="0" jsxheight="20"/>
+      <strings jsxpadding="3 10 3 10" jsxdisplay="none" jsxname="IntalioInternal_DismissButton" jsxmargin="15 10 15 0"/>
+      <dynamics jsxtext="Intalio Dismiss Button"/>
+      <events jsxexecute="Intalio.Internal.TMS.callComplete();"/>
+    </object>
+    <object type="jsx3.gui.Button">
+      <variants jsxenabled="0" jsxheight="20"/>
+      <strings jsxpadding="3 10 3 10" jsxdisplay="none" jsxname="IntalioInternal_SaveButton" jsxmargin="15 10 15 0"/>
+      <dynamics jsxtext="Intalio Save Button"/>
+      <events jsxexecute="Intalio.Internal.TMS.callSetOutput();"/>
+    </object>
+    <object type="jsx3.gui.Button">
+      <variants jsxenabled="0" jsxheight="20"/>
+      <strings jsxpadding="3 10 3 10" jsxdisplay="none" jsxname="IntalioInternal_ClaimButton" jsxmargin="15 10 15 0"/>
+      <dynamics jsxtext="Intalio Claim Button"/>
+      <events jsxexecute="Intalio.Internal.TMP.callClaimTask();"/>
+    </object>
+    <object type="jsx3.gui.Button">
+      <variants jsxenabled="0" jsxheight="20"/>
+      <strings jsxpadding="3 10 3 10" jsxdisplay="none" jsxname="IntalioInternal_RevokeButton" jsxmargin="15 10 15 0"/>
+      <dynamics jsxtext="Intalio Revoke Button"/>
+      <events jsxexecute="Intalio.Internal.TMP.callRevokeTask();"/>
+    </object>
+    <object type="jsx3.gui.Button">
+      <variants jsxenabled="0" jsxheight="20"/>
+      <strings jsxpadding="3 10 3 10" jsxdisplay="none" jsxname="IntalioInternal_CompleteButton" jsxmargin="15 10 15 0"/>
+      <dynamics jsxtext="Intalio Complete Button"/>
+      <events jsxexecute="Intalio.Internal.TMP.callCompleteTask();"/>
     </object>
   </object>
 </serialization>

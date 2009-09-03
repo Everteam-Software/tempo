@@ -1,27 +1,31 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<bpel:process xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ode="http://www.apache.org/ode/type/extension" xmlns:nf="http://www.example.org/notif" xmlns:NotifInterface="http://example.com/process/NotifToAMI/NotifInterface" xmlns:this="http://example.com/process/NotifToAMI/NotifToAMIprocess" xmlns:RMAnotifService="http://example.com/process/NotifToAMI/RMAnotifService" xmlns:diag="http://example.com/process/NotifToAMI" xmlns:tns="http://ode/bpel/unit-test.wsdl" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:bpmn="http://www.intalio.com/bpms" xmlns:atomic="http://ode.apache.org/atomicScope" queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0" bpmn:label="NotifToAMIprocess" name="NotifToAMIprocess" bpmn:id="_EbSxAEqkEd6mL5laCVF80g" targetNamespace="http://example.com/process/NotifToAMI/NotifToAMIprocess">
+<bpel:process xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ode="http://www.apache.org/ode/type/extension" xmlns:TokenService="http://example.com/process/NotifToAMI/TokenService" xmlns:NotifInterface="http://example.com/process/NotifToAMI/NotifInterface" xmlns:this="http://example.com/process/NotifToAMI/NotifToAMIprocess" xmlns:TaskManagementSystem="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:TokenService1="http://tempo.intalio.org/security/tokenService/" xmlns:ta="http://www.example.org/ta" xmlns:diag="http://example.com/process/NotifToAMI" xmlns:TAlistService="http://example.com/process/NotifToAMI/TAlistService" xmlns:tns="http://ode/bpel/unit-test.wsdl" xmlns:nf="http://www.example.org/notif" xmlns:TMS="http://example.com/process/NotifToAMI/TMS" xmlns:RMAnotifService="http://example.com/process/NotifToAMI/RMAnotifService" xmlns:TAdata="http://www.intalio.com/gi/forms/TAmanagement.gi" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:bpmn="http://www.intalio.com/bpms" xmlns:atomic="http://ode.apache.org/atomicScope" queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0" bpmn:label="NotifToAMIprocess" name="NotifToAMIprocess" bpmn:id="_EbSxAEqkEd6mL5laCVF80g" targetNamespace="http://example.com/process/NotifToAMI/NotifToAMIprocess">
   <bpel:import namespace="http://ode/bpel/unit-test.wsdl" location="../services/RMAnotif.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+  <bpel:import namespace="http://ode/bpel/unit-test.wsdl" location="../services/TAlistToAMI.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+  <bpel:import namespace="http://tempo.intalio.org/security/tokenService/" location="../services/TokenService.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
   <bpel:import namespace="http://example.com/process/NotifToAMI" location="NotifToAMI.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
   <bpel:import namespace="http://example.com/process/NotifToAMI/NotifToAMIprocess" location="NotifToAMI-NotifToAMIprocess.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+  <bpel:import namespace="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" location="../services/TaskManagementSystem.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
   <bpel:partnerLinks>
     <bpel:partnerLink name="notifToAMIprocessAndNotifInterfacePlkVar" partnerLinkType="diag:NotifToAMIprocessAndNotifInterface" myRole="NotifToAMIprocess_for_NotifInterface"/>
+    <bpel:partnerLink name="tokenServiceAndNotifToAMIprocessForTokenServiceHttpportPlkVar" partnerLinkType="diag:TokenServiceAndNotifToAMIprocessForTokenServiceHttpportPlk" initializePartnerRole="yes" partnerRole="TokenService_for_NotifToAMIprocess"/>
+    <bpel:partnerLink name="tMsAndNotifToAMIprocessForPortTaskManagementServicesSOAPPlkVar" partnerLinkType="diag:TMsAndNotifToAMIprocessForPortTaskManagementServicesSOAPPlk" initializePartnerRole="yes" partnerRole="TMS_for_NotifToAMIprocess"/>
+    <bpel:partnerLink name="tAlistServiceAndNotifToAMIprocessForTAlistPortPlkVar" partnerLinkType="diag:TAlistServiceAndNotifToAMIprocessForTAlistPortPlk" initializePartnerRole="yes" partnerRole="TAlistService_for_NotifToAMIprocess"/>
     <bpel:partnerLink name="rMAnotifServiceAndNotifToAMIprocessForRMAnotifPortPlkVar" partnerLinkType="diag:RMAnotifServiceAndNotifToAMIprocessForRMAnotifPortPlk" initializePartnerRole="yes" partnerRole="RMAnotifService_for_NotifToAMIprocess"/>
   </bpel:partnerLinks>
   <bpel:variables>
     <bpel:variable name="thisStartRequestMsg" messageType="this:startRequest"/>
-    <bpel:variable name="tnsInputMessage" messageType="tns:RMAnotif"/>
     <bpel:variable name="thisStartResponseMsg" messageType="this:startResponse"/>
+    <bpel:variable name="tokenService1AuthenticateUserRequestMsg" messageType="TokenService1:authenticateUser"/>
+    <bpel:variable name="tokenService1AuthenticateUserResponseMsg" messageType="TokenService1:authenticateUserResponse"/>
+    <bpel:variable name="taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg" messageType="TaskManagementSystem:getAvailableTasksWithInputOutputRequest"/>
+    <bpel:variable name="taskManagementSystemGetAvailableTasksWithInputOutputResponseMsg" messageType="TaskManagementSystem:getAvailableTasksWithInputOutputResponse"/>
+    <bpel:variable name="tnsInputMessage" messageType="tns:RMAnotif"/>
+    <bpel:variable name="TAlist" messageType="tns:TAlist"/>
   </bpel:variables>
   <bpel:sequence>
     <bpel:receive partnerLink="notifToAMIprocessAndNotifInterfacePlkVar" portType="this:ForNotifInterface" operation="start" variable="thisStartRequestMsg" createInstance="yes" bpmn:label="start" name="start" bpmn:id="_pi1rYEqkEd6mL5laCVF80g"></bpel:receive>
     <bpel:assign name="init-variables-NotifToAMIprocess" bpmn:id="_pi1rYEqkEd6mL5laCVF80g">
-      <bpel:copy bpmn:label="$tnsInputMessage">
-        <bpel:from>
-          <bpel:literal>
-<nf:notification subject="" type="" user=""></nf:notification></bpel:literal>
-        </bpel:from>
-        <bpel:to>$tnsInputMessage.body</bpel:to>
-      </bpel:copy>
       <bpel:copy bpmn:label="$thisStartResponseMsg">
         <bpel:from>
           <bpel:literal>
@@ -29,26 +33,116 @@
         </bpel:from>
         <bpel:to>$thisStartResponseMsg.body</bpel:to>
       </bpel:copy>
+      <bpel:copy bpmn:label="$tokenService1AuthenticateUserRequestMsg">
+        <bpel:from>
+          <bpel:literal>
+<TokenService1:authenticateUser>
+  <TokenService1:user></TokenService1:user>
+  <TokenService1:password></TokenService1:password>
+</TokenService1:authenticateUser></bpel:literal>
+        </bpel:from>
+        <bpel:to>$tokenService1AuthenticateUserRequestMsg.payload</bpel:to>
+      </bpel:copy>
+      <bpel:copy bpmn:label="$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg">
+        <bpel:from>
+          <bpel:literal>
+<TaskManagementSystem:getAvailableTasksWithInputOutputRequest>
+  <TaskManagementSystem:participantToken></TaskManagementSystem:participantToken>
+  <TaskManagementSystem:taskType></TaskManagementSystem:taskType>
+  <TaskManagementSystem:subQuery></TaskManagementSystem:subQuery>
+  <TaskManagementSystem:filter></TaskManagementSystem:filter>
+  <TaskManagementSystem:first></TaskManagementSystem:first>
+  <TaskManagementSystem:max></TaskManagementSystem:max>
+</TaskManagementSystem:getAvailableTasksWithInputOutputRequest></bpel:literal>
+        </bpel:from>
+        <bpel:to>$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest</bpel:to>
+      </bpel:copy>
+      <bpel:copy bpmn:label="$tnsInputMessage">
+        <bpel:from>
+          <bpel:literal>
+<nf:notification subject="" type="" user=""></nf:notification></bpel:literal>
+        </bpel:from>
+        <bpel:to>$tnsInputMessage.body</bpel:to>
+      </bpel:copy>
+      <bpel:copy bpmn:label="$TAlist">
+        <bpel:from>
+          <bpel:literal>
+<ta:ta-list>
+  <ta:ta actual-arrival-datetime="" actual-departure-datetime="" aircraft-id="" comment="" estimated-arrival-datetime="" estimated-departure-datetime="" expected-release-datetime="" expected-start-datetime="" expected-stop-datetime="" inspection-type="" late="" scheduled-arrival-datetime="" scheduled-arrival-flight-number="" scheduled-departure-datetime="" scheduled-departure-flight-number="" stand="" ta-id="">
+    <ta:roster>
+      <ta:coordinator user-id="" user-name=""></ta:coordinator>
+      <ta:mechanic certified="" user-id="" user-name=""></ta:mechanic>
+      <ta:avionic user-id="" user-name=""></ta:avionic>
+    </ta:roster>
+    <ta:incidents>
+      <ta:rtr ad="" description="" limit-date="" rtr-id=""></ta:rtr>
+      <ta:hil description="" hil-slip-id="" limit-date=""></ta:hil>
+    </ta:incidents>
+  </ta:ta>
+</ta:ta-list></bpel:literal>
+        </bpel:from>
+        <bpel:to>$TAlist.body</bpel:to>
+      </bpel:copy>
     </bpel:assign>
     <bpel:reply partnerLink="notifToAMIprocessAndNotifInterfacePlkVar" portType="this:ForNotifInterface" operation="start" variable="thisStartResponseMsg" bpmn:label="start" name="start-1" bpmn:id="_pi1rYEqkEd6mL5laCVF80g"></bpel:reply>
-    <bpel:assign bpmn:label="end" name="end" bpmn:id="_rIdlYEqkEd6mL5laCVF80g">
+    <bpel:assign bpmn:label="authenticate" name="authenticate" bpmn:id="_RVg-IHxcEd6-KOIRqIOo_Q">
       <bpel:copy>
-        <bpel:from>"TAP.FMR.UPDATE"</bpel:from>
-        <bpel:to>$tnsInputMessage.body/@type</bpel:to>
+        <bpel:from>"intalio\admin"</bpel:from>
+        <bpel:to>$tokenService1AuthenticateUserRequestMsg.payload/TokenService1:user</bpel:to>
       </bpel:copy>
+      <bpel:copy>
+        <bpel:from>"changeit"</bpel:from>
+        <bpel:to>$tokenService1AuthenticateUserRequestMsg.payload/TokenService1:password</bpel:to>
+      </bpel:copy>
+    </bpel:assign>
+    <bpel:invoke partnerLink="tokenServiceAndNotifToAMIprocessForTokenServiceHttpportPlkVar" portType="TokenService1:TokenServicePortType" operation="authenticateUser" inputVariable="tokenService1AuthenticateUserRequestMsg" outputVariable="tokenService1AuthenticateUserResponseMsg" bpmn:label="authenticate" name="authenticate-1" bpmn:id="_RVg-IHxcEd6-KOIRqIOo_Q"></bpel:invoke>
+    <bpel:assign bpmn:label="getTaskList" name="getTaskList" bpmn:id="_SMpacHxcEd6-KOIRqIOo_Q">
+      <bpel:copy>
+        <bpel:from>"PATask"</bpel:from>
+        <bpel:to>$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest/TaskManagementSystem:taskType</bpel:to>
+      </bpel:copy>
+      <bpel:copy>
+        <bpel:from>$tokenService1AuthenticateUserResponseMsg.payload/TokenService1:token</bpel:from>
+        <bpel:to>$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest/TaskManagementSystem:participantToken</bpel:to>
+      </bpel:copy>
+      <bpel:copy>
+        <bpel:from>"T._output NOT LIKE '%InspectionStatus_released%' AND NOT(T._state = TaskState.COMPLETED) ORDER BY T._ScheduledArrival  "</bpel:from>
+        <bpel:to>$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest/TaskManagementSystem:subQuery</bpel:to>
+      </bpel:copy>
+      <bpel:copy>
+        <bpel:from>true()</bpel:from>
+        <bpel:to>$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest/TaskManagementSystem:filter</bpel:to>
+      </bpel:copy>
+    </bpel:assign>
+    <bpel:invoke partnerLink="tMsAndNotifToAMIprocessForPortTaskManagementServicesSOAPPlkVar" portType="TaskManagementSystem:TaskManagementServices" operation="getAvailableTasksWithInputOutput" inputVariable="taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg" outputVariable="taskManagementSystemGetAvailableTasksWithInputOutputResponseMsg" bpmn:label="getTaskList" name="getTaskList-1" bpmn:id="_SMpacHxcEd6-KOIRqIOo_Q"></bpel:invoke>
+    <bpel:assign bpmn:label="sendToAMI" name="sendToAMI" bpmn:id="_UMzUUHxcEd6-KOIRqIOo_Q">
+      <bpel:copy>
+        <bpel:from>bpel:doXslTransform("TaskListTransform.xsl", $taskManagementSystemGetAvailableTasksWithInputOutputResponseMsg.getAvailableTasksWithInputOutputResponse)</bpel:from>
+        <bpel:to>$TAlist.body</bpel:to>
+      </bpel:copy>
+    </bpel:assign>
+    <bpel:invoke partnerLink="tAlistServiceAndNotifToAMIprocessForTAlistPortPlkVar" portType="tns:TAlistPortType" operation="sendTAlist" inputVariable="TAlist" bpmn:label="sendToAMI" name="sendToAMI-1" bpmn:id="_UMzUUHxcEd6-KOIRqIOo_Q"></bpel:invoke>
+    <bpel:wait bpmn:label="wait 10s" name="wait_10s" bpmn:id="_faoCMHxdEd6-KOIRqIOo_Q">
+      <bpel:for>"PT10S"</bpel:for>
+    </bpel:wait>
+    <bpel:assign bpmn:label="Message_End_Event" name="Message_End_Event" bpmn:id="_G-viIHxdEd6-KOIRqIOo_Q">
       <bpel:copy>
         <bpel:from>concat($thisStartRequestMsg.body/nf:freetext, "")</bpel:from>
         <bpel:to>$tnsInputMessage.body</bpel:to>
+      </bpel:copy>
+      <bpel:copy>
+        <bpel:from>"TAP.FMR.UPDATE"</bpel:from>
+        <bpel:to>$tnsInputMessage.body/@type</bpel:to>
       </bpel:copy>
       <bpel:copy>
         <bpel:from>$thisStartRequestMsg.body/nf:users</bpel:from>
         <bpel:to>$tnsInputMessage.body/@user</bpel:to>
       </bpel:copy>
       <bpel:copy>
-        <bpel:from>concat($thisStartRequestMsg.body/nf:aircraft, " UPDATE")</bpel:from>
+        <bpel:from>concat($thisStartRequestMsg.body/nf:aircraft, "UPDATE")</bpel:from>
         <bpel:to>$tnsInputMessage.body/@subject</bpel:to>
       </bpel:copy>
     </bpel:assign>
-    <bpel:invoke partnerLink="rMAnotifServiceAndNotifToAMIprocessForRMAnotifPortPlkVar" portType="tns:RMAnotifPortType" operation="sendRMAnotif" inputVariable="tnsInputMessage" bpmn:label="end" name="end-1" bpmn:id="_rIdlYEqkEd6mL5laCVF80g"></bpel:invoke>
+    <bpel:invoke partnerLink="rMAnotifServiceAndNotifToAMIprocessForRMAnotifPortPlkVar" portType="tns:RMAnotifPortType" operation="sendRMAnotif" inputVariable="tnsInputMessage" bpmn:label="Message_End_Event" name="Message_End_Event-1" bpmn:id="_G-viIHxdEd6-KOIRqIOo_Q"></bpel:invoke>
   </bpel:sequence>
 </bpel:process>

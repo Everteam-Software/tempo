@@ -25,6 +25,8 @@
 			<xs:attribute name="ATA" type="xs:dateTime" use="optional"/>
 			<xs:attribute name="STD" type="xs:dateTime" use="optional"/>
 			<xs:attribute name="ATD" type="xs:dateTime" use="optional"/>
+			<xs:attribute name="ETA" type="xs:dateTime" use="optional"/>
+			<xs:attribute name="ETD" type="xs:dateTime" use="optional"/>
 			<xs:attribute name="Stand" type="xs:string" use="optional"/>
 			<xs:attribute name="InspectionType" type="xs:string" use="optional"/>
 			<xs:attribute name="DepartureFlightNumber" use="optional">

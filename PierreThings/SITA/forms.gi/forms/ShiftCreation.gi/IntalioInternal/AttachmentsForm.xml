@@ -37,7 +37,7 @@
 				</td>
 				<td width="40%"
 					style="padding: 3; text-align: center; vertical-align: top;">
-					<input type="file" name="attachmentFile" size="20"
+					<input type="file" name="attachmentFile" size="40"
 						style="" />
 					<textarea name="attachmentText" rows="6" cols="40"
 						style="display: none;">

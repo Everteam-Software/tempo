@@ -36,6 +36,7 @@
 <ta:ta-list>
   <ta:ta actual-arrival-datetime="" actual-departure-datetime="" aircraft-id="" comment="" estimated-arrival-datetime="" estimated-departure-datetime="" expected-release-datetime="" expected-start-datetime="" expected-stop-datetime="" inspection-type="" late="" scheduled-arrival-datetime="" scheduled-arrival-flight-number="" scheduled-departure-datetime="" scheduled-departure-flight-number="" stand="" ta-id="">
     <ta:roster>
+      <ta:coordinator user-id="" user-name=""></ta:coordinator>
       <ta:mechanic certified="" user-id="" user-name=""></ta:mechanic>
       <ta:avionic user-id="" user-name=""></ta:avionic>
     </ta:roster>
@@ -95,7 +96,7 @@
         <bpel:to>$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest/TaskManagementSystem:participantToken</bpel:to>
       </bpel:copy>
       <bpel:copy>
-        <bpel:from>"T._output NOT LIKE '%InspectionStatus_released%' ORDER BY T._ScheduledArrival"</bpel:from>
+        <bpel:from>"T._output NOT LIKE '%InspectionStatus_released%' AND NOT(T._state = TaskState.COMPLETED) ORDER BY T._ScheduledArrival  "</bpel:from>
         <bpel:to>$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest/TaskManagementSystem:subQuery</bpel:to>
       </bpel:copy>
       <bpel:copy>

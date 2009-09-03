@@ -66,7 +66,7 @@ public class ExportKey {
 				"Scheduled arrival date"), STA("Scheduled arrival time"), ETA_ATA(
 				"Actual Arrival"), INS("Inspection type"), DEP_FL(
 				"Departure flight"), DEP_SCH_DATE("Scheduled departure date"), STD(
-				"Scheduled departure time"), ETD_ATD("Actual arrival time"), STAND(
+				"Scheduled departure time"), ETD_ATD("Actual departure time"), STAND(
 				"Stand"), COORD("Coordinators"), MECHANICS("Mechanics"), AVIONICS(
 				"Avionics"), HIL("HIL"), RTR("RTR"), COMMENTS("Comments"), STATE(
 				"State"), HELP_REQUEST("Help request"), START("Start time"), END(
