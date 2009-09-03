@@ -814,6 +814,7 @@ public class SITAservice {
 
 			}
 			
+			
 			InspectionType inspection = input.getData().getFormModel()
 					.getInspection();
 			if (FMRelement.xgetStand() != null) {
@@ -839,7 +840,19 @@ public class SITAservice {
 				}
 
 			}
+			
+			if (FMRelement.xgetStand() != null) {
+				String stand = FMRelement.getStand();
 
+				inspection.setStand(stand);
+				if (inspection.xgetStand() != null
+						&& !inspection.getStand().equals(
+								stand)) {
+					update = true;
+				}
+
+			}
+			
 			String newRTR_ids;
 			if (FMRelement.xgetRtrId() != null) {
 				newRTR_ids = FMRelement.getRtrId();
