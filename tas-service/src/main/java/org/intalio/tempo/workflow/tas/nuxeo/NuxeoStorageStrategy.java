@@ -20,6 +20,7 @@ import java.util.Iterator;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.apache.axiom.om.OMAttribute;
@@ -29,7 +30,6 @@ import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpConnectionManager;
-import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.URIException;
@@ -89,7 +89,7 @@ public class NuxeoStorageStrategy implements StorageStrategy {
 
     }
 
-    public void init() throws HttpException, IOException {
+    public void init() throws IOException {
         initHttpClient();
         try {
             String localRepoId = getWorkspacesURL(getNuxeoRestUrl(), "workspaces", "WorkspaceRoot");
@@ -98,9 +98,9 @@ public class NuxeoStorageStrategy implements StorageStrategy {
             if (repoId == null)
                 repoId = createFolder(getNuxeoRestUrl() + "/" + localRepoId, this.repoName);
             log.debug("REPOURL:" + repoId);
-            //init = true;
+            // init = true;
         } catch (Exception e) {
-            throw new IOException(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -132,8 +132,8 @@ public class NuxeoStorageStrategy implements StorageStrategy {
      */
     public void deleteAttachment(Property[] props, String url) throws UnavailableAttachmentException {
         try {
-//            if (!init)
-                init();
+            // if (!init)
+            init();
             String fileUrl = url.substring(0, url.indexOf(this.REST_DOWNLOAD));
             String newUri = fileUrl + REST_DELETE;
             log.debug("NUXEO DELETE:" + newUri);
@@ -152,20 +152,15 @@ public class NuxeoStorageStrategy implements StorageStrategy {
      * Store the attachment, implement the java interface
      */
     public String storeAttachment(Property[] properties, AttachmentMetadata metadata, InputStream payload) throws IOException {
-//        if (!init)
-            init();
+        // if (!init)
+        init();
         OMElement omEle = null;
         String encodedName = URLEncoder.encode(metadata.getFilename(), "utf-8");
-        try {
-            omEle = getCreateFileEle(getNuxeoRestUrl(), repoId, encodedName);
-            log.debug("NUXEO ATTACH " + omEle.toString());
-        } catch (Exception e) {
-            throw new IOException(e);
-        }
+        omEle = getCreateFileEle(getNuxeoRestUrl(), repoId, encodedName);
+        log.debug("NUXEO ATTACH " + omEle.toString());
         if (omEle == null) {
-            throw new RuntimeException("Failed to create file :" + metadata.getFilename());
+            throw new IOException("Failed to create file :" + metadata.getFilename());
         }
-
         String fileId = getDocumentRef(omEle);
         String fileUrl = getNuxeoRestUrl() + "/" + fileId;
         String newUri = fileUrl + "/" + encodedName;
@@ -178,7 +173,7 @@ public class NuxeoStorageStrategy implements StorageStrategy {
      * Create a file reference in nuxeo, which does not contain the file, but
      * creates a file container so we can upload
      */
-    private OMElement getCreateFileEle(String uri, String repoId, String fileName) throws Exception {
+    private OMElement getCreateFileEle(String uri, String repoId, String fileName) throws IOException {
         String newUri = uri + "/" + repoId + REST_CREATE;
         GetMethod method = new GetMethod(newUri);
 
@@ -370,9 +365,14 @@ public class NuxeoStorageStrategy implements StorageStrategy {
         return null;
     }
 
-    private static OMElement buildOMElement(String xmlData) throws Exception {
+    private static OMElement buildOMElement(String xmlData) throws IOException {
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xmlData.getBytes());
-        XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(byteArrayInputStream);
+        XMLStreamReader parser;
+        try {
+            parser = XMLInputFactory.newInstance().createXMLStreamReader(byteArrayInputStream);
+        } catch (XMLStreamException e) {
+            throw new IOException(e.getMessage());
+        }
         StAXOMBuilder builder = new StAXOMBuilder(parser);
         return builder.getDocumentElement();
     }
