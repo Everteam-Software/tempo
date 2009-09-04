@@ -45,4 +45,11 @@
 			<property name="password" value="admin"/>
 			<property name="slingUrl" value="http://localhost:8080/sling"/>
 		</bean> -->
+		
+    <!-- <bean id="tas.storageStrategy" class="org.intalio.tempo.workflow.tas.nuxeo.NuxeoStorageStrategy">
+      <property name="repoName" value="nuxeo"/>
+      <property name="userName" value="Administrator"/>
+      <property name="password" value="Administrator"/>
+      <property name="nuxeoBaseUrl" value="http://localhost:9080/"/>
+    </bean> -->
 </beans>
