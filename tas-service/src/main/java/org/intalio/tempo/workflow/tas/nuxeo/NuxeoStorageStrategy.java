@@ -79,7 +79,7 @@ public class NuxeoStorageStrategy implements StorageStrategy {
     // computed on init()
     private String repoId;
 
-    private boolean init = false;
+    // private boolean init = false;
 
     // NOT USED FOR NOW, but we could when we access versions
     // private String nuxeoPublicUrl = nuxeoBaseUrl +
@@ -98,7 +98,7 @@ public class NuxeoStorageStrategy implements StorageStrategy {
             if (repoId == null)
                 repoId = createFolder(getNuxeoRestUrl() + "/" + localRepoId, this.repoName);
             log.debug("REPOURL:" + repoId);
-            init = true;
+            //init = true;
         } catch (Exception e) {
             throw new IOException(e);
         }
@@ -132,7 +132,7 @@ public class NuxeoStorageStrategy implements StorageStrategy {
      */
     public void deleteAttachment(Property[] props, String url) throws UnavailableAttachmentException {
         try {
-            if (!init)
+//            if (!init)
                 init();
             String fileUrl = url.substring(0, url.indexOf(this.REST_DOWNLOAD));
             String newUri = fileUrl + REST_DELETE;
@@ -152,7 +152,7 @@ public class NuxeoStorageStrategy implements StorageStrategy {
      * Store the attachment, implement the java interface
      */
     public String storeAttachment(Property[] properties, AttachmentMetadata metadata, InputStream payload) throws IOException {
-        if (!init)
+//        if (!init)
             init();
         OMElement omEle = null;
         String encodedName = URLEncoder.encode(metadata.getFilename(), "utf-8");
