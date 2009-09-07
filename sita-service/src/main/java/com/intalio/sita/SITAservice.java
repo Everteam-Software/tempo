@@ -301,7 +301,7 @@ public class SITAservice {
 									currentTAdata, skippedMechs.get(cursor)
 											.getName(), skippedMechs
 											.get(cursor).getId(), skippedMechs
-											.get(cursor).getCertified(), 0,
+											.get(cursor).getCertified(), 1,
 									namespace);
 
 							currentTAdata.getFirstChildWithName(
@@ -450,7 +450,7 @@ public class SITAservice {
 													mechCursor).getName(),
 											mechanics.get(mechCursor).getId(),
 											mechanics.get(mechCursor)
-													.getCertified(), 1,
+													.getCertified(), 0,
 											namespace);
 
 									currentTAdata.getFirstChildWithName(
@@ -650,11 +650,9 @@ public class SITAservice {
 					.parse("<xml-fragment>" + requestElement
 							+ "</xml-fragment>");
 
-
 			UpdateInput input = updateRequest.getUpdateInput();
 
 			Data data = input.getData();
-
 
 			ArrivalDepartureType arrivalDeparture = data.getFormModel()
 					.getArrivalDeparture();
@@ -665,7 +663,7 @@ public class SITAservice {
 
 			if (FMRelement.xgetAircraft() != null) {
 				String aircraft = FMRelement.getAircraft();
-				String oldAircraft=activity.getAircraftID();
+				String oldAircraft = activity.getAircraftID();
 				activity.setAircraftID(aircraft.substring(
 						aircraft.length() - 3, aircraft.length()));
 				if (activity.xgetAircraftID() != null
@@ -675,7 +673,6 @@ public class SITAservice {
 
 			}
 
-			
 			if (FMRelement.xgetATA() != null && FMRelement.xgetATA().validate()) {
 				Calendar FMR_ATA = FMRelement.getATA();
 				FMR_ATA = removeTimezone(FMR_ATA);
@@ -696,28 +693,27 @@ public class SITAservice {
 				arrivalDeparture.setATA(FMR_ATA);
 			}
 
-
-
-//			if (FMRelement.xgetSTA() != null && FMRelement.xgetSTA().validate()) {
-//				Calendar FMR_STA = FMRelement.getSTA();
-//				FMR_STA = removeTimezone(FMR_STA);
-//				if (arrivalDeparture.xgetScheduledArrivalDate() != null
-//						&& arrivalDeparture.xgetScheduledArrivalDate()
-//								.validate()
-//						&& arrivalDeparture.xgetSTA() != null
-//						&& arrivalDeparture.xgetSTA().validate()) {
-//					Calendar dateElement = arrivalDeparture
-//							.getScheduledArrivalDate();
-//					Calendar timeElement = arrivalDeparture.getSTA();
-//
-//					if (!FMR_STA.equals(add(dateElement, timeElement))) {
-//						update = true;
-//					}
-//
-//				}
-//				arrivalDeparture.setScheduledArrivalDate(FMR_STA);
-//				arrivalDeparture.setSTA(FMR_STA);
-//			}
+			// if (FMRelement.xgetSTA() != null &&
+			// FMRelement.xgetSTA().validate()) {
+			// Calendar FMR_STA = FMRelement.getSTA();
+			// FMR_STA = removeTimezone(FMR_STA);
+			// if (arrivalDeparture.xgetScheduledArrivalDate() != null
+			// && arrivalDeparture.xgetScheduledArrivalDate()
+			// .validate()
+			// && arrivalDeparture.xgetSTA() != null
+			// && arrivalDeparture.xgetSTA().validate()) {
+			// Calendar dateElement = arrivalDeparture
+			// .getScheduledArrivalDate();
+			// Calendar timeElement = arrivalDeparture.getSTA();
+			//
+			// if (!FMR_STA.equals(add(dateElement, timeElement))) {
+			// update = true;
+			// }
+			//
+			// }
+			// arrivalDeparture.setScheduledArrivalDate(FMR_STA);
+			// arrivalDeparture.setSTA(FMR_STA);
+			// }
 			if (FMRelement.xgetSTD() != null && FMRelement.xgetSTD().validate()) {
 				Calendar FMR_STD = FMRelement.getSTD();
 				FMR_STD = removeTimezone(FMR_STD);
@@ -759,7 +755,6 @@ public class SITAservice {
 				arrivalDeparture.setATD(FMR_ATD);
 			}
 
-
 			if (FMRelement.xgetETD() != null && FMRelement.xgetETD().validate()) {
 				Calendar FMR_ETD = FMRelement.getETD();
 				FMR_ETD = removeTimezone(FMR_ETD);
@@ -781,7 +776,6 @@ public class SITAservice {
 				arrivalDeparture.setETD(FMR_ETD);
 			}
 
-
 			if (FMRelement.xgetETA() != null && FMRelement.xgetETA().validate()) {
 				Calendar FMR_ETA = FMRelement.getETA();
 				FMR_ETA = removeTimezone(FMR_ETA);
@@ -802,25 +796,25 @@ public class SITAservice {
 				arrivalDeparture.setEstimatedArrivalDate(FMR_ETA);
 				arrivalDeparture.setETA(FMR_ETA);
 			}
-			
+
 			if (FMRelement.xgetDepartureFlightNumber() != null) {
 				String departure = FMRelement.getDepartureFlightNumber();
-				String oldDeparture=arrivalDeparture.getDepartureFlightNumber();
+				String oldDeparture = arrivalDeparture
+						.getDepartureFlightNumber();
 				arrivalDeparture.setDepartureFlightNumber(departure);
 				if (arrivalDeparture.xgetDepartureFlightNumber() != null
-						&& !arrivalDeparture.getDepartureFlightNumber().equals(oldDeparture)) {
+						&& !arrivalDeparture.getDepartureFlightNumber().equals(
+								oldDeparture)) {
 					update = true;
 				}
 
 			}
-			
-			
+
 			InspectionType inspection = input.getData().getFormModel()
 					.getInspection();
 			if (FMRelement.xgetStand() != null) {
 				String Stand = FMRelement.getStand();
 
-				
 				inspection.setStand(Stand);
 				if (inspection.xgetStand() != null
 						&& !inspection.getStand().equals(Stand)) {
@@ -830,7 +824,8 @@ public class SITAservice {
 			}
 			if (FMRelement.xgetInspectionType() != null) {
 				String inspectionType = FMRelement.getInspectionType();
-				inspectionType = inspectionType.substring(inspectionType.lastIndexOf(";") + 1);
+				inspectionType = inspectionType.substring(inspectionType
+						.lastIndexOf(";") + 1);
 				inspectionType = inspectionType.replace("+", "");
 				inspection.setInspectionType(inspectionType);
 				if (inspection.xgetInspectionType() != null
@@ -840,19 +835,18 @@ public class SITAservice {
 				}
 
 			}
-			
+
 			if (FMRelement.xgetStand() != null) {
 				String stand = FMRelement.getStand();
 
 				inspection.setStand(stand);
 				if (inspection.xgetStand() != null
-						&& !inspection.getStand().equals(
-								stand)) {
+						&& !inspection.getStand().equals(stand)) {
 					update = true;
 				}
 
 			}
-			
+
 			String newRTR_ids;
 			if (FMRelement.xgetRtrId() != null) {
 				newRTR_ids = FMRelement.getRtrId();
@@ -1025,7 +1019,7 @@ public class SITAservice {
 	}
 
 	private static AxisFault prepareAxisFault(Exception e, QName qname) {
-		AxisFault fault = new AxisFault(e.getMessage(),e);
+		AxisFault fault = new AxisFault(e.getMessage(), e);
 		OMElement response = OM_Factory.createOMElement(qname);
 		Throwable throwable = e.fillInStackTrace();
 		final Writer message = new StringWriter();
@@ -1630,10 +1624,11 @@ public class SITAservice {
 	}
 
 	public static Calendar removeTimezone(Calendar calendar) {
-		///The +1 in the month is because January in the Date object is month 0 and in the GDate object is 1.
+		// /The +1 in the month is because January in the Date object is month 0
+		// and in the GDate object is 1.
 		XmlDateTimeImpl date = new XmlDateTimeImpl();
 		date.set(new GDate(calendar.get(Calendar.YEAR), calendar
-				.get(Calendar.MONTH)+1, calendar.get(Calendar.DAY_OF_MONTH),
+				.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH),
 				calendar.get(Calendar.HOUR_OF_DAY), calendar
 						.get(Calendar.MINUTE), calendar.get(Calendar.SECOND),
 				BigDecimal.ZERO));
