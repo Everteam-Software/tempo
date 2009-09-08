@@ -43,7 +43,7 @@ define "tempo" do
 
   desc "Task Attachment Service"
   define "tas-service" do
-    compile.with APACHE_COMMONS[:httpclient], AXIOM, AXIS2, JAXEN, SLF4J, STAX_API, WEBDAV, SECURITY_WS_CLIENT_ONLY
+    compile.with APACHE_COMMONS[:httpclient], APACHE_COMMONS[:io], AXIOM, AXIS2, JAXEN, SLF4J, STAX_API, WEBDAV, SECURITY_WS_CLIENT_ONLY
 
     test.with SECURITY_WS_COMMON, APACHE_COMMONS[:codec], LOG4J, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, INSTINCT
     test.exclude '*TestUtils*'

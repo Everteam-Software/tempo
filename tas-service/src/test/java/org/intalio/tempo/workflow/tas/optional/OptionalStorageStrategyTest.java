@@ -8,7 +8,7 @@ import org.intalio.tempo.workflow.tas.core.AuthCredentials;
 import org.intalio.tempo.workflow.tas.core.AuthStrategy;
 import org.intalio.tempo.workflow.tas.core.TaskAttachmentService;
 import org.intalio.tempo.workflow.tas.core.TaskAttachmentServiceImpl;
-import org.intalio.tempo.workflow.tas.nuxeo.NuxeoStorageStrategy;
+import org.intalio.tempo.workflow.tas.sling.FileSystemStorageStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,8 +33,9 @@ public class OptionalStorageStrategyTest extends TestCase {
 
     @Override
     protected void setUp() throws Exception {
-        //SlingStorageStrategy ass = new SlingStorageStrategy();
-        NuxeoStorageStrategy ass = new NuxeoStorageStrategy();
+        // SlingStorageStrategy ass = new SlingStorageStrategy();
+        // NuxeoStorageStrategy ass = new NuxeoStorageStrategy();
+        FileSystemStorageStrategy ass = new FileSystemStorageStrategy();
         _service = new TaskAttachmentServiceImpl(new DummyAuthStrategy(), ass);
     }
 
@@ -65,11 +66,12 @@ public class OptionalStorageStrategyTest extends TestCase {
         String url = _service.add(_credentials, metadata, this.getClass().getResource("/log4j.xml").toExternalForm());
         _service.delete(_credentials, url);
     }
-    
-//    public void testMp3File() throws Exception {
-//        AttachmentMetadata metadata = new AttachmentMetadata();
-//        metadata.setMimeType("application/mp3");
-//        metadata.setFilename("route.mp3");
-//        String url = _service.add(_credentials, metadata, this.getClass().getResource("/route.mp3").toExternalForm());
-//    }
+
+    // public void testMp3File() throws Exception {
+    // AttachmentMetadata metadata = new AttachmentMetadata();
+    // metadata.setMimeType("application/mp3");
+    // metadata.setFilename("route.mp3");
+    // String url = _service.add(_credentials, metadata,
+    // this.getClass().getResource("/route.mp3").toExternalForm());
+    // }
 }
