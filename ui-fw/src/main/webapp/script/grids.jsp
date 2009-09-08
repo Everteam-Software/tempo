@@ -283,13 +283,13 @@
         }
         
         function populateRoles(data) {
-        
             $(data).find("/rbac:getAssignedRolesResponse/rbac:role/").each(function(){
                 if(this.nodeName == "rbac:role") {
                  var option = "<option value=\""+$(this).text()+"\">"+$(this).text()+"</option>";
                  $("#reassign_dyn").append(option);
                 }
               });
+            updateDynamicUsers();
         }
         
         function updateDynamicRoles() {
