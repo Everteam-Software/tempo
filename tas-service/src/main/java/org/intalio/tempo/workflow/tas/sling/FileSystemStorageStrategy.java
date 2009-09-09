@@ -5,8 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.tools.ant.util.FileUtils;
 import org.intalio.tempo.security.Property;
 import org.intalio.tempo.workflow.tas.core.AttachmentMetadata;
 import org.intalio.tempo.workflow.tas.core.StorageStrategy;
@@ -20,7 +20,8 @@ public class FileSystemStorageStrategy implements StorageStrategy {
     public void deleteAttachment(Property[] props, String url) throws UnavailableAttachmentException {
         if (url.startsWith(url)) {
             String localUrl = url.substring(publicPath.length() + 1);
-            FileUtils.delete(new File(localUrl));
+            File localFile = new File(path + File.separator + localUrl);
+            localFile.delete();
         }
 
     }
