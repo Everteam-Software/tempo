@@ -1,0 +1,344 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Define security realms, users and roles -->
+<security>
+
+    <defaultRealm>intalio</defaultRealm>
+
+    <caseSensitive>false</caseSensitive>
+
+    <realm identifier="intalio">
+        <user identifier="admin">
+            <name>Admininistrator</name>
+            <email>admin@example.com</email>
+            <password>changeit</password>
+            <assignRole>ProcessAdministrator</assignRole>
+            <assignRole>coordinatorA</assignRole>
+			<assignRole>coordinatorB</assignRole>
+			<assignRole>coordinatorC</assignRole>
+			<assignRole>coordinatorD</assignRole>
+			<assignRole>coordinatorE</assignRole>
+			<assignRole>coordinatorF</assignRole>
+        </user>
+    
+        <user identifier="manager">
+            <name>Manager</name>
+            <email>manager@example.com</email>
+            <password>changeit</password>
+            <assignRole>ProcessManager</assignRole>
+            <assignRole>coordinatorA</assignRole>
+			<assignRole>coordinatorB</assignRole>
+			<assignRole>coordinatorC</assignRole>
+			<assignRole>coordinatorD</assignRole>
+			<assignRole>coordinatorE</assignRole>
+			<assignRole>coordinatorF</assignRole>
+        </user>
+		
+		<user identifier="200477a">
+            <name>ANTONIO CARRILHO</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorA</assignRole>
+        </user>
+		
+		<user identifier="200477b">
+            <name>ANTONIO CARRILHO</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorB</assignRole>
+        </user>
+		
+		<user identifier="200477c">
+            <name>ANTONIO CARRILHO</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorC</assignRole>
+        </user>
+		
+		<user identifier="200477d">
+            <name>ANTONIO CARRILHO</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorD</assignRole>
+        </user>
+		
+		<user identifier="200477e">
+            <name>ANTONIO CARRILHO</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorE</assignRole>
+        </user>
+		
+		<user identifier="200477f">
+            <name>ANTONIO CARRILHO</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorF</assignRole>
+        </user>
+		
+		<user identifier="200170a">
+            <name>LUIS MARQUES</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorA</assignRole>
+        </user>
+		
+		<user identifier="200170b">
+            <name>LUIS MARQUES</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorB</assignRole>
+        </user>
+		
+		<user identifier="200170c">
+            <name>LUIS MARQUES</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorC</assignRole>
+        </user>
+		
+		<user identifier="200170d">
+            <name>LUIS MARQUES</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorD</assignRole>
+        </user>
+		
+		<user identifier="200170e">
+            <name>LUIS MARQUES</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorE</assignRole>
+        </user>
+		
+		<user identifier="200170f">
+            <name>LUIS MARQUES</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorF</assignRole>
+        </user>
+		
+		<user identifier="198077a">
+            <name>CARLOS MENDES</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorA</assignRole>
+        </user>
+		
+		<user identifier="198077b">
+            <name>CARLOS MENDES</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorB</assignRole>
+        </user>
+		
+		<user identifier="198077c">
+            <name>CARLOS MENDES</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorC</assignRole>
+        </user>
+		
+		<user identifier="198077d">
+            <name>CARLOS MENDES</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorD</assignRole>
+        </user>
+		
+		<user identifier="198077e">
+            <name>CARLOS MENDES</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorE</assignRole>
+        </user>
+		
+		<user identifier="198077f">
+            <name>CARLOS MENDES</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorF</assignRole>
+        </user>
+		
+		<user identifier="199935">
+            <name>P. RIBEIRO</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorA</assignRole>
+        </user>
+		
+		<user identifier="195495">
+            <name>CARLOS VIEGAS</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorA</assignRole>
+        </user>
+		 
+		<user identifier="136176">
+            <name>JOAO LEITAO</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorB</assignRole>
+        </user>
+		 
+		<user identifier="195057">
+            <name>BERNARDO MOTA</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorB</assignRole>
+        </user>
+
+		<user identifier="127829">
+            <name>JOSE GASPAR</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorB</assignRole>
+        </user>
+		
+		<user identifier="200253">
+            <name>JOAQ. LOPES</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorB</assignRole>
+        </user>
+
+		<user identifier="105882">
+            <name>VITOR ALVES</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorC</assignRole>
+        </user>
+
+		<user identifier="183368">
+            <name>EDG. CERCAS</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorC</assignRole>
+        </user>
+
+		<user identifier="143487">
+            <name>JOSE SOBRAL</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorC</assignRole>
+        </user>
+
+		<user identifier="108332">
+            <name>C. SANTOS</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorC</assignRole>
+        </user>
+
+		<user identifier="200014">
+            <name>P.ESTEVES</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorD</assignRole>
+        </user>
+
+		<user identifier="78543">
+            <name>A. BRANDAO</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorD</assignRole>
+        </user>
+
+		<user identifier="183277">
+            <name>VITOR ALMEIDA</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorD</assignRole>
+        </user>
+
+		<user identifier="183301">
+            <name>PAULO PINTO</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorD</assignRole>
+        </user>
+
+		<user identifier="183269">
+            <name>VITOR PIRES</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorE</assignRole>
+        </user>
+
+		<user identifier="68742">
+            <name>JOSE BENTES</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorE</assignRole>
+        </user>
+
+		<user identifier="200022">
+            <name>P. MARQUES</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorE</assignRole>
+        </user>
+		
+		<user identifier="200204">
+            <name>JOSE SILVA</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorE</assignRole>
+        </user>		
+
+		<user identifier="70599">
+            <name>FERN.ABRANTES</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorF</assignRole>
+        </user>
+
+		<user identifier="200311">
+            <name>FERNANDO NUNES</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorF</assignRole>
+        </user>
+
+		<user identifier="200352">
+            <name>CLAUDIA JESUS</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorF</assignRole>
+        </user>
+
+        <role identifier="coordinatorA">
+            <description>Coordinator for shift A</description>
+        </role>
+		
+		<role identifier="coordinatorB">
+            <description>Coordinator for shift B</description>
+        </role>
+		
+		<role identifier="coordinatorC">
+            <description>Coordinator for shift C</description>
+        </role>
+		
+		<role identifier="coordinatorD">
+            <description>Coordinator for shift D</description>
+        </role>
+		
+		<role identifier="coordinatorE">
+            <description>Coordinator for shift E</description>
+        </role>
+		
+		<role identifier="coordinatorF">
+            <description>Coordinator for shift F</description>
+        </role>
+
+        <role identifier="ProcessAdministrator">
+            <description>Process Administrator</description>
+            <descendantRole>ProcessManager</descendantRole>
+        </role>
+
+        <role identifier="ProcessManager">
+            <description>Process Manager</description>
+        </role>
+       
+    </realm>
+
+</security>
