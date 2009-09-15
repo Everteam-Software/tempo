@@ -1,1 +1,1 @@
-select name, identifier, certified from rma_coordinator where shift = ? ;
+select name, identifier, certified, available from rma_coordinator where shift = ? ;

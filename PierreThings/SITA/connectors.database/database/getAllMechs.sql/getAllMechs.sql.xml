@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jdbc:descriptor wsdlLocation="getAllMechs.sql.wsdl" targetNamespace="urn:intalio.com:connectors:database:sita:getallmechsservice" xmlns:jdbc="http://bpms.intalio.com/connectors/jdbc/">
     <jdbc:service name="getAllMechsService">
-        <jdbc:operation name="urn:getAllMechs" sqlStatement="select name, identifier, certified from rma_mechanic where shift = ? ;" event="false" dynamicCredentials="true" xmlns:urn="urn:intalio.com:connectors:database:sita:getallmechsservice">
+        <jdbc:operation name="urn:getAllMechs" sqlStatement="select name, identifier, certified, available from rma_mechanic where shift = ? ;" event="false" dynamicCredentials="true" xmlns:urn="urn:intalio.com:connectors:database:sita:getallmechsservice">
             <jdbc:input>
                 <jdbc:parameter>
                     <jdbc:mode>1</jdbc:mode>
@@ -63,10 +63,25 @@
                     <jdbc:signed>false</jdbc:signed>
                     <jdbc:writable>true</jdbc:writable>
                 </jdbc:column>
+                <jdbc:column>
+                    <jdbc:name>available</jdbc:name>
+                    <jdbc:typeName>INT</jdbc:typeName>
+                    <jdbc:precision>1</jdbc:precision>
+                    <jdbc:scale>0</jdbc:scale>
+                    <jdbc:autoIncrement>false</jdbc:autoIncrement>
+                    <jdbc:caseSensitive>false</jdbc:caseSensitive>
+                    <jdbc:currency>false</jdbc:currency>
+                    <jdbc:definitelyWritable>true</jdbc:definitelyWritable>
+                    <jdbc:nullable>true</jdbc:nullable>
+                    <jdbc:readOnly>false</jdbc:readOnly>
+                    <jdbc:searchable>true</jdbc:searchable>
+                    <jdbc:signed>true</jdbc:signed>
+                    <jdbc:writable>true</jdbc:writable>
+                </jdbc:column>
             </jdbc:output>
         </jdbc:operation>
         <jdbc:port>
-            <jdbc:address location="http://172.17.128.120:9080/ode/processes/getAllMechsService"/>
+            <jdbc:address location="http://localhost:9080/ode/processes/getAllMechsService"/>
         </jdbc:port>
         <jdbc:connection jndiName="java:comp/env/jdbc/">
             <jdbc:databaseProductName>MySql</jdbc:databaseProductName>

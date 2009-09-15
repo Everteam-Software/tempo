@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<bpel:process xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ode="http://www.apache.org/ode/type/extension" xmlns:TokenService="http://example.com/process/Upload/TokenService" xmlns:tns="http://www.example.org/UploadResponse" xmlns:TaskManagementSystem="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:as="http://www.example.org/assignment" xmlns:AppearNetworks="http://example.com/process/Upload/AppearNetworks" xmlns:TokenService1="http://tempo.intalio.org/security/tokenService/" xmlns:DB="http://example.com/process/Upload/DB" xmlns:countExistingTAs="urn:intalio.com:connectors:database:sita:countexistingtasservice" xmlns:diag="http://example.com/process/Upload" xmlns:TMP="http://example.com/process/Upload/TMP" xmlns:p="http://www.example.org/prop" xmlns:TMS="http://example.com/process/Upload/TMS" xmlns:hil="http://www.example.org/hil" xmlns:fmr="http://www.example.org/fmr" xmlns:SITAservice="http://example.com/process/Upload/SITAservice" xmlns:b4p="http://www.intalio.com/bpms/workflow/ib4p_20051115" xmlns:TAdata="http://www.intalio.com/gi/forms/TAmanagement.gi" xmlns:this="http://example.com/process/Upload/UploadProcess" xmlns:SITAservice1="http://www.example.org/FMRupload" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:bpmn="http://www.intalio.com/bpms" xmlns:atomic="http://ode.apache.org/atomicScope" queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0" bpmn:label="UploadProcess" name="UploadProcess" bpmn:id="_VbNFwD7SEd6K2cgYiBoOqg" targetNamespace="http://example.com/process/Upload/UploadProcess">
+<bpel:process xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ode="http://www.apache.org/ode/type/extension" xmlns:TokenService="http://example.com/process/Upload/TokenService" xmlns:tns="http://www.example.org/UploadResponse" xmlns:TaskManagementSystem="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:ns="urn:intalio.com:connectors:database:sita:storefmrservice" xmlns:as="http://www.example.org/assignment" xmlns:AppearNetworks="http://example.com/process/Upload/AppearNetworks" xmlns:TokenService1="http://tempo.intalio.org/security/tokenService/" xmlns:DB="http://example.com/process/Upload/DB" xmlns:countExistingTAs="urn:intalio.com:connectors:database:sita:countexistingtasservice" xmlns:diag="http://example.com/process/Upload" xmlns:TMP="http://example.com/process/Upload/TMP" xmlns:p="http://www.example.org/prop" xmlns:TMS="http://example.com/process/Upload/TMS" xmlns:hil="http://www.example.org/hil" xmlns:fmr="http://www.example.org/fmr" xmlns:SITAservice="http://example.com/process/Upload/SITAservice" xmlns:b4p="http://www.intalio.com/bpms/workflow/ib4p_20051115" xmlns:TAdata="http://www.intalio.com/gi/forms/TAmanagement.gi" xmlns:this="http://example.com/process/Upload/UploadProcess" xmlns:SITAservice1="http://www.example.org/FMRupload" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:bpmn="http://www.intalio.com/bpms" xmlns:atomic="http://ode.apache.org/atomicScope" queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0" bpmn:label="UploadProcess" name="UploadProcess" bpmn:id="_VbNFwD7SEd6K2cgYiBoOqg" targetNamespace="http://example.com/process/Upload/UploadProcess">
   <bpel:import namespace="http://tempo.intalio.org/security/tokenService/" location="../services/TokenService.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
   <bpel:import namespace="http://example.com/process/Upload" location="Upload.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
   <bpel:import namespace="http://example.com/process/Upload/UploadProcess" location="Upload-UploadProcess.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
@@ -7,6 +7,7 @@
   <bpel:import namespace="http://www.intalio.com/bpms/workflow/ib4p_20051115" location="../services/TaskManagerProcess.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
   <bpel:import namespace="http://www.intalio.com/gi/forms/TAmanagement.gi" location="../services/SITAservice.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
   <bpel:import namespace="urn:intalio.com:connectors:database:sita:countexistingtasservice" location="../database/countExistingTAs.sql/countExistingTAs.sql.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+  <bpel:import namespace="urn:intalio.com:connectors:database:sita:storefmrservice" location="../database/storeFMR.sql/storeFMR.sql.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
   <bpel:partnerLinks>
     <bpel:partnerLink name="uploadProcessAndAppearNetworksPlkVar" partnerLinkType="diag:UploadProcessAndAppearNetworks" myRole="UploadProcess_for_AppearNetworks"/>
     <bpel:partnerLink name="uploadProcessAndSITAserviceForSITAservicePortPlkVar" partnerLinkType="diag:UploadProcessAndSITAserviceForSITAservicePortPlk" initializePartnerRole="yes" partnerRole="SITAservice_for_UploadProcess"/>
@@ -14,6 +15,7 @@
     <bpel:partnerLink name="uploadProcessAndTMPForUserBusinessProcessPortPlkVar" partnerLinkType="diag:UploadProcessAndTMPForUserBusinessProcessPortPlk" initializePartnerRole="yes" partnerRole="TMP_for_UploadProcess"/>
     <bpel:partnerLink name="tMsAndUploadProcessForPortTaskManagementServicesSOAPPlkVar" partnerLinkType="diag:TMsAndUploadProcessForPortTaskManagementServicesSOAPPlk" initializePartnerRole="yes" partnerRole="TMS_for_UploadProcess"/>
     <bpel:partnerLink name="dbAndUploadProcessForCountExistingTAsPortPlkVar" partnerLinkType="diag:DbAndUploadProcessForCountExistingTAsPortPlk" initializePartnerRole="yes" partnerRole="DB_for_UploadProcess"/>
+    <bpel:partnerLink name="dbAndUploadProcessForStoreFMRPortPlkVar" partnerLinkType="diag:DbAndUploadProcessForStoreFMRPortPlk" initializePartnerRole="yes" partnerRole="DB_for_UploadProcess"/>
   </bpel:partnerLinks>
   <bpel:variables>
     <bpel:variable name="thisUploadFMRRequestMsg" messageType="this:uploadFMRRequest"/>
@@ -36,6 +38,10 @@
     <bpel:variable name="taskManagementSystemGetAvailableTasksWithInputOutputResponseMsg" messageType="TaskManagementSystem:getAvailableTasksWithInputOutputResponse"/>
     <bpel:variable name="countExistingTAsCountExistingTAsRequestMsg" messageType="countExistingTAs:countExistingTAsInput"/>
     <bpel:variable name="countExistingTAsCountExistingTAsResponseMsg" messageType="countExistingTAs:countExistingTAsOutput"/>
+    <bpel:variable name="logInput" messageType="TAdata:readPropertyRequest"/>
+    <bpel:variable name="logOutput" messageType="TAdata:readPropertyResponse"/>
+    <bpel:variable name="nsStoreFMRRequestMsg" messageType="ns:storeFMRInput"/>
+    <bpel:variable name="nsStoreFMRResponseMsg" messageType="ns:storeFMROutput"/>
   </bpel:variables>
   <bpel:pick createInstance="yes" bpmn:label="Exclusive_Event-Based_Gateway" name="Exclusive_Event-Based_Gateway" bpmn:id="_aGdT8D7SEd6K2cgYiBoOqg">
     <bpel:onMessage partnerLink="uploadProcessAndAppearNetworksPlkVar" portType="this:ForAppearNetworks" operation="uploadFMR" variable="thisUploadFMRRequestMsg" bpmn:label="uploadFMR" name="uploadFMR" bpmn:id="_bbQjsD7SEd6K2cgYiBoOqg">
@@ -378,7 +384,60 @@
             </bpel:from>
             <bpel:to>$countExistingTAsCountExistingTAsRequestMsg.parameters</bpel:to>
           </bpel:copy>
+          <bpel:copy bpmn:label="$logInput">
+            <bpel:from>
+              <bpel:literal>
+<p:property></p:property></bpel:literal>
+            </bpel:from>
+            <bpel:to>$logInput.body</bpel:to>
+          </bpel:copy>
+          <bpel:copy bpmn:label="$nsStoreFMRRequestMsg">
+            <bpel:from>
+              <bpel:literal>
+<ns:storeFMRParameterSet>
+  <ns:connection>
+    <ns:user></ns:user>
+    <ns:password></ns:password>
+  </ns:connection>
+  <ns:execute>
+    <ns:parameters>
+      <ns:creationTime></ns:creationTime>
+      <ns:fmrdata></ns:fmrdata>
+    </ns:parameters>
+  </ns:execute>
+</ns:storeFMRParameterSet></bpel:literal>
+            </bpel:from>
+            <bpel:to>$nsStoreFMRRequestMsg.parameters</bpel:to>
+          </bpel:copy>
         </bpel:assign>
+        <bpel:assign bpmn:label="check log" name="check_log" bpmn:id="_XktygJcPEd6JfLNGzbY2vA">
+          <bpel:copy>
+            <bpel:from>"fmrlog"</bpel:from>
+            <bpel:to>$logInput.body</bpel:to>
+          </bpel:copy>
+        </bpel:assign>
+        <bpel:invoke partnerLink="uploadProcessAndSITAserviceForSITAservicePortPlkVar" portType="TAdata:SITAservicePortType" operation="readProperty" inputVariable="logInput" outputVariable="logOutput" bpmn:label="check log" name="check_log-1" bpmn:id="_XktygJcPEd6JfLNGzbY2vA"></bpel:invoke>
+        <bpel:if>
+          <bpel:condition>$logOutput.body/text() = "ON"</bpel:condition>
+          <bpel:sequence>
+            <bpel:assign bpmn:label="store FMR" name="store_FMR" bpmn:id="_e-3P4JcPEd6JfLNGzbY2vA">
+              <bpel:copy>
+                <bpel:from>current-dateTime()</bpel:from>
+                <bpel:to>$nsStoreFMRRequestMsg.parameters/ns:execute/ns:parameters/ns:creationTime</bpel:to>
+              </bpel:copy>
+              <bpel:copy>
+                <bpel:from>bpel:doXslTransform("storeFMR.xsl", $thisUploadFMRRequestMsg.body)</bpel:from>
+                <bpel:to>$nsStoreFMRRequestMsg.parameters/ns:execute/ns:parameters/ns:fmrdata</bpel:to>
+              </bpel:copy>
+            </bpel:assign>
+            <bpel:invoke partnerLink="dbAndUploadProcessForStoreFMRPortPlkVar" portType="ns:storeFMRPort" operation="storeFMR" inputVariable="nsStoreFMRRequestMsg" outputVariable="nsStoreFMRResponseMsg" bpmn:label="store FMR" name="store_FMR-1" bpmn:id="_e-3P4JcPEd6JfLNGzbY2vA"></bpel:invoke>
+          </bpel:sequence>
+        </bpel:if>
+        <bpel:empty bpmn:label="Exclusive_Data-based_Gateway" name="Exclusive_Data-based_Gateway" bpmn:id="_dJvhUJcPEd6JfLNGzbY2vA">
+          <bpel:links>
+            <bpel:targets></bpel:targets>
+          </bpel:links>
+        </bpel:empty>
         <bpel:assign bpmn:label="Convert  dates to local time" name="Convert__dates_to_local_time" bpmn:id="_Io02kGwQEd66f4iq3wYOag">
           <bpel:copy ignoreUninitializedFromVariable="yes" ignoreMissingFromData="yes">
             <bpel:from>adjust-dateTime-to-timezone(xs:dateTime($thisUploadFMRRequestMsg.body/@ATA)) + xs:dayTimeDuration ("PT1H")</bpel:from>
@@ -542,7 +601,7 @@
                   </bpel:sequence>
                 </bpel:else>
               </bpel:if>
-              <bpel:empty bpmn:label="Exclusive_Data-based_Gateway" name="Exclusive_Data-based_Gateway" bpmn:id="_-ANDsFZmEd6OBK2EwaAgcw">
+              <bpel:empty bpmn:label="Exclusive_Data-based_Gateway" name="Exclusive_Data-based_Gateway-1" bpmn:id="_-ANDsFZmEd6OBK2EwaAgcw">
                 <bpel:links>
                   <bpel:targets></bpel:targets>
                 </bpel:links>
@@ -556,7 +615,7 @@
             </bpel:sequence>
           </bpel:else>
         </bpel:if>
-        <bpel:empty bpmn:label="Exclusive_Data-based_Gateway" name="Exclusive_Data-based_Gateway-1" bpmn:id="_ho0UMFZiEd6OBK2EwaAgcw">
+        <bpel:empty bpmn:label="Exclusive_Data-based_Gateway" name="Exclusive_Data-based_Gateway-2" bpmn:id="_ho0UMFZiEd6OBK2EwaAgcw">
           <bpel:links>
             <bpel:targets></bpel:targets>
           </bpel:links>
@@ -903,6 +962,31 @@
 </countExistingTAs:countExistingTAsParameterSet></bpel:literal>
             </bpel:from>
             <bpel:to>$countExistingTAsCountExistingTAsRequestMsg.parameters</bpel:to>
+          </bpel:copy>
+          <bpel:copy bpmn:label="$logInput">
+            <bpel:from>
+              <bpel:literal>
+<p:property></p:property></bpel:literal>
+            </bpel:from>
+            <bpel:to>$logInput.body</bpel:to>
+          </bpel:copy>
+          <bpel:copy bpmn:label="$nsStoreFMRRequestMsg">
+            <bpel:from>
+              <bpel:literal>
+<ns:storeFMRParameterSet>
+  <ns:connection>
+    <ns:user></ns:user>
+    <ns:password></ns:password>
+  </ns:connection>
+  <ns:execute>
+    <ns:parameters>
+      <ns:creationTime></ns:creationTime>
+      <ns:fmrdata></ns:fmrdata>
+    </ns:parameters>
+  </ns:execute>
+</ns:storeFMRParameterSet></bpel:literal>
+            </bpel:from>
+            <bpel:to>$nsStoreFMRRequestMsg.parameters</bpel:to>
           </bpel:copy>
         </bpel:assign>
         <bpel:empty bpmn:label="create HIL" name="create_HIL" bpmn:id="_fwKHYD7SEd6K2cgYiBoOqg"/>

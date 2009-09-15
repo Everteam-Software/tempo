@@ -106,7 +106,18 @@
                       </xsd:annotation>
                       <xsd:simpleType>
                         <xsd:restriction base="xsd:string">
-                          <xsd:maxLength value="2"/>
+                          <xsd:maxLength value="3"/>
+                        </xsd:restriction>
+                      </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="available">
+                      <xsd:annotation>
+                        <xsd:documentation>The type definition for  available</xsd:documentation>
+                      </xsd:annotation>
+                      <xsd:simpleType>
+                        <xsd:restriction base="xsd:decimal">
+                          <xsd:totalDigits value="1"/>
+                          <xsd:fractionDigits value="0"/>
                         </xsd:restriction>
                       </xsd:simpleType>
                     </xsd:element>

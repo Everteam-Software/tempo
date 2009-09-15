@@ -1,5 +1,5 @@
 ﻿#
-#Thu Aug 20 18:23:27 CEST 2009
+#Tue Sep 15 22:58:37 CEST 2009
 formURI=http\://172.17.128.120\:9080/gi/apppath/SITA/forms/TAlistCyclicExport.gi/IntalioInternal/ServerLaunch.html
 userProcessInitSOAPAction=http\://www.intalio.com/gi/forms/TAlistCyclicExport.gi/Process/initProcess
 processEndpoint=http\://172.17.128.120\:9080/ode/processes/SITA/process/StartCyclicTAlistExport/process/User/processAndUserForPortTypeProcessPlk

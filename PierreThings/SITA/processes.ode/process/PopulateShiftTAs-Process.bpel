@@ -1,11 +1,17 @@
 ﻿<?xml version='1.0' encoding='UTF-8'?>
-<bpel:process xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ode="http://www.apache.org/ode/type/extension" xmlns:as="http://www.example.org/assignment" xmlns:ShiftCreationLight="http://www.intalio.com/gi/forms/ShiftCreationLight.gi" xmlns:DC="http://example.com/process/PopulateShiftTAs/DC" xmlns:diag="http://example.com/process/PopulateShiftTAs" xmlns:p="http://www.example.org/prop" xmlns:attachments="http://www.intalio.com/gi/forms/ShiftCreationLight.gi/attachments" xmlns:SITAservice="http://example.com/process/PopulateShiftTAs/SITAservice" xmlns:this="http://example.com/process/PopulateShiftTAs/Process" xmlns:SITAservice1="http://www.intalio.com/gi/forms/TAmanagement.gi" xmlns:fmr="http://www.example.org/FMRupload" xmlns:bpmn="http://www.intalio.com/bpms" xmlns:atomic="http://ode.apache.org/atomicScope" queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0" bpmn:label="Process" name="Process" bpmn:id="_tpABcFg3Ed6KULKWaznjDA" targetNamespace="http://example.com/process/PopulateShiftTAs/Process">
+<bpel:process xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ode="http://www.apache.org/ode/type/extension" xmlns:updateAvi="urn:intalio.com:connectors:database:sita:updateaviservice" xmlns:as="http://www.example.org/assignment" xmlns:ShiftCreationLight="http://www.intalio.com/gi/forms/ShiftCreationLight.gi" xmlns:DB="http://example.com/process/PopulateShiftTAs/DB" xmlns:DC="http://example.com/process/PopulateShiftTAs/DC" xmlns:diag="http://example.com/process/PopulateShiftTAs" xmlns:ns="urn:intalio.com:connectors:database:sita:updatecoordservice" xmlns:p="http://www.example.org/prop" xmlns:attachments="http://www.intalio.com/gi/forms/ShiftCreationLight.gi/attachments" xmlns:SITAservice="http://example.com/process/PopulateShiftTAs/SITAservice" xmlns:this="http://example.com/process/PopulateShiftTAs/Process" xmlns:SITAservice1="http://www.intalio.com/gi/forms/TAmanagement.gi" xmlns:updateMech="urn:intalio.com:connectors:database:sita:updatemechservice" xmlns:fmr="http://www.example.org/FMRupload" xmlns:bpmn="http://www.intalio.com/bpms" xmlns:atomic="http://ode.apache.org/atomicScope" queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0" bpmn:label="Process" name="Process" bpmn:id="_tpABcFg3Ed6KULKWaznjDA" targetNamespace="http://example.com/process/PopulateShiftTAs/Process">
   <bpel:import namespace="http://example.com/process/PopulateShiftTAs" location="PopulateShiftTAs.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"></bpel:import>
   <bpel:import namespace="http://www.intalio.com/gi/forms/ShiftCreationLight.gi" location="../forms/ShiftCreationLight.gi.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"></bpel:import>
   <bpel:import namespace="http://www.intalio.com/gi/forms/TAmanagement.gi" location="../services/SITAservice.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"></bpel:import>
+  <bpel:import namespace="urn:intalio.com:connectors:database:sita:updateaviservice" location="../database/updateAvi.sql/updateAvi.sql.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"></bpel:import>
+  <bpel:import namespace="urn:intalio.com:connectors:database:sita:updatecoordservice" location="../database/updateCoord.sql/updateCoord.sql.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"></bpel:import>
+  <bpel:import namespace="urn:intalio.com:connectors:database:sita:updatemechservice" location="../database/updateMech.sql/updateMech.sql.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"></bpel:import>
   <bpel:partnerLinks>
     <bpel:partnerLink name="sITAserviceAndProcessForSITAservicePortPlkVar" partnerLinkType="diag:SITAserviceAndProcessForSITAservicePortPlk" initializePartnerRole="yes" partnerRole="SITAservice_for_Process"></bpel:partnerLink>
     <bpel:partnerLink name="processAndDCForPortTypeProcessPlkVar" partnerLinkType="diag:ProcessAndDCForPortTypeProcessPlk" myRole="Process_for_DC"></bpel:partnerLink>
+    <bpel:partnerLink name="processAndDBForUpdateCoordPortPlkVar" partnerLinkType="diag:ProcessAndDBForUpdateCoordPortPlk" initializePartnerRole="yes" partnerRole="DB_for_Process"></bpel:partnerLink>
+    <bpel:partnerLink name="processAndDBForUpdateMechPortPlkVar" partnerLinkType="diag:ProcessAndDBForUpdateMechPortPlk" initializePartnerRole="yes" partnerRole="DB_for_Process"></bpel:partnerLink>
+    <bpel:partnerLink name="processAndDBForUpdateAviPortPlkVar" partnerLinkType="diag:ProcessAndDBForUpdateAviPortPlk" initializePartnerRole="yes" partnerRole="DB_for_Process"></bpel:partnerLink>
   </bpel:partnerLinks>
   <bpel:variables>
     <bpel:variable name="sITAservice1InputMessage" messageType="SITAservice1:AssignTAtoShiftRequest"></bpel:variable>
@@ -45,17 +51,152 @@
       </bpel:copy>
     </bpel:assign>
     <bpel:reply partnerLink="processAndDCForPortTypeProcessPlkVar" portType="ShiftCreationLight:Process" operation="initProcess" variable="shiftCreationLightInitProcessResponseMsg" bpmn:label="start" name="start-1" bpmn:id="_0sM-cFg3Ed6KULKWaznjDA"></bpel:reply>
+    <bpel:scope bpmn:label="outer-SubProcess" name="outer-SubProcess" bpmn:id="_B-KmkJ6_Ed6qKcOrFhoGtQ">
+      <bpel:forEach bpmn:label="SubProcess" name="SubProcess" bpmn:id="_B-KmkJ6_Ed6qKcOrFhoGtQ" parallel="no" counterName="coordCounter">
+        <bpel:startCounterValue>1</bpel:startCounterValue>
+        <bpel:finalCounterValue>count($shiftCreationLightInitProcessRequestMsg.root/ShiftCreationLight:taskOutput/ShiftCreationLight:FormModel/shiftInformation/coordinators)</bpel:finalCounterValue>
+        <bpel:scope bpmn:label="SubProcess" name="SubProcess-1" bpmn:id="_B-KmkJ6_Ed6qKcOrFhoGtQ">
+          <bpel:variables>
+            <bpel:variable name="nsUpdateCoordRequestMsg" messageType="ns:updateCoordInput"></bpel:variable>
+            <bpel:variable name="nsUpdateCoordResponseMsg" messageType="ns:updateCoordOutput"></bpel:variable>
+          </bpel:variables>
+          <bpel:sequence>
+            <bpel:assign name="init-variables-SubProcess" bpmn:id="_B-KmkJ6_Ed6qKcOrFhoGtQ">
+              <bpel:copy bpmn:label="$nsUpdateCoordRequestMsg">
+                <bpel:from>
+                  <bpel:literal>
+<ns:updateCoordParameterSet>
+  <ns:connection>
+    <ns:user></ns:user>
+    <ns:password></ns:password>
+  </ns:connection>
+  <ns:execute>
+    <ns:parameters>
+      <ns:available></ns:available>
+      <ns:identifier></ns:identifier>
+    </ns:parameters>
+  </ns:execute>
+</ns:updateCoordParameterSet></bpel:literal>
+                </bpel:from>
+                <bpel:to>$nsUpdateCoordRequestMsg.parameters</bpel:to>
+              </bpel:copy>
+            </bpel:assign>
+            <bpel:assign bpmn:label="update coordinator" name="update_coordinator" bpmn:id="_B-Kmkp6_Ed6qKcOrFhoGtQ">
+              <bpel:copy>
+                <bpel:from>$shiftCreationLightInitProcessRequestMsg.root/ShiftCreationLight:taskOutput/ShiftCreationLight:FormModel/shiftInformation/coordinators[$coordCounter]/coordID</bpel:from>
+                <bpel:to>$nsUpdateCoordRequestMsg.parameters/ns:execute/ns:parameters/ns:identifier</bpel:to>
+              </bpel:copy>
+              <bpel:copy>
+                <bpel:from>$shiftCreationLightInitProcessRequestMsg.root/ShiftCreationLight:taskOutput/ShiftCreationLight:FormModel/shiftInformation/coordinators[$coordCounter]/coordAvail</bpel:from>
+                <bpel:to>$nsUpdateCoordRequestMsg.parameters/ns:execute/ns:parameters/ns:available</bpel:to>
+              </bpel:copy>
+            </bpel:assign>
+            <bpel:invoke partnerLink="processAndDBForUpdateCoordPortPlkVar" portType="ns:updateCoordPort" operation="updateCoord" inputVariable="nsUpdateCoordRequestMsg" outputVariable="nsUpdateCoordResponseMsg" bpmn:label="update coordinator" name="update_coordinator-1" bpmn:id="_B-Kmkp6_Ed6qKcOrFhoGtQ"></bpel:invoke>
+          </bpel:sequence>
+        </bpel:scope>
+      </bpel:forEach>
+    </bpel:scope>
+    <bpel:scope bpmn:label="outer-SubProcess" name="outer-SubProcess-1" bpmn:id="_DjzHoJ6_Ed6qKcOrFhoGtQ">
+      <bpel:forEach bpmn:label="SubProcess" name="SubProcess-2" bpmn:id="_DjzHoJ6_Ed6qKcOrFhoGtQ" parallel="no" counterName="mechCounter">
+        <bpel:startCounterValue>1</bpel:startCounterValue>
+        <bpel:finalCounterValue>count($shiftCreationLightInitProcessRequestMsg.root/ShiftCreationLight:taskOutput/ShiftCreationLight:FormModel/shiftInformation/mechanics)</bpel:finalCounterValue>
+        <bpel:scope bpmn:label="SubProcess" name="SubProcess-3" bpmn:id="_DjzHoJ6_Ed6qKcOrFhoGtQ">
+          <bpel:variables>
+            <bpel:variable name="updateMechUpdateMechRequestMsg" messageType="updateMech:updateMechInput"></bpel:variable>
+            <bpel:variable name="updateMechUpdateMechResponseMsg" messageType="updateMech:updateMechOutput"></bpel:variable>
+          </bpel:variables>
+          <bpel:sequence>
+            <bpel:assign name="init-variables-SubProcess" bpmn:id="_DjzHoJ6_Ed6qKcOrFhoGtQ">
+              <bpel:copy bpmn:label="$updateMechUpdateMechRequestMsg">
+                <bpel:from>
+                  <bpel:literal>
+<updateMech:updateMechParameterSet>
+  <updateMech:connection>
+    <updateMech:user></updateMech:user>
+    <updateMech:password></updateMech:password>
+  </updateMech:connection>
+  <updateMech:execute>
+    <updateMech:parameters>
+      <updateMech:available></updateMech:available>
+      <updateMech:identifier></updateMech:identifier>
+    </updateMech:parameters>
+  </updateMech:execute>
+</updateMech:updateMechParameterSet></bpel:literal>
+                </bpel:from>
+                <bpel:to>$updateMechUpdateMechRequestMsg.parameters</bpel:to>
+              </bpel:copy>
+            </bpel:assign>
+            <bpel:assign bpmn:label="update mechanic" name="update_mechanic" bpmn:id="_Dj8RkJ6_Ed6qKcOrFhoGtQ">
+              <bpel:copy>
+                <bpel:from>$shiftCreationLightInitProcessRequestMsg.root/ShiftCreationLight:taskOutput/ShiftCreationLight:FormModel/shiftInformation/mechanics[$mechCounter]/mechID</bpel:from>
+                <bpel:to>$updateMechUpdateMechRequestMsg.parameters/updateMech:execute/updateMech:parameters/updateMech:identifier</bpel:to>
+              </bpel:copy>
+              <bpel:copy>
+                <bpel:from>$shiftCreationLightInitProcessRequestMsg.root/ShiftCreationLight:taskOutput/ShiftCreationLight:FormModel/shiftInformation/mechanics[$mechCounter]/mechAvail</bpel:from>
+                <bpel:to>$updateMechUpdateMechRequestMsg.parameters/updateMech:execute/updateMech:parameters/updateMech:available</bpel:to>
+              </bpel:copy>
+            </bpel:assign>
+            <bpel:invoke partnerLink="processAndDBForUpdateMechPortPlkVar" portType="updateMech:updateMechPort" operation="updateMech" inputVariable="updateMechUpdateMechRequestMsg" outputVariable="updateMechUpdateMechResponseMsg" bpmn:label="update mechanic" name="update_mechanic-1" bpmn:id="_Dj8RkJ6_Ed6qKcOrFhoGtQ"></bpel:invoke>
+          </bpel:sequence>
+        </bpel:scope>
+      </bpel:forEach>
+    </bpel:scope>
+    <bpel:scope bpmn:label="outer-SubProcess" name="outer-SubProcess-2" bpmn:id="_EquTcJ6_Ed6qKcOrFhoGtQ">
+      <bpel:forEach bpmn:label="SubProcess" name="SubProcess-4" bpmn:id="_EquTcJ6_Ed6qKcOrFhoGtQ" parallel="no" counterName="aviCounter">
+        <bpel:startCounterValue>1</bpel:startCounterValue>
+        <bpel:finalCounterValue>count($shiftCreationLightInitProcessRequestMsg.root/ShiftCreationLight:taskOutput/ShiftCreationLight:FormModel/shiftInformation/avionics)</bpel:finalCounterValue>
+        <bpel:scope bpmn:label="SubProcess" name="SubProcess-5" bpmn:id="_EquTcJ6_Ed6qKcOrFhoGtQ">
+          <bpel:variables>
+            <bpel:variable name="updateAviUpdateAviRequestMsg" messageType="updateAvi:updateAviInput"></bpel:variable>
+            <bpel:variable name="updateAviUpdateAviResponseMsg" messageType="updateAvi:updateAviOutput"></bpel:variable>
+          </bpel:variables>
+          <bpel:sequence>
+            <bpel:assign name="init-variables-SubProcess" bpmn:id="_EquTcJ6_Ed6qKcOrFhoGtQ">
+              <bpel:copy bpmn:label="$updateAviUpdateAviRequestMsg">
+                <bpel:from>
+                  <bpel:literal>
+<updateAvi:updateAviParameterSet>
+  <updateAvi:connection>
+    <updateAvi:user></updateAvi:user>
+    <updateAvi:password></updateAvi:password>
+  </updateAvi:connection>
+  <updateAvi:execute>
+    <updateAvi:parameters>
+      <updateAvi:available></updateAvi:available>
+      <updateAvi:identifier></updateAvi:identifier>
+    </updateAvi:parameters>
+  </updateAvi:execute>
+</updateAvi:updateAviParameterSet></bpel:literal>
+                </bpel:from>
+                <bpel:to>$updateAviUpdateAviRequestMsg.parameters</bpel:to>
+              </bpel:copy>
+            </bpel:assign>
+            <bpel:assign bpmn:label="update avionic" name="update_avionic" bpmn:id="_Eq4EcJ6_Ed6qKcOrFhoGtQ">
+              <bpel:copy>
+                <bpel:from>$shiftCreationLightInitProcessRequestMsg.root/ShiftCreationLight:taskOutput/ShiftCreationLight:FormModel/shiftInformation/avionics[$aviCounter]/aviID</bpel:from>
+                <bpel:to>$updateAviUpdateAviRequestMsg.parameters/updateAvi:execute/updateAvi:parameters/updateAvi:identifier</bpel:to>
+              </bpel:copy>
+              <bpel:copy>
+                <bpel:from>$shiftCreationLightInitProcessRequestMsg.root/ShiftCreationLight:taskOutput/ShiftCreationLight:FormModel/shiftInformation/avionics[$aviCounter]/aviAvail</bpel:from>
+                <bpel:to>$updateAviUpdateAviRequestMsg.parameters/updateAvi:execute/updateAvi:parameters/updateAvi:available</bpel:to>
+              </bpel:copy>
+            </bpel:assign>
+            <bpel:invoke partnerLink="processAndDBForUpdateAviPortPlkVar" portType="updateAvi:updateAviPort" operation="updateAvi" inputVariable="updateAviUpdateAviRequestMsg" outputVariable="updateAviUpdateAviResponseMsg" bpmn:label="update avionic" name="update_avionic-1" bpmn:id="_Eq4EcJ6_Ed6qKcOrFhoGtQ"></bpel:invoke>
+          </bpel:sequence>
+        </bpel:scope>
+      </bpel:forEach>
+    </bpel:scope>
     <bpel:assign bpmn:label="call SITAservice" name="call_SITAservice" bpmn:id="_2HZxIFg3Ed6KULKWaznjDA">
       <bpel:copy>
         <bpel:from>$shiftCreationLightInitProcessRequestMsg.root/ShiftCreationLight:user</bpel:from>
         <bpel:to>$sITAservice1InputMessage.body/user</bpel:to>
       </bpel:copy>
       <bpel:copy>
-        <bpel:from>$shiftCreationLightInitProcessRequestMsg.root/ShiftCreationLight:taskOutput/ShiftCreationLight:FormModel/startDate</bpel:from>
+        <bpel:from>$shiftCreationLightInitProcessRequestMsg.root/ShiftCreationLight:taskOutput/ShiftCreationLight:FormModel/shiftInformation/startDate</bpel:from>
         <bpel:to>$sITAservice1InputMessage.body/startDate</bpel:to>
       </bpel:copy>
       <bpel:copy>
-        <bpel:from>$shiftCreationLightInitProcessRequestMsg.root/ShiftCreationLight:taskOutput/ShiftCreationLight:FormModel/startTime</bpel:from>
+        <bpel:from>$shiftCreationLightInitProcessRequestMsg.root/ShiftCreationLight:taskOutput/ShiftCreationLight:FormModel/shiftInformation/startTime</bpel:from>
         <bpel:to>$sITAservice1InputMessage.body/startTime</bpel:to>
       </bpel:copy>
     </bpel:assign>

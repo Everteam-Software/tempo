@@ -1,0 +1,36 @@
+﻿<wsdl:definitions targetNamespace="urn:intalio.com:connectors:database:sita:updatecoordservice" xmlns:tns="urn:intalio.com:connectors:database:sita:updatecoordservice" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns="urn:intalio.com:connectors:database:sita:updatecoordservice">
+    <wsdl:types>
+        <xsd:schema>
+            <xsd:import schemaLocation="updateCoord.xsd" namespace="urn:intalio.com:connectors:database:sita:updatecoordservice"/>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="updateCoordInput">
+        <wsdl:part name="parameters" element="ns:updateCoordParameterSet"/>
+    </wsdl:message>
+    <wsdl:message name="updateCoordOutput">
+        <wsdl:part name="parameters" element="ns:updateCoordResultSet"/>
+    </wsdl:message>
+    <wsdl:portType name="updateCoordPort">
+        <wsdl:operation name="updateCoord">
+            <wsdl:input message="tns:updateCoordInput"/>
+            <wsdl:output message="tns:updateCoordOutput"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="updateCoordPortSoapBinding" type="tns:updateCoordPort">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="updateCoord">
+            <soap:operation style="document" soapAction="urn:intalio:connector:jdbc:query:updateCoord"/>
+            <wsdl:input>
+                <soap:body namespace="urn:intalio.com:connectors:database:sita:updatecoordservice" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body namespace="urn:intalio.com:connectors:database:sita:updatecoordservice" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="updateCoordService">
+        <wsdl:port binding="tns:updateCoordPortSoapBinding" name="updateCoordPort">
+            <soap:address location="http://172.17.128.120:9080/ode/processes/SITA/database/updateCoord"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

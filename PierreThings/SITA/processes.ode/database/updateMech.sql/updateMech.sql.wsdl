@@ -1,0 +1,36 @@
+﻿<wsdl:definitions targetNamespace="urn:intalio.com:connectors:database:sita:updatemechservice" xmlns:tns="urn:intalio.com:connectors:database:sita:updatemechservice" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns="urn:intalio.com:connectors:database:sita:updatemechservice">
+    <wsdl:types>
+        <xsd:schema>
+            <xsd:import schemaLocation="updateMech.xsd" namespace="urn:intalio.com:connectors:database:sita:updatemechservice"/>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="updateMechInput">
+        <wsdl:part name="parameters" element="ns:updateMechParameterSet"/>
+    </wsdl:message>
+    <wsdl:message name="updateMechOutput">
+        <wsdl:part name="parameters" element="ns:updateMechResultSet"/>
+    </wsdl:message>
+    <wsdl:portType name="updateMechPort">
+        <wsdl:operation name="updateMech">
+            <wsdl:input message="tns:updateMechInput"/>
+            <wsdl:output message="tns:updateMechOutput"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="updateMechPortSoapBinding" type="tns:updateMechPort">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="updateMech">
+            <soap:operation style="document" soapAction="urn:intalio:connector:jdbc:query:updateMech"/>
+            <wsdl:input>
+                <soap:body namespace="urn:intalio.com:connectors:database:sita:updatemechservice" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body namespace="urn:intalio.com:connectors:database:sita:updatemechservice" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="updateMechService">
+        <wsdl:port binding="tns:updateMechPortSoapBinding" name="updateMechPort">
+            <soap:address location="http://172.17.128.120:9080/ode/processes/SITA/database/updateMech"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

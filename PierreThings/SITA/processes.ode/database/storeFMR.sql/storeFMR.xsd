@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace="urn:intalio.com:connectors:database:sita:storefmrservice" elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:intalio.com:connectors:database:sita:storefmrservice">
+  <xsd:element name="storeFMRParameterSet">
+    <xsd:annotation>
+      <xsd:documentation>Main element in request message for operation - storeFMR</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="connection">
+          <xsd:annotation>
+            <xsd:documentation>The database credentials</xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="user">
+                <xsd:annotation>
+                  <xsd:documentation>The type definition for  user</xsd:documentation>
+                </xsd:annotation>
+                <xsd:simpleType>
+                  <xsd:restriction base="xsd:string"/>
+                </xsd:simpleType>
+              </xsd:element>
+              <xsd:element name="password">
+                <xsd:annotation>
+                  <xsd:documentation>The type definition for  password</xsd:documentation>
+                </xsd:annotation>
+                <xsd:simpleType>
+                  <xsd:restriction base="xsd:string"/>
+                </xsd:simpleType>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="execute">
+          <xsd:annotation>
+            <xsd:documentation>Execution with input parameter</xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element form="qualified" name="parameters">
+                <xsd:annotation>
+                  <xsd:documentation>The query parameters</xsd:documentation>
+                </xsd:annotation>
+                <xsd:complexType>
+                  <xsd:sequence>
+                    <xsd:element name="creationTime">
+                      <xsd:annotation>
+                        <xsd:documentation>The parameter value</xsd:documentation>
+                      </xsd:annotation>
+                      <xsd:simpleType>
+                        <xsd:restriction base="xsd:dateTime"/>
+                      </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="fmrdata">
+                      <xsd:annotation>
+                        <xsd:documentation>The parameter value</xsd:documentation>
+                      </xsd:annotation>
+                      <xsd:simpleType>
+                        <xsd:restriction base="xsd:string">
+                          <xsd:maxLength value="500"/>
+                        </xsd:restriction>
+                      </xsd:simpleType>
+                    </xsd:element>
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="storeFMRResultSet">
+    <xsd:annotation>
+      <xsd:documentation>Main element in response message for operation - storeFMR</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="count">
+          <xsd:annotation>
+            <xsd:documentation>The type definition for  count</xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:decimal">
+              <xsd:totalDigits value="10"/>
+              <xsd:fractionDigits value="0"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>

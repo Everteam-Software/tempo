@@ -1,0 +1,36 @@
+﻿<wsdl:definitions targetNamespace="urn:intalio.com:connectors:database:sita:storefmrservice" xmlns:tns="urn:intalio.com:connectors:database:sita:storefmrservice" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns="urn:intalio.com:connectors:database:sita:storefmrservice">
+    <wsdl:types>
+        <xsd:schema>
+            <xsd:import schemaLocation="storeFMR.xsd" namespace="urn:intalio.com:connectors:database:sita:storefmrservice"/>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="storeFMRInput">
+        <wsdl:part name="parameters" element="ns:storeFMRParameterSet"/>
+    </wsdl:message>
+    <wsdl:message name="storeFMROutput">
+        <wsdl:part name="parameters" element="ns:storeFMRResultSet"/>
+    </wsdl:message>
+    <wsdl:portType name="storeFMRPort">
+        <wsdl:operation name="storeFMR">
+            <wsdl:input message="tns:storeFMRInput"/>
+            <wsdl:output message="tns:storeFMROutput"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="storeFMRPortSoapBinding" type="tns:storeFMRPort">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="storeFMR">
+            <soap:operation style="document" soapAction="urn:intalio:connector:jdbc:query:storeFMR"/>
+            <wsdl:input>
+                <soap:body namespace="urn:intalio.com:connectors:database:sita:storefmrservice" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body namespace="urn:intalio.com:connectors:database:sita:storefmrservice" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="storeFMRService">
+        <wsdl:port binding="tns:storeFMRPortSoapBinding" name="storeFMRPort">
+            <soap:address location="http://172.17.128.120:9080/ode/processes/SITA/database/storeFMR"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

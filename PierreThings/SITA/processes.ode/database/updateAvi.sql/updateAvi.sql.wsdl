@@ -1,0 +1,36 @@
+﻿<wsdl:definitions targetNamespace="urn:intalio.com:connectors:database:sita:updateaviservice" xmlns:tns="urn:intalio.com:connectors:database:sita:updateaviservice" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns="urn:intalio.com:connectors:database:sita:updateaviservice">
+    <wsdl:types>
+        <xsd:schema>
+            <xsd:import schemaLocation="updateAvi.xsd" namespace="urn:intalio.com:connectors:database:sita:updateaviservice"/>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="updateAviInput">
+        <wsdl:part name="parameters" element="ns:updateAviParameterSet"/>
+    </wsdl:message>
+    <wsdl:message name="updateAviOutput">
+        <wsdl:part name="parameters" element="ns:updateAviResultSet"/>
+    </wsdl:message>
+    <wsdl:portType name="updateAviPort">
+        <wsdl:operation name="updateAvi">
+            <wsdl:input message="tns:updateAviInput"/>
+            <wsdl:output message="tns:updateAviOutput"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="updateAviPortSoapBinding" type="tns:updateAviPort">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="updateAvi">
+            <soap:operation style="document" soapAction="urn:intalio:connector:jdbc:query:updateAvi"/>
+            <wsdl:input>
+                <soap:body namespace="urn:intalio.com:connectors:database:sita:updateaviservice" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body namespace="urn:intalio.com:connectors:database:sita:updateaviservice" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="updateAviService">
+        <wsdl:port binding="tns:updateAviPortSoapBinding" name="updateAviPort">
+            <soap:address location="http://172.17.128.120:9080/ode/processes/SITA/database/updateAvi"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

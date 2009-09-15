@@ -1,0 +1,1 @@
+update rma_avionic set available= ? where identifier= ?

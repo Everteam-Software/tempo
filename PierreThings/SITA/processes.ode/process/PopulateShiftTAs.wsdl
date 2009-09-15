@@ -1,11 +1,23 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<wsdl:definitions xmlns:attachments="http://www.intalio.com/gi/forms/ShiftCreationLight.gi/attachments" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ShiftCreationLight="http://www.intalio.com/gi/forms/ShiftCreationLight.gi" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Process="http://example.com/process/PopulateShiftTAs/Process" xmlns:diag="http://example.com/process/PopulateShiftTAs" xmlns:as="http://www.example.org/assignment" xmlns:DC="http://example.com/process/PopulateShiftTAs/DC" xmlns:p="http://www.example.org/prop" xmlns:SITAservice1="http://www.intalio.com/gi/forms/TAmanagement.gi" xmlns:fmr="http://www.example.org/FMRupload" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:bpdm="http://www.intalio/designer/business-process-data-modeling" targetNamespace="http://example.com/process/PopulateShiftTAs">
+<wsdl:definitions xmlns:updateAvi="urn:intalio.com:connectors:database:sita:updateaviservice" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Process="http://example.com/process/PopulateShiftTAs/Process" xmlns:diag="http://example.com/process/PopulateShiftTAs" xmlns:updateMech="urn:intalio.com:connectors:database:sita:updatemechservice" xmlns:ns="urn:intalio.com:connectors:database:sita:updatecoordservice" xmlns:attachments="http://www.intalio.com/gi/forms/ShiftCreationLight.gi/attachments" xmlns:ShiftCreationLight="http://www.intalio.com/gi/forms/ShiftCreationLight.gi" xmlns:as="http://www.example.org/assignment" xmlns:DB="http://example.com/process/PopulateShiftTAs/DB" xmlns:p="http://www.example.org/prop" xmlns:SITAservice1="http://www.intalio.com/gi/forms/TAmanagement.gi" xmlns:fmr="http://www.example.org/FMRupload" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:bpdm="http://www.intalio/designer/business-process-data-modeling" targetNamespace="http://example.com/process/PopulateShiftTAs">
     <wsdl:import namespace="http://www.intalio.com/gi/forms/ShiftCreationLight.gi" location="../forms/ShiftCreationLight.gi.wsdl"/>
     <wsdl:import namespace="http://www.intalio.com/gi/forms/TAmanagement.gi" location="../services/SITAservice.wsdl"/>
+    <wsdl:import namespace="urn:intalio.com:connectors:database:sita:updateaviservice" location="../database/updateAvi.sql/updateAvi.sql.wsdl"/>
+    <wsdl:import namespace="urn:intalio.com:connectors:database:sita:updatecoordservice" location="../database/updateCoord.sql/updateCoord.sql.wsdl"/>
+    <wsdl:import namespace="urn:intalio.com:connectors:database:sita:updatemechservice" location="../database/updateMech.sql/updateMech.sql.wsdl"/>
     <pnlk:partnerLinkType name="SITAserviceAndProcessForSITAservicePortPlk">
         <pnlk:role name="SITAservice_for_Process" portType="SITAservice1:SITAservicePortType"/>
     </pnlk:partnerLinkType>
     <pnlk:partnerLinkType name="ProcessAndDCForPortTypeProcessPlk">
         <pnlk:role name="Process_for_DC" portType="ShiftCreationLight:Process"/>
+    </pnlk:partnerLinkType>
+    <pnlk:partnerLinkType name="ProcessAndDBForUpdateMechPortPlk">
+        <pnlk:role name="DB_for_Process" portType="updateMech:updateMechPort"/>
+    </pnlk:partnerLinkType>
+    <pnlk:partnerLinkType name="ProcessAndDBForUpdateAviPortPlk">
+        <pnlk:role name="DB_for_Process" portType="updateAvi:updateAviPort"/>
+    </pnlk:partnerLinkType>
+    <pnlk:partnerLinkType name="ProcessAndDBForUpdateCoordPortPlk">
+        <pnlk:role name="DB_for_Process" portType="ns:updateCoordPort"/>
     </pnlk:partnerLinkType>
 </wsdl:definitions>

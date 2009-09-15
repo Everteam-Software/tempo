@@ -9,7 +9,7 @@
   <dd:provide partnerLink="processAndUserForPortTypeProcessPlkVar">
     <dd:service name="this:processAndUserForPortTypeProcessPlkService" port="process_for_UserPort"></dd:service>
   </dd:provide>
-</dd:process><dd:process xmlns:fmr="http://www.example.org/FMRupload" xmlns:DC="http://example.com/process/PopulateShiftTAs/DC" xmlns:as="http://www.example.org/assignment" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:SITAservice="http://example.com/process/PopulateShiftTAs/SITAservice" xmlns:dd="http://www.apache.org/ode/schemas/dd/2007/03" xmlns:diag="http://example.com/process/PopulateShiftTAs" xmlns:p="http://www.example.org/prop" xmlns:SITAservice1="http://www.intalio.com/gi/forms/TAmanagement.gi" xmlns:attachments="http://www.intalio.com/gi/forms/ShiftCreationLight.gi/attachments" xmlns:ShiftCreationLight="http://www.intalio.com/gi/forms/ShiftCreationLight.gi" xmlns:this="http://example.com/process/PopulateShiftTAs/Process" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="this:Process" fileName="process/PopulateShiftTAs-Process.bpel">
+</dd:process><dd:process xmlns:ns="urn:intalio.com:connectors:database:sita:updatecoordservice" xmlns:fmr="http://www.example.org/FMRupload" xmlns:DC="http://example.com/process/PopulateShiftTAs/DC" xmlns:as="http://www.example.org/assignment" xmlns:DB="http://example.com/process/PopulateShiftTAs/DB" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:SITAservice="http://example.com/process/PopulateShiftTAs/SITAservice" xmlns:dd="http://www.apache.org/ode/schemas/dd/2007/03" xmlns:updateAvi="urn:intalio.com:connectors:database:sita:updateaviservice" xmlns:diag="http://example.com/process/PopulateShiftTAs" xmlns:p="http://www.example.org/prop" xmlns:SITAservice1="http://www.intalio.com/gi/forms/TAmanagement.gi" xmlns:attachments="http://www.intalio.com/gi/forms/ShiftCreationLight.gi/attachments" xmlns:this="http://example.com/process/PopulateShiftTAs/Process" xmlns:ShiftCreationLight="http://www.intalio.com/gi/forms/ShiftCreationLight.gi" xmlns:updateMech="urn:intalio.com:connectors:database:sita:updatemechservice" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="this:Process" fileName="process/PopulateShiftTAs-Process.bpel">
   <dd:process-events generate="none"/>
   <dd:property name="PATH">process/PopulateShiftTAs</dd:property>
   <dd:property name="SVG">process/PopulateShiftTAs.svg</dd:property>
@@ -19,6 +19,15 @@
   <dd:provide partnerLink="processAndDCForPortTypeProcessPlkVar">
     <dd:service name="this:ProcessAndDCForPortTypeProcessPlkService" port="Process_for_DCPort"></dd:service>
   </dd:provide>
+  <dd:invoke partnerLink="processAndDBForUpdateCoordPortPlkVar">
+    <dd:service name="ns:updateCoordService" port="updateCoordPort"></dd:service>
+  </dd:invoke>
+  <dd:invoke partnerLink="processAndDBForUpdateMechPortPlkVar">
+    <dd:service name="updateMech:updateMechService" port="updateMechPort"></dd:service>
+  </dd:invoke>
+  <dd:invoke partnerLink="processAndDBForUpdateAviPortPlkVar">
+    <dd:service name="updateAvi:updateAviService" port="updateAviPort"></dd:service>
+  </dd:invoke>
 </dd:process><dd:process xmlns:User="http://example.com/process/UploadFMRinterface/User" xmlns:fmr="http://www.example.org/fmr" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:hil="http://www.example.org/hil" xmlns:dd="http://www.apache.org/ode/schemas/dd/2007/03" xmlns:diag="http://example.com/process/UploadFMRinterface" xmlns:Upload-UploadProcess="http://example.com/process/Upload/UploadProcess" xmlns:tns="http://www.example.org/UploadResponse" xmlns:processimplicitPartner="http://example.com/process/UploadFMRinterface/processimplicitPartner" xmlns:attachments="http://www.intalio.com/gi/forms/uploadFMR.gi/attachments" xmlns:uploadFMR="http://www.intalio.com/gi/forms/uploadFMR.gi" xmlns:this="http://example.com/process/UploadFMRinterface/process" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="this:process" fileName="process/UploadFMRinterface-process.bpel">
   <dd:process-events generate="none"/>
   <dd:property name="PATH">process/UploadFMRinterface</dd:property>
@@ -48,7 +57,7 @@
   <dd:invoke partnerLink="rMAnotifServiceAndNotifToAMIprocessForRMAnotifPortPlkVar">
     <dd:service name="tns:RMAnotifService" port="RMAnotifPort"></dd:service>
   </dd:invoke>
-</dd:process><dd:process xmlns:FlightMovementRecord07="__project:///schema/FlightMovementRecord06.xsd" xmlns:fmr="http://www.example.org/fmr" xmlns:TMP="http://example.com/process/Upload/TMP" xmlns:countExistingTAs="urn:intalio.com:connectors:database:sita:countexistingtasservice" xmlns:TokenService="http://example.com/process/Upload/TokenService" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:as="http://www.example.org/assignment" xmlns:DB="http://example.com/process/Upload/DB" xmlns:TMS="http://example.com/process/Upload/TMS" xmlns:TAdata="http://www.intalio.com/gi/forms/TAmanagement.gi" xmlns:b4p="http://www.intalio.com/bpms/workflow/ib4p_20051115" xmlns:hil="http://www.example.org/hil" xmlns:SITAservice="http://example.com/process/Upload/SITAservice" xmlns:AppearNetworks="http://example.com/process/Upload/AppearNetworks" xmlns:dd="http://www.apache.org/ode/schemas/dd/2007/03" xmlns:diag="http://example.com/process/Upload" xmlns:tns="http://www.example.org/UploadResponse" xmlns:TaskManagementSystem="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:p="http://www.example.org/prop" xmlns:SITAservice1="http://www.example.org/FMRupload" xmlns:this="http://example.com/process/Upload/UploadProcess" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:TokenService1="http://tempo.intalio.org/security/tokenService/" name="this:UploadProcess" fileName="process/Upload-UploadProcess.bpel">
+</dd:process><dd:process xmlns:FlightMovementRecord07="__project:///schema/FlightMovementRecord06.xsd" xmlns:ns="urn:intalio.com:connectors:database:sita:storefmrservice" xmlns:fmr="http://www.example.org/fmr" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:hil="http://www.example.org/hil" xmlns:b4p="http://www.intalio.com/bpms/workflow/ib4p_20051115" xmlns:TAdata="http://www.intalio.com/gi/forms/TAmanagement.gi" xmlns:SITAservice="http://example.com/process/Upload/SITAservice" xmlns:AppearNetworks="http://example.com/process/Upload/AppearNetworks" xmlns:dd="http://www.apache.org/ode/schemas/dd/2007/03" xmlns:diag="http://example.com/process/Upload" xmlns:SITAservice1="http://www.example.org/FMRupload" xmlns:TokenService1="http://tempo.intalio.org/security/tokenService/" xmlns:TMP="http://example.com/process/Upload/TMP" xmlns:countExistingTAs="urn:intalio.com:connectors:database:sita:countexistingtasservice" xmlns:TokenService="http://example.com/process/Upload/TokenService" xmlns:DB="http://example.com/process/Upload/DB" xmlns:as="http://www.example.org/assignment" xmlns:TMS="http://example.com/process/Upload/TMS" xmlns:tns="http://www.example.org/UploadResponse" xmlns:p="http://www.example.org/prop" xmlns:TaskManagementSystem="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:this="http://example.com/process/Upload/UploadProcess" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="this:UploadProcess" fileName="process/Upload-UploadProcess.bpel">
   <dd:process-events generate="none"/>
   <dd:property name="PATH">process/Upload</dd:property>
   <dd:property name="SVG">process/Upload.svg</dd:property>
@@ -69,6 +78,9 @@
   </dd:invoke>
   <dd:invoke partnerLink="dbAndUploadProcessForCountExistingTAsPortPlkVar">
     <dd:service name="countExistingTAs:countExistingTAsService" port="countExistingTAsPort"></dd:service>
+  </dd:invoke>
+  <dd:invoke partnerLink="dbAndUploadProcessForStoreFMRPortPlkVar">
+    <dd:service name="ns:storeFMRService" port="storeFMRPort"></dd:service>
   </dd:invoke>
 </dd:process><dd:process xmlns:Interface="http://example.com/process/completeTA/Interface" xmlns:dd="http://www.apache.org/ode/schemas/dd/2007/03" xmlns:diag="http://example.com/process/completeTA" xmlns:TMP="http://example.com/process/completeTA/TMP" xmlns:tns="http://www.example.org/UploadResponse" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:b4p="http://www.intalio.com/bpms/workflow/ib4p_20051115" xmlns:this="http://example.com/process/completeTA/process" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="this:process" fileName="process/completeTA-process.bpel">
   <dd:process-events generate="none"/>

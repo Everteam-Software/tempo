@@ -6,41 +6,303 @@
     </headers>
     <record jsxid="mi_4" jsxtext="Input (request)" type="I" jsxopen="1" src="../../../forms/ShiftCreationLight.gi/IntalioInternal/FormModel.xsd">
       <record jsxid="mi_5" jsxtext="FormModel" type="C" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='FormModel']" datatype="" tns="http://www.intalio.com/gi/forms/ShiftCreationLight.gi">
-        <record jsxid="mi_6" jsxtext="startDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='startDate']">
+        <record jsxid="mi_6" jsxtext="shiftInformation" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='shiftInformation']">
           <restrictions>
             <record jsxid="mi_7" name="nillable" value="true"/>
           </restrictions>
-          <mappings jsxid="mi_8">
-            <record jsxid="mi_9" name="Script" value="setValue(Intalio.Internal.Utilities.fixDateOutput(jsx3.GO('startDate', my.getNamespace())));"/>
-          </mappings>
-        </record>
-        <record jsxid="mi_10" jsxtext="startTime" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='startTime']">
-          <restrictions>
-            <record jsxid="mi_11" name="nillable" value="true"/>
-          </restrictions>
-          <mappings jsxid="mi_12">
-            <record jsxid="mi_13" name="DOM" value="startTime"/>
-          </mappings>
+          <record jsxid="mi_8" jsxtext="startDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='startDate']">
+            <restrictions>
+              <record jsxid="mi_9" name="nillable" value="true"/>
+            </restrictions>
+            <mappings jsxid="mi_10">
+              <record jsxid="mi_11" name="Script" value="setValue(Intalio.Internal.Utilities.fixDateOutput(jsx3.GO('startDate', my.getNamespace())));"/>
+            </mappings>
+          </record>
+          <record jsxid="mi_12" jsxtext="startTime" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='startTime']">
+            <restrictions>
+              <record jsxid="mi_13" name="nillable" value="true"/>
+            </restrictions>
+            <mappings jsxid="mi_14">
+              <record jsxid="mi_15" name="DOM" value="startTime"/>
+            </mappings>
+          </record>
+          <record jsxid="mi_16" jsxtext="coordinators" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='coordinators']">
+            <restrictions>
+              <record jsxid="mi_17" name="maxoccur" value="unbounded"/>
+              <record jsxid="mi_18" name="minoccur" value="0"/>
+            </restrictions>
+            <record jsxid="mi_19" jsxtext="coordName" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='coordName']">
+              <restrictions>
+                <record jsxid="mi_20" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_21">
+                <record jsxid="mi_22" name="CDF Attribute" value="jsxCoordName"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_23" jsxtext="coordID" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='coordID']">
+              <restrictions>
+                <record jsxid="mi_24" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_25">
+                <record jsxid="mi_26" name="CDF Attribute" value="jsxCoordID"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_27" jsxtext="coordCert" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='coordCert']">
+              <restrictions>
+                <record jsxid="mi_28" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_29">
+                <record jsxid="mi_30" name="CDF Attribute" value="jsxCoordCert"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_31" jsxtext="coordAvail" type="E" datatype="boolean" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='coordAvail']">
+              <restrictions>
+                <record jsxid="mi_32" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_33">
+                <record jsxid="mi_34" name="CDF Attribute" value="jsxCoordAvail"/>
+              </mappings>
+            </record>
+            <mappings jsxid="mi_35">
+              <record jsxid="mi_36" name="Script" value="if(typeof(this._i_36)=='undefined'){this._i_36=-1;my.getCDFDocument('coords','OUTBOUND');}"/>
+              <record jsxid="mi_37" name="CDF Record"/>
+            </mappings>
+          </record>
+          <record jsxid="mi_38" jsxtext="mechanics" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='mechanics']">
+            <restrictions>
+              <record jsxid="mi_39" name="maxoccur" value="unbounded"/>
+              <record jsxid="mi_40" name="minoccur" value="0"/>
+            </restrictions>
+            <record jsxid="mi_41" jsxtext="mechName" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='mechName']">
+              <restrictions>
+                <record jsxid="mi_42" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_43">
+                <record jsxid="mi_44" name="CDF Attribute" value="jsxMechName"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_45" jsxtext="mechID" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='mechID']">
+              <restrictions>
+                <record jsxid="mi_46" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_47">
+                <record jsxid="mi_48" name="CDF Attribute" value="jsxMechID"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_49" jsxtext="mechCert" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='mechCert']">
+              <restrictions>
+                <record jsxid="mi_50" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_51">
+                <record jsxid="mi_52" name="CDF Attribute" value="jsxMechCert"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_53" jsxtext="mechAvail" type="E" datatype="boolean" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='mechAvail']">
+              <restrictions>
+                <record jsxid="mi_54" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_55">
+                <record jsxid="mi_56" name="CDF Attribute" value="jsxMechAvail"/>
+              </mappings>
+            </record>
+            <mappings jsxid="mi_57">
+              <record jsxid="mi_58" name="Script" value="if(typeof(this._i_58)=='undefined'){this._i_58=-1;my.getCDFDocument('mechs','OUTBOUND');}"/>
+              <record jsxid="mi_59" name="CDF Record"/>
+            </mappings>
+          </record>
+          <record jsxid="mi_60" jsxtext="avionics" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='avionics']">
+            <restrictions>
+              <record jsxid="mi_61" name="maxoccur" value="unbounded"/>
+              <record jsxid="mi_62" name="minoccur" value="0"/>
+            </restrictions>
+            <record jsxid="mi_63" jsxtext="aviName" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='aviName']">
+              <restrictions>
+                <record jsxid="mi_64" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_65">
+                <record jsxid="mi_66" name="CDF Attribute" value="jsxAviName"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_67" jsxtext="aviID" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='aviID']">
+              <restrictions>
+                <record jsxid="mi_68" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_69">
+                <record jsxid="mi_70" name="CDF Attribute" value="jsxAviID"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_71" jsxtext="aviCert" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='aviCert']">
+              <restrictions>
+                <record jsxid="mi_72" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_73">
+                <record jsxid="mi_74" name="CDF Attribute" value="jsxAviCert"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_75" jsxtext="aviAvail" type="E" datatype="boolean" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='aviAvail']">
+              <restrictions>
+                <record jsxid="mi_76" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_77">
+                <record jsxid="mi_78" name="CDF Attribute" value="jsxAviAvail"/>
+              </mappings>
+            </record>
+            <mappings jsxid="mi_79">
+              <record jsxid="mi_80" name="Script" value="if(typeof(this._i_80)=='undefined'){this._i_80=-1;my.getCDFDocument('avis','OUTBOUND');}"/>
+              <record jsxid="mi_81" name="CDF Record"/>
+            </mappings>
+          </record>
         </record>
       </record>
     </record>
-    <record jsxid="mi_14" jsxtext="Output (response)" type="O" jsxopen="1" src="../../../forms/ShiftCreationLight.gi/IntalioInternal/FormModel.xsd">
-      <record jsxid="mi_15" jsxtext="FormModel" type="C" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='FormModel']" datatype="" tns="http://www.intalio.com/gi/forms/ShiftCreationLight.gi">
-        <record jsxid="mi_16" jsxtext="startDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='startDate']">
+    <record jsxid="mi_82" jsxtext="Output (response)" type="O" jsxopen="1" src="../../../forms/ShiftCreationLight.gi/IntalioInternal/FormModel.xsd">
+      <record jsxid="mi_83" jsxtext="FormModel" type="C" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='FormModel']" datatype="" tns="http://www.intalio.com/gi/forms/ShiftCreationLight.gi">
+        <record jsxid="mi_84" jsxtext="shiftInformation" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='shiftInformation']">
           <restrictions>
-            <record jsxid="mi_17" name="nillable" value="true"/>
+            <record jsxid="mi_85" name="nillable" value="true"/>
           </restrictions>
-          <mappings jsxid="mi_18">
-            <record jsxid="mi_19" name="Script" value="Intalio.Internal.Utilities.fixDateInput(jsx3.GO('startDate', my.getNamespace()), MESSAGENODE.getValue());"/>
-          </mappings>
-        </record>
-        <record jsxid="mi_20" jsxtext="startTime" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='startTime']">
-          <restrictions>
-            <record jsxid="mi_21" name="nillable" value="true"/>
-          </restrictions>
-          <mappings jsxid="mi_22">
-            <record jsxid="mi_23" name="DOM" value="startTime"/>
-          </mappings>
+          <record jsxid="mi_86" jsxtext="startDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='startDate']">
+            <restrictions>
+              <record jsxid="mi_87" name="nillable" value="true"/>
+            </restrictions>
+            <mappings jsxid="mi_88">
+              <record jsxid="mi_89" name="Script" value="Intalio.Internal.Utilities.fixDateInput(jsx3.GO('startDate', my.getNamespace()), MESSAGENODE.getValue());"/>
+            </mappings>
+          </record>
+          <record jsxid="mi_90" jsxtext="startTime" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='startTime']">
+            <restrictions>
+              <record jsxid="mi_91" name="nillable" value="true"/>
+            </restrictions>
+            <mappings jsxid="mi_92">
+              <record jsxid="mi_93" name="DOM" value="startTime"/>
+            </mappings>
+          </record>
+          <record jsxid="mi_94" jsxtext="coordinators" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='coordinators']">
+            <restrictions>
+              <record jsxid="mi_95" name="maxoccur" value="unbounded"/>
+              <record jsxid="mi_96" name="minoccur" value="0"/>
+            </restrictions>
+            <record jsxid="mi_97" jsxtext="coordName" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='coordName']">
+              <restrictions>
+                <record jsxid="mi_98" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_99">
+                <record jsxid="mi_100" name="CDF Attribute" value="jsxCoordName"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_101" jsxtext="coordID" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='coordID']">
+              <restrictions>
+                <record jsxid="mi_102" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_103">
+                <record jsxid="mi_104" name="CDF Attribute" value="jsxCoordID"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_105" jsxtext="coordCert" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='coordCert']">
+              <restrictions>
+                <record jsxid="mi_106" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_107">
+                <record jsxid="mi_108" name="CDF Attribute" value="jsxCoordCert"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_109" jsxtext="coordAvail" type="E" datatype="boolean" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='coordAvail']">
+              <restrictions>
+                <record jsxid="mi_110" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_111">
+                <record jsxid="mi_112" name="CDF Attribute" value="jsxCoordAvail"/>
+              </mappings>
+            </record>
+            <mappings jsxid="mi_113">
+              <record jsxid="mi_114" name="Script" value="if(typeof(this._i_114)=='undefined'){this._i_114=-1;my.getCDFDocument('coords','INBOUND');}"/>
+              <record jsxid="mi_115" name="CDF Record"/>
+            </mappings>
+          </record>
+          <record jsxid="mi_116" jsxtext="mechanics" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='mechanics']">
+            <restrictions>
+              <record jsxid="mi_117" name="maxoccur" value="unbounded"/>
+              <record jsxid="mi_118" name="minoccur" value="0"/>
+            </restrictions>
+            <record jsxid="mi_119" jsxtext="mechName" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='mechName']">
+              <restrictions>
+                <record jsxid="mi_120" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_121">
+                <record jsxid="mi_122" name="CDF Attribute" value="jsxMechName"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_123" jsxtext="mechID" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='mechID']">
+              <restrictions>
+                <record jsxid="mi_124" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_125">
+                <record jsxid="mi_126" name="CDF Attribute" value="jsxMechID"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_127" jsxtext="mechCert" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='mechCert']">
+              <restrictions>
+                <record jsxid="mi_128" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_129">
+                <record jsxid="mi_130" name="CDF Attribute" value="jsxMechCert"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_131" jsxtext="mechAvail" type="E" datatype="boolean" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='mechAvail']">
+              <restrictions>
+                <record jsxid="mi_132" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_133">
+                <record jsxid="mi_134" name="CDF Attribute" value="jsxMechAvail"/>
+              </mappings>
+            </record>
+            <mappings jsxid="mi_135">
+              <record jsxid="mi_136" name="Script" value="if(typeof(this._i_136)=='undefined'){this._i_136=-1;my.getCDFDocument('mechs','INBOUND');}"/>
+              <record jsxid="mi_137" name="CDF Record"/>
+            </mappings>
+          </record>
+          <record jsxid="mi_138" jsxtext="avionics" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='avionics']">
+            <restrictions>
+              <record jsxid="mi_139" name="maxoccur" value="unbounded"/>
+              <record jsxid="mi_140" name="minoccur" value="0"/>
+            </restrictions>
+            <record jsxid="mi_141" jsxtext="aviName" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='aviName']">
+              <restrictions>
+                <record jsxid="mi_142" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_143">
+                <record jsxid="mi_144" name="CDF Attribute" value="jsxAviName"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_145" jsxtext="aviID" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='aviID']">
+              <restrictions>
+                <record jsxid="mi_146" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_147">
+                <record jsxid="mi_148" name="CDF Attribute" value="jsxAviID"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_149" jsxtext="aviCert" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='aviCert']">
+              <restrictions>
+                <record jsxid="mi_150" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_151">
+                <record jsxid="mi_152" name="CDF Attribute" value="jsxAviCert"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_153" jsxtext="aviAvail" type="E" datatype="boolean" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/ShiftCreationLight.gi']//jsx1:element[@name='aviAvail']">
+              <restrictions>
+                <record jsxid="mi_154" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_155">
+                <record jsxid="mi_156" name="CDF Attribute" value="jsxAviAvail"/>
+              </mappings>
+            </record>
+            <mappings jsxid="mi_157">
+              <record jsxid="mi_158" name="Script" value="if(typeof(this._i_158)=='undefined'){this._i_158=-1;my.getCDFDocument('avis','INBOUND');}"/>
+              <record jsxid="mi_159" name="CDF Record"/>
+            </mappings>
+          </record>
         </record>
       </record>
     </record>
