@@ -46,7 +46,8 @@ BUILD_CONFIG = {
   
   :ode => :v1_3_snapshot,
   :tomcat => :v5,
-  :liferay => {:v => :v5_2_3, :base_folder => "liferay-portal-5.2.3", :server_folder => "tomcat-5.5.27"},
+  :liferay => {:v => :v5_2_5ee, :base_folder => "liferay-portal-5.2.5", :server_folder => "tomcat-5.5.27"},
+  #:liferay => {:v => :v5_2_3, :base_folder => "liferay-portal-5.2.3", :server_folder => "tomcat-5.5.27"},
   :alfresco => :v3_0,
   :tempo => {
     :core => "6.0.0.47",
