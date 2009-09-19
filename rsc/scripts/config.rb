@@ -1,5 +1,5 @@
 include BuildSupport
-BuildSupport::BUILD_DEBUG = false
+BuildSupport::BUILD_DEBUG = true
 
 BUILD_CONFIG = {
   :directory => "../tempo",
@@ -39,9 +39,14 @@ BUILD_CONFIG = {
   # :mode => [BuildMode::REMOTE, BuildMode::TOMCAT6,BuildMode::TOKEN_SERVICE, BuildMode::UIFW,BuildMode::OPENSSO,BuildMode::AGENT],
   #
   
+  # build with liferay and uifw
+  #
+  # :mode => [BuildMode::LIFERAY, BuildMode::UIFW],
+  #
+  
   :ode => :v1_3_snapshot,
   :tomcat => :v5,
-  :liferay => :v5_1_0,
+  :liferay => {:v => :v5_2_3, :base_folder => "liferay-portal-5.2.3", :server_folder => "tomcat-5.5.27"},
   :alfresco => :v3_0,
   :tempo => {
     :core => "6.0.0.47",

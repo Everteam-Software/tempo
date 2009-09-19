@@ -228,7 +228,7 @@ module BuildSupport
   def rename_folder org_name, new_name
     parent = File.dirname(org_name)
     begin 
-      File.rename(org_name,new_name) 
+      FileUtils.mv(org_name,new_name) 
     rescue 
       print "An error occurred: ",$!, "\n"
     end
@@ -440,7 +440,8 @@ APACHE_MIRROR = find_apache_mirror
 BUILD_URI = {
 	:liferay => {
 		:v5_1_0 => "http://downloads.sourceforge.net/sourceforge/lportal/liferay-portal-tomcat-5.5-5.1.0.zip",
-		:v5_2_0 => "http://downloads.sourceforge.net/sourceforge/lportal/liferay-portal-tomcat-5.5-5.2.0.zip",
+		:v5_2_3 => "http://downloads.sourceforge.net/sourceforge/lportal/liferay-portal-tomcat-5.5-5.2.3.zip",
+		:v5_2_5ee => "http://files.liferay.com/public/3mDkoitQ/ee/portal/5.2.5/liferay-portal-tomcat-5.5-5.2.5.zip",
 	},
 	:tomcat => {
 		:v5 => APACHE_MIRROR + "tomcat/tomcat-5/v5.5.27/bin/apache-tomcat-5.5.27.zip",

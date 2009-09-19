@@ -23,6 +23,16 @@ def install_tomcat build_folder="tempo-tomcat-#{time_now}"
   end
 end
 
+def install_liferay build_folder="tempo-liferay-#{time_now}"
+  download_unzip(BUILD_URI[:liferay][BUILD_CONFIG[:liferay][:v]], true)
+  @@server_folder = rename_folder(BUILD_CONFIG[:liferay][:base_folder], build_folder)
+  @@server_folder = "#{@@server_folder}/#{BUILD_CONFIG[:liferay][:server_folder]}"
+  @@webapp_folder = "#{@@server_folder}/webapps"
+  @@wi = WarInstaller.new @@webapp_folder, true, true
+  @@lib_folder = "#{@@server_folder}/common/lib" # tomcat5
+  @@log_folder = check_folder("#{@@server_folder}/var/logs") # tomcat5
+end
+
 def time_now
   Time.now.strftime('%Y.%m.%d')  
 end
