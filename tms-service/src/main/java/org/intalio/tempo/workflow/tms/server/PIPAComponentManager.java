@@ -40,14 +40,15 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
     private static final Logger LOG = LoggerFactory.getLogger(PIPAComponentManager.class);
 
     ITMSServer _tms;
-    
+
     private HashMap<String, HashSet<AssemblyId>> _versions = new HashMap<String, HashSet<AssemblyId>>();
 
     public PIPAComponentManager(ITMSServer tms) {
         _tms = tms;
     }
 
-    // ------------------ ComponentManager implementation ------------------------
+    // ------------------ ComponentManager implementation
+    // ------------------------
 
     public String getComponentManagerName() {
         return "pipa";
@@ -65,8 +66,10 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
         List<DeploymentMessage> msgs = new ArrayList<DeploymentMessage>();
 
         /*
-         * ALEX: Disabled until we get token propagation from deploy-impl if (!TokenContext.hasToken()) { msgs.add(new
-         * DeploymentMessage(Level.ERROR, "No security context token")); return msgs; }
+         * ALEX: Disabled until we get token propagation from deploy-impl if
+         * (!TokenContext.hasToken()) { msgs.add(new
+         * DeploymentMessage(Level.ERROR, "No security context token")); return
+         * msgs; }
          */
 
         String token = TokenContext.getToken();
@@ -99,16 +102,16 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
         String assembly = name.getAssemblyId().getAssemblyName();
         HashSet<AssemblyId> set = _versions.get(assembly);
         if (set == null || set.size() <= 1) {
-            for (String url: deployedResources) {
+            for (String url : deployedResources) {
                 try {
                     _tms.deletePipa(url, token);
                 } catch (UnavailableTaskException e) {
-                    LOG.warn("Undeploy - PIPA not found: "+url);
+                    LOG.warn("Undeploy - PIPA not found: " + url);
                 } catch (AuthException e) {
-                    LOG.warn("Undeploy - AuthException: "+url, e);
+                    LOG.warn("Undeploy - AuthException: " + url, e);
                     break; // fail-fast
                 } catch (TMSException e) {
-                    LOG.warn("Undeploy - TMSException: "+url, e);
+                    LOG.warn("Undeploy - TMSException: " + url, e);
                     break; // fail-fast
                 }
             }
@@ -123,19 +126,20 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
         // nothing
     }
 
-	public void activate(ComponentId name, File path, List<String> deployedResources) {
-		// TODO Implement this
-	}
+    public void activate(ComponentId name, File path, List<String> deployedResources) {
+        // TODO Implement this
+    }
 
-	public void retire(ComponentId name, File path, List<String> deployedResources) {
-		// TODO Implement this
-	}
+    public void retire(ComponentId name, File path, List<String> deployedResources) {
+        // TODO Implement this
+    }
 
     public void deployed(ComponentId name, File path, List<String> deployedResources, boolean active) {
         // increment number of versions for the given assembly
         String assembly = name.getAssemblyId().getAssemblyName();
         HashSet<AssemblyId> set = _versions.get(assembly);
-        if (set == null) set = new HashSet<AssemblyId>();
+        if (set == null)
+            set = new HashSet<AssemblyId>();
         set.add(name.getAssemblyId());
         _versions.put(assembly, set);
     }
@@ -144,18 +148,24 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
         // decrement number of versions for the given assembly
         String assembly = name.getAssemblyId().getAssemblyName();
         HashSet<AssemblyId> set = _versions.get(assembly);
-        if (set != null) set.remove(name.getAssemblyId());
+        if (set != null)
+            set.remove(name.getAssemblyId());
     }
 
-	public void activated(ComponentId name, File path, List<String> deployedResources) {
-		// TODO Implement this
-	}
+    public void activated(ComponentId name, File path, List<String> deployedResources) {
+        // TODO Implement this
+    }
 
-	public void retired(ComponentId name, File path, List<String> deployedResources) {
-		// TODO Implement this
-	}
+    public void retired(ComponentId name, File path, List<String> deployedResources) {
+        // TODO Implement this
+    }
 
-	// ------------------ Common deployment methods ------------------------
+    private String getFormUrl(PIPATask task) {
+        // return task.getFormURLAsString();
+        return task.getProcessEndpoint().toString();
+    }
+
+    // ------------------ Common deployment methods ------------------------
 
     public DeploymentMessage checkPipa(String token, InputStream input, String name) {
         DeploymentMessage msg = null;
@@ -163,9 +173,11 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
             PIPATask task = loadPIPADescriptor(input);
             if (task.isValid()) {
                 /*
-                 * ALEX: Disabled until we get token propagation from deploy-impl PIPATask existing =
-                 * wds.getPipaTask(task.getFormURLAsString(), token); if (existing != null) { msg = new
-                 * DeploymentMessage(Level.ERROR, "PIPA task already exists: "+task.getFormURLAsString());
+                 * ALEX: Disabled until we get token propagation from
+                 * deploy-impl PIPATask existing =
+                 * wds.getPipaTask(task.getFormURLAsString(), token); if
+                 * (existing != null) { msg = new DeploymentMessage(Level.ERROR,
+                 * "PIPA task already exists: "+task.getFormURLAsString());
                  * msg.setResource(name); }
                  */
             } else {
@@ -184,11 +196,11 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
         DeploymentMessage msg = null;
         try {
             PIPATask task = loadPIPADescriptor(input);
-            urls.add(task.getFormURLAsString());
+            urls.add(getFormUrl(task));
             if (task.isValid()) {
                 LOG.debug("Store PIPA {}", name);
                 try {
-                    _tms.deletePipa(task.getFormURLAsString(), token);    
+                    _tms.deletePipa(getFormUrl(task), token);
                 } catch (Exception e) {
                     // don't bother with that here
                 }
@@ -212,13 +224,13 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
         return task;
     }
 
-
     // ------------------ Private stuff ------------------------
 
     private void checkDir(File base, File dir, List<DeploymentMessage> msgs, String token) {
         File[] files = dir.listFiles();
-        if( files == null ) return;
-        
+        if (files == null)
+            return;
+
         for (File f : files) {
             LOG.debug("Check: {}", f);
             String itemURL = relativePath(base, f);

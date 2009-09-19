@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.intalio.tempo.security.Property;
 import org.intalio.tempo.workflow.tas.core.AttachmentMetadata;
