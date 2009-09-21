@@ -52,4 +52,11 @@
       <property name="password" value="Administrator"/>
       <property name="nuxeoBaseUrl" value="http://localhost:9080/"/>
     </bean> -->
+    
+    <!--
+    <bean id="tas.storageStrategy" class="org.intalio.tempo.workflow.tas.sling.FileSystemStorageStrategy">
+      <property name="path" value="/tmp"/>
+      <property name="publicPath" value="http://localhost/~home"/>
+    </bean>
+    -->
 </beans>
