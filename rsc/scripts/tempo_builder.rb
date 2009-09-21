@@ -53,9 +53,23 @@ class TempoBuilder
       set_tomcat_ports ({"8005"=>"7005","8080"=>"7080", "8443"=>"7443", "8009"=> "7009"})
     end
 
-    # TODO: finish this
+    # if need to deploy ui-fw as portlet, two more things need to do
+    # 1. copy [util-bridges.jar util-java.jar util-taglib.jar] from $liferay/webapps/ROOT/WEB-INF/lib to $liferay/webapps/ui-fw/WEB-INF/lib
+    # 2. use the web-cas.xml as web.xml 
+    # NOTE: for liferay 5.2.5 ee, just change the download url should work
     activate_step [BuildMode::LIFERAY], "Installing Liferay" do
-      @@server_folder = download_unzip(BUILD_URI[:liferay][BUILD_CONFIG[:liferay]])
+      install_liferay
+      setup_axis_and_ode
+      install_tempo_services
+      install_tempo_webapps
+      install_tmp
+      install_absence_request
+      copy_missing_lib
+      configure_tomcat
+      generate_mysql_file
+      setup_java_options
+      chmod_sh_files
+      copy_tempo_config_files      
     end
     
     activate_step [BuildMode::TOMCAT], "Downloading tomcat" do

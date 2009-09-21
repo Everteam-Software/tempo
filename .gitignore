@@ -4,3 +4,5 @@ derby.log
 .classpath
 .project
 .metadata
+.DS_Store
+**/.DS_Store
