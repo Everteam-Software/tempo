@@ -30,12 +30,10 @@ import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axiom.om.impl.llom.OMElementImpl;
 import org.apache.axiom.om.impl.llom.util.AXIOMUtil;
-import org.apache.axiom.soap.impl.llom.soap11.SOAP11FaultImpl;
 import org.apache.axis2.AxisFault;
 import org.apache.xmlbeans.GDate;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
-import org.apache.xmlbeans.XmlOptions;
 import org.apache.xmlbeans.impl.values.XmlDateTimeImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -165,7 +163,6 @@ public class SITAservice {
 
 				s.close();
 
-				// TODO get only avaialble mechs
 				// get shift mechanics
 				ResultSet m = statement
 						.executeQuery("SELECT name, identifier, certified FROM rma_mechanic WHERE shift='"
@@ -183,7 +180,6 @@ public class SITAservice {
 
 				m.close();
 
-				// TODO get only available avionics
 				// get shift avionics
 				ResultSet a = statement
 						.executeQuery("SELECT name, identifier, certified FROM rma_avionic WHERE shift='"
@@ -200,7 +196,6 @@ public class SITAservice {
 
 				a.close();
 
-				// TODO get only available coordinators
 				// get shift coordinators
 				ResultSet c = statement
 						.executeQuery("SELECT name, identifier, certified FROM rma_coordinator WHERE shift='"
@@ -1309,103 +1304,106 @@ public class SITAservice {
 					String dateTime;
 
 					if (AD.getFirstChildWithName(new QName(namespace,
-							"ActualArrivalDate")) == null) {
-						dateTime = AD.getFirstChildWithName(
-								new QName(namespace, "ScheduledArrivalDate"))
-								.getText()
-								+ " "
-								+ AD.getFirstChildWithName(
-										new QName(namespace, "STA")).getText();
-					} else {
+							"ActualArrivalDate")) != null) {
 						dateTime = AD.getFirstChildWithName(
 								new QName(namespace, "ActualArrivalDate"))
 								.getText()
 								+ " "
 								+ AD.getFirstChildWithName(
 										new QName(namespace, "ATA")).getText();
+					} else if (AD.getFirstChildWithName(new QName(namespace,
+							"EstimatedArrivalDate")) != null) {
+						dateTime = AD.getFirstChildWithName(
+								new QName(namespace, "EstimatedArrivalDate"))
+								.getText()
+								+ " "
+								+ AD.getFirstChildWithName(
+										new QName(namespace, "ETA")).getText();
+					} else {
+						dateTime = AD.getFirstChildWithName(
+								new QName(namespace, "ScheduledArrivalDate"))
+								.getText()
+								+ " "
+								+ AD.getFirstChildWithName(
+										new QName(namespace, "STA")).getText();
 					}
 
 					Calendar TAstartDateTime = convertToCalendar(dateTime);
 
 					if (AD.getFirstChildWithName(new QName(namespace,
-							"ActualDepartureDate")) == null) {
-
-						if (AD.getFirstChildWithName(new QName(namespace,
-								"ScheduledDepartureDate")) != null) {
-							dateTime = AD.getFirstChildWithName(
-									new QName(namespace,
-											"ScheduledDepartureDate"))
-									.getText()
-									+ " "
-									+ AD.getFirstChildWithName(
-											new QName(namespace, "STD"))
-											.getText();
-						} else {
-							// if we have no STD, take a far-away date in the
-							// future
-							dateTime = "2100-12-12 23:00:00";
-						}
-					} else {
+							"ActualDepartureDate")) != null) {
 						dateTime = AD.getFirstChildWithName(
 								new QName(namespace, "ActualDepartureDate"))
 								.getText()
 								+ " "
 								+ AD.getFirstChildWithName(
 										new QName(namespace, "ATD")).getText();
+					} else if (AD.getFirstChildWithName(new QName(namespace,
+							"EstimatedDepartureDate")) != null) {
+						dateTime = AD.getFirstChildWithName(
+								new QName(namespace, "EstimatedDepartureDate"))
+								.getText()
+								+ " "
+								+ AD.getFirstChildWithName(
+										new QName(namespace, "ETD")).getText();
+					} else if (AD.getFirstChildWithName(new QName(namespace,
+							"ScheduledDepartureDate")) != null) {
+						dateTime = AD.getFirstChildWithName(
+								new QName(namespace, "ScheduledDepartureDate"))
+								.getText()
+								+ " "
+								+ AD.getFirstChildWithName(
+										new QName(namespace, "STD")).getText();
+					} else {
+						// if we have no STD, take a far-away date in the
+						// future
+						dateTime = "2100-12-12 23:00:00";
 					}
 
 					Calendar TAendDateTime = convertToCalendar(dateTime);
 
-					// Now that we have the dateTime to consider, we need to
-					// check
-					// that
-					// it corresponds to the shift we're working on, and that
-					// the
-					// assignment hasn't been done already
+					// NOTE: the commented "if" statement below takes into
+					// account whether a TA has been assigned already during a
+					// given shift. In other words, IF there are new TAs in the
+					// middle of a shift and two or more pre-populations are
+					// required, then we only pre-populate the new ones. But
+					// this doesn't comply with the pre-population algorithm
 
-					if (((TAstartDateTime.after(start) && TAstartDateTime
+					// if (((TAstartDateTime.after(start) && TAstartDateTime
+					// .before(end))
+					// || (TAendDateTime.after(start) && TAendDateTime
+					// .before(end)) || (TAstartDateTime
+					// .before(start) && TAendDateTime.after(end)))
+					// && !builder.getDocumentElement()
+					// .getFirstChildWithName(
+					// new QName(namespace, "Inspection"))
+					// .getFirstChildWithName(
+					// new QName(namespace, "assigned"))
+					// .getText().equals(currentShift)) {
+
+					// Now that we have the dateTime to consider, we need to
+					// check that it corresponds to the shift we're working on
+
+					if ((TAstartDateTime.after(start) && TAstartDateTime
 							.before(end))
 							|| (TAendDateTime.after(start) && TAendDateTime
-									.before(end)) || (TAstartDateTime
-							.before(start) && TAendDateTime.after(end)))
-							&& !builder.getDocumentElement()
-									.getFirstChildWithName(
-											new QName(namespace, "Inspection"))
-									.getFirstChildWithName(
-											new QName(namespace, "assigned"))
-									.getText().equals(currentShift)) {
+									.before(end))
+							|| (TAstartDateTime.before(start) && TAendDateTime
+									.after(end))) {
 
 						// scratch assigned mechanics/avionics/coordinators
 						OMElement ins = builder.getDocumentElement()
 								.getFirstChildWithName(
 										new QName(namespace, "Inspection"));
 
-						Iterator mechIter = ins.getChildrenWithName(new QName(
-								namespace, "assignedMechanics"));
+						clear(ins, "assignedMechanics");
 
-						while (mechIter.hasNext()) {
-							mechIter.next();
-							mechIter.remove();
-						}
+						clear(ins, "assignedAvionics");
 
-						Iterator aviIter = ins.getChildrenWithName(new QName(
-								namespace, "assignedAvionics"));
+						clear(ins, "assignedCoord");
 
-						while (aviIter.hasNext()) {
-							aviIter.next();
-							aviIter.remove();
-						}
-
-						Iterator coordIter = ins.getChildrenWithName(new QName(
-								namespace, "assignedCoord"));
-
-						while (coordIter.hasNext()) {
-							coordIter.next();
-							coordIter.remove();
-						}
-
-						ShiftTAs.add(new TAobject(myElement, TAendDateTime, TAs
-								.getInt("id")));
+						ShiftTAs.add(new TAobject(builder.getDocumentElement(),
+								TAendDateTime, TAs.getInt("id")));
 					}
 				}
 			} catch (Exception e) {
@@ -1418,6 +1416,25 @@ public class SITAservice {
 		}
 
 		return ShiftTAs;
+	}
+
+	private static void clear(OMElement ins, String name) {
+
+		// for security, let's do it with both potential namespaces. Anyway, the
+		// useless one will be empty so there's not much more resources involved
+		Iterator iter = ins.getChildrenWithName((new QName("", name)));
+		Iterator iter2 = ins.getChildrenWithName((new QName(TAMANAGEMENT_URI,
+				name)));
+
+		while (iter.hasNext()) {
+			iter.next();
+			iter.remove();
+		}
+
+		while (iter2.hasNext()) {
+			iter2.next();
+			iter2.remove();
+		}
 	}
 
 	/**
