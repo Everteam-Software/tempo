@@ -1362,34 +1362,38 @@ public class SITAservice {
 
 					Calendar TAendDateTime = convertToCalendar(dateTime);
 
-					// NOTE: the commented "if" statement below takes into
+					// NOTE: the "if" statement below takes into
 					// account whether a TA has been assigned already during a
-					// given shift. In other words, IF there are new TAs in the
+					// given shift, as opposed to one right after who doesn't.
+					// Only one of those two statements should be active,
+					// depending on the behavior that we want to follow. In
+					// other words, IF there are new TAs in the
 					// middle of a shift and two or more pre-populations are
 					// required, then we only pre-populate the new ones. But
 					// this doesn't comply with the pre-population algorithm
 
-					// if (((TAstartDateTime.after(start) && TAstartDateTime
-					// .before(end))
-					// || (TAendDateTime.after(start) && TAendDateTime
-					// .before(end)) || (TAstartDateTime
-					// .before(start) && TAendDateTime.after(end)))
-					// && !builder.getDocumentElement()
-					// .getFirstChildWithName(
-					// new QName(namespace, "Inspection"))
-					// .getFirstChildWithName(
-					// new QName(namespace, "assigned"))
-					// .getText().equals(currentShift)) {
-
-					// Now that we have the dateTime to consider, we need to
-					// check that it corresponds to the shift we're working on
-
-					if ((TAstartDateTime.after(start) && TAstartDateTime
+					if (((TAstartDateTime.after(start) && TAstartDateTime
 							.before(end))
 							|| (TAendDateTime.after(start) && TAendDateTime
-									.before(end))
-							|| (TAstartDateTime.before(start) && TAendDateTime
-									.after(end))) {
+									.before(end)) || (TAstartDateTime
+							.before(start) && TAendDateTime.after(end)))
+							&& !builder.getDocumentElement()
+									.getFirstChildWithName(
+											new QName(namespace, "Inspection"))
+									.getFirstChildWithName(
+											new QName(namespace, "assigned"))
+									.getText().equals(currentShift)) {
+
+						// Now that we have the dateTime to consider, we need to
+						// check that it corresponds to the shift we're working
+						// on
+
+						// if ((TAstartDateTime.after(start) && TAstartDateTime
+						// .before(end))
+						// || (TAendDateTime.after(start) && TAendDateTime
+						// .before(end))
+						// || (TAstartDateTime.before(start) && TAendDateTime
+						// .after(end))) {
 
 						// scratch assigned mechanics/avionics/coordinators
 						OMElement ins = builder.getDocumentElement()
