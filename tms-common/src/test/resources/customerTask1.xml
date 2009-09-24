@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		Copyright (c) 2005-2006 Intalio inc. All rights reserved. This program
+		and the accompanying materials are made available under the terms of
+		the Eclipse Public License v1.0 which accompanies this distribution,
+		and is available at http://www.eclipse.org/legal/epl-v10.html
+
+		Contributors: Intalio inc. - initial API and implementation
+	-->
+	<!-- bad task: no namespace -->
+<tms:task
+	xmlns:tms="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+	<tms:taskId>fd1915e904d85dd9:792ad401:123e2e6c0c1:1c7810.173.160.15324488818</tms:taskId>
+	<tms:taskState>READY</tms:taskState>
+	<tms:taskType>ACTIVITY</tms:taskType>
+	<tms:description>Americas 0839 Infra - CFO - Group Tax 9 # 5206 Special
+		Instructions / GEP Approved Exceptions</tms:description>
+	<tms:processId xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:nil="true" />
+	<tms:creationDate>2009-09-23T02:59:33.124+08:00</tms:creationDate>
+	<tms:roleOwner>intalio\costexcp</tms:roleOwner>
+	<tms:formUrl>oxf://Cost_Allocation/xform/SpecialInstructions.xform
+	</tms:formUrl>
+	<tms:userProcessCompleteSOAPAction>http://example.com/xform%2FSpecialInstructions%2Fxform/Process/notifyTaskCompletion
+	</tms:userProcessCompleteSOAPAction>
+	<tms:isChainedBefore>false</tms:isChainedBefore>
+	<tms:attachments />
+</tms:task>

@@ -66,7 +66,8 @@ public class TaskUnmarshallerTest extends TestCase {
         OMElement rootElement = TestUtils.loadElementFromResource(resourceName);
         try {
             unmarshaller.unmarshalTaskFromMetadata(rootElement);
-            // Assert.fail("InvalidInputFormatException expected:" + resourceName);
+            // Assert.fail("InvalidInputFormatException expected:" +
+            // resourceName);
         } catch (InvalidInputFormatException e) {
             _logger.debug("Expected exception OK.\nMessage: " + e.getMessage());
         }
@@ -76,6 +77,12 @@ public class TaskUnmarshallerTest extends TestCase {
         for (int i = 1; i <= 14; ++i) {
             this.testBadTaskMetadata("/badTask" + i + ".xml");
         }
+    }
+
+    public void testCustomerTask1() throws Exception {
+        OMElement rootElement = TestUtils.loadElementFromResource("/customerTask1.xml");
+        TaskUnmarshaller unmarshaller = new TaskUnmarshaller();
+        Task task = unmarshaller.unmarshalTaskFromMetadata(rootElement);
     }
 
     private void testFullTask(String resourceName) throws Exception {
@@ -114,7 +121,8 @@ public class TaskUnmarshallerTest extends TestCase {
 
         try {
             unmarshaller.unmarshalFullTask(rootElement);
-            //Assert.fail("InvalidInputFormatException expected (" + resourceName + ")");
+            // Assert.fail("InvalidInputFormatException expected (" +
+            // resourceName + ")");
         } catch (InvalidInputFormatException e) {
             _logger.debug("Expected exception OK.\nMessage: " + e.getMessage());
         }
@@ -137,9 +145,9 @@ public class TaskUnmarshallerTest extends TestCase {
         checkTaskDates(new Object[] { "/taskWithDates1.xml", 2008, 2008 });
         checkTaskDates(new Object[] { "/taskWithDates2.xml", 2008, 2008 });
         checkTaskDates(new Object[] { "/taskWithDates3.xml", Calendar.getInstance().get(Calendar.YEAR), -1 }); // using
-                                                                                                               // -1
-                                                                                                               // as
-                                                                                                               // null
+        // -1
+        // as
+        // null
     }
 
     private void checkTaskDates(Object[] date1) throws Exception {
