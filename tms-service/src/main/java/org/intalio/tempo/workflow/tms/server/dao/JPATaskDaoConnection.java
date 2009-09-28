@@ -74,7 +74,7 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
         entityManager.persist(task);
     }
 
-    public PIPATask fetchPipa(String formUrl) {
+    public PIPATask fetchPipa(String formUrl) throws UnavailableTaskException {
         PIPATask pipa = _fetcher.fetchPipaFromUrl(formUrl);
         return pipa;
     }

@@ -63,8 +63,7 @@ import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
 public class TaskUnmarshaller extends XmlBeanUnmarshaller {
 
     private static final Logger _logger = LoggerFactory.getLogger(TaskUnmarshaller.class);
-    private static final String[] actions = new String[] {"claim", "revoke", "save", "complete", "dismiss"};
-    
+    private static final String[] actions = new String[] { "claim", "revoke", "save", "complete", "dismiss" };
 
     public TaskUnmarshaller() {
         super(TaskXMLConstants.TASK_NAMESPACE, TaskXMLConstants.TASK_NAMESPACE_PREFIX);
@@ -80,8 +79,7 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
             XmlCursor xmlCursor = xmlObject.newCursor();
             xmlCursor.toStartDoc();
             xmlCursor.toNextToken();
-            TaskMetadata taskMetadata = com.intalio.bpms.workflow.taskManagementServices20051109.Task.Factory
-                    .newInstance().addNewMetadata();
+            TaskMetadata taskMetadata = com.intalio.bpms.workflow.taskManagementServices20051109.Task.Factory.newInstance().addNewMetadata();
             taskMetadata.set(xmlCursor.getObject());
             return unmarshalTaskFromMetadata(taskMetadata);
         } catch (InvalidInputFormatException e) {
@@ -154,18 +152,26 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
             }
         }
         if (IProcessBoundTask.class.isAssignableFrom(taskClass)) {
-            if(taskMetadata.xgetProcessId()==null){
-            	/* The following line will be commented to support versions of designer that do not generate the processId*/
-            	
-            	//throw new InvalidInputFormatException("ProcessID not specified");
+            if (taskMetadata.xgetProcessId() == null) {
+                /*
+                 * The following line will be commented to support versions of
+                 * designer that do not generate the processId
+                 */
+
+                // throw new
+                // InvalidInputFormatException("ProcessID not specified");
             }
         } else {
             forbidParameter(processID, "processID");
         }
         if (IInstanceBoundTask.class.isAssignableFrom(taskClass)) {
-            if(taskMetadata.xgetInstanceId()==null){
-            	/* The following line will be commented to support versions of designer that do not generate the InstanceId*/
-               // throw new InvalidInputFormatException("instanceID not specified");
+            if (taskMetadata.xgetInstanceId() == null) {
+                /*
+                 * The following line will be commented to support versions of
+                 * designer that do not generate the InstanceId
+                 */
+                // throw new
+                // InvalidInputFormatException("instanceID not specified");
             }
         } else {
             forbidParameter(instanceID, "instanceID");
@@ -189,9 +195,8 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
         resultTask.getRoleOwners().addAll(roleOwners);
 
         resultTask.setDescription(description == null ? "" : description);
-        
-        
-        try{
+
+        try {
             Calendar creationDate = taskMetadata.getCreationDate();
             if (creationDate != null)
                 resultTask.setCreationDate(creationDate.getTime());
@@ -200,12 +205,12 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
         } catch (XmlValueOutOfRangeException e) {
             resultTask.setCreationDate(new Date());
         }
-		 
-		for(String action : actions ) {
-           ACL acl = readACL(taskMetadata, action);    
-           authorize(resultTask, action, acl);
-		}
-		
+
+        for (String action : actions) {
+            ACL acl = readACL(taskMetadata, action);
+            authorize(resultTask, action, acl);
+        }
+
         if (ITaskWithState.class.isAssignableFrom(taskClass)) {
             ITaskWithState taskWithState = (ITaskWithState) resultTask;
             taskWithState.setState(taskState);
@@ -232,51 +237,61 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
                 task.setProcessEndpoint(URI.create(uri2));
         }
         if (IProcessBoundTask.class.isAssignableFrom(taskClass)) {
-            if (taskMetadata.xgetProcessId()!=null && processID != null)
+            if (taskMetadata.xgetProcessId() != null && processID != null)
                 ((IProcessBoundTask) resultTask).setProcessID(processID);
         }
         if (IInstanceBoundTask.class.isAssignableFrom(taskClass)) {
-        	 if(taskMetadata.xgetInstanceId()!=null &&taskMetadata.getInstanceId()!=null){
-        		 ((IInstanceBoundTask) resultTask).setInstanceId(instanceID);
-              }
+            if (taskMetadata.xgetInstanceId() != null && taskMetadata.getInstanceId() != null) {
+                ((IInstanceBoundTask) resultTask).setInstanceId(instanceID);
+            }
         }
-       
 
         if (ICompleteReportingTask.class.isAssignableFrom(taskClass)) {
             ((ICompleteReportingTask) resultTask).setCompleteSOAPAction(completeSOAPAction);
         }
         if (ITaskWithAttachments.class.isAssignableFrom(taskClass)) {
             ITaskWithAttachments taskWithAttachments = (ITaskWithAttachments) resultTask;
-            
+
             if (attachmentsElement != null) {
                 for (int i = 0; i < attachmentsElement.sizeOfAttachmentArray(); i++) {
                     com.intalio.bpms.workflow.taskManagementServices20051109.Attachment attachmentElement = attachmentsElement.getAttachmentArray(i);
-                    
+
                     if (attachmentElement != null
 
-                    	    //The following line has been added to handle the case where an attachment element is present
-                    		// but do not contain any data: no title, nodescription , ect...
-                    		//The reason why is this is added is to handle the initial initialization on Designer
-                    		//In which designer generates by default an attachment element as a part of the initialization of  the message
-                    		//even if no attachment is used
-                    		
-                    		//TODO: When Designer and Server will support "lazy initialization", this line can be omitted
-                    		
-                    		&& attachmentElement.newCursor().getTextValue().trim().length()!=0		
-                    ) {
-                        com.intalio.bpms.workflow.taskManagementServices20051109.AttachmentMetadata attachmentMetadata = attachmentElement.getAttachmentMetadata();
+                    // The following line has been added to handle the case
+                                    // where an attachment element is present
+                                    // but do not contain any data: no title,
+                                    // nodescription , ect...
+                                    // The reason why is this is added is to
+                                    // handle the initial initialization on
+                                    // Designer
+                                    // In which designer generates by default an
+                                    // attachment element as a part of the
+                                    // initialization of the message
+                                    // even if no attachment is used
+
+                                    // TODO: When Designer and Server will
+                                    // support "lazy initialization", this line
+                                    // can be omitted
+
+                                    && attachmentElement.newCursor().getTextValue().trim().length() != 0) {
+                        com.intalio.bpms.workflow.taskManagementServices20051109.AttachmentMetadata attachmentMetadata = attachmentElement
+                                        .getAttachmentMetadata();
                         AttachmentMetadata metadata = new AttachmentMetadata();
                         String mimeType = attachmentMetadata.getMimeType();
                         if (mimeType != null) {
                             metadata.setMimeType(mimeType);
                         }
                         String fileName = attachmentMetadata.getFileName();
-                        if (fileName != null) metadata.setFileName(fileName);
+                        if (fileName != null)
+                            metadata.setFileName(fileName);
                         String title = attachmentMetadata.getTitle();
-                        if (title != null) metadata.setTitle(title);
+                        if (title != null)
+                            metadata.setTitle(title);
                         String description2 = attachmentMetadata.getDescription();
-                        if (description2 != null) metadata.setDescription(description2);
-                        
+                        if (description2 != null)
+                            metadata.setDescription(description2);
+
                         try {
                             Calendar cal = attachmentMetadata.getCreationDate();
                             if ((cal != null)) {
@@ -297,7 +312,7 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
 
                         Attachment attachment = new Attachment(metadata, payloadURL);
                         taskWithAttachments.addAttachment(attachment);
-                    } 
+                    }
                 }
             }
         }
@@ -306,48 +321,44 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
             if (isChainedBeforeStr != null) {
                 if ("1".equals(isChainedBeforeStr) || "true".equals(isChainedBeforeStr)) {
                     if (previousTaskID == null) {
-                        throw new InvalidInputFormatException("tms:previousTaskId is required "
-                                + "if tms:isChainedBefore is true");
+                        throw new InvalidInputFormatException("tms:previousTaskId is required " + "if tms:isChainedBefore is true");
                     }
                     chainableTask.setPreviousTaskID(previousTaskID);
                     chainableTask.setChainedBefore(true);
                 } else {
                     if ((previousTaskID != null) && (!"".equals(previousTaskID))) {
-                        throw new InvalidInputFormatException("tms:previousTaskId must be empty or not present "
-                                + "if tms:isChainedBefore is false");
+                        throw new InvalidInputFormatException("tms:previousTaskId must be empty or not present " + "if tms:isChainedBefore is false");
                     }
                 }
             } else {
                 if (previousTaskID != null) {
-                    throw new InvalidInputFormatException("tms:isChainedBefore is required "
-                            + "if tms:previousTaskId is present");
+                    throw new InvalidInputFormatException("tms:isChainedBefore is required " + "if tms:previousTaskId is present");
                 }
             }
         }
-        
+
         // / the following is added to support task deadlines
         if (ITaskWithDeadline.class.isAssignableFrom(taskClass)) {
             ITaskWithDeadline taskWithDeadline = (ITaskWithDeadline) resultTask;
-            try{
+            try {
                 Calendar deadline = taskMetadata.getDeadline();
-                if (deadline!=null) {
+                if (deadline != null) {
                     taskWithDeadline.setDeadline(deadline.getTime());
-                }
-                else { 
+                } else {
                     // do nothing, deadline is null by default
                 }
             } catch (XmlValueOutOfRangeException e) {
                 // do nothing, not a valid xml date
             }
-            
+
         }
-        
+
         // the following is added to support task priorities
         if (ITaskWithPriority.class.isAssignableFrom(taskClass)) {
             ITaskWithPriority taskWithDeadline = (ITaskWithPriority) resultTask;
             taskWithDeadline.setPriority(priority);
         }
-        
+
         return resultTask;
     }
 
@@ -437,7 +448,7 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
         requireElement(rootElement, "metadata");
 
         com.intalio.bpms.workflow.taskManagementServices20051109.Task taskElement = com.intalio.bpms.workflow.taskManagementServices20051109.Task.Factory
-                .newInstance();
+                        .newInstance();
 
         TaskMetadata metadataElement = taskElement.addNewMetadata();
         metadataElement.set(expectElement(rootElement, "metadata"));
@@ -476,8 +487,8 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
     }
 
     /**
-     * Xmlbeans is wrapping the content with some <code>xml-fragment</code>
-     * tag Position the cursor on the data we really want.
+     * Xmlbeans is wrapping the content with some <code>xml-fragment</code> tag
+     * Position the cursor on the data we really want.
      */
     private String serializeXMLObject(XmlObject xmlObject) {
         XmlCursor cursor = xmlObject.newCursor();

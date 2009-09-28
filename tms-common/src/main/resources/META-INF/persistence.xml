@@ -26,8 +26,8 @@
         transaction-type="RESOURCE_LOCAL">
         <!-- <mapping-file>orm.xml</mapping-file> -->
         <class>org.intalio.tempo.workflow.task.PATask</class>
-        <class>org.intalio.tempo.workflow.task.Task</class>
         <class>org.intalio.tempo.workflow.task.PIPATask</class>
+        <class>org.intalio.tempo.workflow.task.Task</class>
         <class>org.intalio.tempo.workflow.task.Notification</class>
         <class>org.intalio.tempo.workflow.auth.ACL</class>
         <class>org.intalio.tempo.workflow.auth.AuthIdentifierSet</class>

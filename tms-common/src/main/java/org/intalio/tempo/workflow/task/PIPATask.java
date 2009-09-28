@@ -21,7 +21,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.QueryHint;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 import org.apache.openjpa.persistence.Externalizer;
@@ -37,17 +37,11 @@ import org.intalio.tempo.workflow.util.RequiredArgumentException;
  */
 @Entity
 @Table(name = "tempo_pipa")
-@NamedQueries( { @NamedQuery(name = PIPATask.FIND_BY_URL, query = "select m from PIPATask m where m._formURL like ?1", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") })})
+@PrimaryKeyJoinColumn(name = "id", referencedColumnName = "id")
+@NamedQueries( { @NamedQuery(name = PIPATask.FIND_BY_URL, query = "select DISTINCT T FROM PIPATask T where T._processEndpoint=(?1)") })
 public class PIPATask extends Task implements InitTask {
 
     public static final String FIND_BY_URL = "find_by_url";
-    public static final String FIND_BY_PIPA_USER_ROLE = "find_by_pipa_user_role";
-    
-    @Persistent
-    @Factory("URI.create")
-    @Externalizer("toString")
-    @Column(name = "process_endpoint", length = 1024)
-    private URI _processEndpoint;
 
     @Persistent
     @Factory("URI.create")
@@ -58,7 +52,11 @@ public class PIPATask extends Task implements InitTask {
     @Persistent
     @Column(name = "init_soap")
     private String _initOperationSOAPAction;
-    
+
+    @Persistent
+    @Column(name = "process_endpoint")
+    private String _processEndpoint;
+
     public PIPATask() {
         super();
     }
@@ -71,10 +69,9 @@ public class PIPATask extends Task implements InitTask {
         super(id, formURL);
     }
 
-    public PIPATask(String id, URI formURL, URI processEndpoint, URI initMessageNamespaceURI,
-            String initOperationSOAPAction) {
+    public PIPATask(String id, URI formURL, URI processEndpoint, URI initMessageNamespaceURI, String initOperationSOAPAction) {
         super(id, formURL);
-        _processEndpoint = processEndpoint;
+        setProcessEndpoint(processEndpoint);
         _initMessageNamespaceURI = initMessageNamespaceURI;
         _initOperationSOAPAction = initOperationSOAPAction;
     }
@@ -111,17 +108,18 @@ public class PIPATask extends Task implements InitTask {
         if (_processEndpoint == null) {
             throw new IllegalStateException("The required property processEndpoint is not set.");
         }
-        return _processEndpoint;
+        return URI.create(_processEndpoint);
     }
 
     public void setProcessEndpointFromString(String processEndpoint) {
-        _processEndpoint = convertToFieldURI(processEndpoint);
+        _processEndpoint = convertToFieldURI(processEndpoint).toString();
     }
 
     public void setProcessEndpoint(URI processEndpoint) {
-        _processEndpoint = processEndpoint;
+        if (processEndpoint != null)
+            _processEndpoint = processEndpoint.toString();
     }
-    
+
     /**
      * Returns <code>true</code> if this instance has all necessary properties
      * specified.<br />
@@ -131,9 +129,8 @@ public class PIPATask extends Task implements InitTask {
      *         specified.
      */
     public boolean isValid() {
-        return (getID() != null) && (getFormURL() != null) && (_processEndpoint != null) && (getFormURL() != null)
-                && (_initOperationSOAPAction != null) && (getDescription() != null) && (getUserOwners() != null)
-                && (getRoleOwners() != null);
+        return (getID() != null) && (getFormURL() != null) && (_processEndpoint != null) && (getFormURL() != null) && (_initOperationSOAPAction != null)
+                        && (getDescription() != null) && (getUserOwners() != null) && (getRoleOwners() != null);
     }
 
     /**
@@ -152,7 +149,8 @@ public class PIPATask extends Task implements InitTask {
             return null;
         AuthIdentifierSet set = new AuthIdentifierSet();
         for (int i = 0; i < sourceIdentifiers.length; ++i)
-            //set.add(sourceIdentifiers[i].replace('/', '\\').replace('.', '\\'));
+            // set.add(sourceIdentifiers[i].replace('/', '\\').replace('.',
+            // '\\'));
             set.add(sourceIdentifiers[i].replace('/', '\\'));
         return set;
     }

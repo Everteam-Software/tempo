@@ -78,10 +78,16 @@ public class TaskFetcher {
 
     /**
      * Fetch a PIPA task from its URL
+     * 
+     * @throws UnavailableTaskException
      */
-    public PIPATask fetchPipaFromUrl(String formUrl) {
-        Query q = _entityManager.createNamedQuery(PIPATask.FIND_BY_URL).setParameter(1, "%" + formUrl);
-        return (PIPATask) q.getResultList().get(0);
+    public PIPATask fetchPipaFromUrl(String formUrl) throws UnavailableTaskException {
+        Query q = _entityManager.createNamedQuery(PIPATask.FIND_BY_URL).setParameter(1, formUrl);
+        try {
+            return (PIPATask) q.getSingleResult();
+        } catch (NoResultException nre) {
+            throw new UnavailableTaskException("Task with following endpoint does not exist:" + formUrl);
+        }
     }
 
     /**

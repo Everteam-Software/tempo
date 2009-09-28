@@ -163,6 +163,7 @@
               if(pipa.html()!=null) {
                var soapBody = new SOAPObject("deletePipa");
                soapBody.ns = "http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/";
+               alert(pipa);
                soapBody.appendChild(new SOAPObject("pipaurl")).val(pipa.attr('url'));
                soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
                var sr = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/deletePipa", soapBody);

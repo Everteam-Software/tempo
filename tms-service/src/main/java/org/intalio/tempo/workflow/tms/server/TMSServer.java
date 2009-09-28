@@ -416,7 +416,7 @@ public class TMSServer implements ITMSServer {
             dao.deletePipaTask(formUrl);
             dao.commit();
         } catch (Exception e) {
-            // throw new UnavailableTaskException(e);
+            throw new UnavailableTaskException(e);
         }
     }
 

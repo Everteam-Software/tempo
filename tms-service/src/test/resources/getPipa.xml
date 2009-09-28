@@ -12,6 +12,6 @@
  -->
 
 <m:getPipaRequest xmlns:m="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
-  <m:pipaurl>http://www.intalio.com/AbsenceRequest/AbsenceRequest.xform</m:pipaurl>
+  <m:pipaurl>http://localhost:8080/ode/processes/AbsenceRequest/Employee_To_AbsenceRequest</m:pipaurl>
   <m:participantToken>token1</m:participantToken>
 </m:getPipaRequest>

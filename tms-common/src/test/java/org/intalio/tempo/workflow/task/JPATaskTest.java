@@ -115,28 +115,28 @@ public class JPATaskTest {
 
         UserRoles ur = new UserRoles("niko", new String[] { "examples\\employee" });
         final TaskFetcher taskFetcher = new TaskFetcher(em);
-        
+
         // test task1 has two attachments
         String query = "(T._id = '" + task1.getID() + "')";
         Task[] t2 = taskFetcher.fetchAvailableTasks(ur, PATask.class, query);
         Assert.assertTrue(t2[0] instanceof PATask);
         PATask t = (PATask) t2[0];
-        Collection<Attachment> atts =  t.getAttachments();
+        Collection<Attachment> atts = t.getAttachments();
         Assert.assertEquals(2, atts.size());
-        
+
         // test the two attachments are different
         Iterator<Attachment> iter = atts.iterator();
         Attachment a1 = iter.next();
         Attachment a2 = iter.next();
         Assert.assertNotSame(a1.getPayloadURL(), a2.getPayloadURL());
-        
+
         // test task2 has one attachment
         query = "(T._id = '" + task2.getID() + "')";
         t2 = taskFetcher.fetchAvailableTasks(ur, PATask.class, query);
         Assert.assertTrue(t2[0] instanceof PATask);
         t = (PATask) t2[0];
         Assert.assertEquals(1, t.getAttachments().size());
-        
+
         // task2 attachments are not the same as task1
         URL ur1 = t.getAttachments().iterator().next().getPayloadURL();
         Assert.assertNotSame(a1.getPayloadURL(), ur1);
@@ -191,6 +191,42 @@ public class JPATaskTest {
         Assert.assertEquals((Long) expected, (Long) taskFetcher.countTasks(map));
 
         remoteQuery();
+    }
+
+    @Test
+    public void testMultiplePipa() throws Exception {
+        PIPATask task1 = new PIPATask(getUniqueTaskID(), new URI("http://hellonico2.net"), new URI("http://hellonicoUnique1.net"), new URI(
+                        "http://hellonico2.net"), "initOperationSOAPAction");
+        task1.getUserOwners().add("niko");
+        persist(task1);
+        PIPATask task2 = new PIPATask(getUniqueTaskID(), new URI("http://hellonico2.net"), new URI("http://hellonicoUnique2.net"), new URI(
+                        "http://hellonico2.net"), "initOperationSOAPAction");
+        task2.getUserOwners().add("niko");
+        persist(task2);
+
+        UserRoles ur = new UserRoles("niko", new String[] { "examples\\employee" });
+        final TaskFetcher taskFetcher = new TaskFetcher(em);
+        Task[] ts = taskFetcher.fetchAvailableTasks(ur, PIPATask.class, "");
+        Assert.assertEquals(2, ts.length);
+
+        PIPATask t3 = taskFetcher.fetchPipaFromUrl("http://hellonicoUnique1.net");
+        TaskEquality.areTasksEquals(task1, t3);
+
+        PIPATask tt1 = taskFetcher.fetchPipaFromUrl(task1.getProcessEndpoint().toString());
+        TaskEquality.areTasksEquals(task1, tt1);
+
+        jpa.begin();
+        em.remove(tt1);
+        jpa.commit();
+
+        try {
+            PIPATask ttt1 = taskFetcher.fetchPipaFromUrl(task1.getProcessEndpoint().toString());
+            Assert.fail("Should throw an exception");
+        } catch (Exception e) {
+
+        }
+
+        checkRemoved(new Task[] { task1, task2 });
     }
 
     @Test

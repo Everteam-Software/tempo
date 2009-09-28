@@ -32,7 +32,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.QueryHint;
 import javax.persistence.Table;
 
-import org.apache.openjpa.persistence.Persistent;
 import org.apache.openjpa.persistence.PersistentMap;
 import org.apache.openjpa.persistence.jdbc.ContainerTable;
 import org.intalio.tempo.workflow.auth.ACL;

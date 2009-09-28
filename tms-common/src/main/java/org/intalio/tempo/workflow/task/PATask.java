@@ -31,6 +31,7 @@ import javax.persistence.Lob;
 import javax.persistence.MapKey;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.QueryHint;
 import javax.persistence.Table;
 
@@ -58,6 +59,7 @@ import org.w3c.dom.Document;
  */
 @Entity
 @Table(name = "tempo_pa")
+@PrimaryKeyJoinColumn(name="ID", referencedColumnName="ID")
 @NamedQueries( {
         @NamedQuery(name = PATask.FIND_BY_STATES, query = "select m from PATask m where m._state=?1", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") })})
 public class PATask extends Task implements ITaskWithState, IProcessBoundTask, ITaskWithInput, ITaskWithOutput,

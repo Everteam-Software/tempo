@@ -39,5 +39,5 @@ public interface ITaskDAOConnection {
     
     public void storePipaTask(PIPATask task);
     public void deletePipaTask(String formUrl);
-    public PIPATask fetchPipa(String formUrl);
+    public PIPATask fetchPipa(String formUrl) throws UnavailableTaskException ;
 }

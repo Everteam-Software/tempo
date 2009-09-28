@@ -20,14 +20,14 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.Table;
 import javax.persistence.Lob;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
 
 import org.apache.openjpa.persistence.Persistent;
-import org.intalio.tempo.workflow.task.traits.IProcessBoundTask;
 import org.intalio.tempo.workflow.task.traits.IInstanceBoundTask;
+import org.intalio.tempo.workflow.task.traits.IProcessBoundTask;
 import org.intalio.tempo.workflow.task.traits.ITaskWithInput;
-import org.intalio.tempo.workflow.task.traits.ITaskWithPriority;
 import org.intalio.tempo.workflow.task.traits.ITaskWithState;
 import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
@@ -38,6 +38,7 @@ import org.w3c.dom.Document;
  */
 @Entity
 @Table(name = "tempo_notification")
+@PrimaryKeyJoinColumn(name="ID", referencedColumnName="ID")
 public class Notification extends Task implements ITaskWithState, ITaskWithInput, IProcessBoundTask,IInstanceBoundTask{
 
     @Column(name = "state")
