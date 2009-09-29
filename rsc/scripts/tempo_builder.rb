@@ -53,6 +53,14 @@ class TempoBuilder
       set_tomcat_ports ({"8005"=>"7005","8080"=>"7080", "8443"=>"7443", "8009"=> "7009"})
     end
 
+    # Create a standalone cas server
+    activate_step [BuildMode::TOMCAT5,BuildMode::CAS], "Creating CAS Bundle" do
+      install_tomcat
+      install_cas
+
+      set_tomcat_ports ({"8005"=>"7005","8080"=>"7080", "8443"=>"7443", "8009"=> "7009"})
+    end
+    
     # if need to deploy ui-fw as portlet, two more things need to do
     # 1. copy [util-bridges.jar util-java.jar util-taglib.jar] from $liferay/webapps/ROOT/WEB-INF/lib to $liferay/webapps/ui-fw/WEB-INF/lib
     # 2. use the web-cas.xml as web.xml 

@@ -17,6 +17,9 @@ BUILD_CONFIG = {
   # build with ode, axis2, uifw, ldap and cas
   # :mode => [BuildMode::BPMS,BuildMode::UIFW, BuildMode::CAS],
   
+  # build standalone cas server
+  # :mode => [BuildMode::TOMCAT5, BuildMode::CAS],
+  
   ### BELOW IS NOT TESTED SO MUCH
   
   # build with ode, axis2, *NO* uifw, and opensso support on the server side

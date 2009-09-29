@@ -26,6 +26,7 @@ module BuildMode
   REMOTE = 11
   AGENT = 12
   TOKEN_SERVICE = 15
+  CAS = 16
 end
 
 module BuildActivate
