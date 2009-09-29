@@ -30,7 +30,7 @@
 				<c:set var="taskFullURL" value="${taskHolder.formManagerURL}" />
 				<row id="pi${status.index}">
 					<cell><![CDATA[
-						<a class="pipa" href="${taskFullURL}" url="${taskHolder.task.formURL}" id="${taskHolder.task.ID}" target="taskform">
+						<a class="pipa" href="${taskFullURL}" endpoint="${taskHolder.task.processEndpoint}" url="${taskHolder.task.formURL}" id="${taskHolder.task.ID}" target="taskform">
 						<c:choose>
 							<c:when test="${taskHolder.task.description == ''}">
 								<i><fmt:message key="org_intalio_uifw_tasks_notitle"/></i>
