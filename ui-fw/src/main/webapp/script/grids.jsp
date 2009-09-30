@@ -58,13 +58,14 @@
                 var str = $.string(elem.text()).stripTags().strip().str
 
                 // This has a friend in flexigrid.js (line 456)
-                if($("#caseFilter").val()=="on") {                
+                if($("#caseFilter").attr("checked")) {                
                   if(str.indexOf($("#filter").val())==-1)  
                    elem.attr("flexi","ignore");
                  }
                 else {
-                  if(str.toLowerCase().indexOf($("#filter").val().toLowerCase())==-1) 
-                   elem.attr("flexi","ignore");
+                  if(str.toLowerCase().indexOf($("#filter").val().toLowerCase())==-1) {
+                   elem.attr("flexi","ignore"); 
+                  }
                 }
 				        
 		    });
@@ -163,7 +164,7 @@
               if(pipa.html()!=null) {
                var soapBody = new SOAPObject("deletePipa");
                soapBody.ns = "http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/";
-               soapBody.appendChild(new SOAPObject("pipaurl")).val(pipa.attr('endpoint'));
+               soapBody.appendChild(new SOAPObject("pipaurl")).val(pipa.attr('url'));
                soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
                var sr = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/deletePipa", soapBody);
                SOAPClient.SOAPServer = tmsService;
