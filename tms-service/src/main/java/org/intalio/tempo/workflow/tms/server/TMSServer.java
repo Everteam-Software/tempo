@@ -264,8 +264,9 @@ public class TMSServer implements ITMSServer {
         OMElement omTaskOutput = omFactory.createOMElement("taskOutput", omNamespace, omInitProcessRequest);
 
         XmlTooling xmlTooling = new XmlTooling();
-        if(input!=null) omTaskOutput.addChild(xmlTooling.convertDOMToOM(input, omFactory));
-        
+        if (input != null)
+            omTaskOutput.addChild(xmlTooling.convertDOMToOM(input, omFactory));
+
         Options options = new Options();
         EndpointReference endpointReference = new EndpointReference(task.getProcessEndpoint().toString());
         options.setTo(endpointReference);
@@ -371,7 +372,7 @@ public class TMSServer implements ITMSServer {
 
     public void reassign(String taskID, AuthIdentifierSet users, AuthIdentifierSet roles, TaskState state, String participantToken) throws AuthException,
                     UnavailableTaskException {
-        // UserRoles credentials = _authProvider 
+        // UserRoles credentials = _authProvider
         // TODO: this requires SYSTEM
         // role
         // to be present
@@ -445,15 +446,15 @@ public class TMSServer implements ITMSServer {
         map.put(TaskFetcher.FETCH_SUB_QUERY, subQuery);
         return this.getAvailableTasks(participantToken, map);
     }
-    
 
     public Long countAvailableTasks(String participantToken, HashMap parameters) throws AuthException {
         UserRoles credentials = _authProvider.authenticate(participantToken);
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         try {
             parameters.put(TaskFetcher.FETCH_USER, credentials);
-            String klass = (String)parameters.get(TaskFetcher.FETCH_CLASS_NAME);
-            if(klass!=null) parameters.put(TaskFetcher.FETCH_CLASS, TaskTypeMapper.getTaskClassFromStringName(klass));
+            String klass = (String) parameters.get(TaskFetcher.FETCH_CLASS_NAME);
+            if (klass != null)
+                parameters.put(TaskFetcher.FETCH_CLASS, TaskTypeMapper.getTaskClassFromStringName(klass));
             return dao.countAvailableTasks(parameters);
         } catch (Exception e) {
             _logger.error("Error while tasks list retrieval for user " + credentials.getUserID(), e);
@@ -466,8 +467,9 @@ public class TMSServer implements ITMSServer {
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         try {
             parameters.put(TaskFetcher.FETCH_USER, credentials);
-            String klass = (String)parameters.get(TaskFetcher.FETCH_CLASS_NAME);
-            if(klass!=null) parameters.put(TaskFetcher.FETCH_CLASS, TaskTypeMapper.getTaskClassFromStringName(klass));
+            String klass = (String) parameters.get(TaskFetcher.FETCH_CLASS_NAME);
+            if (klass != null)
+                parameters.put(TaskFetcher.FETCH_CLASS, TaskTypeMapper.getTaskClassFromStringName(klass));
             return dao.fetchAvailableTasks(parameters);
         } catch (Exception e) {
             _logger.error("Error while tasks list retrieval for user " + credentials.getUserID(), e);
@@ -481,7 +483,9 @@ public class TMSServer implements ITMSServer {
      */
     public void deleteAll(boolean fakeDelete, String subquery, String taskType, String participantToken) throws AuthException, UnavailableTaskException {
         Task[] tasks = null;
-        if (taskType != null && taskType.length() != 0 && subquery != null && subquery.length() != 0) {
+        if (taskType != null && taskType.length() != 0) {
+            if (subquery == null || subquery.length() == 0)
+                subquery = "";
             tasks = getAvailableTasks(participantToken, taskType, subquery);
         } else {
             tasks = getTaskList(participantToken);
