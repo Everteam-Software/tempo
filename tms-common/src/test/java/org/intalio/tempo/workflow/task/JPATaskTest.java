@@ -82,6 +82,43 @@ public class JPATaskTest {
     }
 
     @Test
+    public void testNativeQueryForAllPATasks() throws Exception {
+
+        UserRoles ur = new UserRoles("niko", new String[] { "examples\\employee" });
+        final TaskFetcher taskFetcher = new TaskFetcher(em);
+
+        // get your query from here
+        Task[] list1 = taskFetcher.fetchAvailableTasks(ur, PATask.class, "");
+        // we make sure no previous tasks left here 
+        checkRemoved(list1);
+
+        // create and persist a new task for user niko
+        PATask task1 = new PATask(getUniqueTaskID(), new URI("http://hellonico.net"));
+        task1.getUserOwners().add("niko");
+        task1.getRoleOwners().add("examples\\employee");
+        persist(task1);
+        
+        // create and persist a new task for user niko2
+        PATask task2 = new PATask(getUniqueTaskID(), new URI("http://hellonico.net"));
+        task2.getUserOwners().add("niko2");
+        task2.getRoleOwners().add("examples\\employee");
+        persist(task2);
+        
+
+        String query = "SELECT DISTINCT t1.id, t0.ID, t1.creation_date, t1.description, t1.form_url, t1.taskid, t1.internal_id, t0.complete_soap_action, t0.deadline, t0.instance_id, t0.is_chained_before, t0.previous_task_id, t0.priority, t0.process_id, t0.state FROM tempo_pa t0 INNER JOIN tempo_task t1 ON t0.ID = t1.id LEFT OUTER JOIN tempo_user t2 ON t1.id = t2.TASK_ID LEFT OUTER JOIN tempo_role t3 ON t1.id = t3.TASK_ID WHERE (t2.element IN (?) OR t3.element IN (?))";
+        // see: http://blog.randompage.org/2006/06/jpa-native-queries.html
+        Query q = em.createNativeQuery(query, PATask.class);
+        q.setParameter(1, ""); // negate the user
+        q.setParameter(2, "examples\\employee"); // use that role
+        
+        // start the native query
+        List<Task> list = q.getResultList();
+        for( Task t : list) System.out.println(t.toString());    
+        Assert.assertEquals(2, list.size());
+        checkRemoved(list);
+    }
+
+    @Test
     public void testInjection() throws Exception {
         PATask task1 = new PATask(getUniqueTaskID(), new URI("http://hellonico.net"));
         task1.setInput("OR true; DELETE * FROM tempo_task;");
@@ -677,6 +714,11 @@ public class JPATaskTest {
     }
 
     private void checkRemoved(Task[] tasks) {
+        for (Task t : tasks)
+            checkRemoved(t);
+    }
+
+    private void checkRemoved(List<Task> tasks) {
         for (Task t : tasks)
             checkRemoved(t);
     }
