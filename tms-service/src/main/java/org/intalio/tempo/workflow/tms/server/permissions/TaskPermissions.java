@@ -13,6 +13,7 @@ public class TaskPermissions {
 
     public static final Logger LOG = LoggerFactory.getLogger(TaskPermissions.class);
     public static final String ACTION_DELETE = "delete";
+    public static final String ACTION_READ = "read";
 
     private Map<String, Set<String>> _permissions;
 

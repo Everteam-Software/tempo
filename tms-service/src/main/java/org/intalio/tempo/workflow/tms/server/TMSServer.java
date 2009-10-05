@@ -116,8 +116,12 @@ public class TMSServer implements ITMSServer {
     }
 
     private void checkIsAvailable(String taskID, Task task, UserRoles credentials) throws AccessDeniedException {
-        if (!task.isAvailableTo(credentials))
-            throw new AccessDeniedException(credentials.getUserID() + " cannot access task:" + taskID);
+        // the task has been assign to those credentials
+        if (task.isAvailableTo(credentials)) return ;
+        // some admin access user has been defined in the configuration file
+        else if (_permissions.isAuthorized(TaskPermissions.ACTION_READ, task, credentials)) return ;
+        // fire the exception, this user cannot read this task
+        else throw new AccessDeniedException(credentials.getUserID() + " cannot access task:" + taskID);
     }
 
     public void setOutput(String taskID, Document output, String participantToken) throws AuthException, UnavailableTaskException, AccessDeniedException {
