@@ -274,7 +274,8 @@ public class FormDispatcherServlet extends HttpServlet {
     }
 
     protected MessageSender getMessageSender() {
-        return new MessageSender();
+        MessageSender messageSender = new MessageSender();
+        return messageSender;
     }
 
     @Override

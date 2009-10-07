@@ -40,7 +40,7 @@ public final class FormDispatcherConfiguration {
      * Configuration file location property
      */
     public static final String CONFIG_DIR_PROPERTY = "org.intalio.tempo.configDirectory";
-    
+
     /**
      * The name of the resource containing the configuration.
      */
@@ -61,7 +61,7 @@ public final class FormDispatcherConfiguration {
      * The initialization value is the default.
      */
     private String _pxeBaseUrl = "http://localhost:8080/ode";
-    
+
     /**
      * The FDS endpoint
      */
@@ -73,11 +73,16 @@ public final class FormDispatcherConfiguration {
      * The initialization value is the default.
      */
     private String _workflowProcessesRelativeUrl = "/workflow/ib4p";
-    
+
     /**
      * Endpoint for the Task Management Service
      */
     private String _tmsUrl = "http://localhost:8080/axis2/services/TaskManagementServices";
+
+    /**
+     * Timeout when sending messages
+     */
+    private long _httpTimeout = 2000;
 
     /**
      * Returns the shared singleton instance of this class.
@@ -96,14 +101,22 @@ public final class FormDispatcherConfiguration {
     public String getPxeBaseUrl() {
         return _pxeBaseUrl;
     }
-    
+
+    public long getHttpTimeout() {
+        return _httpTimeout;
+    }
+
+    public void setHttpTimeout(long httpTimeout) {
+        _httpTimeout = httpTimeout;
+    }
+
     /**
      * Returns the endpoint for FDS
      * 
      * @return the FDS endpoint
      */
     public String getFdsUrl() {
-    	return _fdsUrl;
+        return _fdsUrl;
     }
 
     /**
@@ -125,7 +138,7 @@ public final class FormDispatcherConfiguration {
     public String getTmsUrl() {
         return _tmsUrl;
     }
-    
+
     /**
      * Instance constructor. <br>
      * Tries to load the configuration from the configuration resource. <br>
@@ -135,7 +148,7 @@ public final class FormDispatcherConfiguration {
         try {
             String configDir = System.getProperty(CONFIG_DIR_PROPERTY);
             if (configDir == null) {
-                _log.error("Property "+CONFIG_DIR_PROPERTY+" not set; using configuration defaults for FDS");
+                _log.error("Property " + CONFIG_DIR_PROPERTY + " not set; using configuration defaults for FDS");
                 return;
             }
             File f = new File(configDir, _CONFIG_RESOURCE_NAME);
@@ -151,10 +164,17 @@ public final class FormDispatcherConfiguration {
             String tmsUrl = configDocument.valueOf("/config/tmsUrl");
             String fdsUrl = configDocument.valueOf("/config/fdsUrl");
 
+            try {
+                _httpTimeout = Long.parseLong(configDocument.valueOf("/config/fdsUrl"));
+            } catch (Exception e) {
+                _log.error("Not using invalid value for httptimeout");
+            }
+
             _pxeBaseUrl = pxeBaseUrl;
             _workflowProcessesRelativeUrl = workflowProcessesRelativeUrl;
             _tmsUrl = tmsUrl;
             _fdsUrl = fdsUrl;
+
         } catch (Exception e) {
             _log.error("Failed to load the configuration: " + e.getMessage());
         }

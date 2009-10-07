@@ -23,6 +23,7 @@ import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
+import org.intalio.tempo.workflow.fds.FormDispatcherConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,6 +79,9 @@ public class MessageSender {
         // turn off retrying, since retrying SOAP requests can cause side-effects
         DefaultHttpMethodRetryHandler retryhandler = new DefaultHttpMethodRetryHandler(0, false);
         httpClient.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, retryhandler);
+        
+        // set the timeout
+        httpClient.getParams().setParameter(HttpMethodParams.SO_TIMEOUT, FormDispatcherConfiguration.getInstance().getHttpTimeout());
 
         // Prepare an XML parser 
         SAXReader reader = new SAXReader();

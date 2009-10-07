@@ -59,6 +59,7 @@ public class TMSServer implements ITMSServer {
     private IAuthProvider _authProvider;
     private ITaskDAOConnectionFactory _taskDAOFactory;
     private TaskPermissions _permissions;
+    private long _httpTimeout = 2000;
 
     public TMSServer() {
     }
@@ -74,6 +75,14 @@ public class TMSServer implements ITMSServer {
 
     public void setPermissions(TaskPermissions permissions) {
         this._permissions = permissions;
+    }
+
+    public long getHttpTimeout() {
+        return _httpTimeout;
+    }
+
+    public void setHttpTimeout(long httpTimeout) {
+        _httpTimeout = httpTimeout;
     }
 
     public void setAuthProvider(IAuthProvider authProvider) {
@@ -284,6 +293,7 @@ public class TMSServer implements ITMSServer {
         ServiceClient client = getServiceClient();
         client.setOptions(options);
         try {
+            options.setTimeOutInMilliSeconds(_httpTimeout);
             OMElement response = client.sendReceive(omInitProcessRequest);
             return xmlTooling.convertOMToDOM(response);
         } catch (Exception e) {
