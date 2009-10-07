@@ -26,7 +26,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.intalio.deploy.deployment.utils.DeploymentServiceRegister;
 import org.intalio.tempo.web.SysPropApplicationContextLoader;
-import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.wds.core.Item;
 import org.intalio.tempo.workflow.wds.core.UnavailableItemException;
 import org.intalio.tempo.workflow.wds.core.WDSService;
@@ -169,8 +168,8 @@ public class WDSServlet extends HttpServlet {
                 int length = IOUtils.copy(new ByteArrayInputStream(item.getPayload()), outputStream);
                 response.setContentLength(length);
             } catch (UnavailableItemException e) {
+                LOG.debug("Item not found: '" + resourceUri + "'");
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
-                LOG.warn("Item not found: '" + resourceUri + "'");
             } finally {
                 if (service != null)
                     service.close();
