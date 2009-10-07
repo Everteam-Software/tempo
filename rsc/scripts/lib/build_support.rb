@@ -304,6 +304,7 @@ module BuildSupport
   end
 
   class WarInstaller
+    attr_accessor :webapp_folder
     
     def initialize(folder, extract=false, clean=false)
       if folder =~ /webapps$/ then
@@ -350,6 +351,11 @@ module BuildSupport
     def install_war_artifact artifact_name, war_name
       war_name += ".war"
       install locate_artifact(artifact_name), war_name
+    end
+    
+    def copy_war_artifact artifact_name, target_folder, war_name
+      war_name += ".war"
+      File.cp locate_artifact(artifact_name), File.expand_path("#{target_folder}/#{war_name}")
     end
   end
 
@@ -443,6 +449,7 @@ BUILD_URI = {
 		:v5_1_0 => "http://downloads.sourceforge.net/sourceforge/lportal/liferay-portal-tomcat-5.5-5.1.0.zip",
 		:v5_2_3 => "http://downloads.sourceforge.net/sourceforge/lportal/liferay-portal-tomcat-5.5-5.2.3.zip",
 		:v5_2_5ee => "http://files.liferay.com/public/3mDkoitQ/ee/portal/5.2.5/liferay-portal-tomcat-5.5-5.2.5.zip",
+		:v5_2_5_jb => "http://files.liferay.com/public/3mDkoitQ/ee/portal/5.2.5/liferay-portal-jboss-tomcat-4.2-5.2.5.zip",
 	},
 	:tomcat => {
 		:v5 => APACHE_MIRROR + "tomcat/tomcat-5/v5.5.27/bin/apache-tomcat-5.5.27.zip",

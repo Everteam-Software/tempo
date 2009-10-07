@@ -61,21 +61,24 @@ class TempoBuilder
       set_tomcat_ports ({"8005"=>"7005","8080"=>"7080", "8443"=>"7443", "8009"=> "7009"})
     end
     
-    # if need to deploy ui-fw as portlet, two more things need to do
-    # 1. copy [util-bridges.jar util-java.jar util-taglib.jar] from $liferay/webapps/ROOT/WEB-INF/lib to $liferay/webapps/ui-fw/WEB-INF/lib
-    # 2. use the web-cas.xml as web.xml 
-    # NOTE: for liferay 5.2.5 ee, just change the download url should work
+    # if need to use CAS, please use the web-cas.xml as web.xml in ui-fw project
     activate_step [BuildMode::LIFERAY], "Installing Liferay" do
       install_liferay
-      setup_axis_and_ode
-      install_tempo_services
-      install_tempo_webapps
-      install_tmp
-      install_absence_request
-      copy_missing_lib
-      configure_tomcat
+      if BUILD_CONFIG[:liferay][:server_folder].index("jboss")
+        # after this script execution
+        # need to add "-Dorg.intalio.tempo.configDirectory=$JBOSS_HOME/var/config" manually in bin/run.sh line 192
+      else
+        # Uncomment the following if necessary(only works for liferay-tomcat bundle for now)
+        #setup_axis_and_ode
+        #install_tempo_services
+        #install_tempo_webapps
+        #install_tmp
+        #install_absence_request        
+        copy_missing_lib
+        configure_tomcat
+        setup_java_options
+      end
       generate_mysql_file
-      setup_java_options
       chmod_sh_files
       copy_tempo_config_files      
     end
@@ -148,7 +151,11 @@ class TempoBuilder
 
     # this install the uifw war file
     activate_step [BuildMode::UIFW], "Adding the task list webapp" do 
-      install_tempo_uifw
+      if BUILD_CONFIG[:mode].index(BuildMode::LIFERAY)
+        install_tempo_uifw false, true
+      else
+        install_tempo_uifw
+      end
     end
     
     activate_step [BuildMode::BPMS, BuildMode::LDAP], "Install LDAP"  do

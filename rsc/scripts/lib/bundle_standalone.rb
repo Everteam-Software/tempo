@@ -68,8 +68,12 @@ def install_tempo_webapps
   @@wi.install_war_artifact("org.intalio.tempo:xforms-manager:war:#{BUILD_CONFIG[:tempo][:formManager]}","xFormsManager")
 end
 
-def install_tempo_uifw portlet=false
-  @@wi.install_war_artifact("org.intalio.tempo:tempo-ui-fw:war:#{BUILD_CONFIG[:tempo][:core]}","ui-fw")
+def install_tempo_uifw portlet=false, hotdeploy=false
+  if hotdeploy
+    @@wi.copy_war_artifact("org.intalio.tempo:tempo-ui-fw:war:#{BUILD_CONFIG[:tempo][:core]}",@@deploy_folder, "ui-fw")
+  else
+    @@wi.install_war_artifact("org.intalio.tempo:tempo-ui-fw:war:#{BUILD_CONFIG[:tempo][:core]}","ui-fw")
+  end
 end
 
 # Install the TMP process, and the absence request process into the ode services folders
