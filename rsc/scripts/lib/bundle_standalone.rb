@@ -214,7 +214,6 @@ def config_ssl
   if BUILD_CONFIG[:liferay][:server_folder].index("jboss")
   else
     FileUtils.cp "#{TEMPO_SVN}/rsc/liferay/server.xml", "#{@@server_folder}/conf"
-    FileUtils.cp "#{TEMPO_SVN}/rsc/liferay/ROOT.xml", "#{@@server_folder}/conf/Catalina/localhost"
     FileUtils.cp "#{TEMPO_SVN}/rsc/bundle-config/intalio-keystore.jks", "#{@@server_folder}/var/config"
   end
 end
