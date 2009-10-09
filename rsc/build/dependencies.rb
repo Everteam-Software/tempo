@@ -65,7 +65,7 @@ JSTL = "javax.servlet:jstl:jar:1.1.2"
 JUNIT = "junit:junit:jar:4.4"
 JYAML = "org.jyaml:jyaml:jar:1.3"
 
-LIFERAY = group("portal-impl", "portal-kernel", "util-java", "portal-service", :under=>"com.liferay", :version=>"5.1.0")
+LIFERAY = group("portal-impl", "portal-kernel", "util-java", "portal-service", :under=>"com.liferay", :version=>"5.2.0")
 LIFT = [group("lift-core", "lift-amqp", "lift-facebook", "lift-textile", "lift-webkit", "lift-widgets", "lift-xmpp", :under=>"net.liftweb",:version=>"0.8")]
 LOG4J = "log4j:log4j:jar:1.2.15"
 

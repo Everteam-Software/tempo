@@ -32,6 +32,7 @@ load "#{@@script_folder}/../build/dependencies.rb"
 load "#{@@script_folder}/../scripts/lib/bundle_servers.rb"
 load "#{@@script_folder}/../scripts/lib/bundle_opensso.rb"
 load "#{@@script_folder}/../scripts/lib/bundle_standalone.rb"
+load "#{@@script_folder}/../scripts/lib/bundle_liferay_uifw.rb"
 load "#{@@script_folder}/../scripts/config.rb"
 TEMPO_SVN="#{@@script_folder}/../.."
 Dir.chdir check_folder(BUILD_CONFIG[:directory])
@@ -50,15 +51,14 @@ class TempoBuilder
       install_tomcat6 "tomcat-sso"
       install_opensso
 
-      set_tomcat_ports ({"8005"=>"7005","8080"=>"7080", "8443"=>"7443", "8009"=> "7009"})
+      set_tomcat_ports({"8005"=>"7005","8080"=>"7080", "8443"=>"7443", "8009"=> "7009"})
     end
 
     # Create a standalone cas server
     activate_step [BuildMode::TOMCAT5,BuildMode::CAS], "Creating CAS Bundle" do
       install_tomcat
       install_cas
-
-      set_tomcat_ports ({"8005"=>"7005","8080"=>"7080", "8443"=>"7443", "8009"=> "7009"})
+      config_ssl
     end
     
     # if need to use CAS, please use the web-cas.xml as web.xml in ui-fw project
@@ -73,14 +73,16 @@ class TempoBuilder
         #install_tempo_services
         #install_tempo_webapps
         #install_tmp
-        #install_absence_request        
+        #install_absence_request
         copy_missing_lib
         configure_tomcat
         setup_java_options
+        set_tomcat_ports({"8005"=>"8205","8080"=>"8280", "8443"=>"8643", "8009"=> "8209"})
       end
-      generate_mysql_file
       chmod_sh_files
-      copy_tempo_config_files      
+      copy_tempo_config_files("tempo-formmanager.xml")
+      copy_tempo_config_files("tempo-ui-fw-servlet.xml")
+      copy_tempo_config_files("tempo-ui-fw.xml")      
     end
     
     activate_step [BuildMode::TOMCAT], "Downloading tomcat" do
@@ -108,6 +110,16 @@ class TempoBuilder
     activate_step [BuildMode::BPMS,BuildMode::OPENSSO], "Customize tomcat build for opensso" do
       copy_tempo_config_file("securityConfig-opensso.xml", "securityConfig.xml")
       # opensso-ldap should be already copied
+    end
+    
+    activate_step [BuildMode::BPMS,BuildMode::CAS], "Customize tomcat build for CAS" do
+      install_cas
+      config_ssl
+    end
+    
+    activate_step [BuildMode::LIFERAY, BuildMode::CAS], "Config Liferay bundle for CAS" do
+      copy_liferay_config_file
+      set_tomcat_ports({"8005"=>"8205","8080"=>"8280", "8443"=>"8643", "8009"=> "8209"})
     end
     
     activate_step [BuildMode::REMOTE, BuildMode::TOMCAT6], "Prepare remote open source tomcat build" do

@@ -6,7 +6,7 @@ BUILD_CONFIG = {
   
   # build with ode, axis2, uifw
   #
-  :mode => [BuildMode::BPMS,BuildMode::UIFW],
+   :mode => [BuildMode::BPMS,BuildMode::UIFW],
   #
   
   # build an opensso server
@@ -26,7 +26,11 @@ BUILD_CONFIG = {
   #
   # :mode => [BuildMode::BPMS,BuildMode::OPENSSO]
   #
-  
+  # build full tempo with CAS server, but w/o uifw
+  #
+  # :mode => [BuildMode::BPMS,BuildMode::CAS, BuildMode::LDAP],
+  #
+  #
   #
   # build the above and zip the resulting folder
   # :mode => [BuildMode::TOMCAT,BuildMode::UIFW,BuildMode::ZIP],
@@ -44,14 +48,14 @@ BUILD_CONFIG = {
   
   # build with liferay and uifw
   #
-  # :mode => [BuildMode::LIFERAY, BuildMode::UIFW],
+  # :mode => [BuildMode::LIFERAY, BuildMode::UIFW, BuildMode::CAS],
   #
   
   :ode => :v1_3_snapshot,
   :tomcat => :v5,
   #:liferay => {:v => :v5_2_5ee, :base_folder => "liferay-portal-5.2.5", :server_folder => "tomcat-5.5.27"},
-  #:liferay => {:v => :v5_2_3, :base_folder => "liferay-portal-5.2.3", :server_folder => "tomcat-5.5.27"},
-  :liferay => {:v => :v5_2_5_jb, :base_folder => "liferay-portal-5.2.5", :server_folder => "jboss-tomcat-4.2.3"},  
+  :liferay => {:v => :v5_2_3, :base_folder => "liferay-portal-5.2.3", :server_folder => "tomcat-5.5.27"},
+  #:liferay => {:v => :v5_2_5_jb, :base_folder => "liferay-portal-5.2.5", :server_folder => "jboss-tomcat-4.2.3"},  
   :alfresco => :v3_0,
   :tempo => {
     :core => "6.0.0.47",

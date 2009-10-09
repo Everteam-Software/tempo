@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2008 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2009 Liferay, Inc. All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,6 +36,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.servlet.BaseFilter;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.servlet.filters.sso.cas.CASFilter;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PrefsPropsUtil;
 import com.liferay.portal.util.PropsKeys;
@@ -47,10 +48,10 @@ import com.liferay.util.servlet.filters.DynamicFilterConfig;
  *
  * @author Michael Young
  * @author Brian Wing Shun Chan
- * @author Raymond Aug√©
+ * @author Raymond Augé
  *
  */
-public class CASFilter510 extends BaseFilter {
+public class CASFilter520 extends BaseFilter {
 
     public static void reload(long companyId) {
         _casFilters.remove(companyId);
@@ -67,13 +68,17 @@ public class CASFilter510 extends BaseFilter {
                 _filterName, _servletContext);
 
             String serverName = PrefsPropsUtil.getString(
-                companyId, PropsKeys.CAS_SERVER_NAME);
+                companyId, PropsKeys.CAS_SERVER_NAME,
+                PropsValues.CAS_SERVER_NAME);
             String serviceUrl = PrefsPropsUtil.getString(
-                companyId, PropsKeys.CAS_SERVICE_URL);
+                companyId, PropsKeys.CAS_SERVICE_URL,
+                PropsValues.CAS_SERVICE_URL);
 
             config.addInitParameter(
                 edu.yale.its.tp.cas.client.filter.CASFilter.LOGIN_INIT_PARAM,
-                PrefsPropsUtil.getString(companyId, PropsKeys.CAS_LOGIN_URL));
+                PrefsPropsUtil.getString(
+                    companyId, PropsKeys.CAS_LOGIN_URL,
+                    PropsValues.CAS_LOGIN_URL));
 
             if (Validator.isNotNull(serviceUrl)) {
                 config.addInitParameter(
@@ -91,13 +96,14 @@ public class CASFilter510 extends BaseFilter {
             config.addInitParameter(
                 edu.yale.its.tp.cas.client.filter.CASFilter.VALIDATE_INIT_PARAM,
                 PrefsPropsUtil.getString(
-                    companyId, PropsKeys.CAS_VALIDATE_URL));
+                    companyId, PropsKeys.CAS_VALIDATE_URL,
+                    PropsValues.CAS_VALIDATE_URL));
 
           //Add proxy call back url
             config.addInitParameter(edu.yale.its.tp.cas.client.filter.CASFilter.PROXY_CALLBACK_INIT_PARAM,
                     PrefsPropsUtil.getString(
                             companyId, "cas.proxycallback.url"));
-            
+
             casFilter.init(config);
 
             _casFilters.put(companyId, casFilter);
@@ -129,7 +135,8 @@ public class CASFilter510 extends BaseFilter {
                     session.invalidate();
 
                     String logoutUrl = PrefsPropsUtil.getString(
-                        companyId, PropsKeys.CAS_LOGOUT_URL);
+                        companyId, PropsKeys.CAS_LOGOUT_URL,
+                        PropsValues.CAS_LOGOUT_URL);
 
                     response.sendRedirect(logoutUrl);
                 }
@@ -140,7 +147,7 @@ public class CASFilter510 extends BaseFilter {
                 }
             }
             else {
-                processFilter(edu.yale.its.tp.cas.client.filter.CASFilter.class, request, response, filterChain);
+                processFilter(CASFilter.class, request, response, filterChain);
             }
         }
         catch (Exception e) {
@@ -148,7 +155,7 @@ public class CASFilter510 extends BaseFilter {
         }
     }
 
-    private static Log _log = LogFactoryUtil.getLog(edu.yale.its.tp.cas.client.filter.CASFilter.class);
+    private static Log _log = LogFactoryUtil.getLog(CASFilter.class);
 
     private static Map<Long, edu.yale.its.tp.cas.client.filter.CASFilter>
         _casFilters = new ConcurrentHashMap
