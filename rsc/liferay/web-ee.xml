@@ -17,10 +17,6 @@
 		<param-name>com.ibm.websphere.portletcontainer.PortletDeploymentEnabled</param-name>
 		<param-value>false</param-value>
 	</context-param>
-	<context-param>
-		<param-name>com.sun.portal.container.service.PolicyService</param-name>
-		<param-value>com.liferay.portal.portletcontainer.PolicyServiceImpl</param-value>
-	</context-param>
 	<filter>
 		<filter-name>Auto Login Filter</filter-name>
 		<filter-class>com.liferay.portal.servlet.filters.autologin.AutoLoginFilter</filter-class>
@@ -50,11 +46,11 @@
 		</init-param>
 	</filter>
 	<filter>
-		<filter-name>Cache Filter - Resource CSS JSP</filter-name>
+		<filter-name>Cache Filter - Resource JSP</filter-name>
 		<filter-class>com.liferay.portal.servlet.filters.cache.CacheFilter</filter-class>
 		<init-param>
 			<param-name>url-regex-pattern</param-name>
-			<param-value>.+/css\.jsp</param-value>
+			<param-value>.+/(barebone|css|everything)\.jsp</param-value>
 		</init-param>
 		<init-param>
 			<param-name>pattern</param-name>
@@ -64,6 +60,22 @@
 	<filter>
 		<filter-name>Double Click Filter</filter-name>
 		<filter-class>com.liferay.portal.servlet.filters.doubleclick.DoubleClickFilter</filter-class>
+	</filter>
+	<filter>
+		<filter-name>ETag Filter</filter-name>
+		<filter-class>com.liferay.portal.servlet.filters.etag.ETagFilter</filter-class>
+	</filter>
+	<filter>
+		<filter-name>ETag Filter - JSP</filter-name>
+		<filter-class>com.liferay.portal.servlet.filters.etag.ETagFilter</filter-class>
+		<init-param>
+		<param-name>url-regex-pattern</param-name>
+			<param-value>.+/(barebone|css|everything)\.jsp</param-value>
+		</init-param>
+	</filter>
+	<filter>
+		<filter-name>GZip Filter</filter-name>
+		<filter-class>com.liferay.portal.servlet.filters.gzip.GZipFilter</filter-class>
 	</filter>
 	<filter>
 		<filter-name>Header Filter</filter-name>
@@ -78,11 +90,11 @@
 		</init-param>
 	</filter>
 	<filter>
-		<filter-name>Header Filter - CSS JSP</filter-name>
+		<filter-name>Header Filter - JSP</filter-name>
 		<filter-class>com.liferay.portal.servlet.filters.header.HeaderFilter</filter-class>
 		<init-param>
 			<param-name>url-regex-pattern</param-name>
-			<param-value>.+/css\.jsp</param-value>
+			<param-value>.+/(barebone|css|everything)\.jsp</param-value>
 		</init-param>
 		<init-param>
 			<param-name>Cache-Control</param-name>
@@ -94,15 +106,11 @@
 		</init-param>
 	</filter>
 	<filter>
-		<filter-name>GZip Filter</filter-name>
-		<filter-class>com.liferay.portal.servlet.filters.gzip.GZipFilter</filter-class>
-	</filter>
-	<filter>
 		<filter-name>Minifier Filter</filter-name>
 		<filter-class>com.liferay.portal.servlet.filters.minifier.MinifierFilter</filter-class>
 	</filter>
 	<filter>
-		<filter-name>Minifier Filter - CSS JSP</filter-name>
+		<filter-name>Minifier Filter - JSP</filter-name>
 		<filter-class>com.liferay.portal.servlet.filters.minifier.MinifierFilter</filter-class>
 		<init-param>
 			<param-name>url-regex-pattern</param-name>
@@ -110,12 +118,8 @@
 		</init-param>
 	</filter>
 	<filter>
-		<filter-name>Open Session In View Filter</filter-name>
-		<filter-class>org.springframework.orm.hibernate3.support.OpenSessionInViewFilter</filter-class>
-		<init-param>
-			<param-name>sessionFactoryBeanName</param-name>
-			<param-value>liferayHibernateSessionFactory</param-value>
-		</init-param>
+		<filter-name>Monitoring Filter</filter-name>
+		<filter-class>com.liferay.portal.servlet.filters.monitoring.MonitoringFilter</filter-class>
 	</filter>
 	<filter>
 		<filter-name>Secure Main Servlet Filter</filter-name>
@@ -132,26 +136,14 @@
 	<filter>
 		<filter-name>SSO CAS Filter</filter-name>
 		<filter-class>org.intalio.tempo.web.CASFilter520</filter-class>
-		<!--<init-param>
-			<param-name>logout_url</param-name>
-			<param-value>https://localhost:8443/cas-web/logout</param-value>
-		</init-param>
-		<init-param>
-			<param-name>edu.yale.its.tp.cas.client.filter.loginUrl</param-name>
-			<param-value>https://localhost:8443/cas-web/login</param-value>
-		</init-param>
-		<init-param>
-			<param-name>edu.yale.its.tp.cas.client.filter.validateUrl</param-name>
-			<param-value>https://localhost:8443/cas-web/proxyValidate</param-value>
-		</init-param>
-		<init-param>
-			<param-name>edu.yale.its.tp.cas.client.filter.serviceUrl</param-name>
-			<param-value>http://localhost:8080/c/portal/login</param-value>
-		</init-param>-->
 	</filter>
 	<filter>
 		<filter-name>SSO Ntlm Filter</filter-name>
 		<filter-class>com.liferay.portal.servlet.filters.sso.ntlm.NtlmFilter</filter-class>
+	</filter>
+	<filter>
+		<filter-name>SSO Ntlm Post Filter</filter-name>
+		<filter-class>com.liferay.portal.servlet.filters.sso.ntlm.NtlmPostFilter</filter-class>
 	</filter>
 	<filter>
 		<filter-name>SSO Open SSO Filter</filter-name>
@@ -201,10 +193,6 @@
 		<filter-name>Thread Local Cache Filter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-	<!--<filter-mapping>
-		<filter-name>Open Session In View Filter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>-->
 	<filter-mapping>
 		<filter-name>Virtual Host Filter</filter-name>
 		<url-pattern>/*</url-pattern>
@@ -240,6 +228,10 @@
 	<filter-mapping>
 		<filter-name>SSO Ntlm Filter</filter-name>
 		<url-pattern>/c/portal/login</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>SSO Ntlm Post Filter</filter-name>
+		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>SSO Open SSO Filter</filter-name>
@@ -304,6 +296,50 @@
 		<dispatcher>FORWARD</dispatcher>
 	</filter-mapping>
 	<filter-mapping>
+		<filter-name>Auto Login Filter</filter-name>
+		<url-pattern>/widget/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Header Filter</filter-name>
+		<url-pattern>/image/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Header Filter</filter-name>
+		<url-pattern>/language/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Header Filter</filter-name>
+		<url-pattern>*.css</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Header Filter</filter-name>
+		<url-pattern>*.gif</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Header Filter</filter-name>
+		<url-pattern>*.html</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Header Filter</filter-name>
+		<url-pattern>*.ico</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Header Filter</filter-name>
+		<url-pattern>*.jpg</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Header Filter</filter-name>
+		<url-pattern>*.js</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Header Filter</filter-name>
+		<url-pattern>*.png</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Header Filter - JSP</filter-name>
+		<url-pattern>*.jsp</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
 		<filter-name>Cache Filter - Friendly</filter-name>
 		<url-pattern>/group/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
@@ -350,7 +386,7 @@
 		<url-pattern>*.js</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
-		<filter-name>Cache Filter - Resource CSS JSP</filter-name>
+		<filter-name>Cache Filter - Resource JSP</filter-name>
 		<url-pattern>*.jsp</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
@@ -378,6 +414,8 @@
 	<filter-mapping>
 		<filter-name>Secure Main Servlet Filter</filter-name>
 		<url-pattern>/c/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>Secure Main Servlet Filter</filter-name>
@@ -398,148 +436,192 @@
 		<dispatcher>FORWARD</dispatcher>
 	</filter-mapping>
 	<filter-mapping>
-		<filter-name>Header Filter</filter-name>
-		<url-pattern>/image/*</url-pattern>
+		<filter-name>GZip Filter</filter-name>
+		<url-pattern>/c/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>FORWARD</dispatcher>
 	</filter-mapping>
 	<filter-mapping>
-		<filter-name>Header Filter</filter-name>
+		<filter-name>GZip Filter</filter-name>
+		<url-pattern>/group/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>GZip Filter</filter-name>
 		<url-pattern>/language/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>FORWARD</dispatcher>
 	</filter-mapping>
 	<filter-mapping>
-		<filter-name>Header Filter</filter-name>
+		<filter-name>GZip Filter</filter-name>
+		<url-pattern>/user/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>GZip Filter</filter-name>
+		<url-pattern>/web/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>GZip Filter</filter-name>
 		<url-pattern>*.css</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
-		<filter-name>Header Filter</filter-name>
-		<url-pattern>*.gif</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>Header Filter</filter-name>
+		<filter-name>GZip Filter</filter-name>
 		<url-pattern>*.html</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
-		<filter-name>Header Filter</filter-name>
+		<filter-name>GZip Filter</filter-name>
+		<url-pattern>*.js</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>GZip Filter</filter-name>
+		<url-pattern>*.jsp</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Theme Preview Filter</filter-name>
+		<url-pattern>/c/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Theme Preview Filter</filter-name>
+		<url-pattern>/group/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Theme Preview Filter</filter-name>
+		<url-pattern>/user/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Theme Preview Filter</filter-name>
+		<url-pattern>/web/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Strip Filter</filter-name>
+		<url-pattern>/c/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Strip Filter</filter-name>
+		<url-pattern>/group/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Strip Filter</filter-name>
+		<url-pattern>/user/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Strip Filter</filter-name>
+		<url-pattern>/web/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Minifier Filter</filter-name>
+		<url-pattern>*.css</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Minifier Filter</filter-name>
+		<url-pattern>*.js</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Minifier Filter - JSP</filter-name>
+		<url-pattern>*.jsp</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>ETag Filter</filter-name>
+		<url-pattern>/group/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>ETag Filter</filter-name>
+		<url-pattern>/user/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>ETag Filter</filter-name>
+		<url-pattern>/web/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>ETag Filter</filter-name>
+		<url-pattern>/image/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>ETag Filter</filter-name>
+		<url-pattern>/language/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>ETag Filter</filter-name>
+		<url-pattern>*.css</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>ETag Filter</filter-name>
+		<url-pattern>*.gif</url-pattern>
+	</filter-mapping>
+	<!--<filter-mapping>
+		<filter-name>ETag Filter</filter-name>
+		<url-pattern>*.html</url-pattern>
+	</filter-mapping>-->
+	<filter-mapping>
+		<filter-name>ETag Filter</filter-name>
 		<url-pattern>*.ico</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
-		<filter-name>Header Filter</filter-name>
+		<filter-name>ETag Filter</filter-name>
 		<url-pattern>*.jpg</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
-		<filter-name>Header Filter</filter-name>
+		<filter-name>ETag Filter</filter-name>
 		<url-pattern>*.js</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
-		<filter-name>Header Filter</filter-name>
+		<filter-name>ETag Filter</filter-name>
 		<url-pattern>*.png</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
-		<filter-name>Header Filter - CSS JSP</filter-name>
+		<filter-name>ETag Filter - JSP</filter-name>
 		<url-pattern>*.jsp</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
-		<filter-name>GZip Filter</filter-name>
-		<url-pattern>/c/portal/*</url-pattern>
+		<filter-name>Monitoring Filter</filter-name>
+		<url-pattern>/c/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
 	</filter-mapping>
 	<filter-mapping>
-		<filter-name>GZip Filter</filter-name>
+		<filter-name>Monitoring Filter</filter-name>
 		<url-pattern>/group/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>FORWARD</dispatcher>
 	</filter-mapping>
 	<filter-mapping>
-		<filter-name>GZip Filter</filter-name>
-		<url-pattern>/language/*</url-pattern>
-		<dispatcher>REQUEST</dispatcher>
-		<dispatcher>FORWARD</dispatcher>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>GZip Filter</filter-name>
+		<filter-name>Monitoring Filter</filter-name>
 		<url-pattern>/user/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>FORWARD</dispatcher>
 	</filter-mapping>
 	<filter-mapping>
-		<filter-name>GZip Filter</filter-name>
+		<filter-name>Monitoring Filter</filter-name>
 		<url-pattern>/web/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>FORWARD</dispatcher>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>GZip Filter</filter-name>
-		<url-pattern>*.css</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>GZip Filter</filter-name>
-		<url-pattern>*.html</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>GZip Filter</filter-name>
-		<url-pattern>*.js</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>GZip Filter</filter-name>
-		<url-pattern>*.jsp</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>Theme Preview Filter</filter-name>
-		<url-pattern>/c/portal/*</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>Theme Preview Filter</filter-name>
-		<url-pattern>/group/*</url-pattern>
-		<dispatcher>REQUEST</dispatcher>
-		<dispatcher>FORWARD</dispatcher>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>Theme Preview Filter</filter-name>
-		<url-pattern>/user/*</url-pattern>
-		<dispatcher>REQUEST</dispatcher>
-		<dispatcher>FORWARD</dispatcher>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>Theme Preview Filter</filter-name>
-		<url-pattern>/web/*</url-pattern>
-		<dispatcher>REQUEST</dispatcher>
-		<dispatcher>FORWARD</dispatcher>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>Strip Filter</filter-name>
-		<url-pattern>/c/portal/*</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>Strip Filter</filter-name>
-		<url-pattern>/group/*</url-pattern>
-		<dispatcher>REQUEST</dispatcher>
-		<dispatcher>FORWARD</dispatcher>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>Strip Filter</filter-name>
-		<url-pattern>/user/*</url-pattern>
-		<dispatcher>REQUEST</dispatcher>
-		<dispatcher>FORWARD</dispatcher>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>Strip Filter</filter-name>
-		<url-pattern>/web/*</url-pattern>
-		<dispatcher>REQUEST</dispatcher>
-		<dispatcher>FORWARD</dispatcher>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>Minifier Filter</filter-name>
-		<url-pattern>*.css</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>Minifier Filter</filter-name>
-		<url-pattern>*.js</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>Minifier Filter - CSS JSP</filter-name>
-		<url-pattern>*.jsp</url-pattern>
 	</filter-mapping>
 	<listener>
 		<listener-class>com.liferay.portal.spring.context.PortalContextLoaderListener</listener-class>
@@ -556,12 +638,6 @@
 	<listener>
 		<listener-class>com.liferay.portal.servlet.SharedSessionAttributeListener</listener-class>
 	</listener>
-	<listener>
-		<listener-class>com.sun.portal.container.service.ServiceManagerContextListenerImpl</listener-class>
-	</listener>
-	<listener>
-		<listener-class>com.sun.portal.portletcontainer.impl.PortletContainerContextListenerImpl</listener-class>
-	</listener>
 	<servlet>
 		<servlet-name>ProxyTicketReceptor</servlet-name>
 		<servlet-class>
@@ -571,7 +647,7 @@
 	<servlet-mapping>
 		<servlet-name>ProxyTicketReceptor</servlet-name>
 		<url-pattern>/c/portal/CasProxyServlet</url-pattern>
-	</servlet-mapping>	
+	</servlet-mapping>
 	<servlet>
 		<servlet-name>Main Servlet</servlet-name>
 		<servlet-class>com.liferay.portal.servlet.MainServlet</servlet-class>
@@ -677,10 +753,6 @@
 		<servlet-name>Portal Delegator Servlet</servlet-name>
 		<servlet-class>com.liferay.portal.kernel.servlet.PortalDelegatorServlet</servlet-class>
 		<load-on-startup>2</load-on-startup>
-	</servlet>
-	<servlet>
-		<servlet-name>Resource Proxy Servlet</servlet-name>
-		<servlet-class>com.liferay.portal.wsrp.servlet.ResourceProxyServlet</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>Sitemap Servlet</servlet-name>
@@ -796,10 +868,6 @@
 	<servlet-mapping>
 		<servlet-name>Portal Delegator Servlet</servlet-name>
 		<url-pattern>/delegate/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>Resource Proxy Servlet</servlet-name>
-		<url-pattern>/wsrp/resource_proxy/*</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>Sitemap Servlet</servlet-name>
