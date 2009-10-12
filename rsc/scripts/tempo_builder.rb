@@ -119,7 +119,7 @@ class TempoBuilder
     
     activate_step [BuildMode::LIFERAY, BuildMode::CAS], "Config Liferay bundle for CAS" do
       copy_liferay_config_file
-      set_tomcat_ports({"8005"=>"8205","8080"=>"8280", "8443"=>"8643", "8009"=> "8209"})
+      set_tomcat_ports({"8005"=>"8205","8080"=>"8280", "8443"=>"8643", "8009"=> "8209"}, "#{@@server_folder}/server/default/deploy/jboss-web.deployer/server.xml")
     end
     
     activate_step [BuildMode::REMOTE, BuildMode::TOMCAT6], "Prepare remote open source tomcat build" do
