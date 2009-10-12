@@ -61,12 +61,10 @@ class TempoBuilder
       config_ssl
     end
     
-    # if need to use CAS, please use the web-cas.xml as web.xml in ui-fw project
+    # Create a standalone Liferay server
     activate_step [BuildMode::LIFERAY], "Installing Liferay" do
       install_liferay
       if BUILD_CONFIG[:liferay][:server_folder].index("jboss")
-        # after this script execution
-        # need to add "-Dorg.intalio.tempo.configDirectory=$JBOSS_HOME/var/config" manually in bin/run.sh line 192
       else
         # Uncomment the following if necessary(only works for liferay-tomcat bundle for now)
         #setup_axis_and_ode
@@ -77,7 +75,6 @@ class TempoBuilder
         copy_missing_lib
         configure_tomcat
         setup_java_options
-        set_tomcat_ports({"8005"=>"8205","8080"=>"8280", "8443"=>"8643", "8009"=> "8209"})
       end
       chmod_sh_files
       copy_tempo_config_files("tempo-formmanager.xml")
@@ -119,7 +116,12 @@ class TempoBuilder
     
     activate_step [BuildMode::LIFERAY, BuildMode::CAS], "Config Liferay bundle for CAS" do
       copy_liferay_config_file
-      set_tomcat_ports({"8005"=>"8205","8080"=>"8280", "8443"=>"8643", "8009"=> "8209"}, "#{@@server_folder}/server/default/deploy/jboss-web.deployer/server.xml")
+      if BUILD_CONFIG[:liferay][:server_folder].index("jboss")
+        set_tomcat_ports({"8005"=>"8205","8080"=>"8280", "8443"=>"8643", "8009"=> "8209"}, "#{@@server_folder}/server/default/deploy/jboss-web.deployer/server.xml")
+      else
+        set_tomcat_ports({"8005"=>"8205","8080"=>"8280", "8443"=>"8643", "8009"=> "8209"})
+      end
+      chmod_sh_files
     end
     
     activate_step [BuildMode::REMOTE, BuildMode::TOMCAT6], "Prepare remote open source tomcat build" do
