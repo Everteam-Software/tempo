@@ -189,7 +189,7 @@ if $cygwin; then
     JBOSS_ENDORSED_DIRS=`cygpath --path --windows "$JBOSS_ENDORSED_DIRS"`
 fi
 
-JAVA_OPTS="$JAVA_OPTS -Xmx1024m -XX:MaxPermSize=256m -Dfile.encoding=UTF-8 -Duser.timezone=GMT -Dorg.intalio.tempo.configDirectory=$JBOSS_HOME/var/config"
+JAVA_OPTS="$JAVA_OPTS -Xmx1024m -XX:MaxPermSize=256m -Dfile.encoding=UTF-8 -Duser.timezone=GMT -Dorg.intalio.tempo.configDirectory=$JBOSS_HOME/var/config -Djavax.net.ssl.trustStore=$JBOSS_HOME/var/config/intalio-keystore.jks"
 
 # Display our environment
 echo "========================================================================="
