@@ -27,6 +27,7 @@ module BuildMode
   AGENT = 12
   TOKEN_SERVICE = 15
   CAS = 16
+  RELEASE = 17
 end
 
 module BuildActivate
@@ -134,6 +135,8 @@ module BuildSupport
         zipfile.add(file.sub(path+'/',''),file)
       end
     end
+    
+    archive
   end
 
   # Unzip a file
@@ -167,14 +170,14 @@ module BuildSupport
     ar = Buildr::artifact(spec)
     download(ar=>url)
     ar.invoke
-    File.cp repositories.locate(spec), filename
+    FileUtils.cp repositories.locate(spec), filename
     unzip2(filename) if unzip
   end
   # download a file from a given url and copy it to the given folder
   def download_and_copy(url, folder)
     puts "Copying #{url} to #{folder}" if BUILD_DEBUG
     download_unzip( url,false )
-    File.copy( filename_from_url(url), folder, BUILD_DEBUG )
+    FileUtils.cp( filename_from_url(url), folder, BUILD_DEBUG )
   end
   def download_unzip(url, unzip=true)
     filename = filename_from_url url
@@ -188,7 +191,7 @@ module BuildSupport
     ar = Buildr::artifact(spec)
     download(ar=>arg[:url])
     ar.invoke
-    File.cp repositories.locate(spec), filename
+    FileUtils.cp repositories.locate(spec), filename
     unzip2(filename, arg[:base_folder])
     arg[:base_folder]
   end
@@ -209,7 +212,7 @@ module BuildSupport
     if(lib.kind_of? Array) then
       lib.each {|l| locate_and_copy l,folder}
     else
-      File.cp(locate_artifact(lib),folder)
+      FileUtils.cp(locate_artifact(lib),folder)
     end
   end
 
@@ -319,7 +322,7 @@ module BuildSupport
     def install(war_file, war_name)
       puts "Installing #{war_name} to #{war_name}" if BUILD_DEBUG
       puts "Currently in folder: #{Dir.pwd}" if BUILD_DEBUG
-      File.copy(File.expand_path(war_file), File.expand_path("#{@webapp_folder}/#{war_name}"), BUILD_DEBUG)
+      FileUtils.cp(File.expand_path(war_file), File.expand_path("#{@webapp_folder}/#{war_name}"), BUILD_DEBUG)
       if @extract
         return extract_war(war_name,@webapp_folder)
       else
@@ -355,7 +358,7 @@ module BuildSupport
     
     def copy_war_artifact artifact_name, target_folder, war_name
       war_name += ".war"
-      File.cp locate_artifact(artifact_name), File.expand_path("#{target_folder}/#{war_name}")
+      FileUtils.cp locate_artifact(artifact_name), File.expand_path("#{target_folder}/#{war_name}")
     end
   end
 
@@ -367,7 +370,7 @@ module BuildSupport
     end
 
     def install aar
-      File.copy( aar, @process_folder, BUILD_DEBUG )
+      FileUtils.cp( aar, @process_folder, BUILD_DEBUG )
     end
     
     def install_artifact_aar artifact
