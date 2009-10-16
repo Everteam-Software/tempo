@@ -191,9 +191,9 @@ class TempoBuilder
     end
     
     activate_step [BuildMode::RELEASE], "Release" do
-      # ar = artifact(BUILD_CONFIG[:artifact]).from(compress(@@server_folder))
-      ar = artifact(BUILD_CONFIG[:artifact])
-      ar.install
+      ar = artifact(BUILD_CONFIG[:artifact]).from(compress(@@server_folder))
+      #ar = artifact(BUILD_CONFIG[:artifact])
+      ar.upload
     end
     
   end
