@@ -4,6 +4,7 @@
 @@script_folder = File.dirname(File.expand_path("#{$0}"))
 load "#{@@script_folder}/../scripts/tempo_builder_lib.rb"
 load "#{@@script_folder}/../scripts/config.rb"
+require "pp"
 
 BASE_PACKAGE = "org.intalio.liferay"
 VERSION_NUMBER = '6.0.002'
@@ -19,12 +20,14 @@ BUILD_CONFIG = {
   # :artifact => "org.intalio.liferay:liferay-jboss-ee:zip:6.0.001"
 }
 
-BUILD_CONFIG[:artifact] = "${BASE_PACKAGE}:liferay-jboss-ee:zip:${VERSION_NUMBER}"
+BUILD_CONFIG[:artifact] = "#{BASE_PACKAGE}:liferay-jboss-ee:zip:#{VERSION_NUMBER}"
 BUILD_CONFIG[:liferay] = {:v => :v5_2_5_jbee, :base_folder => "liferay-portal-5.2.5", :server_folder => "jboss-tomcat-4.2.3"}
 tb = TempoBuilder.new
+pp BUILD_CONFIG
 tb.build BUILD_CONFIG
 
-BUILD_CONFIG[:artifact] = "${BASE_PACKAGE}:liferay-tomcat-ee:zip:${VERSION_NUMBER}"
+BUILD_CONFIG[:artifact] = "#{BASE_PACKAGE}:liferay-tomcat-ee:zip:#{VERSION_NUMBER}"
 BUILD_CONFIG[:liferay] = {:v => :v5_2_5ee, :base_folder => "liferay-portal-5.2.5", :server_folder => "tomcat-5.5.27"}
 tb = TempoBuilder.new
+pp BUILD_CONFIG
 tb.build BUILD_CONFIG
