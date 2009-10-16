@@ -13,7 +13,7 @@ CERTIFICATE_FILENAME="tempo.cert"
 # Added: You need to have at least first name last name identical to the hostname, otherwise the certificate might not 
 # be valid. 
 #
-# system "keytool -genkey -alias tomcat -keyalg RSA"
+# system "keytool -genkey -alias tomcat -keyalg RSA -keystore #{LOCAL_KEYSTORE}"
 
 # If you need to export the certificate.
 #
