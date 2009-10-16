@@ -71,7 +71,7 @@ class TempoBuilder
         #install_tempo_webapps
         #install_tmp
         #install_absence_request
-        copy_missing_lib
+        # copy_missing_lib
         configure_tomcat
         setup_java_options
       end
