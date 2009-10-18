@@ -177,7 +177,7 @@ module BuildSupport
   def download_and_copy(url, folder)
     puts "Copying #{url} to #{folder}" if BUILD_DEBUG
     download_unzip( url,false )
-    FileUtils.cp( filename_from_url(url), folder, BUILD_DEBUG )
+    FileUtils.cp( filename_from_url(url), folder)
   end
   def download_unzip(url, unzip=true)
     filename = filename_from_url url
@@ -322,7 +322,7 @@ module BuildSupport
     def install(war_file, war_name)
       puts "Installing #{war_name} to #{war_name}" if BUILD_DEBUG
       puts "Currently in folder: #{Dir.pwd}" if BUILD_DEBUG
-      FileUtils.cp(File.expand_path(war_file), File.expand_path("#{@webapp_folder}/#{war_name}"), BUILD_DEBUG)
+      FileUtils.cp(File.expand_path(war_file), File.expand_path("#{@webapp_folder}/#{war_name}"))
       if @extract
         return extract_war(war_name,@webapp_folder)
       else
@@ -370,7 +370,7 @@ module BuildSupport
     end
 
     def install aar
-      FileUtils.cp( aar, @process_folder, BUILD_DEBUG )
+      FileUtils.cp( aar, @process_folder)
     end
     
     def install_artifact_aar artifact
