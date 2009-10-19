@@ -55,15 +55,15 @@ public class TaskFetcher {
 	 * and std==null
 	 */
 	private final String SITA_FILTER_ATD = "(T._ActualDeparture > (?3))";
-	private final String SITA_FILTER_STD = "(T._ActualDeparture IS NULL AND (T._ScheduledDeparture > (?3)) )";
-	private final String SITA_FILTER_ETD = "(T._ActualDeparture IS NULL AND  T._ScheduledDeparture IS NULL AND T._EstimatedDeparture >(?3) )";
-	private final String SITA_FILTER_xTD_NULL = "(T._ActualDeparture IS NULL AND T._ScheduledDeparture IS NULL AND T._EstimatedDeparture IS NULL)";
-	private final String SITA_FILTER_xTD = "( "+ SITA_FILTER_ATD + " OR " + SITA_FILTER_STD + " OR " + SITA_FILTER_ETD + " OR " + SITA_FILTER_xTD_NULL+ " )";
+	private final String SITA_FILTER_ETD = "(T._ActualDeparture IS NULL AND T._EstimatedDeparture > (?3) )";
+	private final String SITA_FILTER_STD = "(T._ActualDeparture IS NULL AND T._EstimatedDeparture IS NULL AND T._ScheduledDeparture > (?3) )";
+	private final String SITA_FILTER_xTD_NULL = "(T._ActualDeparture IS NULL AND T._EstimatedDeparture IS NULL AND T._ScheduledDeparture IS NULL)";
+	private final String SITA_FILTER_xTD = "( "+ SITA_FILTER_ATD + " OR " + SITA_FILTER_ETD + " OR " + SITA_FILTER_STD + " OR " + SITA_FILTER_xTD_NULL+ " )";
 	private final String SITA_FILTER_ATA = "(T._ActualArrival < (?4))";
-	private final String SITA_FILTER_STA = "(T._ActualArrival IS NULL AND (T._ScheduledArrival <(?4)) )";
-	private final String SITA_FILTER_ETA = "(T._ActualArrival IS NULL AND T._ScheduledArrival IS NULL AND (T._EstimatedArrival < (?4) ) )";
-	private final String SITA_FILTER_xTA_NULL = "(T._ActualArrival IS NULL AND T._ScheduledArrival IS NULL AND T._EstimatedArrival IS NULL)";
-	private final String SITA_FILTER_xTA = "( "+ SITA_FILTER_ATA + " OR " + SITA_FILTER_STA + " OR " + SITA_FILTER_ETA + " OR " + SITA_FILTER_xTA_NULL+ " )";
+	private final String SITA_FILTER_ETA = "(T._ActualArrival IS NULL AND T._EstimatedArrival < (?4) )";
+	private final String SITA_FILTER_STA = "(T._ActualArrival IS NULL AND T._EstimatedArrival IS NULL AND T._ScheduledArrival < (?4) )";
+	private final String SITA_FILTER_xTA_NULL = "(T._ActualArrival IS NULL AND T._EstimatedArrival IS NULL AND T._ScheduledArrival IS NULL)";
+	private final String SITA_FILTER_xTA = "( "+ SITA_FILTER_ATA + " OR " + SITA_FILTER_ETA + " OR " + SITA_FILTER_STA + " OR " + SITA_FILTER_xTA_NULL+ " )";
 	private final String QUERY_WITH_FILTER = ""
 	+ " AND ( " + SITA_FILTER_xTD 
 	+ " AND "+ SITA_FILTER_xTA 
