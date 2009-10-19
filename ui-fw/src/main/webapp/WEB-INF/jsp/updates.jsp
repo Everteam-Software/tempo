@@ -21,6 +21,13 @@
 						</c:choose>
 						</a>
 						]]></cell>
+            	<cell>
+    					    <c:choose>
+    							<c:when test="${taskHolder.task.priority != '0'}">
+    								${taskHolder.task.priority}
+    							</c:when>
+    						</c:choose>
+    					</cell>
 						<cell><![CDATA[<a href="${taskFullURL}" title="${taskHolder.task.creationDate}" target="taskform"><fmt:formatDate value="${taskHolder.task.creationDate}" type="both" timeStyle="short" dateStyle="short" /></a>]]></cell>
 				</row>
 			</c:forEach>
