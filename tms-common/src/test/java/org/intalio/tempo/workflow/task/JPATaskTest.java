@@ -2,8 +2,12 @@ package org.intalio.tempo.workflow.task;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
@@ -17,8 +21,11 @@ import junit.framework.Assert;
 import junit.framework.JUnit4TestAdapter;
 
 import org.intalio.tempo.workflow.auth.UserRoles;
+import org.intalio.tempo.workflow.task.attachments.Attachment;
+import org.intalio.tempo.workflow.task.attachments.AttachmentMetadata;
 import org.intalio.tempo.workflow.task.xml.TaskMarshaller;
 import org.intalio.tempo.workflow.task.xml.XmlTooling;
+import org.intalio.tempo.workflow.util.TaskEquality;
 import org.intalio.tempo.workflow.util.jpa.TaskFetcher;
 import org.junit.After;
 import org.junit.Before;
@@ -825,30 +832,10 @@ public class JPATaskTest {
 
 		testFetchForUserRolesWithCriteria("user1", new String[] { "role1" },
 				Notification.class, null, 1);
-		// testFetchForUserRolesWithCriteria("user3", new String[] { "role3" },
-		// Notification.class, null, 0);
-		// testFetchForUserRolesWithCriteria("user1", new String[] { "role1" },
-		// PIPATask.class, null, 0);
-
-		checkRemoved(task2.getID());
-	}
-
-	@Test
-	public void testFetchAvailabeTasksWithCriteriaNOTI() throws Exception {
-		String id = getUniqueTaskID();
-		Notification task2 = new Notification(id, new URI(
-				"http://hellonico.net"), getXmlSampleDocument());
-		task2.getRoleOwners().add("role1");
-		task2.getUserOwners().add("user1");
-
-		persist(task2);
-
-		testFetchForUserRolesWithCriteria("user1", new String[] { "role1" },
-				Notification.class, null, 1);
-		// testFetchForUserRolesWithCriteria("user3", new String[] { "role3" },
-		// Notification.class, null, 0);
-		// testFetchForUserRolesWithCriteria("user1", new String[] { "role1" },
-		// PIPATask.class, null, 0);
+		 testFetchForUserRolesWithCriteria("user3", new String[] { "role3" },
+		 Notification.class, null, 0);
+		 testFetchForUserRolesWithCriteria("user1", new String[] { "role1" },
+		 PIPATask.class, null, 0);
 
 		checkRemoved(task2.getID());
 	}
