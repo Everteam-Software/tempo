@@ -96,16 +96,16 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
     @Lob
     private String _output;
 
-    @PersistentMap(keyCascade = CascadeType.ALL, elementCascade = CascadeType.ALL, keyType = String.class, elementType = Attachment.class, fetch=FetchType.EAGER)
+    @PersistentMap(keyCascade = CascadeType.ALL, elementCascade = CascadeType.ALL, keyType = String.class, elementType = Attachment.class)
     @MapKey(name = "payloadURLAsString")
     @ContainerTable(name = "tempo_attachment_map")
     private Map<String, Attachment> _attachments = new HashMap<String, Attachment>();
 
-    @Persistent(fetch= FetchType.EAGER)
+    @Persistent(fetch= FetchType.LAZY)
     @Column(name = "is_chained_before")
     private Boolean _isChainedBefore = false;
 
-    @Persistent(fetch= FetchType.EAGER)
+    @Persistent(fetch= FetchType.LAZY)
     @Column(name = "previous_task_id")
     private String _previousTaskID = null;
 

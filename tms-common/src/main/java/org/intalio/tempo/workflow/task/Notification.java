@@ -62,7 +62,7 @@ public class Notification extends Task implements ITaskWithState, ITaskWithInput
     @Column(name = "priority")
     private Integer _priority;
 
-    @Persistent (fetch = FetchType.LAZY)
+    @Persistent
     @Column(name = "instanceId")
     private String _instanceId;
     
