@@ -81,6 +81,7 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
             xmlCursor.toNextToken();
             TaskMetadata taskMetadata = com.intalio.bpms.workflow.taskManagementServices20051109.Task.Factory.newInstance().addNewMetadata();
             taskMetadata.set(xmlCursor.getObject());
+            xmlCursor.dispose();
             return unmarshalTaskFromMetadata(taskMetadata);
         } catch (InvalidInputFormatException e) {
             throw e;
@@ -256,62 +257,67 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
                 for (int i = 0; i < attachmentsElement.sizeOfAttachmentArray(); i++) {
                     com.intalio.bpms.workflow.taskManagementServices20051109.Attachment attachmentElement = attachmentsElement.getAttachmentArray(i);
 
-                    if (attachmentElement != null
+                    if (attachmentElement != null) {
+                        // The following line has been added to handle the case
+                        // where an attachment element is present
+                        // but do not contain any data: no title,
+                        // nodescription , ect...
+                        // The reason why is this is added is to
+                        // handle the initial initialization on
+                        // Designer
+                        // In which designer generates by default an
+                        // attachment element as a part of the
+                        // initialization of the message
+                        // even if no attachment is used
 
-                    // The following line has been added to handle the case
-                                    // where an attachment element is present
-                                    // but do not contain any data: no title,
-                                    // nodescription , ect...
-                                    // The reason why is this is added is to
-                                    // handle the initial initialization on
-                                    // Designer
-                                    // In which designer generates by default an
-                                    // attachment element as a part of the
-                                    // initialization of the message
-                                    // even if no attachment is used
+                        // TODO: When Designer and Server will
+                        // support "lazy initialization", this line
+                        // can be omitted
 
-                                    // TODO: When Designer and Server will
-                                    // support "lazy initialization", this line
-                                    // can be omitted
-
-                                    && attachmentElement.newCursor().getTextValue().trim().length() != 0) {
-                        com.intalio.bpms.workflow.taskManagementServices20051109.AttachmentMetadata attachmentMetadata = attachmentElement
-                                        .getAttachmentMetadata();
-                        AttachmentMetadata metadata = new AttachmentMetadata();
-                        String mimeType = attachmentMetadata.getMimeType();
-                        if (mimeType != null) {
-                            metadata.setMimeType(mimeType);
-                        }
-                        String fileName = attachmentMetadata.getFileName();
-                        if (fileName != null)
-                            metadata.setFileName(fileName);
-                        String title = attachmentMetadata.getTitle();
-                        if (title != null)
-                            metadata.setTitle(title);
-                        String description2 = attachmentMetadata.getDescription();
-                        if (description2 != null)
-                            metadata.setDescription(description2);
-
+                        XmlCursor attCursor = attachmentElement.newCursor();
                         try {
-                            Calendar cal = attachmentMetadata.getCreationDate();
-                            if ((cal != null)) {
-                                metadata.setCreationDate(new XsdDateTime(cal.toString()).getTime());
+                            if (attCursor.getTextValue().trim().length() != 0) {
+                                com.intalio.bpms.workflow.taskManagementServices20051109.AttachmentMetadata attachmentMetadata = attachmentElement
+                                                .getAttachmentMetadata();
+                                AttachmentMetadata metadata = new AttachmentMetadata();
+                                String mimeType = attachmentMetadata.getMimeType();
+                                if (mimeType != null) {
+                                    metadata.setMimeType(mimeType);
+                                }
+                                String fileName = attachmentMetadata.getFileName();
+                                if (fileName != null)
+                                    metadata.setFileName(fileName);
+                                String title = attachmentMetadata.getTitle();
+                                if (title != null)
+                                    metadata.setTitle(title);
+                                String description2 = attachmentMetadata.getDescription();
+                                if (description2 != null)
+                                    metadata.setDescription(description2);
+
+                                try {
+                                    Calendar cal = attachmentMetadata.getCreationDate();
+                                    if ((cal != null)) {
+                                        metadata.setCreationDate(new XsdDateTime(cal.toString()).getTime());
+                                    }
+                                } catch (Exception e) {
+                                    _logger.warn("Error in unmarshalling creation date in attachment from metadata");
+                                    metadata.setCreationDate(new Date());
+                                }
+
+                                String payloadURLStr = attachmentElement.getPayloadUrl();
+                                URL payloadURL;
+                                try {
+                                    payloadURL = new URL(payloadURLStr);
+                                } catch (MalformedURLException e) {
+                                    throw new InvalidInputFormatException(e);
+                                }
+
+                                Attachment attachment = new Attachment(metadata, payloadURL);
+                                taskWithAttachments.addAttachment(attachment);
                             }
-                        } catch (Exception e) {
-                            _logger.warn("Error in unmarshalling creation date in attachment from metadata");
-                            metadata.setCreationDate(new Date());
+                        } finally {
+                            attCursor.dispose();
                         }
-
-                        String payloadURLStr = attachmentElement.getPayloadUrl();
-                        URL payloadURL;
-                        try {
-                            payloadURL = new URL(payloadURLStr);
-                        } catch (MalformedURLException e) {
-                            throw new InvalidInputFormatException(e);
-                        }
-
-                        Attachment attachment = new Attachment(metadata, payloadURL);
-                        taskWithAttachments.addAttachment(attachment);
                     }
                 }
             }
@@ -386,14 +392,16 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
             throw new RequiredArgumentException("containerElement");
         }
         XmlCursor payloadCursor = containerElement.newCursor();
-
-        if (!payloadCursor.toFirstChild()) {
-            throw new InvalidInputFormatException("Payload container element must contain exactly one child element");
+        try {
+            if (!payloadCursor.toFirstChild()) {
+                throw new InvalidInputFormatException("Payload container element must contain exactly one child element");
+            }
+            if (payloadCursor.toNextSibling()) {
+                throw new InvalidInputFormatException("Task payload must consist of exactly one element.");
+            }
+        } finally {
+            payloadCursor.dispose();
         }
-        if (payloadCursor.toNextSibling()) {
-            throw new InvalidInputFormatException("Task payload must consist of exactly one element.");
-        }
-        payloadCursor.dispose();
     }
 
     public XmlObject unmarshalTaskInput(XmlObject inputContainerElement) throws InvalidInputFormatException {
@@ -492,11 +500,16 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
      */
     private String serializeXMLObject(XmlObject xmlObject) {
         XmlCursor cursor = xmlObject.newCursor();
-        cursor.toFirstChild();
-        XmlOptions opts = new XmlOptions();
-        opts.setSaveNoXmlDecl();
-        opts.setLoadReplaceDocumentElement(cursor.getName());
-        return cursor.xmlText(opts);
+        try {
+            cursor.toFirstChild();
+            XmlOptions opts = new XmlOptions();
+            opts.setSaveNoXmlDecl();
+            opts.setLoadReplaceDocumentElement(cursor.getName());
+            return cursor.xmlText(opts);
+        } finally {
+            cursor.dispose();
+        }
+
     }
 
     private void checkNS(XmlObject containerElement) throws InvalidInputFormatException {
@@ -504,15 +517,17 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
             throw new RequiredArgumentException("containerElement");
         }
         XmlCursor payloadCursor = containerElement.newCursor();
-
-        if (!payloadCursor.toFirstChild()) {
-            throw new InvalidInputFormatException("No taskmetadata element");
+        try {
+            if (!payloadCursor.toFirstChild()) {
+                throw new InvalidInputFormatException("No taskmetadata element");
+            }
+            QName qName = payloadCursor.getName();
+            if (qName == null || qName.getNamespaceURI() == null || qName.getNamespaceURI().trim().length() == 0) {
+                throw new InvalidInputFormatException("No namespace defined");
+            }
+        } finally {
+            payloadCursor.dispose();
         }
-        QName qName = payloadCursor.getName();
-        if (qName == null || qName.getNamespaceURI() == null || qName.getNamespaceURI().trim().length() == 0) {
-            throw new InvalidInputFormatException("No namespace defined");
-        }
-        payloadCursor.dispose();
     }
 
 }
