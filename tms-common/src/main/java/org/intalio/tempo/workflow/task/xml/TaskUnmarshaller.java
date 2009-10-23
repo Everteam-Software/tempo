@@ -60,6 +60,12 @@ import org.w3c.dom.Document;
 import com.intalio.bpms.workflow.taskManagementServices20051109.Attachments;
 import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
 
+/**
+ * As noted by Alexis, we are now careful of using dispose properly throughout this class.
+ * You can refer to this for more info:
+ * <a href="http://xmlbeans.apache.org/docs/2.0.0/reference/org/apache/xmlbeans/XmlCursor.html#dispose%28%29">Dispose cursors</a>
+ *
+ */
 public class TaskUnmarshaller extends XmlBeanUnmarshaller {
 
     private static final Logger _logger = LoggerFactory.getLogger(TaskUnmarshaller.class);
