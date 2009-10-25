@@ -42,6 +42,15 @@ def install_liferay build_folder="tempo-liferay-#{time_now}"
   @@config_folder = check_folder("#{@@server_folder}/var/config")
 end
 
+def install_jetty build_folder="tempo-jetty-#{time_now}"
+  @@server_folder = rename_folder(download_unzip(BUILD_URI[:jetty][:v7], true), build_folder)
+  @@webapp_folder = "#{@@server_folder}/webapps"
+  @@wi = WarInstaller.new @@webapp_folder, true, true
+  @@lib_folder = "#{@@server_folder}/lib/ext"
+  @@log_folder = check_folder("#{@@server_folder}/var/logs")
+  @@config_folder = check_folder("#{@@server_folder}/var/config")
+end
+
 def time_now
   Time.now.strftime('%Y.%m.%d')  
 end

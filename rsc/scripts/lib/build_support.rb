@@ -28,6 +28,7 @@ module BuildMode
   TOKEN_SERVICE = 15
   CAS = 16
   RELEASE = 17
+  JETTY = 18
 end
 
 module BuildActivate
@@ -469,6 +470,9 @@ BUILD_URI = {
 	  :v2_1 => "http://downloads.sourceforge.net/sourceforge/alfresco/alfresco-community-war-2.1.0.zip",
     :v2_9 => "http://downloads.sourceforge.net/sourceforge/alfresco/alfresco-community-war-2.9.0B.zip",
     :v3_0 => "http://downloads.sourceforge.net/sourceforge/alfresco/alfresco-labs-war-3a.1032.zip"  
+	},
+	:jetty => {
+	  :v7 => "http://dist.codehaus.org/jetty/jetty-7.0.0/jetty-hightide-7.0.0.v20091005.zip"
 	}, 
 	:opensso_agent => "http://download.java.net/general/opensso/nightly/latest/j2eeagents/tomcat_v6_agent_3.zip"
 }

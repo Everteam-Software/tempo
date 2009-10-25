@@ -31,6 +31,7 @@ load "#{@@script_folder}/../scripts/lib/bundle_servers.rb"
 load "#{@@script_folder}/../scripts/lib/bundle_opensso.rb"
 load "#{@@script_folder}/../scripts/lib/bundle_standalone.rb"
 load "#{@@script_folder}/../scripts/lib/bundle_liferay_uifw.rb"
+load "#{@@script_folder}/../scripts/lib/bundle_jetty.rb"
 # load "#{@@script_folder}/../scripts/config.rb"
 TEMPO_SVN="#{@@script_folder}/../.."
 
@@ -85,6 +86,21 @@ class TempoBuilder
       install_tomcat
     end
 
+    activate_step [BuildMode::JETTY], "Downloading JETTY" do
+      install_jetty
+      setup_axis_and_ode
+      install_tempo_services
+      install_tempo_webapps
+      install_tmp
+      install_absence_request
+      copy_missing_lib
+      clean_unused_files
+      configure_jetty
+      generate_mysql_file
+      chmod_sh_files
+      copy_tempo_config_files
+    end
+    
     # this creates a full tomcat5 build, but does not include the uifw
     activate_step [BuildMode::BPMS], "Prepare standalone open source tomcat build" do
       install_tomcat5
@@ -175,6 +191,18 @@ class TempoBuilder
       install_embedded_apacheds
     end
 
+    activate_step [BuildMode::JETTY, BuildMode::LDAP], "Install LDAP"  do
+      install_embedded_apacheds
+    end
+    
+    activate_step [BuildMode::JETTY, BuildMode::UIFW], "Install LDAP"  do
+      configure_ui_fw_jetty
+    end
+    
+    activate_step [BuildMode::JETTY,BuildMode::CAS], "Customize tomcat build for CAS" do
+      install_cas
+    end
+    
     # add the configuration for ui-fw so that it can use opensso
     activate_step [BuildMode::UIFW,BuildMode::REMOTE,BuildMode::OPENSSO], "Configuring task list for opensso" do
       enable_opensso_in_uifw

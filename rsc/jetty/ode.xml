@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://jetty.mortbay.org/configure.dtd">
+
+<!-- =============================================================== -->
+<!-- Configure the ode webapp                                  -->
+<!-- =============================================================== -->
+<Configure id='ode' class="org.eclipse.jetty.webapp.WebAppContext">
+
+<!-- Ensure Jetty Plus features are enabled for this webapp                      -->
+  <Set name="configurationClasses">
+    <Array type="java.lang.String">
+      <Item>org.eclipse.jetty.webapp.WebInfConfiguration</Item>
+      <Item>org.eclipse.jetty.webapp.WebXmlConfiguration</Item>
+      <Item>org.eclipse.jetty.webapp.MetaInfConfiguration</Item>
+      <Item>org.eclipse.jetty.webapp.FragmentConfiguration</Item>
+      <Item>org.eclipse.jetty.plus.webapp.EnvConfiguration</Item>
+      <Item>org.eclipse.jetty.plus.webapp.Configuration</Item>
+      <Item>org.eclipse.jetty.webapp.JettyWebXmlConfiguration</Item>
+      <Item>org.eclipse.jetty.webapp.TagLibConfiguration</Item>
+    </Array>
+  </Set>
+
+  <Set name="contextPath">/ode</Set>
+  <Set name="war"><SystemProperty name="jetty.home" default="."/>/webapps/ode</Set>
+  <Set name="extractWAR">false</Set>
+  <Set name="copyWebDir">false</Set>
+  <Set name="configurationDiscovered">true</Set>
+
+<!-- =============================================================== -->
+<!-- Configure the datasource                                        -->
+<!-- =============================================================== -->
+    <New id="BPMSDB" class="org.eclipse.jetty.plus.jndi.Resource">
+    <Arg><Ref id='ode'/></Arg>
+    <Arg>jdbc/BPMSDB</Arg>
+    <Arg>
+     <New class="org.apache.commons.dbcp.BasicDataSource">
+         <Set name="driverClassName">com.mysql.jdbc.Driver</Set>
+         <Set name="url">jdbc:mysql://localhost:3306/bpms?relaxAutoCommit=true</Set>
+         <Set name="username">root</Set>
+         <Set name="password"></Set>
+         <Set name="maxActive">100</Set>
+         <Set name="maxIdle">30</Set>
+         <Set name="maxWait">10000</Set>
+     </New>
+    </Arg>
+   </New>
+</Configure>
