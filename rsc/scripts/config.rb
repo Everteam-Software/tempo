@@ -66,7 +66,7 @@ BUILD_CONFIG = {
   :tempo => {
     :core => "6.0.0.77",
     # not used until we've upgraded to the new deploy and security packages
-    :security => "1.0.6",
+    :security => "1.0.5",
     :deploy => "1.0.25",
     
     :processes => "6.0.6",
