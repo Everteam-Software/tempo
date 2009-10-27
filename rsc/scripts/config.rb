@@ -2,11 +2,11 @@ include BuildSupport
 BuildSupport::BUILD_DEBUG = true
 
 BUILD_CONFIG = {
-  :directory => "../tempo",
+  :directory => "../tempo.jetty",
   
   # build with ode, axis2, uifw
   #
-   :mode => [BuildMode::BPMS,BuildMode::UIFW],
+  # :mode => [BuildMode::BPMS,BuildMode::UIFW],
   #
   
   # build an opensso server
@@ -53,7 +53,7 @@ BUILD_CONFIG = {
   
   # build with jetty and ui-fw along with CAS and LDAP
   #
-  #:mode => [BuildMode::JETTY, BuildMode::UIFW, BuildMode::CAS, BuildMode::LDAP],
+  :mode => [BuildMode::JETTY, BuildMode::UIFW, BuildMode::CAS, BuildMode::LDAP],
   #
   
   :ode => :v1_3_snapshot,
@@ -64,14 +64,14 @@ BUILD_CONFIG = {
   #:liferay => {:v => :v5_2_5_jbee, :base_folder => "liferay-portal-5.2.5", :server_folder => "jboss-tomcat-4.2.3"},  
   :alfresco => :v3_0,
   :tempo => {
-    :core => "6.0.0.47",
+    :core => "6.0.0.77",
     # not used until we've upgraded to the new deploy and security packages
-    :security => "1.0.1",
-    :deploy => "1.0.3",
+    :security => "1.0.6",
+    :deploy => "1.0.25",
     
     :processes => "6.0.6",
     :formManager => "6.0.0.40",
-    :apacheds => "6.0.0.34",
-    :cas => "6.0.0.34"
+    :apacheds => "6.0.0.37",
+    :cas => "6.0.0.35"
   }
 }
