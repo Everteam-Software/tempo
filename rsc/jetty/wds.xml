@@ -59,7 +59,7 @@
    </Ref>
    <New id="TempoRegistry" class="org.eclipse.jetty.plus.jndi.Resource">
     <Arg><Ref id='wds'/></Arg>
-    <Arg>registry/TempoRegistry</Arg>
+    <Arg>registry/DeployRegistry</Arg>
     <Arg>
        <Ref id="staticRegistry"/>
     </Arg>

@@ -44,4 +44,24 @@
      </New>
     </Arg>
    </New>
+
+<!-- =============================================================== -->
+<!-- Configure the tempo registry webapp                             -->
+<!-- =============================================================== -->
+   <New id="registry" class="org.intalio.deploy.registry.RegistryObjectFactory"></New>
+   <Ref id="registry">
+       <Call id="staticRegistry" name="getObjectInstance">
+          <Arg></Arg>
+          <Arg></Arg>
+          <Arg></Arg>
+          <Arg></Arg>
+       </Call>
+   </Ref>
+   <New id="TempoRegistry" class="org.eclipse.jetty.plus.jndi.Resource">
+    <Arg><Ref id='ode'/></Arg>
+    <Arg>registry/DeployRegistry</Arg>
+    <Arg>
+       <Ref id="staticRegistry"/>
+    </Arg>
+   </New>
 </Configure>

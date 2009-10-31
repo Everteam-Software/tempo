@@ -104,4 +104,9 @@
 	    <res-auth>Container</res-auth>
 	    <res-sharing-scope>Shareable</res-sharing-scope>
 	  </resource-ref>
+	  <resource-ref>
+		<res-ref-name>registry/DeployRegistry</res-ref-name>
+		<res-type>org.intalio.deploy.registry.Registry</res-type>
+		<res-sharing-scope>Shareable</res-sharing-scope>
+	  </resource-ref>
 </web-app>
