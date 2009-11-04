@@ -4,11 +4,10 @@
 @@script_folder = File.dirname(File.expand_path("#{$0}"))
 load "#{@@script_folder}/../scripts/tempo_builder_lib.rb"
 load "#{@@script_folder}/../scripts/config.rb"
-require "pp"
 
 BASE_PACKAGE = "org.intalio.jetty"
-VERSION_NUMBER = '6.0.002'
-TEMPO_VERSION = "6.0.0.77"
+VERSION_NUMBER = '6.0.003'
+TEMPO_VERSION = "6.0.0.78"
 
 BUILD_CONFIG = {
   :directory => "./target",
@@ -30,5 +29,4 @@ BUILD_CONFIG = {
 }
 
 tb = TempoBuilder.new
-pp BUILD_CONFIG
 tb.build BUILD_CONFIG

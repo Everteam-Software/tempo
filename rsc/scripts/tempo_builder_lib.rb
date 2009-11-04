@@ -7,6 +7,7 @@ require "rubygems"
 
 gem "buildr",">=1.3.3"
 require "buildr"
+require "pp"
 
 # The goal of this script is to
 #
@@ -43,6 +44,7 @@ class TempoBuilder
   def build cconfig, show_steps=false
     Dir.chdir check_folder(cconfig[:directory])
     @config=cconfig
+    pp @config
     @show_steps = show_steps
 
     # Create a standalone opensso server
