@@ -82,7 +82,7 @@ public final class FormDispatcherConfiguration {
     /**
      * Timeout when sending messages
      */
-    private int _httpTimeout = 2000;
+    private int _httpTimeout = 10000;
 
     /**
      * Returns the shared singleton instance of this class.
