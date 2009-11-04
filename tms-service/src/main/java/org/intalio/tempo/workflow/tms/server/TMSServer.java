@@ -77,7 +77,7 @@ public class TMSServer implements ITMSServer {
         this._permissions = permissions;
     }
 
-    public long getHttpTimeout() {
+    public int getHttpTimeout() {
         return _httpTimeout;
     }
 

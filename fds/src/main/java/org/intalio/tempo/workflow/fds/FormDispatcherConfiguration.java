@@ -102,7 +102,7 @@ public final class FormDispatcherConfiguration {
         return _pxeBaseUrl;
     }
 
-    public long getHttpTimeout() {
+    public int getHttpTimeout() {
         return _httpTimeout;
     }
 
