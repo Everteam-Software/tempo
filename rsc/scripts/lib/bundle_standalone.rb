@@ -15,7 +15,7 @@ def setup_axis
   @@axis2_war_folder = @@wi.install axis_war, "axis2.war"
   
   @@config_folder = check_folder("#{@@server_folder}/var/config")
-  File.copy "#{TEMPO_SVN}/rsc/bundle-config/axis2.xml", "#{@@webapp_folder}/axis2/WEB-INF/conf"
+  FileUtils.cp "#{TEMPO_SVN}/rsc/bundle-config/axis2.xml", "#{@@webapp_folder}/axis2/WEB-INF/conf"
   
   @@si = ServiceInstaller.new( @@axis2_war_folder )
 end
@@ -31,7 +31,7 @@ def setup_ode
   locate_and_copy("org.intalio.tempo:tempo-processes-xpath-extensions:jar:#{BUILD_CONFIG[:tempo][:processes]}", "#{@@ode_war_folder}/WEB-INF/lib")
 
   # copy ode related configuration
-  File.copy "#{TEMPO_SVN}/rsc/bundle-config/ode-axis2.properties", @@config_folder
+  FileUtils.cp "#{TEMPO_SVN}/rsc/bundle-config/ode-axis2.properties", @@config_folder
   
   # setup of common deployment service, needs ode-ext from the following project:
   # http://github.com/intalio/ode-ext/tree/master

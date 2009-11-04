@@ -128,7 +128,8 @@ module BuildSupport
   # with a .zip extension appended
   def compress(path)
     path.sub!(%r[/$],'')
-    archive = File.join(path,"../"+File.basename(path))+'.zip'
+    archive = File.expand_path(File.join(path,"../"+File.basename(path))+'.zip')
+    pp archive if BUILD_DEBUG
     FileUtils.rm archive, :force=>true
 
     Zip::ZipFile.open(archive, 'w') do |zipfile|
