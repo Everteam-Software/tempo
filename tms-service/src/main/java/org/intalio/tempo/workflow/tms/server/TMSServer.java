@@ -59,7 +59,7 @@ public class TMSServer implements ITMSServer {
     private IAuthProvider _authProvider;
     private ITaskDAOConnectionFactory _taskDAOFactory;
     private TaskPermissions _permissions;
-    private long _httpTimeout = 2000;
+    private int _httpTimeout = 2000;
 
     public TMSServer() {
     }
@@ -81,7 +81,7 @@ public class TMSServer implements ITMSServer {
         return _httpTimeout;
     }
 
-    public void setHttpTimeout(long httpTimeout) {
+    public void setHttpTimeout(int httpTimeout) {
         _httpTimeout = httpTimeout;
     }
 

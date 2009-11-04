@@ -82,7 +82,7 @@ public final class FormDispatcherConfiguration {
     /**
      * Timeout when sending messages
      */
-    private long _httpTimeout = 2000;
+    private int _httpTimeout = 2000;
 
     /**
      * Returns the shared singleton instance of this class.
@@ -106,7 +106,7 @@ public final class FormDispatcherConfiguration {
         return _httpTimeout;
     }
 
-    public void setHttpTimeout(long httpTimeout) {
+    public void setHttpTimeout(int httpTimeout) {
         _httpTimeout = httpTimeout;
     }
 
@@ -165,7 +165,7 @@ public final class FormDispatcherConfiguration {
             String fdsUrl = configDocument.valueOf("/config/fdsUrl");
 
             try {
-                _httpTimeout = Long.parseLong(configDocument.valueOf("/config/fdsUrl"));
+                _httpTimeout = Integer.parseInt(configDocument.valueOf("/config/fdsUrl"));
             } catch (Exception e) {
                 _log.error("Not using invalid value for httptimeout");
             }
