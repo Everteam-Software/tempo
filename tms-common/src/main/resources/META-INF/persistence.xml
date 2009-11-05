@@ -29,6 +29,7 @@
         <class>org.intalio.tempo.workflow.task.AssignedMechanics</class>
         <class>org.intalio.tempo.workflow.task.RTR</class>
         <class>org.intalio.tempo.workflow.task.AssignedAvionics</class>
+        <class>org.intalio.tempo.workflow.task.Inspection</class>
         <class>org.intalio.tempo.workflow.task.PATask</class>
         <class>org.intalio.tempo.workflow.task.Task</class>
         <class>org.intalio.tempo.workflow.task.PIPATask</class>

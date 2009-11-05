@@ -44,10 +44,12 @@ import com.intalio.gi.forms.tAmanagement.DataDocument;
 import com.intalio.gi.forms.tAmanagement.InspectionType;
 import com.intalio.gi.forms.tAmanagement.UpdateInputDocument;
 import com.intalio.gi.forms.tAmanagement.DataDocument.Data;
+import com.intalio.gi.forms.tAmanagement.InspectionType.MaintTasks;
 import com.intalio.gi.forms.tAmanagement.InspectionType.RTR;
 import com.intalio.gi.forms.tAmanagement.InspectionType.RTR.RTRstatus;
 import com.intalio.gi.forms.tAmanagement.UpdateInputDocument.UpdateInput;
 import com.intalio.gi.forms.tAmanagement.UpdateInputDocument.UpdateInput.FMR;
+import com.intalio.gi.forms.tAmanagement.UpdateInputDocument.UpdateInput.FMR.MaintTask;
 import com.intalio.gi.forms.tAmanagement.impl.DataDocumentImpl;
 import com.intalio.gi.forms.tAmanagement.impl.UpdateInputDocumentImpl;
 import com.intalio.gi.forms.tAmanagement.impl.InspectionTypeImpl.RTRImpl;
@@ -693,27 +695,27 @@ public class SITAservice {
 				arrivalDeparture.setATA(FMR_ATA);
 			}
 
-			// if (FMRelement.xgetSTA() != null &&
-			// FMRelement.xgetSTA().validate()) {
-			// Calendar FMR_STA = FMRelement.getSTA();
-			// FMR_STA = removeTimezone(FMR_STA);
-			// if (arrivalDeparture.xgetScheduledArrivalDate() != null
-			// && arrivalDeparture.xgetScheduledArrivalDate()
-			// .validate()
-			// && arrivalDeparture.xgetSTA() != null
-			// && arrivalDeparture.xgetSTA().validate()) {
-			// Calendar dateElement = arrivalDeparture
-			// .getScheduledArrivalDate();
-			// Calendar timeElement = arrivalDeparture.getSTA();
-			//
-			// if (!FMR_STA.equals(add(dateElement, timeElement))) {
-			// update = true;
-			// }
-			//
-			// }
-			// arrivalDeparture.setScheduledArrivalDate(FMR_STA);
-			// arrivalDeparture.setSTA(FMR_STA);
-			// }
+			if (FMRelement.xgetSTA() != null && FMRelement.xgetSTA().validate()) {
+				Calendar FMR_STA = FMRelement.getSTA();
+				FMR_STA = removeTimezone(FMR_STA);
+				if (arrivalDeparture.xgetScheduledArrivalDate() != null
+						&& arrivalDeparture.xgetScheduledArrivalDate()
+								.validate()
+						&& arrivalDeparture.xgetSTA() != null
+						&& arrivalDeparture.xgetSTA().validate()) {
+					Calendar dateElement = arrivalDeparture
+							.getScheduledArrivalDate();
+					Calendar timeElement = arrivalDeparture.getSTA();
+
+					if (!FMR_STA.equals(add(dateElement, timeElement))) {
+						update = true;
+					}
+
+				}
+				arrivalDeparture.setScheduledArrivalDate(FMR_STA);
+				arrivalDeparture.setSTA(FMR_STA);
+			}
+
 			if (FMRelement.xgetSTD() != null && FMRelement.xgetSTD().validate()) {
 				Calendar FMR_STD = FMRelement.getSTD();
 				FMR_STD = removeTimezone(FMR_STD);
@@ -814,94 +816,135 @@ public class SITAservice {
 					.getInspection();
 			if (FMRelement.xgetStand() != null) {
 				String Stand = FMRelement.getStand();
-
+				String oldStand;
+				if (inspection.getStand() != null) {
+					oldStand = inspection.getStand();
+				} else {
+					oldStand = null;
+				}
 				inspection.setStand(Stand);
 				if (inspection.xgetStand() != null
-						&& !inspection.getStand().equals(Stand)) {
-					update = true;
-				}
-
-			}
-			if (FMRelement.xgetInspectionType() != null) {
-				String inspectionType = FMRelement.getInspectionType();
-				inspectionType = inspectionType.substring(inspectionType
-						.lastIndexOf(";") + 1);
-				inspectionType = inspectionType.replace("+", "");
-				inspection.setInspectionType(inspectionType);
-				if (inspection.xgetInspectionType() != null
-						&& !inspection.getInspectionType().equals(
-								inspectionType)) {
+						&& !inspection.getStand().equals(oldStand)) {
 					update = true;
 				}
 
 			}
 
-			if (FMRelement.xgetStand() != null) {
-				String stand = FMRelement.getStand();
-
-				inspection.setStand(stand);
-				if (inspection.xgetStand() != null
-						&& !inspection.getStand().equals(stand)) {
-					update = true;
-				}
-
+			if (FMRelement.xgetFlightStatus() != null) {
+				String flightStatus = FMRelement.getFlightStatus();
+				inspection.setFlightStatus(flightStatus);
 			}
 
-			String newRTR_ids;
-			if (FMRelement.xgetRtrId() != null) {
-				newRTR_ids = FMRelement.getRtrId();
-
-			} else {
-				// No RTRs, so need to delete the old ones
-				newRTR_ids = "";
-			}
-			RTR[] oldRTRs = inspection.getRTRArray();
-
-			oldRTRs = clone(oldRTRs);
-
-			String oldRTR_ids = "";
-			for (RTR oldRTR : oldRTRs) {
-				oldRTR_ids += oldRTR.getRTRid() + ";";
-			}
-			if (oldRTR_ids.endsWith(";")) {
-				oldRTR_ids = oldRTR_ids.substring(0, oldRTR_ids.length() - 1);
-			}
-
-			if (!newRTR_ids.equals(oldRTR_ids)) {
-				// remove all old RTRs
-
-				inspection.setRTRArray(new RTR[0]);
-
-				// check that we still have all the old RTRs, to be removed
-
-				StringTokenizer tok = new StringTokenizer(newRTR_ids, ";");
-
+			if (FMRelement.getMaintTaskArray() != null) {
+				MaintTask[] maintTasks = FMRelement.getMaintTaskArray();
+				ArrayList<InspectionType.MaintTasks> tasks = new ArrayList<MaintTasks>();
+				InspectionType.RTR[] oldRTRs = inspection.getRTRArray();
+				oldRTRs = clone(oldRTRs);
 				ArrayList<RTR> newRTRsArray = new ArrayList<RTR>();
+				for (MaintTask maintTask : maintTasks) {
+					InspectionType.MaintTasks task = InspectionType.MaintTasks.Factory
+							.newInstance();
+					task.setInspectionType(maintTask.getInspectionType());
+					task.setMTstartDate(maintTask.getMaintStartDate());
+					task.setMTstartTime(maintTask.getMaintStartDate());
+					task.setMTendDate(maintTask.getMaintEndtDate());
+					task.setMTendTime(maintTask.getMaintEndtDate());
+					if (maintTask.getRemarks() != null) {
+						task.setRemarks(maintTask.getRemarks());
+					}
+					tasks.add(task);
 
-				while (tok.hasMoreTokens()) {
-					String currentID = tok.nextToken();
+					String[] FMRrtrs = maintTask.getRTRIDArray();
+					for (String RTRid : FMRrtrs) {
+						// check if that RTR existed before
+						int contain = contains(oldRTRs, RTRid);
+						if (contain != -1) {
+							newRTRsArray.add(oldRTRs[contain]);
+						} else {
+							// new RTR
+							RTR newRTR = RTR.Factory.newInstance();
+							newRTR.setRTRid(RTRid);
+							newRTR.setRTRad(false);
+							newRTR.setRTRstatus(RTRstatus.OPEN);
+							newRTRsArray.add(newRTR);
+						}
 
-					int contains = contains(oldRTRs, currentID);
-
-					if (contains != -1) {
-
-						newRTRsArray.add(oldRTRs[contains]);
-					} else {
-
-						RTR newRTR = RTR.Factory.newInstance();
-
-						newRTR.setRTRid(currentID);
-
-						newRTR.setRTRad(false);
-						newRTR.setRTRstatus(RTRstatus.OPEN);
-						newRTRsArray.add(newRTR);
 					}
 				}
-
+				inspection.setMaintTasksArray(tasks
+						.toArray(new InspectionType.MaintTasks[0]));
 				inspection.setRTRArray(newRTRsArray.toArray(new RTR[0]));
-
-				update = true;
 			}
+
+			// if (FMRelement.xgetInspectionType() != null) {
+			// String inspectionType = FMRelement.getInspectionType();
+			// inspectionType = inspectionType.substring(inspectionType
+			// .lastIndexOf(";") + 1);
+			// inspectionType = inspectionType.replace("+", "");
+			// inspection.setInspectionType(inspectionType);
+			// if (inspection.xgetInspectionType() != null
+			// && !inspection.getInspectionType().equals(
+			// inspectionType)) {
+			// update = true;
+			// }
+			//
+			// }
+
+			// String newRTR_ids = "";
+			// if (FMRelement.xgetRtrId() != null) {
+			// newRTR_ids = FMRelement.getRtrId();
+			//
+			// } else {
+			// // No RTRs, so need to delete the old ones
+			// newRTR_ids = "";
+			// }
+			// RTR[] oldRTRs = inspection.getRTRArray();
+			//
+			// oldRTRs = clone(oldRTRs);
+			//
+			// String oldRTR_ids = "";
+			// for (RTR oldRTR : oldRTRs) {
+			// oldRTR_ids += oldRTR.getRTRid() + ";";
+			// }
+			// if (oldRTR_ids.endsWith(";")) {
+			// oldRTR_ids = oldRTR_ids.substring(0, oldRTR_ids.length() - 1);
+			// }
+			//
+			// if (!newRTR_ids.equals(oldRTR_ids)) {
+			// // remove all old RTRs
+			//
+			// inspection.setRTRArray(new RTR[0]);
+			//
+			// // check that we still have all the old RTRs, to be removed
+			//
+			// StringTokenizer tok = new StringTokenizer(newRTR_ids, ";");
+			//
+			// ArrayList<RTR> newRTRsArray = new ArrayList<RTR>();
+			//
+			// while (tok.hasMoreTokens()) {
+			// String currentID = tok.nextToken();
+			//
+			// int contains = contains(oldRTRs, currentID);
+			//
+			// if (contains != -1) {
+			//
+			// newRTRsArray.add(oldRTRs[contains]);
+			// } else {
+			//
+			// RTR newRTR = RTR.Factory.newInstance();
+			//
+			// newRTR.setRTRid(currentID);
+			//
+			// newRTR.setRTRad(false);
+			// newRTR.setRTRstatus(RTRstatus.OPEN);
+			// newRTRsArray.add(newRTR);
+			// }
+			// }
+			//
+			// inspection.setRTRArray(newRTRsArray.toArray(new RTR[0]));
+			//
+			// update = true;
+			// }
 
 			if (update) {
 
@@ -1319,13 +1362,16 @@ public class SITAservice {
 								+ " "
 								+ AD.getFirstChildWithName(
 										new QName(namespace, "ETA")).getText();
-					} else {
+					} else if (AD.getFirstChildWithName(new QName(namespace,
+							"ScheduledArrivalDate")) != null) {
 						dateTime = AD.getFirstChildWithName(
 								new QName(namespace, "ScheduledArrivalDate"))
 								.getText()
 								+ " "
 								+ AD.getFirstChildWithName(
 										new QName(namespace, "STA")).getText();
+					} else {
+						dateTime = "2008-01-01 01:00:00";
 					}
 
 					Calendar TAstartDateTime = convertToCalendar(dateTime);

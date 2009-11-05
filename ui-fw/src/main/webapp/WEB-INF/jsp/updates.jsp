@@ -76,7 +76,10 @@
 				</a>]]>
 			</cell>
 			<%-- Type --%>
-			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform">${taskHolder.task._InspectionType}
+			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform">
+					<c:forEach items="${taskHolder.task._Inspections}" var="currentInspection" varStatus="inspStatus">
+						${currentInspection._InspectionType}<c:if test="${!inspStatus.last}"><br/></c:if>
+					</c:forEach>
 				</a>]]></cell>
 			<%-- Departure Flight Number --%>
 			<cell><![CDATA[<a href="${taskFullURL}" title="" target="taskform">${taskHolder.task._DepartureFlightNumber}

@@ -157,7 +157,7 @@ public abstract class ExternalTasksServlet extends HttpServlet {
             map.put(ExportKey.ExportSITAKey.ARR_SCH_DATE.ExportSITAKey(), formatDate(task.get_ScheduledArrival()));
             map.put(ExportKey.ExportSITAKey.STA.ExportSITAKey(), formatTime(task.get_ScheduledArrival()));
             map.put(ExportKey.ExportSITAKey.ETA_ATA.ExportSITAKey(),  formatTime(task.get_ActualArrival()));
-            map.put(ExportKey.ExportSITAKey.INS.ExportSITAKey(), task.get_InspectionType());
+            // TODO map.put(ExportKey.ExportSITAKey.INS.ExportSITAKey(), task.get_InspectionType());
             map.put(ExportKey.ExportSITAKey.DEP_FL.ExportSITAKey(), task.get_DepartureFlightNumber());
             map.put(ExportKey.ExportSITAKey.DEP_SCH_DATE.ExportSITAKey(), formatDate(task.get_ScheduledDeparture()));
             map.put(ExportKey.ExportSITAKey.STD.ExportSITAKey(), formatTime(task.get_ScheduledDeparture()));
@@ -167,7 +167,7 @@ public abstract class ExternalTasksServlet extends HttpServlet {
             map.put(ExportKey.ExportSITAKey.MECHANICS.ExportSITAKey(), formatMechanics(task.get_assignedMechanics()));
             map.put(ExportKey.ExportSITAKey.AVIONICS.ExportSITAKey(), formatAvionics(task.get_assignedAvionics()));
             map.put(ExportKey.ExportSITAKey.HIL.ExportSITAKey(), "");
-            map.put(ExportKey.ExportSITAKey.RTR.ExportSITAKey(), formatRTR(task.get_RTR()));
+            // TODO map.put(ExportKey.ExportSITAKey.RTR.ExportSITAKey(), formatRTR(task.get_RTR()));
             map.put(ExportKey.ExportSITAKey.COMMENTS.ExportSITAKey(), task.get_comments());
             map.put(ExportKey.ExportSITAKey.STATE.ExportSITAKey(), task.get_state().name());          
             map.put(ExportKey.ExportSITAKey.HELP_REQUEST.ExportSITAKey(), task.get_resources());

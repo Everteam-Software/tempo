@@ -58,26 +58,37 @@ public class TaskFetcher {
 	private final String SITA_FILTER_ETD = "(T._ActualDeparture IS NULL AND T._EstimatedDeparture > (?3) )";
 	private final String SITA_FILTER_STD = "(T._ActualDeparture IS NULL AND T._EstimatedDeparture IS NULL AND T._ScheduledDeparture > (?3) )";
 	private final String SITA_FILTER_xTD_NULL = "(T._ActualDeparture IS NULL AND T._EstimatedDeparture IS NULL AND T._ScheduledDeparture IS NULL)";
-	private final String SITA_FILTER_xTD = "( "+ SITA_FILTER_ATD + " OR " + SITA_FILTER_ETD + " OR " + SITA_FILTER_STD + " OR " + SITA_FILTER_xTD_NULL+ " )";
+	private final String SITA_FILTER_xTD = "( " + SITA_FILTER_ATD + " OR "
+			+ SITA_FILTER_ETD + " OR " + SITA_FILTER_STD + " OR "
+			+ SITA_FILTER_xTD_NULL + " )";
 	private final String SITA_FILTER_ATA = "(T._ActualArrival < (?4))";
 	private final String SITA_FILTER_ETA = "(T._ActualArrival IS NULL AND T._EstimatedArrival < (?4) )";
 	private final String SITA_FILTER_STA = "(T._ActualArrival IS NULL AND T._EstimatedArrival IS NULL AND T._ScheduledArrival < (?4) )";
 	private final String SITA_FILTER_xTA_NULL = "(T._ActualArrival IS NULL AND T._EstimatedArrival IS NULL AND T._ScheduledArrival IS NULL)";
-	private final String SITA_FILTER_xTA = "( "+ SITA_FILTER_ATA + " OR " + SITA_FILTER_ETA + " OR " + SITA_FILTER_STA + " OR " + SITA_FILTER_xTA_NULL+ " )";
-	private final String QUERY_WITH_FILTER = ""
-	+ " AND ( " + SITA_FILTER_xTD 
-	+ " AND "+ SITA_FILTER_xTA 
-	+ ")"
-	;
-//	private final String LATE_START="( CURRENT_TIMESTAMPMSTAMP>( m._ActualArrival + m._ExpectedStartTime))";
-//	private final String LATE_FINISHED_ETD="(m._EstimatedDeparture is not null and CURRENT_TIMESTAMPMSTAMP > (m._EstimatedDeparture - m._ExpectedFinishTime))";
-//	private final String LATE_FINISHED_STD="(m._EstimatedDeparture is  null and CURRENT_TIMESTAMPMSTAMP > (m._ScheduledDeparture - m._ExpectedFinishTime)))";
-//	private final String LATE_FINISHED="("+"(m._InspectionStatus ='stopped') and "+"("+LATE_FINISHED_ETD+" or "+LATE_FINISHED_STD+")"+")";
-//	private final String LATE_RELEASED_ETD="(m._EstimatedDeparture is not null and CURRENT_TIMESTAMPMSTAMP > (m._EstimatedDeparture - m._ExpectedReleaseTime))";
-//	private final String LATE_RELEASED_STD="(m._EstimatedDeparture is  null and CURRENT_TIMESTAMPMSTAMP > (m._ScheduledDeparture - m._ExpectedReleaseTime)))";
-//	private final String LATE_RELEASED="("+"(m._InspectionStatus is 'stopped') and "+"("+LATE_FINISHED_ETD+" or "+LATE_FINISHED_STD+")"+")";
-//	private final String LATE="update PATask m set m._late=true where "+LATE_START;
-	//or "+ LATE_FINISHED+" or "+LATE_RELEASED+" or "+")";
+	private final String SITA_FILTER_xTA = "( " + SITA_FILTER_ATA + " OR "
+			+ SITA_FILTER_ETA + " OR " + SITA_FILTER_STA + " OR "
+			+ SITA_FILTER_xTA_NULL + " )";
+	private final String SITA_FILTER_FLIGHTSTATUS = "(NOT (T._FlightStatus='X'))";
+	private final String QUERY_WITH_FILTER = "" + " AND ( " + SITA_FILTER_xTD
+			+ " AND " + SITA_FILTER_xTA + " AND " + SITA_FILTER_FLIGHTSTATUS
+			+ ")";
+	// private final String
+	// LATE_START="( CURRENT_TIMESTAMPMSTAMP>( m._ActualArrival + m._ExpectedStartTime))";
+	// private final String
+	// LATE_FINISHED_ETD="(m._EstimatedDeparture is not null and CURRENT_TIMESTAMPMSTAMP > (m._EstimatedDeparture - m._ExpectedFinishTime))";
+	// private final String
+	// LATE_FINISHED_STD="(m._EstimatedDeparture is  null and CURRENT_TIMESTAMPMSTAMP > (m._ScheduledDeparture - m._ExpectedFinishTime)))";
+	// private final String
+	// LATE_FINISHED="("+"(m._InspectionStatus ='stopped') and "+"("+LATE_FINISHED_ETD+" or "+LATE_FINISHED_STD+")"+")";
+	// private final String
+	// LATE_RELEASED_ETD="(m._EstimatedDeparture is not null and CURRENT_TIMESTAMPMSTAMP > (m._EstimatedDeparture - m._ExpectedReleaseTime))";
+	// private final String
+	// LATE_RELEASED_STD="(m._EstimatedDeparture is  null and CURRENT_TIMESTAMPMSTAMP > (m._ScheduledDeparture - m._ExpectedReleaseTime)))";
+	// private final String
+	// LATE_RELEASED="("+"(m._InspectionStatus is 'stopped') and "+"("+LATE_FINISHED_ETD+" or "+LATE_FINISHED_STD+")"+")";
+	// private final String
+	// LATE="update PATask m set m._late=true where "+LATE_START;
+	// or "+ LATE_FINISHED+" or "+LATE_RELEASED+" or "+")";
 	// private final String DELETE_TASKS =
 	// "delete from Task m where m._userOwners in (?1) or m._roleOwners in (?2) "
 	// ;
@@ -182,20 +193,22 @@ public class TaskFetcher {
 				calendar.setTime(dateBefore8Hours);
 				calendar.add(Calendar.HOUR, -8);
 				dateBefore8Hours = calendar.getTime();
-				
+
 				Date dateAfter8Hours = new Date();
 				Calendar calendar2 = Calendar.getInstance();
 				calendar2.setTime(dateAfter8Hours);
 				calendar2.add(Calendar.HOUR, 8);
 				dateAfter8Hours = calendar2.getTime();
-				
+
 				q = _entityManager.createQuery(
 						baseQuery + taskClass.getSimpleName() + QUERY_GENERIC2
 								+ QUERY_WITH_FILTER)
 						.setParameter(1, userIdList).setParameter(2,
 								user.getAssignedRoles()).setParameter(3,
-								dateBefore8Hours, TemporalType.TIMESTAMP).setParameter(4, dateAfter8Hours, TemporalType.TIMESTAMP);
-				
+								dateBefore8Hours, TemporalType.TIMESTAMP)
+						.setParameter(4, dateAfter8Hours,
+								TemporalType.TIMESTAMP);
+
 			} else {
 				q = _entityManager.createQuery(
 						baseQuery + taskClass.getSimpleName() + QUERY_GENERIC2)
@@ -207,7 +220,7 @@ public class TaskFetcher {
 			if (taskClass.equals(PATask.class) && filter) {
 				buffer.append(baseQuery).append(taskClass.getSimpleName())
 						.append(QUERY_GENERIC2 + QUERY_WITH_FILTER);
-			
+
 			} else {
 				buffer.append(baseQuery).append(taskClass.getSimpleName())
 						.append(QUERY_GENERIC2);
@@ -235,19 +248,18 @@ public class TaskFetcher {
 				calendar.setTime(dateBefore8Hours);
 				calendar.add(Calendar.HOUR, -8);
 				dateBefore8Hours = calendar.getTime();
-				
+
 				Date dateAfter8Hours = new Date();
 				Calendar calendar2 = Calendar.getInstance();
 				calendar2.setTime(dateAfter8Hours);
 				calendar2.add(Calendar.HOUR, 8);
 				dateAfter8Hours = calendar2.getTime();
-				
+
 				q = _entityManager.createQuery(buffer.toString()).setParameter(
 						1, userIdList).setParameter(2, user.getAssignedRoles())
 						.setParameter(3, dateBefore8Hours,
-								TemporalType.TIMESTAMP).setParameter(4, dateAfter8Hours,
-										TemporalType.TIMESTAMP)
-										;
+								TemporalType.TIMESTAMP).setParameter(4,
+								dateAfter8Hours, TemporalType.TIMESTAMP);
 
 			} else {
 				q = _entityManager.createQuery(buffer.toString()).setParameter(
@@ -295,9 +307,10 @@ public class TaskFetcher {
 	}
 
 	public Collection<String> updateLateTasks() {
-		Query q=_entityManager.createNativeQuery("select t.taskid from tempo_pa as m join tempo_task  as t on m.id=t.id where  ((   (        ( 	m.InspectionStatus != 'stopped' ) and  		(CURRENT_TIMESTAMP > ADDTIME(m.ActualArrival , m.ExpectedStartTime))	)	or (	m.InspectionStatus ='finished'	and   (			( (m.EstimatedDeparture is not null)  and  (CURRENT_TIMESTAMP > SUBTIME(m.EstimatedDeparture,  m.ExpectedFinishTime)))   		 or 			( (m.EstimatedDeparture is  null)  and  (CURRENT_TIMESTAMP > SUBTIME(m.ScheduledDeparture , m.ExpectedFinishTime)))  				 	 ))or (	m.InspectionStatus ='released'	and   (			( (m.EstimatedDeparture is not null)  and  (CURRENT_TIMESTAMP > SUBTIME(m.EstimatedDeparture , m.ExpectedReleaseTime)))   		 or 			( (m.EstimatedDeparture is  null)  and  (CURRENT_TIMESTAMP > SUBTIME(m.ScheduledDeparture , m.ExpectedReleaseTime))))  				 	 )))");
-		
-		List<String> list=q.getResultList();
+		Query q = _entityManager
+				.createNativeQuery("select t.taskid from tempo_pa as m join tempo_task  as t on m.id=t.id where  ((   (        ( 	m.InspectionStatus != 'stopped' ) and  		(CURRENT_TIMESTAMP > ADDTIME(m.ActualArrival , m.ExpectedStartTime))	)	or (	m.InspectionStatus ='finished'	and   (			( (m.EstimatedDeparture is not null)  and  (CURRENT_TIMESTAMP > SUBTIME(m.EstimatedDeparture,  m.ExpectedFinishTime)))   		 or 			( (m.EstimatedDeparture is  null)  and  (CURRENT_TIMESTAMP > SUBTIME(m.ScheduledDeparture , m.ExpectedFinishTime)))  				 	 ))or (	m.InspectionStatus ='released'	and   (			( (m.EstimatedDeparture is not null)  and  (CURRENT_TIMESTAMP > SUBTIME(m.EstimatedDeparture , m.ExpectedReleaseTime)))   		 or 			( (m.EstimatedDeparture is  null)  and  (CURRENT_TIMESTAMP > SUBTIME(m.ScheduledDeparture , m.ExpectedReleaseTime))))  				 	 )))");
+
+		List<String> list = q.getResultList();
 		return list;
 	}
 

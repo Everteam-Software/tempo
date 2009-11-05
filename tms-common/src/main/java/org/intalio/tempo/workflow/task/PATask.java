@@ -39,8 +39,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.QueryHint;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.TemporalType; //import javax.persistence.UniqueConstraint;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.OMNamespaceImpl;
@@ -75,12 +74,15 @@ import com.intalio.gi.forms.tAmanagement.impl.FormModelImpl;
 
 /**
  * Activity task
+ * 
+ * 11-04-09: Pierre took this out of the table definition: , uniqueConstraints =
+ * { @UniqueConstraint(columnNames = {"ArrivalFlightNumber", "ScheduledArrival"
+ * }) }
  */
 @Entity
-@Table(name = "tempo_pa",
-	uniqueConstraints={@UniqueConstraint(columnNames={"ArrivalFlightNumber","ScheduledArrival"})})
-@NamedQueries( { @NamedQuery(name = PATask.FIND_BY_STATES, query = "select m from PATask m where m._state=?1", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }) 
-  
+@Table(name = "tempo_pa")
+@NamedQueries( { @NamedQuery(name = PATask.FIND_BY_STATES, query = "select m from PATask m where m._state=?1", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") })
+
 })
 public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 		ITaskWithInput, ITaskWithOutput, ICompleteReportingTask,
@@ -152,7 +154,7 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 	@Persistent
 	@Column(name = "AircraftID")
 	private String _AircraftID;
-	
+
 	@Persistent
 	@Column(name = "startTime")
 	@Temporal(TemporalType.TIMESTAMP)
@@ -219,8 +221,16 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 	private String _Stand;
 
 	@Persistent
-	@Column(name = "InspectionType")
-	private String _InspectionType;
+	@Column(name = "FlightStatus")
+	private String _FlightStatus;
+
+	// 11-04-2009: Change made to InspectionType by Pierre
+	// @Persistent
+	// @Column(name = "InspectionType")
+	// private String _InspectionType;
+
+	@OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+	Collection<org.intalio.tempo.workflow.task.Inspection> _Inspections;
 
 	@Persistent
 	@Column(name = "InspectionStatus")
@@ -246,20 +256,18 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 	@Persistent
 	@Column(name = "comments")
 	private String _comments;
-	
+
 	@Column(name = "ExpectedStartTime")
 	@Temporal(TemporalType.TIME)
 	private Calendar _ExpectedStartTime;
-	
+
 	@Column(name = "ExpectedFinishTime")
 	@Temporal(TemporalType.TIME)
 	private Calendar _ExpectedFinishTime;
-	
 
 	@Column(name = "ExpectedReleaseTime")
 	@Temporal(TemporalType.TIME)
 	private Calendar _ExpectedReleaseTime;
-
 
 	/** End Extra metadata for SITA **/
 	/****************************/
@@ -443,40 +451,42 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 	}
 
 	public void setOutput(String output) {
-		
+
 		// System.out.println(output);
 		try {
 			OMElement om = AXIOMUtil.stringToOM(output);
-			
-			/////////Ajax forms do not qualify the elements, this section is to make sure all of the elements are qualified and have the same as the FormElementParent
+
+			// ///////Ajax forms do not qualify the elements, this section is to
+			// make sure all of the elements are qualified and have the same as
+			// the FormElementParent
 			String mainNameSpace = om.getNamespace().getNamespaceURI();
-			Collection<OMElement> allNodes=getAllNodes(om);
-			for(OMElement node:allNodes){
+			Collection<OMElement> allNodes = getAllNodes(om);
+			for (OMElement node : allNodes) {
 				node.declareDefaultNamespace(mainNameSpace);
 			}
 			_output = om.toString();
-			///////END fix forAjax bug
+			// /////END fix forAjax bug
 			om.setLocalName("xml-fragment");
-			om.setNamespace(new OMNamespaceImpl("","k"));
+			om.setNamespace(new OMNamespaceImpl("", "k"));
 			FormModelImpl outputXML = (FormModelImpl) FormModel.Factory
 					.parse(om.getXMLStreamReaderWithoutCaching());
 			setMetadata(outputXML);
 		} catch (XmlException e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 		} catch (XMLStreamException e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	private Collection<OMElement> getAllNodes(OMElement om) {
-	Collection<OMElement> response=new HashSet<OMElement>();
-	Iterator<OMElement> iter=om.getChildElements();
-	while(iter.hasNext()){
-		response.addAll(getAllNodes(iter.next()));
-	}
-	response.add(om);
+		Collection<OMElement> response = new HashSet<OMElement>();
+		Iterator<OMElement> iter = om.getChildElements();
+		while (iter.hasNext()) {
+			response.addAll(getAllNodes(iter.next()));
+		}
+		response.add(om);
 		return response;
 	}
 
@@ -489,7 +499,7 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 	private void setMetadata(FormModelImpl outputXML) {
 		/** calendar is an object for time+date calculation **/
 		Calendar calendar = Calendar.getInstance();
-		
+
 		// System.out.println("setMEtadata1");
 		/**************** Activity Data Departure DATA ****************/
 		if (outputXML.getActivity() != null) {
@@ -623,11 +633,17 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 					&& inspection.getStand() != null) {
 				set_Stand(inspection.getStand());
 			}
-			if (inspection.xgetInspectionType() != null
-					&& inspection.xgetInspectionType().validate()
-					&& inspection.getInspectionType() != null) {
-				set_InspectionType(inspection.getInspectionType());
+			if (inspection.xgetFlightStatus() != null
+					&& inspection.xgetFlightStatus().validate()
+					&& inspection.getFlightStatus() != null) {
+				set_FlightStatus(inspection.getFlightStatus());
 			}
+			/** 11-04-09 Commented out by Pierre, changed implementation */
+			// if (inspection.xgetInspectionType() != null
+			// && inspection.xgetInspectionType().validate()
+			// && inspection.getInspectionType() != null) {
+			// set_InspectionType(inspection.getInspectionType());
+			// }
 			if (inspection.xgetInspectionStatus() != null
 					&& inspection.xgetInspectionStatus().validate()
 					&& inspection.getInspectionStatus() != null) {
@@ -647,16 +663,6 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 				org.intalio.tempo.workflow.task.AssignedCoords newCoord = new org.intalio.tempo.workflow.task.AssignedCoords();
 				newCoord.setName(coord.getAssignedCoordName());
 				get_assignedCoord().add(newCoord);
-			}
-			/** RTR */
-			com.intalio.gi.forms.tAmanagement.InspectionType.RTR[] RTRs = inspection
-					.getRTRArray();
-			set_RTR(new ArrayList<org.intalio.tempo.workflow.task.RTR>());
-			for (com.intalio.gi.forms.tAmanagement.InspectionType.RTR RTR : RTRs) {
-				org.intalio.tempo.workflow.task.RTR newRTR = new org.intalio.tempo.workflow.task.RTR();
-				newRTR.setRTRID(RTR.getRTRid());
-				newRTR.setRTRStatus(RTR.getRTRstatus().toString());
-				get_RTR().add(newRTR);
 			}
 
 			/** mechanics */
@@ -681,6 +687,48 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 				newAvioninc.setName(avionic.getAssignedAvionicName());
 				get_assignedAvionics().add(newAvioninc);
 			}
+			/** maintenance tasks and RTRs */
+			com.intalio.gi.forms.tAmanagement.InspectionType.MaintTasks[] maintTasks = inspection
+					.getMaintTasksArray();
+			set_Inspections(new ArrayList<org.intalio.tempo.workflow.task.Inspection>());
+			for (com.intalio.gi.forms.tAmanagement.InspectionType.MaintTasks maintTask : maintTasks) {
+				org.intalio.tempo.workflow.task.Inspection newInspection = new org.intalio.tempo.workflow.task.Inspection();
+				newInspection.set_InspectionType(maintTask.getInspectionType());
+				if (maintTask.xgetMTstartDate() != null
+						&& maintTask.xgetMTstartDate().validate()
+						&& maintTask.getMTstartDate() != null
+						&& maintTask.xgetMTstartTime() != null
+						&& maintTask.xgetMTstartTime().validate()
+						&& maintTask.getMTstartTime() != null) {
+					calendar = maintTask.getMTstartDate();
+					addTimeToDate(maintTask.getMTstartTime().getTime(),
+							calendar);
+					newInspection.set_startDate(calendar.getTime());
+				}
+				if (maintTask.xgetMTendDate() != null
+						&& maintTask.xgetMTendDate().validate()
+						&& maintTask.getMTendDate() != null
+						&& maintTask.xgetMTendTime() != null
+						&& maintTask.xgetMTendTime().validate()
+						&& maintTask.getMTendTime() != null) {
+					calendar = maintTask.getMTendDate();
+					addTimeToDate(maintTask.getMTendTime().getTime(), calendar);
+					newInspection.set_endDate(calendar.getTime());
+				}
+				newInspection.set_remarks(maintTask.getRemarks());
+				get_Inspections().add(newInspection);
+			}
+
+			/** RTR */
+			com.intalio.gi.forms.tAmanagement.InspectionType.RTR[] RTRs = inspection
+					.getRTRArray();
+			set_RTR(new ArrayList<org.intalio.tempo.workflow.task.RTR>());
+			for (com.intalio.gi.forms.tAmanagement.InspectionType.RTR RTR : RTRs) {
+				org.intalio.tempo.workflow.task.RTR newRTR = new org.intalio.tempo.workflow.task.RTR();
+				newRTR.setRTRID(RTR.getRTRid());
+				newRTR.setRTRStatus(RTR.getRTRstatus().toString());
+				get_RTR().add(newRTR);
+			}
 		}
 		/**************** DC DATA ****************/
 		if (outputXML.getDC() != null) {
@@ -689,20 +737,22 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 					&& dc.getComments() != null) {
 				set_comments(dc.getComments());
 			}
-			if (dc.xgetExpectedStartTime() != null && dc.xgetExpectedStartTime().validate()
+			if (dc.xgetExpectedStartTime() != null
+					&& dc.xgetExpectedStartTime().validate()
 					&& dc.getExpectedStartTime() != null) {
 				set_ExpectedStartTime(dc.getExpectedStartTime());
 			}
-			if (dc.xgetExpectedFinishTime() != null && dc.xgetExpectedFinishTime().validate()
+			if (dc.xgetExpectedFinishTime() != null
+					&& dc.xgetExpectedFinishTime().validate()
 					&& dc.getExpectedFinishTime() != null) {
 				set_ExpectedFinishTime(dc.getExpectedFinishTime());
 			}
-			if (dc.xgetExpectedReleaseTime() != null && dc.xgetExpectedReleaseTime().validate()
+			if (dc.xgetExpectedReleaseTime() != null
+					&& dc.xgetExpectedReleaseTime().validate()
 					&& dc.getExpectedReleaseTime() != null) {
 				set_ExpectedReleaseTime(dc.getExpectedReleaseTime());
 			}
-			
-			
+
 		}
 	}
 
@@ -847,13 +897,13 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 		_assignedAvionics = avionics;
 	}
 
-	public String get_InspectionType() {
-		return _InspectionType;
-	}
-
-	public void set_InspectionType(String inspectionType) {
-		_InspectionType = inspectionType;
-	}
+	// public String get_InspectionType() {
+	// return _InspectionType;
+	// }
+	//
+	// public void set_InspectionType(String inspectionType) {
+	// _InspectionType = inspectionType;
+	// }
 
 	public String get_InspectionStatus() {
 		return _InspectionStatus;
@@ -964,6 +1014,23 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 		date.add(Calendar.HOUR, time.getHours());
 		date.add(Calendar.MINUTE, time.getMinutes());
 		date.add(Calendar.SECOND, time.getSeconds());
+	}
+
+	public Collection<org.intalio.tempo.workflow.task.Inspection> get_Inspections() {
+		return _Inspections;
+	}
+
+	public void set_Inspections(
+			Collection<org.intalio.tempo.workflow.task.Inspection> inspections) {
+		_Inspections = inspections;
+	}
+
+	public String get_FlightStatus() {
+		return _FlightStatus;
+	}
+
+	public void set_FlightStatus(String flightStatus) {
+		_FlightStatus = flightStatus;
 	}
 
 }
