@@ -165,7 +165,7 @@ public final class FormDispatcherConfiguration {
             String fdsUrl = configDocument.valueOf("/config/fdsUrl");
 
             try {
-                _httpTimeout = Integer.parseInt(configDocument.valueOf("/config/fdsUrl"));
+                _httpTimeout = Integer.parseInt(configDocument.valueOf("/config/httpTimeout"));
             } catch (Exception e) {
                 _log.error("Not using invalid value for httptimeout");
             }
