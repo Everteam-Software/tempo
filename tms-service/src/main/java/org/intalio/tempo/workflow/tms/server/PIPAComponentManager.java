@@ -101,9 +101,12 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
         // only undeploy if this is the last version of this assembly
         String assembly = name.getAssemblyId().getAssemblyName();
         HashSet<AssemblyId> set = _versions.get(assembly);
-        if (set == null || set.size() <= 1) {
+        if (set == null || set.size() < 1) {
+        	// if set is equal to 1, we have one more version remaining.
+        	// fix for WF-1324
             for (String url : deployedResources) {
                 try {
+                	if(LOG.isDebugEnabled()) LOG.debug("versions>> "+_versions.toString());
                     _tms.deletePipa(url, token);
                 } catch (UnavailableTaskException e) {
                     LOG.warn("Undeploy - PIPA not found: " + url);
