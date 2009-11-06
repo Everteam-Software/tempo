@@ -131,7 +131,7 @@ public class WDSServlet extends HttpServlet {
             LOG.debug("Item {} deleted OK", resourceUri);
         } catch (UnavailableItemException e) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
-            LOG.warn("Item not found: '" + resourceUri + "'");
+            LOG.debug("Item not found: '" + resourceUri + "'");
         } finally {
             service.close();
         }
