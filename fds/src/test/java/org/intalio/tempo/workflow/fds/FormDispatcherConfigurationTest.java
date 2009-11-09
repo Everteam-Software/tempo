@@ -28,6 +28,9 @@ public class FormDispatcherConfigurationTest extends TestCase {
         String tmsUrl = fdc.getTmsUrl();
         assertEquals(tmsUrl,"http://localhost:8080/axis2/services/TaskManagementServices");
         
+        int timeout = fdc.getHttpTimeout();
+        assertEquals(timeout, 5000);
+        
         if(null == prop){
             System.clearProperty(FormDispatcherConfiguration.CONFIG_DIR_PROPERTY);
         }else{

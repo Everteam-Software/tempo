@@ -164,16 +164,17 @@ public final class FormDispatcherConfiguration {
             String tmsUrl = configDocument.valueOf("/config/tmsUrl");
             String fdsUrl = configDocument.valueOf("/config/fdsUrl");
 
+            _pxeBaseUrl = pxeBaseUrl;
+            _workflowProcessesRelativeUrl = workflowProcessesRelativeUrl;
+            _tmsUrl = tmsUrl;
+            _fdsUrl = fdsUrl;
+           
             try {
                 _httpTimeout = Integer.parseInt(configDocument.valueOf("/config/httpTimeout"));
             } finally {
             	_log.debug("Using following timeout in ms:"+_httpTimeout);
             }
             
-            _pxeBaseUrl = pxeBaseUrl;
-            _workflowProcessesRelativeUrl = workflowProcessesRelativeUrl;
-            _tmsUrl = tmsUrl;
-            _fdsUrl = fdsUrl;
 
         } catch (Exception e) {
             _log.error("Failed to load the configuration: " + e.getMessage());
