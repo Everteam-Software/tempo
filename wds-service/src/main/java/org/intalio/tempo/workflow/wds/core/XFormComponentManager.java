@@ -99,7 +99,7 @@ public class XFormComponentManager implements org.intalio.deploy.deployment.spi.
         // only undeploy if this is the last version of this assembly
         String assembly = name.getAssemblyId().getAssemblyName();
         HashSet<AssemblyId> set = _versions.get(assembly);
-        if (set == null || set.size() <= 1) {
+        if (set == null || set.size() < 1) {
             for (String url: deployedObjects) {
                 try {
                     wds.deleteItem(url, token);
