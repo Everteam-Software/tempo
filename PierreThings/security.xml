@@ -172,6 +172,13 @@
             <password>password</password>
             <assignRole>coordinatorA</assignRole>
         </user>
+		
+		<user identifier="122819">
+            <name>ANTONIO SOUSA</name>
+            <email>email@domain.pt</email>
+            <password>password</password>
+            <assignRole>coordinatorA</assignRole>
+        </user>
 		 
 		<user identifier="136176">
             <name>JOAO LEITAO</name>

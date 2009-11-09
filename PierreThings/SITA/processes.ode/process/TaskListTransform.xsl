@@ -39,9 +39,9 @@
 					<xsl:attribute name="stand">
 						<xsl:value-of select="gi:Inspection/gi:Stand" />
 					</xsl:attribute>
-					<xsl:attribute name="inspection-type"> 
+					<!-- <xsl:attribute name="inspection-type"> 
 						<xsl:value-of select="gi:Inspection/gi:InspectionType" />
-					</xsl:attribute>
+					</xsl:attribute> -->
 					<xsl:attribute name="comment"> 
 						<xsl:value-of select="gi:DC/gi:Comments" />
 					</xsl:attribute>

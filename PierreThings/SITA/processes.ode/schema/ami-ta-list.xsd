@@ -57,6 +57,7 @@
       <xs:sequence>
         <xs:element minOccurs="0" maxOccurs="unbounded" ref="ta:rtr"/>
         <xs:element minOccurs="0" maxOccurs="unbounded" ref="ta:hil"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="ta:lmc"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -94,6 +95,17 @@
         <xs:simpleType>
           <xs:restriction base="xs:string">
             <xs:maxLength value="255"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="lmc">
+    <xs:complexType>
+      <xs:attribute name="lmc-id" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="25"/>
           </xs:restriction>
         </xs:simpleType>
       </xs:attribute>

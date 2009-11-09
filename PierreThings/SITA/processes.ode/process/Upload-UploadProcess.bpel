@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<bpel:process xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ode="http://www.apache.org/ode/type/extension" xmlns:TokenService="http://example.com/process/Upload/TokenService" xmlns:tns="http://www.example.org/UploadResponse" xmlns:TaskManagementSystem="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:ns="urn:intalio.com:connectors:database:sita:storefmrservice" xmlns:as="http://www.example.org/assignment" xmlns:AppearNetworks="http://example.com/process/Upload/AppearNetworks" xmlns:TokenService1="http://tempo.intalio.org/security/tokenService/" xmlns:DB="http://example.com/process/Upload/DB" xmlns:countExistingTAs="urn:intalio.com:connectors:database:sita:countexistingtasservice" xmlns:diag="http://example.com/process/Upload" xmlns:TMP="http://example.com/process/Upload/TMP" xmlns:p="http://www.example.org/prop" xmlns:TMS="http://example.com/process/Upload/TMS" xmlns:hil="http://www.example.org/hil" xmlns:fmr="http://www.example.org/fmr" xmlns:SITAservice="http://example.com/process/Upload/SITAservice" xmlns:b4p="http://www.intalio.com/bpms/workflow/ib4p_20051115" xmlns:TAdata="http://www.intalio.com/gi/forms/TAmanagement.gi" xmlns:this="http://example.com/process/Upload/UploadProcess" xmlns:SITAservice1="http://www.example.org/FMRupload" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:bpmn="http://www.intalio.com/bpms" xmlns:atomic="http://ode.apache.org/atomicScope" queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0" bpmn:label="UploadProcess" name="UploadProcess" bpmn:id="_VbNFwD7SEd6K2cgYiBoOqg" targetNamespace="http://example.com/process/Upload/UploadProcess">
+<bpel:process xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:pnlk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ode="http://www.apache.org/ode/type/extension" xmlns:TokenService="http://example.com/process/Upload/TokenService" xmlns:tns="http://www.example.org/UploadResponse" xmlns:TaskManagementSystem="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:as="http://www.example.org/assignment" xmlns:ns="urn:intalio.com:connectors:database:sita:storefmrservice" xmlns:AppearNetworks="http://example.com/process/Upload/AppearNetworks" xmlns:TokenService1="http://tempo.intalio.org/security/tokenService/" xmlns:DB="http://example.com/process/Upload/DB" xmlns:countExistingTAs="urn:intalio.com:connectors:database:sita:countexistingtasservice" xmlns:diag="http://example.com/process/Upload" xmlns:TMP="http://example.com/process/Upload/TMP" xmlns:p="http://www.example.org/prop" xmlns:TMS="http://example.com/process/Upload/TMS" xmlns:hil="http://www.example.org/hil" xmlns:fmr="http://www.example.org/fmr" xmlns:SITAservice="http://example.com/process/Upload/SITAservice" xmlns:b4p="http://www.intalio.com/bpms/workflow/ib4p_20051115" xmlns:TAdata="http://www.intalio.com/gi/forms/TAmanagement.gi" xmlns:this="http://example.com/process/Upload/UploadProcess" xmlns:SITAservice1="http://www.example.org/FMRupload" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:bpmn="http://www.intalio.com/bpms" xmlns:atomic="http://ode.apache.org/atomicScope" queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0" bpmn:label="UploadProcess" name="UploadProcess" bpmn:id="_VbNFwD7SEd6K2cgYiBoOqg" targetNamespace="http://example.com/process/Upload/UploadProcess">
   <bpel:import namespace="http://tempo.intalio.org/security/tokenService/" location="../services/TokenService.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
   <bpel:import namespace="http://example.com/process/Upload" location="Upload.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
   <bpel:import namespace="http://example.com/process/Upload/UploadProcess" location="Upload-UploadProcess.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
@@ -42,6 +42,8 @@
     <bpel:variable name="logOutput" messageType="TAdata:readPropertyResponse"/>
     <bpel:variable name="nsStoreFMRRequestMsg" messageType="ns:storeFMRInput"/>
     <bpel:variable name="nsStoreFMRResponseMsg" messageType="ns:storeFMROutput"/>
+    <bpel:variable name="taskManagementSystemCountAvailableTasksRequestMsg" messageType="TaskManagementSystem:countAvailableTasksRequest"/>
+    <bpel:variable name="taskManagementSystemCountAvailableTasksResponseMsg" messageType="TaskManagementSystem:countAvailableTasksResponse"/>
   </bpel:variables>
   <bpel:pick createInstance="yes" bpmn:label="Exclusive_Event-Based_Gateway" name="Exclusive_Event-Based_Gateway" bpmn:id="_aGdT8D7SEd6K2cgYiBoOqg">
     <bpel:onMessage partnerLink="uploadProcessAndAppearNetworksPlkVar" portType="this:ForAppearNetworks" operation="uploadFMR" variable="thisUploadFMRRequestMsg" bpmn:label="uploadFMR" name="uploadFMR" bpmn:id="_bbQjsD7SEd6K2cgYiBoOqg">
@@ -168,8 +170,16 @@
     </TAdata:ArrivalDeparture>
     <TAdata:Inspection>
       <TAdata:assigned></TAdata:assigned>
+      <TAdata:flightStatus></TAdata:flightStatus>
       <TAdata:Stand></TAdata:Stand>
-      <TAdata:InspectionType></TAdata:InspectionType>
+      <TAdata:taTasks>
+        <TAdata:InspectionType></TAdata:InspectionType>
+        <TAdata:MTstartDate></TAdata:MTstartDate>
+        <TAdata:MTstartTime></TAdata:MTstartTime>
+        <TAdata:MTendDate></TAdata:MTendDate>
+        <TAdata:MTendTime></TAdata:MTendTime>
+        <TAdata:Remarks></TAdata:Remarks>
+      </TAdata:taTasks>
       <TAdata:InspectionStatus></TAdata:InspectionStatus>
       <TAdata:resources></TAdata:resources>
       <TAdata:RTR>
@@ -227,7 +237,27 @@
             <bpel:from>
               <bpel:literal>
 <TAdata:updateInput>
-  <FMR ATA="" ATD="" Aircraft="" ArrivalFlightNumber="" CreationTime="" DepartureFlightNumber="" InspectionType="" Rtr-id="" STA="" STD="" Stand=""></FMR>
+  <FMR FMR_TYPE="">
+    <Aircraft></Aircraft>
+    <CreationTIme></CreationTIme>
+    <FlightStatus></FlightStatus>
+    <STA></STA>
+    <STD></STD>
+    <ATA></ATA>
+    <ATD></ATD>
+    <ETA></ETA>
+    <ETD></ETD>
+    <ArrivalFlightNumber></ArrivalFlightNumber>
+    <DepartureFlightNumber></DepartureFlightNumber>
+    <stand></stand>
+    <MaintTask>
+      <InspectionType></InspectionType>
+      <MaintStartDate></MaintStartDate>
+      <MaintEndtDate></MaintEndtDate>
+      <RTR_ID></RTR_ID>
+      <Remarks></Remarks>
+    </MaintTask>
+  </FMR>
   <TAdata:data>
     <TAdata:FormModel>
       <TAdata:Activity>
@@ -256,8 +286,16 @@
       </TAdata:ArrivalDeparture>
       <TAdata:Inspection>
         <TAdata:assigned></TAdata:assigned>
+        <TAdata:flightStatus></TAdata:flightStatus>
         <TAdata:Stand></TAdata:Stand>
-        <TAdata:InspectionType></TAdata:InspectionType>
+        <TAdata:taTasks>
+          <TAdata:InspectionType></TAdata:InspectionType>
+          <TAdata:MTstartDate></TAdata:MTstartDate>
+          <TAdata:MTstartTime></TAdata:MTstartTime>
+          <TAdata:MTendDate></TAdata:MTendDate>
+          <TAdata:MTendTime></TAdata:MTendTime>
+          <TAdata:Remarks></TAdata:Remarks>
+        </TAdata:taTasks>
         <TAdata:InspectionStatus></TAdata:InspectionStatus>
         <TAdata:resources></TAdata:resources>
         <TAdata:RTR>
@@ -409,6 +447,18 @@
             </bpel:from>
             <bpel:to>$nsStoreFMRRequestMsg.parameters</bpel:to>
           </bpel:copy>
+          <bpel:copy bpmn:label="$taskManagementSystemCountAvailableTasksRequestMsg">
+            <bpel:from>
+              <bpel:literal>
+<TaskManagementSystem:countAvailableTasksRequest>
+  <TaskManagementSystem:participantToken></TaskManagementSystem:participantToken>
+  <TaskManagementSystem:taskType></TaskManagementSystem:taskType>
+  <TaskManagementSystem:subQuery></TaskManagementSystem:subQuery>
+  <TaskManagementSystem:filter></TaskManagementSystem:filter>
+</TaskManagementSystem:countAvailableTasksRequest></bpel:literal>
+            </bpel:from>
+            <bpel:to>$taskManagementSystemCountAvailableTasksRequestMsg.countAvailableTasksRequest</bpel:to>
+          </bpel:copy>
         </bpel:assign>
         <bpel:assign bpmn:label="check log" name="check_log" bpmn:id="_XktygJcPEd6JfLNGzbY2vA">
           <bpel:copy>
@@ -440,53 +490,152 @@
         </bpel:empty>
         <bpel:assign bpmn:label="Convert  dates to local time" name="Convert__dates_to_local_time" bpmn:id="_Io02kGwQEd66f4iq3wYOag">
           <bpel:copy ignoreUninitializedFromVariable="yes" ignoreMissingFromData="yes">
-            <bpel:from>adjust-dateTime-to-timezone(xs:dateTime($thisUploadFMRRequestMsg.body/@ATA)) + xs:dayTimeDuration ("PT1H")</bpel:from>
-            <bpel:to>$thisUploadFMRRequestMsg.body/@ATA</bpel:to>
+            <bpel:from>adjust-dateTime-to-timezone(xs:dateTime($thisUploadFMRRequestMsg.body/fmr:ATA)) + xs:dayTimeDuration ("PT1H")</bpel:from>
+            <bpel:to>$thisUploadFMRRequestMsg.body/fmr:ATA</bpel:to>
           </bpel:copy>
           <bpel:copy ignoreUninitializedFromVariable="yes" ignoreMissingFromData="yes">
-            <bpel:from>adjust-dateTime-to-timezone(xs:dateTime($thisUploadFMRRequestMsg.body/@ATD)) + xs:dayTimeDuration ("PT1H")</bpel:from>
-            <bpel:to>$thisUploadFMRRequestMsg.body/@ATD</bpel:to>
+            <bpel:from>adjust-dateTime-to-timezone(xs:dateTime($thisUploadFMRRequestMsg.body/fmr:ATD)) + xs:dayTimeDuration ("PT1H")</bpel:from>
+            <bpel:to>$thisUploadFMRRequestMsg.body/fmr:ATD</bpel:to>
           </bpel:copy>
           <bpel:copy ignoreUninitializedFromVariable="yes" ignoreMissingFromData="yes">
-            <bpel:from>adjust-dateTime-to-timezone(xs:dateTime($thisUploadFMRRequestMsg.body/@CreationTime)) + xs:dayTimeDuration ("PT1H")</bpel:from>
-            <bpel:to>$thisUploadFMRRequestMsg.body/@CreationTime</bpel:to>
+            <bpel:from>adjust-dateTime-to-timezone(xs:dateTime($thisUploadFMRRequestMsg.body/fmr:ETD)) + xs:dayTimeDuration ("PT1H")</bpel:from>
+            <bpel:to>$thisUploadFMRRequestMsg.body/fmr:ETD</bpel:to>
           </bpel:copy>
           <bpel:copy ignoreUninitializedFromVariable="yes" ignoreMissingFromData="yes">
-            <bpel:from>adjust-dateTime-to-timezone(xs:dateTime($thisUploadFMRRequestMsg.body/@ETA)) + xs:dayTimeDuration ("PT1H")</bpel:from>
-            <bpel:to>$thisUploadFMRRequestMsg.body/@ETA</bpel:to>
+            <bpel:from>adjust-dateTime-to-timezone(xs:dateTime($thisUploadFMRRequestMsg.body/fmr:ETA)) + xs:dayTimeDuration ("PT1H")</bpel:from>
+            <bpel:to>$thisUploadFMRRequestMsg.body/fmr:ETA</bpel:to>
           </bpel:copy>
           <bpel:copy ignoreUninitializedFromVariable="yes" ignoreMissingFromData="yes">
-            <bpel:from>adjust-dateTime-to-timezone(xs:dateTime($thisUploadFMRRequestMsg.body/@ETD)) + xs:dayTimeDuration ("PT1H")</bpel:from>
-            <bpel:to>$thisUploadFMRRequestMsg.body/@ETD</bpel:to>
+            <bpel:from>xs:dayTimeDuration ("PT1H") + adjust-dateTime-to-timezone(xs:dateTime($thisUploadFMRRequestMsg.body/fmr:STA))</bpel:from>
+            <bpel:to>$thisUploadFMRRequestMsg.body/fmr:STA</bpel:to>
           </bpel:copy>
           <bpel:copy ignoreUninitializedFromVariable="yes" ignoreMissingFromData="yes">
-            <bpel:from>adjust-dateTime-to-timezone(xs:dateTime($thisUploadFMRRequestMsg.body/@STD)) + xs:dayTimeDuration ("PT1H")</bpel:from>
-            <bpel:to>$thisUploadFMRRequestMsg.body/@STD</bpel:to>
+            <bpel:from>adjust-dateTime-to-timezone(xs:dateTime($thisUploadFMRRequestMsg.body/fmr:STD)) + xs:dayTimeDuration ("PT1H")</bpel:from>
+            <bpel:to>$thisUploadFMRRequestMsg.body/fmr:STD</bpel:to>
           </bpel:copy>
           <bpel:copy ignoreUninitializedFromVariable="yes" ignoreMissingFromData="yes">
-            <bpel:from>xs:dayTimeDuration ("PT1H") + adjust-dateTime-to-timezone(xs:dateTime($thisUploadFMRRequestMsg.body/@STA))</bpel:from>
-            <bpel:to>$thisUploadFMRRequestMsg.body/@STA</bpel:to>
+            <bpel:from>adjust-dateTime-to-timezone(xs:dateTime($thisUploadFMRRequestMsg.body/fmr:CreationTime)) + xs:dayTimeDuration ("PT1H")</bpel:from>
+            <bpel:to>$thisUploadFMRRequestMsg.body/fmr:CreationTime</bpel:to>
           </bpel:copy>
         </bpel:assign>
+        <bpel:assign bpmn:label="authenticate" name="authenticate" bpmn:id="_MRuwgGCXEd6OfeUZe_9QRQ">
+          <bpel:copy>
+            <bpel:from>"intalio\admin"</bpel:from>
+            <bpel:to>$tokenService1AuthenticateUserRequestMsg.payload/TokenService1:user</bpel:to>
+          </bpel:copy>
+          <bpel:copy>
+            <bpel:from>"changeit"</bpel:from>
+            <bpel:to>$tokenService1AuthenticateUserRequestMsg.payload/TokenService1:password</bpel:to>
+          </bpel:copy>
+        </bpel:assign>
+        <bpel:invoke partnerLink="uploadProcessAndTokenServiceForTokenServiceHttpportPlkVar" portType="TokenService1:TokenServicePortType" operation="authenticateUser" inputVariable="tokenService1AuthenticateUserRequestMsg" outputVariable="tokenService1AuthenticateUserResponseMsg" bpmn:label="authenticate" name="authenticate-1" bpmn:id="_MRuwgGCXEd6OfeUZe_9QRQ"></bpel:invoke>
         <bpel:if>
-          <bpel:condition>((bpel:doXslTransform("Discard.xsl", $thisUploadFMRRequestMsg.body) = "true") or (bpel:doXslTransform("DiscardArrival.xsl", $thisUploadFMRRequestMsg.body) = "true")) or (bpel:doXslTransform("DiscardDeparture.xsl", $thisUploadFMRRequestMsg.body) = "true")</bpel:condition>
+          <bpel:condition>bpel:doXslTransform("Discard.xsl", $thisUploadFMRRequestMsg.body) = "true"</bpel:condition>
           <bpel:sequence>
-            <bpel:assign bpmn:label="setError" name="setError" bpmn:id="_zHgtwFZkEd6OBK2EwaAgcw">
+            <bpel:assign bpmn:label="checkForUpdate" name="checkForUpdate" bpmn:id="_yOr7MMnaEd6R0r2ZXXidhw">
               <bpel:copy>
-                <bpel:from>"RECORD MISSING SOME DATA"</bpel:from>
-                <bpel:to>$thisUploadFMRResponseMsg.body/tns:reponseMsg</bpel:to>
+                <bpel:from>$tokenService1AuthenticateUserResponseMsg.payload/TokenService1:token</bpel:from>
+                <bpel:to>$taskManagementSystemCountAvailableTasksRequestMsg.countAvailableTasksRequest/TaskManagementSystem:participantToken</bpel:to>
+              </bpel:copy>
+              <bpel:copy>
+                <bpel:from>"PATask"</bpel:from>
+                <bpel:to>$taskManagementSystemCountAvailableTasksRequestMsg.countAvailableTasksRequest/TaskManagementSystem:taskType</bpel:to>
+              </bpel:copy>
+              <bpel:copy>
+                <bpel:from>concat("T._AircraftID = '", $thisUploadFMRRequestMsg.body/fmr:Aircraft, "' AND (T._ScheduledArrival&lt; '", $thisUploadFMRRequestMsg.body/fmr:MaintTask[1]/fmr:MaintStartDate, "' OR T._ScheduledArrival IS NULL) AND (T._ScheduledDeparture&gt; '", $thisUploadFMRRequestMsg.body/fmr:MaintTask[1]/fmr:MaintEndtDate, "' OR T._ScheduledDeparture IS NULL)")</bpel:from>
+                <bpel:to>$taskManagementSystemCountAvailableTasksRequestMsg.countAvailableTasksRequest/TaskManagementSystem:subQuery</bpel:to>
               </bpel:copy>
             </bpel:assign>
+            <bpel:invoke partnerLink="tMsAndUploadProcessForPortTaskManagementServicesSOAPPlkVar" portType="TaskManagementSystem:TaskManagementServices" operation="countAvailableTasks" inputVariable="taskManagementSystemCountAvailableTasksRequestMsg" outputVariable="taskManagementSystemCountAvailableTasksResponseMsg" bpmn:label="checkForUpdate" name="checkForUpdate-1" bpmn:id="_yOr7MMnaEd6R0r2ZXXidhw"></bpel:invoke>
+            <bpel:if>
+              <bpel:condition>$taskManagementSystemCountAvailableTasksResponseMsg.countAvailableTasksResponse/text() = "0"</bpel:condition>
+              <bpel:sequence>
+                <bpel:assign bpmn:label="setError" name="setError" bpmn:id="_zHgtwFZkEd6OBK2EwaAgcw">
+                  <bpel:copy>
+                    <bpel:from>"RECORD MISSING SOME DATA"</bpel:from>
+                    <bpel:to>$thisUploadFMRResponseMsg.body/tns:reponseMsg</bpel:to>
+                  </bpel:copy>
+                </bpel:assign>
+              </bpel:sequence>
+              <bpel:else>
+                <bpel:sequence>
+                  <bpel:assign bpmn:label="getTask" name="getTask" bpmn:id="_sQceUMneEd6R0r2ZXXidhw">
+                    <bpel:copy>
+                      <bpel:from>$tokenService1AuthenticateUserResponseMsg.payload/TokenService1:token</bpel:from>
+                      <bpel:to>$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest/TaskManagementSystem:participantToken</bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                      <bpel:from>"PATask"</bpel:from>
+                      <bpel:to>$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest/TaskManagementSystem:taskType</bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                      <bpel:from>$taskManagementSystemCountAvailableTasksRequestMsg.countAvailableTasksRequest/TaskManagementSystem:subQuery</bpel:from>
+                      <bpel:to>$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest/TaskManagementSystem:subQuery</bpel:to>
+                    </bpel:copy>
+                  </bpel:assign>
+                  <bpel:invoke partnerLink="tMsAndUploadProcessForPortTaskManagementServicesSOAPPlkVar" portType="TaskManagementSystem:TaskManagementServices" operation="getAvailableTasksWithInputOutput" inputVariable="taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg" outputVariable="taskManagementSystemGetAvailableTasksWithInputOutputResponseMsg" bpmn:label="getTask" name="getTask-1" bpmn:id="_sQceUMneEd6R0r2ZXXidhw"></bpel:invoke>
+                  <bpel:if>
+                    <bpel:condition>if (($thisUploadFMRRequestMsg.body/fmr:FlightStatus = "S") or ($thisUploadFMRRequestMsg.body/fmr:FlightStatus = "X")) then (true()) else (if (xs:int($thisUploadFMRRequestMsg.body/fmr:FlightStatus)&gt; xs:int(bpel:doXslTransform("getFlightStatus.xsl", $taskManagementSystemGetAvailableTasksWithInputOutputResponseMsg.getAvailableTasksWithInputOutputResponse))) then (true()) else (false()))</bpel:condition>
+                    <bpel:sequence>
+                      <bpel:assign bpmn:label="updateData" name="updateData" bpmn:id="_xblRAMnfEd6R0r2ZXXidhw">
+                        <bpel:copy>
+                          <bpel:from>$thisUploadFMRRequestMsg.body</bpel:from>
+                          <bpel:to>$tAdataInputMessage.body/FMR</bpel:to>
+                        </bpel:copy>
+                        <bpel:copy>
+                          <bpel:from>$taskManagementSystemGetAvailableTasksWithInputOutputResponseMsg.getAvailableTasksWithInputOutputResponse/TaskManagementSystem:task/TaskManagementSystem:output/node()</bpel:from>
+                          <bpel:to>$tAdataInputMessage.body/TAdata:data/TAdata:FormModel</bpel:to>
+                        </bpel:copy>
+                      </bpel:assign>
+                      <bpel:invoke partnerLink="uploadProcessAndSITAserviceForSITAservicePortPlkVar" portType="TAdata:SITAservicePortType" operation="updateTA" inputVariable="tAdataInputMessage" outputVariable="tAdataOuputMessage" bpmn:label="updateData" name="updateData-1" bpmn:id="_xblRAMnfEd6R0r2ZXXidhw"></bpel:invoke>
+                      <bpel:assign bpmn:label="update TA" name="update_TA" bpmn:id="_MKFT8MngEd6R0r2ZXXidhw">
+                        <bpel:copy>
+                          <bpel:from>$tAdataOuputMessage.body</bpel:from>
+                          <bpel:to>$taskManagementSystemSetOutputRequestMsg.setOutputRequest/TaskManagementSystem:data</bpel:to>
+                        </bpel:copy>
+                        <bpel:copy>
+                          <bpel:from>$tokenService1AuthenticateUserResponseMsg.payload/TokenService1:token</bpel:from>
+                          <bpel:to>$taskManagementSystemSetOutputRequestMsg.setOutputRequest/TaskManagementSystem:participantToken</bpel:to>
+                        </bpel:copy>
+                        <bpel:copy>
+                          <bpel:from>$taskManagementSystemGetAvailableTasksWithInputOutputResponseMsg.getAvailableTasksWithInputOutputResponse/TaskManagementSystem:task/TaskManagementSystem:metadata/TaskManagementSystem:taskId</bpel:from>
+                          <bpel:to>$taskManagementSystemSetOutputRequestMsg.setOutputRequest/TaskManagementSystem:taskId</bpel:to>
+                        </bpel:copy>
+                      </bpel:assign>
+                      <bpel:invoke partnerLink="tMsAndUploadProcessForPortTaskManagementServicesSOAPPlkVar" portType="TaskManagementSystem:TaskManagementServices" operation="setOutput" inputVariable="taskManagementSystemSetOutputRequestMsg" outputVariable="taskManagementSystemSetOutputResponseMsg" bpmn:label="update TA" name="update_TA-1" bpmn:id="_MKFT8MngEd6R0r2ZXXidhw"></bpel:invoke>
+                    </bpel:sequence>
+                  </bpel:if>
+                  <bpel:empty bpmn:label="Exclusive_Data-based_Gateway" name="Exclusive_Data-based_Gateway-1" bpmn:id="_KcwOcMnrEd6R0r2ZXXidhw">
+                    <bpel:links>
+                      <bpel:targets></bpel:targets>
+                    </bpel:links>
+                  </bpel:empty>
+                  <bpel:assign bpmn:label="setOk" name="setOk" bpmn:id="_06FiwMngEd6R0r2ZXXidhw">
+                    <bpel:copy>
+                      <bpel:from>"OK"</bpel:from>
+                      <bpel:to>$thisUploadFMRResponseMsg.body/tns:reponseMsg</bpel:to>
+                    </bpel:copy>
+                  </bpel:assign>
+                </bpel:sequence>
+              </bpel:else>
+            </bpel:if>
+            <bpel:empty>
+              <bpel:links>
+                <bpel:sources>
+                  <bpel:source linkName="_pB6s0MneEd6R0r2ZXXidhw_to__Wf_-4MngEd6R0r2ZXXidhw"/>
+                </bpel:sources>
+              </bpel:links>
+            </bpel:empty>
           </bpel:sequence>
           <bpel:else>
             <bpel:sequence>
-              <bpel:assign bpmn:label="checkForUpdate" name="checkForUpdate" bpmn:id="_dRZrMFZmEd6OBK2EwaAgcw">
+              <bpel:assign bpmn:label="checkForUpdate" name="checkForUpdate-2" bpmn:id="_dRZrMFZmEd6OBK2EwaAgcw">
                 <bpel:copy>
                   <bpel:from>bpel:doXslTransform("PrepareQueryForCount.xsl", $thisUploadFMRRequestMsg.body)</bpel:from>
                   <bpel:to>$countExistingTAsCountExistingTAsRequestMsg.parameters/countExistingTAs:execute/countExistingTAs:parameters/countExistingTAs:like</bpel:to>
                 </bpel:copy>
               </bpel:assign>
-              <bpel:invoke partnerLink="dbAndUploadProcessForCountExistingTAsPortPlkVar" portType="countExistingTAs:countExistingTAsPort" operation="countExistingTAs" inputVariable="countExistingTAsCountExistingTAsRequestMsg" outputVariable="countExistingTAsCountExistingTAsResponseMsg" bpmn:label="checkForUpdate" name="checkForUpdate-1" bpmn:id="_dRZrMFZmEd6OBK2EwaAgcw"></bpel:invoke>
+              <bpel:invoke partnerLink="dbAndUploadProcessForCountExistingTAsPortPlkVar" portType="countExistingTAs:countExistingTAsPort" operation="countExistingTAs" inputVariable="countExistingTAsCountExistingTAsRequestMsg" outputVariable="countExistingTAsCountExistingTAsResponseMsg" bpmn:label="checkForUpdate" name="checkForUpdate-3" bpmn:id="_dRZrMFZmEd6OBK2EwaAgcw"></bpel:invoke>
               <bpel:assign bpmn:label="getShifts" name="getShifts" bpmn:id="_Qmie8GAmEd62BZFvm-kYig">
                 <bpel:copy>
                   <bpel:from>bpel:doXslTransform("ShiftDetermination.xsl", $thisUploadFMRRequestMsg.body)</bpel:from>
@@ -494,17 +643,6 @@
                 </bpel:copy>
               </bpel:assign>
               <bpel:invoke partnerLink="uploadProcessAndSITAserviceForSITAservicePortPlkVar" portType="TAdata:SITAservicePortType" operation="getRoles" inputVariable="shiftInput" outputVariable="shiftOutput" bpmn:label="getShifts" name="getShifts-1" bpmn:id="_Qmie8GAmEd62BZFvm-kYig"></bpel:invoke>
-              <bpel:assign bpmn:label="authenticate" name="authenticate" bpmn:id="_MRuwgGCXEd6OfeUZe_9QRQ">
-                <bpel:copy>
-                  <bpel:from>"intalio\admin"</bpel:from>
-                  <bpel:to>$tokenService1AuthenticateUserRequestMsg.payload/TokenService1:user</bpel:to>
-                </bpel:copy>
-                <bpel:copy>
-                  <bpel:from>"changeit"</bpel:from>
-                  <bpel:to>$tokenService1AuthenticateUserRequestMsg.payload/TokenService1:password</bpel:to>
-                </bpel:copy>
-              </bpel:assign>
-              <bpel:invoke partnerLink="uploadProcessAndTokenServiceForTokenServiceHttpportPlkVar" portType="TokenService1:TokenServicePortType" operation="authenticateUser" inputVariable="tokenService1AuthenticateUserRequestMsg" outputVariable="tokenService1AuthenticateUserResponseMsg" bpmn:label="authenticate" name="authenticate-1" bpmn:id="_MRuwgGCXEd6OfeUZe_9QRQ"></bpel:invoke>
               <bpel:if>
                 <bpel:condition>$countExistingTAsCountExistingTAsResponseMsg.parameters/countExistingTAs:rows/countExistingTAs:row/countExistingTAs:COL1 = "0"</bpel:condition>
                 <bpel:sequence>
@@ -538,7 +676,7 @@
                 </bpel:sequence>
                 <bpel:else>
                   <bpel:sequence>
-                    <bpel:assign bpmn:label="getTask" name="getTask" bpmn:id="_3MMZQFZmEd6OBK2EwaAgcw">
+                    <bpel:assign bpmn:label="getTask" name="getTask-2" bpmn:id="_3MMZQFZmEd6OBK2EwaAgcw">
                       <bpel:copy>
                         <bpel:from>"PATask"</bpel:from>
                         <bpel:to>$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest/TaskManagementSystem:taskType</bpel:to>
@@ -552,61 +690,73 @@
                         <bpel:to>$taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg.getAvailableTasksWithInputOutputRequest/TaskManagementSystem:subQuery</bpel:to>
                       </bpel:copy>
                     </bpel:assign>
-                    <bpel:invoke partnerLink="tMsAndUploadProcessForPortTaskManagementServicesSOAPPlkVar" portType="TaskManagementSystem:TaskManagementServices" operation="getAvailableTasksWithInputOutput" inputVariable="taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg" outputVariable="taskManagementSystemGetAvailableTasksWithInputOutputResponseMsg" bpmn:label="getTask" name="getTask-1" bpmn:id="_3MMZQFZmEd6OBK2EwaAgcw"></bpel:invoke>
-                    <bpel:assign bpmn:label="updateData" name="updateData" bpmn:id="_MrnMEF8WEd6UEZqhP-YRNw">
-                      <bpel:copy>
-                        <bpel:from>$thisUploadFMRRequestMsg.body</bpel:from>
-                        <bpel:to>$tAdataInputMessage.body/FMR</bpel:to>
-                      </bpel:copy>
-                      <bpel:copy>
-                        <bpel:from>$taskManagementSystemGetAvailableTasksWithInputOutputResponseMsg.getAvailableTasksWithInputOutputResponse/TaskManagementSystem:task/TaskManagementSystem:output/node()</bpel:from>
-                        <bpel:to>$tAdataInputMessage.body/TAdata:data/TAdata:FormModel</bpel:to>
-                      </bpel:copy>
-                    </bpel:assign>
-                    <bpel:invoke partnerLink="uploadProcessAndSITAserviceForSITAservicePortPlkVar" portType="TAdata:SITAservicePortType" operation="updateTA" inputVariable="tAdataInputMessage" outputVariable="tAdataOuputMessage" bpmn:label="updateData" name="updateData-1" bpmn:id="_MrnMEF8WEd6UEZqhP-YRNw"></bpel:invoke>
-                    <bpel:assign bpmn:label="reassign" name="reassign" bpmn:id="_-5N2sGAnEd62BZFvm-kYig">
-                      <bpel:copy>
-                        <bpel:from>$taskManagementSystemGetAvailableTasksWithInputOutputResponseMsg.getAvailableTasksWithInputOutputResponse/TaskManagementSystem:task/TaskManagementSystem:metadata/TaskManagementSystem:taskId</bpel:from>
-                        <bpel:to>$taskManagementSystemReassignRequestMsg.reassignRequest/TaskManagementSystem:taskId</bpel:to>
-                      </bpel:copy>
-                      <bpel:copy>
-                        <bpel:from>$shiftOutput.body/roles</bpel:from>
-                        <bpel:to>$taskManagementSystemReassignRequestMsg.reassignRequest/TaskManagementSystem:roleOwner</bpel:to>
-                      </bpel:copy>
-                      <bpel:copy>
-                        <bpel:from>$tokenService1AuthenticateUserResponseMsg.payload/TokenService1:token</bpel:from>
-                        <bpel:to>$taskManagementSystemReassignRequestMsg.reassignRequest/TaskManagementSystem:participantToken</bpel:to>
-                      </bpel:copy>
-                      <bpel:copy>
-                        <bpel:from>"READY"</bpel:from>
-                        <bpel:to>$taskManagementSystemReassignRequestMsg.reassignRequest/TaskManagementSystem:taskState</bpel:to>
-                      </bpel:copy>
-                    </bpel:assign>
-                    <bpel:invoke partnerLink="tMsAndUploadProcessForPortTaskManagementServicesSOAPPlkVar" portType="TaskManagementSystem:TaskManagementServices" operation="reassign" inputVariable="taskManagementSystemReassignRequestMsg" outputVariable="taskManagementSystemReassignResponseMsg" bpmn:label="reassign" name="reassign-1" bpmn:id="_-5N2sGAnEd62BZFvm-kYig"></bpel:invoke>
-                    <bpel:assign bpmn:label="update TA" name="update_TA" bpmn:id="_UllP8FZ5Ed6OBK2EwaAgcw">
-                      <bpel:copy>
-                        <bpel:from>$taskManagementSystemGetAvailableTasksWithInputOutputResponseMsg.getAvailableTasksWithInputOutputResponse/TaskManagementSystem:task/TaskManagementSystem:metadata/TaskManagementSystem:taskId</bpel:from>
-                        <bpel:to>$taskManagementSystemSetOutputRequestMsg.setOutputRequest/TaskManagementSystem:taskId</bpel:to>
-                      </bpel:copy>
-                      <bpel:copy>
-                        <bpel:from>$tAdataOuputMessage.body</bpel:from>
-                        <bpel:to>$taskManagementSystemSetOutputRequestMsg.setOutputRequest/TaskManagementSystem:data</bpel:to>
-                      </bpel:copy>
-                      <bpel:copy>
-                        <bpel:from>$tokenService1AuthenticateUserResponseMsg.payload/TokenService1:token</bpel:from>
-                        <bpel:to>$taskManagementSystemSetOutputRequestMsg.setOutputRequest/TaskManagementSystem:participantToken</bpel:to>
-                      </bpel:copy>
-                    </bpel:assign>
-                    <bpel:invoke partnerLink="tMsAndUploadProcessForPortTaskManagementServicesSOAPPlkVar" portType="TaskManagementSystem:TaskManagementServices" operation="setOutput" inputVariable="taskManagementSystemSetOutputRequestMsg" outputVariable="taskManagementSystemSetOutputResponseMsg" bpmn:label="update TA" name="update_TA-1" bpmn:id="_UllP8FZ5Ed6OBK2EwaAgcw"></bpel:invoke>
+                    <bpel:invoke partnerLink="tMsAndUploadProcessForPortTaskManagementServicesSOAPPlkVar" portType="TaskManagementSystem:TaskManagementServices" operation="getAvailableTasksWithInputOutput" inputVariable="taskManagementSystemGetAvailableTasksWithInputOutputRequestMsg" outputVariable="taskManagementSystemGetAvailableTasksWithInputOutputResponseMsg" bpmn:label="getTask" name="getTask-3" bpmn:id="_3MMZQFZmEd6OBK2EwaAgcw"></bpel:invoke>
+                    <bpel:if>
+                      <bpel:condition>if (($thisUploadFMRRequestMsg.body/fmr:FlightStatus = "S") or ($thisUploadFMRRequestMsg.body/fmr:FlightStatus = "X")) then (true()) else (if (xs:int($thisUploadFMRRequestMsg.body/fmr:FlightStatus)&gt; xs:int(bpel:doXslTransform("getFlightStatus.xsl", $taskManagementSystemGetAvailableTasksWithInputOutputResponseMsg.getAvailableTasksWithInputOutputResponse))) then (true()) else (false()))</bpel:condition>
+                      <bpel:sequence>
+                        <bpel:assign bpmn:label="updateData" name="updateData-2" bpmn:id="_MrnMEF8WEd6UEZqhP-YRNw">
+                          <bpel:copy>
+                            <bpel:from>$thisUploadFMRRequestMsg.body</bpel:from>
+                            <bpel:to>$tAdataInputMessage.body/FMR</bpel:to>
+                          </bpel:copy>
+                          <bpel:copy>
+                            <bpel:from>$taskManagementSystemGetAvailableTasksWithInputOutputResponseMsg.getAvailableTasksWithInputOutputResponse/TaskManagementSystem:task/TaskManagementSystem:output/node()</bpel:from>
+                            <bpel:to>$tAdataInputMessage.body/TAdata:data/TAdata:FormModel</bpel:to>
+                          </bpel:copy>
+                        </bpel:assign>
+                        <bpel:invoke partnerLink="uploadProcessAndSITAserviceForSITAservicePortPlkVar" portType="TAdata:SITAservicePortType" operation="updateTA" inputVariable="tAdataInputMessage" outputVariable="tAdataOuputMessage" bpmn:label="updateData" name="updateData-3" bpmn:id="_MrnMEF8WEd6UEZqhP-YRNw"></bpel:invoke>
+                        <bpel:assign bpmn:label="reassign" name="reassign" bpmn:id="_-5N2sGAnEd62BZFvm-kYig">
+                          <bpel:copy>
+                            <bpel:from>$taskManagementSystemGetAvailableTasksWithInputOutputResponseMsg.getAvailableTasksWithInputOutputResponse/TaskManagementSystem:task/TaskManagementSystem:metadata/TaskManagementSystem:taskId</bpel:from>
+                            <bpel:to>$taskManagementSystemReassignRequestMsg.reassignRequest/TaskManagementSystem:taskId</bpel:to>
+                          </bpel:copy>
+                          <bpel:copy>
+                            <bpel:from>$shiftOutput.body/roles</bpel:from>
+                            <bpel:to>$taskManagementSystemReassignRequestMsg.reassignRequest/TaskManagementSystem:roleOwner</bpel:to>
+                          </bpel:copy>
+                          <bpel:copy>
+                            <bpel:from>$tokenService1AuthenticateUserResponseMsg.payload/TokenService1:token</bpel:from>
+                            <bpel:to>$taskManagementSystemReassignRequestMsg.reassignRequest/TaskManagementSystem:participantToken</bpel:to>
+                          </bpel:copy>
+                          <bpel:copy>
+                            <bpel:from>"READY"</bpel:from>
+                            <bpel:to>$taskManagementSystemReassignRequestMsg.reassignRequest/TaskManagementSystem:taskState</bpel:to>
+                          </bpel:copy>
+                        </bpel:assign>
+                        <bpel:invoke partnerLink="tMsAndUploadProcessForPortTaskManagementServicesSOAPPlkVar" portType="TaskManagementSystem:TaskManagementServices" operation="reassign" inputVariable="taskManagementSystemReassignRequestMsg" outputVariable="taskManagementSystemReassignResponseMsg" bpmn:label="reassign" name="reassign-1" bpmn:id="_-5N2sGAnEd62BZFvm-kYig"></bpel:invoke>
+                        <bpel:assign bpmn:label="update TA" name="update_TA-2" bpmn:id="_UllP8FZ5Ed6OBK2EwaAgcw">
+                          <bpel:copy>
+                            <bpel:from>$taskManagementSystemGetAvailableTasksWithInputOutputResponseMsg.getAvailableTasksWithInputOutputResponse/TaskManagementSystem:task/TaskManagementSystem:metadata/TaskManagementSystem:taskId</bpel:from>
+                            <bpel:to>$taskManagementSystemSetOutputRequestMsg.setOutputRequest/TaskManagementSystem:taskId</bpel:to>
+                          </bpel:copy>
+                          <bpel:copy>
+                            <bpel:from>$tAdataOuputMessage.body</bpel:from>
+                            <bpel:to>$taskManagementSystemSetOutputRequestMsg.setOutputRequest/TaskManagementSystem:data</bpel:to>
+                          </bpel:copy>
+                          <bpel:copy>
+                            <bpel:from>$tokenService1AuthenticateUserResponseMsg.payload/TokenService1:token</bpel:from>
+                            <bpel:to>$taskManagementSystemSetOutputRequestMsg.setOutputRequest/TaskManagementSystem:participantToken</bpel:to>
+                          </bpel:copy>
+                        </bpel:assign>
+                        <bpel:invoke partnerLink="tMsAndUploadProcessForPortTaskManagementServicesSOAPPlkVar" portType="TaskManagementSystem:TaskManagementServices" operation="setOutput" inputVariable="taskManagementSystemSetOutputRequestMsg" outputVariable="taskManagementSystemSetOutputResponseMsg" bpmn:label="update TA" name="update_TA-3" bpmn:id="_UllP8FZ5Ed6OBK2EwaAgcw"></bpel:invoke>
+                      </bpel:sequence>
+                    </bpel:if>
+                    <bpel:empty>
+                      <bpel:links>
+                        <bpel:sources>
+                          <bpel:source linkName="_wl7FQMnoEd6R0r2ZXXidhw_to__yRgdUMnoEd6R0r2ZXXidhw"/>
+                        </bpel:sources>
+                      </bpel:links>
+                    </bpel:empty>
                   </bpel:sequence>
                 </bpel:else>
               </bpel:if>
-              <bpel:empty bpmn:label="Exclusive_Data-based_Gateway" name="Exclusive_Data-based_Gateway-1" bpmn:id="_-ANDsFZmEd6OBK2EwaAgcw">
+              <bpel:empty bpmn:label="Exclusive_Data-based_Gateway" name="Exclusive_Data-based_Gateway-2" bpmn:id="_-ANDsFZmEd6OBK2EwaAgcw">
                 <bpel:links>
                   <bpel:targets></bpel:targets>
                 </bpel:links>
               </bpel:empty>
-              <bpel:assign bpmn:label="setOk" name="setOk" bpmn:id="_ALOw0FZnEd6OBK2EwaAgcw">
+              <bpel:assign bpmn:label="setOk" name="setOk-1" bpmn:id="_ALOw0FZnEd6OBK2EwaAgcw">
                 <bpel:copy>
                   <bpel:from>"OK"</bpel:from>
                   <bpel:to>$thisUploadFMRResponseMsg.body/tns:reponseMsg</bpel:to>
@@ -615,7 +765,7 @@
             </bpel:sequence>
           </bpel:else>
         </bpel:if>
-        <bpel:empty bpmn:label="Exclusive_Data-based_Gateway" name="Exclusive_Data-based_Gateway-2" bpmn:id="_ho0UMFZiEd6OBK2EwaAgcw">
+        <bpel:empty bpmn:label="Exclusive_Data-based_Gateway" name="Exclusive_Data-based_Gateway-3" bpmn:id="_ho0UMFZiEd6OBK2EwaAgcw">
           <bpel:links>
             <bpel:targets></bpel:targets>
           </bpel:links>
@@ -747,8 +897,16 @@
     </TAdata:ArrivalDeparture>
     <TAdata:Inspection>
       <TAdata:assigned></TAdata:assigned>
+      <TAdata:flightStatus></TAdata:flightStatus>
       <TAdata:Stand></TAdata:Stand>
-      <TAdata:InspectionType></TAdata:InspectionType>
+      <TAdata:taTasks>
+        <TAdata:InspectionType></TAdata:InspectionType>
+        <TAdata:MTstartDate></TAdata:MTstartDate>
+        <TAdata:MTstartTime></TAdata:MTstartTime>
+        <TAdata:MTendDate></TAdata:MTendDate>
+        <TAdata:MTendTime></TAdata:MTendTime>
+        <TAdata:Remarks></TAdata:Remarks>
+      </TAdata:taTasks>
       <TAdata:InspectionStatus></TAdata:InspectionStatus>
       <TAdata:resources></TAdata:resources>
       <TAdata:RTR>
@@ -806,7 +964,27 @@
             <bpel:from>
               <bpel:literal>
 <TAdata:updateInput>
-  <FMR ATA="" ATD="" Aircraft="" ArrivalFlightNumber="" CreationTime="" DepartureFlightNumber="" InspectionType="" Rtr-id="" STA="" STD="" Stand=""></FMR>
+  <FMR FMR_TYPE="">
+    <Aircraft></Aircraft>
+    <CreationTIme></CreationTIme>
+    <FlightStatus></FlightStatus>
+    <STA></STA>
+    <STD></STD>
+    <ATA></ATA>
+    <ATD></ATD>
+    <ETA></ETA>
+    <ETD></ETD>
+    <ArrivalFlightNumber></ArrivalFlightNumber>
+    <DepartureFlightNumber></DepartureFlightNumber>
+    <stand></stand>
+    <MaintTask>
+      <InspectionType></InspectionType>
+      <MaintStartDate></MaintStartDate>
+      <MaintEndtDate></MaintEndtDate>
+      <RTR_ID></RTR_ID>
+      <Remarks></Remarks>
+    </MaintTask>
+  </FMR>
   <TAdata:data>
     <TAdata:FormModel>
       <TAdata:Activity>
@@ -835,8 +1013,16 @@
       </TAdata:ArrivalDeparture>
       <TAdata:Inspection>
         <TAdata:assigned></TAdata:assigned>
+        <TAdata:flightStatus></TAdata:flightStatus>
         <TAdata:Stand></TAdata:Stand>
-        <TAdata:InspectionType></TAdata:InspectionType>
+        <TAdata:taTasks>
+          <TAdata:InspectionType></TAdata:InspectionType>
+          <TAdata:MTstartDate></TAdata:MTstartDate>
+          <TAdata:MTstartTime></TAdata:MTstartTime>
+          <TAdata:MTendDate></TAdata:MTendDate>
+          <TAdata:MTendTime></TAdata:MTendTime>
+          <TAdata:Remarks></TAdata:Remarks>
+        </TAdata:taTasks>
         <TAdata:InspectionStatus></TAdata:InspectionStatus>
         <TAdata:resources></TAdata:resources>
         <TAdata:RTR>
@@ -987,6 +1173,18 @@
 </ns:storeFMRParameterSet></bpel:literal>
             </bpel:from>
             <bpel:to>$nsStoreFMRRequestMsg.parameters</bpel:to>
+          </bpel:copy>
+          <bpel:copy bpmn:label="$taskManagementSystemCountAvailableTasksRequestMsg">
+            <bpel:from>
+              <bpel:literal>
+<TaskManagementSystem:countAvailableTasksRequest>
+  <TaskManagementSystem:participantToken></TaskManagementSystem:participantToken>
+  <TaskManagementSystem:taskType></TaskManagementSystem:taskType>
+  <TaskManagementSystem:subQuery></TaskManagementSystem:subQuery>
+  <TaskManagementSystem:filter></TaskManagementSystem:filter>
+</TaskManagementSystem:countAvailableTasksRequest></bpel:literal>
+            </bpel:from>
+            <bpel:to>$taskManagementSystemCountAvailableTasksRequestMsg.countAvailableTasksRequest</bpel:to>
           </bpel:copy>
         </bpel:assign>
         <bpel:empty bpmn:label="create HIL" name="create_HIL" bpmn:id="_fwKHYD7SEd6K2cgYiBoOqg"/>

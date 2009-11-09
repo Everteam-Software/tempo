@@ -3,7 +3,7 @@
 	
 	<xsl:template match="fmr:FMR" xmlns:fmr="http://www.example.org/fmr">
 		<xsl:choose>
-			<xsl:when test="@STA!='' and @ArrivalFlightNumber!='' and @Aircraft!=''">false</xsl:when>
+			<xsl:when test="fmr:STD!='' and fmr:DepartureFlightNumber!='' and fmr:Aircraft!=''">false</xsl:when>
 			<xsl:otherwise>true</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>

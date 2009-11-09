@@ -28,16 +28,6 @@
   <dd:invoke partnerLink="processAndDBForUpdateAviPortPlkVar">
     <dd:service name="updateAvi:updateAviService" port="updateAviPort"></dd:service>
   </dd:invoke>
-</dd:process><dd:process xmlns:User="http://example.com/process/UploadFMRinterface/User" xmlns:fmr="http://www.example.org/fmr" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:hil="http://www.example.org/hil" xmlns:dd="http://www.apache.org/ode/schemas/dd/2007/03" xmlns:diag="http://example.com/process/UploadFMRinterface" xmlns:Upload-UploadProcess="http://example.com/process/Upload/UploadProcess" xmlns:tns="http://www.example.org/UploadResponse" xmlns:processimplicitPartner="http://example.com/process/UploadFMRinterface/processimplicitPartner" xmlns:attachments="http://www.intalio.com/gi/forms/uploadFMR.gi/attachments" xmlns:uploadFMR="http://www.intalio.com/gi/forms/uploadFMR.gi" xmlns:this="http://example.com/process/UploadFMRinterface/process" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="this:process" fileName="process/UploadFMRinterface-process.bpel">
-  <dd:process-events generate="none"/>
-  <dd:property name="PATH">process/UploadFMRinterface</dd:property>
-  <dd:property name="SVG">process/UploadFMRinterface.svg</dd:property>
-  <dd:invoke partnerLink="processimplicitPartnerAndProcessForCanonicPortPlkVar">
-    <dd:service name="Upload-UploadProcess:CanonicServiceForAppearNetworks" port="canonicPort"></dd:service>
-  </dd:invoke>
-  <dd:provide partnerLink="processAndUserForPortTypeProcessPlkVar">
-    <dd:service name="this:processAndUserForPortTypeProcessPlkService" port="process_for_UserPort"></dd:service>
-  </dd:provide>
 </dd:process><dd:process xmlns:TokenService="http://example.com/process/NotifToAMI/TokenService" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:TMS="http://example.com/process/NotifToAMI/TMS" xmlns:TAdata="http://www.intalio.com/gi/forms/TAmanagement.gi" xmlns:NotifInterface="http://example.com/process/NotifToAMI/NotifInterface" xmlns:dd="http://www.apache.org/ode/schemas/dd/2007/03" xmlns:diag="http://example.com/process/NotifToAMI" xmlns:tns="http://ode/bpel/unit-test.wsdl" xmlns:TaskManagementSystem="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:ta="http://www.example.org/ta" xmlns:TAlistService="http://example.com/process/NotifToAMI/TAlistService" xmlns:nf="http://www.example.org/notif" xmlns:this="http://example.com/process/NotifToAMI/NotifToAMIprocess" xmlns:RMAnotifService="http://example.com/process/NotifToAMI/RMAnotifService" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:TokenService1="http://tempo.intalio.org/security/tokenService/" name="this:NotifToAMIprocess" fileName="process/NotifToAMI-NotifToAMIprocess.bpel">
   <dd:process-events generate="none"/>
   <dd:property name="PATH">process/NotifToAMI</dd:property>

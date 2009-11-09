@@ -188,855 +188,971 @@
               <record jsxid="mi_95" name="DOM" value="assigned"/>
             </mappings>
           </record>
-          <record jsxid="mi_96" jsxtext="Stand" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='Stand']">
+          <record jsxid="mi_96" jsxtext="flightStatus" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='flightStatus']">
             <restrictions>
               <record jsxid="mi_97" name="minoccur" value="0"/>
             </restrictions>
             <mappings jsxid="mi_98">
-              <record jsxid="mi_99" name="DOM" value="Stand"/>
+              <record jsxid="mi_99" name="DOM" value="flightStatus"/>
             </mappings>
           </record>
-          <record jsxid="mi_100" jsxtext="InspectionType" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='InspectionType']">
+          <record jsxid="mi_100" jsxtext="Stand" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='Stand']">
             <restrictions>
               <record jsxid="mi_101" name="minoccur" value="0"/>
             </restrictions>
             <mappings jsxid="mi_102">
-              <record jsxid="mi_103" name="DOM" value="InspectionType"/>
+              <record jsxid="mi_103" name="DOM" value="Stand"/>
             </mappings>
           </record>
-          <record jsxid="mi_104" jsxtext="InspectionStatus" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='InspectionStatus']">
+          <record jsxid="mi_104" jsxtext="taTasks" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='taTasks']">
             <restrictions>
-              <record jsxid="mi_105" name="minoccur" value="0"/>
+              <record jsxid="mi_105" name="maxoccur" value="unbounded"/>
+              <record jsxid="mi_106" name="minoccur" value="0"/>
             </restrictions>
-            <mappings jsxid="mi_106">
-              <record jsxid="mi_107" name="DOM" value="InspectionStatus"/>
-            </mappings>
-          </record>
-          <record jsxid="mi_108" jsxtext="resources" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='resources']">
-            <restrictions>
-              <record jsxid="mi_109" name="minoccur" value="0"/>
-            </restrictions>
-            <mappings jsxid="mi_110">
-              <record jsxid="mi_111" name="DOM" value="resources"/>
-            </mappings>
-          </record>
-          <record jsxid="mi_112" jsxtext="RTR" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='RTR']">
-            <restrictions>
-              <record jsxid="mi_113" name="maxoccur" value="unbounded"/>
-              <record jsxid="mi_114" name="minoccur" value="0"/>
-            </restrictions>
-            <record jsxid="mi_115" jsxtext="RTRid" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='RTRid']">
+            <record jsxid="mi_107" jsxtext="InspectionType" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='InspectionType']">
+              <restrictions>
+                <record jsxid="mi_108" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_109">
+                <record jsxid="mi_110" name="CDF Attribute" value="jsxInspectionType"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_111" jsxtext="MTstartDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='MTstartDate']">
+              <restrictions>
+                <record jsxid="mi_112" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_113">
+                <record jsxid="mi_114" name="Script" value="setValue(Intalio.Internal.Utilities.fixDateOutputMatrix(CDFCONTEXT.getAttribute('jsxMTstartDate')));"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_115" jsxtext="MTstartTime" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='MTstartTime']">
               <restrictions>
                 <record jsxid="mi_116" name="minoccur" value="0"/>
               </restrictions>
               <mappings jsxid="mi_117">
-                <record jsxid="mi_118" name="CDF Attribute" value="jsxRTRid"/>
+                <record jsxid="mi_118" name="Script" value="setValue(Intalio.Internal.Utilities.fixTimeOutputMatrix(CDFCONTEXT.getAttribute('jsxMTstartTime')));"/>
               </mappings>
             </record>
-            <record jsxid="mi_119" jsxtext="RTRdescription" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='RTRdescription']">
+            <record jsxid="mi_119" jsxtext="MTendDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='MTendDate']">
               <restrictions>
                 <record jsxid="mi_120" name="minoccur" value="0"/>
               </restrictions>
               <mappings jsxid="mi_121">
-                <record jsxid="mi_122" name="CDF Attribute" value="RTRdescription"/>
+                <record jsxid="mi_122" name="Script" value="setValue(Intalio.Internal.Utilities.fixDateOutputMatrix(CDFCONTEXT.getAttribute('jsxMTendDate')));"/>
               </mappings>
             </record>
-            <record jsxid="mi_123" jsxtext="RTRstatus" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='RTRstatus']">
+            <record jsxid="mi_123" jsxtext="MTendTime" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='MTendTime']">
               <restrictions>
                 <record jsxid="mi_124" name="minoccur" value="0"/>
               </restrictions>
               <mappings jsxid="mi_125">
-                <record jsxid="mi_126" name="CDF Attribute" value="jsxRTRstatus"/>
+                <record jsxid="mi_126" name="Script" value="setValue(Intalio.Internal.Utilities.fixTimeOutputMatrix(CDFCONTEXT.getAttribute('jsxMTendTime')));"/>
               </mappings>
             </record>
-            <record jsxid="mi_127" jsxtext="RTRad" type="E" datatype="boolean" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='RTRad']">
+            <record jsxid="mi_127" jsxtext="Remarks" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='Remarks']">
               <restrictions>
                 <record jsxid="mi_128" name="minoccur" value="0"/>
               </restrictions>
               <mappings jsxid="mi_129">
-                <record jsxid="mi_130" name="CDF Attribute" value="jsxRTRad"/>
+                <record jsxid="mi_130" name="CDF Attribute" value="jsxRemarks"/>
               </mappings>
             </record>
             <mappings jsxid="mi_131">
-              <record jsxid="mi_132" name="Script" value="if(typeof(this._i_132)=='undefined'){this._i_132=-1;my.getCDFDocument('RTR','OUTBOUND');}"/>
+              <record jsxid="mi_132" name="Script" value="if(typeof(this._i_132)=='undefined'){this._i_132=-1;my.getCDFDocument('taTasks','OUTBOUND');}"/>
               <record jsxid="mi_133" name="CDF Record"/>
             </mappings>
           </record>
-          <record jsxid="mi_134" jsxtext="assignedCoord" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedCoord']">
+          <record jsxid="mi_134" jsxtext="InspectionStatus" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='InspectionStatus']">
             <restrictions>
-              <record jsxid="mi_135" name="maxoccur" value="unbounded"/>
-              <record jsxid="mi_136" name="minoccur" value="0"/>
+              <record jsxid="mi_135" name="minoccur" value="0"/>
             </restrictions>
-            <record jsxid="mi_137" jsxtext="assignedCoordName" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedCoordName']">
-              <restrictions>
-                <record jsxid="mi_138" name="minoccur" value="0"/>
-              </restrictions>
-              <mappings jsxid="mi_139">
-                <record jsxid="mi_140" name="CDF Attribute" value="jsxAssignedCoordName"/>
-              </mappings>
-            </record>
-            <record jsxid="mi_141" jsxtext="assignedCoordID" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedCoordID']">
-              <restrictions>
-                <record jsxid="mi_142" name="minoccur" value="0"/>
-              </restrictions>
-              <mappings jsxid="mi_143">
-                <record jsxid="mi_144" name="CDF Attribute" value="jsxAssignedCoordID"/>
-              </mappings>
-            </record>
-            <record jsxid="mi_145" jsxtext="assignedCoordCert" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedCoordCert']">
+            <mappings jsxid="mi_136">
+              <record jsxid="mi_137" name="DOM" value="InspectionStatus"/>
+            </mappings>
+          </record>
+          <record jsxid="mi_138" jsxtext="resources" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='resources']">
+            <restrictions>
+              <record jsxid="mi_139" name="minoccur" value="0"/>
+            </restrictions>
+            <mappings jsxid="mi_140">
+              <record jsxid="mi_141" name="DOM" value="resources"/>
+            </mappings>
+          </record>
+          <record jsxid="mi_142" jsxtext="RTR" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='RTR']">
+            <restrictions>
+              <record jsxid="mi_143" name="maxoccur" value="unbounded"/>
+              <record jsxid="mi_144" name="minoccur" value="0"/>
+            </restrictions>
+            <record jsxid="mi_145" jsxtext="RTRid" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='RTRid']">
               <restrictions>
                 <record jsxid="mi_146" name="minoccur" value="0"/>
               </restrictions>
               <mappings jsxid="mi_147">
-                <record jsxid="mi_148" name="CDF Attribute" value="jsxAssignedCoordCert"/>
+                <record jsxid="mi_148" name="CDF Attribute" value="jsxRTRid"/>
               </mappings>
             </record>
-            <mappings jsxid="mi_149">
-              <record jsxid="mi_150" name="Script" value="if(typeof(this._i_150)=='undefined'){this._i_150=-1;my.getCDFDocument('assignedCoord','OUTBOUND');}"/>
-              <record jsxid="mi_151" name="CDF Record"/>
+            <record jsxid="mi_149" jsxtext="RTRdescription" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='RTRdescription']">
+              <restrictions>
+                <record jsxid="mi_150" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_151">
+                <record jsxid="mi_152" name="CDF Attribute" value="RTRdescription"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_153" jsxtext="RTRstatus" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='RTRstatus']">
+              <restrictions>
+                <record jsxid="mi_154" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_155">
+                <record jsxid="mi_156" name="CDF Attribute" value="jsxRTRstatus"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_157" jsxtext="RTRad" type="E" datatype="boolean" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='RTRad']">
+              <restrictions>
+                <record jsxid="mi_158" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_159">
+                <record jsxid="mi_160" name="CDF Attribute" value="jsxRTRad"/>
+              </mappings>
+            </record>
+            <mappings jsxid="mi_161">
+              <record jsxid="mi_162" name="Script" value="if(typeof(this._i_162)=='undefined'){this._i_162=-1;my.getCDFDocument('RTR','OUTBOUND');}"/>
+              <record jsxid="mi_163" name="CDF Record"/>
             </mappings>
           </record>
-          <record jsxid="mi_152" jsxtext="assignedMechanics" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedMechanics']">
+          <record jsxid="mi_164" jsxtext="assignedCoord" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedCoord']">
             <restrictions>
-              <record jsxid="mi_153" name="maxoccur" value="unbounded"/>
-              <record jsxid="mi_154" name="minoccur" value="0"/>
+              <record jsxid="mi_165" name="maxoccur" value="unbounded"/>
+              <record jsxid="mi_166" name="minoccur" value="0"/>
             </restrictions>
-            <record jsxid="mi_155" jsxtext="assignedMechanicName" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedMechanicName']">
-              <restrictions>
-                <record jsxid="mi_156" name="minoccur" value="0"/>
-              </restrictions>
-              <mappings jsxid="mi_157">
-                <record jsxid="mi_158" name="CDF Attribute" value="jsxAssignedMechanicName"/>
-              </mappings>
-            </record>
-            <record jsxid="mi_159" jsxtext="assignedMechanicID" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedMechanicID']">
-              <restrictions>
-                <record jsxid="mi_160" name="minoccur" value="0"/>
-              </restrictions>
-              <mappings jsxid="mi_161">
-                <record jsxid="mi_162" name="CDF Attribute" value="jsxAssignedMechanicID"/>
-              </mappings>
-            </record>
-            <record jsxid="mi_163" jsxtext="assignedMechanicCert" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedMechanicCert']">
-              <restrictions>
-                <record jsxid="mi_164" name="minoccur" value="0"/>
-              </restrictions>
-              <mappings jsxid="mi_165">
-                <record jsxid="mi_166" name="CDF Attribute" value="jsxAssignedMechanicCert"/>
-              </mappings>
-            </record>
-            <record jsxid="mi_167" jsxtext="entitledToRelease" type="E" datatype="boolean" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='entitledToRelease']">
+            <record jsxid="mi_167" jsxtext="assignedCoordName" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedCoordName']">
               <restrictions>
                 <record jsxid="mi_168" name="minoccur" value="0"/>
               </restrictions>
               <mappings jsxid="mi_169">
-                <record jsxid="mi_170" name="CDF Attribute" value="jsxRelease"/>
+                <record jsxid="mi_170" name="CDF Attribute" value="jsxAssignedCoordName"/>
               </mappings>
             </record>
-            <mappings jsxid="mi_171">
-              <record jsxid="mi_172" name="Script" value="if(typeof(this._i_172)=='undefined'){this._i_172=-1;my.getCDFDocument('assignedMechanics','OUTBOUND');}"/>
-              <record jsxid="mi_173" name="CDF Record"/>
+            <record jsxid="mi_171" jsxtext="assignedCoordID" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedCoordID']">
+              <restrictions>
+                <record jsxid="mi_172" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_173">
+                <record jsxid="mi_174" name="CDF Attribute" value="jsxAssignedCoordID"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_175" jsxtext="assignedCoordCert" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedCoordCert']">
+              <restrictions>
+                <record jsxid="mi_176" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_177">
+                <record jsxid="mi_178" name="CDF Attribute" value="jsxAssignedCoordCert"/>
+              </mappings>
+            </record>
+            <mappings jsxid="mi_179">
+              <record jsxid="mi_180" name="Script" value="if(typeof(this._i_180)=='undefined'){this._i_180=-1;my.getCDFDocument('assignedCoord','OUTBOUND');}"/>
+              <record jsxid="mi_181" name="CDF Record"/>
             </mappings>
           </record>
-          <record jsxid="mi_174" jsxtext="assignedAvionics" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedAvionics']">
+          <record jsxid="mi_182" jsxtext="assignedMechanics" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedMechanics']">
             <restrictions>
-              <record jsxid="mi_175" name="maxoccur" value="unbounded"/>
-              <record jsxid="mi_176" name="minoccur" value="0"/>
+              <record jsxid="mi_183" name="maxoccur" value="unbounded"/>
+              <record jsxid="mi_184" name="minoccur" value="0"/>
             </restrictions>
-            <record jsxid="mi_177" jsxtext="assignedAvionicName" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedAvionicName']">
-              <restrictions>
-                <record jsxid="mi_178" name="minoccur" value="0"/>
-              </restrictions>
-              <mappings jsxid="mi_179">
-                <record jsxid="mi_180" name="CDF Attribute" value="jsxAssignedAvionicName"/>
-              </mappings>
-            </record>
-            <record jsxid="mi_181" jsxtext="assignedAvionicID" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedAvionicID']">
-              <restrictions>
-                <record jsxid="mi_182" name="minoccur" value="0"/>
-              </restrictions>
-              <mappings jsxid="mi_183">
-                <record jsxid="mi_184" name="CDF Attribute" value="jsxAssignedAvionicID"/>
-              </mappings>
-            </record>
-            <record jsxid="mi_185" jsxtext="assignedAvionicCert" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedAvionicCert']">
+            <record jsxid="mi_185" jsxtext="assignedMechanicName" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedMechanicName']">
               <restrictions>
                 <record jsxid="mi_186" name="minoccur" value="0"/>
               </restrictions>
               <mappings jsxid="mi_187">
-                <record jsxid="mi_188" name="CDF Attribute" value="jsxAssignedAvionicCert"/>
+                <record jsxid="mi_188" name="CDF Attribute" value="jsxAssignedMechanicName"/>
               </mappings>
             </record>
-            <mappings jsxid="mi_189">
-              <record jsxid="mi_190" name="Script" value="if(typeof(this._i_190)=='undefined'){this._i_190=-1;my.getCDFDocument('assignedAvionics','OUTBOUND');}"/>
-              <record jsxid="mi_191" name="CDF Record"/>
-            </mappings>
-          </record>
-        </record>
-        <record jsxid="mi_192" jsxtext="HIL" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='HIL']">
-          <restrictions>
-            <record jsxid="mi_193" name="nillable" value="true"/>
-          </restrictions>
-          <record jsxid="mi_194" jsxtext="TAHIL" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHIL']">
-            <restrictions>
-              <record jsxid="mi_195" name="maxoccur" value="unbounded"/>
-              <record jsxid="mi_196" name="minoccur" value="0"/>
-            </restrictions>
-            <record jsxid="mi_197" jsxtext="TAHILid" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILid']">
+            <record jsxid="mi_189" jsxtext="assignedMechanicID" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedMechanicID']">
+              <restrictions>
+                <record jsxid="mi_190" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_191">
+                <record jsxid="mi_192" name="CDF Attribute" value="jsxAssignedMechanicID"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_193" jsxtext="assignedMechanicCert" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedMechanicCert']">
+              <restrictions>
+                <record jsxid="mi_194" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_195">
+                <record jsxid="mi_196" name="CDF Attribute" value="jsxAssignedMechanicCert"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_197" jsxtext="entitledToRelease" type="E" datatype="boolean" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='entitledToRelease']">
               <restrictions>
                 <record jsxid="mi_198" name="minoccur" value="0"/>
               </restrictions>
               <mappings jsxid="mi_199">
-                <record jsxid="mi_200" name="CDF Attribute" value="jsxtTAHILid"/>
+                <record jsxid="mi_200" name="CDF Attribute" value="jsxRelease"/>
               </mappings>
             </record>
-            <record jsxid="mi_201" jsxtext="TAHILtype" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILtype']">
+            <mappings jsxid="mi_201">
+              <record jsxid="mi_202" name="Script" value="if(typeof(this._i_202)=='undefined'){this._i_202=-1;my.getCDFDocument('assignedMechanics','OUTBOUND');}"/>
+              <record jsxid="mi_203" name="CDF Record"/>
+            </mappings>
+          </record>
+          <record jsxid="mi_204" jsxtext="assignedAvionics" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedAvionics']">
+            <restrictions>
+              <record jsxid="mi_205" name="maxoccur" value="unbounded"/>
+              <record jsxid="mi_206" name="minoccur" value="0"/>
+            </restrictions>
+            <record jsxid="mi_207" jsxtext="assignedAvionicName" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedAvionicName']">
               <restrictions>
-                <record jsxid="mi_202" name="minoccur" value="0"/>
+                <record jsxid="mi_208" name="minoccur" value="0"/>
               </restrictions>
-              <mappings jsxid="mi_203">
-                <record jsxid="mi_204" name="CDF Attribute" value="jsxtTAHILtype"/>
+              <mappings jsxid="mi_209">
+                <record jsxid="mi_210" name="CDF Attribute" value="jsxAssignedAvionicName"/>
               </mappings>
             </record>
-            <record jsxid="mi_205" jsxtext="TAHILopeningDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILopeningDate']">
+            <record jsxid="mi_211" jsxtext="assignedAvionicID" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedAvionicID']">
               <restrictions>
-                <record jsxid="mi_206" name="minoccur" value="0"/>
+                <record jsxid="mi_212" name="minoccur" value="0"/>
               </restrictions>
-              <mappings jsxid="mi_207">
-                <record jsxid="mi_208" name="Script" value="setValue(Intalio.Internal.Utilities.fixDateOutputMatrix(CDFCONTEXT.getAttribute('jsxTAHILopeningDate')));"/>
+              <mappings jsxid="mi_213">
+                <record jsxid="mi_214" name="CDF Attribute" value="jsxAssignedAvionicID"/>
               </mappings>
             </record>
-            <record jsxid="mi_209" jsxtext="TAHILCL" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILCL']">
+            <record jsxid="mi_215" jsxtext="assignedAvionicCert" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedAvionicCert']">
               <restrictions>
-                <record jsxid="mi_210" name="minoccur" value="0"/>
+                <record jsxid="mi_216" name="minoccur" value="0"/>
               </restrictions>
-              <mappings jsxid="mi_211">
-                <record jsxid="mi_212" name="CDF Attribute" value="jsxtTAHILCL"/>
+              <mappings jsxid="mi_217">
+                <record jsxid="mi_218" name="CDF Attribute" value="jsxAssignedAvionicCert"/>
               </mappings>
             </record>
-            <record jsxid="mi_213" jsxtext="TAHILlimitDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILlimitDate']">
-              <restrictions>
-                <record jsxid="mi_214" name="minoccur" value="0"/>
-              </restrictions>
-              <mappings jsxid="mi_215">
-                <record jsxid="mi_216" name="Script" value="setValue(Intalio.Internal.Utilities.fixDateOutputMatrix(CDFCONTEXT.getAttribute('jsxTAHILlimitDate')));"/>
-              </mappings>
-            </record>
-            <record jsxid="mi_217" jsxtext="TAHILclosingDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILclosingDate']">
-              <restrictions>
-                <record jsxid="mi_218" name="minoccur" value="0"/>
-              </restrictions>
-              <mappings jsxid="mi_219">
-                <record jsxid="mi_220" name="Script" value="setValue(Intalio.Internal.Utilities.fixDateOutputMatrix(CDFCONTEXT.getAttribute('jsxTAHILclosingDate')));"/>
-              </mappings>
-            </record>
-            <record jsxid="mi_221" jsxtext="TAHILATA100" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILATA100']">
-              <restrictions>
-                <record jsxid="mi_222" name="minoccur" value="0"/>
-              </restrictions>
-              <mappings jsxid="mi_223">
-                <record jsxid="mi_224" name="CDF Attribute" value="jsxtTAHILATA100"/>
-              </mappings>
-            </record>
-            <record jsxid="mi_225" jsxtext="TAHILdescription" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILdescription']">
-              <restrictions>
-                <record jsxid="mi_226" name="minoccur" value="0"/>
-              </restrictions>
-              <mappings jsxid="mi_227">
-                <record jsxid="mi_228" name="CDF Attribute" value="jsxTAHILdescription"/>
-              </mappings>
-            </record>
-            <record jsxid="mi_229" jsxtext="TAHILstatus" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILstatus']">
-              <restrictions>
-                <record jsxid="mi_230" name="minoccur" value="0"/>
-              </restrictions>
-              <mappings jsxid="mi_231">
-                <record jsxid="mi_232" name="CDF Attribute" value="jsxTAHILstatus"/>
-              </mappings>
-            </record>
-            <record jsxid="mi_233" jsxtext="TAHILpartNr" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILpartNr']">
-              <restrictions>
-                <record jsxid="mi_234" name="minoccur" value="0"/>
-              </restrictions>
-              <mappings jsxid="mi_235">
-                <record jsxid="mi_236" name="CDF Attribute" value="jsxTAHILpartNr"/>
-              </mappings>
-            </record>
-            <record jsxid="mi_237" jsxtext="TAHILcomments" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILcomments']">
-              <restrictions>
-                <record jsxid="mi_238" name="minoccur" value="0"/>
-              </restrictions>
-              <mappings jsxid="mi_239">
-                <record jsxid="mi_240" name="CDF Attribute" value="jsxTAHILcomments"/>
-              </mappings>
-            </record>
-            <mappings jsxid="mi_241">
-              <record jsxid="mi_242" name="Script" value="if(typeof(this._i_242)=='undefined'){this._i_242=-1;my.getCDFDocument('TAHIL','OUTBOUND');}"/>
-              <record jsxid="mi_243" name="CDF Record"/>
+            <mappings jsxid="mi_219">
+              <record jsxid="mi_220" name="Script" value="if(typeof(this._i_220)=='undefined'){this._i_220=-1;my.getCDFDocument('assignedAvionics','OUTBOUND');}"/>
+              <record jsxid="mi_221" name="CDF Record"/>
             </mappings>
           </record>
         </record>
-        <record jsxid="mi_244" jsxtext="DC" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='DC']">
+        <record jsxid="mi_222" jsxtext="HIL" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='HIL']">
           <restrictions>
-            <record jsxid="mi_245" name="nillable" value="true"/>
+            <record jsxid="mi_223" name="nillable" value="true"/>
           </restrictions>
-          <record jsxid="mi_246" jsxtext="ExpectedStartTime" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='ExpectedStartTime']">
+          <record jsxid="mi_224" jsxtext="TAHIL" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHIL']">
             <restrictions>
-              <record jsxid="mi_247" name="minoccur" value="0"/>
+              <record jsxid="mi_225" name="maxoccur" value="unbounded"/>
+              <record jsxid="mi_226" name="minoccur" value="0"/>
             </restrictions>
-            <mappings jsxid="mi_248">
-              <record jsxid="mi_249" name="Script" value="setValue(Intalio.Internal.Utilities.fixTimeOutput(jsx3.GO('ExpectedStartTime', my.getNamespace())));"/>
+            <record jsxid="mi_227" jsxtext="TAHILid" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILid']">
+              <restrictions>
+                <record jsxid="mi_228" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_229">
+                <record jsxid="mi_230" name="CDF Attribute" value="jsxtTAHILid"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_231" jsxtext="TAHILtype" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILtype']">
+              <restrictions>
+                <record jsxid="mi_232" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_233">
+                <record jsxid="mi_234" name="CDF Attribute" value="jsxtTAHILtype"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_235" jsxtext="TAHILopeningDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILopeningDate']">
+              <restrictions>
+                <record jsxid="mi_236" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_237">
+                <record jsxid="mi_238" name="Script" value="setValue(Intalio.Internal.Utilities.fixDateOutputMatrix(CDFCONTEXT.getAttribute('jsxTAHILopeningDate')));"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_239" jsxtext="TAHILCL" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILCL']">
+              <restrictions>
+                <record jsxid="mi_240" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_241">
+                <record jsxid="mi_242" name="CDF Attribute" value="jsxtTAHILCL"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_243" jsxtext="TAHILlimitDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILlimitDate']">
+              <restrictions>
+                <record jsxid="mi_244" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_245">
+                <record jsxid="mi_246" name="Script" value="setValue(Intalio.Internal.Utilities.fixDateOutputMatrix(CDFCONTEXT.getAttribute('jsxTAHILlimitDate')));"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_247" jsxtext="TAHILclosingDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILclosingDate']">
+              <restrictions>
+                <record jsxid="mi_248" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_249">
+                <record jsxid="mi_250" name="Script" value="setValue(Intalio.Internal.Utilities.fixDateOutputMatrix(CDFCONTEXT.getAttribute('jsxTAHILclosingDate')));"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_251" jsxtext="TAHILATA100" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILATA100']">
+              <restrictions>
+                <record jsxid="mi_252" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_253">
+                <record jsxid="mi_254" name="CDF Attribute" value="jsxtTAHILATA100"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_255" jsxtext="TAHILdescription" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILdescription']">
+              <restrictions>
+                <record jsxid="mi_256" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_257">
+                <record jsxid="mi_258" name="CDF Attribute" value="jsxTAHILdescription"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_259" jsxtext="TAHILstatus" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILstatus']">
+              <restrictions>
+                <record jsxid="mi_260" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_261">
+                <record jsxid="mi_262" name="CDF Attribute" value="jsxTAHILstatus"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_263" jsxtext="TAHILpartNr" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILpartNr']">
+              <restrictions>
+                <record jsxid="mi_264" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_265">
+                <record jsxid="mi_266" name="CDF Attribute" value="jsxTAHILpartNr"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_267" jsxtext="TAHILcomments" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILcomments']">
+              <restrictions>
+                <record jsxid="mi_268" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_269">
+                <record jsxid="mi_270" name="CDF Attribute" value="jsxTAHILcomments"/>
+              </mappings>
+            </record>
+            <mappings jsxid="mi_271">
+              <record jsxid="mi_272" name="Script" value="if(typeof(this._i_272)=='undefined'){this._i_272=-1;my.getCDFDocument('TAHIL','OUTBOUND');}"/>
+              <record jsxid="mi_273" name="CDF Record"/>
             </mappings>
           </record>
-          <record jsxid="mi_250" jsxtext="ExpectedFinishTime" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='ExpectedFinishTime']">
+        </record>
+        <record jsxid="mi_274" jsxtext="DC" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='DC']">
+          <restrictions>
+            <record jsxid="mi_275" name="nillable" value="true"/>
+          </restrictions>
+          <record jsxid="mi_276" jsxtext="ExpectedStartTime" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='ExpectedStartTime']">
             <restrictions>
-              <record jsxid="mi_251" name="minoccur" value="0"/>
+              <record jsxid="mi_277" name="minoccur" value="0"/>
             </restrictions>
-            <mappings jsxid="mi_252">
-              <record jsxid="mi_253" name="Script" value="setValue(Intalio.Internal.Utilities.fixTimeOutput(jsx3.GO('ExpectedFinishTime', my.getNamespace())));"/>
+            <mappings jsxid="mi_278">
+              <record jsxid="mi_279" name="Script" value="setValue(Intalio.Internal.Utilities.fixTimeOutput(jsx3.GO('ExpectedStartTime', my.getNamespace())));"/>
             </mappings>
           </record>
-          <record jsxid="mi_254" jsxtext="ExpectedReleaseTime" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='ExpectedReleaseTime']">
+          <record jsxid="mi_280" jsxtext="ExpectedFinishTime" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='ExpectedFinishTime']">
             <restrictions>
-              <record jsxid="mi_255" name="minoccur" value="0"/>
+              <record jsxid="mi_281" name="minoccur" value="0"/>
             </restrictions>
-            <mappings jsxid="mi_256">
-              <record jsxid="mi_257" name="Script" value="setValue(Intalio.Internal.Utilities.fixTimeOutput(jsx3.GO('ExpectedReleaseTime', my.getNamespace())));"/>
+            <mappings jsxid="mi_282">
+              <record jsxid="mi_283" name="Script" value="setValue(Intalio.Internal.Utilities.fixTimeOutput(jsx3.GO('ExpectedFinishTime', my.getNamespace())));"/>
             </mappings>
           </record>
-          <record jsxid="mi_258" jsxtext="CompassInspectionType" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='CompassInspectionType']">
+          <record jsxid="mi_284" jsxtext="ExpectedReleaseTime" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='ExpectedReleaseTime']">
             <restrictions>
-              <record jsxid="mi_259" name="minoccur" value="0"/>
+              <record jsxid="mi_285" name="minoccur" value="0"/>
             </restrictions>
-            <mappings jsxid="mi_260">
-              <record jsxid="mi_261" name="DOM" value="CompassInspectionType"/>
+            <mappings jsxid="mi_286">
+              <record jsxid="mi_287" name="Script" value="setValue(Intalio.Internal.Utilities.fixTimeOutput(jsx3.GO('ExpectedReleaseTime', my.getNamespace())));"/>
             </mappings>
           </record>
-          <record jsxid="mi_262" jsxtext="Comments" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='Comments']">
+          <record jsxid="mi_288" jsxtext="CompassInspectionType" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='CompassInspectionType']">
             <restrictions>
-              <record jsxid="mi_263" name="minoccur" value="0"/>
+              <record jsxid="mi_289" name="minoccur" value="0"/>
             </restrictions>
-            <mappings jsxid="mi_264">
-              <record jsxid="mi_265" name="DOM" value="Comments"/>
+            <mappings jsxid="mi_290">
+              <record jsxid="mi_291" name="DOM" value="CompassInspectionType"/>
+            </mappings>
+          </record>
+          <record jsxid="mi_292" jsxtext="Comments" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='Comments']">
+            <restrictions>
+              <record jsxid="mi_293" name="minoccur" value="0"/>
+            </restrictions>
+            <mappings jsxid="mi_294">
+              <record jsxid="mi_295" name="DOM" value="Comments"/>
             </mappings>
           </record>
         </record>
       </record>
     </record>
-    <record jsxid="mi_266" jsxtext="Output (response)" type="O" jsxopen="1" src="../../../forms/TAmanagement.gi/IntalioInternal/FormModel.xsd">
-      <record jsxid="mi_267" jsxtext="FormModel" type="C" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='FormModel']" datatype="" tns="http://www.intalio.com/gi/forms/TAmanagement.gi">
-        <record jsxid="mi_268" jsxtext="Activity" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='Activity']">
+    <record jsxid="mi_296" jsxtext="Output (response)" type="O" jsxopen="1" src="../../../forms/TAmanagement.gi/IntalioInternal/FormModel.xsd">
+      <record jsxid="mi_297" jsxtext="FormModel" type="C" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='FormModel']" datatype="" tns="http://www.intalio.com/gi/forms/TAmanagement.gi">
+        <record jsxid="mi_298" jsxtext="Activity" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='Activity']">
           <restrictions>
-            <record jsxid="mi_269" name="nillable" value="true"/>
+            <record jsxid="mi_299" name="nillable" value="true"/>
           </restrictions>
-          <record jsxid="mi_270" jsxtext="AircraftID" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='AircraftID']">
-            <restrictions>
-              <record jsxid="mi_271" name="minoccur" value="0"/>
-            </restrictions>
-            <mappings jsxid="mi_272">
-              <record jsxid="mi_273" name="DOM" value="AircraftID"/>
-            </mappings>
-          </record>
-          <record jsxid="mi_274" jsxtext="startTime" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='startTime']">
-            <restrictions>
-              <record jsxid="mi_275" name="minoccur" value="0"/>
-            </restrictions>
-            <mappings jsxid="mi_276">
-              <record jsxid="mi_277" name="Script" value="Intalio.Internal.Utilities.fixTimeInput(jsx3.GO('startTime', my.getNamespace()), MESSAGENODE.getValue());"/>
-            </mappings>
-          </record>
-          <record jsxid="mi_278" jsxtext="finishTime" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='finishTime']">
-            <restrictions>
-              <record jsxid="mi_279" name="minoccur" value="0"/>
-            </restrictions>
-            <mappings jsxid="mi_280">
-              <record jsxid="mi_281" name="Script" value="Intalio.Internal.Utilities.fixTimeInput(jsx3.GO('finishTime', my.getNamespace()), MESSAGENODE.getValue());"/>
-            </mappings>
-          </record>
-          <record jsxid="mi_282" jsxtext="releaseTime" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='releaseTime']">
-            <restrictions>
-              <record jsxid="mi_283" name="minoccur" value="0"/>
-            </restrictions>
-            <mappings jsxid="mi_284">
-              <record jsxid="mi_285" name="Script" value="Intalio.Internal.Utilities.fixTimeInput(jsx3.GO('releaseTime', my.getNamespace()), MESSAGENODE.getValue());"/>
-            </mappings>
-          </record>
-          <record jsxid="mi_286" jsxtext="late" type="E" datatype="boolean" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='late']">
-            <restrictions>
-              <record jsxid="mi_287" name="minoccur" value="0"/>
-            </restrictions>
-            <mappings jsxid="mi_288">
-              <record jsxid="mi_289" name="DOM" value="late"/>
-            </mappings>
-          </record>
-          <record jsxid="mi_290" jsxtext="update" type="E" datatype="boolean" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='update']">
-            <restrictions>
-              <record jsxid="mi_291" name="minoccur" value="0"/>
-            </restrictions>
-            <mappings jsxid="mi_292">
-              <record jsxid="mi_293" name="DOM" value="update"/>
-            </mappings>
-          </record>
-        </record>
-        <record jsxid="mi_294" jsxtext="ArrivalDeparture" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='ArrivalDeparture']">
-          <restrictions>
-            <record jsxid="mi_295" name="nillable" value="true"/>
-          </restrictions>
-          <record jsxid="mi_296" jsxtext="ScheduledArrivalDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='ScheduledArrivalDate']">
-            <restrictions>
-              <record jsxid="mi_297" name="minoccur" value="0"/>
-            </restrictions>
-            <mappings jsxid="mi_298">
-              <record jsxid="mi_299" name="Script" value="Intalio.Internal.Utilities.fixDateInput(jsx3.GO('ScheduledArrivalDate', my.getNamespace()), MESSAGENODE.getValue());"/>
-            </mappings>
-          </record>
-          <record jsxid="mi_300" jsxtext="STA" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='STA']">
+          <record jsxid="mi_300" jsxtext="AircraftID" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='AircraftID']">
             <restrictions>
               <record jsxid="mi_301" name="minoccur" value="0"/>
             </restrictions>
             <mappings jsxid="mi_302">
-              <record jsxid="mi_303" name="Script" value="Intalio.Internal.Utilities.fixTimeInput(jsx3.GO('STA', my.getNamespace()), MESSAGENODE.getValue());"/>
+              <record jsxid="mi_303" name="DOM" value="AircraftID"/>
             </mappings>
           </record>
-          <record jsxid="mi_304" jsxtext="ScheduledDepartureDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='ScheduledDepartureDate']">
+          <record jsxid="mi_304" jsxtext="startTime" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='startTime']">
             <restrictions>
               <record jsxid="mi_305" name="minoccur" value="0"/>
             </restrictions>
             <mappings jsxid="mi_306">
-              <record jsxid="mi_307" name="Script" value="Intalio.Internal.Utilities.fixDateInput(jsx3.GO('ScheduledDepartureDate', my.getNamespace()), MESSAGENODE.getValue());"/>
+              <record jsxid="mi_307" name="Script" value="Intalio.Internal.Utilities.fixTimeInput(jsx3.GO('startTime', my.getNamespace()), MESSAGENODE.getValue());"/>
             </mappings>
           </record>
-          <record jsxid="mi_308" jsxtext="STD" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='STD']">
+          <record jsxid="mi_308" jsxtext="finishTime" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='finishTime']">
             <restrictions>
               <record jsxid="mi_309" name="minoccur" value="0"/>
             </restrictions>
             <mappings jsxid="mi_310">
-              <record jsxid="mi_311" name="Script" value="Intalio.Internal.Utilities.fixTimeInput(jsx3.GO('STD', my.getNamespace()), MESSAGENODE.getValue());"/>
+              <record jsxid="mi_311" name="Script" value="Intalio.Internal.Utilities.fixTimeInput(jsx3.GO('finishTime', my.getNamespace()), MESSAGENODE.getValue());"/>
             </mappings>
           </record>
-          <record jsxid="mi_312" jsxtext="EstimatedArrivalDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='EstimatedArrivalDate']">
+          <record jsxid="mi_312" jsxtext="releaseTime" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='releaseTime']">
             <restrictions>
               <record jsxid="mi_313" name="minoccur" value="0"/>
             </restrictions>
             <mappings jsxid="mi_314">
-              <record jsxid="mi_315" name="Script" value="Intalio.Internal.Utilities.fixDateInput(jsx3.GO('EstimatedArrivalDate', my.getNamespace()), MESSAGENODE.getValue());"/>
+              <record jsxid="mi_315" name="Script" value="Intalio.Internal.Utilities.fixTimeInput(jsx3.GO('releaseTime', my.getNamespace()), MESSAGENODE.getValue());"/>
             </mappings>
           </record>
-          <record jsxid="mi_316" jsxtext="ETA" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='ETA']">
+          <record jsxid="mi_316" jsxtext="late" type="E" datatype="boolean" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='late']">
             <restrictions>
               <record jsxid="mi_317" name="minoccur" value="0"/>
             </restrictions>
             <mappings jsxid="mi_318">
-              <record jsxid="mi_319" name="Script" value="Intalio.Internal.Utilities.fixTimeInput(jsx3.GO('ETA', my.getNamespace()), MESSAGENODE.getValue());"/>
+              <record jsxid="mi_319" name="DOM" value="late"/>
             </mappings>
           </record>
-          <record jsxid="mi_320" jsxtext="EstimatedDepartureDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='EstimatedDepartureDate']">
+          <record jsxid="mi_320" jsxtext="update" type="E" datatype="boolean" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='update']">
             <restrictions>
               <record jsxid="mi_321" name="minoccur" value="0"/>
             </restrictions>
             <mappings jsxid="mi_322">
-              <record jsxid="mi_323" name="Script" value="Intalio.Internal.Utilities.fixDateInput(jsx3.GO('EstimatedDepartureDate', my.getNamespace()), MESSAGENODE.getValue());"/>
-            </mappings>
-          </record>
-          <record jsxid="mi_324" jsxtext="ETD" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='ETD']">
-            <restrictions>
-              <record jsxid="mi_325" name="minoccur" value="0"/>
-            </restrictions>
-            <mappings jsxid="mi_326">
-              <record jsxid="mi_327" name="Script" value="Intalio.Internal.Utilities.fixTimeInput(jsx3.GO('ETD', my.getNamespace()), MESSAGENODE.getValue());"/>
-            </mappings>
-          </record>
-          <record jsxid="mi_328" jsxtext="ActualArrivalDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='ActualArrivalDate']">
-            <restrictions>
-              <record jsxid="mi_329" name="minoccur" value="0"/>
-            </restrictions>
-            <mappings jsxid="mi_330">
-              <record jsxid="mi_331" name="Script" value="Intalio.Internal.Utilities.fixDateInput(jsx3.GO('ActualArrivalDate', my.getNamespace()), MESSAGENODE.getValue());"/>
-            </mappings>
-          </record>
-          <record jsxid="mi_332" jsxtext="ATA" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='ATA']">
-            <restrictions>
-              <record jsxid="mi_333" name="minoccur" value="0"/>
-            </restrictions>
-            <mappings jsxid="mi_334">
-              <record jsxid="mi_335" name="Script" value="Intalio.Internal.Utilities.fixTimeInput(jsx3.GO('ATA', my.getNamespace()), MESSAGENODE.getValue());"/>
-            </mappings>
-          </record>
-          <record jsxid="mi_336" jsxtext="ActualDepartureDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='ActualDepartureDate']">
-            <restrictions>
-              <record jsxid="mi_337" name="minoccur" value="0"/>
-            </restrictions>
-            <mappings jsxid="mi_338">
-              <record jsxid="mi_339" name="Script" value="Intalio.Internal.Utilities.fixDateInput(jsx3.GO('ActualDepartureDate', my.getNamespace()), MESSAGENODE.getValue());"/>
-            </mappings>
-          </record>
-          <record jsxid="mi_340" jsxtext="ATD" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='ATD']">
-            <restrictions>
-              <record jsxid="mi_341" name="minoccur" value="0"/>
-            </restrictions>
-            <mappings jsxid="mi_342">
-              <record jsxid="mi_343" name="Script" value="Intalio.Internal.Utilities.fixTimeInput(jsx3.GO('ATD', my.getNamespace()), MESSAGENODE.getValue());"/>
-            </mappings>
-          </record>
-          <record jsxid="mi_344" jsxtext="ArrivalFlightNumber" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='ArrivalFlightNumber']">
-            <restrictions>
-              <record jsxid="mi_345" name="minoccur" value="0"/>
-            </restrictions>
-            <mappings jsxid="mi_346">
-              <record jsxid="mi_347" name="DOM" value="ArrivalFlightNumber"/>
-            </mappings>
-          </record>
-          <record jsxid="mi_348" jsxtext="DepartureFlightNumber" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='DepartureFlightNumber']">
-            <restrictions>
-              <record jsxid="mi_349" name="minoccur" value="0"/>
-            </restrictions>
-            <mappings jsxid="mi_350">
-              <record jsxid="mi_351" name="DOM" value="DepartureFlightNumber"/>
+              <record jsxid="mi_323" name="DOM" value="update"/>
             </mappings>
           </record>
         </record>
-        <record jsxid="mi_352" jsxtext="Inspection" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='Inspection']">
+        <record jsxid="mi_324" jsxtext="ArrivalDeparture" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='ArrivalDeparture']">
           <restrictions>
-            <record jsxid="mi_353" name="nillable" value="true"/>
+            <record jsxid="mi_325" name="nillable" value="true"/>
           </restrictions>
-          <record jsxid="mi_354" jsxtext="assigned" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assigned']">
+          <record jsxid="mi_326" jsxtext="ScheduledArrivalDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='ScheduledArrivalDate']">
+            <restrictions>
+              <record jsxid="mi_327" name="minoccur" value="0"/>
+            </restrictions>
+            <mappings jsxid="mi_328">
+              <record jsxid="mi_329" name="Script" value="Intalio.Internal.Utilities.fixDateInput(jsx3.GO('ScheduledArrivalDate', my.getNamespace()), MESSAGENODE.getValue());"/>
+            </mappings>
+          </record>
+          <record jsxid="mi_330" jsxtext="STA" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='STA']">
+            <restrictions>
+              <record jsxid="mi_331" name="minoccur" value="0"/>
+            </restrictions>
+            <mappings jsxid="mi_332">
+              <record jsxid="mi_333" name="Script" value="Intalio.Internal.Utilities.fixTimeInput(jsx3.GO('STA', my.getNamespace()), MESSAGENODE.getValue());"/>
+            </mappings>
+          </record>
+          <record jsxid="mi_334" jsxtext="ScheduledDepartureDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='ScheduledDepartureDate']">
+            <restrictions>
+              <record jsxid="mi_335" name="minoccur" value="0"/>
+            </restrictions>
+            <mappings jsxid="mi_336">
+              <record jsxid="mi_337" name="Script" value="Intalio.Internal.Utilities.fixDateInput(jsx3.GO('ScheduledDepartureDate', my.getNamespace()), MESSAGENODE.getValue());"/>
+            </mappings>
+          </record>
+          <record jsxid="mi_338" jsxtext="STD" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='STD']">
+            <restrictions>
+              <record jsxid="mi_339" name="minoccur" value="0"/>
+            </restrictions>
+            <mappings jsxid="mi_340">
+              <record jsxid="mi_341" name="Script" value="Intalio.Internal.Utilities.fixTimeInput(jsx3.GO('STD', my.getNamespace()), MESSAGENODE.getValue());"/>
+            </mappings>
+          </record>
+          <record jsxid="mi_342" jsxtext="EstimatedArrivalDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='EstimatedArrivalDate']">
+            <restrictions>
+              <record jsxid="mi_343" name="minoccur" value="0"/>
+            </restrictions>
+            <mappings jsxid="mi_344">
+              <record jsxid="mi_345" name="Script" value="Intalio.Internal.Utilities.fixDateInput(jsx3.GO('EstimatedArrivalDate', my.getNamespace()), MESSAGENODE.getValue());"/>
+            </mappings>
+          </record>
+          <record jsxid="mi_346" jsxtext="ETA" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='ETA']">
+            <restrictions>
+              <record jsxid="mi_347" name="minoccur" value="0"/>
+            </restrictions>
+            <mappings jsxid="mi_348">
+              <record jsxid="mi_349" name="Script" value="Intalio.Internal.Utilities.fixTimeInput(jsx3.GO('ETA', my.getNamespace()), MESSAGENODE.getValue());"/>
+            </mappings>
+          </record>
+          <record jsxid="mi_350" jsxtext="EstimatedDepartureDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='EstimatedDepartureDate']">
+            <restrictions>
+              <record jsxid="mi_351" name="minoccur" value="0"/>
+            </restrictions>
+            <mappings jsxid="mi_352">
+              <record jsxid="mi_353" name="Script" value="Intalio.Internal.Utilities.fixDateInput(jsx3.GO('EstimatedDepartureDate', my.getNamespace()), MESSAGENODE.getValue());"/>
+            </mappings>
+          </record>
+          <record jsxid="mi_354" jsxtext="ETD" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='ETD']">
             <restrictions>
               <record jsxid="mi_355" name="minoccur" value="0"/>
             </restrictions>
             <mappings jsxid="mi_356">
-              <record jsxid="mi_357" name="DOM" value="assigned"/>
+              <record jsxid="mi_357" name="Script" value="Intalio.Internal.Utilities.fixTimeInput(jsx3.GO('ETD', my.getNamespace()), MESSAGENODE.getValue());"/>
             </mappings>
           </record>
-          <record jsxid="mi_358" jsxtext="Stand" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='Stand']">
+          <record jsxid="mi_358" jsxtext="ActualArrivalDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='ActualArrivalDate']">
             <restrictions>
               <record jsxid="mi_359" name="minoccur" value="0"/>
             </restrictions>
             <mappings jsxid="mi_360">
-              <record jsxid="mi_361" name="DOM" value="Stand"/>
+              <record jsxid="mi_361" name="Script" value="Intalio.Internal.Utilities.fixDateInput(jsx3.GO('ActualArrivalDate', my.getNamespace()), MESSAGENODE.getValue());"/>
             </mappings>
           </record>
-          <record jsxid="mi_362" jsxtext="InspectionType" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='InspectionType']">
+          <record jsxid="mi_362" jsxtext="ATA" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='ATA']">
             <restrictions>
               <record jsxid="mi_363" name="minoccur" value="0"/>
             </restrictions>
             <mappings jsxid="mi_364">
-              <record jsxid="mi_365" name="DOM" value="InspectionType"/>
+              <record jsxid="mi_365" name="Script" value="Intalio.Internal.Utilities.fixTimeInput(jsx3.GO('ATA', my.getNamespace()), MESSAGENODE.getValue());"/>
             </mappings>
           </record>
-          <record jsxid="mi_366" jsxtext="InspectionStatus" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='InspectionStatus']">
+          <record jsxid="mi_366" jsxtext="ActualDepartureDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='ActualDepartureDate']">
             <restrictions>
               <record jsxid="mi_367" name="minoccur" value="0"/>
             </restrictions>
             <mappings jsxid="mi_368">
-              <record jsxid="mi_369" name="DOM" value="InspectionStatus"/>
+              <record jsxid="mi_369" name="Script" value="Intalio.Internal.Utilities.fixDateInput(jsx3.GO('ActualDepartureDate', my.getNamespace()), MESSAGENODE.getValue());"/>
             </mappings>
           </record>
-          <record jsxid="mi_370" jsxtext="resources" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='resources']">
+          <record jsxid="mi_370" jsxtext="ATD" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='ATD']">
             <restrictions>
               <record jsxid="mi_371" name="minoccur" value="0"/>
             </restrictions>
             <mappings jsxid="mi_372">
-              <record jsxid="mi_373" name="DOM" value="resources"/>
+              <record jsxid="mi_373" name="Script" value="Intalio.Internal.Utilities.fixTimeInput(jsx3.GO('ATD', my.getNamespace()), MESSAGENODE.getValue());"/>
             </mappings>
           </record>
-          <record jsxid="mi_374" jsxtext="RTR" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='RTR']">
+          <record jsxid="mi_374" jsxtext="ArrivalFlightNumber" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='ArrivalFlightNumber']">
             <restrictions>
-              <record jsxid="mi_375" name="maxoccur" value="unbounded"/>
-              <record jsxid="mi_376" name="minoccur" value="0"/>
+              <record jsxid="mi_375" name="minoccur" value="0"/>
             </restrictions>
-            <record jsxid="mi_377" jsxtext="RTRid" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='RTRid']">
-              <restrictions>
-                <record jsxid="mi_378" name="minoccur" value="0"/>
-              </restrictions>
-              <mappings jsxid="mi_379">
-                <record jsxid="mi_380" name="CDF Attribute" value="jsxRTRid"/>
-              </mappings>
-            </record>
-            <record jsxid="mi_381" jsxtext="RTRdescription" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='RTRdescription']">
-              <restrictions>
-                <record jsxid="mi_382" name="minoccur" value="0"/>
-              </restrictions>
-              <mappings jsxid="mi_383">
-                <record jsxid="mi_384" name="CDF Attribute" value="RTRdescription"/>
-              </mappings>
-            </record>
-            <record jsxid="mi_385" jsxtext="RTRstatus" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='RTRstatus']">
-              <restrictions>
-                <record jsxid="mi_386" name="minoccur" value="0"/>
-              </restrictions>
-              <mappings jsxid="mi_387">
-                <record jsxid="mi_388" name="CDF Attribute" value="jsxRTRstatus"/>
-              </mappings>
-            </record>
-            <record jsxid="mi_389" jsxtext="RTRad" type="E" datatype="boolean" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='RTRad']">
-              <restrictions>
-                <record jsxid="mi_390" name="minoccur" value="0"/>
-              </restrictions>
-              <mappings jsxid="mi_391">
-                <record jsxid="mi_392" name="CDF Attribute" value="jsxRTRad"/>
-              </mappings>
-            </record>
-            <mappings jsxid="mi_393">
-              <record jsxid="mi_394" name="Script" value="if(typeof(this._i_394)=='undefined'){this._i_394=-1;my.getCDFDocument('RTR','INBOUND');}"/>
-              <record jsxid="mi_395" name="CDF Record"/>
+            <mappings jsxid="mi_376">
+              <record jsxid="mi_377" name="DOM" value="ArrivalFlightNumber"/>
             </mappings>
           </record>
-          <record jsxid="mi_396" jsxtext="assignedCoord" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedCoord']">
+          <record jsxid="mi_378" jsxtext="DepartureFlightNumber" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='DepartureFlightNumber']">
+            <restrictions>
+              <record jsxid="mi_379" name="minoccur" value="0"/>
+            </restrictions>
+            <mappings jsxid="mi_380">
+              <record jsxid="mi_381" name="DOM" value="DepartureFlightNumber"/>
+            </mappings>
+          </record>
+        </record>
+        <record jsxid="mi_382" jsxtext="Inspection" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='Inspection']">
+          <restrictions>
+            <record jsxid="mi_383" name="nillable" value="true"/>
+          </restrictions>
+          <record jsxid="mi_384" jsxtext="assigned" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assigned']">
+            <restrictions>
+              <record jsxid="mi_385" name="minoccur" value="0"/>
+            </restrictions>
+            <mappings jsxid="mi_386">
+              <record jsxid="mi_387" name="DOM" value="assigned"/>
+            </mappings>
+          </record>
+          <record jsxid="mi_388" jsxtext="flightStatus" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='flightStatus']">
+            <restrictions>
+              <record jsxid="mi_389" name="minoccur" value="0"/>
+            </restrictions>
+            <mappings jsxid="mi_390">
+              <record jsxid="mi_391" name="DOM" value="flightStatus"/>
+            </mappings>
+          </record>
+          <record jsxid="mi_392" jsxtext="Stand" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='Stand']">
+            <restrictions>
+              <record jsxid="mi_393" name="minoccur" value="0"/>
+            </restrictions>
+            <mappings jsxid="mi_394">
+              <record jsxid="mi_395" name="DOM" value="Stand"/>
+            </mappings>
+          </record>
+          <record jsxid="mi_396" jsxtext="taTasks" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='taTasks']">
             <restrictions>
               <record jsxid="mi_397" name="maxoccur" value="unbounded"/>
               <record jsxid="mi_398" name="minoccur" value="0"/>
             </restrictions>
-            <record jsxid="mi_399" jsxtext="assignedCoordName" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedCoordName']">
+            <record jsxid="mi_399" jsxtext="InspectionType" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='InspectionType']">
               <restrictions>
                 <record jsxid="mi_400" name="minoccur" value="0"/>
               </restrictions>
               <mappings jsxid="mi_401">
-                <record jsxid="mi_402" name="CDF Attribute" value="jsxAssignedCoordName"/>
+                <record jsxid="mi_402" name="CDF Attribute" value="jsxInspectionType"/>
               </mappings>
             </record>
-            <record jsxid="mi_403" jsxtext="assignedCoordID" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedCoordID']">
+            <record jsxid="mi_403" jsxtext="MTstartDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='MTstartDate']">
               <restrictions>
                 <record jsxid="mi_404" name="minoccur" value="0"/>
               </restrictions>
               <mappings jsxid="mi_405">
-                <record jsxid="mi_406" name="CDF Attribute" value="jsxAssignedCoordID"/>
+                <record jsxid="mi_406" name="Script" value="CDFCONTEXT.setAttribute('jsxMTstartDate', Intalio.Internal.Utilities.fixDateInputMatrix(MESSAGENODE.getValue()));"/>
               </mappings>
             </record>
-            <record jsxid="mi_407" jsxtext="assignedCoordCert" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedCoordCert']">
+            <record jsxid="mi_407" jsxtext="MTstartTime" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='MTstartTime']">
               <restrictions>
                 <record jsxid="mi_408" name="minoccur" value="0"/>
               </restrictions>
               <mappings jsxid="mi_409">
-                <record jsxid="mi_410" name="CDF Attribute" value="jsxAssignedCoordCert"/>
+                <record jsxid="mi_410" name="Script" value="CDFCONTEXT.setAttribute('jsxMTstartTime', Intalio.Internal.Utilities.fixTimeInputMatrix(MESSAGENODE.getValue()));"/>
               </mappings>
             </record>
-            <mappings jsxid="mi_411">
-              <record jsxid="mi_412" name="Script" value="if(typeof(this._i_412)=='undefined'){this._i_412=-1;my.getCDFDocument('assignedCoord','INBOUND');}"/>
-              <record jsxid="mi_413" name="CDF Record"/>
+            <record jsxid="mi_411" jsxtext="MTendDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='MTendDate']">
+              <restrictions>
+                <record jsxid="mi_412" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_413">
+                <record jsxid="mi_414" name="Script" value="CDFCONTEXT.setAttribute('jsxMTendDate', Intalio.Internal.Utilities.fixDateInputMatrix(MESSAGENODE.getValue()));"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_415" jsxtext="MTendTime" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='MTendTime']">
+              <restrictions>
+                <record jsxid="mi_416" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_417">
+                <record jsxid="mi_418" name="Script" value="CDFCONTEXT.setAttribute('jsxMTendTime', Intalio.Internal.Utilities.fixTimeInputMatrix(MESSAGENODE.getValue()));"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_419" jsxtext="Remarks" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='Remarks']">
+              <restrictions>
+                <record jsxid="mi_420" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_421">
+                <record jsxid="mi_422" name="CDF Attribute" value="jsxRemarks"/>
+              </mappings>
+            </record>
+            <mappings jsxid="mi_423">
+              <record jsxid="mi_424" name="Script" value="if(typeof(this._i_424)=='undefined'){this._i_424=-1;my.getCDFDocument('taTasks','INBOUND');}"/>
+              <record jsxid="mi_425" name="CDF Record"/>
             </mappings>
           </record>
-          <record jsxid="mi_414" jsxtext="assignedMechanics" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedMechanics']">
+          <record jsxid="mi_426" jsxtext="InspectionStatus" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='InspectionStatus']">
             <restrictions>
-              <record jsxid="mi_415" name="maxoccur" value="unbounded"/>
-              <record jsxid="mi_416" name="minoccur" value="0"/>
+              <record jsxid="mi_427" name="minoccur" value="0"/>
             </restrictions>
-            <record jsxid="mi_417" jsxtext="assignedMechanicName" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedMechanicName']">
-              <restrictions>
-                <record jsxid="mi_418" name="minoccur" value="0"/>
-              </restrictions>
-              <mappings jsxid="mi_419">
-                <record jsxid="mi_420" name="CDF Attribute" value="jsxAssignedMechanicName"/>
-              </mappings>
-            </record>
-            <record jsxid="mi_421" jsxtext="assignedMechanicID" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedMechanicID']">
-              <restrictions>
-                <record jsxid="mi_422" name="minoccur" value="0"/>
-              </restrictions>
-              <mappings jsxid="mi_423">
-                <record jsxid="mi_424" name="CDF Attribute" value="jsxAssignedMechanicID"/>
-              </mappings>
-            </record>
-            <record jsxid="mi_425" jsxtext="assignedMechanicCert" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedMechanicCert']">
-              <restrictions>
-                <record jsxid="mi_426" name="minoccur" value="0"/>
-              </restrictions>
-              <mappings jsxid="mi_427">
-                <record jsxid="mi_428" name="CDF Attribute" value="jsxAssignedMechanicCert"/>
-              </mappings>
-            </record>
-            <record jsxid="mi_429" jsxtext="entitledToRelease" type="E" datatype="boolean" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='entitledToRelease']">
-              <restrictions>
-                <record jsxid="mi_430" name="minoccur" value="0"/>
-              </restrictions>
-              <mappings jsxid="mi_431">
-                <record jsxid="mi_432" name="CDF Attribute" value="jsxRelease"/>
-              </mappings>
-            </record>
-            <mappings jsxid="mi_433">
-              <record jsxid="mi_434" name="Script" value="if(typeof(this._i_434)=='undefined'){this._i_434=-1;my.getCDFDocument('assignedMechanics','INBOUND');}"/>
-              <record jsxid="mi_435" name="CDF Record"/>
+            <mappings jsxid="mi_428">
+              <record jsxid="mi_429" name="DOM" value="InspectionStatus"/>
             </mappings>
           </record>
-          <record jsxid="mi_436" jsxtext="assignedAvionics" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedAvionics']">
+          <record jsxid="mi_430" jsxtext="resources" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='resources']">
             <restrictions>
-              <record jsxid="mi_437" name="maxoccur" value="unbounded"/>
-              <record jsxid="mi_438" name="minoccur" value="0"/>
+              <record jsxid="mi_431" name="minoccur" value="0"/>
             </restrictions>
-            <record jsxid="mi_439" jsxtext="assignedAvionicName" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedAvionicName']">
-              <restrictions>
-                <record jsxid="mi_440" name="minoccur" value="0"/>
-              </restrictions>
-              <mappings jsxid="mi_441">
-                <record jsxid="mi_442" name="CDF Attribute" value="jsxAssignedAvionicName"/>
-              </mappings>
-            </record>
-            <record jsxid="mi_443" jsxtext="assignedAvionicID" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedAvionicID']">
-              <restrictions>
-                <record jsxid="mi_444" name="minoccur" value="0"/>
-              </restrictions>
-              <mappings jsxid="mi_445">
-                <record jsxid="mi_446" name="CDF Attribute" value="jsxAssignedAvionicID"/>
-              </mappings>
-            </record>
-            <record jsxid="mi_447" jsxtext="assignedAvionicCert" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedAvionicCert']">
-              <restrictions>
-                <record jsxid="mi_448" name="minoccur" value="0"/>
-              </restrictions>
-              <mappings jsxid="mi_449">
-                <record jsxid="mi_450" name="CDF Attribute" value="jsxAssignedAvionicCert"/>
-              </mappings>
-            </record>
-            <mappings jsxid="mi_451">
-              <record jsxid="mi_452" name="Script" value="if(typeof(this._i_452)=='undefined'){this._i_452=-1;my.getCDFDocument('assignedAvionics','INBOUND');}"/>
-              <record jsxid="mi_453" name="CDF Record"/>
+            <mappings jsxid="mi_432">
+              <record jsxid="mi_433" name="DOM" value="resources"/>
             </mappings>
           </record>
-        </record>
-        <record jsxid="mi_454" jsxtext="HIL" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='HIL']">
-          <restrictions>
-            <record jsxid="mi_455" name="nillable" value="true"/>
-          </restrictions>
-          <record jsxid="mi_456" jsxtext="TAHIL" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHIL']">
+          <record jsxid="mi_434" jsxtext="RTR" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='RTR']">
+            <restrictions>
+              <record jsxid="mi_435" name="maxoccur" value="unbounded"/>
+              <record jsxid="mi_436" name="minoccur" value="0"/>
+            </restrictions>
+            <record jsxid="mi_437" jsxtext="RTRid" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='RTRid']">
+              <restrictions>
+                <record jsxid="mi_438" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_439">
+                <record jsxid="mi_440" name="CDF Attribute" value="jsxRTRid"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_441" jsxtext="RTRdescription" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='RTRdescription']">
+              <restrictions>
+                <record jsxid="mi_442" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_443">
+                <record jsxid="mi_444" name="CDF Attribute" value="RTRdescription"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_445" jsxtext="RTRstatus" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='RTRstatus']">
+              <restrictions>
+                <record jsxid="mi_446" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_447">
+                <record jsxid="mi_448" name="CDF Attribute" value="jsxRTRstatus"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_449" jsxtext="RTRad" type="E" datatype="boolean" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='RTRad']">
+              <restrictions>
+                <record jsxid="mi_450" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_451">
+                <record jsxid="mi_452" name="CDF Attribute" value="jsxRTRad"/>
+              </mappings>
+            </record>
+            <mappings jsxid="mi_453">
+              <record jsxid="mi_454" name="Script" value="if(typeof(this._i_454)=='undefined'){this._i_454=-1;my.getCDFDocument('RTR','INBOUND');}"/>
+              <record jsxid="mi_455" name="CDF Record"/>
+            </mappings>
+          </record>
+          <record jsxid="mi_456" jsxtext="assignedCoord" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedCoord']">
             <restrictions>
               <record jsxid="mi_457" name="maxoccur" value="unbounded"/>
               <record jsxid="mi_458" name="minoccur" value="0"/>
             </restrictions>
-            <record jsxid="mi_459" jsxtext="TAHILid" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILid']">
+            <record jsxid="mi_459" jsxtext="assignedCoordName" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedCoordName']">
               <restrictions>
                 <record jsxid="mi_460" name="minoccur" value="0"/>
               </restrictions>
               <mappings jsxid="mi_461">
-                <record jsxid="mi_462" name="CDF Attribute" value="jsxtTAHILid"/>
+                <record jsxid="mi_462" name="CDF Attribute" value="jsxAssignedCoordName"/>
               </mappings>
             </record>
-            <record jsxid="mi_463" jsxtext="TAHILtype" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILtype']">
+            <record jsxid="mi_463" jsxtext="assignedCoordID" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedCoordID']">
               <restrictions>
                 <record jsxid="mi_464" name="minoccur" value="0"/>
               </restrictions>
               <mappings jsxid="mi_465">
-                <record jsxid="mi_466" name="CDF Attribute" value="jsxtTAHILtype"/>
+                <record jsxid="mi_466" name="CDF Attribute" value="jsxAssignedCoordID"/>
               </mappings>
             </record>
-            <record jsxid="mi_467" jsxtext="TAHILopeningDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILopeningDate']">
+            <record jsxid="mi_467" jsxtext="assignedCoordCert" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedCoordCert']">
               <restrictions>
                 <record jsxid="mi_468" name="minoccur" value="0"/>
               </restrictions>
               <mappings jsxid="mi_469">
-                <record jsxid="mi_470" name="Script" value="CDFCONTEXT.setAttribute('jsxTAHILopeningDate', Intalio.Internal.Utilities.fixDateInputMatrix(MESSAGENODE.getValue()));"/>
+                <record jsxid="mi_470" name="CDF Attribute" value="jsxAssignedCoordCert"/>
               </mappings>
             </record>
-            <record jsxid="mi_471" jsxtext="TAHILCL" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILCL']">
+            <mappings jsxid="mi_471">
+              <record jsxid="mi_472" name="Script" value="if(typeof(this._i_472)=='undefined'){this._i_472=-1;my.getCDFDocument('assignedCoord','INBOUND');}"/>
+              <record jsxid="mi_473" name="CDF Record"/>
+            </mappings>
+          </record>
+          <record jsxid="mi_474" jsxtext="assignedMechanics" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedMechanics']">
+            <restrictions>
+              <record jsxid="mi_475" name="maxoccur" value="unbounded"/>
+              <record jsxid="mi_476" name="minoccur" value="0"/>
+            </restrictions>
+            <record jsxid="mi_477" jsxtext="assignedMechanicName" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedMechanicName']">
               <restrictions>
-                <record jsxid="mi_472" name="minoccur" value="0"/>
+                <record jsxid="mi_478" name="minoccur" value="0"/>
               </restrictions>
-              <mappings jsxid="mi_473">
-                <record jsxid="mi_474" name="CDF Attribute" value="jsxtTAHILCL"/>
+              <mappings jsxid="mi_479">
+                <record jsxid="mi_480" name="CDF Attribute" value="jsxAssignedMechanicName"/>
               </mappings>
             </record>
-            <record jsxid="mi_475" jsxtext="TAHILlimitDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILlimitDate']">
+            <record jsxid="mi_481" jsxtext="assignedMechanicID" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedMechanicID']">
               <restrictions>
-                <record jsxid="mi_476" name="minoccur" value="0"/>
+                <record jsxid="mi_482" name="minoccur" value="0"/>
               </restrictions>
-              <mappings jsxid="mi_477">
-                <record jsxid="mi_478" name="Script" value="CDFCONTEXT.setAttribute('jsxTAHILlimitDate', Intalio.Internal.Utilities.fixDateInputMatrix(MESSAGENODE.getValue()));"/>
+              <mappings jsxid="mi_483">
+                <record jsxid="mi_484" name="CDF Attribute" value="jsxAssignedMechanicID"/>
               </mappings>
             </record>
-            <record jsxid="mi_479" jsxtext="TAHILclosingDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILclosingDate']">
+            <record jsxid="mi_485" jsxtext="assignedMechanicCert" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedMechanicCert']">
               <restrictions>
-                <record jsxid="mi_480" name="minoccur" value="0"/>
+                <record jsxid="mi_486" name="minoccur" value="0"/>
               </restrictions>
-              <mappings jsxid="mi_481">
-                <record jsxid="mi_482" name="Script" value="CDFCONTEXT.setAttribute('jsxTAHILclosingDate', Intalio.Internal.Utilities.fixDateInputMatrix(MESSAGENODE.getValue()));"/>
+              <mappings jsxid="mi_487">
+                <record jsxid="mi_488" name="CDF Attribute" value="jsxAssignedMechanicCert"/>
               </mappings>
             </record>
-            <record jsxid="mi_483" jsxtext="TAHILATA100" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILATA100']">
+            <record jsxid="mi_489" jsxtext="entitledToRelease" type="E" datatype="boolean" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='entitledToRelease']">
               <restrictions>
-                <record jsxid="mi_484" name="minoccur" value="0"/>
+                <record jsxid="mi_490" name="minoccur" value="0"/>
               </restrictions>
-              <mappings jsxid="mi_485">
-                <record jsxid="mi_486" name="CDF Attribute" value="jsxtTAHILATA100"/>
+              <mappings jsxid="mi_491">
+                <record jsxid="mi_492" name="CDF Attribute" value="jsxRelease"/>
               </mappings>
             </record>
-            <record jsxid="mi_487" jsxtext="TAHILdescription" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILdescription']">
-              <restrictions>
-                <record jsxid="mi_488" name="minoccur" value="0"/>
-              </restrictions>
-              <mappings jsxid="mi_489">
-                <record jsxid="mi_490" name="CDF Attribute" value="jsxTAHILdescription"/>
-              </mappings>
-            </record>
-            <record jsxid="mi_491" jsxtext="TAHILstatus" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILstatus']">
-              <restrictions>
-                <record jsxid="mi_492" name="minoccur" value="0"/>
-              </restrictions>
-              <mappings jsxid="mi_493">
-                <record jsxid="mi_494" name="CDF Attribute" value="jsxTAHILstatus"/>
-              </mappings>
-            </record>
-            <record jsxid="mi_495" jsxtext="TAHILpartNr" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILpartNr']">
-              <restrictions>
-                <record jsxid="mi_496" name="minoccur" value="0"/>
-              </restrictions>
-              <mappings jsxid="mi_497">
-                <record jsxid="mi_498" name="CDF Attribute" value="jsxTAHILpartNr"/>
-              </mappings>
-            </record>
-            <record jsxid="mi_499" jsxtext="TAHILcomments" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILcomments']">
+            <mappings jsxid="mi_493">
+              <record jsxid="mi_494" name="Script" value="if(typeof(this._i_494)=='undefined'){this._i_494=-1;my.getCDFDocument('assignedMechanics','INBOUND');}"/>
+              <record jsxid="mi_495" name="CDF Record"/>
+            </mappings>
+          </record>
+          <record jsxid="mi_496" jsxtext="assignedAvionics" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedAvionics']">
+            <restrictions>
+              <record jsxid="mi_497" name="maxoccur" value="unbounded"/>
+              <record jsxid="mi_498" name="minoccur" value="0"/>
+            </restrictions>
+            <record jsxid="mi_499" jsxtext="assignedAvionicName" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedAvionicName']">
               <restrictions>
                 <record jsxid="mi_500" name="minoccur" value="0"/>
               </restrictions>
               <mappings jsxid="mi_501">
-                <record jsxid="mi_502" name="CDF Attribute" value="jsxTAHILcomments"/>
+                <record jsxid="mi_502" name="CDF Attribute" value="jsxAssignedAvionicName"/>
               </mappings>
             </record>
-            <mappings jsxid="mi_503">
-              <record jsxid="mi_504" name="Script" value="if(typeof(this._i_504)=='undefined'){this._i_504=-1;my.getCDFDocument('TAHIL','INBOUND');}"/>
-              <record jsxid="mi_505" name="CDF Record"/>
+            <record jsxid="mi_503" jsxtext="assignedAvionicID" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedAvionicID']">
+              <restrictions>
+                <record jsxid="mi_504" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_505">
+                <record jsxid="mi_506" name="CDF Attribute" value="jsxAssignedAvionicID"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_507" jsxtext="assignedAvionicCert" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='assignedAvionicCert']">
+              <restrictions>
+                <record jsxid="mi_508" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_509">
+                <record jsxid="mi_510" name="CDF Attribute" value="jsxAssignedAvionicCert"/>
+              </mappings>
+            </record>
+            <mappings jsxid="mi_511">
+              <record jsxid="mi_512" name="Script" value="if(typeof(this._i_512)=='undefined'){this._i_512=-1;my.getCDFDocument('assignedAvionics','INBOUND');}"/>
+              <record jsxid="mi_513" name="CDF Record"/>
             </mappings>
           </record>
         </record>
-        <record jsxid="mi_506" jsxtext="DC" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='DC']">
+        <record jsxid="mi_514" jsxtext="HIL" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='HIL']">
           <restrictions>
-            <record jsxid="mi_507" name="nillable" value="true"/>
+            <record jsxid="mi_515" name="nillable" value="true"/>
           </restrictions>
-          <record jsxid="mi_508" jsxtext="ExpectedStartTime" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='ExpectedStartTime']">
+          <record jsxid="mi_516" jsxtext="TAHIL" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHIL']">
             <restrictions>
-              <record jsxid="mi_509" name="minoccur" value="0"/>
+              <record jsxid="mi_517" name="maxoccur" value="unbounded"/>
+              <record jsxid="mi_518" name="minoccur" value="0"/>
             </restrictions>
-            <mappings jsxid="mi_510">
-              <record jsxid="mi_511" name="Script" value="Intalio.Internal.Utilities.fixTimeInput(jsx3.GO('ExpectedStartTime', my.getNamespace()), MESSAGENODE.getValue());"/>
+            <record jsxid="mi_519" jsxtext="TAHILid" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILid']">
+              <restrictions>
+                <record jsxid="mi_520" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_521">
+                <record jsxid="mi_522" name="CDF Attribute" value="jsxtTAHILid"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_523" jsxtext="TAHILtype" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILtype']">
+              <restrictions>
+                <record jsxid="mi_524" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_525">
+                <record jsxid="mi_526" name="CDF Attribute" value="jsxtTAHILtype"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_527" jsxtext="TAHILopeningDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILopeningDate']">
+              <restrictions>
+                <record jsxid="mi_528" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_529">
+                <record jsxid="mi_530" name="Script" value="CDFCONTEXT.setAttribute('jsxTAHILopeningDate', Intalio.Internal.Utilities.fixDateInputMatrix(MESSAGENODE.getValue()));"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_531" jsxtext="TAHILCL" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILCL']">
+              <restrictions>
+                <record jsxid="mi_532" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_533">
+                <record jsxid="mi_534" name="CDF Attribute" value="jsxtTAHILCL"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_535" jsxtext="TAHILlimitDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILlimitDate']">
+              <restrictions>
+                <record jsxid="mi_536" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_537">
+                <record jsxid="mi_538" name="Script" value="CDFCONTEXT.setAttribute('jsxTAHILlimitDate', Intalio.Internal.Utilities.fixDateInputMatrix(MESSAGENODE.getValue()));"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_539" jsxtext="TAHILclosingDate" type="E" datatype="date" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILclosingDate']">
+              <restrictions>
+                <record jsxid="mi_540" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_541">
+                <record jsxid="mi_542" name="Script" value="CDFCONTEXT.setAttribute('jsxTAHILclosingDate', Intalio.Internal.Utilities.fixDateInputMatrix(MESSAGENODE.getValue()));"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_543" jsxtext="TAHILATA100" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILATA100']">
+              <restrictions>
+                <record jsxid="mi_544" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_545">
+                <record jsxid="mi_546" name="CDF Attribute" value="jsxtTAHILATA100"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_547" jsxtext="TAHILdescription" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILdescription']">
+              <restrictions>
+                <record jsxid="mi_548" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_549">
+                <record jsxid="mi_550" name="CDF Attribute" value="jsxTAHILdescription"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_551" jsxtext="TAHILstatus" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILstatus']">
+              <restrictions>
+                <record jsxid="mi_552" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_553">
+                <record jsxid="mi_554" name="CDF Attribute" value="jsxTAHILstatus"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_555" jsxtext="TAHILpartNr" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILpartNr']">
+              <restrictions>
+                <record jsxid="mi_556" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_557">
+                <record jsxid="mi_558" name="CDF Attribute" value="jsxTAHILpartNr"/>
+              </mappings>
+            </record>
+            <record jsxid="mi_559" jsxtext="TAHILcomments" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='TAHILcomments']">
+              <restrictions>
+                <record jsxid="mi_560" name="minoccur" value="0"/>
+              </restrictions>
+              <mappings jsxid="mi_561">
+                <record jsxid="mi_562" name="CDF Attribute" value="jsxTAHILcomments"/>
+              </mappings>
+            </record>
+            <mappings jsxid="mi_563">
+              <record jsxid="mi_564" name="Script" value="if(typeof(this._i_564)=='undefined'){this._i_564=-1;my.getCDFDocument('TAHIL','INBOUND');}"/>
+              <record jsxid="mi_565" name="CDF Record"/>
             </mappings>
           </record>
-          <record jsxid="mi_512" jsxtext="ExpectedFinishTime" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='ExpectedFinishTime']">
+        </record>
+        <record jsxid="mi_566" jsxtext="DC" type="C" datatype="" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='DC']">
+          <restrictions>
+            <record jsxid="mi_567" name="nillable" value="true"/>
+          </restrictions>
+          <record jsxid="mi_568" jsxtext="ExpectedStartTime" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='ExpectedStartTime']">
             <restrictions>
-              <record jsxid="mi_513" name="minoccur" value="0"/>
+              <record jsxid="mi_569" name="minoccur" value="0"/>
             </restrictions>
-            <mappings jsxid="mi_514">
-              <record jsxid="mi_515" name="Script" value="Intalio.Internal.Utilities.fixTimeInput(jsx3.GO('ExpectedFinishTime', my.getNamespace()), MESSAGENODE.getValue());"/>
+            <mappings jsxid="mi_570">
+              <record jsxid="mi_571" name="Script" value="Intalio.Internal.Utilities.fixTimeInput(jsx3.GO('ExpectedStartTime', my.getNamespace()), MESSAGENODE.getValue());"/>
             </mappings>
           </record>
-          <record jsxid="mi_516" jsxtext="ExpectedReleaseTime" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='ExpectedReleaseTime']">
+          <record jsxid="mi_572" jsxtext="ExpectedFinishTime" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='ExpectedFinishTime']">
             <restrictions>
-              <record jsxid="mi_517" name="minoccur" value="0"/>
+              <record jsxid="mi_573" name="minoccur" value="0"/>
             </restrictions>
-            <mappings jsxid="mi_518">
-              <record jsxid="mi_519" name="Script" value="Intalio.Internal.Utilities.fixTimeInput(jsx3.GO('ExpectedReleaseTime', my.getNamespace()), MESSAGENODE.getValue());"/>
+            <mappings jsxid="mi_574">
+              <record jsxid="mi_575" name="Script" value="Intalio.Internal.Utilities.fixTimeInput(jsx3.GO('ExpectedFinishTime', my.getNamespace()), MESSAGENODE.getValue());"/>
             </mappings>
           </record>
-          <record jsxid="mi_520" jsxtext="CompassInspectionType" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='CompassInspectionType']">
+          <record jsxid="mi_576" jsxtext="ExpectedReleaseTime" type="E" datatype="time" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='ExpectedReleaseTime']">
             <restrictions>
-              <record jsxid="mi_521" name="minoccur" value="0"/>
+              <record jsxid="mi_577" name="minoccur" value="0"/>
             </restrictions>
-            <mappings jsxid="mi_522">
-              <record jsxid="mi_523" name="DOM" value="CompassInspectionType"/>
+            <mappings jsxid="mi_578">
+              <record jsxid="mi_579" name="Script" value="Intalio.Internal.Utilities.fixTimeInput(jsx3.GO('ExpectedReleaseTime', my.getNamespace()), MESSAGENODE.getValue());"/>
             </mappings>
           </record>
-          <record jsxid="mi_524" jsxtext="Comments" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='Comments']">
+          <record jsxid="mi_580" jsxtext="CompassInspectionType" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='CompassInspectionType']">
             <restrictions>
-              <record jsxid="mi_525" name="minoccur" value="0"/>
+              <record jsxid="mi_581" name="minoccur" value="0"/>
             </restrictions>
-            <mappings jsxid="mi_526">
-              <record jsxid="mi_527" name="DOM" value="Comments"/>
+            <mappings jsxid="mi_582">
+              <record jsxid="mi_583" name="DOM" value="CompassInspectionType"/>
+            </mappings>
+          </record>
+          <record jsxid="mi_584" jsxtext="Comments" type="E" datatype="string" tns="" path="//jsx1:schema[@targetNamespace='http://www.intalio.com/gi/forms/TAmanagement.gi']//jsx1:element[@name='Comments']">
+            <restrictions>
+              <record jsxid="mi_585" name="minoccur" value="0"/>
+            </restrictions>
+            <mappings jsxid="mi_586">
+              <record jsxid="mi_587" name="DOM" value="Comments"/>
             </mappings>
           </record>
         </record>

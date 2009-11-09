@@ -3,25 +3,25 @@
 	
 	<xsl:template match="fmr:FMR" xmlns:fmr="http://www.example.org/fmr">
 		<xsl:choose>
-			<xsl:when test="@ATA!=''">
+			<xsl:when test="fmr:ATA!=''">
 				<xsl:choose>
-					<xsl:when test="xs:dateTime(@ATA) &gt; (current-dateTime() + xs:dayTimeDuration('PT12H'))">true</xsl:when>
+					<xsl:when test="xs:dateTime(fmr:ATA) &gt; (current-dateTime() + xs:dayTimeDuration('PT12H'))">true</xsl:when>
 					<xsl:otherwise>false</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:choose>
-					<xsl:when test="@ETA!=''">
+					<xsl:when test="fmr:ETA!=''">
 						<xsl:choose>
-							<xsl:when test="xs:dateTime(@ETA) &gt; (current-dateTime() + xs:dayTimeDuration('PT12H'))">true</xsl:when>
+							<xsl:when test="xs:dateTime(fmr:ETA) &gt; (current-dateTime() + xs:dayTimeDuration('PT12H'))">true</xsl:when>
 							<xsl:otherwise>false</xsl:otherwise>
 						</xsl:choose>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:choose>
-							<xsl:when test="@STA!=''">
+							<xsl:when test="fmr:STA!=''">
 								<xsl:choose>
-									<xsl:when test="xs:dateTime(@STA) &gt; (current-dateTime() + xs:dayTimeDuration('PT12H'))">true</xsl:when>
+									<xsl:when test="xs:dateTime(fmr:STA) &gt; (current-dateTime() + xs:dayTimeDuration('PT12H'))">true</xsl:when>
 									<xsl:otherwise>false</xsl:otherwise>
 								</xsl:choose>
 							</xsl:when>

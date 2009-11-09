@@ -89,8 +89,20 @@
 	<complexType name="InspectionType">
 		<sequence>
 			<element type="string" name="assigned"/>
-			<element type="string" name="Stand" />
-			<element type="string" name="InspectionType" minOccurs="0" />
+		    <element type="string" name="flightStatus" minOccurs="0"/>
+		    <element type="string" name="Stand" minOccurs="0"/>
+		    <element name="taTasks" minOccurs="0" maxOccurs="unbounded">
+		        <complexType>
+		          <sequence>
+		            <element type="string" name="InspectionType" minOccurs="0"/>
+		            <element type="date" name="MTstartDate" minOccurs="0"/>
+		            <element type="time" name="MTstartTime" minOccurs="0"/>
+		            <element type="date" name="MTendDate" minOccurs="0"/>
+		            <element type="time" name="MTendTime" minOccurs="0"/>
+		            <element type="string" name="Remarks" minOccurs="0"/>
+		          </sequence>
+		        </complexType>
+		    </element>
 			<element name="InspectionStatus">
 				<simpleType>
 					<restriction base="string">

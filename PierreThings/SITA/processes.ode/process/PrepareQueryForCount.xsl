@@ -26,15 +26,15 @@
 	</xsl:template>
 
 	<xsl:template match="fmr:FMR" xmlns:fmr="http://www.example.org/fmr">
-		<xsl:element name="like" xmlns="urn:intalio.com:connectors:database:sita:countexistingtasservice">%ScheduledArrivalDate_<xsl:call-template name="dateFromDateTime">
+		<xsl:element name="like" xmlns="urn:intalio.com:connectors:database:sita:countexistingtasservice">%ScheduledDepartureDate_<xsl:call-template name="dateFromDateTime">
 				<xsl:with-param name="dateTime">
-					<xsl:value-of select="@STA" />
+					<xsl:value-of select="fmr:STD" />
 				</xsl:with-param>
-			</xsl:call-template>%STA_<xsl:call-template name="timeFromDateTime">
+			</xsl:call-template>%STD_<xsl:call-template name="timeFromDateTime">
 				<xsl:with-param name="dateTime">
-					<xsl:value-of select="@STA" />
+					<xsl:value-of select="fmr:STD" />
 				</xsl:with-param>
-			</xsl:call-template>%ArrivalFlightNumber_<xsl:value-of select="@ArrivalFlightNumber" />%</xsl:element>
+			</xsl:call-template>%DepartureFlightNumber_<xsl:value-of select="fmr:DepartureFlightNumber" />%</xsl:element>
 	</xsl:template>
 	
 	</xsl:stylesheet>

@@ -73,8 +73,16 @@
     </TAdata:ArrivalDeparture>
     <TAdata:Inspection>
       <TAdata:assigned></TAdata:assigned>
+      <TAdata:flightStatus></TAdata:flightStatus>
       <TAdata:Stand></TAdata:Stand>
-      <TAdata:InspectionType></TAdata:InspectionType>
+      <TAdata:taTasks>
+        <TAdata:InspectionType></TAdata:InspectionType>
+        <TAdata:MTstartDate></TAdata:MTstartDate>
+        <TAdata:MTstartTime></TAdata:MTstartTime>
+        <TAdata:MTendDate></TAdata:MTendDate>
+        <TAdata:MTendTime></TAdata:MTendTime>
+        <TAdata:Remarks></TAdata:Remarks>
+      </TAdata:taTasks>
       <TAdata:InspectionStatus></TAdata:InspectionStatus>
       <TAdata:resources></TAdata:resources>
       <TAdata:RTR>
@@ -159,8 +167,16 @@
     </TAdata:ArrivalDeparture>
     <TAdata:Inspection>
       <TAdata:assigned></TAdata:assigned>
+      <TAdata:flightStatus></TAdata:flightStatus>
       <TAdata:Stand></TAdata:Stand>
-      <TAdata:InspectionType></TAdata:InspectionType>
+      <TAdata:taTasks>
+        <TAdata:InspectionType></TAdata:InspectionType>
+        <TAdata:MTstartDate></TAdata:MTstartDate>
+        <TAdata:MTstartTime></TAdata:MTstartTime>
+        <TAdata:MTendDate></TAdata:MTendDate>
+        <TAdata:MTendTime></TAdata:MTendTime>
+        <TAdata:Remarks></TAdata:Remarks>
+      </TAdata:taTasks>
       <TAdata:InspectionStatus></TAdata:InspectionStatus>
       <TAdata:resources></TAdata:resources>
       <TAdata:RTR>
@@ -246,8 +262,16 @@
       </TAdata:ArrivalDeparture>
       <TAdata:Inspection>
         <TAdata:assigned></TAdata:assigned>
+        <TAdata:flightStatus></TAdata:flightStatus>
         <TAdata:Stand></TAdata:Stand>
-        <TAdata:InspectionType></TAdata:InspectionType>
+        <TAdata:taTasks>
+          <TAdata:InspectionType></TAdata:InspectionType>
+          <TAdata:MTstartDate></TAdata:MTstartDate>
+          <TAdata:MTstartTime></TAdata:MTstartTime>
+          <TAdata:MTendDate></TAdata:MTendDate>
+          <TAdata:MTendTime></TAdata:MTendTime>
+          <TAdata:Remarks></TAdata:Remarks>
+        </TAdata:taTasks>
         <TAdata:InspectionStatus></TAdata:InspectionStatus>
         <TAdata:resources></TAdata:resources>
         <TAdata:RTR>

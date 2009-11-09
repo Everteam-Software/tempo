@@ -14,10 +14,10 @@
     <pnlk:partnerLinkType name="ProcessAndDBForUpdateMechPortPlk">
         <pnlk:role name="DB_for_Process" portType="updateMech:updateMechPort"/>
     </pnlk:partnerLinkType>
-    <pnlk:partnerLinkType name="ProcessAndDBForUpdateAviPortPlk">
-        <pnlk:role name="DB_for_Process" portType="updateAvi:updateAviPort"/>
-    </pnlk:partnerLinkType>
     <pnlk:partnerLinkType name="ProcessAndDBForUpdateCoordPortPlk">
         <pnlk:role name="DB_for_Process" portType="ns:updateCoordPort"/>
+    </pnlk:partnerLinkType>
+    <pnlk:partnerLinkType name="ProcessAndDBForUpdateAviPortPlk">
+        <pnlk:role name="DB_for_Process" portType="updateAvi:updateAviPort"/>
     </pnlk:partnerLinkType>
 </wsdl:definitions>

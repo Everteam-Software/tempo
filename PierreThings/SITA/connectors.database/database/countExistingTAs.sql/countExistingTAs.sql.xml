@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jdbc:descriptor wsdlLocation="countExistingTAs.sql.wsdl" targetNamespace="urn:intalio.com:connectors:database:sita:countexistingtasservice" xmlns:jdbc="http://bpms.intalio.com/connectors/jdbc/">
     <jdbc:service name="countExistingTAsService">
-        <jdbc:operation name="urn:countExistingTAs" sqlStatement="select count(taskid) from tempo_task where id=(select id from tempo_pa where output_xml like ? and not state=1); " event="false" dynamicCredentials="true" xmlns:urn="urn:intalio.com:connectors:database:sita:countexistingtasservice">
+        <jdbc:operation name="urn:countExistingTAs" sqlStatement="select count(taskid) from tempo_task where id=(select id from tempo_pa where output_xml like ? and not state=1);" event="false" dynamicCredentials="true" xmlns:urn="urn:intalio.com:connectors:database:sita:countexistingtasservice">
             <jdbc:input>
                 <jdbc:parameter>
                     <jdbc:mode>1</jdbc:mode>
@@ -42,10 +42,10 @@
             <jdbc:databaseProductName>MySql</jdbc:databaseProductName>
             <jdbc:databaseProductVersion>5.1</jdbc:databaseProductVersion>
             <jdbc:driverClass>com.mysql.jdbc.Driver</jdbc:driverClass>
-            <jdbc:databaseUrl>jdbc:mysql://localhost:3306/tap</jdbc:databaseUrl>
-            <jdbc:databaseName>tap</jdbc:databaseName>
+            <jdbc:databaseUrl>jdbc:mysql://localhost:3306/tap3</jdbc:databaseUrl>
+            <jdbc:databaseName>tap3</jdbc:databaseName>
             <jdbc:userName>root</jdbc:userName>
-            <jdbc:password xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">appear</jdbc:password>
+            <jdbc:password>appear</jdbc:password>
         </jdbc:connection>
     </jdbc:service>
 </jdbc:descriptor>

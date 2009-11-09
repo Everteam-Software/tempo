@@ -4,11 +4,11 @@
 	
 	<xsl:template match="fmr:FMR" xmlns:fmr="http://www.example.org/fmr">
 		<xsl:choose>
-			<xsl:when test="starts-with(substring(@Aircraft, string-length(@Aircraft) - 2, string-length(@Aircraft)), 'TO')">A-<xsl:value-of select="@STA"/></xsl:when>
+			<xsl:when test="starts-with(substring(fmr:Aircraft, string-length(fmr:Aircraft) - 2, string-length(fmr:Aircraft)), 'TO')">A-<xsl:value-of select="fmr:STA"/></xsl:when>
 			<xsl:otherwise>
 				<xsl:choose>
-					<xsl:when test="starts-with(substring(@Aircraft, string-length(@Aircraft) - 2, string-length(@Aircraft)), 'T')">B-<xsl:value-of select="@STA"/></xsl:when>
-					<xsl:otherwise>C-<xsl:value-of select="@STA"/></xsl:otherwise>
+					<xsl:when test="starts-with(substring(fmr:Aircraft, string-length(fmr:Aircraft) - 2, string-length(fmr:Aircraft)), 'T')">B-<xsl:value-of select="fmr:STA"/></xsl:when>
+					<xsl:otherwise>C-<xsl:value-of select="fmr:STA"/></xsl:otherwise>
 				</xsl:choose>
 			</xsl:otherwise>
 		</xsl:choose>

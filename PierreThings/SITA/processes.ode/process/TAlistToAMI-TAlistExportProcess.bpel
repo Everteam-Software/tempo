@@ -43,6 +43,7 @@
     <ta:incidents>
       <ta:rtr ad="" description="" limit-date="" rtr-id=""></ta:rtr>
       <ta:hil description="" hil-slip-id="" limit-date=""></ta:hil>
+      <ta:lmc lmc-id=""></ta:lmc>
     </ta:incidents>
   </ta:ta>
 </ta:ta-list></bpel:literal>

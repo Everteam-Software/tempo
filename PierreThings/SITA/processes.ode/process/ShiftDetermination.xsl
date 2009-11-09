@@ -6,17 +6,32 @@
 		<xsl:element name="TAdates" xmlns="http://www.intalio.com/gi/forms/TAmanagement.gi">
 			<xsl:element name="startDateTime">
 				<xsl:choose>
-					<xsl:when test="@ATA!=''"><xsl:value-of select="@ATA" /></xsl:when>
-					<xsl:otherwise><xsl:value-of select="@STA" /></xsl:otherwise>
+					<xsl:when test="fmr:ATA!=''"><xsl:value-of select="fmr:ATA" /></xsl:when>
+					<xsl:otherwise>
+						<xsl:choose>
+							<xsl:when test="fmr:ETA!=''"><xsl:value-of select="fmr:ETA" /></xsl:when>
+							<xsl:otherwise>
+								<xsl:choose>
+									<xsl:when test="fmr:STA!=''"><xsl:value-of select="fmr:STA" /></xsl:when>
+									<xsl:otherwise>2008-01-01T00:00:00</xsl:otherwise>
+								</xsl:choose>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:element>
 			<xsl:element name="endDateTime">
 				<xsl:choose>
-					<xsl:when test="@ATD!=''"><xsl:value-of select="@ATD" /></xsl:when>
+					<xsl:when test="fmr:ATD!=''"><xsl:value-of select="fmr:ATD" /></xsl:when>
 					<xsl:otherwise>
 						<xsl:choose>
-							<xsl:when test="@STD!=''"><xsl:value-of select="@STD" /></xsl:when>
-							<xsl:otherwise>2100-01-01T00:00:00</xsl:otherwise>
+							<xsl:when test="fmr:ETD!=''"><xsl:value-of select="fmr:ETD" /></xsl:when>
+							<xsl:otherwise>
+								<xsl:choose>
+									<xsl:when test="fmr:STD!=''"><xsl:value-of select="fmr:STD" /></xsl:when>
+									<xsl:otherwise>2100-01-01T00:00:00</xsl:otherwise>
+								</xsl:choose>
+							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:otherwise>
 				</xsl:choose>

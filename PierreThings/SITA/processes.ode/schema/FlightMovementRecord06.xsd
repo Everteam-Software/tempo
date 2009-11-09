@@ -1,43 +1,119 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2009 (http://www.altova.com) by Dellerue (SITA) -->
+<!-- edited with XMLSpy v2010 (http://www.altova.com) by Anoosh Atari (SITA) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fmr="http://www.example.org/fmr" targetNamespace="http://www.example.org/fmr" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:element name="FMR">
+		<xs:annotation>
+			<xs:documentation>version 1.0</xs:documentation>
+		</xs:annotation>
 		<xs:complexType>
-			<xs:attribute name="CreationTime" type="xs:dateTime" use="required"/>
-			<xs:attribute name="Aircraft" use="required">
+			<xs:sequence>
+				<xs:element name="Aircraft">
+					<xs:annotation>
+						<xs:documentation>Official tail registration to which the flight leg has been assigned</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="6"/>
+							<xs:minLength value="1"/>
+							<xs:pattern value="\p{Lu}+"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="CreationTime" type="xs:dateTime"/>
+				<xs:element name="FlightStatus">
+					<xs:annotation>
+						<xs:documentation>This is a non-public data item to separate duplicate occurrences of a flight that result from ground and air returns. All flights start their life cycle with status "S" - scheduled. Within the Movement Control System window, however, flights are never deleted. A cancelled flight is moved to status "X", and ground/air returns receive status values of "1", "2" "3" etc..</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="2"/>
+							<xs:minLength value="1"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="STA" type="xs:dateTime" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>This field specifies the full date and time of the scheduled departure of the flight leg, in the format "YYYY-DD-MM hh:mm". This system uses the standard mathematical convention for times, whereby (at the one-minute resolution) the day starts at 00H00 and runs to 23:59. Thus 24H00 is an invalid time - it represents 00H00 on the next date. See the IATA Standard Schedules Information Manual data element description for "Schedule Time of Aircraft Arrival". Observe that IATA's time convention for arrival times deviates from both the mathematical standard as well as from their own convention for departure times: the IATA specification for arrival times is that values run from 00H01 to 24H00 on the same date, whereas arrival times from 00H00 to 23H59 (24H00 being represented by 00H00 on the next day). This inconsistent convention is not supported. </xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="STD" type="xs:dateTime" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Scheduled time of departure STD is more likely to be there than STA.  This field specifies the full date and time of the scheduled departure of the flight leg, in the format "YYYY-DD-MM hh:mm". This system uses the standard mathematical convention for times, whereby (at the one-minute resolution) the day starts at 00H00 and runs to 23:59. Thus 24H00 is an invalid time - it represents 00H00 on the next date. See the IATA Standard Schedules Information Manual data element description for "Schedule Time of Aircraft Departure". </xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="ATA" type="xs:dateTime" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Actual time of Arrival, same as above constrains</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="ATD" type="xs:dateTime" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Actual time of departure, same as above constrains.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="ETA" type="xs:dateTime" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Estimated time of arrival</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="ETD" type="xs:dateTime" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Estimated time of departure</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="ArrivalFlightNumber" minOccurs="0">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:minLength value="5"/>
+							<xs:maxLength value="8"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="DepartureFlightNumber" minOccurs="0">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:minLength value="5"/>
+							<xs:maxLength value="8"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="stand" type="xs:string" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>The gate</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="MaintTask" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="InspectionType" type="xs:string">
+								<xs:annotation>
+									<xs:documentation>If nothing to send, we send a T meaning a routine check</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="MaintStartDate" type="xs:dateTime"/>
+							<xs:element name="MaintEndtDate" type="xs:dateTime"/>
+							<xs:element name="RTR_ID" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+							<xs:element name="Remarks" type="xs:string" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>This is a free-format text field in which any special remarks regarding a specific check may be made (e.g. hours/cycles waivers etc.).</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="FMR_TYPE">
+				<xs:annotation>
+					<xs:documentation>This is a attribute to be used in later version and maybe for production version.</xs:documentation>
+				</xs:annotation>
 				<xs:simpleType>
 					<xs:restriction base="xs:string">
-						<xs:minLength value="1"/>
-						<xs:maxLength value="6" fixed="false"/>
-						<xs:pattern value="\p{Lu}+"/>
+						<xs:enumeration value="NEW"/>
+						<xs:enumeration value="UPDATE"/>
+						<xs:enumeration value="REFRESH"/>
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:attribute>
-			<xs:attribute name="STA" type="xs:dateTime" use="optional"/>
-			<xs:attribute name="ArrivalFlightNumber" use="optional">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:minLength value="5"/>
-						<xs:maxLength value="8"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:attribute>
-			<xs:attribute name="ATA" type="xs:dateTime" use="optional"/>
-			<xs:attribute name="STD" type="xs:dateTime" use="optional"/>
-			<xs:attribute name="ATD" type="xs:dateTime" use="optional"/>
-			<xs:attribute name="ETA" type="xs:dateTime" use="optional"/>
-			<xs:attribute name="ETD" type="xs:dateTime" use="optional"/>
-			<xs:attribute name="Stand" type="xs:string" use="optional"/>
-			<xs:attribute name="InspectionType" type="xs:string" use="optional"/>
-			<xs:attribute name="DepartureFlightNumber" use="optional">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:minLength value="5"/>
-						<xs:maxLength value="8"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:attribute>
-			<xs:attribute name="Rtr-id" type="xs:string" use="optional"/>
 		</xs:complexType>
 	</xs:element>
 </xs:schema>

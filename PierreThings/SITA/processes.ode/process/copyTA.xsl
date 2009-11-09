@@ -11,10 +11,18 @@
 				<xsl:copy-of select="gi:ArrivalDeparture" />
 				<xsl:element name="Inspection">
 					<xsl:element name="assigned"><xsl:value-of select="gi:Inspection/gi:assigned" /></xsl:element>
+					<xsl:element name="flightStatus"><xsl:value-of select="gi:Inspection/gi:flightStatus" /></xsl:element>
 					<xsl:element name="Stand"><xsl:value-of select="gi:Inspection/gi:Stand" /></xsl:element>
-					<xsl:element name="InspectionType">
-						<xsl:if test="gi:Inspection/gi:InspectionType!=''"><xsl:value-of select="gi:Inspection/gi:InspectionType" /></xsl:if>
-					</xsl:element>
+					<xsl:for-each select="gi:Inspection/gi:taTasks">
+						<xsl:element name="taTasks">
+							<xsl:element name="InspectionType"><xsl:value-of select="gi:InspectionType" /></xsl:element>
+							<xsl:element name="MTstartDate"><xsl:value-of select="gi:MTstartDate" /></xsl:element>
+							<xsl:element name="MTstartTime"><xsl:value-of select="gi:MTstartTime" /></xsl:element>
+							<xsl:element name="MTendDate"><xsl:value-of select="gi:MTendDate" /></xsl:element>
+							<xsl:element name="MTendTime"><xsl:value-of select="gi:MTendTime" /></xsl:element>
+							<xsl:element name="Remarks"><xsl:value-of select="gi:Remarks" /></xsl:element>
+						</xsl:element>
+					</xsl:for-each>
 					<xsl:element name="InspectionStatus"><xsl:value-of select="gi:Inspection/gi:InspectionStatus" /></xsl:element>
 					<xsl:element name="resources">
 						<xsl:if test="gi:Inspection/gi:resources!=''"><xsl:value-of select="gi:Inspection/gi:resources" /></xsl:if>

@@ -11,40 +11,118 @@
 				<xsd:complexType>
 					<xsd:sequence>
 						<xsd:element name="FMR">
+							<xsd:annotation>
+								<xsd:documentation>version 1.0</xsd:documentation>
+							</xsd:annotation>
 							<xsd:complexType>
-								<xsd:attribute name="CreationTime" type="xsd:dateTime" use="required"/>
-								<xsd:attribute name="Aircraft" use="required">
+								<xsd:sequence>
+									<xsd:element name="Aircraft">
+										<xsd:annotation>
+											<xsd:documentation>Official tail registration to which the flight leg has been assigned</xsd:documentation>
+										</xsd:annotation>
+										<xsd:simpleType>
+											<xsd:restriction base="xsd:string">
+												<xsd:maxLength value="6"/>
+												<xsd:minLength value="1"/>
+												<xsd:pattern value="\p{Lu}+"/>
+											</xsd:restriction>
+										</xsd:simpleType>
+									</xsd:element>
+									<xsd:element name="CreationTIme" type="xsd:dateTime"/>
+									<xsd:element name="FlightStatus">
+										<xsd:annotation>
+											<xsd:documentation>This is a non-public data item to separate duplicate occurrences of a flight that result from ground and air returns. All flights start their life cycle with status "S" - scheduled. Within the Movement Control System window, however, flights are never deleted. A cancelled flight is moved to status "X", and ground/air returns receive status values of "1", "2" "3" etc..</xsd:documentation>
+										</xsd:annotation>
+										<xsd:simpleType>
+											<xsd:restriction base="xsd:string">
+												<xsd:maxLength value="2"/>
+												<xsd:minLength value="1"/>
+											</xsd:restriction>
+										</xsd:simpleType>
+									</xsd:element>
+									<xsd:element name="STA" type="xsd:dateTime" minOccurs="0">
+										<xsd:annotation>
+											<xsd:documentation>This field specifies the full date and time of the scheduled departure of the flight leg, in the format "YYYY-DD-MM hh:mm". This system uses the standard mathematical convention for times, whereby (at the one-minute resolution) the day starts at 00H00 and runs to 23:59. Thus 24H00 is an invalid time - it represents 00H00 on the next date. See the IATA Standard Schedules Information Manual data element description for "Schedule Time of Aircraft Arrival". Observe that IATA's time convention for arrival times deviates from both the mathematical standard as well as from their own convention for departure times: the IATA specification for arrival times is that values run from 00H01 to 24H00 on the same date, whereas arrival times from 00H00 to 23H59 (24H00 being represented by 00H00 on the next day). This inconsistent convention is not supported. </xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+									<xsd:element name="STD" type="xsd:dateTime" minOccurs="0">
+										<xsd:annotation>
+											<xsd:documentation>Scheduled time of departure STD is more likely to be there than STA.  This field specifies the full date and time of the scheduled departure of the flight leg, in the format "YYYY-DD-MM hh:mm". This system uses the standard mathematical convention for times, whereby (at the one-minute resolution) the day starts at 00H00 and runs to 23:59. Thus 24H00 is an invalid time - it represents 00H00 on the next date. See the IATA Standard Schedules Information Manual data element description for "Schedule Time of Aircraft Departure". </xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+									<xsd:element name="ATA" type="xsd:dateTime" minOccurs="0">
+										<xsd:annotation>
+											<xsd:documentation>Actual time of Arrival, same as above constrains</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+									<xsd:element name="ATD" type="xsd:dateTime" minOccurs="0">
+										<xsd:annotation>
+											<xsd:documentation>Actual time of departure, same as above constrains.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+									<xsd:element name="ETA" type="xsd:dateTime" minOccurs="0">
+										<xsd:annotation>
+											<xsd:documentation>Estimated time of arrival</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+									<xsd:element name="ETD" type="xsd:dateTime" minOccurs="0">
+										<xsd:annotation>
+											<xsd:documentation>Estimated time of departure</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+									<xsd:element name="ArrivalFlightNumber" minOccurs="0">
+										<xsd:simpleType>
+											<xsd:restriction base="xsd:string">
+												<xsd:minLength value="5"/>
+												<xsd:maxLength value="8"/>
+											</xsd:restriction>
+										</xsd:simpleType>
+									</xsd:element>
+									<xsd:element name="DepartureFlightNumber" minOccurs="0">
+										<xsd:simpleType>
+											<xsd:restriction base="xsd:string">
+												<xsd:minLength value="5"/>
+												<xsd:maxLength value="8"/>
+											</xsd:restriction>
+										</xsd:simpleType>
+									</xsd:element>
+									<xsd:element name="stand" type="xsd:string" minOccurs="0">
+										<xsd:annotation>
+											<xsd:documentation>The gate</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+									<xsd:element name="MaintTask" maxOccurs="unbounded">
+										<xsd:complexType>
+											<xsd:sequence>
+												<xsd:element name="InspectionType" type="xsd:string">
+													<xsd:annotation>
+														<xsd:documentation>If nothing to send, we send a T meaning a routine check</xsd:documentation>
+													</xsd:annotation>
+												</xsd:element>
+												<xsd:element name="MaintStartDate" type="xsd:dateTime"/>
+												<xsd:element name="MaintEndtDate" type="xsd:dateTime"/>
+												<xsd:element name="RTR_ID" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+												<xsd:element name="Remarks" type="xsd:string" minOccurs="0">
+													<xsd:annotation>
+														<xsd:documentation>This is a free-format text field in which any special remarks regarding a specific check may be made (e.g. hours/cycles waivers etc.).</xsd:documentation>
+													</xsd:annotation>
+												</xsd:element>
+											</xsd:sequence>
+										</xsd:complexType>
+									</xsd:element>
+								</xsd:sequence>
+								<xsd:attribute name="FMR_TYPE">
+									<xsd:annotation>
+										<xsd:documentation>This is a attribute to be used in later version and maybe for production version.</xsd:documentation>
+									</xsd:annotation>
 									<xsd:simpleType>
 										<xsd:restriction base="xsd:string">
-											<xsd:minLength value="1"/>
-											<xsd:maxLength value="6" fixed="false"/>
-											<xsd:pattern value="\p{Lu}+"/>
+											<xsd:enumeration value="NEW"/>
+											<xsd:enumeration value="UPDATE"/>
+											<xsd:enumeration value="REFRESH"/>
 										</xsd:restriction>
 									</xsd:simpleType>
 								</xsd:attribute>
-								<xsd:attribute name="STA" type="xsd:dateTime" use="optional"/>
-								<xsd:attribute name="ArrivalFlightNumber" use="optional">
-									<xsd:simpleType>
-										<xsd:restriction base="xsd:string">
-											<xsd:minLength value="5"/>
-											<xsd:maxLength value="8"/>
-										</xsd:restriction>
-									</xsd:simpleType>
-								</xsd:attribute>
-								<xsd:attribute name="ATA" type="xsd:dateTime" use="optional"/>
-								<xsd:attribute name="STD" type="xsd:dateTime" use="optional"/>
-								<xsd:attribute name="ATD" type="xsd:dateTime" use="optional"/>
-								<xsd:attribute name="Stand" type="xsd:string" use="optional"/>
-								<xsd:attribute name="InspectionType" type="xsd:string" use="optional"/>
-								<xsd:attribute name="DepartureFlightNumber" use="optional">
-									<xsd:simpleType>
-										<xsd:restriction base="xsd:string">
-											<xsd:minLength value="5"/>
-											<xsd:maxLength value="8"/>
-										</xsd:restriction>
-									</xsd:simpleType>
-								</xsd:attribute>
-								<xsd:attribute name="Rtr-id" type="xsd:string" use="optional"/>
 							</xsd:complexType>
 						</xsd:element>
 						<xsd:element ref="tns:data" />

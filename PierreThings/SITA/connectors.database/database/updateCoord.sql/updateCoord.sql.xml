@@ -6,13 +6,12 @@
                 <jdbc:parameter>
                     <jdbc:mode>1</jdbc:mode>
                     <jdbc:name>available</jdbc:name>
-                    <jdbc:type>20</jdbc:type>
-                    <jdbc:length>0</jdbc:length>
+                    <jdbc:type>40</jdbc:type>
+                    <jdbc:length>10</jdbc:length>
                     <jdbc:typeName xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
-                    <jdbc:precision>15</jdbc:precision>
-                    <jdbc:scale>2</jdbc:scale>
+                    <jdbc:precision>0</jdbc:precision>
+                    <jdbc:scale>0</jdbc:scale>
                     <jdbc:nullable>false</jdbc:nullable>
-                    <jdbc:value>0</jdbc:value>
                 </jdbc:parameter>
                 <jdbc:parameter>
                     <jdbc:mode>1</jdbc:mode>
@@ -47,8 +46,8 @@
             <jdbc:databaseProductName>MySql</jdbc:databaseProductName>
             <jdbc:databaseProductVersion>5.1</jdbc:databaseProductVersion>
             <jdbc:driverClass>com.mysql.jdbc.Driver</jdbc:driverClass>
-            <jdbc:databaseUrl>jdbc:mysql://localhost:3306/tap</jdbc:databaseUrl>
-            <jdbc:databaseName>tap</jdbc:databaseName>
+            <jdbc:databaseUrl>jdbc:mysql://localhost:3306/tapdata</jdbc:databaseUrl>
+            <jdbc:databaseName>tapdata</jdbc:databaseName>
             <jdbc:userName>root</jdbc:userName>
             <jdbc:password>appear</jdbc:password>
         </jdbc:connection>
