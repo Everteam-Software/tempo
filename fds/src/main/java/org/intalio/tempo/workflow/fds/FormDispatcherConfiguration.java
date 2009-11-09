@@ -166,10 +166,10 @@ public final class FormDispatcherConfiguration {
 
             try {
                 _httpTimeout = Integer.parseInt(configDocument.valueOf("/config/httpTimeout"));
-            } catch (Exception e) {
-                _log.error("Not using invalid value for httptimeout");
+            } finally {
+            	_log.debug("Using following timeout in ms:"+_httpTimeout);
             }
-
+            
             _pxeBaseUrl = pxeBaseUrl;
             _workflowProcessesRelativeUrl = workflowProcessesRelativeUrl;
             _tmsUrl = tmsUrl;
