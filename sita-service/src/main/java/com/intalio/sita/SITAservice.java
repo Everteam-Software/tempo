@@ -44,7 +44,6 @@ import com.intalio.gi.forms.tAmanagement.DataDocument;
 import com.intalio.gi.forms.tAmanagement.InspectionType;
 import com.intalio.gi.forms.tAmanagement.UpdateInputDocument;
 import com.intalio.gi.forms.tAmanagement.DataDocument.Data;
-import com.intalio.gi.forms.tAmanagement.InspectionType.MaintTasks;
 import com.intalio.gi.forms.tAmanagement.InspectionType.RTR;
 import com.intalio.gi.forms.tAmanagement.InspectionType.RTR.RTRstatus;
 import com.intalio.gi.forms.tAmanagement.UpdateInputDocument.UpdateInput;
@@ -837,12 +836,12 @@ public class SITAservice {
 
 			if (FMRelement.getMaintTaskArray() != null) {
 				MaintTask[] maintTasks = FMRelement.getMaintTaskArray();
-				ArrayList<InspectionType.MaintTasks> tasks = new ArrayList<MaintTasks>();
+				ArrayList<InspectionType.TaTasks> tasks = new ArrayList<InspectionType.TaTasks>();
 				InspectionType.RTR[] oldRTRs = inspection.getRTRArray();
 				oldRTRs = clone(oldRTRs);
 				ArrayList<RTR> newRTRsArray = new ArrayList<RTR>();
 				for (MaintTask maintTask : maintTasks) {
-					InspectionType.MaintTasks task = InspectionType.MaintTasks.Factory
+					InspectionType.TaTasks task = InspectionType.TaTasks.Factory
 							.newInstance();
 					task.setInspectionType(maintTask.getInspectionType());
 					task.setMTstartDate(maintTask.getMaintStartDate());
@@ -868,11 +867,10 @@ public class SITAservice {
 							newRTR.setRTRstatus(RTRstatus.OPEN);
 							newRTRsArray.add(newRTR);
 						}
-
 					}
 				}
-				inspection.setMaintTasksArray(tasks
-						.toArray(new InspectionType.MaintTasks[0]));
+				inspection.setTaTasksArray(tasks
+						.toArray(new InspectionType.TaTasks[0]));
 				inspection.setRTRArray(newRTRsArray.toArray(new RTR[0]));
 			}
 

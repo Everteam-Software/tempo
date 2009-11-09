@@ -99,7 +99,7 @@
 			<element type="string" name="assigned"  minOccurs="0"/>
 		    <element type="string" name="flightStatus" minOccurs="0"/>
 		    <element type="string" name="Stand" minOccurs="0"/>
-		    <element name="maintTasks" minOccurs="0" maxOccurs="unbounded">
+		    <element name="taTasks" minOccurs="0" maxOccurs="unbounded">
 		        <complexType>
 		          <sequence>
 		            <element type="string" name="InspectionType" minOccurs="0"/>

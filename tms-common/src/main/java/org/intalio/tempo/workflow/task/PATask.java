@@ -688,10 +688,10 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 				get_assignedAvionics().add(newAvioninc);
 			}
 			/** maintenance tasks and RTRs */
-			com.intalio.gi.forms.tAmanagement.InspectionType.MaintTasks[] maintTasks = inspection
-					.getMaintTasksArray();
+			com.intalio.gi.forms.tAmanagement.InspectionType.TaTasks[] maintTasks = inspection
+					.getTaTasksArray();
 			set_Inspections(new ArrayList<org.intalio.tempo.workflow.task.Inspection>());
-			for (com.intalio.gi.forms.tAmanagement.InspectionType.MaintTasks maintTask : maintTasks) {
+			for (com.intalio.gi.forms.tAmanagement.InspectionType.TaTasks maintTask : maintTasks) {
 				org.intalio.tempo.workflow.task.Inspection newInspection = new org.intalio.tempo.workflow.task.Inspection();
 				newInspection.set_InspectionType(maintTask.getInspectionType());
 				if (maintTask.xgetMTstartDate() != null
