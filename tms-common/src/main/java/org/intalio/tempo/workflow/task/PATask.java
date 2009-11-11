@@ -693,7 +693,7 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 			set_Inspections(new ArrayList<org.intalio.tempo.workflow.task.Inspection>());
 			for (com.intalio.gi.forms.tAmanagement.InspectionType.TaTasks maintTask : maintTasks) {
 				org.intalio.tempo.workflow.task.Inspection newInspection = new org.intalio.tempo.workflow.task.Inspection();
-				newInspection.set_InspectionType(maintTask.getInspectionType());
+				newInspection.setInspectionType(maintTask.getInspectionType());
 				if (maintTask.xgetMTstartDate() != null
 						&& maintTask.xgetMTstartDate().validate()
 						&& maintTask.getMTstartDate() != null
@@ -703,7 +703,7 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 					calendar = maintTask.getMTstartDate();
 					addTimeToDate(maintTask.getMTstartTime().getTime(),
 							calendar);
-					newInspection.set_startDate(calendar.getTime());
+					newInspection.setStartDate(calendar.getTime());
 				}
 				if (maintTask.xgetMTendDate() != null
 						&& maintTask.xgetMTendDate().validate()
@@ -713,9 +713,9 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask,
 						&& maintTask.getMTendTime() != null) {
 					calendar = maintTask.getMTendDate();
 					addTimeToDate(maintTask.getMTendTime().getTime(), calendar);
-					newInspection.set_endDate(calendar.getTime());
+					newInspection.setEndDate(calendar.getTime());
 				}
-				newInspection.set_remarks(maintTask.getRemarks());
+				newInspection.setRemarks(maintTask.getRemarks());
 				get_Inspections().add(newInspection);
 			}
 

@@ -29,35 +29,35 @@ public class Inspection {
 	@Column(name = "remarks")
 	private String _remarks;
 
-	public String get_InspectionType() {
+	public String getInspectionType() {
 		return _InspectionType;
 	}
 
-	public void set_InspectionType(String inspectionType) {
+	public void setInspectionType(String inspectionType) {
 		_InspectionType = inspectionType;
 	}
 
-	public Date get_startDate() {
+	public Date getStartDate() {
 		return _startDate;
 	}
 
-	public void set_startDate(Date date) {
+	public void setStartDate(Date date) {
 		_startDate = date;
 	}
 
-	public Date get_endDate() {
+	public Date getEndDate() {
 		return _endDate;
 	}
 
-	public void set_endDate(Date date) {
+	public void setEndDate(Date date) {
 		_endDate = date;
 	}
 
-	public String get_remarks() {
+	public String getRemarks() {
 		return _remarks;
 	}
 
-	public void set_remarks(String _remarks) {
+	public void setRemarks(String _remarks) {
 		this._remarks = _remarks;
 	}
 
