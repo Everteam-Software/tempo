@@ -168,16 +168,17 @@ public final class FormDispatcherConfiguration {
             _workflowProcessesRelativeUrl = workflowProcessesRelativeUrl;
             _tmsUrl = tmsUrl;
             _fdsUrl = fdsUrl;
-           
+
             try {
-                _httpTimeout = Integer.parseInt(configDocument.valueOf("/config/httpTimeout"));
+                String timeout = configDocument.valueOf("/config/httpTimeout");
+                if (timeout != null && !"".equalsIgnoreCase(timeout))
+                    _httpTimeout = Integer.parseInt(timeout);
             } finally {
-            	_log.debug("Using following timeout in ms:"+_httpTimeout);
+                _log.debug("Using following FDS timeout in ms:" + _httpTimeout);
             }
-            
 
         } catch (Exception e) {
-            _log.error("Failed to load the configuration: " + e.getMessage());
+            _log.error("Failed to load the configuration: " + e.getMessage(), e);
         }
     }
 }
