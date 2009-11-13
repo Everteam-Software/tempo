@@ -52,6 +52,8 @@ public interface ITaskManagementService {
     void deleteAll(String fakeDelete, String subQuery, String taskType) throws AuthException, UnavailableTaskException;
 
     void create(Task task) throws AuthException, TaskIDConflictException;
+    
+    void update(Task task) throws AuthException, UnavailableTaskException;
 
     Document init(String taskID, Document output) throws AuthException, UnavailableTaskException;
 

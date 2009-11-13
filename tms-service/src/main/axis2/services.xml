@@ -70,6 +70,11 @@
             <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/create</actionMapping>
         </operation>
 
+        <operation name="update">
+            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+            <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/update</actionMapping>
+        </operation>
+
         <operation name="initProcess">
             <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
             <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/initProcess</actionMapping>

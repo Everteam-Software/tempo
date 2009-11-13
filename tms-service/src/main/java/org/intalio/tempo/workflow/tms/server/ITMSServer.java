@@ -26,6 +26,8 @@ import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.tms.TMSException;
 import org.w3c.dom.Document;
 
+import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
+
 public interface ITMSServer {
 
     Task[] getTaskList(String participantToken) throws TMSException;
@@ -65,6 +67,8 @@ public interface ITMSServer {
     void delete(String[] taskIDs, String participantToken) throws TMSException;
 
     void create(Task task, String participantToken) throws TMSException;
+    
+    void update(TaskMetadata task, String participantToken) throws TMSException;
 
     void deleteAll(boolean fakeDelete, String subquery, String subqueryClass, String participantToken) throws TMSException;
 

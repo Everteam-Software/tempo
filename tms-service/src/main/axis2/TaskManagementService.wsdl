@@ -139,6 +139,15 @@
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
+
+			<xsd:element name="updateRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="task" type="tns:taskMetadata"/>
+						<xsd:element name="participantToken" type="xsd:string"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
 			
 			<xsd:element name="storePipaRequest">
 				<xsd:complexType>
@@ -430,6 +439,9 @@
 	<wsdl:message name="completeRequest">
 		<wsdl:part name="completeRequest" element="tns:completeRequest"/>
 	</wsdl:message>
+	<wsdl:message name="updateRequest">
+		<wsdl:part name="updateRequest" element="tns:updateRequest"/>
+	</wsdl:message>
 	<wsdl:message name="skipRequest">
         <wsdl:part name="skipRequest" element="tns:skipRequest"/>
 	</wsdl:message>
@@ -595,6 +607,13 @@
 		</wsdl:operation>
 		<wsdl:operation name="create">
 			<wsdl:input message="tns:createRequest"/>
+			<wsdl:output message="tns:okResponse"/>
+			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault"/>
+			<wsdl:fault name="AccessDenied" message="tns:accessDeniedFault"/>
+			<wsdl:fault name="InvalidInputMessage" message="tns:invalidInputMessageFault"/>
+		</wsdl:operation>
+		<wsdl:operation name="update">
+			<wsdl:input message="tns:updateRequest"/>
 			<wsdl:output message="tns:okResponse"/>
 			<wsdl:fault name="InvalidParticipantToken" message="tns:invalidParticipantTokenFault"/>
 			<wsdl:fault name="AccessDenied" message="tns:accessDeniedFault"/>
@@ -833,6 +852,24 @@
 			</wsdl:fault>
 			<wsdl:fault name="UnavailableTask">
 				<soap:fault name="UnavailableTask" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="InvalidInputMessage">
+				<soap:fault name="InvalidInputMessage" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="update">
+			<soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/update"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="AccessDenied">
+				<soap:fault name="AccessDenied" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="InvalidParticipantToken">
+				<soap:fault name="InvalidParticipantToken" use="literal"/>
 			</wsdl:fault>
 			<wsdl:fault name="InvalidInputMessage">
 				<soap:fault name="InvalidInputMessage" use="literal"/>

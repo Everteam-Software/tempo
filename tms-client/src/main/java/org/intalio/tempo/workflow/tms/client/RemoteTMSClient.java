@@ -303,6 +303,24 @@ public class RemoteTMSClient implements ITaskManagementService {
 
         sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "create");
     }
+    
+    public void update(final Task task) throws AuthException, UnavailableTaskException {
+        if (task == null) {
+            throw new RequiredArgumentException("task");
+        }
+
+        OMElement request = new TMSMarshaller() {
+            public OMElement marshalRequest() {
+                OMElement request = createElement("updateTaskRequest");
+                OMElement meta = new TaskMarshaller().marshalFullTask(task, null);
+                request.addChild(meta);
+                createElement(request, "participantToken", _participantToken);
+                return request;
+            }
+        }.marshalRequest();
+
+        sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "update");
+    }
 
     public Document init(final String taskID, final Document input) throws AuthException, UnavailableTaskException {
         if (taskID == null) {
@@ -376,7 +394,7 @@ public class RemoteTMSClient implements ITaskManagementService {
             public OMElement marshalRequest() {
                 OMElement request = createElement("addAttachmentRequest");
                 createElement(request, "taskId", taskID);
-                request = AttachmentMarshaller.marshalAttachment(attachment);
+                request.addChild(AttachmentMarshaller.marshalAttachment(attachment));
                 createElement(request, "participantToken", _participantToken);
 
                 return request;
