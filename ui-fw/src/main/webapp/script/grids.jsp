@@ -264,6 +264,26 @@
                 SOAPClient.SendRequest(sr, update);
             });
         }
+
+        function updateTask(com,grid) {
+            $('.trSelected',grid).each(function() 
+            {
+                var task = $('a.taskd',$(this));
+                var soapBody     = new SOAPObject("update");
+                soapBody.ns      = "http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/";
+                var taskEl = soapBody.appendChild(new SOAPObject("task"));
+                var metaEl = taskEl.appendChild(new SOAPObject("metadata"));
+                metaEl.appendChild(new SOAPObject("taskId")).val(task.attr('tid'));
+                metaEl.appendChild(new SOAPObject("description")).val($('#up_description').val());
+                metaEl.appendChild(new SOAPObject("priority")).val($('#up_priority').val());
+                soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
+                
+                var sr = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/update", soapBody);
+                SOAPClient.Proxy = proxy;
+                SOAPClient.SOAPServer = tmsService;
+                SOAPClient.SendRequest(sr, update);
+            });
+        }
         
         function reassignTask(com,grid) {
             $('.trSelected',grid).each(function() 
@@ -338,7 +358,31 @@
             $('#reassign_user').val($('#reassign_dyn_user').val());
             $('#reassign_roles').val("");
         });
-        
+
+        function clickUpdate(com,grid) {
+             $('.trSelected',grid).each(function() 
+             {
+              var task = $('a.taskd',$(this));
+              $('#up_description').val(task.attr('description'));
+              //$('#up_description').val('hello');
+              $('#up_priority').val(task.attr('priority'));
+             });
+
+             $("#updateDialog").dialog({
+                			bgiframe: false,
+                			autoOpen: open,
+                			height: 300,
+                			modal: true,		
+                      buttons: {
+                				Update: function() {updateTask(com,grid); $(this).dialog('close');},
+                				Cancel: function() {$(this).dialog('close');}
+                			},
+                			close: function() {}
+                });
+                $("#updateDialog").dialog('open');
+
+        }        
+
         function clickReassign(com,grid) {
             if($('.trSelected',grid).length!=0) {
             
@@ -413,6 +457,7 @@
            {name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : deleteTask},
            {name: '<fmt:message key="org_intalio_uifw_toolbar_button_claimrevoke"/>', bclass: 'claim', onpress : claimTask},
            {name: '<fmt:message key="org_intalio_uifw_toolbar_button_reassign"/>', bclass: 'reassign', onpress : clickReassign},
+           {name: '<fmt:message key="org_intalio_uifw_toolbar_button_update"/>', bclass: 'update', onpress : clickUpdate},
            {name: '<fmt:message key="org_intalio_uifw_toolbar_button_skip"/>', bclass: 'skip', onpress : skipTask},
            {name: '<fmt:message key="org_intalio_uifw_toolbar_button_export"/>', bclass: 'export', onpress : exportTasks}
         ],

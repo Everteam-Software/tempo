@@ -55,7 +55,7 @@
 				<c:set var="taskFullURL" value="${taskHolder.formManagerURL}" />
 				<row id="pa${status.index}">
 						<cell><![CDATA[
-						    <a class="taskd" state="${taskHolder.task.state}" href="${taskFullURL}" tid="${taskHolder.task.ID}" target="taskform">
+						    <a class="taskd" state="${taskHolder.task.state}" href="${taskFullURL}" tid="${taskHolder.task.ID}" target="taskform" priority="${taskHolder.task.priority}" description="${taskHolder.task.description}">
 							<c:choose>
 								<c:when test="${taskHolder.task.description == ''}">
 									<i><fmt:message key="org_intalio_uifw_tasks_notitle"/></i>

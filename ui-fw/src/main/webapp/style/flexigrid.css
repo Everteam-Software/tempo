@@ -20,6 +20,10 @@
 {
     background: url(../images/icons/icon.export.gif) no-repeat center left;
 }
+.flexigrid div.fbutton .update
+{
+    background: url(../images/icons/icon.edit.gif) no-repeat center left;
+}
 /* The two below are fixes for IE */
 .flexigrid input {
     font-size: 11px;

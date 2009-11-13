@@ -106,6 +106,17 @@
     
     <div id="connectionLost" title="<fmt:message key="org_intalio_uifw_session_connection_lost"/>">
     </div>
+
+    <div id="updateDialog" title="<fmt:message key="org_intalio_uifw_update_title"/>">
+      <form>
+        <fieldset>
+           <label for="description"><fmt:message key="org_intalio_uifw_update_description"/></label>
+           <input type="text" name="description" title="<fmt:message key="org_intalio_uifw_update_description"/>" id="up_description" class="text ui-widget-content ui-corner-all" />
+           <label for="priority"><fmt:message key="org_intalio_uifw_update_priority"/></label>
+	   <input type="text" name="priority" title="<fmt:message key="org_intalio_uifw_update_priority"/>" id="up_priority" class="text ui-widget-content ui-corner-all" />
+        </fieldset>
+      </form>
+    </div>
     
     <div id="exportdialog" title="<fmt:message key="org_intalio_uifw_dialog_export"/>">
     <form>
