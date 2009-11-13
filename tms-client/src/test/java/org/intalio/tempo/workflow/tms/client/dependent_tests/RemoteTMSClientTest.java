@@ -44,7 +44,7 @@ public class RemoteTMSClientTest extends TestCase {
     private static final String TMS_REMOTE_URL = "http://localhost:8080/axis2/services/TaskManagementServices";
 
     static final Logger _logger = LoggerFactory.getLogger(RemoteTMSClientTest.class);
-    
+
     private static final SecureRandom SECURE_RANDOM = new SecureRandom();
     private static final String TOKEN = "VE9LRU4mJnVzZXI9PWludGFsaW9cYWRtaW4mJmlzc3VlZD09MTE5NzQ0ODYzNjIzNSYmcm9sZXM9PWludGFsaW9ccHJvY2Vzc2FkbWluaXN0cmF0b3IsZXhhbXBsZXNcZW1wbG95ZWUsaW50YWxpb1xwcm9jZXNzbWFuYWdlcixleGFtcGxlc1xtYW5hZ2VyJiZmdWxsTmFtZT09QWRtaW5pbmlzdHJhdG9yJiZlbWFpbD09YWRtaW5AZXhhbXBsZS5jb20mJm5vbmNlPT0tMjM1OTg5Mzc4MzQ0MDg3MTE5MCYmdGltZXN0YW1wPT0xMTk3NDQ4NjM2MjM2JiZkaWdlc3Q9PXdLNzJnTXhDWDhzS2ZoM29oOFJwcGVjYlV1ND0mJiYmVE9LRU4=";
 
@@ -52,60 +52,79 @@ public class RemoteTMSClientTest extends TestCase {
         junit.textui.TestRunner.run(RemoteTMSClientTest.class);
     }
 
-	public void testInput() throws Exception {
-		ITaskManagementService tms = new RemoteTMSFactory(TMS_REMOTE_URL, TOKEN).getService();
-		Document input1 = Utils.createXMLDocument("/absr.xml");
-		String task1ID = nextRandom();
-		PATask task1 = new PATask(task1ID, new URI("http://localhost/1"), "processID", "urn:completeSOAPAction", input1);
-		task1.getUserOwners().add("intalio.admin");
-		tms.create(task1);
-		testRoundTrip(task1, input1);
+    public void testInput() throws Exception {
+        ITaskManagementService tms = new RemoteTMSFactory(TMS_REMOTE_URL, TOKEN).getService();
+        Document input1 = Utils.createXMLDocument("/absr.xml");
+        String task1ID = nextRandom();
+        PATask task1 = new PATask(task1ID, new URI("http://localhost/1"), "processID", "urn:completeSOAPAction", input1);
+        task1.getUserOwners().add("intalio\\admin");
+        tms.create(task1);
+        testRoundTrip(task1, input1);
 
-		PATask task2 = (PATask) tms.getTask(task1ID);
-		TaskEquality.areTasksEquals(task1, task2);
-	}
+        PATask task2 = (PATask) tms.getTask(task1ID);
+        TaskEquality.areTasksEquals(task1, task2);
+    }
 
-	private void testRoundTrip(PATask task1, Document input) throws Exception {
-		TaskMarshaller marshaller = new TaskMarshaller();
-		OMElement marshalledTask = marshaller.marshalFullTask(task1, null);
-		TaskUnmarshaller unmarshaller = new TaskUnmarshaller();
-		PATask task2 = (PATask) unmarshaller.unmarshalFullTask(marshalledTask);
-		Assert.assertEquals(task1.getInput().toString(), task2.getInput().toString());
-	}
-    
+    public void testUpdate() throws Exception {
+        ITaskManagementService tms = new RemoteTMSFactory(TMS_REMOTE_URL, TOKEN).getService();
+        Document input1 = Utils.createXMLDocument("/absr.xml");
+        String id = "583c10bfdbd326ba:69a8b3cd:124dd681279:-7ef6127.0.1.1163844" + System.currentTimeMillis();
+        PATask task1 = new PATask(id, new URI("http://localhost/1"), "processID", "urn:completeSOAPAction", input1);
+        String description = "new two:" + System.currentTimeMillis();
+        task1.getUserOwners().add("intalio\\admin");
+        tms.create(task1);
+
+        task1.setDescription(description);
+        tms.update(task1);
+
+        Task updated = tms.getTask(id);
+        Assert.assertEquals(description, updated.getDescription());
+
+        task1.setDescription("new one");
+        tms.update(task1);
+        Task updated2 = tms.getTask(id);
+        Assert.assertNotSame(description, updated2.getDescription());
+
+        tms.delete(new String[] { id });
+    }
+
+    private void testRoundTrip(PATask task1, Document input) throws Exception {
+        TaskMarshaller marshaller = new TaskMarshaller();
+        OMElement marshalledTask = marshaller.marshalFullTask(task1, null);
+        TaskUnmarshaller unmarshaller = new TaskUnmarshaller();
+        PATask task2 = (PATask) unmarshaller.unmarshalFullTask(marshalledTask);
+        Assert.assertEquals(task1.getInput().toString(), task2.getInput().toString());
+    }
+
     public void testPIPAInit() throws Exception {
         String pipaId = "d1f20ad2-bba4-45aa-b449-d2f147c84561";
         Document outputForInit = Utils.createXMLDocument("/japaneseOutputForPipa.xml");
-        ITaskManagementService tms = new RemoteTMSFactory( TMS_REMOTE_URL, TOKEN).getService();
+        ITaskManagementService tms = new RemoteTMSFactory(TMS_REMOTE_URL, TOKEN).getService();
         Task[] tasks = tms.getTaskList();
-        for(Task t : tasks) {
-	       if(t instanceof PIPATask) {
-	           pipaId = t.getID();
-	           break;
-	       }
+        for (Task t : tasks) {
+            if (t instanceof PIPATask) {
+                pipaId = t.getID();
+                break;
+            }
         }
         tms.init(pipaId, outputForInit);
     }
-   
 
     public void testBasicPATaskLifecycle() throws Exception {
-        ITaskManagementService tms = new RemoteTMSFactory(
-                TMS_REMOTE_URL, TOKEN).getService();
+        ITaskManagementService tms = new RemoteTMSFactory(TMS_REMOTE_URL, TOKEN).getService();
         Task[] tasks = tms.getTaskList();
         Assert.assertNotNull(tasks);
 
         String task1ID = nextRandom();
-        PATask task1 = new PATask(task1ID, new URI("http://localhost/1"), "processID", "urn:completeSOAPAction",
-                Utils.createXMLDocument());
-        task1.getUserOwners().add("intalio.admin");
+        PATask task1 = new PATask(task1ID, new URI("http://localhost/1"), "processID", "urn:completeSOAPAction", Utils.createXMLDocument());
+        task1.getUserOwners().add("intalio\\admin");
         tms.create(task1);
 
         PATask task2 = (PATask) tms.getTask(task1ID);
         TaskEquality.areTasksEquals(task1, task2);
 
         String task3ID = nextRandom();
-        PATask task3 = new PATask(task3ID, new URI("http://localhost/3"), "processID", "urn:completeSOAPAction",
-                Utils.createXMLDocument());
+        PATask task3 = new PATask(task3ID, new URI("http://localhost/3"), "processID", "urn:completeSOAPAction", Utils.createXMLDocument());
         task3.getUserOwners().add("intalio.admin");
         task3.getUserOwners().add("intalio\\admin");
         tms.create(task3);
@@ -126,9 +145,8 @@ public class RemoteTMSClientTest extends TestCase {
         Assert.assertEquals(TaskState.COMPLETED, task5.getState());
 
         String task6ID = nextRandom();
-        PATask task6 = new PATask(task6ID, new URI("http://localhost/6"), "processID", "urn:completeSOAPAction",
-                Utils.createXMLDocument());
-        task6.getUserOwners().add("intalio.admin");
+        PATask task6 = new PATask(task6ID, new URI("http://localhost/6"), "processID", "urn:completeSOAPAction", Utils.createXMLDocument());
+        task6.getUserOwners().add("intalio\\admin");
         tms.create(task6);
         tms.complete(task6ID);
 
@@ -146,13 +164,13 @@ public class RemoteTMSClientTest extends TestCase {
         String task8ID = task8.getID();
 
         // TODO: add system user for testing that can delete tasks
-//        tms.delete(new String[] { task3ID, task8ID });
-//        Task[] tasks2 = tms.getTaskList();
-//        for (Task task : tasks2) {
-//            if (task.getID().equals(task3ID) || task.getID().equals(task8ID)) {
-//                Assert.fail();
-//            }
-//        }
+        tms.delete(new String[] { task3ID, task8ID });
+        Task[] tasks2 = tms.getTaskList();
+        for (Task task : tasks2) {
+            if (task.getID().equals(task3ID) || task.getID().equals(task8ID)) {
+                Assert.fail();
+            }
+        }
     }
 
     private String nextRandom() {
@@ -160,14 +178,12 @@ public class RemoteTMSClientTest extends TestCase {
     }
 
     public void testAttachments() throws Exception {
-        ITaskManagementService tms = new RemoteTMSFactory(
-                TMS_REMOTE_URL, TOKEN).getService();
+        ITaskManagementService tms = new RemoteTMSFactory(TMS_REMOTE_URL, TOKEN).getService();
 
         String task1ID = nextRandom();
-        PATask task1 = new PATask(task1ID, new URI("http://localhost/1"), "processID", "urn:completeSOAPAction",
-                Utils.createXMLDocument());
+        PATask task1 = new PATask(task1ID, new URI("http://localhost/1"), "processID", "urn:completeSOAPAction", Utils.createXMLDocument());
         task1.getUserOwners().add("test.system-test");
-        task1.getUserOwners().add("intalio.admin");
+        task1.getUserOwners().add("intalio\\admin");
         Attachment attachment1 = new Attachment(new AttachmentMetadata(), new URL("http://localhost/a1"));
         task1.addAttachment(attachment1);
         Attachment attachment2 = new Attachment(new AttachmentMetadata(), new URL("http://localhost/a2"));
@@ -194,23 +210,22 @@ public class RemoteTMSClientTest extends TestCase {
         Assert.assertEquals(1, task4.getAttachments().size());
         Assert.assertEquals(attachment1.getPayloadURL(), task4.getAttachments().iterator().next().getPayloadURL());
     }
-    
+
     public void testPipa() throws Exception {
         Random rand = new Random();
-        PIPATask task1 = new PIPATask("abc","http://localhost/"+rand.nextInt());
+        PIPATask task1 = new PIPATask("abc", "http://localhost/" + rand.nextInt());
         task1.setInitMessageNamespaceURI(URI.create("urn:ns"));
-        task1.setProcessEndpointFromString("http://localhost/process"+rand.nextInt());
-        task1.setInitOperationSOAPAction("initProcess"+rand.nextInt());
-        
-        String[] unnormalizedRoles = {"jkl/jkl", "mno\\mno", "pqr.pqr"};
+        task1.setProcessEndpointFromString("http://localhost/process" + rand.nextInt());
+        task1.setInitOperationSOAPAction("initProcess" + rand.nextInt());
+
+        String[] unnormalizedRoles = { "jkl/jkl", "mno\\mno", "pqr.pqr" };
         task1.setRoleOwners(unnormalizedRoles);
-        
-        ITaskManagementService tms = new RemoteTMSFactory(
-                TMS_REMOTE_URL, TOKEN).getService();
+
+        ITaskManagementService tms = new RemoteTMSFactory(TMS_REMOTE_URL, TOKEN).getService();
         tms.storePipa(task1);
-        PIPATask task2 = tms.getPipa(task1.getFormURLAsString());
+        PIPATask task2 = tms.getPipa(task1.getProcessEndpoint().toString());
         TaskEquality.areTasksEquals(task1, task2);
         _logger.debug(task2.getRoleOwners().toString());
-        tms.deletePipa(task1.getFormURLAsString());
+        tms.deletePipa(task1.getProcessEndpoint().toString());
     }
 }

@@ -52,6 +52,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
+import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
+
 public class TMSRequestProcessor extends OMUnmarshaller {
     final static Logger _logger = LoggerFactory.getLogger(TMSRequestProcessor.class);
 
@@ -136,6 +138,23 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             }
             String participantToken = requireElementValue(rootQueue, "participantToken");
             _server.create(task, participantToken);
+            return createOkResponse();
+        } catch (Exception e) {
+            throw makeFault(e);
+        }
+    }
+    
+    public OMElement update(OMElement requestElement) throws AxisFault {
+    	try {
+            OMElementQueue rootQueue = new OMElementQueue(requestElement);
+            OMElement taskElement = requireElement(rootQueue, "task");
+            this._logger.error(taskElement.toString());
+            TaskMetadata metadata = new TaskUnmarshaller().unmarshalPartialTask(taskElement);
+            
+            this._logger.error(metadata.getDescription());
+            this._logger.error(metadata.getTaskId());
+            String participantToken = requireElementValue(rootQueue, "participantToken");
+            _server.update(metadata, participantToken);
             return createOkResponse();
         } catch (Exception e) {
             throw makeFault(e);

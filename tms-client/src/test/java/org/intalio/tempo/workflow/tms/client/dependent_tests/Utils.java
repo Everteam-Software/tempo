@@ -64,7 +64,7 @@ public class Utils {
     }
 
     public static Document createXMLDocument() throws Exception {
-        return createXMLDocument("/japaneseOutputForPipa.xml");
+        return createXMLDocument("/absr.xml");
     }
 
     public static Document createXMLDocument(String resource) throws Exception {

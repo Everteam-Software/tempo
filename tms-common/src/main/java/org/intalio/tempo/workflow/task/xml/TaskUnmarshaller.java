@@ -77,6 +77,10 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
 
     // for compatibility usage
     public Task unmarshalTaskFromMetadata(OMElement rootElement) throws InvalidInputFormatException {
+            return unmarshalTaskFromMetadata(unmarshalTaskMetadata(rootElement));  
+    }
+    
+    private TaskMetadata unmarshalTaskMetadata(OMElement rootElement) throws InvalidInputFormatException {
         try {
             XmlObject xmlObject = XmlObject.Factory.parse(rootElement.getXMLStreamReader());
             if (_logger.isDebugEnabled()) {
@@ -88,13 +92,12 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
             TaskMetadata taskMetadata = com.intalio.bpms.workflow.taskManagementServices20051109.Task.Factory.newInstance().addNewMetadata();
             taskMetadata.set(xmlCursor.getObject());
             xmlCursor.dispose();
-            return unmarshalTaskFromMetadata(taskMetadata);
+            return taskMetadata;
         } catch (InvalidInputFormatException e) {
             throw e;
         } catch (XmlException e) {
             throw new InvalidInputFormatException(e);
         }
-
     }
 
     private Task unmarshalTaskFromMetadata(TaskMetadata taskMetadata) throws XmlValueOutOfRangeException {
@@ -448,6 +451,22 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
         try {
             XmlObject xmlObject = XmlObject.Factory.parse(rootElement.getXMLStreamReader());
             return unmarshalFullTask(xmlObject);
+        } catch (XmlException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+    
+    public TaskMetadata unmarshalPartialTask(OMElement rootElement) throws InvalidInputFormatException {
+        try {
+            XmlObject xmlObject = XmlObject.Factory.parse(rootElement.getXMLStreamReader());
+            requireElement(xmlObject, "metadata");
+
+            com.intalio.bpms.workflow.taskManagementServices20051109.Task taskElement = com.intalio.bpms.workflow.taskManagementServices20051109.Task.Factory
+                            .newInstance();
+
+            TaskMetadata metadataElement = taskElement.addNewMetadata();
+            metadataElement.set(expectElement(xmlObject, "metadata"));
+            return metadataElement;
         } catch (XmlException e) {
             throw new RuntimeException(e.getMessage(), e);
         }

@@ -16,6 +16,7 @@
 package org.intalio.tempo.workflow.tms.server;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -24,10 +25,13 @@ import org.intalio.tempo.workflow.task.Notification;
 import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.TaskState;
 import org.intalio.tempo.workflow.task.xml.XmlTooling;
+import org.intalio.tempo.workflow.task.xml.TaskTypeMapper.TaskType;
 import org.intalio.tempo.workflow.tms.AccessDeniedException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.intalio.tempo.workflow.util.TaskEquality;
 import org.w3c.dom.Document;
+
+import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
 
 public class TMSServerTest extends TestCase {
 
@@ -39,6 +43,9 @@ public class TMSServerTest extends TestCase {
         ITMSServer server = Utils.createTMSServer();
 
         PATask paTask = new PATask("taskID", new URI("http://localhost/1"), "processID", "urn:completeSOAPAction", Utils.createXMLDocument());
+        paTask.getUserOwners().add("test/user1");
+        paTask.getRoleOwners().add("test/role3");
+        
         paTask.getUserOwners().add("test/user1");
         paTask.getRoleOwners().add("test/role3");
         server.create(paTask, "token1");
@@ -97,6 +104,64 @@ public class TMSServerTest extends TestCase {
 
         }
 
+    }
+
+    private PATask getPATask(String id) throws URISyntaxException, Exception {
+        PATask pa = new PATask(id, new URI("http://localhost/1"), "processID", "urn:completeSOAPAction", Utils.createXMLDocument());
+        pa.getUserOwners().add("test/user1");
+        pa.getRoleOwners().add("test/role3");
+        return pa;
+    }
+    
+    public void testCannotUpdateNotification() throws Exception {
+        ITMSServer server = Utils.createTMSServerJPA();
+        Notification notification = new Notification("taskID", new URI("http://localhost/1"), Utils.createXMLDocument());
+        notification.getUserOwners().add("test/user1");
+        notification.getRoleOwners().add("test/role3");
+        server.create(notification, "token1");
+        try {
+            TaskMetadata metadata = TaskMetadata.Factory.newInstance();  
+            metadata.setTaskId("taskID");
+            metadata.setTaskType(TaskType.NOTIFICATION.name());
+            server.update(metadata, "token");
+            fail("should not be able to update a notification");
+        } catch (Exception e) {
+            // expected
+        }    
+    }
+    
+    public void testCannotUpdatePAIfNoPrevious() throws Exception {
+        ITMSServer server = Utils.createTMSServerJPA();
+        TaskMetadata metadata = TaskMetadata.Factory.newInstance();  
+        metadata.setTaskId("taskID");
+        metadata.setTaskType(TaskType.ACTIVITY.name());
+        try {
+            server.update(metadata, "token");
+            fail("should not be able to update a notification");
+        } catch (Exception e) {
+            // expected
+        }    
+    }
+    
+    public void testCanUpdatePriority() throws Exception {
+        ITMSServer server = Utils.createTMSServerJPA();
+        String id = ""+System.currentTimeMillis();
+        PATask pa = getPATask(id);
+        server.create(pa, "token1");
+        TaskMetadata metadata = TaskMetadata.Factory.newInstance();  
+        metadata.setTaskId(id);
+        
+        metadata.setPriority(5);
+        metadata.setDescription("desc2");
+        //Date date = new Date();
+        //tu.setDeadline(date);
+        server.update(metadata, "token1");
+        PATask pa2 = (PATask) server.getTask(pa.getID(), "token1");
+        Assert.assertNotNull(pa2);
+        
+        Assert.assertEquals(5, (int)pa2.getPriority());
+        Assert.assertEquals("desc2", pa2.getDescription());
+        //Assert.assertEquals(date, pa2.getDeadline());
     }
 
     public void testNotificationLifecycle() throws Exception {

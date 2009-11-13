@@ -31,6 +31,7 @@ import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.IAuthProvider;
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.InvalidTaskException;
+import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.TaskState;
@@ -42,6 +43,7 @@ import org.intalio.tempo.workflow.task.xml.TaskTypeMapper;
 import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.tms.AccessDeniedException;
 import org.intalio.tempo.workflow.tms.InvalidTaskStateException;
+import org.intalio.tempo.workflow.tms.TMSException;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
 import org.intalio.tempo.workflow.tms.UnavailableAttachmentException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
@@ -52,6 +54,8 @@ import org.intalio.tempo.workflow.util.jpa.TaskFetcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
+
+import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
 
 public class TMSServer implements ITMSServer {
 
@@ -126,11 +130,14 @@ public class TMSServer implements ITMSServer {
 
     private void checkIsAvailable(String taskID, Task task, UserRoles credentials) throws AccessDeniedException {
         // the task has been assign to those credentials
-        if (task.isAvailableTo(credentials)) return ;
+        if (task.isAvailableTo(credentials))
+            return;
         // some admin access user has been defined in the configuration file
-        else if (_permissions.isAuthorized(TaskPermissions.ACTION_READ, task, credentials)) return ;
+        else if (_permissions.isAuthorized(TaskPermissions.ACTION_READ, task, credentials))
+            return;
         // fire the exception, this user cannot read this task
-        else throw new AccessDeniedException(credentials.getUserID() + " cannot access task:" + taskID);
+        else
+            throw new AccessDeniedException(credentials.getUserID() + " cannot access task:" + taskID);
     }
 
     public void setOutput(String taskID, Document output, String participantToken) throws AuthException, UnavailableTaskException, AccessDeniedException {
@@ -252,6 +259,33 @@ public class TMSServer implements ITMSServer {
             _logger.error("Cannot create Workflow Tasks", e); // TODO :
             // TaskIDConflictException
             // must be rethrowed :vb
+        } finally {
+            dao.close();
+        }
+    }
+
+    public void update(TaskMetadata task, String participantToken) throws AuthException, TMSException {
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        try {
+            String id = task.getTaskId();
+            Task previous = dao.fetchTaskIfExists(id);
+            if(previous != null && (previous instanceof PATask)) {
+                PATask paPrevious = (PATask) previous;
+                
+                // security ?
+                UserRoles credentials = _authProvider.authenticate(participantToken);
+                //checkIsAvailable(id, previous, credentials); 
+                
+                paPrevious.setPriority(task.getPriority());
+                paPrevious.setDescription(task.getDescription());
+                
+                dao.updateTask(previous);
+                dao.commit();
+                if (_logger.isDebugEnabled())
+                    _logger.debug("Workflow Task " + task + " was updated");
+            } else {
+                throw new RuntimeException("No previous activity task with the given id:"+id+(previous!=null)+(previous instanceof PATask));
+            }
         } finally {
             dao.close();
         }
