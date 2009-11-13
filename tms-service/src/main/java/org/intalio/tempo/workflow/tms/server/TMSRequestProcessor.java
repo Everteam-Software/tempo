@@ -148,11 +148,7 @@ public class TMSRequestProcessor extends OMUnmarshaller {
     	try {
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
             OMElement taskElement = requireElement(rootQueue, "task");
-            this._logger.error(taskElement.toString());
             TaskMetadata metadata = new TaskUnmarshaller().unmarshalPartialTask(taskElement);
-            
-            this._logger.error(metadata.getDescription());
-            this._logger.error(metadata.getTaskId());
             String participantToken = requireElementValue(rootQueue, "participantToken");
             _server.update(metadata, participantToken);
             return createOkResponse();
