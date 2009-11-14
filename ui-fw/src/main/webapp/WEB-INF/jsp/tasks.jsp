@@ -107,7 +107,7 @@
     <div id="connectionLost" title="<fmt:message key="org_intalio_uifw_session_connection_lost"/>">
     </div>
 
-    <div id="updateDialog" title="<fmt:message key="org_intalio_uifw_update_title"/>">
+    <div id="updateDialog" class="hiddencontent" title="<fmt:message key="org_intalio_uifw_update_title"/>">
       <form>
         <fieldset>
            <label for="description"><fmt:message key="org_intalio_uifw_update_description"/></label>
