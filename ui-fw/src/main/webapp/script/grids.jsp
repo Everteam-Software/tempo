@@ -141,7 +141,7 @@
     });
     
     /*
-		Erase the session, call logout on the server
+    Erase the session, call logout on the server
     */
 	function log_me_out() {
 	   $.post("login.htm?actionName=logOut");
