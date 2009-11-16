@@ -454,13 +454,10 @@
       $('#up_priority').empty();
       $('#up_description').show();
       $('#up_priority').show();
-
-      $('.trSelected',grid).each(function() 
-      {
-        var task = $('a.taskd',$(this));
-        $('#up_description').val(task.attr('description'));
-        $('#up_priority').val(task.attr('priority'));
-      });
+      
+      var task = $('a.taskd',$('.trSelected:first',grid));
+      $('#up_description').val(task.attr('description'));
+      $('#up_priority').val(task.attr('priority'));
 
       $("#updateDialog").dialog({
         bgiframe: false,
