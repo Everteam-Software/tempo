@@ -276,7 +276,11 @@ public class TMSServer implements ITMSServer {
                 UserRoles credentials = _authProvider.authenticate(participantToken);
                 //checkIsAvailable(id, previous, credentials); 
                 
-                paPrevious.setPriority(task.getPriority());
+                try {
+                    paPrevious.setPriority(task.getPriority());
+                } catch(Exception e) {
+                    _logger.debug("Ignoring invalid priority value"+task.xgetPriority().toString());
+                }
                 paPrevious.setDescription(task.getDescription());
                 
                 dao.updateTask(previous);
