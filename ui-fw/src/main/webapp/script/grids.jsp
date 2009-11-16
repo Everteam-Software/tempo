@@ -4,10 +4,10 @@
 <%@page import="org.intalio.tempo.security.ws.TokenClient"%>
 <script type="text/javascript">
 
-    $(document).ready(function(){ 
+    $(document).ready(function(){
         
     /*********************************************************************
-    Load the dynamic JSP code that contains variables defined on the server 
+    1. Load the dynamic JSP code that contains variables defined on the server 
     **********************************************************************/
     <% 
     Configuration conf = Configuration.getInstance();
@@ -16,7 +16,7 @@
     %>
     
     /*********************************************************************
-    Load the javascript variables on the client
+    2. Load the javascript variables on the client
     **********************************************************************/
     var speed = "fast";
     var currentUser = '<%= ((String)request.getAttribute("currentUser")).replace("\\", "\\\\")%>';
@@ -32,7 +32,7 @@
     $.ajaxSetup({timeout: <%= conf.getAjaxTimeout() %>});
     
     /*********************************************************************
-    Section to handle resizing of window, and recompute table size and
+    3. Section to handle resizing of window, and recompute table size and
     display area
     **********************************************************************/
 
@@ -66,7 +66,7 @@
     });
 
    /*********************************************************************
-   Method to preprocess the data loaded in flexigrid.
+   4. Method to preprocess the data loaded in flexigrid.
    The reason is we want to be able to hide some lines,
    depending on the search fields.
    **********************************************************************/
@@ -110,9 +110,9 @@
         window.open("/ui-fw/script/empty.jsp", "taskform");
     }
 		
-	/*********************************************************************
-	Methods and variablles to handle Session timeout management
-	**********************************************************************/
+    /*********************************************************************
+    5. Methods and variablles to handle Session timeout management
+    **********************************************************************/
 	var time = 0;
 	var sessionTimeout = <c:out value="${sessionTimeout}"/>; // in minutes 
 	var timeCount = 60000; // 1 minute 
@@ -155,7 +155,7 @@
     $(this).click(function() {resetTimer();});
 		
     /*********************************************************************
-    Section to handle dialogs code
+    6. Section to handle dialogs code
     *********************************************************************/
 		
     /*
@@ -196,7 +196,7 @@
     });
     
     /*********************************************************************
-    Remote SOAP Calls section.
+    8. Remote SOAP Calls section.
     
     Note that we call update of the task list on the call back of each SOAP
     request. Which means, most actions would have an immediate effects, and
@@ -357,7 +357,7 @@
     }
         
     /*********************************************************************
-    Support methods for reassign dialog.
+    9. Support methods for reassign dialog.
     We need to be able to fetch users and roles, so below are a few
     methods that make SOAP calls to the token service and retrieve the 
     proper data.
@@ -430,7 +430,7 @@
     });
     
     /*********************************************************************
-    Support methods for export dialog.
+    10. Support methods for the export dialog.
     *********************************************************************/
     
     function exportTasksAction() {
@@ -443,11 +443,11 @@
     }
     
     /*********************************************************************
-    Support for handling click from the flexigrid toolbars
+    11. Support for handling click from the flexigrid toolbars
     *********************************************************************/
 
     /*
-    Code for loading the update dialog after mouse click
+    Code for loading the update dialog after a mouse click
     */
     function clickUpdate(com,grid) {
       $('#up_description').empty();
@@ -474,7 +474,7 @@
     }        
 
     /*
-    Code for laoding the reassign dialog after mouse click
+    Code for laoding the reassign dialog after a mouse click
     */
     function clickReassign(com,grid) {
       if($('.trSelected',grid).length!=0) {
@@ -500,18 +500,19 @@
     }
 
     /*
-    Code for the export dialog, after the mouse click
+    Code for the export dialog, after a mouse click
     */        
     function clickExportTasks() {
       $('#exportdialog').dialog('open');
     }
 		
-	/*********************************************************************
-    Flexigrid tables handling
+    /*********************************************************************
+    12. Flexigrid tables handling
     *********************************************************************/
 		
     /*
-    Common flexigrid properties
+    Common flexigrid properties.
+    The 3 tables call the xml result of updates.jsp 
     */
     var p = {
       url: 'updates.htm',
@@ -605,12 +606,12 @@
 	  width : width*0.5, 
 	  sortable : true, 
 	  align: 'left'},
-{
-  display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_priority"/>', 
-  name : '_priority', 
-  width : width*0.3, 
-  sortable : true, 
-  align: 'left'},
+    {
+      display: '<fmt:message key = "com_intalio_bpms_workflow_taskHolder_priority"/>', 
+      name : '_priority', 
+      width : width*0.3, 
+      sortable : true, 
+      align: 'left'},
 	{
 	  display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/>', 
 	  name : '_creationDate', 
@@ -644,15 +645,14 @@
 	  width : width*0.4, 
 	  sortable : true, 
 	  align: 'left'}
-	]},p));		
-		
+	]},p));
 		
     /*********************************************************************
-    JQuery Tab handling
+    13. JQuery Tab handling
     *********************************************************************/
 
     /*
-    tab definition
+    tabs definition
     */
     $.jtabber({
       mainLinkTag: "#container li a", 
@@ -664,7 +664,7 @@
     });
 
     /*
-    Support method for refreshing the current tab tabs and hiding the other ones
+    Support method for refreshing the current tab and hiding the other ones
     */
     function refresh(visible) {
       // visible == hide all
@@ -704,9 +704,9 @@
       }
     }
 
-		/*
-		Change tab on click, refresh frame, refresh task list
-		/*/
+    /*
+    Change tab on click, refresh frame, refresh task list
+    */
     $('#tabnav li a').click(function(){
       resetTimer();
       clearFrame();
@@ -719,18 +719,17 @@
       refresh(true);
     });
 
-
     /*********************************************************************
-    Handling of the filter buttons.
+    14. Handling of the filter buttons.
     Refresh the task lists, and hide the items not matching the search 
     elements.
     *********************************************************************/
-		// not supported by IE
-		$("#filter").change(function() {refresh(true);});
-		$("#filterbutt").click(function() {refresh(true);});
+    // not supported by IE
+    $("#filter").change(function() {refresh(true);});
+    $("#filterbutt").click(function() {refresh(true);});
 
     /*********************************************************************
-    Handling of the form manager internal iframe
+    15. Handling of the form manager internal iframe
     *********************************************************************/
     $('#taskform').load(function(){
       
@@ -764,7 +763,7 @@
 
 		
     /**********************************************************************
-    Section to handle auto refresh of the table content.
+    16. Section to handle auto refresh of the table content.
     We do not reload if any of the dialog is showing up.
 
     We also check the connection by pinging the server at the same time, 
@@ -809,16 +808,25 @@
     }
 		
     /**********************************************************************
-    Remaining client side init calls
+    17. Remaining client side init calls
     **********************************************************************/
-    //$.jcorners("#intro",{radius:20});
-
+    
+    /*
+    Hide the dialogs
+    */
     $("#filterdiv").hide();
     $("#reassignDialog").hide();
     $("#updateDialog").hide();
     $("#connectionLost").hide();
+    
+    /*
+    Show the activity tasks tab. Fire the event to refresh at the same time
+    */
     $("#tabTasks").click();
 
+    /*
+    blank the form iframe, and also trigger the event to hide it 
+    */
     window.open("/ui-fw/script/empty.jsp", "taskform");
 
     /*
