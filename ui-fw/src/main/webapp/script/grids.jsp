@@ -609,6 +609,7 @@
 		$.jcorners("#intro",{radius:20});
 		$("#filterdiv").hide();
 		$("#reassignDialog").hide();
+		$("#updateDialog").hide();
 		$("#connectionLost").hide();
 		
 		var timeout = <c:out value="${refreshTime}"/> * 1000;
