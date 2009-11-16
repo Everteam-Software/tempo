@@ -452,6 +452,8 @@
     function clickUpdate(com,grid) {
       $('#up_description').empty();
       $('#up_priority').empty();
+      $('#up_description').show();
+      $('#up_priority').show();
 
       $('.trSelected',grid).each(function() 
       {
