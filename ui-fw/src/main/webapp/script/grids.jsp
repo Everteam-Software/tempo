@@ -4,7 +4,8 @@
 <%@page import="org.intalio.tempo.security.ws.TokenClient"%>
 <script type="text/javascript">
 
-	$(document).ready(function(){ 
+    $(document).ready(function(){ 
+        
     /*********************************************************************
     Load the dynamic JSP code that contains variables defined on the server 
     **********************************************************************/
@@ -17,27 +18,27 @@
     /*********************************************************************
     Load the javascript variables on the client
     **********************************************************************/
-		var speed = "fast";
-		var currentUser = '<%= ((String)request.getAttribute("currentUser")).replace("\\", "\\\\")%>';
-		var tokenService = '<%= tokenService %>';
-		var tmsService = '<%=conf.getServiceEndpoint()%>';
-		var tmpService = '<%=conf.getTMPEndpoint()%>';
-		var rbacService = '<%= tokenService.substring(0, tokenService.indexOf("/TokenService"))+"/RBACQueryService" %>';
-		var proxy = '/ui-fw/script/proxy.jsp';
-		var widthFull = $(window).width()*0.99;
-		var width = $(window).width()*0.90;
-		var height = 0;
-		var current = null;
-		$.ajaxSetup({timeout: <%= conf.getAjaxTimeout() %>});
+    var speed = "fast";
+    var currentUser = '<%= ((String)request.getAttribute("currentUser")).replace("\\", "\\\\")%>';
+    var tokenService = '<%= tokenService %>';
+    var tmsService = '<%=conf.getServiceEndpoint()%>';
+    var tmpService = '<%=conf.getTMPEndpoint()%>';
+    var rbacService = '<%= tokenService.substring(0, tokenService.indexOf("/TokenService"))+"/RBACQueryService" %>';
+    var proxy = '/ui-fw/script/proxy.jsp';
+    var widthFull = $(window).width()*0.99;
+    var width = $(window).width()*0.90;
+    var height = 0;
+    var current = null;
+    $.ajaxSetup({timeout: <%= conf.getAjaxTimeout() %>});
     
-		/*********************************************************************
-		Section to handle resizing of window, and recompute table size and
-		display area
-		**********************************************************************/
-		
-		/*
-		Find the browser window size, and adapt to IE
-		*/
+    /*********************************************************************
+    Section to handle resizing of window, and recompute table size and
+    display area
+    **********************************************************************/
+
+    /*
+    Find the browser window size, and adapt to IE
+    */
     if($.browser.msie){
       height = $(window).height() - 130;
     }else{
@@ -46,9 +47,9 @@
     var height2 = height - 80;
     var needResize = false;
 		
-		/*
-		Resize the application when the window is reloaded
-		*/
+    /*
+    Resize the application when the window is reloaded
+    */
     $(window).resize(function() {
       if(navigator.appName != "Microsoft Internet Explorer") {
         var loc = window.frames['taskform'].location;
@@ -66,8 +67,8 @@
 
    /*********************************************************************
    Method to preprocess the data loaded in flexigrid.
-   The reason is we want to be able to hide some lines depending on the search fields.
-   
+   The reason is we want to be able to hide some lines,
+   depending on the search fields.
    **********************************************************************/
    
    /*
@@ -96,37 +97,37 @@
     /*
     Completely clear the content of the frame, where the forms are usually loaded
     */
-		function clearFrame() {
-    	var loc = window.frames['taskform'].location;
-    	try {
-    	  if(loc.toString().match("empty.jsp")!=null) return ;
-    	} catch(err) {
-    	  $('#taskform').animate({height:"0px"},speed);
+    function clearFrame() {
+        var loc = window.frames['taskform'].location;
+        try {
+            if(loc.toString().match("empty.jsp")!=null) return ;
+        } catch(err) {
+            $('#taskform').animate({height:"0px"},speed);
+            window.open("/ui-fw/script/empty.jsp", "taskform");
+        }
+
+        $('#taskform').animate({height:"0px"},speed);
         window.open("/ui-fw/script/empty.jsp", "taskform");
-    	}
-		  
-			$('#taskform').animate({height:"0px"},speed);
-      window.open("/ui-fw/script/empty.jsp", "taskform");
-		}
+    }
 		
-		/*********************************************************************
-		Methods and variablles to handle Session timeout management
-		**********************************************************************/
-		var time = 0;
-		var sessionTimeout = <c:out value="${sessionTimeout}"/>; // in minutes 
-		var timeCount = 60000; // 1 minute 
-		
-		/*
-		Method to reset the timer, and the timer notice text
-		*/
-		function resetTimer() {
-		    time = 0;
+	/*********************************************************************
+	Methods and variablles to handle Session timeout management
+	**********************************************************************/
+	var time = 0;
+	var sessionTimeout = <c:out value="${sessionTimeout}"/>; // in minutes 
+	var timeCount = 60000; // 1 minute 
+	
+	/*
+	Method to reset the timer, and the timer notice text
+	*/
+    function resetTimer() {
+        time = 0;
         $("#timer").text("");
-		}
+    }
 		
-		/*
-		Increase the elapsed time count for the current session, on the client side
-		*/ 
+    /*
+    Increase the elapsed time count for the current session, on the client side
+    */ 
     $.timer(timeCount,function(timer) {
       if(time>=1) {
         var text = '<fmt:message key="org_intalio_uifw_session_inactivity_1"/>';
@@ -141,25 +142,25 @@
     
     /*
 		Erase the session, call logout on the server
-		*/
-		function log_me_out() {
-		   $.post("login.htm?actionName=logOut");
-		   $("#sessionExpired").dialog('open');
-		}
+    */
+	function log_me_out() {
+	   $.post("login.htm?actionName=logOut");
+	   $("#sessionExpired").dialog('open');
+	}
     
     /*
     Define needed events for timer
     */
-		$("html").mousemove(function(e){resetTimer();});
-		$(this).click(function() {resetTimer();});
+    $("html").mousemove(function(e){resetTimer();});
+    $(this).click(function() {resetTimer();});
 		
     /*********************************************************************
     Section to handle dialogs code
     *********************************************************************/
 		
-		/*
-		Session expired dialog
-		*/
+    /*
+    Session expired dialog
+    */
     $("#sessionExpired").dialog({
       bgiframe: false,
       autoOpen: false,
@@ -506,13 +507,13 @@
       $('#exportdialog').dialog('open');
     }
 		
-		/*********************************************************************
+	/*********************************************************************
     Flexigrid tables handling
     *********************************************************************/
 		
-		/*
-		Common flexigrid properties
-		*/
+    /*
+    Common flexigrid properties
+    */
     var p = {
       url: 'updates.htm',
       dataType: 'xml',
@@ -587,73 +588,73 @@
         ]
     },p));
 		
-		/*
-		Table for notifications
-		*/
-		var t2 = $("#table2").flexigrid($.extend({
-		params: [
-			 { name : 'type', value : 'Notification' }
-			,{ name : 'update', value : true }
-		],
-		<% if(useToolbar) {%> 
-		buttons : [{name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : deleteTask}],
-		<%} %>
-		colModel : [
-		{
-		  display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', 
-		  name : '_description', 
-		  width : width*0.5, 
-		  sortable : true, 
-		  align: 'left'},
-    {
-      display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_priority"/>', 
-      name : '_priority', 
-      width : width*0.3, 
-      sortable : true, 
-      align: 'left'},
-		{
-		  display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/>', 
-		  name : '_creationDate', 
-		  width : width*0.2, 
-		  sortable : true, 
-		  align: 'left'}
-		]
-		},p));
+	/*
+	Table for notifications
+	*/
+	var t2 = $("#table2").flexigrid($.extend({
+	params: [
+		 { name : 'type', value : 'Notification' }
+		,{ name : 'update', value : true }
+	],
+	<% if(useToolbar) {%> 
+	buttons : [{name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : deleteTask}],
+	<%} %>
+	colModel : [
+	{
+	  display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', 
+	  name : '_description', 
+	  width : width*0.5, 
+	  sortable : true, 
+	  align: 'left'},
+{
+  display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_priority"/>', 
+  name : '_priority', 
+  width : width*0.3, 
+  sortable : true, 
+  align: 'left'},
+	{
+	  display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/>', 
+	  name : '_creationDate', 
+	  width : width*0.2, 
+	  sortable : true, 
+	  align: 'left'}
+	]
+	},p));
 		
-		/*
-		Table for PIPA
-		*/
-		var t3 = $("#table3").flexigrid($.extend({
-		params: [
-			 { name : 'type', value : 'PIPATask' }
-			,{ name : 'update', value : true }
-		],
-		<% if(useToolbar) {%> 
-		buttons : [{name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : deleteTask}], 
-		<%} %>
-		colModel : [
-		{
-		  display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', 
-		  name : '_description', 
-		  width : width*0.6, 
-		  sortable : true, 
-		  align: 'left'},
-		{
-		  display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/>', 
-		  name : '_creationDate', 
-		  width : width*0.4, 
-		  sortable : true, 
-		  align: 'left'}
-		]},p));		
+	/*
+	Table for PIPA
+	*/
+	var t3 = $("#table3").flexigrid($.extend({
+	params: [
+		 { name : 'type', value : 'PIPATask' }
+		,{ name : 'update', value : true }
+	],
+	<% if(useToolbar) {%> 
+	buttons : [{name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : deleteTask}], 
+	<%} %>
+	colModel : [
+	{
+	  display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', 
+	  name : '_description', 
+	  width : width*0.6, 
+	  sortable : true, 
+	  align: 'left'},
+	{
+	  display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/>', 
+	  name : '_creationDate', 
+	  width : width*0.4, 
+	  sortable : true, 
+	  align: 'left'}
+	]},p));		
 		
 		
     /*********************************************************************
     JQuery Tab handling
     *********************************************************************/
 
-		/*
-		tab definition
-		*/
+    /*
+    tab definition
+    */
     $.jtabber({
       mainLinkTag: "#container li a", 
       activeLinkClass: "active", 
@@ -763,17 +764,17 @@
     });
 
 		
-		/**********************************************************************
-		Section to handle auto refresh of the table content.
-		We do not reload if any of the dialog is showing up.
-		
-		We also check the connection by pinging the server at the same time, 
-		and trigger the connectionLost dialog if the server is not responding
-		**********************************************************************/
-		
-		/*
-		Refresh related variables
-		*/
+    /**********************************************************************
+    Section to handle auto refresh of the table content.
+    We do not reload if any of the dialog is showing up.
+
+    We also check the connection by pinging the server at the same time, 
+    and trigger the connectionLost dialog if the server is not responding
+    **********************************************************************/
+
+    /*
+    Refresh related variables
+    */
     var timeout = <c:out value="${refreshTime}"/> * 1000;
     if(timeout == null || timeout < 1000) timeout = 1000;
 
@@ -808,22 +809,22 @@
       });
     }
 		
-		/**********************************************************************
-		Remaining client side init calls
-		**********************************************************************/
-		//$.jcorners("#intro",{radius:20});
-		
-		$("#filterdiv").hide();
-		$("#reassignDialog").hide();
-		$("#updateDialog").hide();
-		$("#connectionLost").hide();
-		$("#tabTasks").click();
-		
-		window.open("/ui-fw/script/empty.jsp", "taskform");
-		
-		/*
-		Ajax activity support call. Show the ajax loading icon
-		*/
+    /**********************************************************************
+    Remaining client side init calls
+    **********************************************************************/
+    //$.jcorners("#intro",{radius:20});
+
+    $("#filterdiv").hide();
+    $("#reassignDialog").hide();
+    $("#updateDialog").hide();
+    $("#connectionLost").hide();
+    $("#tabTasks").click();
+
+    window.open("/ui-fw/script/empty.jsp", "taskform");
+
+    /*
+    Ajax activity support call. Show the ajax loading icon
+    */
     $('#loadingdiv')
     .hide()  // hide it initially
     .ajaxStart(function() {
@@ -833,6 +834,6 @@
       $(this).hide();
     });
 		
-		}); // end of document ready, which also means the custom jquery code
+    }); // end of document ready, which also means the custom jquery code
 
 </script>
