@@ -51,6 +51,19 @@ def install_jetty build_folder="tempo-jetty-#{time_now}"
   @@config_folder = check_folder("#{@@server_folder}/var/config")
 end
 
+def install_osgi_jetty build_folder="tempo-osgi-jetty-#{time_now}"
+  osgi_jetty_file = filename_from_url BUILD_URI[:osgi_jetty][:v7]
+  download_to(osgi_jetty_file, BUILD_URI[:osgi_jetty][:v7], false)
+  unpack_file(osgi_jetty_file, build_folder)
+  @@server_folder = build_folder
+
+  @@webapp_folder = "#{@@server_folder}/eclipse/plugins"
+  @@wi = WarInstaller.new @@webapp_folder, true, true
+  @@lib_folder = "#{@@server_folder}/eclipse/jettyhome/lib/ext"
+  @@log_folder = check_folder("#{@@server_folder}/eclipse/jettyhome/var/logs")
+  @@config_folder = check_folder("#{@@server_folder}/eclipse/jettyhome/var/config")
+end
+
 def time_now
   Time.now.strftime('%Y.%m.%d')  
 end
