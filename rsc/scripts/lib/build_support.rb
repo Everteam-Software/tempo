@@ -3,6 +3,8 @@ require 'open-uri'
 require 'fileutils'
 require 'open-uri'
 require "hpricot"
+require 'zlib'
+require 'archive/tar/minitar'
 
 # monkey patching to allow buildr to run without a buildfile (since buildr 1.3.3)
 class Buildr::Application 
@@ -29,6 +31,7 @@ module BuildMode
   CAS = 16
   RELEASE = 17
   JETTY = 18
+  OSGI_JETTY = 19
 end
 
 module BuildActivate
@@ -67,7 +70,7 @@ module BuildActivate
 end
 
 module BuildSupport
-  
+  include Archive::Tar
   
   # Replace all the strings in a file
   def replace_all(src_string, target_string, src_file, target_file=src_file)
@@ -198,6 +201,44 @@ module BuildSupport
     arg[:base_folder]
   end
   
+  def unpack_file(file_name, dir)
+    if(!File.exists?(dir))
+      if(is_zip?(file_name))
+        #unpack_zip(file_name, dir)
+        #Thinking of merge the unzip function
+      elsif(is_targz?(file_name))
+        unpack_targz(file_name, dir)
+      else
+        raise "FileTask does not know how to unpack files of type: #{file_name}"
+      end
+    end    
+  end
+  
+  def unpack_targz(tgz_file, dir)
+    if(!File.exists?(dir))
+      FileUtils.makedirs(dir)
+    end
+    tar = Zlib::GzipReader.new(File.open(tgz_file, 'rb'))
+    Minitar.unpack(tar, dir)
+
+    # Recurse and unpack gzipped children (Adobe did this double 
+    # gzip with the Linux FlashPlayer for some reason)
+    Dir.glob("#{dir}/**/*.tar.gz").each do |child|
+      if(child != tgz_file)
+        unpack_targz(child, File.dirname(child))
+      end
+    end
+  end
+  
+  def is_zip?(file)
+    return (file.split('.').pop == 'zip')
+  end
+
+  def is_targz?(file)
+    parts = file.split('.')
+    part = parts.pop
+    return (part == 'tgz' || part == 'gz' && parts.pop == 'tar')
+  end
   
   
   # Returns the local path of an artifact
@@ -474,6 +515,9 @@ BUILD_URI = {
 	},
 	:jetty => {
 	  :v7 => "http://dist.codehaus.org/jetty/jetty-7.0.0/jetty-hightide-7.0.0.v20091005.zip"
+	},
+	:osgi_jetty => {
+	  :v7 => "http://www.intalio.org/public/maven2/org/intalio/osgi/org.intalio.osgi-packages-hightide.runtime.equinox/7.0.1.007/org.intalio.osgi-packages-hightide.runtime.equinox-7.0.1.007.tgz"
 	}, 
 	:opensso_agent => "http://download.java.net/general/opensso/nightly/latest/j2eeagents/tomcat_v6_agent_3.zip"
 }

@@ -56,9 +56,15 @@ BUILD_CONFIG = {
   :mode => [BuildMode::JETTY, BuildMode::UIFW, BuildMode::CAS, BuildMode::LDAP],
   #
   
+  # build with OSGI_jetty and ui-fw along with CAS and LDAP
+  #
+  #:mode => [BuildMode::OSGI_JETTY, BuildMode::UIFW, BuildMode::CAS, BuildMode::LDAP],
+  #
+  
   :ode => :v1_3_snapshot,
   :tomcat => :v5,
   :jetty => :v7,
+  :osgi_jetty => :v7,
   #:liferay => {:v => :v5_2_5ee, :base_folder => "liferay-portal-5.2.5", :server_folder => "tomcat-5.5.27"},
   :liferay => {:v => :v5_2_3, :base_folder => "liferay-portal-5.2.3", :server_folder => "tomcat-5.5.27"},
   #:liferay => {:v => :v5_2_5_jbee, :base_folder => "liferay-portal-5.2.5", :server_folder => "jboss-tomcat-4.2.3"},  
