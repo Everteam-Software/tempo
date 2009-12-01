@@ -1,0 +1,2390 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project name="Workflow Testing" soapui-version="3.0.1" abortOnError="false" runType="SEQUENTIAL" resourceRoot="" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" wsaVersion="NONE" name="TokenServiceSOAP" type="wsdl" bindingName="{http://tempo.intalio.org/security/tokenService/}TokenServiceSOAP" soapVersion="1_1" anonymous="optional" definition="http://localhost:8080/axis2/services/TokenService?wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="http://localhost:8080/axis2/services/TokenService?wsdl"><con:part><con:url>http://localhost:8080/axis2/services/TokenService?wsdl</con:url><con:content><![CDATA[<wsdl:definitions targetNamespace="http://tempo.intalio.org/security/tokenService/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns="http://tempo.intalio.org/security/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:tns="http://tempo.intalio.org/security/tokenService/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/">
+  <wsdl:documentation>TokenService</wsdl:documentation>
+  <wsdl:types>
+    <xsd:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://tempo.intalio.org/security/tokenService/">
+      <xsd:complexType name="PropertyType">
+        <xsd:sequence>
+          <xsd:element name="name" type="xsd:string"/>
+          <xsd:element name="value" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="properties">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="property" type="tns:PropertyType"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="authenticateUser">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="user" type="xsd:string"/>
+            <xsd:element name="password" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="authenticateUserWithCredentials">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="user" type="xsd:string"/>
+            <xsd:element name="credentials" type="tns:PropertyType"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="authenticateUserResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="token" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getTokenProperties">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="token" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getTokenPropertiesResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="credentials" type="tns:PropertyType"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getTokenResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="out" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="proxyTicket">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="ticket" type="xsd:string"/>
+            <xsd:element name="serviceURL" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="openssoTicket">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="openssoToken" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="authenticateUser">
+    <wsdl:part name="payload" element="tns:authenticateUser"/>
+  </wsdl:message>
+  <wsdl:message name="authenticateUserResponse">
+    <wsdl:part name="payload" element="tns:authenticateUserResponse"/>
+  </wsdl:message>
+  <wsdl:message name="getTokenFromOpenSSOTokenRequest">
+    <wsdl:part name="payload" element="tns:openssoTicket"/>
+  </wsdl:message>
+  <wsdl:message name="getTokenFromOpenSSOTokenResponse">
+    <wsdl:part name="payload" element="tns:authenticateUserResponse"/>
+  </wsdl:message>
+  <wsdl:message name="authenticateUserWithCredentials">
+    <wsdl:part name="payload" element="tns:authenticateUserWithCredentials"/>
+  </wsdl:message>
+  <wsdl:message name="getTokenProperties">
+    <wsdl:part name="payload" element="tns:getTokenProperties"/>
+  </wsdl:message>
+  <wsdl:message name="getTokenPropertiesResponse">
+    <wsdl:part name="payload" element="tns:getTokenPropertiesResponse"/>
+  </wsdl:message>
+  <wsdl:message name="getTokenFromTicketRequest">
+    <wsdl:part name="payload" element="tns:proxyTicket"/>
+  </wsdl:message>
+  <wsdl:message name="getTokenFromTicketResponse">
+    <wsdl:part name="payload" element="tns:authenticateUserResponse"/>
+  </wsdl:message>
+  <wsdl:portType name="TokenServicePortType">
+    <wsdl:operation name="authenticateUser">
+      <wsdl:input message="tns:authenticateUser" wsaw:Action="authenticateUser"/>
+      <wsdl:output message="tns:authenticateUserResponse" wsaw:Action="http://tempo.intalio.org/security/tokenService/TokenService/authenticateUserResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="getTokenFromOpenSSOToken">
+      <wsdl:input message="tns:getTokenFromOpenSSOTokenRequest" wsaw:Action="getTokenFromOpenSSOToken"/>
+      <wsdl:output message="tns:getTokenFromOpenSSOTokenResponse" wsaw:Action="http://tempo.intalio.org/security/tokenService/TokenService/getTokenFromOpenSSOTokenResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="authenticateUserWithCredentials">
+      <wsdl:input message="tns:authenticateUserWithCredentials" wsaw:Action="authenticateUserWithCredentials"/>
+      <wsdl:output message="tns:authenticateUserResponse" wsaw:Action="http://tempo.intalio.org/security/tokenService/TokenService/authenticateUserWithCredentialsResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="getTokenProperties">
+      <wsdl:input message="tns:getTokenProperties" wsaw:Action="getTokenProperties"/>
+      <wsdl:output message="tns:getTokenPropertiesResponse" wsaw:Action="http://tempo.intalio.org/security/tokenService/TokenService/getTokenPropertiesResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="getTokenFromTicket">
+      <wsdl:input message="tns:getTokenFromTicketRequest" wsaw:Action="getTokenFromTicket"/>
+      <wsdl:output message="tns:getTokenFromTicketResponse" wsaw:Action="http://tempo.intalio.org/security/tokenService/TokenService/getTokenFromTicketResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="TokenServiceSOAP" type="tns:TokenServicePortType">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+    <wsdl:operation name="authenticateUser">
+      <soap:operation soapAction="authenticateUser" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getTokenFromOpenSSOToken">
+      <soap:operation soapAction="getTokenFromOpenSSOToken" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="authenticateUserWithCredentials">
+      <soap:operation soapAction="authenticateUserWithCredentials" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getTokenProperties">
+      <soap:operation soapAction="getTokenProperties" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getTokenFromTicket">
+      <soap:operation soapAction="getTokenFromTicket" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="TokenService">
+    <wsdl:port name="Service" binding="tns:TokenServiceSOAP">
+      <soap:address location="http://localhost:8080/axis2/services/TokenService.Service/"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://localhost:8080/axis2/services/TokenService.Service/</con:endpoint></con:endpoints><con:operation isOneWay="false" action="authenticateUser" name="authenticateUser" bindingOperationName="authenticateUser" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/TokenService.Service/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tok="http://tempo.intalio.org/security/tokenService/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tok:authenticateUser>
+         <tok:user>?</tok:user>
+         <tok:password>?</tok:password>
+      </tok:authenticateUser>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="authenticateUser"/></con:call></con:operation><con:operation isOneWay="false" action="authenticateUserWithCredentials" name="authenticateUserWithCredentials" bindingOperationName="authenticateUserWithCredentials" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/TokenService.Service/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tok="http://tempo.intalio.org/security/tokenService/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tok:authenticateUserWithCredentials>
+         <tok:user>?</tok:user>
+         <tok:credentials>
+            <tok:name>?</tok:name>
+            <tok:value>?</tok:value>
+         </tok:credentials>
+      </tok:authenticateUserWithCredentials>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="authenticateUserWithCredentials"/></con:call></con:operation><con:operation isOneWay="false" action="getTokenFromOpenSSOToken" name="getTokenFromOpenSSOToken" bindingOperationName="getTokenFromOpenSSOToken" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/TokenService.Service/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tok="http://tempo.intalio.org/security/tokenService/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tok:openssoTicket>
+         <tok:openssoToken>?</tok:openssoToken>
+      </tok:openssoTicket>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="getTokenFromOpenSSOToken"/></con:call></con:operation><con:operation isOneWay="false" action="getTokenFromTicket" name="getTokenFromTicket" bindingOperationName="getTokenFromTicket" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/TokenService.Service/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tok="http://tempo.intalio.org/security/tokenService/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tok:proxyTicket>
+         <tok:ticket>?</tok:ticket>
+         <tok:serviceURL>?</tok:serviceURL>
+      </tok:proxyTicket>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="getTokenFromTicket"/></con:call></con:operation><con:operation isOneWay="false" action="getTokenProperties" name="getTokenProperties" bindingOperationName="getTokenProperties" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/TokenService.Service/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tok="http://tempo.intalio.org/security/tokenService/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tok:getTokenProperties>
+         <tok:token>?</tok:token>
+      </tok:getTokenProperties>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="getTokenProperties"/></con:call></con:operation></con:interface><con:interface xsi:type="con:WsdlInterface" wsaVersion="NONE" name="TaskManagementServicesSOAP" type="wsdl" bindingName="{http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/}TaskManagementServicesSOAP" soapVersion="1_1" anonymous="optional" definition="http://localhost:8080/axis2/services/TaskManagementServices?wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="http://localhost:8080/axis2/services/TaskManagementServices?wsdl"><con:part><con:url>http://localhost:8080/axis2/services/TaskManagementServices?wsdl</con:url><con:content><![CDATA[<wsdl:definitions targetNamespace="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/">
+  <wsdl:documentation>TaskManagementServices</wsdl:documentation>
+  <wsdl:types>
+    <xsd:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+      <xsd:element name="getTaskListResponse">
+        <xsd:complexType>
+          <xsd:sequence maxOccurs="unbounded">
+            <xsd:element maxOccurs="unbounded" name="task" type="tns:taskMetadata"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getTaskListRequest">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="participantToken" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getTaskResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="task" type="tns:task"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getTaskRequest">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="taskId" type="xsd:string"/>
+            <xsd:element name="participantToken" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="setOutputRequest">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="taskId" type="xsd:string"/>
+            <xsd:element name="data">
+              <xsd:complexType>
+                <xsd:sequence>
+                  <xsd:any maxOccurs="unbounded" minOccurs="0"/>
+                </xsd:sequence>
+              </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="participantToken" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="skipRequest">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="taskId" type="xsd:string"/>
+            <xsd:element name="participantToken" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="completeRequest">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="taskId" type="xsd:string"/>
+            <xsd:element name="participantToken" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="setOutputAndCompleteRequest">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="taskId" type="xsd:string"/>
+            <xsd:element name="data">
+              <xsd:complexType>
+                <xsd:sequence>
+                  <xsd:any maxOccurs="unbounded" minOccurs="0"/>
+                </xsd:sequence>
+              </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="participantToken" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="failRequest">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="taskId" type="xsd:string"/>
+            <xsd:element name="code" type="xsd:string"/>
+            <xsd:element name="message" type="xsd:string"/>
+            <xsd:element name="participantToken" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="deleteRequest">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" name="taskId" type="xsd:string"/>
+            <xsd:element name="participantToken" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="deleteAllRequest">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="taskType" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="subQuery" type="xsd:string"/>
+            <xsd:element name="fakeDelete" type="xsd:boolean"/>
+            <xsd:element name="participantToken" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="createRequest">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="task" type="tns:task"/>
+            <xsd:element name="participantToken" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="storePipaRequest">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="task" type="tns:task"/>
+            <xsd:element name="participantToken" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="deletePipaRequest">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="pipaurl" type="xsd:string"/>
+            <xsd:element name="participantToken" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getPipaRequest">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="pipaurl" type="xsd:string"/>
+            <xsd:element name="participantToken" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getPipaResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="metadata" type="tns:taskMetadata"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="initRequest">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="taskId" type="xsd:string"/>
+            <xsd:element name="input">
+              <xsd:complexType>
+                <xsd:sequence>
+                  <xsd:any maxOccurs="unbounded" minOccurs="0"/>
+                </xsd:sequence>
+              </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="participantToken" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="formUrl" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="okResponse">
+        <xsd:complexType>
+          <xsd:sequence/>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="userProcessResponse">
+        <xsd:complexType>
+          <xsd:sequence/>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getAttachmentsRequest">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="taskId" type="xsd:string"/>
+            <xsd:element name="participantToken" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getAttachmentsResponse" type="tns:attachments"/>
+      <xsd:element name="addAttachmentRequest">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="taskId" type="xsd:string"/>
+            <xsd:element name="attachment" type="tns:attachment"/>
+            <xsd:element name="participantToken" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="removeAttachmentRequest">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="taskId" type="xsd:string"/>
+            <xsd:element name="attachmentUrl" type="xsd:string"/>
+            <xsd:element name="participantToken" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="attachments">
+        <xsd:sequence>
+          <xsd:element maxOccurs="unbounded" minOccurs="0" name="attachment" type="tns:attachment"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="attachmentMetadata">
+        <xsd:sequence>
+          <xsd:element name="mimeType" type="xsd:string"/>
+          <xsd:element name="fileName" type="xsd:string"/>
+          <xsd:element name="title" type="xsd:string"/>
+          <xsd:element name="description" type="xsd:string"/>
+          <xsd:element name="creationDate" type="xsd:dateTime"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="attachment">
+        <xsd:sequence>
+          <xsd:element name="attachmentMetadata" type="tns:attachmentMetadata"/>
+          <xsd:element name="payloadUrl" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="accessControlType">
+        <xsd:sequence>
+          <xsd:element maxOccurs="unbounded" minOccurs="0" name="user" type="xsd:string"/>
+          <xsd:element maxOccurs="unbounded" minOccurs="0" name="role" type="xsd:string"/>
+          <xsd:element minOccurs="0" name="authorized" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="taskMetadata">
+        <xsd:sequence>
+          <xsd:element name="taskId" type="xsd:string"/>
+          <xsd:element minOccurs="0" name="taskState" type="xsd:token"/>
+          <xsd:element name="taskType" type="xsd:token"/>
+          <xsd:element minOccurs="0" name="description" type="xsd:string"/>
+          <xsd:element minOccurs="0" name="processId" type="xsd:string"/>
+          <xsd:element minOccurs="0" name="instanceId" type="xsd:string"/>
+          <xsd:element minOccurs="0" name="creationDate" type="xsd:dateTime"/>
+          <xsd:element minOccurs="0" name="deadline" type="xsd:dateTime"/>
+          <xsd:element minOccurs="0" name="priority" nillable="true" type="xsd:int"/>
+          <xsd:element maxOccurs="unbounded" minOccurs="0" name="userOwner" type="xsd:string"/>
+          <xsd:element maxOccurs="unbounded" minOccurs="0" name="roleOwner" type="xsd:string"/>
+          <xsd:element name="formUrl" type="xsd:anyURI"/>
+          <xsd:element minOccurs="0" name="failureCode" type="xsd:string"/>
+          <xsd:element minOccurs="0" name="failureReason" type="xsd:string"/>
+          <xsd:element minOccurs="0" name="userProcessCompleteSOAPAction" type="xsd:string"/>
+          <xsd:element minOccurs="0" name="processEndpoint" type="xsd:anyURI"/>
+          <xsd:element minOccurs="0" name="initMessageNamespaceURI" type="xsd:anyURI"/>
+          <xsd:element minOccurs="0" name="initOperationSOAPAction" type="xsd:string"/>
+          <xsd:element minOccurs="0" name="isChainedBefore" type="xsd:string"/>
+          <xsd:element minOccurs="0" name="previousTaskId" type="xsd:string"/>
+          <xsd:element minOccurs="0" name="claimAction" type="tns:accessControlType"/>
+          <xsd:element minOccurs="0" name="revokeAction" type="tns:accessControlType"/>
+          <xsd:element minOccurs="0" name="saveAction" type="tns:accessControlType"/>
+          <xsd:element minOccurs="0" name="dismissAction" type="tns:accessControlType"/>
+          <xsd:element minOccurs="0" name="completeAction" type="tns:accessControlType"/>
+          <xsd:element minOccurs="0" name="attachments" type="tns:attachments"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="task">
+        <xsd:sequence>
+          <xsd:element name="metadata" type="tns:taskMetadata"/>
+          <xsd:element name="input">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:any maxOccurs="unbounded" minOccurs="0"/>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="output">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:any maxOccurs="unbounded" minOccurs="0"/>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="getAvailableTasksResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="task" type="tns:taskMetadata"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getAvailableTasksRequest">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="participantToken" type="xsd:string"/>
+            <xsd:element name="taskType" type="xsd:string"/>
+            <xsd:element name="subQuery" type="xsd:string"/>
+            <xsd:element name="first" type="xsd:string"/>
+            <xsd:element name="max" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="countAvailableTasksRequest">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="participantToken" type="xsd:string"/>
+            <xsd:element name="taskType" type="xsd:string"/>
+            <xsd:element name="subQuery" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="countAvailableTasksResponse" type="xsd:string"/>
+      <xsd:element name="reassignRequest">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="taskId" type="xsd:string"/>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="userOwner" type="xsd:string"/>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="roleOwner" type="xsd:string"/>
+            <xsd:element name="taskState" type="xsd:string"/>
+            <xsd:element name="participantToken" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="unavailableTaskFault">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="reason" type="xsd:string"/>
+            <xsd:element maxOccurs="unbounded" name="unavailableTaskId" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="invalidParticipantTokenFault">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="reason" type="xsd:string"/>
+            <xsd:element name="invalidToken" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="accessDeniedFault">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="reason" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="invalidInputMessageFault">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="reason" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="unavailableAttachmentFault">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="reason" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="deletePipaRequest">
+    <wsdl:part name="deletePipaRequest" element="tns:deletePipaRequest"/>
+  </wsdl:message>
+  <wsdl:message name="okResponse">
+    <wsdl:part name="okResponse" element="tns:okResponse"/>
+  </wsdl:message>
+  <wsdl:message name="invalidParticipantTokenFault">
+    <wsdl:part name="invalidParticipantTokenFault" element="tns:invalidParticipantTokenFault"/>
+  </wsdl:message>
+  <wsdl:message name="unavailableTaskFault">
+    <wsdl:part name="unavailableTaskFault" element="tns:unavailableTaskFault"/>
+  </wsdl:message>
+  <wsdl:message name="invalidInputMessageFault">
+    <wsdl:part name="invalidInputMessageFault" element="tns:invalidInputMessageFault"/>
+  </wsdl:message>
+  <wsdl:message name="getTaskRequest">
+    <wsdl:part name="getTaskRequest" element="tns:getTaskRequest"/>
+  </wsdl:message>
+  <wsdl:message name="getTaskResponse">
+    <wsdl:part name="getTaskResponse" element="tns:getTaskResponse"/>
+  </wsdl:message>
+  <wsdl:message name="removeAttachmentRequest">
+    <wsdl:part name="removeAttachmentRequest" element="tns:removeAttachmentRequest"/>
+  </wsdl:message>
+  <wsdl:message name="unavailableAttachmentFault">
+    <wsdl:part name="unavailableAttachmentFault" element="tns:unavailableAttachmentFault"/>
+  </wsdl:message>
+  <wsdl:message name="getAvailableTasksRequest">
+    <wsdl:part name="getAvailableTasksRequest" element="tns:getAvailableTasksRequest"/>
+  </wsdl:message>
+  <wsdl:message name="getAvailableTasksResponse">
+    <wsdl:part name="getAvailableTasksResponse" element="tns:getAvailableTasksResponse"/>
+  </wsdl:message>
+  <wsdl:message name="countAvailableTasksRequest">
+    <wsdl:part name="countAvailableTasksRequest" element="tns:countAvailableTasksRequest"/>
+  </wsdl:message>
+  <wsdl:message name="countAvailableTasksResponse">
+    <wsdl:part name="countAvailableTasksResponse" element="tns:countAvailableTasksResponse"/>
+  </wsdl:message>
+  <wsdl:message name="skipRequest">
+    <wsdl:part name="skipRequest" element="tns:skipRequest"/>
+  </wsdl:message>
+  <wsdl:message name="createRequest">
+    <wsdl:part name="createRequest" element="tns:createRequest"/>
+  </wsdl:message>
+  <wsdl:message name="accessDeniedFault">
+    <wsdl:part name="accessDeniedFault" element="tns:accessDeniedFault"/>
+  </wsdl:message>
+  <wsdl:message name="initRequest">
+    <wsdl:part name="initRequest" element="tns:initRequest"/>
+  </wsdl:message>
+  <wsdl:message name="userProcessResponse"/>
+  <wsdl:message name="setOutputRequest">
+    <wsdl:part name="setOutputRequest" element="tns:setOutputRequest"/>
+  </wsdl:message>
+  <wsdl:message name="reassignRequest">
+    <wsdl:part name="reassignRequest" element="tns:reassignRequest"/>
+  </wsdl:message>
+  <wsdl:message name="completeRequest">
+    <wsdl:part name="completeRequest" element="tns:completeRequest"/>
+  </wsdl:message>
+  <wsdl:message name="setOutputAndCompleteRequest">
+    <wsdl:part name="setOutputAndCompleteRequest" element="tns:setOutputAndCompleteRequest"/>
+  </wsdl:message>
+  <wsdl:message name="getAttachmentsRequest">
+    <wsdl:part name="getAttachmentsRequest" element="tns:getAttachmentsRequest"/>
+  </wsdl:message>
+  <wsdl:message name="getAttachmentsResponse">
+    <wsdl:part name="getAttachmentsResponse" element="tns:getAttachmentsResponse"/>
+  </wsdl:message>
+  <wsdl:message name="getPipaRequest">
+    <wsdl:part name="getPipaRequest" element="tns:getPipaRequest"/>
+  </wsdl:message>
+  <wsdl:message name="getPipaResponse">
+    <wsdl:part name="getPipaResponse" element="tns:getPipaResponse"/>
+  </wsdl:message>
+  <wsdl:message name="deleteAllRequest">
+    <wsdl:part name="deleteAllRequest" element="tns:deleteAllRequest"/>
+  </wsdl:message>
+  <wsdl:message name="addAttachmentRequest">
+    <wsdl:part name="addAttachmentRequest" element="tns:addAttachmentRequest"/>
+  </wsdl:message>
+  <wsdl:message name="storePipaRequest">
+    <wsdl:part name="storePipaRequest" element="tns:storePipaRequest"/>
+  </wsdl:message>
+  <wsdl:message name="getTaskListRequest">
+    <wsdl:part name="getTaskListRequest" element="tns:getTaskListRequest"/>
+  </wsdl:message>
+  <wsdl:message name="getTaskListResponse">
+    <wsdl:part name="getTaskListResponse" element="tns:getTaskListResponse"/>
+  </wsdl:message>
+  <wsdl:message name="deleteRequest">
+    <wsdl:part name="deleteRequest" element="tns:deleteRequest"/>
+  </wsdl:message>
+  <wsdl:message name="failRequest">
+    <wsdl:part name="failRequest" element="tns:failRequest"/>
+  </wsdl:message>
+  <wsdl:portType name="TaskManagementServicesPortType">
+    <wsdl:operation name="deletePipa">
+      <wsdl:input message="tns:deletePipaRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/deletePipa"/>
+      <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/deletePipaResponse"/>
+      <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:deletePipainvalidParticipantTokenFault"/>
+      <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:deletePipaunavailableTaskFault"/>
+      <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:deletePipainvalidInputMessageFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="getTask">
+      <wsdl:input message="tns:getTaskRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getTask"/>
+      <wsdl:output message="tns:getTaskResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/getTaskResponse"/>
+      <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:getTaskinvalidParticipantTokenFault"/>
+      <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:getTaskunavailableTaskFault"/>
+      <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:getTaskinvalidInputMessageFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="removeAttachment">
+      <wsdl:input message="tns:removeAttachmentRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/removeAttachment"/>
+      <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/removeAttachmentResponse"/>
+      <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:removeAttachmentinvalidParticipantTokenFault"/>
+      <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:removeAttachmentunavailableTaskFault"/>
+      <wsdl:fault message="tns:unavailableAttachmentFault" name="unavailableAttachmentFault" wsaw:Action="urn:removeAttachmentunavailableAttachmentFault"/>
+      <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:removeAttachmentinvalidInputMessageFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="getAvailableTasks">
+      <wsdl:input message="tns:getAvailableTasksRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getAvailableTasks"/>
+      <wsdl:output message="tns:getAvailableTasksResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/getAvailableTasksResponse"/>
+      <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:getAvailableTasksinvalidParticipantTokenFault"/>
+      <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:getAvailableTasksinvalidInputMessageFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="countAvailableTasks">
+      <wsdl:input message="tns:countAvailableTasksRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/countAvailableTasks"/>
+      <wsdl:output message="tns:countAvailableTasksResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/countAvailableTasksResponse"/>
+      <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:countAvailableTasksinvalidParticipantTokenFault"/>
+      <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:countAvailableTasksinvalidInputMessageFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="skip">
+      <wsdl:input message="tns:skipRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/skip"/>
+      <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/skipResponse"/>
+      <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:skipinvalidParticipantTokenFault"/>
+      <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:skipunavailableTaskFault"/>
+      <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:skipinvalidInputMessageFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="create">
+      <wsdl:input message="tns:createRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/create"/>
+      <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/createResponse"/>
+      <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:createinvalidParticipantTokenFault"/>
+      <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:createinvalidInputMessageFault"/>
+      <wsdl:fault message="tns:accessDeniedFault" name="accessDeniedFault" wsaw:Action="urn:createaccessDeniedFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="initProcess">
+      <wsdl:input message="tns:initRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/init"/>
+      <wsdl:output message="tns:userProcessResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/initProcessResponse"/>
+      <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:initProcessinvalidParticipantTokenFault"/>
+      <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:initProcessunavailableTaskFault"/>
+      <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:initProcessinvalidInputMessageFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="setOutput">
+      <wsdl:input message="tns:setOutputRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/setOutput"/>
+      <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/setOutputResponse"/>
+      <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:setOutputinvalidParticipantTokenFault"/>
+      <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:setOutputunavailableTaskFault"/>
+      <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:setOutputinvalidInputMessageFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="reassign">
+      <wsdl:input message="tns:reassignRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/reassign"/>
+      <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/reassignResponse"/>
+      <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:reassigninvalidParticipantTokenFault"/>
+      <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:reassignunavailableTaskFault"/>
+      <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:reassigninvalidInputMessageFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="complete">
+      <wsdl:input message="tns:completeRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/complete"/>
+      <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/completeResponse"/>
+      <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:completeinvalidParticipantTokenFault"/>
+      <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:completeunavailableTaskFault"/>
+      <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:completeinvalidInputMessageFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="setOutputAndComplete">
+      <wsdl:input message="tns:setOutputAndCompleteRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/setOutputAndComplete"/>
+      <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/setOutputAndCompleteResponse"/>
+      <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:setOutputAndCompleteinvalidParticipantTokenFault"/>
+      <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:setOutputAndCompleteunavailableTaskFault"/>
+      <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:setOutputAndCompleteinvalidInputMessageFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="getAttachments">
+      <wsdl:input message="tns:getAttachmentsRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getAttachments"/>
+      <wsdl:output message="tns:getAttachmentsResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/getAttachmentsResponse"/>
+      <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:getAttachmentsinvalidParticipantTokenFault"/>
+      <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:getAttachmentsunavailableTaskFault"/>
+      <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:getAttachmentsinvalidInputMessageFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="getPipa">
+      <wsdl:input message="tns:getPipaRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getPipa"/>
+      <wsdl:output message="tns:getPipaResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/getPipaResponse"/>
+      <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:getPipainvalidParticipantTokenFault"/>
+      <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:getPipaunavailableTaskFault"/>
+      <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:getPipainvalidInputMessageFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="deleteAll">
+      <wsdl:input message="tns:deleteAllRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/deleteAll"/>
+      <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/deleteAllResponse"/>
+      <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:deleteAllinvalidParticipantTokenFault"/>
+      <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:deleteAllinvalidInputMessageFault"/>
+      <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:deleteAllunavailableTaskFault"/>
+      <wsdl:fault message="tns:accessDeniedFault" name="accessDeniedFault" wsaw:Action="urn:deleteAllaccessDeniedFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="addAttachment">
+      <wsdl:input message="tns:addAttachmentRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/addAttachment"/>
+      <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/addAttachmentResponse"/>
+      <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:addAttachmentinvalidParticipantTokenFault"/>
+      <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:addAttachmentunavailableTaskFault"/>
+      <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:addAttachmentinvalidInputMessageFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="storePipa">
+      <wsdl:input message="tns:storePipaRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/storePipa"/>
+      <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/storePipaResponse"/>
+      <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:storePipainvalidParticipantTokenFault"/>
+      <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:storePipainvalidInputMessageFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="getTaskList">
+      <wsdl:input message="tns:getTaskListRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getTaskList"/>
+      <wsdl:output message="tns:getTaskListResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/getTaskListResponse"/>
+      <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:getTaskListinvalidParticipantTokenFault"/>
+      <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:getTaskListinvalidInputMessageFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="delete">
+      <wsdl:input message="tns:deleteRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/delete"/>
+      <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/deleteResponse"/>
+      <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:deleteinvalidParticipantTokenFault"/>
+      <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:deleteinvalidInputMessageFault"/>
+      <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:deleteunavailableTaskFault"/>
+      <wsdl:fault message="tns:accessDeniedFault" name="accessDeniedFault" wsaw:Action="urn:deleteaccessDeniedFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="fail">
+      <wsdl:input message="tns:failRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/fail"/>
+      <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/failResponse"/>
+      <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:failinvalidParticipantTokenFault"/>
+      <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:failunavailableTaskFault"/>
+      <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:failinvalidInputMessageFault"/>
+      <wsdl:fault message="tns:accessDeniedFault" name="accessDeniedFault" wsaw:Action="urn:failaccessDeniedFault"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="TaskManagementServicesSOAP" type="tns:TaskManagementServicesPortType">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+    <wsdl:operation name="deletePipa">
+      <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/deletePipa" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="invalidInputMessageFault">
+        <soap:fault use="literal" name="invalidInputMessageFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="unavailableTaskFault">
+        <soap:fault use="literal" name="unavailableTaskFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="invalidParticipantTokenFault">
+        <soap:fault use="literal" name="invalidParticipantTokenFault"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getTask">
+      <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getTask" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="invalidInputMessageFault">
+        <soap:fault use="literal" name="invalidInputMessageFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="unavailableTaskFault">
+        <soap:fault use="literal" name="unavailableTaskFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="invalidParticipantTokenFault">
+        <soap:fault use="literal" name="invalidParticipantTokenFault"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="removeAttachment">
+      <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/removeAttachment" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="invalidInputMessageFault">
+        <soap:fault use="literal" name="invalidInputMessageFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="unavailableAttachmentFault">
+        <soap:fault use="literal" name="unavailableAttachmentFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="unavailableTaskFault">
+        <soap:fault use="literal" name="unavailableTaskFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="invalidParticipantTokenFault">
+        <soap:fault use="literal" name="invalidParticipantTokenFault"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getAvailableTasks">
+      <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getAvailableTasks" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="invalidInputMessageFault">
+        <soap:fault use="literal" name="invalidInputMessageFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="invalidParticipantTokenFault">
+        <soap:fault use="literal" name="invalidParticipantTokenFault"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="countAvailableTasks">
+      <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/countAvailableTasks" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="invalidInputMessageFault">
+        <soap:fault use="literal" name="invalidInputMessageFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="invalidParticipantTokenFault">
+        <soap:fault use="literal" name="invalidParticipantTokenFault"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="skip">
+      <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/skip" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="invalidInputMessageFault">
+        <soap:fault use="literal" name="invalidInputMessageFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="unavailableTaskFault">
+        <soap:fault use="literal" name="unavailableTaskFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="invalidParticipantTokenFault">
+        <soap:fault use="literal" name="invalidParticipantTokenFault"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="create">
+      <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/create" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="accessDeniedFault">
+        <soap:fault use="literal" name="accessDeniedFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="invalidInputMessageFault">
+        <soap:fault use="literal" name="invalidInputMessageFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="invalidParticipantTokenFault">
+        <soap:fault use="literal" name="invalidParticipantTokenFault"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="initProcess">
+      <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/init" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="invalidInputMessageFault">
+        <soap:fault use="literal" name="invalidInputMessageFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="unavailableTaskFault">
+        <soap:fault use="literal" name="unavailableTaskFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="invalidParticipantTokenFault">
+        <soap:fault use="literal" name="invalidParticipantTokenFault"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="setOutput">
+      <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/setOutput" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="invalidInputMessageFault">
+        <soap:fault use="literal" name="invalidInputMessageFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="unavailableTaskFault">
+        <soap:fault use="literal" name="unavailableTaskFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="invalidParticipantTokenFault">
+        <soap:fault use="literal" name="invalidParticipantTokenFault"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="reassign">
+      <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/reassign" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="invalidInputMessageFault">
+        <soap:fault use="literal" name="invalidInputMessageFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="unavailableTaskFault">
+        <soap:fault use="literal" name="unavailableTaskFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="invalidParticipantTokenFault">
+        <soap:fault use="literal" name="invalidParticipantTokenFault"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="complete">
+      <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/complete" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="invalidInputMessageFault">
+        <soap:fault use="literal" name="invalidInputMessageFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="unavailableTaskFault">
+        <soap:fault use="literal" name="unavailableTaskFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="invalidParticipantTokenFault">
+        <soap:fault use="literal" name="invalidParticipantTokenFault"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="setOutputAndComplete">
+      <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/setOutputAndComplete" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="invalidInputMessageFault">
+        <soap:fault use="literal" name="invalidInputMessageFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="unavailableTaskFault">
+        <soap:fault use="literal" name="unavailableTaskFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="invalidParticipantTokenFault">
+        <soap:fault use="literal" name="invalidParticipantTokenFault"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getAttachments">
+      <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getAttachments" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="invalidInputMessageFault">
+        <soap:fault use="literal" name="invalidInputMessageFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="unavailableTaskFault">
+        <soap:fault use="literal" name="unavailableTaskFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="invalidParticipantTokenFault">
+        <soap:fault use="literal" name="invalidParticipantTokenFault"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getPipa">
+      <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getPipa" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="invalidInputMessageFault">
+        <soap:fault use="literal" name="invalidInputMessageFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="unavailableTaskFault">
+        <soap:fault use="literal" name="unavailableTaskFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="invalidParticipantTokenFault">
+        <soap:fault use="literal" name="invalidParticipantTokenFault"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="deleteAll">
+      <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/deleteAll" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="accessDeniedFault">
+        <soap:fault use="literal" name="accessDeniedFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="invalidInputMessageFault">
+        <soap:fault use="literal" name="invalidInputMessageFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="unavailableTaskFault">
+        <soap:fault use="literal" name="unavailableTaskFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="invalidParticipantTokenFault">
+        <soap:fault use="literal" name="invalidParticipantTokenFault"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="addAttachment">
+      <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/addAttachment" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="invalidInputMessageFault">
+        <soap:fault use="literal" name="invalidInputMessageFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="unavailableTaskFault">
+        <soap:fault use="literal" name="unavailableTaskFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="invalidParticipantTokenFault">
+        <soap:fault use="literal" name="invalidParticipantTokenFault"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="storePipa">
+      <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/storePipa" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="invalidInputMessageFault">
+        <soap:fault use="literal" name="invalidInputMessageFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="invalidParticipantTokenFault">
+        <soap:fault use="literal" name="invalidParticipantTokenFault"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getTaskList">
+      <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getTaskList" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="invalidInputMessageFault">
+        <soap:fault use="literal" name="invalidInputMessageFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="invalidParticipantTokenFault">
+        <soap:fault use="literal" name="invalidParticipantTokenFault"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="delete">
+      <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/delete" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="accessDeniedFault">
+        <soap:fault use="literal" name="accessDeniedFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="invalidInputMessageFault">
+        <soap:fault use="literal" name="invalidInputMessageFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="unavailableTaskFault">
+        <soap:fault use="literal" name="unavailableTaskFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="invalidParticipantTokenFault">
+        <soap:fault use="literal" name="invalidParticipantTokenFault"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="fail">
+      <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/fail" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="accessDeniedFault">
+        <soap:fault use="literal" name="accessDeniedFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="invalidInputMessageFault">
+        <soap:fault use="literal" name="invalidInputMessageFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="unavailableTaskFault">
+        <soap:fault use="literal" name="unavailableTaskFault"/>
+      </wsdl:fault>
+      <wsdl:fault name="invalidParticipantTokenFault">
+        <soap:fault use="literal" name="invalidParticipantTokenFault"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="TaskManagementServices">
+    <wsdl:port name="TaskManagementServicesSOAP" binding="tns:TaskManagementServicesSOAP">
+      <soap:address location="http://localhost:8080/axis2/services/TaskManagementServices.TaskManagementServicesSOAP/"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://localhost:8080/axis2/services/TaskManagementServices.TaskManagementServicesSOAP/</con:endpoint></con:endpoints><con:operation isOneWay="false" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/addAttachment" name="addAttachment" bindingOperationName="addAttachment" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/TaskManagementServices.TaskManagementServicesSOAP/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tas="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tas:addAttachmentRequest>
+         <tas:taskId>?</tas:taskId>
+         <tas:attachment>
+            <tas:attachmentMetadata>
+               <tas:mimeType>?</tas:mimeType>
+               <tas:fileName>?</tas:fileName>
+               <tas:title>?</tas:title>
+               <tas:description>?</tas:description>
+               <tas:creationDate>?</tas:creationDate>
+            </tas:attachmentMetadata>
+            <tas:payloadUrl>?</tas:payloadUrl>
+         </tas:attachment>
+         <tas:participantToken>?</tas:participantToken>
+      </tas:addAttachmentRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/addAttachment"/></con:call></con:operation><con:operation isOneWay="false" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/complete" name="complete" bindingOperationName="complete" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/TaskManagementServices.TaskManagementServicesSOAP/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tas="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tas:completeRequest>
+         <tas:taskId>?</tas:taskId>
+         <tas:participantToken>?</tas:participantToken>
+      </tas:completeRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/complete"/></con:call></con:operation><con:operation isOneWay="false" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/countAvailableTasks" name="countAvailableTasks" bindingOperationName="countAvailableTasks" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/TaskManagementServices.TaskManagementServicesSOAP/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tas="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tas:countAvailableTasksRequest>
+         <tas:participantToken>?</tas:participantToken>
+         <tas:taskType>?</tas:taskType>
+         <tas:subQuery>?</tas:subQuery>
+      </tas:countAvailableTasksRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/countAvailableTasks"/></con:call></con:operation><con:operation isOneWay="false" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/create" name="create" bindingOperationName="create" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/TaskManagementServices.TaskManagementServicesSOAP/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tas="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tas:createRequest>
+         <tas:task>
+            <tas:metadata>
+               <tas:taskId>?</tas:taskId>
+               <!--Optional:-->
+               <tas:taskState>?</tas:taskState>
+               <tas:taskType>?</tas:taskType>
+               <!--Optional:-->
+               <tas:description>?</tas:description>
+               <!--Optional:-->
+               <tas:processId>?</tas:processId>
+               <!--Optional:-->
+               <tas:instanceId>?</tas:instanceId>
+               <!--Optional:-->
+               <tas:creationDate>?</tas:creationDate>
+               <!--Optional:-->
+               <tas:deadline>?</tas:deadline>
+               <!--Optional:-->
+               <tas:priority>?</tas:priority>
+               <!--Zero or more repetitions:-->
+               <tas:userOwner>?</tas:userOwner>
+               <!--Zero or more repetitions:-->
+               <tas:roleOwner>?</tas:roleOwner>
+               <tas:formUrl>?</tas:formUrl>
+               <!--Optional:-->
+               <tas:failureCode>?</tas:failureCode>
+               <!--Optional:-->
+               <tas:failureReason>?</tas:failureReason>
+               <!--Optional:-->
+               <tas:userProcessCompleteSOAPAction>?</tas:userProcessCompleteSOAPAction>
+               <!--Optional:-->
+               <tas:processEndpoint>?</tas:processEndpoint>
+               <!--Optional:-->
+               <tas:initMessageNamespaceURI>?</tas:initMessageNamespaceURI>
+               <!--Optional:-->
+               <tas:initOperationSOAPAction>?</tas:initOperationSOAPAction>
+               <!--Optional:-->
+               <tas:isChainedBefore>?</tas:isChainedBefore>
+               <!--Optional:-->
+               <tas:previousTaskId>?</tas:previousTaskId>
+               <!--Optional:-->
+               <tas:claimAction>
+                  <!--Zero or more repetitions:-->
+                  <tas:user>?</tas:user>
+                  <!--Zero or more repetitions:-->
+                  <tas:role>?</tas:role>
+                  <!--Optional:-->
+                  <tas:authorized>?</tas:authorized>
+               </tas:claimAction>
+               <!--Optional:-->
+               <tas:revokeAction>
+                  <!--Zero or more repetitions:-->
+                  <tas:user>?</tas:user>
+                  <!--Zero or more repetitions:-->
+                  <tas:role>?</tas:role>
+                  <!--Optional:-->
+                  <tas:authorized>?</tas:authorized>
+               </tas:revokeAction>
+               <!--Optional:-->
+               <tas:saveAction>
+                  <!--Zero or more repetitions:-->
+                  <tas:user>?</tas:user>
+                  <!--Zero or more repetitions:-->
+                  <tas:role>?</tas:role>
+                  <!--Optional:-->
+                  <tas:authorized>?</tas:authorized>
+               </tas:saveAction>
+               <!--Optional:-->
+               <tas:dismissAction>
+                  <!--Zero or more repetitions:-->
+                  <tas:user>?</tas:user>
+                  <!--Zero or more repetitions:-->
+                  <tas:role>?</tas:role>
+                  <!--Optional:-->
+                  <tas:authorized>?</tas:authorized>
+               </tas:dismissAction>
+               <!--Optional:-->
+               <tas:completeAction>
+                  <!--Zero or more repetitions:-->
+                  <tas:user>?</tas:user>
+                  <!--Zero or more repetitions:-->
+                  <tas:role>?</tas:role>
+                  <!--Optional:-->
+                  <tas:authorized>?</tas:authorized>
+               </tas:completeAction>
+               <!--Optional:-->
+               <tas:attachments>
+                  <!--Zero or more repetitions:-->
+                  <tas:attachment>
+                     <tas:attachmentMetadata>
+                        <tas:mimeType>?</tas:mimeType>
+                        <tas:fileName>?</tas:fileName>
+                        <tas:title>?</tas:title>
+                        <tas:description>?</tas:description>
+                        <tas:creationDate>?</tas:creationDate>
+                     </tas:attachmentMetadata>
+                     <tas:payloadUrl>?</tas:payloadUrl>
+                  </tas:attachment>
+               </tas:attachments>
+            </tas:metadata>
+            <tas:input>
+               <!--You may enter ANY elements at this point-->
+            </tas:input>
+            <tas:output>
+               <!--You may enter ANY elements at this point-->
+            </tas:output>
+         </tas:task>
+         <tas:participantToken>?</tas:participantToken>
+      </tas:createRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/create"/></con:call></con:operation><con:operation isOneWay="false" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/delete" name="delete" bindingOperationName="delete" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/TaskManagementServices.TaskManagementServicesSOAP/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tas="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tas:deleteRequest>
+         <!--1 or more repetitions:-->
+         <tas:taskId>?</tas:taskId>
+         <tas:participantToken>?</tas:participantToken>
+      </tas:deleteRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/delete"/></con:call></con:operation><con:operation isOneWay="false" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/deleteAll" name="deleteAll" bindingOperationName="deleteAll" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/TaskManagementServices.TaskManagementServicesSOAP/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tas="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tas:deleteAllRequest>
+         <!--Optional:-->
+         <tas:taskType>?</tas:taskType>
+         <!--Optional:-->
+         <tas:subQuery>?</tas:subQuery>
+         <tas:fakeDelete>?</tas:fakeDelete>
+         <tas:participantToken>?</tas:participantToken>
+      </tas:deleteAllRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/deleteAll"/></con:call></con:operation><con:operation isOneWay="false" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/deletePipa" name="deletePipa" bindingOperationName="deletePipa" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/TaskManagementServices.TaskManagementServicesSOAP/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tas="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tas:deletePipaRequest>
+         <tas:pipaurl>?</tas:pipaurl>
+         <tas:participantToken>?</tas:participantToken>
+      </tas:deletePipaRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/deletePipa"/></con:call></con:operation><con:operation isOneWay="false" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/fail" name="fail" bindingOperationName="fail" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/TaskManagementServices.TaskManagementServicesSOAP/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tas="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tas:failRequest>
+         <tas:taskId>?</tas:taskId>
+         <tas:code>?</tas:code>
+         <tas:message>?</tas:message>
+         <tas:participantToken>?</tas:participantToken>
+      </tas:failRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/fail"/></con:call></con:operation><con:operation isOneWay="false" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getAttachments" name="getAttachments" bindingOperationName="getAttachments" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/TaskManagementServices.TaskManagementServicesSOAP/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tas="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tas:getAttachmentsRequest>
+         <tas:taskId>?</tas:taskId>
+         <tas:participantToken>?</tas:participantToken>
+      </tas:getAttachmentsRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getAttachments"/></con:call></con:operation><con:operation isOneWay="false" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getAvailableTasks" name="getAvailableTasks" bindingOperationName="getAvailableTasks" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/TaskManagementServices.TaskManagementServicesSOAP/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tas="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tas:getAvailableTasksRequest>
+         <tas:participantToken>?</tas:participantToken>
+         <tas:taskType>?</tas:taskType>
+         <tas:subQuery>?</tas:subQuery>
+         <tas:first>?</tas:first>
+         <tas:max>?</tas:max>
+      </tas:getAvailableTasksRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getAvailableTasks"/></con:call></con:operation><con:operation isOneWay="false" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getPipa" name="getPipa" bindingOperationName="getPipa" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/TaskManagementServices.TaskManagementServicesSOAP/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tas="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tas:getPipaRequest>
+         <tas:pipaurl>?</tas:pipaurl>
+         <tas:participantToken>?</tas:participantToken>
+      </tas:getPipaRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getPipa"/></con:call></con:operation><con:operation isOneWay="false" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getTask" name="getTask" bindingOperationName="getTask" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/TaskManagementServices.TaskManagementServicesSOAP/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tas="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tas:getTaskRequest>
+         <tas:taskId>?</tas:taskId>
+         <tas:participantToken>?</tas:participantToken>
+      </tas:getTaskRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getTask"/></con:call></con:operation><con:operation isOneWay="false" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getTaskList" name="getTaskList" bindingOperationName="getTaskList" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/TaskManagementServices.TaskManagementServicesSOAP/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tas="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tas:getTaskListRequest>
+         <tas:participantToken>?</tas:participantToken>
+      </tas:getTaskListRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getTaskList"/></con:call></con:operation><con:operation isOneWay="false" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/init" name="initProcess" bindingOperationName="initProcess" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/TaskManagementServices.TaskManagementServicesSOAP/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tas="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tas:initRequest>
+         <tas:taskId>?</tas:taskId>
+         <tas:input>
+            <!--You may enter ANY elements at this point-->
+         </tas:input>
+         <tas:participantToken>?</tas:participantToken>
+         <!--Optional:-->
+         <tas:formUrl>?</tas:formUrl>
+      </tas:initRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/init"/></con:call></con:operation><con:operation isOneWay="false" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/reassign" name="reassign" bindingOperationName="reassign" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/TaskManagementServices.TaskManagementServicesSOAP/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tas="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tas:reassignRequest>
+         <tas:taskId>?</tas:taskId>
+         <!--Zero or more repetitions:-->
+         <tas:userOwner>?</tas:userOwner>
+         <!--Zero or more repetitions:-->
+         <tas:roleOwner>?</tas:roleOwner>
+         <tas:taskState>?</tas:taskState>
+         <tas:participantToken>?</tas:participantToken>
+      </tas:reassignRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/reassign"/></con:call></con:operation><con:operation isOneWay="false" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/removeAttachment" name="removeAttachment" bindingOperationName="removeAttachment" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/TaskManagementServices.TaskManagementServicesSOAP/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tas="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tas:removeAttachmentRequest>
+         <tas:taskId>?</tas:taskId>
+         <tas:attachmentUrl>?</tas:attachmentUrl>
+         <tas:participantToken>?</tas:participantToken>
+      </tas:removeAttachmentRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/removeAttachment"/></con:call></con:operation><con:operation isOneWay="false" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/setOutput" name="setOutput" bindingOperationName="setOutput" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/TaskManagementServices.TaskManagementServicesSOAP/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tas="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tas:setOutputRequest>
+         <tas:taskId>?</tas:taskId>
+         <tas:data>
+            <!--You may enter ANY elements at this point-->
+         </tas:data>
+         <tas:participantToken>?</tas:participantToken>
+      </tas:setOutputRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/setOutput"/></con:call></con:operation><con:operation isOneWay="false" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/setOutputAndComplete" name="setOutputAndComplete" bindingOperationName="setOutputAndComplete" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/TaskManagementServices.TaskManagementServicesSOAP/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tas="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tas:setOutputAndCompleteRequest>
+         <tas:taskId>?</tas:taskId>
+         <tas:data>
+            <!--You may enter ANY elements at this point-->
+         </tas:data>
+         <tas:participantToken>?</tas:participantToken>
+      </tas:setOutputAndCompleteRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/setOutputAndComplete"/></con:call></con:operation><con:operation isOneWay="false" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/skip" name="skip" bindingOperationName="skip" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/TaskManagementServices.TaskManagementServicesSOAP/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tas="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tas:skipRequest>
+         <tas:taskId>?</tas:taskId>
+         <tas:participantToken>?</tas:participantToken>
+      </tas:skipRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/skip"/></con:call></con:operation><con:operation isOneWay="false" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/storePipa" name="storePipa" bindingOperationName="storePipa" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/TaskManagementServices.TaskManagementServicesSOAP/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tas="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tas:storePipaRequest>
+         <tas:task>
+            <tas:metadata>
+               <tas:taskId>?</tas:taskId>
+               <!--Optional:-->
+               <tas:taskState>?</tas:taskState>
+               <tas:taskType>?</tas:taskType>
+               <!--Optional:-->
+               <tas:description>?</tas:description>
+               <!--Optional:-->
+               <tas:processId>?</tas:processId>
+               <!--Optional:-->
+               <tas:instanceId>?</tas:instanceId>
+               <!--Optional:-->
+               <tas:creationDate>?</tas:creationDate>
+               <!--Optional:-->
+               <tas:deadline>?</tas:deadline>
+               <!--Optional:-->
+               <tas:priority>?</tas:priority>
+               <!--Zero or more repetitions:-->
+               <tas:userOwner>?</tas:userOwner>
+               <!--Zero or more repetitions:-->
+               <tas:roleOwner>?</tas:roleOwner>
+               <tas:formUrl>?</tas:formUrl>
+               <!--Optional:-->
+               <tas:failureCode>?</tas:failureCode>
+               <!--Optional:-->
+               <tas:failureReason>?</tas:failureReason>
+               <!--Optional:-->
+               <tas:userProcessCompleteSOAPAction>?</tas:userProcessCompleteSOAPAction>
+               <!--Optional:-->
+               <tas:processEndpoint>?</tas:processEndpoint>
+               <!--Optional:-->
+               <tas:initMessageNamespaceURI>?</tas:initMessageNamespaceURI>
+               <!--Optional:-->
+               <tas:initOperationSOAPAction>?</tas:initOperationSOAPAction>
+               <!--Optional:-->
+               <tas:isChainedBefore>?</tas:isChainedBefore>
+               <!--Optional:-->
+               <tas:previousTaskId>?</tas:previousTaskId>
+               <!--Optional:-->
+               <tas:claimAction>
+                  <!--Zero or more repetitions:-->
+                  <tas:user>?</tas:user>
+                  <!--Zero or more repetitions:-->
+                  <tas:role>?</tas:role>
+                  <!--Optional:-->
+                  <tas:authorized>?</tas:authorized>
+               </tas:claimAction>
+               <!--Optional:-->
+               <tas:revokeAction>
+                  <!--Zero or more repetitions:-->
+                  <tas:user>?</tas:user>
+                  <!--Zero or more repetitions:-->
+                  <tas:role>?</tas:role>
+                  <!--Optional:-->
+                  <tas:authorized>?</tas:authorized>
+               </tas:revokeAction>
+               <!--Optional:-->
+               <tas:saveAction>
+                  <!--Zero or more repetitions:-->
+                  <tas:user>?</tas:user>
+                  <!--Zero or more repetitions:-->
+                  <tas:role>?</tas:role>
+                  <!--Optional:-->
+                  <tas:authorized>?</tas:authorized>
+               </tas:saveAction>
+               <!--Optional:-->
+               <tas:dismissAction>
+                  <!--Zero or more repetitions:-->
+                  <tas:user>?</tas:user>
+                  <!--Zero or more repetitions:-->
+                  <tas:role>?</tas:role>
+                  <!--Optional:-->
+                  <tas:authorized>?</tas:authorized>
+               </tas:dismissAction>
+               <!--Optional:-->
+               <tas:completeAction>
+                  <!--Zero or more repetitions:-->
+                  <tas:user>?</tas:user>
+                  <!--Zero or more repetitions:-->
+                  <tas:role>?</tas:role>
+                  <!--Optional:-->
+                  <tas:authorized>?</tas:authorized>
+               </tas:completeAction>
+               <!--Optional:-->
+               <tas:attachments>
+                  <!--Zero or more repetitions:-->
+                  <tas:attachment>
+                     <tas:attachmentMetadata>
+                        <tas:mimeType>?</tas:mimeType>
+                        <tas:fileName>?</tas:fileName>
+                        <tas:title>?</tas:title>
+                        <tas:description>?</tas:description>
+                        <tas:creationDate>?</tas:creationDate>
+                     </tas:attachmentMetadata>
+                     <tas:payloadUrl>?</tas:payloadUrl>
+                  </tas:attachment>
+               </tas:attachments>
+            </tas:metadata>
+            <tas:input>
+               <!--You may enter ANY elements at this point-->
+            </tas:input>
+            <tas:output>
+               <!--You may enter ANY elements at this point-->
+            </tas:output>
+         </tas:task>
+         <tas:participantToken>?</tas:participantToken>
+      </tas:storePipaRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/storePipa"/></con:call></con:operation></con:interface><con:interface xsi:type="con:WsdlInterface" wsaVersion="NONE" name="UIFWBinding" type="wsdl" bindingName="{http://www.intalio.com/bpms/workflow/ib4p_20051115}UIFWBinding" soapVersion="1_1" anonymous="optional" definition="http://localhost:8080/ode/processes/completeTask?wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="http://localhost:8080/ode/processes/completeTask?wsdl"><con:part><con:url>http://localhost:8080/ode/processes/completeTask?wsdl</con:url><con:content><![CDATA[<wsdl:definitions targetNamespace="http://www.intalio.com/bpms/workflow/ib4p_20051115" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:plnk="http://schemas.xmlsoap.org/ws/2004/03/partner-link/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:tms="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:bpws="http://schemas.xmlsoap.org/ws/2004/03/business-process/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:b4p="http://www.intalio.com/bpms/workflow/ib4p_20051115" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/">
+  <wsdl:types>
+    <xsd:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+      <xsd:include schemaLocation="completeTask?xsd=b4p.xsd"/>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="revokeTaskRequest">
+    <wsdl:part name="root" element="b4p:revokeTaskRequest"/>
+  </wsdl:message>
+  <wsdl:message name="revokeTaskResponse">
+    <wsdl:part name="root" element="b4p:revokeTaskResponse"/>
+  </wsdl:message>
+  <wsdl:message name="claimTaskRequest">
+    <wsdl:part name="root" element="b4p:claimTaskRequest"/>
+  </wsdl:message>
+  <wsdl:message name="claimTaskResponse">
+    <wsdl:part name="root" element="b4p:claimTaskResponse"/>
+  </wsdl:message>
+  <wsdl:message name="completeTaskRequest">
+    <wsdl:part name="root" element="b4p:completeTaskRequest"/>
+  </wsdl:message>
+  <wsdl:message name="completeTaskResponse">
+    <wsdl:part name="root" element="b4p:response"/>
+  </wsdl:message>
+  <wsdl:message name="skipTaskRequest">
+    <wsdl:part name="root" element="b4p:skipTaskRequest"/>
+  </wsdl:message>
+  <wsdl:message name="skipTaskResponse">
+    <wsdl:part name="root" element="b4p:response"/>
+  </wsdl:message>
+  <wsdl:portType name="completeTaskPortType">
+    <wsdl:operation name="revokeTask">
+      <wsdl:input message="b4p:revokeTaskRequest" wsaw:Action="revokeTask"/>
+      <wsdl:output message="b4p:revokeTaskResponse" wsaw:Action="http://www.intalio.com/bpms/workflow/ib4p_20051115/UIFWPortType/revokeTaskResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="claimTask">
+      <wsdl:input message="b4p:claimTaskRequest" wsaw:Action="claimTask"/>
+      <wsdl:output message="b4p:claimTaskResponse" wsaw:Action="http://www.intalio.com/bpms/workflow/ib4p_20051115/UIFWPortType/claimTaskResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="completeTask">
+      <wsdl:input message="b4p:completeTaskRequest" wsaw:Action="completeTask"/>
+      <wsdl:output message="b4p:completeTaskResponse" wsaw:Action="http://www.intalio.com/bpms/workflow/ib4p_20051115/UIFWPortType/completeTaskResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="skipTask">
+      <wsdl:input message="b4p:skipTaskRequest" wsaw:Action="skipTask"/>
+      <wsdl:output message="b4p:skipTaskResponse" wsaw:Action="http://www.intalio.com/bpms/workflow/ib4p_20051115/UIFWPortType/skipTaskResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="UIFWBinding" type="b4p:completeTaskPortType">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+    <wsdl:operation name="revokeTask">
+      <soap:operation soapAction="revokeTask" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="claimTask">
+      <soap:operation soapAction="claimTask" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="completeTask">
+      <soap:operation soapAction="completeTask" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="skipTask">
+      <soap:operation soapAction="skipTask" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="completeTask">
+    <wsdl:port name="UIFWPort" binding="b4p:UIFWBinding">
+      <soap:address location="http://localhost:8080/ode/processes/completeTask.UIFWPort/"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part><con:part><con:url>http://localhost:8080/ode/processes/completeTask?xsd=b4p.xsd</con:url><con:content><![CDATA[<xsd:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.intalio.com/bpms/workflow/ib4p_20051115" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:b4p="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+  <xsd:element name="usersAndRoles" type="b4p:accessControlType"/>
+  <xsd:complexType name="accessControlType">
+    <xsd:sequence>
+      <xsd:element maxOccurs="unbounded" minOccurs="0" name="user" type="xsd:string"/>
+      <xsd:element maxOccurs="unbounded" minOccurs="0" name="role" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="scheduledActionsDetails">
+    <xsd:choice minOccurs="0">
+      <xsd:element minOccurs="0" name="until" type="xsd:dateTime"/>
+      <xsd:element minOccurs="0" name="for" type="xsd:duration"/>
+    </xsd:choice>
+  </xsd:complexType>
+  <xsd:element name="completeTaskRequest">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="taskMetaData" type="b4p:taskMetaDataType"/>
+        <xsd:element name="participantToken" type="xsd:string"/>
+        <xsd:element name="user" type="xsd:string"/>
+        <xsd:element name="taskOutput"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="skipTaskRequest">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="taskId" type="xsd:string"/>
+        <xsd:element name="participantToken" type="xsd:string"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="createTaskRequest">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="taskMetaData" type="b4p:taskMetaDataType"/>
+        <xsd:element name="participantToken" type="xsd:string"/>
+        <xsd:element name="taskInput"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="escalateTaskRequest">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="taskId" type="xsd:string"/>
+        <xsd:element name="userOwner" type="xsd:string"/>
+        <xsd:element name="roleOwner" type="xsd:string"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="escalateTaskResponse">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="status" type="xsd:string"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="claimTaskRequest">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="taskId" type="xsd:string"/>
+        <xsd:element name="claimerUser" type="xsd:string"/>
+        <xsd:element name="participantToken" type="xsd:string"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="claimTaskResponse">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="status" type="xsd:string"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="revokeTaskRequest">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="taskId" type="xsd:string"/>
+        <xsd:element name="participantToken" type="xsd:string"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="revokeTaskResponse">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="status" type="xsd:string"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="notifyTaskCompletionRequest">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="taskMetaData" type="b4p:taskMetaDataType"/>
+        <xsd:element name="taskOutput"/>
+        <xsd:element name="user" type="xsd:string"/>
+        <xsd:element name="status" type="xsd:string"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="response">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="taskMetaData" type="b4p:taskMetaDataType"/>
+        <xsd:element name="status" type="xsd:string"/>
+        <xsd:element minOccurs="0" name="errorCode" type="xsd:string"/>
+        <xsd:element minOccurs="0" name="errorReason" type="xsd:string"/>
+        <xsd:element minOccurs="0" name="isChainedAfter" type="xsd:boolean"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="chainedExecution">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" name="previousTaskId" type="xsd:string"/>
+        <xsd:element minOccurs="0" name="nextTaskId" type="xsd:string"/>
+        <xsd:element minOccurs="0" name="nextTaskURL" type="xsd:string"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:complexType name="taskMetaDataType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="taskId" type="xsd:string"/>
+      <xsd:element minOccurs="0" name="taskState" type="xsd:token"/>
+      <xsd:element minOccurs="0" name="taskType" type="xsd:token"/>
+      <xsd:element minOccurs="0" name="description" type="xsd:string"/>
+      <xsd:element minOccurs="0" name="processId" type="xsd:string"/>
+      <xsd:element minOccurs="0" name="instanceId" type="xsd:string"/>
+      <xsd:element minOccurs="0" name="creationDate" type="xsd:dateTime"/>
+      <xsd:element maxOccurs="unbounded" minOccurs="0" name="userOwner" type="xsd:string"/>
+      <xsd:element maxOccurs="unbounded" minOccurs="0" name="roleOwner" type="xsd:string"/>
+      <xsd:element minOccurs="0" name="claimAction" type="b4p:accessControlType"/>
+      <xsd:element minOccurs="0" name="revokeAction" type="b4p:accessControlType"/>
+      <xsd:element minOccurs="0" name="saveAction" type="b4p:accessControlType"/>
+      <xsd:element minOccurs="0" name="dismissAction" type="b4p:accessControlType"/>
+      <xsd:element minOccurs="0" name="completeAction" type="b4p:accessControlType"/>
+      <xsd:element minOccurs="0" name="deferAction" type="b4p:accessControlType"/>
+      <xsd:element minOccurs="0" name="formUrl" type="xsd:anyURI"/>
+      <xsd:element minOccurs="0" name="failureCode" type="xsd:string"/>
+      <xsd:element minOccurs="0" name="failureReason" type="xsd:string"/>
+      <xsd:element minOccurs="0" name="priority" type="xsd:int"/>
+      <xsd:element minOccurs="0" name="scheduledActions">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="expiration" type="b4p:scheduledActionsDetails"/>
+            <xsd:element minOccurs="0" name="deferActivation" type="b4p:scheduledActionsDetails"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="userEndpoint" type="xsd:string"/>
+      <xsd:element minOccurs="0" name="userProcessEndpoint" type="xsd:string"/>
+      <xsd:element minOccurs="0" name="userProcessNamespaceURI" type="xsd:string"/>
+      <xsd:element minOccurs="0" name="userProcessCompleteSOAPAction" type="xsd:string"/>
+      <xsd:element minOccurs="0" name="isChainedBefore" type="xsd:boolean"/>
+      <xsd:element minOccurs="0" name="previousTaskId" type="xsd:string"/>
+      <xsd:element minOccurs="0" name="nextTaskId" type="xsd:string"/>
+      <xsd:element minOccurs="0" name="session" type="xsd:string"/>
+      <xsd:element minOccurs="0" name="nextTaskURL" type="xsd:string"/>
+      <xsd:element name="attachments">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element form="unqualified" maxOccurs="unbounded" minOccurs="0" name="attachment" type="b4p:attachment"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="attachment">
+    <xsd:sequence>
+      <xsd:element form="unqualified" name="attachmentMetadata" type="b4p:attachmentMetadata"/>
+      <xsd:element form="unqualified" name="payloadUrl" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="attachmentMetadata">
+    <xsd:sequence>
+      <xsd:element form="unqualified" name="mimeType" type="xsd:string"/>
+      <xsd:element form="unqualified" name="fileName" type="xsd:string"/>
+      <xsd:element form="unqualified" name="title" type="xsd:string"/>
+      <xsd:element form="unqualified" name="description" type="xsd:string"/>
+      <xsd:element form="unqualified" name="creationDate" type="xsd:dateTime"/>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://localhost:8080/ode/processes/completeTask.UIFWPort/</con:endpoint></con:endpoints><con:operation isOneWay="false" action="claimTask" name="claimTask" bindingOperationName="claimTask" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/ode/processes/completeTask.UIFWPort/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ib4p="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ib4p:claimTaskRequest>
+         <ib4p:taskId>?</ib4p:taskId>
+         <ib4p:claimerUser>?</ib4p:claimerUser>
+         <ib4p:participantToken>?</ib4p:participantToken>
+      </ib4p:claimTaskRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="claimTask"/></con:call></con:operation><con:operation isOneWay="false" action="completeTask" name="completeTask" bindingOperationName="completeTask" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/ode/processes/completeTask.UIFWPort/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ib4p="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ib4p:completeTaskRequest>
+         <ib4p:taskMetaData>
+            <!--Optional:-->
+            <ib4p:taskId>?</ib4p:taskId>
+            <!--Optional:-->
+            <ib4p:taskState>?</ib4p:taskState>
+            <!--Optional:-->
+            <ib4p:taskType>?</ib4p:taskType>
+            <!--Optional:-->
+            <ib4p:description>?</ib4p:description>
+            <!--Optional:-->
+            <ib4p:processId>?</ib4p:processId>
+            <!--Optional:-->
+            <ib4p:instanceId>?</ib4p:instanceId>
+            <!--Optional:-->
+            <ib4p:creationDate>?</ib4p:creationDate>
+            <!--Zero or more repetitions:-->
+            <ib4p:userOwner>?</ib4p:userOwner>
+            <!--Zero or more repetitions:-->
+            <ib4p:roleOwner>?</ib4p:roleOwner>
+            <!--Optional:-->
+            <ib4p:claimAction>
+               <!--Zero or more repetitions:-->
+               <ib4p:user>?</ib4p:user>
+               <!--Zero or more repetitions:-->
+               <ib4p:role>?</ib4p:role>
+            </ib4p:claimAction>
+            <!--Optional:-->
+            <ib4p:revokeAction>
+               <!--Zero or more repetitions:-->
+               <ib4p:user>?</ib4p:user>
+               <!--Zero or more repetitions:-->
+               <ib4p:role>?</ib4p:role>
+            </ib4p:revokeAction>
+            <!--Optional:-->
+            <ib4p:saveAction>
+               <!--Zero or more repetitions:-->
+               <ib4p:user>?</ib4p:user>
+               <!--Zero or more repetitions:-->
+               <ib4p:role>?</ib4p:role>
+            </ib4p:saveAction>
+            <!--Optional:-->
+            <ib4p:dismissAction>
+               <!--Zero or more repetitions:-->
+               <ib4p:user>?</ib4p:user>
+               <!--Zero or more repetitions:-->
+               <ib4p:role>?</ib4p:role>
+            </ib4p:dismissAction>
+            <!--Optional:-->
+            <ib4p:completeAction>
+               <!--Zero or more repetitions:-->
+               <ib4p:user>?</ib4p:user>
+               <!--Zero or more repetitions:-->
+               <ib4p:role>?</ib4p:role>
+            </ib4p:completeAction>
+            <!--Optional:-->
+            <ib4p:deferAction>
+               <!--Zero or more repetitions:-->
+               <ib4p:user>?</ib4p:user>
+               <!--Zero or more repetitions:-->
+               <ib4p:role>?</ib4p:role>
+            </ib4p:deferAction>
+            <!--Optional:-->
+            <ib4p:formUrl>?</ib4p:formUrl>
+            <!--Optional:-->
+            <ib4p:failureCode>?</ib4p:failureCode>
+            <!--Optional:-->
+            <ib4p:failureReason>?</ib4p:failureReason>
+            <!--Optional:-->
+            <ib4p:priority>?</ib4p:priority>
+            <!--Optional:-->
+            <ib4p:scheduledActions>
+               <!--Optional:-->
+               <ib4p:expiration>
+                  <!--You have a CHOICE of the next 2 items at this level-->
+                  <!--Optional:-->
+                  <ib4p:until>?</ib4p:until>
+                  <!--Optional:-->
+                  <ib4p:for>?</ib4p:for>
+               </ib4p:expiration>
+               <!--Optional:-->
+               <ib4p:deferActivation>
+                  <!--You have a CHOICE of the next 2 items at this level-->
+                  <!--Optional:-->
+                  <ib4p:until>?</ib4p:until>
+                  <!--Optional:-->
+                  <ib4p:for>?</ib4p:for>
+               </ib4p:deferActivation>
+            </ib4p:scheduledActions>
+            <!--Optional:-->
+            <ib4p:userEndpoint>?</ib4p:userEndpoint>
+            <!--Optional:-->
+            <ib4p:userProcessEndpoint>?</ib4p:userProcessEndpoint>
+            <!--Optional:-->
+            <ib4p:userProcessNamespaceURI>?</ib4p:userProcessNamespaceURI>
+            <!--Optional:-->
+            <ib4p:userProcessCompleteSOAPAction>?</ib4p:userProcessCompleteSOAPAction>
+            <!--Optional:-->
+            <ib4p:isChainedBefore>?</ib4p:isChainedBefore>
+            <!--Optional:-->
+            <ib4p:previousTaskId>?</ib4p:previousTaskId>
+            <!--Optional:-->
+            <ib4p:nextTaskId>?</ib4p:nextTaskId>
+            <!--Optional:-->
+            <ib4p:session>?</ib4p:session>
+            <!--Optional:-->
+            <ib4p:nextTaskURL>?</ib4p:nextTaskURL>
+            <ib4p:attachments>
+               <!--Zero or more repetitions:-->
+               <attachment>
+                  <attachmentMetadata>
+                     <mimeType>?</mimeType>
+                     <fileName>?</fileName>
+                     <title>?</title>
+                     <description>?</description>
+                     <creationDate>?</creationDate>
+                  </attachmentMetadata>
+                  <payloadUrl>?</payloadUrl>
+               </attachment>
+            </ib4p:attachments>
+         </ib4p:taskMetaData>
+         <ib4p:participantToken>?</ib4p:participantToken>
+         <ib4p:user>?</ib4p:user>
+         <ib4p:taskOutput>?</ib4p:taskOutput>
+      </ib4p:completeTaskRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="completeTask"/></con:call></con:operation><con:operation isOneWay="false" action="revokeTask" name="revokeTask" bindingOperationName="revokeTask" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/ode/processes/completeTask.UIFWPort/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ib4p="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ib4p:revokeTaskRequest>
+         <ib4p:taskId>?</ib4p:taskId>
+         <ib4p:participantToken>?</ib4p:participantToken>
+      </ib4p:revokeTaskRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="revokeTask"/></con:call></con:operation><con:operation isOneWay="false" action="skipTask" name="skipTask" bindingOperationName="skipTask" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/ode/processes/completeTask.UIFWPort/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ib4p="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ib4p:skipTaskRequest>
+         <ib4p:taskId>?</ib4p:taskId>
+         <ib4p:participantToken>?</ib4p:participantToken>
+      </ib4p:skipTaskRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="skipTask"/></con:call></con:operation></con:interface><con:testSuite name="WorkflowTestWithGroovy"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="GroovyTest" searchProperties="true" id="3bcffa7c-e6d8-4824-aa71-e1b56a7ae522"><con:settings/><con:testStep type="request" name="Authenticate" disabled="true"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>TokenServiceSOAP</con:interface><con:operation>authenticateUser</con:operation><con:request name="Authenticate"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/TokenService.Service/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tok="http://tempo.intalio.org/security/tokenService/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tok:authenticateUser>
+         <tok:user>admin</tok:user>
+         <tok:password>changeit</tok:password>
+      </tok:authenticateUser>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="groovy" name="Groovy Script"><con:settings/><con:config><script>/**
+ This is a sample groovy test script to access workflow base processes
+*/
+/* 
+  ************************************************************************************************
+  ************************************************************************************************
+    Workflow Testing Internal Methods. Just copy and paste 
+  ************************************************************************************************
+  ************************************************************************************************
+*/
+
+def getStep(stepName) {
+  return testRunner.testCase.getTestStepByName(stepName)
+}
+
+def printMethods(obj) {
+   def pp = obj.class.methods
+   for(m in pp) log.info(m.toString())
+}
+
+def requestHolderFromStep(step) {
+/*
+  a step has the following properties:
+  one of Domain, Password, Username, Response, Request, Endpoint
+/*
+ def properties = step.getPropertyNames()
+ for(prop in properties) {log.info(prop)}
+*/
+   def stepRequest = step.getProperty("Request")
+   def requestC = stepRequest.testStep.getTestRequest().getRequestContent()
+   def utils = new com.eviware.soapui.support.GroovyUtils( context )
+   def holder = utils.getXmlHolder(requestC)  
+   return holder
+}
+
+def updateRequestWithMap(step, map) {
+  def holder = requestHolderFromStep(step)
+  map.each {key, value -> holder.setNodeValue(key,value)}
+  step.testStep.getTestRequest().setRequestContent(holder.xml)
+}
+
+def sendSoapRequest(step, map) {
+   currentStep = getStep(step)
+   updateRequestWithMap(currentStep, map)
+   result = currentStep.run(testRunner, context)
+   resultHolder = new com.eviware.soapui.support.GroovyUtils( context ).getXmlHolder(result.responseContentAsXml)
+   return resultHolder
+}
+
+/**
+  Pause time in seconds
+*/
+def pause(time) {
+    log.info("Wating for "+ time +" seconds") 
+    synchronized(this) {wait(time*1000)}
+}
+
+/* 
+  ************************************************************************************************
+  ************************************************************************************************
+    Starting the workflow test case
+  ************************************************************************************************
+  ************************************************************************************************
+*/
+
+/* 
+  Run the authenticate method against token service and get the 
+  security token
+*/
+authenticateResult = sendSoapRequest("Authenticate" , ["tok:user":"admin", "tok:password":"changeit"])
+token = authenticateResult.getNodeValue("//tokenws:token")
+log.info("Using security token:"+token)
+
+/*
+  Get the pipa ID to start 
+*/
+pipaRequestMap = [ 
+  "//tas:taskType": "PIPATask",
+  "//tas:participantToken":token,
+  "//tas:subQuery": "T._description like '%Examples%'"
+]
+pipaResultHolder = sendSoapRequest("GetTasks", pipaRequestMap)
+pipaId = pipaResultHolder.getNodeValue("//tms:taskId")
+log.info("PIPA Id:"+pipaId)
+
+/*
+  Init the process related to the pipa
+*/
+initMap = [
+  "//tas:participantToken" : token,
+  "//tas:taskId" : pipaId
+]
+sendSoapRequest("InitFromPipa" , initMap)
+
+/*
+   Waiting a few seconds
+*/
+pause(2)
+
+/*
+   Get the new activity task generated by the process
+*/
+requestMap = [
+ "//tas:participantToken":token,
+ "//tas:taskType": "PATask",
+ "//tas:subQuery" : "T._state = TaskState.READY and T._description like '%Absence%' ORDER BY T._creationDate DESC"
+]
+taskListResponse = sendSoapRequest("GetTasks", requestMap)
+tasks = taskListResponse.getDomNodes("//tms:taskId")
+// check we only have 1 activy task to complete
+if(tasks.length &lt;= 0 || tasks.length > 1) throw new Exception("Number of tasks is weird")
+// getValueAsString(): http://www.docjar.com/docs/api/org/apache/xmlbeans/impl/store/Xobj$ElementXobj.html
+activityTaskId = tasks[0].getValueAsString()
+
+/*
+   Complete the task
+*/
+log.info("We are going to complete this task"+activityTaskId)
+completeMap = [
+   "//ib4p:participantToken":token,
+   "//ib4p:taskId": activityTaskId,
+   "//ib4p:user" : "admin"
+]
+completeResult = sendSoapRequest("CompleteTMPTask" , completeMap)
+log.info(completeResult.xml)
+
+/* 
+   Get and Complete notification
+*/
+requestMap = [
+ "//tas:participantToken":token,
+ "//tas:taskType": "Notification",
+ "//tas:subQuery" : "T._state = TaskState.READY ORDER BY T._creationDate DESC"
+]
+taskListResponse = sendSoapRequest("GetTasks", requestMap)
+tasks = taskListResponse.getDomNodes("//tms:taskId")
+
+pause(1)
+
+requestMap = [
+ "//tas:participantToken":token,
+ "//tas:taskId": tasks[0].getValueAsString()
+]
+completeResult = sendSoapRequest("CompleteTMSTask", requestMap)
+log.info(completeResult.xml)</script></con:config></con:testStep><con:testStep type="request" name="GetTasks" disabled="true"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>TaskManagementServicesSOAP</con:interface><con:operation>getAvailableTasks</con:operation><con:request name="GetTasks"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/TaskManagementServices.TaskManagementServicesSOAP/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tas="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tas:getAvailableTasksRequest>
+         <tas:participantToken>VE9LRU4mJnVzZXI9PWludGFsaW9cYWRtaW4mJmlzc3VlZD09MTI1OTY4NjMzMDU1MSYmcm9sZXM9PWV4YW1wbGVzXG1hbmFnZXIsZXhhbXBsZXNcZW1wbG95ZWUsaW50YWxpb1xwcm9jZXNzYWRtaW5pc3RyYXRvcixpbnRhbGlvXHByb2Nlc3NtYW5hZ2VyJiZmdWxsTmFtZT09QWRtaW5pbmlzdHJhdG9yJiZlbWFpbD09YWRtaW5AZXhhbXBsZS5jb20mJm5vbmNlPT0tNzgzMzQwOTgxNzIxOTA2MzQ3NSYmdGltZXN0YW1wPT0xMjU5Njg2MzMwNTUxJiZkaWdlc3Q9PUJTL0RXT1NCekV3MURKWnJHa1BkTDBlZWhtYz0mJiYmVE9LRU4=</tas:participantToken>
+         <tas:taskType>Notification</tas:taskType>
+         <tas:subQuery>T._state = TaskState.READY ORDER BY T._creationDate DESC</tas:subQuery>
+      </tas:getAvailableTasksRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="InitFromPipa" disabled="true"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>TaskManagementServicesSOAP</con:interface><con:operation>initProcess</con:operation><con:request name="InitFromPipa"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/TaskManagementServices.TaskManagementServicesSOAP/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tas="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tas:initRequest>
+         <tas:taskId>94e6e871-637a-4b9a-99f7-9fd5a064028d</tas:taskId>
+         <tas:input>
+<output xmlns="http://www.intalio.com/workflow/forms/AbsenceRequest/AbsenceRequest">
+	<request>
+		<employee>
+			<name>Employee Name</name>
+			<phone>Employee Phone</phone>
+			<email>employee@intalio.com</email>
+		</employee>
+		<details>
+			<request>
+				<from>2009-10-09</from>
+				<to>2009-11-12</to>
+				<type>Holidays</type>
+				<hours>300</hours>
+			</request>
+		</details>
+		<contactWhileAway>
+			<name>Nicolas Modrzyk</name>
+			<phone>123456</phone>
+			<email>nico@intalio.com</email>
+		</contactWhileAway>
+		<notes>Some notes ...</notes>
+	</request>
+</output>
+         </tas:input>
+         <tas:participantToken>VE9LRU4mJnVzZXI9PWludGFsaW9cYWRtaW4mJmlzc3VlZD09MTI1OTY4NjMzMDU1MSYmcm9sZXM9PWV4YW1wbGVzXG1hbmFnZXIsZXhhbXBsZXNcZW1wbG95ZWUsaW50YWxpb1xwcm9jZXNzYWRtaW5pc3RyYXRvcixpbnRhbGlvXHByb2Nlc3NtYW5hZ2VyJiZmdWxsTmFtZT09QWRtaW5pbmlzdHJhdG9yJiZlbWFpbD09YWRtaW5AZXhhbXBsZS5jb20mJm5vbmNlPT0tNzgzMzQwOTgxNzIxOTA2MzQ3NSYmdGltZXN0YW1wPT0xMjU5Njg2MzMwNTUxJiZkaWdlc3Q9PUJTL0RXT1NCekV3MURKWnJHa1BkTDBlZWhtYz0mJiYmVE9LRU4=</tas:participantToken>
+      </tas:initRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="CompleteTask" disabled="true"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>TaskManagementServicesSOAP</con:interface><con:operation>setOutputAndComplete</con:operation><con:request name="CompleteTask"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/TaskManagementServices.TaskManagementServicesSOAP/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tas="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tas:setOutputAndCompleteRequest>
+         <tas:taskId>notify-JM0L-B6SI-4M7N-KSPW</tas:taskId>
+         <tas:data><output xmlns="http://www.intalio.com/workflow/forms/AbsenceRequest/AbsenceRequest">
+<approved>false</approved>
+<comment>some comments</comment>
+<contactWhileAway>
+			<name>Me</name>
+			<phone>My phone</phone>
+			<email>away@intalio.com</email>
+</contactWhileAway>
+</output>
+         </tas:data>
+         <tas:participantToken>VE9LRU4mJnVzZXI9PWludGFsaW9cYWRtaW4mJmlzc3VlZD09MTI1OTY4NjEzODM2MyYmcm9sZXM9PWV4YW1wbGVzXG1hbmFnZXIsZXhhbXBsZXNcZW1wbG95ZWUsaW50YWxpb1xwcm9jZXNzYWRtaW5pc3RyYXRvcixpbnRhbGlvXHByb2Nlc3NtYW5hZ2VyJiZmdWxsTmFtZT09QWRtaW5pbmlzdHJhdG9yJiZlbWFpbD09YWRtaW5AZXhhbXBsZS5jb20mJm5vbmNlPT0yNjg0MjQxMTA2OTMwNTE4NzY5JiZ0aW1lc3RhbXA9PTEyNTk2ODYxMzgzNjMmJmRpZ2VzdD09VnZ1RnRKRHU0ajU4QkhLMk5yZkd5ajc0SVZNPSYmJiZUT0tFTg==</tas:participantToken>
+      </tas:setOutputAndCompleteRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="CompleteTMPTask" disabled="true"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>UIFWBinding</con:interface><con:operation>completeTask</con:operation><con:request name="CompleteTMPTask"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/ode/processes/completeTask.UIFWPort/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ib4p="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ib4p:completeTaskRequest>
+         <ib4p:taskMetaData><ib4p:taskId>2cdf7ebd97f5743a:-6421c88:12544e47511:-7acf192.16.17.10289</ib4p:taskId>
+         </ib4p:taskMetaData>
+         <ib4p:participantToken>VE9LRU4mJnVzZXI9PWludGFsaW9cYWRtaW4mJmlzc3VlZD09MTI1OTY4NjMzMDU1MSYmcm9sZXM9PWV4YW1wbGVzXG1hbmFnZXIsZXhhbXBsZXNcZW1wbG95ZWUsaW50YWxpb1xwcm9jZXNzYWRtaW5pc3RyYXRvcixpbnRhbGlvXHByb2Nlc3NtYW5hZ2VyJiZmdWxsTmFtZT09QWRtaW5pbmlzdHJhdG9yJiZlbWFpbD09YWRtaW5AZXhhbXBsZS5jb20mJm5vbmNlPT0tNzgzMzQwOTgxNzIxOTA2MzQ3NSYmdGltZXN0YW1wPT0xMjU5Njg2MzMwNTUxJiZkaWdlc3Q9PUJTL0RXT1NCekV3MURKWnJHa1BkTDBlZWhtYz0mJiYmVE9LRU4=</ib4p:participantToken>
+         <ib4p:user>admin</ib4p:user>
+         <ib4p:taskOutput><output xmlns="http://www.intalio.com/workflow/forms/AbsenceRequest/AbsenceRequest">
+<approved>false</approved>
+<comment>some comments</comment>
+<contactWhileAway>
+			<name>Me</name>
+			<phone>My phone</phone>
+			<email>away@intalio.com</email>
+</contactWhileAway>
+</output></ib4p:taskOutput>
+      </ib4p:completeTaskRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="CompleteTMSTask" disabled="true"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>TaskManagementServicesSOAP</con:interface><con:operation>complete</con:operation><con:request name="CompleteTMSTask"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/TaskManagementServices.TaskManagementServicesSOAP/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tas="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tas:completeRequest>
+         <tas:taskId>notify-DWE4-E0XP-2QVQ-8FIL</tas:taskId>
+         <tas:participantToken>VE9LRU4mJnVzZXI9PWludGFsaW9cYWRtaW4mJmlzc3VlZD09MTI1OTY4NjMzMDU1MSYmcm9sZXM9PWV4YW1wbGVzXG1hbmFnZXIsZXhhbXBsZXNcZW1wbG95ZWUsaW50YWxpb1xwcm9jZXNzYWRtaW5pc3RyYXRvcixpbnRhbGlvXHByb2Nlc3NtYW5hZ2VyJiZmdWxsTmFtZT09QWRtaW5pbmlzdHJhdG9yJiZlbWFpbD09YWRtaW5AZXhhbXBsZS5jb20mJm5vbmNlPT0tNzgzMzQwOTgxNzIxOTA2MzQ3NSYmdGltZXN0YW1wPT0xMjU5Njg2MzMwNTUxJiZkaWdlc3Q9PUJTL0RXT1NCekV3MURKWnJHa1BkTDBlZWhtYz0mJiYmVE9LRU4=</tas:participantToken>
+      </tas:completeRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:properties/></con:testSuite><con:testSuite name="WorkflowTestWithSoapUI"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="TestAbsenceRequest" searchProperties="true" id="df38624c-a3f1-4d62-8f5c-917082303dac"><con:settings/><con:testStep type="request" name="AuthenticateUser"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>TokenServiceSOAP</con:interface><con:operation>authenticateUser</con:operation><con:request name="AuthenticateUser"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/TokenService.Service/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tok="http://tempo.intalio.org/security/tokenService/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tok:authenticateUser>
+         <tok:user>admin</tok:user>
+         <tok:password>changeit</tok:password>
+      </tok:authenticateUser>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="transfer" name="CopyToken"><con:settings/><con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" useXQuery="false" entitize="false" transferChildNodes="false"><con:name>token</con:name><con:sourceType>Response</con:sourceType><con:sourceStep>AuthenticateUser</con:sourceStep><con:sourcePath>declare namespace soapenv='http://schemas.xmlsoap.org/soap/envelope/';
+declare namespace tokenws='http://tempo.intalio.org/security/tokenService/';
+//tokenws:token</con:sourcePath><con:targetType>Request</con:targetType><con:targetStep>GetPipa</con:targetStep><con:targetPath>declare namespace soap='http://www.w3.org/2003/05/soap-envelope';
+declare namespace tas='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/';
+//tas:participantToken</con:targetPath></con:transfers></con:config></con:testStep><con:testStep type="request" name="GetPipa"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>TaskManagementServicesSOAP</con:interface><con:operation>getAvailableTasks</con:operation><con:request name="GetPipa"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/TaskManagementServices.TaskManagementServicesSOAP/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tas="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tas:getAvailableTasksRequest>
+         <tas:participantToken>VE9LRU4mJnVzZXI9PWludGFsaW9cYWRtaW4mJmlzc3VlZD09MTI1OTY3MjAyMzg0MCYmcm9sZXM9PWV4YW1wbGVzXG1hbmFnZXIsZXhhbXBsZXNcZW1wbG95ZWUsaW50YWxpb1xwcm9jZXNzYWRtaW5pc3RyYXRvcixpbnRhbGlvXHByb2Nlc3NtYW5hZ2VyJiZmdWxsTmFtZT09QWRtaW5pbmlzdHJhdG9yJiZlbWFpbD09YWRtaW5AZXhhbXBsZS5jb20mJm5vbmNlPT0tMjU4NTI4Nzk2ODIwMjE5MDI5MiYmdGltZXN0YW1wPT0xMjU5NjcyMDIzODQxJiZkaWdlc3Q9PVgrYnMrTngzOTJIcURXWElWd3M0R1h1UzhTWT0mJiYmVE9LRU4=</tas:participantToken>
+         <tas:taskType>PIPATask</tas:taskType>
+         <tas:subQuery>T._description like '%Examples%'</tas:subQuery>
+      </tas:getAvailableTasksRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="transfer" name="CopyTokenAndPipaId"><con:settings/><con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" useXQuery="false" entitize="false" transferChildNodes="true"><con:name>CopyToken</con:name><con:sourceType>Response</con:sourceType><con:sourceStep>AuthenticateUser</con:sourceStep><con:sourcePath>declare namespace soapenv='http://schemas.xmlsoap.org/soap/envelope/';
+declare namespace tokenws='http://tempo.intalio.org/security/tokenService/';
+//tokenws:token
+</con:sourcePath><con:targetType>Request</con:targetType><con:targetStep>initProcess</con:targetStep><con:targetPath>declare namespace soap='http://www.w3.org/2003/05/soap-envelope';
+declare namespace tas='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/';
+//tas:participantToken</con:targetPath></con:transfers><con:transfers setNullOnMissingSource="false" transferTextContent="true" failOnError="true" transferChildNodes="false" entitize="false" useXQuery="false" ignoreEmpty="false" transferToAll="false"><con:name>CopyTaskId</con:name><con:sourceType>Response</con:sourceType><con:sourceStep>GetPipa</con:sourceStep><con:sourcePath>declare namespace soapenv='http://www.w3.org/2003/05/soap-envelope';
+declare namespace tms='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/';
+//tms:taskId
+</con:sourcePath><con:targetType>Request</con:targetType><con:targetStep>initProcess</con:targetStep><con:targetPath>declare namespace soap='http://www.w3.org/2003/05/soap-envelope';
+declare namespace tas='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/';
+//tas:taskId</con:targetPath></con:transfers></con:config></con:testStep><con:testStep type="request" name="initProcess"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>TaskManagementServicesSOAP</con:interface><con:operation>initProcess</con:operation><con:request name="initProcess"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/TaskManagementServices.TaskManagementServicesSOAP/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tas="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tas:initRequest>
+         <tas:taskId>94e6e871-637a-4b9a-99f7-9fd5a064028d</tas:taskId>
+         <tas:input>
+<output xmlns="http://www.intalio.com/workflow/forms/AbsenceRequest/AbsenceRequest">
+	<request>
+		<employee>
+			<name>Employee Name</name>
+			<phone>Employee Phone</phone>
+			<email>employee@intalio.com</email>
+		</employee>
+		<details>
+			<request>
+				<from>2009-10-09</from>
+				<to>2009-11-12</to>
+				<type>Holidays</type>
+				<hours>300</hours>
+			</request>
+		</details>
+		<contactWhileAway>
+			<name>Nicolas Modrzyk</name>
+			<phone>123456</phone>
+			<email>nico@intalio.com</email>
+		</contactWhileAway>
+		<notes>Some notes ...</notes>
+	</request>
+</output>
+         </tas:input>
+         <tas:participantToken>VE9LRU4mJnVzZXI9PWludGFsaW9cYWRtaW4mJmlzc3VlZD09MTI1OTY3MjAyMzg0MCYmcm9sZXM9PWV4YW1wbGVzXG1hbmFnZXIsZXhhbXBsZXNcZW1wbG95ZWUsaW50YWxpb1xwcm9jZXNzYWRtaW5pc3RyYXRvcixpbnRhbGlvXHByb2Nlc3NtYW5hZ2VyJiZmdWxsTmFtZT09QWRtaW5pbmlzdHJhdG9yJiZlbWFpbD09YWRtaW5AZXhhbXBsZS5jb20mJm5vbmNlPT0tMjU4NTI4Nzk2ODIwMjE5MDI5MiYmdGltZXN0YW1wPT0xMjU5NjcyMDIzODQxJiZkaWdlc3Q9PVgrYnMrTngzOTJIcURXWElWd3M0R1h1UzhTWT0mJiYmVE9LRU4=</tas:participantToken>
+      </tas:initRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="transfer" name="CopyTokenToGetTasks"><con:settings/><con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" useXQuery="false" entitize="false" transferChildNodes="false"><con:name>token</con:name><con:sourceType>Response</con:sourceType><con:sourceStep>AuthenticateUser</con:sourceStep><con:sourcePath>declare namespace soapenv='http://schemas.xmlsoap.org/soap/envelope/';
+declare namespace tokenws='http://tempo.intalio.org/security/tokenService/';
+//tokenws:token</con:sourcePath><con:targetType>Request</con:targetType><con:targetStep>GetActivityTasks</con:targetStep><con:targetPath>declare namespace soap='http://www.w3.org/2003/05/soap-envelope';
+declare namespace tas='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/';
+//tas:participantToken</con:targetPath></con:transfers></con:config></con:testStep><con:testStep type="delay" name="Delay"><con:settings/><con:config><delay>2000</delay></con:config></con:testStep><con:testStep type="request" name="GetActivityTasks"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>TaskManagementServicesSOAP</con:interface><con:operation>getAvailableTasks</con:operation><con:request name="GetActivityTasks"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/TaskManagementServices.TaskManagementServicesSOAP/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tas="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tas:getAvailableTasksRequest>
+         <tas:participantToken>VE9LRU4mJnVzZXI9PWludGFsaW9cYWRtaW4mJmlzc3VlZD09MTI1OTY3MjAyMzg0MCYmcm9sZXM9PWV4YW1wbGVzXG1hbmFnZXIsZXhhbXBsZXNcZW1wbG95ZWUsaW50YWxpb1xwcm9jZXNzYWRtaW5pc3RyYXRvcixpbnRhbGlvXHByb2Nlc3NtYW5hZ2VyJiZmdWxsTmFtZT09QWRtaW5pbmlzdHJhdG9yJiZlbWFpbD09YWRtaW5AZXhhbXBsZS5jb20mJm5vbmNlPT0tMjU4NTI4Nzk2ODIwMjE5MDI5MiYmdGltZXN0YW1wPT0xMjU5NjcyMDIzODQxJiZkaWdlc3Q9PVgrYnMrTngzOTJIcURXWElWd3M0R1h1UzhTWT0mJiYmVE9LRU4=</tas:participantToken>
+         <tas:taskType>PATask</tas:taskType>
+         <tas:subQuery>T._state = TaskState.READY and T._description like '%Absence%' ORDER BY T._creationDate DESC</tas:subQuery>
+      </tas:getAvailableTasksRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="transfer" name="CopyActivityTaskId"><con:settings/><con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" useXQuery="false" entitize="false" transferChildNodes="false"><con:name>taskId</con:name><con:sourceType>Response</con:sourceType><con:sourceStep>GetActivityTasks</con:sourceStep><con:sourcePath>declare namespace soapenv='http://www.w3.org/2003/05/soap-envelope';
+declare namespace tms='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/';
+//tms:taskId</con:sourcePath><con:targetType>Request</con:targetType><con:targetStep>Complete</con:targetStep><con:targetPath>declare namespace soap='http://www.w3.org/2003/05/soap-envelope';
+declare namespace ib4p='http://www.intalio.com/bpms/workflow/ib4p_20051115';
+//ib4p:taskId</con:targetPath></con:transfers><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferChildNodes="false" entitize="false" transferToAll="false" useXQuery="false"><con:name>token</con:name><con:sourceType>Response</con:sourceType><con:sourceStep>AuthenticateUser</con:sourceStep><con:sourcePath>declare namespace soapenv='http://schemas.xmlsoap.org/soap/envelope/';
+declare namespace tokenws='http://tempo.intalio.org/security/tokenService/';
+//tokenws:token</con:sourcePath><con:targetType>Request</con:targetType><con:targetStep>Complete</con:targetStep><con:targetPath>declare namespace soap='http://www.w3.org/2003/05/soap-envelope';
+declare namespace tas='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/';
+declare namespace ib4p='http://www.intalio.com/bpms/workflow/ib4p_20051115';
+//ib4p:participantToken</con:targetPath></con:transfers></con:config></con:testStep><con:testStep type="request" name="Complete"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>UIFWBinding</con:interface><con:operation>completeTask</con:operation><con:request name="Complete"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/ode/processes/completeTask.UIFWPort/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ib4p="http://www.intalio.com/bpms/workflow/ib4p_20051115">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ib4p:completeTaskRequest>
+<ib4p:taskMetaData><ib4p:taskId>2cdf7ebd97f5743a:-6421c88:12544e47511:-7b8c192.16.17.10199</ib4p:taskId></ib4p:taskMetaData>
+         <ib4p:participantToken>VE9LRU4mJnVzZXI9PWludGFsaW9cYWRtaW4mJmlzc3VlZD09MTI1OTY3MjAyMzg0MCYmcm9sZXM9PWV4YW1wbGVzXG1hbmFnZXIsZXhhbXBsZXNcZW1wbG95ZWUsaW50YWxpb1xwcm9jZXNzYWRtaW5pc3RyYXRvcixpbnRhbGlvXHByb2Nlc3NtYW5hZ2VyJiZmdWxsTmFtZT09QWRtaW5pbmlzdHJhdG9yJiZlbWFpbD09YWRtaW5AZXhhbXBsZS5jb20mJm5vbmNlPT0tMjU4NTI4Nzk2ODIwMjE5MDI5MiYmdGltZXN0YW1wPT0xMjU5NjcyMDIzODQxJiZkaWdlc3Q9PVgrYnMrTngzOTJIcURXWElWd3M0R1h1UzhTWT0mJiYmVE9LRU4=</ib4p:participantToken>
+         <ib4p:user>admin</ib4p:user>
+         <ib4p:taskOutput>
+<output xmlns="http://www.intalio.com/workflow/forms/AbsenceRequest/AbsenceRequest">
+<approved>false</approved>
+<comment>some comments</comment>
+<contactWhileAway>
+			<name>Me</name>
+			<phone>My phone</phone>
+			<email>away@intalio.com</email>
+</contactWhileAway>
+</output>
+</ib4p:taskOutput>
+      </ib4p:completeTaskRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="transfer" name="CoptyTokenToNotification"><con:settings/><con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" useXQuery="false" entitize="false" transferChildNodes="false"><con:name>token</con:name><con:sourceType>Response</con:sourceType><con:sourceStep>AuthenticateUser</con:sourceStep><con:sourcePath>declare namespace soapenv='http://schemas.xmlsoap.org/soap/envelope/';
+declare namespace tokenws='http://tempo.intalio.org/security/tokenService/';
+//tokenws:token</con:sourcePath><con:targetType>Request</con:targetType><con:targetStep>GetNotification</con:targetStep><con:targetPath>declare namespace soap='http://www.w3.org/2003/05/soap-envelope';
+declare namespace tas='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/';
+//tas:participantToken</con:targetPath></con:transfers></con:config></con:testStep><con:testStep type="request" name="GetNotification"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>TaskManagementServicesSOAP</con:interface><con:operation>getAvailableTasks</con:operation><con:request name="GetNotification"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/TaskManagementServices.TaskManagementServicesSOAP/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tas="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tas:getAvailableTasksRequest>
+         <tas:participantToken>VE9LRU4mJnVzZXI9PWludGFsaW9cYWRtaW4mJmlzc3VlZD09MTI1OTY3MjAyMzg0MCYmcm9sZXM9PWV4YW1wbGVzXG1hbmFnZXIsZXhhbXBsZXNcZW1wbG95ZWUsaW50YWxpb1xwcm9jZXNzYWRtaW5pc3RyYXRvcixpbnRhbGlvXHByb2Nlc3NtYW5hZ2VyJiZmdWxsTmFtZT09QWRtaW5pbmlzdHJhdG9yJiZlbWFpbD09YWRtaW5AZXhhbXBsZS5jb20mJm5vbmNlPT0tMjU4NTI4Nzk2ODIwMjE5MDI5MiYmdGltZXN0YW1wPT0xMjU5NjcyMDIzODQxJiZkaWdlc3Q9PVgrYnMrTngzOTJIcURXWElWd3M0R1h1UzhTWT0mJiYmVE9LRU4=</tas:participantToken>
+         <tas:taskType>Notification</tas:taskType>
+         <tas:subQuery>T._state = TaskState.READY </tas:subQuery>
+      </tas:getAvailableTasksRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="transfer" name="NotificationToCompleteId"><con:settings/><con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" useXQuery="false" entitize="false" transferChildNodes="false"><con:name>token</con:name><con:sourceType>Response</con:sourceType><con:sourceStep>AuthenticateUser</con:sourceStep><con:sourcePath>declare namespace soapenv='http://schemas.xmlsoap.org/soap/envelope/';
+declare namespace tokenws='http://tempo.intalio.org/security/tokenService/';
+//tokenws:token</con:sourcePath><con:targetType>Request</con:targetType><con:targetStep>CompleteNotification</con:targetStep><con:targetPath>declare namespace soap='http://www.w3.org/2003/05/soap-envelope';
+declare namespace tas='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/';
+//tas:participantToken</con:targetPath></con:transfers><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" transferToAll="false" entitize="false" ignoreEmpty="false" useXQuery="false" transferChildNodes="false"><con:name>taskId</con:name><con:sourceType>Response</con:sourceType><con:sourceStep>GetNotification</con:sourceStep><con:sourcePath>declare namespace soapenv='http://www.w3.org/2003/05/soap-envelope';
+declare namespace tms='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/';
+//tms:taskId</con:sourcePath><con:targetType>Request</con:targetType><con:targetStep>CompleteNotification</con:targetStep><con:targetPath>declare namespace soap='http://www.w3.org/2003/05/soap-envelope';
+declare namespace tas='http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/';
+//tas:taskId</con:targetPath></con:transfers></con:config></con:testStep><con:testStep type="request" name="CompleteNotification"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>TaskManagementServicesSOAP</con:interface><con:operation>complete</con:operation><con:request name="CompleteNotification"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/TaskManagementServices.TaskManagementServicesSOAP/</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tas="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tas:completeRequest>
+         <tas:taskId>notify-COX4-RUZ4-B3EA-B8W4</tas:taskId>
+         <tas:participantToken>VE9LRU4mJnVzZXI9PWludGFsaW9cYWRtaW4mJmlzc3VlZD09MTI1OTY3MjAyMzg0MCYmcm9sZXM9PWV4YW1wbGVzXG1hbmFnZXIsZXhhbXBsZXNcZW1wbG95ZWUsaW50YWxpb1xwcm9jZXNzYWRtaW5pc3RyYXRvcixpbnRhbGlvXHByb2Nlc3NtYW5hZ2VyJiZmdWxsTmFtZT09QWRtaW5pbmlzdHJhdG9yJiZlbWFpbD09YWRtaW5AZXhhbXBsZS5jb20mJm5vbmNlPT0tMjU4NTI4Nzk2ODIwMjE5MDI5MiYmdGltZXN0YW1wPT0xMjU5NjcyMDIzODQxJiZkaWdlc3Q9PVgrYnMrTngzOTJIcURXWElWd3M0R1h1UzhTWT0mJiYmVE9LRU4=</tas:participantToken>
+      </tas:completeRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:properties/></con:testSuite><con:properties/><con:wssContainer/></con:soapui-project>
