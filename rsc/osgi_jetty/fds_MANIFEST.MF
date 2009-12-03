@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-Version: 1.0.0.200911081325
+Bundle-Name: Fds
+Bundle-ManifestVersion: 2
+Web-ContextPath: /fds
+Bundle-SymbolicName: org.intalio.tempo.fds
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+

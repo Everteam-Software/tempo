@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-Version: 1.0.0.200911081254
+Bundle-Name: Apacheds
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.intalio.tempo.apacheds
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Jetty-ContextFilePath: contexts/apacheds.xml
+

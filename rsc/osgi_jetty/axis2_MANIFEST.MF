@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Jetty-ContextFilePath: contexts/axis2.xml
+Bundle-Version: 1.0.0.200911081304
+Bundle-Name: Axis2
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.intalio.tempo.axis2
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+

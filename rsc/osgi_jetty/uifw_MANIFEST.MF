@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-Version: 1.0.0.200911081342
+Bundle-Name: Uifw
+Bundle-ManifestVersion: 2
+Web-ContextPath: /ui-fw
+Bundle-SymbolicName: org.intalio.tempo.uifw
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+

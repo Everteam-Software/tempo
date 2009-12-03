@@ -56,10 +56,6 @@ BUILD_CONFIG = {
   :mode => [BuildMode::JETTY, BuildMode::UIFW, BuildMode::CAS, BuildMode::LDAP],
   #
   
-  # build with OSGI_jetty and ui-fw along with CAS and LDAP
-  #
-  #:mode => [BuildMode::OSGI_JETTY, BuildMode::UIFW, BuildMode::CAS, BuildMode::LDAP],
-  #
   
   :ode => :v1_3_snapshot,
   :tomcat => :v5,
@@ -78,6 +74,6 @@ BUILD_CONFIG = {
     :processes => "6.0.6",
     :formManager => "6.0.0.40",
     :apacheds => "6.0.0.37",
-    :cas => "6.0.0.35"
+    :cas => "6.0.0.34"
   }
 }

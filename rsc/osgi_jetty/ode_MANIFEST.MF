@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Jetty-ContextFilePath: contexts/ode.xml
+Bundle-Version: 1.0.0.200911081335
+Bundle-Name: Ode
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.intalio.tempo.ode
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+

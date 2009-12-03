@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Jetty-ContextFilePath: contexts/wds.xml
+Bundle-Version: 1.0.0.200911081330
+Bundle-Name: Wds
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.intalio.tempo.wds
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+

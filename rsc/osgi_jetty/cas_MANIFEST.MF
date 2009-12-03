@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-Version: 1.0.0.200911081321
+Bundle-Name: Cas
+Bundle-ManifestVersion: 2
+Web-ContextPath: /cas
+Bundle-SymbolicName: org.intalio.tempo.cas
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+

@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-Version: 1.0.0.200911081328
+Bundle-Name: Xformmanager
+Bundle-ManifestVersion: 2
+Web-ContextPath: /xFormsManager
+Bundle-SymbolicName: org.intalio.tempo.xformmanager
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+
