@@ -41,41 +41,52 @@ end
 def osgi_axis2
   check_folder("#{@@webapp_folder}/axis2/contexts")
   FileUtils.cp "#{TEMPO_SVN}/rsc/osgi_jetty/axis2.xml", "#{@@webapp_folder}/axis2/contexts"
+  FileUtils.cp "#{TEMPO_SVN}/rsc/osgi_jetty/axis2_web.xml", "#{@@webapp_folder}/axis2/WEB-INF/web.xml"
   FileUtils.cp "#{TEMPO_SVN}/rsc/osgi_jetty/axis2_MANIFEST.MF", "#{@@webapp_folder}/axis2/META-INF/MANIFEST.MF"
+  FileUtils.mv "#{@@webapp_folder}/axis2", "#{@@webapp_folder}/org.intalio.tempo.axis2"
 end
 
 def osgi_fds
   FileUtils.cp "#{TEMPO_SVN}/rsc/osgi_jetty/fds_MANIFEST.MF", "#{@@webapp_folder}/fds/META-INF/MANIFEST.MF"
+  FileUtils.mv "#{@@webapp_folder}/fds", "#{@@webapp_folder}/org.intalio.tempo.fds"
 end
 
 def osgi_ode
   check_folder("#{@@webapp_folder}/ode/contexts")
   FileUtils.cp "#{TEMPO_SVN}/rsc/osgi_jetty/ode.xml", "#{@@webapp_folder}/ode/contexts"
+  FileUtils.cp "#{TEMPO_SVN}/rsc/osgi_jetty/ode_web.xml", "#{@@webapp_folder}/ode/WEB-INF/web.xml"
   FileUtils.cp "#{TEMPO_SVN}/rsc/osgi_jetty/ode_MANIFEST.MF", "#{@@webapp_folder}/ode/META-INF/MANIFEST.MF"
+  FileUtils.mv "#{@@webapp_folder}/ode", "#{@@webapp_folder}/org.intalio.tempo.ode"
 end
 
 def osgi_uifw
   FileUtils.cp "#{TEMPO_SVN}/rsc/osgi_jetty/uifw_MANIFEST.MF", "#{@@webapp_folder}/ui-fw/META-INF/MANIFEST.MF"
+  FileUtils.mv "#{@@webapp_folder}/ui-fw", "#{@@webapp_folder}/org.intalio.tempo.uifw"
 end
 
 def osgi_wds
   check_folder("#{@@webapp_folder}/wds/contexts")
   FileUtils.cp "#{TEMPO_SVN}/rsc/osgi_jetty/wds.xml", "#{@@webapp_folder}/wds/contexts"
+  FileUtils.cp "#{TEMPO_SVN}/rsc/osgi_jetty/wds_web.xml", "#{@@webapp_folder}/wds/WEB-INF/web.xml"
   FileUtils.cp "#{TEMPO_SVN}/rsc/osgi_jetty/wds_MANIFEST.MF", "#{@@webapp_folder}/wds/META-INF/MANIFEST.MF"
+  FileUtils.mv "#{@@webapp_folder}/wds", "#{@@webapp_folder}/org.intalio.tempo.wds"
 end
 
 def osgi_xFormsManager
   FileUtils.cp "#{TEMPO_SVN}/rsc/osgi_jetty/xFormsManager_MANIFEST.MF", "#{@@webapp_folder}/xFormsManager/META-INF/MANIFEST.MF"  
+  FileUtils.mv "#{@@webapp_folder}/xFormsManager", "#{@@webapp_folder}/org.intalio.tempo.xformmanager"
 end
 
 def osgi_apacheds
   check_folder("#{@@webapp_folder}/apacheds/contexts")
   FileUtils.cp "#{TEMPO_SVN}/rsc/osgi_jetty/apacheds.xml", "#{@@webapp_folder}/apacheds/contexts"
   FileUtils.cp "#{TEMPO_SVN}/rsc/osgi_jetty/apacheds_MANIFEST.MF", "#{@@webapp_folder}/apacheds/META-INF/MANIFEST.MF"  
+  FileUtils.mv "#{@@webapp_folder}/apacheds", "#{@@webapp_folder}/org.intalio.tempo.apacheds"
 end
 
 def osgi_cas
   FileUtils.cp "#{TEMPO_SVN}/rsc/osgi_jetty/cas_MANIFEST.MF", "#{@@webapp_folder}/cas/META-INF/MANIFEST.MF"
+  FileUtils.mv "#{@@webapp_folder}/cas", "#{@@webapp_folder}/org.intalio.tempo.cas"
 end
 
 def osgi_jetty_config
