@@ -32,13 +32,13 @@ def install_liferay build_folder="tempo-liferay-#{time_now}"
     @@wi = WarInstaller.new @@webapp_folder, true, true
     @@wi.webapp_folder = "#{@@server_folder}/server/default/deploy/"
     @@lib_folder = "#{@@server_folder}/lib"
+    @@deploy_folder = "#{@@server_folder}/server/default/deploy/"
   else
     @@webapp_folder = "#{@@server_folder}/webapps"
     @@wi = WarInstaller.new @@webapp_folder, true, true
     @@lib_folder = "#{@@server_folder}/common/lib" # tomcat5
+    @@deploy_folder = "#{@@server_folder}/../deploy/"
   end
-  
-  @@deploy_folder = "#{@@server_folder}/server/default/deploy/" # TODO: Please check this. 
   
   @@log_folder = check_folder("#{@@server_folder}/var/logs") # tomcat5
   @@config_folder = check_folder("#{@@server_folder}/var/config")
