@@ -14,6 +14,7 @@
 
     <!-- =========================================================== -->
     <!-- Server Thread Pool                                          -->
+
     <!-- =========================================================== -->
     <Set name="ThreadPool">
       <!-- Default queued blocking threadpool 
@@ -38,6 +39,7 @@
   <!-- =========================================================== -->
   <Array id="plusConfig" type="java.lang.String">
     <Item>org.mortbay.jetty.webapp.WebInfConfiguration</Item>
+
     <Item>org.mortbay.jetty.plus.webapp.EnvConfiguration</Item>
     <Item>org.mortbay.jetty.plus.webapp.Configuration</Item>
     <Item>org.mortbay.jetty.webapp.JettyWebXmlConfiguration</Item>
@@ -46,6 +48,7 @@
 
 
     <!-- =========================================================== -->
+
     <!-- Set connectors                                              -->
     <!-- =========================================================== -->
 
@@ -55,12 +58,14 @@
             <Set name="host"><Property name="jetty.host" /></Set>
             <Set name="port"><Property name="jetty.port" default="8080"/></Set>
             <Set name="maxIdleTime">300000</Set>
+
             <Set name="Acceptors">2</Set>
             <Set name="statsOn">false</Set>
             <Set name="confidentialPort">8443</Set>
 	    <Set name="lowResourcesConnections">20000</Set>
 	    <Set name="lowResourcesMaxIdleTime">5000</Set>
           </New>
+
       </Arg>
     </Call>
 
@@ -71,6 +76,7 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
     <!-- To add a HTTP blocking connector                                -->
     <!-- mixin jetty-bio.xml:                                            -->
     <!--   java -jar start.jar etc/jetty.xml etc/jetty-bio.xml           -->
@@ -81,6 +87,7 @@
     <!-- mixin jetty-xinetd.xml:                                         -->
     <!--   java -jar start.jar etc/jetty.xml etc/jetty-xinetd.xml        -->
     <!--                                                                 -->
+
     <!-- See jetty-xinetd.xml for further instructions.                  -->
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
@@ -91,6 +98,7 @@
       <New id="Handlers" class="org.eclipse.jetty.server.handler.HandlerCollection">
         <Set name="handlers">
          <Array type="org.eclipse.jetty.server.Handler">
+
            <Item>
              <New id="Contexts" class="org.eclipse.jetty.server.handler.ContextHandlerCollection"/>
            </Item>
@@ -100,6 +108,7 @@
            <Item>
              <New id="RequestLog" class="org.eclipse.jetty.server.handler.RequestLogHandler"/>
            </Item>
+
          </Array>
         </Set>
       </New>
@@ -110,6 +119,7 @@
     <!-- A context deployer will deploy contexts described in        -->
     <!-- configuration files discovered in a directory.              -->
     <!-- The configuration directory can be scanned for hot          -->
+
     <!-- deployments at the configured scanInterval.                 -->
     <!--                                                             -->
     <!-- This deployer is configured to deploy contexts configured   -->
@@ -119,6 +129,7 @@
     <Call name="addBean">
       <Arg>
         <New class="org.eclipse.jetty.deploy.ContextDeployer">
+
           <Set name="contexts"><Ref id="Contexts"/></Set>
           <Set name="configurationDir"><Property name="jetty.home" default="."/>/contexts</Set>
           <Set name="scanInterval">5</Set>
@@ -126,6 +137,7 @@
             <Arg>org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern</Arg>
             <Arg>.*/jsp-api-[^/]*\.jar$|.*/jsp-[^/]*\.jar$</Arg>
           </Call>
+
         </New>
       </Arg>
     </Call>
@@ -135,6 +147,7 @@
     <!-- A webapp  deployer will deploy standard webapps discovered  -->
     <!-- in a directory at startup, without the need for additional  -->
     <!-- configuration files.    It does not support hot deploy or   -->
+
     <!-- non standard contexts (see ContextDeployer above).          -->
     <!--                                                             -->
     <!-- This deployer is configured to deploy webapps from the      -->
@@ -144,6 +157,7 @@
     <!--                                                             -->
     <!-- =========================================================== -->
     <Call name="addBean">
+
       <Arg>
         <New class="org.eclipse.jetty.deploy.WebAppDeployer">
           <Set name="contexts"><Ref id="Contexts"/></Set>
@@ -151,6 +165,7 @@
 	  <Set name="parentLoaderPriority">false</Set>
 	  <Set name="extract">true</Set>
 	  <Set name="allowDuplicates">false</Set>
+
           <Set name="defaultsDescriptor"><Property name="jetty.home" default="."/>/etc/webdefault.xml</Set>
           <Call name="setAttribute">
             <Arg>org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern</Arg>
@@ -158,6 +173,7 @@
           </Call>
         </New>
       </Arg>
+
     </Call>
 
     <!-- =========================================================== -->
@@ -167,6 +183,7 @@
     <!-- configuration (see $(jetty.home)/contexts/test.xml for an   -->
     <!-- example).                                                   -->
     <!-- =========================================================== -->
+
     <Call name="addBean">
       <Arg>
         <New class="org.eclipse.jetty.security.HashLoginService">
@@ -174,6 +191,7 @@
           <Set name="config"><Property name="jetty.home" default="."/>/etc/realm.properties</Set>
           <Set name="refreshInterval">0</Set>
         </New>
+
       </Arg>
     </Call>
 
@@ -183,6 +201,7 @@
     <!-- or they can be configured for a specific web app in a       -->
     <!-- contexts configuration (see $(jetty.home)/contexts/test.xml -->
     <!-- for an example).                                            -->
+
     <!-- =========================================================== -->
     <Ref id="RequestLog">
       <Set name="requestLog">
@@ -190,6 +209,7 @@
           <Set name="filename"><Property name="jetty.home" default="."/>/logs/yyyy_mm_dd.request.log</Set>
           <Set name="filenameDateFormat">yyyy_MM_dd</Set>
           <Set name="retainDays">90</Set>
+
           <Set name="append">true</Set>
           <Set name="extended">false</Set>
           <Set name="logCookies">false</Set>
@@ -216,6 +236,7 @@
           <Arg></Arg>
           <Arg></Arg>
           <Arg></Arg>
+
           <Arg></Arg>
        </Call>
    </Ref>
@@ -224,25 +245,37 @@
     <Arg>registry/DeployRegistry</Arg>
     <Arg>
        <Ref id="staticRegistry"/>
+
     </Arg>
    </New>
 <!-- =============================================================== -->
 <!-- Configure the datasource                                        -->
 <!-- =============================================================== -->
-    <New id="BPMSDB" class="org.eclipse.jetty.plus.jndi.Resource">
-    <Arg><Ref id='Server'/></Arg>
-    <Arg>jdbc/BPMSDB</Arg>
-    <Arg>
-     <New class="org.apache.commons.dbcp.BasicDataSource">
-         <Set name="driverClassName">com.mysql.jdbc.Driver</Set>
-         <Set name="url">jdbc:mysql://localhost:3306/bpms?relaxAutoCommit=true</Set>
-         <Set name="username">root</Set>
-         <Set name="password"></Set>
-         <Set name="maxActive">100</Set>
-         <Set name="maxIdle">30</Set>
-         <Set name="maxWait">10000</Set>
-     </New>
-    </Arg>
+   <New id="tx" class="org.eclipse.jetty.plus.jndi.Transaction">
+     <Arg>
+       <New class="com.atomikos.icatch.jta.UserTransactionImp"/>
+     </Arg>
    </New>
 
+   <New id="BPMSDB" class="org.eclipse.jetty.plus.jndi.Resource">
+     <Arg><Ref id='Server'/></Arg>
+     <Arg>jdbc/BPMSDB</Arg>
+   <Arg>
+    <New class="com.atomikos.jdbc.AtomikosDataSourceBean">
+     <Set name="xaDataSourceClassName">com.mysql.jdbc.jdbc2.optional.MysqlXADataSource</Set>
+     <Set name="xaProperties">
+       <New class="java.util.Properties">
+
+         <Call name="setProperty"><Arg>URL</Arg><Arg>jdbc:mysql://localhost:3306/bpms?relaxAutoCommit=true</Arg></Call>
+         <Call name="setProperty"><Arg>user</Arg><Arg>root</Arg></Call>
+         <!--<Call name="setProperty"><Arg>password</Arg><Arg></Arg></Call> -->
+       </New>
+     </Set>
+     <Set name="UniqueResourceName">BPMSDB</Set>
+
+     <Set name="minPoolSize">30</Set>
+     <Set name="maxPoolSize">100</Set>
+    </New>
+   </Arg>
+  </New>
 </Configure>
