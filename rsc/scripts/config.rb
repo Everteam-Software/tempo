@@ -74,6 +74,6 @@ BUILD_CONFIG = {
     :processes => "6.0.6",
     :formManager => "6.0.0.40",
     :apacheds => "6.0.0.37",
-    :cas => "6.0.0.34"
+    :cas => "6.0.0.36"
   }
 }
