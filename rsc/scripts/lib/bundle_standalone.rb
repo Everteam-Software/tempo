@@ -207,7 +207,7 @@ def set_tomcat_ports map, conf_file="#{@@server_folder}/conf/server.xml"
 end
 
 def install_cas_webapp
-  @@wi.install_war_artifact("org.intalio.tempo:tempo-cas-webapp:war:#{BUILD_CONFIG[:tempo][:cas]}","cas")
+  @@wi.install_war_artifact("org.intalio.tempo:cas-webapp:war:#{BUILD_CONFIG[:tempo][:cas]}","cas")
 end
 
 def config_ssl
