@@ -71,7 +71,7 @@ BUILD_CONFIG = {
     :security => "1.0.5",
     :deploy => "1.0.25",
     
-    :processes => "6.0.6",
+    :processes => "6.0.8",
     :formManager => "6.0.0.40",
     :apacheds => "6.0.0.37",
     :cas => "6.0.0.36"
