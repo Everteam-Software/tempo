@@ -32,7 +32,7 @@ CSV = "org.ostermiller:utils:jar:1.07.00"
 
 DB_CONNECTOR = {
   :db2 => "com.ibm.db2.jcc:jcc4:jar:9.2",
-  :mysql => "com.mysql.mysql-connector:mysql-connector-java:jar:5.1.6",
+  :mysql => "com.mysql.mysql-connector:mysql-connector-java:jar:5.1.10",
   :postgresql => "postgresql:postgresql:jar:8.3-603.jdbc3"
 }
 DSIG = "javax.xml.xmldsig:xmldsig:jar:1.0"

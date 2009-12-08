@@ -119,6 +119,7 @@ def osgi_config
   osgi_apacheds
   osgi_cas
   osgi_jetty_config
+  generate_mysql_file
 end
 
 def time_now
