@@ -66,7 +66,7 @@ BUILD_CONFIG = {
   #:liferay => {:v => :v5_2_5_jbee, :base_folder => "liferay-portal-5.2.5", :server_folder => "jboss-tomcat-4.2.3"},  
   :alfresco => :v3_0,
   :tempo => {
-    :core => "6.0.0.77",
+    :core => "6.0.0.85",
     # not used until we've upgraded to the new deploy and security packages
     :security => "1.0.5",
     :deploy => "1.0.25",
