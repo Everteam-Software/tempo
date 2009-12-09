@@ -503,10 +503,8 @@ BUILD_URI = {
 	},  
 	:axis2 => APACHE_MIRROR + "ws/axis2/1_4_1/axis2-1.4.1-war.zip",
 	:ode => {
-    :v1_2_snapshot => "http://www.intalio.org/public/ode/apache-ode-1.2-SNAPSHOT-700632.zip",
-    # :v1_3_snapshot => "http://www.intalio.org/public/ode/apache-ode-1.3-SNAPSHOT-745704.zip",
-    :v1_3_snapshot => "http://www.intalio.org/public/ode/apache-ode-war-1.3.2-SNAPSHOT.zip",
-    :v1_3_3 => "org.apache.ode:ode-axis2:war:1.3.3",
+    :v1_3_snapshot => "org.apache.ode:ode-axis2-war:war:1.3.2-SNAPSHOT",
+    :v1_3_3 => "org.apache.ode:ode-axis2-war:war:1.3.3",
     :v2_1_snapshot => "http://www.intalio.org/public/ode/apache-ode-war-2.1-SNAPSHOT-20090303-768496.zip"
 	}, 
 	:alfresco => {
