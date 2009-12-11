@@ -12,9 +12,7 @@
  */
 package org.intalio.tempo.workflow.tms.client.dependent_tests;
 
-import java.io.StringWriter;
 import java.security.SecureRandom;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,12 +21,6 @@ import java.util.Map;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import org.apache.axiom.om.OMAbstractFactory;
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.OMFactory;
-import org.apache.axis2.addressing.EndpointReference;
-import org.apache.axis2.client.Options;
-import org.apache.axis2.client.ServiceClient;
 import org.intalio.tempo.security.Property;
 import org.intalio.tempo.security.authentication.AuthenticationConstants;
 import org.intalio.tempo.security.util.PropertyUtils;
@@ -37,16 +29,9 @@ import org.intalio.tempo.workflow.task.Notification;
 import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.xml.XmlTooling;
-import org.intalio.tempo.workflow.tms.client.RemoteTMSClient;
+import org.intalio.tempo.workflow.tms.client.TempoClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-
-import freemarker.cache.ClassTemplateLoader;
-import freemarker.cache.TemplateLoader;
-import freemarker.template.Configuration;
-import freemarker.template.DefaultObjectWrapper;
-import freemarker.template.Template;
 
 /**
  * This supports a fully absence request samples through code and soap requests
@@ -60,16 +45,9 @@ public class RemoteAbsenceRequestTest extends TestCase {
     static final String TASK_MANAGEMENT_PROCESS_WORKFLOW = "http://localhost:8080/fds/workflow/xform";
 
     static final XmlTooling xmlTooling = new XmlTooling();
-    Configuration cfg;
+    
     static final int SLEEP_TIME = 5000;
     static final int MICRO_SLEEP_TIME = 400;
-
-    public void setUp() {
-        TemplateLoader loader = new ClassTemplateLoader(this.getClass(), "/");
-        cfg = new Configuration();
-        cfg.setTemplateLoader(loader);
-        cfg.setObjectWrapper(new DefaultObjectWrapper());
-    }
 
     /**
      * This sets the different parameters we'll use through this test
@@ -106,38 +84,38 @@ public class RemoteAbsenceRequestTest extends TestCase {
         pipa.put("requests", list);
 
         // We'll use those parameters to complete the task
-        HashMap complete = new HashMap();
-        complete.put("comment", "It is a great day for some comments");
-        complete.put("approved", "false");
+        HashMap abrComplete = new HashMap();
+        abrComplete.put("comment", "It is a great day for some comments");
+        abrComplete.put("approved", "false");
         Map<String, String> person = new HashMap<String, String>();
         person.put("name", "George Michael");
         person.put("phone", "+1(650)596-1802");
         person.put("email", "george@examples.intalio.com");
-        complete.put("contact", person);
+        abrComplete.put("contact", person);
 
         // Standard absence request
-        runAbsenceRequest(paramUser, paramPassword, pipa, complete);
+        runAbsenceRequest(paramUser, paramPassword, pipa, abrComplete);
 
         // Provoke a fail by calling TMS.fail while the task has been created
-        runAbsenceRequestWithOptionalCall(paramUser, paramPassword, pipa, complete, "fail");
+        runAbsenceRequestWithOptionalCall(paramUser, paramPassword, pipa, abrComplete, "fail");
 
         // Provoke a skip by calling TMP.skip while the task has been created
         // runAbsenceRequestWithOptionalCall(paramUser, paramPassword, pipa, complete, "skip");
 
         // Provoke a delete by calling TMS.delete while the task has been
         // created.
-        runAbsenceRequestWithOptionalCall("admin", "changeit", pipa, complete, "delete");
+        runAbsenceRequestWithOptionalCall("admin", "changeit", pipa, abrComplete, "delete");
 
         // Provoke a deleteAll by calling TMS.deleteAll while the task has been
         // created.
-        runAbsenceRequestWithOptionalCall("admin", "changeit", pipa, complete, "deleteAll");
+        runAbsenceRequestWithOptionalCall("admin", "changeit", pipa, abrComplete, "deleteAll");
 
         // Provoke a reassign to a new user. If we reassign to a new user, it
         // will disappear from the list, so we're good. (hint: hack!)
-        runAbsenceRequestWithOptionalCall("admin", "changeit", pipa, complete, "reassign");
+        runAbsenceRequestWithOptionalCall("admin", "changeit", pipa, abrComplete, "reassign");
     
         // Runs consecutive claim and revoke calls. 
-        runAbsenceRequestWithRandomClaimRevokeTMPCalls(paramUser, paramPassword, pipa, complete);
+        runAbsenceRequestWithRandomClaimRevokeTMPCalls(paramUser, paramPassword, pipa, abrComplete);
     }
 
 
@@ -150,32 +128,34 @@ public class RemoteAbsenceRequestTest extends TestCase {
 
         _log.info("We are trying to authenticate as user:" + paramUser + " with password:" + paramPassword);
         String token = client.authenticateUser(paramUser, paramPassword);
+        
         _log.info("We have gained a token from the token service. We can use it to call authenticated tempo services");
         Property[] props = client.getTokenProperties(token);
         String user = (String) PropertyUtils.getProperty(props, AuthenticationConstants.PROPERTY_USER).getValue();
         _log.info("Decrypting the token properties. We have successfully logged in as:" + user);
 
         _log.info("Instanciate tms service client");
-        RemoteTMSClient tms = new RemoteTMSClient(TMS_SERVICE, token);
+        TempoClient tempoClient = new TempoClient("http://localhost:8080", token, client);
+        //RemoteTMSClient tms = new RemoteTMSClient(TMS_SERVICE, token);
 
         _log.info("get the pipa corresponding to the absence request, by making a query on our available tasks");
-        Task[] ts = tms.getAvailableTasks("PIPATask", "T._description like '%Examples%'");
+        Task[] ts = tempoClient.getAvailableTasks("PIPATask", "T._description like '%Examples%'");
 
         String pipaID = ts[0].getID();
         _log.info("We have found the task to instanciate the process. This task has the following ID:" + pipaID);
-        tms.init(pipaID, xmlTooling.parseXML(pipa(pipa)));
+        tempoClient.init(pipaID, tempoClient.createMessageAsDocument(pipa, "abr_initPipa.ftl"));
         _log.info("wait for the task to be initiated. Hopefully 2s is enough");
         Thread.sleep(SLEEP_TIME);
 
         _log.info("get our full activity task list");
-        Task[] paList = tms.getAvailableTasks("PATask", "ORDER BY T._creationDate DESC");
+        Task[] paList = tempoClient.getAvailableTasks("PATask", "ORDER BY T._creationDate DESC");
         _log.info("get the id of the activity task");
         String id = paList[0].getID();
         _log.info("We're about to start using PATask with id:" + id);
 
         _log.info("We cannot get input and output of a task on a get task list call (see WSDL)");
         _log.info("Let's call TMS again to get the full input and output data of this PATask");
-        PATask task = (PATask) tms.getTask(id);
+        PATask task = (PATask) tempoClient.getTask(id);
         _log.info("" + "\nChecking the task metadata..." + "\nThe task has been created on:" + task.getCreationDate() + "\nIt has the following description:"
                         + task.getDescription() + "\nIt is attached to the process with id:" + task.getProcessID() + "\nIt is attached to the following form:"
                         + task.getFormURLAsString() + "\nIt is in the following state:" + task.getState() + "\nIt has the following input:\n"
@@ -183,30 +163,31 @@ public class RemoteAbsenceRequestTest extends TestCase {
                         + "\nIt can be assigned to the following users:" + task.getUserOwners());
 
         _log.info("Let's claim the task: no one else can access this task apart from user:" + user);
-        sendSoapToTMP(claim(token, id, user), "claimTask");
+        tempoClient.claim(id, user);
         _log.info("Let's revoke the task:every one can access this task again");
-        sendSoapToTMP(revoke(token, id), "revokeTask");
+        tempoClient.revoke(id);
         _log.info("Call setoutput from TMS Client");
-        tms.setOutput(id, createOutputMessage(complete));
+        tempoClient.setOutput(id, tempoClient.createMessageAsDocument(complete, "abr_output.ftl"));
         _log.info("Check the output we've just set");
-        String outputAsXmlString = ((PATask)tms.getTask(id)).getOutputAsXmlString();
+        String outputAsXmlString = ((PATask)tempoClient.getTask(id)).getOutputAsXmlString();
 		_log.info(outputAsXmlString);
         _log.info("complete the PA task with some output");
-        sendSoapToTMP(complete(token, id, complete), "completeTask");
+        tempoClient.complete(id, complete, "abr_output.ftl");
+        //sendSoapToTMP(complete(token, id, complete), "completeTask");
 
         _log.info("sleep again to wait for the notification");
         Thread.sleep(SLEEP_TIME);
-        Task[] ts2 = tms.getAvailableTasks("Notification", "ORDER BY T._creationDate DESC");
+        Task[] ts2 = tempoClient.getAvailableTasks("Notification", "ORDER BY T._creationDate DESC");
         String notificationId = ts2[0].getID();
         _log.info("We want to retrieve some more data on the notification with id:" + notificationId);
-        Notification notification = (Notification) tms.getTask(notificationId);
+        Notification notification = (Notification) tempoClient.getTask(notificationId);
 
         _log.info("The notification has the following:" + "\nInput:" + xmlTooling.serializeXML(notification.getInput()) + "\nCreation Date:"
                         + notification.getCreationDate() + "\nAttached Form:" + notification.getFormURLAsString() + "\nDescription:"
                         + notification.getDescription());
 
         _log.info("Dismiss this notification");
-        tms.complete(notificationId);
+        tempoClient.complete(notificationId);
     }
 
     /**
@@ -221,18 +202,19 @@ public class RemoteAbsenceRequestTest extends TestCase {
         String token = client.authenticateUser(paramUser, paramPassword);
 
         _log.info("get the tms client");
-        RemoteTMSClient tms = new RemoteTMSClient(TMS_SERVICE, token);
-
+        //RemoteTMSClient tms = new RemoteTMSClient(TMS_SERVICE, token);
+        TempoClient tempoClient = new TempoClient("http://localhost:8080", token, client);
+        
         _log.info("get the absence request PIPA");
-        Task[] ts = tms.getAvailableTasks("PIPATask", "T._description like '%Examples%'");
+        Task[] ts = tempoClient.getAvailableTasks("PIPATask", "T._description like '%Examples%'");
         String pipaID = ts[0].getID();
 
         _log.info("Init the process and wait");
-        tms.init(pipaID, xmlTooling.parseXML(pipa(pipa)));
+        tempoClient.init(pipaID, tempoClient.createMessageAsDocument(pipa, "abr_initPipa.ftl"));
         Thread.sleep(SLEEP_TIME);
 
         _log.info("check the new task has appeared");
-        Task[] paList = tms.getAvailableTasks("PATask", "T._state = TaskState.READY ORDER BY T._creationDate DESC");
+        Task[] paList = tempoClient.getAvailableTasks("PATask", "T._state = TaskState.READY ORDER BY T._creationDate DESC");
         String id = paList[0].getID();
 
         _log.info("keep track of the current time");
@@ -242,15 +224,15 @@ public class RemoteAbsenceRequestTest extends TestCase {
 
         // skip needs to be called on TMP first.
         if (optionalCall.equals("skip"))
-            sendSoapToTMP(skip(token, id), "skipTask");
+            tempoClient.skip(id);
         else if (optionalCall.equals("fail"))
-            tms.fail(id, "0", "Error message");
+        	tempoClient.fail(id, "0", "Error message");
         else if (optionalCall.equals("delete"))
-            tms.delete(new String[] { id });
+        	tempoClient.delete(new String[] { id });
         else if (optionalCall.equals("deleteAll"))
-            tms.deleteAll("false", "T._state = TaskState.READY", "PATask");
+        	tempoClient.deleteAll("false", "T._state = TaskState.READY", "PATask");
         else if (optionalCall.equals("reassign"))
-            sendSoapToWorkflow(reassign(token, id, "examples/msmith"), "escalate");
+            tempoClient.reassign(id, "examples/msmith");
         else
             throw new Exception("invalid optional call:" + optionalCall);
 
@@ -258,12 +240,12 @@ public class RemoteAbsenceRequestTest extends TestCase {
         Thread.sleep(SLEEP_TIME);
 
         _log.info("check the task has disappeared. All the call we've done make the task not showing the user task list anymore");
-        Task[] ts2 = tms.getAvailableTasks("PATask", "T._state = TaskState.READY ORDER BY T._creationDate DESC");
+        Task[] ts2 = tempoClient.getAvailableTasks("PATask", "T._state = TaskState.READY ORDER BY T._creationDate DESC");
         Assert.assertEquals(0, ts2.length);
 
         if (optionalCall.equals("skip")) {
             _log.info("for skip, we're doing one extra check to see if the state of the task is appropriately OBSOLETE");
-            Task[] ts3 = tms.getAvailableTasks("PATask", "T._state = TaskState.OBSOLETE ORDER BY T._creationDate DESC");
+            Task[] ts3 = tempoClient.getAvailableTasks("PATask", "T._state = TaskState.OBSOLETE ORDER BY T._creationDate DESC");
             long time = currentTime - ts3[0].getCreationDate().getTime();
             Assert.assertTrue(time > 0);
             Assert.assertTrue(time < 5000); // 2*SLEEP_TIME + 1s of computer
@@ -278,122 +260,26 @@ public class RemoteAbsenceRequestTest extends TestCase {
     private void runAbsenceRequestWithRandomClaimRevokeTMPCalls(String paramUser, String paramPassword, HashMap pipa, HashMap complete) throws Exception {
         TokenClient client = new TokenClient(TOKEN_SERVICE);
         String token = client.authenticateUser(paramUser, paramPassword);
-        RemoteTMSClient tms = new RemoteTMSClient(TMS_SERVICE, token);
-        Task[] ts = tms.getAvailableTasks("PIPATask", "T._description like '%Examples%'");
+        //RemoteTMSClient tms = new RemoteTMSClient(TMS_SERVICE, token);
+        TempoClient tempoClient = new TempoClient("http://localhost:8080", token, client);
+        Task[] ts = tempoClient.getAvailableTasks("PIPATask", "T._description like '%Examples%'");
         String pipaID = ts[0].getID();
-        tms.init(pipaID, xmlTooling.parseXML(pipa(pipa)));
+        tempoClient.init(pipaID, tempoClient.createMessageAsDocument(pipa, "abr_initPipa.ftl"));
         Thread.sleep(SLEEP_TIME);
-        String id = tms.getAvailableTasks("PATask", "T._description like '%Approval%' ORDER BY T._creationDate DESC")[0].getID();
+        String id = tempoClient.getAvailableTasks("PATask", "T._description like '%Approval%' ORDER BY T._creationDate DESC")[0].getID();
         SecureRandom r = new SecureRandom();
         for (int i = 0; i < 10; i++) {
             if (r.nextBoolean()) {
-                sendSoapToTMP(claim(token, id, paramUser), "claimTask");
+            	tempoClient.claim(id, paramUser);
             } else {
-                sendSoapToTMP(revoke(token, id), "revokeTask");
+            	tempoClient.revoke(id);
             }
         }
     }
 
-    /**
-     * Send a WS request to Form Dispatcher Service (FDS).
-     * This is called on a reassign
-     */
-    private void sendSoapToWorkflow(String request, String soapAction) throws Exception {
-        sendSoapTo(request, soapAction, TASK_MANAGEMENT_PROCESS_WORKFLOW);
-    }
+//    private Document createOutputMessage(HashMap complete) throws Exception {
+//        return new XmlTooling().parseXML(templateMe("abr_output.ftl", complete));
+//    }
 
-    /**
-     * Send a WS request to The Task Management Process (TMP).
-     */
-    private void sendSoapToTMP(String request, String soapAction) throws Exception {
-        sendSoapTo(request, soapAction, TASK_MANAGEMENT_PROCESS);
-    }
-
-    /**
-    * Generic http method to send a soap request
-    */
-    private void sendSoapTo(String request, String soapAction, String endpoint) throws Exception {
-        ServiceClient serviceClient = new ServiceClient();
-        OMFactory factory = OMAbstractFactory.getOMFactory();
-        Options options = new Options();
-        options.setTo(new EndpointReference(endpoint));
-        serviceClient.setOptions(options);
-        options.setAction(soapAction);
-        OMElement response = serviceClient.sendReceive(xmlTooling.convertDOMToOM(xmlTooling.parseXML(request), factory));
-        _log.info(MessageFormat.format("Answer from endpoint {0}: {1}", endpoint, response.toString()));
-    }
     
-    /**
-    * Prepare a skip message
-    */
-    private String skip(String token, String taskId) throws Exception {
-        HashMap<String, String> skip = new HashMap<String, String>();
-        skip.put("taskId", taskId);
-        skip.put("token", token);
-        return templateMe("skip.ftl", skip);
-    }
-   
-    /**
-    * Prepare a reassign message
-    */ 
-    private String reassign(String token, String taskId, String user) throws Exception {
-        HashMap<String, String> escalate = new HashMap<String, String>();
-        escalate.put("taskId", taskId);
-        escalate.put("token", token);
-        escalate.put("user", user);
-        return templateMe("escalate.ftl", escalate);
-    }
-
-    /**
-     * Generate a complete request. This also adds some output to the task.
-     */
-    private String complete(String token, String taskId, HashMap complete) throws Exception {
-        complete.put("taskId", taskId);
-        complete.put("token", token);
-        complete.put("user", "niko");
-        return templateMe("complete.ftl", complete);
-    }
-
-    /**
-     * Generate a revoke request
-     */
-    private String revoke(String token, String taskId) throws Exception {
-        HashMap<String, String> root = new HashMap<String, String>();
-        root.put("taskId", taskId);
-        root.put("token", token);
-        return templateMe("revoke.ftl", root);
-    }
-
-    /**
-     * Generate a claim request, for the given user
-     */
-    private String claim(String token, String taskId, String user) throws Exception {
-        HashMap<String, String> root = new HashMap<String, String>();
-        root.put("taskId", taskId);
-        root.put("user", user);
-        root.put("token", token);
-        return templateMe("claim.ftl", root);
-    }
-    
-    private Document createOutputMessage(HashMap complete) throws Exception {
-        return new XmlTooling().parseXML(templateMe("setoutput.ftl", complete));
-    }
-
-    /**
-     * Couldn't get a better name :) Prepare some parameters for a dynamic pipa
-     * input.
-     */
-    private String pipa(HashMap pipa) throws Exception {
-        return templateMe("initPipa.ftl", pipa);
-    }
-
-    /**
-     * Get the Result from templating operation
-     */
-    private String templateMe(String template, Map params) throws Exception {
-        Template temp = cfg.getTemplate(template);
-        StringWriter writer = new StringWriter();
-        temp.process(params, writer);
-        return writer.toString();
-    }
 }
