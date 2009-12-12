@@ -75,7 +75,7 @@ define "tempo" do
     compile { open_jpa_enhance }
     task "package" => generate_sql([project], "workflow.tms")
     
-    test.with APACHE_DERBY, LOG4J, DB_CONNECTOR.values, XMLUNIT, WOODSTOX, INSTINCT, SECURITY_WS_COMMON
+    test.with APACHE_DERBY, LOG4J, DB_CONNECTOR.values, XMLUNIT, WOODSTOX, INSTINCT, SECURITY_WS_COMMON, SQLSERVER_DRIVER
     test.exclude '*TestUtils*'
     unless ENV["LIVE"] == 'yes'
       test.exclude '*N3AuthProviderLiveTest*'
@@ -122,6 +122,7 @@ define "tempo" do
       test.exclude '*TMSAxis2RemoteTest*'
       test.exclude '*RemoteReassginTaskTest*'
       test.exclude "*ReassignTaskLiveTest*"
+      test.exclude "*SomeSampleClientCode*"
     end
     test.exclude '*TestUtils*'
 

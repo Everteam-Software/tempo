@@ -75,7 +75,8 @@ OPENSSO_CLIENT_SDK = "com.sun:openssoclientsdk:jar:3.0"
 PORTLET_API = "portlet-api:portlet-api:jar:1.0"
 
 QOM = "net.sf.qom:qom:jar:0.1alpha3"
-  
+
+SQLSERVER_DRIVER = "microsoft:sqljdbc4:jar:2005"  
 SUNACTIVATION = ["javax.activation:activation:jar:1.1.1"]
 SUNMAIL = ["javax.mail:mail:jar:1.4.1", SUNACTIVATION]
 SERVLET_API = "javax.servlet:servlet-api:jar:2.4" 
