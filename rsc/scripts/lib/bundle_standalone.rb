@@ -22,7 +22,7 @@ end
 
 
 def setup_ode
-  @@ode_war_folder = @@wi.install_war_artifact("#{BUILD_CONFIG[:ode]}","ode")
+  @@ode_war_folder = @@wi.install_war_artifact("#{BUILD_URI[:ode][BUILD_CONFIG[:ode]]}","ode")
   
   # copy required xpath extension for ode, this is used in TMP
   # see: http://www.intalio.org/confluence/display/PXE/Custom+XPath+Functions

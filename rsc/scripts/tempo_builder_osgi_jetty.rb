@@ -11,14 +11,34 @@ gem "buildr",">=1.3.3"
 require "buildr"
 require "pp"
 
-
-
 @@script_folder = File.dirname(File.expand_path("#{$0}"))
 load "#{@@script_folder}/../scripts/lib/build_support.rb"
 load "#{@@script_folder}/../build/repositories.rb"
 load "#{@@script_folder}/../build/dependencies.rb"
 load "#{@@script_folder}/../scripts/config.rb"
 load "#{@@script_folder}/../scripts/lib/bundle_standalone.rb"
+
+VERSION_NUMBER = '6.0.001'
+BASE_PACKAGE = "org.intalio.jettyosgi"
+BUILD_CONFIG = {
+  :directory => "../tempo.jetty",
+  :artifact => "#{BASE_PACKAGE}:tempo-jetty-osgi:zip:#{VERSION_NUMBER}",
+  :mode => [BuildMode::JETTY, BuildMode::UIFW, BuildMode::CAS, BuildMode::LDAP], 
+  :ode => :v1_3_snapshot,
+  :jetty => :v7,
+  :osgi_jetty => :v7,
+  :tempo => {
+    :core => "6.0.0.75",
+    :security => "1.0.5",
+    :deploy => "1.0.25",
+    
+    :processes => "6.0.6",
+    :formManager => "6.0.0.40",
+    :apacheds => "6.0.0.37",
+    :cas => "6.0.0.36"
+  }
+}
+
 
 TEMPO_SVN="#{@@script_folder}/../.."
 
@@ -126,7 +146,8 @@ def time_now
   Time.now.strftime('%Y.%m.%d')  
 end
 
-install_osgi_jetty
+build_folder="tempo-osgi-jetty-#{time_now}"
+install_osgi_jetty build_folder
 
 setup_axis_and_ode
 
@@ -140,3 +161,6 @@ install_cas_webapp
 copy_missing_lib
 copy_tempo_config_files
 osgi_config
+
+#ar = artifact(BUILD_CONFIG[:artifact]).from(compress("#{build_folder}"))
+#ar.upload
