@@ -96,6 +96,7 @@ define "tempo" do
     unless ENV["LIVE"] == 'yes'
       test.exclude '*RemoteTMSClientTest*'
       test.exclude '*RemoteAbsenceRequestTest*'
+      test.exclude '*SomeSampleClientCode*'
     end
     unless ENV["DESIGNER"] == 'yes'
       test.exclude '*UTFURLTest*'
@@ -122,7 +123,6 @@ define "tempo" do
       test.exclude '*TMSAxis2RemoteTest*'
       test.exclude '*RemoteReassginTaskTest*'
       test.exclude "*ReassignTaskLiveTest*"
-      test.exclude "*SomeSampleClientCode*"
     end
     test.exclude '*TestUtils*'
 
