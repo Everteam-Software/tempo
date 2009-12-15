@@ -21,18 +21,18 @@ module Buildr
 
   # Provides OpenJPA bytecode enhancement and Mapping tool task. Require explicitly using <code>require "buildr/openjpa"</code>.
   module OpenJPA
-    
+
     REQUIRES = [ 
+      "org.apache.openjpa:openjpa-all:jar:2.0.0-SNAPSHOT",
       "commons-collections:commons-collections:jar:3.1",
       "commons-dbcp:commons-dbcp:jar:1.2.1", 
       "commons-lang:commons-lang:jar:2.1",
-      "commons-pool:commons-pool:jar:1.2",
-      "javax.persistence:persistence-api:jar:1.0",
+      "commons-pool:commons-pool:jar:1.2",      
       "org.apache.geronimo.specs:geronimo-j2ee-connector_1.5_spec:jar:1.0",
       "org.apache.geronimo.specs:geronimo-jta_1.0.1B_spec:jar:1.0",
       "net.sourceforge.serp:serp:jar:1.11.0" ]
 
-    Java.classpath << APACHE_JPA << REQUIRES << APACHE_DERBY
+    Java.classpath <<  REQUIRES << APACHE_DERBY
 
     class << self
 
@@ -40,7 +40,7 @@ module Buildr
         rake_check_options options, :classpath, :properties, :output
         artifacts = Buildr.artifacts(options[:classpath]).each { |a| a.invoke }.map(&:to_s) + [options[:output].to_s]
         properties = file(options[:properties]).tap { |task| task.invoke }.to_s
-
+        
         Buildr.ant "openjpa" do |ant|
           ant.taskdef :name=>"enhancer", :classname=>"org.apache.openjpa.ant.PCEnhancerTask",
             :classpath=>requires.join(File::PATH_SEPARATOR)

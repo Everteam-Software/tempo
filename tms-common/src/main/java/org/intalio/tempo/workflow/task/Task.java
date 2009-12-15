@@ -76,7 +76,7 @@ public abstract class Task extends BaseRestrictedEntity {
     @Column(name = "form_url")
     private String _formURL;
 
-    @PersistentMap(keyCascade = CascadeType.ALL, elementCascade = CascadeType.ALL, fetch=FetchType.EAGER)
+    @PersistentMap(keyCascade = CascadeType.ALL, elementCascade = CascadeType.ALL)
     @ContainerTable(name="tempo_acl_map")
     @MapKey(name = "action")
     private Map<String, ACL> _actionACLs = new HashMap<String, ACL>();

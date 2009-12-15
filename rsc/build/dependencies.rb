@@ -42,8 +42,9 @@ FOP = "fop:fop:jar:0.20.5"
 
 GERONIMO_SPECS = {
   "jta" => "org.apache.geronimo.specs:geronimo-jta_1.1_spec:jar:1.1",
-  "jpa" => "org.apache.geronimo.specs:geronimo-jpa_3.0_spec:jar:1.0",
+  # "jpa" => "org.apache.geronimo.specs:geronimo-jpa_3.0_spec:jar:1.0",
   # "jpa" => "org.apache.geronimo.specs:geronimo-jpa_2.0_spec:jar:1.0-EA-20090312",
+  "jpa" => "org.apache.geronimo.specs:geronimo-jpa_2.0_spec:jar:1.0-EA2-SNAPSHOT",
   "jms" => "org.apache.geronimo.specs:geronimo-jms_1.1_spec:jar:1.0.1"
 }
 
@@ -262,19 +263,25 @@ MY_FACES = [
   "org.apache.myfaces.core:myfaces-impl:jar:1.1.5"
 ]
 
-APACHE_JPA = [
+
+APACHE_JPA_1_x = [
   APACHE_COMMONS[:lang],
   APACHE_COMMONS[:collections],
   GERONIMO_SPECS["jta"],
   GERONIMO_SPECS["jpa"],
-  
-  "org.apache.openjpa:openjpa:jar:1.1.0-645340",
-  
-  
-  # "org.apache.openjpa:openjpa:jar:1.2.0-patched",
+  #"org.apache.openjpa:openjpa:jar:1.1.0-645340",
   
   "serp:serp:jar:1.13.1"
 ]
+APACHE_JPA_2_0_0 = [
+  APACHE_COMMONS[:lang],
+  APACHE_COMMONS[:collections],
+  GERONIMO_SPECS["jta"],
+  #"org.apache.openjpa:openjpa-all:jar:2.0.0-SNAPSHOT",
+  "org.apache.openjpa:openjpa-all:jar:2.0.0-svn-890673",
+  "serp:serp:jar:1.13.1"  
+]
+APACHE_JPA = APACHE_JPA_2_0_0
 
 FREEMARKER = "org.freemarker:freemarker:jar:2.3.14"
 
