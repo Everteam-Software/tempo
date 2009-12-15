@@ -183,7 +183,6 @@ public class TaskFetcher {
 			q.setFirstResult(first);
 
 		List result = q.getResultList();
-		System.out.println(first + ";" + max + ";" + result.size());
 		return (Task[]) result.toArray(new Task[result.size()]);
 	}
 
