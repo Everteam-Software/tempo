@@ -15,11 +15,14 @@
 
 package org.intalio.tempo.workflow.util.xml;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.commons.lang.StringUtils;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
-
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
 public abstract class OMUnmarshaller {
@@ -96,18 +99,25 @@ public abstract class OMUnmarshaller {
         }
         return result;
     }
+    
+    @SuppressWarnings("unchecked")
+	protected ArrayList expectListOfValues(OMElementQueue queue, String elementName) {
+    	return (ArrayList) expectList(queue, elementName, new ArrayList());
+    }
+    
+    protected Collection expectList(OMElementQueue queue, String elementName, Collection list) {
+    	while (true) {
+            String value = this.expectElementValue(queue, elementName);
+            if(StringUtils.isNotEmpty(value)) 
+                list.add(value);
+            else 
+                break;
+        }
+        return list;
+    }
 
     protected AuthIdentifierSet expectAuthIdentifiers(OMElementQueue queue, String elementName) {
-        AuthIdentifierSet resultSet = new AuthIdentifierSet();
-        while (true) {
-            String authID = this.expectElementValue(queue, elementName);
-            if ((authID != null) && (! "".equals(authID.trim()))) {
-                resultSet.add(authID);
-            } else {
-                break;
-            }
-        }
-        return resultSet;
+    	return (AuthIdentifierSet) expectList(queue, elementName, new AuthIdentifierSet());
     }
 
     protected void requireParameter(Object parameter, String name)

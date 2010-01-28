@@ -454,16 +454,17 @@ public class RemoteTMSClient implements ITaskManagementService {
         sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "reassign");
     }
 
-    public void reassign(final String taskID, final AuthIdentifierSet users, final AuthIdentifierSet roles, final TaskState state) throws AuthException,
+    public void reassign(final String[] taskIds, final AuthIdentifierSet users, final AuthIdentifierSet roles, final TaskState state) throws AuthException,
                     UnavailableTaskException {
-        if (taskID == null) {
+        if (taskIds == null) {
             throw new RequiredArgumentException("taskID");
         }
 
         OMElement request = new TMSMarshaller() {
             public OMElement marshalRequest() {
                 OMElement request = createElement("reassignRequest");
-                createElement(request, "taskId", taskID);
+                for(String taskId : taskIds)
+                  createElement(request, "taskId", taskId);
                 for (String userOwner : users) {
                     createElement(request, "userOwner", userOwner);
                 }

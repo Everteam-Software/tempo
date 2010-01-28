@@ -151,7 +151,7 @@ public class TempoClient extends RemoteTMSClient {
 		complete.put("user", getCurrentUser());
 		complete.put("output", templateMe(outputTemplate, complete));
 		String fullCompleteMessage = templateMe("complete.ftl", complete);
-		_log.info("CIMPLETE:"+complete.toString());
+		_log.info("COMPLETE:"+complete.toString());
 		sendSoapToTMP(fullCompleteMessage, "completeTask");
 		return StringUtils.EMPTY;
 	}

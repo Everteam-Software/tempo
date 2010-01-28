@@ -24,6 +24,7 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.apache.axiom.om.OMElement;
+import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
@@ -32,6 +33,7 @@ import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.task.attachments.AttachmentMetadata;
 import org.intalio.tempo.workflow.task.xml.TaskMarshaller;
 import org.intalio.tempo.workflow.task.xml.TaskUnmarshaller;
+import org.intalio.tempo.workflow.task.xml.TaskTypeMapper.TaskType;
 import org.intalio.tempo.workflow.tms.ITaskManagementService;
 import org.intalio.tempo.workflow.tms.client.RemoteTMSFactory;
 import org.intalio.tempo.workflow.util.TaskEquality;
@@ -51,6 +53,7 @@ public class RemoteTMSClientTest extends TestCase {
     public static void main(String[] args) {
         junit.textui.TestRunner.run(RemoteTMSClientTest.class);
     }
+
 
     public void testInput() throws Exception {
         ITaskManagementService tms = new RemoteTMSFactory(TMS_REMOTE_URL, TOKEN).getService();
@@ -227,5 +230,25 @@ public class RemoteTMSClientTest extends TestCase {
         TaskEquality.areTasksEquals(task1, task2);
         _logger.debug(task2.getRoleOwners().toString());
         tms.deletePipa(task1.getProcessEndpoint().toString());
+    }
+    
+    public void testMultipleReassign() throws Exception {
+    	ITaskManagementService tms = new RemoteTMSFactory(TMS_REMOTE_URL, TOKEN).getService();
+    	
+    	
+    	Task[] tasks = tms.getAvailableTasks(TaskType.ACTIVITY.name(), "");
+    	TaskState newState = TaskState.READY;
+    	if(((PATask)tasks[0]).getState().equals(TaskState.READY))
+    		newState = TaskState.CLAIMED;
+    	
+    	String[] ids = new String[tasks.length];
+    	for(int i = 0 ; i <tasks.length ; i++)  ids[i] = tasks[i].getID();
+    	AuthIdentifierSet users = new AuthIdentifierSet();
+    	users.add("intalio\\admin");
+    	AuthIdentifierSet roles = new  AuthIdentifierSet();
+    	tms.reassign(ids, users, roles, newState);
+    	
+    	tasks = tms.getAvailableTasks(TaskType.ACTIVITY.name(), "");
+    	Assert.assertEquals(newState, ((PATask)tasks[0]).getState());
     }
 }

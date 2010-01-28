@@ -331,7 +331,7 @@ public class TMSRequestProcessor extends OMUnmarshaller {
     public OMElement reassign(OMElement requestElement) throws AxisFault {
         try {
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
-            String taskID = requireElementValue(rootQueue, "taskId");
+            ArrayList<String> taskIds = expectListOfValues(rootQueue, "taskId");
             AuthIdentifierSet users = expectAuthIdentifiers(rootQueue, "userOwner");
             AuthIdentifierSet roles = expectAuthIdentifiers(rootQueue, "roleOwner");
             TaskState taskState;
@@ -342,7 +342,8 @@ public class TMSRequestProcessor extends OMUnmarshaller {
                 throw new InvalidInputFormatException("Unknown task state: '" + taskStateStr + "'");
             }
             String participantToken = requireElementValue(rootQueue, "participantToken");
-            _server.reassign(taskID, users, roles, taskState, participantToken);
+            for(String taskId : taskIds) 
+              _server.reassign(taskId, users, roles, taskState, participantToken);
             return createOkResponse();
         } catch (Exception e) {
             throw makeFault(e);

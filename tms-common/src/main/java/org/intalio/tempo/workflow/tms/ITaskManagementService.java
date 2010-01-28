@@ -16,6 +16,7 @@
 package org.intalio.tempo.workflow.tms;
 
 import java.net.URL;
+import java.util.ArrayList;
 
 import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
@@ -63,7 +64,7 @@ public interface ITaskManagementService {
 
     void removeAttachment(String taskID, URL attachmentURL) throws AuthException, UnavailableTaskException, UnavailableAttachmentException;
 
-    void reassign(String taskID, AuthIdentifierSet users, AuthIdentifierSet roles, TaskState state) throws AuthException, UnavailableTaskException;
+    void reassign(String[] taskID, AuthIdentifierSet users, AuthIdentifierSet roles, TaskState state) throws AuthException, UnavailableTaskException;
 
     void storePipa(PIPATask task) throws AuthException, InvalidTaskException;
 
