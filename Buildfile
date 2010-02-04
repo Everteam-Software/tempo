@@ -53,6 +53,7 @@ define "tempo" do
       test.exclude '*Axis2TASService*'
       test.exclude '*WDSStorageTest*'
       test.exclude '*OptionalStorage*'
+      test.exclude '*TaskAttachmentTest*'
     end
 
     package :jar
