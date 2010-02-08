@@ -498,14 +498,16 @@ BUILD_URI = {
 		:v5_2_5_jbee => "http://files.liferay.com/public/3mDkoitQ/ee/portal/5.2.5/liferay-portal-jboss-tomcat-4.2-5.2.5.zip",
 	},
 	:tomcat => {
-		:v5 => APACHE_MIRROR + "tomcat/tomcat-5/v5.5.27/bin/apache-tomcat-5.5.27.zip",
+    # :v5 => APACHE_MIRROR + "tomcat/tomcat-5/v5.5.27/bin/apache-tomcat-5.5.27.zip",
+		:v5 => APACHE_MIRROR + "tomcat/tomcat-5/v5.5.28/bin/apache-tomcat-5.5.28.zip",
 		:v6 => APACHE_MIRROR + "tomcat/tomcat-6/v6.0.18/bin/apache-tomcat-6.0.18.zip"
 	},  
 	:axis2 => APACHE_MIRROR + "ws/axis2/1_4_1/axis2-1.4.1-war.zip",
 	:ode => {
     :v1_3_snapshot => "org.apache.ode:ode-axis2-war:war:1.3.2-SNAPSHOT",
+    :v1_3_2 => "org.apache.ode:ode-axis2-war:war:1.3.2",
     :v1_3_3 => "org.apache.ode:ode-axis2-war:war:1.3.3",
-    :v2_1_snapshot => "http://www.intalio.org/public/ode/apache-ode-war-2.1-SNAPSHOT-20090303-768496.zip"
+    :v2_0_beta2 => "org.apache.ode:ode-axis2-war:war:2.0-beta2"
 	}, 
 	:alfresco => {
 	  :v2_1 => "http://downloads.sourceforge.net/sourceforge/alfresco/alfresco-community-war-2.1.0.zip",

@@ -7,7 +7,10 @@ BUILD_CONFIG = {
   # build with ode, axis2, uifw
   #
   # :mode => [BuildMode::BPMS,BuildMode::UIFW],
+  
   #
+  # build with ode, axis2, ui-fw, cas and ldap
+  :mode => [BuildMode::BPMS,BuildMode::UIFW, BuildMode::CAS, BuildMode::LDAP],
   
   # build an opensso server
   #
@@ -53,11 +56,10 @@ BUILD_CONFIG = {
   
   # build with jetty and ui-fw along with CAS and LDAP
   #
-  :mode => [BuildMode::JETTY, BuildMode::UIFW, BuildMode::CAS, BuildMode::LDAP],
+  # :mode => [BuildMode::JETTY, BuildMode::UIFW, BuildMode::CAS, BuildMode::LDAP],
   #
   
-  
-  :ode => :v1_3_snapshot,
+  :ode => :v1_3_3,
   :tomcat => :v5,
   :jetty => :v7,
   :osgi_jetty => :v7,
@@ -66,10 +68,12 @@ BUILD_CONFIG = {
   #:liferay => {:v => :v5_2_5_jbee, :base_folder => "liferay-portal-5.2.5", :server_folder => "jboss-tomcat-4.2.3"},  
   :alfresco => :v3_0,
   :tempo => {
-    :core => "6.0.0.75",
-    # not used until we've upgraded to the new deploy and security packages
-    :security => "1.0.5",
-    :deploy => "1.0.25",
+    # :core => "6.0.0.75", 
+    # TODO: version after 6.0.0.84 include the OpenJPA fix 
+    # and do not run on windows, see https://issues.apache.org/jira/browse/OPENJPA-1410
+    :core => "6.0.4.001",
+    :security => "1.0.10",
+    :deploy => "1.0.26",
     
     :processes => "6.0.6",
     :formManager => "6.0.0.40",
