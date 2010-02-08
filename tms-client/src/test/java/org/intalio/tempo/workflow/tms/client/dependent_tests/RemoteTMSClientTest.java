@@ -232,6 +232,14 @@ public class RemoteTMSClientTest extends TestCase {
         tms.deletePipa(task1.getProcessEndpoint().toString());
     }
     
+    public void testUpdate2() throws Exception {
+    	ITaskManagementService tms = new RemoteTMSFactory(TMS_REMOTE_URL, TOKEN).getService();
+    	Task[] tasks = tms.getAvailableTasks(TaskType.ACTIVITY.name(), "");
+    	Random rand = new Random();
+    	((PATask)tasks[0]).setPriority(rand.nextInt(10));
+    	tms.update(tasks[0]);
+    }
+    
     public void testMultipleReassign() throws Exception {
     	ITaskManagementService tms = new RemoteTMSFactory(TMS_REMOTE_URL, TOKEN).getService();
     	
