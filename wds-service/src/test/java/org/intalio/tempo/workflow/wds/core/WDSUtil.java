@@ -20,7 +20,6 @@ import java.util.Random;
 import java.util.ResourceBundle;
 
 import org.intalio.tempo.workflow.task.PIPATask;
-import org.intalio.tempo.workflow.wds.core.Item;
 
 public class WDSUtil {
     static final Random rand = new Random();

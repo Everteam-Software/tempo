@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.regex.Pattern;
 
-import org.intalio.tempo.workflow.wds.core.xforms.XFormsConverter;
 import org.junit.runner.RunWith;
 
 import com.googlecode.instinct.expect.ExpectThat;

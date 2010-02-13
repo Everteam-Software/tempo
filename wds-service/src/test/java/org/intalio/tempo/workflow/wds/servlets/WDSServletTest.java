@@ -3,20 +3,12 @@ package org.intalio.tempo.workflow.wds.servlets;
 //import static com.googlecode.instinct.expect.behaviour.Mocker.mock;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.io.IOUtils;
 import org.intalio.tempo.web.SysPropApplicationContextLoader;
-import org.intalio.tempo.workflow.task.PIPATask;
-import org.intalio.tempo.workflow.wds.core.Item;
-import org.intalio.tempo.workflow.wds.core.PIPALoader;
 import org.intalio.tempo.workflow.wds.core.WDSServiceFactory;
-import org.intalio.tempo.workflow.wds.core.WDSUtil;
-import org.intalio.tempo.workflow.wds.core.xforms.XFormsProcessor;
 import org.jmock.Expectations;
 import org.junit.Assert;
 import org.junit.runner.RunWith;

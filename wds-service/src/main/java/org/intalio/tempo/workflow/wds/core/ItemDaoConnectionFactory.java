@@ -11,7 +11,6 @@
  */
 package org.intalio.tempo.workflow.wds.core;
 
-import org.intalio.tempo.workflow.wds.core.ItemDaoConnection;
 
 /**
  * Defines the set of methods an item DAO connection factory must provide.

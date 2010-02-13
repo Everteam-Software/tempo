@@ -1,8 +1,5 @@
 package org.intalio.tempo.workflow.wds.core;
 
-import org.intalio.tempo.workflow.wds.core.Item;
-import org.intalio.tempo.workflow.wds.core.ItemDaoConnection;
-import org.intalio.tempo.workflow.wds.core.JPAItemDaoConnectionFactory;
 import org.junit.runner.RunWith;
 
 import com.googlecode.instinct.expect.ExpectThat;
