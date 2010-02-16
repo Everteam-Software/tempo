@@ -11,6 +11,8 @@ def configure_jetty
   FileUtils.cp "#{TEMPO_SVN}/rsc/jetty/jetty.sh", "#{@@server_folder}/bin"
   
   FileUtils.cp "#{TEMPO_SVN}/rsc/bundle-config/intalio-keystore.jks", "#{@@server_folder}/var/config"
+  
+  FileUtils.rm "#{@@server_folder}/contexts/test.xml"
 end
 
 def configure_ui_fw_jetty

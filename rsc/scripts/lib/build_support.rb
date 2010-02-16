@@ -507,6 +507,7 @@ BUILD_URI = {
     :v1_3_snapshot => "org.apache.ode:ode-axis2-war:war:1.3.2-SNAPSHOT",
     :v1_3_2 => "org.apache.ode:ode-axis2-war:war:1.3.2",
     :v1_3_3 => "org.apache.ode:ode-axis2-war:war:1.3.3",
+    :v1_3_4_snapshot => "org.apache.ode:ode-axis2-war:war:1.3.4-SNAPSHOT-svn-907948",
     :v2_0_beta2 => "org.apache.ode:ode-axis2-war:war:2.0-beta2"
 	}, 
 	:alfresco => {
