@@ -6,26 +6,28 @@ load "#{@@script_folder}/../scripts/tempo_builder_lib.rb"
 load "#{@@script_folder}/../scripts/config.rb"
 
 BASE_PACKAGE = "org.intalio.jetty"
-VERSION_NUMBER = '6.0.003'
-TEMPO_VERSION = "6.0.0.78"
+VERSION_NUMBER = '6.0.4.001'
 
 BUILD_CONFIG = {
   :directory => "./target",
-  # :mode => [BuildMode::JETTY, BuildMode::UIFW, BuildMode::CAS, BuildMode::LDAP, BuildMode::RELEASE],
-  :mode => [BuildMode::JETTY, BuildMode::UIFW, BuildMode::CAS, BuildMode::LDAP],
-
-  :ode => :v1_3_snapshot,
+  :mode => [BuildMode::JETTY, BuildMode::UIFW, BuildMode::CAS, BuildMode::LDAP, BuildMode::RELEASE],
+  # :mode => [BuildMode::JETTY, BuildMode::UIFW, BuildMode::CAS, BuildMode::LDAP],
+  :ode => :v1_3_4_snapshot,
+  :tomcat => :v5,
   :jetty => :v7,
+  :osgi_jetty => :v7,
+  :artifact => "org.intalio.jetty:tempo-jetty7:zip:#{VERSION_NUMBER}",
   :tempo => {
-    :core => TEMPO_VERSION,
-    :security => "1.0.5",
-    :deploy => "1.0.25",
+    :core => "6.0.4.002",
+    :security => "1.0.10",
+    :deploy => "1.0.26",
+
     :processes => "6.0.6",
     :formManager => "6.0.0.40",
     :apacheds => "6.0.0.37",
-    :cas => "6.0.0.35"
-  },
-  :artifact => "org.intalio.jetty:tempo-jetty7:zip:#{VERSION_NUMBER}"
+    :cas => "6.0.0.36"
+  }
+  
 }
 
 tb = TempoBuilder.new
