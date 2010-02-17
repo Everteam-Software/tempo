@@ -2,9 +2,6 @@ package org.intalio.tempo.workflow.tms.server;
 
 import junit.framework.TestCase;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class LoggingInterceptorTest extends TestCase {
     // private static final Logger _logger =
     // LoggerFactory.getLogger(LoggingInterceptorTest.class);

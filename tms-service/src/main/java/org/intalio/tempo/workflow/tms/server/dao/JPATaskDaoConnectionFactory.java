@@ -12,9 +12,6 @@ package org.intalio.tempo.workflow.tms.server.dao;
 import java.util.Map;
 
 import org.intalio.tempo.workflow.dao.AbstractJPAConnectionFactory;
-import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
-import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnectionFactory;
-import org.intalio.tempo.workflow.tms.server.dao.JPATaskDaoConnection;
 
 /**
  * Factory for JPA-based task persistence
