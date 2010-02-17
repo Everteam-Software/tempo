@@ -278,7 +278,7 @@ APACHE_JPA_2_0_0 = [
   APACHE_COMMONS[:collections],
   GERONIMO_SPECS["jta"],
   #"org.apache.openjpa:openjpa-all:jar:2.0.0-SNAPSHOT",
-  "org.apache.openjpa:openjpa-all:jar:2.0.0-svn-890673",
+  "org.apache.openjpa:openjpa-all:jar:2.0.0-svn-910423",
   "serp:serp:jar:1.13.1"  
 ]
 APACHE_JPA = APACHE_JPA_2_0_0
