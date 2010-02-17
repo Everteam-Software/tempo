@@ -56,7 +56,7 @@ BUILD_CONFIG = {
   
   # build with jetty and ui-fw along with CAS and LDAP
   #
-  :mode => [BuildMode::JETTY, BuildMode::UIFW, BuildMode::CAS, BuildMode::LDAP],
+  # :mode => [BuildMode::JETTY, BuildMode::UIFW, BuildMode::CAS, BuildMode::LDAP],
   #
   
   :ode => :v1_3_4_snapshot,
@@ -71,7 +71,7 @@ BUILD_CONFIG = {
     # :core => "6.0.0.75", 
     # TODO: version after 6.0.0.84 include the OpenJPA fix 
     # and do not run on windows, see https://issues.apache.org/jira/browse/OPENJPA-1410
-    :core => "6.0.4.002",
+    :core => "6.0.4.004",
     :security => "1.0.10",
     :deploy => "1.0.26",
     
