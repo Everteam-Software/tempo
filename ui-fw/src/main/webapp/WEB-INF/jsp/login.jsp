@@ -16,8 +16,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="intalio" uri="http://www.intalio.com/tagfiles"%>
 
-<%@ taglib prefix="intalio" uri="http://www.intalio.com/tagfiles"%>
-
 <c:set var="logoPath" value="images/logo.gif" />
 <c:set var="pageTitle" value="Intalio|Workflow" />
 <c:set var="footer">
