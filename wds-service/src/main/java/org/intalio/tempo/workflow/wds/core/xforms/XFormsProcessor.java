@@ -64,8 +64,9 @@ public class XFormsProcessor {
         format.setOmitComments(false);
         format.setPreserveSpace(true);
         SchemaURLRewriter ser = new SchemaURLRewriter(out, format, itemUri);
-        parser.getXMLReader().setContentHandler(ser);
-        parser.getXMLReader().parse(new InputSource(inputStream));
+        XMLReader reader = parser.getXMLReader();
+        reader.setContentHandler(ser);
+        reader.parse(new InputSource(inputStream));
         return new Item(itemUri, XFORMS_CONTENT_TYPE, out.toString().getBytes(CharEncoding.UTF_8));
     }
 
