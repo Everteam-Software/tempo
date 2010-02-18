@@ -21,10 +21,8 @@ module Buildr
 
   # Provides OpenJPA bytecode enhancement and Mapping tool task. Require explicitly using <code>require "buildr/openjpa"</code>.
   module OpenJPA
-
-    VERSION = "1.2.0-patched"
-
-    REQUIRES = [ "org.apache.openjpa:openjpa:jar:#{VERSION}",
+    
+    REQUIRES = [ 
       "commons-collections:commons-collections:jar:3.1",
       "commons-dbcp:commons-dbcp:jar:1.2.1", 
       "commons-lang:commons-lang:jar:2.1",
