@@ -261,19 +261,21 @@ MY_FACES = [
   "org.apache.myfaces.core:myfaces-impl:jar:1.1.5"
 ]
 
-APACHE_JPA = [
+APACHE_JPA_1_x = [
   APACHE_COMMONS[:lang],
   APACHE_COMMONS[:collections],
   GERONIMO_SPECS["jta"],
   GERONIMO_SPECS["jpa"],
-  
-  "org.apache.openjpa:openjpa:jar:1.1.0-645340",
-  
-  
-  # "org.apache.openjpa:openjpa:jar:1.2.0-patched",
-  
   "serp:serp:jar:1.13.1"
 ]
+APACHE_JPA_2_0_0 = [
+  APACHE_COMMONS[:lang],
+  APACHE_COMMONS[:collections],
+  GERONIMO_SPECS["jta"],
+  "org.apache.openjpa:openjpa-all:jar:2.0.0-svn-910423",
+  "serp:serp:jar:1.13.1"  
+]
+APACHE_JPA = APACHE_JPA_2_0_0
 
 FREEMARKER = "org.freemarker:freemarker:jar:2.3.14"
 
