@@ -86,8 +86,7 @@ public class JPATaskTest {
 	private void testRange(int first, int max, int expected) {
 		final TaskFetcher taskFetcher = new TaskFetcher(em);
 		HashMap map = new HashMap();
-		map.put(TaskFetcher.FETCH_USER, new UserRoles("user1",
-				new String[] { "examples\\employee" }));
+		map.put(TaskFetcher.FETCH_USER, new UserRoles("user1", new String[] { "examples\\employee" }));
 		map.put(TaskFetcher.FETCH_CLASS, PATask.class);
 		map.put(TaskFetcher.FETCH_SUB_QUERY, "");
 		map.put(TaskFetcher.FETCH_FIRST, first);
@@ -349,17 +348,20 @@ public class JPATaskTest {
 		checkRemoved(new Task[] { task1 });
 	}
 
-	@Test
-	public void testFetchRangeAndCount() throws Exception {
-		PATask[] tasks = getSampleTasks(10);
-		for (Task t : tasks)
-			persist(t);
-		testRange(1, 1, 1);
-		testRange(1, 2, 2);
-		testRange(-1, 1, tasks.length);
-		testCount(tasks.length);
-		checkRemoved(tasks);
-	}
+    @Test
+    public void testFetchRangeAndCount() throws Exception {
+     PATask[] tasks = getSampleTasks(10);
+     for (Task t : tasks)
+         persist(t);
+
+     testRange(1, 2, 2);
+     testRange(1, 1, 1);
+     testRange(-1, 1, 1);
+     testRange(1, 1, 1);
+     testRange(1, 5, 5);
+     testCount(tasks.length);
+     checkRemoved(tasks);
+    }
 
 	@Test
 	public void testMultiplePipa() throws Exception {

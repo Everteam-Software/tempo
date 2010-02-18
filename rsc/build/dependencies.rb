@@ -42,10 +42,12 @@ FOP = "fop:fop:jar:0.20.5"
 
 GERONIMO_SPECS = {
   "jta" => "org.apache.geronimo.specs:geronimo-jta_1.1_spec:jar:1.1",
-  "jpa" => "org.apache.geronimo.specs:geronimo-jpa_3.0_spec:jar:1.0",
+  # "jpa" => "org.apache.geronimo.specs:geronimo-jpa_3.0_spec:jar:1.0",
   # "jpa" => "org.apache.geronimo.specs:geronimo-jpa_2.0_spec:jar:1.0-EA-20090312",
+  "jpa" => "org.apache.geronimo.specs:geronimo-jpa_2.0_spec:jar:1.0-EA2-SNAPSHOT",
   "jms" => "org.apache.geronimo.specs:geronimo-jms_1.1_spec:jar:1.0.1"
 }
+
 
 ICAL = "ical4j:ical4j:jar:0.9.20"
 INTALIO_STATS = "org.intalio.common:intalio-stats:jar:1.0.2" 
