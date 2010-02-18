@@ -5,7 +5,9 @@ require "buildr/xmlbeans"
 # require "buildr/cobertura"
 
 # Keep this structure to allow the build system to update version numbers.
-VERSION_NUMBER = "6.0.0.85"
+
+# This branch is a copy of Tempo 6.0.85
+VERSION_NUMBER = "6.0.3.001"
 
 require "rsc/build/dependencies.rb"
 require "rsc/build/repositories.rb"
