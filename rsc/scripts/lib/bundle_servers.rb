@@ -1,5 +1,6 @@
 def install_server server_zip_url, build_folder="tempo-build-#{time_now}"
   @@server_folder = rename_folder(download_unzip(server_zip_url, true), build_folder)
+  @@base_folder = @@server_folder
   @@webapp_folder = "#{@@server_folder}/webapps"
   @@wi = WarInstaller.new @@webapp_folder, true, true
   @@lib_folder = "#{@@server_folder}/common/lib" # tomcat5
@@ -25,8 +26,8 @@ end
 
 def install_liferay build_folder="tempo-liferay-#{time_now}"
   download_unzip(BUILD_URI[:liferay][BUILD_CONFIG[:liferay][:v]], true)
-  @@server_folder = rename_folder(BUILD_CONFIG[:liferay][:base_folder], build_folder)
-  @@server_folder = "#{@@server_folder}/#{BUILD_CONFIG[:liferay][:server_folder]}"
+  @@base_folder = rename_folder(BUILD_CONFIG[:liferay][:base_folder], build_folder)
+  @@server_folder = "#{@@base_folder}/#{BUILD_CONFIG[:liferay][:server_folder]}"
   if BUILD_CONFIG[:liferay][:v] == :v5_2_5_jbee
     @@webapp_folder = "#{@@server_folder}/server/default/deploy/"
     @@wi = WarInstaller.new @@webapp_folder, true, true
@@ -45,6 +46,7 @@ end
 
 def install_jetty build_folder="tempo-jetty-#{time_now}"
   @@server_folder = rename_folder(download_unzip(BUILD_URI[:jetty][:v7], true), build_folder)
+  @@base_folder = @@server_folder
   @@webapp_folder = "#{@@server_folder}/webapps"
   @@wi = WarInstaller.new @@webapp_folder, true, true
   @@lib_folder = "#{@@server_folder}/lib/ext"

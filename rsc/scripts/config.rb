@@ -2,7 +2,7 @@ include BuildSupport
 BuildSupport::BUILD_DEBUG = true
 
 BUILD_CONFIG = {
-  :directory => "../tempo.jetty",
+  :directory => "../tempo.server",
   
   # build with ode, axis2, uifw
   #
@@ -51,7 +51,7 @@ BUILD_CONFIG = {
   
   # build with liferay and uifw
   #
-  # :mode => [BuildMode::LIFERAY, BuildMode::UIFW, BuildMode::CAS],
+  # :mode => [BuildMode::LIFERAY, BuildMode::UIFW, BuildMode::CAS, BuildMode::RELEASE],
   #
   
   # build with jetty and ui-fw along with CAS and LDAP

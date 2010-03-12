@@ -217,11 +217,13 @@ class TempoBuilder
 
     # zip the resulting @@server_folder
     activate_step [BuildMode::ZIP], "Zip build release" do
-      compress(@@server_folder) if @@server_folder and File.exist? @@server_folder
+      server_folder = @@base_folder
+      compress(server_folder) if server_folder and File.exist? server_folder
     end
     
     activate_step [BuildMode::RELEASE], "Release" do
-      ar = artifact(BUILD_CONFIG[:artifact]).from(compress(@@server_folder))
+      server_folder = @@base_folder
+      ar = artifact(BUILD_CONFIG[:artifact]).from(compress(server_folder))
       #ar = artifact(BUILD_CONFIG[:artifact])
       ar.upload
     end
