@@ -30,7 +30,7 @@
     <link rel="alternate" type="application/atom+xml" title="Process feed" href="/feeds/atom/processes?token=${participantToken}"/>
 
     <script type="text/javascript" src="script/ui-fw.js"></script>
-    <script type="text/javascript" src="script/jquery-1.4.1.min.js"></script>
+    <script type="text/javascript" src="script/jquery-1.3.2.min.js"></script>
     <script type="text/javascript" src="script/jtabber.js"></script>
     <script type="text/javascript" src="script/jquery-timer.js"></script>
     <script type="text/javascript" src="script/jquery.jcorners.js"></script>
