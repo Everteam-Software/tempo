@@ -464,15 +464,29 @@ public class TMSServer implements ITMSServer {
     }
 
     public void deletePipa(String formUrl, String participantToken) throws AuthException, UnavailableTaskException {
-        try {
-            // UserRoles credentials =
-            // _authProvider.authenticate(participantToken);
-            ITaskDAOConnection dao = _taskDAOFactory.openConnection();
-            dao.deletePipaTask(formUrl);
-            dao.commit();
-        } catch (Exception e) {
-            throw new UnavailableTaskException(e);
-        }
+    	HashMap<String, Exception> problemTasks = new HashMap<String, Exception>();
+    	UserRoles credentials = _authProvider.authenticate(participantToken);
+
+    	ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+    	String userID = credentials.getUserID();
+	    try {
+	        Task task = dao.fetchPipa(formUrl);
+	        if (_permissions.isAuthorized(TaskPermissions.ACTION_DELETE, task, credentials)) {
+	            dao.deletePipaTask(formUrl);
+	            dao.commit();
+	            if (_logger.isDebugEnabled())
+	                _logger.debug(userID + " has deleted PIPA Task " + task);
+	        } else {
+	            problemTasks.put(formUrl, new AuthException(userID + " cannot delete" + formUrl));
+	        }
+	    } catch (Exception e) {
+	        _logger.error("Cannot retrieve PIPA Tasks", e);
+	        problemTasks.put(formUrl, e);
+	    }
+    	if (problemTasks.size() > 0) {
+    	    throw new UnavailableTaskException(userID + " cannot delete PIPA Tasks: " + problemTasks.keySet());
+    	}
+    	    
     }
 
     public PIPATask getPipa(String formUrl, String participantToken) throws AuthException, UnavailableTaskException {
