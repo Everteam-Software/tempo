@@ -19,12 +19,12 @@ BUILD_CONFIG = {
   # :artifact => "org.intalio.liferay:liferay-jboss-ee:zip:6.0.001"
 }
 
-# BUILD_CONFIG[:artifact] = "#{BASE_PACKAGE}:liferay-jboss-ee:zip:#{VERSION_NUMBER}"
-# BUILD_CONFIG[:liferay] = {:v => :v5_2_5_jbee, :base_folder => "liferay-portal-5.2.5", :server_folder => "jboss-tomcat-4.2.3"}
+ BUILD_CONFIG[:artifact] = "#{BASE_PACKAGE}:liferay-jboss-ee:zip:#{VERSION_NUMBER}"
+ BUILD_CONFIG[:liferay] = {:v => :v5_2_5_jbee, :base_folder => "liferay-portal-5.2.5", :server_folder => "jboss-tomcat-4.2.3"}
 # tb = TempoBuilder.new
 # tb.build BUILD_CONFIG
 
-BUILD_CONFIG[:artifact] = "#{BASE_PACKAGE}:liferay-tomcat-ee:zip:#{VERSION_NUMBER}"
-BUILD_CONFIG[:liferay] = {:v => :v5_2_5ee, :base_folder => "liferay-portal-5.2.5", :server_folder => "tomcat-5.5.27"}
+#BUILD_CONFIG[:artifact] = "#{BASE_PACKAGE}:liferay-tomcat-ee:zip:#{VERSION_NUMBER}"
+#BUILD_CONFIG[:liferay] = {:v => :v5_2_5ee, :base_folder => "liferay-portal-5.2.5", :server_folder => "tomcat-5.5.27"}
 tb = TempoBuilder.new
 tb.build BUILD_CONFIG
