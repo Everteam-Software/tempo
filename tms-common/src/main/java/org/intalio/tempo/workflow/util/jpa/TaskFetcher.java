@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
-import javax.persistence.FlushModeType;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
@@ -163,8 +162,11 @@ public class TaskFetcher {
 					buffer.append(subQuery);
 				}
 			}
-			if (_logger.isDebugEnabled())
+			if (_logger.isDebugEnabled()){
 				_logger.debug(buffer.toString());
+				_logger.debug("Parameter 1:" + userIdList);
+				_logger.debug("Parameter 2:" + user.getAssignedRoles());
+			}
 			q = _entityManager.createQuery(buffer.toString()).setParameter(1,
 					userIdList).setParameter(2, user.getAssignedRoles());
 		}
