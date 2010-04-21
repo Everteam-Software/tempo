@@ -75,6 +75,7 @@ class TempoBuilder
         #install_tmp
         #install_absence_request
         locate_and_copy(LOG4J, @@lib_folder)
+        locate_and_copy(SLF4J, @@lib_folder)
         configure_tomcat
         setup_java_options
       end
