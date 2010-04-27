@@ -96,27 +96,6 @@ public class Configuration {
         return (String[]) taskIcons.toArray(new String[taskIcons.size()]);
     }
 
-    public String convertIconsToHTMLCode(String[] iconSet){
-        
-        String htmlCode = "[ ";
-        for(int i=0;i<iconSet.length;i++){
-            if(iconSet[i].equalsIgnoreCase("delete")){
-                htmlCode += "{name: '<fmt:message key=\"org_intalio_uifw_toolbar_button_delete\"/>', bclass: 'delete', onpress : deleteTask},";
-            }else if(iconSet[i].equalsIgnoreCase("claim")){
-                htmlCode += "{name: '<fmt:message key=\"org_intalio_uifw_toolbar_button_claimrevoke\"/>', bclass: 'claim', onpress : claimTask},";
-            }else if(iconSet[i].equalsIgnoreCase("reassign")){
-                htmlCode += "{name: '<fmt:message key=\"org_intalio_uifw_toolbar_button_reassign\"/>', bclass: 'reassign', onpress : clickReassign},";
-            }else if(iconSet[i].equalsIgnoreCase("update")){
-                htmlCode += "{name: '<fmt:message key=\"org_intalio_uifw_toolbar_button_update\"/>', bclass: 'update', onpress : clickUpdate},";
-            }else if(iconSet[i].equalsIgnoreCase("skip")){
-                htmlCode += "{name: '<fmt:message key=\"org_intalio_uifw_toolbar_button_skip\"/>', bclass: 'skip', onpress : skipTask},";
-            }else if(iconSet[i].equalsIgnoreCase("export")){
-                htmlCode += "{name: '<fmt:message key=\"org_intalio_uifw_toolbar_button_export\"/>', bclass: 'export', onpress : clickExportTasks},";
-            }
-        }
-        return htmlCode.substring(0, htmlCode.length()-1) + "]";
-    }
-    
     public String getFeedUrl() {
         return _feedUrl;
     }
