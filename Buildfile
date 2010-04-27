@@ -179,7 +179,7 @@ define "tempo" do
     web_xml = _("src/main/webapp/WEB-INF/"+web_xml) 
     
     resources.filter.using "version" => VERSION_NUMBER
-    test.with JAXEN, XMLUNIT, INSTINCT, LOG4J
+    test.with JAXEN, XMLUNIT, INSTINCT, LOG4J, SPRING_MOCK
     package(:war).include(web_xml, :as=>'WEB-INF/web.xml').with(:libs=>libs)
   end
 
