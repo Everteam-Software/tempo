@@ -14,12 +14,19 @@
  */
 package org.intalio.tempo.uiframework;
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import org.intalio.tempo.security.ws.TokenClient;
 
 public class Configuration {
 
     private static Configuration INSTANCE = new Configuration();
 
+    private static String TASK_TAB = "task";
+    private static String NOTIFICATION_TAB = "notification";
+    
     private String _serviceEndpoint;
     private String _tmpEndpoint = "http://localhost:8080/ode/processes/completeTask";
     private int _pagingLength;
@@ -31,7 +38,43 @@ public class Configuration {
     private Boolean _toolbarIcons = Boolean.TRUE;
     private Boolean _claimTaskOnOpen = Boolean.TRUE;
     private int _ajaxTimeout = 5000;
- 
+    private Map<String, Map<String, Set<String>>> _toolbarIconSets;
+    private Map<String, Set<String>> _bindIconSetToRole;
+
+    public Map<String, Set<String>> getBindIconSetToRole() {
+        return _bindIconSetToRole;
+    }
+
+    public void setBindIconSetToRole(Map<String, Set<String>> _bindIconSetToRole) {
+        this._bindIconSetToRole = _bindIconSetToRole;
+    }
+
+    public Map<String, Map<String, Set<String>>> getToolbarIconSets() {
+        return _toolbarIconSets;
+    }
+
+    public void setToolbarIconSets(Map<String, Map<String, Set<String>>> _toolbarIconSets) {
+        this._toolbarIconSets = _toolbarIconSets;
+    }
+
+    public Set<String> getTaskIconSetByRole(String[] roles) {
+        HashSet<String> taskIcons = new HashSet<String>();
+        for(int i = 0; i < roles.length; i++){
+            Map<String, Set<String>> iconSetByRole = _toolbarIconSets.get(roles[i]);
+            taskIcons.addAll(iconSetByRole.get(TASK_TAB));
+        }
+        return taskIcons;
+    }
+    
+    public Set<String> getNotificationIconSetByRole(String[] roles){
+        HashSet<String> taskIcons = new HashSet<String>();
+        for(int i = 0; i < roles.length; i++){
+            Map<String, Set<String>> iconSetByRole = _toolbarIconSets.get(roles[i]);
+            taskIcons.addAll(iconSetByRole.get(NOTIFICATION_TAB));
+        }
+        return taskIcons;        
+    }
+    
     public String getFeedUrl() {
         return _feedUrl;
     }
@@ -39,27 +82,27 @@ public class Configuration {
     public void setFeedUrl(String url) {
         _feedUrl = url;
     }
-    
+
     public void setAjaxTimeout(int timeout) {
         _ajaxTimeout = timeout;
     }
-    
+
     public int getAjaxTimeout() {
         return _ajaxTimeout;
     }
-    
+
     public Boolean getClaimTaskOnOpen() {
-		return _claimTaskOnOpen;
-	}
-
-	public void setClaimTaskOnOpen(Boolean claimTaskOnOpen) {
-		_claimTaskOnOpen = claimTaskOnOpen;
-	}
-
-	public void setUseToolbarIcons(Boolean use) {
-        _toolbarIcons=use;
+        return _claimTaskOnOpen;
     }
-    
+
+    public void setClaimTaskOnOpen(Boolean claimTaskOnOpen) {
+        _claimTaskOnOpen = claimTaskOnOpen;
+    }
+
+    public void setUseToolbarIcons(Boolean use) {
+        _toolbarIcons = use;
+    }
+
     public Boolean isUseToolbarIcons() {
         return _toolbarIcons;
     }
@@ -70,11 +113,11 @@ public class Configuration {
     public String getServiceEndpoint() {
         return _serviceEndpoint;
     }
-    
+
     public String getFeedItemBaseUrl() {
         return _baseUrl;
     }
-    
+
     public void setFeedItemBaseUrl(String baseUrl) {
         this._baseUrl = baseUrl;
     }
@@ -88,7 +131,7 @@ public class Configuration {
     }
 
     public String getTMPEndpoint() {
-	    return _tmpEndpoint;
+        return _tmpEndpoint;
     }
 
     public int getPagingLength() {
@@ -111,18 +154,18 @@ public class Configuration {
         _refreshTime = time;
     }
 
-	public int getSessionTimeout() {
+    public int getSessionTimeout() {
         return _sessionTimeout;
     }
 
     public void setSessionTimeout(int time) {
         _sessionTimeout = time;
     }
-    
+
     public void setTokenClient(TokenClient tc) {
         _tokenClient = tc;
     }
-    
+
     public TokenClient getTokenClient() {
         return _tokenClient;
     }
