@@ -28,7 +28,7 @@
 						<entry key="task">
 							<set>
 								<value>delete</value>
-								<value>claim</value>
+								<!--  <value>claim</value>-->
 								<value>reassign</value>
 								<value>update</value>
 								<value>skip</value>
@@ -68,7 +68,7 @@
 				</entry>
 				<entry key="employee">
 					<set>
-						<value>intalio\employee</value>
+						<value>intalio\Employee</value>
 						<value>examples\employee</value>
 					</set>
 				</entry>

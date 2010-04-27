@@ -2,21 +2,27 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
 <%@page import="org.intalio.tempo.uiframework.Configuration"%>
 <%@page import="org.intalio.tempo.security.ws.TokenClient"%>
+<%@page import="org.intalio.tempo.web.ApplicationState"%>
+<%@page import="org.intalio.tempo.web.User"%>
+
 <script type="text/javascript">
 
-    $(document).ready(function(){
+    $(document).ready(function(){ 
         
     /*********************************************************************
-    1. Load the dynamic JSP code that contains variables defined on the server 
+    Load the dynamic JSP code that contains variables defined on the server 
     **********************************************************************/
     <% 
     Configuration conf = Configuration.getInstance();
     String tokenService = conf.getTokenClient().getEndpoint();
     boolean useToolbar = conf.isUseToolbarIcons().booleanValue();
+	User currentUser = ApplicationState.getCurrentInstance(request).getCurrentUser();
+	String[] taskIconSet = conf.getTaskIconSetByRole(currentUser.getRoles());
+	String[] notiIconSet = conf.getNotificationIconSetByRole(currentUser.getRoles());
     %>
     
     /*********************************************************************
-    2. Load the javascript variables on the client
+    Load the javascript variables on the client
     **********************************************************************/
     var speed = "fast";
     var currentUser = '<%= ((String)request.getAttribute("currentUser")).replace("\\", "\\\\")%>';
@@ -30,9 +36,16 @@
     var height = 0;
     var current = null;
     $.ajaxSetup({timeout: <%= conf.getAjaxTimeout() %>});
-    
+	var taskIconSet = new Array(<%=taskIconSet.length%>)
+	<% for(int i=0;i<taskIconSet.length;i++) {%>
+    	taskIconSet[<%=i%>] = '<%=taskIconSet[i]%>';
+    <%}%>
+	var notiIconSet = new Array(<%=notiIconSet.length%>)
+    <% for(int i=0;i<notiIconSet.length;i++) {%>
+    	notiIconSet[<%=i%>] = '<%=notiIconSet[i]%>';
+    <%}%>    
     /*********************************************************************
-    3. Section to handle resizing of window, and recompute table size and
+    Section to handle resizing of window, and recompute table size and
     display area
     **********************************************************************/
 
@@ -66,7 +79,7 @@
     });
 
    /*********************************************************************
-   4. Method to preprocess the data loaded in flexigrid.
+   Method to preprocess the data loaded in flexigrid.
    The reason is we want to be able to hide some lines,
    depending on the search fields.
    **********************************************************************/
@@ -110,9 +123,9 @@
         window.open("/ui-fw/script/empty.jsp", "taskform");
     }
 		
-    /*********************************************************************
-    5. Methods and variablles to handle Session timeout management
-    **********************************************************************/
+	/*********************************************************************
+	Methods and variablles to handle Session timeout management
+	**********************************************************************/
 	var time = 0;
 	var sessionTimeout = <c:out value="${sessionTimeout}"/>; // in minutes 
 	var timeCount = 60000; // 1 minute 
@@ -141,21 +154,51 @@
     });
     
     /*
-    Erase the session, call logout on the server
+		Erase the session, call logout on the server
     */
 	function log_me_out() {
 	   $.post("login.htm?actionName=logOut");
 	   $("#sessionExpired").dialog('open');
 	}
     
+	/*
+		Convert the icon name to flexigrid code
+	*/
+    function getToolbarIconsCodes(icons){
+	    var iconsetCode = new Array(icons.length);
+	    for(i = 0; i < icons.length; i++){
+	        switch(icons[i]){
+	        case "delete":
+	            iconsetCode[i] = {name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : deleteTask};
+	            break;
+	        case "claim":
+	            iconsetCode[i] = {name: '<fmt:message key="org_intalio_uifw_toolbar_button_claimrevoke"/>', bclass: 'claim', onpress : claimTask};
+	            break;
+	        case "reassign":
+	        	iconsetCode[i] = {name: '<fmt:message key="org_intalio_uifw_toolbar_button_reassign"/>', bclass: 'reassign', onpress : clickReassign};
+	            break;
+	        case "update":
+	        	iconsetCode[i] = {name: '<fmt:message key="org_intalio_uifw_toolbar_button_update"/>', bclass: 'update', onpress : clickUpdate};
+	            break;
+	        case "skip":
+	        	iconsetCode[i] = {name: '<fmt:message key="org_intalio_uifw_toolbar_button_skip"/>', bclass: 'skip', onpress : skipTask};
+	            break;
+	        case "export":
+	        	iconsetCode[i] = {name: '<fmt:message key="org_intalio_uifw_toolbar_button_export"/>', bclass: 'export', onpress : clickExportTasks};
+	            break;
+	        }
+	    }
+	    return iconsetCode;
+    }
     /*
     Define needed events for timer
     */
     $("html").mousemove(function(e){resetTimer();});
     $(this).click(function() {resetTimer();});
 		
+
     /*********************************************************************
-    6. Section to handle dialogs code
+    Section to handle dialogs code
     *********************************************************************/
 		
     /*
@@ -196,7 +239,7 @@
     });
     
     /*********************************************************************
-    8. Remote SOAP Calls section.
+    Remote SOAP Calls section.
     
     Note that we call update of the task list on the call back of each SOAP
     request. Which means, most actions would have an immediate effects, and
@@ -357,7 +400,7 @@
     }
         
     /*********************************************************************
-    9. Support methods for reassign dialog.
+    Support methods for reassign dialog.
     We need to be able to fetch users and roles, so below are a few
     methods that make SOAP calls to the token service and retrieve the 
     proper data.
@@ -430,7 +473,7 @@
     });
     
     /*********************************************************************
-    10. Support methods for the export dialog.
+    Support methods for export dialog.
     *********************************************************************/
     
     function exportTasksAction() {
@@ -443,11 +486,11 @@
     }
     
     /*********************************************************************
-    11. Support for handling click from the flexigrid toolbars
+    Support for handling click from the flexigrid toolbars
     *********************************************************************/
 
     /*
-    Code for loading the update dialog after a mouse click
+    Code for loading the update dialog after mouse click
     */
     function clickUpdate(com,grid) {
       $('#up_description').empty();
@@ -474,7 +517,7 @@
     }        
 
     /*
-    Code for laoding the reassign dialog after a mouse click
+    Code for laoding the reassign dialog after mouse click
     */
     function clickReassign(com,grid) {
       if($('.trSelected',grid).length!=0) {
@@ -500,19 +543,18 @@
     }
 
     /*
-    Code for the export dialog, after a mouse click
+    Code for the export dialog, after the mouse click
     */        
     function clickExportTasks() {
       $('#exportdialog').dialog('open');
     }
 		
-    /*********************************************************************
-    12. Flexigrid tables handling
+	/*********************************************************************
+    Flexigrid tables handling
     *********************************************************************/
 		
     /*
-    Common flexigrid properties.
-    The 3 tables call the xml result of updates.jsp 
+    Common flexigrid properties
     */
     var p = {
       url: 'updates.htm',
@@ -532,16 +574,10 @@
     /*
     Table for activity tasks
     */
+	var taskIcons = getToolbarIconsCodes(taskIconSet);
     var t1 = $("#table1").flexigrid($.extend({
       <% if(useToolbar) {%> 
-        buttons : [
-        {name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : deleteTask},
-        {name: '<fmt:message key="org_intalio_uifw_toolbar_button_claimrevoke"/>', bclass: 'claim', onpress : claimTask},
-        {name: '<fmt:message key="org_intalio_uifw_toolbar_button_reassign"/>', bclass: 'reassign', onpress : clickReassign},
-        {name: '<fmt:message key="org_intalio_uifw_toolbar_button_update"/>', bclass: 'update', onpress : clickUpdate},
-        {name: '<fmt:message key="org_intalio_uifw_toolbar_button_skip"/>', bclass: 'skip', onpress : skipTask},
-        {name: '<fmt:message key="org_intalio_uifw_toolbar_button_export"/>', bclass: 'export', onpress : clickExportTasks}
-        ],
+        buttons : taskIcons,
         <%} %>
         params: [
         { name : 'type', value : 'PATask' }
@@ -591,13 +627,14 @@
 	/*
 	Table for notifications
 	*/
+	var notiIcons = getToolbarIconsCodes(notiIconSet);
 	var t2 = $("#table2").flexigrid($.extend({
 	params: [
 		 { name : 'type', value : 'Notification' }
 		,{ name : 'update', value : true }
 	],
 	<% if(useToolbar) {%> 
-	buttons : [{name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : deleteTask}],
+	buttons : notiIcons,
 	<%} %>
 	colModel : [
 	{
@@ -606,12 +643,12 @@
 	  width : width*0.5, 
 	  sortable : true, 
 	  align: 'left'},
-    {
-      display: '<fmt:message key = "com_intalio_bpms_workflow_taskHolder_priority"/>', 
-      name : '_priority', 
-      width : width*0.3, 
-      sortable : true, 
-      align: 'left'},
+{
+  display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_priority"/>', 
+  name : '_priority', 
+  width : width*0.3, 
+  sortable : true, 
+  align: 'left'},
 	{
 	  display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/>', 
 	  name : '_creationDate', 
@@ -630,7 +667,7 @@
 		,{ name : 'update', value : true }
 	],
 	<% if(useToolbar) {%> 
-	buttons : [{name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : deleteTask}], 
+	buttons : notiIcons, 
 	<%} %>
 	colModel : [
 	{
@@ -645,14 +682,15 @@
 	  width : width*0.4, 
 	  sortable : true, 
 	  align: 'left'}
-	]},p));
+	]},p));		
+		
 		
     /*********************************************************************
-    13. JQuery Tab handling
+    JQuery Tab handling
     *********************************************************************/
 
     /*
-    tabs definition
+    tab definition
     */
     $.jtabber({
       mainLinkTag: "#container li a", 
@@ -664,7 +702,7 @@
     });
 
     /*
-    Support method for refreshing the current tab and hiding the other ones
+    Support method for refreshing the current tab tabs and hiding the other ones
     */
     function refresh(visible) {
       // visible == hide all
@@ -704,9 +742,9 @@
       }
     }
 
-    /*
-    Change tab on click, refresh frame, refresh task list
-    */
+		/*
+		Change tab on click, refresh frame, refresh task list
+		/*/
     $('#tabnav li a').click(function(){
       resetTimer();
       clearFrame();
@@ -719,17 +757,18 @@
       refresh(true);
     });
 
+
     /*********************************************************************
-    14. Handling of the filter buttons.
+    Handling of the filter buttons.
     Refresh the task lists, and hide the items not matching the search 
     elements.
     *********************************************************************/
-    // not supported by IE
-    $("#filter").change(function() {refresh(true);});
-    $("#filterbutt").click(function() {refresh(true);});
+		// not supported by IE
+		$("#filter").change(function() {refresh(true);});
+		$("#filterbutt").click(function() {refresh(true);});
 
     /*********************************************************************
-    15. Handling of the form manager internal iframe
+    Handling of the form manager internal iframe
     *********************************************************************/
     $('#taskform').load(function(){
       
@@ -763,7 +802,7 @@
 
 		
     /**********************************************************************
-    16. Section to handle auto refresh of the table content.
+    Section to handle auto refresh of the table content.
     We do not reload if any of the dialog is showing up.
 
     We also check the connection by pinging the server at the same time, 
@@ -808,25 +847,16 @@
     }
 		
     /**********************************************************************
-    17. Remaining client side init calls
+    Remaining client side init calls
     **********************************************************************/
-    
-    /*
-    Hide the dialogs
-    */
+    //$.jcorners("#intro",{radius:20});
+
     $("#filterdiv").hide();
     $("#reassignDialog").hide();
     $("#updateDialog").hide();
     $("#connectionLost").hide();
-    
-    /*
-    Show the activity tasks tab. Fire the event to refresh at the same time
-    */
     $("#tabTasks").click();
 
-    /*
-    blank the form iframe, and also trigger the event to hide it 
-    */
     window.open("/ui-fw/script/empty.jsp", "taskform");
 
     /*
