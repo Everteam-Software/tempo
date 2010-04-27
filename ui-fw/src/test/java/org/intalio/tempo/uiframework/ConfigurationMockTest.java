@@ -18,12 +18,24 @@ public class ConfigurationMockTest {
     public void testToolbarIconSets(){
         System.out.println("start...");
         System.out.println(_configuration.getToolbarIconSets());
-        System.out.println(_configuration.getTaskIconSetByRole(new String[]{"administrator"}));
-        System.out.println(_configuration.getTaskIconSetByRole(new String[]{"employee"}));
-        System.out.println(_configuration.getTaskIconSetByRole(new String[]{"employee", "administrator", "employee"}));
-        System.out.println(_configuration.getNotificationIconSetByRole(new String[]{"administrator"}));
-        System.out.println(_configuration.getNotificationIconSetByRole(new String[]{"employee"}));
-        System.out.println(_configuration.getNotificationIconSetByRole(new String[]{"employee", "administrator"}));
+        outputStringArray(_configuration.getTaskIconSetByRole(new String[]{"intalio\\ProcessManager"}));
+        outputStringArray(_configuration.getTaskIconSetByRole(new String[]{"intalio\\Employee"}));
+        outputStringArray(_configuration.getTaskIconSetByRole(new String[]{"intalio\\ProcessManager", "intalio\\ProcessManager", "intalio\\Employee"}));
+        outputStringArray(_configuration.getTaskIconSetByRole(new String[]{"examples\\employee"}));
+        outputStringArray(_configuration.getNotificationIconSetByRole(new String[]{"intalio\\ProcessManager"}));
+        outputStringArray(_configuration.getNotificationIconSetByRole(new String[]{"intalio\\Employee"}));
+        outputStringArray(_configuration.getNotificationIconSetByRole(new String[]{"intalio\\ProcessManager", "intalio\\Employee", "intalio\\ProcessManager"}));
     }
 
+    @Test
+    public void testConvertIconsToHTMLCode(){
+        System.out.println(_configuration.convertIconsToHTMLCode(new String[]{"export","delete", "reassign", "claim", "update", "skip"}));
+    }
+    
+    private void outputStringArray(String[] array){
+        for(int i = 0; i < array.length; i++){
+            System.out.print(array[i] + ",");
+        }
+        System.out.println("end");
+    }
 }

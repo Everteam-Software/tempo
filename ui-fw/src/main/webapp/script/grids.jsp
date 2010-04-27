@@ -2,6 +2,9 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
 <%@page import="org.intalio.tempo.uiframework.Configuration"%>
 <%@page import="org.intalio.tempo.security.ws.TokenClient"%>
+<%@page import="org.intalio.tempo.web.ApplicationState"%>
+<%@page import="org.intalio.tempo.web.User"%>
+
 <script type="text/javascript">
 
     $(document).ready(function(){ 
@@ -13,6 +16,9 @@
     Configuration conf = Configuration.getInstance();
     String tokenService = conf.getTokenClient().getEndpoint();
     boolean useToolbar = conf.isUseToolbarIcons().booleanValue();
+	User currentUser = ApplicationState.getCurrentInstance(request).getCurrentUser();
+	String[] taskIconSet = conf.getTaskIconSetByRole(currentUser.getRoles());
+	String[] notiIconSet = conf.getNotificationIconSetByRole(currentUser.getRoles());
     %>
     
     /*********************************************************************
@@ -30,7 +36,14 @@
     var height = 0;
     var current = null;
     $.ajaxSetup({timeout: <%= conf.getAjaxTimeout() %>});
-    
+	var taskIconSet = new Array(<%=taskIconSet.length%>)
+	<% for(int i=0;i<taskIconSet.length;i++) {%>
+    	taskIconSet[<%=i%>] = '<%=taskIconSet[i]%>';
+    <%}%>
+	var notiIconSet = new Array(<%=notiIconSet.length%>)
+    <% for(int i=0;i<notiIconSet.length;i++) {%>
+    	notiIconSet[<%=i%>] = '<%=notiIconSet[i]%>';
+    <%}%>    
     /*********************************************************************
     Section to handle resizing of window, and recompute table size and
     display area
@@ -148,12 +161,42 @@
 	   $("#sessionExpired").dialog('open');
 	}
     
+	/*
+		Convert the icon name to flexigrid code
+	*/
+    function getToolbarIconsCodes(icons){
+	    var iconsetCode = new Array(icons.length);
+	    for(i = 0; i < icons.length; i++){
+	        switch(icons[i]){
+	        case "delete":
+	            iconsetCode[i] = {name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : deleteTask};
+	            break;
+	        case "claim":
+	            iconsetCode[i] = {name: '<fmt:message key="org_intalio_uifw_toolbar_button_claimrevoke"/>', bclass: 'claim', onpress : claimTask};
+	            break;
+	        case "reassign":
+	        	iconsetCode[i] = {name: '<fmt:message key="org_intalio_uifw_toolbar_button_reassign"/>', bclass: 'reassign', onpress : clickReassign};
+	            break;
+	        case "update":
+	        	iconsetCode[i] = {name: '<fmt:message key="org_intalio_uifw_toolbar_button_update"/>', bclass: 'update', onpress : clickUpdate};
+	            break;
+	        case "skip":
+	        	iconsetCode[i] = {name: '<fmt:message key="org_intalio_uifw_toolbar_button_skip"/>', bclass: 'skip', onpress : skipTask};
+	            break;
+	        case "export":
+	        	iconsetCode[i] = {name: '<fmt:message key="org_intalio_uifw_toolbar_button_export"/>', bclass: 'export', onpress : clickExportTasks};
+	            break;
+	        }
+	    }
+	    return iconsetCode;
+    }
     /*
     Define needed events for timer
     */
     $("html").mousemove(function(e){resetTimer();});
     $(this).click(function() {resetTimer();});
 		
+
     /*********************************************************************
     Section to handle dialogs code
     *********************************************************************/
@@ -531,16 +574,10 @@
     /*
     Table for activity tasks
     */
+	var taskIcons = getToolbarIconsCodes(taskIconSet);
     var t1 = $("#table1").flexigrid($.extend({
       <% if(useToolbar) {%> 
-        buttons : [
-        {name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : deleteTask},
-        {name: '<fmt:message key="org_intalio_uifw_toolbar_button_claimrevoke"/>', bclass: 'claim', onpress : claimTask},
-        {name: '<fmt:message key="org_intalio_uifw_toolbar_button_reassign"/>', bclass: 'reassign', onpress : clickReassign},
-        {name: '<fmt:message key="org_intalio_uifw_toolbar_button_update"/>', bclass: 'update', onpress : clickUpdate},
-        {name: '<fmt:message key="org_intalio_uifw_toolbar_button_skip"/>', bclass: 'skip', onpress : skipTask},
-        {name: '<fmt:message key="org_intalio_uifw_toolbar_button_export"/>', bclass: 'export', onpress : clickExportTasks}
-        ],
+        buttons : taskIcons,
         <%} %>
         params: [
         { name : 'type', value : 'PATask' }
@@ -590,13 +627,14 @@
 	/*
 	Table for notifications
 	*/
+	var notiIcons = getToolbarIconsCodes(notiIconSet);
 	var t2 = $("#table2").flexigrid($.extend({
 	params: [
 		 { name : 'type', value : 'Notification' }
 		,{ name : 'update', value : true }
 	],
 	<% if(useToolbar) {%> 
-	buttons : [{name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : deleteTask}],
+	buttons : notiIcons,
 	<%} %>
 	colModel : [
 	{
@@ -629,7 +667,7 @@
 		,{ name : 'update', value : true }
 	],
 	<% if(useToolbar) {%> 
-	buttons : [{name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : deleteTask}], 
+	buttons : notiIcons, 
 	<%} %>
 	colModel : [
 	{
