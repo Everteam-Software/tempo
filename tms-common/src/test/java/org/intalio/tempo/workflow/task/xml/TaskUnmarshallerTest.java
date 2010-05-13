@@ -27,7 +27,6 @@ import org.apache.axiom.om.OMFactory;
 import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.util.xml.InvalidInputFormatException;
-import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -104,6 +103,7 @@ public class TaskUnmarshallerTest extends TestCase {
         this.testFullTask("/fullPATask3.xml");
         this.testFullTask("/fullPATask4.xml");
         this.testFullTask("/fullPIPATask1.xml");
+        this.testFullTask("/fullNotificationTask1.xml");
     }
 
     public void testOracleTask() throws Exception {
