@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- To test the chain and description -->
+<task xmlns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+    <metadata>
+      <description/>  
+      <creationDate/>  
+      <processId/>  
+      <instanceId>2</instanceId>  
+      <userOwner>intalio\admin</userOwner>  
+      <roleOwner/>  
+      <formUrl>oxf://Notify_Priority/Notify.xform</formUrl>  
+      <dismissAction> 
+        <user/>  
+        <role/> 
+      </dismissAction>  
+      <priority>1</priority>  
+      <taskId>notify-4KGU-KVSH-8N8X-WWBD</taskId>
+      <taskType>NOTIFICATION</taskType>
+    </metadata>
+    <input>
+      <testDocument/>
+    </input>
+</task>
