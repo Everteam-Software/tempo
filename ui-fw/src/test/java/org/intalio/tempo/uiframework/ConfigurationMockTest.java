@@ -27,6 +27,11 @@ public class ConfigurationMockTest {
         outputStringArray(_configuration.getNotificationIconSetByRole(new String[]{"intalio\\ProcessManager", "intalio\\Employee", "intalio\\ProcessManager"}));
     }
 
+    @Test
+    public void testConvertIconsToHTMLCode(){
+        System.out.println(_configuration.convertIconsToHTMLCode(new String[]{"export","delete", "reassign", "claim", "update", "skip"}));
+    }
+    
     private void outputStringArray(String[] array){
         for(int i = 0; i < array.length; i++){
             System.out.print(array[i] + ",");
