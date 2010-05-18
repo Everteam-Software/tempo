@@ -19,8 +19,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.intalio.tempo.security.ws.TokenClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class Configuration {
 
@@ -28,7 +26,7 @@ public class Configuration {
 
     private static String TASK_TAB = "task";
     private static String NOTIFICATION_TAB = "notification";
-
+    
     private String _serviceEndpoint;
     private String _tmpEndpoint = "http://localhost:8080/ode/processes/completeTask";
     private int _pagingLength;
@@ -42,7 +40,6 @@ public class Configuration {
     private int _ajaxTimeout = 5000;
     private Map<String, Map<String, Set<String>>> _toolbarIconSets;
     private Map<String, Set<String>> _bindIconSetToRole;
-    private Logger _log = LoggerFactory.getLogger(Configuration.class);
 
     public Map<String, Set<String>> getBindIconSetToRole() {
         return _bindIconSetToRole;
@@ -60,63 +57,24 @@ public class Configuration {
         this._toolbarIconSets = _toolbarIconSets;
     }
 
-    public String[] getTaskIconSetByRole(String[] roles) {
-        if (_log.isDebugEnabled()) {
-            _log.debug("Get task iconset by Roles:");
-            for (int i = 0; i < roles.length; i++) {
-                _log.debug(roles[i]);
-            }
-        }
+    public Set<String> getTaskIconSetByRole(String[] roles) {
         HashSet<String> taskIcons = new HashSet<String>();
-        HashSet<String> iconSet = getKeysFromValues(_bindIconSetToRole, roles);
-        for (String is : iconSet) {
-            for (int i = 0; i < roles.length; i++) {
-                Map<String, Set<String>> iconSetByRole = _toolbarIconSets.get(is);
-                taskIcons.addAll(iconSetByRole.get(TASK_TAB));
-            }
+        for(int i = 0; i < roles.length; i++){
+            Map<String, Set<String>> iconSetByRole = _toolbarIconSets.get(roles[i]);
+            taskIcons.addAll(iconSetByRole.get(TASK_TAB));
         }
-        return (String[]) taskIcons.toArray(new String[taskIcons.size()]);
+        return taskIcons;
     }
-
-    public String[] getNotificationIconSetByRole(String[] roles) {
-        if (_log.isDebugEnabled()) {
-            _log.debug("Get notification iconset by Roles:");
-            for (int i = 0; i < roles.length; i++) {
-                _log.debug(roles[i]);
-            }
-        }
+    
+    public Set<String> getNotificationIconSetByRole(String[] roles){
         HashSet<String> taskIcons = new HashSet<String>();
-        HashSet<String> iconSet = getKeysFromValues(_bindIconSetToRole, roles);
-        for (String is : iconSet) {
-            for (int i = 0; i < roles.length; i++) {
-                Map<String, Set<String>> iconSetByRole = _toolbarIconSets.get(is);
-                taskIcons.addAll(iconSetByRole.get(NOTIFICATION_TAB));
-            }
+        for(int i = 0; i < roles.length; i++){
+            Map<String, Set<String>> iconSetByRole = _toolbarIconSets.get(roles[i]);
+            taskIcons.addAll(iconSetByRole.get(NOTIFICATION_TAB));
         }
-        return (String[]) taskIcons.toArray(new String[taskIcons.size()]);
+        return taskIcons;        
     }
-
-    public String convertIconsToHTMLCode(String[] iconSet){
-        
-        String htmlCode = "[ ";
-        for(int i=0;i<iconSet.length;i++){
-            if(iconSet[i].equalsIgnoreCase("delete")){
-                htmlCode += "{name: '<fmt:message key=\"org_intalio_uifw_toolbar_button_delete\"/>', bclass: 'delete', onpress : deleteTask},";
-            }else if(iconSet[i].equalsIgnoreCase("claim")){
-                htmlCode += "{name: '<fmt:message key=\"org_intalio_uifw_toolbar_button_claimrevoke\"/>', bclass: 'claim', onpress : claimTask},";
-            }else if(iconSet[i].equalsIgnoreCase("reassign")){
-                htmlCode += "{name: '<fmt:message key=\"org_intalio_uifw_toolbar_button_reassign\"/>', bclass: 'reassign', onpress : clickReassign},";
-            }else if(iconSet[i].equalsIgnoreCase("update")){
-                htmlCode += "{name: '<fmt:message key=\"org_intalio_uifw_toolbar_button_update\"/>', bclass: 'update', onpress : clickUpdate},";
-            }else if(iconSet[i].equalsIgnoreCase("skip")){
-                htmlCode += "{name: '<fmt:message key=\"org_intalio_uifw_toolbar_button_skip\"/>', bclass: 'skip', onpress : skipTask},";
-            }else if(iconSet[i].equalsIgnoreCase("export")){
-                htmlCode += "{name: '<fmt:message key=\"org_intalio_uifw_toolbar_button_export\"/>', bclass: 'export', onpress : clickExportTasks},";
-            }
-        }
-        return htmlCode.substring(0, htmlCode.length()-1) + "]";
-    }
-
+    
     public String getFeedUrl() {
         return _feedUrl;
     }
@@ -211,16 +169,5 @@ public class Configuration {
     public TokenClient getTokenClient() {
         return _tokenClient;
     }
-
-    private HashSet<String> getKeysFromValues(Map<String, Set<String>> hm, String[] values) {
-        HashSet<String> list = new HashSet<String>();
-        for (int i = 0; i < values.length; i++) {
-            for (String o : hm.keySet()) {
-                if (hm.get(o).contains(values[i])) {
-                    list.add(o);
-                }
-            }
-        }
-        return list;
-    }
 }
+

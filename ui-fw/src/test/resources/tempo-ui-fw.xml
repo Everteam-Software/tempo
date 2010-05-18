@@ -1,84 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright (c) 2005-2006 Intalio inc. All rights reserved. This program 
-	and the accompanying materials are made available under the terms of the 
-	Eclipse Public License v1.0 which accompanies this distribution, and is available 
-	at http://www.eclipse.org/legal/epl-v10.html Contributors: Intalio inc. - 
-	initial API and implementation -->
+  and the accompanying materials are made available under the terms of the 
+  Eclipse Public License v1.0 which accompanies this distribution, and is available 
+  at http://www.eclipse.org/legal/epl-v10.html Contributors: Intalio inc. - 
+  initial API and implementation -->
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
-	<!-- remove the xform import segment -->
+  <!-- remove the xform import segment -->
 
-	<bean id="configuration" class="org.intalio.tempo.uiframework.Configuration"
-		factory-method="getInstance">
-		<property name="feedItemBaseUrl" value="http://127.0.0.1:8080" />
-		<property name="feedUrl" value="http://tempo.intalio.org" />
-		<property name="serviceEndpoint"
-			value="http://localhost:8080/axis2/services/TaskManagementServices" />
-		<property name="pagingLength" value="10" />
-		<property name="refreshTime" value="20" />
-		<property name="claimTaskOnOpen" value="false" />
-		<property name="sessionTimeout" value="10" />
-		<property name="tokenClient">
-			<ref bean="tokenService" />
-		</property>
-		<property name="toolbarIconSets">
-			<map>
-				<entry key="administrator">
-					<map>
-						<entry key="task">
-							<set>
-								<value>delete</value>
-								<!--  <value>claim</value>-->
-								<value>reassign</value>
-								<value>update</value>
-								<value>skip</value>
-								<value>export</value>
-							</set>
-						</entry>
-						<entry key="notification">
-							<set>
-								<value>delete</value>
-							</set>
-						</entry>
-					</map>
-				</entry>
-				<entry key="employee">
-					<map>
-						<entry key="task">
-							<set>
-								<value>claim</value>
-								<value>export</value>
-							</set>
-						</entry>
-						<entry key="notification">
-							<set></set>
-						</entry>
-					</map>
-				</entry>
-			</map>
-		</property>
-		<property name="bindIconSetToRole">
-			<map>
-				<entry key="administrator">
-					<set>
-						<value>intalio\ProcessManager</value>
-						<value>intalio\ProcessAdministrator</value>
-						<value>examples\manager</value>
-					</set>
-				</entry>
-				<entry key="employee">
-					<set>
-						<value>intalio\Employee</value>
-						<value>examples\employee</value>
-					</set>
-				</entry>
-			</map>
-		</property>
-	</bean>
+  <bean id="configuration" class="org.intalio.tempo.uiframework.Configuration"
+    factory-method="getInstance">
+    <property name="feedItemBaseUrl" value="http://127.0.0.1:8080" />
+    <property name="feedUrl" value="http://tempo.intalio.org" />
+    <property name="serviceEndpoint"
+      value="http://localhost:8080/axis2/services/TaskManagementServices" />
+    <property name="pagingLength" value="10" />
+    <property name="refreshTime" value="20" />
+    <property name="claimTaskOnOpen" value="false" />
+    <property name="sessionTimeout" value="10" />
+    <property name="tokenClient">
+      <ref bean="tokenService" />
+    </property>
+    <property name="toolbarIconSets">
+      <map>
+        <entry key="administrator">
+          <map>
+            <entry key="task">
+              <set>
+                <value>delete</value>
+                <value>claim</value>
+                <value>reassign</value>
+                <value>update</value>
+                <value>skip</value>
+                <value>export</value>
+              </set>
+            </entry>
+            <entry key="notification">
+              <set>
+                <value>delete</value>
+              </set>
+            </entry>
+          </map>
+        </entry>
+        <entry key="employee">
+          <map>
+            <entry key="task">
+              <set>
+                <value>claim</value>
+                <value>export</value>
+              </set>
+            </entry>
+            <entry key="notification">
+              <set></set>
+            </entry>
+          </map>
+        </entry>
+      </map>
+    </property>
+    <property name="bindIconSetToRole">
+      <map>
+        <entry key="administrator">
+          <set>
+            <value>intalio\ProcessManager</value>
+            <value>intalio\ProcessAdministrator</value>
+            <value>examples\manager</value>
+          </set>
+        </entry>
+        <entry key="employee">
+          <set>
+            <value>intalio\employee</value>
+            <value>examples\employee</value>
+          </set>
+        </entry>
+      </map>
+    </property>
+  </bean>
 
-	<bean id="tokenService" class="org.intalio.tempo.security.ws.TokenClient">
-		<constructor-arg value="http://localhost:8080/axis2/services/TokenService" />
-	</bean>
+  <bean id="tokenService" class="org.intalio.tempo.security.ws.TokenClient">
+    <constructor-arg value="http://localhost:8080/axis2/services/TokenService" />
+  </bean>
 
-	<bean id="applicationState" class="org.intalio.tempo.uiframework.UIFWApplicationState" />
+  <bean id="applicationState" class="org.intalio.tempo.uiframework.UIFWApplicationState" />
 </beans>
