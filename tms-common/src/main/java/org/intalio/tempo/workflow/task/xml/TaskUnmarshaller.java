@@ -471,17 +471,6 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
             throw new RuntimeException(e.getMessage(), e);
         }
     }
-    public TaskMetadata unmarshalPartialTask2(OMElement rootElement) throws InvalidInputFormatException {
-    	try {
-        	XmlObject xmlObject = XmlObject.Factory.parse(rootElement.getXMLStreamReader());
-        	com.intalio.bpms.workflow.taskManagementServices20051109.Task taskElement = com.intalio.bpms.workflow.taskManagementServices20051109.Task.Factory.newInstance();
-            TaskMetadata metadata = taskElement.addNewMetadata();
-            metadata.set(new TaskUnmarshaller().expectElement(xmlObject, "taskMetadata"));
-            return metadata;
-        } catch (XmlException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
-    }
 
     private Task unmarshalFullTask(XmlObject rootElement) throws InvalidInputFormatException {
         if (rootElement == null) {

@@ -26,7 +26,6 @@ import org.apache.axis2.AxisFault;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
-import org.apache.commons.lang.StringUtils;
 import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.IAuthProvider;
@@ -280,11 +279,11 @@ public class TMSServer implements ITMSServer {
                 try {
                     paPrevious.setPriority(task.getPriority());
                 } catch(Exception e) {
+                    paPrevious.setPriority(0);
                     _logger.debug("Ignoring invalid priority value:"+task.xgetPriority().toString());
                 }
-                String desc = task.getDescription();
-                if(!StringUtils.isEmpty(desc)) paPrevious.setDescription(desc);	
-
+                paPrevious.setDescription(task.getDescription());
+                
                 dao.updateTask(previous);
                 dao.commit();
                 if (_logger.isDebugEnabled())

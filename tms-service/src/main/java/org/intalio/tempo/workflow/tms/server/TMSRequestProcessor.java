@@ -147,8 +147,8 @@ public class TMSRequestProcessor extends OMUnmarshaller {
     public OMElement update(OMElement requestElement) throws AxisFault {
     	try {
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
-            OMElement taskElement = requireElement(rootQueue, "taskMetadata");
-            TaskMetadata metadata = new TaskUnmarshaller().unmarshalPartialTask2(taskElement);
+            OMElement taskElement = requireElement(rootQueue, "task");
+            TaskMetadata metadata = new TaskUnmarshaller().unmarshalPartialTask(taskElement);
             String participantToken = requireElementValue(rootQueue, "participantToken");
             _server.update(metadata, participantToken);
             return createOkResponse();

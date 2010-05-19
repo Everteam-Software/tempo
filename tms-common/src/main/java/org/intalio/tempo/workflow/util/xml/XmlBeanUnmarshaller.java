@@ -43,7 +43,7 @@ public abstract class XmlBeanUnmarshaller {
 		_namespacePrefix = namespacePrefix;
 	}
 
-	public XmlObject expectElement(XmlObject element, String name) {
+	protected XmlObject expectElement(XmlObject element, String name) {
 		XmlObject result = null;
 		XmlCursor elementCursor = element.newCursor();
 		elementCursor.toStartDoc();
