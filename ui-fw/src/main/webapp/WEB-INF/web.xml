@@ -1,40 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app id="bpms-ui-fw" version="2.4"
-    xmlns="http://java.sun.com/xml/ns/j2ee"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+	xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
-    <display-name>Intalio|BPMS User Interface Framework</display-name>
+	<display-name>Intalio|BPMS User Interface Framework</display-name>
 
-    <listener>
-        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-    </listener>
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
 
-    <context-param>
-        <param-name>contextClass</param-name>
-        <param-value>org.intalio.tempo.web.SysPropWebApplicationContext</param-value>
-    </context-param>
+	<context-param>
+		<param-name>contextClass</param-name>
+		<param-value>org.intalio.tempo.web.SysPropWebApplicationContext</param-value>
+	</context-param>
 
-    <context-param>
-        <param-name>contextConfigLocation</param-name>
-        <param-value>file:${org.intalio.tempo.configDirectory}/tempo-ui-fw.xml</param-value>
-    </context-param>
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>file:${org.intalio.tempo.configDirectory}/tempo-ui-fw.xml</param-value>
+	</context-param>
 
-    <filter>
-       <filter-name>UrlRewriteFilter</filter-name>
-       <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
-       <init-param>
-           <param-name>confReloadCheckInterval</param-name>
-           <param-value>30</param-value>
-       </init-param>
-    </filter>
-    <filter-mapping>
-       <filter-name>UrlRewriteFilter</filter-name>
-       <url-pattern>/*</url-pattern>
-    </filter-mapping>
+	<filter>
+		<filter-name>SetCharacterEncodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>SetCharacterEncodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<filter>
+		<filter-name>UrlRewriteFilter</filter-name>
+		<filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+		<init-param>
+			<param-name>confReloadCheckInterval</param-name>
+			<param-value>30</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>UrlRewriteFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 
 	<servlet id="abdera">
-		<servlet-name>Abdera</servlet-name>  
+		<servlet-name>Abdera</servlet-name>
 		<servlet-class>org.apache.abdera.protocol.server.servlet.AbderaServlet</servlet-class>
 		<init-param>
 			<param-name>org.apache.abdera.protocol.server.Provider</param-name>
@@ -60,11 +76,11 @@
 		<servlet-name>JsonUpdate</servlet-name>
 		<servlet-class>org.intalio.tempo.uiframework.service.JsonUpdate</servlet-class>
 		<init-param>
-            <param-name>TaskManagementServices</param-name>
-            <param-value>http://localhost:8080/axis2/services/TaskManagementServices</param-value>
-        </init-param>
+			<param-name>TaskManagementServices</param-name>
+			<param-value>http://localhost:8080/axis2/services/TaskManagementServices</param-value>
+		</init-param>
 	</servlet>
-	
+
 	<servlet-mapping>
 		<servlet-name>ViewRendererServlet</servlet-name>
 		<url-pattern>/WEB-INF/servlet/view</url-pattern>
@@ -74,73 +90,73 @@
 		<servlet-name>JsonUpdate</servlet-name>
 		<url-pattern>/json/update</url-pattern>
 	</servlet-mapping>
-    <!-- servlet -->
-
-    <servlet>
-        <servlet-name>springapp</servlet-name>
-        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-        <init-param>
-            <param-name>contextConfigLocation</param-name>
-            <param-value>file:${org.intalio.tempo.configDirectory}/tempo-ui-fw-servlet.xml</param-value>
-        </init-param>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>springapp</servlet-name>
-        <url-pattern>*.htm</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>versionsServlet</servlet-name>
-        <servlet-class>org.intalio.tempo.uiframework.versions.BpmsVersionsServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>versionsServlet</servlet-name>
-        <url-pattern>/versions</url-pattern>
-    </servlet-mapping>
-    
-    <servlet>
-        <servlet-name>iCalServlet</servlet-name>
-        <servlet-class>org.intalio.tempo.uiframework.export.iCalServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>iCalServlet</servlet-name>
-        <url-pattern>/ical</url-pattern>
-    </servlet-mapping>
+	<!-- servlet -->
 
 	<servlet>
-        <servlet-name>CSVServlet</servlet-name>
-        <servlet-class>org.intalio.tempo.uiframework.export.CSVServlet</servlet-class>
-    </servlet>
+		<servlet-name>springapp</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>file:${org.intalio.tempo.configDirectory}/tempo-ui-fw-servlet.xml</param-value>
+		</init-param>
+	</servlet>
 
-    <servlet-mapping>
-        <servlet-name>CSVServlet</servlet-name>
-        <url-pattern>/csv</url-pattern>
-    </servlet-mapping>
-    
-    <servlet>
-          <servlet-name>PDFServlet</servlet-name>
-          <servlet-class>org.intalio.tempo.uiframework.export.PDFServlet</servlet-class>
-      </servlet>
+	<servlet-mapping>
+		<servlet-name>springapp</servlet-name>
+		<url-pattern>*.htm</url-pattern>
+	</servlet-mapping>
 
-      <servlet-mapping>
-          <servlet-name>PDFServlet</servlet-name>
-          <url-pattern>/pdf</url-pattern>
-      </servlet-mapping>
-    
+	<servlet>
+		<servlet-name>versionsServlet</servlet-name>
+		<servlet-class>org.intalio.tempo.uiframework.versions.BpmsVersionsServlet</servlet-class>
+	</servlet>
 
-    <!-- Welcome File List -->
+	<servlet-mapping>
+		<servlet-name>versionsServlet</servlet-name>
+		<url-pattern>/versions</url-pattern>
+	</servlet-mapping>
 
-    <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
-    </welcome-file-list>
+	<servlet>
+		<servlet-name>iCalServlet</servlet-name>
+		<servlet-class>org.intalio.tempo.uiframework.export.iCalServlet</servlet-class>
+	</servlet>
 
-    <error-page>
-        <exception-type>java.lang.Throwable</exception-type>
-        <location>/genError.jsp</location>
-    </error-page>
+	<servlet-mapping>
+		<servlet-name>iCalServlet</servlet-name>
+		<url-pattern>/ical</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>CSVServlet</servlet-name>
+		<servlet-class>org.intalio.tempo.uiframework.export.CSVServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>CSVServlet</servlet-name>
+		<url-pattern>/csv</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>PDFServlet</servlet-name>
+		<servlet-class>org.intalio.tempo.uiframework.export.PDFServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>PDFServlet</servlet-name>
+		<url-pattern>/pdf</url-pattern>
+	</servlet-mapping>
+
+
+	<!-- Welcome File List -->
+
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+
+	<error-page>
+		<exception-type>java.lang.Throwable</exception-type>
+		<location>/genError.jsp</location>
+	</error-page>
 
 	<jsp-config>
 		<jsp-property-group>
@@ -150,15 +166,15 @@
 		</jsp-property-group>
 	</jsp-config>
 
-    <locale-encoding-mapping-list>
-        <locale-encoding-mapping>
-            <locale>en</locale>
-            <encoding>iso-8859-1</encoding>
-        </locale-encoding-mapping>
+	<locale-encoding-mapping-list>
+		<locale-encoding-mapping>
+			<locale>en</locale>
+			<encoding>iso-8859-1</encoding>
+		</locale-encoding-mapping>
 
-        <locale-encoding-mapping>
-            <locale>ua</locale>
-            <encoding>cp1251</encoding>
-        </locale-encoding-mapping>
-    </locale-encoding-mapping-list>
+		<locale-encoding-mapping>
+			<locale>ua</locale>
+			<encoding>cp1251</encoding>
+		</locale-encoding-mapping>
+	</locale-encoding-mapping-list>
 </web-app>
