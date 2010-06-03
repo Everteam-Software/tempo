@@ -493,7 +493,7 @@ APACHE_MIRROR = find_apache_mirror
 BUILD_URI = {
 	:liferay => {
 		:v5_1_0 => "http://downloads.sourceforge.net/sourceforge/lportal/liferay-portal-tomcat-5.5-5.1.0.zip",
-		:v5_2_3 => "http://downloads.sourceforge.net/sourceforge/lportal/liferay-portal-tomcat-5.5-5.2.3.zip",
+		:v5_2_3 => "http://downloads.sourceforge.net/project/lportal/Liferay%20Portal/5.2.3/liferay-portal-tomcat-5.5-5.2.3.zip",
 		:v5_2_5ee => "http://files.liferay.com/public/3mDkoitQ/ee/portal/5.2.5/liferay-portal-tomcat-5.5-5.2.5.zip",
 		:v5_2_5_jbee => "http://files.liferay.com/public/3mDkoitQ/ee/portal/5.2.5/liferay-portal-jboss-tomcat-4.2-5.2.5.zip",
 	},
