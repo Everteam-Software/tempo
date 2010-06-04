@@ -111,7 +111,8 @@ public class TMSServer implements ITMSServer {
         return _authProvider.authenticate(participantToken);
     }
 
-    public Task getTask(String taskID, String participantToken) throws AuthException, UnavailableTaskException, AccessDeniedException {
+    public Task getTask(String taskID, String participantToken) throws AuthException, UnavailableTaskException,
+            AccessDeniedException {
         UserRoles credentials = _authProvider.authenticate(participantToken);
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         Task task = dao.fetchTaskIfExists(taskID);
@@ -141,7 +142,8 @@ public class TMSServer implements ITMSServer {
             throw new AccessDeniedException(credentials.getUserID() + " cannot access task:" + taskID);
     }
 
-    public void setOutput(String taskID, Document output, String participantToken) throws AuthException, UnavailableTaskException, AccessDeniedException {
+    public void setOutput(String taskID, Document output, String participantToken) throws AuthException,
+            UnavailableTaskException, AccessDeniedException {
         UserRoles credentials = _authProvider.authenticate(participantToken);
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         Task task = dao.fetchTaskIfExists(taskID);
@@ -157,8 +159,8 @@ public class TMSServer implements ITMSServer {
             throw new UnavailableTaskException(credentials.getUserID() + " cannot set output for Workflow Task " + task);
     }
 
-    public void complete(String taskID, String participantToken) throws AuthException, UnavailableTaskException, InvalidTaskStateException,
-                    AccessDeniedException {
+    public void complete(String taskID, String participantToken) throws AuthException, UnavailableTaskException,
+            InvalidTaskStateException, AccessDeniedException {
         UserRoles credentials = _authProvider.authenticate(participantToken);
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         Task task = dao.fetchTaskIfExists(taskID);
@@ -175,8 +177,8 @@ public class TMSServer implements ITMSServer {
         }
     }
 
-    public void setOutputAndComplete(String taskID, Document output, String participantToken) throws AuthException, UnavailableTaskException,
-                    InvalidTaskStateException, AccessDeniedException {
+    public void setOutputAndComplete(String taskID, Document output, String participantToken) throws AuthException,
+            UnavailableTaskException, InvalidTaskStateException, AccessDeniedException {
         UserRoles credentials = _authProvider.authenticate(participantToken);
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         Task task = dao.fetchTaskIfExists(taskID);
@@ -189,11 +191,13 @@ public class TMSServer implements ITMSServer {
             if (_logger.isDebugEnabled())
                 _logger.debug(credentials.getUserID() + " has set output and completed Workflow Task " + task);
         } else {
-            throw new UnavailableTaskException(credentials.getUserID() + " cannot set output and complete Workflow Task " + task);
+            throw new UnavailableTaskException(credentials.getUserID()
+                    + " cannot set output and complete Workflow Task " + task);
         }
     }
 
-    public void fail(String taskID, String failureCode, String failureReason, String participantToken) throws AuthException, UnavailableTaskException {
+    public void fail(String taskID, String failureCode, String failureReason, String participantToken)
+            throws AuthException, UnavailableTaskException {
         boolean available = false;
 
         // UserRoles credentials = _authProvider.authenticate(participantToken);
@@ -210,7 +214,7 @@ public class TMSServer implements ITMSServer {
             dao.commit();
             _logger.debug(
             // credentials.getUserID() +
-                            " fails Workflow Task " + task + " with code: " + failureCode + " and reason: " + failureReason);
+            " fails Workflow Task " + task + " with code: " + failureCode + " and reason: " + failureReason);
         }
         if (!available) {
             throw new UnavailableTaskException("Cannot set state as FAILED for Workflow Task " + task);
@@ -270,34 +274,37 @@ public class TMSServer implements ITMSServer {
         try {
             String id = task.getTaskId();
             Task previous = dao.fetchTaskIfExists(id);
-            if(previous != null && (previous instanceof PATask)) {
+            if (previous != null && (previous instanceof PATask)) {
                 PATask paPrevious = (PATask) previous;
-                
+
                 // security ?
                 UserRoles credentials = _authProvider.authenticate(participantToken);
-                //checkIsAvailable(id, previous, credentials); 
-                
+                // checkIsAvailable(id, previous, credentials);
+
                 try {
                     paPrevious.setPriority(task.getPriority());
-                } catch(Exception e) {
-                    _logger.debug("Ignoring invalid priority value:"+task.xgetPriority().toString());
+                } catch (Exception e) {
+                    _logger.debug("Ignoring invalid priority value:" + task.xgetPriority().toString());
                 }
                 String desc = task.getDescription();
-                if(!StringUtils.isEmpty(desc)) paPrevious.setDescription(desc);	
+                if (!StringUtils.isEmpty(desc))
+                    paPrevious.setDescription(desc);
 
                 dao.updateTask(previous);
                 dao.commit();
                 if (_logger.isDebugEnabled())
                     _logger.debug("Workflow Task " + task + " was updated");
             } else {
-                throw new RuntimeException("No previous activity task with the given id:"+id+(previous!=null)+(previous instanceof PATask));
+                throw new RuntimeException("No previous activity task with the given id:" + id + (previous != null)
+                        + (previous instanceof PATask));
             }
         } finally {
             dao.close();
         }
     }
 
-    private Document sendInitMessage(PIPATask task, String user, String formUrl, String participantToken, Document input) throws AxisFault {
+    private Document sendInitMessage(PIPATask task, String user, String formUrl, String participantToken, Document input)
+            throws AxisFault {
 
         OMFactory omFactory = OMAbstractFactory.getOMFactory();
         OMNamespace omNamespace = omFactory.createOMNamespace(task.getInitMessageNamespaceURI().toString(), "user");
@@ -343,8 +350,8 @@ public class TMSServer implements ITMSServer {
 
     }
 
-    public Document initProcess(String taskID, String user, String formUrl, Document input, String participantToken) throws AuthException,
-                    UnavailableTaskException, AccessDeniedException, AxisFault {
+    public Document initProcess(String taskID, String user, String formUrl, Document input, String participantToken)
+            throws AuthException, UnavailableTaskException, AccessDeniedException, AxisFault {
         UserRoles credentials = _authProvider.authenticate(participantToken);
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         Task task = dao.fetchTaskIfExists(taskID);
@@ -353,14 +360,17 @@ public class TMSServer implements ITMSServer {
             PIPATask pipaTask = (PIPATask) task;
             Document document = sendInitMessage(pipaTask, user, formUrl, participantToken, input);
             if (_logger.isDebugEnabled())
-                _logger.debug(credentials.getUserID() + " has initialized process " + pipaTask.getProcessEndpoint() + " with Workflow PIPA Task " + task);
+                _logger.debug(credentials.getUserID() + " has initialized process " + pipaTask.getProcessEndpoint()
+                        + " with Workflow PIPA Task " + task);
             return document;
         } else {
-            throw new UnavailableTaskException("Task (" + taskID + ") is not a PIPA task cannot be used to initiate a process");
+            throw new UnavailableTaskException("Task (" + taskID
+                    + ") is not a PIPA task cannot be used to initiate a process");
         }
     }
 
-    public Attachment[] getAttachments(String taskID, String participantToken) throws AuthException, UnavailableTaskException, AccessDeniedException {
+    public Attachment[] getAttachments(String taskID, String participantToken) throws AuthException,
+            UnavailableTaskException, AccessDeniedException {
         UserRoles credentials = _authProvider.authenticate(participantToken);
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         Task task = dao.fetchTaskIfExists(taskID);
@@ -373,8 +383,8 @@ public class TMSServer implements ITMSServer {
         }
     }
 
-    public void addAttachment(String taskID, Attachment attachment, String participantToken) throws AuthException, UnavailableTaskException,
-                    AccessDeniedException {
+    public void addAttachment(String taskID, Attachment attachment, String participantToken) throws AuthException,
+            UnavailableTaskException, AccessDeniedException {
         UserRoles credentials = _authProvider.authenticate(participantToken);
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         Task task = dao.fetchTaskIfExists(taskID);
@@ -390,8 +400,8 @@ public class TMSServer implements ITMSServer {
             _logger.debug(credentials.getUserID() + " has added attachment " + attachment + "to Workflow Task " + task);
     }
 
-    public void removeAttachment(String taskID, URL attachmentURL, String participantToken) throws AuthException, UnavailableAttachmentException,
-                    UnavailableTaskException {
+    public void removeAttachment(String taskID, URL attachmentURL, String participantToken) throws AuthException,
+            UnavailableAttachmentException, UnavailableTaskException {
 
         Task task = null;
         boolean availableTask = false;
@@ -410,7 +420,8 @@ public class TMSServer implements ITMSServer {
                     dao.updateTask(task);
                     dao.commit();
                     if (_logger.isDebugEnabled())
-                        _logger.debug(credentials.getUserID() + " has removed attachment " + attachmentURL + " for Workflow Task " + task);
+                        _logger.debug(credentials.getUserID() + " has removed attachment " + attachmentURL
+                                + " for Workflow Task " + task);
                 }
             }
         } catch (Exception e) {
@@ -419,13 +430,14 @@ public class TMSServer implements ITMSServer {
             dao.close();
         }
         if (!availableTask || !availableAttachment) {
-            throw new UnavailableTaskException(credentials.getUserID() + " cannot remove attachment for Workflow Task " + task + ", is problem with task? - "
-                            + availableTask + ", is problem with attachment? - " + availableAttachment);
+            throw new UnavailableTaskException(credentials.getUserID() + " cannot remove attachment for Workflow Task "
+                    + task + ", is problem with task? - " + availableTask + ", is problem with attachment? - "
+                    + availableAttachment);
         }
     }
 
-    public void reassign(String taskID, AuthIdentifierSet users, AuthIdentifierSet roles, TaskState state, String participantToken) throws AuthException,
-                    UnavailableTaskException {
+    public void reassign(String taskID, AuthIdentifierSet users, AuthIdentifierSet roles, TaskState state,
+            String participantToken) throws AuthException, UnavailableTaskException {
         // UserRoles credentials = _authProvider
         // TODO: this requires SYSTEM
         // role
@@ -464,29 +476,35 @@ public class TMSServer implements ITMSServer {
     }
 
     public void deletePipa(String formUrl, String participantToken) throws AuthException, UnavailableTaskException {
-    	HashMap<String, Exception> problemTasks = new HashMap<String, Exception>();
-    	UserRoles credentials = _authProvider.authenticate(participantToken);
+        HashMap<String, Exception> problemTasks = new HashMap<String, Exception>();
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
+        Task task = dao.fetchPipa(formUrl);
 
-    	ITaskDAOConnection dao = _taskDAOFactory.openConnection();
-    	String userID = credentials.getUserID();
-	    try {
-	        Task task = dao.fetchPipa(formUrl);
-	        if (_permissions.isAuthorized(TaskPermissions.ACTION_DELETE, task, credentials)) {
-	            dao.deletePipaTask(formUrl);
-	            dao.commit();
-	            if (_logger.isDebugEnabled())
-	                _logger.debug(userID + " has deleted PIPA Task " + task);
-	        } else {
-	            problemTasks.put(formUrl, new AuthException(userID + " cannot delete" + formUrl));
-	        }
-	    } catch (Exception e) {
-	        _logger.error("Cannot retrieve PIPA Tasks", e);
-	        problemTasks.put(formUrl, e);
-	    }
-    	if (problemTasks.size() > 0) {
-    	    throw new UnavailableTaskException(userID + " cannot delete PIPA Tasks: " + problemTasks.keySet());
-    	}
-    	    
+        // DOTO due to all the service from wds is 'x'
+        if (participantToken.equalsIgnoreCase("x")) {
+            dao.deletePipaTask(formUrl);
+            dao.commit();
+        } else {
+            UserRoles credentials = _authProvider.authenticate(participantToken);
+            String userID = credentials.getUserID();
+            try {
+                if (_permissions.isAuthorized(TaskPermissions.ACTION_DELETE, task, credentials)) {
+                    dao.deletePipaTask(formUrl);
+                    dao.commit();
+                    if (_logger.isDebugEnabled())
+                        _logger.debug(userID + " has deleted PIPA Task " + task);
+                } else {
+                    problemTasks.put(formUrl, new AuthException(userID + " cannot delete" + formUrl));
+                }
+            } catch (Exception e) {
+                _logger.error("Cannot retrieve PIPA Tasks", e);
+                problemTasks.put(formUrl, e);
+            }
+            if (problemTasks.size() > 0) {
+                throw new UnavailableTaskException(userID + " cannot delete PIPA Tasks: " + problemTasks.keySet());
+            }
+        }
+
     }
 
     public PIPATask getPipa(String formUrl, String participantToken) throws AuthException, UnavailableTaskException {
@@ -549,7 +567,8 @@ public class TMSServer implements ITMSServer {
      * Get the list of task ids to be deleted, and then delegate to the regular
      * delete method
      */
-    public void deleteAll(boolean fakeDelete, String subquery, String taskType, String participantToken) throws AuthException, UnavailableTaskException {
+    public void deleteAll(boolean fakeDelete, String subquery, String taskType, String participantToken)
+            throws AuthException, UnavailableTaskException {
         Task[] tasks = null;
         if (taskType != null && taskType.length() != 0) {
             if (subquery == null || subquery.length() == 0)
@@ -571,7 +590,8 @@ public class TMSServer implements ITMSServer {
         }
     }
 
-    public void skip(String taskID, String participantToken) throws AuthException, UnavailableTaskException, InvalidTaskStateException, AccessDeniedException {
+    public void skip(String taskID, String participantToken) throws AuthException, UnavailableTaskException,
+            InvalidTaskStateException, AccessDeniedException {
         UserRoles credentials = _authProvider.authenticate(participantToken);
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         Task task = dao.fetchTaskIfExists(taskID);
