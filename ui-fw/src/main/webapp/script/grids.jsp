@@ -78,34 +78,6 @@
       }
     });
 
-   /*********************************************************************
-   Method to preprocess the data loaded in flexigrid.
-   The reason is we want to be able to hide some lines,
-   depending on the search fields.
-   **********************************************************************/
-   
-   /*
-   Do preprocessing of the loaded items in the flexigrid table
-    This has a friend in flexigrid.js (line 456)
-   */
-   function preProcess(data) {
-     $("rows row", data).each(function () {
-       var elem = $(this);
-       var str = $.string(elem.text()).stripTags().strip().str
-
-       if($("#caseFilter").attr("checked")) {                
-         if(str.indexOf($("#filter").val())==-1) {
-           elem.attr("flexi","ignore");
-         }
-       }
-       else {
-         if(str.toLowerCase().indexOf($("#filter").val().toLowerCase())==-1) {
-           elem.attr("flexi","ignore"); 
-         }
-       }
-     });
-     return data;
-    }
 
     /*
     Completely clear the content of the frame, where the forms are usually loaded
@@ -566,7 +538,6 @@
       nomsg: '<fmt:message key="org_intalio_uifw_flexigrid_noitem"/>',
       errormsg: '<fmt:message key="org_intalio_uifw_flexigrid_error"/>',
       height: height2,
-      preProcess: preProcess,
       usepager: true,
       searchitems : [{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description'}]
     };		
@@ -580,8 +551,8 @@
         buttons : taskIcons,
         <%} %>
         params: [
-        { name : 'type', value : 'PATask' }
-        ,{ name : 'update', value : true }
+        { name : 'type', value : 'PATask' },
+        { name : 'update', value : true }
         ],
         colModel : [
         {
@@ -748,24 +719,13 @@
     $('#tabnav li a').click(function(){
       resetTimer();
       clearFrame();
-      $("#filter").val("");
       if(current==null)  {
         $(".intro").each(function(){ $(this).hide();});
-        $("#filterdiv").show();
       }
       current = $(this).attr("id");
       refresh(true);
     });
 
-
-    /*********************************************************************
-    Handling of the filter buttons.
-    Refresh the task lists, and hide the items not matching the search 
-    elements.
-    *********************************************************************/
-		// not supported by IE
-		$("#filter").change(function() {refresh(true);});
-		$("#filterbutt").click(function() {refresh(true);});
 
     /*********************************************************************
     Handling of the form manager internal iframe
@@ -784,7 +744,7 @@
       var elo = $('html', window.frames['taskform'].document);
       var visible = $('#taskform').height() != 0;
       
-      if(visible) {
+      //if(visible) {
         // TODO: let's find a clever way of checking for content independent of the form manager
         var content = (loc.toString().indexOf('type=PATask')!=-1) || (elo.html().substring(0,6).toLowerCase() == '<head>' && elo.html().length > 700);
         if(!content) {
@@ -794,7 +754,7 @@
           $('#taskform').animate({height:height},speed);
           refresh(false);
         }
-      }
+      //}
       
       $('#taskform').contents().mousemove(function(e){ resetTimer();});
       $("#taskform").contents().keypress(function (e){ resetTimer();});
@@ -851,7 +811,6 @@
     **********************************************************************/
     //$.jcorners("#intro",{radius:20});
 
-    $("#filterdiv").hide();
     $("#reassignDialog").hide();
     $("#updateDialog").hide();
     $("#connectionLost").hide();
