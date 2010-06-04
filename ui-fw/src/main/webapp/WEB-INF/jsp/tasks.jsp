@@ -69,25 +69,6 @@
             <fmt:message key="com_intalio_bpms_workflow_tab_processes"/>
           </a>
         </li>
-        <li>
-          <div id="filterdiv" class="filtertext" style="margin-left:20px; margin-right:20px">
-            <input type="text" id="filter" style="margin-left:20px" title="<fmt:message key="org_intalio_uifw_tasks_filtertext"/> "/>
-
-            <label><fmt:message key="org_intalio_uifw_tasks_filtercase"/></label>
-            <input checked="true" type="checkbox" id="caseFilter" title="<fmt:message key="org_intalio_uifw_tasks_filtercase"/>"/>
-
-            <input 
-              title="<fmt:message key="org_intalio_uifw_tasks_filtertext"/>" 
-              id="filterbutt" 
-              type="button" 
-              value="<fmt:message key="org_intalio_uifw_tasks_filterbutton"/>">
-            </input>
-          </div>
-        </li>
-        <li id="loadingdiv" style="margin-left:10px;">
-          <fmt:message key="org_intalio_uifw_message_loading"/>
-          <img src="images/icons/icon.loading.gif"/>
-        </li>
       </ul>
 
       <div id ="tasktables">
