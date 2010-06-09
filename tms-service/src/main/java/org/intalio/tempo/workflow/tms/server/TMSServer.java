@@ -478,7 +478,6 @@ public class TMSServer implements ITMSServer {
     public void deletePipa(String formUrl, String participantToken) throws AuthException, UnavailableTaskException {
         HashMap<String, Exception> problemTasks = new HashMap<String, Exception>();
         ITaskDAOConnection dao = _taskDAOFactory.openConnection();
-        Task task = dao.fetchPipa(formUrl);
 
         // DOTO due to all the service from wds is 'x'
         if (participantToken.equalsIgnoreCase("x")) {
@@ -488,6 +487,7 @@ public class TMSServer implements ITMSServer {
             UserRoles credentials = _authProvider.authenticate(participantToken);
             String userID = credentials.getUserID();
             try {
+                Task task = dao.fetchPipa(formUrl);
                 if (_permissions.isAuthorized(TaskPermissions.ACTION_DELETE, task, credentials)) {
                     dao.deletePipaTask(formUrl);
                     dao.commit();

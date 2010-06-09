@@ -6,8 +6,8 @@ load "#{@@script_folder}/../scripts/tempo_builder_lib.rb"
 load "#{@@script_folder}/../scripts/config.rb"
 
 BASE_PACKAGE = "org.intalio.liferay"
-VERSION_NUMBER = '6.0.4.004'
-TEMPO_VERSION = "6.0.4.004"
+VERSION_NUMBER = '6.0.4.008'
+TEMPO_VERSION = "6.0.4.008"
 
 BUILD_CONFIG = {
   :directory => "./target",

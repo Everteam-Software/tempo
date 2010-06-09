@@ -71,13 +71,13 @@ BUILD_CONFIG = {
     # :core => "6.0.0.75", 
     # TODO: version after 6.0.0.84 include the OpenJPA fix 
     # and do not run on windows, see https://issues.apache.org/jira/browse/OPENJPA-1410
-    :core => "6.0.4.004",
-    :security => "1.0.10",
+    :core => "6.0.4.008",
+    :security => "1.0.16",
     :deploy => "1.0.26",
     
-    :processes => "6.0.6",
+    :processes => "6.0.11",
     :formManager => "6.0.0.40",
     :apacheds => "6.0.0.37",
-    :cas => "6.0.0.36"
+    :cas => "6.0.0.37"
   }
 }
