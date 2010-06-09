@@ -531,7 +531,7 @@
     var p = {
       url: 'updates.htm',
       dataType: 'xml',
-      showTableToggleBtn: true,
+      showToggleBtn: true,
       width: widthFull,
       pagestat: '<fmt:message key="org_intalio_uifw_flexigrid_displaying"/>',
       procmsg: '<fmt:message key="org_intalio_uifw_flexigrid_processing"/>',
