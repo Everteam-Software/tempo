@@ -10,7 +10,7 @@ VERSION_NUMBER = '6.0.4.011'
 
 BUILD_CONFIG = {
   :directory => "./target",
-  :mode => [BuildMode::JETTY, BuildMode::UIFW, BuildMode::CAS, BuildMode::LDAP, BuildMode::RELEASE],
+  :mode => [BuildMode::JETTY, BuildMode::UIFW, BuildMode::CAS, BuildMode::LDAP],# BuildMode::RELEASE],
   # :mode => [BuildMode::JETTY, BuildMode::UIFW, BuildMode::CAS, BuildMode::LDAP],
   :ode => :v1_3_4_snapshot,
   :tomcat => :v5,

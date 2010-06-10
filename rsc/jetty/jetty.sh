@@ -389,6 +389,7 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Djetty.home=$JETTY_HOME -Djava.io.tmpdir=$TMP"
 export JAVA_OPTIONS="$JAVA_OPTIONS -XX:MaxPermSize=256m -server -Djavax.net.ssl.trustStore=$JETTY_HOME/var/config/intalio-keystore.jks -Dfile.encoding=UTF-8 -Xms128m -Xmx1024m -Dorg.intalio.tempo.configDirectory=$JETTY_HOME/var/config -Dorg.apache.ode.configDir=$JETTY_HOME/var/config -Dorg.intalio.deploy.configDirectory=$JETTY_HOME/var/config"
 ##########
 
+
 #####################################################
 # This is how the Jetty server will be started
 #####################################################
@@ -397,7 +398,7 @@ JETTY_START=$JETTY_HOME/start.jar
 [ ! -f $JETTY_START ] && JETTY_START=$JETTY_HOME/lib/start.jar
 
 #RUN_ARGS="$JAVA_OPTIONS -jar $JETTY_START --fromDaemon $JETTY_ARGS $ARGS"
-RUN_ARGS="$JAVA_OPTIONS -jar $JETTY_START OPTIONS=Server,All,jsp,jndi,ext,jdbc,jta,spring,slf4j etc/jetty.xml etc/jetty-ssl.xml"
+RUN_ARGS="$JAVA_OPTIONS -jar $JETTY_START OPTIONS=Server,All,jsp,jndi,ext,jdbc,jta,spring,slf4j etc/jetty-ssl.xml"
 RUN_CMD="$JAVA $RUN_ARGS"
 
 #####################################################
