@@ -516,7 +516,7 @@ BUILD_URI = {
     :v3_0 => "http://downloads.sourceforge.net/sourceforge/alfresco/alfresco-labs-war-3a.1032.zip"  
 	},
 	:jetty => {
-	  :v7 => "http://dist.codehaus.org/jetty/jetty-7.0.0/jetty-hightide-7.0.0.v20091005.zip"
+	  :v7 => "http://dist.codehaus.org/jetty/jetty-hightide-7.1.3/jetty-hightide-7.1.3.v20100526.zip"
 	},
 	:osgi_jetty => {
 	  :v7 => "http://www.intalio.org/public/maven2/org/intalio/osgi/org.intalio.osgi-packages-hightide.runtime.equinox/7.0.1.007/org.intalio.osgi-packages-hightide.runtime.equinox-7.0.1.007.tgz"
