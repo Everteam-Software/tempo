@@ -5,7 +5,7 @@
 load "#{@@script_folder}/../scripts/tempo_builder_lib.rb"
 load "#{@@script_folder}/../scripts/config.rb"
 
-BASE_PACKAGE = "org.intalio.jetty"
+BASE_PACKAGE = "org.intalio.tomcat"
 VERSION_NUMBER = '6.0.4.011'
 
 BUILD_CONFIG = {
