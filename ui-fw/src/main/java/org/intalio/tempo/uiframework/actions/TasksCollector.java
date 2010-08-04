@@ -50,7 +50,7 @@ public class TasksCollector {
         public ParameterMap() {
             super(parameters.length);
             put("page", "1");
-            put("page", "3");
+            put("rp", "3");
             put("sortname", "_creationDate");
             put("sortorder", "DESC");
             put("query", null);
