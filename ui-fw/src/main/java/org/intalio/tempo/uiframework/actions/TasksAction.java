@@ -34,7 +34,7 @@ public class TasksAction extends Action {
 
     @Override
     public ModelAndView execute() {
-        if (Boolean.valueOf(_request.getParameter("update"))) {
+        if (Boolean.valueOf(_request.getParameter("update")).booleanValue()) {
             return new ModelAndView(Constants.TASKS_UPDATE_VIEW, createModel());
         } else {
             return new ModelAndView(Constants.TASKS_VIEW, createModel());
@@ -53,14 +53,15 @@ public class TasksAction extends Action {
         final UIFWApplicationState state = ApplicationState.getCurrentInstance(new HttpServletRequestWrapper(_request));
         final String token = state.getCurrentUser().getToken();
         final String user = state.getCurrentUser().getName();
-        try {
-        	TasksCollector collector = getTaskCollector(user, token);
-            model.put("tasks", collector.retrieveTasks());
-        } catch (Exception ex) {
-            _errors.add(new ActionError(-1, null, "com_intalio_bpms_workflow_tasks_retrieve_error", null, ActionError.getStackTrace(ex), null, null));
-            _log.error("Error while retrieving task list", ex);
-        }
-
+		if (Boolean.valueOf(_request.getParameter("update")).booleanValue()) {
+	        try {
+	        	TasksCollector collector = getTaskCollector(user, token);
+	            model.put("tasks", collector.retrieveTasks());
+	        } catch (Exception ex) {
+	            _errors.add(new ActionError(-1, null, "com_intalio_bpms_workflow_tasks_retrieve_error", null, ActionError.getStackTrace(ex), null, null));
+	            _log.error("Error while retrieving task list", ex);
+	        }
+		}
         model.put("participantToken", token);
         model.put("currentUser", user);
         model.put("refreshTime", Configuration.getInstance().getRefreshTime());
