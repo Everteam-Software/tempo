@@ -72,8 +72,13 @@ define "tempo" do
   define "tms-axis" do 
     FileUtils.mkdir_p _('target/classes/') # workaround for bug in buildr when no classes to be compiled.
     compile_xml_beans _("../tms-service/src/main/axis2")
-    package(:jar).include _('target/generated/xmlbeans/'), :as=>'.'
-    package(:jar).include _('target/classes/'), :as=>'.' 
+#    package(:jar).include _('target/generated/xmlbeans/'), :as=>'.'
+#    package(:jar).include _('target/classes/'), :as=>'.' 
+    package(:bundle).tap do |bnd|
+      bnd['Import-Package'] = "*"
+      bnd['Export-Package'] = "com.intalio.bpms.workflow*;version=#{version}"
+      bnd['Include-Resource'] = "generated/xmlbeans"
+    end
   end
 
   desc "Task Management Services Common Library"
@@ -134,7 +139,12 @@ define "tempo" do
     end
     test.exclude '*TestUtils*'
 
-    package :jar
+    package(:bundle).tap do |bnd|
+      bnd['Import-Package'] = "com.iplanet.sso*;resolution:=optional,com.sun.identity.idm*;resolution:=optional,org.apache.noggit*;resolution:=optional,*"
+      bnd['Export-Package'] = "org.intalio.tempo*;version=#{version},com.intalio.bpms.workflow*;version=#{version}"
+      bnd['Include-Resource'] = "../src/main/osgi"
+      bnd['Embed-Dependency'] = "*;inline=**.xsd|schemaorg_apache_xmlbeans/**|**.xml"
+    end
     package(:aar).with :libs => 
         [ projects("tms-axis", "tms-common", "dao-nutsNbolts"), APACHE_COMMONS[:pool], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], APACHE_JPA, SLF4J, SPRING[:core], DEPLOY_API, REGISTRY, SECURITY_WS_CLIENT, WEB_NUTSNBOLTS ] 
   end
@@ -188,6 +198,12 @@ define "tempo" do
     resources.filter.using "version" => VERSION_NUMBER
     test.with JAXEN, XMLUNIT, INSTINCT, LOG4J, SPRING_MOCK
     package(:war).include(web_xml, :as=>'WEB-INF/web.xml').with(:libs=>libs)
+    package(:bundle).tap do |bnd|
+      bnd['Import-Package'] = "*"
+      bnd['Export-Package'] = "org.intalio.tempo.workflow.*;version=#{version};-split-package:=merge-first"
+      bnd['Include-Resource'] = "../src/main/webapp,../src/main/resources"
+      bnd['Web-ContextPath'] = "/ui-fw"
+    end
   end
 
   desc "Workflow Deployment Service"
