@@ -143,7 +143,7 @@ define "tempo" do
       bnd['Import-Package'] = "com.iplanet.sso*;resolution:=optional,com.sun.identity.idm*;resolution:=optional,org.apache.noggit*;resolution:=optional,*"
       bnd['Export-Package'] = "org.intalio.tempo*;version=#{version},com.intalio.bpms.workflow*;version=#{version}"
       bnd['Include-Resource'] = "../src/main/osgi"
-      bnd['Embed-Dependency'] = "*;inline=**.xsd|schemaorg_apache_xmlbeans/**|**.xml"
+      bnd['DynamicImport-Package'] = "*"
     end
     package(:aar).with :libs => 
         [ projects("tms-axis", "tms-common", "dao-nutsNbolts"), APACHE_COMMONS[:pool], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], APACHE_JPA, SLF4J, SPRING[:core], DEPLOY_API, REGISTRY, SECURITY_WS_CLIENT, WEB_NUTSNBOLTS ] 
