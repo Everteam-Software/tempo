@@ -6,6 +6,7 @@ repositories.remote = [
   "http://scala-tools.org/repo-releases",
   "http://repository.apache.org/snapshots"
 ]
+repositories.remote << Buildr::Bnd.remote_repository 
 
 repositories.release_to[:username] ||= "release"
 repositories.release_to[:url] ||= "sftp://www.intalio.org/var/www-org/public/maven2"

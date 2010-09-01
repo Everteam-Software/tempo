@@ -1,6 +1,7 @@
 require "rubygems"
 require "buildr"
 require "buildr/xmlbeans"
+require "buildr_bnd"
 # require "buildr/openjpa"
 # require "buildr/cobertura"
 
@@ -37,6 +38,12 @@ define "tempo" do
     test.with XMLUNIT, INSTINCT
     unless ENV["LIVE"] == 'yes'
       test.exclude '*RemoteFDSTest*'
+    end
+    package(:bundle).tap do |bnd|
+      bnd['Import-Package'] = "*"
+      bnd['Export-Package'] = "org.intalio.tempo.workflow.fds*;version=#{version}"
+      bnd['Include-Resource'] = "../src/main/webapp"
+      bnd['Web-ContextPath'] = "/fds"
     end
     package :war
   end
