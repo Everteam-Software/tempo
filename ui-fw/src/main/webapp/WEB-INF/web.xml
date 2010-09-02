@@ -177,4 +177,8 @@
 			<encoding>cp1251</encoding>
 		</locale-encoding-mapping>
 	</locale-encoding-mapping-list>
+  <taglib>
+    <taglib-uri>http://www.intalio.com/tagfiles</taglib-uri>
+    <taglib-location>/WEB-INF/intalio.tld</taglib-location>
+  </taglib>
 </web-app>

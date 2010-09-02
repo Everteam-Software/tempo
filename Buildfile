@@ -199,10 +199,11 @@ define "tempo" do
     test.with JAXEN, XMLUNIT, INSTINCT, LOG4J, SPRING_MOCK
     package(:war).include(web_xml, :as=>'WEB-INF/web.xml').with(:libs=>libs)
     package(:bundle).tap do |bnd|
-      bnd['Import-Package'] = "*"
-      bnd['Export-Package'] = "org.intalio.tempo.workflow.*;version=#{version};-split-package:=merge-first"
+      bnd['Import-Package'] = "*,org.springframework.web.context,org.springframework.web.filter,org.tuckey.web.filters.urlrewrite,org.apache.abdera.protocol.server.servlet"
+      bnd['Export-Package'] = "org.intalio.tempo*;version=#{version};-split-package:=merge-first"
       bnd['Include-Resource'] = "../src/main/webapp,../src/main/resources"
       bnd['Web-ContextPath'] = "/ui-fw"
+      bnd['DynamicImport-Package'] = "*"
     end
   end
 
