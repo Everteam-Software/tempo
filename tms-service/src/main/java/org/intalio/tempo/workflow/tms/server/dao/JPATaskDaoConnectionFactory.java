@@ -12,6 +12,7 @@ package org.intalio.tempo.workflow.tms.server.dao;
 import java.util.Map;
 
 import org.intalio.tempo.workflow.dao.AbstractJPAConnectionFactory;
+import org.intalio.tempo.workflow.dao.ClassloaderEntityManager;
 
 /**
  * Factory for JPA-based task persistence
@@ -27,6 +28,6 @@ public class JPATaskDaoConnectionFactory extends AbstractJPAConnectionFactory im
     }
     
     public ITaskDAOConnection openConnection() {
-            return new JPATaskDaoConnection(factory.createEntityManager());
+            return new JPATaskDaoConnection(ClassloaderEntityManager.createEntityManager(factory, getClass().getClassLoader()));
     }
 }

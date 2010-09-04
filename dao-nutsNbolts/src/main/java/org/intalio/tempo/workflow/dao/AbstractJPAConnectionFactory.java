@@ -82,12 +82,18 @@ public abstract class AbstractJPAConnectionFactory {
     }
 
     private void initEM(String entityManagerFactoryName, Map properties) {
-        log.info("Factory:" + this.getClass().getName() + ": Using the following JPA properties:" + properties);
-        factory = Persistence.createEntityManagerFactory(entityManagerFactoryName, properties);
-
-        // the factory created can sometimes be null. Check against that
-        if (factory == null)
-            throw new RuntimeException("Factory not properly created");
+        ClassLoader oldCL = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+            log.info("Factory:" + this.getClass().getName() + ": Using the following JPA properties:" + properties);
+            factory = Persistence.createEntityManagerFactory(entityManagerFactoryName, properties);
+    
+            // the factory created can sometimes be null. Check against that
+            if (factory == null)
+                throw new RuntimeException("Factory not properly created");
+        } finally {
+            Thread.currentThread().setContextClassLoader(oldCL);
+        }
     }
     
     public Connection getUnderlyingJDBCConnectionFromEntityManager() {

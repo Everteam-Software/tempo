@@ -14,6 +14,7 @@ package org.intalio.tempo.workflow.wds.core;
 import java.util.Map;
 
 import org.intalio.tempo.workflow.dao.AbstractJPAConnectionFactory;
+import org.intalio.tempo.workflow.dao.ClassloaderEntityManager;
 
 public class JPAItemDaoConnectionFactory extends AbstractJPAConnectionFactory implements ItemDaoConnectionFactory {
 
@@ -27,7 +28,7 @@ public class JPAItemDaoConnectionFactory extends AbstractJPAConnectionFactory im
 
     @Override
 	public JPAItemDaoConnection openConnection() {
-    	return new JPAItemDaoConnection(factory.createEntityManager());
+    	return new JPAItemDaoConnection(ClassloaderEntityManager.createEntityManager(factory, getClass().getClassLoader()));
 	}
 
 	public synchronized ItemDaoConnection getItemDaoConnection() {

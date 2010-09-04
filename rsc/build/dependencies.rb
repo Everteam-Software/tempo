@@ -26,7 +26,7 @@ AXIOM = group("axiom-api", "axiom-dom", "axiom-impl", :under=>"org.apache.ws.com
 
 BACKPORT = "backport-util-concurrent:backport-util-concurrent:jar:3.1"
 
-CASTOR = "castor:castor:jar:1.0"
+CASTOR = "org.codehaus.castor:castor-core:jar:1.3.1"
 CAS_CLIENT = "cas:casclient:jar:2.1.1"
 CSV = "org.ostermiller:utils:jar:1.07.00"
 
