@@ -218,7 +218,13 @@ define "tempo" do
     resources.filter.using "version" => VERSION_NUMBER
     task "package" => generate_sql([project], "workflow.deployment")
     
-    package :jar
+    package(:bundle).tap do |bnd|
+      bnd['Import-Package'] = "*"
+      bnd['Export-Package'] = "org.intalio.tempo*;version=#{version};-split-package:=merge-first"
+      bnd['Include-Resource'] = "../src/main/webapp,../src/main/resources"
+      bnd['Web-ContextPath'] = "/wds"
+      bnd['DynamicImport-Package'] = "*"
+    end
     package(:war).with(:libs=>libs)
   end
 
