@@ -40,7 +40,7 @@ function resizeIframe() {
     	    
     	    }
     	 else {
-    		 height -= 20; /* whatever you set your body bottom margin/padding to be */
+    		// height -= 20; /* whatever you set your body bottom margin/padding to be */
     		 document.getElementById('taskform').style.height = height +"px";
     		    
         }
