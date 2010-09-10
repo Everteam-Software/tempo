@@ -26,6 +26,7 @@ function submitActionToURL(url, actionName) {
 
 function resizeIframe() {
 	
+
 	
     var height = document.documentElement.clientHeight;
     height -= document.getElementById('taskform').offsetTop;
@@ -49,6 +50,5 @@ function resizeIframe() {
       }
   
 
-    
     
 }
