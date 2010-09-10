@@ -34,13 +34,13 @@ function resizeIframe() {
     try {
     	 if(navigator.appName != "Microsoft Internet Explorer")
     	    {
-    	        // not sure how to get this dynamically
+    	       
     	    height = 20; /* whatever you set your body bottom margin/padding to be */
     	    document.getElementById('taskform').style.height = height +"px";
     	    
     	    }
     	 else {
-    		// height -= 20; /* whatever you set your body bottom margin/padding to be */
+    		 height -= 20; /* whatever you set your body bottom margin/padding to be */
     		 document.getElementById('taskform').style.height = height +"px";
     		    
         }
