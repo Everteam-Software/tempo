@@ -47,7 +47,7 @@
     <script type="text/javascript" src="script/flexigrid.js"></script>
     
     <%@ include file="/script/grids.jsp"%>
-
+   
   </head>
   <body width="95%" height="98%">
 
@@ -145,8 +145,8 @@
        <p><a href="/ui-fw"><fmt:message key="org_intalio_uifw_session_login_again"/></a></p>
     </div>
 
-    <iframe src="script/empty.jsp" onLoad="resizeIframe" name="taskform" frameborder="0" id="taskform" scrolling="auto"></iframe>
-
+    <iframe src="script/empty.jsp" onLoad="resizeIframe"  name="taskform" frameborder="0" id="taskform" scrolling="auto"></iframe>
+    
     <div id="footer" style="margin-left:20px">
       <fmt:message key="com_intalio_bpms_workflow_pageFooter_poweredBy_label" />
       <a href="http://www.intalio.com">
@@ -173,10 +173,11 @@
       </a>
     </div>
 
-  <script>
+   <script>
     document.getElementById('taskform').onload = resizeIframe;
     window.onresize = resizeIframe;
   </script>
+  
 
   </body>
 </html>
