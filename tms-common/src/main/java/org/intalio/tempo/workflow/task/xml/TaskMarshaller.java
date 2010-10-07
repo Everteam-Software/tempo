@@ -190,7 +190,7 @@ public class TaskMarshaller {
     }
 
     public void marshalTaskInput(ITaskWithInput task,
-            com.intalio.bpms.workflow.taskManagementServices20051109.Task.Input parent) {
+            com.intalio.bpms.workflow.taskManagementServices20051109.TaskData parent) {
         try {
             parent.set(extractXmlObject(task.getInput()));
         } catch (Exception e) {
@@ -241,7 +241,7 @@ public class TaskMarshaller {
     }
 
     public void marshalTaskOutput(ITaskWithOutput task,
-            com.intalio.bpms.workflow.taskManagementServices20051109.Task.Output parent) {
+            com.intalio.bpms.workflow.taskManagementServices20051109.TaskData parent) {
         try {
             parent.set(extractXmlObject(task.getOutput()));
         } catch (XmlException e) {
@@ -284,14 +284,14 @@ public class TaskMarshaller {
 
         if (task instanceof ITaskWithInput) {
             ITaskWithInput taskWithInput = (ITaskWithInput) task;
-            com.intalio.bpms.workflow.taskManagementServices20051109.Task.Input taskInput = parent.addNewInput();
+            com.intalio.bpms.workflow.taskManagementServices20051109.TaskData taskInput = parent.addNewInput();
             marshalTaskInput(taskWithInput, taskInput);
         }
 
         if (task instanceof ITaskWithOutput) {
             ITaskWithOutput taskWithOutput = (ITaskWithOutput) task;
             if (taskWithOutput.getOutput() != null) {
-                com.intalio.bpms.workflow.taskManagementServices20051109.Task.Output taskOutput = parent.addNewOutput();
+                com.intalio.bpms.workflow.taskManagementServices20051109.TaskData taskOutput = parent.addNewOutput();
                 marshalTaskOutput(taskWithOutput, taskOutput);
             }
         }

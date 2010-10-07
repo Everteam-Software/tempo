@@ -497,14 +497,14 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
         TaskMetadata metadataElement = taskElement.addNewMetadata();
         metadataElement.set(expectElement(rootElement, "metadata"));
 
-        com.intalio.bpms.workflow.taskManagementServices20051109.Task.Input inputElement = null;
+        com.intalio.bpms.workflow.taskManagementServices20051109.TaskData inputElement = null;
         XmlObject xmlInput = expectElement(rootElement, "input");
         if (xmlInput != null) {
             inputElement = taskElement.addNewInput();
             inputElement.set(xmlInput);
         }
 
-        com.intalio.bpms.workflow.taskManagementServices20051109.Task.Output outputElement = null;
+        com.intalio.bpms.workflow.taskManagementServices20051109.TaskData outputElement = null;
         XmlObject xmlOutput = expectElement(rootElement, "output");
         if (xmlOutput != null) {
             outputElement = taskElement.addNewOutput();
