@@ -55,29 +55,28 @@
     if($.browser.msie){
       height = $(window).height() - 130;
     }else{
-      height = $(window).height() - 130 ;
+      height = $(window).height() - 130;
     }
-    var height2 = height - 80 ;
+    var height2 = height - 80;
     var needResize = false;
 		
     /*
     Resize the application when the window is reloaded
     */
-   
     $(window).resize(function() {
-        if(navigator.appName != "Microsoft Internet Explorer") {
-          var loc = window.frames['taskform'].location;
-          try {
-            if(loc.toString().indexOf("empty.jsp")>0) {
-              location.href=location.href;
-            } else {
-              needResize = true;
-            }
-          } catch(err) {
-            return;
+      if(navigator.appName != "Microsoft Internet Explorer") {
+        var loc = window.frames['taskform'].location;
+        try {
+          if(loc.toString().indexOf("empty.jsp")>0) {
+            location.href=location.href;
+          } else {
+            needResize = true;
           }
+        } catch(err) {
+          return;
         }
-      });
+      }
+    });
 
 
     /*
@@ -86,9 +85,7 @@
     function clearFrame() {
         var loc = window.frames['taskform'].location;
         try {
-            if(loc.toString().match("empty.jsp")!=null)
-             
-                      return ;
+            if(loc.toString().match("empty.jsp")!=null) return ;
         } catch(err) {
             $('#taskform').animate({height:"0px"},speed);
             window.open("/ui-fw/script/empty.jsp", "taskform");
@@ -819,7 +816,7 @@
     $("#connectionLost").hide();
     $("#tabTasks").click();
 
-    window.open("/ui-fw/script/empty.jsp", "taskform");
+    if (!one_task_page) window.open("/ui-fw/script/empty.jsp", "taskform");
 
     /*
     Ajax activity support call. Show the ajax loading icon

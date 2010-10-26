@@ -97,6 +97,16 @@ public class TasksCollector {
         return new RemoteTMSFactory(endpoint, token).getService();
     }
 
+    public TaskHolder<Task> retrieveOneTask(String taskId) throws Exception {
+        final FormManager fmanager = FormManagerBroker.getInstance().getFormManager();
+        final String endpoint = URIUtils.resolveURI(_request, _endpoint);
+        final ITaskManagementService taskManager = getTaskManager(endpoint, _token);
+
+        Task task = taskManager.getTask(taskId);
+
+        return new TaskHolder<Task>(task, URIUtils.getResolvedTaskURLAsString(_request, fmanager, task, _token, _user));
+    }
+
     public ArrayList<TaskHolder<Task>> retrieveTasks() throws Exception {
         final FormManager fmanager = FormManagerBroker.getInstance().getFormManager();
         final ArrayList<TaskHolder<Task>> _tasks = new ArrayList<TaskHolder<Task>>();
