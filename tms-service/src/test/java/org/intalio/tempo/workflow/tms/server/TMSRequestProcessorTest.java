@@ -27,9 +27,6 @@ import org.apache.axis2.AxisFault;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.PIPATask;
-import org.intalio.tempo.workflow.tms.server.dao.JPATaskDaoConnectionFactory;
-import org.intalio.tempo.workflow.tms.server.dao.SimpleTaskDAOConnection;
-import org.intalio.tempo.workflow.tms.server.dao.SimpleTaskDAOConnectionFactory;
 import org.intalio.tempo.workflow.tms.server.permissions.TaskPermissions;
 import org.junit.Assert;
 import org.slf4j.Logger;
@@ -42,14 +39,14 @@ public class TMSRequestProcessorTest extends TestCase {
 
   private TMSRequestProcessor createRequestProcessor() throws Exception {
     ITMSServer server = Utils.createTMSServer();
-    TMSRequestProcessor proc = new TMSRequestProcessor(new SimpleTaskDAOConnectionFactory());
+    TMSRequestProcessor proc = new TMSRequestProcessor();
     proc.setServer(server);
     return proc;
   }
 
   private TMSRequestProcessor createRequestProcessorJPA() throws Exception {
     ITMSServer server = Utils.createTMSServerJPA();
-    TMSRequestProcessor proc = new TMSRequestProcessor(new JPATaskDaoConnectionFactory());
+    TMSRequestProcessor proc = new TMSRequestProcessor();
     proc.setServer(server);
     return proc;
   }
@@ -76,7 +73,6 @@ public class TMSRequestProcessorTest extends TestCase {
     TMSRequestProcessor requestProcessor = this.createRequestProcessorJPA();
 
     OMElement createTaskRequest = Utils.loadElementFromResource("/createTaskRequest1.xml");
-   
     OMElement createTaskResponse = requestProcessor.create(createTaskRequest);
     OMElement createTaskRequest2 = Utils.loadElementFromResource("/createTaskRequest2.xml");
     OMElement createTaskResponse2 = requestProcessor.create(createTaskRequest2);

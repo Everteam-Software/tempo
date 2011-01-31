@@ -13,9 +13,6 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
 	<bean id="tms.serviceImplementation" class="org.intalio.tempo.workflow.tms.server.TMSRequestProcessor">
-		<constructor-arg>
-	<ref bean="tms.daoFactory"/>
-	</constructor-arg>
 		<property name="server">
 			<ref bean="tms.server"/>
 		</property>
@@ -23,6 +20,9 @@
 	<bean id="tms.server" class="org.intalio.tempo.workflow.tms.server.TMSServer">
 		<property name="authProvider">
 			<ref bean="tms.authProvider"/>
+		</property>
+		<property name="taskDAOFactory">
+			<ref bean="tms.daoFactory"/>
 		</property>
 		<property name="permissions">
 			<ref bean="tms.permissionsHandler"/>
