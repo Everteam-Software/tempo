@@ -49,6 +49,7 @@ import org.intalio.tempo.workflow.tms.TaskIDConflictException;
 import org.intalio.tempo.workflow.tms.UnavailableAttachmentException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
+import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnectionFactory;
 import org.intalio.tempo.workflow.tms.server.permissions.TaskPermissions;
 import org.intalio.tempo.workflow.util.jpa.TaskFetcher;
 import org.slf4j.Logger;
@@ -61,18 +62,19 @@ public class TMSServer implements ITMSServer {
 
     private static final Logger _logger = LoggerFactory.getLogger(TMSServer.class);
     private IAuthProvider _authProvider;
+    private ITaskDAOConnectionFactory _taskDAOFactory;
     private TaskPermissions _permissions;
     private int _httpTimeout = 10000;
 
     public TMSServer() {
     }
 
-    public TMSServer(IAuthProvider authProvider, TaskPermissions permissions) {
+    public TMSServer(IAuthProvider authProvider, ITaskDAOConnectionFactory taskDAOFactory, TaskPermissions permissions) {
         _logger.info("New TMS Instance");
         assert authProvider != null : "IAuthProvider implementation is absent!";
-        
+        assert taskDAOFactory != null : "ITaskDAOConnectionFactory implementation is absent!";
         setAuthProvider(authProvider);
-
+        setTaskDAOFactory(taskDAOFactory);
         setPermissions(permissions);
     }
 
@@ -93,11 +95,14 @@ public class TMSServer implements ITMSServer {
         _logger.info("IAuthProvider implementation : " + _authProvider.getClass());
     }
 
+    public void setTaskDAOFactory(ITaskDAOConnectionFactory taskDAOFactory) {
+        this._taskDAOFactory = taskDAOFactory;
+        _logger.info("ITaskDAOConnectionFactory implementation : " + _taskDAOFactory.getClass());
+    }
 
-/*JIRA WF-1466 Changes have been made to get the dao in the method 
-instead of creating and opening connections in the method itself */
-    public Task[] getTaskList(ITaskDAOConnection dao,String participantToken) throws AuthException {
+    public Task[] getTaskList(String participantToken) throws AuthException {
         UserRoles credentials = _authProvider.authenticate(participantToken);
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         Task[] result = dao.fetchAllAvailableTasks(credentials);
         return result;
     }
@@ -106,10 +111,10 @@ instead of creating and opening connections in the method itself */
         return _authProvider.authenticate(participantToken);
     }
 
-    public Task getTask(ITaskDAOConnection dao,String taskID, String participantToken) throws AuthException, UnavailableTaskException,
+    public Task getTask(String taskID, String participantToken) throws AuthException, UnavailableTaskException,
             AccessDeniedException {
         UserRoles credentials = _authProvider.authenticate(participantToken);
-         
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         Task task = dao.fetchTaskIfExists(taskID);
         if ((task != null)) {
             checkIsAvailable(taskID, task, credentials);
@@ -137,9 +142,10 @@ instead of creating and opening connections in the method itself */
             throw new AccessDeniedException(credentials.getUserID() + " cannot access task:" + taskID);
     }
 
-    public void setOutput(ITaskDAOConnection dao,String taskID, Document output, String participantToken) throws AuthException,
+    public void setOutput(String taskID, Document output, String participantToken) throws AuthException,
             UnavailableTaskException, AccessDeniedException {
         UserRoles credentials = _authProvider.authenticate(participantToken);
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         Task task = dao.fetchTaskIfExists(taskID);
         checkIsAvailable(taskID, task, credentials);
         if (task instanceof ITaskWithOutput) {
@@ -153,9 +159,10 @@ instead of creating and opening connections in the method itself */
             throw new UnavailableTaskException(credentials.getUserID() + " cannot set output for Workflow Task " + task);
     }
 
-    public void complete(ITaskDAOConnection dao,String taskID, String participantToken) throws AuthException, UnavailableTaskException,
+    public void complete(String taskID, String participantToken) throws AuthException, UnavailableTaskException,
             InvalidTaskStateException, AccessDeniedException {
         UserRoles credentials = _authProvider.authenticate(participantToken);
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         Task task = dao.fetchTaskIfExists(taskID);
         checkIsAvailable(taskID, task, credentials);
         if (task instanceof ITaskWithState) {
@@ -170,9 +177,10 @@ instead of creating and opening connections in the method itself */
         }
     }
 
-    public void setOutputAndComplete(ITaskDAOConnection dao,String taskID, Document output, String participantToken) throws AuthException,
+    public void setOutputAndComplete(String taskID, Document output, String participantToken) throws AuthException,
             UnavailableTaskException, InvalidTaskStateException, AccessDeniedException {
         UserRoles credentials = _authProvider.authenticate(participantToken);
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         Task task = dao.fetchTaskIfExists(taskID);
         checkIsAvailable(taskID, task, credentials);
         if (task instanceof ITaskWithOutput && task instanceof ITaskWithState) {
@@ -188,11 +196,12 @@ instead of creating and opening connections in the method itself */
         }
     }
 
-    public void fail(ITaskDAOConnection dao,String taskID, String failureCode, String failureReason, String participantToken)
+    public void fail(String taskID, String failureCode, String failureReason, String participantToken)
             throws AuthException, UnavailableTaskException {
         boolean available = false;
 
         // UserRoles credentials = _authProvider.authenticate(participantToken);
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         Task task = dao.fetchTaskIfExists(taskID);
         available = task instanceof ITaskWithState;
         // && task.isAvailableTo(credentials)
@@ -212,10 +221,11 @@ instead of creating and opening connections in the method itself */
         }
     }
 
-    public void delete(ITaskDAOConnection dao,String[] taskIDs, String participantToken) throws AuthException, UnavailableTaskException {
+    public void delete(String[] taskIDs, String participantToken) throws AuthException, UnavailableTaskException {
         HashMap<String, Exception> problemTasks = new HashMap<String, Exception>();
         UserRoles credentials = _authProvider.authenticate(participantToken);
 
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         String userID = credentials.getUserID();
         for (String taskID : taskIDs) {
             try {
@@ -238,11 +248,12 @@ instead of creating and opening connections in the method itself */
         }
     }
 
-    public void create(ITaskDAOConnection dao,Task task, String participantToken) throws AuthException, TaskIDConflictException {
+    public void create(Task task, String participantToken) throws AuthException, TaskIDConflictException {
         // UserRoles credentials =
         // _authProvider.authenticate(participantToken);// FIXME: decide on this
         // issue
 
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         try {
             dao.createTask(task);
             dao.commit();
@@ -253,10 +264,13 @@ instead of creating and opening connections in the method itself */
             _logger.error("Cannot create Workflow Tasks", e); // TODO :
             // TaskIDConflictException
             // must be rethrowed :vb
-        } 
+        } finally {
+            dao.close();
+        }
     }
 
-    public void update(ITaskDAOConnection dao,TaskMetadata task, String participantToken) throws AuthException, TMSException, AxisFault {
+    public void update(TaskMetadata task, String participantToken) throws AuthException, TMSException {
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         try {
             String id = task.getTaskId();
             Task previous = dao.fetchTaskIfExists(id);
@@ -284,9 +298,8 @@ instead of creating and opening connections in the method itself */
                 throw new RuntimeException("No previous activity task with the given id:" + id + (previous != null)
                         + (previous instanceof PATask));
             }
-        } catch (Exception e) {
-        	_logger.error("Error while sending updating:" + e.getClass(), e);
-            throw AxisFault.makeFault(e);
+        } finally {
+            dao.close();
         }
     }
 
@@ -337,9 +350,10 @@ instead of creating and opening connections in the method itself */
 
     }
 
-    public Document initProcess(ITaskDAOConnection dao,String taskID, String user, String formUrl, Document input, String participantToken)
+    public Document initProcess(String taskID, String user, String formUrl, Document input, String participantToken)
             throws AuthException, UnavailableTaskException, AccessDeniedException, AxisFault {
         UserRoles credentials = _authProvider.authenticate(participantToken);
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         Task task = dao.fetchTaskIfExists(taskID);
         checkIsAvailable(taskID, task, credentials);
         if (task instanceof PIPATask) {
@@ -355,9 +369,10 @@ instead of creating and opening connections in the method itself */
         }
     }
 
-    public Attachment[] getAttachments(ITaskDAOConnection dao,String taskID, String participantToken) throws AuthException,
+    public Attachment[] getAttachments(String taskID, String participantToken) throws AuthException,
             UnavailableTaskException, AccessDeniedException {
         UserRoles credentials = _authProvider.authenticate(participantToken);
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         Task task = dao.fetchTaskIfExists(taskID);
         checkIsAvailable(taskID, task, credentials);
         if (task instanceof ITaskWithAttachments) {
@@ -368,9 +383,10 @@ instead of creating and opening connections in the method itself */
         }
     }
 
-    public void addAttachment(ITaskDAOConnection dao,String taskID, Attachment attachment, String participantToken) throws AuthException,
+    public void addAttachment(String taskID, Attachment attachment, String participantToken) throws AuthException,
             UnavailableTaskException, AccessDeniedException {
         UserRoles credentials = _authProvider.authenticate(participantToken);
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         Task task = dao.fetchTaskIfExists(taskID);
         checkIsAvailable(taskID, task, credentials);
         if (task instanceof ITaskWithAttachments == false) {
@@ -384,7 +400,7 @@ instead of creating and opening connections in the method itself */
             _logger.debug(credentials.getUserID() + " has added attachment " + attachment + "to Workflow Task " + task);
     }
 
-    public void removeAttachment(ITaskDAOConnection dao,String taskID, URL attachmentURL, String participantToken) throws AuthException,
+    public void removeAttachment(String taskID, URL attachmentURL, String participantToken) throws AuthException,
             UnavailableAttachmentException, UnavailableTaskException {
 
         Task task = null;
@@ -392,6 +408,7 @@ instead of creating and opening connections in the method itself */
         boolean availableAttachment = false;
 
         UserRoles credentials = _authProvider.authenticate(participantToken);
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         try {
             task = dao.fetchTaskIfExists(taskID);
             availableTask = task instanceof ITaskWithAttachments && task.isAvailableTo(credentials);
@@ -409,6 +426,8 @@ instead of creating and opening connections in the method itself */
             }
         } catch (Exception e) {
             _logger.error("Error while delete attachment " + attachmentURL + " for Workflow Task " + taskID, e);
+        } finally {
+            dao.close();
         }
         if (!availableTask || !availableAttachment) {
             throw new UnavailableTaskException(credentials.getUserID() + " cannot remove attachment for Workflow Task "
@@ -417,7 +436,7 @@ instead of creating and opening connections in the method itself */
         }
     }
 
-    public void reassign(ITaskDAOConnection dao,String taskID, AuthIdentifierSet users, AuthIdentifierSet roles, TaskState state,
+    public void reassign(String taskID, AuthIdentifierSet users, AuthIdentifierSet roles, TaskState state,
             String participantToken) throws AuthException, UnavailableTaskException {
         // UserRoles credentials = _authProvider
         // TODO: this requires SYSTEM
@@ -430,6 +449,7 @@ instead of creating and opening connections in the method itself */
         Task task = null;
         boolean available = false;
 
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         try {
             task = dao.fetchTaskIfExists(taskID);
             // if (task.isAvailableTo(credentials) && (task instanceof
@@ -447,14 +467,17 @@ instead of creating and opening connections in the method itself */
             }
         } catch (Exception e) {
             _logger.error("Cannot retrieve Workflow Tasks", e);
-        } 
+        } finally {
+            dao.close();
+        }
         if (!available) {
             throw new UnavailableTaskException("Error to ressign Workflow Task " + task);
         }
     }
 
-    public void deletePipa(ITaskDAOConnection dao,String formUrl, String participantToken) throws AuthException, UnavailableTaskException {
+    public void deletePipa(String formUrl, String participantToken) throws AuthException, UnavailableTaskException {
         HashMap<String, Exception> problemTasks = new HashMap<String, Exception>();
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
 
         // DOTO due to all the service from wds is 'x'
         if (participantToken.equalsIgnoreCase("x")) {
@@ -484,16 +507,18 @@ instead of creating and opening connections in the method itself */
 
     }
 
-    public PIPATask getPipa(ITaskDAOConnection dao,String formUrl, String participantToken) throws AuthException, UnavailableTaskException {
+    public PIPATask getPipa(String formUrl, String participantToken) throws AuthException, UnavailableTaskException {
         try {
+            ITaskDAOConnection dao = _taskDAOFactory.openConnection();
             return dao.fetchPipa(formUrl);
         } catch (Exception e) {
             throw new UnavailableTaskException(e);
         }
     }
 
-    public void storePipa(ITaskDAOConnection dao,PIPATask task, String participantToken) throws AuthException, InvalidTaskException {
+    public void storePipa(PIPATask task, String participantToken) throws AuthException, InvalidTaskException {
         try {
+            ITaskDAOConnection dao = _taskDAOFactory.openConnection();
             dao.storePipaTask(task);
             dao.commit();
         } catch (Exception e) {
@@ -501,15 +526,16 @@ instead of creating and opening connections in the method itself */
         }
     }
 
-    public Task[] getAvailableTasks(ITaskDAOConnection dao,String participantToken, String taskType, String subQuery) throws AuthException {
+    public Task[] getAvailableTasks(String participantToken, String taskType, String subQuery) throws AuthException {
         HashMap map = new HashMap(3);
         map.put(TaskFetcher.FETCH_CLASS_NAME, taskType);
         map.put(TaskFetcher.FETCH_SUB_QUERY, subQuery);
-        return this.getAvailableTasks(dao,participantToken, map);
+        return this.getAvailableTasks(participantToken, map);
     }
 
-    public Long countAvailableTasks(ITaskDAOConnection dao,String participantToken, HashMap parameters) throws AuthException {
+    public Long countAvailableTasks(String participantToken, HashMap parameters) throws AuthException {
         UserRoles credentials = _authProvider.authenticate(participantToken);
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         try {
             parameters.put(TaskFetcher.FETCH_USER, credentials);
             String klass = (String) parameters.get(TaskFetcher.FETCH_CLASS_NAME);
@@ -522,8 +548,9 @@ instead of creating and opening connections in the method itself */
         }
     }
 
-    public Task[] getAvailableTasks(ITaskDAOConnection dao,String participantToken, HashMap parameters) throws AuthException {
+    public Task[] getAvailableTasks(String participantToken, HashMap parameters) throws AuthException {
         UserRoles credentials = _authProvider.authenticate(participantToken);
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         try {
             parameters.put(TaskFetcher.FETCH_USER, credentials);
             String klass = (String) parameters.get(TaskFetcher.FETCH_CLASS_NAME);
@@ -540,15 +567,15 @@ instead of creating and opening connections in the method itself */
      * Get the list of task ids to be deleted, and then delegate to the regular
      * delete method
      */
-    public void deleteAll(ITaskDAOConnection dao,boolean fakeDelete, String subquery, String taskType, String participantToken)
+    public void deleteAll(boolean fakeDelete, String subquery, String taskType, String participantToken)
             throws AuthException, UnavailableTaskException {
         Task[] tasks = null;
         if (taskType != null && taskType.length() != 0) {
             if (subquery == null || subquery.length() == 0)
                 subquery = "";
-            tasks = getAvailableTasks(dao,participantToken, taskType, subquery);
+            tasks = getAvailableTasks(participantToken, taskType, subquery);
         } else {
-            tasks = getTaskList(dao,participantToken);
+            tasks = getTaskList(participantToken);
         }
         int length = tasks.length;
         String[] ids = new String[length];
@@ -559,13 +586,14 @@ instead of creating and opening connections in the method itself */
         if (fakeDelete) {
             _logger.info("Fake delete enabled. Not deleting any tasks");
         } else {
-            delete(dao,ids, participantToken);
+            delete(ids, participantToken);
         }
     }
 
-    public void skip(ITaskDAOConnection dao,String taskID, String participantToken) throws AuthException, UnavailableTaskException,
+    public void skip(String taskID, String participantToken) throws AuthException, UnavailableTaskException,
             InvalidTaskStateException, AccessDeniedException {
         UserRoles credentials = _authProvider.authenticate(participantToken);
+        ITaskDAOConnection dao = _taskDAOFactory.openConnection();
         Task task = dao.fetchTaskIfExists(taskID);
         checkIsAvailable(taskID, task, credentials);
         if (task instanceof ITaskWithState) {

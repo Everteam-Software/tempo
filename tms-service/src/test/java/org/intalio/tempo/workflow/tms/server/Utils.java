@@ -47,6 +47,7 @@ public class Utils {
 
     public static OMElement loadElementFromResource(String resource) throws Exception {
         InputStream requestInputStream = Utils.class.getResourceAsStream(resource);
+
         XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(requestInputStream);
         StAXOMBuilder builder = new StAXOMBuilder(parser);
 
@@ -84,12 +85,12 @@ public class Utils {
     }
 
     public static ITMSServer createTMSServer() throws Exception {
-        return new TMSServer(getMeASimpleAuthProvider(), getMeADefaultPermissionHandler());
+        return new TMSServer(getMeASimpleAuthProvider(), new SimpleTaskDAOConnectionFactory(), getMeADefaultPermissionHandler());
     }
 
 
     public static ITMSServer createTMSServerJPA() throws Exception {
-        return new TMSServer(getMeASimpleAuthProvider(), getMeADefaultPermissionHandler()){
+        return new TMSServer(getMeASimpleAuthProvider(), new JPATaskDaoConnectionFactory(), getMeADefaultPermissionHandler()){
             protected ServiceClient getServiceClient() throws AxisFault{           
                 return new MockServiceClient();
             };
@@ -97,7 +98,7 @@ public class Utils {
     }
 
     public static ITMSServer createMockTMSServerJPA() throws Exception {
-        return new TMSServer(getMeASimpleAuthProvider(),  getMeADefaultPermissionHandler()){
+        return new TMSServer(getMeASimpleAuthProvider(), Mocker.mock(JPATaskDaoConnectionFactory.class), getMeADefaultPermissionHandler()){
             protected ServiceClient getServiceClient()throws AxisFault{           
                 return new MockServiceClient();
             };
