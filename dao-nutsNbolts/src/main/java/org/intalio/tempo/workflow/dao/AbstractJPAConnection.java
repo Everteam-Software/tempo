@@ -40,7 +40,6 @@ public class AbstractJPAConnection {
 
 	public void close() {
 	    // commit();
-		entityManager.close();
 		_logger.debug(ACTION.CLOSE.toString());
 	}
 	
