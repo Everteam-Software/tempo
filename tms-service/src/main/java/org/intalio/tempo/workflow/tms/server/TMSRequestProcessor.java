@@ -429,7 +429,7 @@ public class TMSRequestProcessor extends OMUnmarshaller {
     	try {
     		dao=_taskDAOFactory.openConnection();
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
-	    ArrayList<String> taskIds = expectListOfValues(rootQueue, "taskId");
+            String taskID = requireElementValue(rootQueue, "taskId");
             AuthIdentifierSet users = expectAuthIdentifiers(rootQueue, "userOwner");
             AuthIdentifierSet roles = expectAuthIdentifiers(rootQueue, "roleOwner");
             TaskState taskState;
