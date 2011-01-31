@@ -24,55 +24,56 @@ import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.TaskState;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.tms.TMSException;
+import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
 import org.w3c.dom.Document;
 
 import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
-
+//Added ITaskDAOConnection in every method signature for JIRA WF-1466
 public interface ITMSServer {
 
-    Task[] getTaskList(String participantToken) throws TMSException;
+    Task[] getTaskList(ITaskDAOConnection dao,String participantToken) throws TMSException;
 
-    Task[] getAvailableTasks(String participantToken, String taskType, String subQuery) throws TMSException;
+    Task[] getAvailableTasks(ITaskDAOConnection dao,String participantToken, String taskType, String subQuery) throws TMSException;
 
-    void skip(String taskID, String participantToken) throws TMSException;
+    void skip(ITaskDAOConnection dao,String taskID, String participantToken) throws TMSException;
     
-    Task getTask(String taskID, String participantToken) throws TMSException;
+    Task getTask(ITaskDAOConnection dao,String taskID, String participantToken) throws TMSException;
 
     UserRoles getUserRoles(String participantToken) throws TMSException;
 
-    PIPATask getPipa(String formUrl, String participantToken) throws TMSException;
+    PIPATask getPipa(ITaskDAOConnection dao,String formUrl, String participantToken) throws TMSException;
 
-    Document initProcess(String taskID, String user, String formUrl, Document input, String participantToken) throws TMSException, AxisFault;
+    Document initProcess(ITaskDAOConnection dao,String taskID, String user, String formUrl, Document input, String participantToken) throws TMSException, AxisFault;
 
-    Attachment[] getAttachments(String taskID, String participantToken) throws TMSException;
+    Attachment[] getAttachments(ITaskDAOConnection dao,String taskID, String participantToken) throws TMSException;
 
-    void addAttachment(String taskID, Attachment attachment, String participantToken) throws TMSException;
+    void addAttachment(ITaskDAOConnection dao,String taskID, Attachment attachment, String participantToken) throws TMSException;
 
-    void removeAttachment(String taskID, URL attachmentURL, String participantToken) throws TMSException;
+    void removeAttachment(ITaskDAOConnection dao,String taskID, URL attachmentURL, String participantToken) throws TMSException;
 
-    void reassign(String taskID, AuthIdentifierSet users, AuthIdentifierSet roles, TaskState state, String participantToken) throws TMSException;
+    void reassign(ITaskDAOConnection dao,String taskID, AuthIdentifierSet users, AuthIdentifierSet roles, TaskState state, String participantToken) throws TMSException;
 
-    void storePipa(PIPATask task, String participantToken) throws TMSException;
+    void storePipa(ITaskDAOConnection dao,PIPATask task, String participantToken) throws TMSException;
 
-    void deletePipa(String formUrl, String participantToken) throws TMSException;
+    void deletePipa(ITaskDAOConnection dao,String formUrl, String participantToken) throws TMSException;
 
-    void setOutput(String taskID, Document output, String participantToken) throws TMSException;
+    void setOutput(ITaskDAOConnection dao,String taskID, Document output, String participantToken) throws TMSException;
 
-    void complete(String taskID, String participantToken) throws TMSException;
+    void complete(ITaskDAOConnection dao,String taskID, String participantToken) throws TMSException;
 
-    void setOutputAndComplete(String taskID, Document output, String participantToken) throws TMSException;
+    void setOutputAndComplete(ITaskDAOConnection dao,String taskID, Document output, String participantToken) throws TMSException;
 
-    void fail(String taskID, String failureCode, String failureReason, String participantToken) throws TMSException;
+    void fail(ITaskDAOConnection dao,String taskID, String failureCode, String failureReason, String participantToken) throws TMSException;
 
-    void delete(String[] taskIDs, String participantToken) throws TMSException;
+    void delete(ITaskDAOConnection dao,String[] taskIDs, String participantToken) throws TMSException;
 
-    void create(Task task, String participantToken) throws TMSException;
+    void create(ITaskDAOConnection dao,Task task, String participantToken) throws TMSException;
     
-    void update(TaskMetadata task, String participantToken) throws TMSException;
+    void update(ITaskDAOConnection dao,TaskMetadata task, String participantToken) throws TMSException, AxisFault;
 
-    void deleteAll(boolean fakeDelete, String subquery, String subqueryClass, String participantToken) throws TMSException;
+    void deleteAll(ITaskDAOConnection dao,boolean fakeDelete, String subquery, String subqueryClass, String participantToken) throws TMSException;
 
-    Task[] getAvailableTasks(String participantToken, HashMap parameters) throws Exception;
+    Task[] getAvailableTasks(ITaskDAOConnection dao,String participantToken, HashMap parameters) throws Exception;
 
-    Long countAvailableTasks(String participantToken, HashMap map) throws AuthException;
+    Long countAvailableTasks(ITaskDAOConnection dao,String participantToken, HashMap map) throws AuthException;
 }
