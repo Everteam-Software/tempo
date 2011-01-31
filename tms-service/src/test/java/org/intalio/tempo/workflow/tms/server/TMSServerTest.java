@@ -28,6 +28,9 @@ import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.task.xml.TaskTypeMapper.TaskType;
 import org.intalio.tempo.workflow.tms.AccessDeniedException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
+import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
+import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnectionFactory;
+import org.intalio.tempo.workflow.tms.server.dao.SimpleTaskDAOConnectionFactory;
 import org.intalio.tempo.workflow.util.TaskEquality;
 import org.w3c.dom.Document;
 
@@ -48,57 +51,59 @@ public class TMSServerTest extends TestCase {
         
         paTask.getUserOwners().add("test/user1");
         paTask.getRoleOwners().add("test/role3");
-        server.create(paTask, "token1");
+        ITaskDAOConnectionFactory daoFactory=new SimpleTaskDAOConnectionFactory();
+        ITaskDAOConnection dao=daoFactory.openConnection();
+        server.create(dao,paTask, "token1");
 
-        TaskEquality.areTasksEquals(paTask, server.getTask("taskID", "token1"));
-        TaskEquality.areTasksEquals(paTask, server.getTask("taskID", "token2"));
-        TaskEquality.areTasksEquals(paTask, server.getTaskList("token1")[0]);
-        TaskEquality.areTasksEquals(paTask, server.getTaskList("token2")[0]);
+        TaskEquality.areTasksEquals(paTask, server.getTask(dao,"taskID", "token1"));
+        TaskEquality.areTasksEquals(paTask, server.getTask(dao,"taskID", "token2"));
+        TaskEquality.areTasksEquals(paTask, server.getTaskList(dao,"token1")[0]);
+        TaskEquality.areTasksEquals(paTask, server.getTaskList(dao,"token2")[0]);
         try {
-            server.getTask("taskID", "token3");
+            server.getTask(dao,"taskID", "token3");
             Assert.fail("AccessDeniedException expected");
         } catch (AccessDeniedException e) {
 
         }
-        Assert.assertEquals(0, server.getTaskList("token3").length);
+        Assert.assertEquals(0, server.getTaskList(dao,"token3").length);
         
         Document newOutput1 = Utils.createXMLDocument();
-        server.setOutput("taskID", newOutput1, "token1");
-        PATask taskWithSetOutput = (PATask) server.getTask("taskID", "token2");
+        server.setOutput(dao,"taskID", newOutput1, "token1");
+        PATask taskWithSetOutput = (PATask) server.getTask(dao,"taskID", "token2");
         Assert.assertTrue(XmlTooling.equals(newOutput1, taskWithSetOutput.getOutput()));
         Assert.assertEquals(TaskState.READY, taskWithSetOutput.getState());
         
         // test reassign
         org.intalio.tempo.workflow.auth.AuthIdentifierSet newUsers = new org.intalio.tempo.workflow.auth.AuthIdentifierSet(new String[]{"test/user1", "test/user2"});
         org.intalio.tempo.workflow.auth.AuthIdentifierSet newRoles = new org.intalio.tempo.workflow.auth.AuthIdentifierSet(new String[]{"test/role2", "test/role3"});
-        server.reassign("taskID", newUsers, newRoles, TaskState.READY, "token1");
+        server.reassign(dao,"taskID", newUsers, newRoles, TaskState.READY, "token1");
 
         Document newOutput2 = Utils.createXMLDocument();
-        server.setOutputAndComplete("taskID", newOutput2, "token2");
-        PATask completedTask = (PATask) server.getTask("taskID", "token1");
+        server.setOutputAndComplete(dao,"taskID", newOutput2, "token2");
+        PATask completedTask = (PATask) server.getTask(dao,"taskID", "token1");
         Assert.assertTrue(XmlTooling.equals(newOutput2, completedTask.getOutput()));
         Assert.assertEquals(TaskState.COMPLETED, completedTask.getState());
 
         String failureCode = "failure-code";
         String failureReason = "failure reason";
-        server.fail("taskID", failureCode, failureReason, "token1");
-        PATask failedTask = (PATask) server.getTask("taskID", "token2");
+        server.fail(dao,"taskID", failureCode, failureReason, "token1");
+        PATask failedTask = (PATask) server.getTask(dao,"taskID", "token2");
         Assert.assertEquals(TaskState.FAILED, failedTask.getState());
         Assert.assertEquals(failureCode, failedTask.getFailureCode());
         Assert.assertEquals(failureReason, failedTask.getFailureReason());
 
         try {
-            server.delete(new String[] { "taskID" }, "token1");
+            server.delete(dao,new String[] { "taskID" }, "token1");
             Assert.fail("AuthException expected");
         } catch (UnavailableTaskException e) {
 
         }
 
-        server.delete(new String[] { "taskID" }, "system-user-token");
-        Assert.assertEquals(0, server.getTaskList("token1").length);
+        server.delete(dao,new String[] { "taskID" }, "system-user-token");
+        Assert.assertEquals(0, server.getTaskList(dao,"token1").length);
 
         try {
-            server.delete(new String[] { "taskID2" }, "system-user-token");
+            server.delete(dao,new String[] { "taskID2" }, "system-user-token");
             Assert.fail("Unavailable task expected");
         } catch (UnavailableTaskException e) {
 
@@ -118,12 +123,14 @@ public class TMSServerTest extends TestCase {
         Notification notification = new Notification("taskID", new URI("http://localhost/1"), Utils.createXMLDocument());
         notification.getUserOwners().add("test/user1");
         notification.getRoleOwners().add("test/role3");
-        server.create(notification, "token1");
+        ITaskDAOConnectionFactory daoFactory=new SimpleTaskDAOConnectionFactory();
+        ITaskDAOConnection dao=daoFactory.openConnection();
+        server.create(dao,notification, "token1");
         try {
             TaskMetadata metadata = TaskMetadata.Factory.newInstance();  
             metadata.setTaskId("taskID");
             metadata.setTaskType(TaskType.NOTIFICATION.name());
-            server.update(metadata, "token");
+            server.update(dao,metadata, "token");
             fail("should not be able to update a notification");
         } catch (Exception e) {
             // expected
@@ -136,7 +143,9 @@ public class TMSServerTest extends TestCase {
         metadata.setTaskId("taskID");
         metadata.setTaskType(TaskType.ACTIVITY.name());
         try {
-            server.update(metadata, "token");
+        	ITaskDAOConnectionFactory daoFactory=new SimpleTaskDAOConnectionFactory();
+            ITaskDAOConnection dao=daoFactory.openConnection();
+            server.update(dao,metadata, "token");
             fail("should not be able to update a notification");
         } catch (Exception e) {
             // expected
@@ -147,7 +156,9 @@ public class TMSServerTest extends TestCase {
         ITMSServer server = Utils.createTMSServerJPA();
         String id = ""+System.currentTimeMillis();
         PATask pa = getPATask(id);
-        server.create(pa, "token1");
+        ITaskDAOConnectionFactory daoFactory=new SimpleTaskDAOConnectionFactory();
+        ITaskDAOConnection dao=daoFactory.openConnection();
+        server.create(dao,pa, "token1");
         TaskMetadata metadata = TaskMetadata.Factory.newInstance();  
         metadata.setTaskId(id);
         
@@ -155,8 +166,9 @@ public class TMSServerTest extends TestCase {
         metadata.setDescription("desc2");
         //Date date = new Date();
         //tu.setDeadline(date);
-        server.update(metadata, "token1");
-        PATask pa2 = (PATask) server.getTask(pa.getID(), "token1");
+        
+        server.update(dao,metadata, "token1");
+        PATask pa2 = (PATask) server.getTask(dao,pa.getID(), "token1");
         Assert.assertNotNull(pa2);
         
         Assert.assertEquals(5, (int)pa2.getPriority());
@@ -169,41 +181,43 @@ public class TMSServerTest extends TestCase {
         Notification notification = new Notification("taskID", new URI("http://localhost/1"), Utils.createXMLDocument());
         notification.getUserOwners().add("test/user1");
         notification.getRoleOwners().add("test/role3");
-        server.create(notification, "token1");
+        ITaskDAOConnectionFactory daoFactory=new SimpleTaskDAOConnectionFactory();
+        ITaskDAOConnection dao=daoFactory.openConnection();
+        server.create(dao,notification, "token1");
 
-        TaskEquality.areTasksEquals(notification, server.getTask("taskID", "token1"));
-        TaskEquality.areTasksEquals(notification, server.getTask("taskID", "token2"));
-        TaskEquality.areTasksEquals(notification, server.getTaskList("token1")[0]);
-        TaskEquality.areTasksEquals(notification, server.getTaskList("token2")[0]);
+        TaskEquality.areTasksEquals(notification, server.getTask(dao,"taskID", "token1"));
+        TaskEquality.areTasksEquals(notification, server.getTask(dao,"taskID", "token2"));
+        TaskEquality.areTasksEquals(notification, server.getTaskList(dao,"token1")[0]);
+        TaskEquality.areTasksEquals(notification, server.getTaskList(dao,"token2")[0]);
         try {
-            server.getTask("taskID", "token3");
+            server.getTask(dao,"taskID", "token3");
             Assert.fail("AccessDeniedException expected");
         } catch (AccessDeniedException e) {
 
         }
-        Assert.assertEquals(0, server.getTaskList("token3").length);
+        Assert.assertEquals(0, server.getTaskList(dao,"token3").length);
 
-        server.complete("taskID", "token2");
-        Notification completedTask = (Notification) server.getTask("taskID", "token1");
+        server.complete(dao,"taskID", "token2");
+        Notification completedTask = (Notification) server.getTask(dao,"taskID", "token1");
         Assert.assertEquals(TaskState.COMPLETED, completedTask.getState());
 
         String failureCode = "failure-code";
         String failureReason = "failure reason";
-        server.fail("taskID", failureCode, failureReason, "token1");
-        Notification failedTask = (Notification) server.getTask("taskID", "token2");
+        server.fail(dao,"taskID", failureCode, failureReason, "token1");
+        Notification failedTask = (Notification) server.getTask(dao,"taskID", "token2");
         Assert.assertEquals(TaskState.FAILED, failedTask.getState());
         Assert.assertEquals(failureCode, failedTask.getFailureCode());
         Assert.assertEquals(failureReason, failedTask.getFailureReason());
 
         try {
-            server.delete(new String[] { "taskID" }, "token1");
+            server.delete(dao,new String[] { "taskID" }, "token1");
             Assert.fail("AuthException expected");
         } catch (UnavailableTaskException e) {
 
         }
 
-        server.delete(new String[] { "taskID" }, "system-user-token");
-        Assert.assertEquals(0, server.getTaskList("token1").length);
+        server.delete(dao,new String[] { "taskID" }, "system-user-token");
+        Assert.assertEquals(0, server.getTaskList(dao,"token1").length);
     }
     
 //    public void testXX() throws Exception{
