@@ -35,16 +35,19 @@ import org.intalio.tempo.workflow.tms.TMSException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
+import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnectionFactory;
 
 public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.ComponentManager {
     private static final Logger LOG = LoggerFactory.getLogger(PIPAComponentManager.class);
 
     ITMSServer _tms;
-
+    private ITaskDAOConnectionFactory _taskDAOFactory;
     private HashMap<String, HashSet<AssemblyId>> _versions = new HashMap<String, HashSet<AssemblyId>>();
 
-    public PIPAComponentManager(ITMSServer tms) {
+    public PIPAComponentManager(ITMSServer tms,ITaskDAOConnectionFactory taskDAOFactory) {
         _tms = tms;
+        _taskDAOFactory=taskDAOFactory;
     }
 
     // ------------------ ComponentManager implementation
@@ -104,21 +107,30 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
         if (set == null || set.size() < 1) {
         	// if set is equal to 1, we have one more version remaining.
         	// fix for WF-1324
-            for (String url : deployedResources) {
-                try {
-                	if(LOG.isDebugEnabled()) LOG.debug("versions>> "+_versions.toString());
-                    _tms.deletePipa(url, token);
-                } catch (UnavailableTaskException e) {
-                    LOG.warn("Undeploy - PIPA not found: " + url);
-                } catch (AuthException e) {
-                    LOG.warn("Undeploy - AuthException: " + url, e);
-                    break; // fail-fast
-                } catch (TMSException e) {
-                    LOG.warn("Undeploy - TMSException: " + url, e);
-                    break; // fail-fast
-                }
-            }
-        }
+        	ITaskDAOConnection dao=null;
+        	//ITaskDAOConnection is accessed here for fix of JIRA WF-1466
+        	try {
+        		dao=_taskDAOFactory.openConnection();
+	            for (String url : deployedResources) {
+	                try {
+	                	if(LOG.isDebugEnabled()) LOG.debug("versions>> "+_versions.toString());
+	                    _tms.deletePipa(dao,url, token);
+	                } catch (UnavailableTaskException e) {
+	                    LOG.warn("Undeploy - PIPA not found: " + url);
+	                } catch (AuthException e) {
+	                    LOG.warn("Undeploy - AuthException: " + url, e);
+	                    break; // fail-fast
+	                } catch (TMSException e) {
+	                    LOG.warn("Undeploy - TMSException: " + url, e);
+	                    break; // fail-fast
+	                }
+	            }
+        	   	}finally
+        	     {
+	        		if(dao!=null)
+	        			dao.close();
+        	     }
+          }
     }
 
     public void start(ComponentId name, File path, List<String> deployedResources, boolean active) {
@@ -202,12 +214,14 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
             urls.add(getFormUrl(task));
             if (task.isValid()) {
                 LOG.debug("Store PIPA {}", name);
+                ITaskDAOConnection dao=_taskDAOFactory.openConnection();
                 try {
-                    _tms.deletePipa(getFormUrl(task), token);
+                    _tms.deletePipa(dao,getFormUrl(task), token);
                 } catch (Exception e) {
                     // don't bother with that here
                 }
-                _tms.storePipa(task, token);
+                _tms.storePipa(dao,task, token);
+                dao.close();
             } else {
                 msg = new DeploymentMessage(Level.ERROR, "Invalid PIPA task descriptor: " + name);
                 msg.setResource(name);

@@ -17,6 +17,9 @@ import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.TaskState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
+import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnectionFactory;
+import org.intalio.tempo.workflow.tms.server.dao.SimpleTaskDAOConnectionFactory;
 
 /**
  * Use this class to test the life-cycle of Task Re-assign.
@@ -63,7 +66,9 @@ public class ReassignTaskLiveTest extends TestCase {
 
     public void testReassginLive() throws Exception {
 
-        /*
+    	ITaskDAOConnectionFactory daoFactory=new SimpleTaskDAOConnectionFactory();
+    	ITaskDAOConnection dao=daoFactory.openConnection();
+    	/*
          * Get available users
          */
         _logger.debug("Get the users from role: " + ROLE_TARGET);
@@ -74,7 +79,7 @@ public class ReassignTaskLiveTest extends TestCase {
          * Get task list of current user
          */
         _logger.debug("Get the task list from token: " + TOKEN_CURRENT);
-        Task[] tasks = tmsServer.getTaskList(TOKEN_CURRENT);
+        Task[] tasks = tmsServer.getTaskList(dao,TOKEN_CURRENT);
 
         /*
          * Select one task to re-assign
@@ -94,14 +99,14 @@ public class ReassignTaskLiveTest extends TestCase {
         /*
          * Re-assign task
          */
-        tmsServer.reassign(selectTask.getID(), targetUserSet, new AuthIdentifierSet(), TaskState.READY, "token1");
+        tmsServer.reassign(dao,selectTask.getID(), targetUserSet, new AuthIdentifierSet(), TaskState.READY, "token1");
         _logger.debug("Reassign task[" + selectTaskId + "] to " + targetUserId);
 
         /*
          * check that the task is not in the inbox of current user
          */
         boolean task_nowuser_inbox = false;
-        Task[] tasks2 = tmsServer.getTaskList(TOKEN_CURRENT);
+        Task[] tasks2 = tmsServer.getTaskList(dao,TOKEN_CURRENT);
         for (int i = 0; i < tasks2.length; i++) {
             if (selectTaskId.equalsIgnoreCase(tasks2[i].getID())) {
                 task_nowuser_inbox = true;
@@ -116,7 +121,7 @@ public class ReassignTaskLiveTest extends TestCase {
          * check that the task is not in the inbox of target user
          */
         boolean task_targetuser_inbox = false;
-        Task[] tasks3 = tmsServer.getTaskList(TOKEN_TARGET);
+        Task[] tasks3 = tmsServer.getTaskList(dao,TOKEN_TARGET);
         for (int i = 0; i < tasks3.length; i++) {
             if (selectTaskId.equalsIgnoreCase(tasks3[i].getID())) {
                 task_targetuser_inbox = true;
@@ -151,7 +156,7 @@ public class ReassignTaskLiveTest extends TestCase {
     }
 
     void initTMSRequestProcessor() throws Exception {
-        requestProcessor = new TMSRequestProcessor();
+        requestProcessor = new TMSRequestProcessor(new SimpleTaskDAOConnectionFactory());
         requestProcessor.setServer(tmsServer);
     }
 

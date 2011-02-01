@@ -51,6 +51,9 @@ import org.intalio.tempo.workflow.util.xml.OMUnmarshaller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
+import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
+import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnectionFactory;
+
 
 import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
 
@@ -61,12 +64,21 @@ public class TMSRequestProcessor extends OMUnmarshaller {
     private PIPAComponentManager _pipa;
     private DeploymentServiceRegister _registerPipa;
     private static final OMFactory OM_FACTORY = OMAbstractFactory.getOMFactory();
-
-    public TMSRequestProcessor() {
+    private ITaskDAOConnectionFactory _taskDAOFactory;
+    public TMSRequestProcessor(ITaskDAOConnectionFactory taskDAOFactory) {
         super(TaskXMLConstants.TASK_NAMESPACE, TaskXMLConstants.TASK_NAMESPACE_PREFIX);
-        _logger.debug("Created TMSRequestProcessor");
+        assert taskDAOFactory != null : "ITaskDAOConnectionFactory implementation is absent!";
+         _logger.debug("Created TMSRequestProcessor");
+         setTaskDAOFactory(taskDAOFactory);
     }
 
+      /*JIRA WF-1466 Changes have been made open the dao connection in TMSRequestProcessor
+       instead of creating and opening connections in the TMSServer */
+      public void setTaskDAOFactory(ITaskDAOConnectionFactory taskDAOFactory) {
+         this._taskDAOFactory = taskDAOFactory;
+           _logger.info("ITaskDAOConnectionFactory implementation : " + _taskDAOFactory.getClass());
+       }
+      
     // unify desctroy pipa behaviour make it easy to be covered by test.
     protected void destroyRegisterPipa() {
         if (_registerPipa != null) {
@@ -82,30 +94,38 @@ public class TMSRequestProcessor extends OMUnmarshaller {
         destroyRegisterPipa();
         _logger.debug("TMSRequestProcessor.setServer:" + server.getClass().getSimpleName());
         _server = server;
-        _pipa = new PIPAComponentManager(_server);
+        _pipa = new PIPAComponentManager(_server,_taskDAOFactory);
         _registerPipa = new DeploymentServiceRegister(_pipa);
         _registerPipa.init();
     }
 
     public OMElement getTaskList(final OMElement requestElement) throws AxisFault {
-        try {
+    	ITaskDAOConnection dao=null;
+    	try {
+    		dao=_taskDAOFactory.openConnection();
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
             String participantToken = requireElementValue(rootQueue, "participantToken");
             final UserRoles user = _server.getUserRoles(participantToken);
-            Task[] tasks = _server.getTaskList(participantToken);
+            Task[] tasks = _server.getTaskList(dao,participantToken);
             return marshalTasksList(user, tasks, "getTaskListResponse");
         } catch (Exception e) {
             throw makeFault(e);
         }
+        finally{
+        	if(dao!=null)
+        	dao.close();
+        }
     }
 
     public OMElement getTask(OMElement requestElement) throws AxisFault {
-        try {
+    	ITaskDAOConnection dao=null;
+    	try {
+    		dao=_taskDAOFactory.openConnection();
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
             String taskID = requireElementValue(rootQueue, "taskId");
             String participantToken = requireElementValue(rootQueue, "participantToken");
             final UserRoles user = _server.getUserRoles(participantToken);
-            Task task = _server.getTask(taskID, participantToken);
+            Task task = _server.getTask(dao,taskID, participantToken);
             OMElement response = new TMSResponseMarshaller(OM_FACTORY) {
                 public OMElement marshalResponse(Task task) {
                     OMElement response = createElement("getTaskResponse");
@@ -116,6 +136,10 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             return response;
         } catch (Exception e) {
             throw makeFault(e);
+        }
+        finally{
+        	if(dao!=null)
+        	dao.close();
         }
     }
 
@@ -129,7 +153,9 @@ public class TMSRequestProcessor extends OMUnmarshaller {
     }
 
     public OMElement create(OMElement requestElement) throws AxisFault {
-        try {
+    	ITaskDAOConnection dao=null;
+    	try {
+    		dao=_taskDAOFactory.openConnection();
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
             OMElement taskElement = requireElement(rootQueue, "task");
             Task task = new TaskUnmarshaller().unmarshalFullTask(taskElement);
@@ -137,28 +163,40 @@ public class TMSRequestProcessor extends OMUnmarshaller {
                 throw new InvalidInputFormatException("Not allowed to create() PIPA tasks");
             }
             String participantToken = requireElementValue(rootQueue, "participantToken");
-            _server.create(task, participantToken);
+            _server.create(dao,task, participantToken);
             return createOkResponse();
         } catch (Exception e) {
             throw makeFault(e);
+        }
+        finally{
+        	if(dao!=null)
+        	dao.close();
         }
     }
     
     public OMElement update(OMElement requestElement) throws AxisFault {
+    	ITaskDAOConnection dao=null;
     	try {
+    		dao=_taskDAOFactory.openConnection();
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
             OMElement taskElement = requireElement(rootQueue, "taskMetadata");
             TaskMetadata metadata = new TaskUnmarshaller().unmarshalPartialTask2(taskElement);
             String participantToken = requireElementValue(rootQueue, "participantToken");
-            _server.update(metadata, participantToken);
+            _server.update(dao,metadata, participantToken);
             return createOkResponse();
         } catch (Exception e) {
             throw makeFault(e);
         }
+        finally{
+        	if(dao!=null)
+        	dao.close();
+        }
     }
 
     public OMElement delete(OMElement requestElement) throws AxisFault {
-        try {
+    	ITaskDAOConnection dao=null;
+    	try {
+    		dao=_taskDAOFactory.openConnection();
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
             List<String> taskIDs = new ArrayList<String>();
             while (true) {
@@ -172,29 +210,41 @@ public class TMSRequestProcessor extends OMUnmarshaller {
                 throw new InvalidInputFormatException("At least one taskId element must be present");
             }
             String participantToken = requireElementValue(rootQueue, "participantToken");
-            _server.delete(taskIDs.toArray(new String[] {}), participantToken);
+            _server.delete(dao,taskIDs.toArray(new String[] {}), participantToken);
             return createOkResponse();
         } catch (Exception e) {
             throw makeFault(e);
         }
+        finally{
+        	if(dao!=null)
+        	dao.close();
+        }
     }
 
     public OMElement deleteAll(OMElement requestElement) throws AxisFault {
-        try {
+    	ITaskDAOConnection dao=null;
+    	try {
+    		dao=_taskDAOFactory.openConnection();
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
             String taskType = expectElementValue(rootQueue, "taskType");
             String subquery = expectElementValue(rootQueue, "subQuery");
             boolean fakeDelete = Boolean.valueOf(requireElementValue(rootQueue, "fakeDelete"));
             String participantToken = requireElementValue(rootQueue, "participantToken");
-            _server.deleteAll(fakeDelete, subquery, taskType, participantToken);
+            _server.deleteAll(dao,fakeDelete, subquery, taskType, participantToken);
             return createOkResponse();
         } catch (Exception e) {
             throw makeFault(e);
+        }
+        finally{
+        	if(dao!=null)
+        	dao.close();
         }
     }
 
     public OMElement setOutput(OMElement requestElement) throws AxisFault {
-        try {
+    	ITaskDAOConnection dao=null;
+    	try {
+    		dao=_taskDAOFactory.openConnection();
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
             String taskID = requireElementValue(rootQueue, "taskId");
             OMElement omOutputContainer = requireElement(rootQueue, "data");
@@ -203,15 +253,21 @@ public class TMSRequestProcessor extends OMUnmarshaller {
                 domOutput = new TaskUnmarshaller().unmarshalTaskOutput(omOutputContainer);
             }
             String participantToken = requireElementValue(rootQueue, "participantToken");
-            _server.setOutput(taskID, domOutput, participantToken);
+            _server.setOutput(dao,taskID, domOutput, participantToken);
             return createOkResponse();
         } catch (Exception e) {
             throw makeFault(e);
+        }
+        finally{
+        	if(dao!=null)
+        	dao.close();
         }
     }
 
     public OMElement setOutputAndComplete(OMElement requestElement) throws AxisFault {
-        try {
+    	ITaskDAOConnection dao=null;
+    	try {
+    		dao=_taskDAOFactory.openConnection();
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
             String taskID = requireElementValue(rootQueue, "taskId");
             OMElement omOutputContainer = requireElement(rootQueue, "data");
@@ -220,41 +276,59 @@ public class TMSRequestProcessor extends OMUnmarshaller {
                 domOutput = new TaskUnmarshaller().unmarshalTaskOutput(omOutputContainer);
             }
             String participantToken = requireElementValue(rootQueue, "participantToken");
-            _server.setOutputAndComplete(taskID, domOutput, participantToken);
+            _server.setOutputAndComplete(dao,taskID, domOutput, participantToken);
             return createOkResponse();
         } catch (Exception e) {
             throw makeFault(e);
+        }
+        finally{
+        	if(dao!=null)
+        	dao.close();
         }
     }
 
     public OMElement complete(OMElement requestElement) throws AxisFault {
-        try {
+    	ITaskDAOConnection dao=null;
+    	try {
+    		dao=_taskDAOFactory.openConnection();
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
             String taskID = requireElementValue(rootQueue, "taskId");
             String participantToken = requireElementValue(rootQueue, "participantToken");
-            _server.complete(taskID, participantToken);
+            _server.complete(dao,taskID, participantToken);
             return createOkResponse();
         } catch (Exception e) {
             throw makeFault(e);
         }
+        finally{
+        	if(dao!=null)
+        	dao.close();
+        }
     }
 
     public OMElement fail(OMElement requestElement) throws AxisFault {
-        try {
+    	ITaskDAOConnection dao=null;
+    	try {
+    		dao=_taskDAOFactory.openConnection();
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
             String taskID = requireElementValue(rootQueue, "taskId");
             String failureCode = requireElementValue(rootQueue, "code");
             String failureReason = requireElementValue(rootQueue, "message");
             String participantToken = requireElementValue(rootQueue, "participantToken");
-            _server.fail(taskID, failureCode, failureReason, participantToken);
+            _server.fail(dao,taskID, failureCode, failureReason, participantToken);
             return createOkResponse();
         } catch (Exception e) {
             throw makeFault(e);
         }
+        finally{
+        	if(dao!=null)
+        	dao.close();
+        }
     }
 
     public OMElement initProcess(final OMElement requestElement) throws AxisFault {
-        try {
+    	ITaskDAOConnection dao=null;
+    	try {
+    		dao=_taskDAOFactory.openConnection();
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
             String taskID = requireElementValue(rootQueue, "taskId");
             OMElement omInputContainer = requireElement(rootQueue, "input");
@@ -267,7 +341,7 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             final String user = ur.getUserID();            
             final String formUrl = expectElementValue(rootQueue, "formUrl");
 
-            Document userProcessResponse = _server.initProcess(taskID, user, formUrl, domInput, participantToken);
+            Document userProcessResponse = _server.initProcess(dao,taskID, user, formUrl, domInput, participantToken);
             if (userProcessResponse == null)
                 throw new RuntimeException("TMP did not return a correct message while calling init");
             OMElement response = new TMSResponseMarshaller(OM_FACTORY) {
@@ -282,43 +356,61 @@ public class TMSRequestProcessor extends OMUnmarshaller {
         } catch (Exception e) {
             throw makeFault(e);
         }
+        finally{
+        	if(dao!=null)
+        	dao.close();
+        }
     }
 
     public OMElement getAttachments(OMElement requestElement) throws AxisFault {
-        try {
+    	ITaskDAOConnection dao=null;
+    	try {
+    		dao=_taskDAOFactory.openConnection();
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
             String taskID = requireElementValue(rootQueue, "taskId");
             String participantToken = requireElementValue(rootQueue, "participantToken");
-            Attachment[] attachments = _server.getAttachments(taskID, participantToken);
+            Attachment[] attachments = _server.getAttachments(dao,taskID, participantToken);
 
             return AttachmentMarshaller.marshalAttachments(attachments);
         } catch (Exception e) {
             throw makeFault(e);
         }
+        finally{
+        	if(dao!=null)
+        	dao.close();
+        }
     }
 
     public OMElement addAttachment(OMElement requestElement) throws AxisFault {
-        try {
+    	ITaskDAOConnection dao=null;
+    	try {
+    		dao=_taskDAOFactory.openConnection();
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
             String taskID = requireElementValue(rootQueue, "taskId");
             OMElement attachmentElement = requireElement(rootQueue, "attachment");
             Attachment attachment = new AttachmentUnmarshaller().unmarshalAttachment(attachmentElement);
             String participantToken = requireElementValue(rootQueue, "participantToken");
-            _server.addAttachment(taskID, attachment, participantToken);
+            _server.addAttachment(dao,taskID, attachment, participantToken);
             return createOkResponse();
         } catch (Exception e) {
             throw makeFault(e);
         }
+        finally{
+        	if(dao!=null)
+        	dao.close();
+        }
     }
 
     public OMElement removeAttachment(OMElement requestElement) throws AxisFault {
-        try {
+    	ITaskDAOConnection dao=null;
+    	try {
+    		dao=_taskDAOFactory.openConnection();
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
             String taskID = requireElementValue(rootQueue, "taskId");
             String attachmentURL = requireElementValue(rootQueue, "attachmentUrl");
             String participantToken = requireElementValue(rootQueue, "participantToken");
             try {
-                _server.removeAttachment(taskID, new URL(attachmentURL), participantToken);
+                _server.removeAttachment(dao,taskID, new URL(attachmentURL), participantToken);
             } catch (MalformedURLException e) {
                 throw new InvalidInputFormatException(e);
             }
@@ -326,10 +418,16 @@ public class TMSRequestProcessor extends OMUnmarshaller {
         } catch (Exception e) {
             throw makeFault(e);
         }
+        finally{
+        	if(dao!=null)
+        	dao.close();
+        }
     }
 
     public OMElement reassign(OMElement requestElement) throws AxisFault {
-        try {
+    		ITaskDAOConnection dao=null;
+    		try {
+    		dao=_taskDAOFactory.openConnection();
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
             String taskID = requireElementValue(rootQueue, "taskId");
             AuthIdentifierSet users = expectAuthIdentifiers(rootQueue, "userOwner");
@@ -342,20 +440,27 @@ public class TMSRequestProcessor extends OMUnmarshaller {
                 throw new InvalidInputFormatException("Unknown task state: '" + taskStateStr + "'");
             }
             String participantToken = requireElementValue(rootQueue, "participantToken");
-            _server.reassign(taskID, users, roles, taskState, participantToken);
+            _server.reassign(dao,taskID, users, roles, taskState, participantToken);
             return createOkResponse();
         } catch (Exception e) {
             throw makeFault(e);
         }
+        finally{
+        	if(dao!=null)
+        	dao.close();
+        }
+        
     }
 
     public OMElement getPipa(OMElement requestElement) throws AxisFault {
-        try {
+    	 ITaskDAOConnection dao=null;
+     	try {
+     		dao=_taskDAOFactory.openConnection();
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
             String taskID = requireElementValue(rootQueue, "pipaurl");
             String participantToken = requireElementValue(rootQueue, "participantToken");
             final UserRoles user = _server.getUserRoles(participantToken);
-            Task task = _server.getPipa(taskID, participantToken);
+            Task task = _server.getPipa(dao,taskID, participantToken);
             OMElement response = new TMSResponseMarshaller(OM_FACTORY) {
                 public OMElement marshalResponse(Task task) {
                     OMElement response = createElement("getPipaResponse");
@@ -367,37 +472,55 @@ public class TMSRequestProcessor extends OMUnmarshaller {
         } catch (Exception e) {
             throw makeFault(e);
         }
+        finally{
+        	if(dao!=null)
+        	dao.close();
+        }
     }
 
     public OMElement storePipa(OMElement requestElement) throws AxisFault {
-        try {
+	   	 ITaskDAOConnection dao=null;
+	   	 try {
+	  		dao=_taskDAOFactory.openConnection();
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
             OMElement taskElement = requireElement(rootQueue, "task");
             PIPATask task = (PIPATask) new TaskUnmarshaller().unmarshalFullTask(taskElement);
             String participantToken = requireElementValue(rootQueue, "participantToken");
             // final UserRoles user = _server.getUserRoles(participantToken);
-            _server.storePipa(task, participantToken);
+            _server.storePipa(dao,task, participantToken);
             return createOkResponse();
         } catch (Exception e) {
             throw makeFault(e);
+        }
+        finally{
+        	if(dao!=null)
+        	dao.close();
         }
     }
 
     public OMElement deletePipa(OMElement requestElement) throws AxisFault {
-        try {
+    	ITaskDAOConnection dao=null;
+    	try {
+    		dao=_taskDAOFactory.openConnection();
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
             String taskID = requireElementValue(rootQueue, "pipaurl");
             String participantToken = requireElementValue(rootQueue, "participantToken");
             // final UserRoles user = _server.getUserRoles(participantToken);
-            _server.deletePipa(taskID, participantToken);
+            _server.deletePipa(dao,taskID, participantToken);
             return createOkResponse();
         } catch (Exception e) {
             throw makeFault(e);
         }
+        finally{
+        	if(dao!=null)
+        	dao.close();
+        }
     }
 
     public OMElement getAvailableTasks(final OMElement requestElement) throws AxisFault {
+    	ITaskDAOConnection dao=null;
         try {
+        	dao=_taskDAOFactory.openConnection();
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
             String participantToken = requireElementValue(rootQueue, "participantToken");
             String taskType = requireElementValue(rootQueue, "taskType");
@@ -410,15 +533,22 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             map.put(TaskFetcher.FETCH_FIRST, first);
             map.put(TaskFetcher.FETCH_MAX, max);
             final UserRoles user = _server.getUserRoles(participantToken);
-            Task[] tasks = _server.getAvailableTasks(participantToken, map);
+            Task[] tasks = _server.getAvailableTasks(dao,participantToken, map);
             return marshalTasksList(user, tasks, "getAvailableTasksResponse");
         } catch (Exception e) {
             throw makeFault(e);
         }
+        finally{
+        	if(dao!=null)
+        	dao.close();
+        }
+        
     }
     
     public OMElement countAvailableTasks(final OMElement requestElement) throws AxisFault {
+    	ITaskDAOConnection dao=null;
         try {
+        	dao=_taskDAOFactory.openConnection();
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
             String participantToken = requireElementValue(rootQueue, "participantToken");
             String taskType = requireElementValue(rootQueue, "taskType");
@@ -429,7 +559,7 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             map.put(TaskFetcher.FETCH_CLASS_NAME, taskType);
             map.put(TaskFetcher.FETCH_SUB_QUERY, subQuery);
             final UserRoles user = _server.getUserRoles(participantToken);
-            final Long taskCount = _server.countAvailableTasks(participantToken, map);
+            final Long taskCount = _server.countAvailableTasks(dao,participantToken, map);
             return new TMSResponseMarshaller(OM_FACTORY) {
                 public OMElement createOkResponse() {
                     OMElement response = createElement("countAvailableTasksResponse");
@@ -439,6 +569,10 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             }.createOkResponse();
         } catch (Exception e) {
             throw makeFault(e);
+        }
+        finally{
+        	if(dao!=null)
+        	dao.close();
         }
     }
 
@@ -500,14 +634,20 @@ public class TMSRequestProcessor extends OMUnmarshaller {
     }
 
     public OMElement skip(OMElement requestElement) throws AxisFault {
-        try {
+    	ITaskDAOConnection dao=null;
+    	try {
+    		dao=_taskDAOFactory.openConnection();
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
             String taskID = requireElementValue(rootQueue, "taskId");
             String participantToken = requireElementValue(rootQueue, "participantToken");
-            _server.skip(taskID, participantToken);
+            _server.skip(dao,taskID, participantToken);
             return createOkResponse();
         } catch (Exception e) {
             throw makeFault(e);
+        }
+        finally{
+        	if(dao!=null)
+        	dao.close();
         }
     }
 

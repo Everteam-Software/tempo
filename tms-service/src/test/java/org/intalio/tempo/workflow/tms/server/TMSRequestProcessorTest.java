@@ -32,6 +32,10 @@ import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.intalio.tempo.workflow.task.TaskState;
+import org.intalio.tempo.workflow.tms.server.dao.JPATaskDaoConnectionFactory;
+import org.intalio.tempo.workflow.tms.server.dao.SimpleTaskDAOConnection;
+import org.intalio.tempo.workflow.tms.server.dao.SimpleTaskDAOConnectionFactory;
+
 
 public class TMSRequestProcessorTest extends TestCase {
 
@@ -39,14 +43,14 @@ public class TMSRequestProcessorTest extends TestCase {
 
   private TMSRequestProcessor createRequestProcessor() throws Exception {
     ITMSServer server = Utils.createTMSServer();
-    TMSRequestProcessor proc = new TMSRequestProcessor();
+    TMSRequestProcessor proc = new TMSRequestProcessor(new SimpleTaskDAOConnectionFactory());
     proc.setServer(server);
     return proc;
   }
 
   private TMSRequestProcessor createRequestProcessorJPA() throws Exception {
     ITMSServer server = Utils.createTMSServerJPA();
-    TMSRequestProcessor proc = new TMSRequestProcessor();
+    TMSRequestProcessor proc = new TMSRequestProcessor(new JPATaskDaoConnectionFactory());
     proc.setServer(server);
     return proc;
   }

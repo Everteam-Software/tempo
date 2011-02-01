@@ -85,12 +85,12 @@ public class Utils {
     }
 
     public static ITMSServer createTMSServer() throws Exception {
-        return new TMSServer(getMeASimpleAuthProvider(), new SimpleTaskDAOConnectionFactory(), getMeADefaultPermissionHandler());
+        return new TMSServer(getMeASimpleAuthProvider(),  getMeADefaultPermissionHandler());
     }
 
 
     public static ITMSServer createTMSServerJPA() throws Exception {
-        return new TMSServer(getMeASimpleAuthProvider(), new JPATaskDaoConnectionFactory(), getMeADefaultPermissionHandler()){
+        return new TMSServer(getMeASimpleAuthProvider(),  getMeADefaultPermissionHandler()){
             protected ServiceClient getServiceClient() throws AxisFault{           
                 return new MockServiceClient();
             };
@@ -98,7 +98,7 @@ public class Utils {
     }
 
     public static ITMSServer createMockTMSServerJPA() throws Exception {
-        return new TMSServer(getMeASimpleAuthProvider(), Mocker.mock(JPATaskDaoConnectionFactory.class), getMeADefaultPermissionHandler()){
+        return new TMSServer(getMeASimpleAuthProvider(), getMeADefaultPermissionHandler()){
             protected ServiceClient getServiceClient()throws AxisFault{           
                 return new MockServiceClient();
             };
