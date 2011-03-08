@@ -57,6 +57,14 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
         checkTransactionIsActive();
         entityManager.persist(task);
     }
+    
+    public boolean deleteTaskfromInstanceID(String instanceid) throws UnavailableTaskException {
+        Task pat=(Task)_fetcher.fetchTaskIfExistsfrominstanceID(instanceid);
+        checkTransactionIsActive();
+        entityManager.remove(pat);
+        return true;
+    }
+    
 
     public void deletePipaTask(String formUrl) {
         try {

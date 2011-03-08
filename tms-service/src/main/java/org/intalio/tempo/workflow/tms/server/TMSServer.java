@@ -63,6 +63,15 @@ public class TMSServer implements ITMSServer {
     private IAuthProvider _authProvider;
     private TaskPermissions _permissions;
     private int _httpTimeout = 10000;
+    private static String _secretTokenforODE;
+
+    public static String getsecretTokenforODE() {
+        return _secretTokenforODE;
+    }
+
+    public  void setsecretTokenforODE(String secretTokenforODE) {
+      _secretTokenforODE = secretTokenforODE;
+    }
 
     public TMSServer() {
     }
@@ -232,6 +241,51 @@ public class TMSServer implements ITMSServer {
         }
     }
 
+    public void deletefrominstance(ITaskDAOConnection dao,String[] instanceids, String participantToken) throws AuthException, UnavailableTaskException {
+        HashMap<String, Exception> problemTasks = new HashMap<String, Exception>();
+       if (_secretTokenforODE!=null && _secretTokenforODE!="" && participantToken.equals(_secretTokenforODE))
+        {
+            try{
+            for(String instanceid: instanceids)
+            {
+            dao.deleteTaskfromInstanceID(instanceid);
+            dao.commit();
+            }
+            }
+            catch(Exception e)
+            {
+                //The exceptions are swallowed here because the instanceIds are not there for every task.(XFormTasks)
+                
+            }
+        }
+        else
+        {
+            UserRoles credentials = _authProvider.authenticate(participantToken);
+            String userID = credentials.getUserID(); 
+            if (_permissions.isAuthrorized(TaskPermissions.ACTION_DELETE, credentials)){
+                
+                for(String instanceid: instanceids)
+                {
+                try{
+                dao.deleteTaskfromInstanceID(instanceid);
+                dao.commit();
+                }catch (Exception e) {
+                    _logger.error("Cannot retrieve Workflow Tasks with InstanceId", e);
+                    problemTasks.put(instanceid, e);
+                }
+                }
+            }
+            else {
+                throw new UnavailableTaskException(userID + " cannot delete Workflow Tasks: with instanceId " );
+            }
+           if (problemTasks.size() > 0) {
+                throw new UnavailableTaskException(userID + " cannot delete Workflow Tasks: with instanceId " + problemTasks.keySet());
+            }
+        }
+               
+      
+    }
+    
     public void create(ITaskDAOConnection dao,Task task, String participantToken) throws AuthException, TaskIDConflictException {
         // UserRoles credentials =
         // _authProvider.authenticate(participantToken);// FIXME: decide on this

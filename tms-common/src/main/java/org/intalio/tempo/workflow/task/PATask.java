@@ -61,13 +61,15 @@ import org.w3c.dom.Document;
 @Table(name = "tempo_pa")
 @PrimaryKeyJoinColumn(name="ID", referencedColumnName="ID")
 @NamedQueries( {
-        @NamedQuery(name = PATask.FIND_BY_STATES, query = "select m from PATask m where m._state=?1", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") })})
+        @NamedQuery(name = PATask.FIND_BY_STATES, query = "select m from PATask m where m._state=?1", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }),
+        @NamedQuery(name= PATask.FIND_BY_INSTANCEID, query= "select m from PATask m where m._instanceId= ?1")})
 public class PATask extends Task implements ITaskWithState, IProcessBoundTask, ITaskWithInput, ITaskWithOutput,
         ICompleteReportingTask, ITaskWithAttachments, IChainableTask, ITaskWithPriority, ITaskWithDeadline ,IInstanceBoundTask{
 
     public static final String FIND_BY_STATES = "find_by_ps_states";
     public static final String FIND_BY_PA_USER_ROLE = "find_by_pa_user_role";
     public static final String FIND_BY_PA_USER_ROLE_GENERIC = "find_by_pa_user_role_generic";
+    public static final String FIND_BY_INSTANCEID="find_by_pa_instanceid";
 
     
     @Persistent
@@ -332,5 +334,8 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
 	public void setInstanceId(String instanceId) {
 		_instanceId=instanceId;
 	}
+	
+
+
 
 }

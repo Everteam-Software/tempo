@@ -36,4 +36,18 @@ public class TaskPermissions {
             return true;
         return false;
     }
+    
+    public boolean isAuthrorized(String action,UserRoles credentials){
+        if (!_permissions.containsKey(action))
+            return false;
+        Set<String> roles = _permissions.get(action);
+        LOG.info("Checking for action:"+action+" on credentials:"+credentials.toString()+" where allowed roles are:"+roles);
+        if (roles.contains(credentials.getUserID()))
+            return true;
+        if (CollectionUtils.containsAny(roles, credentials.getAssignedRoles()))
+            return true;
+        return false;
+        
+        
+    }
 }

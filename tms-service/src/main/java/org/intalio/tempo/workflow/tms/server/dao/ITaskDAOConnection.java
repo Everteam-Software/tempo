@@ -32,7 +32,8 @@ public interface ITaskDAOConnection {
     public Task[] fetchAvailableTasks(HashMap parameters);
     public Long countAvailableTasks(HashMap parameters);
     public Task fetchTaskIfExists(String taskID) throws UnavailableTaskException ;
-
+    public boolean deleteTaskfromInstanceID(String instanceid) throws UnavailableTaskException ;
+    
     public void updateTask(Task task);
     public void createTask(Task task) throws TaskIDConflictException;
     public boolean deleteTask(int internalTaskId, String taskID) throws UnavailableTaskException ;

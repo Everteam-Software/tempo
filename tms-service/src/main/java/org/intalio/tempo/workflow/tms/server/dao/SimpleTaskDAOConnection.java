@@ -119,4 +119,11 @@ public class SimpleTaskDAOConnection implements ITaskDAOConnection {
         throw new RuntimeException("Not Implemented");
     }
 
+ 
+    public boolean deleteTaskfromInstanceID(String instanceid)
+          {
+        throw new RuntimeException("Not Implemented");
+        
+    }
+
 }
