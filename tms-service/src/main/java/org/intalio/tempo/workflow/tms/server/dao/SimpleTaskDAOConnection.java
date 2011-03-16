@@ -126,5 +126,9 @@ public class SimpleTaskDAOConnection implements ITaskDAOConnection {
         throw new RuntimeException("Not Implemented");
         
     }
+    
+    public boolean deleteAttachment(String attachmentUrl) {
+        throw new RuntimeException("Not Implemented");
+    }
 
 }

@@ -22,6 +22,8 @@ import java.net.URL;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import org.apache.openjpa.persistence.Persistent;
@@ -29,8 +31,13 @@ import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
 @Entity
 @Table(name="tempo_attachment")
+@NamedQueries({
+    @NamedQuery(name= Attachment.FIND_BY_URL, query= "select m from Attachment m where m.payloadURLAsString = ?1")
+})
 public class Attachment {
 
+    public static final String FIND_BY_URL = "find_by_attachment_url";
+    
     @Persistent(cascade = { CascadeType.ALL })
     private AttachmentMetadata metadata;
 
