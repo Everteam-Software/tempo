@@ -12,6 +12,7 @@ import javax.persistence.Query;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.intalio.tempo.workflow.auth.UserRoles;
+import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
@@ -71,6 +72,21 @@ public class TaskFetcher {
 			throw new UnavailableTaskException("Task does not exist" + taskID);
 		}
 	}
+	
+	   public List<Task> fetchTaskIfExistsfrominstanceID(String instanceid)
+       throws UnavailableTaskException {
+	       try {
+       Query q = _entityManager.createNamedQuery(PATask.FIND_BY_INSTANCEID);
+       q.setParameter(1, instanceid);
+       List<Task> resultList = q.getResultList();
+       if (resultList.size() < 1)
+           throw new UnavailableTaskException("Task does not exist with InstanceID"
+                   + instanceid);
+       return  resultList;
+	       } catch (NoResultException nre) {
+       throw new UnavailableTaskException("Task does not exist" + instanceid);
+   }
+}
 
 	public int deleteTasksWithID(String taskID) {
 		Query q = _entityManager.createQuery(DELETE_ALL_TASK_WITH_ID);

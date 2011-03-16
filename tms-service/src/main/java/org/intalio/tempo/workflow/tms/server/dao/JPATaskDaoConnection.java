@@ -10,6 +10,7 @@
 package org.intalio.tempo.workflow.tms.server.dao;
 
 import java.util.HashMap;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -20,6 +21,7 @@ import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
+import org.intalio.tempo.workflow.util.jpa.AttachmentFetcher;
 import org.intalio.tempo.workflow.util.jpa.TaskFetcher;
 
 /**
@@ -28,10 +30,12 @@ import org.intalio.tempo.workflow.util.jpa.TaskFetcher;
 public class JPATaskDaoConnection extends AbstractJPAConnection implements ITaskDAOConnection {
 
     private TaskFetcher _fetcher;
+    private AttachmentFetcher _attachmentFetcher;
 
     public JPATaskDaoConnection(EntityManager createEntityManager) {
         super(createEntityManager);
         _fetcher = new TaskFetcher(createEntityManager);
+        _attachmentFetcher = new AttachmentFetcher( createEntityManager );
     }
 
     public void createTask(Task task) throws TaskIDConflictException {
@@ -57,6 +61,12 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
         checkTransactionIsActive();
         entityManager.persist(task);
     }
+    
+    public List<Task> fetchTaskfromInstanceID(String instanceid) throws UnavailableTaskException {
+        List<Task> pat=_fetcher.fetchTaskIfExistsfrominstanceID(instanceid);
+        return pat;
+    }
+    
 
     public void deletePipaTask(String formUrl) {
         try {
@@ -66,6 +76,13 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
         } catch (Exception nre) {
             throw new NoResultException(nre.getMessage());
         }
+    }
+    
+    //Fix for WF-1479
+    public boolean deleteAttachment(String attachmentUrl){
+        checkTransactionIsActive();
+        entityManager.remove(_attachmentFetcher.fetchAttachmentIfExists(attachmentUrl));
+        return true;
     }
 
     public void storePipaTask(PIPATask task) {

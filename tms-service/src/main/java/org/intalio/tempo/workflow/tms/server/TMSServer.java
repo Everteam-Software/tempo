@@ -16,7 +16,10 @@
 package org.intalio.tempo.workflow.tms.server;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
@@ -63,7 +66,9 @@ public class TMSServer implements ITMSServer {
     private IAuthProvider _authProvider;
     private TaskPermissions _permissions;
     private int _httpTimeout = 10000;
-
+    private String _tasEndPoint;
+    private static final String _tas_NameSpace= "http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/";
+   
     public TMSServer() {
     }
 
@@ -89,6 +94,14 @@ public class TMSServer implements ITMSServer {
     public void setAuthProvider(IAuthProvider authProvider) {
         this._authProvider = authProvider;
         _logger.info("IAuthProvider implementation : " + _authProvider.getClass());
+    }
+    
+    public void setTasEndPoint(String tasEndPoint) {
+        this._tasEndPoint = tasEndPoint;
+    }
+
+    public String getTasEndPoint() {
+        return _tasEndPoint;
     }
 
       public Task[] getTaskList(ITaskDAOConnection dao,String participantToken) throws AuthException {
@@ -215,6 +228,17 @@ public class TMSServer implements ITMSServer {
             try {
                 Task task = dao.fetchTaskIfExists(taskID);
                 if (_permissions.isAuthorized(TaskPermissions.ACTION_DELETE, task, credentials)) {
+                    if (task instanceof ITaskWithAttachments) {
+                        ITaskWithAttachments taskWithAttachments = (ITaskWithAttachments) task;
+                        Collection<Attachment> attachments = taskWithAttachments
+                                .getAttachments();
+                        for (Attachment attachment : attachments) {
+                            if(!isAttachmentRelatedToOtherTask(attachment,(PATask)task, dao)){
+                                deleteAttachmentTas(participantToken, attachment
+                                        .getPayloadURL().toExternalForm());
+                            }
+                        }
+                    }
                     dao.deleteTask(task.getInternalId(), taskID);
                     dao.commit();
                     if (_logger.isDebugEnabled())
@@ -232,6 +256,105 @@ public class TMSServer implements ITMSServer {
         }
     }
 
+    /**
+     * Checks if the currentAttachment is being used by any other tasks. WF-1477 fix.
+     */
+    private boolean isAttachmentRelatedToOtherTask(Attachment currentAttachment, PATask currentTask, ITaskDAOConnection dao){
+        
+        String instanceId = currentTask.getInstanceId();
+        String currentAttachmentURL = currentAttachment.getPayloadURL().toExternalForm();
+        
+        if(instanceId == null ){
+            return false;
+        }
+        
+        try {           
+            List<Task> taskList = dao.fetchTaskfromInstanceID(instanceId);
+            for(Task task : taskList ){
+                if(task instanceof ITaskWithAttachments && !task.getID().equals(currentTask.getID())){
+                    ITaskWithAttachments taskWithAttachments = (ITaskWithAttachments) task;
+                    Collection<Attachment> attachments = taskWithAttachments.getAttachments();
+                    for(Attachment attachment : attachments){
+                        if(attachment.getPayloadURL().toExternalForm().equals(currentAttachment.getPayloadURL().toExternalForm())){
+                            return true;    
+                        }
+                    }
+                }
+            }
+            
+        } catch (UnavailableTaskException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Deletes attachment from the TEMPO_ITEM table through TAS delete operation. WF-1477 fix.
+     */
+    private void deleteAttachmentTas(String participantToken, String payloadURL) throws AxisFault {
+        OMFactory omFactory = OMAbstractFactory.getOMFactory();
+
+        OMNamespace omNamespaceTas = omFactory.createOMNamespace(
+                _tas_NameSpace, "tas");
+        OMElement deleteRequest = omFactory.createOMElement("deleteRequest",
+                omNamespaceTas);
+        OMElement authCredentials = omFactory.createOMElement(
+                "authCredentials", omNamespaceTas, deleteRequest);
+        OMElement participantTokenOM = omFactory.createOMElement(
+                "participantToken", omNamespaceTas, authCredentials);
+        participantTokenOM.setText(participantToken);
+        OMElement attachmentUrlOM = omFactory.createOMElement("attachmentURL",
+                omNamespaceTas, deleteRequest);
+        attachmentUrlOM.setText(payloadURL);
+
+        Options options = new Options();
+        EndpointReference endpointReference = new EndpointReference(
+                _tasEndPoint);
+        options.setTo(endpointReference);
+
+        options.setAction("delete");
+        
+        if (_logger.isDebugEnabled()) {
+            _logger.debug("Request to TAS:\n" + deleteRequest.toString());
+        }
+        
+        ServiceClient client = getServiceClient();
+        client.setOptions(options);
+
+        try {
+            options.setTimeOutInMilliSeconds(_httpTimeout);
+            OMElement response = client.sendReceive(deleteRequest);
+
+        }catch (Exception e) {
+            _logger.error("Error while sending deleteRequest:" + e.getClass(), e);
+            throw AxisFault.makeFault(e);
+        }
+    }
+    
+    public void deletefrominstance(ITaskDAOConnection dao,String instanceid, String participantToken) throws AuthException, UnavailableTaskException,AccessDeniedException {
+        
+        UserRoles credentials = _authProvider.authenticate(participantToken);  
+        String userID=credentials.getUserID();
+        if (!_permissions.isAuthroized(TaskPermissions.ACTION_DELETE,  credentials))
+        {
+            throw new AccessDeniedException("The user"+userID+"does not have delete permission");
+        }
+            
+        List<Task> taskInstanceId = new ArrayList<Task>();
+            taskInstanceId = dao.fetchTaskfromInstanceID(instanceid);
+            //Exceptions are not logged as the call will be from ODEEventListener and for some tasks instanceid is not there
+            if (taskInstanceId != null && taskInstanceId.size() > 0) {
+                String[] taskIds = new String[taskInstanceId.size()];
+                for (int count = 0; count < taskInstanceId.size(); count++) {
+                    taskIds[count] = taskInstanceId.get(count).getID();
+                }
+                delete(dao, taskIds, participantToken); //Delete is called so that tempo_item fix for delete task also works here
+            }
+       }
+              
+    
     public void create(ITaskDAOConnection dao,Task task, String participantToken) throws AuthException, TaskIDConflictException {
         // UserRoles credentials =
         // _authProvider.authenticate(participantToken);// FIXME: decide on this
@@ -382,7 +505,10 @@ public class TMSServer implements ITMSServer {
         if (_logger.isDebugEnabled())
             _logger.debug(credentials.getUserID() + " has added attachment " + attachment + "to Workflow Task " + task);
     }
-
+    
+    /**
+     * deletes from attachment_map, attachment, attachment_metadata tables. WF-1479 fix.
+     * */
     public void removeAttachment(ITaskDAOConnection dao,String taskID, URL attachmentURL, String participantToken) throws AuthException,
             UnavailableAttachmentException, UnavailableTaskException {
 
@@ -396,10 +522,13 @@ public class TMSServer implements ITMSServer {
             availableTask = task instanceof ITaskWithAttachments && task.isAvailableTo(credentials);
             if (availableTask) {
                 ITaskWithAttachments taskWithAttachments = (ITaskWithAttachments) task;
+              //removes from the attachment_map table
                 Attachment removedAttachment = taskWithAttachments.removeAttachment(attachmentURL);
                 availableAttachment = (removedAttachment != null);
                 if (availableAttachment) {
                     dao.updateTask(task);
+                  //deletes from the attachment and attachment_metadata tables
+                    dao.deleteAttachment(attachmentURL.toExternalForm());
                     dao.commit();
                     if (_logger.isDebugEnabled())
                         _logger.debug(credentials.getUserID() + " has removed attachment " + attachmentURL
@@ -578,4 +707,6 @@ public class TMSServer implements ITMSServer {
             throw new UnavailableTaskException(credentials.getUserID() + " cannot skip Workflow Task " + task);
         }
     }
+
+
 }
