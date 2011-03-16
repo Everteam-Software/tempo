@@ -16,7 +16,9 @@
 package org.intalio.tempo.workflow.tms.server;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
@@ -63,16 +65,7 @@ public class TMSServer implements ITMSServer {
     private IAuthProvider _authProvider;
     private TaskPermissions _permissions;
     private int _httpTimeout = 10000;
-    private static String _secretTokenforODE;
-
-    public static String getsecretTokenforODE() {
-        return _secretTokenforODE;
-    }
-
-    public  void setsecretTokenforODE(String secretTokenforODE) {
-      _secretTokenforODE = secretTokenforODE;
-    }
-
+   
     public TMSServer() {
     }
 
@@ -241,50 +234,28 @@ public class TMSServer implements ITMSServer {
         }
     }
 
-    public void deletefrominstance(ITaskDAOConnection dao,String[] instanceids, String participantToken) throws AuthException, UnavailableTaskException {
-        HashMap<String, Exception> problemTasks = new HashMap<String, Exception>();
-       if (_secretTokenforODE!=null && _secretTokenforODE!="" && participantToken.equals(_secretTokenforODE))
+    
+    public void deletefrominstance(ITaskDAOConnection dao,String instanceid, String participantToken) throws AuthException, UnavailableTaskException,AccessDeniedException {
+        
+        UserRoles credentials = _authProvider.authenticate(participantToken);  
+        String userID=credentials.getUserID();
+        if (!_permissions.isAuthroized(TaskPermissions.ACTION_DELETE,  credentials))
         {
-            try{
-            for(String instanceid: instanceids)
-            {
-            dao.deleteTaskfromInstanceID(instanceid);
-            dao.commit();
-            }
-            }
-            catch(Exception e)
-            {
-                //The exceptions are swallowed here because the instanceIds are not there for every task.(XFormTasks)
-                
-            }
+            throw new AccessDeniedException("The user"+userID+"does not have delete permission");
         }
-        else
-        {
-            UserRoles credentials = _authProvider.authenticate(participantToken);
-            String userID = credentials.getUserID(); 
-            if (_permissions.isAuthrorized(TaskPermissions.ACTION_DELETE, credentials)){
-                
-                for(String instanceid: instanceids)
-                {
-                try{
-                dao.deleteTaskfromInstanceID(instanceid);
-                dao.commit();
-                }catch (Exception e) {
-                    _logger.error("Cannot retrieve Workflow Tasks with InstanceId", e);
-                    problemTasks.put(instanceid, e);
+            
+        List<Task> taskInstanceId = new ArrayList<Task>();
+            taskInstanceId = dao.fetchTaskfromInstanceID(instanceid);
+            //Exceptions are not logged as the call will be from ODEEventListener and for some tasks instanceid is not there
+            if (taskInstanceId != null && taskInstanceId.size() > 0) {
+                String[] taskIds = new String[taskInstanceId.size()];
+                for (int count = 0; count < taskInstanceId.size(); count++) {
+                    taskIds[count] = taskInstanceId.get(count).getID();
                 }
-                }
+                delete(dao, taskIds, participantToken); //Delete is called so that tempo_item fix for delete task also works here
             }
-            else {
-                throw new UnavailableTaskException(userID + " cannot delete Workflow Tasks: with instanceId " );
-            }
-           if (problemTasks.size() > 0) {
-                throw new UnavailableTaskException(userID + " cannot delete Workflow Tasks: with instanceId " + problemTasks.keySet());
-            }
-        }
-               
-      
-    }
+       }
+              
     
     public void create(ITaskDAOConnection dao,Task task, String participantToken) throws AuthException, TaskIDConflictException {
         // UserRoles credentials =

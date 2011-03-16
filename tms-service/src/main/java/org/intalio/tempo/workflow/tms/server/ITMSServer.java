@@ -68,7 +68,7 @@ public interface ITMSServer {
 
     void delete(ITaskDAOConnection dao,String[] taskIDs, String participantToken) throws TMSException;
     
-    void deletefrominstance(ITaskDAOConnection dao,String[] taskIDs, String participantToken) throws TMSException;
+    void deletefrominstance(ITaskDAOConnection dao,String instanceId, String participantToken) throws TMSException;
 
     void create(ITaskDAOConnection dao,Task task, String participantToken) throws TMSException;
     

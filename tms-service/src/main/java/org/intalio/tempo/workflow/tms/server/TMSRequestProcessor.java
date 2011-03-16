@@ -226,19 +226,13 @@ public class TMSRequestProcessor extends OMUnmarshaller {
         try {
             dao=_taskDAOFactory.openConnection();
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
-            List<String> instanceIDs = new ArrayList<String>();
-            while (true) {
-                String instanceid = expectElementValue(rootQueue, "instanceid");
-                if (instanceid != null)
-                    instanceIDs.add(instanceid);
-                else
-                    break;
-            }
-            if (instanceIDs.isEmpty()) {
-                throw new InvalidInputFormatException("At least one instanceid element must be present");
-            }
+            String instanceid = expectElementValue(rootQueue, "instanceid");
+             if (instanceid == null || "".equals(instanceid))
+             {     
+                    throw new InvalidInputFormatException("At least one instanceid element must be present");
+             }
             String participantToken = requireElementValue(rootQueue, "participantToken");
-            _server.deletefrominstance(dao,instanceIDs.toArray(new String[] {}), participantToken);
+            _server.deletefrominstance(dao,instanceid, participantToken);
             return createOkResponse();
         } catch (Exception e) {
             throw makeFault(e);

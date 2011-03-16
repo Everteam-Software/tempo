@@ -37,7 +37,7 @@ public class TaskPermissions {
         return false;
     }
     
-    public boolean isAuthrorized(String action,UserRoles credentials){
+    public boolean isAuthroized(String action,UserRoles credentials){
         if (!_permissions.containsKey(action))
             return false;
         Set<String> roles = _permissions.get(action);

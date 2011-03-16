@@ -73,16 +73,16 @@ public class TaskFetcher {
 		}
 	}
 	
-	   public Task fetchTaskIfExistsfrominstanceID(String instanceid)
+	   public List<Task> fetchTaskIfExistsfrominstanceID(String instanceid)
        throws UnavailableTaskException {
 	       try {
        Query q = _entityManager.createNamedQuery(PATask.FIND_BY_INSTANCEID);
        q.setParameter(1, instanceid);
-       List resultList = q.getResultList();
+       List<Task> resultList = q.getResultList();
        if (resultList.size() < 1)
            throw new UnavailableTaskException("Task does not exist with InstanceID"
                    + instanceid);
-       return (Task) resultList.get(0);
+       return  resultList;
 	       } catch (NoResultException nre) {
        throw new UnavailableTaskException("Task does not exist" + instanceid);
    }

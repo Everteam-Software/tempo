@@ -17,6 +17,7 @@ package org.intalio.tempo.workflow.tms.server.dao;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.intalio.tempo.workflow.auth.UserRoles;
@@ -120,7 +121,7 @@ public class SimpleTaskDAOConnection implements ITaskDAOConnection {
     }
 
  
-    public boolean deleteTaskfromInstanceID(String instanceid)
+    public List<Task> fetchTaskfromInstanceID(String instanceid)
           {
         throw new RuntimeException("Not Implemented");
         

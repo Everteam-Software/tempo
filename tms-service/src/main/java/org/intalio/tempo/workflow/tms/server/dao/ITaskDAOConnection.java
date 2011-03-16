@@ -16,6 +16,7 @@
 package org.intalio.tempo.workflow.tms.server.dao;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.PIPATask;
@@ -32,7 +33,7 @@ public interface ITaskDAOConnection {
     public Task[] fetchAvailableTasks(HashMap parameters);
     public Long countAvailableTasks(HashMap parameters);
     public Task fetchTaskIfExists(String taskID) throws UnavailableTaskException ;
-    public boolean deleteTaskfromInstanceID(String instanceid) throws UnavailableTaskException ;
+    public List<Task> fetchTaskfromInstanceID(String instanceid) throws UnavailableTaskException ;
     
     public void updateTask(Task task);
     public void createTask(Task task) throws TaskIDConflictException;

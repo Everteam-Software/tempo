@@ -100,7 +100,7 @@
 			<xsd:element name="deletefrominstanceRequest">
                 <xsd:complexType>
                     <xsd:sequence>
-                        <xsd:element maxOccurs="unbounded" name="instanceid" type="xsd:string"/>
+                        <xsd:element name="instanceid" type="xsd:string"/>
                         <xsd:element name="participantToken" type="xsd:string"/>
                     </xsd:sequence>
                 </xsd:complexType>
@@ -618,7 +618,9 @@
             <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:deleteinvalidParticipantTokenFault"/>
             <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:deleteinvalidInputMessageFault"/>
             <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:deleteunavailableTaskFault"/>
-        </wsdl:operation>
+			<wsdl:fault message="tns:accessDeniedFault" name="accessDeniedFault" wsaw:Action="urn:deleteaccessDeniedFault"/>
+		</wsdl:operation>
+		
         <wsdl:operation name="fail">
             <wsdl:input message="tns:failRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/fail"/>
             <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/failResponse"/>

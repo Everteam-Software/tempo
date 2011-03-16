@@ -10,6 +10,7 @@
 package org.intalio.tempo.workflow.tms.server.dao;
 
 import java.util.HashMap;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -58,11 +59,9 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
         entityManager.persist(task);
     }
     
-    public boolean deleteTaskfromInstanceID(String instanceid) throws UnavailableTaskException {
-        Task pat=(Task)_fetcher.fetchTaskIfExistsfrominstanceID(instanceid);
-        checkTransactionIsActive();
-        entityManager.remove(pat);
-        return true;
+    public List<Task> fetchTaskfromInstanceID(String instanceid) throws UnavailableTaskException {
+        List<Task> pat=_fetcher.fetchTaskIfExistsfrominstanceID(instanceid);
+        return pat;
     }
     
 
