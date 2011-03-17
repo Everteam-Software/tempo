@@ -22,6 +22,7 @@ import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
+import org.intalio.tempo.workflow.tms.UnavailableAttachmentException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 
 public interface ITaskDAOConnection {
@@ -38,7 +39,7 @@ public interface ITaskDAOConnection {
     public void updateTask(Task task);
     public void createTask(Task task) throws TaskIDConflictException;
     public boolean deleteTask(int internalTaskId, String taskID) throws UnavailableTaskException ;
-    public boolean deleteAttachment(String attachmentUrl);
+    public boolean deleteAttachment(String attachmentUrl) throws UnavailableAttachmentException;
     
     public void storePipaTask(PIPATask task);
     public void deletePipaTask(String formUrl);
