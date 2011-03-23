@@ -20,6 +20,7 @@ import org.intalio.tempo.workflow.dao.AbstractJPAConnection;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
+import org.intalio.tempo.workflow.tms.UnavailableAttachmentException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.intalio.tempo.workflow.util.jpa.AttachmentFetcher;
 import org.intalio.tempo.workflow.util.jpa.TaskFetcher;
@@ -79,7 +80,7 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
     }
     
     //Fix for WF-1479
-    public boolean deleteAttachment(String attachmentUrl){
+    public boolean deleteAttachment(String attachmentUrl) throws UnavailableAttachmentException{
         checkTransactionIsActive();
         entityManager.remove(_attachmentFetcher.fetchAttachmentIfExists(attachmentUrl));
         return true;

@@ -67,7 +67,7 @@ public class TMSServer implements ITMSServer {
     private TaskPermissions _permissions;
     private int _httpTimeout = 120000;
     private String _tasEndPoint;
-    private static final String _tas_NameSpace= "http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/";
+    private static final String TAS_NS= "http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/";
    
     public TMSServer() {
     }
@@ -228,7 +228,7 @@ public class TMSServer implements ITMSServer {
             try {
                 Task task = dao.fetchTaskIfExists(taskID);
                 if (_permissions.isAuthorized(TaskPermissions.ACTION_DELETE, task, credentials)) {
-                    if (task instanceof ITaskWithAttachments) {
+                    if (task instanceof ITaskWithAttachments && task instanceof PATask) {
                         ITaskWithAttachments taskWithAttachments = (ITaskWithAttachments) task;
                         Collection<Attachment> attachments = taskWithAttachments
                                 .getAttachments();
@@ -258,8 +258,9 @@ public class TMSServer implements ITMSServer {
 
     /**
      * Checks if the currentAttachment is being used by any other tasks. WF-1477 fix.
+     * @throws UnavailableTaskException 
      */
-    private boolean isAttachmentRelatedToOtherTask(Attachment currentAttachment, PATask currentTask, ITaskDAOConnection dao){
+    private boolean isAttachmentRelatedToOtherTask(Attachment currentAttachment, PATask currentTask, ITaskDAOConnection dao) throws UnavailableTaskException{
         
         String instanceId = currentTask.getInstanceId();
         String currentAttachmentURL = currentAttachment.getPayloadURL().toExternalForm();
@@ -267,26 +268,19 @@ public class TMSServer implements ITMSServer {
         if(instanceId == null ){
             return false;
         }
-        
-        try {           
-            List<Task> taskList = dao.fetchTaskfromInstanceID(instanceId);
-            for(Task task : taskList ){
-                if(task instanceof ITaskWithAttachments && !task.getID().equals(currentTask.getID())){
-                    ITaskWithAttachments taskWithAttachments = (ITaskWithAttachments) task;
-                    Collection<Attachment> attachments = taskWithAttachments.getAttachments();
-                    for(Attachment attachment : attachments){
-                        if(attachment.getPayloadURL().toExternalForm().equals(currentAttachment.getPayloadURL().toExternalForm())){
-                            return true;    
-                        }
+                          
+        List<Task> taskList = dao.fetchTaskfromInstanceID(instanceId);
+        for(Task task : taskList ){
+            if(task instanceof ITaskWithAttachments && !task.getID().equals(currentTask.getID())){
+                ITaskWithAttachments taskWithAttachments = (ITaskWithAttachments) task;
+                Collection<Attachment> attachments = taskWithAttachments.getAttachments();
+                for(Attachment attachment : attachments){
+                    if(attachment.getPayloadURL().toExternalForm().equals(currentAttachmentURL)){
+                        return true;    
                     }
                 }
             }
-            
-        } catch (UnavailableTaskException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        
+        }       
         return false;
     }
     
@@ -297,7 +291,7 @@ public class TMSServer implements ITMSServer {
         OMFactory omFactory = OMAbstractFactory.getOMFactory();
 
         OMNamespace omNamespaceTas = omFactory.createOMNamespace(
-                _tas_NameSpace, "tas");
+                TAS_NS, "tas");
         OMElement deleteRequest = omFactory.createOMElement("deleteRequest",
                 omNamespaceTas);
         OMElement authCredentials = omFactory.createOMElement(
@@ -326,14 +320,16 @@ public class TMSServer implements ITMSServer {
         try {
             options.setTimeOutInMilliSeconds(_httpTimeout);
             OMElement response = client.sendReceive(deleteRequest);
-
+            if (_logger.isDebugEnabled()) {
+                _logger.debug("Response from TAS:\n" + response.toString());
+            }
         }catch (Exception e) {
             _logger.error("Error while sending deleteRequest:" + e.getClass(), e);
             throw AxisFault.makeFault(e);
         }
     }
     
-    public void deletefrominstance(ITaskDAOConnection dao,String instanceid, String participantToken) throws AuthException, UnavailableTaskException,AccessDeniedException {
+    public void manageFromInstance(ITaskDAOConnection dao,String instanceid, String participantToken,boolean delete,TaskState state) throws AuthException, UnavailableTaskException,AccessDeniedException {
         
         UserRoles credentials = _authProvider.authenticate(participantToken);  
         String userID=credentials.getUserID();
@@ -341,20 +337,37 @@ public class TMSServer implements ITMSServer {
         {
             throw new AccessDeniedException("The user"+userID+"does not have delete permission");
         }
-            
-        List<Task> taskInstanceId = new ArrayList<Task>();
-            taskInstanceId = dao.fetchTaskfromInstanceID(instanceid);
-            //Exceptions are not logged as the call will be from ODEEventListener and for some tasks instanceid is not there
-            if (taskInstanceId != null && taskInstanceId.size() > 0) {
-                String[] taskIds = new String[taskInstanceId.size()];
-                for (int count = 0; count < taskInstanceId.size(); count++) {
-                    taskIds[count] = taskInstanceId.get(count).getID();
+        
+        if(delete){
+            List<Task> taskInstanceId = new ArrayList<Task>();
+                taskInstanceId = dao.fetchTaskfromInstanceID(instanceid);
+                //Exceptions are not logged as the call will be from ODEEventListener and for some tasks instanceid is not there
+                if (taskInstanceId != null && taskInstanceId.size() > 0) {
+                    String[] taskIds = new String[taskInstanceId.size()];
+                    for (int count = 0; count < taskInstanceId.size(); count++) {
+                        taskIds[count] = taskInstanceId.get(count).getID();
+                    }
+                    delete(dao, taskIds, participantToken); //Delete is called so that tempo_item fix for delete task also works here
                 }
-                delete(dao, taskIds, participantToken); //Delete is called so that tempo_item fix for delete task also works here
+           }
+        else{
+            List<Task> taskInstanceId = new ArrayList<Task>();
+            taskInstanceId = dao.fetchTaskfromInstanceID(instanceid);
+            if(taskInstanceId!=null && taskInstanceId.size()>0){
+                for(int count=0;count <taskInstanceId.size();count++)
+                {
+                    if (taskInstanceId.get(count) instanceof ITaskWithState)
+                    {
+                        ITaskWithState taskWithState= (ITaskWithState)taskInstanceId.get(count);
+                        taskWithState.setState(state);
+                        dao.updateTask(taskInstanceId.get(count));
+                        dao.commit();
+                    }
+                }
             }
-       }
-              
-    
+        }
+    }       
+        
     public void create(ITaskDAOConnection dao,Task task, String participantToken) throws AuthException, TaskIDConflictException {
         // UserRoles credentials =
         // _authProvider.authenticate(participantToken);// FIXME: decide on this

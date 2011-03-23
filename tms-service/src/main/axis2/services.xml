@@ -65,9 +65,9 @@
             <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/delete</actionMapping>
         </operation>
        
-        <operation name="deletefrominstance">
+        <operation name="manageFromInstance">
             <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
-            <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/deletefrominstance</actionMapping>
+            <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/manageFromInstance</actionMapping>
         </operation>
         
         <operation name="create">
