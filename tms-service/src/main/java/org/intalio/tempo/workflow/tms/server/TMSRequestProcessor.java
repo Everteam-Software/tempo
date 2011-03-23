@@ -221,7 +221,7 @@ public class TMSRequestProcessor extends OMUnmarshaller {
         }
     }
     
-    public OMElement deletefrominstance(OMElement requestElement) throws AxisFault {
+    public OMElement manageFromInstance(OMElement requestElement) throws AxisFault {
         ITaskDAOConnection dao=null;
         try {
             dao=_taskDAOFactory.openConnection();
@@ -231,8 +231,27 @@ public class TMSRequestProcessor extends OMUnmarshaller {
              {     
                     throw new InvalidInputFormatException("At least one instanceid element must be present");
              }
+            boolean delete=Boolean.valueOf(requireElementValue(rootQueue, "delete"));
             String participantToken = requireElementValue(rootQueue, "participantToken");
-            _server.deletefrominstance(dao,instanceid, participantToken);
+            TaskState taskState=null;
+            String taskStateStr = expectElementValue(rootQueue, "taskState");
+            if(taskStateStr!=null){
+               try {
+                   taskState = TaskState.valueOf(taskStateStr.toUpperCase());
+               } catch (IllegalArgumentException e) {
+                   throw new InvalidInputFormatException("Unknown task state: '" + taskStateStr + "'");
+               }
+            }
+           
+            if(taskStateStr!=null && delete)
+            {
+                throw new InvalidInputFormatException("Cannot delete the tasks and update the task state at same time");
+            }
+            if (!delete && taskStateStr==null)
+            {
+                throw new InvalidInputFormatException("No delete or update taskState action specified");
+            }
+            _server.manageFromInstance(dao,instanceid, participantToken,delete,taskState);
             return createOkResponse();
         } catch (Exception e) {
             throw makeFault(e);

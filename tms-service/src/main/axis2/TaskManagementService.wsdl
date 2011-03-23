@@ -97,12 +97,14 @@
                 </xsd:complexType>
             </xsd:element>
 			
-			<xsd:element name="deletefrominstanceRequest">
+			<xsd:element name="manageFromInstanceRequest">
                 <xsd:complexType>
                     <xsd:sequence>
                         <xsd:element name="instanceid" type="xsd:string"/>
+						<xsd:element  name="delete" type="xsd:boolean"/>
                         <xsd:element name="participantToken" type="xsd:string"/>
-                    </xsd:sequence>
+						<xsd:element  minOccurs="0" maxOccurs="1" name="taskState" type="xsd:string"/>
+					</xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
 				
@@ -464,8 +466,8 @@
     <wsdl:message name="deleteRequest">
         <wsdl:part name="deleteRequest" element="tns:deleteRequest"/>
     </wsdl:message>
-	<wsdl:message name="deletefrominstanceRequest">
-        <wsdl:part name="deletefrominstance" element="tns:deletefrominstanceRequest"/>
+	<wsdl:message name="manageFromInstanceRequest">
+        <wsdl:part name="manageFromInstance" element="tns:manageFromInstanceRequest"/>
     </wsdl:message>
 
     <wsdl:message name="failRequest">
@@ -612,9 +614,9 @@
             <wsdl:fault message="tns:accessDeniedFault" name="accessDeniedFault" wsaw:Action="urn:deleteaccessDeniedFault"/>
         </wsdl:operation>
 		
-		<wsdl:operation name="deletefrominstance">
-            <wsdl:input message="tns:deletefrominstanceRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/deletefrominstance"/>
-            <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/deletefrominstanceResponse"/>
+		<wsdl:operation name="manageFromInstance">
+            <wsdl:input message="tns:manageFromInstanceRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/manageFromInstance"/>
+            <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/manageFromInstanceResponse"/>
             <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:deleteinvalidParticipantTokenFault"/>
             <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:deleteinvalidInputMessageFault"/>
             <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:deleteunavailableTaskFault"/>
@@ -990,8 +992,8 @@
             </wsdl:fault>
         </wsdl:operation>
 		
-		<wsdl:operation name="deletefrominstance">
-            <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/deletefrominstance" style="document"/>
+		<wsdl:operation name="manageFromInstance">
+            <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/manageFromInstance" style="document"/>
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>

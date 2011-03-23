@@ -329,7 +329,7 @@ public class TMSServer implements ITMSServer {
         }
     }
     
-    public void deletefrominstance(ITaskDAOConnection dao,String instanceid, String participantToken) throws AuthException, UnavailableTaskException,AccessDeniedException {
+    public void manageFromInstance(ITaskDAOConnection dao,String instanceid, String participantToken,boolean delete,TaskState state) throws AuthException, UnavailableTaskException,AccessDeniedException {
         
         UserRoles credentials = _authProvider.authenticate(participantToken);  
         String userID=credentials.getUserID();
@@ -337,20 +337,37 @@ public class TMSServer implements ITMSServer {
         {
             throw new AccessDeniedException("The user"+userID+"does not have delete permission");
         }
-            
-        List<Task> taskInstanceId = new ArrayList<Task>();
-            taskInstanceId = dao.fetchTaskfromInstanceID(instanceid);
-            //Exceptions are not logged as the call will be from ODEEventListener and for some tasks instanceid is not there
-            if (taskInstanceId != null && taskInstanceId.size() > 0) {
-                String[] taskIds = new String[taskInstanceId.size()];
-                for (int count = 0; count < taskInstanceId.size(); count++) {
-                    taskIds[count] = taskInstanceId.get(count).getID();
+        
+        if(delete){
+            List<Task> taskInstanceId = new ArrayList<Task>();
+                taskInstanceId = dao.fetchTaskfromInstanceID(instanceid);
+                //Exceptions are not logged as the call will be from ODEEventListener and for some tasks instanceid is not there
+                if (taskInstanceId != null && taskInstanceId.size() > 0) {
+                    String[] taskIds = new String[taskInstanceId.size()];
+                    for (int count = 0; count < taskInstanceId.size(); count++) {
+                        taskIds[count] = taskInstanceId.get(count).getID();
+                    }
+                    delete(dao, taskIds, participantToken); //Delete is called so that tempo_item fix for delete task also works here
                 }
-                delete(dao, taskIds, participantToken); //Delete is called so that tempo_item fix for delete task also works here
+           }
+        else{
+            List<Task> taskInstanceId = new ArrayList<Task>();
+            taskInstanceId = dao.fetchTaskfromInstanceID(instanceid);
+            if(taskInstanceId!=null && taskInstanceId.size()>0){
+                for(int count=0;count <taskInstanceId.size();count++)
+                {
+                    if (taskInstanceId.get(count) instanceof ITaskWithState)
+                    {
+                        ITaskWithState taskWithState= (ITaskWithState)taskInstanceId.get(count);
+                        taskWithState.setState(state);
+                        dao.updateTask(taskInstanceId.get(count));
+                        dao.commit();
+                    }
+                }
             }
-       }
-              
-    
+        }
+    }       
+        
     public void create(ITaskDAOConnection dao,Task task, String participantToken) throws AuthException, TaskIDConflictException {
         // UserRoles credentials =
         // _authProvider.authenticate(participantToken);// FIXME: decide on this
