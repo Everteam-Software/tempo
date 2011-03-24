@@ -326,8 +326,8 @@
             var task = $('a.taskd',$(this));
             var soapBody     = new SOAPObject("update");
             soapBody.ns      = "http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/";
-            var taskEl = soapBody.appendChild(new SOAPObject("task"));
-            var metaEl = taskEl.appendChild(new SOAPObject("metadata"));
+            //var taskEl = soapBody.appendChild(new SOAPObject("task"));
+            var metaEl = soapBody.appendChild(new SOAPObject("taskMetadata"));
             metaEl.appendChild(new SOAPObject("taskId")).val(task.attr('tid'));
             metaEl.appendChild(new SOAPObject("description")).val($('#up_description').val());
             metaEl.appendChild(new SOAPObject("priority")).val($('#up_priority').val());
@@ -483,7 +483,7 @@
           Update: function() {updateTask(com,grid); $(this).dialog('close');},
           Cancel: function() {$(this).dialog('close');}
         },
-        close: function() {}
+        close: function() {location.reload(true);} //updated line fix for WF-1460
       });
       $("#updateDialog").dialog('open');
     }        
