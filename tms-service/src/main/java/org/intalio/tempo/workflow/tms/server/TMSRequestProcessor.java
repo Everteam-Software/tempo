@@ -235,7 +235,7 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             String participantToken = requireElementValue(rootQueue, "participantToken");
             TaskState taskState=null;
             String taskStateStr = expectElementValue(rootQueue, "taskState");
-            if(taskStateStr!=null){
+            if(taskStateStr!=null && !"".equals(taskStateStr)){
                try {
                    taskState = TaskState.valueOf(taskStateStr.toUpperCase());
                } catch (IllegalArgumentException e) {
@@ -243,11 +243,11 @@ public class TMSRequestProcessor extends OMUnmarshaller {
                }
             }
            
-            if(taskStateStr!=null && delete)
+            if(taskState!=null && delete)
             {
                 throw new InvalidInputFormatException("Cannot delete the tasks and update the task state at same time");
             }
-            if (!delete && taskStateStr==null)
+            if (!delete && taskState==null)
             {
                 throw new InvalidInputFormatException("No delete or update taskState action specified");
             }
