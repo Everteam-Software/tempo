@@ -104,6 +104,7 @@
 						<xsd:element  name="delete" type="xsd:boolean"/>
                         <xsd:element name="participantToken" type="xsd:string"/>
 						<xsd:element  minOccurs="0" maxOccurs="1" name="taskState" type="xsd:string"/>
+						<xsd:element  name="throwFaultIfNoTask" type="xsd:boolean"/>
 					</xsd:sequence>
                 </xsd:complexType>
             </xsd:element>

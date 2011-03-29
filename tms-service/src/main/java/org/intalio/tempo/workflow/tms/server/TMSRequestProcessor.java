@@ -223,6 +223,7 @@ public class TMSRequestProcessor extends OMUnmarshaller {
     
     public OMElement manageFromInstance(OMElement requestElement) throws AxisFault {
         ITaskDAOConnection dao=null;
+        boolean throwFaultIfNoTask=true;
         try {
             dao=_taskDAOFactory.openConnection();
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
@@ -251,9 +252,23 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             {
                 throw new InvalidInputFormatException("No delete or update taskState action specified");
             }
+            //Throw Fault IF No Task is added because every instance may not have tasks associated with them.
+            //The call is made from ODEEventListener so no exception should be logged for no tasks from instanceId
+            //The call can be made using SOAP UI hence providing this option to user if he wants to get 
+            //fault for no tasks associated with instance id
+            throwFaultIfNoTask=Boolean.valueOf(requireElementValue(rootQueue, "throwFaultIfNoTask"));
             _server.manageFromInstance(dao,instanceid, participantToken,delete,taskState);
             return createOkResponse();
-        } catch (Exception e) {
+        }
+       catch(UnavailableTaskException e){
+             if(throwFaultIfNoTask){
+                 throw makeFault(e);
+             }
+             else{
+                 return createOkResponse();
+             }
+        }
+         catch (Exception e) {
             throw makeFault(e);
         }
         finally{
