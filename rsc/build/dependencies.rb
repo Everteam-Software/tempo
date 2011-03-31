@@ -176,7 +176,7 @@ APACHE_ABDERA = [
 HTTPCORE = "org.apache.httpcomponents:httpcore:jar:4.0"
 
 AXIS2 = [
-  group("axis2-transport-http", "axis2-transport-local", "axis2-kernel", "axis2-adb", "axis2-xmlbeans", "axis2-json", :under=>"org.apache.axis2", :version=>"1.5"),
+  group("axis2-transport-http", "axis2-transport-local", "axis2-kernel", "axis2-adb", "axis2-xmlbeans", "axis2-json", :under=>"org.apache.axis2", :version=>"1.5.4"),
   "org.apache.axis2:axis2-transports:jar:1.0-i1",
   "org.apache.axis2:axis2-jaxws-api:jar:1.2",
   group("woden-api", "woden-impl-dom", :under=>"org.apache.woden", :version=>"1.0M8"),
