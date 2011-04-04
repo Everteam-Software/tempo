@@ -5,4 +5,5 @@ derby.log
 .project
 .metadata
 .DS_Store
+*.patch
 **/.DS_Store
