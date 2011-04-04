@@ -35,11 +35,21 @@
 		</map></constructor-arg>
 	</bean>
 
-	<bean id="tms.authProvider" class="org.intalio.tempo.workflow.auth.n3.N3AuthProvider">
+	<!-- <bean id="tms.authProvider" class="org.intalio.tempo.workflow.auth.n3.N3AuthProvider">
 		<property name="wsEndpoint">
 			<value>http://localhost:8080/axis2/services/TokenService</value>
 		</property>
+	</bean> -->
+	
+	<import resource="securityConfig.xml"/>
+	<bean id="tms.authProvider" class="org.intalio.tempo.workflow.auth.LocalAuthProvider">
+		<property name="tokenService">
+			<ref bean="tokenService"/>
+		</property>
+		
 	</bean>
+	
+	
 	<bean id="tms.daoFactory" class="org.intalio.tempo.workflow.tms.server.dao.JPATaskDaoConnectionFactory">
 		<constructor-arg>
 			<map>
