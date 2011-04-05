@@ -88,8 +88,8 @@ define "tempo" do
   
   desc "Task Management Service Client"
   define "tms-client" do
-    compile.with projects("tms-axis", "tms-common"), 
-      APACHE_JPA, AXIOM, AXIS2, SLF4J, STAX_API, WSDL4J, WS_COMMONS_SCHEMA, XMLBEANS
+    compile.with projects("tms-axis", "tms-common","tms-service"), 
+      APACHE_JPA, AXIOM, AXIS2, SLF4J, STAX_API, WSDL4J, WS_COMMONS_SCHEMA, XMLBEANS,SPRING[:core]
 
     test.with APACHE_COMMONS[:pool], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], LOG4J, WOODSTOX, SUNMAIL, SECURITY_WS_CLIENT, FREEMARKER
 
@@ -107,7 +107,7 @@ define "tempo" do
   
   desc "Task Management Service"
   define "tms-service" do
-    libs = projects("tms-axis", "tms-common", "tms-client", "dao-nutsNbolts"),
+    libs = projects("tms-axis", "tms-common", "dao-nutsNbolts"),
      APACHE_JPA, APACHE_COMMONS[:pool], AXIOM, AXIS2, JAXEN, SLF4J, SPRING[:core], STAX_API, XMLBEANS, DB_CONNECTOR.values, DEPLOY_API, SECURITY_WS_CLIENT_ONLY, WEB_NUTSNBOLTS
   
     compile.with libs
@@ -134,7 +134,7 @@ define "tempo" do
   
   desc "User-Interface Framework"
   define "ui-fw" do
-    libs = projects("tms-axis", "tms-client", "tms-common"),
+    libs = projects("tms-axis", "tms-client", "tms-common","dao-nutsNbolts","tms-service"),
            SECURITY_WS_CLIENT,
            WEB_NUTSNBOLTS,
            APACHE_ABDERA,

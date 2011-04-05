@@ -468,7 +468,7 @@
         <wsdl:part name="deleteRequest" element="tns:deleteRequest"/>
     </wsdl:message>
 	<wsdl:message name="manageFromInstanceRequest">
-        <wsdl:part name="manageFromInstance" element="tns:manageFromInstanceRequest"/>
+        <wsdl:part name="manageFromInstanceRequest" element="tns:manageFromInstanceRequest"/>
     </wsdl:message>
 
     <wsdl:message name="failRequest">
@@ -618,10 +618,10 @@
 		<wsdl:operation name="manageFromInstance">
             <wsdl:input message="tns:manageFromInstanceRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/manageFromInstance"/>
             <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/manageFromInstanceResponse"/>
-            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:deleteinvalidParticipantTokenFault"/>
-            <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:deleteinvalidInputMessageFault"/>
-            <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:deleteunavailableTaskFault"/>
-			<wsdl:fault message="tns:accessDeniedFault" name="accessDeniedFault" wsaw:Action="urn:deleteaccessDeniedFault"/>
+            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:manageFromInstanceinvalidParticipantTokenFault"/>
+            <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:manageFromInstanceinvalidInputMessageFault"/>
+            <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:manageFromInstanceunavailableTaskFault"/>
+			<wsdl:fault message="tns:accessDeniedFault" name="accessDeniedFault" wsaw:Action="urn:manageFromInstanceaccessDeniedFault"/>
 		</wsdl:operation>
 		
         <wsdl:operation name="fail">
@@ -1001,6 +1001,9 @@
             <wsdl:output>
                 <soap:body use="literal"/>
             </wsdl:output>
+			 <wsdl:fault name="accessDeniedFault">
+                <soap:fault use="literal" name="accessDeniedFault"/>
+            </wsdl:fault>
             <wsdl:fault name="invalidInputMessageFault">
                 <soap:fault use="literal" name="invalidInputMessageFault"/>
             </wsdl:fault>
