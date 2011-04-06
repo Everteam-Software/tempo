@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
-import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.InvalidTaskException;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
@@ -17,6 +16,7 @@ import org.intalio.tempo.workflow.tms.TaskIDConflictException;
 import org.intalio.tempo.workflow.tms.UnavailableAttachmentException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.intalio.tempo.workflow.tms.server.TMSServer;
+import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnectionFactory;
 import org.intalio.tempo.workflow.util.jpa.TaskFetcher;
 import org.w3c.dom.Document;
@@ -67,11 +67,12 @@ public class LocalTMSClient implements ITaskManagementService{
 		HashMap map = new HashMap();
 		map.put(TaskFetcher.FETCH_CLASS_NAME, taskType);
 		map.put(TaskFetcher.FETCH_SUB_QUERY, subQuery);
+		ITaskDAOConnection connection = taskDAOFactory.openConnection();
 		try {
-			count = server.countAvailableTasks(taskDAOFactory.openConnection(),
+			count = server.countAvailableTasks(connection,
 					this.participantToken, map);
 		} finally {
-			taskDAOFactory.openConnection().close();
+			connection.close();
 		}
 		return count;
 	}
@@ -126,12 +127,13 @@ public class LocalTMSClient implements ITaskManagementService{
 		map.put(TaskFetcher.FETCH_SUB_QUERY, subQuery);
 		map.put(TaskFetcher.FETCH_FIRST, first);
 		map.put(TaskFetcher.FETCH_MAX, max);
-		final UserRoles user = server.getUserRoles(participantToken);
+		//final UserRoles user = server.getUserRoles(participantToken);
+		ITaskDAOConnection connection = taskDAOFactory.openConnection();
 		try {
-			tasks = server.getAvailableTasks(taskDAOFactory.openConnection(),
+			tasks = server.getAvailableTasks(connection,
 					participantToken, map);
 		} finally {
-			taskDAOFactory.openConnection().close();
+			connection.close();
 		}
 		return tasks;
 	}
@@ -153,11 +155,12 @@ public class LocalTMSClient implements ITaskManagementService{
 	 */
 	public Task[] getTaskList() throws AuthException {
 		Task[] tasks;
+		ITaskDAOConnection connection = taskDAOFactory.openConnection();
 		try {
-			tasks = server.getTaskList(taskDAOFactory.openConnection(),
+			tasks = server.getTaskList(connection,
 					participantToken);
 		} finally {
-			taskDAOFactory.openConnection().close();
+			connection.close();
 		}
 		return tasks;
 	}
