@@ -229,8 +229,11 @@ public abstract class Task extends BaseRestrictedEntity {
     }
 
     @Override
-    public String toString() {
-        return "Workflow Task " + _id;
-    }
+	public String toString() {
+		return "Task [_actionACLs=" + _actionACLs + ", _creationDate="
+				+ _creationDate + ", _description=" + _description
+				+ ", _formURL=" + _formURL + ", _id=" + _id + ", _internalId="
+				+ _internalId + "]";
+	}
 
 }

@@ -5,11 +5,13 @@ import java.util.HashMap;
 
 import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
+import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.InvalidTaskException;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.TaskState;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
+import org.intalio.tempo.workflow.tms.AccessDeniedException;
 import org.intalio.tempo.workflow.tms.ITaskManagementService;
 import org.intalio.tempo.workflow.tms.InvalidTaskStateException;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
@@ -19,14 +21,16 @@ import org.intalio.tempo.workflow.tms.server.TMSServer;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnectionFactory;
 import org.intalio.tempo.workflow.util.jpa.TaskFetcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
-public class LocalTMSClient implements ITaskManagementService{
-
+public class LocalTMSClient implements ITaskManagementService {
+	final static Logger logger = LoggerFactory.getLogger(LocalTMSClient.class);
 	private String participantToken;
 	private ITaskDAOConnectionFactory taskDAOFactory;
-	private TMSServer server ;
- 
+	private TMSServer server;
+
 	public TMSServer getServer() {
 		return server;
 	}
@@ -45,78 +49,115 @@ public class LocalTMSClient implements ITaskManagementService{
 
 	public void addAttachment(String taskID, Attachment attachment)
 			throws AuthException, UnavailableTaskException {
-		// TODO Auto-generated method stub
-		
+		ITaskDAOConnection dao = null;
+		try {
+			dao = taskDAOFactory.openConnection();
+			server.addAttachment(dao, taskID, attachment, participantToken);
+		} catch (AccessDeniedException e) {
+			logger.error("Error while adding attachment ", e);
+		} finally {
+			if (dao != null)
+				dao.close();
+		}
+
 	}
 
 	public void close() {
-		// TODO Auto-generated method stub
-		
+
+		logger.error("Calling LocalTMSClient :: close ");
+
 	}
 
 	public void complete(String taskID) throws AuthException,
 			UnavailableTaskException, InvalidTaskStateException {
-		// TODO Auto-generated method stub
-		
+
+		logger.error("Calling LocalTMSClient :: complete ");
+
 	}
 
 	public Long countAvailableTasks(String taskType, String subQuery)
 			throws AuthException {
 		long count = 0;
-		 
+
 		HashMap map = new HashMap();
 		map.put(TaskFetcher.FETCH_CLASS_NAME, taskType);
 		map.put(TaskFetcher.FETCH_SUB_QUERY, subQuery);
-		ITaskDAOConnection connection = taskDAOFactory.openConnection();
+		ITaskDAOConnection dao = taskDAOFactory.openConnection();
 		try {
-			count = server.countAvailableTasks(connection,
-					this.participantToken, map);
+			count = server.countAvailableTasks(dao, this.participantToken, map);
 		} finally {
-			connection.close();
+			if (dao != null) 
+				dao.close();
 		}
 		return count;
 	}
 
 	public void create(Task task) throws AuthException, TaskIDConflictException {
-		// TODO Auto-generated method stub
-		
+
+		logger.error("Calling LocalTMSClient :: fail ");
+
 	}
 
 	public void delete(String[] taskIDs) throws AuthException,
 			UnavailableTaskException {
-		// TODO Auto-generated method stub
-		
+		logger.error("Calling LocalTMSClient :: fail ");
+
 	}
 
 	public void deleteAll(String fakeDelete, String subQuery, String taskType)
 			throws AuthException, UnavailableTaskException {
-		// TODO Auto-generated method stub
-		
+		logger.error("Calling LocalTMSClient :: fail ");
+
 	}
 
 	public void deletePipa(String formUrl) throws AuthException,
 			UnavailableTaskException {
-		// TODO Auto-generated method stub
-		
+		logger.error("Calling LocalTMSClient :: fail ");
+
 	}
 
 	public void fail(String taskID, String failureCode, String failureReason)
 			throws AuthException, UnavailableTaskException,
 			InvalidTaskStateException {
-		// TODO Auto-generated method stub
-		
+
+		logger.error("Calling LocalTMSClient :: fail ");
+
 	}
 
 	public Attachment[] getAttachments(String taskID) throws AuthException,
 			UnavailableTaskException {
-		// TODO Auto-generated method stub
-		return null;
+		logger.debug("Working on getting attachments .....");
+		ITaskDAOConnection dao = null;
+		Attachment[] attachments = null;
+		try {
+			dao = this.taskDAOFactory.openConnection();
+			attachments = this.server.getAttachments(dao, taskID,
+					participantToken);
+		} catch (AccessDeniedException e) {
+			logger.error("Cannot get Attachment for taskID" + taskID);
+		} finally {
+			if (dao != null)
+				dao.close();
+		}
+		return attachments;
 	}
 
 	public Task[] getAvailableTasks(String taskType, String subQuery)
 			throws AuthException {
-		// TODO Auto-generated method stub
-		return null;
+		ITaskDAOConnection dao = taskDAOFactory.openConnection();
+		Task[] tasks = null;
+		try {
+			final UserRoles user = server.getUserRoles(participantToken);
+			tasks = server.getAvailableTasks(dao, participantToken, taskType,
+					subQuery);
+		} catch (Exception e) {
+			logger.error("Cannot get getAvailableTasks" + taskType + " , "
+					+ subQuery);
+		} finally {
+			if (dao != null)
+				dao.close();
+		}
+		return tasks;
 	}
 
 	public Task[] getAvailableTasks(String taskType, String subQuery,
@@ -127,13 +168,13 @@ public class LocalTMSClient implements ITaskManagementService{
 		map.put(TaskFetcher.FETCH_SUB_QUERY, subQuery);
 		map.put(TaskFetcher.FETCH_FIRST, first);
 		map.put(TaskFetcher.FETCH_MAX, max);
-		//final UserRoles user = server.getUserRoles(participantToken);
-		ITaskDAOConnection connection = taskDAOFactory.openConnection();
+		// final UserRoles user = server.getUserRoles(participantToken);
+		ITaskDAOConnection dao = taskDAOFactory.openConnection();
 		try {
-			tasks = server.getAvailableTasks(connection,
-					participantToken, map);
+			tasks = server.getAvailableTasks(dao, participantToken, map);
 		} finally {
-			connection.close();
+			if (dao != null)
+				dao.close();
 		}
 		return tasks;
 	}
@@ -141,73 +182,103 @@ public class LocalTMSClient implements ITaskManagementService{
 	public PIPATask getPipa(String formUrl) throws AuthException,
 			UnavailableTaskException {
 		// TODO Auto-generated method stub
-		return null;
+		PIPATask task = null;
+		ITaskDAOConnection dao = taskDAOFactory.openConnection();
+		try {
+			task = server.getPipa(dao, formUrl, participantToken);
+		} catch (Exception e) {
+			logger.error("Cannot get pipaTask for formUrl" + formUrl);
+		} finally {
+			if (dao != null)
+				dao.close();
+		}
+		return task;
 	}
 
 	public Task getTask(String taskID) throws AuthException,
 			UnavailableTaskException {
-		// TODO Auto-generated method stub
-		return null;
+		Task task = null;
+		ITaskDAOConnection dao = taskDAOFactory.openConnection();
+		try {
+			task = server.getTask(dao, taskID, participantToken);
+		} catch (AccessDeniedException e) {
+			logger.error("Cannot get Attachment for taskID" + taskID);
+		} finally {
+			if (dao != null)
+				dao.close();
+		}
+		return task;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.intalio.tempo.workflow.tms.ITaskManagementService#getTaskList()
 	 */
 	public Task[] getTaskList() throws AuthException {
 		Task[] tasks;
-		ITaskDAOConnection connection = taskDAOFactory.openConnection();
+		ITaskDAOConnection dao = taskDAOFactory.openConnection();
 		try {
-			tasks = server.getTaskList(connection,
-					participantToken);
+			tasks = server.getTaskList(dao, participantToken);
 		} finally {
-			connection.close();
+			if (dao != null)
+				dao.close();
 		}
 		return tasks;
 	}
 
 	public Document init(String taskID, Document output) throws AuthException,
 			UnavailableTaskException {
-		// TODO Auto-generated method stub
+		logger.error("Calling LocalTMSClient :: init");
 		return null;
 	}
 
 	public void reassign(String taskID, AuthIdentifierSet users,
 			AuthIdentifierSet roles, TaskState state) throws AuthException,
 			UnavailableTaskException {
+		logger.error("Calling LocalTMSClient :: reassign");
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void removeAttachment(String taskID, URL attachmentURL)
 			throws AuthException, UnavailableTaskException,
 			UnavailableAttachmentException {
-		// TODO Auto-generated method stub
-		
+		ITaskDAOConnection dao = null;
+		try {
+			dao = taskDAOFactory.openConnection();
+			server.removeAttachment(dao, taskID, attachmentURL,
+					participantToken);
+		}  finally {
+			if (dao != null)
+				dao.close();
+		}
+
 	}
 
 	public void setOutput(String taskID, Document output) throws AuthException,
 			UnavailableTaskException, InvalidTaskStateException {
-		// TODO Auto-generated method stub
-		
+		 logger.error("Calling LocalTMSClient :: setOutput");
+
 	}
 
 	public void setOutputAndComplete(String taskID, Document output)
 			throws AuthException, UnavailableTaskException,
 			InvalidTaskStateException {
-		// TODO Auto-generated method stub
-		
+		 logger.error("Calling LocalTMSClient :: setOutputAndComplete");
+
 	}
 
 	public void storePipa(PIPATask task) throws AuthException,
 			InvalidTaskException {
-		// TODO Auto-generated method stub
-		
+		logger.error("Calling LocalTMSClient :: storePipa");
+
 	}
 
 	public void update(Task task) throws AuthException,
 			UnavailableTaskException {
-		// TODO Auto-generated method stub
-		
+		logger.error("Calling LocalTMSClient :: update");
+
 	}
 
 }

@@ -68,7 +68,7 @@ public class TMSServer implements ITMSServer {
     private int _httpTimeout = 10000;
     private String _tasEndPoint;
     private static final String TAS_NS= "http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/";
-   
+      
     public TMSServer() {
     }
 
@@ -492,7 +492,8 @@ public class TMSServer implements ITMSServer {
 
     public Attachment[] getAttachments(ITaskDAOConnection dao,String taskID, String participantToken) throws AuthException,
             UnavailableTaskException, AccessDeniedException {
-        UserRoles credentials = _authProvider.authenticate(participantToken);
+    	_logger.debug("Calling "+this.getClass()+":getAttachments");
+    	UserRoles credentials = _authProvider.authenticate(participantToken);
        Task task = dao.fetchTaskIfExists(taskID);
         checkIsAvailable(taskID, task, credentials);
         if (task instanceof ITaskWithAttachments) {
@@ -505,6 +506,7 @@ public class TMSServer implements ITMSServer {
 
     public void addAttachment(ITaskDAOConnection dao,String taskID, Attachment attachment, String participantToken) throws AuthException,
             UnavailableTaskException, AccessDeniedException {
+    	_logger.debug("Calling "+this.getClass()+":addAttachment");
         UserRoles credentials = _authProvider.authenticate(participantToken);
         Task task = dao.fetchTaskIfExists(taskID);
         checkIsAvailable(taskID, task, credentials);

@@ -17,6 +17,7 @@ package org.intalio.tempo.workflow.task;
 
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -265,6 +266,14 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
     }
 
     public Collection<Attachment> getAttachments() {
+    	/*
+    	 *  This is coming as null in  and we need to investigate, 
+    	 *  even when we have attachment this shows up as null , because of it being null 
+    	 *  page doesnt gets displayed
+    	 */
+    	if(_attachments == null){
+    		return new ArrayList();
+    	}
         return Collections.unmodifiableCollection(_attachments.values());
     }
 

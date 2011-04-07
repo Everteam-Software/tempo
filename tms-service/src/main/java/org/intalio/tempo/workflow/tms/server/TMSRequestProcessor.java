@@ -439,6 +439,7 @@ public class TMSRequestProcessor extends OMUnmarshaller {
 
     public OMElement addAttachment(OMElement requestElement) throws AxisFault {
     	ITaskDAOConnection dao=null;
+    	_logger.debug("addAttachment(OMElement requestElement) called ");
     	try {
     		dao=_taskDAOFactory.openConnection();
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
