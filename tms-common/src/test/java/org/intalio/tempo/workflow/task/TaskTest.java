@@ -183,6 +183,6 @@ public class TaskTest extends TestCase {
     
     public void testToString() throws Exception {
         Task task1 = new TestTask("id1", new URI("http://localhost"));
-        assertEquals("Workflow Task id1", task1.toString());
+        assertEquals("Task [_actionACLs={}, _creationDate="+task1.getCreationDate()+", _description=, _formURL=http://localhost, _id=id1, _internalId=0]", task1.toString());
     }
 }
