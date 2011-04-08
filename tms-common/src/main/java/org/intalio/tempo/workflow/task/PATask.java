@@ -257,7 +257,7 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
         _output = XmlTooling.serializeDocument(outputDocument);
     }
 
-    public Attachment addAttachment(Attachment attachment) {
+	public Attachment addAttachment(Attachment attachment) {
         return _attachments.put(attachment.getPayloadURL().toExternalForm(), attachment);
     }
 
@@ -267,13 +267,10 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
 
     public Collection<Attachment> getAttachments() {
     	/*
-    	 *  This is coming as null in  and we need to investigate, 
-    	 *  even when we have attachment this shows up as null , because of it being null 
-    	 *  page doesnt gets displayed
+    	 * IF attachment is null then return null
     	 */
-    	if(_attachments == null){
-    		return new ArrayList();
-    	}
+    	if(_attachments == null)
+    		return null;
         return Collections.unmodifiableCollection(_attachments.values());
     }
 
@@ -344,7 +341,18 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
 		_instanceId=instanceId;
 	}
 	
-
+    @Override
+	public String toString() {
+		return "PATask [_attachments=" + _attachments
+				+ ", _completeSOAPAction=" + _completeSOAPAction
+				+ ", _deadline=" + _deadline + ", _failureCode=" + _failureCode
+				+ ", _failureReason=" + _failureReason + ", _input=" + _input
+				+ ", _instanceId=" + _instanceId + ", _isChainedBefore="
+				+ _isChainedBefore + ", _output=" + _output
+				+ ", _previousTaskID=" + _previousTaskID + ", _priority="
+				+ _priority + ", _processID=" + _processID + ", _state="
+				+ _state + "]";
+	}
 
 
 }

@@ -168,7 +168,6 @@ public class TasksCollector {
         for (Task task : tasks) {
             tasksHolder.add(new TaskHolder<Task>(task, URIUtils.getResolvedTaskURLAsString(_request, fmanager, task, token, user)));
         }
-
         if (_log.isDebugEnabled()) {
             _log.debug("DEBUG\n" + taskType + "\n" + query + "\n" + tasks.length);
             _log.debug("(" + tasks.length + ") tasks were retrieved for participant token " + _token);

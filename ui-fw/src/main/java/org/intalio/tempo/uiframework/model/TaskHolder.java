@@ -43,4 +43,10 @@ public class TaskHolder<T extends Task> {
         this._task = task;
     }
 
+	@Override
+	public String toString() {
+		return "TaskHolder [_formManagerURL=" + _formManagerURL + ", _task="
+				+ _task + "]";
+	}
+
 }

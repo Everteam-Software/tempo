@@ -42,7 +42,7 @@ public class Attachment {
     private AttachmentMetadata metadata;
 
     @Persistent
-    @Column(name = "payload_url")
+    @Column(name = "payload_url") 
     private String payloadURLAsString;
 
     public Attachment() {

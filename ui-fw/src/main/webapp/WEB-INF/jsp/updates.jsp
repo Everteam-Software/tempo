@@ -70,7 +70,9 @@
 							</c:when>
 			</c:choose> </cell> <cell><![CDATA[
 							<c:forEach items="${taskHolder.task.attachments}" var="attachment" varStatus="index">
+<c:if test="${attachment ne null}">
 								<a href="${attachment.payloadURL}" onClick="window.open('${attachment.payloadURL}', 'newwindow'); return false;"><img border="0" height="${iconSize}" width="${iconSize}" title="${attachment.payloadURL}" src="images/icons/icon.attachment.gif"/></a>
+</c:if>
 							</c:forEach>
 						]]> </cell> </row>
 		</c:forEach>
