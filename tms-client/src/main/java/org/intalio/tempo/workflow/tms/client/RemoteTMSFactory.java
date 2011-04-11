@@ -32,7 +32,7 @@ public class RemoteTMSFactory implements ITaskManagementServiceFactory {
 	final static Logger logger = LoggerFactory.getLogger(RemoteTMSFactory.class);
 	private String _endpoint;
 	private String _participantToken;
-	private static boolean isTEMPOLOCAL = true;
+	//private static boolean isTEMPOLOCAL = true;
     
 	public RemoteTMSFactory(String endpoint, String participantToken) {
 		if (endpoint == null) {
@@ -46,19 +46,27 @@ public class RemoteTMSFactory implements ITaskManagementServiceFactory {
 	}
 
 	public ITaskManagementService getService() {
-		logger.debug("RemoteTMSFactory will be initializing Local factory ::: " + isTEMPOLOCAL);
-		if (isTEMPOLOCAL) {
-			Resource xmlResource = new FileSystemResource(System
-					.getProperty("org.intalio.deploy.configDirectory")
-					+ File.separatorChar + "tempo-tms.xml");
-			BeanFactory factory = new XmlBeanFactory(xmlResource);
-			LocalTMSClient client = (LocalTMSClient) factory
-					.getBean("tms.tmsclient");
-			client.setParticipantToken(_participantToken);
-			return client;
-		} else {
-			return new RemoteTMSClient(_endpoint, _participantToken);
-		}
-	}
+        //logger.debug("RemoteTMSFactory will be initializing Local factory ::: ");
+        
+            Resource xmlResource = new FileSystemResource(System
+                    .getProperty("org.intalio.deploy.configDirectory")
+                    + File.separatorChar + "tempo-tms.xml");
+            BeanFactory factory = new XmlBeanFactory(xmlResource);
+             
+            TMSClientProvider tmsclientprovider=(TMSClientProvider)factory
+            .getBean("tms.tmsclientprovider");
+            
+            if(tmsclientprovider.isTempoLocal()){
+                logger.debug("RemoteTMSFactory will be initializing LocalTMSClient  ::: ");
+                LocalTMSClient client = (LocalTMSClient) factory
+                .getBean("tms.Localtmsclient");
+                client.setParticipantToken(_participantToken);
+                return client;
+            }
+            else {
+                logger.debug("RemoteTMSFactory will be initializing RemoteTMSClient ::: ");
+            return new RemoteTMSClient(_endpoint, _participantToken);
+        }
+    }
 
 }
