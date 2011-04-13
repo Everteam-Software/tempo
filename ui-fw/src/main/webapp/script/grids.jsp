@@ -453,7 +453,10 @@
       var format = $("input[name='eformat']:checked").val();
       var type = $("input[name='etype']:checked").val();
       var export_url = format+"?";
-      export_url += "type="+type;   
+      export_url += "type="+type;
+      var rp = $("div.flexigrid div.pGroup select[name='rp'] option:selected").val();
+	  var page = $("div.flexigrid div.pGroup span.pcontrol input").val();
+	  export_url += "&rp="+rp+"&page="+page;   
       window.open(export_url,"_new");
     }
     
