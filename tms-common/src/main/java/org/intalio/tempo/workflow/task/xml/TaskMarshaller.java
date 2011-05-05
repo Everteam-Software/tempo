@@ -265,6 +265,35 @@ public class TaskMarshaller {
             return parent;
         }
     }
+    
+    //Fix for WF-1493 and WF-1490. To return only userOwners and taskState
+    public OMElement marshalTaskPartially( Task task ){
+        com.intalio.bpms.workflow.taskManagementServices20051109.Task taskElement = com.intalio.bpms.workflow.taskManagementServices20051109.Task.Factory
+        .newInstance();
+        TaskMetadata taskMetadataElement = TaskMetadata.Factory.newInstance();
+        
+        for (String userOwner : task.getUserOwners()) {
+            XmlString XmlStrUserOwner = taskMetadataElement.addNewUserOwner();
+            XmlStrUserOwner.setStringValue(userOwner);
+        }
+        
+        if (task instanceof ITaskWithState) {
+            taskMetadataElement.setTaskState(((ITaskWithState) task).getState().toString());
+        }
+        
+        taskElement.setMetadata(taskMetadataElement);
+        
+        OMElement om = XmlTooling.convertDocument(taskElement);
+        if (om.getLocalName().equalsIgnoreCase("xml-fragment")) {
+            om.setLocalName(TaskXMLConstants.TASK_LOCAL_NAME);
+            om.setNamespace(TaskXMLConstants.TASK_OM_NAMESPACE);
+            return om;
+        } else {
+            OMElement parent = OMAbstractFactory.getOMFactory().createOMElement("task", TaskXMLConstants.TASK_NAMESPACE, TaskXMLConstants.TASK_NAMESPACE_PREFIX);
+            parent.addChild(om);
+            return parent;
+}
+    }
 
     // for compatibility usage
     public void marshalFullTask(Task task, OMElement parent, UserRoles user) {

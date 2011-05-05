@@ -31,6 +31,7 @@ import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
+import org.intalio.tempo.workflow.task.TaskOwnerAndState;
 import org.intalio.tempo.workflow.task.TaskState;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.task.xml.TaskMarshaller;
@@ -140,6 +141,32 @@ public class TMSRequestProcessor extends OMUnmarshaller {
         finally{
         	if(dao!=null)
         	dao.close();
+        }
+    }
+    
+    //Fix for WF-1493 and WF-1490. To return only userOwners and taskState
+    public OMElement getTaskOwnerAndState(OMElement requestElement) throws AxisFault {
+        ITaskDAOConnection dao=null;
+        try {
+            dao=_taskDAOFactory.openConnection();
+            OMElementQueue rootQueue = new OMElementQueue(requestElement);
+            String taskID = requireElementValue(rootQueue, "taskId");
+            String participantToken = requireElementValue(rootQueue, "participantToken");
+            Task task = _server.getTaskOwnerAndState(dao,taskID, participantToken);
+            OMElement response = new TMSResponseMarshaller(OM_FACTORY) {
+                public OMElement marshalResponse(Task task) {
+                    OMElement response = createElement("getTaskOwnerAndStateResponse");
+                    response.addChild(new TaskMarshaller().marshalTaskPartially(task));
+                    return response;
+                }
+            }.marshalResponse(task);
+            return response;
+        } catch (Exception e) {
+            throw makeFault(e);
+        }
+        finally{
+            if(dao!=null)
+            dao.close();
         }
     }
 
