@@ -127,6 +127,22 @@ public class TMSServer implements ITMSServer {
             throw new UnavailableTaskException("No task with" + taskID + " has been found");
         }
     }
+    
+    //Fix for WF-1493 and WF-1490. To return only userOwners and taskState
+    public Task getTaskOwnerAndState(ITaskDAOConnection dao, String taskID,
+            String participantToken) throws AuthException, UnavailableTaskException{
+        UserRoles credentials = _authProvider.authenticate(participantToken);
+        Task task = dao.fetchTaskIfExists(taskID);
+        if ((task != null)) {
+//            checkIsAvailable(taskID, task, credentials);
+            if (_logger.isDebugEnabled())
+                _logger.debug("Workflow Task " + taskID + " for user " + credentials.getUserID());
+            return task;
+        } else {
+            throw new UnavailableTaskException("No task with" + taskID + " has been found");
+        }
+    }
+
 
     protected ServiceClient getServiceClient() throws AxisFault {
         return new ServiceClient();

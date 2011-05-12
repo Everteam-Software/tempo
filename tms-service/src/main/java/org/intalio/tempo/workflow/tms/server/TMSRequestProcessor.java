@@ -142,6 +142,32 @@ public class TMSRequestProcessor extends OMUnmarshaller {
         	dao.close();
         }
     }
+    
+    //Fix for WF-1493 and WF-1490. To return only userOwners and taskState
+    public OMElement getTaskOwnerAndState(OMElement requestElement) throws AxisFault {
+        ITaskDAOConnection dao=null;
+        try {
+            dao=_taskDAOFactory.openConnection();
+            OMElementQueue rootQueue = new OMElementQueue(requestElement);
+            String taskID = requireElementValue(rootQueue, "taskId");
+            String participantToken = requireElementValue(rootQueue, "participantToken");
+            Task task = _server.getTaskOwnerAndState(dao,taskID, participantToken);
+            OMElement response = new TMSResponseMarshaller(OM_FACTORY) {
+                public OMElement marshalResponse(Task task) {
+                    OMElement response = createElement("getTaskOwnerAndStateResponse");
+                    response.addChild(new TaskMarshaller().marshalTaskPartially(task));
+                    return response;
+                }
+            }.marshalResponse(task);
+            return response;
+        } catch (Exception e) {
+            throw makeFault(e);
+        }
+        finally{
+            if(dao!=null)
+            dao.close();
+        }
+    }
 
     private OMElement createOkResponse() {
         return new TMSResponseMarshaller(OM_FACTORY) {

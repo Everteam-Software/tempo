@@ -39,6 +39,8 @@ public interface ITMSServer {
     void skip(ITaskDAOConnection dao,String taskID, String participantToken) throws TMSException;
     
     Task getTask(ITaskDAOConnection dao,String taskID, String participantToken) throws TMSException;
+    
+    Task getTaskOwnerAndState(ITaskDAOConnection dao,String taskID, String participantToken) throws TMSException;
 
     UserRoles getUserRoles(String participantToken) throws TMSException;
 
