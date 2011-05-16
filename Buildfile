@@ -108,7 +108,7 @@ define "tempo" do
   desc "Task Management Service"
   define "tms-service" do
     libs = projects("tms-axis", "tms-common", "dao-nutsNbolts"),
-     APACHE_JPA, APACHE_COMMONS[:pool], AXIOM, AXIS2, JAXEN, SLF4J, SPRING[:core], STAX_API, XMLBEANS, DB_CONNECTOR.values, DEPLOY_API, SECURITY_WS_CLIENT_ONLY, WEB_NUTSNBOLTS
+     APACHE_JPA, APACHE_COMMONS[:pool], AXIOM, AXIS2, JAXEN, SLF4J, SPRING[:core], STAX_API, XMLBEANS, DB_CONNECTOR.values, DEPLOY_API, SECURITY_WS_CLIENT_ONLY, WEB_NUTSNBOLTS,XALAN
   
     compile.with libs
     test.with libs + [REGISTRY, APACHE_DERBY, APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], CASTOR, EASY_B, LOG4J, DB_CONNECTOR.values, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES, XMLUNIT, INSTINCT]

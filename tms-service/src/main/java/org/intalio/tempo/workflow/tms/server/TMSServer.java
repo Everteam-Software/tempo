@@ -15,11 +15,19 @@
 
 package org.intalio.tempo.workflow.tms.server;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+
+import javax.xml.transform.TransformerException;
+
+
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
@@ -57,6 +65,8 @@ import org.intalio.tempo.workflow.util.jpa.TaskFetcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
 
@@ -69,6 +79,16 @@ public class TMSServer implements ITMSServer {
     private String _tasEndPoint;
     private static final String TAS_NS= "http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/";
       
+    //Added the property for deleting file upload widget attachments
+    private String _tasStorageStrategyEndPoint;
+    public String tasStorageStrategyEndPoint() {
+        return _tasStorageStrategyEndPoint;
+    }
+
+    public void settasStorageStrategyEndPoint(String _tasStorageStrategyEndPoint) {
+        this._tasStorageStrategyEndPoint = _tasStorageStrategyEndPoint;
+    }
+    
     public TMSServer() {
     }
 
@@ -243,18 +263,48 @@ public class TMSServer implements ITMSServer {
         for (String taskID : taskIDs) {
             try {
                 Task task = dao.fetchTaskIfExists(taskID);
+                Set<String> attachmentsdeletedurl=new HashSet<String>(); 
                 if (_permissions.isAuthorized(TaskPermissions.ACTION_DELETE, task, credentials)) {
                     if (task instanceof ITaskWithAttachments && task instanceof PATask) {
                         ITaskWithAttachments taskWithAttachments = (ITaskWithAttachments) task;
                         Collection<Attachment> attachments = taskWithAttachments
                                 .getAttachments();
+                        
                         for (Attachment attachment : attachments) {
                             if(!isAttachmentRelatedToOtherTask(attachment,(PATask)task, dao)){
                                 deleteAttachmentTas(participantToken, attachment
                                         .getPayloadURL().toExternalForm());
+                                attachmentsdeletedurl.add(attachment.getPayloadURL().toExternalForm());
                             }
                         }
                     }
+                    //Change by Atul Starts for deleting attachments uploaded by file upload widget which does not have mapping
+                    try{
+                    if(task instanceof PATask){
+                        PATask patask=(PATask) task;
+                        ArrayList<Document> documents=new ArrayList<Document>();
+                        if(patask.getOutput()!=null)
+                            documents.add(patask.getOutput());
+                        if(patask.getInput()!=null)
+                            documents.add(patask.getInput());
+                        //patask.getInput();
+                        if(documents!=null){
+                            Set<String> attachmentURL=getAttachmentsURL(documents);
+                            if(attachmentURL!=null){
+                                attachmentURL.removeAll(attachmentsdeletedurl);
+                                Iterator<String> itr=attachmentURL.iterator();
+                                while(itr.hasNext()){
+                                     deleteAttachmentTas(participantToken,itr.next());
+                                }
+                            }
+                        }
+                    }
+                    }catch(AxisFault e){
+                        _logger.warn("The Attachment URL was not valid " + e.getMessage());
+                        //No handling required as the url might have been picked from some text
+                    }
+                    //Change by Atul Ends
+                    
                     dao.deleteTask(task.getInternalId(), taskID);
                     dao.commit();
                     if (_logger.isDebugEnabled())
@@ -738,6 +788,71 @@ public class TMSServer implements ITMSServer {
             throw new UnavailableTaskException(credentials.getUserID() + " cannot skip Workflow Task " + task);
         }
     }
+    
+    private Set<String> getAttachmentsURL(ArrayList<Document> documents) {
+        if(_tasStorageStrategyEndPoint==null||_tasStorageStrategyEndPoint ==""){
+            _logger.warn(" _tasStorageStrategyEndPoint is not set in properties of TMSServer");
+            return null;
+        }
+        String xpath = "//*[count(*)=0 and contains(.,'"
+                + _tasStorageStrategyEndPoint + "')]";
+        Set<String> fileuploadwidgetlinkset = new HashSet<String>();
+        // Adding the string url only if it's a well formed url
+        try {
+            if (documents != null) {
+                for (Document document : documents) {
+                    NodeList nodelist = org.apache.xpath.XPathAPI
+                            .selectNodeList(document, xpath);
+                    if (nodelist != null) {
+                        for (int i = 0; i < nodelist.getLength(); i++) {
+                            Element elem = (Element) nodelist.item(i);
+                            try {
+                                URL url = new URL(elem.getTextContent().trim());
+                                _logger.info("File upload widget attachments url" +elem.getTextContent().trim() );
+                                fileuploadwidgetlinkset.add(elem
+                                        .getTextContent().trim());
+                            } catch (MalformedURLException mal) {
+
+                                // The urls are malformed because the file
+                                // upload widget makes the link like
+                                // <a
+                                // href=http://127.0.0.1:8080/wds/attachments/920d7155-ea9e-4ad4-94d5-ef3033d2cab0/x.xlsx>File</a
+                                // href>
+
+                                String hrefstring = elem.getTextContent()
+                                        .trim();
+                                if (hrefstring != null) {
+                                    int startindex = hrefstring
+                                            .indexOf(_tasStorageStrategyEndPoint);
+                                    int endindex = hrefstring.indexOf(">");
+                                    if ((startindex != -1 && endindex != -1)
+                                            && startindex < endindex) {
+                                        String ur = hrefstring.substring(
+                                                startindex, endindex).trim();
+                                        try {
+                                            URL url = new URL(ur);
+                                            _logger.info("File upload widget attachments url" +ur );
+                                            fileuploadwidgetlinkset.add(ur);
+                                        } catch (MalformedURLException ex) {
+                                            _logger.warn("File upload widget attachments url not found" + ur );
+                                            // Exception Handling not required
+
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+         } 
+            catch (TransformerException e) {
+            _logger.error("Exception  getAttachmentsURL for FileUpload"+e.getMessage());
+         }
+         return fileuploadwidgetlinkset;
+
+    }
+
 
 
 }
