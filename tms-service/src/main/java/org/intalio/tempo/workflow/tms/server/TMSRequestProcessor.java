@@ -116,6 +116,31 @@ public class TMSRequestProcessor extends OMUnmarshaller {
         	dao.close();
         }
     }
+    
+    public OMElement listTasksFromInstance( OMElement requestElement) throws AxisFault{
+        ITaskDAOConnection dao=null;
+       
+        try {
+            dao=_taskDAOFactory.openConnection();
+            OMElementQueue rootQueue = new OMElementQueue(requestElement);
+            String participantToken = requireElementValue(rootQueue, "participantToken"); 
+            final UserRoles user = _server.getUserRoles(participantToken);
+            String instanceId = expectElementValue(rootQueue, "instanceId");
+            if (instanceId == null || "".equals(instanceId))
+            {     
+                throw new InvalidInputFormatException("Instance id element must be present");
+            }
+            Task[] tasks = _server.listTasksFromInstance(dao, participantToken, instanceId);
+            return marshalTasksList(user, tasks, "listTasksFromInstanceResponse");
+        }
+        catch (Exception e) {
+            throw makeFault(e);
+        }
+        finally{
+            if(dao!=null)
+            dao.close();
+        }
+    }
 
     public OMElement getTask(OMElement requestElement) throws AxisFault {
     	ITaskDAOConnection dao=null;
@@ -302,6 +327,8 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             dao.close();
         }
     }
+    
+    
 
     public OMElement deleteAll(OMElement requestElement) throws AxisFault {
     	ITaskDAOConnection dao=null;

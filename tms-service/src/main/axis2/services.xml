@@ -29,6 +29,11 @@
             <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
             <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getTaskList</actionMapping>
         </operation>
+        
+        <operation name="listTasksFromInstance">
+            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+            <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/listTasksFromInstance</actionMapping>
+        </operation>
 
         <operation name="getTask">
             <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>

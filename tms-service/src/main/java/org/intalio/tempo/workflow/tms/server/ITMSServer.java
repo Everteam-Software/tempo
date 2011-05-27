@@ -23,7 +23,9 @@ import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.TaskState;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
+import org.intalio.tempo.workflow.tms.AccessDeniedException;
 import org.intalio.tempo.workflow.tms.TMSException;
+import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
 import org.w3c.dom.Document;
 
@@ -71,7 +73,9 @@ public interface ITMSServer {
     void delete(ITaskDAOConnection dao,String[] taskIDs, String participantToken) throws TMSException;
     
     void manageFromInstance(ITaskDAOConnection dao,String instanceId, String participantToken,boolean delete,TaskState state) throws TMSException;
-
+    
+    Task[] listTasksFromInstance(ITaskDAOConnection dao,String participantToken, String instanceId)throws AuthException, AccessDeniedException, UnavailableTaskException;
+    
     void create(ITaskDAOConnection dao,Task task, String participantToken) throws TMSException;
     
     void update(ITaskDAOConnection dao,TaskMetadata task, String participantToken) throws TMSException,AxisFault;

@@ -124,9 +124,24 @@ public class TMSServer implements ITMSServer {
         return _tasEndPoint;
     }
 
-      public Task[] getTaskList(ITaskDAOConnection dao,String participantToken) throws AuthException {
+    public Task[] getTaskList(ITaskDAOConnection dao,String participantToken) throws AuthException {
         UserRoles credentials = _authProvider.authenticate(participantToken);
         Task[] result = dao.fetchAllAvailableTasks(credentials);
+        return result;
+    }
+      
+    public Task[] listTasksFromInstance(ITaskDAOConnection dao,
+        String participantToken, String instanceId) throws AuthException, AccessDeniedException, UnavailableTaskException{
+        UserRoles credentials = _authProvider.authenticate( participantToken );
+        String userID = credentials.getUserID();
+        if (!_permissions.isAuthroized(TaskPermissions.ACTION_DELETE,  credentials))
+        {
+            throw new AccessDeniedException("The user "+userID+" does not have permission to view tasks from an instance");
+        }
+        List<Task> tasksFromInstanceId = new ArrayList<Task>();
+                        tasksFromInstanceId = dao.fetchTaskfromInstanceID(instanceId);
+        Task[] result = (Task[]) tasksFromInstanceId.toArray(new Task[tasksFromInstanceId.size()]);
+                        
         return result;
     }
 
@@ -852,6 +867,8 @@ public class TMSServer implements ITMSServer {
          return fileuploadwidgetlinkset;
 
     }
+
+
 
 
 

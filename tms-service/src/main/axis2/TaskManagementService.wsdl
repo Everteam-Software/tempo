@@ -17,6 +17,21 @@
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
+			<xsd:element name="listTasksFromInstanceResponse">
+                <xsd:complexType>
+                    <xsd:sequence maxOccurs="unbounded">
+                        <xsd:element maxOccurs="unbounded" name="task" type="tns:taskMetadata"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="listTasksFromInstanceRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="participantToken" type="xsd:string"/>
+						<xsd:element name="instanceId" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
             <xsd:element name="getTaskResponse">
                 <xsd:complexType>
                     <xsd:sequence>
@@ -496,6 +511,12 @@
     <wsdl:message name="getTaskListResponse">
         <wsdl:part name="getTaskListResponse" element="tns:getTaskListResponse"/>
     </wsdl:message>
+	<wsdl:message name="listTasksFromInstanceRequest">
+        <wsdl:part name="listTasksFromInstanceRequest" element="tns:listTasksFromInstanceRequest"/>
+    </wsdl:message>
+    <wsdl:message name="listTasksFromInstanceResponse">
+        <wsdl:part name="listTasksFromInstanceResponse" element="tns:listTasksFromInstanceResponse"/>
+    </wsdl:message>
     <wsdl:message name="deleteRequest">
         <wsdl:part name="deleteRequest" element="tns:deleteRequest"/>
     </wsdl:message>
@@ -661,6 +682,15 @@
             <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:manageFromInstanceinvalidInputMessageFault"/>
             <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:manageFromInstanceunavailableTaskFault"/>
 			<wsdl:fault message="tns:accessDeniedFault" name="accessDeniedFault" wsaw:Action="urn:manageFromInstanceaccessDeniedFault"/>
+		</wsdl:operation>
+		
+		<wsdl:operation name="listTasksFromInstance">
+            <wsdl:input message="tns:listTasksFromInstanceRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/listTasksFromInstance"/>
+            <wsdl:output message="tns:listTasksFromInstanceResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/listTasksFromInstanceResponse"/>
+            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:listTasksFromInstanceinvalidParticipantTokenFault"/>
+            <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:listTasksFromInstanceinvalidInputMessageFault"/>
+            <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:listTasksFromInstanceunavailableTaskFault"/>
+			<wsdl:fault message="tns:accessDeniedFault" name="accessDeniedFault" wsaw:Action="urn:listTasksFromInstanceaccessDeniedFault"/>
 		</wsdl:operation>
 		
         <wsdl:operation name="fail">
@@ -1048,8 +1078,7 @@
             <wsdl:fault name="invalidParticipantTokenFault">
                 <soap:fault use="literal" name="invalidParticipantTokenFault"/>
             </wsdl:fault>
-        </wsdl:operation>
-		
+        </wsdl:operation>	
 		<wsdl:operation name="manageFromInstance">
             <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/manageFromInstance" style="document"/>
             <wsdl:input>
@@ -1070,8 +1099,28 @@
             <wsdl:fault name="invalidParticipantTokenFault">
                 <soap:fault use="literal" name="invalidParticipantTokenFault"/>
             </wsdl:fault>
-        </wsdl:operation>
-		
+        </wsdl:operation>		
+		<wsdl:operation name="listTasksFromInstance">
+            <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/listTasksFromInstance" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+			 <wsdl:fault name="accessDeniedFault">
+                <soap:fault use="literal" name="accessDeniedFault"/>
+            </wsdl:fault>
+            <wsdl:fault name="invalidInputMessageFault">
+                <soap:fault use="literal" name="invalidInputMessageFault"/>
+            </wsdl:fault>
+			<wsdl:fault name="unavailableTaskFault">
+                <soap:fault use="literal" name="unavailableTaskFault"/>
+            </wsdl:fault>
+            <wsdl:fault name="invalidParticipantTokenFault">
+                <soap:fault use="literal" name="invalidParticipantTokenFault"/>
+            </wsdl:fault>
+        </wsdl:operation>		
         <wsdl:operation name="fail">
             <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/fail" style="document"/>
             <wsdl:input>
