@@ -71,7 +71,7 @@ LIFERAY = group("portal-impl", "portal-kernel", "util-java", "portal-service", :
 LIFT = [group("lift-core", "lift-amqp", "lift-facebook", "lift-textile", "lift-webkit", "lift-widgets", "lift-xmpp", :under=>"net.liftweb",:version=>"0.8")]
 LOG4J = "log4j:log4j:jar:1.2.15"
 
-NEETHI = "org.apache.neethi:neethi:jar:2.0.4"
+NEETHI = "org.apache.neethi:neethi:jar:2.0.5"
 
 OPENSSO_CLIENT_SDK = "com.sun:openssoclientsdk:jar:3.0"
 PORTLET_API = "portlet-api:portlet-api:jar:1.0"
@@ -100,7 +100,7 @@ TAGLIBS = [ "taglibs:standard:jar:1.1.2" ]
 URLREWRITE = "org.tuckey:urlrewrite:jar:3.1.0"
 
 WOODSTOX = [ "woodstox:wstx-asl:jar:3.2.4" ]
-WS_COMMONS_SCHEMA = "org.apache.ws.commons.schema:XmlSchema:jar:1.3.1"
+WS_COMMONS_SCHEMA = "org.apache.ws.commons.schema:XmlSchema:jar:1.4.3"
 WSDL4J = [ "wsdl4j:wsdl4j:jar:1.6.1" ]
 
 XERCES = [
@@ -124,7 +124,7 @@ PLUTO = [
   PLUTO_TAGLIB,
   PLUTO_DRIVER
 ]
-XALAN = "xalan:xalan:jar:2.7.0"
+XALAN = ["xalan:xalan:jar:2.7.1", "xalan:serializer:jar:2.7.1"]
 PLUTO_DEPLOY = [
   PLUTO_CONTAINER,
   PLUTO_TAGLIB,
