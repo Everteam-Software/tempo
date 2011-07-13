@@ -26,6 +26,11 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
@@ -34,14 +39,8 @@ import org.apache.axis2.client.ServiceClient;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.SimpleAuthProvider;
 import org.intalio.tempo.workflow.auth.UserRoles;
-import org.intalio.tempo.workflow.tms.server.dao.JPATaskDaoConnectionFactory;
-import org.intalio.tempo.workflow.tms.server.dao.SimpleTaskDAOConnectionFactory;
 import org.intalio.tempo.workflow.tms.server.permissions.TaskPermissions;
 import org.w3c.dom.Document;
-
-import com.googlecode.instinct.expect.behaviour.Mocker;
-import com.sun.org.apache.xml.internal.serialize.OutputFormat;
-import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
 public class Utils {
 
@@ -62,17 +61,14 @@ public class Utils {
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document doc = builder.parse(new ByteArrayInputStream(uglyString.getBytes()));
 
-        OutputFormat format = new OutputFormat(doc);
-        format.setLineWidth(65);
-        format.setIndenting(true);
-        format.setIndent(2);
+        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        //initialize StreamResult with File object to save to file
+        StreamResult result = new StreamResult(new ByteArrayOutputStream());
+        DOMSource source = new DOMSource(doc);
+        transformer.transform(source, result);
 
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-        XMLSerializer serializer = new XMLSerializer(outputStream, format);
-        serializer.serialize(doc);
-
-        return new String(outputStream.toByteArray(), "UTF-8");
+        return new String(((ByteArrayOutputStream)result.getOutputStream()).toByteArray(), "UTF-8");
     }
 
     public static Document createXMLDocument() throws Exception {
