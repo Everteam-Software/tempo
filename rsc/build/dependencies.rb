@@ -22,7 +22,7 @@ APACHE_DERBY_NET = "org.apache.derby:derbynet:jar:10.2.2.0"
 APACHE_DERBY_CLIENT = "org.apache.derby:derbyclient:jar:10.2.2.0"
 APACHE_DS = "org.apache.apacheds:noarch-installer:jar:1.5.1a"
 
-AXIOM = group("axiom-api", "axiom-dom", "axiom-impl", :under=>"org.apache.ws.commons.axiom", :version=>"1.2.8")
+AXIOM = group("axiom-api", "axiom-dom", "axiom-impl", :under=>"org.apache.ws.commons.axiom", :version=>"1.2.11")
 
 BACKPORT = "backport-util-concurrent:backport-util-concurrent:jar:3.1"
 
@@ -71,7 +71,7 @@ LIFERAY = group("portal-impl", "portal-kernel", "util-java", "portal-service", :
 LIFT = [group("lift-core", "lift-amqp", "lift-facebook", "lift-textile", "lift-webkit", "lift-widgets", "lift-xmpp", :under=>"net.liftweb",:version=>"0.8")]
 LOG4J = "log4j:log4j:jar:1.2.15"
 
-NEETHI = "org.apache.neethi:neethi:jar:2.0.4"
+NEETHI = "org.apache.neethi:neethi:jar:2.0.5"
 
 OPENSSO_CLIENT_SDK = "com.sun:openssoclientsdk:jar:3.0"
 PORTLET_API = "portlet-api:portlet-api:jar:1.0"
@@ -100,7 +100,7 @@ TAGLIBS = [ "taglibs:standard:jar:1.1.2" ]
 URLREWRITE = "org.tuckey:urlrewrite:jar:3.1.0"
 
 WOODSTOX = [ "woodstox:wstx-asl:jar:3.2.4" ]
-WS_COMMONS_SCHEMA = "org.apache.ws.commons.schema:XmlSchema:jar:1.3.1"
+WS_COMMONS_SCHEMA = "org.apache.ws.commons.schema:XmlSchema:jar:1.4.3"
 WSDL4J = [ "wsdl4j:wsdl4j:jar:1.6.1" ]
 
 XERCES = [
@@ -124,7 +124,7 @@ PLUTO = [
   PLUTO_TAGLIB,
   PLUTO_DRIVER
 ]
-XALAN = "xalan:xalan:jar:2.7.0"
+XALAN = ["xalan:xalan:jar:2.7.1", "xalan:serializer:jar:2.7.1"]
 PLUTO_DEPLOY = [
   PLUTO_CONTAINER,
   PLUTO_TAGLIB,
@@ -176,9 +176,8 @@ APACHE_ABDERA = [
 HTTPCORE = "org.apache.httpcomponents:httpcore:jar:4.0"
 
 AXIS2 = [
-  group("axis2-transport-http", "axis2-transport-local", "axis2-kernel", "axis2-adb", "axis2-xmlbeans", "axis2-json", :under=>"org.apache.axis2", :version=>"1.5"),
-  "org.apache.axis2:axis2-transports:jar:1.0-i1",
-  "org.apache.axis2:axis2-jaxws-api:jar:1.2",
+  group("axis2-transport-http", "axis2-transport-local", "axis2-kernel", "axis2-adb", "axis2-xmlbeans", "axis2-json", :under=>"org.apache.axis2", :version=>"1.5.5"),
+  "org.apache.axis2:axis2-transports:jar:1.0-i6",
   group("woden-api", "woden-impl-dom", :under=>"org.apache.woden", :version=>"1.0M8"),
   BACKPORT,
   NEETHI,
@@ -251,8 +250,8 @@ CAS_LIBS = [
   "taglibs:standard:jar:1.1.2"
 ]
 
-DEPLOY_API = "org.intalio.deploy:deploy-api:jar:1.0.3"
-REGISTRY = "org.intalio.deploy:deploy-registry:jar:1.0.3"
+DEPLOY_API = "org.intalio.deploy:deploy-api:jar:1.0.32"
+REGISTRY = "org.intalio.deploy:deploy-registry:jar:1.0.32"
 SECURITY = group("security-api", :under=>"org.intalio.security", :version=>"1.0.16")
 SECURITY_WS_COMMON = group("security-ws-common", :under=>"org.intalio.security", :version=>"1.0.16")
 SECURITY_WS_CLIENT = group("security-api", "security-ws-client", "security-ws-common", :under=>"org.intalio.security", :version=>"1.0.16")
