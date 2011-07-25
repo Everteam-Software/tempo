@@ -62,6 +62,7 @@ public class RemoteTMSClient implements ITaskManagementService {
     private EndpointReference _endpoint;
     private String _participantToken;
     private OMFactory _omFactory;
+    private long _httpTimeOut = 30000;
 
     private class TMSMarshaller extends OMMarshaller {
         protected TMSMarshaller() {
@@ -73,6 +74,12 @@ public class RemoteTMSClient implements ITaskManagementService {
         _endpoint = new EndpointReference(endpoint);
         _participantToken = participantToken;
         _omFactory = OMAbstractFactory.getOMFactory();
+    }
+    public RemoteTMSClient(String endpoint, String participantToken, long httpTimeOut) {
+        _endpoint = new EndpointReference(endpoint);
+        _participantToken = participantToken;
+        _omFactory = OMAbstractFactory.getOMFactory();
+        setHttpTimeOut(httpTimeOut);
     }
 
     public void close() {
@@ -91,10 +98,11 @@ public class RemoteTMSClient implements ITaskManagementService {
             Options options = new Options();
             options.setTo(_endpoint);
             options.setAction(soapAction);
+            options.setTimeOutInMilliSeconds( _httpTimeOut );
 
             ServiceClient serviceClient = new ServiceClient();
             serviceClient.setOptions(options);
-
+            _log.debug("serviceClient.getOptions().getTimeOutInMilliSeconds() = "+serviceClient.getOptions().getTimeOutInMilliSeconds() + " ms");
             OMElement response = serviceClient.sendReceive(request);
             return response;
         } catch (AxisFault f) {
@@ -576,4 +584,13 @@ public class RemoteTMSClient implements ITaskManagementService {
         return tasks.toArray(new Task[tasks.size()]);
     }
 
+    public void setHttpTimeOut(long _httpTimeOut) {
+        this._httpTimeOut = _httpTimeOut;
+    }
+
+    public long getHttpTimeOut() {
+        return _httpTimeOut;
+    }
+
+    
 }

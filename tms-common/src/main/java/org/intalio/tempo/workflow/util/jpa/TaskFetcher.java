@@ -2,8 +2,10 @@ package org.intalio.tempo.workflow.util.jpa;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -43,7 +45,7 @@ public class TaskFetcher {
 	private Query find_by_id;
 	private final String QUERY_GENERIC1 = "select DISTINCT T from ";
 	private final String QUERY_GENERIC_COUNT = "select COUNT(DISTINCT T) from ";
-	private final String QUERY_GENERIC2 = " T where (T._userOwners in (?1) or T._roleOwners in (?2)) ";
+	private final String QUERY_GENERIC2 = " T where (T._userOwners = (?1) or T._roleOwners = (?2)) ";
 	// private final String DELETE_TASKS =
 	// "delete from Task m where m._userOwners in (?1) or m._roleOwners in (?2) "
 	// ;
@@ -138,9 +140,20 @@ public class TaskFetcher {
 	}
 
 	public Long countTasks(Map parameters) {
-		parameters.put(TaskFetcher.FETCH_COUNT, StringUtils.EMPTY);
-		Query q = buildQuery(parameters);
-		return (Long) q.getSingleResult();
+	    Task[] tasks = fetchAvailableTasks(parameters);
+//	       UserRoles user = (UserRoles) parameters.get(FETCH_USER);
+//	        Set<String> roles = user.getAssignedRoles();
+//	        Long count=(long) 0;
+//	        for(String role : roles){
+//	            parameters.put(TaskFetcher.FETCH_COUNT, StringUtils.EMPTY);
+//	            Query q = buildQueryForSingleRole(parameters, role);
+//
+//	            Long singleRoleCount = (Long) q.getSingleResult();
+//	            count = count + singleRoleCount;
+//	            
+//	        }
+	    Long count = (long) tasks.length;
+		return count;
 	}
 
 	private Query buildQuery(Map parameters) {
@@ -188,19 +201,78 @@ public class TaskFetcher {
 		}
 		return q;
 	}
+	
+	private Query buildQueryForSingleRole(Map parameters, String role){
+	       UserRoles user = (UserRoles) parameters.get(FETCH_USER);
+	        Class taskClass = (Class) parameters.get(FETCH_CLASS);
+	        String subQuery = MapUtils.getString(parameters, FETCH_SUB_QUERY, "");
+	        String baseQuery = parameters.containsKey(FETCH_COUNT) ? QUERY_GENERIC_COUNT
+	                : QUERY_GENERIC1;
+	        Query q;
+	        if (StringUtils.isEmpty(subQuery)) {
+	            q = _entityManager.createQuery(
+	                    baseQuery + taskClass.getSimpleName() + QUERY_GENERIC2)
+	                    .setParameter(1, user.getUserID()).setParameter(2,
+	                            role);
+	        } else {
+	            StringBuffer buffer = new StringBuffer();
+	            buffer.append(baseQuery).append(taskClass.getSimpleName()).append(
+	                    QUERY_GENERIC2);
+
+	            String trim = subQuery.toLowerCase().trim();
+	            int orderIndex = trim.indexOf("order");
+	            if (orderIndex == -1) {
+	                buffer.append(" and ").append(" ( ").append(subQuery).append(
+	                        " ) ");
+	            } else {
+	                if (!trim.startsWith("order"))
+	                    buffer.append(" and (").append(
+	                            subQuery.substring(0, orderIndex)).append(") ")
+	                            .append(subQuery.substring(orderIndex));
+	                else {
+	                    buffer.append(subQuery);
+	                }
+	            }
+	            if (_logger.isDebugEnabled()){
+	                _logger.debug(buffer.toString());
+	                _logger.debug("Parameter 1:" + user.getUserID());
+	                _logger.debug("Parameter 2:" + role);
+	            }
+	            q = _entityManager.createQuery(buffer.toString()).setParameter(1,
+	                    user.getUserID()).setParameter(2, role);
+	        }
+	        return q;
+	}
 
 	public Task[] fetchAvailableTasks(Map parameters) {
-		Query q = buildQuery(parameters);
-		int first = MapUtils.getIntValue(parameters, FETCH_FIRST, -1);
-		int max = MapUtils.getIntValue(parameters, FETCH_MAX, -1);
+	    UserRoles user = (UserRoles) parameters.get(FETCH_USER);
+	    Set<String> roles = user.getAssignedRoles();
+	    Set result = new HashSet();
+	    for(String role : roles){
+	        Query q = buildQueryForSingleRole(parameters, role);
+	        int first = MapUtils.getIntValue(parameters, FETCH_FIRST, -1);
+	        int max = MapUtils.getIntValue(parameters, FETCH_MAX, -1);
 
-		// WARNING: there is a bug in OpenJPA 2.0. You need to call setMax #before# setFirst
-		if (max > 0)
-			q.setMaxResults(max);
-		if (first >= 0)
-			q.setFirstResult(first);
-
-		List result = q.getResultList();
+	        // WARNING: there is a bug in OpenJPA 2.0. You need to call setMax #before# setFirst
+	        if (max > 0)
+	            q.setMaxResults(max);
+	        if (first >= 0)
+	            q.setFirstResult(first);
+	        List singleRoleResult = q.getResultList();
+	        for( Object object : singleRoleResult){
+	            result.add(object);
+	        }
+	    }
+//		Query q = buildQuery(parameters);
+//		int first = MapUtils.getIntValue(parameters, FETCH_FIRST, -1);
+//		int max = MapUtils.getIntValue(parameters, FETCH_MAX, -1);
+//
+//		// WARNING: there is a bug in OpenJPA 2.0. You need to call setMax #before# setFirst
+//		if (max > 0)
+//			q.setMaxResults(max);
+//		if (first >= 0)
+//			q.setFirstResult(first);
+//		List result = q.getResultList();
 		return (Task[]) result.toArray(new Task[result.size()]);
 	}
 

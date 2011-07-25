@@ -16,5 +16,5 @@
 package org.intalio.tempo.workflow.tms;
 
 public interface ITaskManagementServiceFactory {
-    ITaskManagementService getService();
+    ITaskManagementService getService(String endpoint, String participantToken);
 }

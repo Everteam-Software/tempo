@@ -13,11 +13,11 @@ package org.intalio.tempo.workflow.wds.core;
 
 import java.util.Date;
 
+import org.intalio.tempo.uiframework.Configuration;
 import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.tms.ITaskManagementService;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
-import org.intalio.tempo.workflow.tms.client.RemoteTMSFactory;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -170,7 +170,8 @@ public class WDSService {
     }
     
     protected ITaskManagementService getTMSService(String participantToken){
-        return new RemoteTMSFactory(_tmsEndpoint, participantToken).getService();
+        return Configuration.getInstance().getTmsFactory().getService(_tmsEndpoint, participantToken);
+//        return new TMSFactory(_tmsEndpoint, participantToken).getService();
     }
-
+   
 }

@@ -43,7 +43,6 @@ import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.tms.ITaskManagementService;
-import org.intalio.tempo.workflow.tms.client.RemoteTMSFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -109,7 +108,9 @@ public class TasksCollectionAdapter extends AbstractCollectionAdapter {
     }
 
     protected ITaskManagementService getClient(String token){
-    	return new RemoteTMSFactory(Configuration.getInstance().getServiceEndpoint(), token).getService();
+        Configuration configuration = Configuration.getInstance();
+        return configuration.getTmsFactory().getService(configuration.getServiceEndpoint(), token);
+//    	return new TMSFactory(Configuration.getInstance().getServiceEndpoint(), token).getService();
     }
     
     private Document<Feed> getFeedDocument(RequestContext context) throws ResponseContextException {

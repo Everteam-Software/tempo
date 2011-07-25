@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.intalio.tempo.security.ws.TokenClient;
+import org.intalio.tempo.workflow.tms.ITaskManagementServiceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,6 +44,15 @@ public class Configuration {
     private Map<String, Map<String, Set<String>>> _toolbarIconSets;
     private Map<String, Set<String>> _bindIconSetToRole;
     private Logger _log = LoggerFactory.getLogger(Configuration.class);
+    private ITaskManagementServiceFactory _tmsFactory;
+
+    public void setTmsFactory(ITaskManagementServiceFactory tmsFactory) {
+        this._tmsFactory = tmsFactory;
+    }
+
+    public ITaskManagementServiceFactory getTmsFactory() {
+        return _tmsFactory;
+    }
 
     public Map<String, Set<String>> getBindIconSetToRole() {
         return _bindIconSetToRole;

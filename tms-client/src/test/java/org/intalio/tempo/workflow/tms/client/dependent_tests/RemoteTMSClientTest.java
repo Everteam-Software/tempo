@@ -33,7 +33,7 @@ import org.intalio.tempo.workflow.task.attachments.AttachmentMetadata;
 import org.intalio.tempo.workflow.task.xml.TaskMarshaller;
 import org.intalio.tempo.workflow.task.xml.TaskUnmarshaller;
 import org.intalio.tempo.workflow.tms.ITaskManagementService;
-import org.intalio.tempo.workflow.tms.client.RemoteTMSFactory;
+import org.intalio.tempo.workflow.tms.client.TMSFactory;
 import org.intalio.tempo.workflow.util.TaskEquality;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +53,8 @@ public class RemoteTMSClientTest extends TestCase {
     }
 
     public void testInput() throws Exception {
-        ITaskManagementService tms = new RemoteTMSFactory(TMS_REMOTE_URL, TOKEN).getService();
+        ITaskManagementService tms = new TMSFactory().configureRemote().getService(TMS_REMOTE_URL, TOKEN);
+//        ITaskManagementService tms = new TMSFactory(TMS_REMOTE_URL, TOKEN).getService();
         Document input1 = Utils.createXMLDocument("/absr.xml");
         String task1ID = nextRandom();
         PATask task1 = new PATask(task1ID, new URI("http://localhost/1"), "processID", "urn:completeSOAPAction", input1);
@@ -66,7 +67,8 @@ public class RemoteTMSClientTest extends TestCase {
     }
 
     public void testUpdate() throws Exception {
-        ITaskManagementService tms = new RemoteTMSFactory(TMS_REMOTE_URL, TOKEN).getService();
+        ITaskManagementService tms = new TMSFactory().configureRemote().getService(TMS_REMOTE_URL, TOKEN);
+//        ITaskManagementService tms = new TMSFactory(TMS_REMOTE_URL, TOKEN).getService();
         Document input1 = Utils.createXMLDocument("/absr.xml");
         String id = "583c10bfdbd326ba:69a8b3cd:124dd681279:-7ef6127.0.1.1163844" + System.currentTimeMillis();
         PATask task1 = new PATask(id, new URI("http://localhost/1"), "processID", "urn:completeSOAPAction", input1);
@@ -99,7 +101,8 @@ public class RemoteTMSClientTest extends TestCase {
     public void testPIPAInit() throws Exception {
         String pipaId = "d1f20ad2-bba4-45aa-b449-d2f147c84561";
         Document outputForInit = Utils.createXMLDocument("/japaneseOutputForPipa.xml");
-        ITaskManagementService tms = new RemoteTMSFactory(TMS_REMOTE_URL, TOKEN).getService();
+        ITaskManagementService tms = new TMSFactory().configureRemote().getService(TMS_REMOTE_URL, TOKEN);
+//        ITaskManagementService tms = new TMSFactory(TMS_REMOTE_URL, TOKEN).getService();
         Task[] tasks = tms.getTaskList();
         for (Task t : tasks) {
             if (t instanceof PIPATask) {
@@ -111,7 +114,8 @@ public class RemoteTMSClientTest extends TestCase {
     }
 
     public void testBasicPATaskLifecycle() throws Exception {
-        ITaskManagementService tms = new RemoteTMSFactory(TMS_REMOTE_URL, TOKEN).getService();
+        ITaskManagementService tms = new TMSFactory().configureRemote().getService(TMS_REMOTE_URL, TOKEN);
+//        ITaskManagementService tms = new TMSFactory(TMS_REMOTE_URL, TOKEN).getService();
         Task[] tasks = tms.getTaskList();
         Assert.assertNotNull(tasks);
 
@@ -178,7 +182,8 @@ public class RemoteTMSClientTest extends TestCase {
     }
 
     public void testAttachments() throws Exception {
-        ITaskManagementService tms = new RemoteTMSFactory(TMS_REMOTE_URL, TOKEN).getService();
+        ITaskManagementService tms = new TMSFactory().configureRemote().getService(TMS_REMOTE_URL, TOKEN);
+//        ITaskManagementService tms = new TMSFactory(TMS_REMOTE_URL, TOKEN).getService();
 
         String task1ID = nextRandom();
         PATask task1 = new PATask(task1ID, new URI("http://localhost/1"), "processID", "urn:completeSOAPAction", Utils.createXMLDocument());
@@ -220,8 +225,8 @@ public class RemoteTMSClientTest extends TestCase {
 
         String[] unnormalizedRoles = { "jkl/jkl", "mno\\mno", "pqr.pqr" };
         task1.setRoleOwners(unnormalizedRoles);
-
-        ITaskManagementService tms = new RemoteTMSFactory(TMS_REMOTE_URL, TOKEN).getService();
+        ITaskManagementService tms = new TMSFactory().configureRemote().getService(TMS_REMOTE_URL, TOKEN);
+//        ITaskManagementService tms = new TMSFactory(TMS_REMOTE_URL, TOKEN).getService();
         tms.storePipa(task1);
         PIPATask task2 = tms.getPipa(task1.getProcessEndpoint().toString());
         TaskEquality.areTasksEquals(task1, task2);

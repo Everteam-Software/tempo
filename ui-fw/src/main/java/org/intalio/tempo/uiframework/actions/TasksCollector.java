@@ -28,7 +28,7 @@ import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.tms.ITaskManagementService;
-import org.intalio.tempo.workflow.tms.client.RemoteTMSFactory;
+import org.intalio.tempo.workflow.tms.client.TMSFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -94,7 +94,8 @@ public class TasksCollector {
     }
 
     protected ITaskManagementService getTaskManager(String endpoint, String token) {
-        return new RemoteTMSFactory(endpoint, token).getService();
+        return Configuration.getInstance().getTmsFactory().getService(endpoint, token);
+//        return new TMSFactory(endpoint, token).getService();
     }
 
     public ArrayList<TaskHolder<Task>> retrieveTasks() throws Exception {
@@ -166,6 +167,10 @@ public class TasksCollector {
 
         Task[] tasks = taskManager.getAvailableTasks(taskType, query.toString(), String.valueOf(index), String.valueOf(itasksPerPage));
         for (Task task : tasks) {
+            if(task instanceof PATask){
+                PATask paTask = (PATask) task;
+            _log.debug("Task State="+paTask.getState()+" Task Description="+paTask.getDescription()+"Tasks length ="+tasks.length+"\n");
+            }
             tasksHolder.add(new TaskHolder<Task>(task, URIUtils.getResolvedTaskURLAsString(_request, fmanager, task, token, user)));
         }
         if (_log.isDebugEnabled()) {

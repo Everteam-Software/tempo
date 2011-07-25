@@ -6,7 +6,7 @@ import org.intalio.tempo.uiframework.Configuration;
 import org.intalio.tempo.uiframework.URIUtils;
 import org.intalio.tempo.web.ApplicationState;
 import org.intalio.tempo.workflow.tms.ITaskManagementService;
-import org.intalio.tempo.workflow.tms.client.RemoteTMSFactory;
+import org.intalio.tempo.workflow.tms.client.TMSFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.portlet.ModelAndView;
@@ -29,7 +29,8 @@ public class DeleteAllTasksAction extends Action {
 
     protected ITaskManagementService getTMS(String participantToken) throws RemoteException {
         String endpoint = URIUtils.resolveURI(_request, conf.getServiceEndpoint());
-        return new RemoteTMSFactory(endpoint, participantToken).getService();
+        return Configuration.getInstance().getTmsFactory().getService(endpoint, participantToken);
+//        return new TMSFactory(endpoint, participantToken).getService();
     }
 
     protected String getParticipantToken() {

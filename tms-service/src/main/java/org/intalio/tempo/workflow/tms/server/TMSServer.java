@@ -75,7 +75,7 @@ public class TMSServer implements ITMSServer {
     private static final Logger _logger = LoggerFactory.getLogger(TMSServer.class);
     private IAuthProvider _authProvider;
     private TaskPermissions _permissions;
-    private int _httpTimeout = 10000;
+    private int _httpTimeout = 30000;
     private String _tasEndPoint;
     private static final String TAS_NS= "http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/";
       

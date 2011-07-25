@@ -17,7 +17,7 @@ import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.tms.ITaskManagementService;
-import org.intalio.tempo.workflow.tms.client.RemoteTMSFactory;
+import org.intalio.tempo.workflow.tms.client.TMSFactory;
 import org.intalio.tempo.workflow.tms.server.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,8 +73,10 @@ public class RemoteReassginTaskTest extends TestCase {
     }
 
     public void testReassginTaskLifecycle() throws Exception {
-        ITaskManagementService tms = new RemoteTMSFactory(
-                "http://localhost:8080/axis2/services/TaskManagementServices", TOKEN_CURRENT).getService();
+        ITaskManagementService tms = 
+            new TMSFactory().configureRemote().getService("http://localhost:8080/axis2/services/TaskManagementServices", TOKEN_CURRENT);
+//        ITaskManagementService tms = new TMSFactory(
+//                "http://localhost:8080/axis2/services/TaskManagementServices", TOKEN_CURRENT).getService();
 
         /*
          * Get available users
@@ -153,8 +155,12 @@ public class RemoteReassginTaskTest extends TestCase {
         /*
          * check that the task is not in the inbox of target user
          */
-        ITaskManagementService tms_target = new RemoteTMSFactory(
-                "http://localhost:8080/axis2/services/TaskManagementServices", TOKEN_TARGET2).getService();
+        ITaskManagementService tms_target =
+            new TMSFactory().configureRemote().
+                getService("http://localhost:8080/axis2/services/TaskManagementServices", TOKEN_TARGET2);
+        
+//        ITaskManagementService tms_target = new TMSFactory(
+//                "http://localhost:8080/axis2/services/TaskManagementServices", TOKEN_TARGET2).getService();
         boolean task_targetuser_inbox = false;
         Task[] tasks3 = tms_target.getTaskList();
         for (int i = 0; i < tasks3.length; i++) {

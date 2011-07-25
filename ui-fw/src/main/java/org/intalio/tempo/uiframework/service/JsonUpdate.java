@@ -33,7 +33,7 @@ import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.tms.ITaskManagementService;
-import org.intalio.tempo.workflow.tms.client.RemoteTMSFactory;
+import org.intalio.tempo.workflow.tms.client.TMSFactory;
 import org.intalio.tempo.workflow.task.TaskState;
 
 import atg.taglib.json.util.JSONArray;
@@ -126,6 +126,7 @@ public class JsonUpdate extends HttpServlet {
         //to enable unit test using mock object to test
 		String endpoint = URIUtils.resolveURI(request, conf.getServiceEndpoint());
 		LOG.debug(MessageFormat.format("Getting tasks: type {1} query {2} for endpoint {3}", new Object[]{taskType, subQuery, endpoint}));
-        return new RemoteTMSFactory(endpoint, participantToken).getService().getAvailableTasks(taskType, subQuery);
+		return Configuration.getInstance().getTmsFactory().getService(endpoint, participantToken).getAvailableTasks(taskType, subQuery);
+		//        return new TMSFactory(endpoint, participantToken).getService().getAvailableTasks(taskType, subQuery);
     }
 }

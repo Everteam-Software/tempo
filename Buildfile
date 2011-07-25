@@ -180,13 +180,14 @@ define "tempo" do
     
     resources.filter.using "version" => VERSION_NUMBER
     test.with JAXEN, XMLUNIT, INSTINCT, LOG4J, SPRING_MOCK
+	package(:jar)
     package(:war).include(web_xml, :as=>'WEB-INF/web.xml').with(:libs=>libs)
   end
 
   desc "Workflow Deployment Service"
   define "wds-service" do |project|
-    libs = [ projects("dao-nutsNbolts", "tms-client", "tms-axis", "tms-common"), 
-      AXIS2, AXIOM, APACHE_COMMONS[:io], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], APACHE_COMMONS[:pool], APACHE_JPA, DOM4J, JAXEN, SLF4J, SPRING[:core], STAX_API, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX, XERCES, XMLBEANS, DEPLOY_API, REGISTRY, SECURITY, WEB_NUTSNBOLTS ]
+    libs = [ projects("dao-nutsNbolts", "tms-client", "tms-axis", "tms-common", "ui-fw"), 
+      AXIS2, AXIOM, APACHE_COMMONS[:io], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], APACHE_COMMONS[:pool], APACHE_JPA, DOM4J, JAXEN, SLF4J, SPRING[:core], STAX_API, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX, XERCES, XMLBEANS, DEPLOY_API, REGISTRY, SECURITY, WEB_NUTSNBOLTS]
     test_libs = libs + [SERVLET_API, EASY_B, INSTINCT, DB_CONNECTOR.values]
     compile.with test_libs
     compile { open_jpa_enhance }
