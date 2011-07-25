@@ -20,11 +20,11 @@
         <property name="feedUrl" value="http://tempo.intalio.org"/>
         <property name="serviceEndpoint" value="http://localhost:8080/axis2/services/TaskManagementServices"/>
         <property name="pagingLength" value="10"/>
-        <property name="refreshTime" value="20"/>
+        <property name="refreshTime" value="180"/>
         <property name="claimTaskOnOpen" value="false"/>
-        <property name="sessionTimeout" value="10"/>
+        <property name="sessionTimeout" value="60"/>
 		<property name="useToolbarIcons" value="true"/>
-        <property name="tokenClient"><ref bean="tokenService"/></property>
+        <property name="tokenClient"><ref bean="tmsservice"/></property>
 		<property name="toolbarIconSets">
 			<map>
 				<entry key="administrator">
@@ -78,11 +78,76 @@
 				</entry>
 			</map>
 		</property>
-    </bean>
+		<property name="tmsFactory">
+			<ref bean="tmsfactory"/>
+		</property>
+	</bean>
 
-    <bean id="tokenService" class="org.intalio.tempo.security.ws.TokenClient">
+    <bean id="tmsservice" class="org.intalio.tempo.security.ws.TokenClient">
         <constructor-arg value="http://localhost:8080/axis2/services/TokenService"/>
     </bean>
 
     <bean id="applicationState" class="org.intalio.tempo.uiframework.UIFWApplicationState"/>
+	
+
+	
+	<bean id="tmsfactory" class="org.intalio.tempo.workflow.tms.client.TMSFactory">
+		<property name="local" value="false"/>
+		<property name="taskDAOFactory">
+			<ref bean="tms.daoFactory"/>
+		</property>
+		<property name="server">
+			<ref bean="tms.server" />
+		</property>
+		<property name="httpTimeOut" value="120000"/>
+	</bean>
+	
+	<bean id="tms.daoFactory" class="org.intalio.tempo.workflow.tms.server.dao.JPATaskDaoConnectionFactory">
+		<constructor-arg>
+			<map>
+        		<!--    <entry><key><value>openjpa.jdbc.SynchronizeMappings</value></key><value>buildSchema</value></entry> -->
+				<entry><key><value>openjpa.Log</value></key><value>log4j</value></entry>
+				<entry><key><value>openjpa.ConnectionFactoryMode</value></key><value>local</value></entry>
+				<entry><key><value>tempo.datasourceURL</value></key><value>java:comp/env/jdbc/BPMSDB</value></entry>
+				<entry><key><value>openjpa.DataCache</value></key><value>false</value></entry>
+                                <entry><key><value>openjpa.QueryCache</value></key><value>true(cacheSize=20000)</value></entry>
+                                <entry><key><value>openjpa.RemoteCommitProvider</value></key><value>sjvm</value></entry>
+			</map>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="tms.server" class="org.intalio.tempo.workflow.tms.server.TMSServer">
+		<property name="authProvider">
+			<ref bean="tms.authProvider"/>
+		</property>
+		<property name="permissions">
+			<ref bean="tms.permissionsHandler"/>
+		</property>
+		<property name="httpTimeout" value="120000"/>
+		<property name="tasEndPoint" value="http://localhost:8080/axis2/services/tas"/>
+	</bean>
+	
+	<bean id="tms.permissionsHandler" class="org.intalio.tempo.workflow.tms.server.permissions.TaskPermissions">
+		<constructor-arg><map>
+			<entry key="delete"><set><value>intalio\admin</value></set></entry>
+		</map></constructor-arg>
+	</bean>
+
+	<bean id="tms.authProvider" class="org.intalio.tempo.workflow.auth.n3.N3AuthProvider">
+		<property name="wsEndpoint">
+			<value>http://localhost:8080/axis2/services/TokenService</value>
+		</property>
+	</bean> 
+
+	<!-- We are bypassing going for tokenservice via HTTP and directly instantiating a bean, in case we want to put tokenservices on different server then we should comment this line and use the  above bean -->	
+	<!--import resource="file:${org.intalio.tempo.configDirectory}/securityConfig.xml"/>
+	<bean id="tms.authProvider" class="org.intalio.tempo.workflow.auth.LocalAuthProvider">
+		<property name="tokenService">
+			<ref bean="tokenService"/>
+		</property>
+	</bean-->
+	<bean id="tokenService" class="org.intalio.tempo.security.ws.TokenClient">
+        <constructor-arg value="http://localhost:8080/axis2/services/TokenService"/>
+    </bean>
+	
 </beans>
