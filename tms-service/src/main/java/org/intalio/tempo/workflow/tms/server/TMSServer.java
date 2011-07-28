@@ -399,11 +399,17 @@ public class TMSServer implements ITMSServer {
         client.setOptions(options);
 
         try {
-            options.setTimeOutInMilliSeconds(_httpTimeout);
-            OMElement response = client.sendReceive(deleteRequest);
-            if (_logger.isDebugEnabled()) {
-                _logger.debug("Response from TAS:\n" + response.toString());
+            try{
+                options.setTimeOutInMilliSeconds(_httpTimeout);
+                OMElement response = client.sendReceive(deleteRequest);
+                response.build();
+                if (_logger.isDebugEnabled()) {
+                    _logger.debug("Response from TAS:\n" + response.toString());
+                }
+            }finally{
+                client.cleanupTransport();
             }
+
         }catch (Exception e) {
             _logger.error("Error while sending deleteRequest:" + e.getClass(), e);
             throw AxisFault.makeFault(e);
@@ -543,9 +549,15 @@ public class TMSServer implements ITMSServer {
         ServiceClient client = getServiceClient();
         client.setOptions(options);
         try {
-            options.setTimeOutInMilliSeconds(_httpTimeout);
-            OMElement response = client.sendReceive(omInitProcessRequest);
-            return xmlTooling.convertOMToDOM(response);
+            try{
+                options.setTimeOutInMilliSeconds(_httpTimeout);
+                OMElement response = client.sendReceive(omInitProcessRequest);
+                response.build();
+                return xmlTooling.convertOMToDOM(response);
+            }
+            finally{
+                client.cleanupTransport();
+            }
         } catch (Exception e) {
             _logger.error("Error while sending initProcessRequest:" + e.getClass(), e);
             throw AxisFault.makeFault(e);
