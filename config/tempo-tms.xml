@@ -29,6 +29,16 @@
 		</property>
 	</bean>
 	
+	<!--
+	<bean id="tms.tmsclient" class="org.intalio.tempo.workflow.tms.client.LocalTMSClient">
+		<property name="taskDAOFactory">
+			<ref bean="tms.daoFactory"/>
+		</property>
+		<property name="server">
+			<ref bean="tms.server"/>
+		</property>
+	</bean>-->
+	
 	<bean id="tms.permissionsHandler" class="org.intalio.tempo.workflow.tms.server.permissions.TaskPermissions">
 		<constructor-arg><map>
 			<entry key="delete"><set><value>intalio\admin</value></set></entry>

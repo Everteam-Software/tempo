@@ -24,7 +24,7 @@
         <property name="claimTaskOnOpen" value="false"/>
         <property name="sessionTimeout" value="60"/>
 		<property name="useToolbarIcons" value="true"/>
-        <property name="tokenClient"><ref bean="tmsservice"/></property>
+        <property name="tokenClient"><ref bean="tokenClient"/></property>
 		<property name="toolbarIconSets">
 			<map>
 				<entry key="administrator">
@@ -82,8 +82,8 @@
 			<ref bean="tmsfactory"/>
 		</property>
 	</bean>
-
-    <bean id="tmsservice" class="org.intalio.tempo.security.ws.TokenClient">
+	
+	<bean id="tokenClient" class="org.intalio.tempo.security.ws.TokenClient">
         <constructor-arg value="http://localhost:8080/axis2/services/TokenService"/>
     </bean>
 
@@ -108,9 +108,9 @@
         		<!--    <entry><key><value>openjpa.jdbc.SynchronizeMappings</value></key><value>buildSchema</value></entry> -->
 				<entry><key><value>openjpa.Log</value></key><value>log4j</value></entry>
 				<entry><key><value>openjpa.ConnectionFactoryMode</value></key><value>local</value></entry>
-				<entry><key><value>tempo.datasourceURL</value></key><value>java:comp/env/jdbc/BPMSDB</value></entry>
+				<entry><key><value>tempo.datasourceURL</value></key><value>java:/BPMSDB</value></entry>
 				<entry><key><value>openjpa.DataCache</value></key><value>false</value></entry>
-                                <entry><key><value>openjpa.QueryCache</value></key><value>true(cacheSize=20000)</value></entry>
+                                <entry><key><value>openjpa.QueryCache</value></key><value>false</value></entry>
                                 <entry><key><value>openjpa.RemoteCommitProvider</value></key><value>sjvm</value></entry>
 			</map>
 		</constructor-arg>
@@ -133,21 +133,19 @@
 		</map></constructor-arg>
 	</bean>
 
-	<bean id="tms.authProvider" class="org.intalio.tempo.workflow.auth.n3.N3AuthProvider">
+	<!--bean id="tms.authProvider" class="org.intalio.tempo.workflow.auth.n3.N3AuthProvider">
 		<property name="wsEndpoint">
 			<value>http://localhost:8080/axis2/services/TokenService</value>
 		</property>
-	</bean> 
+	</bean--> 
 
 	<!-- We are bypassing going for tokenservice via HTTP and directly instantiating a bean, in case we want to put tokenservices on different server then we should comment this line and use the  above bean -->	
-	<!--import resource="file:${org.intalio.tempo.configDirectory}/securityConfig.xml"/>
+	<import resource="file:${org.intalio.tempo.configDirectory}/securityConfig.xml"/>
 	<bean id="tms.authProvider" class="org.intalio.tempo.workflow.auth.LocalAuthProvider">
 		<property name="tokenService">
 			<ref bean="tokenService"/>
 		</property>
-	</bean-->
-	<bean id="tokenService" class="org.intalio.tempo.security.ws.TokenClient">
-        <constructor-arg value="http://localhost:8080/axis2/services/TokenService"/>
-    </bean>
+	</bean>
+
 	
 </beans>

@@ -18,7 +18,7 @@
 
   <!-- Login section -->
   <bean id="loginController" class="org.intalio.tempo.web.controller.LoginController">
-    <constructor-arg index="0" ref="tokenService"/>
+    <constructor-arg index="0" ref="tokenClient"/>
     <constructor-arg index="1" value="tasks.htm"/>
 
     <property name="commandClass" value="org.intalio.tempo.web.controller.LoginCommand"/>
