@@ -101,10 +101,15 @@ public class RemoteTMSClient implements ITaskManagementService {
             options.setTimeOutInMilliSeconds( _httpTimeOut );
 
             ServiceClient serviceClient = new ServiceClient();
-            serviceClient.setOptions(options);
-            _log.debug("serviceClient.getOptions().getTimeOutInMilliSeconds() = "+serviceClient.getOptions().getTimeOutInMilliSeconds() + " ms");
-            OMElement response = serviceClient.sendReceive(request);
-            return response;
+            try {
+	            serviceClient.setOptions(options);
+	            _log.debug("serviceClient.getOptions().getTimeOutInMilliSeconds() = "+serviceClient.getOptions().getTimeOutInMilliSeconds() + " ms");
+	            OMElement response = serviceClient.sendReceive(request);
+	            response.build();
+	            return response;
+            } finally {
+            	serviceClient.cleanupTransport();
+            }
         } catch (AxisFault f) {
             throw new RemoteTMSException(f);
         } finally {
