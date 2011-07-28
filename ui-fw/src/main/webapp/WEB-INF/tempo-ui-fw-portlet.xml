@@ -26,7 +26,7 @@
 	
 	<bean id="tasksController"
 		class="org.intalio.tempo.portlet.SecuredController">
-		<constructor-arg index="0" ref="tokenService" />
+		<constructor-arg index="0" ref="tokenClient" />
 		<constructor-arg index="1" value="/c/portal/login" />
 		<property name="commandClass" value="java.lang.Object" />
 		<property name="defaultAction">
