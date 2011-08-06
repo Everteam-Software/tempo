@@ -47,7 +47,7 @@ public class LocalTMSClient implements ITaskManagementService {
 	}
 
 	public void setParticipantToken(String participantToken) {
-		this.participantToken = participantToken;
+		this.participantToken = participantToken; 
 	}
 
 	public void setTaskDAOFactory(ITaskDAOConnectionFactory taskDAOFactory) {

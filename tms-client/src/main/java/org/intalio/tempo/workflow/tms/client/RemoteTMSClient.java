@@ -24,9 +24,12 @@ import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axis2.AxisFault;
+import org.apache.axis2.Constants;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
+import org.apache.axis2.transport.http.HTTPConstants;
+import org.apache.commons.httpclient.HttpClient;
 import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.task.InvalidTaskException;
@@ -55,13 +58,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
+
 public class RemoteTMSClient implements ITaskManagementService {
 
     private static final Logger _log = LoggerFactory.getLogger(OMUnmarshaller.class);
 
+    private static final String AXIS2_REPOSITORY_LOCATION = "";
+
+    private static final String AXIS2_CLIENT_CONFIG_FILE = "";
+
     private EndpointReference _endpoint;
     private String _participantToken;
-    private OMFactory _omFactory;
+    private OMFactory _omFactory; 
     private long _httpTimeOut = 30000;
 
     private class TMSMarshaller extends OMMarshaller {
@@ -92,8 +100,9 @@ public class RemoteTMSClient implements ITaskManagementService {
 
         Thread currentThread = Thread.currentThread();
         ClassLoader cl = currentThread.getContextClassLoader();
+ 
         try {
-            currentThread.setContextClassLoader(this.getClass().getClassLoader());
+            HttpClient httpClient = new HttpClient(MultiThreadedHttpConnectionManagerFactory.getInstance()); 
 
             Options options = new Options();
             options.setTo(_endpoint);
@@ -103,6 +112,8 @@ public class RemoteTMSClient implements ITaskManagementService {
             ServiceClient serviceClient = new ServiceClient();
             try {
 	            serviceClient.setOptions(options);
+	            serviceClient.getOptions().setProperty(HTTPConstants.REUSE_HTTP_CLIENT, Constants.VALUE_TRUE);
+	            serviceClient.getOptions().setProperty(HTTPConstants.CACHED_HTTP_CLIENT, httpClient);
 	            _log.debug("serviceClient.getOptions().getTimeOutInMilliSeconds() = "+serviceClient.getOptions().getTimeOutInMilliSeconds() + " ms");
 	            OMElement response = serviceClient.sendReceive(request);
 	            response.build();

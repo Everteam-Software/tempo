@@ -88,10 +88,10 @@ define "tempo" do
   
   desc "Task Management Service Client"
   define "tms-client" do
-    compile.with projects("tms-axis", "tms-common","tms-service"), 
+    compile.with projects("tms-axis", "tms-common","tms-service"), APACHE_COMMONS[:httpclient],
       APACHE_JPA, AXIOM, AXIS2, SLF4J, STAX_API, WSDL4J, WS_COMMONS_SCHEMA, XMLBEANS,SPRING[:core]
 
-    test.with APACHE_COMMONS[:pool], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], LOG4J, WOODSTOX, SUNMAIL, SECURITY_WS_CLIENT, FREEMARKER
+    test.with APACHE_COMMONS[:pool],projects("tms-service"), APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], LOG4J, WOODSTOX, SUNMAIL, SECURITY_WS_CLIENT, FREEMARKER
 
     test.exclude '*TestUtils*'
 
