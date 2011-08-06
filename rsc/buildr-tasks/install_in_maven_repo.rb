@@ -54,7 +54,7 @@ module Buildr
       PKG.each do |pkg|
         artifact_spec = artifact_spec_from_name group_name, group_version, pkg, artifact
         begin
-        verbose(false) do 
+        verbose(true) do 
           a = artifact(artifact_spec)
           a.invoke
           puts "Processing #{a}"
