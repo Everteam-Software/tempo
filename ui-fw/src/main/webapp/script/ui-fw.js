@@ -48,3 +48,16 @@ function resizeIframe() {
       }
   
    }
+   
+ function showAlertForTask(message,title){       
+	jAlert(message, title); 
+  }
+
+  function showAlertForProcess(message,title){
+	jAlert(message, title); 
+  }
+
+  function showAlertForNotification(message,title){
+	jAlert(message, title); 
+  }
+   

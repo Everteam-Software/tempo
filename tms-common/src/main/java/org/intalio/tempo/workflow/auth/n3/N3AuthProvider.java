@@ -15,7 +15,11 @@
 
 package org.intalio.tempo.workflow.auth.n3;
 
+import java.rmi.RemoteException;
+
 import org.intalio.tempo.security.Property;
+import org.intalio.tempo.security.authentication.AuthenticationException;
+import org.intalio.tempo.security.rbac.RBACException;
 import org.intalio.tempo.security.token.TokenService;
 import org.intalio.tempo.security.util.PropertyUtils;
 import org.intalio.tempo.security.util.StringArrayUtils;
@@ -59,12 +63,20 @@ public class N3AuthProvider implements IAuthProvider {
                     roles += (i == 0 ? "" : ",") + invokerRoles[i];
                 _logger.debug("User " + invokerUser + " with roles " + roles);
             }
-            return new UserRoles(invokerUser, invokerRoles);
+            UserRoles userRoles=new UserRoles(invokerUser, invokerRoles);
+            userRoles.setWorkflowAdmin(isWorkflowAdmin(invokerUser));
+            
+            return userRoles;
         } catch (Exception e) {
             throw new AuthException(e);
         }
     }
 
+    private boolean isWorkflowAdmin(String user) throws Exception  {
+        	return	connect2tokenService().isWorkflowAdmin(user);        
+    }
+    
+    
     private TokenService connect2tokenService() throws Exception {
         if (_tokenService == null) {
             _logger.debug("Initialize connect to " + _wsEndpoint);

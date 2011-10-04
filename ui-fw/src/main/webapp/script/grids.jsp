@@ -561,7 +561,7 @@
         {
           display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', 
           name : '_description', 
-          width : width*0.44, 
+          width : width*0.25, 
           sortable : true, 
           align: 'left'},
         {
@@ -594,6 +594,18 @@
           name : '_attachments', 
           width : width*0.12, 
           sortable : false, 
+          align: 'center'},
+        {
+          display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_userOwners"/>', 
+          name : '_attachments', 
+          width : width*0.12, 
+          sortable : false, 
+          align: 'center'},
+        {
+          display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_roleOwners"/>', 
+          name : '_attachments', 
+          width : width*0.12, 
+          sortable : false, 
           align: 'center'}
         ]
     },p));
@@ -614,13 +626,13 @@
 	{
 	  display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', 
 	  name : '_description', 
-	  width : width*0.5, 
+	  width : width*0.3, 
 	  sortable : true, 
 	  align: 'left'},
 {
   display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_priority"/>', 
   name : '_priority', 
-  width : width*0.3, 
+  width : width*0.2, 
   sortable : true, 
   align: 'left'},
 	{
@@ -628,7 +640,19 @@
 	  name : '_creationDate', 
 	  width : width*0.2, 
 	  sortable : true, 
-	  align: 'left'}
+	  align: 'left'},
+        {
+          display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_userOwners"/>', 
+          name : '_attachments', 
+          width : width*0.12, 
+          sortable : false, 
+          align: 'center'},
+        {
+          display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_roleOwners"/>', 
+          name : '_attachments', 
+          width : width*0.12, 
+          sortable : false, 
+          align: 'center'}
 	]
 	},p));
 		
@@ -647,15 +671,27 @@
 	{
 	  display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', 
 	  name : '_description', 
-	  width : width*0.6, 
+	  width : width*0.4, 
 	  sortable : true, 
 	  align: 'left'},
 	{
 	  display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/>', 
 	  name : '_creationDate', 
-	  width : width*0.4, 
+	  width : width*0.3, 
 	  sortable : true, 
-	  align: 'left'}
+	  align: 'left'},
+    {
+      display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_userOwners"/>', 
+      name : '_attachments', 
+      width : width*0.2, 
+      sortable : false, 
+      align: 'center'},
+    {
+      display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_roleOwners"/>', 
+      name : '_attachments', 
+      width : width*0.2, 
+      sortable : false, 
+      align: 'center'}
 	]},p));		
 		
 		

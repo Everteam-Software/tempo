@@ -53,19 +53,22 @@ public class TasksAction extends Action {
         final UIFWApplicationState state = ApplicationState.getCurrentInstance(new HttpServletRequestWrapper(_request));
         final String token = state.getCurrentUser().getToken();
         final String user = state.getCurrentUser().getName();
-		if (Boolean.valueOf(_request.getParameter("update")).booleanValue()) {
-	        try {
-	        	TasksCollector collector = getTaskCollector(user, token);
-	            model.put("tasks", collector.retrieveTasks());
-	        } catch (Exception ex) {
-	            _errors.add(new ActionError(-1, null, "com_intalio_bpms_workflow_tasks_retrieve_error", null, ActionError.getStackTrace(ex), null, null));
-	            _log.error("Error while retrieving task list", ex);
-	        }
-		}
+        try {
+	        if (Boolean.valueOf(_request.getParameter("update")).booleanValue()) {	
+		        	TasksCollector collector = getTaskCollector(user, token);
+		            model.put("tasks", collector.retrieveTasks());		        
+			}
+            model.put("isWorkflowAdmin", Configuration.getInstance().getTokenClient().isWorkflowAdmin(user));
+        } catch (Exception ex) {
+            _errors.add(new ActionError(-1, null, "com_intalio_bpms_workflow_tasks_retrieve_error", null, ActionError.getStackTrace(ex), null, null));
+            _log.error("Error while retrieving task list", ex);
+        }
+		
         model.put("participantToken", token);
         model.put("currentUser", user);
+        model.put("userRoles", state.getCurrentUser().getRoles());
         model.put("refreshTime", Configuration.getInstance().getRefreshTime());
-        model.put("sessionTimeout", Configuration.getInstance().getSessionTimeout());
+        model.put("sessionTimeout", Configuration.getInstance().getSessionTimeout());        
         BPMS_DESCRIPTOR_PARSER.addBpmsBuildVersionsPropertiesToMap(model);
     }
 }
