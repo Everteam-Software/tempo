@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 public class LocalAuthProvider implements IAuthProvider {
 	public TokenServiceImpl _tokenService;
 	private static final Logger _logger = LoggerFactory
-			.getLogger(N3AuthProvider.class);
+			.getLogger(LocalAuthProvider.class);
 
 	public void setTokenService(TokenServiceImpl tokenService) {
 		_tokenService = tokenService;
@@ -52,7 +52,15 @@ public class LocalAuthProvider implements IAuthProvider {
 					roles += (i == 0 ? "" : ",") + invokerRoles[i];
 				_logger.debug("User " + invokerUser + " with roles " + roles);
 			}
-			return new UserRoles(invokerUser, invokerRoles);
+			
+			UserRoles userRoles=new UserRoles(invokerUser, invokerRoles);
+			userRoles.setWorkflowAdmin(_tokenService.isWorkflowAdmin(invokerUser));
+			
+			if (_logger.isDebugEnabled()){		
+				_logger.debug("isWorkflowAdmin :" + userRoles.isWorkflowAdmin());
+			}
+			
+			return userRoles;
 		} catch (Exception e) {
 			_logger.error("Exception while Authenticating users", e);
 			throw new AuthException(e);

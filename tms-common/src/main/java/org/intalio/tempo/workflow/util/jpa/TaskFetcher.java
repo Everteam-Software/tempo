@@ -174,14 +174,26 @@ public class TaskFetcher {
 			}
 				
 		} else {
-			StringBuffer buffer = new StringBuffer();
-			
-			if(isWorkflowAdmin){
-			buffer.append(baseQuery).append(taskClass.getSimpleName()).append(
-					QUERY_GENERIC2_FOR_ADMIN);
+				StringBuffer buffer = new StringBuffer();
+				
+				if(isWorkflowAdmin){
+					buffer.append(baseQuery).append(taskClass.getSimpleName()).append(QUERY_GENERIC2_FOR_ADMIN);
+					String trim = subQuery.toLowerCase().trim();
+					int orderIndex = trim.indexOf("order");
+					if (orderIndex == -1) {
+						buffer.append(" where ").append(subQuery);
+					} else {
+						if (!trim.startsWith("order")){
+							buffer.append(" where ").append(subQuery);
+						}
+						else {
+							buffer.append(subQuery);
+						}
+				}
 			}else{
 				buffer.append(baseQuery).append(taskClass.getSimpleName()).append(
 						QUERY_GENERIC2);
+				
 				String trim = subQuery.toLowerCase().trim();
 				int orderIndex = trim.indexOf("order");
 				if (orderIndex == -1) {
@@ -196,14 +208,15 @@ public class TaskFetcher {
 						buffer.append(subQuery);
 					}
 				}				
-				
-			}
+			}	
+			
 			if (_logger.isDebugEnabled()){
 				_logger.debug(buffer.toString());
 				_logger.debug("Parameter 1:" + userIdList);				
 				_logger.debug("Parameter 2:" + user.getAssignedRoles());
-			}
-			
+				_logger.debug("isWorkflowAdmin" + isWorkflowAdmin);
+			}			
+		
 
 			if(isWorkflowAdmin)
 				q = _entityManager.createQuery(buffer.toString());
