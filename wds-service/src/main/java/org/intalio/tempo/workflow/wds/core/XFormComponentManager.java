@@ -36,10 +36,18 @@ import org.slf4j.LoggerFactory;
 
 public class XFormComponentManager implements org.intalio.deploy.deployment.spi.ComponentManager {
     private static final Logger LOG = LoggerFactory.getLogger(XFormComponentManager.class);
-
+    private String internalPassword = "verylongpassword";
     private WDSServiceFactory _wdsFactory;
 
-    private HashMap<String, HashSet<AssemblyId>> _versions = new HashMap<String, HashSet<AssemblyId>>();
+    public String getInternalPassword() {
+		return internalPassword;
+	}
+
+	public void setInternalPassword(String internalPassword) {
+		this.internalPassword = internalPassword;
+	}
+
+	private HashMap<String, HashSet<AssemblyId>> _versions = new HashMap<String, HashSet<AssemblyId>>();
 
     public XFormComponentManager(WDSServiceFactory wdsFactory) {
         _wdsFactory = wdsFactory;
@@ -67,15 +75,10 @@ public class XFormComponentManager implements org.intalio.deploy.deployment.spi.
          * DeploymentMessage(Level.ERROR, "No security context token")); return msgs; }
          */
 
-        String token = TokenContext.getToken();
-
-        /* ALEX: */
-        token = "x";
-
         WDSService wds = _wdsFactory.getWDSService();
         try {
             // Phase 1: Check for conflicts
-            checkDir(base, base, msgs, token, wds);
+            checkDir(base, base, msgs, internalPassword, wds);
 
             // Stop if any error during checks
             for (DeploymentMessage msg : msgs) {
@@ -85,7 +88,7 @@ public class XFormComponentManager implements org.intalio.deploy.deployment.spi.
 
             // Phase 2: Actual deployment
             ArrayList<String> urls = new ArrayList<String>();
-            processDir(base, base, urls, msgs, token, wds);
+            processDir(base, base, urls, msgs, internalPassword, wds);
             return new ComponentManagerResult(msgs, urls);
         } finally {
             wds.close();
@@ -94,7 +97,6 @@ public class XFormComponentManager implements org.intalio.deploy.deployment.spi.
 
     public void undeploy(ComponentId name, File path, List<String> deployedObjects) {
         WDSService wds = _wdsFactory.getWDSService();
-        String token = "x"; // TODO
 
         // only undeploy if this is the last version of this assembly
         String assembly = name.getAssemblyId().getAssemblyName();
@@ -102,7 +104,7 @@ public class XFormComponentManager implements org.intalio.deploy.deployment.spi.
         if (set == null || set.size() < 1) {
             for (String url: deployedObjects) {
                 try {
-                    wds.deleteItem(url, token);
+                    wds.deleteItem(url, internalPassword);
                 } catch (UnavailableItemException e) {
                     LOG.warn("Undeploy - XForm not found: "+url);
                 } catch (Exception e) {

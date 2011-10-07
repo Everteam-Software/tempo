@@ -17,6 +17,8 @@ APACHE_COMMONS = {
   :pool => "commons-pool:commons-pool:jar:1.4",
   :validator => "commons-validator:commons-validator:jar:1.2.0"
 }
+ICU4J = "com.ibm.icu:icu4j:jar:3.4.4"
+JASYPT = "org.jasypt:jasypt:jar:1.8"
 APACHE_DERBY = "org.apache.derby:derby:jar:10.2.2.0"
 APACHE_DERBY_NET = "org.apache.derby:derbynet:jar:10.2.2.0"
 APACHE_DERBY_CLIENT = "org.apache.derby:derbyclient:jar:10.2.2.0"
@@ -215,6 +217,7 @@ APACHE_JPA_2_0_0 = [
 APACHE_JPA = APACHE_JPA_2_0_0
 
 FREEMARKER = "org.freemarker:freemarker:jar:2.3.14"
+AOPALLIANCE ="aopalliance:aopalliance:jar:1.0"
 
 CAS_LIBS = [
   group("cas-server-core",:under=>"org.jasig.cas", :version=>"3.2.1.1"),
