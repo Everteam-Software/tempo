@@ -112,8 +112,18 @@ public class TMSServer implements ITMSServer {
     public void settasStorageStrategyEndPoint(String _tasStorageStrategyEndPoint) {
         this._tasStorageStrategyEndPoint = _tasStorageStrategyEndPoint;
     }
+
+    // Added the property for the process endpoint that are stored without ODE server URL in the database
+    private String _odeServerURL;
+	public String getOdeServerURL() {
+		return _odeServerURL;
+	}
+
+	public void setOdeServerURL(String odeServerURL) {
+		_odeServerURL = odeServerURL;
+	}
     
-    public TMSServer() {
+	public TMSServer() {
     }
 
     public TMSServer(IAuthProvider authProvider, TaskPermissions permissions) {
@@ -571,7 +581,11 @@ public class TMSServer implements ITMSServer {
             omTaskOutput.addChild(xmlTooling.convertDOMToOM(input, omFactory));
 
         Options options = new Options();
-        EndpointReference endpointReference = new EndpointReference(task.getProcessEndpoint().toString());
+        //  Refer WF-1531 : Use ODE server url from tempo-tms.xml if process endpoint in the database does not contain the ODE server url.
+        String processEndPoint= task.getProcessEndpoint().toString();
+        processEndPoint=processEndPoint.startsWith("http:") ? processEndPoint : _odeServerURL+processEndPoint;
+
+        EndpointReference endpointReference = new EndpointReference(processEndPoint);
         options.setTo(endpointReference);
         options.setAction(task.getInitOperationSOAPAction());
 
