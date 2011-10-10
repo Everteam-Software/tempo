@@ -78,8 +78,8 @@ public class TMSServer implements ITMSServer {
     private int _httpTimeout = 30000;
     private String _tasEndPoint;
     private static final String TAS_NS= "http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/";
-   
-	//Added the property for deleting file upload widget attachments
+      
+    //Added the property for deleting file upload widget attachments
     private String _tasStorageStrategyEndPoint;
     public String tasStorageStrategyEndPoint() {
         return _tasStorageStrategyEndPoint;
@@ -89,21 +89,10 @@ public class TMSServer implements ITMSServer {
         this._tasStorageStrategyEndPoint = _tasStorageStrategyEndPoint;
     }
     
-
-    // Added the property for storing the URL without ODE server url in database.
-    private String _odeServerURL;
-	public String getOdeServerURL() {
-		return _odeServerURL;
-	}
-
-	public void setOdeServerURL(String odeServerURL) {
-		_odeServerURL = odeServerURL;
-	}
-
     public TMSServer() {
-    }    
+    }
 
-	public TMSServer(IAuthProvider authProvider, TaskPermissions permissions) {
+    public TMSServer(IAuthProvider authProvider, TaskPermissions permissions) {
         _logger.info("New TMS Instance");
         assert authProvider != null : "IAuthProvider implementation is absent!";
         setAuthProvider(authProvider);
@@ -548,12 +537,7 @@ public class TMSServer implements ITMSServer {
             omTaskOutput.addChild(xmlTooling.convertDOMToOM(input, omFactory));
 
         Options options = new Options();
-        
-        //  Refer WF-1531 : Use ODE server url from tempo-tms.xml if process endpoint in the database does not contain the ODE server url.
-        String processEndPoint= task.getProcessEndpoint().toString();
-        processEndPoint=processEndPoint.startsWith("http:") ? processEndPoint : _odeServerURL+processEndPoint;
-        
-        EndpointReference endpointReference = new EndpointReference(processEndPoint);
+        EndpointReference endpointReference = new EndpointReference(task.getProcessEndpoint().toString());
         options.setTo(endpointReference);
         options.setAction(task.getInitOperationSOAPAction());
 
