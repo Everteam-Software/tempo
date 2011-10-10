@@ -255,8 +255,8 @@ CAS_LIBS = [
 
 DEPLOY_API = "org.intalio.deploy:deploy-api:jar:1.0.32"
 REGISTRY = "org.intalio.deploy:deploy-registry:jar:1.0.32"
-SECURITY = group("security-api", :under=>"org.intalio.security", :version=>"1.0.21")
-SECURITY_WS_COMMON = group("security-ws-common", :under=>"org.intalio.security", :version=>"1.0.21")
-SECURITY_WS_CLIENT = group("security-api", "security-ws-client", "security-ws-common", :under=>"org.intalio.security", :version=>"1.0.21")
-SECURITY_WS_CLIENT_ONLY = group("security-api", "security-ws-client", :under=>"org.intalio.security", :version=>"1.0.21")
-WEB_NUTSNBOLTS = "org.intalio.security:security-web-nutsNbolts:jar:1.0.21"
+SECURITY = group("security-api", :under=>"org.intalio.security", :version=>"1.0.22")
+SECURITY_WS_COMMON = group("security-ws-common", :under=>"org.intalio.security", :version=>"1.0.22")
+SECURITY_WS_CLIENT = group("security-api", "security-ws-client", "security-ws-common", :under=>"org.intalio.security", :version=>"1.0.22")
+SECURITY_WS_CLIENT_ONLY = group("security-api", "security-ws-client", :under=>"org.intalio.security", :version=>"1.0.22")
+WEB_NUTSNBOLTS = "org.intalio.security:security-web-nutsNbolts:jar:1.0.22"
