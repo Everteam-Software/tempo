@@ -59,12 +59,24 @@ public class N3AuthProvider implements IAuthProvider {
                     roles += (i == 0 ? "" : ",") + invokerRoles[i];
                 _logger.debug("User " + invokerUser + " with roles " + roles);
             }
-            return new UserRoles(invokerUser, invokerRoles);
+            UserRoles userRoles=new UserRoles(invokerUser, invokerRoles);
+            userRoles.setWorkflowAdmin(isWorkflowAdmin(invokerUser));
+
+			if (_logger.isDebugEnabled()){		
+				_logger.debug("isWorkflowAdmin :" + userRoles.isWorkflowAdmin());
+			}	
+			
+            return userRoles;
         } catch (Exception e) {
             throw new AuthException(e);
         }
     }
 
+    private boolean isWorkflowAdmin(String user) throws Exception  {
+        	return	connect2tokenService().isWorkflowAdmin(user);        
+    }
+    
+    
     private TokenService connect2tokenService() throws Exception {
         if (_tokenService == null) {
             _logger.debug("Initialize connect to " + _wsEndpoint);

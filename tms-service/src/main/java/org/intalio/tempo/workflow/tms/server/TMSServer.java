@@ -62,6 +62,7 @@ import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
 import org.intalio.tempo.workflow.tms.server.permissions.TaskPermissions;
 import org.intalio.tempo.workflow.util.jpa.TaskFetcher;
+import org.jasypt.util.text.BasicTextEncryptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -77,7 +78,30 @@ public class TMSServer implements ITMSServer {
     private TaskPermissions _permissions;
     private int _httpTimeout = 30000;
     private String _tasEndPoint;
-    private static final String TAS_NS= "http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/";
+    private String httpChunking = "true";
+    private String internalPassword = "verylongpassword";
+    
+    public String getInternalPassword() {
+		return internalPassword;
+	}
+
+	public void setInternalPassword(String internalPassword) {
+		this.internalPassword = internalPassword;
+	}
+
+	public String getHttpChunking() {
+		return httpChunking;
+	}
+
+	public void setHttpChunking(String httpChunking) {
+		this.httpChunking = httpChunking;
+	}
+
+	public boolean isHTTPChunking(){
+		return Boolean.parseBoolean(httpChunking);
+	}
+	
+	private static final String TAS_NS= "http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/";
       
     //Added the property for deleting file upload widget attachments
     private String _tasStorageStrategyEndPoint;
@@ -88,8 +112,18 @@ public class TMSServer implements ITMSServer {
     public void settasStorageStrategyEndPoint(String _tasStorageStrategyEndPoint) {
         this._tasStorageStrategyEndPoint = _tasStorageStrategyEndPoint;
     }
+
+    // Added the property for the process endpoint that are stored without ODE server URL in the database
+    private String _odeServerURL;
+	public String getOdeServerURL() {
+		return _odeServerURL;
+	}
+
+	public void setOdeServerURL(String odeServerURL) {
+		_odeServerURL = odeServerURL;
+	}
     
-    public TMSServer() {
+	public TMSServer() {
     }
 
     public TMSServer(IAuthProvider authProvider, TaskPermissions permissions) {
@@ -388,6 +422,16 @@ public class TMSServer implements ITMSServer {
         EndpointReference endpointReference = new EndpointReference(
                 _tasEndPoint);
         options.setTo(endpointReference);
+		// Disabling chunking as lighthttpd doesnt support it
+        
+		if (isHTTPChunking())
+			options.setProperty(
+					org.apache.axis2.transport.http.HTTPConstants.CHUNKED,
+					Boolean.TRUE);
+		else
+			options.setProperty(
+					org.apache.axis2.transport.http.HTTPConstants.CHUNKED,
+					Boolean.FALSE);
 
         options.setAction("delete");
         
@@ -537,7 +581,11 @@ public class TMSServer implements ITMSServer {
             omTaskOutput.addChild(xmlTooling.convertDOMToOM(input, omFactory));
 
         Options options = new Options();
-        EndpointReference endpointReference = new EndpointReference(task.getProcessEndpoint().toString());
+        //  Refer WF-1531 : Use ODE server url from tempo-tms.xml if process endpoint in the database does not contain the ODE server url.
+        String processEndPoint= task.getProcessEndpoint().toString();
+        processEndPoint=processEndPoint.startsWith("http:") ? processEndPoint : _odeServerURL+processEndPoint;
+
+        EndpointReference endpointReference = new EndpointReference(processEndPoint);
         options.setTo(endpointReference);
         options.setAction(task.getInitOperationSOAPAction());
 
@@ -550,6 +598,14 @@ public class TMSServer implements ITMSServer {
         client.setOptions(options);
         try {
             try{
+        		if (isHTTPChunking())
+        			options.setProperty(
+        					org.apache.axis2.transport.http.HTTPConstants.CHUNKED,
+        					Boolean.TRUE);
+        		else
+        			options.setProperty(
+        					org.apache.axis2.transport.http.HTTPConstants.CHUNKED,
+        					Boolean.FALSE);
                 options.setTimeOutInMilliSeconds(_httpTimeout);
                 OMElement response = client.sendReceive(omInitProcessRequest);
                 response.build();
@@ -691,9 +747,12 @@ public class TMSServer implements ITMSServer {
 
     public void deletePipa(ITaskDAOConnection dao,String formUrl, String participantToken) throws AuthException, UnavailableTaskException {
         HashMap<String, Exception> problemTasks = new HashMap<String, Exception>();
-       
+        BasicTextEncryptor decryptor = new BasicTextEncryptor();
+        
+        // setPassword uses hash to decrypt password which should be same as hash of encryptor
+		decryptor.setPassword("IntalioEncryptedpasswordfortempo#123");
         // DOTO due to all the service from wds is 'x'
-        if (participantToken.equalsIgnoreCase("x")) {
+        if (decryptor.decrypt(participantToken).equalsIgnoreCase(internalPassword)) {
             dao.deletePipaTask(formUrl);
             dao.commit();
         } else {

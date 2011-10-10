@@ -63,16 +63,29 @@ public class RemoteTMSClient implements ITaskManagementService {
 
     private static final Logger _log = LoggerFactory.getLogger(OMUnmarshaller.class);
 
-    private static final String AXIS2_REPOSITORY_LOCATION = "";
-
-    private static final String AXIS2_CLIENT_CONFIG_FILE = "";
-
     private EndpointReference _endpoint;
     private String _participantToken;
     private OMFactory _omFactory; 
     private long _httpTimeOut = 30000;
+    
+    private String httpChunking = "true";
 
-    private class TMSMarshaller extends OMMarshaller {
+    public RemoteTMSClient () {
+    }
+
+    public boolean isChunking() {
+    	return Boolean.parseBoolean(httpChunking);
+    }
+    
+	public String getHttpChunking() {
+		return httpChunking;
+	}
+
+	public void setHttpChunking(String httpChunking) {
+		this.httpChunking = httpChunking;
+	}
+
+	private class TMSMarshaller extends OMMarshaller {
         protected TMSMarshaller() {
             super(_omFactory, TaskXMLConstants.TASK_OM_NAMESPACE);
         }
@@ -115,6 +128,21 @@ public class RemoteTMSClient implements ITaskManagementService {
 	            serviceClient.getOptions().setProperty(HTTPConstants.REUSE_HTTP_CLIENT, Constants.VALUE_TRUE);
 	            serviceClient.getOptions().setProperty(HTTPConstants.CACHED_HTTP_CLIENT, httpClient);
 	            _log.debug("serviceClient.getOptions().getTimeOutInMilliSeconds() = "+serviceClient.getOptions().getTimeOutInMilliSeconds() + " ms");
+	        	// Disabling chunking as lighthttpd doesnt support it
+				if (this.isChunking()) {
+					serviceClient
+							.getOptions()
+							.setProperty(
+									org.apache.axis2.transport.http.HTTPConstants.CHUNKED,
+									Boolean.TRUE);
+				} else {
+
+					serviceClient
+							.getOptions()
+							.setProperty(
+									org.apache.axis2.transport.http.HTTPConstants.CHUNKED,
+									Boolean.FALSE);
+				}
 	            OMElement response = serviceClient.sendReceive(request);
 	            response.build();
 	            return response;

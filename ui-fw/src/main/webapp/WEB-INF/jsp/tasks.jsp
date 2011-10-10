@@ -25,7 +25,8 @@
     <link rel="stylesheet" type="text/css" href="style/tabs.css"/>
     <link rel="stylesheet" type="text/css" href="style/flexigrid.css"/>
     <link rel="stylesheet" type="text/css" href="style/jqueryui/ui.all.css"/>
-
+    <link rel="stylesheet" type="text/css" href="style/jqueryui/jquery.alerts.css"/>
+    
     <link rel="alternate" type="application/atom+xml" title="Personal Task feed" href="/feeds/atom/tasks?token=${participantToken}"/>
     <link rel="alternate" type="application/atom+xml" title="Process feed" href="/feeds/atom/processes?token=${participantToken}"/>
 
@@ -45,6 +46,7 @@
     <script type="text/javascript" src="script/ui/effects.highlight.js"></script>
     <script type="text/javascript" src="script/ui/jquery.bgiframe.js"></script>
     <script type="text/javascript" src="script/flexigrid.js"></script>
+    <script type="text/javascript" src="script/jquery.alerts.js"></script>
     
     <%@ include file="/script/grids.jsp"%>
 

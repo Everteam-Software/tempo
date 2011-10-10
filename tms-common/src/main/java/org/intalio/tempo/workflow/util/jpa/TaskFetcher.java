@@ -46,7 +46,9 @@ public class TaskFetcher {
 	private final String QUERY_GENERIC1 = "select DISTINCT T from ";
 	private final String QUERY_GENERIC_COUNT = "select COUNT(DISTINCT T) from ";
 //	private final String QUERY_GENERIC2 = " T where (T._userOwners = (?1) or T._roleOwners = (?2)) ";
+	private final String QUERY_GENERIC2_FOR_ADMIN = " T ";
 	private final String QUERY_GENERIC2 = " T where (T._userOwners in (?1) or T._roleOwners in (?2)) ";
+	
 	// private final String DELETE_TASKS =
 	// "delete from Task m where m._userOwners in (?1) or m._roleOwners in (?2) "
 	// ;
@@ -152,7 +154,7 @@ public class TaskFetcher {
 	private Query buildQuery(Map parameters) {
 		// _entityManager.clear();
 		UserRoles user = (UserRoles) parameters.get(FETCH_USER);
-		Class taskClass = (Class) parameters.get(FETCH_CLASS);
+		Class taskClass = (Class) parameters.get(FETCH_CLASS);		
 		String subQuery = MapUtils.getString(parameters, FETCH_SUB_QUERY, "");
 
 		ArrayList userIdList = new ArrayList();
@@ -160,37 +162,67 @@ public class TaskFetcher {
 		String baseQuery = parameters.containsKey(FETCH_COUNT) ? QUERY_GENERIC_COUNT
 				: QUERY_GENERIC1;
 		Query q;
+		boolean isWorkflowAdmin=user.isWorkflowAdmin();
 		if (StringUtils.isEmpty(subQuery)) {
-			q = _entityManager.createQuery(
-					baseQuery + taskClass.getSimpleName() + QUERY_GENERIC2)
-					.setParameter(1, userIdList).setParameter(2,
-							user.getAssignedRoles());
-		} else {
-			StringBuffer buffer = new StringBuffer();
-			buffer.append(baseQuery).append(taskClass.getSimpleName()).append(
-					QUERY_GENERIC2);
-
-			String trim = subQuery.toLowerCase().trim();
-			int orderIndex = trim.indexOf("order");
-			if (orderIndex == -1) {
-				buffer.append(" and ").append(" ( ").append(subQuery).append(
-						" ) ");
-			} else {
-				if (!trim.startsWith("order"))
-					buffer.append(" and (").append(
-							subQuery.substring(0, orderIndex)).append(") ")
-							.append(subQuery.substring(orderIndex));
-				else {
-					buffer.append(subQuery);
-				}
+			if(isWorkflowAdmin) {
+				q = _entityManager.createQuery(
+					baseQuery + taskClass.getSimpleName() + QUERY_GENERIC2_FOR_ADMIN);
+			}else{
+				q = _entityManager.createQuery(
+						baseQuery + taskClass.getSimpleName() + QUERY_GENERIC2).setParameter(1, userIdList).setParameter(2,user.getAssignedRoles());
+				
 			}
+				
+		} else {
+				StringBuffer buffer = new StringBuffer();
+				
+				if(isWorkflowAdmin){
+					buffer.append(baseQuery).append(taskClass.getSimpleName()).append(QUERY_GENERIC2_FOR_ADMIN);
+					String trim = subQuery.toLowerCase().trim();
+					int orderIndex = trim.indexOf("order");
+					if (orderIndex == -1) {
+						buffer.append(" where ").append(subQuery);
+					} else {
+						if (!trim.startsWith("order")){
+							buffer.append(" where ").append(subQuery);
+						}
+						else {
+							buffer.append(subQuery);
+						}
+				}
+			}else{
+				buffer.append(baseQuery).append(taskClass.getSimpleName()).append(
+						QUERY_GENERIC2);
+				
+				String trim = subQuery.toLowerCase().trim();
+				int orderIndex = trim.indexOf("order");
+				if (orderIndex == -1) {
+					buffer.append(" and ").append(" ( ").append(subQuery).append(
+							" ) ");
+				} else {
+					if (!trim.startsWith("order"))
+						buffer.append(" and (").append(
+								subQuery.substring(0, orderIndex)).append(") ")
+								.append(subQuery.substring(orderIndex));
+					else {
+						buffer.append(subQuery);
+					}
+				}				
+			}	
+			
 			if (_logger.isDebugEnabled()){
 				_logger.debug(buffer.toString());
-				_logger.debug("Parameter 1:" + userIdList);
+				_logger.debug("Parameter 1:" + userIdList);				
 				_logger.debug("Parameter 2:" + user.getAssignedRoles());
-			}
-			q = _entityManager.createQuery(buffer.toString()).setParameter(1,
-					userIdList).setParameter(2, user.getAssignedRoles());
+				_logger.debug("isWorkflowAdmin" + isWorkflowAdmin);
+			}			
+		
+
+			if(isWorkflowAdmin)
+				q = _entityManager.createQuery(buffer.toString());
+			else
+				q = _entityManager.createQuery(buffer.toString()).setParameter(1,userIdList).setParameter(2, user.getAssignedRoles());
+				
 		}
 		return q;
 	}

@@ -20,8 +20,17 @@ import org.intalio.tempo.workflow.util.RequiredArgumentException;
 public class UserRoles {
     private String _userID;
     private AuthIdentifierSet _assignedRoles;
+    private boolean isWorkflowAdmin;
+    
+    public boolean isWorkflowAdmin() {
+		return isWorkflowAdmin;
+	}
 
-    public UserRoles(String userID, String[] assignedRoles) {
+	public void setWorkflowAdmin(boolean isWorkflowAdmin) {
+		this.isWorkflowAdmin = isWorkflowAdmin;
+	}
+
+	public UserRoles(String userID, String[] assignedRoles) {
         this(userID, new AuthIdentifierSet(assignedRoles));
     }
 

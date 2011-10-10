@@ -37,6 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnectionFactory;
+import org.jasypt.util.text.BasicTextEncryptor;
 
 public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.ComponentManager {
     private static final Logger LOG = LoggerFactory.getLogger(PIPAComponentManager.class);
@@ -44,8 +45,17 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
     ITMSServer _tms;
     private ITaskDAOConnectionFactory _taskDAOFactory;
     private HashMap<String, HashSet<AssemblyId>> _versions = new HashMap<String, HashSet<AssemblyId>>();
+    private String internalPassword = "verylongpassword";
+    
+    public String getInternalPassword() {
+		return internalPassword;
+	}
 
-    public PIPAComponentManager(ITMSServer tms,ITaskDAOConnectionFactory taskDAOFactory) {
+	public void setInternalPassword(String internalPassword) {
+		this.internalPassword = internalPassword;
+	}
+
+	public PIPAComponentManager(ITMSServer tms,ITaskDAOConnectionFactory taskDAOFactory) {
         _tms = tms;
         _taskDAOFactory=taskDAOFactory;
     }
@@ -75,14 +85,19 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
          * msgs; }
          */
 
-        String token = TokenContext.getToken();
 
-        /* ALEX: */
-        token = "x";
+        
+        
+        String intaliohash = System.getProperty("intaliohash");
+        
+    
 
+        BasicTextEncryptor encryptor = new BasicTextEncryptor();
+        // setPassword uses hash to decrypt password which should be same as hash of encryptor
+		encryptor.setPassword("IntalioEncryptedpasswordfortempo#123");
         try {
             // Phase 1: Check for conflicts
-            checkDir(base, base, msgs, token);
+            checkDir(base, base, msgs, internalPassword);
 
             // Stop if any error during checks
             for (DeploymentMessage msg : msgs) {
@@ -92,15 +107,16 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
 
             // Phase 2: Actual deployment
             ArrayList<String> urls = new ArrayList<String>();
-            processDir(base, base, urls, msgs, token);
+            processDir(base, base, urls, msgs,encryptor.encrypt(internalPassword));
             return new ComponentManagerResult(msgs, urls);
         } finally {
         }
     }
 
     public void undeploy(ComponentId name, File path, List<String> deployedResources) {
-        String token = "x"; // TODO
-
+        BasicTextEncryptor encryptor = new BasicTextEncryptor();
+        // setPassword uses hash to decrypt password which should be same as hash of encryptor
+		encryptor.setPassword("IntalioEncryptedpasswordfortempo#123");
         // only undeploy if this is the last version of this assembly
         String assembly = name.getAssemblyId().getAssemblyName();
         HashSet<AssemblyId> set = _versions.get(assembly);
@@ -114,7 +130,7 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
 	            for (String url : deployedResources) {
 	                try {
 	                	if(LOG.isDebugEnabled()) LOG.debug("versions>> "+_versions.toString());
-	                    _tms.deletePipa(dao,url, token);
+	                    _tms.deletePipa(dao,url,encryptor.encrypt(internalPassword));
 	                } catch (UnavailableTaskException e) {
 	                    LOG.warn("Undeploy - PIPA not found: " + url);
 	                } catch (AuthException e) {

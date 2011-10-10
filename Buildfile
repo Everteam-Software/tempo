@@ -59,7 +59,7 @@ define "tempo" do
 
     package :jar
     package(:aar).with(:libs => [ 
-        SECURITY_WS_CLIENT, WEB_NUTSNBOLTS, APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], JAXEN, SLF4J, SPRING[:core], WEBDAV])
+        SECURITY_WS_CLIENT, WEB_NUTSNBOLTS, APACHE_COMMONS[:httpclient],JASYPT, APACHE_COMMONS[:codec], JAXEN, SLF4J, SPRING[:core], WEBDAV])
   end
 
   desc "Xml Beans generation"
@@ -77,7 +77,7 @@ define "tempo" do
     compile { open_jpa_enhance }
     task "package" => generate_sql([project], "workflow.tms")
     
-    test.with APACHE_DERBY, LOG4J, DB_CONNECTOR.values, XMLUNIT, WOODSTOX, INSTINCT, SECURITY_WS_COMMON
+    test.with APACHE_DERBY, LOG4J, DB_CONNECTOR.values, XMLUNIT, WOODSTOX, INSTINCT, SECURITY_WS_COMMON, APACHE_COMMONS[:pool], APACHE_COMMONS[:collections]
     test.exclude '*TestUtils*'
     unless ENV["LIVE"] == 'yes'
       test.exclude '*N3AuthProviderLiveTest*'
@@ -107,9 +107,8 @@ define "tempo" do
   
   desc "Task Management Service"
   define "tms-service" do
-    libs = projects("tms-axis", "tms-common", "dao-nutsNbolts"),
-     APACHE_JPA, APACHE_COMMONS[:pool], AXIOM, AXIS2, JAXEN, SLF4J, SPRING[:core], STAX_API, XMLBEANS, DB_CONNECTOR.values, DEPLOY_API, SECURITY_WS_CLIENT_ONLY, WEB_NUTSNBOLTS,XALAN
-  
+    libs = projects("tms-axis", "tms-common", "dao-nutsNbolts"),JASYPT,
+     APACHE_JPA, APACHE_COMMONS[:pool], AXIOM, AXIS2, JAXEN, SLF4J, SPRING[:core], STAX_API, XMLBEANS, DB_CONNECTOR.values, DEPLOY_API, SECURITY_WS_CLIENT_ONLY, WEB_NUTSNBOLTS,XALAN,JASYPT 
     compile.with libs
     test.with libs + [REGISTRY, APACHE_DERBY, APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], CASTOR, EASY_B, LOG4J, DB_CONNECTOR.values, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES, XMLUNIT, INSTINCT]
 
@@ -129,10 +128,11 @@ define "tempo" do
 
     package :jar
     package(:aar).with :libs => 
-        [ projects("tms-axis", "tms-common", "dao-nutsNbolts"), OPENSSO_CLIENT_SDK, CAS_CLIENT,CASTOR,APACHE_COMMONS[:pool], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], APACHE_JPA, SLF4J, SPRING[:core], DEPLOY_API, REGISTRY, SECURITY_WS_CLIENT, WEB_NUTSNBOLTS ] 
+        [ projects("tms-axis", "tms-common", "dao-nutsNbolts"), JASYPT,OPENSSO_CLIENT_SDK, CAS_CLIENT,CASTOR,APACHE_COMMONS[:pool], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], APACHE_JPA, SLF4J, SPRING[:core], DEPLOY_API, REGISTRY, SECURITY_WS_CLIENT, WEB_NUTSNBOLTS ] 
   end
   
   desc "User-Interface Framework"
+
   define "ui-fw" do
     libs = projects("tms-axis", "tms-client", "tms-common","dao-nutsNbolts","tms-service"),
            SECURITY_WS_CLIENT,
@@ -152,6 +152,8 @@ define "tempo" do
            INTALIO_STATS, 
            # JODATIME,
            JSON,
+	   JASYPT,
+	   ICU4J,
            JSON_NAGGIT,
            JSTL,
            OPENSSO_CLIENT_SDK,
@@ -186,17 +188,17 @@ define "tempo" do
 
   desc "Workflow Deployment Service"
   define "wds-service" do |project|
-    libs = [ projects("dao-nutsNbolts", "tms-client", "tms-axis", "tms-common", "ui-fw"), 
-      AXIS2, AXIOM, APACHE_COMMONS[:io], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], APACHE_COMMONS[:pool], APACHE_JPA, DOM4J, JAXEN, SLF4J, SPRING[:core], STAX_API, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX, XERCES, XMLBEANS, DEPLOY_API, REGISTRY, SECURITY, WEB_NUTSNBOLTS]
+    libs = [ projects("dao-nutsNbolts", "tms-client", "tms-axis", "tms-common" ), 
+      AXIS2, AXIOM, APACHE_COMMONS[:io], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], APACHE_COMMONS[:pool], APACHE_JPA, DOM4J, JAXEN, SLF4J, SPRING[:core], STAX_API, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX, XERCES, XMLBEANS, DEPLOY_API, REGISTRY, SECURITY, WEB_NUTSNBOLTS ]
     test_libs = libs + [SERVLET_API, EASY_B, INSTINCT, DB_CONNECTOR.values]
-    compile.with test_libs
+	compile.with(test_libs + projects("ui-fw"))
     compile { open_jpa_enhance }
     test.with APACHE_DERBY, LOG4J
     resources.filter.using "version" => VERSION_NUMBER
     task "package" => generate_sql([project], "workflow.deployment")
     
     package :jar
-    package(:war).with(:libs=>libs)
+	package(:war).with(:libs=> [libs , 'ui-fw/target/*.jar'])
   end
 
   
