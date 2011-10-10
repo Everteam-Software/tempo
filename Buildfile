@@ -7,7 +7,7 @@ require "buildr/xmlbeans"
 # Keep this structure to allow the build system to update version numbers.
 
 # This branch is a copy of Tempo 6.0.85
-VERSION_NUMBER = "6.2.0.009"
+VERSION_NUMBER = "6.2.0.009-SNAPSHOT"
 
 require "rsc/build/dependencies.rb"
 require "rsc/build/repositories.rb"
@@ -59,7 +59,7 @@ define "tempo" do
 
     package :jar
     package(:aar).with(:libs => [ 
-        SECURITY_WS_CLIENT, WEB_NUTSNBOLTS, APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], JAXEN, SLF4J, SPRING[:core], WEBDAV])
+        SECURITY_WS_CLIENT, WEB_NUTSNBOLTS, APACHE_COMMONS[:httpclient],JASYPT, APACHE_COMMONS[:codec], JAXEN, SLF4J, SPRING[:core], WEBDAV])
   end
 
   desc "Xml Beans generation"
@@ -77,7 +77,7 @@ define "tempo" do
     compile { open_jpa_enhance }
     task "package" => generate_sql([project], "workflow.tms")
     
-    test.with APACHE_DERBY, LOG4J, DB_CONNECTOR.values, XMLUNIT, WOODSTOX, INSTINCT, SECURITY_WS_COMMON
+    test.with APACHE_DERBY, LOG4J, DB_CONNECTOR.values, XMLUNIT, WOODSTOX, INSTINCT, SECURITY_WS_COMMON, APACHE_COMMONS[:pool], APACHE_COMMONS[:collections]
     test.exclude '*TestUtils*'
     unless ENV["LIVE"] == 'yes'
       test.exclude '*N3AuthProviderLiveTest*'
@@ -107,9 +107,8 @@ define "tempo" do
   
   desc "Task Management Service"
   define "tms-service" do
-    libs = projects("tms-axis", "tms-common", "dao-nutsNbolts"),
-     APACHE_JPA, APACHE_COMMONS[:pool], AXIOM, AXIS2, JAXEN, SLF4J, SPRING[:core], STAX_API, XMLBEANS, DB_CONNECTOR.values, DEPLOY_API, SECURITY_WS_CLIENT_ONLY, WEB_NUTSNBOLTS,XALAN
-  
+    libs = projects("tms-axis", "tms-common", "dao-nutsNbolts"),JASYPT,
+     APACHE_JPA, APACHE_COMMONS[:pool], AXIOM, AXIS2, JAXEN, SLF4J, SPRING[:core], STAX_API, XMLBEANS, DB_CONNECTOR.values, DEPLOY_API, SECURITY_WS_CLIENT_ONLY, WEB_NUTSNBOLTS,XALAN,JASYPT 
     compile.with libs
     test.with libs + [REGISTRY, APACHE_DERBY, APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], CASTOR, EASY_B, LOG4J, DB_CONNECTOR.values, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES, XMLUNIT, INSTINCT]
 
@@ -129,7 +128,7 @@ define "tempo" do
 
     package :jar
     package(:aar).with :libs => 
-        [ projects("tms-axis", "tms-common", "dao-nutsNbolts"), OPENSSO_CLIENT_SDK, CAS_CLIENT,CASTOR,APACHE_COMMONS[:pool], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], APACHE_JPA, SLF4J, SPRING[:core], DEPLOY_API, REGISTRY, SECURITY_WS_CLIENT, WEB_NUTSNBOLTS ] 
+        [ projects("tms-axis", "tms-common", "dao-nutsNbolts"), JASYPT,OPENSSO_CLIENT_SDK, CAS_CLIENT,CASTOR,APACHE_COMMONS[:pool], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], APACHE_JPA, SLF4J, SPRING[:core], DEPLOY_API, REGISTRY, SECURITY_WS_CLIENT, WEB_NUTSNBOLTS ] 
   end
   
   desc "User-Interface Framework"
@@ -152,6 +151,8 @@ define "tempo" do
            INTALIO_STATS, 
            # JODATIME,
            JSON,
+	   JASYPT,
+	   ICU4J,
            JSON_NAGGIT,
            JSTL,
            OPENSSO_CLIENT_SDK,
