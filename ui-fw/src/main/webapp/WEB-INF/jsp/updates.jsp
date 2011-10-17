@@ -16,11 +16,11 @@
 			<c:set var="showAlert" value="" />
                    <c:if test="${isWorkflowAdmin}"> 
                         <c:forEach var="role" items="${userRoles}">      
-							<c:if test="${fn:indexOf(fn:escapeXml(roles),fn:escapeXml(role))!=-1}"> 
+							<c:if test="${fn:containsIgnoreCase(fn:escapeXml(roles),fn:escapeXml(role))}"> 
 								<c:set var="showAnchorTag" value="false" />
 							</c:if> 
 						</c:forEach>
-						<c:if test="${ showAnchorTag && fn:indexOf(fn:escapeXml(users),fn:escapeXml(currentUser))==-1}">
+						<c:if test="${ showAnchorTag && ! fn:containsIgnoreCase(fn:escapeXml(users),fn:escapeXml(currentUser))}">
                                  <c:set var="messageKey"><fmt:message key='com_intalio_bpms_workflow_admin_notifications_retrieve_error'/> </c:set> 
 			                     <c:set var="title"><fmt:message key='com_intalio_bpms_workflow_pageTitle'/> </c:set> 
 	                             <c:set var="showAlert" value="showAlertForNotification('${messageKey}','${title}');return false" /> 
@@ -58,12 +58,12 @@
 			<c:set var="showAlert" value="" />
                  <c:if test="${isWorkflowAdmin}"> 
                        <c:forEach var="role" items="${userRoles}">      
-							<c:if test="${fn:indexOf(fn:escapeXml(roles),fn:escapeXml(role))!=-1}"> 
+							<c:if test="${fn:containsIgnoreCase(fn:escapeXml(roles),fn:escapeXml(role))}"> 
 								<c:set var="showAnchorTag" value="false" />
 							</c:if> 
 
 						</c:forEach>
-						<c:if test="${ showAnchorTag && fn:indexOf(fn:escapeXml(users),fn:escapeXml(currentUser))==-1}">
+						<c:if test="${ showAnchorTag && ! fn:containsIgnoreCase(fn:escapeXml(users),fn:escapeXml(currentUser))}">
                              <c:set var="messageKey"><fmt:message key='com_intalio_bpms_workflow_admin_processes_retrieve_error'/> </c:set> 
 		                     <c:set var="title"><fmt:message key='com_intalio_bpms_workflow_pageTitle'/> </c:set> 
 		                     <c:set var="showAlert" value="showAlertForProcess('${messageKey}','${title}');return false" />
@@ -97,11 +97,11 @@
 			<c:set var="showAlert" value="" />
                         <c:if test="${isWorkflowAdmin}"> 
                                 <c:forEach var="role" items="${userRoles}">      
-									<c:if test="${fn:indexOf(fn:escapeXml(roles),fn:escapeXml(role))!=-1}"> 
+									<c:if test="${fn:containsIgnoreCase(fn:escapeXml(roles),fn:escapeXml(role))}"> 
 										<c:set var="showAnchorTag" value="false" />
 									</c:if> 
 								</c:forEach>
-								<c:if test="${ showAnchorTag && fn:indexOf(fn:escapeXml(users),fn:escapeXml(currentUser))==-1}">
+								<c:if test="${ showAnchorTag && ! fn:containsIgnoreCase(fn:escapeXml(users),fn:escapeXml(currentUser))}">
 			                             <c:set var="messageKey"><fmt:message key='com_intalio_bpms_workflow_admin_tasks_retrieve_error'/> </c:set> 
 			                             <c:set var="title"><fmt:message key='com_intalio_bpms_workflow_pageTitle'/> </c:set> 
 			                             <c:set var="showAlert" value="showAlertForTask('${messageKey}','${title}');return false" />
