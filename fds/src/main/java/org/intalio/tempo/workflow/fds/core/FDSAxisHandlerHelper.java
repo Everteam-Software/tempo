@@ -12,9 +12,9 @@ import org.intalio.tempo.workflow.fds.tools.SoapTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class FDSAxisHanderHelper {
+public class FDSAxisHandlerHelper {
 
-    private static Logger _log = LoggerFactory.getLogger(FDSAxisHanderHelper.class);
+    private static Logger _log = LoggerFactory.getLogger(FDSAxisHandlerHelper.class);
 
     private WorkflowProcessesMessageConvertor _wf2up = null;
     private UserProcessMessageConvertor _up2wf = null;    
@@ -22,7 +22,7 @@ public class FDSAxisHanderHelper {
     private String _soapAction = null;
     private String _targetEPR = null;
 
-    public FDSAxisHanderHelper(boolean changeCallbackAddress) {
+    public FDSAxisHandlerHelper(boolean changeCallbackAddress) {
         _log.debug("Constructor called");
         _wf2up = new WorkflowProcessesMessageConvertor();
         _up2wf = new UserProcessMessageConvertor();
