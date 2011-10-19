@@ -33,6 +33,14 @@ define "tempo" do
 
   desc "Form Dispatcher Servlet"
   define "fds" do
+    def package_as_mar(file_name) #:nodoc:
+      Packaging::Java::JarTask.define_task(file_name).tap do |jar|
+        jar.with :manifest=>manifest, :meta_inf=>meta_inf
+        jar.with [compile.target, resources.target].compact
+        jar.path('META-INF').include path_to(:source, :main, :axis2, 'module.xml'), :as=>'module.xml'
+      end
+    end
+
     libs = [AXIS2, APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], DOM4J, JAXEN, LOG4J, SERVLET_API, SLF4J, STAX_API]
     compile.with libs 
     resources.filter.using "version" => VERSION_NUMBER
@@ -41,6 +49,7 @@ define "tempo" do
       test.exclude '*RemoteFDSTest*'
     end
     package :war
+    package :mar
   end
 
   desc "Task Attachment Service"
