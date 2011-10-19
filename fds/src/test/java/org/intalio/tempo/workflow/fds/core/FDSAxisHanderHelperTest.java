@@ -14,7 +14,7 @@ import junit.framework.TestCase;
 
 public class FDSAxisHanderHelperTest extends TestCase{   
     //needs to be static as this object needs to statefull
-    private static FDSAxisHanderHelper helper = new FDSAxisHanderHelper(false);
+    private static FDSAxisHandlerHelper helper = new FDSAxisHandlerHelper(false);
     
     private static String ubpSoapAction  = "http://www.example.com/AbsenceRequest/AbsenceRequest_To_Manager/AbsenceRequest_To_Manager_PortType/Receive_Absence_Request--006";
     private static String userProcessNamespaceURI = "http://www.intalio.com/workflow/forms/AbsenceRequest/AbsenceRequest";
