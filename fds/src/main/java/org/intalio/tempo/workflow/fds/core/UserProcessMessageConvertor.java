@@ -58,6 +58,14 @@ public class UserProcessMessageConvertor {
      * Converted soap action, if applicable
      */
     private String _soapAction = null;
+    
+    /**
+     * Flag to indicate whether the value of callback address in header <br> 
+     * needs to be changed.
+     * Default: true
+     */
+    private boolean changeCallbackAddress = true;
+    
 
     /**
      * Converts a SOAP message from a user process to the WorkflowProcesses
@@ -273,4 +281,26 @@ public class UserProcessMessageConvertor {
     public String getSoapAction() {
         return _soapAction;
     }
+    
+    /**
+     * Returns the value of status flag indicating whether the value of callback address <br>
+     * can be changed or not while converting the message. 
+     * 
+     * @return
+     *  Default value: true
+     *
+     * @see #setChangeCallbackAddress(boolean) 
+     */
+    public boolean isChangeCallbackAddress(){
+        return changeCallbackAddress;
+    }
+    
+    /**
+     * 
+     * @param changeCallbackAddress
+     *      Sets the changeCallbackAddress.
+     */
+    public void setChangeCallbackAddress(boolean changeCallbackAddress){
+        this.changeCallbackAddress = changeCallbackAddress;
+    }    
 }
