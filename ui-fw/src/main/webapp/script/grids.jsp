@@ -347,6 +347,12 @@
         $('.trSelected',grid).each(function() 
         {
             var task = $('a.taskd',$(this));
+            var reassign_user= $('#reassign_user').val();
+            var reassign_roles= $('#reassign_roles').val()         
+            if ((reassign_user==null || reassign_user.trim().length==0) && (reassign_roles==null || reassign_roles.trim().length==0) ){
+	             jAlert('<fmt:message key="org_intalio_uifw_reassign_error"/>', '<fmt:message key="com_intalio_bpms_workflow_pageTitle"/>');
+	             return false;
+            }
             
             var soapBody     = new SOAPObject("reassign");
             soapBody.ns      = "http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/";
@@ -360,6 +366,8 @@
             SOAPClient.Proxy = proxy;
             SOAPClient.SOAPServer = tmsService;
             SOAPClient.SendRequest(sr, update);
+    	    $("#reassignDialog").dialog('close');
+            
         });
     }
         
@@ -508,7 +516,7 @@
           height: 300,
           modal: true,		
           buttons: {
-            Reassign: function() {reassignTask(com,grid); $(this).dialog('close');},
+            Reassign: function() {reassignTask(com,grid);},
             Cancel: function() {$(this).dialog('close');}
           },
           close: function() {}
