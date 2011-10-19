@@ -21,7 +21,8 @@ import org.slf4j.LoggerFactory;
  */
 public class FDSModule implements Module {
 	private static Logger _log = LoggerFactory.getLogger(FDSModule.class);
-
+	public static final String FDS_HANDLER_CONTEXT = "org.intalio.tempo.workflow.fds::context";
+	
 	public void init(ConfigurationContext configContext, AxisModule module)
 			throws AxisFault {
 		try {

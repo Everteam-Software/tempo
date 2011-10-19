@@ -1,25 +1,25 @@
 <module name="FDSModule" class ="org.intalio.tempo.workflow.fds.module.FDSModule">
     <Description>UBP-TMP-Mediator</Description>
     <InFlow>
-        <handler name="FDSInHandler" class="org.intalio.tempo.workflow.fds.module.FDSHandler">
+        <handler name="FDSInHandler" class="org.intalio.tempo.workflow.fds.module.FDSInHandler">
             <order phase="FDS" />
         </handler>
     </InFlow>
 
     <OutFlow>
-        <handler name="FDSOutHandler" class="org.intalio.tempo.workflow.fds.module.FDSHandler">
+        <handler name="FDSOutHandler" class="org.intalio.tempo.workflow.fds.module.FDSOutHandler">
             <order phase="FDS" />
         </handler>
     </OutFlow>
 
     <OutFaultFlow>
-        <handler name="FDSOutHandler" class="org.intalio.tempo.workflow.fds.module.FDSHandler">
+        <handler name="FDSOutHandler" class="org.intalio.tempo.workflow.fds.module.FDSOutHandler">
             <order phase="FDS" />
         </handler>
     </OutFaultFlow>
 
     <InFaultFlow>
-        <handler name="FDSInHandler" class="org.intalio.tempo.workflow.fds.module.FDSHandler">
+        <handler name="FDSInHandler" class="org.intalio.tempo.workflow.fds.module.FDSInHandler">
             <order phase="FDS" />
         </handler>
     </InFaultFlow>
