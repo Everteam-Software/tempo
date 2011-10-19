@@ -68,10 +68,55 @@ public class N3AuthProviderTest {
         expect.that(new Expectations() {
             {
                 one(tc).getTokenProperties(SYSTEM_TEST_TOKEN); will(returnValue(properties));
+                one(tc).isWorkflowAdmin("exolab\\castor"); will(returnValue(false));
+               
             }
         });
         ap.setWsEndpoint("http://localhost:8080/axis2/services/TokenService");
         UserRoles user = ap.authenticate(SYSTEM_TEST_TOKEN);
         Assert.assertEquals("exolab\\castor", user.getUserID());
+        
+    }
+    
+    @Specification
+    public void testN3AuthProviderForNonAdmin() throws Exception {
+        final Property[] properties = new Property[5];
+        properties[0] = new Property("issued", "1222330753605");
+        properties[1] = new Property("user", "exolab\\castor");
+        properties[2] = new Property("fullName", "Castor Workaholic");
+        properties[3] = new Property("email", "castor@exolab.org");
+        properties[4] = new Property("roles", "exolab\\committer,exolab\\participant");
+        
+        expect.that(new Expectations() {
+            {
+                one(tc).getTokenProperties(SYSTEM_TEST_TOKEN); will(returnValue(properties));
+                one(tc).isWorkflowAdmin("exolab\\castor"); will(returnValue(false));
+            }
+        });
+        ap.setWsEndpoint("http://localhost:8080/axis2/services/TokenService");
+        UserRoles user = ap.authenticate(SYSTEM_TEST_TOKEN);
+        Assert.assertEquals("exolab\\castor", user.getUserID());
+        Assert.assertFalse(user.isWorkflowAdmin());
+    }
+    
+    @Specification
+    public void testN3AuthProviderForAdmin() throws Exception {
+        final Property[] properties = new Property[5];
+        properties[0] = new Property("issued", "1222330753605");
+        properties[1] = new Property("user", "exolab\\castor");
+        properties[2] = new Property("fullName", "Castor Workaholic");
+        properties[3] = new Property("email", "castor@exolab.org");
+        properties[4] = new Property("roles", "exolab\\committer,exolab\\participant");
+        
+        expect.that(new Expectations() {
+            {
+                one(tc).getTokenProperties(SYSTEM_TEST_TOKEN); will(returnValue(properties));
+                one(tc).isWorkflowAdmin("exolab\\castor"); will(returnValue(true));
+            }
+        });
+        ap.setWsEndpoint("http://localhost:8080/axis2/services/TokenService");
+        UserRoles user = ap.authenticate(SYSTEM_TEST_TOKEN);
+        Assert.assertEquals("exolab\\castor", user.getUserID());
+        Assert.assertTrue(user.isWorkflowAdmin());
     }
 }
