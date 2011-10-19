@@ -11,7 +11,19 @@
  */
 package org.intalio.tempo.workflow.fds.tools;
 
+import java.io.Reader;
+import java.io.StringReader;
+
+import javax.xml.stream.FactoryConfigurationError;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
+import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.soap.SOAPEnvelope;
+import org.apache.axiom.soap.impl.builder.StAXSOAPModelBuilder;
 import org.dom4j.Document;
+import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.Node;
@@ -47,5 +59,18 @@ public class SoapTools {
         bodyElement.add(rootElementCopy);
 
         return document;
+    }
+    
+    public static Document fromAxiom(SOAPEnvelope envelope) throws DocumentException {
+		return DocumentHelper.parseText(envelope.toString());
+    }
+    
+    public static SOAPEnvelope fromDocument(Document doc) throws XMLStreamException, FactoryConfigurationError {
+        Reader reader = new StringReader(doc.asXML());
+        XMLStreamReader streamReader = XMLInputFactory.newInstance().createXMLStreamReader(
+                reader);
+        
+        StAXSOAPModelBuilder builder = (StAXSOAPModelBuilder)OMAbstractFactory.getMetaFactory().createStAXSOAPModelBuilder(streamReader);
+        return builder.getSOAPEnvelope();
     }
 }
