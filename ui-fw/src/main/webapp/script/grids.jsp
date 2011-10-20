@@ -1,5 +1,6 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@page import="org.intalio.tempo.uiframework.Configuration"%>
 <%@page import="org.intalio.tempo.security.ws.TokenClient"%>
 <%@page import="org.intalio.tempo.web.ApplicationState"%>
@@ -302,19 +303,28 @@
     SOAP to skip a task
     */
     function skipTask(com,grid) {
+        var count=0; 
         $('.trSelected',grid).each(function() 
         {
             var task = $('a.taskd',$(this));
-            
-            var soapBody = new SOAPObject("skipTaskRequest");
-            soapBody.ns = "http://www.intalio.com/bpms/workflow/ib4p_20051115";
-            soapBody.appendChild(new SOAPObject("taskId")).val(task.attr('tid'));
-            soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
-            var sr = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/skipTask", soapBody);
-            SOAPClient.Proxy = proxy;
-            SOAPClient.SOAPServer = tmpService;
-            SOAPClient.SendRequest(sr, update);
+            var istaskowner=task.attr('istaskowner');  
+            if(istaskowner=="true"){
+	            var soapBody = new SOAPObject("skipTaskRequest");
+	            soapBody.ns = "http://www.intalio.com/bpms/workflow/ib4p_20051115";
+	            soapBody.appendChild(new SOAPObject("taskId")).val(task.attr('tid'));
+	            soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
+	            var sr = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/skipTask", soapBody);
+	            SOAPClient.Proxy = proxy;
+	            SOAPClient.SOAPServer = tmpService;
+	            SOAPClient.SendRequest(sr, update);
+            }else
+        		count=count+1;
         });
+        if (count!=0){
+            var errorMessage="<fmt:message key='org_intalio_uifw_toolbar_button_skip_error'/>";
+	        jAlert(errorMessage.replace("{0}", count) , '<fmt:message key="com_intalio_bpms_workflow_pageTitle"/>' );
+        }
+
     }
         
     /*
@@ -390,6 +400,8 @@
     Populate the html select box with roles coming from the server 
     */
     function populateRoles(data) {
+      var firstOption="<option value=''>Select role </option>";
+      $("#reassign_dyn").append(firstOption);
       $(data).find("/rbac:getAssignedRolesResponse/rbac:role/").each(function(){
         if(this.nodeName == "rbac:role") {
           var option = "<option value=\""+$(this).text()+"\">"+$(this).text()+"</option>";
@@ -430,6 +442,8 @@
     */        
     function populateDynamicUsers(data) {
       $('#reassign_dyn_user').empty();
+      var firstOption="<option value=''>Select user </option>";
+      $("#reassign_dyn_user").append(firstOption);      
       $(data).find("/rbac:getAssignedRolesResponse/rbac:role/").each(function(){
         if(this.nodeName == "rbac:user") {
           var option = "<option value=\""+$(this).text()+"\">"+$(this).text()+"</option>";

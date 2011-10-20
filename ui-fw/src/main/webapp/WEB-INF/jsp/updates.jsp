@@ -94,6 +94,7 @@
 			<c:set var="rolesLength" value="${fn:length(fn:escapeXml(roles))}" />
 			<c:set var="taskFullURL" value="${taskHolder.formManagerURL}" />
 			<c:set var="showAnchorTag" value="true" />
+		     <c:set var="isTaskOwner" value="true" />
 			<c:set var="showAlert" value="" />
                         <c:if test="${isWorkflowAdmin}"> 
                                 <c:forEach var="role" items="${userRoles}">      
@@ -105,11 +106,12 @@
 			                             <c:set var="messageKey"><fmt:message key='com_intalio_bpms_workflow_admin_tasks_retrieve_error'/> </c:set> 
 			                             <c:set var="title"><fmt:message key='com_intalio_bpms_workflow_pageTitle'/> </c:set> 
 			                             <c:set var="showAlert" value="showAlertForTask('${messageKey}','${title}');return false" />
+			                             <c:set var="isTaskOwner" value="false" />
 					           </c:if> 
                         </c:if>
 			<row id="pa${status.index}"> <cell><![CDATA[
 					     
-					     <a class="taskd" state="${taskHolder.task.state}" href="${taskFullURL}" tid="${taskHolder.task.ID}" target="taskform" priority="${taskHolder.task.priority}" description="${taskHolder.task.description}" onclick='<c:out value="${showAlert}"/>' >
+					     <a class="taskd" state="${taskHolder.task.state}" href="${taskFullURL}" tid="${taskHolder.task.ID}" istaskowner="<c:out value='${isTaskOwner}'/>"  target="taskform" priority="${taskHolder.task.priority}" description="${taskHolder.task.description}" onclick='<c:out value="${showAlert}"/>' >
 		       				<c:choose>
 								<c:when test="${taskHolder.task.description == ''}">
 									<i><fmt:message key="org_intalio_uifw_tasks_notitle"/></i>
