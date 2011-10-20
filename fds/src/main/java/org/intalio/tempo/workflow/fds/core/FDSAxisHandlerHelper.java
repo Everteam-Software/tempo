@@ -50,17 +50,17 @@ public class FDSAxisHandlerHelper {
             }
 
             if (_wf2up.getSoapAction() != null) {
-                soapAction = _wf2up.getSoapAction();                
+                _soapAction = _wf2up.getSoapAction();
             }
 
             // SOAP Action should always be quoted (WS-Interop)
-            if (soapAction == null || soapAction.length() == 0) {
-                soapAction = "\"\"";
-            } else if (soapAction.charAt(0) != '\"') {
-                soapAction = "\"" + soapAction + "\"";
+            if (_soapAction == null || _soapAction.length() == 0) {
+                _soapAction = "\"\"";
+            } else if (_soapAction.charAt(0) != '\"') {
+                _soapAction = "\"" + _soapAction + "\"";
             }
 
-            _log.debug("Completion SOAP Action: " + soapAction);
+            _log.debug("Completion SOAP Action: " + _soapAction);
             
             _targetEPR = _wf2up.getUserProcessEndpoint();
             
