@@ -30,19 +30,20 @@ public class FDSInHandler extends AbstractHandler {
 	public InvocationResponse invoke(MessageContext msgContext)
 			throws AxisFault {
 
+	    _log.debug("To: {}", msgContext.getTo());
+        _log.debug("SOAPAction: {}", msgContext.getSoapAction());
+        _log.debug("WSAAction: {}", msgContext.getWSAAction());
+        _log.debug("FLOW: {}", msgContext.getFLOW());        
+
 		OperationContext oCtx = msgContext.getOperationContext();
 		if (oCtx != null) {
 			FDSAxisHandlerHelper helper = (FDSAxisHandlerHelper)oCtx.getProperty(FDSModule.FDS_HANDLER_CONTEXT);
 			
 			if (helper != null) {
 				_log.debug("Processing incoming response from TMP...");
-
-				_log.debug("To: {}", msgContext.getTo());
-				_log.debug("SOAPAction: {}", msgContext.getSoapAction());
-				_log.debug("WSAAction: {}", msgContext.getWSAAction());
 				
 				try {
-					Document mediatedRequest = helper.processInMessage(SoapTools.fromAxiom(msgContext.getEnvelope()), msgContext.getSoapAction());
+					Document mediatedRequest = helper.processInMessage(SoapTools.fromAxiom(msgContext.getEnvelope()), msgContext.getSoapAction(),msgContext.getTo().getAddress());
 					msgContext.setEnvelope(SoapTools.fromDocument(mediatedRequest));
 
 					// FIXME: We need to set To and SOAPAction to the correct values. 

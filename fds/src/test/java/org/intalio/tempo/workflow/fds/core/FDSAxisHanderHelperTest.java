@@ -30,7 +30,7 @@ public class FDSAxisHanderHelperTest extends TestCase{
     }    
     
     public void testProcessOutMessage() throws Exception {
-        Document transformedRequest = helper.processOutMessage(createUBPRequest(), null);
+        Document transformedRequest = helper.processOutMessage(createUBPRequest(), null,"");
         assertEquals("createTask", helper.getSoapAction());
         assertEquals("http://localhost:8080/ode/workflow/ib4p", helper.getTargetEPR());
         
@@ -59,7 +59,7 @@ public class FDSAxisHanderHelperTest extends TestCase{
     }
     
     public void testProcessInMessage() throws Exception {
-        Document transformedRequest = helper.processInMessage(createWFResponse(), "createTaskResponse");
+        Document transformedRequest = helper.processInMessage(createWFResponse(), "createTaskResponse","");
         assertEquals("createTaskResponse", helper.getSoapAction());
 
         XPath xpathSelector = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Body/*[1]");
