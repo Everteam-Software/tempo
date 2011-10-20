@@ -33,13 +33,10 @@ public class FDSOutHandler extends AbstractHandler {
 	public InvocationResponse invoke(MessageContext msgContext)
 			throws AxisFault {
 
-	    _log.debug("To: {}", msgContext.getTo());
-        _log.debug("SOAPAction: {}", msgContext.getSoapAction());
-        _log.debug("WSAAction: {}", msgContext.getWSAAction());
-
          if (isRequestToFDS(msgContext)) {
-			_log.debug("Processing outgoing request to TMP via FDS...");
-			
+			if (_log.isDebugEnabled()) {
+				_log.debug("Processing outgoing request to FDS...");
+			}
 			try {
 				FDSAxisHandlerHelper helper = new FDSAxisHandlerHelper(false);
 				Document mediatedRequest = helper.processOutMessage(SoapTools.fromAxiom(msgContext.getEnvelope()), msgContext.getSoapAction(),msgContext.getTo().getAddress());
@@ -49,11 +46,9 @@ public class FDSOutHandler extends AbstractHandler {
 				msgContext.setEnvelope(SoapTools.fromDocument(mediatedRequest));
 				msgContext.getOperationContext().setProperty(FDSModule.FDS_HANDLER_CONTEXT, helper);
 				
-				_log.debug("Request processed.");
-				
-				_log.debug("To: {}", msgContext.getTo());
-				_log.debug("SOAPAction: {}", msgContext.getSoapAction());
-				_log.debug("WSAAction: {}", msgContext.getWSAAction());
+				if (_log.isDebugEnabled()) {
+					_log.debug("Request redirected to [To: {}, SOAPAction: {}, WSAAction: {}].", new String[] { msgContext.getTo().getAddress(), msgContext.getSoapAction(), msgContext.getWSAAction() });
+				}
 
 			} catch (MessageFormatException e) {
 				_log.warn("Invalid message format: " + e.getMessage(), e);

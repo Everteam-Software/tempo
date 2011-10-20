@@ -12,6 +12,7 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.intalio.tempo.workflow.fds.core.FDSAxisHandlerHelper;
 import org.intalio.tempo.workflow.fds.core.MessageFormatException;
+import org.intalio.tempo.workflow.fds.dispatches.InvalidInputFormatException;
 import org.intalio.tempo.workflow.fds.tools.SoapTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,26 +31,19 @@ public class FDSInHandler extends AbstractHandler {
 	public InvocationResponse invoke(MessageContext msgContext)
 			throws AxisFault {
 
-	    _log.debug("To: {}", msgContext.getTo());
-        _log.debug("SOAPAction: {}", msgContext.getSoapAction());
-        _log.debug("WSAAction: {}", msgContext.getWSAAction());
-        _log.debug("FLOW: {}", msgContext.getFLOW());        
-
 		OperationContext oCtx = msgContext.getOperationContext();
 		if (oCtx != null) {
 			FDSAxisHandlerHelper helper = (FDSAxisHandlerHelper)oCtx.getProperty(FDSModule.FDS_HANDLER_CONTEXT);
 			
 			if (helper != null) {
-				_log.debug("Processing incoming response from TMP...");
+				if (_log.isDebugEnabled()) {
+					_log.debug("Processing incoming response from FDS...");
+				}
 				
 				try {
 					Document mediatedRequest = helper.processInMessage(SoapTools.fromAxiom(msgContext.getEnvelope()), msgContext.getSoapAction(),msgContext.getTo().getAddress());
 					msgContext.setEnvelope(SoapTools.fromDocument(mediatedRequest));
 
-					// FIXME: We need to set To and SOAPAction to the correct values. 
-					_log.debug("To: {}", msgContext.getTo());
-					_log.debug("SOAPAction: {}", msgContext.getSoapAction());
-					_log.debug("WSAAction: {}", msgContext.getWSAAction());
 
 				} catch (MessageFormatException e) {
 					_log.warn("Invalid message format: " + e.getMessage(), e);
@@ -58,6 +52,8 @@ public class FDSInHandler extends AbstractHandler {
 				} catch (XMLStreamException e) {
 					_log.warn("Invalid XML in message: " + e.getMessage(), e);
 				} catch (FactoryConfigurationError e) {
+					_log.warn("Invalid XML in message: " + e.getMessage(), e);
+				} catch (InvalidInputFormatException e) {
 					_log.warn("Invalid XML in message: " + e.getMessage(), e);
 				}
 			}

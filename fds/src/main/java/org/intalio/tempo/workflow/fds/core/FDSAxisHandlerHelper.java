@@ -15,15 +15,17 @@ import org.slf4j.LoggerFactory;
 public class FDSAxisHandlerHelper {
 
     private static Logger _log = LoggerFactory.getLogger(FDSAxisHandlerHelper.class);
+    
+    public enum Direction {WF2UP, UP2WF}
 
     private WorkflowProcessesMessageConvertor _wf2up = null;
     private UserProcessMessageConvertor _up2wf = null;    
     private IDispatcher _dispatcher = null;
     private String _soapAction = null;
     private String _targetEPR = null;
+    private Direction _requestDirection;
 
     public FDSAxisHandlerHelper(boolean changeCallbackAddress) {
-        _log.debug("Constructor called");
         _wf2up = new WorkflowProcessesMessageConvertor();
         _up2wf = new UserProcessMessageConvertor();
         _up2wf.setChangeCallbackAddress(changeCallbackAddress);
@@ -31,105 +33,109 @@ public class FDSAxisHandlerHelper {
 
     
     public Document processOutMessage(Document soapEnv, String soapAction, String toAddress) throws InvalidInputFormatException, AxisFault, MessageFormatException {
-        Document responseDocument = null;
-
         _soapAction = soapAction;
-
-        String rootElementName = getRootElementName(soapEnv);
+        Document result = null;
         
-        IDispatcher dispatcher = getDispatcher(rootElementName);
-        
-        if(toAddress.contains("fds/workflow/ib4p")){
-            if (_log.isDebugEnabled()) {
-                _log.debug("Workflow process request (before conversion):\n" + soapEnv.asXML() + "\n");
-            }            
-            _wf2up.convertMessage(soapEnv, null);
-            
-            if (_log.isDebugEnabled()) {
-                _log.debug("Workflow process request (after conversion):\n" + soapEnv.asXML() + "\n");
-            }
+        if (_log.isDebugEnabled()) {
+			_log.debug("Outgoing document before conversion: {}", soapEnv.toString());
+		}
 
-            if (_wf2up.getSoapAction() != null) {
-                _soapAction = _wf2up.getSoapAction();
-            }
-
-            // SOAP Action should always be quoted (WS-Interop)
-            if (_soapAction == null || _soapAction.length() == 0) {
-                _soapAction = "\"\"";
-            } else if (_soapAction.charAt(0) != '\"') {
-                _soapAction = "\"" + _soapAction + "\"";
-            }
-
-            _log.debug("Completion SOAP Action: " + _soapAction);
-            
-            _targetEPR = _wf2up.getUserProcessEndpoint();
-            
-            _log.debug("_targetEPR: " + _targetEPR);            
-            
-            responseDocument = soapEnv;
-            
-        }
-        else{
-            if (dispatcher != null) {
-                try {
-                    Document dispatcherReq = createDispatcherRequest(dispatcher,
-                            soapEnv);
-                    _targetEPR = dispatcher.getTargetEndpoint();
-                    _soapAction = dispatcher.getTargetSoapAction();
-            
-                    responseDocument = dispatcherReq;
-                } catch (InvalidInputFormatException e) {
-                    _log.error("Error converting user process request", e);
-                    throw new RuntimeException(e);
-                }
-            } else {
-                _log.debug("Before Conversion: "+soapEnv.asXML());
-                _up2wf.convertMessage(soapEnv);
-                _log.debug("After Conversion: "+soapEnv.asXML());
-            
-                if (_up2wf.getSoapAction() != null) {
-                    _soapAction = _up2wf.getSoapAction();
-                }
-                
-                FormDispatcherConfiguration _config = FormDispatcherConfiguration.getInstance();            
-            
-                _targetEPR = _config.getPxeBaseUrl()
-                        + _config.getWorkflowProcessesRelativeUrl();
-            
-                responseDocument = soapEnv;
-            }
-        }
-        
-        return responseDocument;
-    }
-
-    public Document processInMessage(Document soapEnv, String soapAction,String toAddress) throws MessageFormatException {
-        Document responseDocument = null;
-    
-        _soapAction = soapAction;
-        
-        // FIXME: On what basis should the UBP notifyReponse be converted back to TMP response
-        /**
-         * Add code here
-         */
-                
-        if (_dispatcher != null) {
-            try {
-                responseDocument = createDispatcherResponse(_dispatcher,
-                        soapEnv);
-            } catch (InvalidInputFormatException e) {
-                _log.error("Error converting user process request", e);
-                throw new RuntimeException(e);
-            }
+        if (toAddress.contains("fds/workflow/ib4p")) {
+        	// request from TMP to UBP
+        	_requestDirection = Direction.WF2UP;
+        	
+            result = convertWF2UP(soapEnv);            
         } else {
-            _log.debug("Before Conversion: "+soapEnv.asXML());
-            _wf2up.convertMessage(soapEnv, _up2wf.getUserProcessNamespaceUri());
-            _log.debug("After Conversion: "+soapEnv.asXML());
-            responseDocument = soapEnv;
+        	// request from UBP to TMP
+        	_requestDirection = Direction.UP2WF;
+        	
+    		_dispatcher = createDispatcher(soapEnv);
+    		if (_dispatcher != null) {
+		        Document dispatcherReq = createDispatcherRequest(_dispatcher,
+		                soapEnv);
+		        _targetEPR = _dispatcher.getTargetEndpoint();
+		        _soapAction = _dispatcher.getTargetSoapAction();
+		
+		        result = dispatcherReq;
+    		} else {
+    			result = convertUP2WF(soapEnv);
+    		}
         }
-    
-        return responseDocument;    
+        
+        if (_log.isDebugEnabled()) {
+			_log.debug("Outgoing document before conversion: {}", result.toString());
+		}
+
+        return result;
     }
+
+    public Document processInMessage(Document soapEnv, String soapAction,String toAddress) throws MessageFormatException, AxisFault, InvalidInputFormatException {
+        _soapAction = soapAction;
+        Document result = null;
+
+        if (_log.isDebugEnabled()) {
+			_log.debug("Incoming document before conversion: {}", soapEnv.toString());
+		}
+        
+        if (Direction.WF2UP.equals(_requestDirection)) {
+        	// request came from TMP to UBP, now translating the response from UBP to TMP.
+        	_log.debug("request came from TMP to UBP, now translating the response from UBP to TMP.");
+        	result = convertUP2WF(soapEnv);
+        } else {
+        	// request came from UBP to TMP, now translating the response from TMP to UBP.
+        	_log.debug("request came from UBP to TMP, now translating the response from TMP to UBP.");
+	        if (_dispatcher != null) {
+	        	result = createDispatcherResponse(_dispatcher,
+	                        soapEnv);
+	        } else {
+	        	result = convertWF2UP(soapEnv);
+	        }
+        }
+        
+		if (_log.isDebugEnabled()) {
+			_log.debug("Incoming document after conversion: {}", result.toString());
+		}
+		
+		return result;
+    }
+
+
+	private Document convertUP2WF(Document soapEnv)
+			throws MessageFormatException,
+			AxisFault {
+
+	    _up2wf.convertMessage(soapEnv);
+	
+	    if (_up2wf.getSoapAction() != null) {
+	        _soapAction = _up2wf.getSoapAction();
+	    }
+	    
+	    FormDispatcherConfiguration _config = FormDispatcherConfiguration.getInstance();            
+	    _targetEPR = _config.getPxeBaseUrl() + _config.getWorkflowProcessesRelativeUrl();
+	
+	    return soapEnv;
+	}
+
+
+	private Document convertWF2UP(Document soapEnv) throws MessageFormatException {
+		_wf2up.convertMessage(soapEnv, _up2wf.getUserProcessNamespaceUri());
+		
+		if (_wf2up.getSoapAction() != null) {
+		    _soapAction = _wf2up.getSoapAction();
+		}
+
+		// SOAP Action should always be quoted (WS-Interop)
+		if (_soapAction == null || _soapAction.length() == 0) {
+		    _soapAction = "\"\"";
+		} else if (_soapAction.charAt(0) != '\"') {
+		    _soapAction = "\"" + _soapAction + "\"";
+		}
+
+		_targetEPR = _wf2up.getUserProcessEndpoint();
+		
+		return soapEnv;
+	}
+
     
     public String getSoapAction(){
         return _soapAction;
@@ -144,29 +150,15 @@ public class FDSAxisHandlerHelper {
         return pureRequest;
     }
 
-    protected String getRootElementName(Document soapEnvelope) throws InvalidInputFormatException {
+    protected IDispatcher createDispatcher(Document soapEnvelope) throws InvalidInputFormatException {
+        IDispatcher dispatcher = null;
+
         Document payload = getPayloadFromEnvelope(soapEnvelope);
         Element rootElement = payload.getRootElement();
         String rootElementName = rootElement.getName();
 
-        return rootElementName;
-    }
-
-    protected IDispatcher getDispatcher(String elementName) {
-        if (_dispatcher != null) {
-            return _dispatcher;
-        }
-
-        _dispatcher = createDispatcher(elementName);
-
-        return _dispatcher;
-    }
-
-    protected IDispatcher createDispatcher(String elementName) {
-        IDispatcher dispatcher = null;
-
         try {
-            dispatcher = Dispatchers.createDispatcher(elementName);
+            dispatcher = Dispatchers.createDispatcher(rootElementName);
         } catch (NoDispatcherException e) {
             _log.debug("No custom dispatcher, using the default processing");
         }
