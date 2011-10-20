@@ -44,6 +44,7 @@ public class FDSOutHandler extends AbstractHandler {
 				FDSAxisHandlerHelper helper = new FDSAxisHandlerHelper(false);
 				Document mediatedRequest = helper.processOutMessage(SoapTools.fromAxiom(msgContext.getEnvelope()), msgContext.getSoapAction(),msgContext.getTo().getAddress());
 				msgContext.setSoapAction(helper.getSoapAction());
+				msgContext.setWSAAction(helper.getSoapAction());
 				msgContext.getTo().setAddress(helper.getTargetEPR());
 				msgContext.setEnvelope(SoapTools.fromDocument(mediatedRequest));
 				msgContext.getOperationContext().setProperty(FDSModule.FDS_HANDLER_CONTEXT, helper);
