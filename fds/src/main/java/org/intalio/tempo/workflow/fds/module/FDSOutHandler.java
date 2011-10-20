@@ -33,16 +33,16 @@ public class FDSOutHandler extends AbstractHandler {
 	public InvocationResponse invoke(MessageContext msgContext)
 			throws AxisFault {
 
-		if (isRequestToFDS(msgContext)) {
-			_log.debug("Processing outgoing request to TMP via FDS...");
+	    _log.debug("To: {}", msgContext.getTo());
+        _log.debug("SOAPAction: {}", msgContext.getSoapAction());
+        _log.debug("WSAAction: {}", msgContext.getWSAAction());
 
-			_log.debug("To: {}", msgContext.getTo());
-			_log.debug("SOAPAction: {}", msgContext.getSoapAction());
-			_log.debug("WSAAction: {}", msgContext.getWSAAction());
+         if (isRequestToFDS(msgContext)) {
+			_log.debug("Processing outgoing request to TMP via FDS...");
 			
 			try {
 				FDSAxisHandlerHelper helper = new FDSAxisHandlerHelper(false);
-				Document mediatedRequest = helper.processOutMessage(SoapTools.fromAxiom(msgContext.getEnvelope()), msgContext.getSoapAction());
+				Document mediatedRequest = helper.processOutMessage(SoapTools.fromAxiom(msgContext.getEnvelope()), msgContext.getSoapAction(),msgContext.getTo().getAddress());
 				msgContext.setSoapAction(helper.getSoapAction());
 				msgContext.getTo().setAddress(helper.getTargetEPR());
 				msgContext.setEnvelope(SoapTools.fromDocument(mediatedRequest));
