@@ -5,6 +5,7 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.description.AxisDescription;
 import org.apache.axis2.description.AxisModule;
 import org.apache.axis2.modules.Module;
+import org.apache.axis2.transport.local.LocalTransportReceiver;
 import org.apache.neethi.Assertion;
 import org.apache.neethi.Policy;
 import org.slf4j.Logger;
@@ -27,6 +28,10 @@ public class FDSModule implements Module {
 			throws AxisFault {
 		try {
 			configContext.getAxisConfiguration().engageModule(module.getName());
+			
+			// evil hack to overcome AXIS2-3219
+			LocalTransportReceiver.CONFIG_CONTEXT = configContext;
+			
 			_log.info("FDS module initialized and engaged.");
 		} catch (Exception e) {
 			_log.error("Error during FDS module initialization", e);

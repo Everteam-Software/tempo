@@ -43,7 +43,8 @@ public class FDSInHandler extends AbstractHandler {
 				try {
 					Document mediatedRequest = helper.processInMessage(SoapTools.fromAxiom(msgContext.getEnvelope()), msgContext.getSoapAction(),msgContext.getTo().getAddress());
 					msgContext.setEnvelope(SoapTools.fromDocument(mediatedRequest));
-
+					msgContext.setSoapAction(helper.getSoapAction());
+					msgContext.setWSAAction(helper.getSoapAction());
 
 				} catch (MessageFormatException e) {
 					_log.warn("Invalid message format: " + e.getMessage(), e);

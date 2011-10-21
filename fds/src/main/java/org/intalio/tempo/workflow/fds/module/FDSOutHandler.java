@@ -4,9 +4,13 @@ import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLStreamException;
 
 import org.apache.axis2.AxisFault;
+import org.apache.axis2.Constants;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.description.HandlerDescription;
+import org.apache.axis2.description.TransportInDescription;
+import org.apache.axis2.description.TransportOutDescription;
 import org.apache.axis2.handlers.AbstractHandler;
+import org.apache.axis2.transport.local.LocalTransportReceiver;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.intalio.tempo.workflow.fds.core.FDSAxisHandlerHelper;
@@ -45,7 +49,12 @@ public class FDSOutHandler extends AbstractHandler {
 				msgContext.getTo().setAddress(helper.getTargetEPR());
 				msgContext.setEnvelope(SoapTools.fromDocument(mediatedRequest));
 				msgContext.getOperationContext().setProperty(FDSModule.FDS_HANDLER_CONTEXT, helper);
-				
+
+				// use the local transport
+		        TransportOutDescription tOut = msgContext.getConfigurationContext().getAxisConfiguration().getTransportOut(
+		                Constants.TRANSPORT_LOCAL);
+		        msgContext.setTransportOut(tOut);
+
 				if (_log.isDebugEnabled()) {
 					_log.debug("Request redirected to [To: {}, SOAPAction: {}, WSAAction: {}].", new String[] { msgContext.getTo().getAddress(), msgContext.getSoapAction(), msgContext.getWSAAction() });
 				}
