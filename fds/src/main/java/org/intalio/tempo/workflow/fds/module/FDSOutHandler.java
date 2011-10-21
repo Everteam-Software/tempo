@@ -13,6 +13,7 @@ import org.apache.axis2.handlers.AbstractHandler;
 import org.apache.axis2.transport.local.LocalTransportReceiver;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
+import org.intalio.tempo.workflow.fds.FormDispatcherConfiguration;
 import org.intalio.tempo.workflow.fds.core.FDSAxisHandlerHelper;
 import org.intalio.tempo.workflow.fds.core.MessageFormatException;
 import org.intalio.tempo.workflow.fds.dispatches.InvalidInputFormatException;
@@ -50,10 +51,12 @@ public class FDSOutHandler extends AbstractHandler {
 				msgContext.setEnvelope(SoapTools.fromDocument(mediatedRequest));
 				msgContext.getOperationContext().setProperty(FDSModule.FDS_HANDLER_CONTEXT, helper);
 
-				// use the local transport
-		        TransportOutDescription tOut = msgContext.getConfigurationContext().getAxisConfiguration().getTransportOut(
-		                Constants.TRANSPORT_LOCAL);
-		        msgContext.setTransportOut(tOut);
+				// use the local transport if target is run by PXE
+				if (msgContext.getTo().getAddress().startsWith(FormDispatcherConfiguration.getInstance().getPxeBaseUrl())) {
+			        TransportOutDescription tOut = msgContext.getConfigurationContext().getAxisConfiguration().getTransportOut(
+			                Constants.TRANSPORT_LOCAL);
+			        msgContext.setTransportOut(tOut);
+				}
 
 				if (_log.isDebugEnabled()) {
 					_log.debug("Request redirected to [To: {}, SOAPAction: {}, WSAAction: {}].", new String[] { msgContext.getTo().getAddress(), msgContext.getSoapAction(), msgContext.getWSAAction() });
