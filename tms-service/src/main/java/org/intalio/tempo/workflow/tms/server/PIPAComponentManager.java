@@ -23,21 +23,26 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.intalio.deploy.deployment.AssemblyId;
 import org.intalio.deploy.deployment.ComponentId;
 import org.intalio.deploy.deployment.DeploymentMessage;
 import org.intalio.deploy.deployment.DeploymentMessage.Level;
 import org.intalio.deploy.deployment.spi.ComponentManagerResult;
-import org.intalio.tempo.security.token.TokenContext;
 import org.intalio.tempo.workflow.auth.AuthException;
+import org.intalio.tempo.workflow.task.CustomColumn;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.tms.TMSException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnectionFactory;
 import org.jasypt.util.text.BasicTextEncryptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.ComponentManager {
     private static final Logger LOG = LoggerFactory.getLogger(PIPAComponentManager.class);
@@ -46,6 +51,9 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
     private ITaskDAOConnectionFactory _taskDAOFactory;
     private HashMap<String, HashSet<AssemblyId>> _versions = new HashMap<String, HashSet<AssemblyId>>();
     private String internalPassword = "verylongpassword";
+    private static final String COLUMN_ELEMENT ="column";
+    private static final String COLUMN_NAME_ELEMENT ="column_name";
+
     
     public String getInternalPassword() {
 		return internalPassword;
@@ -223,20 +231,27 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
         return msg;
     }
 
-    public DeploymentMessage processPipa(String token, InputStream input, String name, ArrayList<String> urls) {
+    public DeploymentMessage processPipa(String token, InputStream input, String name, ArrayList<String> urls, File dir) {
         DeploymentMessage msg = null;
+        
         try {
             PIPATask task = loadPIPADescriptor(input);
+            String processName=getProcessName(dir);
+            CustomColumn[] customColumn=loadCustomMetadata(dir,processName);
+            
             urls.add(getFormUrl(task));
             if (task.isValid()) {
                 LOG.debug("Store PIPA {}", name);
                 ITaskDAOConnection dao=_taskDAOFactory.openConnection();
                 try {
                     _tms.deletePipa(dao,getFormUrl(task), token);
+                    _tms.deleteCustomColumn(dao,processName, token);
                 } catch (Exception e) {
                     // don't bother with that here
                 }
                 _tms.storePipa(dao,task, token);
+                 if (customColumn!=null)
+                	 _tms.storeCustomColumn(dao,customColumn, token);
                 dao.close();
             } else {
                 msg = new DeploymentMessage(Level.ERROR, "Invalid PIPA task descriptor: " + name);
@@ -250,7 +265,23 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
         return msg;
     }
 
-    public PIPATask loadPIPADescriptor(InputStream input) throws IOException {
+    private String getProcessName(File dir) {
+    	File parentDir = dir.getParentFile();
+		String processName=parentDir.getName();
+		processName = processName.replaceAll(".\\d*$", "");
+		return processName;
+	}
+
+	private CustomColumn[] loadCustomMetadata(File dir,String processName) {
+		CustomColumn customColumn[]=null;
+		File metadataFile=new File(dir.getAbsolutePath()+"//..//processes.ode/metadata.xml");
+		if (metadataFile.exists()){
+			customColumn= parse(metadataFile,processName);	
+		}
+		return  customColumn;
+	}
+
+	public PIPATask loadPIPADescriptor(InputStream input) throws IOException {
         Properties prop = new Properties();
         prop.load(input);
         PIPATask task = PIPALoader.parsePipa(prop);
@@ -309,8 +340,10 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
                     InputStream input = new FileInputStream(f);
                     try {
                         if (f.getName().endsWith(".pipa")) {
-                            msg = processPipa(token, input, itemURL, urls);
+                            msg = processPipa(token, input, itemURL, urls,dir);
                         }
+                        // TODO Call MetaData and do the needful
+                        
                         if (msg != null)
                             msgs.add(msg);
                     } finally {
@@ -343,4 +376,27 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
             // ignore
         }
     }
+    
+    private  CustomColumn[] parse(File metadataFile, String processName){
+        List<CustomColumn> columns = new ArrayList<CustomColumn>();
+        try {
+        InputStream metadataInputStream = new FileInputStream(metadataFile);
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        
+            Document document = documentBuilderFactory.newDocumentBuilder().parse( metadataInputStream);
+            Element docElement = document.getDocumentElement();
+            NodeList columnList = docElement.getElementsByTagName(COLUMN_ELEMENT);
+            for(int i=0; i < columnList.getLength(); i++){
+            	CustomColumn custCol=new CustomColumn();
+                String columnName = columnList.item(i).getAttributes().getNamedItem(COLUMN_NAME_ELEMENT).getNodeValue();
+                custCol.setCustomColumnName(columnName);
+                custCol.setProjectName(processName);
+                columns.add(custCol);
+            }
+        } catch (Exception e) {
+        	LOG.error("Error while parsing metadata.xml of the Process Name: " + processName, e);
+        } 
+        return (CustomColumn[]) columns.toArray(new CustomColumn[columns.size()]);
+    }
+ 
 }

@@ -1,6 +1,5 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@page import="org.intalio.tempo.uiframework.Configuration"%>
 <%@page import="org.intalio.tempo.security.ws.TokenClient"%>
 <%@page import="org.intalio.tempo.web.ApplicationState"%>
@@ -629,6 +628,19 @@
           width : width*0.12, 
           sortable : false, 
           align: 'center'}
+          
+          <c:forEach items="${newColumnList}" var="newColumn">
+          
+          ,{
+              display: '${newColumn}', 
+              name : '_attachments', 
+              width : width*0.12, 
+              sortable : false, 
+              align: 'center'}
+          
+          </c:forEach>
+          
+          
         ]
     },p));
 		

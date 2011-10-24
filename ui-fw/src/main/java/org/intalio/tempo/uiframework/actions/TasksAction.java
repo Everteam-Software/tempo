@@ -12,6 +12,8 @@
 
 package org.intalio.tempo.uiframework.actions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequestWrapper;
@@ -68,7 +70,13 @@ public class TasksAction extends Action {
         model.put("currentUser", user);
         model.put("userRoles", state.getCurrentUser().getRoles());
         model.put("refreshTime", Configuration.getInstance().getRefreshTime());
-        model.put("sessionTimeout", Configuration.getInstance().getSessionTimeout());        
+        model.put("sessionTimeout", Configuration.getInstance().getSessionTimeout());   
+        
+
+        List<String> newColumnList=new ArrayList<String>(); // Call the operation that returns the distinct list of custom column from DB.
+        newColumnList.add("id");
+        
+        model.put("newColumnList",newColumnList);
         BPMS_DESCRIPTOR_PARSER.addBpmsBuildVersionsPropertiesToMap(model);
     }
 }

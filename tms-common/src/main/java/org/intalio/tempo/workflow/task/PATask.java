@@ -17,7 +17,7 @@ package org.intalio.tempo.workflow.task;
 
 import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -46,6 +46,7 @@ import org.intalio.tempo.workflow.task.traits.ICompleteReportingTask;
 import org.intalio.tempo.workflow.task.traits.IInstanceBoundTask;
 import org.intalio.tempo.workflow.task.traits.IProcessBoundTask;
 import org.intalio.tempo.workflow.task.traits.ITaskWithAttachments;
+import org.intalio.tempo.workflow.task.traits.ITaskWithCustomMetadata;
 import org.intalio.tempo.workflow.task.traits.ITaskWithDeadline;
 import org.intalio.tempo.workflow.task.traits.ITaskWithInput;
 import org.intalio.tempo.workflow.task.traits.ITaskWithOutput;
@@ -65,7 +66,7 @@ import org.w3c.dom.Document;
         @NamedQuery(name = PATask.FIND_BY_STATES, query = "select m from PATask m where m._state=?1", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }),
         @NamedQuery(name= PATask.FIND_BY_INSTANCEID, query= "select m from PATask m where m._instanceId= ?1")})
 public class PATask extends Task implements ITaskWithState, IProcessBoundTask, ITaskWithInput, ITaskWithOutput,
-        ICompleteReportingTask, ITaskWithAttachments, IChainableTask, ITaskWithPriority, ITaskWithDeadline ,IInstanceBoundTask{
+        ICompleteReportingTask, ITaskWithAttachments, IChainableTask, ITaskWithPriority, ITaskWithDeadline ,IInstanceBoundTask,ITaskWithCustomMetadata{
 
     public static final String FIND_BY_STATES = "find_by_ps_states";
     public static final String FIND_BY_PA_USER_ROLE = "find_by_pa_user_role";
@@ -128,6 +129,14 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
     @Column(name = "instance_id")
     private String _instanceId;
     
+    @PersistentMap(keyCascade = CascadeType.ALL, elementCascade = CascadeType.ALL, keyType = String.class, 
+    		elementType=String.class, fetch=FetchType.EAGER)
+    @ContainerTable(name="tempo_generic")
+    private Map<String, String> _customMetadata;
+    
+    
+    
+    
     public PATask() {
         super();
     }
@@ -142,7 +151,18 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
         this.setCompleteSOAPAction(completeSOAPAction);
         if (input != null)
             this.setInput(input);
+    }  
+        
+    public void setCustomMetadata(Map<String, String> customMetadata) {
+        this._customMetadata = customMetadata;
     }
+    
+    public Map<String, String> getCustomMetadata() {
+        return _customMetadata;
+    }
+    
+    
+    
     public String getProcessID() {
         return _processID;
     }

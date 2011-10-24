@@ -19,6 +19,7 @@ import org.apache.axis2.AxisFault;
 import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.UserRoles;
+import org.intalio.tempo.workflow.task.CustomColumn;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.TaskState;
@@ -85,4 +86,12 @@ public interface ITMSServer {
     Task[] getAvailableTasks(ITaskDAOConnection dao,String participantToken, HashMap parameters) throws Exception;
 
     Long countAvailableTasks(ITaskDAOConnection dao,String participantToken, HashMap map) throws AuthException;
+
+	
+
+	void storeCustomColumn(ITaskDAOConnection dao, CustomColumn[] customColumn,
+			String token);
+
+	void deleteCustomColumn(ITaskDAOConnection dao, String processName,
+			String token) throws Exception;
 }

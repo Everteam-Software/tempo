@@ -2,10 +2,8 @@ package org.intalio.tempo.workflow.util.jpa;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -14,6 +12,7 @@ import javax.persistence.Query;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.intalio.tempo.workflow.auth.UserRoles;
+import org.intalio.tempo.workflow.task.CustomColumn;
 import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
@@ -115,7 +114,7 @@ public class TaskFetcher {
 					"Task with following endpoint does not exist:" + formUrl);
 		}
 	}
-
+	
 	/**
 	 * Core method. retrieve all the tasks for the given <code>UserRoles</code>
 	 */
@@ -325,4 +324,23 @@ public class TaskFetcher {
 		return (Task[]) result.toArray(new Task[result.size()]);
 	}
 
+	/**
+	 * Fetch Custom Columns from its Process Name.
+	 * 
+	 * @throws UnavailableTaskException
+	 */
+	public List<CustomColumn> fetchCustomColumnIfExistsfromprocessname(
+			String processName) throws UnavailableTaskException {
+       try {
+           Query q = _entityManager.createNamedQuery(CustomColumn.FIND_BY_PROCESS_NAME);
+           q.setParameter(1, processName);
+           List<CustomColumn> resultList = q.getResultList();
+           if (resultList.size() < 1)
+               throw new UnavailableTaskException("Custom Column does not exist with ProcessName"
+                       + processName);
+           return  resultList;
+    	       } catch (NoResultException nre) {
+           throw new UnavailableTaskException("Custom Column does not exist" + processName);
+       }
+	}
 }

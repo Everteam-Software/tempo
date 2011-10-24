@@ -19,6 +19,8 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
@@ -36,6 +38,7 @@ import org.intalio.tempo.workflow.task.traits.ICompleteReportingTask;
 import org.intalio.tempo.workflow.task.traits.IInstanceBoundTask;
 import org.intalio.tempo.workflow.task.traits.IProcessBoundTask;
 import org.intalio.tempo.workflow.task.traits.ITaskWithAttachments;
+import org.intalio.tempo.workflow.task.traits.ITaskWithCustomMetadata;
 import org.intalio.tempo.workflow.task.traits.ITaskWithDeadline;
 import org.intalio.tempo.workflow.task.traits.ITaskWithInput;
 import org.intalio.tempo.workflow.task.traits.ITaskWithOutput;
@@ -51,6 +54,8 @@ import org.w3c.dom.Node;
 
 import com.intalio.bpms.workflow.taskManagementServices20051109.AccessControlType;
 import com.intalio.bpms.workflow.taskManagementServices20051109.Attachments;
+import com.intalio.bpms.workflow.taskManagementServices20051109.CustomMetadataKeyValueType;
+import com.intalio.bpms.workflow.taskManagementServices20051109.CustomMetadataType;
 import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
 
 public class TaskMarshaller {
@@ -153,6 +158,22 @@ public class TaskMarshaller {
                 final URL payloadURL = attachment.getPayloadURL();
                 xmlAttachment.setPayloadUrl(payloadURL.toString());
             }
+        }
+        
+        if(task instanceof ITaskWithCustomMetadata){
+            ITaskWithCustomMetadata customMetadataTask = (ITaskWithCustomMetadata) task;
+            CustomMetadataType customMetadataType = taskMetadataElement.addNewCustomMetadata();
+            
+            
+            Map<String, String> customMetadataMap = customMetadataTask.getCustomMetadata();
+            Set<String> keySet = customMetadataMap.keySet();
+            for(String key: keySet){
+                CustomMetadataKeyValueType xmlCustomMetadataKeyValueType = customMetadataType.addNewCustomMetadataKeyValue();
+                xmlCustomMetadataKeyValueType.setKey(key);
+                xmlCustomMetadataKeyValueType.setValue( customMetadataMap.get(key));
+            }
+            
+            taskMetadataElement.setCustomMetadata( customMetadataType);
         }
 
         if (task instanceof IChainableTask) {

@@ -17,6 +17,7 @@ import javax.persistence.NoResultException;
 
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.dao.AbstractJPAConnection;
+import org.intalio.tempo.workflow.task.CustomColumn;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
@@ -108,5 +109,28 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
     public Long countAvailableTasks(HashMap parameters) {
         return _fetcher.countTasks(parameters);
     }
+
+    public List<CustomColumn> fetchCustomColumnfromProcessName(String processName) throws UnavailableTaskException {
+        List<CustomColumn> customMetadata=_fetcher.fetchCustomColumnIfExistsfromprocessname(processName);
+        return customMetadata;
+    }
+    
+    @Override
+	public void deleteCustomColumn(CustomColumn toDeleteCustomColumn) {
+	   try {
+            checkTransactionIsActive();
+           	entityManager.remove(toDeleteCustomColumn);
+        } catch (Exception nre) {
+            throw new NoResultException(nre.getMessage());
+        }
+	
+	}
+
+	@Override
+	public void storeCustomColumn(CustomColumn customColumn) {
+        checkTransactionIsActive();
+        entityManager.persist(customColumn);
+		
+	}
 
 }

@@ -22,7 +22,9 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 
@@ -43,6 +45,7 @@ import org.intalio.tempo.workflow.task.traits.ICompleteReportingTask;
 import org.intalio.tempo.workflow.task.traits.IInstanceBoundTask;
 import org.intalio.tempo.workflow.task.traits.IProcessBoundTask;
 import org.intalio.tempo.workflow.task.traits.ITaskWithAttachments;
+import org.intalio.tempo.workflow.task.traits.ITaskWithCustomMetadata;
 import org.intalio.tempo.workflow.task.traits.ITaskWithDeadline;
 import org.intalio.tempo.workflow.task.traits.ITaskWithInput;
 import org.intalio.tempo.workflow.task.traits.ITaskWithOutput;
@@ -56,8 +59,11 @@ import org.intalio.tempo.workflow.util.xml.XsdDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 import com.intalio.bpms.workflow.taskManagementServices20051109.Attachments;
+import com.intalio.bpms.workflow.taskManagementServices20051109.CustomMetadataKeyValueType;
+import com.intalio.bpms.workflow.taskManagementServices20051109.CustomMetadataType;
 import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
 
 /**
@@ -144,6 +150,7 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
         Attachments attachmentsElement = taskMetadata.getAttachments();
         String isChainedBeforeStr = expectElementValue(taskMetadata, "isChainedBefore");
         String previousTaskID = expectElementValue(taskMetadata, "previousTaskId");
+        CustomMetadataType customMetadataTypeElement = taskMetadata.getCustomMetadata();
 
         Class<? extends Task> taskClass = TaskTypeMapper.getTypeClassByName(taskTypeStr);
         Task resultTask = null;
@@ -259,6 +266,23 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
         if (ICompleteReportingTask.class.isAssignableFrom(taskClass)) {
             ((ICompleteReportingTask) resultTask).setCompleteSOAPAction(completeSOAPAction);
         }
+        if(ITaskWithCustomMetadata.class.isAssignableFrom(taskClass)){
+            ITaskWithCustomMetadata taskWithCustomMetadata = (ITaskWithCustomMetadata)resultTask;
+            Map<String, String> customMetadata = new HashMap<String, String>();
+            if(customMetadataTypeElement !=null){
+                for(int i=0; i < customMetadataTypeElement.sizeOfCustomMetadataKeyValueArray(); i ++){
+                    CustomMetadataKeyValueType customMetadataKeyValueTypeElement = customMetadataTypeElement.getCustomMetadataKeyValueArray(i);
+                    if(customMetadataKeyValueTypeElement !=null){
+                        String key = customMetadataKeyValueTypeElement.getKey();
+                        String value = customMetadataKeyValueTypeElement.getValue();
+                        customMetadata.put(key, value);
+                    }
+                }
+            }
+            taskWithCustomMetadata.setCustomMetadata(customMetadata);
+        }
+        
+        
         if (ITaskWithAttachments.class.isAssignableFrom(taskClass)) {
             ITaskWithAttachments taskWithAttachments = (ITaskWithAttachments) resultTask;
 
@@ -449,7 +473,8 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
 
     public Task unmarshalFullTask(OMElement rootElement) throws InvalidInputFormatException {
         try {
-            XmlObject xmlObject = XmlObject.Factory.parse(rootElement.getXMLStreamReader());
+//            XmlObject xmlObject = XmlObject.Factory.parse(rootElement.getXMLStreamReader());
+            XmlObject xmlObject = XmlObject.Factory.parse(rootElement.getXMLStreamReader(), new XmlOptions().setLoadStripWhitespace());
             return unmarshalFullTask(xmlObject);
         } catch (XmlException e) {
             throw new RuntimeException(e.getMessage(), e);
@@ -525,6 +550,17 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
             ((ITaskWithOutput) resultTask).setOutput(serializeXMLObject(output));
         } else {
             forbidParameter(outputElement, "task output");
+        }
+        
+        if(resultTask instanceof ITaskWithCustomMetadata){     
+            NodeList list= xmlInput.getDomNode().getFirstChild().getChildNodes();
+            Map<String, String> customMetadata = new HashMap<String, String>();
+            int elements = list.getLength();
+            for (int j = 0 ; j < elements ; j++) {
+                System.out.println("NodeName : " + list.item(j).getNodeName() + " NodeValue : " + list.item(j).getFirstChild().getNodeValue());
+                customMetadata.put(list.item(j).getNodeName(), list.item(j).getFirstChild().getNodeValue());
+            }
+            ((ITaskWithCustomMetadata) resultTask).setCustomMetadata(customMetadata);
         }
 
         return resultTask;

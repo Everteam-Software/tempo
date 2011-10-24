@@ -21,9 +21,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.intalio.tempo.workflow.auth.UserRoles;
+import org.intalio.tempo.workflow.task.CustomColumn;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
+import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -130,5 +132,24 @@ public class SimpleTaskDAOConnection implements ITaskDAOConnection {
     public boolean deleteAttachment(String attachmentUrl) {
         throw new RuntimeException("Not Implemented");
     }
+
+	@Override
+	public void deleteCustomColumn(CustomColumn customColumn) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public List<CustomColumn> fetchCustomColumnfromProcessName(
+			String processName) throws UnavailableTaskException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void storeCustomColumn(CustomColumn customColumn) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

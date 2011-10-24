@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.intalio.tempo.workflow.auth.UserRoles;
+import org.intalio.tempo.workflow.task.CustomColumn;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
@@ -44,4 +45,7 @@ public interface ITaskDAOConnection {
     public void storePipaTask(PIPATask task);
     public void deletePipaTask(String formUrl);
     public PIPATask fetchPipa(String formUrl) throws UnavailableTaskException ;
+    public List<CustomColumn> fetchCustomColumnfromProcessName(String processName) throws UnavailableTaskException ;
+    void deleteCustomColumn(CustomColumn customColumn);
+	void storeCustomColumn(CustomColumn customColumn);
 }

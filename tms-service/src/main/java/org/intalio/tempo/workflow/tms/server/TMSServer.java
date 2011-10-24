@@ -42,6 +42,7 @@ import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.IAuthProvider;
 import org.intalio.tempo.workflow.auth.UserRoles;
+import org.intalio.tempo.workflow.task.CustomColumn;
 import org.intalio.tempo.workflow.task.InvalidTaskException;
 import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.PIPATask;
@@ -938,6 +939,25 @@ public class TMSServer implements ITMSServer {
          return fileuploadwidgetlinkset;
 
     }
+
+	@Override
+	public void deleteCustomColumn(ITaskDAOConnection dao, String processName,String token) throws Exception {
+		List<CustomColumn> customColumns = null;
+		if (processName != null && processName.length() != 0) {
+            customColumns = dao.fetchCustomColumnfromProcessName(processName);
+        } 
+        for (CustomColumn custCol: customColumns) {
+            dao.deleteCustomColumn(custCol);
+        }
+	}
+
+	@Override
+	public void storeCustomColumn(ITaskDAOConnection dao,CustomColumn[] customColumn, String token) {
+        for (CustomColumn custCol: customColumn) {
+        	dao.storeCustomColumn(custCol);
+        	dao.commit();           
+        }
+	}
 
 
 

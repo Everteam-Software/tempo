@@ -142,7 +142,11 @@
 							</c:forEach>
 						]]> </cell> 
 						<cell><![CDATA[<c:out value="${fn:substring(fn:escapeXml(users),1,usersLength-1)}" />]]></cell>
-						<cell><![CDATA[<c:out value="${fn:substring(fn:escapeXml(roles),1,rolesLength-1)}" />]]></cell>											
+						<cell><![CDATA[<c:out value="${fn:substring(fn:escapeXml(roles),1,rolesLength-1)}" />]]></cell>
+						
+						 <c:forEach items="${newColumnList}" var="metadataKey" >
+							<cell><![CDATA[<c:out value='${taskHolder.task.customMetadata[metadataKey]}' />]]></cell>
+						 </c:forEach>
 						</row>
 		</c:forEach>
 	</c:otherwise>
