@@ -109,7 +109,12 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
     public Long countAvailableTasks(HashMap parameters) {
         return _fetcher.countTasks(parameters);
     }
-
+    
+    public List<String> fetchCustomColumns(){
+        List<String> customColumns = _fetcher.fetchCustomColumns();
+        return customColumns;
+    }
+    
     public List<CustomColumn> fetchCustomColumnfromProcessName(String processName) throws UnavailableTaskException {
         List<CustomColumn> customMetadata=_fetcher.fetchCustomColumnIfExistsfromprocessname(processName);
         return customMetadata;

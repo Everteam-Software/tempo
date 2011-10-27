@@ -24,6 +24,7 @@ import java.util.List;
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
+import org.apache.axiom.om.OMNode;
 import org.apache.axis2.AxisFault;
 import org.intalio.deploy.deployment.utils.DeploymentServiceRegister;
 import org.intalio.tempo.workflow.auth.AuthException;
@@ -759,6 +760,39 @@ public class TMSRequestProcessor extends OMUnmarshaller {
         	if(dao!=null)
         	dao.close();
         }
+    }
+    
+    public OMElement getCustomColumns(OMElement requestElement) throws AxisFault{
+        ITaskDAOConnection dao=null;
+        try {
+            OMElementQueue rootQueue = new OMElementQueue(requestElement);
+            String participantToken = requireElementValue(rootQueue, "participantToken");
+            dao=_taskDAOFactory.openConnection();
+            List<String> customColumns = _server.getCustomColumns(dao, participantToken);
+            return marshalColumnsList(customColumns, "getCustomColumnsResponse");
+        } catch (Exception e) {
+            throw makeFault(e);
+        }
+        finally{
+            if(dao!=null)
+            dao.close();
+        }
+    }
+    
+    private OMElement marshalColumnsList( List<String> customColumns, final String responseTag){
+        OMElement response = new TMSResponseMarshaller(OM_FACTORY) {
+            public OMElement marshalResponse(List<String> customColumns) {
+                OMElement response = createElement(responseTag);
+                for(int i=0; i < customColumns.size(); i++){
+                    OMElement columnElement = createElement(response, TaskXMLConstants.CUSTOM_COLUMN_LOCAL_NAME);
+                    columnElement.setText( customColumns.get(i));
+                }
+                return response;
+            }
+        }.marshalResponse(customColumns);
+        if (_logger.isDebugEnabled())
+            _logger.debug(response.toString());
+        return response;
     }
 
     protected void finalize() throws Throwable {

@@ -335,12 +335,18 @@ public class TaskFetcher {
            Query q = _entityManager.createNamedQuery(CustomColumn.FIND_BY_PROCESS_NAME);
            q.setParameter(1, processName);
            List<CustomColumn> resultList = q.getResultList();
-           if (resultList.size() < 1)
-               throw new UnavailableTaskException("Custom Column does not exist with ProcessName"
-                       + processName);
+//           if (resultList.size() < 1)
+//               throw new UnavailableTaskException("Custom Column does not exist with ProcessName"
+//                       + processName);
            return  resultList;
     	       } catch (NoResultException nre) {
-           throw new UnavailableTaskException("Custom Column does not exist" + processName);
+           throw new UnavailableTaskException("Custom Column does not exist " + processName + nre);
        }
+	}
+	
+	public List<String> fetchCustomColumns(){
+	        Query q = _entityManager.createNamedQuery( CustomColumn.FIND_ALL_CUSTOM_COLUMNS);
+	        List<String> resultList = q.getResultList();
+	        return resultList;
 	}
 }

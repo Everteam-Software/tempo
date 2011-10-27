@@ -21,10 +21,13 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import org.intalio.tempo.uiframework.Configuration;
 import org.intalio.tempo.uiframework.Constants;
 import org.intalio.tempo.uiframework.UIFWApplicationState;
+import org.intalio.tempo.uiframework.URIUtils;
 import org.intalio.tempo.versions.BpmsDescriptorParser;
 import org.intalio.tempo.web.ApplicationState;
 import org.intalio.tempo.web.controller.Action;
 import org.intalio.tempo.web.controller.ActionError;
+import org.intalio.tempo.workflow.auth.AuthException;
+import org.intalio.tempo.workflow.tms.ITaskManagementService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.ModelAndView;
@@ -73,10 +76,23 @@ public class TasksAction extends Action {
         model.put("sessionTimeout", Configuration.getInstance().getSessionTimeout());   
         
 
-        List<String> newColumnList=new ArrayList<String>(); // Call the operation that returns the distinct list of custom column from DB.
-        newColumnList.add("id");
+        List<String> newColumnList=getCustomColumns(token); // Call the operation that returns the distinct list of custom column from DB.
+//        newColumnList.add("id");
         
         model.put("newColumnList",newColumnList);
         BPMS_DESCRIPTOR_PARSER.addBpmsBuildVersionsPropertiesToMap(model);
+    }
+    
+    private List<String> getCustomColumns(String token){
+        List<String> customColumns = new ArrayList<String>();
+        String _endpoint = Configuration.getInstance().getServiceEndpoint();
+        final String endpoint = URIUtils.resolveURI(_request, _endpoint);
+        ITaskManagementService taskManager = Configuration.getInstance().getTmsFactory().getService(endpoint, token);
+        try {
+            customColumns = taskManager.getCustomColumns();
+        } catch (AuthException e) {
+            _log.debug( "Not avalid token" + e);
+        }
+        return customColumns;
     }
 }

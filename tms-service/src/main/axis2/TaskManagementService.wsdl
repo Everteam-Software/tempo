@@ -419,7 +419,23 @@
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
+			<xsd:element name="getCustomColumnsRequest">
+				<xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="participantToken" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+			<xsd:element name="getCustomColumnsResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="customColumn" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+			
         </xsd:schema>
+		
     </wsdl:types>
     <wsdl:message name="deletePipaRequest">
         <wsdl:part name="deletePipaRequest" element="tns:deletePipaRequest"/>
@@ -535,10 +551,16 @@
 	<wsdl:message name="manageFromInstanceRequest">
         <wsdl:part name="manageFromInstanceRequest" element="tns:manageFromInstanceRequest"/>
     </wsdl:message>
-
     <wsdl:message name="failRequest">
         <wsdl:part name="failRequest" element="tns:failRequest"/>
     </wsdl:message>
+	<wsdl:message name="getCustomColumnsRequest">
+        <wsdl:part name="getCustomColumnsRequest" element="tns:getCustomColumnsRequest"/>
+    </wsdl:message>	
+	<wsdl:message name="getCustomColumnsResponse">
+        <wsdl:part name="getCustomColumnsResponse" element="tns:getCustomColumnsResponse"/>
+    </wsdl:message>
+	
     <wsdl:portType name="TaskManagementServicesPortType">
         <wsdl:operation name="deletePipa">
             <wsdl:input message="tns:deletePipaRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/deletePipa"/>
@@ -713,6 +735,11 @@
             <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:failinvalidInputMessageFault"/>
             <wsdl:fault message="tns:accessDeniedFault" name="accessDeniedFault" wsaw:Action="urn:failaccessDeniedFault"/>
         </wsdl:operation>
+		<wsdl:operation name="getCustomColumns" >
+			<wsdl:input message="tns:getCustomColumnsRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getCustomColumns" />
+			<wsdl:output message="tns:getCustomColumnsResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getCustomColumnsResponse" />
+		</wsdl:operation>
+		
     </wsdl:portType>
     <wsdl:binding name="TaskManagementServicesSOAP" type="tns:TaskManagementServicesPortType">
         <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
@@ -1153,6 +1180,15 @@
             <wsdl:fault name="invalidParticipantTokenFault">
                 <soap:fault use="literal" name="invalidParticipantTokenFault"/>
             </wsdl:fault>
+        </wsdl:operation>
+		<wsdl:operation name="getCustomColumns">
+            <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getCustomColumns" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
         </wsdl:operation>
     </wsdl:binding>
     <wsdl:service name="TaskManagementServices">

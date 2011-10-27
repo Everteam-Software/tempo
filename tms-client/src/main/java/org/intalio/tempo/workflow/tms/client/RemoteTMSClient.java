@@ -636,5 +636,44 @@ public class RemoteTMSClient implements ITaskManagementService {
         return _httpTimeOut;
     }
 
+    @Override
+    public List<String> getCustomColumns() throws AuthException{
+        OMElement request = new TMSMarshaller() {
+            public OMElement marshalRequest() {
+                OMElement request = createElement("getCustomColumns");
+                createElement(request, "participantToken", _participantToken);
+                return request;
+            }
+        }.marshalRequest();
+        OMElement response = sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "getCustomColumns");
+        List<String> customColumns = new ArrayList<String>();
+        OMElementQueue rootQueue = new OMElementQueue(response);
+        while (true) {
+            OMElement customColumnElement = expectElementCustomColumn(rootQueue, "customColumn");
+            if (customColumnElement == null)
+                break;
+
+            try {
+                String column = customColumnElement.getText();
+                customColumns.add(column);
+            } catch (Exception e) {
+                _log.error("Error reading customColumns: "+e);
+            }
+        }
+        return customColumns;
+    }
+    
+    private OMElement expectElementCustomColumn(OMElementQueue queue, String name) {
+        OMElement element = queue.getNextElement();
+        if (element != null) {
+            if (element.getQName().equals(TaskXMLConstants.CUSTOM_COLUMN_QNAME)) {
+                return element;
+            } else {
+                queue.pushElementBack(element);
+            }
+        }
+        return null;
+    }
+
     
 }

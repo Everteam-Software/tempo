@@ -144,5 +144,9 @@
             <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
             <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/countAvailableTasks</actionMapping>
         </operation>
+        <operation name="getCustomColumns">
+            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+            <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getCustomColumns</actionMapping>
+        </operation>
     </service>
 </serviceGroup>

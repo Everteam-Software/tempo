@@ -152,4 +152,10 @@ public class SimpleTaskDAOConnection implements ITaskDAOConnection {
 		
 	}
 
+    @Override
+    public List<String> fetchCustomColumns() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

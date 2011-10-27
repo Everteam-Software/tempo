@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
@@ -345,5 +346,12 @@ public class LocalTMSClient implements ITaskManagementService {
 		logger.error("Calling LocalTMSClient :: update");
 
 	}
+
+    @Override
+    public List<String> getCustomColumns() throws AuthException {
+        ITaskDAOConnection dao = taskDAOFactory.openConnection();
+        return server.getCustomColumns(dao, participantToken);
+                
+    }
 
 }

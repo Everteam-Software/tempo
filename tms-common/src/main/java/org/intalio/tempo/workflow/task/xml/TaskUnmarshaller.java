@@ -557,7 +557,7 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
             Map<String, String> customMetadata = new HashMap<String, String>();
             int elements = list.getLength();
             for (int j = 0 ; j < elements ; j++) {
-                System.out.println("NodeName : " + list.item(j).getNodeName() + " NodeValue : " + list.item(j).getFirstChild().getNodeValue());
+//                System.out.println("NodeName : " + list.item(j).getNodeName() + " NodeValue : " + list.item(j).getFirstChild().getNodeValue());
                 customMetadata.put(list.item(j).getNodeName(), list.item(j).getFirstChild().getNodeValue());
             }
             ((ITaskWithCustomMetadata) resultTask).setCustomMetadata(customMetadata);

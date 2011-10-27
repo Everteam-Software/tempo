@@ -958,6 +958,11 @@ public class TMSServer implements ITMSServer {
         	dao.commit();           
         }
 	}
+	
+	public List<String> getCustomColumns(ITaskDAOConnection dao, String token) throws AuthException{
+	    UserRoles credentials = _authProvider.authenticate(token);
+	    return dao.fetchCustomColumns();
+	}
 
 
 

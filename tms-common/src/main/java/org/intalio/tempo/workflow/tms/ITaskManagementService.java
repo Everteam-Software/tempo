@@ -16,6 +16,7 @@
 package org.intalio.tempo.workflow.tms;
 
 import java.net.URL;
+import java.util.List;
 
 import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
@@ -70,4 +71,6 @@ public interface ITaskManagementService {
     void deletePipa(String formUrl) throws AuthException, UnavailableTaskException;
 
     PIPATask getPipa(String formUrl) throws AuthException, UnavailableTaskException;
+    
+    List<String> getCustomColumns() throws AuthException;
 }

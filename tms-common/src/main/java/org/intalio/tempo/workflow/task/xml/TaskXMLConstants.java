@@ -28,10 +28,14 @@ public final class TaskXMLConstants {
     
     public static final String TASK_LOCAL_NAME = "task";
     
+    public static final String CUSTOM_COLUMN_LOCAL_NAME ="customColumn";
+    
     public final static OMNamespace TASK_OM_NAMESPACE = OMAbstractFactory.getOMFactory().createOMNamespace(
             TASK_NAMESPACE, 
             TASK_NAMESPACE_PREFIX);
     
     public static final QName TASK_QNAME = new QName(TASK_NAMESPACE, TASK_LOCAL_NAME);
+    
+    public static final QName CUSTOM_COLUMN_QNAME = new QName(TASK_NAMESPACE, CUSTOM_COLUMN_LOCAL_NAME);
 
 }

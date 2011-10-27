@@ -345,6 +345,6 @@ public class TaskMarshaller {
                 marshalTaskOutput(taskWithOutput, taskOutput);
             }
         }
-    }
+    }  
 
 }

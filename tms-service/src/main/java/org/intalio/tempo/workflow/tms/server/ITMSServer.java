@@ -14,6 +14,7 @@ package org.intalio.tempo.workflow.tms.server;
 
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.axis2.AxisFault;
 import org.intalio.tempo.workflow.auth.AuthException;
@@ -86,6 +87,8 @@ public interface ITMSServer {
     Task[] getAvailableTasks(ITaskDAOConnection dao,String participantToken, HashMap parameters) throws Exception;
 
     Long countAvailableTasks(ITaskDAOConnection dao,String participantToken, HashMap map) throws AuthException;
+    
+    List<String> getCustomColumns( ITaskDAOConnection dao, String token) throws AuthException;
 
 	
 
