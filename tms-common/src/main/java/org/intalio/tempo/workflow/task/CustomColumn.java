@@ -14,7 +14,7 @@ import org.apache.openjpa.persistence.Persistent;
 @Entity
 @Table(name="tempo_custom_column")
 @NamedQueries({
-    @NamedQuery(name = CustomColumn.FIND_BY_PROCESS_NAME, query = "select distinct t from CustomColumn t where t._projectname=(?1)"),
+    @NamedQuery(name = CustomColumn.FIND_BY_PROCESS_NAME, query = "select distinct t from CustomColumn t where t._projectName=(?1)"),
     @NamedQuery(name=CustomColumn.FIND_ALL_CUSTOM_COLUMNS, query="select distinct t.customColumnName from CustomColumn t" )}
 )
 public class CustomColumn {
