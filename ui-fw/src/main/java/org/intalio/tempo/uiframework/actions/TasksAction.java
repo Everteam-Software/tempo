@@ -91,8 +91,13 @@ public class TasksAction extends Action {
         try {
             customColumns = taskManager.getCustomColumns();
         } catch (AuthException e) {
-            _log.debug( "Not avalid token" + e);
+            _log.debug( "Not a valid token" + e);
         }
-        return customColumns;
+        List<String> customColumnsLowerCase = new ArrayList<String>();
+        for(String customColumn : customColumns){
+            customColumnsLowerCase.add(customColumn.toLowerCase());
+        }
+        
+        return customColumnsLowerCase;
     }
 }

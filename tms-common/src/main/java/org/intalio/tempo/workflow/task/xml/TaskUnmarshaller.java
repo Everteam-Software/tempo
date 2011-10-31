@@ -59,6 +59,7 @@ import org.intalio.tempo.workflow.util.xml.XsdDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.intalio.bpms.workflow.taskManagementServices20051109.Attachments;
@@ -558,7 +559,8 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
             int elements = list.getLength();
             for (int j = 0 ; j < elements ; j++) {
 //                System.out.println("NodeName : " + list.item(j).getNodeName() + " NodeValue : " + list.item(j).getFirstChild().getNodeValue());
-                customMetadata.put(list.item(j).getNodeName(), list.item(j).getFirstChild().getNodeValue());
+                if(list.item(j).getFirstChild() != null)
+                    customMetadata.put(list.item(j).getNodeName().toLowerCase(), getTextNodeValue(list.item(j)));
             }
             ((ITaskWithCustomMetadata) resultTask).setCustomMetadata(customMetadata);
         }
@@ -566,6 +568,13 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
         return resultTask;
     }
 
+    private String getTextNodeValue(Node node) {
+         if (node.getChildNodes().getLength() > 0) {
+             return getTextNodeValue(node.getFirstChild());
+         } 
+         return node.getNodeValue();
+    }
+    
     /**
      * Xmlbeans is wrapping the content with some <code>xml-fragment</code> tag
      * Position the cursor on the data we really want.
