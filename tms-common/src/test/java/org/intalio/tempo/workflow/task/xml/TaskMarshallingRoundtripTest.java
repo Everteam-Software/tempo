@@ -18,6 +18,7 @@ package org.intalio.tempo.workflow.task.xml;
 import java.net.URI;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 import junit.framework.TestCase;
 
@@ -41,7 +42,7 @@ public class TaskMarshallingRoundtripTest extends TestCase {
      */
     public void testFullPAMarshallingRoundtrip() throws Exception {
         PATask task1 = new PATask("taskID", new URI("http://localhost/URL"), "processID", "urn:completeSOAPAction",
-                TestUtils.createXMLDocument());
+                TestUtils.createXMLDocument(), new HashMap<String, String>());
         task1.setPriority(new Integer(3));
         task1.authorizeActionForRole("save", "intalio\\engineer");
         task1.authorizeActionForUser("save", "david");
@@ -56,6 +57,7 @@ public class TaskMarshallingRoundtripTest extends TestCase {
         task1.setFailureCode("123");
         task1.setFailureReason("Who knows");
         task1.setOutput(TestUtils.createXMLDocument());
+        task1.getCustomMetadata().put("test", "intalio");
     }
 
      /**
@@ -80,7 +82,7 @@ public class TaskMarshallingRoundtripTest extends TestCase {
      */
     public void testPAWithInput() throws Exception {
         Document doc = new XmlTooling().getXmlDocument("/inputWithNamespace.xml");
-        PATask task = new PATask("taskID", new URI("http://localhost/URL"), "processID", "urn:completeSOAPAction", doc);
+        PATask task = new PATask("taskID", new URI("http://localhost/URL"), "processID", "urn:completeSOAPAction", doc, new HashMap<String, String>());
         task.setOutput(doc);
         PATask task2 = (PATask) testRoundTrip(task);
         TaskEquality.areDocumentsEqual(doc, task2.getInput());

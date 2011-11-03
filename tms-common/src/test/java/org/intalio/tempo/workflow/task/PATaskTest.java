@@ -16,6 +16,8 @@ package org.intalio.tempo.workflow.task;
 
 import java.net.URI;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -53,8 +55,9 @@ public class PATaskTest extends TestCase {
         String processID = "processID";
         String completeSOAPAction = "urn:complete";
         Document input = this.createXMLDocument();
-
-        return new PATask(taskID, formURL, processID, completeSOAPAction, input);
+        Map<String, String> customMetadata = new HashMap<String, String>();
+        customMetadata.put("test", "intalio");
+        return new PATask(taskID, formURL, processID, completeSOAPAction, input, customMetadata);
     }
 
     public void testPATask()
@@ -64,8 +67,9 @@ public class PATaskTest extends TestCase {
         String processID = "processID";
         String completeSOAPAction = "urn:complete";
         Document input = this.createXMLDocument();
-
-        PATask task = new PATask(taskID, formURL, processID, completeSOAPAction, input);
+        Map<String, String> customMetadata = new HashMap<String, String>();
+        customMetadata.put("test", "intalio");
+        PATask task = new PATask(taskID, formURL, processID, completeSOAPAction, input, customMetadata);
         Assert.assertEquals(processID, task.getProcessID());
         Assert.assertEquals(completeSOAPAction, task.getCompleteSOAPAction());
         Assert.assertTrue(XmlTooling.equals(input, task.getInput()));
@@ -74,19 +78,19 @@ public class PATaskTest extends TestCase {
         Assert.assertTrue(task.getAttachments().isEmpty());
 
         try {
-            new PATask(taskID, formURL, null, completeSOAPAction, input);
+            new PATask(taskID, formURL, null, completeSOAPAction, input, customMetadata);
             Assert.fail("RequiredArgumentException expected");
         } catch (RequiredArgumentException e) {
 
         }
         try {
-            new PATask(taskID, formURL, processID, null, input);
+            new PATask(taskID, formURL, processID, null, input, customMetadata);
             Assert.fail("RequiredArgumentException expected");
         } catch (RequiredArgumentException e) {
 
         }
         try {
-            PATask inputLessTask = new PATask(taskID, formURL, processID, completeSOAPAction, null);
+            PATask inputLessTask = new PATask(taskID, formURL, processID, completeSOAPAction, null, customMetadata);
             inputLessTask.getInput();
             Assert.fail("IllegalStateException expected");
         } catch (IllegalStateException e) {

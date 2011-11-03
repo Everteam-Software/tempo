@@ -17,6 +17,7 @@ package org.intalio.tempo.workflow.tms.server;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -46,10 +47,10 @@ public class TMSServerTest extends TestCase {
     public void testPATaskLifecycle() throws Exception {
         ITMSServer server = Utils.createTMSServer();
 
-        PATask paTask = new PATask("taskID", new URI("http://localhost/1"), "processID", "urn:completeSOAPAction", Utils.createXMLDocument());
+        PATask paTask = new PATask("taskID", new URI("http://localhost/1"), "processID", "urn:completeSOAPAction", Utils.createXMLDocument(), new HashMap<String, String>());
         paTask.getUserOwners().add("test/user1");
         paTask.getRoleOwners().add("test/role3");
-        
+        paTask.getCustomMetadata().put("test", "intalio");
         paTask.getUserOwners().add("test/user1");
         paTask.getRoleOwners().add("test/role3");
         ITaskDAOConnectionFactory daoFactory=new SimpleTaskDAOConnectionFactory();
@@ -114,9 +115,11 @@ public class TMSServerTest extends TestCase {
     }
 
     private PATask getPATask(String id) throws URISyntaxException, Exception {
-        PATask pa = new PATask(id, new URI("http://localhost/1"), "processID", "urn:completeSOAPAction", Utils.createXMLDocument());
+        PATask pa = new PATask(id, new URI("http://localhost/1"), "processID", "urn:completeSOAPAction",
+                    Utils.createXMLDocument(), new HashMap<String, String>());
         pa.getUserOwners().add("test/user1");
         pa.getRoleOwners().add("test/role3");
+        pa.getCustomMetadata().put("test", "intalio");
         return pa;
     }
     

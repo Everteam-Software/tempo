@@ -4,6 +4,7 @@ import java.io.File;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Random;
 
 import junit.framework.Assert;
@@ -91,7 +92,7 @@ public class RemoteReassginTaskTest extends TestCase {
          * Create a new task for current user
          */
         PATask task1 = new PATask(String.valueOf(new Random().nextInt(10000)), new URI("http://localhost/1"),
-                "processID", "urn:completeSOAPAction", Utils.createXMLDocument());
+                "processID", "urn:completeSOAPAction", Utils.createXMLDocument(), new HashMap<String, String>());
         task1.getUserOwners().add(USER_CURRENT);
         tms.create(task1);
 

@@ -18,6 +18,7 @@ package org.intalio.tempo.workflow.task.xml;
 import java.net.URI;
 import java.net.URL;
 import java.util.Date;
+import java.util.HashMap;
 
 import junit.framework.TestCase;
 
@@ -64,11 +65,12 @@ public class TaskMarshallerTest extends TestCase {
     }
 
     public void testPATaskMarshalling() throws Exception {
-        PATask task = new PATask("id", new URI("http://localhost/form"), "processID", "urn:completeSoapAction", TestUtils.createXMLDocument());
+        PATask task = new PATask("id", new URI("http://localhost/form"), "processID", "urn:completeSoapAction", TestUtils.createXMLDocument(), new HashMap<String, String>());
         task.getUserOwners().add("test/user1");
         task.getRoleOwners().add("test.role1");
         task.getRoleOwners().add("test\\role2");
         task.setOutput(TestUtils.createXMLDocument());
+        task.getCustomMetadata().put("test", "intalio");
       
         task.addAttachment(new Attachment(new AttachmentMetadata(), new URL("http://localhost/url1")));
         AttachmentMetadata metadata = new AttachmentMetadata();
@@ -94,10 +96,11 @@ public class TaskMarshallerTest extends TestCase {
     }
 
     public void testPATaskMetaMarshalling() throws Exception {
-        PATask task = new PATask("id", new URI("http://localhost/form"), "processID", "urn:completeSoapAction", TestUtils.createXMLDocument());
+        PATask task = new PATask("id", new URI("http://localhost/form"), "processID", "urn:completeSoapAction", TestUtils.createXMLDocument(), new HashMap<String, String>());
         task.getUserOwners().add("test/user1");
         task.getRoleOwners().add("test.role1");
         task.getRoleOwners().add("test\\role2");
+        task.getCustomMetadata().put("test", "intalio");
         task.setOutput(TestUtils.createXMLDocument());
 
         task.addAttachment(new Attachment(new AttachmentMetadata(), new URL("http://localhost/url1")));
@@ -115,7 +118,7 @@ public class TaskMarshallerTest extends TestCase {
     }
 
     public void testPATaskChainedBefore() throws Exception {
-        PATask task = new PATask("id", new URI("http://localhost/form"), "processID", "urn:completeSoapAction", TestUtils.createXMLDocument());
+        PATask task = new PATask("id", new URI("http://localhost/form"), "processID", "urn:completeSoapAction", TestUtils.createXMLDocument(), new HashMap<String, String>());
         task.getUserOwners().add("test/user1");
         task.getRoleOwners().add("test.role1");
 
@@ -123,12 +126,13 @@ public class TaskMarshallerTest extends TestCase {
         task.setState(TaskState.READY);
         task.setPreviousTaskID("p1");
         task.setChainedBefore(true);
+        task.getCustomMetadata().put("test", "intalio");
 
         this.testTaskMarshalling(task);
     }
 
     public void testPATaskMarshallingWithOtherProperty() throws Exception {
-        PATask task = new PATask("id", new URI("http://localhost/form"), "processID", "urn:completeSoapAction", TestUtils.createXMLDocument());
+        PATask task = new PATask("id", new URI("http://localhost/form"), "processID", "urn:completeSoapAction", TestUtils.createXMLDocument(), new HashMap<String, String>());
         task.getUserOwners().add("test/user1");
         task.getRoleOwners().add("test.role1");
         task.getRoleOwners().add("test\\role2");
@@ -147,6 +151,8 @@ public class TaskMarshallerTest extends TestCase {
         AttachmentMetadata metadata = new AttachmentMetadata();
         metadata.setMimeType("image/jpeg");
         task.addAttachment(new Attachment(metadata, new URL("http://localhost/url2")));
+        
+        task.getCustomMetadata().put("test", "intalio");
 
         this.testTaskMarshalling(task);
     }  

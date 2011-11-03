@@ -18,6 +18,7 @@ package org.intalio.tempo.workflow.tms.client.dependent_tests;
 import java.net.URI;
 import java.net.URL;
 import java.security.SecureRandom;
+import java.util.HashMap;
 import java.util.Random;
 
 import junit.framework.Assert;
@@ -57,7 +58,7 @@ public class RemoteTMSClientTest extends TestCase {
 //        ITaskManagementService tms = new TMSFactory(TMS_REMOTE_URL, TOKEN).getService();
         Document input1 = Utils.createXMLDocument("/absr.xml");
         String task1ID = nextRandom();
-        PATask task1 = new PATask(task1ID, new URI("http://localhost/1"), "processID", "urn:completeSOAPAction", input1);
+        PATask task1 = new PATask(task1ID, new URI("http://localhost/1"), "processID", "urn:completeSOAPAction", input1, new HashMap<String, String>());
         task1.getUserOwners().add("intalio\\admin");
         tms.create(task1);
         testRoundTrip(task1, input1);
@@ -71,7 +72,7 @@ public class RemoteTMSClientTest extends TestCase {
 //        ITaskManagementService tms = new TMSFactory(TMS_REMOTE_URL, TOKEN).getService();
         Document input1 = Utils.createXMLDocument("/absr.xml");
         String id = "583c10bfdbd326ba:69a8b3cd:124dd681279:-7ef6127.0.1.1163844" + System.currentTimeMillis();
-        PATask task1 = new PATask(id, new URI("http://localhost/1"), "processID", "urn:completeSOAPAction", input1);
+        PATask task1 = new PATask(id, new URI("http://localhost/1"), "processID", "urn:completeSOAPAction", input1, new HashMap<String, String>());
         String description = "new two:" + System.currentTimeMillis();
         task1.getUserOwners().add("intalio\\admin");
         tms.create(task1);
@@ -120,7 +121,7 @@ public class RemoteTMSClientTest extends TestCase {
         Assert.assertNotNull(tasks);
 
         String task1ID = nextRandom();
-        PATask task1 = new PATask(task1ID, new URI("http://localhost/1"), "processID", "urn:completeSOAPAction", Utils.createXMLDocument());
+        PATask task1 = new PATask(task1ID, new URI("http://localhost/1"), "processID", "urn:completeSOAPAction", Utils.createXMLDocument(), new HashMap<String, String>());
         task1.getUserOwners().add("intalio\\admin");
         tms.create(task1);
 
@@ -128,7 +129,7 @@ public class RemoteTMSClientTest extends TestCase {
         TaskEquality.areTasksEquals(task1, task2);
 
         String task3ID = nextRandom();
-        PATask task3 = new PATask(task3ID, new URI("http://localhost/3"), "processID", "urn:completeSOAPAction", Utils.createXMLDocument());
+        PATask task3 = new PATask(task3ID, new URI("http://localhost/3"), "processID", "urn:completeSOAPAction", Utils.createXMLDocument(), new HashMap<String, String>());
         task3.getUserOwners().add("intalio.admin");
         task3.getUserOwners().add("intalio\\admin");
         tms.create(task3);
@@ -149,7 +150,7 @@ public class RemoteTMSClientTest extends TestCase {
         Assert.assertEquals(TaskState.COMPLETED, task5.getState());
 
         String task6ID = nextRandom();
-        PATask task6 = new PATask(task6ID, new URI("http://localhost/6"), "processID", "urn:completeSOAPAction", Utils.createXMLDocument());
+        PATask task6 = new PATask(task6ID, new URI("http://localhost/6"), "processID", "urn:completeSOAPAction", Utils.createXMLDocument(), new HashMap<String, String>());
         task6.getUserOwners().add("intalio\\admin");
         tms.create(task6);
         tms.complete(task6ID);
@@ -186,7 +187,7 @@ public class RemoteTMSClientTest extends TestCase {
 //        ITaskManagementService tms = new TMSFactory(TMS_REMOTE_URL, TOKEN).getService();
 
         String task1ID = nextRandom();
-        PATask task1 = new PATask(task1ID, new URI("http://localhost/1"), "processID", "urn:completeSOAPAction", Utils.createXMLDocument());
+        PATask task1 = new PATask(task1ID, new URI("http://localhost/1"), "processID", "urn:completeSOAPAction", Utils.createXMLDocument(), new HashMap<String, String>());
         task1.getUserOwners().add("test.system-test");
         task1.getUserOwners().add("intalio\\admin");
         Attachment attachment1 = new Attachment(new AttachmentMetadata(), new URL("http://localhost/a1"));

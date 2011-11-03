@@ -145,12 +145,13 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
         super(id, formURL);
     }
 
-    public PATask(String id, URI formURL, String processID, String completeSOAPAction, Document input) {
+    public PATask(String id, URI formURL, String processID, String completeSOAPAction, Document input, Map<String, String> customMetadata) {
         super(id, formURL);
         this.setProcessID(processID);
         this.setCompleteSOAPAction(completeSOAPAction);
         if (input != null)
             this.setInput(input);
+        this.setCustomMetadata(customMetadata);
     }  
         
     public void setCustomMetadata(Map<String, String> customMetadata) {

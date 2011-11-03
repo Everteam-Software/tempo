@@ -11,6 +11,8 @@ package org.intalio.tempo.workflow.tms.server;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import junit.framework.Assert;
@@ -150,7 +152,8 @@ public class JPAFactoriesTest {
 			Exception {
 		String id = String.valueOf(new Object().hashCode());
 		PATask task1 = new PATask(id, new URI("http://hellonico.net"),
-				"processId", "soap", getXmlSampleDocument());
+				"processId", "soap", getXmlSampleDocument(), new HashMap<String, String>());
+		task1.getCustomMetadata().put("test", "intalio");
 		task1.authorizeActionForUser("save", "examples\\manager");
 		task1.setPriority(2);
 		task1.setState(state);
@@ -162,6 +165,8 @@ public class JPAFactoriesTest {
 	Task getRandomSampleTask() throws Exception {
 		String id = "id_" + (ID_COUNTER++);
 		URI uri = new URI("http://hellonico.net");
+		Map<String, String> customMetadata = new HashMap<String, String>();
+		customMetadata.put("test", "intalio");
 		switch (type) {
 		case NOTIFICATION:
 			return new Notification(id, uri, xml.parseXML("<hello/>"));
@@ -169,13 +174,13 @@ public class JPAFactoriesTest {
 			return new PIPATask(id, uri, uri, uri, "initOperationSOAPAction");
 		case PA:
 			return new PATask(id, new URI("http://hellonico.net"), "processId",
-					"soap", xml.parseXML("<hello/>"));
+					"soap", xml.parseXML("<hello/>"), customMetadata);
 		default:
 			int rand = random.nextInt(3);
 			switch (rand) {
 			case 0:
 				return new PATask(id, new URI("http://hellonico.net"),
-						"processId", "soap", xml.parseXML("<hello/>"));
+						"processId", "soap", xml.parseXML("<hello/>"), customMetadata);
 			case 1:
 				return new PIPATask(id, uri, uri, uri,
 						"initOperationSOAPAction");

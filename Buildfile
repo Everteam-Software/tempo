@@ -77,7 +77,7 @@ define "tempo" do
     compile { open_jpa_enhance }
     task "package" => generate_sql([project], "workflow.tms")
     
-    test.with APACHE_DERBY, LOG4J, DB_CONNECTOR.values, XMLUNIT, WOODSTOX, INSTINCT, SECURITY_WS_COMMON, APACHE_COMMONS[:pool], APACHE_COMMONS[:collections]
+    test.with APACHE_DERBY, LOG4J, DB_CONNECTOR.values, XMLUNIT, WOODSTOX, INSTINCT, SECURITY_WS_COMMON, APACHE_COMMONS[:pool], APACHE_COMMONS[:collections], APACHE_COMMONS[:httpclient]
     test.exclude '*TestUtils*'
     unless ENV["LIVE"] == 'yes'
       test.exclude '*N3AuthProviderLiveTest*'

@@ -198,12 +198,13 @@ public class JPATaskTest {
 			Exception {
 		String id = getUniqueTaskID();
 		PATask task1 = new PATask(id, new URI("http://hellonico.net"),
-				"processId", "soap", getXmlSampleDocument());
+				"processId", "soap", getXmlSampleDocument(), new HashMap<String, String>());
 		task1.authorizeActionForUser("save", "examples\\manager");
 		task1.setPriority(2);
 		task1.setState(state);
 		task1.getRoleOwners().add("role1");
 		task1.getUserOwners().add("user1");
+		task1.getCustomMetadata().put("test", "intalio");
 		return task1;
 	}
 
@@ -578,9 +579,9 @@ public class JPATaskTest {
 
 		String id = getUniqueTaskID();
 		PATask task1 = new PATask(id, new URI("http://hellonico.net"),
-				"processId", "soap", getXmlSampleDocument());
+				"processId", "soap", getXmlSampleDocument(), new HashMap<String, String>());
 		task1.setDeadline(new Date());
-
+		task1.getCustomMetadata().put("test", "intalio");
 		persist(task1);
 
 		Query q = em.createNamedQuery(Task.FIND_BY_ID).setParameter(1, id);
@@ -685,10 +686,10 @@ public class JPATaskTest {
 		PATask task2;
 		PATask task1 = new PATask(getUniqueTaskID(), new URI(
 				"http://hellonico.net"), "processId", "soap",
-				getXmlSampleDocument());
+				getXmlSampleDocument(), new HashMap<String, String>());
 		task1.setInput(xml.getXmlDocument("/pa_input.xml"));
 		task1.setOutput(xml.getXmlDocument("/pa_output.xml"));
-
+		task1.getCustomMetadata().put("test", "intalio");
 		task1.getUserOwners().add("intalio\\admin");
 		persist(task1);
 
@@ -709,7 +710,7 @@ public class JPATaskTest {
 				"http://hellonico.net"));
 		String id = "pa" + System.currentTimeMillis();
 		PATask task1 = new PATask(id, new URI("http://hellonico.net"),
-				"processId", "soap", getXmlSampleDocument());
+				"processId", "soap", getXmlSampleDocument(), new HashMap<String, String>());
 		task1.addAttachment(att);
 
 		persist(task1);
@@ -726,12 +727,13 @@ public class JPATaskTest {
 	public void authorizeUserRolesAndIsAvailable() throws Exception {
 		String id = getUniqueTaskID();
 		PATask task1 = new PATask(id, new URI("http://hellonico.net"),
-				"processId", "soap", getXmlSampleDocument());
+				"processId", "soap", getXmlSampleDocument(), new HashMap<String, String>());
 		task1.authorizeActionForUser("save", "examples\\manager");
 		task1.authorizeActionForUser("save", "user1");
 		task1.getUserOwners().add("user2");
 		task1.getRoleOwners().add("role1");
-
+		task1.getCustomMetadata().put("test", "intalio");
+		
 		task1.setPriority(2);
 		persist(task1);
 

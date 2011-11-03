@@ -166,13 +166,14 @@ public class TaskMarshaller {
             
             
             Map<String, String> customMetadataMap = customMetadataTask.getCustomMetadata();
-            Set<String> keySet = customMetadataMap.keySet();
-            for(String key: keySet){
-                CustomMetadataKeyValueType xmlCustomMetadataKeyValueType = customMetadataType.addNewCustomMetadataKeyValue();
-                xmlCustomMetadataKeyValueType.setKey(key);
-                xmlCustomMetadataKeyValueType.setValue( customMetadataMap.get(key));
+            if(customMetadataMap != null){
+                Set<String> keySet = customMetadataMap.keySet();
+                for(String key: keySet){
+                    CustomMetadataKeyValueType xmlCustomMetadataKeyValueType = customMetadataType.addNewCustomMetadataKeyValue();
+                    xmlCustomMetadataKeyValueType.setKey(key);
+                    xmlCustomMetadataKeyValueType.setValue( customMetadataMap.get(key));
+                }
             }
-            
             taskMetadataElement.setCustomMetadata( customMetadataType);
         }
 
