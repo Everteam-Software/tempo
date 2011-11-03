@@ -41,7 +41,7 @@ public class FDSAxisHanderHelperTest extends TestCase{
     }    
     
     public void testProcessOutMessage() throws Exception {
-        Document transformedRequest = helper.processOutMessage(createUBPRequest(), null,"");
+        Document transformedRequest = helper.processOutMessage(createUBPRequest(), null,"/fds/workflow");
         assertEquals("createTask", helper.getSoapAction());
         assertEquals("http://localhost:8080/ode/workflow/ib4p", helper.getTargetEPR());
         
@@ -70,8 +70,8 @@ public class FDSAxisHanderHelperTest extends TestCase{
     }
     
     public void testProcessInMessage() throws Exception {
-        Document transformedRequest = helper.processInMessage(createWFResponse(), "createTaskResponse","");
-        assertEquals("createTaskResponse", helper.getSoapAction());
+        Document transformedRequest = helper.processInMessage(createWFResponse(), "","");
+        assertEquals("", helper.getSoapAction());
 
         XPath xpathSelector = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Body/*[1]");
         xpathSelector.setNamespaceURIs(MessageConstants.get_nsMap());
@@ -82,7 +82,9 @@ public class FDSAxisHanderHelperTest extends TestCase{
         if(!bodyNodes.isEmpty()){
             Node payload = bodyNodes.get(0);            
             assertEquals(userProcessNamespaceURI, ((Element)payload).getNamespaceURI());            
-        }        
+        }
         
-    }   
+    }
+    
+    
 }
