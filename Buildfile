@@ -100,7 +100,7 @@ define "tempo" do
     compile.with projects("tms-axis", "tms-common","tms-service"), APACHE_COMMONS[:httpclient],
       APACHE_JPA, AXIOM, AXIS2, SLF4J, STAX_API, WSDL4J, WS_COMMONS_SCHEMA, XMLBEANS,SPRING[:core]
 
-    test.with APACHE_COMMONS[:pool],projects("tms-service"), APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], LOG4J, WOODSTOX, SUNMAIL, SECURITY_WS_CLIENT, FREEMARKER
+    test.with APACHE_COMMONS[:pool],projects("tms-service"), APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], LOG4J, WOODSTOX, SUNMAIL, SECURITY_WS_CLIENT, FREEMARKER, CASTOR, XERCES
 
     test.exclude '*TestUtils*'
 
