@@ -753,7 +753,11 @@ public class TMSServer implements ITMSServer {
         // setPassword uses hash to decrypt password which should be same as hash of encryptor
 		decryptor.setPassword("IntalioEncryptedpasswordfortempo#123");
         // DOTO due to all the service from wds is 'x'
-        if (decryptor.decrypt(participantToken).equalsIgnoreCase(internalPassword)) {
+        if(_authProvider.authenticate(participantToken) != null) {
+            dao.deletePipaTask(formUrl);
+            dao.commit();
+        } else if (decryptor.decrypt(participantToken).equalsIgnoreCase(internalPassword)) {
+        	// In some cases internal applicatons like WDS will just send value defined in internalPassword so we need to be careful
             dao.deletePipaTask(formUrl);
             dao.commit();
         } else {
@@ -777,7 +781,6 @@ public class TMSServer implements ITMSServer {
                 throw new UnavailableTaskException(userID + " cannot delete PIPA Tasks: " + problemTasks.keySet());
             }
         }
-
     }
 
     public PIPATask getPipa(ITaskDAOConnection dao,String formUrl, String participantToken) throws AuthException, UnavailableTaskException {
