@@ -99,7 +99,7 @@ public class ReassignTaskLiveTest extends TestCase {
         /*
          * Re-assign task
          */
-        tmsServer.reassign(dao,selectTask.getID(), targetUserSet, new AuthIdentifierSet(), TaskState.READY, "token1");
+        tmsServer.reassign(dao,selectTask.getID(), targetUserSet, new AuthIdentifierSet(), TaskState.READY, "token1","REASSIGN");
         _logger.debug("Reassign task[" + selectTaskId + "] to " + targetUserId);
 
         /*

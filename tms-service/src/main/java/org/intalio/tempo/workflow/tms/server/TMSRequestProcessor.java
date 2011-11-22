@@ -32,7 +32,9 @@ import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
+import org.intalio.tempo.workflow.task.TaskAuditTrail;
 import org.intalio.tempo.workflow.task.TaskState;
+import org.intalio.tempo.workflow.task.TaskUserAction;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.task.xml.TaskMarshaller;
 import org.intalio.tempo.workflow.task.xml.TaskUnmarshaller;
@@ -54,6 +56,7 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnectionFactory;
+import org.jasypt.util.text.BasicTextEncryptor;
 
 
 import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
@@ -65,7 +68,7 @@ public class TMSRequestProcessor extends OMUnmarshaller {
     private PIPAComponentManager _pipa;
     private DeploymentServiceRegister _registerPipa;
     private static final OMFactory OM_FACTORY = OMAbstractFactory.getOMFactory();
-    private ITaskDAOConnectionFactory _taskDAOFactory;
+    private ITaskDAOConnectionFactory _taskDAOFactory;    
     public TMSRequestProcessor(ITaskDAOConnectionFactory taskDAOFactory) {
         super(TaskXMLConstants.TASK_NAMESPACE, TaskXMLConstants.TASK_NAMESPACE_PREFIX);
         assert taskDAOFactory != null : "ITaskDAOConnectionFactory implementation is absent!";
@@ -551,7 +554,10 @@ public class TMSRequestProcessor extends OMUnmarshaller {
                 throw new InvalidInputFormatException("Unknown task state: '" + taskStateStr + "'");
             }
             String participantToken = requireElementValue(rootQueue, "participantToken");
-            _server.reassign(dao,taskID, users, roles, taskState, participantToken);
+            String userAction = expectElementValue(rootQueue, "userAction");
+            if(userAction==null) userAction=TaskUserAction.REASSIGN.getName();            
+
+            _server.reassign(dao,taskID, users, roles, taskState, participantToken,userAction);
             return createOkResponse();
         } catch (Exception e) {
             throw makeFault(e);
@@ -617,7 +623,9 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             String taskID = requireElementValue(rootQueue, "pipaurl");
             String participantToken = requireElementValue(rootQueue, "participantToken");
             // final UserRoles user = _server.getUserRoles(participantToken);
-            _server.deletePipa(dao,taskID, participantToken);
+            BasicTextEncryptor encryptor = new BasicTextEncryptor();         
+            encryptor.setPassword("IntalioEncryptedpasswordfortempo#123");            
+            _server.deletePipa(dao,taskID, encryptor.encrypt(participantToken));
             return createOkResponse();
         } catch (Exception e) {
             throw makeFault(e);

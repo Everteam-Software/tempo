@@ -9,6 +9,7 @@
  */
 package org.intalio.tempo.workflow.tms.server.dao;
 
+import java.applet.AudioClip;
 import java.util.HashMap;
 import java.util.List;
 
@@ -20,6 +21,7 @@ import org.intalio.tempo.workflow.dao.AbstractJPAConnection;
 import org.intalio.tempo.workflow.task.CustomColumn;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
+import org.intalio.tempo.workflow.task.TaskAuditTrail;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
 import org.intalio.tempo.workflow.tms.UnavailableAttachmentException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
@@ -135,6 +137,14 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
 	public void storeCustomColumn(CustomColumn customColumn) {
         checkTransactionIsActive();
         entityManager.persist(customColumn);
+		
+	}
+
+	@Override
+	public void storeTaskAuditTrail(TaskAuditTrail taskAuditTrail) {
+		  _logger.info("store task audit trail:" + taskAuditTrail.getActionPerformed());
+	        checkTransactionIsActive();
+	        entityManager.persist(taskAuditTrail);
 		
 	}
 

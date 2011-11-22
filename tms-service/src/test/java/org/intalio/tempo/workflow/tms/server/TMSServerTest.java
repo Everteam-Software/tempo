@@ -29,13 +29,13 @@ import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.task.xml.TaskTypeMapper.TaskType;
 import org.intalio.tempo.workflow.tms.AccessDeniedException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
+import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
+import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnectionFactory;
+import org.intalio.tempo.workflow.tms.server.dao.SimpleTaskDAOConnectionFactory;
 import org.intalio.tempo.workflow.util.TaskEquality;
 import org.w3c.dom.Document;
 
 import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
-import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
-import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnectionFactory;
-import org.intalio.tempo.workflow.tms.server.dao.SimpleTaskDAOConnectionFactory;
 
 
 public class TMSServerTest extends TestCase {
@@ -79,7 +79,7 @@ public class TMSServerTest extends TestCase {
         // test reassign
         org.intalio.tempo.workflow.auth.AuthIdentifierSet newUsers = new org.intalio.tempo.workflow.auth.AuthIdentifierSet(new String[]{"test/user1", "test/user2"});
         org.intalio.tempo.workflow.auth.AuthIdentifierSet newRoles = new org.intalio.tempo.workflow.auth.AuthIdentifierSet(new String[]{"test/role2", "test/role3"});
-        server.reassign(dao,"taskID", newUsers, newRoles, TaskState.READY, "token1");
+        server.reassign(dao,"taskID", newUsers, newRoles, TaskState.READY, "token1","REASSIGN");
 
         Document newOutput2 = Utils.createXMLDocument();
         server.setOutputAndComplete(dao,"taskID", newOutput2, "token2");

@@ -24,6 +24,7 @@ import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.CustomColumn;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
+import org.intalio.tempo.workflow.task.TaskAuditTrail;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
@@ -157,5 +158,11 @@ public class SimpleTaskDAOConnection implements ITaskDAOConnection {
         // TODO Auto-generated method stub
         return null;
     }
+
+	@Override
+	public void storeTaskAuditTrail(TaskAuditTrail taskAuditTrail) {
+		throw new RuntimeException("Not Implemented");
+		
+	}
 
 }

@@ -27,8 +27,6 @@ import java.util.Set;
 
 import javax.xml.transform.TransformerException;
 
-
-
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
@@ -47,7 +45,9 @@ import org.intalio.tempo.workflow.task.InvalidTaskException;
 import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
+import org.intalio.tempo.workflow.task.TaskAuditTrail;
 import org.intalio.tempo.workflow.task.TaskState;
+import org.intalio.tempo.workflow.task.TaskUserAction;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.task.traits.ITaskWithAttachments;
 import org.intalio.tempo.workflow.task.traits.ITaskWithOutput;
@@ -81,6 +81,7 @@ public class TMSServer implements ITMSServer {
     private String _tasEndPoint;
     private String httpChunking = "true";
     private String internalPassword = "verylongpassword";
+    private String auditTrail= "false";
     
     public String getInternalPassword() {
 		return internalPassword;
@@ -356,6 +357,13 @@ public class TMSServer implements ITMSServer {
                     //Change by Atul Ends
                     
                     dao.deleteTask(task.getInternalId(), taskID);
+                    if(isAuditTrailEnabled()){
+	                    TaskAuditTrail taskAuditTrail=new TaskAuditTrail();
+	                    taskAuditTrail.setActionPerformed("DELETE");
+	                    taskAuditTrail.setUserid(userID);       
+	                    taskAuditTrail.setTaskDescription(task.getDescription());
+                    dao.storeTaskAuditTrail(taskAuditTrail);
+                    }
                     dao.commit();
                     if (_logger.isDebugEnabled())
                         _logger.debug(userID + " has deleted Workflow Task " + task);
@@ -542,6 +550,14 @@ public class TMSServer implements ITMSServer {
                     paPrevious.setDescription(desc);
 
                 dao.updateTask(previous);
+                if(isAuditTrailEnabled()){
+	                TaskAuditTrail taskAuditTrail=new TaskAuditTrail();
+	                taskAuditTrail.setActionPerformed("Edit Task");
+	                taskAuditTrail.setUserid(credentials.getUserID());       
+	                taskAuditTrail.setTaskDescription(paPrevious.getDescription());
+	                dao.storeTaskAuditTrail(taskAuditTrail);
+                }
+                
                 dao.commit();
                 if (_logger.isDebugEnabled())
                     _logger.debug("Workflow Task " + task + " was updated");
@@ -711,7 +727,7 @@ public class TMSServer implements ITMSServer {
     }
 
     public void reassign(ITaskDAOConnection dao,String taskID, AuthIdentifierSet users, AuthIdentifierSet roles, TaskState state,
-            String participantToken) throws AuthException, UnavailableTaskException {
+            String participantToken,String userAction) throws AuthException, UnavailableTaskException {
         // UserRoles credentials = _authProvider
         // TODO: this requires SYSTEM
         // role
@@ -720,6 +736,9 @@ public class TMSServer implements ITMSServer {
         // is
         // a security hole for now!
 
+    	UserRoles credentials = _authProvider.authenticate( participantToken );
+        String userID = credentials.getUserID();
+        
         Task task = null;
         boolean available = false;
 
@@ -730,10 +749,22 @@ public class TMSServer implements ITMSServer {
             available = task instanceof ITaskWithState;
             if (available) {
                 ((ITaskWithState) task).setState(state);
+                Collection<String> previousUsers=task.getUserOwners();
+                Collection<String> previousRoles=task.getRoleOwners();
                 task.setUserOwners(users);
                 task.setRoleOwners(roles);
-
                 dao.updateTask(task);
+                
+                if(isAuditTrailEnabled()){
+	                TaskAuditTrail taskAuditTrail=new TaskAuditTrail();
+	                taskAuditTrail.setActionPerformed(userAction);
+	                taskAuditTrail.setCurrentOwner(getTaskOwners(users, roles));
+	                taskAuditTrail.setPreviousOwner(getTaskOwners(previousUsers,previousRoles));
+	                taskAuditTrail.setUserid(userID);
+	                taskAuditTrail.setTaskDescription(task.getDescription());
+	                dao.storeTaskAuditTrail(taskAuditTrail);
+                }
+                
                 dao.commit();
                 if (_logger.isDebugEnabled())
                     _logger.debug(" changed to user owners " + users + " and role owners " + roles);
@@ -746,39 +777,70 @@ public class TMSServer implements ITMSServer {
         }
     }
 
+	/**
+	 * @param task
+	 * @return
+	 */
+	private String getTaskOwners(Collection<String> userOwners, Collection<String> roleOwners) {
+		String Owner;		
+		String users= userOwners.size() > 0 ? userOwners.toString() : null;
+		String roles= roleOwners.size()> 0 ? roleOwners.toString() : null;
+		
+		if (users != null && roles !=null)
+			Owner=users.toString()+", "+roles.toString();
+		else
+			Owner=users !=null ? users : roles;
+		return Owner;
+	}
+
     public void deletePipa(ITaskDAOConnection dao,String formUrl, String participantToken) throws AuthException, UnavailableTaskException {
         HashMap<String, Exception> problemTasks = new HashMap<String, Exception>();
         BasicTextEncryptor decryptor = new BasicTextEncryptor();
-        
+     
         // setPassword uses hash to decrypt password which should be same as hash of encryptor
 		decryptor.setPassword("IntalioEncryptedpasswordfortempo#123");
+        participantToken=decryptor.decrypt(participantToken);
         // DOTO due to all the service from wds is 'x'
-        if (decryptor.decrypt(participantToken).equalsIgnoreCase(internalPassword)) {
-            dao.deletePipaTask(formUrl);
-            dao.commit();
+		
+       	if (participantToken.equalsIgnoreCase(internalPassword)) {
+      	// In some cases internal applicatons like WDS will just send value defined in internalPassword so we need to be careful
+           dao.deletePipaTask(formUrl);
+           dao.commit();
         } else {
-            UserRoles credentials = _authProvider.authenticate(participantToken);
-            String userID = credentials.getUserID();
-            try {
-                Task task = dao.fetchPipa(formUrl);
-                if (_permissions.isAuthorized(TaskPermissions.ACTION_DELETE, task, credentials)) {
-                    dao.deletePipaTask(formUrl);
-                    dao.commit();
-                    if (_logger.isDebugEnabled())
-                        _logger.debug(userID + " has deleted PIPA Task " + task);
-                } else {
-                    problemTasks.put(formUrl, new AuthException(userID + " cannot delete" + formUrl));
-                }
-            } catch (Exception e) {
-                _logger.error("Cannot retrieve PIPA Tasks", e);
-                problemTasks.put(formUrl, e);
-            }
-            if (problemTasks.size() > 0) {
-                throw new UnavailableTaskException(userID + " cannot delete PIPA Tasks: " + problemTasks.keySet());
-            }
+    		try {
+			   	    UserRoles credentials = _authProvider.authenticate(participantToken);
+			        String userID = credentials.getUserID();
+		        	Task task = dao.fetchPipa(formUrl);    
+	                if (_permissions.isAuthorized(TaskPermissions.ACTION_DELETE, task, credentials)) {
+	                    dao.deletePipaTask(formUrl);                   
+	                    dao.commit();
+	                    if (_logger.isDebugEnabled())
+	                        _logger.debug(userID + " has deleted PIPA Task " + task);
+	                } else {
+	                    problemTasks.put(formUrl, new AuthException(userID + " cannot delete" + formUrl));
+	                }
+		
+		            if(problemTasks.size()==0 && isAuditTrailEnabled()){
+		                TaskAuditTrail taskAuditTrail=new TaskAuditTrail();
+		                taskAuditTrail.setActionPerformed("DELETE PIPA TASK");
+		                taskAuditTrail.setUserid(userID);       
+		                taskAuditTrail.setTaskDescription(task.getDescription());
+		                dao.storeTaskAuditTrail(taskAuditTrail);
+		                dao.commit();
+	                }
+	                if (problemTasks.size() > 0) {
+		                throw new UnavailableTaskException(userID + " cannot delete PIPA Tasks: " + problemTasks.keySet());
+		            }
+	        
+	            } catch (Exception e) {
+	                _logger.error("Cannot retrieve PIPA Tasks", e);
+	                problemTasks.put(formUrl, e);
+	            }
+	           
+	    }
+           
         }
-
-    }
+    
 
     public PIPATask getPipa(ITaskDAOConnection dao,String formUrl, String participantToken) throws AuthException, UnavailableTaskException {
         try {
@@ -868,6 +930,14 @@ public class TMSServer implements ITMSServer {
             ITaskWithState taskWithState = (ITaskWithState) task;
             taskWithState.setState(TaskState.OBSOLETE);
             dao.updateTask(task);
+            if(isAuditTrailEnabled()){
+	            TaskAuditTrail taskAuditTrail=new TaskAuditTrail();
+	            taskAuditTrail.setActionPerformed(TaskUserAction.SKIP.getName());
+	            taskAuditTrail.setUserid(credentials.getUserID());
+	            taskAuditTrail.setTaskDescription(task.getDescription());
+	            dao.storeTaskAuditTrail(taskAuditTrail);
+            }
+            
             dao.commit();
             if (_logger.isDebugEnabled())
                 _logger.debug(credentials.getUserID() + " has skiped the Workflow Task " + task);
@@ -964,7 +1034,23 @@ public class TMSServer implements ITMSServer {
 	    return dao.fetchCustomColumns();
 	}
 
+	/**
+	 * @return the auditTrail
+	 */
+	public boolean isAuditTrailEnabled() {
+		return Boolean.parseBoolean(this.auditTrail);
+	}
+	
+	public String getAuditTrail() {
+		return this.auditTrail;
+	}
 
+	/**
+	 * @param auditTrail the auditTrail to set
+	 */
+	public void setAuditTrail(String auditTrail) {
+		this.auditTrail = auditTrail;
+	}
 
 
 
