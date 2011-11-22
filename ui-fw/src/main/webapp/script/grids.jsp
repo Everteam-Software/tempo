@@ -358,7 +358,7 @@
             var task = $('a.taskd',$(this));
             var reassign_user= $('#reassign_user').val();
             var reassign_roles= $('#reassign_roles').val();         
-            if ((reassign_user==null || reassign_user.trim().length==0) && (reassign_roles==null || reassign_roles.trim().length==0) ){
+            if ((reassign_user==null || jQuery.trim(reassign_user).length==0) && (reassign_roles==null || jQuery.trim(reassign_roles).length==0) ){
 	             jAlert('<fmt:message key="org_intalio_uifw_reassign_error"/>', '<fmt:message key="com_intalio_bpms_workflow_pageTitle"/>');
 	             return false;
             }
