@@ -357,8 +357,8 @@
         {
             var task = $('a.taskd',$(this));
             var reassign_user= $('#reassign_user').val();
-            var reassign_roles= $('#reassign_roles').val()         
-            if ((reassign_user==null || reassign_user.trim().length==0) && (reassign_roles==null || reassign_roles.trim().length==0) ){
+            var reassign_roles= $('#reassign_roles').val();         
+            if ((reassign_user==null || jQuery.trim(reassign_user).length==0) && (reassign_roles==null || jQuery.trim(reassign_roles).length==0) ){
 	             jAlert('<fmt:message key="org_intalio_uifw_reassign_error"/>', '<fmt:message key="com_intalio_bpms_workflow_pageTitle"/>');
 	             return false;
             }
@@ -427,14 +427,16 @@
     Call from reassign dialog
     */     
     function updateDynamicUsers() {
-      var soapBody     = new SOAPObject("getAssignedUsers");
-      soapBody.ns      = "http://tempo.intalio.org/security/RBACQueryService/";
-      soapBody.appendChild(new SOAPObject("role")).val($('#reassign_dyn').val());
-      var sr           = new SOAPRequest("http://tempo.intalio.org/security/RBACQueryService/getAssignedUsers", soapBody);
-      SOAPClient.Proxy = proxy;
-      SOAPClient.SOAPServer = rbacService;
-      SOAPClient.SendRequest(sr, populateDynamicUsers);
-    }
+     if($('#reassign_dyn').val() !=null && $('#reassign_dyn').val().length>0 && $('#reassign_dyn').val()!=""){    	
+	      var soapBody     = new SOAPObject("getAssignedUsers");
+	      soapBody.ns      = "http://tempo.intalio.org/security/RBACQueryService/";
+	      soapBody.appendChild(new SOAPObject("role")).val($('#reassign_dyn').val());
+	      var sr           = new SOAPRequest("http://tempo.intalio.org/security/RBACQueryService/getAssignedUsers", soapBody);
+	      SOAPClient.Proxy = proxy;
+	      SOAPClient.SOAPServer = rbacService;
+	      SOAPClient.SendRequest(sr, populateDynamicUsers);
+     }
+	}
         
     /*
     Call from reassign dialog
