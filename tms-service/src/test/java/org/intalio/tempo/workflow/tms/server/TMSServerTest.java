@@ -79,7 +79,7 @@ public class TMSServerTest extends TestCase {
         // test reassign
         org.intalio.tempo.workflow.auth.AuthIdentifierSet newUsers = new org.intalio.tempo.workflow.auth.AuthIdentifierSet(new String[]{"test/user1", "test/user2"});
         org.intalio.tempo.workflow.auth.AuthIdentifierSet newRoles = new org.intalio.tempo.workflow.auth.AuthIdentifierSet(new String[]{"test/role2", "test/role3"});
-        server.reassign(dao,"taskID", newUsers, newRoles, TaskState.READY, "token1");
+        server.reassign(dao,"taskID", newUsers, newRoles, TaskState.READY, "", "ESCALATE");
 
         Document newOutput2 = Utils.createXMLDocument();
         server.setOutputAndComplete(dao,"taskID", newOutput2, "token2");

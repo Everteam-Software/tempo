@@ -58,7 +58,7 @@ public interface ITMSServer {
 
     void removeAttachment(ITaskDAOConnection dao,String taskID, URL attachmentURL, String participantToken) throws TMSException;
 
-    void reassign(ITaskDAOConnection dao,String taskID, AuthIdentifierSet users, AuthIdentifierSet roles, TaskState state, String participantToken) throws TMSException;
+    void reassign(ITaskDAOConnection dao,String taskID, AuthIdentifierSet users, AuthIdentifierSet roles, TaskState state, String participantToken, String userAction) throws TMSException;
 
     void storePipa(ITaskDAOConnection dao,PIPATask task, String participantToken) throws TMSException;
 
