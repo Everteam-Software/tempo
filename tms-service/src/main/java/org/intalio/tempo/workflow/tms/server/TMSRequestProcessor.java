@@ -456,7 +456,7 @@ public class TMSRequestProcessor extends OMUnmarshaller {
                 throw new RuntimeException("TMP did not return a correct message while calling init");
             OMElement response = new TMSResponseMarshaller(OM_FACTORY) {
                 public OMElement marshalResponse(Document userProcessResponse) {
-                    OMElement response = createElement("initProcessResponse");
+                    OMElement response = createElement("initResponse");
                     OMElement userProcessResponseWrapper = createElement(response, "userProcessResponse");
                     userProcessResponseWrapper.addChild(new XmlTooling().convertDOMToOM(userProcessResponse, this.getOMFactory()));
                     return response;
@@ -551,7 +551,8 @@ public class TMSRequestProcessor extends OMUnmarshaller {
                 throw new InvalidInputFormatException("Unknown task state: '" + taskStateStr + "'");
             }
             String participantToken = requireElementValue(rootQueue, "participantToken");
-            _server.reassign(dao,taskID, users, roles, taskState, participantToken);
+            String userAction = requireElementValue(rootQueue, "userAction");
+            _server.reassign(dao,taskID, users, roles, taskState, participantToken, userAction);
             return createOkResponse();
         } catch (Exception e) {
             throw makeFault(e);

@@ -23,6 +23,15 @@
             <assignRole>ProcessManager</assignRole>
             <assignRole>examples\manager</assignRole>
             <assignRole>examples\employee</assignRole>
+			
+        </user>
+		
+		<user identifier="eng1">
+            <name>eng1</name>
+            <email>test@example.com</email>
+            <password>test</password>
+			<assignRole>eng</assignRole>
+			
         </user>
 
         <role identifier="ProcessAdministrator">
@@ -33,6 +42,9 @@
         <role identifier="ProcessManager">
             <description>Process Manager</description>
         </role>
+		<role identifier="eng">
+			<description>Test Role</description>
+		</role>
         
     </realm>
 
@@ -59,7 +71,9 @@
 
         <role identifier="employee">
             <description>Employee</description>
-        </role>
+
+			
+		</role>
 
     </realm>
 

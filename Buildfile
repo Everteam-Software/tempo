@@ -7,7 +7,7 @@ require "buildr/xmlbeans"
 # Keep this structure to allow the build system to update version numbers.
 
 # This branch is a copy of Tempo 6.0.85
-VERSION_NUMBER = "6.2.0.013"
+VERSION_NUMBER = "6.2.0.014-SNAPSHOT"
 
 require "rsc/build/dependencies.rb"
 require "rsc/build/repositories.rb"
@@ -100,7 +100,7 @@ define "tempo" do
     compile.with projects("tms-axis", "tms-common","tms-service"), APACHE_COMMONS[:httpclient],
       APACHE_JPA, AXIOM, AXIS2, SLF4J, STAX_API, WSDL4J, WS_COMMONS_SCHEMA, XMLBEANS,SPRING[:core]
 
-    test.with APACHE_COMMONS[:pool],projects("tms-service"), APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], LOG4J, WOODSTOX, SUNMAIL, SECURITY_WS_CLIENT, FREEMARKER
+    test.with APACHE_COMMONS[:pool],projects("tms-service"), APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], LOG4J, WOODSTOX, SUNMAIL, SECURITY_WS_CLIENT, FREEMARKER, CASTOR, XERCES
 
     test.exclude '*TestUtils*'
 

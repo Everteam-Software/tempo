@@ -336,6 +336,7 @@
                 <xsd:sequence>
 					<xsd:element minOccurs="0" name="taskState" type="xsd:token"/>
 					<xsd:element maxOccurs="unbounded" minOccurs="0" name="userOwner" type="xsd:string"/>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="roleOwner" type="xsd:string"/>
 				</xsd:sequence>
 			</xsd:complexType>	
             <xsd:complexType name="taskData">
@@ -379,6 +380,7 @@
                         <xsd:element maxOccurs="unbounded" minOccurs="0" name="roleOwner" type="xsd:string"/>
                         <xsd:element name="taskState" type="xsd:string"/>
                         <xsd:element name="participantToken" type="xsd:string"/>
+						<xsd:element name="userAction" type="xsd:string" minOccurs="0" />
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>

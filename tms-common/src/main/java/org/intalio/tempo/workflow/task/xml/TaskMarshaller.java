@@ -299,6 +299,11 @@ public class TaskMarshaller {
             XmlStrUserOwner.setStringValue(userOwner);
         }
         
+        for (String roleOwner : task.getRoleOwners()) {
+             XmlString XmlStrRoleOwner = taskMetadataElement.addNewRoleOwner();
+             XmlStrRoleOwner.setStringValue(roleOwner);
+        }
+        
         if (task instanceof ITaskWithState) {
             taskMetadataElement.setTaskState(((ITaskWithState) task).getState().toString());
         }

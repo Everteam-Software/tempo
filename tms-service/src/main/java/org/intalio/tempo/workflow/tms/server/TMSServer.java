@@ -711,7 +711,7 @@ public class TMSServer implements ITMSServer {
     }
 
     public void reassign(ITaskDAOConnection dao,String taskID, AuthIdentifierSet users, AuthIdentifierSet roles, TaskState state,
-            String participantToken) throws AuthException, UnavailableTaskException {
+            String participantToken, String userAction) throws AuthException, UnavailableTaskException, AccessDeniedException {
         // UserRoles credentials = _authProvider
         // TODO: this requires SYSTEM
         // role
@@ -723,8 +723,11 @@ public class TMSServer implements ITMSServer {
         Task task = null;
         boolean available = false;
 
-       try {
             task = dao.fetchTaskIfExists(taskID);
+            if(!(userAction.equals("ESCALATE") && participantToken.equals(""))){
+                UserRoles credentials = _authProvider.authenticate(participantToken);
+                checkIsAvailable(taskID, task, credentials);
+            }
             // if (task.isAvailableTo(credentials) && (task instanceof
             // ITaskWithState)) { // TODO: see above
             available = task instanceof ITaskWithState;
@@ -737,10 +740,7 @@ public class TMSServer implements ITMSServer {
                 dao.commit();
                 if (_logger.isDebugEnabled())
                     _logger.debug(" changed to user owners " + users + " and role owners " + roles);
-            }
-        } catch (Exception e) {
-            _logger.error("Cannot retrieve Workflow Tasks", e);
-        } 
+            } 
         if (!available) {
             throw new UnavailableTaskException("Error to ressign Workflow Task " + task);
         }

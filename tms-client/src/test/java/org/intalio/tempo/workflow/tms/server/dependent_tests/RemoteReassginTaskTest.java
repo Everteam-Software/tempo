@@ -181,6 +181,8 @@ public class RemoteReassginTaskTest extends TestCase {
         try {
             synchronized (RemoteReassginTaskTest.class) {
                 _logger.debug("Initializing configuration.");
+                //Uncomment the following line if you are testing this class from the server
+                System.setProperty("org.intalio.tempo.configDirectory", "src/../../config");
                 String configDir = System.getProperty("org.intalio.tempo.configDirectory");
                 if (configDir == null) {
                     throw new RuntimeException("System property org.intalio.tempo.configDirectory not defined.");

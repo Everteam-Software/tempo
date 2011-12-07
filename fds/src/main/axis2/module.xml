@@ -12,16 +12,4 @@
         </handler>
     </OutFlow>
 
-    <OutFaultFlow>
-        <handler name="FDSOutHandler" class="org.intalio.tempo.workflow.fds.module.FDSOutHandler">
-            <order phase="FDS" />
-        </handler>
-    </OutFaultFlow>
-
-    <InFaultFlow>
-        <handler name="FDSInHandler" class="org.intalio.tempo.workflow.fds.module.FDSInHandler">
-            <order phase="FDS" />
-        </handler>
-    </InFaultFlow>
-
 </module>
