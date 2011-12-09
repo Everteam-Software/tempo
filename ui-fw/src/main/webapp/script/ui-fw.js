@@ -34,7 +34,9 @@ function resizeIframe() {
 	    	 if(navigator.appName != "Microsoft Internet Explorer")
 	    	    {
 	    	      
-	    	    height = 20; /* whatever you set your body bottom margin/padding to be */
+	    	    /* Commented the below line as it always set the height of IFrame to 20 while resizing, due to which gi form gets disappered  */   
+	    	   // height = 20; /* whatever you set your body bottom margin/padding to be */
+		        height -= 20; /* whatever you set your body bottom margin/padding to be */
 	    	    document.getElementById('taskform').style.height = height +"px";
 	    	    
 	    	    }
