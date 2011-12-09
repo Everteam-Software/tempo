@@ -7,7 +7,7 @@ require "buildr/xmlbeans"
 # Keep this structure to allow the build system to update version numbers.
 
 # This branch is a copy of Tempo 6.0.85
-VERSION_NUMBER = "6.2.0.014-SNAPSHOT"
+VERSION_NUMBER = "6.2.0.015-SNAPSHOT"
 
 require "rsc/build/dependencies.rb"
 require "rsc/build/repositories.rb"

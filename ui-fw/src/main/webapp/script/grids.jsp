@@ -370,6 +370,7 @@
             soapBody.appendChild(new SOAPObject("roleOwner")).val($('#reassign_roles').val());
             soapBody.appendChild(new SOAPObject("taskState")).val('READY');
             soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
+			soapBody.appendChild(new SOAPObject("userAction")).val('REASSIGN');
             
             var sr = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/reassign", soapBody);
             SOAPClient.Proxy = proxy;
