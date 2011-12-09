@@ -137,7 +137,8 @@ public class UserProcessMessageConvertor {
         if (callbackToQueryResult.size() != 0) {
             Element wsaToElement = (Element) callbackToQueryResult.get(0);
             _userProcessEndpoint = wsaToElement.getText();
-            wsaToElement.setText(config.getFdsUrl());
+            if(isChangeCallbackAddress())
+                wsaToElement.setText(config.getFdsUrl());
         } else
             _log.debug("Did not find intalio:callback/addr:Address in SOAP header");
 
