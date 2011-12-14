@@ -222,9 +222,10 @@ public class TMSServer implements ITMSServer {
         // the task has been assign to those credentials
         if (task.isAvailableTo(credentials))
             return;
-        // some admin access user has been defined in the configuration file
-        else if (_permissions.isAuthorized(TaskPermissions.ACTION_READ, task, credentials))
-            return;
+        // some workflow admin access user has been defined in the security configuration file
+        else if (credentials.isWorkflowAdmin())
+            return;       
+        
         // fire the exception, this user cannot read this task
         else
             throw new AccessDeniedException(credentials.getUserID() + " cannot access task:" + taskID);
@@ -753,7 +754,8 @@ public class TMSServer implements ITMSServer {
         // setPassword uses hash to decrypt password which should be same as hash of encryptor
 		decryptor.setPassword("IntalioEncryptedpasswordfortempo#123");
         // DOTO due to all the service from wds is 'x'
-        if (decryptor.decrypt(participantToken).equalsIgnoreCase(internalPassword)) {
+		participantToken=decryptor.decrypt(participantToken);
+        if (participantToken.equalsIgnoreCase(internalPassword)) {
             dao.deletePipaTask(formUrl);
             dao.commit();
         } else {
@@ -962,6 +964,26 @@ public class TMSServer implements ITMSServer {
 	public List<String> getCustomColumns(ITaskDAOConnection dao, String token) throws AuthException{
 	    UserRoles credentials = _authProvider.authenticate(token);
 	    return dao.fetchCustomColumns();
+	}
+
+	@Override
+	public void updatePipa(ITaskDAOConnection dao, String formUrl,
+			String encryptyPassword, TaskState state) throws TMSException {
+		Task task =getPipa(dao, formUrl, encryptyPassword);
+		   Task taskState = dao.fetchTaskIfExists(task.getID());
+//	        checkIsAvailable(taskID, task, credentials);
+	        if (taskState instanceof ITaskWithState) {
+	            ITaskWithState taskWithState = (ITaskWithState) task;
+	            taskWithState.setState(state);
+	            dao.updateTask(task);
+	            dao.commit();
+//	            if (_logger.isDebugEnabled())
+//	                _logger.debug(credentials.getUserID() + " has retired the Workflow Task " + task);
+	        } 
+//	        else {
+//	            throw new UnavailableTaskException(credentials.getUserID() + " cannot skip Workflow Task " + task);
+//	        }
+		
 	}
 
 
