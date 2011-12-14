@@ -54,6 +54,7 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnectionFactory;
+import org.jasypt.util.text.BasicTextEncryptor;
 
 
 import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
@@ -613,12 +614,17 @@ public class TMSRequestProcessor extends OMUnmarshaller {
     public OMElement deletePipa(OMElement requestElement) throws AxisFault {
     	ITaskDAOConnection dao=null;
     	try {
+    		BasicTextEncryptor encryptor = new BasicTextEncryptor();
+              // setPassword uses hash to decrypt password which should be same as hash of encryptor
+      		encryptor.setPassword("IntalioEncryptedpasswordfortempo#123");
+              // only undeploy if this is the last version of this assembly
     		dao=_taskDAOFactory.openConnection();
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
             String taskID = requireElementValue(rootQueue, "pipaurl");
             String participantToken = requireElementValue(rootQueue, "participantToken");
+            
             // final UserRoles user = _server.getUserRoles(participantToken);
-            _server.deletePipa(dao,taskID, participantToken);
+            _server.deletePipa(dao,taskID, encryptor.encrypt(participantToken));
             return createOkResponse();
         } catch (Exception e) {
             throw makeFault(e);
