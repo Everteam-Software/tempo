@@ -120,14 +120,14 @@
 						</c:choose>
 						</a>
 							]]></cell> <cell><![CDATA[
-						<a href="${taskFullURL}" target="taskform">
+					<%!--	<a href="${taskFullURL}" target="taskform"> --%>
 						<c:if test="${taskHolder.task.state =='CLAIMED'}">
      						<img height="${iconSize}" width="${iconSize}" title="<fmt:message key="org_intalio_uifw_tasks_claimed"/>" border="0px" src="images/icons/icon.claimed.gif"/>
 						</c:if>
 						<c:if test="${taskHolder.task.state =='READY'}">
 	    					<img height="${iconSize}" width="${iconSize}" title="<fmt:message key="org_intalio_uifw_tasks_ready"/>" border="0px" src="images/icons/icon.notclaimed.gif"/>
 						</c:if>
-						</a>
+						<%!--	</a> --%>
 						]]> </cell> <cell><![CDATA[<a href="${taskFullURL}" title="${taskHolder.task.creationDate}" target="taskform" onclick='<c:out value="${showAlert}"/>' ><fmt:formatDate value="${taskHolder.task.creationDate}" type="both" timeStyle="short" dateStyle="short" /></a>]]></cell>
 			<cell><![CDATA[<a href="${taskFullURL}" title="${taskHolder.task.deadline}" target="taskform"><fmt:formatDate value="${taskHolder.task.deadline}" type="both" timeStyle="short" dateStyle="short" /></a>]]></cell>
 			<cell> <c:choose>
