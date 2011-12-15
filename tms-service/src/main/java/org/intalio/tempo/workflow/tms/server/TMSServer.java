@@ -218,7 +218,7 @@ public class TMSServer implements ITMSServer {
         return new ServiceClient();
     }
 
-    private void checkIsAvailable(String taskID, Task task, UserRoles credentials) throws AccessDeniedException {
+    private void checkIsAvailable(String taskID, Task task, UserRoles credentials) throws AccessDeniedException {  	
         // the task has been assign to those credentials
         if (task.isAvailableTo(credentials))
             return;
@@ -228,7 +228,8 @@ public class TMSServer implements ITMSServer {
         
         // fire the exception, this user cannot read this task
         else
-            throw new AccessDeniedException(credentials.getUserID() + " cannot access task:" + taskID);
+            throw new AccessDeniedException(credentials.getUserID() + " cannot access task:" + taskID);      
+        
     }
 
     public void setOutput(ITaskDAOConnection dao,String taskID, Document output, String participantToken) throws AuthException,
@@ -965,29 +966,5 @@ public class TMSServer implements ITMSServer {
 	    UserRoles credentials = _authProvider.authenticate(token);
 	    return dao.fetchCustomColumns();
 	}
-
-	@Override
-	public void updatePipa(ITaskDAOConnection dao, String formUrl,
-			String encryptyPassword, TaskState state) throws TMSException {
-		Task task =getPipa(dao, formUrl, encryptyPassword);
-		   Task taskState = dao.fetchTaskIfExists(task.getID());
-//	        checkIsAvailable(taskID, task, credentials);
-	        if (taskState instanceof ITaskWithState) {
-	            ITaskWithState taskWithState = (ITaskWithState) task;
-	            taskWithState.setState(state);
-	            dao.updateTask(task);
-	            dao.commit();
-//	            if (_logger.isDebugEnabled())
-//	                _logger.debug(credentials.getUserID() + " has retired the Workflow Task " + task);
-	        } 
-//	        else {
-//	            throw new UnavailableTaskException(credentials.getUserID() + " cannot skip Workflow Task " + task);
-//	        }
-		
-	}
-
-
-
-
 
 }
