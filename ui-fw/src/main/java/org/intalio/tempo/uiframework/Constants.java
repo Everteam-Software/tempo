@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 public class Constants {
+	public static final String ONE_TASK_VIEW = "atask";
     public static final String TASKS_VIEW = "tasks";
     public static final String TASKS_UPDATE_VIEW = "updates";
 

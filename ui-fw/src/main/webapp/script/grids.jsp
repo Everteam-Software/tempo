@@ -892,7 +892,7 @@
     $("#connectionLost").hide();
     $("#tabTasks").click();
 
-    window.open("/ui-fw/script/empty.jsp", "taskform");
+    if (!one_task_page) window.open("/ui-fw/script/empty.jsp", "taskform");
 
     /*
     Ajax activity support call. Show the ajax loading icon
