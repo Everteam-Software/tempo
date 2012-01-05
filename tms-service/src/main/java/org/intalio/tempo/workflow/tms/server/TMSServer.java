@@ -46,6 +46,7 @@ import org.intalio.tempo.workflow.task.CustomColumn;
 import org.intalio.tempo.workflow.task.InvalidTaskException;
 import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.PIPATask;
+import org.intalio.tempo.workflow.task.PIPATaskState;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.TaskState;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
@@ -778,6 +779,19 @@ public class TMSServer implements ITMSServer {
             }
         }
 
+    }
+    
+    public void updatePipa(ITaskDAOConnection dao,String formUrl, String participantToken, PIPATaskState state) throws AuthException, UnavailableTaskException {
+        HashMap<String, Exception> problemTasks = new HashMap<String, Exception>();
+        try {
+	            PIPATask pipaTask = dao.fetchPipa(formUrl);
+	            pipaTask.setProcessState(state);
+	            dao.updatePipaTask(pipaTask);
+	            dao.commit();
+            } catch (Exception e) {
+                _logger.error("Cannot update PIPA Tasks", e);
+                problemTasks.put(formUrl, e);
+            }
     }
 
     public PIPATask getPipa(ITaskDAOConnection dao,String formUrl, String participantToken) throws AuthException, UnavailableTaskException {

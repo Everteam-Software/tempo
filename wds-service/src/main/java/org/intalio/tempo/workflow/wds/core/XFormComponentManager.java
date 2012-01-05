@@ -29,7 +29,6 @@ import org.intalio.deploy.deployment.ComponentId;
 import org.intalio.deploy.deployment.DeploymentMessage;
 import org.intalio.deploy.deployment.DeploymentMessage.Level;
 import org.intalio.deploy.deployment.spi.ComponentManagerResult;
-import org.intalio.tempo.security.token.TokenContext;
 import org.intalio.tempo.workflow.wds.core.xforms.XFormsProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,7 +94,7 @@ public class XFormComponentManager implements org.intalio.deploy.deployment.spi.
         }
     }
 
-    public void undeploy(ComponentId name, File path, List<String> deployedObjects) {
+    public void undeploy(ComponentId name, File path, List<String> deployedObjects,boolean active) {
         WDSService wds = _wdsFactory.getWDSService();
 
         // only undeploy if this is the last version of this assembly
@@ -152,6 +151,21 @@ public class XFormComponentManager implements org.intalio.deploy.deployment.spi.
 
 	public void retired(ComponentId name, File path, List<String> deployedResources) {
         // nothing
+	}
+	
+	public void activateProcess(ComponentId name, File path, List<String> deployedResources,String arg0) {
+	       // nothing
+		
+	}
+	
+	public void retireProcess(ComponentId name, File path, List<String> deployedResources ,String arg0) {
+	       // nothing
+		
+	}
+
+	
+	public void undeploy(ComponentId arg0, File arg1, List<String> arg2) {
+	       // nothing
 	}
 
 	// ------------------ Common deployment methods ------------------------
@@ -311,5 +325,6 @@ public class XFormComponentManager implements org.intalio.deploy.deployment.spi.
         } catch (Exception e) {
             // ignore
         }
-    }
+    }	
+	
 }

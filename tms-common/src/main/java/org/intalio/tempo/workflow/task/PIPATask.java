@@ -56,6 +56,10 @@ public class PIPATask extends Task implements InitTask {
     @Persistent
     @Column(name = "process_endpoint")
     private String _processEndpoint;
+    
+    @Persistent
+    @Column(name = "process_state")
+    private PIPATaskState _processState=PIPATaskState.READY;  
 
     public PIPATask() {
         super();
@@ -180,5 +184,12 @@ public class PIPATask extends Task implements InitTask {
     public void setUserOwners(String[] userOwners) {
         setUserOwners(normalizeAuthIdentifiers(userOwners));
     }
+
+	public PIPATaskState getProcessState() {
+		return _processState;
+	}
+	public void setProcessState(PIPATaskState processState) {
+		this._processState = processState;
+	}
 
 }

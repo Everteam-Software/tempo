@@ -63,6 +63,11 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
         checkTransactionIsActive();
         entityManager.persist(task);
     }
+    public void updatePipaTask(PIPATask pipaTask){
+    	checkTransactionIsActive();
+        entityManager.persist(pipaTask);    	
+    }
+    
     
     public List<Task> fetchTaskfromInstanceID(String instanceid) throws UnavailableTaskException {
         List<Task> pat=_fetcher.fetchTaskIfExistsfrominstanceID(instanceid);

@@ -158,4 +158,10 @@ public class SimpleTaskDAOConnection implements ITaskDAOConnection {
         return null;
     }
 
+	@Override
+	public void updatePipaTask(PIPATask pipaTask) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

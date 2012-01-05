@@ -44,6 +44,7 @@ public interface ITaskDAOConnection {
     
     public void storePipaTask(PIPATask task);
     public void deletePipaTask(String formUrl);
+    public void updatePipaTask(PIPATask pipaTask);
     public PIPATask fetchPipa(String formUrl) throws UnavailableTaskException ;
     public List<String> fetchCustomColumns() ;
     public List<CustomColumn> fetchCustomColumnfromProcessName(String processName) throws UnavailableTaskException ;

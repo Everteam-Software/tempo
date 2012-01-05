@@ -98,6 +98,16 @@ public class TasksCollector {
 //        return new TMSFactory(endpoint, token).getService();
     }
 
+    public TaskHolder<Task> retrieveOneTask(String taskId) throws Exception {
+        final FormManager fmanager = FormManagerBroker.getInstance().getFormManager();
+        final String endpoint = URIUtils.resolveURI(_request, _endpoint);
+        final ITaskManagementService taskManager = getTaskManager(endpoint, _token);
+
+        Task task = taskManager.getTask(taskId);
+
+        return new TaskHolder<Task>(task, URIUtils.getResolvedTaskURLAsString(_request, fmanager, task, _token, _user));
+    }
+
     public ArrayList<TaskHolder<Task>> retrieveTasks() throws Exception {
         final FormManager fmanager = FormManagerBroker.getInstance().getFormManager();
         final ArrayList<TaskHolder<Task>> _tasks = new ArrayList<TaskHolder<Task>>();
@@ -111,7 +121,7 @@ public class TasksCollector {
             StringBuffer baseQuery = new StringBuffer("(T._state = TaskState.READY OR T._state = TaskState.CLAIMED) ");
             collect(fmanager, _tasks, taskManager, params, type, baseQuery);
         } else if (type.equals(PIPATask.class.getSimpleName())) {
-            StringBuffer baseQuery = new StringBuffer("");
+            StringBuffer baseQuery = new StringBuffer("(T._processState = PIPATaskState.READY)");
             collect(fmanager, _tasks, taskManager, params, type, baseQuery);
         } else {
             _log.error("Cannot collect task of type:" + type);
