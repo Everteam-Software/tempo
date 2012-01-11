@@ -566,8 +566,15 @@
       errormsg: '<fmt:message key="org_intalio_uifw_flexigrid_error"/>',
       height: height2,
       usepager: true,
-      searchitems : [{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description'}]
-    };		
+      searchitems : [{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description'},
+                     {display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_userOwners"/>', name : '_userOwners'},
+                     {display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_roleOwners"/>', name : '_roleOwners'}
+
+				      <c:forEach items="${newColumnList}" var="newColumn">
+				             ,{display: '${newColumn}', name : '_customMetadata'}
+				             
+				      </c:forEach>
+   ]};		
 
     /*
     Table for activity tasks
