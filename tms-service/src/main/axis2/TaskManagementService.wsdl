@@ -221,7 +221,7 @@
                         <xsd:element name="userProcessResponse">
                             <xsd:complexType>
                                 <xsd:sequence>
-                                    <xsd:any/>
+                                    <xsd:any processContents="lax"/>
                                 </xsd:sequence>
                             </xsd:complexType>
                         </xsd:element>
