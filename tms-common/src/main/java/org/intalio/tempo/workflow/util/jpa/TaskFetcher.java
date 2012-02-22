@@ -15,6 +15,7 @@ import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.CustomColumn;
 import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.PIPATask;
+import org.intalio.tempo.workflow.task.PIPATaskOutput;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.slf4j.Logger;
@@ -42,6 +43,7 @@ public class TaskFetcher {
 	final static Logger _logger = LoggerFactory.getLogger(TaskFetcher.class);
 	private EntityManager _entityManager;
 	private Query find_by_id;
+	private Query find_pipa_task_output_by_task_id;
 	private final String QUERY_GENERIC1 = "select DISTINCT T from ";
 	private final String QUERY_GENERIC_COUNT = "select COUNT(DISTINCT T) from ";
 //	private final String QUERY_GENERIC2 = " T where (T._userOwners = (?1) or T._roleOwners = (?2)) ";
@@ -56,6 +58,7 @@ public class TaskFetcher {
 	public TaskFetcher(EntityManager em) {
 		this._entityManager = em;
 		this.find_by_id = _entityManager.createNamedQuery(Task.FIND_BY_ID);
+		this.find_pipa_task_output_by_task_id = _entityManager.createNamedQuery(PIPATaskOutput.FIND_BY_TASK_ID_AND_USER);
 	}
 
 	/**
@@ -348,5 +351,16 @@ public class TaskFetcher {
 	        Query q = _entityManager.createNamedQuery( CustomColumn.FIND_ALL_CUSTOM_COLUMNS);
 	        List<String> resultList = q.getResultList();
 	        return resultList;
+	}
+	
+	public PIPATaskOutput fetchPIPATaskOutput(String taskId, String userOwner) {
+		   Query query = find_pipa_task_output_by_task_id.setParameter(1, taskId).setParameter(2, userOwner);
+		   List resultList = query.getResultList();
+		   PIPATaskOutput pipaTaskOutput=null;
+		   if(resultList!= null && !resultList.isEmpty()){
+			   pipaTaskOutput = (PIPATaskOutput) resultList.get(0);
+			   
+		   }
+		   return pipaTaskOutput;
 	}
 }

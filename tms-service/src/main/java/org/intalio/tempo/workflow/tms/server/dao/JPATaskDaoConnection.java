@@ -19,6 +19,7 @@ import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.dao.AbstractJPAConnection;
 import org.intalio.tempo.workflow.task.CustomColumn;
 import org.intalio.tempo.workflow.task.PIPATask;
+import org.intalio.tempo.workflow.task.PIPATaskOutput;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
 import org.intalio.tempo.workflow.tms.UnavailableAttachmentException;
@@ -140,7 +141,30 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
 	public void storeCustomColumn(CustomColumn customColumn) {
         checkTransactionIsActive();
         entityManager.persist(customColumn);
-		
+	}
+
+	@Override
+	public void insertPipaOutput(PIPATaskOutput pipaTaskOutput) {
+	    checkTransactionIsActive();
+	    entityManager.persist(pipaTaskOutput);	
+	}
+
+	@Override
+	public PIPATaskOutput fetchPIPATaskOutput(String taskId, String userOwner) {
+		return _fetcher.fetchPIPATaskOutput(taskId, userOwner);
+	}
+
+	@Override
+	public void updatePipaOutput(PIPATaskOutput pipaTaskOutput) {
+		checkTransactionIsActive();
+	    entityManager.persist(pipaTaskOutput);	
+	}
+
+	@Override
+	public void deletePIPATaskOutput(PIPATaskOutput output) {
+		checkTransactionIsActive();
+		entityManager.remove(output);
+
 	}
 
 }

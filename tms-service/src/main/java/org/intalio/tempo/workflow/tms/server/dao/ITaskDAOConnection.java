@@ -21,6 +21,7 @@ import java.util.List;
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.CustomColumn;
 import org.intalio.tempo.workflow.task.PIPATask;
+import org.intalio.tempo.workflow.task.PIPATaskOutput;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
 import org.intalio.tempo.workflow.tms.UnavailableAttachmentException;
@@ -50,4 +51,8 @@ public interface ITaskDAOConnection {
     public List<CustomColumn> fetchCustomColumnfromProcessName(String processName) throws UnavailableTaskException ;
     void deleteCustomColumn(CustomColumn customColumn);
 	void storeCustomColumn(CustomColumn customColumn);
+	public PIPATaskOutput fetchPIPATaskOutput(String id, String userOwner);
+	public void deletePIPATaskOutput(PIPATaskOutput output);
+	public void updatePipaOutput(PIPATaskOutput pipaTaskOutput);
+	public void insertPipaOutput(PIPATaskOutput pipaTaskOutput);
 }
