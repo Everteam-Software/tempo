@@ -83,6 +83,8 @@ public final class FormDispatcherConfiguration {
      * Timeout when sending messages
      */
     private int _httpTimeout = 10000;
+    
+    private String _odeServerURL = "http://localhost:8080/";
 
     /**
      * Returns the shared singleton instance of this class.
@@ -163,11 +165,13 @@ public final class FormDispatcherConfiguration {
             String workflowProcessesRelativeUrl = configDocument.valueOf("/config/workflowProcessesRelativeUrl");
             String tmsUrl = configDocument.valueOf("/config/tmsUrl");
             String fdsUrl = configDocument.valueOf("/config/fdsUrl");
+            String odeServerURL = configDocument.valueOf("/config/odeServerURL");
 
             _pxeBaseUrl = pxeBaseUrl;
             _workflowProcessesRelativeUrl = workflowProcessesRelativeUrl;
             _tmsUrl = tmsUrl;
             _fdsUrl = fdsUrl;
+            _odeServerURL = odeServerURL;
 
             try {
                 String timeout = configDocument.valueOf("/config/httpTimeout");
@@ -181,4 +185,18 @@ public final class FormDispatcherConfiguration {
             _log.error("Failed to load the configuration: " + e.getMessage(), e);
         }
     }
+    
+	/**
+	 * @return the _odeServerURL
+	 */
+	public String getOdeServerURL() {
+		return _odeServerURL;
+	}
+
+	/**
+	 * @param _odeServerURL the _odeServerURL to set
+	 */
+	public void setOdeServerURL(String odeServerURL) {
+		this._odeServerURL = odeServerURL;
+	}
 }
