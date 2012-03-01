@@ -56,10 +56,14 @@ public class FDSOutHandler extends AbstractHandler {
 				Document mediatedRequest = helper.processOutMessage(SoapTools.fromAxiom(msgContext.getEnvelope()), msgContext.getSoapAction(),msgContext.getTo().getAddress());
 				msgContext.setSoapAction(helper.getSoapAction());
 				msgContext.setWSAAction(helper.getSoapAction());
-				msgContext.getTo().setAddress(FormDispatcherConfiguration.getInstance().getOdeServerURL()+helper.getTargetEPR());
+				if(helper.getTargetEPR().startsWith(FormDispatcherConfiguration.getInstance().getOdeServerURL())){
+					msgContext.getTo().setAddress(helper.getTargetEPR());
+				}else{
+					msgContext.getTo().setAddress(FormDispatcherConfiguration.getInstance().getOdeServerURL()+helper.getTargetEPR());
+				}
 				msgContext.setEnvelope(SoapTools.fromDocument(mediatedRequest));
 				msgContext.getOperationContext().setProperty(FDSModule.FDS_HANDLER_CONTEXT, helper);
-
+				
 				// use the local transport if target is run by PXE
 				if (msgContext.getTo().getAddress().startsWith(FormDispatcherConfiguration.getInstance().getPxeBaseUrl())) {
 			        TransportOutDescription tOut = msgContext.getConfigurationContext().getAxisConfiguration().getTransportOut(

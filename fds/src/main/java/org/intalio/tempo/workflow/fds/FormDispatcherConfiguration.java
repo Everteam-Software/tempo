@@ -84,7 +84,7 @@ public final class FormDispatcherConfiguration {
      */
     private int _httpTimeout = 10000;
     
-    private String _odeServerURL = "http://localhost:8080/";
+    private String _odeServerURL = "http://localhost:8080";
 
     /**
      * Returns the shared singleton instance of this class.
