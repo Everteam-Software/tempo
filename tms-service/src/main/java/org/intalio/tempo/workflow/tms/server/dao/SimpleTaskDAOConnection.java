@@ -23,6 +23,7 @@ import java.util.Map;
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.CustomColumn;
 import org.intalio.tempo.workflow.task.PIPATask;
+import org.intalio.tempo.workflow.task.PIPATaskOutput;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
@@ -157,5 +158,35 @@ public class SimpleTaskDAOConnection implements ITaskDAOConnection {
         // TODO Auto-generated method stub
         return null;
     }
+
+	@Override
+	public void updatePipaTask(PIPATask pipaTask) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public PIPATaskOutput fetchPIPATaskOutput(String id, String userOwner) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void deletePIPATaskOutput(PIPATaskOutput output) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void updatePipaOutput(PIPATaskOutput pipaTaskOutput) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void insertPipaOutput(PIPATaskOutput pipaTaskOutput) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

@@ -84,7 +84,9 @@ public final class FormDispatcherConfiguration {
      */
     private int _httpTimeout = 10000;
     
-    private String _odeServerURL;
+
+    private String _odeServerURL = "http://localhost:8080";
+ 
 
     /**
      * Returns the shared singleton instance of this class.
@@ -185,7 +187,7 @@ public final class FormDispatcherConfiguration {
             _log.error("Failed to load the configuration: " + e.getMessage(), e);
         }
     }
-
+ 
 	/**
 	 * @return the _odeServerURL
 	 */

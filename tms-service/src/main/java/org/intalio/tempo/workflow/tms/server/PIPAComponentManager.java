@@ -33,6 +33,7 @@ import org.intalio.deploy.deployment.spi.ComponentManagerResult;
 import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.task.CustomColumn;
 import org.intalio.tempo.workflow.task.PIPATask;
+import org.intalio.tempo.workflow.task.PIPATaskState;
 import org.intalio.tempo.workflow.tms.TMSException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
@@ -92,13 +93,7 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
          * DeploymentMessage(Level.ERROR, "No security context token")); return
          * msgs; }
          */
-
-
-        
-        
-        String intaliohash = System.getProperty("intaliohash");
-        
-    
+//        String intaliohash = System.getProperty("intaliohash");
 
         BasicTextEncryptor encryptor = new BasicTextEncryptor();
         // setPassword uses hash to decrypt password which should be same as hash of encryptor
@@ -120,11 +115,19 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
         } finally {
         }
     }
-
+    
+     
+  
     public void undeploy(ComponentId name, File path, List<String> deployedResources) {
-        BasicTextEncryptor encryptor = new BasicTextEncryptor();
-        // setPassword uses hash to decrypt password which should be same as hash of encryptor
-		encryptor.setPassword("IntalioEncryptedpasswordfortempo#123");
+       undeploy(name, path, deployedResources,false);
+    }
+    
+    /* Added assembly's state as a new argument to stop showing PIPA task in ui-fw
+     * when undeploying the active assembly and have more than one versions remaining.
+     * but they all are in Retired state.   
+     */
+    public void undeploy(ComponentId name, File path, List<String> deployedResources , boolean active) {
+       
         // only undeploy if this is the last version of this assembly
         String assembly = name.getAssemblyId().getAssemblyName();
         HashSet<AssemblyId> set = _versions.get(assembly);
@@ -138,7 +141,7 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
 	            for (String url : deployedResources) {
 	                try {
 	                	if(LOG.isDebugEnabled()) LOG.debug("versions>> "+_versions.toString());
-	                    _tms.deletePipa(dao,url,encryptor.encrypt(internalPassword));
+	                    _tms.deletePipa(dao,url,encrypt(internalPassword));
 	                } catch (UnavailableTaskException e) {
 	                    LOG.warn("Undeploy - PIPA not found: " + url);
 	                } catch (AuthException e) {
@@ -154,8 +157,77 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
 	        		if(dao!=null)
 	        			dao.close();
         	     }
+
+          //  retire the PIPA Task only if it's assembly is active and there is more than one version of it's assembly exist.
+          }else if (active){
+        	  retire(name, path, deployedResources);
+        	  
           }
     }
+    
+    /*
+     * Added this method to fix WF-1488 issue
+     * 
+     */
+    public void retireProcess(ComponentId name, File path, List<String> deployedResources,String formURL) {
+     	ITaskDAOConnection dao=null;
+
+    	try {
+    		dao=_taskDAOFactory.openConnection();
+                try {
+                	if(LOG.isDebugEnabled()) LOG.debug("versions>> "+_versions.toString());
+                    _tms.updatePipa(dao,formURL,encrypt(internalPassword),PIPATaskState.RETIRED);
+                } catch (UnavailableTaskException e) {
+                    LOG.warn("Undeploy - PIPA not found: " + formURL);
+                } catch (AuthException e) {
+                    LOG.warn("Undeploy - AuthException: " + formURL, e);
+
+                } 
+
+    	   	}finally
+    	     {
+        		if(dao!=null)
+        			dao.close();
+    	     }
+
+  }
+    
+    /*
+     * Added this method to fix WF-1488 issue
+     * 
+     */
+    public void activateProcess(ComponentId name, File path, List<String> deployedResources, String formURL) {    	
+        ITaskDAOConnection dao=null;
+      	try {
+          		dao=_taskDAOFactory.openConnection();
+                try {
+                	if(LOG.isDebugEnabled()) LOG.debug("versions>> "+_versions.toString());
+                    _tms.updatePipa(dao,formURL,encrypt(internalPassword),PIPATaskState.READY);
+                } catch (UnavailableTaskException e) {
+                    LOG.warn("Undeploy - PIPA not found: " + formURL);
+                } catch (AuthException e) {
+                    LOG.warn("Undeploy - AuthException: " + formURL, e);
+                }
+
+  	   	}finally {
+    		if(dao!=null)
+    			dao.close();
+  	     }
+
+    }
+
+    public void activate(ComponentId name, File path, List<String> deployedResources) {
+    	updatePipa(deployedResources,PIPATaskState.READY);
+    }	
+    
+    /*
+     * Added this method to fix WF-1488
+     * 
+     */
+    public void retire(ComponentId name, File path, List<String> deployedResources) {
+    	updatePipa(deployedResources, PIPATaskState.RETIRED);
+    }
+
 
     public void start(ComponentId name, File path, List<String> deployedResources, boolean active) {
         // nothing
@@ -164,15 +236,7 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
     public void stop(ComponentId name, File path, List<String> deployedResources, boolean active) {
         // nothing
     }
-
-    public void activate(ComponentId name, File path, List<String> deployedResources) {
-        // TODO Implement this
-    }
-
-    public void retire(ComponentId name, File path, List<String> deployedResources) {
-        // TODO Implement this
-    }
-
+    
     public void deployed(ComponentId name, File path, List<String> deployedResources, boolean active) {
         // increment number of versions for the given assembly
         String assembly = name.getAssemblyId().getAssemblyName();
@@ -270,6 +334,38 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
 		String processName=parentDir.getName();
 		processName = processName.replaceAll(".\\d*$", "");
 		return processName;
+	}
+    
+    private String encrypt(String internalPassword){
+    	BasicTextEncryptor encryptor = new BasicTextEncryptor();
+    	// setPassword uses hash to decrypt password which should be same as hash of encryptor
+    	encryptor.setPassword("IntalioEncryptedpasswordfortempo#123");
+    	return encryptor.encrypt(internalPassword);
+    	
+    }
+    
+    private void updatePipa(List<String> deployedResources, PIPATaskState state) {	
+
+    	ITaskDAOConnection dao=null;
+      	//ITaskDAOConnection is accessed here for fix of JIRA WF-1466
+      	try {
+      		dao=_taskDAOFactory.openConnection();
+            for (String url : deployedResources) {
+                try {
+                	if(LOG.isDebugEnabled()) LOG.debug("versions>> "+_versions.toString());
+                    _tms.updatePipa(dao,url,encrypt(internalPassword),state);
+                } catch (UnavailableTaskException e) {
+                    LOG.warn("Undeploy - PIPA not found: " + url);
+                } catch (AuthException e) {
+                    LOG.warn("Undeploy - AuthException: " + url, e);
+                    break; // fail-fast
+                }
+            }
+      	   	}finally
+      	     {
+        		if(dao!=null)
+        			dao.close();
+      	     }
 	}
 
 	private CustomColumn[] loadCustomMetadata(File dir,String processName) {
@@ -397,6 +493,6 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
         	LOG.error("Error while parsing metadata.xml of the Process Name: " + processName, e);
         } 
         return (CustomColumn[]) columns.toArray(new CustomColumn[columns.size()]);
-    }
+    }	
  
 }

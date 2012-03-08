@@ -149,6 +149,15 @@
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
+            <xsd:element name="updatePipaRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="formUrl" type="xsd:string"/>                        
+                        <xsd:element name="state" type="xsd:boolean"/>
+                        <xsd:element name="participantToken" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
             <xsd:element name="createRequest">
                 <xsd:complexType>
                     <xsd:sequence>
@@ -212,7 +221,7 @@
                         <xsd:element name="userProcessResponse">
                             <xsd:complexType>
                                 <xsd:sequence>
-                                    <xsd:any/>
+                                    <xsd:any processContents="lax"/>
                                 </xsd:sequence>
                             </xsd:complexType>
                         </xsd:element>
@@ -529,6 +538,9 @@
     <wsdl:message name="deleteAllRequest">
         <wsdl:part name="deleteAllRequest" element="tns:deleteAllRequest"/>
     </wsdl:message>
+    <wsdl:message name="updatePipaRequest">
+        <wsdl:part name="updatePipaRequest" element="tns:updatePipaRequest"/>
+    </wsdl:message>
     <wsdl:message name="addAttachmentRequest">
         <wsdl:part name="addAttachmentRequest" element="tns:addAttachmentRequest"/>
     </wsdl:message>
@@ -741,6 +753,10 @@
 			<wsdl:input message="tns:getCustomColumnsRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getCustomColumns" />
 			<wsdl:output message="tns:getCustomColumnsResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getCustomColumnsResponse" />
 		</wsdl:operation>
+		<wsdl:operation name="updatePipa">
+            <wsdl:input message="tns:updatePipaRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/updatePipa"/>
+            <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/updatePipaResponse"/>                        
+        </wsdl:operation>
 		
     </wsdl:portType>
     <wsdl:binding name="TaskManagementServicesSOAP" type="tns:TaskManagementServicesPortType">

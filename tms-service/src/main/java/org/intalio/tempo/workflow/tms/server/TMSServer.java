@@ -46,6 +46,8 @@ import org.intalio.tempo.workflow.task.CustomColumn;
 import org.intalio.tempo.workflow.task.InvalidTaskException;
 import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.PIPATask;
+import org.intalio.tempo.workflow.task.PIPATaskOutput;
+import org.intalio.tempo.workflow.task.PIPATaskState;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.TaskState;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
@@ -162,6 +164,13 @@ public class TMSServer implements ITMSServer {
     public Task[] getTaskList(ITaskDAOConnection dao,String participantToken) throws AuthException {
         UserRoles credentials = _authProvider.authenticate(participantToken);
         Task[] result = dao.fetchAllAvailableTasks(credentials);
+        if(result != null && result.length > 0 && result[0] instanceof PIPATask){
+        	for(Task task : result){
+        		if(task instanceof PIPATask){
+        			setOutputPIPA(dao, task, credentials.getUserID());
+        		}
+        	}
+	    }
         return result;
     }
       
@@ -188,6 +197,9 @@ public class TMSServer implements ITMSServer {
             AccessDeniedException {
         UserRoles credentials = _authProvider.authenticate(participantToken);
         Task task = dao.fetchTaskIfExists(taskID);
+        if(task instanceof PIPATask){
+        	setOutputPIPA(dao, task, credentials.getUserID());
+        }
         if ((task != null)) {
             checkIsAvailable(taskID, task, credentials);
             if (_logger.isDebugEnabled())
@@ -236,14 +248,36 @@ public class TMSServer implements ITMSServer {
         Task task = dao.fetchTaskIfExists(taskID);
         checkIsAvailable(taskID, task, credentials);
         if (task instanceof ITaskWithOutput) {
-            ITaskWithOutput taskWithOutput = (ITaskWithOutput) task;
-            taskWithOutput.setOutput(output);
-            dao.updateTask(task);
-            dao.commit();
-            if (_logger.isDebugEnabled())
-                _logger.debug(credentials.getUserID() + " has set output for Workflow Task " + task);
-        } else
-            throw new UnavailableTaskException(credentials.getUserID() + " cannot set output for Workflow Task " + task);
+        	if(task instanceof PIPATask){
+        		String userOwner = credentials.getUserID();
+        		String taskId = task.getID();
+        		PIPATaskOutput pipaTaskOutput = null;
+        		pipaTaskOutput = dao.fetchPIPATaskOutput(taskId, userOwner);
+        		if(pipaTaskOutput != null){
+        			pipaTaskOutput.setOutput(output);
+        			dao.updatePipaOutput(pipaTaskOutput);
+            		dao.commit();
+        		}else{
+        			pipaTaskOutput = new PIPATaskOutput();
+            		pipaTaskOutput.setOutput(output);
+            		pipaTaskOutput.setUserOwner(userOwner);
+            		pipaTaskOutput.setPipaTaskId(taskId);
+            		dao.insertPipaOutput(pipaTaskOutput);
+            		dao.commit();
+        		}
+	            if (_logger.isDebugEnabled())
+	                _logger.debug(credentials.getUserID() + " has set output for Workflow Task " + task);
+        	}else {
+        		ITaskWithOutput taskWithOutput = (ITaskWithOutput) task;
+	            taskWithOutput.setOutput(output);
+	            dao.updateTask(task);
+	            dao.commit();
+	            if (_logger.isDebugEnabled())
+	                _logger.debug(credentials.getUserID() + " has set output for Workflow Task "+  task);       
+        	}
+    	} else
+    		throw new UnavailableTaskException(credentials.getUserID() + 
+    				" cannot set output for Workflow Task " + task);
     }
 
     public void complete(ITaskDAOConnection dao,String taskID, String participantToken) throws AuthException, UnavailableTaskException,
@@ -627,6 +661,11 @@ public class TMSServer implements ITMSServer {
         UserRoles credentials = _authProvider.authenticate(participantToken);
         Task task = dao.fetchTaskIfExists(taskID);
         checkIsAvailable(taskID, task, credentials);
+        PIPATaskOutput output = dao.fetchPIPATaskOutput(taskID, credentials.getUserID());
+        if(output != null){
+        	dao.deletePIPATaskOutput(output);
+        	dao.commit();
+        }        
         if (task instanceof PIPATask) {
             PIPATask pipaTask = (PIPATask) task;
             Document document = sendInitMessage(pipaTask, user, formUrl, participantToken, input);
@@ -779,6 +818,19 @@ public class TMSServer implements ITMSServer {
         }
 
     }
+    
+    public void updatePipa(ITaskDAOConnection dao,String formUrl, String participantToken, PIPATaskState state) throws AuthException, UnavailableTaskException {
+        HashMap<String, Exception> problemTasks = new HashMap<String, Exception>();
+        try {
+	            PIPATask pipaTask = dao.fetchPipa(formUrl);
+	            pipaTask.setProcessState(state);
+	            dao.updatePipaTask(pipaTask);
+	            dao.commit();
+            } catch (Exception e) {
+                _logger.error("Cannot update PIPA Tasks", e);
+                problemTasks.put(formUrl, e);
+            }
+    }
 
     public PIPATask getPipa(ITaskDAOConnection dao,String formUrl, String participantToken) throws AuthException, UnavailableTaskException {
         try {
@@ -825,7 +877,16 @@ public class TMSServer implements ITMSServer {
             String klass = (String) parameters.get(TaskFetcher.FETCH_CLASS_NAME);
             if (klass != null)
                 parameters.put(TaskFetcher.FETCH_CLASS, TaskTypeMapper.getTaskClassFromStringName(klass));
-            return dao.fetchAvailableTasks(parameters);
+                Task[] tasks = dao.fetchAvailableTasks(parameters);
+                if(tasks != null && tasks.length > 0 && tasks[0] instanceof PIPATask){
+                	for(Task task : tasks){
+                		if(task instanceof PIPATask){
+                			setOutputPIPA(dao, task, credentials.getUserID());
+                		}
+                	}
+                	
+                }
+                return tasks;
         } catch (Exception e) {
             _logger.error("Error while tasks list retrieval for user " + credentials.getUserID(), e);
             throw new RuntimeException(e);
@@ -964,8 +1025,11 @@ public class TMSServer implements ITMSServer {
 	    return dao.fetchCustomColumns();
 	}
 
-
-
-
+    private void setOutputPIPA(ITaskDAOConnection dao, Task task, String userOwner) {
+		PIPATaskOutput pipaTaskOutput = dao.fetchPIPATaskOutput(task.getID(), userOwner);
+		if(pipaTaskOutput != null){
+			((PIPATask) task).setOutput(pipaTaskOutput.getOutput());
+		}
+	}
 
 }

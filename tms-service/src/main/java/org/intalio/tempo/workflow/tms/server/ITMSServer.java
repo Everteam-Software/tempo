@@ -22,6 +22,7 @@ import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.CustomColumn;
 import org.intalio.tempo.workflow.task.PIPATask;
+import org.intalio.tempo.workflow.task.PIPATaskState;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.TaskState;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
@@ -90,7 +91,7 @@ public interface ITMSServer {
     
     List<String> getCustomColumns( ITaskDAOConnection dao, String token) throws AuthException;
 
-	
+    void updatePipa(ITaskDAOConnection dao,String formUrl, String participantToken, PIPATaskState state) throws AuthException, UnavailableTaskException ;
 
 	void storeCustomColumn(ITaskDAOConnection dao, CustomColumn[] customColumn,
 			String token);

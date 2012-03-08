@@ -23,13 +23,17 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.apache.openjpa.persistence.Externalizer;
 import org.apache.openjpa.persistence.Factory;
 import org.apache.openjpa.persistence.Persistent;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
+import org.intalio.tempo.workflow.task.traits.ITaskWithOutput;
 import org.intalio.tempo.workflow.task.traits.InitTask;
+import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
+import org.w3c.dom.Document;
 
 /**
  * Init task
@@ -39,7 +43,7 @@ import org.intalio.tempo.workflow.util.RequiredArgumentException;
 @Table(name = "tempo_pipa")
 @PrimaryKeyJoinColumn(name = "id", referencedColumnName = "id")
 @NamedQueries( { @NamedQuery(name = PIPATask.FIND_BY_URL, query = "select DISTINCT T FROM PIPATask T where T._processEndpoint=(?1)") })
-public class PIPATask extends Task implements InitTask {
+public class PIPATask extends Task implements InitTask, ITaskWithOutput {
 
     public static final String FIND_BY_URL = "find_by_url";
 
@@ -56,7 +60,14 @@ public class PIPATask extends Task implements InitTask {
     @Persistent
     @Column(name = "process_endpoint")
     private String _processEndpoint;
+    
+    @Persistent
+    @Column(name = "process_state")
+    private PIPATaskState _processState=PIPATaskState.READY;  
 
+    @Transient
+    private String output;
+    
     public PIPATask() {
         super();
     }
@@ -181,4 +192,28 @@ public class PIPATask extends Task implements InitTask {
         setUserOwners(normalizeAuthIdentifiers(userOwners));
     }
 
+	public PIPATaskState getProcessState() {
+		return _processState;
+	}
+	public void setProcessState(PIPATaskState processState) {
+		this._processState = processState;
+	}
+
+	@Override
+	public Document getOutput() {
+		return XmlTooling.deserializeDocument(output);
+	}
+	
+	@Override
+	public void setOutput(Document outputDocument) {
+	    if (outputDocument == null) {
+	        throw new RequiredArgumentException("outputDocument");
+	    }
+	    output = XmlTooling.serializeDocument(outputDocument);
+	}
+	
+	@Override
+	public void setOutput(String output) {
+		this.output = output;		
+	}
 }
