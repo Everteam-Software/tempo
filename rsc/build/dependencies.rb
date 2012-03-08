@@ -211,7 +211,7 @@ APACHE_JPA_2_0_0 = [
   APACHE_COMMONS[:lang],
   APACHE_COMMONS[:collections],
   GERONIMO_SPECS["jta"],
-  "org.apache.openjpa:openjpa-all:jar:2.1.0",
+  "org.apache.openjpa:openjpa-all:jar:2.1.1",
   "serp:serp:jar:1.13.1"  
 ]
 APACHE_JPA = APACHE_JPA_2_0_0
