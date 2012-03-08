@@ -168,6 +168,7 @@ public class FormDispatcherServlet extends HttpServlet {
 
                 String userProcessEndpoint = wf2up.getUserProcessEndpoint();
                 _log.debug("Sending the request to the user process and getting the response");
+                userProcessEndpoint = userProcessEndpoint.startsWith("http") ? userProcessEndpoint : (new StringBuilder(String.valueOf(config.getOdeServerURL()))).append(userProcessEndpoint).toString();
                 Document userProcessResponse = messageSender.requestAndGetReply(workflowProcessesRequest, userProcessEndpoint, soapAction);
                 if (_log.isDebugEnabled()) {
                     _log.debug("User process response:\n" + userProcessResponse.asXML() + "\n");
