@@ -67,7 +67,7 @@
 				<entry><key><value>openjpa.Log</value></key><value>log4j</value></entry>
 				<entry><key><value>openjpa.ConnectionFactoryMode</value></key><value>local</value></entry>
 				<entry><key><value>tempo.datasourceURL</value></key><value>java:comp/env/jdbc/BPMSDB</value></entry>
-				<entry><key><value>openjpa.DataCache</value></key><value>true(cacheSize=20000,SoftReferenceSize=0,EvictionSchedule='*/30 * * * ?')</value></entry>
+				<entry><key><value>openjpa.DataCache</value></key><value>true(cacheSize=20000,SoftReferenceSize=0,EvictionSchedule='+30')</value></entry>
 			</map>
 		</constructor-arg>
 	</bean>
