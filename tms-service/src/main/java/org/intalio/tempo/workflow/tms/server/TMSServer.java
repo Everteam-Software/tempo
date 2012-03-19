@@ -724,7 +724,7 @@ public class TMSServer implements ITMSServer {
         boolean available = false;
 
             task = dao.fetchTaskIfExists(taskID);
-            if(!(userAction.equals("ESCALATE") && participantToken.equals(""))){
+            if(userAction !=null && !(userAction.equals("ESCALATE") && participantToken.equals(""))){
                 UserRoles credentials = _authProvider.authenticate(participantToken);
                 checkIsAvailable(taskID, task, credentials);
             }
