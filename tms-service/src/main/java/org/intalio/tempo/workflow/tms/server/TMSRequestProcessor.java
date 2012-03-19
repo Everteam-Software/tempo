@@ -552,7 +552,8 @@ public class TMSRequestProcessor extends OMUnmarshaller {
                 throw new InvalidInputFormatException("Unknown task state: '" + taskStateStr + "'");
             }
             String participantToken = requireElementValue(rootQueue, "participantToken");
-            String userAction = requireElementValue(rootQueue, "userAction");
+            //String userAction = requireElementValue(rootQueue, "userAction");
+            String userAction = expectElementValue(rootQueue, "userAction");
             _server.reassign(dao,taskID, users, roles, taskState, participantToken, userAction);
             return createOkResponse();
         } catch (Exception e) {
