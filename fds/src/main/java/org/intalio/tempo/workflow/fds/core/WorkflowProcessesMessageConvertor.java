@@ -98,7 +98,7 @@ public class WorkflowProcessesMessageConvertor {
             Element sessionElement = (Element) sessionNodes.get(0);
             String session = sessionElement.getText();
             
-            //remove callback
+            //remove intalio callback
             xpathSelector = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Header/intalio:callback");
             xpathSelector.setNamespaceURIs(MessageConstants.get_nsMap());
             List<Node> callbackNodes = xpathSelector.selectNodes(message);
@@ -107,6 +107,18 @@ public class WorkflowProcessesMessageConvertor {
                 Element header = (Element)wsaTo.getParent();
                 header.remove(wsaTo);
                 sessionElement = header.addElement("session", MessageConstants.INTALIO_NS);
+                sessionElement.setText(session);
+            }
+
+            //remove ode callback
+            xpathSelector = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Header/odesession:callback");
+            xpathSelector.setNamespaceURIs(MessageConstants.get_nsMap());
+            callbackNodes = xpathSelector.selectNodes(message);
+            if (callbackNodes.size() != 0) {
+                Element wsaTo = (Element) callbackNodes.get(0);
+                Element header = (Element)wsaTo.getParent();
+                header.remove(wsaTo);
+                sessionElement = header.addElement("session", MessageConstants.ODE_SESSION_NS);
                 sessionElement.setText(session);
             }
         }
