@@ -230,16 +230,18 @@ public class TMSServer implements ITMSServer {
         return new ServiceClient();
     }
 
-    private void checkIsAvailable(String taskID, Task task, UserRoles credentials) throws AccessDeniedException {
+    private void checkIsAvailable(String taskID, Task task, UserRoles credentials) throws AccessDeniedException {  	
         // the task has been assign to those credentials
         if (task.isAvailableTo(credentials))
             return;
-        // some admin access user has been defined in the configuration file
-        else if (_permissions.isAuthorized(TaskPermissions.ACTION_READ, task, credentials))
-            return;
+        // some workflow admin access user has been defined in the security configuration file
+        else if (credentials.isWorkflowAdmin())
+            return;       
+        
         // fire the exception, this user cannot read this task
         else
-            throw new AccessDeniedException(credentials.getUserID() + " cannot access task:" + taskID);
+            throw new AccessDeniedException(credentials.getUserID() + " cannot access task:" + taskID);      
+        
     }
 
     public void setOutput(ITaskDAOConnection dao,String taskID, Document output, String participantToken) throws AuthException,
@@ -792,7 +794,8 @@ public class TMSServer implements ITMSServer {
         // setPassword uses hash to decrypt password which should be same as hash of encryptor
 		decryptor.setPassword("IntalioEncryptedpasswordfortempo#123");
         // DOTO due to all the service from wds is 'x'
-        if (decryptor.decrypt(participantToken).equalsIgnoreCase(internalPassword)) {
+		participantToken=decryptor.decrypt(participantToken);
+        if (participantToken.equalsIgnoreCase(internalPassword)) {
             dao.deletePipaTask(formUrl);
             dao.commit();
         } else {
@@ -1024,6 +1027,7 @@ public class TMSServer implements ITMSServer {
 	    UserRoles credentials = _authProvider.authenticate(token);
 	    return dao.fetchCustomColumns();
 	}
+
 
     private void setOutputPIPA(ITaskDAOConnection dao, Task task, String userOwner) {
 		PIPATaskOutput pipaTaskOutput = dao.fetchPIPATaskOutput(task.getID(), userOwner);

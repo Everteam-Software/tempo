@@ -139,8 +139,19 @@ public class UserProcessMessageConvertor {
             _userProcessEndpoint = wsaToElement.getText();
             if(isChangeCallbackAddress())
                 wsaToElement.setText(config.getFdsUrl());
-        } else
+        } else{
+            xpath = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Header/odesession:callback/addr:Address");
+            xpath.setNamespaceURIs(MessageConstants.get_nsMap());
+            callbackToQueryResult = xpath.selectNodes(message);
+            if (callbackToQueryResult.size() != 0) {
+                Element wsaToElement = (Element) callbackToQueryResult.get(0);
+                _userProcessEndpoint = wsaToElement.getText();
+                if(isChangeCallbackAddress())
+                    wsaToElement.setText(config.getFdsUrl());
+            } else{
             _log.debug("Did not find intalio:callback/addr:Address in SOAP header");
+            }
+        }
 
         /* Next, fetch the user process namespace URI from the task metadata */
         /*
@@ -181,6 +192,20 @@ public class UserProcessMessageConvertor {
             Element tmdElement = (Element) tmdQueryResult.get(0);
             Element sessionElement = tmdElement.addElement("session", MessageConstants.IB4P_NS);
             sessionElement.setText(session);
+        }else{
+            xpath = DocumentHelper.createXPath("/soapenv:Envelope/soapenv:Header/odesession:callback/odesession:session");
+            xpath.setNamespaceURIs(namespaceURIs/* MessageConstants.get_nsMap() */);
+            sessionQueryResult = xpath.selectNodes(message);
+            if (sessionQueryResult.size() != 0) {
+                Element wsaToElement = (Element) sessionQueryResult.get(0);
+                String session = wsaToElement.getText();
+                xpath = DocumentHelper.createXPath("//" + REQUEST_PREFIX + ":taskMetaData");
+                xpath.setNamespaceURIs(namespaceURIs/* MessageConstants.get_nsMap() */);
+                List<Node> tmdQueryResult = xpath.selectNodes(message);
+                Element tmdElement = (Element) tmdQueryResult.get(0);
+                Element sessionElement = tmdElement.addElement("session", MessageConstants.IB4P_NS);
+                sessionElement.setText(session);
+            }
         }
 
         // retrieve userProcessEndpoint from task meta data
