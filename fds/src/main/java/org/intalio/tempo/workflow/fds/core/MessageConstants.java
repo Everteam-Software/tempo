@@ -55,6 +55,7 @@ public final class MessageConstants {
 	 * The standard namespace for Intalio Magic Session.
 	 */
 	public final static String INTALIO_NS = "http://www.intalio.com/type/session";
+	public final static String ODE_SESSION_NS = "http://www.apache.org/ode/type/session";
 
 	public final static String AR_NS = "http://www.intalio.com/bpms/workflow/forms/examples/absence-request/absence-approval";
 	/**
@@ -70,6 +71,7 @@ public final class MessageConstants {
 		_nsMap.put("ib4p", MessageConstants.IB4P_NS);
 		_nsMap.put("wsa", MessageConstants.WS_ADDRESSING_NS);
 		_nsMap.put("userProcess", MessageConstants.AR_NS);
+		_nsMap.put("odesession", MessageConstants.ODE_SESSION_NS);
 	}
 
 	private MessageConstants() {
