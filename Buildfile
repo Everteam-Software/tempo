@@ -106,6 +106,7 @@ define "tempo" do
 
     unless ENV["LIVE"] == 'yes'
       test.exclude '*RemoteTMSClientTest*'
+      test.exclude '*RemoteReassginTaskTest*'
       test.exclude '*RemoteAbsenceRequestTest*'
     end
     unless ENV["DESIGNER"] == 'yes'
@@ -127,6 +128,7 @@ define "tempo" do
         "jpa.config.file" => "jpa.properties"
       }
 
+    puts " LIVE Env is  set to ::: " + ENV["LIVE"]
     # require live Axis2 instance
     unless ENV["LIVE"] == 'yes'
       test.exclude '*TMSAxis2RemoteTest*'
