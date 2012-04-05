@@ -96,6 +96,18 @@ public abstract class AbstractJPAConnectionFactory {
         //conn.close();
         return conn;
     }
+    
+    /**
+     * Clear the cache by accessing the cache that is associated
+     * with the entity manager factory. 
+     */
+    public void clearCache(){
+    	if(factory != null){
+    		// evict everything from the cache 
+    		factory.getCache().evictAll();  
+    		log.debug("Cache cleared");    	
+    	}
+    }
 
     private void initDatasourceIfNeeded(Map<String,Object> properties) {
         try {

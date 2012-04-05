@@ -158,6 +158,11 @@
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
+            <xsd:element name="clearCacheRequest">
+                <xsd:complexType>
+                    <xsd:sequence />
+                </xsd:complexType>
+            </xsd:element>
             <xsd:element name="createRequest">
                 <xsd:complexType>
                     <xsd:sequence>
@@ -541,6 +546,9 @@
     <wsdl:message name="updatePipaRequest">
         <wsdl:part name="updatePipaRequest" element="tns:updatePipaRequest"/>
     </wsdl:message>
+    <wsdl:message name="clearCacheRequest">
+        <wsdl:part name="clearCacheRequest" element="tns:clearCacheRequest"/>
+    </wsdl:message>
     <wsdl:message name="addAttachmentRequest">
         <wsdl:part name="addAttachmentRequest" element="tns:addAttachmentRequest"/>
     </wsdl:message>
@@ -756,6 +764,9 @@
 		<wsdl:operation name="updatePipa">
             <wsdl:input message="tns:updatePipaRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/updatePipa"/>
             <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/updatePipaResponse"/>                        
+        </wsdl:operation>
+        <wsdl:operation name="clearCache">
+            <wsdl:input message="tns:clearCacheRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/clearCache"/>                
         </wsdl:operation>
 		
     </wsdl:portType>
@@ -1207,6 +1218,12 @@
             <wsdl:output>
                 <soap:body use="literal"/>
             </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="clearCache">
+            <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/clearCache" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
         </wsdl:operation>
     </wsdl:binding>
     <wsdl:service name="TaskManagementServices">

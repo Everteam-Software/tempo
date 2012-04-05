@@ -32,4 +32,12 @@ public class SimpleTaskDAOConnectionFactory implements ITaskDAOConnectionFactory
         return new SimpleTaskDAOConnection(_tasks);
     }
 
+	@Override
+	public void clearCache() {
+		// TODO Auto-generated method stub
+		
+	}
+    
+    
+
 }

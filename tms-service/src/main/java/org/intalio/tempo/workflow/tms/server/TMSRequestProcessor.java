@@ -100,6 +100,12 @@ public class TMSRequestProcessor extends OMUnmarshaller {
         _registerPipa = new DeploymentServiceRegister(_pipa);
         _registerPipa.init();
     }
+    
+    public void clearCache(final OMElement requestElement){
+    	if(_taskDAOFactory != null){
+    		_taskDAOFactory.clearCache();
+    	}
+    }
 
     public OMElement getTaskList(final OMElement requestElement) throws AxisFault {
     	ITaskDAOConnection dao=null;

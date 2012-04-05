@@ -147,6 +147,10 @@
         <operation name="getCustomColumns">
             <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
             <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getCustomColumns</actionMapping>
+        </operation>        
+        <operation name="clearCache">
+            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOnlyMessageReceiver"/>
+            <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/clearCache</actionMapping>
         </operation>
     </service>
 </serviceGroup>
