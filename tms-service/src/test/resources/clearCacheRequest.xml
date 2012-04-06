@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<m:clearCacheRequest xmlns:m="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/clearCache">
+  <m:clearCacheRequest />
+</m:clearCacheRequest>

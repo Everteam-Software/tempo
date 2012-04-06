@@ -15,6 +15,9 @@
 
 package org.intalio.tempo.workflow.tms.server;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -27,14 +30,12 @@ import org.apache.axis2.AxisFault;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.PIPATask;
+import org.intalio.tempo.workflow.tms.server.dao.JPATaskDaoConnectionFactory;
+import org.intalio.tempo.workflow.tms.server.dao.SimpleTaskDAOConnectionFactory;
 import org.intalio.tempo.workflow.tms.server.permissions.TaskPermissions;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.intalio.tempo.workflow.task.TaskState;
-import org.intalio.tempo.workflow.tms.server.dao.JPATaskDaoConnectionFactory;
-import org.intalio.tempo.workflow.tms.server.dao.SimpleTaskDAOConnection;
-import org.intalio.tempo.workflow.tms.server.dao.SimpleTaskDAOConnectionFactory;
 
 
 public class TMSRequestProcessorTest extends TestCase {
@@ -86,6 +87,41 @@ public class TMSRequestProcessorTest extends TestCase {
     OMElement getAvailableTasksRequest = Utils.loadElementFromResource("/getAvailableTasksRequest1.xml");
     OMElement getTaskListResponse = requestProcessor.getAvailableTasks(getAvailableTasksRequest);
     _logger.debug(Utils.toPrettyXML(getTaskListResponse));
+  }
+  
+  public void testClearCache() throws Exception{
+	  TMSRequestProcessor requestProcessor = this.createRequestProcessorJPA();	  
+	  //Creating task
+	  OMElement createTaskRequest = Utils.loadElementFromResource("/createTaskRequest1.xml");
+	  requestProcessor.create(createTaskRequest);	  
+	  
+	  OMElement getTaskRequest = Utils.loadElementFromResource("/getTaskRequest1.xml");
+	  OMElement getTaskResponse1 = requestProcessor.getTask(getTaskRequest);
+	  _logger.debug(Utils.toPrettyXML(getTaskResponse1));
+	  
+	  //Update the task through db
+	  String dbURL = "jdbc:derby:target/JPADB;create=true;user=APP;password=APP";
+	  Class.forName("org.apache.derby.jdbc.EmbeddedDriver").newInstance();
+	  Connection conn = DriverManager.getConnection(dbURL); 
+	  Statement stmt = conn.createStatement();
+	  stmt.execute("update tempo_task set description='I am a Good Test Task I Updated' where taskid='001_Create_Good_Test_Task'");
+	  stmt.close();
+	  conn.close();
+	  
+	  
+	  OMElement getTaskResponse2 = requestProcessor.getTask(getTaskRequest);
+	  _logger.debug(Utils.toPrettyXML(getTaskResponse2));
+	  //It'll not show the updated description due to cache.
+	  assertFalse(getTaskResponse2.toString().contains("I am a Good Test Task I Updated"));
+	  
+	  //Clear cache
+	  OMElement clearCacheRequest = Utils.loadElementFromResource("/clearCacheRequest.xml");
+	  requestProcessor.clearCache(clearCacheRequest);
+	  
+	  OMElement getTaskResponse3 = requestProcessor.getTask(getTaskRequest);
+	  _logger.debug(Utils.toPrettyXML(getTaskResponse3));
+	  //It'll show the updated description as cache is updated.
+	  assertTrue(getTaskResponse3.toString().contains("I am a Good Test Task I Updated"));
   }
   
   public void testGetTask() throws Exception {
