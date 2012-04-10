@@ -827,13 +827,26 @@ public class TMSServer implements ITMSServer {
         }
     }
     
+    public boolean isPipaExist(ITaskDAOConnection dao, String formUrl){
+    	try {
+			dao.fetchPipa(formUrl);
+		} catch (UnavailableTaskException e) {
+			return false;
+		}
+    	return true;
+    }
+    
     public void updatePipa(ITaskDAOConnection dao,String formUrl, String participantToken, PIPATaskState state) throws AuthException, UnavailableTaskException {
         HashMap<String, Exception> problemTasks = new HashMap<String, Exception>();
-        try {
-	            PIPATask pipaTask = dao.fetchPipa(formUrl);
-	            pipaTask.setProcessState(state);
-	            dao.updatePipaTask(pipaTask);
-	            dao.commit();
+        try {	
+            	//Before updating pipa check whether the pipa exists in db?
+        	    //So that if we delete pipa and try to update it doesn't produce exception.
+        		if(isPipaExist(dao, formUrl)){        			
+		            PIPATask pipaTask = dao.fetchPipa(formUrl);
+		            pipaTask.setProcessState(state);
+		            dao.updatePipaTask(pipaTask);
+		            dao.commit();
+        		}
             } catch (Exception e) {
                 _logger.error("Cannot update PIPA Tasks", e);
                 problemTasks.put(formUrl, e);
