@@ -19,6 +19,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -567,16 +568,20 @@ public class TMSServer implements ITMSServer {
                 // security ?
                 UserRoles credentials = _authProvider.authenticate(participantToken);
                 // checkIsAvailable(id, previous, credentials);
-
-                try {
-                    paPrevious.setPriority(task.getPriority());
-                } catch (Exception e) {
-                    _logger.debug("Ignoring invalid priority value:" + task.xgetPriority().toString());
+                
+				if(task.isSetDeadline() && !"<xml-fragment/>".equals(task.xgetDeadline().toString())){
+					paPrevious.setDeadline(new Date(task.getDeadline().getTimeInMillis()));
+				}
+                
+                if(task.isSetPriority() && !"<xml-fragment/>".equals(task.xgetPriority().toString())){
+                	paPrevious.setPriority(task.getPriority());
                 }
                 String desc = task.getDescription();
                 if (!StringUtils.isEmpty(desc))
                     paPrevious.setDescription(desc);
-
+                if(task.getDeadline() != null){
+                	paPrevious.setDeadline(new Date(task.getDeadline().getTimeInMillis()));
+                }
                 dao.updateTask(previous);
                 dao.commit();
                 if (_logger.isDebugEnabled())
