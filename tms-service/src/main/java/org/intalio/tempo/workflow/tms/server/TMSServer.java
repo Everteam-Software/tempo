@@ -795,15 +795,12 @@ public class TMSServer implements ITMSServer {
 		decryptor.setPassword("IntalioEncryptedpasswordfortempo#123");
         // DOTO due to all the service from wds is 'x'
 
-        if(_authProvider.authenticate(participantToken) != null) {
-            dao.deletePipaTask(formUrl);
-            dao.commit();
-        } else if (decryptor.decrypt(participantToken).equalsIgnoreCase(internalPassword)) {
+        if (decryptor.decrypt(participantToken).equalsIgnoreCase(internalPassword)) {
         	// In some cases internal applicatons like WDS will just send value defined in internalPassword so we need to be careful
             dao.deletePipaTask(formUrl);
             dao.commit();
         } else {
-            UserRoles credentials = _authProvider.authenticate(participantToken);
+            UserRoles credentials = _authProvider.authenticate(decryptor.decrypt(participantToken));
             String userID = credentials.getUserID();
             try {
                 Task task = dao.fetchPipa(formUrl);
