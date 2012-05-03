@@ -625,7 +625,7 @@ public class TMSServer implements ITMSServer {
         Options options = new Options();
         //  Refer WF-1531 : Use ODE server url from tempo-tms.xml if process endpoint in the database does not contain the ODE server url.
         String processEndPoint= task.getProcessEndpoint().toString();
-        processEndPoint=processEndPoint.startsWith("http:") ? processEndPoint : _odeServerURL+processEndPoint;
+        processEndPoint=processEndPoint.startsWith("http:")||processEndPoint.startsWith("https:") ? processEndPoint : _odeServerURL+processEndPoint;
 
         EndpointReference endpointReference = new EndpointReference(processEndPoint);
         options.setTo(endpointReference);
