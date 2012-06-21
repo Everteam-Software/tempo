@@ -830,7 +830,7 @@
       //if(visible) {
         // TODO: let's find a clever way of checking for content independent of the form manager
         var content = (loc.toString().indexOf('type=PATask')!=-1) || (elo.html().substring(0,6).toLowerCase() == '<head>' && elo.html().length > 700);
-        if(!content) {
+        if(!content  && ( loc.toString().indexOf('empty.jsp') > -1) ) {
           clearFrame();
           refresh(true);
         } else {
