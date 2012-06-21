@@ -114,7 +114,7 @@ public class FDSAxisHandlerHelper {
         }
         
         if (_log.isDebugEnabled()) {
-			_log.debug("Outgoing document before conversion: {}", result.asXML());
+			_log.debug("Outgoing document after conversion: {}", result.asXML());
 		}
 
         return result;

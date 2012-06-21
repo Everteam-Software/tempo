@@ -218,16 +218,18 @@ public class TMSServer implements ITMSServer {
         return new ServiceClient();
     }
 
-    private void checkIsAvailable(String taskID, Task task, UserRoles credentials) throws AccessDeniedException {
+    private void checkIsAvailable(String taskID, Task task, UserRoles credentials) throws AccessDeniedException {  	
         // the task has been assign to those credentials
         if (task.isAvailableTo(credentials))
             return;
-        // some admin access user has been defined in the configuration file
-        else if (_permissions.isAuthorized(TaskPermissions.ACTION_READ, task, credentials))
-            return;
+        // some workflow admin access user has been defined in the security configuration file
+        else if (credentials.isWorkflowAdmin())
+            return;       
+        
         // fire the exception, this user cannot read this task
         else
-            throw new AccessDeniedException(credentials.getUserID() + " cannot access task:" + taskID);
+            throw new AccessDeniedException(credentials.getUserID() + " cannot access task:" + taskID);      
+        
     }
 
     public void setOutput(ITaskDAOConnection dao,String taskID, Document output, String participantToken) throws AuthException,
@@ -757,7 +759,6 @@ public class TMSServer implements ITMSServer {
             dao.deletePipaTask(formUrl);
             dao.commit();
         } else if (decryptor.decrypt(participantToken).equalsIgnoreCase(internalPassword)) {
-        	// In some cases internal applicatons like WDS will just send value defined in internalPassword so we need to be careful
             dao.deletePipaTask(formUrl);
             dao.commit();
         } else {
@@ -966,9 +967,5 @@ public class TMSServer implements ITMSServer {
 	    UserRoles credentials = _authProvider.authenticate(token);
 	    return dao.fetchCustomColumns();
 	}
-
-
-
-
 
 }
