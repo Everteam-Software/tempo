@@ -18,12 +18,13 @@
 
 <%@ taglib prefix="intalio" uri="http://www.intalio.com/tagfiles"%>
 
-<c:set var="logoPath" value="images/logo.gif" />
+<c:set var="logoPath" value="images/logo.png" />
+<c:set var="bgimage" value="images/newbg.gif" />
 <c:set var="pageTitle" value="Intalio|Workflow" />
 <c:set var="footer">
-	<span>&nbsp;&nbsp;<fmt:message
+	<span >&nbsp;&nbsp;<fmt:message
 		key="com_intalio_bpms_workflow_pageFooter_poweredBy_label" />&nbsp;&nbsp;
-	<a href="http://www.intalio.com"><span style="color: #3082A8"><fmt:message
+	<a href="http://www.intalio.com"><span class="io-login-footer-link"><fmt:message
 		key="com_intalio_bpms_workflow_pageFooter_poweredBy_value" /></span></a> <fmt:message
 		key="com_intalio_bpms_workflow_versionInfo">
 		<c:choose>
@@ -36,55 +37,64 @@
 				<fmt:param value="unknown}" />
 			</c:otherwise>
 		</c:choose>
-	</fmt:message> <a href="http://bpms.intalio.com"><span style="color: #3082A8"><fmt:message
+	</fmt:message> <a  href="mailto:support-team@intalio.com?subject=Bug/Feature Request"><span class="io-login-footer-link"><fmt:message
 		key="com_intalio_bpms_workflow_pageFooter_featureBugRequest" /></span></a> </span>
 </c:set>
 
 <c:set var="scripts">
-	<script src="script/ui-fw.js" language="javascript"
-		type="text/javascript"></script>
+	<script src="style/ui-fw.js" language="javascript" type="text/javascript"></script>
+	<link rel="stylesheet" href="style/login.css" type="text/css">
 </c:set>
 
-<c:set var="subMenuHeader"><fmt:message key="com_intalio_bpms_workflow_login_submenuheader"/></c:set>
-
-<intalio:loginBody subMenuHeader="${subMenuHeader}" logoPath="${logoPath}" scripts="${scripts}" pageTitle="${pageTitle}" footer="${footer}">
-	<table width="350" border="0" cellspacing="4" cellpadding="0">
+<intalio:loginBody scripts="${scripts}" pageTitle="${pageTitle}" footer="${footer}">
+	
+	<div id="header" class="io-login-header" >
+		<img src="${logoPath}" class="io-login-header-image" alt="Intalio Inc" />
+	</div>
+	<div id="loginBox" class="io-login-loginBox">
+	<table>
 		<tr>
 			<spring:bind path="login.username">
-				<td valign="top"><c:choose>
+				<td style=" position:absolute; left:20px; top:30px; "><c:choose>
 					<c:when test="${status.error}">
-						<label style="color: red"> <fmt:message
+						<label style="font-size: 12px;"> <fmt:message
 							key="com_intalio_bpms_workflow_login_username" /> </label>
 					</c:when>
 					<c:otherwise>
-						<label> <fmt:message key="com_intalio_bpms_workflow_login_username" /> </label>
+						<label style="font-size: 12px;"> 
+							<fmt:message key="com_intalio_bpms_workflow_login_username" /> </label>
 					</c:otherwise>
 				</c:choose></td>
-				<td><input type="text" name="username"
-					value="${login.username}" class="textInput" style="width: 250px;" />
+				<td class="io-login-loginBox-userName"><input type="text" size=16 name="username"
+					value="${login.username}" class="textInput"  style="font-size: 16px; height:25px; width:200px; tabindex=1;" />
 				<font color="red">${status.errorMessage}</font></td>
 			</spring:bind>
-		</tr>
-		<tr>
+			
 			<spring:bind path="login.password">
-				<td width="80" valign="top"><c:choose>
+				<td style=" position:absolute; left:230px; top:30px;"><c:choose>
 					<c:when test="${status.error}">
-						<label style="color: red"> <fmt:message
+						<label style="font-size: 12px;"> <fmt:message
 							key="com_intalio_bpms_workflow_login_password" /> </label>
 					</c:when>
 					<c:otherwise>
-						<label> <fmt:message
+						<label style="font-size: 12px;"> <fmt:message
 							key="com_intalio_bpms_workflow_login_password" /> </label>
 					</c:otherwise>
 				</c:choose></td>
-				<td><input type="password" name="password"
-					value="${login.password}" class="textInput" style="width: 250px;" />
+				<td class="io-login-loginBox-password"><input type="password" name="password"
+					value="${login.password}" class="textInput" style="font-size: 16px; width: 200px; height: 25px; tabindex=2;" />
 				<font color="red">${status.errorMessage}</font></td>
 			</spring:bind>
+			<td>&nbsp;</td>
+			<td class="io-login-loginBox-submit"><input type="submit" 
+                                class="submitInput" style="width:80px; height:25px;"
+				value="<fmt:message key="com_intalio_bpms_workflow_login_loginBtn"/>" />
+			</td>
 		</tr>
 		<tr>
 			<td>&nbsp;</td>
-			<td><c:choose>
+			<td class="io-login-loginBox-autoLoginchk" style="left:20px; top:95px;">
+			<c:choose>
 				<c:when test="${login.autoLogin}">
 					<input type="checkbox" name="autoLogin" value="true"
 						checked="checked" />
@@ -95,18 +105,16 @@
 			</c:choose> <fmt:message key="com_intalio_bpms_workflow_auto_login" /></td>
 		</tr>
 		<tr>
-			<td>&nbsp;</td>
-			<td><input type="submit" class="submitInput"
-				value="<fmt:message key="com_intalio_bpms_workflow_login_loginBtn"/>" />
-			</td>
+			
 		</tr>
 		<spring:bind path="login">
 			<c:forEach items="${status.errorMessages}" var="errorMessage">
 				<tr>
-					<td colspan="3"><font color="red"> ${errorMessage} </font></td>
+					<td style=" position:absolute; left:20px; top:2px; " colspan="3"><font color="red"> ${errorMessage} </font></td>
 				</tr>
 			</c:forEach>
 		</spring:bind>
 	</table>
-
+	</div> </div>
 </intalio:loginBody>
+

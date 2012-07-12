@@ -26,7 +26,7 @@
     <link rel="stylesheet" type="text/css" href="style/flexigrid.css"/>
     <link rel="stylesheet" type="text/css" href="style/jqueryui/ui.all.css"/>
     <link rel="stylesheet" type="text/css" href="style/jqueryui/jquery.alerts.css"/>
-    
+    <link rel="stylesheet" type="text/css" href="style/jqueryui/ui.dialog.content.css"/>
     <link rel="alternate" type="application/atom+xml" title="Personal Task feed" href="/feeds/atom/tasks?token=${participantToken}"/>
     <link rel="alternate" type="application/atom+xml" title="Process feed" href="/feeds/atom/processes?token=${participantToken}"/>
 
@@ -52,27 +52,26 @@
 
   </head>
   <body width="95%" height="98%">
-
     <%@ include file="/WEB-INF/jsp/siteHeader.jsp"%>
     <div id="container">			
-      <ul id="tabnav">
-        <li>
-          <a href="#" id="tabTasks" tabtitle="com_intalio_bpms_workflow_tab_tasks" title="<fmt:message key="com_intalio_bpms_workflow_tab_tasks"/>">
+      <ul id="tabnav" style="top:-8px;">
+        <li >
+          <a href="#" id="tabTasks" tabtitle="com_intalio_bpms_workflow_tab_tasks" style="width:120px;height:18px;"title="<fmt:message key="com_intalio_bpms_workflow_tab_tasks"/>">
             <fmt:message key="com_intalio_bpms_workflow_tab_tasks"/>
           </a>
         </li>
         <li>
-          <a href="#" id="tabNotif" tabtitle="com_intalio_bpms_workflow_tab_notifications" title="<fmt:message key="com_intalio_bpms_workflow_tab_notifications"/>">
+          <a href="#" id="tabNotif" tabtitle="com_intalio_bpms_workflow_tab_notifications"style="width:150px;height:18px;" title="<fmt:message key="com_intalio_bpms_workflow_tab_notifications"/>">
             <fmt:message key="com_intalio_bpms_workflow_tab_notifications"/>
           </a>
         </li>
         <li>
-          <a href="#" id="tabPipa" tabtitle="com_intalio_bpms_workflow_tab_processes" title="<fmt:message key="com_intalio_bpms_workflow_tab_processes"/>">
+          <a href="#" id="tabPipa" tabtitle="com_intalio_bpms_workflow_tab_processes" style="align:center;width:140px;height:18px;"title="<fmt:message key="com_intalio_bpms_workflow_tab_processes"/>">
             <fmt:message key="com_intalio_bpms_workflow_tab_processes"/>
           </a>
         </li>
       </ul>
-
+<!--	<a class="ui-loggedin-user">${currentUser} !</a> -->
       <div id ="tasktables">
         <div class="hiddencontent" id="com_intalio_bpms_workflow_tab_tasks">
           <table id="table1" style="display:none"></table>
@@ -86,17 +85,22 @@
       </div>
       
     </div>
-    
+ <!-- Overlay window for PIPA
+   <div id="overlaypipa">
+	<div id="taskData"></div>
+  </div>-->   
+
+
     <div id="connectionLost" title="<fmt:message key="org_intalio_uifw_session_connection_lost"/>">
     </div>
 
     <div id="updateDialog" class="hiddencontent" title="<fmt:message key="org_intalio_uifw_update_title"/>">
       <form>
         <fieldset>
-           <label for="description"><fmt:message key="org_intalio_uifw_update_description"/></label>
-           <input type="text" name="description" title="<fmt:message key="org_intalio_uifw_update_description"/>" id="up_description" class="text ui-widget-content ui-corner-all" />
-           <label for="priority"><fmt:message key="org_intalio_uifw_update_priority"/></label>
-	   <input type="text" name="priority" title="<fmt:message key="org_intalio_uifw_update_priority"/>" id="up_priority" class="text ui-widget-content ui-corner-all" />
+           <label class="ui-update-descriptionlabel"for="description"><fmt:message key="org_intalio_uifw_update_description"/></label>
+           <input type="text" name="description" title="<fmt:message key="org_intalio_uifw_update_description"/>" id="up_description" class="ui-update-descriptioninput" />
+           <label class="ui-update-prioritylabel" for="priority"><fmt:message key="org_intalio_uifw_update_priority"/></label>
+	   <input type="text" name="priority" title="<fmt:message key="org_intalio_uifw_update_priority"/>" id="up_priority" class="ui-update-priorityinput" />
         </fieldset>
       </form>
     </div>
@@ -107,18 +111,18 @@
         
         <fmt:message key="org_intalio_uifw_dialog_export_select_format"/><br/>
         
-        <input type="radio" value="csv" name="eformat" class="ui-widget-content ui-corner-all"><img src="images/icons/export/csv.png" title="csv">
-        <input type="radio" value="ical" name="eformat" class="ui-widget-content ui-corner-all"><img src="images/icons/export/ical.png" title="ical">
-        <input type="radio" value="pdf" name="eformat" class="ui-widget-content ui-corner-all" checked><img src="images/icons/export/pdf.png" title="pdf">
+        <input type="radio" value="csv" name="eformat" class="ui-corner-all"><img src="images/icons/export/csv.png" title="csv">
+        <input type="radio" value="ical" name="eformat" class="ui-corner-all"><img src="images/icons/export/ical.png" title="ical">
+        <input type="radio" value="pdf" name="eformat" class="ui-corner-all" checked><img src="images/icons/export/pdf.png" title="pdf">
         <hr width="100%" align="center">
         
         <fmt:message key="org_intalio_uifw_dialog_export_select_content"/><br/>
         <!-- <label for="etype_pa" ><fmt:message key="com_intalio_bpms_workflow_tab_tasks"/></label> -->
-        <input type="radio" value="PATask" id="etype_pa" name="etype" class="ui-widget-content ui-corner-all" checked><img src="images/icons/icon.task.png" title="<fmt:message key="com_intalio_bpms_workflow_tab_tasks"/>">
+        <input type="radio" value="PATask" id="etype_pa" name="etype" class="ui-corner-all" checked><img src="images/icons/icon.task.png" title="<fmt:message key="com_intalio_bpms_workflow_tab_tasks"/>">
         <!-- <label for="etype_pipa" ><fmt:message key="com_intalio_bpms_workflow_tab_processes"/></label> -->
-        <input type="radio" value="PIPATask" name="etype" class="ui-widget-content ui-corner-all"><img src="images/icons/icon.process.png" title="<fmt:message key="com_intalio_bpms_workflow_tab_processes"/>" id="etype_pipa">
+        <input type="radio" value="PIPATask" name="etype" class="ui-corner-all"><img src="images/icons/icon.process.png" title="<fmt:message key="com_intalio_bpms_workflow_tab_processes"/>" id="etype_pipa">
         <!-- <label for="etype_pipa" ><fmt:message key="com_intalio_bpms_workflow_tab_notifications"/></label> -->
-        <input type="radio" value="Notification" name="etype" class="ui-widget-content ui-corner-all"><img src="images/icons/icon.notification.png" title="<fmt:message key="com_intalio_bpms_workflow_tab_notifications"/>">
+        <input type="radio" value="Notification" name="etype" class="ui-corner-all"><img src="images/icons/icon.notification.png" title="<fmt:message key="com_intalio_bpms_workflow_tab_notifications"/>">
         <!-- <label for="equery"><fmt:message key="org_intalio_uifw_dialog_export_query"/></label>
         <input disabled type="text" name="equery" id="export_query" value="" class="text ui-widget-content ui-corner-all" /><br/> -->
       </fieldset>
@@ -126,18 +130,18 @@
     </div>
 
     <div id="reassignDialog" title="<fmt:message key="org_intalio_uifw_reassign_title"/>">
-      <form>
+	<form>
         <fieldset>
-          <label for="user"><fmt:message key="org_intalio_uifw_reassign_user"/></label>
-          <input type="text" name="user" id="reassign_user" class="text ui-widget-content ui-corner-all" /><br/>
-          <label for="roles"><fmt:message key="org_intalio_uifw_reassign_roles"/></label>
-          <input type="text" name="roles" id="reassign_roles" value="" class="text ui-widget-content ui-corner-all" /><br/>
-          <label for="reassign_dyn"><fmt:message key="org_intalio_uifw_reassign_fetched_roles"/></label><br/>
-          <select name="reassign_dyn" id="reassign_dyn" style="width:200px" class="text ui-widget-content ui-corner-all">
+          <label for="user" class="ui-reassign-userlabel"><fmt:message key="org_intalio_uifw_reassign_user"/></label>
+          <input type="text" class="ui-reassign-userinput" name="user" id="reassign_user"/><br/>
+          <label for="roles" class="ui-reassign-rolelabel"><fmt:message key="org_intalio_uifw_reassign_roles"/></label>
+          <input type="text" name="roles" id="reassign_roles" value="" class="ui-reassign-roleinput" /><br/>
+          <label for="reassign_dyn" class="ui-reassign-fetchedRoleslabel"><fmt:message key="org_intalio_uifw_reassign_fetched_roles"/></label>
+          <select name="reassign_dyn" id="reassign_dyn" class="ui-reassign-fetchedRolesInput">
           </select><br/>
-          <label for="reassign_dyn_user"><fmt:message key="org_intalio_uifw_reassign_fetched_users"/></label><br/>
-          <select name="reassign_dyn_user" id="reassign_dyn_user" style="width:200px" class="text ui-widget-content ui-corner-all">
-          </select><br/>
+          <label for="reassign_dyn_user" class="ui-reassign-fetchedUserslabel"><fmt:message key="org_intalio_uifw_reassign_fetched_users"/></label><br/>
+          <select name="reassign_dyn_user" id="reassign_dyn_user" class="ui-reassign-fetchedUsersInput">
+          </select>
         </fieldset>
       </form>
     </div>
@@ -149,7 +153,7 @@
 
     <iframe src="script/empty.jsp" onLoad="resizeIframe" name="taskform" frameborder="0" id="taskform" scrolling="auto"></iframe>
 
-    <div id="footer" style="margin-left:20px">
+    <div id="footer" style="left:33%">
       <fmt:message key="com_intalio_bpms_workflow_pageFooter_poweredBy_label" />
       <a href="http://www.intalio.com">
         <span style="color: #3082A8">
@@ -157,6 +161,7 @@
         </span>
       </a>
       <a href="versions">
+	<span style="color: #000">
         <fmt:message key="com_intalio_bpms_workflow_versionInfo">
           <c:choose>
             <c:when test="${!empty version && !empty build}" >
@@ -169,9 +174,10 @@
             </c:otherwise>
           </c:choose>
         </fmt:message>
+	 </span>
       </a>
-      <a href="http://bpms.intalio.com">
-        <span style="color: #3082A8"><fmt:message key="com_intalio_bpms_workflow_pageFooter_featureBugRequest"/></span>
+      <a  href="http://bpms.intalio.com">
+        <span style="color: #3082A8;"><fmt:message key="com_intalio_bpms_workflow_pageFooter_featureBugRequest"/></span>
       </a>
     </div>
 
