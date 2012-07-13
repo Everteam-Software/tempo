@@ -17,13 +17,15 @@
 		
 		// apply default properties
 		p = $.extend({
+			 highlightdays: 2,
+			 highlightcolor: "#F7F7E6",
 			 height: 200, //default height
 			 width: 'auto', //auto width
 			 striped: true, //apply odd even stripes
 			 novstripe: false,
 			 minwidth: 30, //min width of columns
 			 minheight: 80, //min height of columns
-			 resizable: true, //resizable table
+			 resizable: false, //resizable table
 			 url: false, //ajax url
 			 method: 'POST', // data sending method
 			 dataType: 'xml', // type of data loaded
@@ -41,6 +43,7 @@
 			 outof: 'of',
 			 findtext: 'Find',
 			 procmsg: 'Processing, please wait ...',
+			 procmsgerr: 'Could not fetch data. Please refresh the browser window. If problem persists, contact System Administrator.',
 			 query: '',
 			 qtype: '',
 			 nomsg: 'No items',
@@ -57,7 +60,6 @@
 			 onSubmit: false // using a custom populate function
 		  }, p);
 		  		
-
 		$(t)
 		.show() //show if hidden
 		.attr({cellPadding: 0, cellSpacing: 0, border: 0})  //remove padding and spacing
@@ -119,6 +121,7 @@
 					var hrH = g.bDiv.offsetTop + newH;
 					if (p.height != 'auto' && p.resizable) hrH = g.vDiv.offsetTop;
 					$(g.rDiv).css({height: hrH});
+					
 				
 			},
 			dragStart: function (dragtype,e,obj) { //default drag function start
@@ -193,7 +196,6 @@
 						var v = this.vresize;
 						var y = e.pageY;
 						var diff = y-v.sy;
-						
 						if (!p.defwidth) p.defwidth = p.width;
 						
 						if (p.width != 'auto' && !p.nohresize && v.hgo)
@@ -217,7 +219,8 @@
 							}
 						v = null;
 					}
-				else if (this.colCopy) {
+				else if (this.colCopy) 
+				{
 					$(this.dcol).addClass('thMove').removeClass('thOver'); 
 					if (e.pageX > this.hset.right || e.pageX < this.hset.left || e.pageY > this.hset.bottom || e.pageY < this.hset.top)
 					{
@@ -234,7 +237,7 @@
 
 				if (this.colresize)
 					{
-						var n = this.colresize.n;
+						var n = this.colresize.n;	
 						var nw = this.colresize.nw;
 
 								$('th:visible div:eq('+n+')',this.hDiv).css('width',nw);
@@ -452,7 +455,9 @@
 						}
 					);				
 					
-				} else if (p.dataType=='xml') {
+				} 
+				else if (p.dataType=='xml') 
+				{
 
 				i = 1;
 
@@ -483,8 +488,42 @@
 										
 										var td = document.createElement('td');
 										var idx = $(this).attr('axis').substr(3);
+										var deadline = $(this).attr('abbr').search('_deadline');
 										td.align = this.align;
-										td.innerHTML = $("cell:eq("+ idx +")",robj).text();
+										var columnData = $("cell:eq("+ idx +")",robj).text();
+										columnData = $.trim(columnData);
+										if(columnData == null || columnData == "" || columnData == " ")
+										{
+											td.innerHTML = "NA";
+											
+										}
+										else
+										{
+											var pos= columnData.search('><');
+											if(pos == -1)
+												td.innerHTML = columnData;
+											else
+												td.innerHTML = "NA";
+											
+										}
+										if((td.innerHTML != "NA")&&(deadline != -1))
+										{
+											$(tr).removeClass('erow');
+											var date1 = td.innerHTML.split(' ');
+											var date2 = date1[0].split('/');
+											var fullDate = date2[0];
+											if(fullDate.length == 1) fullDate = '0' + fullDate;
+											var fullmonth = date2[1];
+											if(fullmonth.length == 1) fullmonth = '0' + fullmonth;
+											var fullyear = '20' + date2[2];
+											var newDate = fullDate+'/'+fullmonth+'/'+fullyear+' '+date1[1]+' '+date1[2];
+											var deadlineTime = Date.parse(newDate);
+											var currentDate = new Date();
+											var currentTime = currentDate.getTime();
+											var noofdays = parseInt((deadlineTime - currentTime)/ (1000 * 60 * 60 * 24)); 
+											if(noofdays <= p.highlightdays)
+												$(tr).css("background-color", p.highlightcolor);				
+										}
 										$(tr).append(td);
 										td = null;
 									}
@@ -531,6 +570,7 @@
 				
 				this.hDiv.scrollLeft = this.bDiv.scrollLeft;
 				if ($.browser.opera) $(t).css('visibility','visible');
+								
 				
 			},
 			changeSort: function(th) { //change sortorder
@@ -589,7 +629,7 @@
 				this.loading = true;
 				if (!p.url) return false;
 				
-				$('.pPageStat',this.pDiv).html(p.procmsg);
+				$('.pPageStat',this.pDiv).html(p.procmsg).css('color','black');
 				
 				$('.pReload',this.pDiv).addClass('loading');
 				
@@ -623,8 +663,13 @@
 					   data: param,
 					   dataType: p.dataType,
 					   success: function(data){g.addData(data);},
-					   error: function(XMLHttpRequest, textStatus, errorThrown) { try { if (p.onError) p.onError(XMLHttpRequest, textStatus, errorThrown); } catch (e) {} }
-					 });
+					   error: function(XMLHttpRequest, textStatus, errorThrown) 
+						{
+						 $('.pReload',this.pDiv).removeClass('loading');
+						 $('.pPageStat',this.pDiv).html(p.procmsgerr).css('color','red');
+						 this.loading = false;	
+						 try { if (p.onError) p.onError(XMLHttpRequest, textStatus, errorThrown); } catch (e) {} }
+					        });
 			},
 			doSearch: function () {
 				p.query = $('input[name=q]',g.sDiv).val();
@@ -1050,7 +1095,7 @@
 		g.bDiv.className = 'bDiv';
 		$(t).before(g.bDiv);
 		$(g.bDiv)
-		.css({ height: (p.height=='auto') ? 'auto' : p.height+"px"})
+		.css({ height: (p.height=='auto') ? 'auto' : (300)+"px"})
 		.scroll(function (e) {g.scroll()})
 		.append(t)
 		;
@@ -1388,7 +1433,7 @@
 		// load data
 		if (p.url&&p.autoload) 
 			{
-			g.populate();
+			//g.populate();
 			}
 		
 		return t;		
@@ -1487,5 +1532,6 @@
 		}
 
 	}; //end noSelect
+	
 		
 })(jQuery);
