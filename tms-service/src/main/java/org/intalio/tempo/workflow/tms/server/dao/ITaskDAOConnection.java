@@ -55,4 +55,46 @@ public interface ITaskDAOConnection {
 	public void deletePIPATaskOutput(PIPATaskOutput output);
 	public void updatePipaOutput(PIPATaskOutput pipaTaskOutput);
 	public void insertPipaOutput(PIPATaskOutput pipaTaskOutput);
+	
+	/**
+	 * Gives notification count which are in ready state available for logged in user and it's assigned roles.
+	 * @param filter
+	 * @param userList
+	 * @param userRolesList
+	 * @return
+	 */
+	public long getPendingNotificationCount(Object filter, List<String> userList, List<String> userRolesList);
+	
+	/**
+	 * Gives pa task count which are in ready state available for logged-in user and it's assigned roles.
+	 * @param filter
+	 * @param userList
+	 * @param userRolesList
+	 * @return
+	 */
+	public long getPendingTaskCount(Object filter, List<String> userList, List<String> userRolesList);
+	
+	/**
+	 * Gives pa task count which are in completed state available for logged-in user.
+	 * @param filter
+	 * @param userList
+	 * @return
+	 */
+	public long getCompletedTaskCountByUser(Object filter, List<String> userList);
+	
+	/**
+	 * Gives pa task count which are in completed state available for logged-in user's assigned roles. 
+	 * @param filter
+	 * @param userRolesList
+	 * @return
+	 */
+	public long getCompletedTaskCountByUserAssignedRoles(Object filter, List<String> userRolesList, List<String> userList);
+	
+	/**
+	 * Gives pa task count which are in claimed state available for logged-in user.
+	 * @param filter
+	 * @param userList
+	 * @return
+	 */
+	public long getClaimedTaskCount(Object filter, List<String> userList);
 }

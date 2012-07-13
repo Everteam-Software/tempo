@@ -14,10 +14,13 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.Query;
 
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.dao.AbstractJPAConnection;
 import org.intalio.tempo.workflow.task.CustomColumn;
+import org.intalio.tempo.workflow.task.Notification;
+import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.PIPATaskOutput;
 import org.intalio.tempo.workflow.task.Task;
@@ -167,4 +170,37 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
 
 	}
 
+	@Override
+	public long getPendingNotificationCount(Object filter, List<String> userList, List<String> userRolesList) {
+		Query query = entityManager.createNamedQuery(Notification.GET_PENDING_NOTIFICATION_COUNT).setParameter("creationDate", filter).setParameter("userOwners", userList).setParameter("roleOwners", userRolesList);
+		return (Long) query.getSingleResult();
+	}
+
+
+	@Override
+	public long getPendingTaskCount(Object filter, List<String> userList, List<String> userRolesList) {
+		Query query = entityManager.createNamedQuery(PATask.GET_PENDING_TASK_COUNT).setParameter("creationDate", filter).setParameter("userOwners", userList).setParameter("roleOwners", userRolesList);
+		return (Long) query.getSingleResult();
+	}
+
+	@Override
+	public long getCompletedTaskCountByUser(Object filter, List<String> userList) {
+		Query query = entityManager.createNamedQuery(PATask.GET_COMPLETED_TASK_COUNT_BY_USER).setParameter("creationDate", filter).setParameter("userOwners", userList);
+		return (Long) query.getSingleResult();
+	}
+	
+	@Override
+	public long getCompletedTaskCountByUserAssignedRoles(Object filter,
+			List<String> userRolesList, List<String> userList) {
+		Query query = entityManager.createNamedQuery(PATask.GET_COMPLETED_TASK_COUNT_BY_USER_ASSIGNED_ROLES).setParameter("creationDate", filter).setParameter("roleOwners", userRolesList).setParameter("userOwners", userList);
+		return (Long) query.getSingleResult();
+	}
+
+	@Override
+	public long getClaimedTaskCount(Object filter, List<String> userList) {
+		Query query = entityManager.createNamedQuery(PATask.GET_CLAIMED_TASK_COUNT).setParameter("creationDate", filter).setParameter("userOwners", userList);
+		return (Long) query.getSingleResult();
+	}
+
+	
 }

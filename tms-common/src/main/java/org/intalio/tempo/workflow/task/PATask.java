@@ -64,7 +64,16 @@ import org.w3c.dom.Document;
 @PrimaryKeyJoinColumn(name="ID", referencedColumnName="ID")
 @NamedQueries( {
         @NamedQuery(name = PATask.FIND_BY_STATES, query = "select m from PATask m where m._state=?1", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }),
-        @NamedQuery(name= PATask.FIND_BY_INSTANCEID, query= "select m from PATask m where m._instanceId= ?1")})
+        @NamedQuery(name= PATask.FIND_BY_INSTANCEID, query= "select m from PATask m where m._instanceId= ?1"),
+        @NamedQuery(name=PATask.GET_PENDING_TASK_COUNT,
+			query="select count(pa._id) from PATask pa where pa._creationDate >= (:creationDate) and pa._state = TaskState.READY and (pa._userOwners in (:userOwners) or pa._roleOwners in (:roleOwners))"),
+		@NamedQuery(name=PATask.GET_COMPLETED_TASK_COUNT_BY_USER,
+            query="select count(pa._id) from PATask pa where pa._creationDate >= (:creationDate) and pa._state = TaskState.COMPLETED and pa._userOwners in (:userOwners)"),
+		@NamedQuery(name=PATask.GET_COMPLETED_TASK_COUNT_BY_USER_ASSIGNED_ROLES,
+			query="select count(pa._id) from PATask pa where pa._creationDate >= (:creationDate) and pa._state = TaskState.COMPLETED and pa._roleOwners in (:roleOwners) and pa._userOwners not in (:userOwners)"),
+		@NamedQuery(name=PATask.GET_CLAIMED_TASK_COUNT,
+			query="select count(pa._id) from PATask pa where pa._creationDate >= (:creationDate) and pa._state = TaskState.CLAIMED and pa._userOwners in (:userOwners)")
+})
 public class PATask extends Task implements ITaskWithState, IProcessBoundTask, ITaskWithInput, ITaskWithOutput,
         ICompleteReportingTask, ITaskWithAttachments, IChainableTask, ITaskWithPriority, ITaskWithDeadline ,IInstanceBoundTask,ITaskWithCustomMetadata{
 
@@ -72,6 +81,10 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
     public static final String FIND_BY_PA_USER_ROLE = "find_by_pa_user_role";
     public static final String FIND_BY_PA_USER_ROLE_GENERIC = "find_by_pa_user_role_generic";
     public static final String FIND_BY_INSTANCEID="find_by_pa_instanceid";
+    public static final String GET_PENDING_TASK_COUNT="get_pending_task_count";
+    public static final String GET_COMPLETED_TASK_COUNT_BY_USER="get_completed_task_count_by_user";
+    public static final String GET_COMPLETED_TASK_COUNT_BY_USER_ASSIGNED_ROLES="get_completed_task_count_by_user_assigned_roles";
+    public static final String GET_CLAIMED_TASK_COUNT="get_claimed_task_count";
 
     
     @Persistent

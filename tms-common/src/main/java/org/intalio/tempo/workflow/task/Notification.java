@@ -21,6 +21,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Lob;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
@@ -40,8 +42,14 @@ import org.w3c.dom.Document;
 @Entity
 @Table(name = "tempo_notification")
 @PrimaryKeyJoinColumn(name="ID", referencedColumnName="ID")
+@NamedQueries({
+    @NamedQuery(name=Notification.GET_PENDING_NOTIFICATION_COUNT,
+                query="select count(notification._id) from Notification notification where notification._creationDate >= (:creationDate) and notification._state = TaskState.READY and (notification._userOwners in (:userOwners) or notification._roleOwners in (:roleOwners))"),
+})
 public class Notification extends Task implements ITaskWithState, ITaskWithInput, IProcessBoundTask, IInstanceBoundTask, ITaskWithPriority{
-
+	
+	public static final String GET_PENDING_NOTIFICATION_COUNT = "get_pending_notification_count";
+	
     @Column(name = "state")
     @Persistent
     private TaskState _state = TaskState.READY;
