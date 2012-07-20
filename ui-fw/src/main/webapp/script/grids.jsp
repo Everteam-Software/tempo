@@ -7,8 +7,39 @@
 
 <script type="text/javascript">
 
+/**
+ * @Function Name   : calendarSetup 
+ * @Description     : This function will just call initialize function
+ * @param           : 
+ * @returns         : 
+ * */
+  function calendarSetup()
+    {
+		initialize("fromdate");
+		initialize("todate");
+		
+	}	
+/**
+ * @Function Name   : initialize 
+ * @Description     : This function will initialize the datepicker of fromdate & toDate of vacation
+ * @param           : reference of date field
+ * @returns         : 
+ * */
+	function initialize(inputField)
+	{
+		new JsDatePick({
+            useMode:2,
+            minDate:0,
+            limitToToday :false, 
+            target:inputField,
+            dateFormat:"%d/%m/%Y",
+        });
+	}; 
+    
     $(document).ready(function(){ 
-        
+	
+	changeButtonText();		
+	
     /*********************************************************************
     Load the dynamic JSP code that contains variables defined on the server 
     **********************************************************************/
@@ -35,11 +66,16 @@
     var width = $(window).width()*0.90;
     var height = 0;
     var current = null;
+    var vac_id;
     $.ajaxSetup({timeout: <%= conf.getAjaxTimeout() %>});
 	var taskIconSet = new Array(<%=taskIconSet.length%>)
 	<% for(int i=0;i<taskIconSet.length;i++) {%>
     	taskIconSet[<%=i%>] = '<%=taskIconSet[i]%>';
     <%}%>
+	
+	//For Vacation button
+	taskIconSet[taskIconSet.length] = "Vacation";
+	
 	var notiIconSet = new Array(<%=notiIconSet.length%>)
     <% for(int i=0;i<notiIconSet.length;i++) {%>
     	notiIconSet[<%=i%>] = '<%=notiIconSet[i]%>';
@@ -158,6 +194,9 @@
 	        case "export":
 	        	iconsetCode[i] = {name: '<fmt:message key="org_intalio_uifw_toolbar_button_export"/>', bclass: 'export', onpress : clickExportTasks};
 	            break;
+	        case "Vacation":
+	        	iconsetCode[i] = {name: '<fmt:message key="org_intalio_uifw_toolbar_button_vacation"/>',  bclass: 'vacationDet', onpress : clickVacation};
+	            break;      
 	        }
 	    }
 	    return iconsetCode;
@@ -209,7 +248,64 @@
       modal: true,		
       buttons: {'<fmt:message key="org_intalio_uifw_message.button.ok"/>': function() {exportTasksAction();}}
     });
-    
+    /*
+    	Vacation dialog
+    */
+    $("#vacation").dialog({
+        bgiframe: false,
+        autoOpen: false,
+        height: 385,
+        width:500,
+        open: function() {
+							$(".JsDatePickBox").css("display","none");
+							console.log("Closed");
+						},
+        buttons: {
+			
+			'<fmt:message key="org_intalio_uifw_message.button.save"/>': function() {saveVacation();},
+			 Cancel: function() {$(this).dialog('close');}
+        
+        }
+      });
+	/*
+		Message Dialog
+	*/
+	$("#messageDialog").dialog({
+        bgiframe: false,
+        autoOpen: false,
+        height: 150,
+        width:600,
+        buttons: {
+				 Ok: function() {$(this).dialog('close');}
+       }
+      });	
+	/*
+		End Vaction Dialog	
+	*/ 
+	 $("#endVacDialog").dialog({
+        bgiframe: false,
+        autoOpen: false,
+        height: 190,
+        width:600,
+        buttons: {
+				 End_Vacation: function(){
+					 endVacation();
+			   	  },	
+				 Ok: function() {$(this).dialog('close');}
+       }
+      });
+      /*
+		Warn Dialog	
+	*/ 
+	 $("#warnDialog").dialog({
+        bgiframe: false,
+        autoOpen: false,
+        height: 150,
+        width:250,
+        buttons: {
+					Ok: function() {$(this).dialog('close');}
+			}
+      });
     /*********************************************************************
     Remote SOAP Calls section.
     
@@ -484,6 +580,81 @@
       window.open(export_url,"_new");
     }
     
+ /**
+ * @Function Name   : saveVacation 
+ * @Description     : This function will make an ajax call to save the data of vacation management
+ * @param           : 
+ * @returns         : 
+ * */
+    function saveVacation()
+    {	
+		
+	  	if(isValidDate("fromdate","todate","desc"))
+    	{
+			var data = { action:"insertVacation",fromDate: $('#fromdate').val(), toDate: $('#todate').val(),desc: $('#desc').val()}
+			$.ajax({
+			url: './vacation.htm',
+			type: 'POST',
+			dataType: 'json',
+			data: data,
+			cache: false,
+			async: true,
+			error: function (e) {
+			},
+			success: function (data) {
+				if(data.message.indexOf("Inserted")>=0)
+				{
+					$('#fromdate').val("");
+					$('#todate').val("");
+					$('#desc').val("");
+					$('#vacation').dialog('close');
+					$('#messageDialog').html('<a style="font-family: verdana;font-size: 13px;">Vacation details are succesfully saved please make sure you also reassign your task before going on leave.</a>');
+					$('#messageDialog').dialog('open');
+				}
+				else
+				{
+					$('#messageDialog').html('<a style="font-family: verdana;font-size: 13px;">Exception occured while saving the Vacation details please see the error log for further details.</a>');
+					$('#messageDialog').dialog('open');
+					
+				}
+				$(".vacationDet").text("End Your Vacation");
+		     }
+			});
+	   }	
+}
+ /**
+ * @Function Name   : saveVacation 
+ * @Description     : This function will make an ajax call to end the vacation of a logged in user
+ * @param           : 
+ * @returns         : 
+ * */
+function endVacation()
+{
+	var data = { action:"endVacation",id:vac_id}
+    	$.ajax({
+        url: './vacation.htm',
+        type: 'POST',
+        dataType: 'json',
+        data: data,
+        cache: false,
+        async: true,
+        error: function (e) {
+        },
+        success: function (data) 
+        {
+			if(data.message.indexOf("Deleted")>=0)
+			{
+				$('#endVacDialog').dialog('close');
+				$('#messageDialog').html('<a style="font-family: verdana;font-size: 13px;">Successfully ended your vacation</a>');
+				$(".vacationDet").text("Vacation");
+			}	
+			else
+			$('#messageDialog').html('<a style="font-family: verdana;font-size: 13px;">Exception occured while ending vacation please see the error log for further details.</a>');
+			
+			$('#messageDialog').dialog('open');
+		}
+	});
+}	
     /*********************************************************************
     Support for handling click from the flexigrid toolbars
     *********************************************************************/
@@ -547,7 +718,158 @@
     function clickExportTasks() {
       $('#exportdialog').dialog('open');
     }
-		
+	
+ /**
+ * @Function Name   : clickVacation 
+ * @Description     : This function will make an ajax call to Validate earlier user has applied leave / not 
+ * @param           : 
+ * @returns         : 
+ * */
+    function clickVacation()
+    {
+		var data = { action:"Validate"}
+    	$.ajax({
+        url: './vacation.htm',
+        type: 'POST',
+        dataType: 'json',
+        data: data,
+        cache: false,
+        async: true,
+        error: function (e) {
+        },
+        success: function (data) {
+			console.log("vac="+data.vacation);
+			if(data.vacation !="undefined" && data.vacation!="" && data.vacation!=undefined)
+			{
+					var vacData = data.vacation.toString().split(',');
+					vac_id = vacData[0];
+      				var from_date = vacData[1].toString().split(' ');
+      				var to_Date   = vacData[2].toString().split(' '); 
+      				$('#endVacDialog').html('<a style="font-family: verdana;font-size: 13px;"> Already applied for a leave <br>From &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' +from_date[2]+'/'+from_date[1]+'/'+from_date[5]+'<br>  To &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:  '+to_Date[2]+'/'+to_Date[1]+'/'+to_Date[5]+'<br> Description  :  ' +vacData[3]+ '<br>If your vacation is completed please click on End Vacation</a>');
+					$('#endVacDialog').dialog('open');
+			}
+			else if(data.vacation =="undefined")
+			$('#vacation').dialog('close');
+			else
+			{
+				$('#fromdate').val("");
+				$('#todate').val("");
+				$('#desc').val("");
+				$('#vacation').dialog('open');
+			}	
+			  
+		}	
+		});	
+    }
+ /**
+ * @Function Name   : isValidDate 
+ * @Description     : This function will Validate to date,from date & description
+ * @param           : Refrence of fromDate , toDate,Description field of vacation
+ * @returns         : 
+ * */
+    function isValidDate(varFrom, varTo,desc) 
+    {
+            var fromdate, todate, dt1, dt2, mon1, mon2, yr1, yr2, date1, date2;
+            var chkFrom = document.getElementById(varFrom);
+            var chkTo = document.getElementById(varTo);
+            if (document.getElementById(varFrom).value == '') {
+                $("#warnDialog").html('<a style="font-family: verdana;font-size: 13px;">From date should not be empty</a>');
+                $("#warnDialog").dialog('open');
+                return false;
+            }
+            else if (document.getElementById(varTo).value == '') {
+                $("#warnDialog").html('<a style="font-family: verdana;font-size: 13px;">To date should not be empty</a>');
+                $("#warnDialog").dialog('open');
+                return false;
+            }
+            else if ($.trim(document.getElementById(desc).value)== '') {
+                $("#warnDialog").html('<a style="font-family: verdana;font-size: 13px;">Description should not be empty</a>');
+                $("#warnDialog").dialog('open');
+                return false;
+            }
+            if (varFrom != null && document.getElementById(varFrom).value != '' && varTo != null && document.getElementById(varTo).value!= '') {
+                if (checkdate(chkFrom) != true) {
+                    document.getElementById(varFrom).value = '';
+                    return false;
+                }
+                else if (checkdate(chkTo) != true) {
+                    document.getElementById(varTo).value = '';
+                    return false;
+                }
+                else {
+                    fromdate = document.getElementById(varFrom).value;
+                    todate = document.getElementById(varTo).value;
+                    dt1 = parseInt(fromdate.substring(0, 2), 10);
+                    mon1 = parseInt(fromdate.substring(3, 5), 10);
+                    yr1 = parseInt(fromdate.substring(6, 10), 10);
+                    dt2 = parseInt(todate.substring(0, 2), 10);
+                    mon2 = parseInt(todate.substring(3, 5), 10);
+                    yr2 = parseInt(todate.substring(6, 10), 10);
+                    date1 = new Date(yr1, mon1, dt1);
+                    date2 = new Date(yr2, mon2, dt2);
+ 
+                    if (date2 < date1) {
+                        $("#warnDialog").html('<a style="font-family: verdana;font-size: 13px;">To date Should be greater than From date</a>');
+						$("#warnDialog").dialog('open');
+                        document.getElementById(varTo).value = '';
+                        return false;
+                    }
+                }
+            }
+            return true;
+   }
+ /**
+ * @Function Name   : checkdate 
+ * @Description     : This function will Validate for special characters in date field
+ * @param           : Refrence of Date field
+ * @returns         : boolean
+ * */ 
+    function checkdate(input) {
+    var validformat = /^\d{2}\/\d{2}\/\d{4}$/ //Basic check for format validity
+    var returnval = false
+    if (!validformat.test(input.value))
+    {
+		$("#warnDialog").html('<a style="font-family: verdana;font-size: 13px;">Invalid Date Format Please correct and submit again.</a>');
+		$("#warnDialog").dialog('open');
+   } 
+    else { //Detailed check for valid date ranges
+        var monthfield = input.value.split("/")[1]
+        var dayfield = input.value.split("/")[0]
+        var yearfield = input.value.split("/")[2]
+        var dayobj = new Date(yearfield, monthfield - 1, dayfield)
+        if ((dayobj.getMonth() + 1 != monthfield) || (dayobj.getDate() != dayfield) || (dayobj.getFullYear() != yearfield))
+        {
+            $("#warnDialog").html('<a style="font-family: verdana;font-size: 13px;">Invalid Day, Month, or Year range detected Please correct and submit again</a>');
+			$("#warnDialog").dialog('open');
+		}	
+        else
+            returnval = true
+    }
+    return returnval
+}  	
+
+    function changeButtonText()
+    {
+
+		var data = { action:"Validate"}
+    	$.ajax({
+        url: './vacation.htm',
+        type: 'POST',
+        dataType: 'json',
+        data: data,
+        cache: false,
+        async: true,
+        error: function (e) {
+        },
+        success: function (data) {
+		   if(data.vacation !="undefined" && data.vacation!="" && data.vacation!=undefined)
+		   $(".vacationDet").text("End Your Vacation");
+		   else 
+		   $('.vacationDet').text('Vacation');
+			  
+		}	
+		});	
+    }
 	/*********************************************************************
     Flexigrid tables handling
     *********************************************************************/
@@ -899,7 +1221,8 @@
     $("#connectionLost").hide();
     $("#tabTasks").click();
 
-    if (!one_task_page) window.open("/ui-fw/script/empty.jsp", "taskform");
+    if (!one_task_page)
+    window.open("/ui-fw/script/empty.jsp", "taskform");
 
     /*
     Ajax activity support call. Show the ajax loading icon
@@ -916,3 +1239,5 @@
     }); // end of document ready, which also means the custom jquery code
 
 </script>
+
+<body onload=calendarSetup();>

@@ -123,11 +123,8 @@ public class SimpleTaskDAOConnection implements ITaskDAOConnection {
         throw new RuntimeException("Not Implemented");
     }
 
- 
-    public List<Task> fetchTaskfromInstanceID(String instanceid)
-          {
-        throw new RuntimeException("Not Implemented");
-        
+    public List<Task> fetchTaskfromInstanceID(String instanceid) {
+        throw new RuntimeException("Not Implemented");        
     }
     
     public boolean deleteAttachment(String attachmentUrl) {
@@ -220,5 +217,4 @@ public class SimpleTaskDAOConnection implements ITaskDAOConnection {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
 }

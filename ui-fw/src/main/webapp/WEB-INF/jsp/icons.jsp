@@ -1,10 +1,20 @@
 <%@ page import="org.intalio.tempo.web.ApplicationState" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <% 
 ApplicationState state = (ApplicationState)request.getSession().getAttribute(ApplicationState.PARAMETER_NAME);
 String mytoken = state.getCurrentUser().getToken();
 %>
 <td>
-	<img src="images/user_suit.png" title="Curent user" alt="Curent user">	
+	<c:choose>  
+		<c:when test="${fn:contains(currentUser, 'admin')}">  
+		<img  alt="Curent user" title="Curent user" src="images/user_green.png"/>	
+	</c:when>  
+	<c:otherwise>  
+		<img  alt="Curent user" title="Curent user" src="images/user_suit.png"/>	
+		</c:otherwise>  
+	</c:choose> 
 	<a style="font-family: verdana;font-size: 12px;">${currentUser}&nbsp;&nbsp;</a>	
 </td>
 <td>

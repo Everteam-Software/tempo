@@ -27,6 +27,7 @@
     <link rel="stylesheet" type="text/css" href="style/jqueryui/ui.all.css"/>
     <link rel="stylesheet" type="text/css" href="style/jqueryui/jquery.alerts.css"/>
     <link rel="stylesheet" type="text/css" href="style/jqueryui/ui.dialog.content.css"/>
+    <link rel="stylesheet" type="text/css" media="all" href="style/jsDatePick_ltr.min.css" />
     <link rel="alternate" type="application/atom+xml" title="Personal Task feed" href="/feeds/atom/tasks?token=${participantToken}"/>
     <link rel="alternate" type="application/atom+xml" title="Process feed" href="/feeds/atom/processes?token=${participantToken}"/>
 
@@ -47,7 +48,8 @@
     <script type="text/javascript" src="script/ui/jquery.bgiframe.js"></script>
     <script type="text/javascript" src="script/flexigrid.js"></script>
     <script type="text/javascript" src="script/jquery.alerts.js"></script>
-    
+	<script type="text/javascript" src="script/jsDatePick.min.1.3.js"></script>
+	
     <%@ include file="/script/grids.jsp"%>
 
   </head>
@@ -151,6 +153,33 @@
        <p><a href="/ui-fw"><fmt:message key="org_intalio_uifw_session_login_again"/></a></p>
     </div>
 
+	<div id="vacation" title="<fmt:message key="org_intalio_uifw_vacation_title"/>">
+	<table>
+		<tr>
+			<td>From:</td>
+			<td style="align:left"><input type="text" size="10" maxlength="10" name="fromdate" id="fromdate"></td>
+		</tr>
+		<tr>
+			<td>To:</td>
+			<td style="align:left"><input type="text" size="10" maxlength="10" name="todate" id="todate"></td>
+		</tr>
+		<tr>
+			<td>Description:</td>
+			<td style="align:left">
+				<textarea style="resize: none;" rows="3" cols="25" name="desc" id="desc">
+				</textarea>
+			</td>
+		</tr>
+	</table>
+	</div>
+	<div id="messageDialog" title="Message">
+	</div>
+    <div id="endVacDialog" title="Message">
+	</div>
+    <div id="warnDialog" title="Message">
+	</div>
+
+    
     <iframe src="script/empty.jsp" onLoad="resizeIframe" name="taskform" frameborder="0" id="taskform" scrolling="auto"></iframe>
 
     <div id="footer" style="left:33%">

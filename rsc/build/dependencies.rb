@@ -260,3 +260,5 @@ SECURITY_WS_COMMON = group("security-ws-common", :under=>"org.intalio.security",
 SECURITY_WS_CLIENT = group("security-api", "security-ws-client", "security-ws-common", :under=>"org.intalio.security", :version=>"1.0.24")
 SECURITY_WS_CLIENT_ONLY = group("security-api", "security-ws-client", :under=>"org.intalio.security", :version=>"1.0.24")
 WEB_NUTSNBOLTS = "org.intalio.security:security-web-nutsNbolts:jar:1.0.24"
+SOJO = [ "net.sf.sojo:sojo:jar:1.0.5" ]
+SPRING_JSON = ["net.sf.spring-json:spring-json:jar:1.3.1"]

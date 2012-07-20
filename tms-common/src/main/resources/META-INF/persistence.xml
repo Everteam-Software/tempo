@@ -36,7 +36,7 @@
         <class>org.intalio.tempo.workflow.task.attachments.AttachmentMetadata</class>
         <class>org.intalio.tempo.workflow.task.CustomColumn</class>
         <class>org.intalio.tempo.workflow.task.PIPATaskOutput</class>
-        
+        <class>org.intalio.tempo.workflow.task.Vacation</class>
         <properties></properties>
     </persistence-unit>
 </persistence>

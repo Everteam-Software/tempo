@@ -20,16 +20,20 @@ import org.intalio.tempo.workflow.tms.server.dao.JPATaskDaoConnection;
  * Factory for JPA-based task persistence
  */
 public class JPATaskDaoConnectionFactory extends AbstractJPAConnectionFactory implements ITaskDAOConnectionFactory {
-    
-    public JPATaskDaoConnectionFactory(Map<String, Object> properties) {
-        super("org.intalio.tempo.tms", properties);
-    }
-    
-    public JPATaskDaoConnectionFactory() {
-        super("org.intalio.tempo.tms");
-    }
-    
-    public ITaskDAOConnection openConnection() {
-            return new JPATaskDaoConnection(factory.createEntityManager());
-    }
+
+	public JPATaskDaoConnectionFactory() {
+		super("org.intalio.tempo.tms");
+	}
+
+	public JPATaskDaoConnectionFactory(Map<String, Object> properties) {
+		super("org.intalio.tempo.tms", properties);
+	}
+
+	public JPATaskDaoConnectionFactory(String tms, Map<String, Object> properties) {
+		super(tms, properties);
+	}
+
+	public ITaskDAOConnection openConnection() {
+		return new JPATaskDaoConnection(factory.createEntityManager());
+	}
 }

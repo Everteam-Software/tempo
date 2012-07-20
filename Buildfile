@@ -183,7 +183,7 @@ define "tempo" do
            XERCES, 
            XMLBEANS
     
-    compile.with libs, JSP_API, SERVLET_API, CAS_CLIENT, PORTLET_API
+    compile.with libs, JSP_API, SERVLET_API, CAS_CLIENT, PORTLET_API, SOJO, SPRING_JSON
 
     # use the following command to build the prepared portlet version
     # buildr install -e portlet

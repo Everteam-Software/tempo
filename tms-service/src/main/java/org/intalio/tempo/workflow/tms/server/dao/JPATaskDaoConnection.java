@@ -7,6 +7,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  */
+
 package org.intalio.tempo.workflow.tms.server.dao;
 
 import java.util.HashMap;
@@ -202,5 +203,4 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
 		return (Long) query.getSingleResult();
 	}
 
-	
 }
