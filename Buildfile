@@ -7,8 +7,10 @@ require "buildr/xmlbeans"
 # Keep this structure to allow the build system to update version numbers.
 
 # This branch is a copy of Tempo 6.0.85
+ 
 
 VERSION_NUMBER = "6.3.0.002-SNAPSHOT"
+ 
 
 require "rsc/build/dependencies.rb"
 require "rsc/build/repositories.rb"
@@ -149,6 +151,7 @@ define "tempo" do
     libs = projects("tms-axis", "tms-client", "tms-common","dao-nutsNbolts","tms-service"),
            SECURITY_WS_CLIENT,
            WEB_NUTSNBOLTS,
+           BPMS_COMMON,
            APACHE_ABDERA,
            APACHE_COMMONS[:io],
            APACHE_COMMONS[:httpclient],

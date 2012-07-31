@@ -360,9 +360,12 @@
     */
     function claimTask(com,grid)
     {
+	  var count=0; 	
       $('.trSelected',grid).each(function() 
       {
       var task = $('a.taskd',$(this));
+	  var istaskowner=task.attr('istaskowner');  
+	  if(istaskowner=="true"){
       
         if(task.attr('state') == "READY") {
           // claim
@@ -389,8 +392,14 @@
           SOAPClient.SOAPServer = tmpService;
           SOAPClient.SendRequest(sr, update);
         }
-
+	}//end if istaskowner
+	else
+		count=count+1;
       }); // end each  
+	  if (count!=0){
+            var errorMessage="<fmt:message key='org_intalio_uifw_toolbar_button_claim_error'/>";
+	        jAlert(errorMessage.replace("{0}", count) , '<fmt:message key="com_intalio_bpms_workflow_pageTitle"/>' );
+        }
     }; // end function claims
     
     /*
