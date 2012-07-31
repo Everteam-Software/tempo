@@ -58,6 +58,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
+import com.intalio.bpms.common.AxisUtil;
+
 
 public class RemoteTMSClient implements ITaskManagementService {
 
@@ -113,20 +115,14 @@ public class RemoteTMSClient implements ITaskManagementService {
 
         Thread currentThread = Thread.currentThread();
         ClassLoader cl = currentThread.getContextClassLoader();
- 
+        AxisUtil util = null;
         try {
-            HttpClient httpClient = new HttpClient(MultiThreadedHttpConnectionManagerFactory.getInstance()); 
-
-            Options options = new Options();
-            options.setTo(_endpoint);
-            options.setAction(soapAction);
-            options.setTimeOutInMilliSeconds( _httpTimeOut );
-
-            ServiceClient serviceClient = new ServiceClient();
+        	util = new AxisUtil();
+            ServiceClient serviceClient = util.getServiceClient();
             try {
-	            serviceClient.setOptions(options);
-	            serviceClient.getOptions().setProperty(HTTPConstants.REUSE_HTTP_CLIENT, Constants.VALUE_TRUE);
-	            serviceClient.getOptions().setProperty(HTTPConstants.CACHED_HTTP_CLIENT, httpClient);
+            	serviceClient.getOptions().setTo(_endpoint);
+            	serviceClient.getOptions().setAction(soapAction);
+	
 	            _log.debug("serviceClient.getOptions().getTimeOutInMilliSeconds() = "+serviceClient.getOptions().getTimeOutInMilliSeconds() + " ms");
 	        	// Disabling chunking as lighthttpd doesnt support it
 				if (this.isChunking()) {
@@ -147,7 +143,7 @@ public class RemoteTMSClient implements ITaskManagementService {
 	            response.build();
 	            return response;
             } finally {
-            	serviceClient.cleanupTransport();
+            	util.closeClient(serviceClient);
             }
         } catch (AxisFault f) {
             throw new RemoteTMSException(f);
