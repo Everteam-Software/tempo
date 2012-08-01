@@ -181,9 +181,11 @@ define "tempo" do
            WSDL4J,
            WS_COMMONS_SCHEMA,
            XERCES, 
-           XMLBEANS
+           XMLBEANS,
+		   SOJO,
+           SPRING_JSON
     
-    compile.with libs, JSP_API, SERVLET_API, CAS_CLIENT, PORTLET_API, SOJO, SPRING_JSON
+    compile.with libs, JSP_API, SERVLET_API, CAS_CLIENT, PORTLET_API
 
     # use the following command to build the prepared portlet version
     # buildr install -e portlet

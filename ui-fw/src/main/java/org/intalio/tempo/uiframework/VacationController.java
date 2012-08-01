@@ -45,8 +45,7 @@ public class VacationController implements Controller {
 	VacationDAOConnection dao = null;
 	JsonView json = null;
 	DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-	@SuppressWarnings("rawtypes")
-	Map model = null;
+	Map<Object,Object> model = null;
 	String message = "Failure";
 
 	public VacationController(EntityManager em) {
@@ -60,7 +59,7 @@ public class VacationController implements Controller {
 	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		try {
-			model = new LinkedHashMap();
+			model = new LinkedHashMap<Object,Object>();
 			dao = vacationDAOFactory.openConnection();
 			if (request.getParameter("action") != null && request.getParameter("action").equalsIgnoreCase("Validate")) {
 				model = getVacationDetails(ApplicationState.getCurrentInstance(request).getCurrentUser().getName());
@@ -83,8 +82,7 @@ public class VacationController implements Controller {
 		return new ModelAndView(json, model);
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public Map getVacationDetails(String user) {
+	public Map<Object,Object> getVacationDetails(String user) {
 		LOG.debug("getDetails=" + user);
 		List<Vacation> vacationObj = dao.getVacationDetails(user);
 		LOG.debug("vacationObj=" + vacationObj.size());
@@ -94,11 +92,9 @@ public class VacationController implements Controller {
 		return model;
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public Map deleteVacationDetails(int id) {
+	public Map<Object,Object>  deleteVacationDetails(int id) {
 		Boolean bol = dao.deleteVacationDetails(id);
 		if (bol) {
-			dao.commit();
 			message = "Deleted";
 		} else
 			message = "Error";
@@ -106,15 +102,13 @@ public class VacationController implements Controller {
 		return model;
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public Map insertVacationDetails(Date fromDate, Date toDate, String description, String user) {
+	public Map<Object,Object>  insertVacationDetails(Date fromDate, Date toDate, String description, String user) {
 		Vacation vacationObj = new Vacation();
-		vacationObj.set_from_Date(fromDate);
-		vacationObj.set_to_Date(toDate);
-		vacationObj.set_description(description);
-		vacationObj.set_user(user);
+		vacationObj.setFromDate(fromDate);
+		vacationObj.setToDate(toDate);
+		vacationObj.setDescription(description);
+		vacationObj.setUser(user);
 		dao.insertVacationDetails(vacationObj);
-		dao.commit();
 		message = "Inserted";
 		model.put("message", message);
 		return model;

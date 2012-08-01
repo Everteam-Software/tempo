@@ -21,10 +21,4 @@ public class JPAVacationDAOConnectionFactory extends AbstractJPAConnectionFactor
 	public VacationDAOConnection openConnection() {
 		return new JPAVacationDAOConnection(factory.createEntityManager());
 	}
-
-	@Override
-	public void clearCache() {
-		// TODO Auto-generated method stub
-
-	}
 }

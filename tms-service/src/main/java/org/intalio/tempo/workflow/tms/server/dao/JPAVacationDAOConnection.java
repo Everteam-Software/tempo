@@ -22,6 +22,8 @@ public class JPAVacationDAOConnection extends AbstractJPAConnection implements V
 	public void insertVacationDetails(Vacation vacation) {
 		checkTransactionIsActive();
 		entityManager.persist(vacation);
+		commit();
+		close();
 	}
 
 	public List<Vacation> getVacationDetails(String user) {
@@ -34,8 +36,10 @@ public class JPAVacationDAOConnection extends AbstractJPAConnection implements V
 
 	public Boolean deleteVacationDetails(int id) {
 		checkTransactionIsActive();
-		_logger.debug("vacation details=" + _vacation.fetchVacationByID(id));
+		LOG.debug("vacation details=" + _vacation.fetchVacationByID(id));
 		entityManager.remove(_vacation.fetchVacationByID(id));
+		commit();
+		close();
 		return true;
 	}
 }

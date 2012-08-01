@@ -1,7 +1,7 @@
 ANT = [ "org.apache.ant:ant:jar:1.7.1" ]
 
 APACHE_COMMONS = {
-  :beanutils => "commons-beanutils:commons-beanutils:jar:1.7.0",
+  :beanutils => "commons-beanutils:commons-beanutils:jar:1.8.3",
   :cli => "commons-cli:commons-cli:jar:1.1",
   :codec => "commons-codec:commons-codec:jar:1.3",
   :collections => "commons-collections:commons-collections:jar:3.2", 
@@ -260,5 +260,5 @@ SECURITY_WS_COMMON = group("security-ws-common", :under=>"org.intalio.security",
 SECURITY_WS_CLIENT = group("security-api", "security-ws-client", "security-ws-common", :under=>"org.intalio.security", :version=>"1.0.24")
 SECURITY_WS_CLIENT_ONLY = group("security-api", "security-ws-client", :under=>"org.intalio.security", :version=>"1.0.24")
 WEB_NUTSNBOLTS = "org.intalio.security:security-web-nutsNbolts:jar:1.0.24"
-SOJO = [ "net.sf.sojo:sojo:jar:1.0.5" ]
+SOJO = [ "net.sf.sojo:sojo:jar:1.0.5","net.sf:sojo-optional:jar:0.5.0" ]
 SPRING_JSON = ["net.sf.spring-json:spring-json:jar:1.3.1"]

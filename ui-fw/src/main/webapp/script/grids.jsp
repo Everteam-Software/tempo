@@ -258,8 +258,7 @@
         width:500,
         open: function() {
 							$(".JsDatePickBox").css("display","none");
-							console.log("Closed");
-						},
+					     },
         buttons: {
 			
 			'<fmt:message key="org_intalio_uifw_message.button.save"/>': function() {saveVacation();},
@@ -738,7 +737,6 @@ function endVacation()
         error: function (e) {
         },
         success: function (data) {
-			console.log("vac="+data.vacation);
 			if(data.vacation !="undefined" && data.vacation!="" && data.vacation!=undefined)
 			{
 					var vacData = data.vacation.toString().split(',');

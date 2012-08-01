@@ -38,7 +38,7 @@ import org.intalio.tempo.workflow.util.RequiredArgumentException;
 @Table(name = "vacation")
 @TableGenerator(name = "tab", initialValue = 0, allocationSize = 50)
 @NamedQueries({
-        @NamedQuery(name = Vacation.GET_VACATION_DETAILS, query = "select vacation._id,vacation._from_Date,vacation._to_Date,vacation._description from Vacation vacation where vacation._user=(:user)"),
+        @NamedQuery(name = Vacation.GET_VACATION_DETAILS, query = "select vacation._id,vacation._fromDate,vacation._toDate,vacation._description from Vacation vacation where vacation._user=(:user)"),
         @NamedQuery(name = Vacation.FIND_VAC_BY_ID, query = "select vacation from Vacation vacation where vacation._id = ?1") })
 public class Vacation {
 
@@ -56,11 +56,11 @@ public class Vacation {
 
     @Column(name = "from_date")
     @Persistent
-    private Date _from_Date;
+    private Date _fromDate;
 
     @Column(name = "to_date")
     @Persistent
-    private Date _to_Date;
+    private Date _toDate;
 
     @Column(name = "description")
     @Persistent
@@ -82,53 +82,53 @@ public class Vacation {
         find_id = _entityManager.createNamedQuery(Vacation.FIND_VAC_BY_ID);
     }
 
-    public int get_id() {
+    public int getId() {
         return _id;
     }
 
-    public void set_id(int _id) {
-        this._id = _id;
+    public void setId(int id) {
+        this._id = id;
     }
 
-    public Date get_from_Date() {
-        return _from_Date;
+    public Date getFromDate() {
+        return _fromDate;
     }
 
-    public void set_from_Date(Date _from_Date) {
-        if (_from_Date == null) {
+    public void setFromDate(Date fromDate) {
+        if (fromDate == null) {
             throw new RequiredArgumentException("_from_Date");
         }
-        this._from_Date = _from_Date;
+        this._fromDate = fromDate;
     }
 
-    public Date get_to_Date() {
-        return _to_Date;
+    public Date getToDate() {
+        return _toDate;
     }
 
-    public void set_to_Date(Date _to_Date) {
-        if (_to_Date == null) {
+    public void setToDate(Date toDate) {
+        if (toDate == null) {
             throw new RequiredArgumentException("_to_Date");
         }
-        this._to_Date = _to_Date;
+        this._toDate = toDate;
     }
 
-    public String get_description() {
+    public String getDescription() {
         return _description;
     }
 
-    public void set_description(String _description) {
-        if (_description == null) {
-            throw new RequiredArgumentException("_description");
+    public void setDescription(String description) {
+        if (description == null) {
+            throw new RequiredArgumentException("description");
         }
-        this._description = _description;
+        this._description = description;
     }
 
-    public String get_user() {
+    public String getUser() {
         return _user;
     }
 
-    public void set_user(String _user) {
-        this._user = _user;
+    public void setUser(String user) {
+        this._user = user;
     }
 
     public Vacation fetchVacationByID(int id) {
