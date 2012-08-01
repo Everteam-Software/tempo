@@ -41,6 +41,7 @@
 			 outof: 'of',
 			 findtext: 'Find',
 			 procmsg: 'Processing, please wait ...',
+			 procmsgerr: 'Could not fetch data. Please refresh the browser window. If problem persists, contact System Administrator.',
 			 query: '',
 			 qtype: '',
 			 nomsg: 'No items',
@@ -484,7 +485,19 @@
 										var td = document.createElement('td');
 										var idx = $(this).attr('axis').substr(3);
 										td.align = this.align;
-										td.innerHTML = $("cell:eq("+ idx +")",robj).text();
+										var columnData = $("cell:eq("+ idx +")",robj).text().trim();
+										if(columnData == null || columnData == "" || columnData == " ")
+										{
+											td.innerHTML = "NA";
+										}
+										else
+										{
+											var pos= columnData.search('><');
+											if(pos == -1)
+												td.innerHTML = columnData;
+											else
+												td.innerHTML = "NA";
+										}
 										$(tr).append(td);
 										td = null;
 									}
@@ -589,7 +602,7 @@
 				this.loading = true;
 				if (!p.url) return false;
 				
-				$('.pPageStat',this.pDiv).html(p.procmsg);
+				$('.pPageStat',this.pDiv).html(p.procmsg).css('color','black');
 				
 				$('.pReload',this.pDiv).addClass('loading');
 				
@@ -623,8 +636,13 @@
 					   data: param,
 					   dataType: p.dataType,
 					   success: function(data){g.addData(data);},
-					   error: function(XMLHttpRequest, textStatus, errorThrown) { try { if (p.onError) p.onError(XMLHttpRequest, textStatus, errorThrown); } catch (e) {} }
-					 });
+					   error: function(XMLHttpRequest, textStatus, errorThrown) 
+						{
+						 $('.pReload',this.pDiv).removeClass('loading');
+						 $('.pPageStat',this.pDiv).html(p.procmsgerr).css('color','red');
+						 this.loading = false;	
+						 try { if (p.onError) p.onError(XMLHttpRequest, textStatus, errorThrown); } catch (e) {} }
+					        });
 			},
 			doSearch: function () {
 				p.query = $('input[name=q]',g.sDiv).val();
@@ -1388,7 +1406,7 @@
 		// load data
 		if (p.url&&p.autoload) 
 			{
-			g.populate();
+			//g.populate();
 			}
 		
 		return t;		
