@@ -490,7 +490,8 @@
 										var idx = $(this).attr('axis').substr(3);
 										var deadline = $(this).attr('abbr').search('_deadline');
 										td.align = this.align;
-										var columnData = $("cell:eq("+ idx +")",robj).text().trim();
+										var columnData = $("cell:eq("+ idx +")",robj).text();
+										columnData = $.trim(columnData);
 										if(columnData == null || columnData == "" || columnData == " ")
 										{
 											td.innerHTML = "NA";
