@@ -34,6 +34,13 @@ public interface VacationDAOConnection {
 	 * @return Object Vacation of logged in user
 	 */
 	public List<Vacation> getVacationDetails(String user);
+	
+	/**
+     * Gets the vacation details of all users
+     *      * 
+     * @return Object Vacation 
+     */
+    public List<Vacation> getVacationDetails();
 
 	/**
 	 * Gets the vacation details of a particular user
@@ -44,4 +51,8 @@ public interface VacationDAOConnection {
 	 * @return Object Vacation of logged in user
 	 */
 	public Boolean deleteVacationDetails(int id);
+	/**
+     *closes the connection
+     */
+	public void close();
 }

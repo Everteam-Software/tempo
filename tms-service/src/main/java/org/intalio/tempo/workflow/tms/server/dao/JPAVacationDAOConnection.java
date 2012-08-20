@@ -33,7 +33,15 @@ public class JPAVacationDAOConnection extends AbstractJPAConnection implements V
 		LOG.debug("resultList :" + resultList);
 		return resultList;
 	}
-
+	
+	public List<Vacation> getVacationDetails() {
+        LOG.debug("Fetching details for all the users");
+        Query query = entityManager.createNamedQuery(Vacation.FETCH_VACATION_SUMMARY);
+        List<Vacation> resultList = query.getResultList();
+        LOG.debug("resultList :" + resultList);
+        return resultList;
+    }
+	
 	public Boolean deleteVacationDetails(int id) {
 		checkTransactionIsActive();
 		LOG.debug("vacation details=" + _vacation.fetchVacationByID(id));
