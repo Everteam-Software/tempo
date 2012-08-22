@@ -257,7 +257,7 @@ DEPLOY_API = "org.intalio.deploy:deploy-api:jar:1.0.32"
 REGISTRY = "org.intalio.deploy:deploy-registry:jar:1.0.32"
 SECURITY = group("security-api", :under=>"org.intalio.security", :version=>"1.0.24")
 SECURITY_WS_COMMON = group("security-ws-common", :under=>"org.intalio.security", :version=>"1.0.24")
-SECURITY_WS_CLIENT = group("security-api", "security-ws-client", "security-ws-common", :under=>"org.intalio.security", :version=>"1.0.24")
+SECURITY_WS_CLIENT = group("security-api", "security-ws-client", "security-ws-common", :under=>"org.intalio.security", :version=>"1.0.25")
 SECURITY_WS_CLIENT_ONLY = group("security-api", "security-ws-client", :under=>"org.intalio.security", :version=>"1.0.24")
-WEB_NUTSNBOLTS = "org.intalio.security:security-web-nutsNbolts:jar:1.0.24"
+WEB_NUTSNBOLTS = "org.intalio.security:security-web-nutsNbolts:jar:1.0.25"
 BPMS_COMMON="com.intalio.bpms.common:bpms-common:jar:1.0.0.0";
