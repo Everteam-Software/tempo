@@ -73,6 +73,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import com.intalio.bpms.common.AxisUtil;
 import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
 
 public class TMSServer implements ITMSServer {
@@ -622,39 +623,43 @@ public class TMSServer implements ITMSServer {
         if (input != null)
             omTaskOutput.addChild(xmlTooling.convertDOMToOM(input, omFactory));
 
-        Options options = new Options();
         //  Refer WF-1531 : Use ODE server url from tempo-tms.xml if process endpoint in the database does not contain the ODE server url.
         String processEndPoint= task.getProcessEndpoint().toString();
         processEndPoint=processEndPoint.startsWith("http:")||processEndPoint.startsWith("https:") ? processEndPoint : _odeServerURL+processEndPoint;
 
-        EndpointReference endpointReference = new EndpointReference(processEndPoint);
-        options.setTo(endpointReference);
-        options.setAction(task.getInitOperationSOAPAction());
 
         if (_logger.isDebugEnabled()) {
             _logger.debug(task + " was used to start the process with endpoint:" + task.getProcessEndpoint());
             _logger.debug("Request to Ode:\n" + omInitProcessRequest.toString());
         }
 
-        ServiceClient client = getServiceClient();
-        client.setOptions(options);
+        ServiceClient serviceClient = null;
+        OMElement response = null;
+        AxisUtil util = new AxisUtil();
         try {
             try{
-        		if (isHTTPChunking())
-        			options.setProperty(
-        					org.apache.axis2.transport.http.HTTPConstants.CHUNKED,
-        					Boolean.TRUE);
-        		else
-        			options.setProperty(
-        					org.apache.axis2.transport.http.HTTPConstants.CHUNKED,
-        					Boolean.FALSE);
-                options.setTimeOutInMilliSeconds(_httpTimeout);
-                OMElement response = client.sendReceive(omInitProcessRequest);
+                serviceClient = util.getServiceClient();
+                serviceClient.getOptions().setTo(new EndpointReference(processEndPoint));
+                serviceClient.getOptions().setAction(task.getInitOperationSOAPAction());
+                if (isHTTPChunking())
+                    serviceClient.getOptions()
+                            .setProperty(org.apache.axis2.transport.http.HTTPConstants.CHUNKED, Boolean.TRUE);
+                else
+                    serviceClient.getOptions()
+                            .setProperty(org.apache.axis2.transport.http.HTTPConstants.CHUNKED, Boolean.FALSE);
+                serviceClient.getOptions().setTimeOutInMilliSeconds(_httpTimeout);
+                response = serviceClient.sendReceive(omInitProcessRequest);
                 response.build();
                 return xmlTooling.convertOMToDOM(response);
             }
             finally{
-                client.cleanupTransport();
+                if (serviceClient != null){
+                    try {
+                        util.closeClient(serviceClient);
+                    } catch (Exception e) {
+                        _logger.error("Error while cleanup");
+                    }
+                }
             }
         } catch (Exception e) {
             _logger.error("Error while sending initProcessRequest:" + e.getClass(), e);
