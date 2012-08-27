@@ -151,7 +151,7 @@ define "tempo" do
     libs = projects("tms-axis", "tms-client", "tms-common","dao-nutsNbolts","tms-service"),
            SECURITY_WS_CLIENT,
            WEB_NUTSNBOLTS,
-           BPMS_COMMON,
+           #BPMS_COMMON,
            APACHE_ABDERA,
            APACHE_COMMONS[:io],
            APACHE_COMMONS[:httpclient],
@@ -185,8 +185,9 @@ define "tempo" do
            WS_COMMONS_SCHEMA,
            XERCES, 
            XMLBEANS,
-		   SOJO,
-           SPRING_JSON
+           SOJO,
+           SPRING_JSON,
+           BPMS_COMMON
     
     compile.with libs, JSP_API, SERVLET_API, CAS_CLIENT, PORTLET_API
 

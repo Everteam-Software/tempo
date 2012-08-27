@@ -262,3 +262,4 @@ SECURITY_WS_CLIENT_ONLY = group("security-api", "security-ws-client", :under=>"o
 WEB_NUTSNBOLTS = "org.intalio.security:security-web-nutsNbolts:jar:1.0.24"
 SOJO = [ "net.sf.sojo:sojo:jar:1.0.5","net.sf:sojo-optional:jar:0.5.0" ]
 SPRING_JSON = ["net.sf.spring-json:spring-json:jar:1.3.1"]
+BPMS_COMMON = ["com.intalio.bpms.common:bpms-common:jar:1.0.0.0"]
