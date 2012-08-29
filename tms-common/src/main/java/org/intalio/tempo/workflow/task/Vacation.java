@@ -69,7 +69,7 @@ public class Vacation {
     @Persistent
     private String _description;
 
-    @Column(name = "userName")
+    @Column(name = "user_name")
     @Persistent
     private String _user;
 
