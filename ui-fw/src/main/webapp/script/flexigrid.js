@@ -1296,7 +1296,7 @@
 			left: '0px'
 		}
 		);
-		$(g.block).fadeTo(0,p.blockOpacity);				
+		$(g.block).fadeTo(0,0);				
 		
 		// add column control
 		if ($('th',g.hDiv).length)
