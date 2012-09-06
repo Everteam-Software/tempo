@@ -25,6 +25,7 @@ import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.PIPATaskOutput;
 import org.intalio.tempo.workflow.task.Task;
+import org.intalio.tempo.workflow.task.audit.Audit;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
 import org.intalio.tempo.workflow.tms.UnavailableAttachmentException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
@@ -203,4 +204,9 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
 		return (Long) query.getSingleResult();
 	}
 
+    @Override
+    public void auditTask(Audit audit) {
+        checkTransactionIsActive();
+        entityManager.persist(audit);
+    }
 }

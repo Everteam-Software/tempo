@@ -88,7 +88,8 @@ SLF4J = group(%w{ slf4j-api slf4j-log4j12 jcl104-over-slf4j }, :under=>"org.slf4
 SPRING = {
   :core => "org.springframework:spring:jar:2.5.5",
   :webmvc_portlet => "org.springframework:spring-webmvc-portlet:jar:2.5.5",
-  :webmvc => "org.springframework:spring-webmvc:jar:2.5.5"
+  :webmvc => "org.springframework:spring-webmvc:jar:2.5.5",
+  :aop => "org.springframework:spring-aop:jar:2.5.5"
 }
 SPRING_MOCK = [
   "org.springframework:spring-test:jar:2.5.5"
@@ -263,3 +264,4 @@ WEB_NUTSNBOLTS = "org.intalio.security:security-web-nutsNbolts:jar:1.0.24"
 SOJO = [ "net.sf.sojo:sojo:jar:1.0.5","net.sf:sojo-optional:jar:0.5.0" ]
 SPRING_JSON = ["net.sf.spring-json:spring-json:jar:1.3.1"]
 BPMS_COMMON = ["com.intalio.bpms.common:bpms-common:jar:1.0.0.0"]
+ASPECTJ = [ "org.aspectj:aspectjrt:jar:1.6.12", "org.aspectj:aspectjweaver:jar:1.6.12" ]

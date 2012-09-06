@@ -23,6 +23,7 @@ import org.intalio.tempo.workflow.task.CustomColumn;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.PIPATaskOutput;
 import org.intalio.tempo.workflow.task.Task;
+import org.intalio.tempo.workflow.task.audit.Audit;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
 import org.intalio.tempo.workflow.tms.UnavailableAttachmentException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
@@ -97,4 +98,10 @@ public interface ITaskDAOConnection {
 	 * @return
 	 */
 	public long getClaimedTaskCount(Object filter, List<String> userList);
+
+    /**
+     * WF-1574: Audit's the task
+     * @param audit
+     */
+    public void auditTask(Audit audit);
 }

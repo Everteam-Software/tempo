@@ -121,7 +121,7 @@ define "tempo" do
   desc "Task Management Service"
   define "tms-service" do
     libs = projects("tms-axis", "tms-common", "dao-nutsNbolts"),JASYPT,
-     APACHE_JPA, APACHE_COMMONS[:pool], AXIOM, AXIS2, JAXEN, SLF4J, SPRING[:core], STAX_API, XMLBEANS, DB_CONNECTOR.values, DEPLOY_API, SECURITY_WS_CLIENT_ONLY, WEB_NUTSNBOLTS,XALAN,JASYPT, BPMS_COMMON 
+     APACHE_JPA, APACHE_COMMONS[:pool], AXIOM, AXIS2, JAXEN, SLF4J, SPRING[:core], STAX_API, XMLBEANS, DB_CONNECTOR.values, DEPLOY_API, SECURITY_WS_CLIENT_ONLY, WEB_NUTSNBOLTS,XALAN,JASYPT, BPMS_COMMON, ASPECTJ 
     compile.with libs
     test.with libs + [REGISTRY, APACHE_DERBY, APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], CASTOR, EASY_B, LOG4J, DB_CONNECTOR.values, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES, XMLUNIT, INSTINCT]
 
@@ -142,7 +142,7 @@ define "tempo" do
 
     package :jar
     package(:aar).with :libs => 
-        [ projects("tms-axis", "tms-common", "dao-nutsNbolts"), BPMS_COMMON,JASYPT,OPENSSO_CLIENT_SDK, CAS_CLIENT,CASTOR,APACHE_COMMONS[:pool], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], APACHE_JPA, SLF4J, SPRING[:core], DEPLOY_API, REGISTRY, SECURITY_WS_CLIENT, WEB_NUTSNBOLTS ] 
+        [ projects("tms-axis", "tms-common", "dao-nutsNbolts"), BPMS_COMMON,JASYPT,OPENSSO_CLIENT_SDK, CAS_CLIENT,CASTOR,APACHE_COMMONS[:pool], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], APACHE_JPA, SLF4J, SPRING[:core], DEPLOY_API, REGISTRY, SECURITY_WS_CLIENT, WEB_NUTSNBOLTS, ASPECTJ, SPRING[:aop] ] 
   end
   
   desc "User-Interface Framework"

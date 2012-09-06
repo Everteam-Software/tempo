@@ -19,6 +19,8 @@
         <parameter name="SpringContextFile">file:${org.intalio.tempo.configDirectory}/tempo-tms.xml</parameter>
         <parameter name="ServiceObjectSupplier">org.intalio.tempo.workflow.ServiceObjectSupplier</parameter>
         <parameter name="SpringBeanName">tms.serviceImplementation</parameter>
+        <!-- Needed so that it can initialize the bean for audit also. Created for WF-1574-->
+        <parameter name="LoadAllBeansOnStartup">true</parameter>
         <!-- 
           Needed so that the deployment service starts straight on server startup. 
           Since the code for pipa deployment is located in TMS.
