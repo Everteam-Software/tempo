@@ -66,13 +66,13 @@ import org.w3c.dom.Document;
         @NamedQuery(name = PATask.FIND_BY_STATES, query = "select m from PATask m where m._state=?1", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }),
         @NamedQuery(name= PATask.FIND_BY_INSTANCEID, query= "select m from PATask m where m._instanceId= ?1"),
         @NamedQuery(name=PATask.GET_PENDING_TASK_COUNT,
-			query="select count(pa._id) from PATask pa where pa._creationDate >= (:creationDate) and pa._state = TaskState.READY and (pa._userOwners in (:userOwners) or pa._roleOwners in (:roleOwners))"),
+			query="select count(pa._id) from PATask pa where pa._creationDate >= (:creationDate) and pa._state = TaskState.READY and (:userOwner MEMBER OF pa._userOwners or pa._roleOwners in (:roleOwners))"),
 		@NamedQuery(name=PATask.GET_COMPLETED_TASK_COUNT_BY_USER,
-            query="select count(pa._id) from PATask pa where pa._creationDate >= (:creationDate) and pa._state = TaskState.COMPLETED and pa._userOwners in (:userOwners)"),
+            query="select count(pa._id) from PATask pa where pa._creationDate >= (:creationDate) and pa._state = TaskState.COMPLETED and :userOwner MEMBER OF pa._userOwners"),
 		@NamedQuery(name=PATask.GET_COMPLETED_TASK_COUNT_BY_USER_ASSIGNED_ROLES,
-			query="select count(pa._id) from PATask pa where pa._creationDate >= (:creationDate) and pa._state = TaskState.COMPLETED and pa._roleOwners in (:roleOwners) and pa._userOwners not in (:userOwners)"),
+			query="select count(pa._id) from PATask pa where pa._creationDate >= (:creationDate) and pa._state = TaskState.COMPLETED and pa._roleOwners in (:roleOwners)"),
 		@NamedQuery(name=PATask.GET_CLAIMED_TASK_COUNT,
-			query="select count(pa._id) from PATask pa where pa._creationDate >= (:creationDate) and pa._state = TaskState.CLAIMED and pa._userOwners in (:userOwners)")
+			query="select count(pa._id) from PATask pa where pa._creationDate >= (:creationDate) and pa._state = TaskState.CLAIMED and :userOwner MEMBER OF pa._userOwners")
 })
 public class PATask extends Task implements ITaskWithState, IProcessBoundTask, ITaskWithInput, ITaskWithOutput,
         ICompleteReportingTask, ITaskWithAttachments, IChainableTask, ITaskWithPriority, ITaskWithDeadline ,IInstanceBoundTask,ITaskWithCustomMetadata{

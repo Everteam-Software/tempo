@@ -44,7 +44,7 @@ import org.w3c.dom.Document;
 @PrimaryKeyJoinColumn(name="ID", referencedColumnName="ID")
 @NamedQueries({
     @NamedQuery(name=Notification.GET_PENDING_NOTIFICATION_COUNT,
-                query="select count(notification._id) from Notification notification where notification._creationDate >= (:creationDate) and notification._state = TaskState.READY and (notification._userOwners in (:userOwners) or notification._roleOwners in (:roleOwners))")
+                query="select count(notification._id) from Notification notification where notification._creationDate >= (:creationDate) and notification._state = TaskState.READY and (:userOwner MEMBER OF notification._userOwners or notification._roleOwners in (:roleOwners))")
 })
 public class Notification extends Task implements ITaskWithState, ITaskWithInput, IProcessBoundTask, IInstanceBoundTask, ITaskWithPriority{
 	

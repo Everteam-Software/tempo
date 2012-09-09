@@ -188,33 +188,33 @@ public class SimpleTaskDAOConnection implements ITaskDAOConnection {
 	}
 
 	@Override
-	public long getPendingNotificationCount(Object filter, List<String> userList, List<String> userRolesList) {
+	public long getPendingNotificationCount(Object filter, String user, List<String> userRolesList) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 
 	@Override
-	public long getPendingTaskCount(Object filter, List<String> userList, List<String> userRolesList) {
+	public long getPendingTaskCount(Object filter, String user, List<String> userRolesList) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public long getCompletedTaskCountByUser(Object filter, List<String> userList) {
+	public long getCompletedTaskCountByUser(Object filter, String user) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public long getClaimedTaskCount(Object filter, List<String> userList) {
+	public long getClaimedTaskCount(Object filter, String user) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public long getCompletedTaskCountByUserAssignedRoles(Object filter,
-			List<String> userRolesList, List<String> userList) {
+			List<String> userRolesList) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

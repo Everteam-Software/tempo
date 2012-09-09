@@ -60,28 +60,28 @@ public interface ITaskDAOConnection {
 	/**
 	 * Gives notification count which are in ready state available for logged in user and it's assigned roles.
 	 * @param filter
-	 * @param userList
+	 * @param user
 	 * @param userRolesList
 	 * @return
 	 */
-	public long getPendingNotificationCount(Object filter, List<String> userList, List<String> userRolesList);
+	public long getPendingNotificationCount(Object filter, String user, List<String> userRolesList);
 	
 	/**
 	 * Gives pa task count which are in ready state available for logged-in user and it's assigned roles.
 	 * @param filter
-	 * @param userList
+	 * @param user
 	 * @param userRolesList
 	 * @return
 	 */
-	public long getPendingTaskCount(Object filter, List<String> userList, List<String> userRolesList);
+	public long getPendingTaskCount(Object filter, String user, List<String> userRolesList);
 	
 	/**
 	 * Gives pa task count which are in completed state available for logged-in user.
 	 * @param filter
-	 * @param userList
+	 * @param user
 	 * @return
 	 */
-	public long getCompletedTaskCountByUser(Object filter, List<String> userList);
+	public long getCompletedTaskCountByUser(Object filter, String user);
 	
 	/**
 	 * Gives pa task count which are in completed state available for logged-in user's assigned roles. 
@@ -89,15 +89,15 @@ public interface ITaskDAOConnection {
 	 * @param userRolesList
 	 * @return
 	 */
-	public long getCompletedTaskCountByUserAssignedRoles(Object filter, List<String> userRolesList, List<String> userList);
+	public long getCompletedTaskCountByUserAssignedRoles(Object filter, List<String> userRolesList);
 	
 	/**
 	 * Gives pa task count which are in claimed state available for logged-in user.
 	 * @param filter
-	 * @param userList
+	 * @param user
 	 * @return
 	 */
-	public long getClaimedTaskCount(Object filter, List<String> userList);
+	public long getClaimedTaskCount(Object filter, String user);
 
     /**
      * WF-1574: Audit's the task
