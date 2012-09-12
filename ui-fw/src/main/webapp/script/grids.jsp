@@ -601,7 +601,7 @@
     	{
 			var data = { action:"insertVacation",fromDate: $('#fromdate').val(), toDate: $('#todate').val(),desc: $('#desc').val()}
 			$.ajax({
-			url: './vacation.htm',
+			url: 'vacation.htm',
 			type: 'POST',
 			dataType: 'json',
 			data: data,
@@ -737,7 +737,7 @@ function endVacation()
     {
 		var data = { action:"Validate"}
     	$.ajax({
-        url: './vacation.htm',
+        url: 'vacation.htm',
         type: 'POST',
         dataType: 'json',
         data: data,
@@ -746,13 +746,10 @@ function endVacation()
         error: function (e) {
         },
         success: function (data) {
-			if(data.vacation !="undefined" && data.vacation!="" && data.vacation!=undefined)
+			if(data.vacId !="undefined" && data.vacId!="" && data.vacId!=undefined)
 			{
-					var vacData = data.vacation.toString().split(',');
-					vac_id = vacData[0];
-      				var from_date = vacData[1].toString().split(' ');
-      				var to_Date   = vacData[2].toString().split(' '); 
-      				$('#endVacDialog').html('<a style="font-family: verdana;font-size: 13px;"> Already applied for a leave <br>From &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' +from_date[2]+'/'+from_date[1]+'/'+from_date[5]+'<br>  To &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:  '+to_Date[2]+'/'+to_Date[1]+'/'+to_Date[5]+'<br> Description  :  ' +vacData[3]+ '<br>If your vacation is completed please click on End Vacation</a>');
+					vac_id = parseInt(data.vacId);
+					$('#endVacDialog').html('<a style="font-family: verdana;font-size: 13px;"> Already applied for a leave <br>From &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' +data.vacFromdate+'<br>  To &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:  '+data.vacToDate+'<br> Description  :  ' +data.vacDesc+ '<br>If your vacation is completed please click on End Vacation</a>');
 					$('#endVacDialog').dialog('open');
 			}
 			else if(data.vacation =="undefined")
@@ -858,9 +855,9 @@ function endVacation()
     function changeButtonText()
     {
 
-		var data = { action:"Validate"}
+		var data = { action:'Validate'}
     	$.ajax({
-        url: './vacation.htm',
+        url: 'vacation.htm',
         type: 'POST',
         dataType: 'json',
         data: data,
@@ -869,7 +866,7 @@ function endVacation()
         error: function (e) {
         },
         success: function (data) {
-		   if(data.vacation !="undefined" && data.vacation!="" && data.vacation!=undefined)
+		   if(data.vacId !="undefined" && data.vacId!="" && data.vacId!=undefined)
 		   $(".vacationDet").text("End Your Vacation");
 		   else 
 		   $('.vacationDet').text('Vacation');

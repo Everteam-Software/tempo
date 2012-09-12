@@ -49,7 +49,7 @@
     <script type="text/javascript" src="script/flexigrid.js"></script>
     <script type="text/javascript" src="script/jquery.alerts.js"></script>
 	<script type="text/javascript" src="script/jsDatePick.min.1.3.js"></script>
-	
+	<script type="text/javascript">var one_task_page = true /*Flag to safeguard changes */</script>
     <%@ include file="/script/grids.jsp"%>
 
   </head>
