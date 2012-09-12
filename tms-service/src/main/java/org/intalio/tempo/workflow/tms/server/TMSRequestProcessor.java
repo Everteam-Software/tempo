@@ -17,6 +17,8 @@ package org.intalio.tempo.workflow.tms.server;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +35,7 @@ import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.TaskState;
+import org.intalio.tempo.workflow.task.Vacation;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.task.xml.TaskMarshaller;
 import org.intalio.tempo.workflow.task.xml.TaskUnmarshaller;
@@ -40,6 +43,7 @@ import org.intalio.tempo.workflow.task.xml.TaskXMLConstants;
 import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.task.xml.attachments.AttachmentMarshaller;
 import org.intalio.tempo.workflow.task.xml.attachments.AttachmentUnmarshaller;
+import org.intalio.tempo.workflow.task.xml.vacation.VacationMarshaller;
 import org.intalio.tempo.workflow.tms.AccessDeniedException;
 import org.intalio.tempo.workflow.tms.TMSException;
 import org.intalio.tempo.workflow.tms.UnavailableAttachmentException;
@@ -54,6 +58,8 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnectionFactory;
+import org.intalio.tempo.workflow.tms.server.dao.VacationDAOConnection;
+import org.intalio.tempo.workflow.tms.server.dao.VacationDAOConnectionFactory;
 import org.jasypt.util.text.BasicTextEncryptor;
 
 
@@ -67,6 +73,7 @@ public class TMSRequestProcessor extends OMUnmarshaller {
     private DeploymentServiceRegister _registerPipa;
     private static final OMFactory OM_FACTORY = OMAbstractFactory.getOMFactory();
     private ITaskDAOConnectionFactory _taskDAOFactory;
+    private VacationDAOConnectionFactory _VacationDAOFactory;
     public TMSRequestProcessor(ITaskDAOConnectionFactory taskDAOFactory) {
         super(TaskXMLConstants.TASK_NAMESPACE, TaskXMLConstants.TASK_NAMESPACE_PREFIX);
         assert taskDAOFactory != null : "ITaskDAOConnectionFactory implementation is absent!";
@@ -81,6 +88,12 @@ public class TMSRequestProcessor extends OMUnmarshaller {
            _logger.info("ITaskDAOConnectionFactory implementation : " + _taskDAOFactory.getClass());
        }
       
+      /* For Vacation Management */
+  	public void setVacationDAOFactory(VacationDAOConnectionFactory vacationDAOFactory) {
+  		this._VacationDAOFactory = vacationDAOFactory;
+  		_logger.info("VacationDAOConnectionFactory implementation : " + _VacationDAOFactory.getClass());
+  	}
+  	
     // unify desctroy pipa behaviour make it easy to be covered by test.
     protected void destroyRegisterPipa() {
         if (_registerPipa != null) {
@@ -817,7 +830,99 @@ public class TMSRequestProcessor extends OMUnmarshaller {
         destroyRegisterPipa();
         super.finalize();
     }
+    
+    public OMElement insertVacation(final OMElement requestElement) throws AxisFault {
+		VacationDAOConnection dao = null;
+		try {
+			dao = _VacationDAOFactory.openConnection();
+			DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+			OMElementQueue rootQueue = new OMElementQueue(requestElement);
+			Vacation vac = new Vacation();
+			vac.setFromDate(df.parse(requireElementValue(rootQueue, "fromDate")));
+			vac.setToDate(df.parse(requireElementValue(rootQueue, "toDate")));
+			vac.setDescription(requireElementValue(rootQueue, "description"));
+			vac.setUser(requireElementValue(rootQueue, "userName"));
+			String participantToken = requireElementValue(rootQueue, "participantToken");
+			_server.insertVacation(dao, vac, participantToken);
+			return createOkResponse();
+		} catch (Exception e) {
+			throw makeFault(e);
+		} finally {
+			if (dao != null)
+				dao.close();
+		}
+	}
 
+	public OMElement getUserVacation(final OMElement requestElement) throws AxisFault {
+		VacationDAOConnection dao = null;
+		try {
+			dao = _VacationDAOFactory.openConnection();
+			OMElementQueue rootQueue = new OMElementQueue(requestElement);
+			String user = requireElementValue(rootQueue, "user");
+			String participantToken = requireElementValue(rootQueue, "participantToken");
+			List<Vacation> vac = _server.getUserVacation(dao, user, participantToken);
+			return marshalVacationList(vac, "getUserVacationResponse");
+		} catch (Exception e) {
+			throw makeFault(e);
+		} finally {
+			if (dao != null)
+				dao.close();
+		}
+	}
+
+	public OMElement getVacationList(final OMElement requestElement) throws AxisFault {
+		VacationDAOConnection dao = null;
+		try {
+			dao = _VacationDAOFactory.openConnection();
+			OMElementQueue rootQueue = new OMElementQueue(requestElement);
+			String participantToken = requireElementValue(rootQueue, "participantToken");
+			List<Vacation> vac = _server.getVacationList(dao, participantToken);
+			return marshalVacationList(vac, "getVacationListResponse");
+		} catch (Exception e) {
+			throw makeFault(e);
+		} finally {
+			if (dao != null)
+				dao.close();
+		}
+	}
+
+	public OMElement deleteVacation(final OMElement requestElement) throws AxisFault {
+		VacationDAOConnection dao = null;
+		try {
+			dao = _VacationDAOFactory.openConnection();
+			OMElementQueue rootQueue = new OMElementQueue(requestElement);
+			int vacId = Integer.parseInt(requireElementValue(rootQueue, "vacId"));
+			String participantToken = requireElementValue(rootQueue, "participantToken");
+			_logger.debug("vacation=" + vacId);
+			_server.deleteVacation(dao, vacId, participantToken);
+			return createOkResponse();
+		} catch (Exception e) {
+			throw makeFault(e);
+		} finally {
+			if (dao != null)
+				dao.close();
+		}
+	}
+	
+	private OMElement marshalVacationList(final List<Vacation> vac, final String responseTag) {
+		OMElement response = new TMSResponseMarshaller(OM_FACTORY) {
+			public OMElement marshalResponse(List<Vacation> vac) {
+				OMElement response = createElement(responseTag);
+				for (Vacation vacation : vac) {
+					try {
+						response.addChild(new VacationMarshaller().marshalVacationData(vacation));
+					} catch (Exception e) {
+						_logger.error(vacation.getId() + "could not be serialized to xml", e);
+					}
+				}
+				return response;
+			}
+		}.marshalResponse(vac);
+		if (_logger.isDebugEnabled())
+			_logger.debug(response.toString());
+		return response;
+	}
+	
     private abstract class TMSResponseMarshaller extends OMMarshaller {
         public TMSResponseMarshaller(OMFactory omFactory) {
             super(omFactory, omFactory.createOMNamespace(TaskXMLConstants.TASK_NAMESPACE, TaskXMLConstants.TASK_NAMESPACE_PREFIX));

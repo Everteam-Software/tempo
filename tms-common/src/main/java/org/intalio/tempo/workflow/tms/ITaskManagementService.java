@@ -24,6 +24,7 @@ import org.intalio.tempo.workflow.task.InvalidTaskException;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.TaskState;
+import org.intalio.tempo.workflow.task.Vacation;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.w3c.dom.Document;
 
@@ -73,4 +74,12 @@ public interface ITaskManagementService {
     PIPATask getPipa(String formUrl) throws AuthException, UnavailableTaskException;
     
     List<String> getCustomColumns() throws AuthException;
+    
+    void insertVacation(String fromDate, String toDate, String Desc, String user);
+
+	void deleteVacation(String vacId);
+
+	List<Vacation> getUserVacation(final String user);
+
+	List<Vacation> getVacationList();
 }

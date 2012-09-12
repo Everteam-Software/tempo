@@ -25,11 +25,13 @@ import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.PIPATaskState;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.TaskState;
+import org.intalio.tempo.workflow.task.Vacation;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.tms.AccessDeniedException;
 import org.intalio.tempo.workflow.tms.TMSException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
+import org.intalio.tempo.workflow.tms.server.dao.VacationDAOConnection;
 import org.w3c.dom.Document;
 
 import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
@@ -98,4 +100,12 @@ public interface ITMSServer {
 
 	void deleteCustomColumn(ITaskDAOConnection dao, String processName,
 			String token) throws Exception;
+	
+	void insertVacation(VacationDAOConnection dao,Vacation vac,String participantToken)throws TMSException;
+    
+    List<Vacation> getUserVacation(VacationDAOConnection dao,String user,String participantToken)throws TMSException;
+    
+    List<Vacation> getVacationList(VacationDAOConnection dao,String participantToken)throws TMSException;
+    
+    void deleteVacation(VacationDAOConnection dao,int vacId,String participantToken)throws TMSException;
 }

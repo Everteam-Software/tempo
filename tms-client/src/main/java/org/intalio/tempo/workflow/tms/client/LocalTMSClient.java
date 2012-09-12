@@ -6,7 +6,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.UserRoles;
@@ -14,18 +15,22 @@ import org.intalio.tempo.workflow.task.InvalidTaskException;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.TaskState;
+import org.intalio.tempo.workflow.task.Vacation;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.task.attachments.AttachmentMetadata;
 import org.intalio.tempo.workflow.task.traits.ITaskWithAttachments;
 import org.intalio.tempo.workflow.tms.AccessDeniedException;
 import org.intalio.tempo.workflow.tms.ITaskManagementService;
 import org.intalio.tempo.workflow.tms.InvalidTaskStateException;
+import org.intalio.tempo.workflow.tms.TMSException;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
 import org.intalio.tempo.workflow.tms.UnavailableAttachmentException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.intalio.tempo.workflow.tms.server.TMSServer;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnectionFactory;
+import org.intalio.tempo.workflow.tms.server.dao.VacationDAOConnection;
+import org.intalio.tempo.workflow.tms.server.dao.VacationDAOConnectionFactory;
 import org.intalio.tempo.workflow.util.jpa.TaskFetcher;
 import org.intalio.tempo.workflow.util.xml.InvalidInputFormatException;
 import org.intalio.tempo.workflow.util.xml.XsdDateTime;
@@ -37,6 +42,7 @@ public class LocalTMSClient implements ITaskManagementService {
 	final static Logger logger = LoggerFactory.getLogger(LocalTMSClient.class);
 	private String participantToken;
 	private ITaskDAOConnectionFactory taskDAOFactory;
+	private VacationDAOConnectionFactory _VacationDAOFactory;
 	private TMSServer server;
 
 	public TMSServer getServer() {
@@ -53,6 +59,11 @@ public class LocalTMSClient implements ITaskManagementService {
 
 	public void setTaskDAOFactory(ITaskDAOConnectionFactory taskDAOFactory) {
 		this.taskDAOFactory = taskDAOFactory;
+	}
+	
+	/* For Vacation Management */
+	public void setVacationDAOFactory(VacationDAOConnectionFactory vacationDAOFactory) {
+		this._VacationDAOFactory = vacationDAOFactory;
 	}
 
 	public void addAttachment(String taskID, Attachment attachment)
@@ -354,4 +365,59 @@ public class LocalTMSClient implements ITaskManagementService {
                 
     }
 
+	public void insertVacation(final String fromDate, final String toDate, final String Desc, final String user) {
+		try {
+			Vacation vac = new Vacation();
+			DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+			vac.setFromDate(df.parse(fromDate));
+			vac.setToDate(df.parse(toDate));
+			vac.setDescription(Desc);
+			vac.setUser(user);
+			VacationDAOConnection dao = _VacationDAOFactory.openConnection();
+			server.insertVacation(dao, vac, participantToken);
+		} catch (TMSException e) {
+			logger.error("TMSException :: ", e);
+		} catch (Exception e) {
+			logger.error("Exception :: ", e);
+		}
+	}
+
+	public List<Vacation> getUserVacation(final String user) {
+		List<Vacation> vac = null;
+		try {
+
+			VacationDAOConnection dao = _VacationDAOFactory.openConnection();
+			vac = server.getUserVacation(dao, user, participantToken);
+
+		} catch (TMSException e) {
+			logger.error("TMSException :: ", e);
+		} catch (Exception e) {
+			logger.error("Exception :: ", e);
+		}
+		return vac;
+	}
+
+	public List<Vacation> getVacationList() {
+		List<Vacation> vac = null;
+		try {
+			VacationDAOConnection dao = _VacationDAOFactory.openConnection();
+			vac = server.getVacationList(dao, participantToken);
+		} catch (TMSException e) {
+			logger.error("TMSException :: ", e);
+		} catch (Exception e) {
+			logger.error("Exception :: ", e);
+		}
+		return vac;
+	}
+
+	public void deleteVacation(final String vacID) {
+		try {
+			VacationDAOConnection dao = _VacationDAOFactory.openConnection();
+			server.deleteVacation(dao, Integer.parseInt(vacID), participantToken);
+		} catch (TMSException e) {
+			logger.error("TMSException :: ", e);
+		} catch (Exception e) {
+			logger.error("Exception :: ", e);
+		}
+	}
 }

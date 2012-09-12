@@ -51,6 +51,7 @@ import org.intalio.tempo.workflow.task.PIPATaskOutput;
 import org.intalio.tempo.workflow.task.PIPATaskState;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.TaskState;
+import org.intalio.tempo.workflow.task.Vacation;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.task.traits.ITaskWithAttachments;
 import org.intalio.tempo.workflow.task.traits.ITaskWithOutput;
@@ -64,6 +65,7 @@ import org.intalio.tempo.workflow.tms.TaskIDConflictException;
 import org.intalio.tempo.workflow.tms.UnavailableAttachmentException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
+import org.intalio.tempo.workflow.tms.server.dao.VacationDAOConnection;
 import org.intalio.tempo.workflow.tms.server.permissions.TaskPermissions;
 import org.intalio.tempo.workflow.util.jpa.TaskFetcher;
 import org.jasypt.util.text.BasicTextEncryptor;
@@ -1058,5 +1060,43 @@ public class TMSServer implements ITMSServer {
 			((PIPATask) task).setOutput(pipaTaskOutput.getOutput());
 		}
 	}
-
+    
+    public void insertVacation(VacationDAOConnection dao,Vacation vac, String participantToken) throws TMSException {
+        try {
+     	   	dao.insertVacationDetails(vac);
+            dao.commit();
+             if (_logger.isDebugEnabled())
+                 _logger.debug("Vacation " + vac + " was created");
+         } catch (Exception e) {
+             _logger.error("Cannot create vacation", e);
+             
+         } finally {
+            // dao.close();
+         }
+     }
+    
+     public List<Vacation> getUserVacation(VacationDAOConnection dao,String user, String participantToken) throws TMSException {
+     		 List<Vacation> vacationOfUser = dao.getVacationDetails(user);
+     		 _logger.debug("vac="+vacationOfUser.size());
+     		 return vacationOfUser;
+      }
+     
+     public List<Vacation> getVacationList(VacationDAOConnection dao,String participantToken) throws TMSException {
+ 		 List<Vacation> vacationOfUser = dao.getVacationDetails();
+ 		 _logger.debug("vac="+vacationOfUser.size());
+ 		 return vacationOfUser;
+     }
+     
+     public void deleteVacation(VacationDAOConnection dao,int vacId, String participantToken) throws TMSException {
+         try {
+         	 dao.deleteVacationDetails(vacId);
+             dao.commit();
+              if (_logger.isDebugEnabled())
+                  _logger.debug("Vacation " + vacId + " was deleted");
+          } catch (Exception e) {
+              _logger.error("Cannot delete vacation", e); // TODO :
+          } finally {
+             // dao.close();
+          }
+      }     
 }

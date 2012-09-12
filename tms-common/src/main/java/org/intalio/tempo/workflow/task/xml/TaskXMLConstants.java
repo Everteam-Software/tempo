@@ -30,6 +30,8 @@ public final class TaskXMLConstants {
     
     public static final String CUSTOM_COLUMN_LOCAL_NAME ="customColumn";
     
+    public static final String VACATION_LOCAL_NAME = "vacation";
+    
     public final static OMNamespace TASK_OM_NAMESPACE = OMAbstractFactory.getOMFactory().createOMNamespace(
             TASK_NAMESPACE, 
             TASK_NAMESPACE_PREFIX);

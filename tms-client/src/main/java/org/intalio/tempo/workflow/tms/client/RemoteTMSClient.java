@@ -37,6 +37,7 @@ import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.TaskState;
+import org.intalio.tempo.workflow.task.Vacation;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.task.xml.TaskMarshaller;
 import org.intalio.tempo.workflow.task.xml.TaskUnmarshaller;
@@ -44,6 +45,7 @@ import org.intalio.tempo.workflow.task.xml.TaskXMLConstants;
 import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.task.xml.attachments.AttachmentMarshaller;
 import org.intalio.tempo.workflow.task.xml.attachments.AttachmentUnmarshaller;
+import org.intalio.tempo.workflow.task.xml.vacation.VacationUnmarshaller;
 import org.intalio.tempo.workflow.tms.ITaskManagementService;
 import org.intalio.tempo.workflow.tms.InvalidTaskStateException;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
@@ -670,6 +672,79 @@ public class RemoteTMSClient implements ITaskManagementService {
         }
         return null;
     }
+    
+    public void insertVacation(final String fromDate, final String toDate, final String Desc, final String user) {
+		OMElement request = new TMSMarshaller() {
+			public OMElement marshalRequest() {
+				OMElement request = createElement("insertVacationRequest");
+				createElement(request, "fromDate", fromDate);
+				createElement(request, "toDate", toDate);
+				createElement(request, "description", Desc);
+				createElement(request, "userName", user);
+				createElement(request, "participantToken", _participantToken);
+				return request;
+			}
+		}.marshalRequest();
+		sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "insertVacation");
+	}
 
+	public List<Vacation> getUserVacation(final String user) {
+		OMElement request = new TMSMarshaller() {
+			public OMElement marshalRequest() {
+				OMElement request = createElement("getUserVacationRequest");
+				createElement(request, "user", user);
+				createElement(request, "participantToken", _participantToken);
+				return request;
+			}
+		}.marshalRequest();
+		List<Vacation> listVac = new ArrayList<Vacation>();
+		OMElement response = sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "getUserVacation");
+		OMElement taskElement = response.getFirstElement();
+		if(taskElement!=null)
+		{
+			Vacation vac = new VacationUnmarshaller().unmarshalVacation(taskElement);
+			listVac.add(vac);
+		}	
+		return listVac;
+	}
+
+	public List<Vacation> getVacationList() {
+		OMElement request = new TMSMarshaller() {
+			public OMElement marshalRequest() {
+				OMElement request = createElement("getVacationListRequest");
+				createElement(request, "participantToken", _participantToken);
+				return request;
+			}
+		}.marshalRequest();
+		List<Vacation> listVac = new ArrayList<Vacation>();
+		OMElement response = sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "getVacationList");
+		OMElementQueue rootQueue = new OMElementQueue(response);
+		while (true) {
+			OMElement taskElement = expectElement(rootQueue, "vacation");
+			if (taskElement == null)
+				break;
+			else {
+				try {
+					Vacation vac = new VacationUnmarshaller().unmarshalVacation(taskElement);
+					listVac.add(vac);
+				} catch (Exception e) {
+					_log.error("Error reading task: " + taskElement, e);
+				}
+			}
+		}
+		return listVac;
+	}
+
+	public void deleteVacation(final String vacID) {
+		OMElement request = new TMSMarshaller() {
+			public OMElement marshalRequest() {
+				OMElement request = createElement("deleteVacationRequest");
+				createElement(request, "vacId", vacID);
+				createElement(request, "participantToken", _participantToken);
+				return request;
+			}
+		}.marshalRequest();
+		sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "deleteVacation");
+	}
     
 }

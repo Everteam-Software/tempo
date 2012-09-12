@@ -1,3 +1,14 @@
+/**
+ * Copyright (c) 2005-2007 Intalio inc.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * Intalio inc. - initial API and implementation
+ */
 package org.intalio.tempo.workflow.tms.server.dao;
 
 import java.util.List;
@@ -22,32 +33,25 @@ public class JPAVacationDAOConnection extends AbstractJPAConnection implements V
 	public void insertVacationDetails(Vacation vacation) {
 		checkTransactionIsActive();
 		entityManager.persist(vacation);
-		commit();
-		close();
 	}
 
 	public List<Vacation> getVacationDetails(String user) {
-		LOG.debug("Current User:" + user);
-		Query query = entityManager.createNamedQuery(Vacation.GET_VACATION_DETAILS).setParameter("user", user);
+		Query query = entityManager.createNamedQuery(Vacation.GET_VACATION_DETAILS, Vacation.class).setParameter(
+				"user", user);
+		List<Vacation> result = query.getResultList();
+		return result;
+	}
+
+	public List<Vacation> getVacationDetails() {
+		Query query = entityManager.createNamedQuery(Vacation.FETCH_VACATION_SUMMARY, Vacation.class);
 		List<Vacation> resultList = query.getResultList();
-		LOG.debug("resultList :" + resultList);
 		return resultList;
 	}
-	
-	public List<Vacation> getVacationDetails() {
-        LOG.debug("Fetching details for all the users");
-        Query query = entityManager.createNamedQuery(Vacation.FETCH_VACATION_SUMMARY);
-        List<Vacation> resultList = query.getResultList();
-        LOG.debug("resultList :" + resultList);
-        return resultList;
-    }
-	
+
 	public Boolean deleteVacationDetails(int id) {
 		checkTransactionIsActive();
 		LOG.debug("vacation details=" + _vacation.fetchVacationByID(id));
 		entityManager.remove(_vacation.fetchVacationByID(id));
-		commit();
-		close();
 		return true;
 	}
 }
