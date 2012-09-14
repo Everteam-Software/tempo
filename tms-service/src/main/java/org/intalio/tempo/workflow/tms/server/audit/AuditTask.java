@@ -102,7 +102,7 @@ public class AuditTask {
         String user = null;
         //If the the userAction is "ESCALATE" and participant token is empty then we don't have to use authentication.As this task
         //is performed by "PROCESS". So declaring the user as "PROCESS".
-        if((userAction.equals("ESCALATE") && participantToken.equals(""))){
+        if(userAction !=null && userAction.equals("ESCALATE") && participantToken.equals("")){
             user = "PROCESS";
         } else {
             UserRoles userRoles = authProvider.authenticate(participantToken);
