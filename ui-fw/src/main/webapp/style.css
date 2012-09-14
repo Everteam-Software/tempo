@@ -44,7 +44,8 @@ position:absolute; margin-top:10px;right:2%; font-size:12px;
 .siteHeaderIcons{
 	position:absolute;
 	top:10px;
-	right:10px;	
+	right:10px;
+        cursor:pointer;	
 }
 select	{
 	border: 1px solid #555555;
