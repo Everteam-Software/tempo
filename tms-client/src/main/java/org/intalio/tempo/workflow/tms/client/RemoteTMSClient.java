@@ -720,7 +720,7 @@ public class RemoteTMSClient implements ITaskManagementService {
 		OMElement response = sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "getVacationList");
 		OMElementQueue rootQueue = new OMElementQueue(response);
 		while (true) {
-			OMElement taskElement = expectElement(rootQueue, "vacation");
+			OMElement taskElement = expectVacationElement(rootQueue);
 			if (taskElement == null)
 				break;
 			else {
@@ -734,7 +734,19 @@ public class RemoteTMSClient implements ITaskManagementService {
 		}
 		return listVac;
 	}
-
+	
+	private OMElement expectVacationElement(OMElementQueue queue) {
+		OMElement element = queue.getNextElement();
+		if (element != null) {
+			if (element.getQName().equals(TaskXMLConstants.Vacation_QName)) {
+				return element;
+				} else {
+					queue.pushElementBack(element);
+					}
+			}
+			return null;
+	}
+	
 	public void deleteVacation(final String vacID) {
 		OMElement request = new TMSMarshaller() {
 			public OMElement marshalRequest() {

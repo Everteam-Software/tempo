@@ -39,5 +39,7 @@ public final class TaskXMLConstants {
     public static final QName TASK_QNAME = new QName(TASK_NAMESPACE, TASK_LOCAL_NAME);
     
     public static final QName CUSTOM_COLUMN_QNAME = new QName(TASK_NAMESPACE, CUSTOM_COLUMN_LOCAL_NAME);
+    
+    public static final QName Vacation_QName = new QName(TASK_NAMESPACE,VACATION_LOCAL_NAME);
 
 }
