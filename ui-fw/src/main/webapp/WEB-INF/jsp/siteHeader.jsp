@@ -12,7 +12,7 @@
 	<!-- hiding current user image
 	<img height="20" width="20" src="images/icons/user/<%=1+r.nextInt(4)%>.png" title="<fmt:message key="org_intalio_uifw_siteHeader_currentUser"/>" alt="org_intalio_uifw_siteHeader_currentUser" border="0"></img> -->
 	
-	<a href="javascript:submitActionToURL('../login.htm','logOut')">
+	<a href="javascript:submitActionToURL('login.htm','logOut')">
 		<img border="0px" alt="<fmt:message key="org_intalio_uifw_siteHeader_tooltip_logout"/>" title="<fmt:message key="org_intalio_uifw_siteHeader_tooltip_logout"/>" src="images/icons/icon.logout.gif"/>
     </a>
 	</div>
