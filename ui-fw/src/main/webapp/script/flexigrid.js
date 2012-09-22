@@ -635,10 +635,18 @@
 					   type: p.method,
 					   url: p.url,
 					   data: param,
+					   tryCount : 0,
+					   retryLimit : 5,	
 					   dataType: p.dataType,
 					   success: function(data){g.addData(data);},
 					   error: function(XMLHttpRequest, textStatus, errorThrown) 
 						{
+						this.tryCount++;
+            					if (this.tryCount <= this.retryLimit) {
+                					//try again
+                					$.ajax(this);
+                					return;
+	    					 }		
 						 $('.pReload',this.pDiv).removeClass('loading');
 						 $('.pPageStat',this.pDiv).html(p.procmsgerr).css('color','red');
 						 this.loading = false;	
