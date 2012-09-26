@@ -74,10 +74,12 @@ public final class FormDispatcherConfiguration {
      */
     private String _workflowProcessesRelativeUrl = "/workflow/ib4p";
 
+    //Changing endpoint of TaskManagementServices as it is migrated to ode.
+    //private String _tmsUrl = "http://localhost:8080/axis2/services/TaskManagementServices";
     /**
      * Endpoint for the Task Management Service
      */
-    private String _tmsUrl = "http://localhost:8080/axis2/services/TaskManagementServices";
+    private String _tmsUrl = "http://localhost:8080/ode/processes/TaskManagementServices";
 
     /**
      * Timeout when sending messages
