@@ -10,4 +10,4 @@
  Intalio inc. - initial API and implementation
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
-<c:redirect url="../login.htm"/>
+<c:redirect url="login.htm"/>
