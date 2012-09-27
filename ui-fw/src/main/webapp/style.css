@@ -222,15 +222,16 @@ table {
 	vertical-align:bottom;
 }
 
-#footer {
-	clear:both;
-	float:center;
-	font-size:12px;
-	font-family:Verdana;
-	position: absolute;
-	bottom: 4px;
-	left:30%;
-	color:#000;
+.footer {
+    clear:both;
+    padding-top:10px;
+    padding-bottom:50px;
+    font-size:12px;
+    font-family:Verdana;
+    position: absolute;
+    left:33%;
+    color:#000;
+    text-align: center;
 }
 
 .pagedisplay {
@@ -275,3 +276,12 @@ input.text { margin-bottom:12px; width:95%; padding: .4em; }
 fieldset { padding:0; border:0; margin-top:25px; }
 .ui-button { outline: 0; margin:0; padding: .4em 1em .5em; text-decoration:none;  !important; cursor:pointer; position: relative; text-align: center; }
 .ui-dialog .ui-state-highlight, .ui-dialog .ui-state-error { padding: .3em;  }
+#versionInfo
+{
+        background: #F7F2F4;
+        width: 350px;
+        padding-bottom: .5em;
+        padding-right: 15px;
+        overflow: hidden;
+        position: absolute;
+    }

@@ -1242,6 +1242,23 @@ function endVacation()
     .ajaxStop(function() {
       $(this).hide();
     });
+
+    var offsetY = 10;
+    var offsetX = -340;
+
+    $('.footer').hide().appendTo('body');
+
+    $('img.imagepopupcontext').hover(function (e) {
+           //$('div.footer').hide().find('p').text($(this).data('message'));
+           $('div.footer').fadeIn(400);
+           $('div.footer').css('top', e.pageY + offsetY).css('left', e.pageX + offsetX);
+       }, function () {
+       $('div.footer').hide();
+    });
+
+    $('img.imagepopupcontext').mousemove(function (e) {
+         $('div.footer').css('top', e.pageY + offsetY).css('left', e.pageX + offsetX);
+    });
 		
     }); // end of document ready, which also means the custom jquery code
 
