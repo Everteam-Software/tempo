@@ -218,6 +218,7 @@
     $("#sessionExpired").dialog({
       bgiframe: false,
       autoOpen: false,
+      resizable:false,
       height: 200,
       modal: true,		
       buttons: {
@@ -232,6 +233,7 @@
     $("#connectionLost").dialog({
       bgiframe: false,
       autoOpen: false,
+      resizable:false,
       height: 200,
       modal: true,		
       buttons: {'<fmt:message key="org_intalio_uifw_message.button.ok"/>': function() {location.reload(true);}},
@@ -244,6 +246,7 @@
     $("#exportdialog").dialog({
       bgiframe: false,
       autoOpen: false,
+      resizable:false,
       height: 300,
       modal: true,		
       buttons: {'<fmt:message key="org_intalio_uifw_message.button.ok"/>': function() {exportTasksAction();}}
@@ -254,6 +257,7 @@
     $("#vacation").dialog({
         bgiframe: false,
         autoOpen: false,
+        resizable:false,
         height: 385,
         width:500,
         open: function() {
@@ -262,9 +266,8 @@
         buttons: {
 			
 			'<fmt:message key="org_intalio_uifw_message.button.save"/>': function() {saveVacation();},
-			 Cancel: function() {$(this).dialog('close');}
-        
-        }
+		  },
+        close: function() {$(this).dialog('close');}
       });
 	/*
 		Message Dialog
@@ -272,6 +275,7 @@
 	$("#messageDialog").dialog({
         bgiframe: false,
         autoOpen: false,
+        resizable:false,
         height: 150,
         width:600,
         buttons: {
@@ -284,13 +288,13 @@
 	 $("#endVacDialog").dialog({
         bgiframe: false,
         autoOpen: false,
+        resizable:false,
         height: 190,
         width:600,
         buttons: {
 				 End_Vacation: function(){
 					 endVacation();
-			   	  },	
-				 Ok: function() {$(this).dialog('close');}
+			   	  }
        }
       });
       /*
@@ -299,6 +303,7 @@
 	 $("#warnDialog").dialog({
         bgiframe: false,
         autoOpen: false,
+        resizable:false,
         height: 150,
         width:250,
         buttons: {
@@ -683,11 +688,10 @@ function endVacation()
       $("#updateDialog").dialog({
         bgiframe: false,
         autoOpen: open,
-        height: 300,
+        height: 200,
         modal: true,		
         buttons: {
-          Update: function() {updateTask(com,grid); $(this).dialog('close');},
-          Cancel: function() {$(this).dialog('close');}
+          Update: function() {updateTask(com,grid); $(this).dialog('close');}
         },
         close: function() {location.reload(true);} //updated line fix for WF-1460
       });
@@ -708,13 +712,12 @@ function endVacation()
         $("#reassignDialog").dialog({
           bgiframe: false,
           autoOpen: open,
-          height: 300,
+          height: 250,
           modal: true,		
           buttons: {
-            Reassign: function() {reassignTask(com,grid);},
-            Cancel: function() {$(this).dialog('close');}
+            Reassign: function() {reassignTask(com,grid);}
           },
-          close: function() {}
+          close: function() {location.reload(true);}
         });
         $("#reassignDialog").dialog('open');
       }
