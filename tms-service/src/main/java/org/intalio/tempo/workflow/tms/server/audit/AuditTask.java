@@ -97,9 +97,17 @@ public class AuditTask {
         AuthIdentifierSet roles = (AuthIdentifierSet) createArgs[3];
         String state = ((TaskState) createArgs[4]).getName();
         String participantToken = (String) createArgs[5];
-        UserRoles userRoles = authProvider.authenticate(participantToken);
-        String user = userRoles.getUserID();
         String actionPerformed = joinPoint.getSignature().getName();
+        String userAction = (String) createArgs[6];
+        String user = null;
+        //If the the userAction is "ESCALATE" and participant token is empty then we don't have to use authentication.As this task
+        //is performed by "PROCESS". So declaring the user as "PROCESS".
+        if(userAction !=null && userAction.equals("ESCALATE") && participantToken.equals("")){
+            user = "PROCESS";
+        } else {
+            UserRoles userRoles = authProvider.authenticate(participantToken);
+            user = userRoles.getUserID();
+        }
         _logger.debug("intercepting action : " + actionPerformed);
         _logger.debug("intercepting arguments task id: " + taskId);
         _logger.debug("intercepting arguments users: " + users);

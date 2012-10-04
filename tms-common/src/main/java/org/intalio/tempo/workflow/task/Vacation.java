@@ -38,9 +38,9 @@ import org.intalio.tempo.workflow.util.RequiredArgumentException;
 @Table(name = "vacation")
 @TableGenerator(name = "tab", initialValue = 0, allocationSize = 50)
 @NamedQueries({
-        @NamedQuery(name = Vacation.GET_VACATION_DETAILS, query = "select vacation._id,vacation._fromDate,vacation._toDate,vacation._description from Vacation vacation where vacation._user=(:user)"),
+        @NamedQuery(name = Vacation.GET_VACATION_DETAILS, query = "select vacation from Vacation vacation where vacation._user=(:user)"),
         @NamedQuery(name = Vacation.FIND_VAC_BY_ID, query = "select vacation from Vacation vacation where vacation._id = ?1"),
-        @NamedQuery(name = Vacation.FETCH_VACATION_SUMMARY, query = "select vacation._id,vacation._user,vacation._fromDate,vacation._toDate,vacation._description from Vacation vacation")
+        @NamedQuery(name = Vacation.FETCH_VACATION_SUMMARY, query = "select vacation from Vacation vacation")
         })
 public class Vacation {
 

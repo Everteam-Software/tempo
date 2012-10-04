@@ -154,5 +154,21 @@
             <messageReceiver class="org.apache.axis2.receivers.RawXMLINOnlyMessageReceiver"/>
             <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/clearCache</actionMapping>
         </operation>
+        <operation name="insertVacation">
+            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+            <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/insertVacation</actionMapping>
+        </operation>
+        <operation name="getUserVacation">
+            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+            <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getUserVacation</actionMapping>
+        </operation>
+        <operation name="getVacationList">
+            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+            <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getVacationList</actionMapping>
+        </operation>
+        <operation name="deleteVacation">
+            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+            <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/deleteVacation</actionMapping>
+        </operation>        
     </service>
 </serviceGroup>

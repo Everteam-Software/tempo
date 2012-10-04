@@ -218,6 +218,7 @@
     $("#sessionExpired").dialog({
       bgiframe: false,
       autoOpen: false,
+      resizable:false,
       height: 200,
       modal: true,		
       buttons: {
@@ -232,6 +233,7 @@
     $("#connectionLost").dialog({
       bgiframe: false,
       autoOpen: false,
+      resizable:false,
       height: 200,
       modal: true,		
       buttons: {'<fmt:message key="org_intalio_uifw_message.button.ok"/>': function() {location.reload(true);}},
@@ -244,6 +246,7 @@
     $("#exportdialog").dialog({
       bgiframe: false,
       autoOpen: false,
+      resizable:false,
       height: 300,
       modal: true,		
       buttons: {'<fmt:message key="org_intalio_uifw_message.button.ok"/>': function() {exportTasksAction();}}
@@ -254,6 +257,7 @@
     $("#vacation").dialog({
         bgiframe: false,
         autoOpen: false,
+        resizable:false,
         height: 385,
         width:500,
         open: function() {
@@ -262,9 +266,8 @@
         buttons: {
 			
 			'<fmt:message key="org_intalio_uifw_message.button.save"/>': function() {saveVacation();},
-			 Cancel: function() {$(this).dialog('close');}
-        
-        }
+		  },
+        close: function() {$(this).dialog('close');}
       });
 	/*
 		Message Dialog
@@ -272,6 +275,7 @@
 	$("#messageDialog").dialog({
         bgiframe: false,
         autoOpen: false,
+        resizable:false,
         height: 150,
         width:600,
         buttons: {
@@ -284,13 +288,13 @@
 	 $("#endVacDialog").dialog({
         bgiframe: false,
         autoOpen: false,
+        resizable:false,
         height: 190,
         width:600,
         buttons: {
 				 End_Vacation: function(){
 					 endVacation();
-			   	  },	
-				 Ok: function() {$(this).dialog('close');}
+			   	  }
        }
       });
       /*
@@ -299,6 +303,7 @@
 	 $("#warnDialog").dialog({
         bgiframe: false,
         autoOpen: false,
+        resizable:false,
         height: 150,
         width:250,
         buttons: {
@@ -601,7 +606,7 @@
     	{
 			var data = { action:"insertVacation",fromDate: $('#fromdate').val(), toDate: $('#todate').val(),desc: $('#desc').val()}
 			$.ajax({
-			url: './vacation.htm',
+			url: 'vacation.htm',
 			type: 'POST',
 			dataType: 'json',
 			data: data,
@@ -683,11 +688,10 @@ function endVacation()
       $("#updateDialog").dialog({
         bgiframe: false,
         autoOpen: open,
-        height: 300,
+        height: 200,
         modal: true,		
         buttons: {
-          Update: function() {updateTask(com,grid); $(this).dialog('close');},
-          Cancel: function() {$(this).dialog('close');}
+          Update: function() {updateTask(com,grid); $(this).dialog('close');}
         },
         close: function() {location.reload(true);} //updated line fix for WF-1460
       });
@@ -708,13 +712,12 @@ function endVacation()
         $("#reassignDialog").dialog({
           bgiframe: false,
           autoOpen: open,
-          height: 300,
+          height: 250,
           modal: true,		
           buttons: {
-            Reassign: function() {reassignTask(com,grid);},
-            Cancel: function() {$(this).dialog('close');}
+            Reassign: function() {reassignTask(com,grid);}
           },
-          close: function() {}
+          close: function() {location.reload(true);}
         });
         $("#reassignDialog").dialog('open');
       }
@@ -737,7 +740,7 @@ function endVacation()
     {
 		var data = { action:"Validate"}
     	$.ajax({
-        url: './vacation.htm',
+        url: 'vacation.htm',
         type: 'POST',
         dataType: 'json',
         data: data,
@@ -746,13 +749,10 @@ function endVacation()
         error: function (e) {
         },
         success: function (data) {
-			if(data.vacation !="undefined" && data.vacation!="" && data.vacation!=undefined)
+			if(data.vacId !="undefined" && data.vacId!="" && data.vacId!=undefined)
 			{
-					var vacData = data.vacation.toString().split(',');
-					vac_id = vacData[0];
-      				var from_date = vacData[1].toString().split(' ');
-      				var to_Date   = vacData[2].toString().split(' '); 
-      				$('#endVacDialog').html('<a style="font-family: verdana;font-size: 13px;"> Already applied for a leave <br>From &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' +from_date[2]+'/'+from_date[1]+'/'+from_date[5]+'<br>  To &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:  '+to_Date[2]+'/'+to_Date[1]+'/'+to_Date[5]+'<br> Description  :  ' +vacData[3]+ '<br>If your vacation is completed please click on End Vacation</a>');
+					vac_id = parseInt(data.vacId);
+					$('#endVacDialog').html('<a style="font-family: verdana;font-size: 13px;"> Already applied for a leave <br>From &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' +data.vacFromdate+'<br>  To &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:  '+data.vacToDate+'<br> Description  :  ' +data.vacDesc+ '<br>If your vacation is completed please click on End Vacation</a>');
 					$('#endVacDialog').dialog('open');
 			}
 			else if(data.vacation =="undefined")
@@ -858,9 +858,9 @@ function endVacation()
     function changeButtonText()
     {
 
-		var data = { action:"Validate"}
+		var data = { action:'Validate'}
     	$.ajax({
-        url: './vacation.htm',
+        url: 'vacation.htm',
         type: 'POST',
         dataType: 'json',
         data: data,
@@ -869,7 +869,7 @@ function endVacation()
         error: function (e) {
         },
         success: function (data) {
-		   if(data.vacation !="undefined" && data.vacation!="" && data.vacation!=undefined)
+		   if(data.vacId !="undefined" && data.vacId!="" && data.vacId!=undefined)
 		   $(".vacationDet").text("End Your Vacation");
 		   else 
 		   $('.vacationDet').text('Vacation');
@@ -1241,6 +1241,23 @@ function endVacation()
     })
     .ajaxStop(function() {
       $(this).hide();
+    });
+
+    var offsetY = 10;
+    var offsetX = -340;
+
+    $('.footer').hide().appendTo('body');
+
+    $('img.imagepopupcontext').hover(function (e) {
+           //$('div.footer').hide().find('p').text($(this).data('message'));
+           $('div.footer').fadeIn(400);
+           $('div.footer').css('top', e.pageY + offsetY).css('left', e.pageX + offsetX);
+       }, function () {
+       $('div.footer').hide();
+    });
+
+    $('img.imagepopupcontext').mousemove(function (e) {
+         $('div.footer').css('top', e.pageY + offsetY).css('left', e.pageX + offsetX);
     });
 		
     }); // end of document ready, which also means the custom jquery code

@@ -49,7 +49,7 @@
     <script type="text/javascript" src="script/flexigrid.js"></script>
     <script type="text/javascript" src="script/jquery.alerts.js"></script>
 	<script type="text/javascript" src="script/jsDatePick.min.1.3.js"></script>
-	
+	<script type="text/javascript">var one_task_page = true /*Flag to safeguard changes */</script>
     <%@ include file="/script/grids.jsp"%>
 
   </head>
@@ -182,14 +182,14 @@
     
     <iframe src="script/empty.jsp" onLoad="resizeIframe" name="taskform" frameborder="0" id="taskform" scrolling="auto"></iframe>
 
-    <div id="footer" style="left:33%">
+    <div id="versionInfo" class="footer" style="left:33%;display:none">
       <fmt:message key="com_intalio_bpms_workflow_pageFooter_poweredBy_label" />
-      <a href="http://www.intalio.com">
-        <span style="color: #3082A8">
+      <a>
+        <span style="color: #000000">
           <fmt:message key="com_intalio_bpms_workflow_pageFooter_poweredBy_value" />
         </span>
       </a>
-      <a href="versions">
+      <a>
 	<span style="color: #000">
         <fmt:message key="com_intalio_bpms_workflow_versionInfo">
           <c:choose>
@@ -205,10 +205,7 @@
         </fmt:message>
 	 </span>
       </a>
-      <a  href="http://bpms.intalio.com">
-        <span style="color: #3082A8;"><fmt:message key="com_intalio_bpms_workflow_pageFooter_featureBugRequest"/></span>
-      </a>
-    </div>
+   </div>
 
   <script>
     document.getElementById('taskform').onload = resizeIframe;
