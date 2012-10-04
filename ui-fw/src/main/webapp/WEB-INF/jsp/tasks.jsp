@@ -95,7 +95,8 @@
 
     <div id="connectionLost" title="<fmt:message key="org_intalio_uifw_session_connection_lost"/>">
     </div>
-
+	<div id="deleteDialog">
+	</div>
     <div id="updateDialog" class="hiddencontent" title="<fmt:message key="org_intalio_uifw_update_title"/>">
       <form>
         <fieldset>
