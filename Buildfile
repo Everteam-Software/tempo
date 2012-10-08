@@ -68,7 +68,7 @@ define "tempo" do
 
     package :jar
     package(:aar).with(:libs => [ 
-        SECURITY_WS_CLIENT, WEB_NUTSNBOLTS, APACHE_COMMONS[:httpclient],JASYPT, APACHE_COMMONS[:codec], JAXEN, SLF4J, SPRING[:core], WEBDAV])
+       BPMS_COMMON, SECURITY_WS_CLIENT, WEB_NUTSNBOLTS, APACHE_COMMONS[:httpclient],JASYPT, APACHE_COMMONS[:codec], JAXEN, SLF4J, SPRING[:core], WEBDAV])
   end
 
   desc "Xml Beans generation"
