@@ -258,8 +258,9 @@
         bgiframe: false,
         autoOpen: false,
         resizable:false,
-        height: 385,
+        height: 350,
         width:500,
+        modal: true,
         open: function() {
 							$(".JsDatePickBox").css("display","none");
 					     },
