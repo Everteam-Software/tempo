@@ -60,7 +60,9 @@ public class N3AuthProvider implements IAuthProvider {
                 _logger.debug("User " + invokerUser + " with roles " + roles);
             }
             UserRoles userRoles=new UserRoles(invokerUser, invokerRoles);
-            userRoles.setWorkflowAdmin(isWorkflowAdmin(invokerUser));
+
+            Property isWorkFlowAdmin = PropertyUtils.getProperty(properties, "isWorkflowAdmin");
+            userRoles.setWorkflowAdmin(Boolean.parseBoolean(isWorkFlowAdmin.getValue().toString()));
 
 			if (_logger.isDebugEnabled()){		
 				_logger.debug("isWorkflowAdmin :" + userRoles.isWorkflowAdmin());
@@ -72,9 +74,9 @@ public class N3AuthProvider implements IAuthProvider {
         }
     }
 
-    private boolean isWorkflowAdmin(String user) throws Exception  {
+    /*private boolean isWorkflowAdmin(String user) throws Exception  {
         	return	connect2tokenService().isWorkflowAdmin(user);        
-    }
+    }*/
     
     
     private TokenService connect2tokenService() throws Exception {
