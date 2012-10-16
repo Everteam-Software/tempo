@@ -18,9 +18,11 @@ import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.IAuthProvider;
 import org.intalio.tempo.workflow.auth.UserRoles;
+import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.TaskState;
 import org.intalio.tempo.workflow.task.audit.Audit;
+import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -230,29 +232,31 @@ public class AuditTask {
         persistAuditing(dao, actionPerformed, task.getID(), null);
     }
 
-    public Audit initAudit(String actionPerformed, String taskId, String user) {
+    public Audit initAudit(ITaskDAOConnection dao, String actionPerformed, String taskId, String user) {
+        Long instanceId = getInstanceId(dao, taskId);
         Audit audit = new Audit();
         audit.setActionPerformed(actionPerformed);
         audit.setAuditDate(new Date());
         audit.setTaskId(taskId);
         audit.setUser(user);
+        audit.setInstanceId(instanceId);
         return audit;
     }
 
     public void persistAuditing(ITaskDAOConnection dao, String actionPerformed, String taskId, String user) {
-        Audit audit = initAudit(actionPerformed, taskId, user);
+        Audit audit = initAudit(dao, actionPerformed, taskId, user);
         persistAuditing(dao, audit);
     }
 
     public void persistAuditing(ITaskDAOConnection dao, String actionPerformed, String taskId, String user, String description, String priority) {
-        Audit audit = initAudit(actionPerformed, taskId, user);
+        Audit audit = initAudit(dao, actionPerformed, taskId, user);
         audit.setUpdatedDescription(description);
         audit.setUpdatedPriority(priority);
         persistAuditing(dao, audit);
     }
 
     public void persistAuditing(ITaskDAOConnection dao, String actionPerformed, String taskId, String user, String users, String roles, String state) {
-        Audit audit = initAudit(actionPerformed, taskId, user);
+        Audit audit = initAudit(dao, actionPerformed, taskId, user);
         audit.setAssignedUsers(users);
         audit.setAssignedRoles(roles);
         audit.setUpdatedState(state);
@@ -274,6 +278,26 @@ public class AuditTask {
             }
         }
         return builder.toString();
+    }
+
+    public Long getInstanceId(ITaskDAOConnection dao, String taskId){
+        Task task;
+        Long instanceId = null;
+        try {
+            task = dao.fetchTaskIfExists(taskId);
+            if(task instanceof PATask){
+                String instanceIdInString = ((PATask) task).getInstanceId();
+                if(instanceIdInString != null && !instanceIdInString.equals("")){
+                    instanceId = Long.parseLong(instanceIdInString);
+                    _logger.debug("Instance id is: " + instanceId + "for Task id: " + taskId);
+                } else {
+                    _logger.warn("Task id: " + taskId + " doesn't have information of instance.");
+                }
+            }
+        } catch (UnavailableTaskException e) {
+            _logger.warn("Task id: " + taskId + " is unvaliable. So, can't audit it's intance details.");
+        }
+        return instanceId;
     }
 
 }
