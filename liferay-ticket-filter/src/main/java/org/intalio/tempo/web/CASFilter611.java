@@ -40,6 +40,7 @@ import com.liferay.portal.servlet.filters.sso.cas.CASFilter;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PrefsPropsUtil;
 import com.liferay.portal.util.PropsKeys;
+import com.liferay.portal.util.PropsValues;
 import com.liferay.util.servlet.filters.DynamicFilterConfig;
 
 /**
@@ -68,24 +69,17 @@ public class CASFilter611 extends BaseFilter {
 
             String serverName = PrefsPropsUtil.getString(
                 companyId, PropsKeys.CAS_SERVER_NAME,
-                PropsKeys.CAS_SERVER_NAME);
-            
-            System.out.println("Server Name : " + serverName);
+                PropsValues.CAS_SERVER_NAME);
             String serviceUrl = PrefsPropsUtil.getString(
                 companyId, PropsKeys.CAS_SERVICE_URL,
-                PropsKeys.CAS_SERVICE_URL);
-            
-            System.out.println("Server URL : " + serviceUrl);
+                PropsValues.CAS_SERVICE_URL);
 
             config.addInitParameter(
                 edu.yale.its.tp.cas.client.filter.CASFilter.LOGIN_INIT_PARAM,
                 PrefsPropsUtil.getString(
                     companyId, PropsKeys.CAS_LOGIN_URL,
-                    PropsKeys.CAS_LOGIN_URL));
+                    PropsValues.CAS_LOGIN_URL));
 
-            System.out.println("CAS LOGIN URL : " + PropsKeys.CAS_LOGIN_URL);
-            System.out.println("Config Init Param : " + config.getInitParameter(new Long(companyId).toString()));
-            
             if (Validator.isNotNull(serviceUrl)) {
                 config.addInitParameter(
                     edu.yale.its.tp.cas.client.filter.CASFilter.
@@ -98,27 +92,18 @@ public class CASFilter611 extends BaseFilter {
                         SERVERNAME_INIT_PARAM,
                     serverName);
             }
-            
-            System.out.println("Config Init Param 2 : " + config.getInitParameter(edu.yale.its.tp.cas.client.filter.CASFilter.
-                    SERVICE_INIT_PARAM));
 
             config.addInitParameter(
                 edu.yale.its.tp.cas.client.filter.CASFilter.VALIDATE_INIT_PARAM,
                 PrefsPropsUtil.getString(
-                    companyId, "https://localhost:8443/cas/proxyValidate",
-                    "https://localhost:8443/cas/proxyValidate"));
-            
-            System.out.println("Config Init Param 3 : " + config.getInitParameter(edu.yale.its.tp.cas.client.filter.CASFilter.
-            		VALIDATE_INIT_PARAM));
+                    companyId, PropsKeys.AUTH_LOGIN_SITE_URL,
+                    PropsValues.AUTH_LOGIN_SITE_URL));
 
           //Add proxy call back url
             config.addInitParameter(edu.yale.its.tp.cas.client.filter.CASFilter.PROXY_CALLBACK_INIT_PARAM,
                     PrefsPropsUtil.getString(
                             companyId, "cas.proxycallback.url"));
             
-            System.out.println("Config Init Param 4 : " + config.getInitParameter(edu.yale.its.tp.cas.client.filter.CASFilter.
-            		PROXY_CALLBACK_INIT_PARAM));
-
 
             casFilter.init(config);
 
@@ -137,18 +122,14 @@ public class CASFilter611 extends BaseFilter {
         FilterChain filterChain) {
 
         try {
-        	System.out.println(" In Process Filter");
             long companyId = PortalUtil.getCompanyId(request);
 
             if (PrefsPropsUtil.getBoolean(
                     companyId, PropsKeys.CAS_AUTH_ENABLED,
-                    new Boolean(PropsKeys.CAS_AUTH_ENABLED))) {
-            	
+                    PropsValues.CAS_AUTH_ENABLED)) {
 
                 String pathInfo = request.getPathInfo();
 
-                System.out.println("Path INfo " + pathInfo);
-                
                 if (pathInfo.indexOf("/portal/logout") != -1) {
                     HttpSession session = request.getSession();
 
@@ -156,7 +137,7 @@ public class CASFilter611 extends BaseFilter {
 
                     String logoutUrl = PrefsPropsUtil.getString(
                         companyId, PropsKeys.CAS_LOGOUT_URL,
-                        PropsKeys.CAS_LOGOUT_URL);
+                        PropsValues.CAS_LOGOUT_URL);
 
                     response.sendRedirect(logoutUrl);
                 }
