@@ -223,4 +223,12 @@ public class SimpleTaskDAOConnection implements ITaskDAOConnection {
     public void auditTask(Audit audit) {
         // TODO Auto-generated method stub
     }
+    
+    @Override
+    public List<Object> getPendingClaimedTaskCountForAllUsers() {
+        // TODO Auto-generated method stub
+        return new ArrayList<Object>();
+        
+       
+    }
 }

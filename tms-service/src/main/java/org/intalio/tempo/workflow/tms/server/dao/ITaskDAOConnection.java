@@ -104,4 +104,9 @@ public interface ITaskDAOConnection {
      * @param audit
      */
     public void auditTask(Audit audit);
+    /**
+     * Gives pa task count which are in ready or claimed state available for all users.
+     * @return
+     */
+    public List<Object> getPendingClaimedTaskCountForAllUsers();
 }
