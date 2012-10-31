@@ -69,6 +69,10 @@ public class Audit {
     @Column(name = "updated_state")
     private String updatedState;
 
+    @Persistent
+    @Column(name = "instance_id")
+    private Long instanceId;
+
     public long getId() {
         return id;
     }
@@ -147,6 +151,14 @@ public class Audit {
 
     public void setUpdatedState(String updatedState) {
         this.updatedState = updatedState;
+    }
+
+    public Long getInstanceId() {
+        return instanceId;
+    }
+
+    public void setInstanceId(Long instanceId) {
+        this.instanceId = instanceId;
     }
 
 }

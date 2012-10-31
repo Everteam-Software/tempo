@@ -209,4 +209,10 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
         checkTransactionIsActive();
         entityManager.persist(audit);
     }
+    
+    public List<Object> getPendingClaimedTaskCountForAllUsers() {
+        List<Object> taskCntForAllUsers = _fetcher.fetchTaskCountForUsers();
+        return taskCntForAllUsers;           
+    }
+    
 }

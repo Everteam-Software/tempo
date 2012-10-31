@@ -2,6 +2,7 @@ package org.intalio.tempo.workflow.util.jpa;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +18,7 @@ import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.PIPATaskOutput;
 import org.intalio.tempo.workflow.task.Task;
+import org.intalio.tempo.workflow.task.TaskState;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -363,4 +365,25 @@ public class TaskFetcher {
 		   }
 		   return pipaTaskOutput;
 	}
+	/**
+     * Fetch the pending and claimed task count for all users.
+     */
+    public List<Object> fetchTaskCountForUsers() {
+        Query q = _entityManager.createNamedQuery(PATask.GET_PENDING_CLAIMED_TASK_COUNT_FOR_ALL_USERS);
+        List result = q.getResultList();
+        List <Object>resultSet = new ArrayList<Object>();
+        
+        Iterator<Object> iterator = result.iterator();
+        while(iterator.hasNext())
+        {
+            Object[] row = (Object[]) iterator.next();
+            HashMap <String,Object>rowData = new HashMap<String,Object>();
+            rowData.put("Count",row[0]);
+            rowData.put("State",((TaskState)row[1]).getName());
+            rowData.put("User",row[2]);
+            resultSet.add(rowData);
+        }
+        
+        return resultSet;
+    }
 }

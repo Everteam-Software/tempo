@@ -177,7 +177,7 @@
 	    for(i = 0; i < icons.length; i++){
 	        switch(icons[i]){
 	        case "delete":
-	            iconsetCode[i] = {name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : deleteTask};
+	            iconsetCode[i] = {name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : clickDelete};
 	            break;
 	        case "claim":
 	            iconsetCode[i] = {name: '<fmt:message key="org_intalio_uifw_toolbar_button_claimrevoke"/>', bclass: 'claim', onpress : claimTask};
@@ -258,8 +258,9 @@
         bgiframe: false,
         autoOpen: false,
         resizable:false,
-        height: 385,
+        height: 350,
         width:500,
+        modal: true,
         open: function() {
 							$(".JsDatePickBox").css("display","none");
 					     },
@@ -324,8 +325,6 @@
     function deleteTask(com,grid)
     {
        if ($('.trSelected',grid).length>0) {
-       if(confirm('Delete ' + $('.trSelected',grid).length + ' tasks?')) {
-
         $('.trSelected',grid).each(function() {
           
           // pipa delete
@@ -355,9 +354,8 @@
          } // end soap delete tasks
                     
         }); // end each
-    		      
-       } // end confirm
-       } // end delete
+      } // end delete
+      $("#deleteDialog").dialog('close');
     }; // end delete function
   
     /*
@@ -681,6 +679,7 @@ function endVacation()
       $('#up_description').show();
       $('#up_priority').show();
       
+      if($('.trSelected',grid).length!=0) {
       var task = $('a.taskd',$('.trSelected:first',grid));
       $('#up_description').val(task.attr('description'));
       $('#up_priority').val(task.attr('priority'));
@@ -696,8 +695,8 @@ function endVacation()
         close: function() {location.reload(true);} //updated line fix for WF-1460
       });
       $("#updateDialog").dialog('open');
-    }        
-
+	}        
+}
     /*
     Code for laoding the reassign dialog after mouse click
     */
@@ -730,6 +729,31 @@ function endVacation()
       $('#exportdialog').dialog('open');
     }
 	
+	 /*
+    Code for laoding the delete dialog after mouse click
+    */
+    function clickDelete(com,grid) {
+		
+      if($('.trSelected',grid).length!=0) {
+		  $("#deleteDialog").dialog({
+          resizable:false,
+          bgiframe: false,
+          autoOpen: false,
+          height: 'auto',
+          width: 'auto',
+          modal: true,
+          title : "Confirmation",
+          autoResize: true,
+		  buttons: {
+            Ok: function() {deleteTask(com,grid);}
+          },
+          close: function() {}
+        });
+        
+        $("#deleteDialog").html("<a style='font-family: verdana;font-size: 14px;'> Are you sure you want to delete "+ $('.trSelected',grid).length + " Task(s) ?</a>");
+        $("#deleteDialog").dialog('open');
+      }
+    }
  /**
  * @Function Name   : clickVacation 
  * @Description     : This function will make an ajax call to Validate earlier user has applied leave / not 
