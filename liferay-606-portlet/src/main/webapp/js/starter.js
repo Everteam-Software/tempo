@@ -73,7 +73,7 @@ var taskListStore = Ext.create('Ext.data.Store', {
         proxy: {
             // load using HTTP
             type: 'ajax',
-            url: lfLocal+'/taskviewer/taskList.jsp',
+            url: lfLocal+'/intalio-portlet/taskList.jsp',
 			actionMethods: { read: 'POST' },
             // the return will be XML, so lets set up a reader
             reader: {
@@ -90,7 +90,7 @@ var notiListStore = Ext.create('Ext.data.Store', {
         proxy: {
             // load using HTTP
             type: 'ajax',
-            url: lfLocal+'/taskviewer/taskList.jsp',
+            url: lfLocal+'/intalio-portlet/taskList.jsp',
 			actionMethods: { read: 'POST' },
             // the return will be XML, so lets set up a reader
             reader: {
@@ -107,7 +107,7 @@ var pipaListStore = Ext.create('Ext.data.Store', {
         proxy: {
             // load using HTTP
             type: 'ajax',
-            url: lfLocal+'/taskviewer/taskList.jsp',
+            url: lfLocal+'/intalio-portlet/taskList.jsp',
 			actionMethods: { read: 'POST' },
             // the return will be XML, so lets set up a reader
             reader: {
@@ -169,7 +169,7 @@ Ext.onReady(function(){
             title: des,
             iconCls: 'tabs',
             closable: !!closable,
-			html: "<iframe src='"+lfLocal+"/taskviewer/callerhtml.jsp?url="+url+"&id="+taskId+"&tkn="+tkn+"&usr="+usr+"&typ="+typ+"' width='100%' height='95%' frameborder='0'></iframe>"
+			html: "<iframe src='"+lfLocal+"/intalio-portlet/callerhtml.jsp?url="+url+"&id="+taskId+"&tkn="+tkn+"&usr="+usr+"&typ="+typ+"' width='100%' height='95%' frameborder='0'></iframe>"
         }).show();
     }
 	
