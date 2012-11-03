@@ -3,12 +3,12 @@
 
 <plugin-package>
 	<name>Intalio Task List Portlet</name>
-	<module-id>liferay/taskviewer/1.0/war</module-id>
+	<module-id>liferay/intalio-portlet/1.0/war</module-id>
 	<types>
 		<type>portlet</type>
 	</types>
 	<tags>
-		<tag>sample</tag>
+		<tag>Intalio</tag>
 	</tags>
 	<short-description>This plugin shows Tasks.</short-description>
 	<long-description></long-description>
