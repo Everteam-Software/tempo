@@ -236,6 +236,6 @@ define "tempo" do
     web_xml = _("src/main/webapp/WEB-INF/web.xml") 
     libs = LIFERAY, PORTLET_API, CAS_CLIENT, LOG4J, DOM4J
     compile.with libs
-     package(:war).with(:libs=>libs)
+     package(:war).with(:libs=>LOG4J)
   end
 end
