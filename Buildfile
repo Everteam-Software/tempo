@@ -9,7 +9,7 @@ require "buildr/xmlbeans"
 # This branch is a copy of Tempo 6.0.85
  
 
-VERSION_NUMBER = "6.5.0.002-SNAPSHOT"
+VERSION_NUMBER = "6.3.0.002-SNAPSHOT"
  
 
 require "rsc/build/dependencies.rb"
@@ -230,5 +230,13 @@ define "tempo" do
   define "liferay-alfresco-sso" do
 	  compile.with(ALFRESCO, APACHE_COMMONS[:logging], APACHE_COMMONS[:fileupload], SERVLET_API, CAS_CLIENT, SPRING[:core], MY_FACES, PORTLET_API, LIFERAY)
     package :jar
+  end
+  desc "Liferay 606 Integration Portlet"
+  define "liferay-606-portlet" do |project|
+    web_xml = _("src/main/webapp/WEB-INF/web.xml") 
+    libs = LIFERAY, PORTLET_API, CAS_CLIENT, LOG4J, DOM4J
+    packlibs=DB_CONNECTOR.values,LOG4J
+    compile.with libs
+     package(:war).with(:libs=>packlibs)
   end
 end
