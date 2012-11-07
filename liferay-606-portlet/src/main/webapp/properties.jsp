@@ -3,5 +3,6 @@
 <%
 String intalioURL = "localhost:8080";
 String realm = "intalio\\";
+String bmpsURL="xFormsManager/init";
 %>
 

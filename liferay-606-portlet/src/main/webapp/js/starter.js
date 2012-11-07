@@ -28,6 +28,7 @@ var lfLocal = location.protocol + '//' + location.host
 			{name: 'roleOwner', type: 'string'},
 			{name: 'creationDate', type: 'date'},
 			{name: 'attachment', type: 'string'},
+			{name: 'bpmsUrl', type: 'string'},
 			{name: 'formUrl', type: 'string'},
 			{name: 'token', type: 'string'},
         ]
@@ -44,6 +45,7 @@ var lfLocal = location.protocol + '//' + location.host
 			{name: 'roleOwner', type: 'string'},
 			{name: 'creationDate', type: 'date'},
 			{name: 'attachment', type: 'string'},
+			{name: 'bpmsUrl', type: 'string'},
 			{name: 'formUrl', type: 'string'},
 			{name: 'token', type: 'string'},
         ]
@@ -60,6 +62,7 @@ var lfLocal = location.protocol + '//' + location.host
 			{name: 'roleOwner', type: 'string'},
 			{name: 'creationDate', type: 'date'},
 			{name: 'attachment', type: 'string'},
+			{name: 'bpmsUrl', type: 'string'},
 			{name: 'formUrl', type: 'string'},
 			{name: 'token', type: 'string'},
         ]
@@ -143,11 +146,12 @@ Ext.onReady(function(){
 	
 		function setVars(record,typ) {
 			var des = record.get('description');
+			var bpmsurl = record.get('bpmsUrl');
 			var url = record.get('formUrl'); 
 			var taskId = record.get('id');
 			var tkn = record.get('token');
 			var usr = Ext.get('usr').dom.value;
-			addTab(true,url,des,taskId,tkn,usr,typ);
+			addTab(true,bpmsurl, url,des,taskId,tkn,usr,typ);
 			
 		}
 		
@@ -163,13 +167,13 @@ Ext.onReady(function(){
 		}
     
 	
-     function addTab(closable,url,des,taskId,tkn,usr,typ) {
+     function addTab(closable,bpmsurl, url,des,taskId,tkn,usr,typ) {
         tabs2.add({
 			id: 'puto',
             title: des,
             iconCls: 'tabs',
             closable: !!closable,
-			html: "<iframe src='"+lfLocal+"/taskviewer/callerhtml.jsp?url="+url+"&id="+taskId+"&tkn="+tkn+"&usr="+usr+"&typ="+typ+"' width='100%' height='95%' frameborder='0'></iframe>"
+			html: "<iframe src='"+lfLocal+"/taskviewer/callerhtml.jsp?bpmsurl="+bpmsurl+"&url="+url+"&id="+taskId+"&tkn="+tkn+"&usr="+usr+"&typ="+typ+"' width='100%' height='95%' frameborder='0'></iframe>"
         }).show();
     }
 	
@@ -279,6 +283,13 @@ var smP = Ext.create('Ext.selection.CheckboxModel');
 						 dataIndex: 'formUrl'
 					 },
 					 {
+						 text     : 'BPMS URL', 
+						 width    : 0, 
+						 sortable : true, 
+						 //renderer : Ext.util.Format.dateRenderer('m/d/Y'), 
+						 dataIndex: 'bpmsUrl'
+					 },
+					 {
 						 text     : 'Token', 
 						 width    : 0, 
 						 sortable : true, 
@@ -346,6 +357,13 @@ var smP = Ext.create('Ext.selection.CheckboxModel');
 						 dataIndex: 'formUrl'
 					 },
 					 {
+						 text     : 'BPMS URL', 
+						 width    : 0, 
+						 sortable : true, 
+						 //renderer : Ext.util.Format.dateRenderer('m/d/Y'), 
+						 dataIndex: 'bpmsUrl'
+					 },
+					 {
 						 text     : 'Token', 
 						 width    : 0, 
 						 sortable : true, 
@@ -410,6 +428,13 @@ var smP = Ext.create('Ext.selection.CheckboxModel');
 						 sortable : true, 
 						 //renderer : Ext.util.Format.dateRenderer('m/d/Y'), 
 						 dataIndex: 'formUrl'
+					 },
+					 {
+						 text     : 'BPMS URL', 
+						 width    : 0, 
+						 sortable : true, 
+						 //renderer : Ext.util.Format.dateRenderer('m/d/Y'), 
+						 dataIndex: 'bpmsUrl'
 					 },
 					 {
 						 text     : 'Token', 

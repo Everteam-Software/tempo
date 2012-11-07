@@ -103,6 +103,10 @@ String countAtt;
 			row.addElement("creationDate").addText(nDate);
 			row.addElement("userOwner").addText(ste.getChildContent("userOwner"));
 			row.addElement("roleOwner").addText(ste.getChildContent("roleOwner"));
+			String bpmsurl = ste.getChildContent("formUrl");
+			if(bpmsurl.contains(".xform"))
+			    bpmsurl="http://"+intalioURL+"/"+bmpsURL;
+			row.addElement("bpmsUrl").addText(bpmsurl);
 			row.addElement("formUrl").addText(ste.getChildContent("formUrl"));
 			row.addElement("token").addText(token);
 			
