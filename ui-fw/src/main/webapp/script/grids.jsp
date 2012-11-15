@@ -921,7 +921,8 @@ function endVacation()
       usepager: true,
       searchitems : [{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description'},
                      {display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_userOwners"/>', name : '_userOwners'},
-                     {display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_roleOwners"/>', name : '_roleOwners'}
+                     {display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_roleOwners"/>', name : '_roleOwners'},
+                     {display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_view_tasks"/>', name : '_viewTasks'}
 
 				      <c:forEach items="${newColumnList}" var="newColumn">
 				             ,{display: '${newColumn}', name : '_customMetadata'}
@@ -990,7 +991,13 @@ function endVacation()
           name : '_attachments', 
           width : width*0.12, 
           sortable : false, 
-          align: 'center'}
+          align: 'center'},
+          {
+              display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_view_tasks"/>', 
+              name : '_attachments', 
+              width : width*0.12, 
+              sortable : false, 
+              align: 'center'}
           
           <c:forEach items="${newColumnList}" var="newColumn">
           
@@ -1043,13 +1050,19 @@ function endVacation()
           name : '_attachments', 
           width : width*0.12, 
           sortable : false, 
-          align: 'center'},
+          align: 'center'},         
         {
           display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_roleOwners"/>', 
           name : '_attachments', 
           width : width*0.12, 
           sortable : false, 
-          align: 'center'}
+          align: 'center'}, 
+          {
+              display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_view_tasks"/>', 
+              name : '_attachments', 
+              width : width*0.12, 
+              sortable : false, 
+              align: 'center'}
 	]
 	},p));
 		
@@ -1088,7 +1101,13 @@ function endVacation()
       name : '_attachments', 
       width : width*0.2, 
       sortable : false, 
-      align: 'center'}
+      align: 'center'}, 
+      {
+          display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_view_tasks"/>', 
+          name : '_viewTasks', 
+          width : width*0.2, 
+          sortable : false, 
+          align: 'center'},
 	]},p));		
 		
 		
