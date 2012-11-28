@@ -32,7 +32,8 @@ public final class AuthIdentifierNormalizer {
             if ("/|:".indexOf(sourceId.charAt(i)) >=0 )
                 sourceId = sourceId.substring(0,i) + '\\' + sourceId.substring(i+1);
         }
-        return sourceId.toLowerCase();
+        //return sourceId.toLowerCase(); This change is for 6.5.x release in order to fix BPMS-986 issue.
+        return sourceId;
     }
 
     public static String[] normalizeAuthIdentifiers(String[] sourceIDs) {
