@@ -17,6 +17,8 @@
 		
 		// apply default properties
 		p = $.extend({
+			 formURL: null,
+			 taskType: null,
 			 highlightdays: 2,
 			 highlightcolor: "#F7F7E6",
 			 height: 200, //default height
@@ -642,20 +644,45 @@
 				
 				if (p.page>p.pages) p.page = p.pages;
 				//var param = {page:p.newp, rp: p.rp, sortname: p.sortname, sortorder: p.sortorder, query: p.query, qtype: p.qtype};
-				var param = [
+				
+				 var param = null;
+				 var isViewTask = document.getElementById('isViewTask').value;
+				 if(isViewTask == 'false'){
+						document.getElementById('formURL').value="";
+						document.getElementById('taskType').value="";
+				 }
+				if(document.getElementById('taskType').value == "PATask"){
+				  param = [
 					 { name : 'page', value : p.newp }
 					,{ name : 'rp', value : p.rp }
 					,{ name : 'sortname', value : p.sortname}
 					,{ name : 'sortorder', value : p.sortorder }
 					,{ name : 'query', value : p.query}
 					,{ name : 'qtype', value : p.qtype}
+					,{ name : 'formURL', value : $("#formURL").val()}
+					,{ name : 'taskType', value : $("#taskType").val()}
+					,{ name : 'type', value : $("#taskType").val()}
+					
+				];	
+				}else{
+				param = [
+					 { name : 'page', value : p.newp }
+					,{ name : 'rp', value : p.rp }
+					,{ name : 'sortname', value : p.sortname}
+					,{ name : 'sortorder', value : p.sortorder }
+					,{ name : 'query', value : p.query}
+					,{ name : 'qtype', value : p.qtype}
+					
 				];							 
-							 
+				
+				
+				}
+				
 				if (p.params)
 					{
 						for (var pi = 0; pi < p.params.length; pi++) param[param.length] = p.params[pi];
 					}
-				
+				    			    
 					$.ajax({
 					   type: p.method,
 					   url: p.url,
@@ -669,6 +696,7 @@
 						 this.loading = false;	
 						 try { if (p.onError) p.onError(XMLHttpRequest, textStatus, errorThrown); } catch (e) {} }
 					        });
+				    
 			},
 			doSearch: function () {
 				p.query = $('input[name=q]',g.sDiv).val();
@@ -1465,7 +1493,6 @@
 	}; //end flexigrid
 
 	$.fn.flexReload = function(p) { // function to reload grid
-
 		return this.each( function() {
 				if (this.grid&&this.p.url) this.grid.populate();
 			});

@@ -28,7 +28,6 @@ import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.tms.ITaskManagementService;
-import org.intalio.tempo.workflow.tms.client.TMSFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,14 +40,22 @@ import org.slf4j.LoggerFactory;
  */
 public class TasksCollector {
 
-    final String[] parameters = new String[] { "page", "rp", "sortname", "sortorder", "query", "qtype", "type" };
+    final String[] parameters = new String[] { "page", "rp", "sortname", "sortorder", "query", "qtype", "type" , "formURL", "taskType"};
 
     /**
      * Parameters that can come from the user interface
      */
     final class ParameterMap extends HashMap<String, String> {
+        
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 1L;
+
         public ParameterMap() {
+            
             super(parameters.length);
+            
             put("page", "1");
             put("rp", "3");
             put("sortname", "_creationDate");
@@ -63,8 +70,11 @@ public class TasksCollector {
          * Do not copy over null values and empty values for parameters
          */
         public void init() {
+            
             for (String param : parameters) {
+                
                 String value = _request.getParameter(param);
+                            
                 if (value != null && !value.trim().equalsIgnoreCase("") && !value.equalsIgnoreCase("undefined"))
                     put(param, value);
             }
@@ -109,20 +119,42 @@ public class TasksCollector {
     }
 
     public ArrayList<TaskHolder<Task>> retrieveTasks() throws Exception {
+        
+        
         final FormManager fmanager = FormManagerBroker.getInstance().getFormManager();
         final ArrayList<TaskHolder<Task>> _tasks = new ArrayList<TaskHolder<Task>>();
         final String endpoint = URIUtils.resolveURI(_request, _endpoint);
         final ITaskManagementService taskManager = getTaskManager(endpoint, _token);
 
         ParameterMap params = new ParameterMap();
+        
         String type = params.get("type");
+        String formURL=params.get("formURL");
+        
+        if(formURL != null && params.get("taskType") != null){
+            type = params.get("taskType");
+            params.put("type", type);
+            
+        }
 
         if (type.equals(Notification.class.getSimpleName()) || type.equals(PATask.class.getSimpleName())) {
-            StringBuffer baseQuery = new StringBuffer("(T._state = TaskState.READY OR T._state = TaskState.CLAIMED) ");
+
+            StringBuffer baseQuery = null; 
+ 
+            if(formURL != null && params.get("taskType") != null){
+
+            	baseQuery = new StringBuffer("(T._state = TaskState.READY and T._formURL like '%" + formURL+ "%')") ;
+            }else{
+            	baseQuery = new StringBuffer("(T._state = TaskState.READY OR T._state = TaskState.CLAIMED) ");
+            }
+
             collect(fmanager, _tasks, taskManager, params, type, baseQuery);
+  
         } else if (type.equals(PIPATask.class.getSimpleName())) {
+            
             StringBuffer baseQuery = new StringBuffer("(T._processState = PIPATaskState.READY)");
             collect(fmanager, _tasks, taskManager, params, type, baseQuery);
+            
         } else {
             _log.error("Cannot collect task of type:" + type);
         }
@@ -131,6 +163,7 @@ public class TasksCollector {
 
     private void collect(final FormManager fmanager, final ArrayList<TaskHolder<Task>> _tasks, final ITaskManagementService taskManager, ParameterMap params,
                     String type, StringBuffer query) throws AuthException {
+        
         // do we have a valid query
         boolean validQuery = params.isSet("qtype") && params.isSet("query");
         // if yes, append it
@@ -138,7 +171,7 @@ public class TasksCollector {
             // PIPA have no base query, since they have no state.
             // so we don't need the keyword AND here.
             if (query.length()!=0) {query.append(" AND ");}
-            query.append(" T." + params.get("qtype") + " like '%" + params.get("query") + "%'");
+            query.append(" T." + params.get("qtype") + " like '% " + params.get("query") + " %'");
         }
         // keep this for counting total tasks
         String countQuery = query.toString();
@@ -149,15 +182,16 @@ public class TasksCollector {
         if (params.isSet("sortorder"))
             query.append(" " + params.get("sortorder"));
         // count total and get those tasks
-        collectTasks(_token, _user, fmanager, taskManager, type, countQuery, query, _tasks, params.get("rp"), params.get("page"));
+        collectTasks(_token, _user, fmanager, taskManager, type, countQuery, query, _tasks, params.get("formURL"), params.get("rp"), params.get("page"));
     }
 
     private void collectTasks(final String token, final String user, FormManager fmanager, ITaskManagementService taskManager, String taskType,
-                    String countQuery, StringBuffer query, List<TaskHolder<Task>> tasksHolder, final String taskPerPage, final String page)
+                    String countQuery, StringBuffer query, List<TaskHolder<Task>> tasksHolder, final String formURL,  final String taskPerPage, final String page)
                     throws AuthException {
+
         // get total number of tasks
         long total = taskManager.countAvailableTasks(taskType, countQuery);
-
+        
         int itasksPerPage = 0;
         try {
             itasksPerPage = Integer.parseInt(taskPerPage);
@@ -172,10 +206,17 @@ public class TasksCollector {
 //        long toIndex = index + itasksPerPage;
 //        if (toIndex > total)
 //            toIndex = total;
+       
+
+        Task[] tasks = null;
+       
+        tasks =  taskManager.getAvailableTasks(taskType, query.toString(), String.valueOf(index), String.valueOf(itasksPerPage));
+       
+        
         _request.setAttribute("totalPage", total);
         _request.setAttribute("currentPage", page);
-
-        Task[] tasks = taskManager.getAvailableTasks(taskType, query.toString(), String.valueOf(index), String.valueOf(itasksPerPage));
+       
+                
         for (Task task : tasks) {
             if(task instanceof PATask){
                 PATask paTask = (PATask) task;
