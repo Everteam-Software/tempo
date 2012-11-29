@@ -696,11 +696,6 @@
 						 this.loading = false;	
 						 try { if (p.onError) p.onError(XMLHttpRequest, textStatus, errorThrown); } catch (e) {} }
 					        });
-					
-					if(isViewTask == 'false'){
-					document.getElementById('formURL').value="";
-					document.getElementById('taskType').value="";
-					}
 				    
 			},
 			doSearch: function () {

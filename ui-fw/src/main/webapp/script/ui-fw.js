@@ -55,9 +55,7 @@ function setFormURL(url) {
   
 	current = "tabTasks";
 	document.getElementById('isViewTask').value="true";
-	alert(url)
 	var k = url.indexOf("/gi/apppath/");
-	alert(k)
 	if(k >= 0){
 	  var length = "/gi/apppath/".length;
 	  length = k+length;
