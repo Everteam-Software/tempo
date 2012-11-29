@@ -50,6 +50,36 @@ function resizeIframe() {
       }
   
    }
+
+function setFormURL(url) {
+  
+	current = "tabTasks";
+	document.getElementById('isViewTask').value="true";
+	alert(url)
+	var k = url.indexOf("/gi/apppath/");
+	alert(k)
+	if(k >= 0){
+	  var length = "/gi/apppath/".length;
+	  length = k+length;
+	  url = url.substring(length, length + url.substring(length).indexOf("/"));
+	}else{
+	  
+	  url = url.substring(url.indexOf(":")+1, url.length);
+	  url = url.substring(0, url.indexOf(".xform"));
+	  var values = url.split("/");
+	  var temp="";
+	  for(var i = 0; i<values.length ; i++){
+	    if(values[i]!=""){
+	    temp = temp+values[i];
+	    if(i<values.length-1)
+	      temp = temp+"%";
+	    }	    
+	  }
+	  url=temp;
+	}
+	document.getElementById('formURL').value=url;
+	document.getElementById('taskType').value="PATask";
+}
    
  function showAlertForTask(message,title){       
 	jAlert(message, title); 

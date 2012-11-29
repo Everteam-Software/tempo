@@ -66,6 +66,7 @@
     var width = $(window).width()*0.90;
     var height = 0;
     var current = null;
+    
     var vac_id;
     $.ajaxSetup({timeout: <%= conf.getAjaxTimeout() %>});
 	var taskIconSet = new Array(<%=taskIconSet.length%>)
@@ -75,6 +76,10 @@
 	
 	//For Vacation button
 	taskIconSet[taskIconSet.length] = "Vacation";
+	
+	//For View All Task Button
+	taskIconSet[taskIconSet.length] = "viewAllTask";
+	
 	
 	var notiIconSet = new Array(<%=notiIconSet.length%>)
     <% for(int i=0;i<notiIconSet.length;i++) {%>
@@ -196,6 +201,9 @@
 	            break;
 	        case "Vacation":
 	        	iconsetCode[i] = {name: '<fmt:message key="org_intalio_uifw_toolbar_button_vacation"/>',  bclass: 'vacationDet', onpress : clickVacation};
+	            break; 
+	        case "viewAllTask":
+	        	iconsetCode[i] = {name: '<fmt:message key="org_intalio_uifw_toolbar_button_view_all_tasks"/>',  bclass: 'viewAllTask', onpress : clickViewAllTasks};
 	            break;      
 	        }
 	    }
@@ -358,6 +366,7 @@
       $("#deleteDialog").dialog('close');
     }; // end delete function
   
+   
     /*
     SOAP for Claim and revoke
     */
@@ -792,6 +801,18 @@ function endVacation()
 		}	
 		});	
     }
+ 
+    /**
+     * @Function Name   : clickViewAllTasks 
+     * @Description     : This function will fetch all the tasks
+     * @param           : 
+     * @returns         : 
+     * */
+        function clickViewAllTasks()
+        {
+    		document.getElementById('isViewTask').value="false";
+    		$("#tabTasks").click();
+        }
  /**
  * @Function Name   : isValidDate 
  * @Description     : This function will Validate to date,from date & description
@@ -935,7 +956,7 @@ function endVacation()
     */
 	var taskIcons = getToolbarIconsCodes(taskIconSet);
     var t1 = $("#table1").flexigrid($.extend({
-      <% if(useToolbar) {%> 
+    	<% if(useToolbar) {%>      
         buttons : taskIcons,
         <%} %>
         params: [
@@ -991,13 +1012,7 @@ function endVacation()
           name : '_attachments', 
           width : width*0.12, 
           sortable : false, 
-          align: 'center'},
-          {
-              display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_view_tasks"/>', 
-              name : '_attachments', 
-              width : width*0.12, 
-              sortable : false, 
-              align: 'center'}
+          align: 'center'}
           
           <c:forEach items="${newColumnList}" var="newColumn">
           
@@ -1081,13 +1096,13 @@ function endVacation()
 	{
 	  display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', 
 	  name : '_description', 
-	  width : width*0.4, 
+	  width : width*0.3, 
 	  sortable : true, 
 	  align: 'left'},
 	{
 	  display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/>', 
 	  name : '_creationDate', 
-	  width : width*0.3, 
+	  width : width*0.2, 
 	  sortable : true, 
 	  align: 'left'},
     {
@@ -1110,7 +1125,7 @@ function endVacation()
           align: 'center'},
 	]},p));		
 		
-		
+	
     /*********************************************************************
     JQuery Tab handling
     *********************************************************************/
@@ -1148,8 +1163,9 @@ function endVacation()
           t3.parent().parent().hide(speed);
         }
         else if(current=='tabTasks') {
+	  	
           t1.flexReload();
-          t1.parent().parent().show(speed);
+         t1.parent().parent().show(speed);
           t2.parent().parent().hide(speed);
           t3.parent().parent().hide(speed);
         }
@@ -1168,16 +1184,25 @@ function endVacation()
       }
     }
 
+    
+    function setCurrent(curTabValue){
+      current = curTabValue;
+    }
 		/*
 		Change tab on click, refresh frame, refresh task list
 		/*/
     $('#tabnav li a').click(function(){
       resetTimer();
       clearFrame();
-      if(current==null)  {
+       if(current==null)  {
         $(".intro").each(function(){ $(this).hide();});
       }
       current = $(this).attr("id");
+      if(current == 'tabNotif' || current == 'tabPipa'){
+    	  document.getElementById('isViewTask').value="false";
+    	  document.getElementById('formURL').value="";
+		  document.getElementById('taskType').value="";
+      }
       refresh(true);
     });
 
@@ -1186,7 +1211,8 @@ function endVacation()
     Handling of the form manager internal iframe
     *********************************************************************/
     $('#taskform').load(function(){
-      
+   
+      var checkPATask = document.getElementById('taskType').value;
       var loc = window.frames['taskform'].location;
       try {
         if(loc == "about:blank") return;
@@ -1204,7 +1230,13 @@ function endVacation()
         var content = (loc.toString().indexOf('type=PATask')!=-1) || (elo.html().substring(0,6).toLowerCase() == '<head>' && elo.html().length > 700);
         if(!content  && ( loc.toString().indexOf('empty.jsp') > -1) ) {
           clearFrame();
-          refresh(true);
+          if(checkPATask){
+        	  	  current = "tabTasks";
+          		$("#tabTasks").click();
+          }else{
+        	
+        	  refresh(true);
+          }
         } else {
           $('#taskform').animate({height:height},speed);
           refresh(false);

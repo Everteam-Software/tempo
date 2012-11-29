@@ -48,12 +48,13 @@
 	</c:when>
 	<c:when test="${param.type == 'PIPATask'}">
 		<c:forEach items="${tasks}" var="taskHolder" varStatus="status">
-
 			<c:set var="taskFullURL" value="${taskHolder.formManagerURL}" />
 			<c:set var="users" value="${taskHolder.task.userOwners}" />
 			<c:set var="roles" value="${taskHolder.task.roleOwners}" />
 			<c:set var="usersLength" value="${fn:length(fn:escapeXml(users))}" />
 			<c:set var="rolesLength" value="${fn:length(fn:escapeXml(roles))}" />
+			<c:set var="taskURL" value="${request.contextPath}/ui-fw/updates.htm?url=${taskHolder.task.formURL}&type=PATask" />
+			<c:set var="formURL" value="${taskHolder.task.formURL}"/>
 			<c:set var="showAnchorTag" value="true" />
 			<c:set var="showAlert" value="" />
                  <c:if test="${isWorkflowAdmin}"> 
@@ -71,7 +72,8 @@
                   </c:if>
 
 			<row id="pi${status.index}"> <cell><![CDATA[
-						<a class="pipa" href="${taskFullURL}" endpoint="${taskHolder.task.processEndpoint}" url="${taskHolder.task.formURL}" id="${taskHolder.task.ID}" target="taskform" onclick='<c:out value="${showAlert}"/>' >
+						<a class="pipa" href="${taskFullURL}" endpoint="${taskHolder.task.processEndpoint}" 
+						url="${taskHolder.task.formURL}" id="${taskHolder.task.ID}" target="taskform" onclick='<c:out value="${showAlert}"/>' >
 						<c:choose>
 							<c:when test="${taskHolder.task.description == ''}">
 								<i><fmt:message key="org_intalio_uifw_tasks_notitle"/></i>
@@ -79,10 +81,13 @@
 							<c:otherwise>${taskHolder.task.description}</c:otherwise>
 						</c:choose>
 						</a>
-						]]></cell> <cell><![CDATA[<a href="${taskFullURL}" title="${taskHolder.task.creationDate}" target="taskform" onclick='<c:out value="${showAlert}"/>' ><fmt:formatDate value="${taskHolder.task.creationDate}" type="both" timeStyle="short" dateStyle="short" /></a>]]></cell>
+						]]></cell>
+						<cell><![CDATA[<a href="${taskFullURL}" title="${taskHolder.task.creationDate}" target="taskform" onclick='<c:out value="${showAlert}"/>' ><fmt:formatDate value="${taskHolder.task.creationDate}" type="both" timeStyle="short" dateStyle="short" /></a>]]></cell>
 
 						<cell><![CDATA[<c:out value="${fn:substring(fn:escapeXml(users),1,usersLength-1)}" />]]></cell>
 						<cell><![CDATA[<c:out value="${fn:substring(fn:escapeXml(roles),1,rolesLength-1)}" />]]></cell>						
+						<cell><![CDATA[<a class="taskd" href="${taskURL}" url="${taskHolder.task.formURL}" id="${taskHolder.task.ID}" title="View Tasks" target="taskform"
+						 onclick="setFormURL('${formURL}')">View Tasks</a>]]></cell>
 			</row>
 		</c:forEach>
 	</c:when>
@@ -129,7 +134,10 @@
 						</c:if>
 						<%--	</a> --%>
 						]]> </cell> 
-			<cell><![CDATA[<a href="${taskFullURL}" title="${taskHolder.task.creationDate}" target="taskform" onclick='<c:out value="${showAlert}"/>' ><fmt:formatDate value="${taskHolder.task.creationDate}" type="both" timeStyle="short" dateStyle="short" /></a>]]></cell>
+			<cell><![CDATA[<a href="${taskFullURL}"
+title="${taskHolder.task.creationDate}" target="taskform" onclick='<c:out
+value="${showAlert}"/>' ><fmt:formatDate value="${taskHolder.task.creationDate}"
+type="both" timeStyle="short" dateStyle="short" /></a>]]></cell>
 <cell><![CDATA[<fmt:formatDate value="${taskHolder.task.deadline}" type="both" timeStyle="short" dateStyle="short" />]]></cell>
 			<!--<cell><![CDATA[<a href="${taskFullURL}" title="${taskHolder.task.deadline}" target="taskform"><fmt:formatDate value="${taskHolder.task.deadline}" type="both" timeStyle="short" dateStyle="short" /></a>]]></cell> -->
 			<cell> <c:choose>
