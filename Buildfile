@@ -231,4 +231,13 @@ define "tempo" do
 	  compile.with(ALFRESCO, APACHE_COMMONS[:logging], APACHE_COMMONS[:fileupload], SERVLET_API, CAS_CLIENT, SPRING[:core], MY_FACES, PORTLET_API, LIFERAY)
     package :jar
   end
+
+  desc "Liferay 606 Integration Portlet"
+  define "liferay-606-portlet" do |project|
+    web_xml = _("src/main/webapp/WEB-INF/web.xml") 
+    libs = LIFERAY, PORTLET_API, CAS_CLIENT, LOG4J, DOM4J
+    packlibs=DB_CONNECTOR.values,LOG4J
+    compile.with libs
+     package(:war).with(:libs=>packlibs)
+  end
 end
