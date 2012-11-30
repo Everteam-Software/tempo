@@ -1,5 +1,9 @@
 @charset "UTF-8";
 /* Custom buttons for flexigrid */
+.flexigrid div.fbutton .viewAllTask
+{
+    background: url(../images/flexigrid/load.png) no-repeat center left;
+}
 .flexigrid div.fbutton .delete
 {
     background: url(../images/icons/icon.delete.gif) no-repeat center left;
