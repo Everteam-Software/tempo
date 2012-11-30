@@ -6,6 +6,9 @@
   <img src="images/logo.png"  class="siteHeader-image" alt="Intalio Inc" />
   <form id="form" name="form" method="POST" border="0" cellpadding="0" cellspacing="0" >
 	<input type="hidden" id="actionName" name="actionName" value=""/>
+	<input type="hidden" id="formURL" name="formURL" value=""/>
+	<input type="hidden" id="taskType" name="taskType" value=""/>
+	<input type="hidden" id="isViewTask" name="isViewTask" value=""/>
 	<div class="siteHeaderIcons">
 	<span id="timer"></span>
 	<%@ include file="icons.jsp" %>

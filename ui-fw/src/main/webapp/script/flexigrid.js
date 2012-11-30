@@ -642,14 +642,37 @@
 				
 				if (p.page>p.pages) p.page = p.pages;
 				//var param = {page:p.newp, rp: p.rp, sortname: p.sortname, sortorder: p.sortorder, query: p.query, qtype: p.qtype};
-				var param = [
+				
+				 var param = null;
+				 var isViewTask = document.getElementById('isViewTask').value;
+				 if(isViewTask == 'false'){
+						document.getElementById('formURL').value="";
+						document.getElementById('taskType').value="";
+				 }
+				if(document.getElementById('taskType').value == "PATask"){
+				  param = [
 					 { name : 'page', value : p.newp }
 					,{ name : 'rp', value : p.rp }
 					,{ name : 'sortname', value : p.sortname}
 					,{ name : 'sortorder', value : p.sortorder }
 					,{ name : 'query', value : p.query}
 					,{ name : 'qtype', value : p.qtype}
+					,{ name : 'formURL', value : $("#formURL").val()}
+					,{ name : 'taskType', value : $("#taskType").val()}
+					,{ name : 'type', value : $("#taskType").val()}
+					
+				];	
+				}else{
+				param = [
+					 { name : 'page', value : p.newp }
+					,{ name : 'rp', value : p.rp }
+					,{ name : 'sortname', value : p.sortname}
+					,{ name : 'sortorder', value : p.sortorder }
+					,{ name : 'query', value : p.query}
+					,{ name : 'qtype', value : p.qtype}
+					
 				];							 
+				}							 
 							 
 				if (p.params)
 					{

@@ -54,6 +54,8 @@
 			<c:set var="roles" value="${taskHolder.task.roleOwners}" />
 			<c:set var="usersLength" value="${fn:length(fn:escapeXml(users))}" />
 			<c:set var="rolesLength" value="${fn:length(fn:escapeXml(roles))}" />
+			<c:set var="taskURL" value="${request.contextPath}/ui-fw/updates.htm?url=${taskHolder.task.formURL}&type=PATask" />
+			<c:set var="formURL" value="${taskHolder.task.formURL}"/>
 			<c:set var="showAnchorTag" value="true" />
 			<c:set var="showAlert" value="" />
                  <c:if test="${isWorkflowAdmin}"> 
@@ -83,6 +85,8 @@
 
 						<cell><![CDATA[<c:out value="${fn:substring(fn:escapeXml(users),1,usersLength-1)}" />]]></cell>
 						<cell><![CDATA[<c:out value="${fn:substring(fn:escapeXml(roles),1,rolesLength-1)}" />]]></cell>						
+						<cell><![CDATA[<a class="taskd" href="${taskURL}" url="${taskHolder.task.formURL}" id="${taskHolder.task.ID}" title="View Tasks" target="taskform"
+						 onclick="setFormURL('${formURL}')">View Tasks</a>]]></cell>
 			</row>
 		</c:forEach>
 	</c:when>
