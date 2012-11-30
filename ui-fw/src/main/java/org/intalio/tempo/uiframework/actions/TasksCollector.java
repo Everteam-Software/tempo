@@ -41,8 +41,7 @@ import org.slf4j.LoggerFactory;
  */
 public class TasksCollector {
 
-    final String[] parameters = new String[] { "page", "rp", "sortname", "sortorder", "query", "qtype", "type" };
-
+    final String[] parameters = new String[] { "page", "rp", "sortname", "sortorder", "query", "qtype", "type" , "formURL", "taskType"};
     /**
      * Parameters that can come from the user interface
      */
@@ -116,9 +115,21 @@ public class TasksCollector {
 
         ParameterMap params = new ParameterMap();
         String type = params.get("type");
+        String formURL=params.get("formURL");
+        
+        if(formURL != null && params.get("taskType") != null){
+            type = params.get("taskType");
+            params.put("type", type);
+            
+        }
 
         if (type.equals(Notification.class.getSimpleName()) || type.equals(PATask.class.getSimpleName())) {
-            StringBuffer baseQuery = new StringBuffer("(T._state = TaskState.READY OR T._state = TaskState.CLAIMED) ");
+          StringBuffer baseQuery = null; 
+            if(formURL != null && params.get("taskType") != null){
+            	baseQuery = new StringBuffer("(T._state = TaskState.READY and T._formURL like '%" + formURL+ "%')") ;
+            }else{
+            	baseQuery = new StringBuffer("(T._state = TaskState.READY OR T._state = TaskState.CLAIMED) ");
+            }
             collect(fmanager, _tasks, taskManager, params, type, baseQuery);
         } else if (type.equals(PIPATask.class.getSimpleName())) {
             StringBuffer baseQuery = new StringBuffer("(T._processState = PIPATaskState.READY)");
@@ -149,11 +160,11 @@ public class TasksCollector {
         if (params.isSet("sortorder"))
             query.append(" " + params.get("sortorder"));
         // count total and get those tasks
-        collectTasks(_token, _user, fmanager, taskManager, type, countQuery, query, _tasks, params.get("rp"), params.get("page"));
+        collectTasks(_token, _user, fmanager, taskManager, type, countQuery, query, _tasks, params.get("formURL"), params.get("rp"), params.get("page"));
     }
 
     private void collectTasks(final String token, final String user, FormManager fmanager, ITaskManagementService taskManager, String taskType,
-                    String countQuery, StringBuffer query, List<TaskHolder<Task>> tasksHolder, final String taskPerPage, final String page)
+                    String countQuery, StringBuffer query, List<TaskHolder<Task>> tasksHolder, final String formURL,  final String taskPerPage, final String page)
                     throws AuthException {
         // get total number of tasks
         long total = taskManager.countAvailableTasks(taskType, countQuery);

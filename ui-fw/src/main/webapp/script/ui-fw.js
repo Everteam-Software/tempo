@@ -55,6 +55,35 @@ function resizeIframe() {
 	jAlert(message, title); 
   }
 
+function setFormURL(url) {
+
+    current = "tabTasks";
+    document.getElementById('isViewTask').value = "true";
+    var k = url.indexOf("/gi/apppath/");
+    if (k >= 0) {
+        var length = "/gi/apppath/".length;
+        length = k + length;
+        url = url.substring(length, length + url.substring(length).indexOf("/"));
+    } else {
+
+        url = url.substring(url.indexOf(":") + 1, url.length);
+        url = url.substring(0, url.indexOf(".xform"));
+        var values = url.split("/");
+        var temp = "";
+        for (var i = 0; i < values.length; i++) {
+            if (values[i] != "") {
+                temp = temp + values[i];
+                break;
+                /*if(i<values.length-1)
+	      temp = temp+"%";*/
+            }
+        }
+        url = temp;
+    }
+    document.getElementById('formURL').value = url;
+    document.getElementById('taskType').value = "PATask";
+}
+
   function showAlertForProcess(message,title){
 	jAlert(message, title); 
   }
