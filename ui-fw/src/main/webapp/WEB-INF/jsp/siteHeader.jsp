@@ -9,6 +9,8 @@
 	<input type="hidden" id="formURL" name="formURL" value=""/>
 	<input type="hidden" id="taskType" name="taskType" value=""/>
 	<input type="hidden" id="isViewTask" name="isViewTask" value=""/>
+	<input type="hidden" id="searchUser" name="searchUser" value="<%=request.getParameter("unid")%>"/>
+	<input type="hidden" id="currTab" name="currTab" value=""/>
 	<div class="siteHeaderIcons">
 	<span id="timer"></span>
 	<%@ include file="icons.jsp" %>
