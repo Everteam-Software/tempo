@@ -1193,6 +1193,7 @@ function endVacation()
     	  document.getElementById('isViewTask').value="false";
     	  document.getElementById('formURL').value="";
 		  document.getElementById('taskType').value="";
+		  //resetQueryString(current);
       }
       refresh(true);
     });
@@ -1327,7 +1328,31 @@ function endVacation()
     });
 		
     }); // end of document ready, which also means the custom jquery code
+    
+    function setSearch(){
+  	  
+  	  var searchUser = document.getElementById('searchUser').value;
+  	  if(searchUser!="" && searchUser != 'null'){
+  			  $('#q').val(searchUser);
+  			  $("#qtype option[value='_userOwners']").attr("selected", "selected");
+  			  setTimeout(function() { $("#q").focus(); }, 200);
+  			  //$("#q").focus();
+  	  }
+     }
+    
+    /*This function will be used to resetQueryString in the browser address bar*/
+    
+    function resetQueryString(current){
+    	var k = location.search.indexOf("unid");
+    	document.getElementById("currTab").value=current;
+    	if(k>0){
+    	var queryString = location.search.substring(0, location.search.indexOf('?'));
+		location.search = queryString; // Causes page to reload
+	}
+    }
+    
 
 </script>
 
-<body onload="calendarSetup();">
+ <body onload="calendarSetup();setSearch();">
+
