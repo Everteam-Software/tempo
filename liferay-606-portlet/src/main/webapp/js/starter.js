@@ -173,7 +173,7 @@ Ext.onReady(function(){
             title: des,
             iconCls: 'tabs',
             closable: !!closable,
-			html: "<iframe src='"+lfLocal+"/taskviewer/callerhtml.jsp?bpmsurl="+bpmsurl+"&url="+url+"&id="+taskId+"&tkn="+tkn+"&usr="+usr+"&typ="+typ+"' width='100%' height='95%' frameborder='0'></iframe>"
+			html: "<iframe src='"+lfLocal+"/taskviewer/callerhtml.jsp?bpmsUrl="+bpmsurl+"&url="+url+"&id="+taskId+"&tkn="+tkn+"&usr="+usr+"&typ="+typ+"' width='100%' height='95%' frameborder='0'></iframe>"
         }).show();
     }
 	
