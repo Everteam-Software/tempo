@@ -939,8 +939,7 @@ function endVacation()
       usepager: true,
       searchitems : [{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description'},
                      {display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_userOwners"/>', name : '_userOwners'},
-                     {display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_roleOwners"/>', name : '_roleOwners'},
-                     {display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_view_tasks"/>', name : '_viewTasks'}
+                     {display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_roleOwners"/>', name : '_roleOwners'}                     
 
 				      <c:forEach items="${newColumnList}" var="newColumn">
 				             ,{display: '${newColumn}', name : '_customMetadata'}
@@ -1331,4 +1330,4 @@ function endVacation()
 
 </script>
 
-<body onload=calendarSetup();>
+<body onload="calendarSetup();">
