@@ -12,8 +12,7 @@
 @charset "UTF-8";
 body {
 	margin: 0px;
-	font-size: 9px;
-	font-family: Verdana; 
+	font-family: "Trebuchet MS","MS Trebuchet",Trebuchet,Helvetica,Arial; font-size: 14px; 
 	background-color: #FFFFFF; 
 	color: #333333;	
 	overflow : hidden;
@@ -22,8 +21,7 @@ body {
 }
 .ui-loggedin-user
 {
-position:absolute; margin-top:10px;right:2%; font-size:12px;
-		font-family:Verdana; color:#000;
+position:absolute; margin-top:10px;right:2%; font-family: "Trebuchet MS","MS Trebuchet",Trebuchet,Helvetica,Arial; font-size: 14px; color:#000;
 }
 .siteHeader-image
 {
@@ -95,42 +93,40 @@ a:hover {
 .subHeader #headerText{
 	background-color: #ffffff;
 	height: 30px;
-	font-size:9px;
+	font-family: "Trebuchet MS","MS Trebuchet",Trebuchet,Helvetica,Arial; font-size: 14px;
 	text-transform: uppercase;
 }
 .subHeader_login {
 	height: 30px;
-	font-size:9px;
+	font-family: "Trebuchet MS","MS Trebuchet",Trebuchet,Helvetica,Arial; font-size: 14px;
 	color:#FFFFFF;
 	background-color: #FFFFFF;
 	display:none;
 }
 .textinput {
-	font-size:9px;
+	font-family: "Trebuchet MS","MS Trebuchet",Trebuchet,Helvetica,Arial; font-size: 14px;
 }
 
 .subHeader_login #headerText{
 	background-color: #FFFFFF;
 	height: 30px;
-	font-size:9px;
+	font-size:14px;
 	text-transform: uppercase;
 }
 
 .contentBox {
-	font-size:9px;
+	font-family: "Trebuchet MS","MS Trebuchet",Trebuchet,Helvetica,Arial; font-size: 14px;
 	background-color: #FFFFFF;
 	width: 100%;
 }
 table {
-	font-family:Verdana;
-	font-size:12px;
+	font-family: "Trebuchet MS","MS Trebuchet",Trebuchet,Helvetica,Arial; font-size: 14px;
 	
 }
 .contentBox_login{
 	background-color: #FFFFFF;
 	width: 300px;
-	font-family:Verdana;
-	font-size:10px;
+	font-family: "Trebuchet MS","MS Trebuchet",Trebuchet,Helvetica,Arial; font-size: 14px; 
 	border: 0px solid #FFFFFF;
 	
 }
@@ -138,7 +134,7 @@ table {
 .thirdLevelHeader {
 	cursor: pointer;
 	height: 18px; 
-	font-family:Verdana;
+	font-family: "Trebuchet MS","MS Trebuchet",Trebuchet,Helvetica,Arial; font-size: 14px; 
 	width: 200px; 
 	border: 1px solid #D7D7D7;
 }
@@ -161,10 +157,9 @@ table {
 
 #headerTr th{
 	cursor: pointer;
-	font-family: Verdana; 
+	font-family: "Trebuchet MS","MS Trebuchet",Trebuchet,Helvetica,Arial; font-size: 14px; 
 	background-color: black; 
 	color: white; 
-	font-size: 10px;
 	border-bottom: 1px solid #2B65EC;
 }
 
@@ -173,12 +168,10 @@ table {
 	text-align: center;
 /*	cellspacing:0px;*/
 /*	cellpadding:0px;*/
-	font-family: "Arial Black";
-	font-size: 9px;
+	font-family: "Trebuchet MS","MS Trebuchet",Trebuchet,Helvetica,Arial; font-size: 14px; 
 }
 .tasks a {
-	font-family: "Arial Black";
-	font-size:  12px;
+	font-family: "Trebuchet MS","MS Trebuchet",Trebuchet,Helvetica,Arial; font-size: 14px; 
 }
 .tasks .odd {
 	background:#f1f5fa;
@@ -186,8 +179,7 @@ table {
 
 
 .line {
-	font-family: "Arial Black";
-	font-size: 8px;
+	font-family: "Trebuchet MS","MS Trebuchet",Trebuchet,Helvetica,Arial; font-size: 14px; 
 	height: 30%;
 }
 
@@ -201,7 +193,7 @@ table {
 }
 
 #user_logged {
-	font-family: "Arial Black";
+	font-family: "Trebuchet MS","MS Trebuchet",Trebuchet,Helvetica,Arial; font-size: 14px; 
 }
 
 #taskform {
@@ -226,8 +218,7 @@ table {
     clear:both;
     padding-top:10px;
     padding-bottom:50px;
-    font-size:12px;
-    font-family:Verdana;
+    font-family: "Trebuchet MS","MS Trebuchet",Trebuchet,Helvetica,Arial; font-size: 14px; 
     position: absolute;
     left:33%;
     color:#000;
@@ -256,7 +247,7 @@ table {
 }
 
 #reassignDialog {
-    font-size:10px;
+    font-family: "Trebuchet MS","MS Trebuchet",Trebuchet,Helvetica,Arial; font-size: 14px; 
 	z-index:10000;
 }
 
@@ -276,12 +267,48 @@ input.text { margin-bottom:12px; width:95%; padding: .4em; }
 fieldset { padding:0; border:0; margin-top:25px; }
 .ui-button { outline: 0; margin:0; padding: .4em 1em .5em; text-decoration:none;  !important; cursor:pointer; position: relative; text-align: center; }
 .ui-dialog .ui-state-highlight, .ui-dialog .ui-state-error { padding: .3em;  }
-#versionInfo
+
+
+.io-header-logo
 {
-        background: #F7F2F4;
-        width: 350px;
-        padding-bottom: .5em;
-        padding-right: 15px;
-        overflow: hidden;
-        position: absolute;
-    }
+  position:relative;
+  float : left;
+  margin-top:12px;
+  margin-left:10px;
+  margin-right:35px;
+  margin-bottom:5px;
+  height:30px;
+}
+
+
+/*new changes 04/12/2012*/
+.headerlink {
+  font-weight:normal;
+  font-family: "Trebuchet MS","MS Trebuchet",Trebuchet,Helvetica,Arial;
+  font-size :14px;
+  color: #000;
+  
+}
+#optionTable tr {
+    background-color: #ffffff;
+}
+#optionTable tr:hover {
+    background-color: #0073ea;
+    color:white;
+    cursor: pointer;
+}
+.siteFooter {
+    clear:both;
+    top:97%;
+    padding-bottom:50px;
+    font-family: "Trebuchet MS","MS Trebuchet",Trebuchet,Helvetica,Arial; font-size: 14px; 
+    position: absolute;
+    left:38%;
+    color:#000;
+    text-align: center;
+}
+a{
+  font-family: "Trebuchet MS","MS Trebuchet",Trebuchet,Helvetica,Arial;
+  font-size :14px;
+}
+
