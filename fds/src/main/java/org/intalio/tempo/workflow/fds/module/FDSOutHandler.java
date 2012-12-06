@@ -56,7 +56,7 @@ public class FDSOutHandler extends AbstractHandler {
 				Document mediatedRequest = helper.processOutMessage(SoapTools.fromAxiom(msgContext.getEnvelope()), msgContext.getSoapAction(),msgContext.getTo().getAddress());
 				msgContext.setSoapAction(helper.getSoapAction());
 				msgContext.setWSAAction(helper.getSoapAction());
-				if(helper.getTargetEPR().startsWith("http://")){
+				if(helper.getTargetEPR().startsWith("http://") || helper.getTargetEPR().startsWith("https://")){
 					msgContext.getTo().setAddress(helper.getTargetEPR());
 				}else{
 					msgContext.getTo().setAddress(FormDispatcherConfiguration.getInstance().getOdeServerURL()+helper.getTargetEPR());
