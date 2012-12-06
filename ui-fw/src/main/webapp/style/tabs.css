@@ -1,11 +1,14 @@
 #tabnav
 {
 	position : relative;
-	margin: 0px;
-	padding-left: 10px;
+	margin-top: -5px;
+	left: -40px;
 	padding-bottom: 10px;
 	float: left;
-	text-align:center;
+	/*display: inline-block;*/
+	text-align: center;
+	vertical-align : middle;
+	font-family: "Trebuchet MS","MS Trebuchet",Trebuchet,Helvetica,Arial; font-size: 13px;
 	margin-bottom: 0px;
 	
 }
@@ -16,49 +19,54 @@
 	padding: 0;
 	display: inline;
 	list-style-type: none;
-	width:150px;
+	text-align: center;
 	
 }
 
 #tabnav a:link, #tabnav a:visited
 {
 	float:left;
-	font-size: 12px;
-	line-height: 14px;
-	font-weight: italic;
+	font-family: "Trebuchet MS","MS Trebuchet",Trebuchet,Helvetica,Arial; font-size: 13px;
+	font-weight: bold;
 	padding: 4px 10px 2px 10px;
 	margin-right: 4px;
-	border: 1px solid #CCCCCC;
+	border: 1px solid #dddddd;
 	text-decoration: none;
-	color: #000;
-	border-radius: 5px 5px 5px 5px;
-	-moz-border-radius: 5px 5px 5px 5px;
-	-webkit-border-radius: 5px 5px 5px 5px;
-	-khtml-border-radius: 5px 5px 5px 5px;
-	font-family : Verdana;
+	align:center;
+	color: #0073ea;
+	border-radius: 0px 0px 0px 0px;
+	-moz-border-radius: 0px 0px 0px 0px;
+	-webkit-border-radius: 0px 0px 0px 0px;
+	-khtml-border-radius: 0px 0px 0px 0px;
+	background-color: #f6f6f6 url(../images/ui-bg_highlight-soft_100_f6f6f6_1x100.png) 50% 50% repeat-x;
+	/*border: 1px solid #dddddd; background: #f6f6f6 url(../images/ui-bg_highlight-soft_100_f6f6f6_1x100.png) 50% 50% repeat-x; font-weight: bold; color: #0073ea;
+	font-family: "Trebuchet MS","MS Trebuchet",Trebuchet,Helvetica,Arial; font-size: 14px;*/
+	
 }
 
 #tabnav a:link.active, #tabnav a:visited.active
 {
 	float:left;
-	font-size: 12px;
-	line-height: 14px;
-	font-weight: italic;
+	font-family: "Trebuchet MS","MS Trebuchet",Trebuchet,Helvetica,Arial; font-size: 13px;
+	font-weight: bold;
 	padding: 4px 10px 2px 10px;
 	margin-right: 4px;
-	border: 1px solid #CCCCCC;
 	text-decoration: none;
-	color: #000;
-	border-radius: 5px 5px 5px 5px;
-	-moz-border-radius: 5px 5px 5px 5px;
-	-webkit-border-radius: 5px 5px 5px 5px;
-	-khtml-border-radius: 5px 5px 5px 5px;
-	background-color: #D8D8D8;
-	font-family : Verdana;
+	color: #ffffff;
+	border-radius: 0px 0px 0px 0px;
+	-moz-border-radius: 0px 0px 0px 0px;
+	-webkit-border-radius: 0px 0px 0px 0px;
+	-khtml-border-radius: 0px 0px 0px 0px;
+	border: 1px solid #0073ea; 
+	background: #0073ea url(../images/ui-bg_highlight-soft_25_0073ea_1x100.png) 50% 50% repeat-x;
+	
+	/*border: 1px solid #0073ea; background: #0073ea url(../../images/ui-bg_highlight-soft_25_0073ea_1x100.png) 50% 50% repeat-x; font-weight: bold; color: #ffffff;
+	font-family: "Trebuchet MS","MS Trebuchet",Trebuchet,Helvetica,Arial; font-size: 14px;*/
 }
 
 #tabnav a:hover
 {
-	background: #FFFFFF;
-	color:#000;
+	
+	color: #ffffff; text-decoration: none;
+	border: 1px solid #0073ea; background-color: #0073ea ; font-weight: bold; color: #ffffff;
 }
