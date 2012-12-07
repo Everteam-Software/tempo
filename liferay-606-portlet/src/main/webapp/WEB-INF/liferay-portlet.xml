@@ -5,7 +5,7 @@
 	<portlet>
 		<portlet-name>1</portlet-name>
 		<instanceable>true</instanceable>
-		<header-portlet-css>/css/all.css</header-portlet-css>
+		<header-portlet-css>/js/resources/css/ext-all.css</header-portlet-css>
 		<header-portlet-javascript>/js/ext-all.js</header-portlet-javascript>
 		<footer-portlet-javascript>/js/starter.js</footer-portlet-javascript>
 	</portlet>
