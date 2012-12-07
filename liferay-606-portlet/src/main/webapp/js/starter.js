@@ -227,7 +227,7 @@ var smP = Ext.create('Ext.selection.CheckboxModel');
 		layout: 'fit',
 		autoScroll: true,
 		listeners : {
-		   itemdblclick : function(view,record,item,index,eventObj) { 
+		   itemclick : function(view,record,item,index,eventObj) { 
 		   setVars(record,'PATask');
 		   }
 		},
@@ -308,7 +308,7 @@ var smP = Ext.create('Ext.selection.CheckboxModel');
 		layout: 'fit',
 		autoScroll: true,
 		listeners : {
-		   itemdblclick : function(view,record,item,index,eventObj) { 
+		   itemclick : function(view,record,item,index,eventObj) { 
 		   setVars(record,'Notification');
 		   }
 		},
@@ -381,7 +381,7 @@ var smP = Ext.create('Ext.selection.CheckboxModel');
 		layout: 'fit',
 		autoScroll: true,
 		listeners : {
-		   itemdblclick : function(view,record,item,index,eventObj) { 
+		itemclick : function(view,record,item,index,eventObj) { 
 		   setVars(record,'PIPATask');
 		   }
 		},
