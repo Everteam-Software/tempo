@@ -19,61 +19,62 @@
       <fmt:message key="com_intalio_bpms_workflow_pageTitle"/>
     </title>
 
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
 
     <link rel="stylesheet" type="text/css" href="style.css" />
     <link rel="stylesheet" type="text/css" href="style/tabs.css"/>
     <link rel="stylesheet" type="text/css" href="style/flexigrid.css"/>
-    <link rel="stylesheet" type="text/css" href="style/jqueryui/ui.all.css"/>
+    <link class="include" rel="stylesheet" href="style/jqueryui/jquery-ui.css"/>
+    <link class="include" rel="stylesheet" href="style/jqueryui/jquery.ui.theme.css"/>
+    <link class="include" rel="stylesheet" href="style/jqueryui/jquery.qtip.css">
     <link rel="stylesheet" type="text/css" href="style/jqueryui/jquery.alerts.css"/>
-    <link rel="stylesheet" type="text/css" href="style/jqueryui/ui.dialog.content.css"/>
-    <link rel="stylesheet" type="text/css" media="all" href="style/jsDatePick_ltr.min.css" />
+    <link class="include" rel="stylesheet" href="style/jqueryui/ui.dialog.content.css">
     <link rel="alternate" type="application/atom+xml" title="Personal Task feed" href="/feeds/atom/tasks?token=${participantToken}"/>
     <link rel="alternate" type="application/atom+xml" title="Process feed" href="/feeds/atom/processes?token=${participantToken}"/>
 
     <script type="text/javascript" src="script/ui-fw.js"></script>
-    <script type="text/javascript" src="script/jquery-1.3.2.min.js"></script>
-    <script type="text/javascript" src="script/jtabber.js"></script>
+    <script type="text/javascript" src="script/jquery.js"></script>
+    <!--<script type="text/javascript" src="script/jquery.cookie.js"></script>-->
+    <script type="text/javascript" src="script/jquery-ui.js"></script>
     <script type="text/javascript" src="script/jquery-timer.js"></script>
     <script type="text/javascript" src="script/jquery.jcorners.js"></script>
     <script type="text/javascript" src="script/jquery.demensions.js"></script>
+    <script type="text/javascript" src="script/jquery.ui.position.js"></script>
+    <script type="text/javascript" src="script/jtabber.js"></script>
+    <script type="text/javascript" src="script/jquery.qtip.js"></script>
     <script type="text/javascript" src="script/jquery.string.1.0.js"></script>
-    <script type="text/javascript" src="script/soap-1.4beta.js"></script>
-    <script type="text/javascript" src="script/ui/ui.core.js"></script>
-    <script type="text/javascript" src="script/ui/ui.draggable.js"></script>
-    <script type="text/javascript" src="script/ui/ui.resizable.js"></script>
-    <script type="text/javascript" src="script/ui/ui.dialog.js"></script>
-    <script type="text/javascript" src="script/ui/effects.core.js"></script>
-    <script type="text/javascript" src="script/ui/effects.highlight.js"></script>
-    <script type="text/javascript" src="script/ui/jquery.bgiframe.js"></script>
+    <script type="text/javascript" src="script/jqSoapClient.min.js"></script>
+    <script type="text/javascript" src="script/ui/jquery.ui.datepicker.js"></script>
+    
+    
     <script type="text/javascript" src="script/flexigrid.js"></script>
     <script type="text/javascript" src="script/jquery.alerts.js"></script>
-	<script type="text/javascript" src="script/jsDatePick.min.1.3.js"></script>
-	<script type="text/javascript">var one_task_page = true /*Flag to safeguard changes */</script>
+    
+    <script type="text/javascript">var one_task_page = true /*Flag to safeguard changes */</script>
     <%@ include file="/script/grids.jsp"%>
 
   </head>
   <body width="95%" height="98%">
     <%@ include file="/WEB-INF/jsp/siteHeader.jsp"%>
-    <div id="container">			
-      <ul id="tabnav" style="top:-8px;">
+    <div id="container">                        
+      <ul id="tabnav">
         <li >
-          <a href="#" id="tabTasks" tabtitle="com_intalio_bpms_workflow_tab_tasks" style="width:120px;height:18px;"title="<fmt:message key="com_intalio_bpms_workflow_tab_tasks"/>">
+          <a href="#" id="tabTasks" tabtitle="com_intalio_bpms_workflow_tab_tasks" style="width:80px;height:22px;" title="<fmt:message key="com_intalio_bpms_workflow_tab_tasks"/>">
             <fmt:message key="com_intalio_bpms_workflow_tab_tasks"/>
           </a>
         </li>
         <li>
-          <a href="#" id="tabNotif" tabtitle="com_intalio_bpms_workflow_tab_notifications"style="width:150px;height:18px;" title="<fmt:message key="com_intalio_bpms_workflow_tab_notifications"/>">
+          <a href="#" id="tabNotif" tabtitle="com_intalio_bpms_workflow_tab_notifications" style="width:80px;height:22px;" title="<fmt:message key="com_intalio_bpms_workflow_tab_notifications"/>">
             <fmt:message key="com_intalio_bpms_workflow_tab_notifications"/>
           </a>
         </li>
         <li>
-          <a href="#" id="tabPipa" tabtitle="com_intalio_bpms_workflow_tab_processes" style="align:center;width:140px;height:18px;"title="<fmt:message key="com_intalio_bpms_workflow_tab_processes"/>">
+          <a href="#" id="tabPipa" tabtitle="com_intalio_bpms_workflow_tab_processes" style="width:80px;height:22px;" title="<fmt:message key="com_intalio_bpms_workflow_tab_processes"/>">
             <fmt:message key="com_intalio_bpms_workflow_tab_processes"/>
           </a>
         </li>
       </ul>
-<!--	<a class="ui-loggedin-user">${currentUser} !</a> -->
+
       <div id ="tasktables">
         <div class="hiddencontent" id="com_intalio_bpms_workflow_tab_tasks">
           <table id="table1" style="display:none"></table>
@@ -100,7 +101,7 @@
     <div id="updateDialog" class="hiddencontent" title="<fmt:message key="org_intalio_uifw_update_title"/>">
       <form>
         <fieldset>
-           <label class="ui-update-descriptionlabel"for="description"><fmt:message key="org_intalio_uifw_update_description"/></label>
+           <label class="ui-update-descriptionlabel" for="description"><fmt:message key="org_intalio_uifw_update_description"/></label>
            <input type="text" name="description" title="<fmt:message key="org_intalio_uifw_update_description"/>" id="up_description" class="ui-update-descriptioninput" />
            <label class="ui-update-prioritylabel" for="priority"><fmt:message key="org_intalio_uifw_update_priority"/></label>
 	   <input type="text" name="priority" title="<fmt:message key="org_intalio_uifw_update_priority"/>" id="up_priority" class="ui-update-priorityinput" />
@@ -183,30 +184,23 @@
     
     <iframe src="script/empty.jsp" onLoad="resizeIframe" name="taskform" frameborder="0" id="taskform" scrolling="auto"></iframe>
 
-    <div id="versionInfo" class="footer" style="left:33%;display:none">
-      <fmt:message key="com_intalio_bpms_workflow_pageFooter_poweredBy_label" />
-      <a>
-        <span style="color: #000000">
-          <fmt:message key="com_intalio_bpms_workflow_pageFooter_poweredBy_value" />
-        </span>
-      </a>
-      <a>
-	<span style="color: #000">
-        <fmt:message key="com_intalio_bpms_workflow_versionInfo">
-          <c:choose>
-            <c:when test="${!empty version && !empty build}" >
-              <fmt:param value="${version}"/>
-              <fmt:param value="${build}"/>
-            </c:when> 
-            <c:otherwise>
-              <fmt:param value="unknown"/>
-              <fmt:param value="unknown"/>
-            </c:otherwise>
-          </c:choose>
-        </fmt:message>
-	 </span>
-      </a>
-   </div>
+      <div id="versionInfo" class="siteFooter">
+	<span>&nbsp;&nbsp;<fmt:message key="com_intalio_bpms_workflow_pageFooter_poweredBy_label" />&nbsp;&nbsp;
+	<a ><span style="color: #000000"><fmt:message key="com_intalio_bpms_workflow_pageFooter_poweredBy_value" /></span></a>
+		<fmt:message key="com_intalio_bpms_workflow_versionInfo">
+		<c:choose>
+		    <c:when test="${!empty version && !empty build}" >
+			<fmt:param value="${version}"/>
+			<fmt:param value="${build}"/>
+		    </c:when> 
+		    <c:otherwise>
+			<fmt:param value="unknown"/>
+			<fmt:param value="unknown"/>
+		    </c:otherwise>
+		</c:choose>
+		</fmt:message>
+	    </span>
+       </div>
 
   <script>
     document.getElementById('taskform').onload = resizeIframe;
