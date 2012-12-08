@@ -35,12 +35,13 @@
 }
 /* The two below are fixes for IE */
 .flexigrid input {
-    font-size: 11px;
+    font-family: "Trebuchet MS","MS Trebuchet",Trebuchet,Helvetica,Arial;
+  font-size :14px;
 }
 .flexigrid select {
     
-    font-size:11px;
-    font-family:Verdana;
+    font-family: "Trebuchet MS","MS Trebuchet",Trebuchet,Helvetica,Arial;
+    font-size :14px;
 }
 
 
@@ -48,15 +49,15 @@
 
 .flexigrid
 {
-	font-size:12px;
-	font-family:Verdana;
+	font-family: "Trebuchet MS","MS Trebuchet",Trebuchet,Helvetica,Arial;
+	font-size :14px;
 	position: relative;
 	margin-left:10px;
-	margin-right:10px;
+	margin-right:5px;
 	border: 0px solid #eee;
 	overflow: hidden;
 	color: #000;
-	top:-8px;
+	top: 5px;
 
 }
 
@@ -74,7 +75,7 @@
 
 .flexigrid div.nDiv
 	{
-	background: #eee url(../images/flexigrid/line.gif) repeat-y -1px top;
+	background: #f6f6f6 url(../images/flexigrid/line.gif) repeat-y -1px top;
 	border: 1px solid #ccc;
 	border-top: 0px;
 	overflow: auto;
@@ -228,7 +229,7 @@
 
 .flexigrid div.tDiv /*toolbar*/
 	{
-	background: #fafafa url(../images/flexigrid/bg.gif) repeat-x top;
+	background: #f6f6f6 url(../images/ui-bg_highlight-soft_100_f6f6f6_1x100.png) 50% 50% repeat-x;
 	position: relative;			
 	border: 1px solid #ccc;
 	border-bottom: 0px;
@@ -245,7 +246,7 @@
 
 .flexigrid div.sDiv /*toolbar*/
 	{
-	background: #fafafa url(../images/flexigrid/bg.gif) repeat-x top;
+	background: #f6f6f6 url(../images/ui-bg_highlight-soft_100_f6f6f6_1x100.png) 50% 50% repeat-x;
 	position: relative;
 	border: 1px solid #ccc;
 	border-top: 0px;
@@ -260,8 +261,8 @@
 		clear: both;
 		padding: 5px;
 		padding-left: 5px;
-		font-size:12px;
-		font-family:Verdana;
+		font-size:14px;
+		font-family: "Trebuchet MS","MS Trebuchet",Trebuchet,Helvetica,Arial;
 		}
 
 		.flexigrid div.sDiv2 input, .flexigrid div.sDiv2 select
@@ -297,8 +298,8 @@
 		float: left;
 		display: block;
 		padding: 3px;
-		font-size:12px;
-		font-family:Verdana;
+		font-family: "Trebuchet MS","MS Trebuchet",Trebuchet,Helvetica,Arial;
+		font-size :14px;
 		}
 
 	.flexigrid div.fbutton:hover, .flexigrid div.fbutton.fbOver
@@ -368,8 +369,8 @@
 	
 	.flexigrid div.iDiv input, .flexigrid div.iDiv select, .flexigrid div.iDiv textarea
 		{
-		font-family: Arial, Helvetica, sans-serif;
-		font-size: 9px;
+		font-family: "Trebuchet MS","MS Trebuchet",Trebuchet,Helvetica,Arial;
+		font-size :14px;
 		}
 		
 	.flexigrid div.iDiv input.tb
@@ -465,8 +466,8 @@
 	}	
 
 div.colCopy {
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 11px;
+	font-family: "Trebuchet MS","MS Trebuchet",Trebuchet,Helvetica,Arial;
+		font-size :14px;
 	background: #fafafa url(../images/flexigrid/fhbg.gif) repeat-x bottom;
 	border: 1px solid #ccc;
 	border-bottom: 0px;

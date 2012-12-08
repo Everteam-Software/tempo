@@ -7,37 +7,137 @@
 
 <script type="text/javascript">
 
-/**
- * @Function Name   : calendarSetup 
- * @Description     : This function will just call initialize function
- * @param           : 
- * @returns         : 
- * */
-  function calendarSetup()
-    {
-		initialize("fromdate");
-		initialize("todate");
-		
-	}	
-/**
- * @Function Name   : initialize 
- * @Description     : This function will initialize the datepicker of fromdate & toDate of vacation
- * @param           : reference of date field
- * @returns         : 
- * */
-	function initialize(inputField)
-	{
-		new JsDatePick({
-            useMode:2,
-            minDate:0,
-            limitToToday :false, 
-            target:inputField,
-            dateFormat:"%d/%m/%Y",
-        });
-	}; 
+
+    function toggleQtip(id) {
+	var div = $('#' + id);
+	hide(id);
+	show(id);
+    }
+
+    function hide(id){
+      var div = $('#' + id);
+      if (div.data('visible')) {
+	  div.qtip('hide');
+	  div.data('visible', false);
+      }
+    }
+    function show(id){
+	var div = $('#' + id);
+	var div1 = 'div1';
+	var div2 = 'div2';
+	if(id == div1){
+	  hide(div2); 
+	} else if(id == div2){
+	  hide(div1); 
+	}
+	if (!div.data('visible')) {
+	  div.qtip('show');
+	  div.data('visible', true); 
+	}
+      }
+    $(window).load(function(){
+	$('*').live('click', function(){
+	    hide('div1');
+	    hide('div2');
+	});
+    });
     
     $(document).ready(function(){ 
+	/*changes 05/12/2012---- start*/
+	$("#userProfile")
+        .button({
+		icons: {
+		secondary: "ui-icon-triangle-1-s"
+	   }	
+	})
+	.click(function(){
+		toggleQtip('div1');
+		return false;
+	});
+	$("#options")
+	    .button({
+		icons: {
+		    primary: "ui-icon-gear",
+		    secondary: "ui-icon-triangle-1-s"
+		},
+		text: false
+	    })
+	    .click(function () {
+	    toggleQtip('div2');
+	    return false;
+	});
 	
+	$('.io-footer').each(function () {
+	  showMyTT($(this).attr('id'));
+	});
+
+	$('.io-footer-options').each(function () {
+	  showMyTT($(this).attr('id'));
+	});
+
+	$("#btnLogout")
+	  .button()
+	  .click(function () {
+	      submitActionToURL('login.htm', 'logOut');
+	      return false;
+	});
+	$("#btnHelp")
+	    .button()
+	    .click(function () {
+	    window.open("http://wiki.intalio.com", '_blank');
+	    window.focus();
+	    return false;
+	});
+
+	function showMyTT(id) {
+	  if(id == "div1")
+	  {
+		$('#' + id).qtip({
+		    content: $('.tooltipContent'),
+		    position: {
+		        my: 'top center',
+		        at: 'bottom right',
+		        adjust: {
+		            x: -65,
+			    y: 45
+		        
+		        },
+			viewport: $(window),
+		    },
+		    show: false,
+		    hide: false,
+		});
+	  }
+	  else if(id == "div2")
+	  {
+		$('#' + id).qtip({
+		    content: $('.optionContent'),
+		    position: {
+		        my: 'top center',
+		        at: 'bottom right',
+		        adjust: {
+		            x: -165,
+			    y:45
+		        
+		        },
+			viewport: $(window),
+
+		    },
+		    show: false,
+		    hide: false,
+		});
+	}
+      }
+
+	
+	/*changes 05/12/2012---- end*/
+	//added for new datepicker
+	
+	$(function() {
+        $( "#fromdate" ).datepicker({minDate:0,dateFormat:'dd/mm/yy'});
+        $( "#todate" ).datepicker({minDate:0,dateFormat:'dd/mm/yy'});
+    });
+	//end of new datepicker
 	changeButtonText();		
 	
     /*********************************************************************
@@ -156,7 +256,7 @@
       if(time>=1) {
         var text = '<fmt:message key="org_intalio_uifw_session_inactivity_1"/>';
         text = text+" "+time+" "+'<fmt:message key="org_intalio_uifw_session_inactivity_2"/>';
-        $("#timer").text(text);
+        $("#timer").text(text).css('padding-right','225px');
       }
       time = time + 1;
 
@@ -240,7 +340,9 @@
       bgiframe: false,
       autoOpen: false,
       resizable:false,
+      autoResize:true,
       height: 200,
+      draggable:false,
       modal: true,		
       buttons: {'<fmt:message key="org_intalio_uifw_message.button.ok"/>': function() {location.reload(true);}},
       close: function() {location.reload(true);}
@@ -253,6 +355,8 @@
       bgiframe: false,
       autoOpen: false,
       resizable:false,
+      autoResize:true,
+      draggable:false,
       height: 300,
       modal: true,		
       buttons: {'<fmt:message key="org_intalio_uifw_message.button.ok"/>': function() {exportTasksAction();}}
@@ -264,17 +368,15 @@
         bgiframe: false,
         autoOpen: false,
         resizable:false,
+	autoResize:true,
+	draggable:false,
         height: 350,
         width:500,
         modal: true,
-        open: function() {
-							$(".JsDatePickBox").css("display","none");
-					     },
-        buttons: {
-			
-			'<fmt:message key="org_intalio_uifw_message.button.save"/>': function() {saveVacation();},
-		  },
-        close: function() {$(this).dialog('close');}
+        buttons: {'<fmt:message key="org_intalio_uifw_message.button.save"/>': function() {saveVacation();}},
+        close: function() {
+					$('#ui-datepicker-div').css("display","none");
+			 }
       });
 	/*
 		Message Dialog
@@ -283,8 +385,11 @@
         bgiframe: false,
         autoOpen: false,
         resizable:false,
+	autoResize:true,
+	draggable:false,
         height: 150,
         width:600,
+        modal:true,
         buttons: {
 				 Ok: function() {$(this).dialog('close');}
        }
@@ -296,6 +401,8 @@
         bgiframe: false,
         autoOpen: false,
         resizable:false,
+	autoResize:true,
+	draggable:false,
         height: 190,
         width:600,
         buttons: {
@@ -311,6 +418,8 @@
         bgiframe: false,
         autoOpen: false,
         resizable:false,
+	autoResize:true,
+	draggable:false,
         height: 150,
         width:250,
         buttons: {
@@ -330,7 +439,13 @@
     */
     function deleteTask(com,grid)
     {
-       if ($('.trSelected',grid).length>0) {
+	if($('.trSelected',grid).length<=0)
+	{
+             $('#warnDialog').html('<a>Please select atleast one task</a>');
+             $('#warnDialog').dialog('open');                
+             return false;
+	}
+       else if($('.trSelected',grid).length>0) {
         $('.trSelected',grid).each(function() {
           
           // pipa delete
@@ -369,7 +484,14 @@
     */
     function claimTask(com,grid)
     {
-	  var count=0; 	
+      var count=0; 
+      if($('.trSelected',grid).length<=0)
+      {
+                  $('#warnDialog').html('<a>Please select atleast one task</a>');
+                  $('#warnDialog').dialog('open');                        
+                  return false;
+      }
+      else {
       $('.trSelected',grid).each(function() 
       {
       var task = $('a.taskd',$(this));
@@ -405,6 +527,7 @@
 	else
 		count=count+1;
       }); // end each  
+    }
 	  if (count!=0){
             var errorMessage="<fmt:message key='org_intalio_uifw_toolbar_button_claim_error'/>";
 	        jAlert(errorMessage.replace("{0}", count) , '<fmt:message key="com_intalio_bpms_workflow_pageTitle"/>' );
@@ -416,8 +539,16 @@
     */
     function skipTask(com,grid) {
         var count=0; 
-        $('.trSelected',grid).each(function() 
-        {
+	 if($('.trSelected',grid).length<=0)
+	{
+                  $('#warnDialog').html('<a>Please select atleast one task</a>');
+                  $('#warnDialog').dialog('open');                        
+                  return false;
+	}
+        else
+	{
+	  $('.trSelected',grid).each(function() 
+	  {
             var task = $('a.taskd',$(this));
             var istaskowner=task.attr('istaskowner');  
             if(istaskowner=="true"){
@@ -431,7 +562,8 @@
 	            SOAPClient.SendRequest(sr, update);
             }else
         		count=count+1;
-        });
+	  });
+	}
         if (count!=0){
             var errorMessage="<fmt:message key='org_intalio_uifw_toolbar_button_skip_error'/>";
 	        jAlert(errorMessage.replace("{0}", count) , '<fmt:message key="com_intalio_bpms_workflow_pageTitle"/>' );
@@ -515,12 +647,10 @@
     function populateRoles(data) {
       var firstOption="<option value=''>Select role </option>";
       $("#reassign_dyn").append(firstOption);
-      $(data).find("/rbac:getAssignedRolesResponse/rbac:role/").each(function(){
-        if(this.nodeName == "rbac:role") {
+      $(data.responseXML).find('*').filterNode("rbac:role").each(function(){
           var option = "<option value=\""+$(this).text()+"\">"+$(this).text()+"</option>";
           $("#reassign_dyn").append(option);
-        }
-      });
+     });
       updateDynamicUsers();
     }
      
@@ -559,12 +689,10 @@
       $('#reassign_dyn_user').empty();
       var firstOption="<option value=''>Select user </option>";
       $("#reassign_dyn_user").append(firstOption);      
-      $(data).find("/rbac:getAssignedRolesResponse/rbac:role/").each(function(){
-        if(this.nodeName == "rbac:user") {
+      $(data.responseXML).find('*').filterNode("rbac:user").each(function(){  
           var option = "<option value=\""+$(this).text()+"\">"+$(this).text()+"</option>";
           $("#reassign_dyn_user").append(option);
-        }
-      });  
+      });
     }
     
     /*
@@ -621,20 +749,17 @@
 			success: function (data) {
 				if(data.message.indexOf("Inserted")>=0)
 				{
-					$('#fromdate').val("");
-					$('#todate').val("");
-					$('#desc').val("");
+					
 					$('#vacation').dialog('close');
-					$('#messageDialog').html('<a style="font-family: verdana;font-size: 13px;">Vacation details are succesfully saved please make sure you also reassign your task before going on leave.</a>');
-					$('#messageDialog').dialog('open');
+					$('#messageDialog').html('<a >Vacation details are succesfully saved please make sure you also reassign your task before going on leave.</a>');
+					$(".vacationDet").text("End Your Vacation");
 				}
 				else
 				{
-					$('#messageDialog').html('<a style="font-family: verdana;font-size: 13px;">Exception occured while saving the Vacation details please see the error log for further details.</a>');
-					$('#messageDialog').dialog('open');
-					
+					$('#messageDialog').html('<a>Exception occured while saving the Vacation details please see the error log for further details.</a>');
+										
 				}
-				$(".vacationDet").text("End Your Vacation");
+				 $('#messageDialog').dialog('open');
 		     }
 			});
 	   }	
@@ -662,11 +787,11 @@ function endVacation()
 			if(data.message.indexOf("Deleted")>=0)
 			{
 				$('#endVacDialog').dialog('close');
-				$('#messageDialog').html('<a style="font-family: verdana;font-size: 13px;">Successfully ended your vacation</a>');
+				$('#messageDialog').html('<a>Successfully ended your vacation</a>');
 				$(".vacationDet").text("Vacation");
 			}	
 			else
-			$('#messageDialog').html('<a style="font-family: verdana;font-size: 13px;">Exception occured while ending vacation please see the error log for further details.</a>');
+			$('#messageDialog').html('<a>Exception occured while ending vacation please see the error log for further details.</a>');
 			
 			$('#messageDialog').dialog('open');
 		}
@@ -680,25 +805,41 @@ function endVacation()
     Code for loading the update dialog after mouse click
     */
     function clickUpdate(com,grid) {
+
       $('#up_description').empty();
       $('#up_priority').empty();
       $('#up_description').show();
       $('#up_priority').show();
-      
-      if($('.trSelected',grid).length!=0) {
+      if($('.trSelected',grid).length<=0)
+      {
+                  $('#warnDialog').html('<a>Please select one task</a>');
+                  $('#warnDialog').dialog('open');                
+                  return false;
+      }
+      else if($('.trSelected',grid).length>1)        
+      {
+                  $('#warnDialog').html('<a>Please select only one task</a>');
+                  $('#warnDialog').dialog('open');                
+                  return false;
+      }
+      else if($('.trSelected',grid).length!=0) {
       var task = $('a.taskd',$('.trSelected:first',grid));
       $('#up_description').val(task.attr('description'));
       $('#up_priority').val(task.attr('priority'));
 
       $("#updateDialog").dialog({
         bgiframe: false,
-        autoOpen: open,
+        autoOpen: false,
         height: 200,
-        modal: true,		
-        buttons: {
+        modal: true,
+        resizable :false,
+	draggable:false,
+	autoResize: true,
+	buttons: {
           Update: function() {updateTask(com,grid); $(this).dialog('close');}
         },
-        close: function() {location.reload(true);} //updated line fix for WF-1460
+        close: function() {$(this).dialog('close');} //updated line fix for WF-1460
+	
       });
       $("#updateDialog").dialog('open');
 	}        
@@ -707,7 +848,19 @@ function endVacation()
     Code for laoding the reassign dialog after mouse click
     */
     function clickReassign(com,grid) {
-      if($('.trSelected',grid).length!=0) {
+      if($('.trSelected',grid).length<=0)
+      {
+                  $('#warnDialog').html('<a>Please select one task</a>');
+                  $('#warnDialog').dialog('open');                
+                  return false;
+      }
+      else if($('.trSelected',grid).length>1)        
+      {
+                  $('#warnDialog').html('<a>Please select only one task</a>');
+                  $('#warnDialog').dialog('open');                
+                  return false;
+      }
+      else if($('.trSelected',grid).length!=0) {
 
         $('#reassign_dyn_user').empty();
         $('#reassign_dyn').empty();
@@ -718,11 +871,14 @@ function endVacation()
           bgiframe: false,
           autoOpen: open,
           height: 250,
-          modal: true,		
+          modal: true,	
+	  resizable :false,
+	  autoResize: true,
+	  draggable:false,
           buttons: {
             Reassign: function() {reassignTask(com,grid);}
           },
-          close: function() {location.reload(true);}
+          close: function() {$(this).dialog('close');}
         });
         $("#reassignDialog").dialog('open');
       }
@@ -748,6 +904,7 @@ function endVacation()
           height: 'auto',
           width: 'auto',
           modal: true,
+	  draggable:false,
           title : "Confirmation",
           autoResize: true,
 		  buttons: {
@@ -756,7 +913,7 @@ function endVacation()
           close: function() {}
         });
         
-        $("#deleteDialog").html("<a style='font-family: verdana;font-size: 14px;'> Are you sure you want to delete "+ $('.trSelected',grid).length + " Task(s) ?</a>");
+        $("#deleteDialog").html("<a> Are you sure you want to delete "+ $('.trSelected',grid).length + " Task(s) ?</a>");
         $("#deleteDialog").dialog('open');
       }
     }
@@ -782,7 +939,7 @@ function endVacation()
 			if(data.vacId !="undefined" && data.vacId!="" && data.vacId!=undefined)
 			{
 					vac_id = parseInt(data.vacId);
-					$('#endVacDialog').html('<a style="font-family: verdana;font-size: 13px;"> Already applied for a leave <br>From &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' +data.vacFromdate+'<br>  To &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:  '+data.vacToDate+'<br> Description  :  ' +data.vacDesc+ '<br>If your vacation is completed please click on End Vacation</a>');
+					$('#endVacDialog').html('<a> Already applied for a leave <br>From &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' +data.vacFromdate+'<br>  To &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:  '+data.vacToDate+'<br> Description  :  ' +data.vacDesc+ '<br>If your vacation is completed please click on End Vacation</a>');
 					$('#endVacDialog').dialog('open');
 			}
 			else if(data.vacation =="undefined")
@@ -808,6 +965,7 @@ function endVacation()
         function clickViewAllTasks()
         {
     		document.getElementById('isViewTask').value="false";
+    		resetQueryString("tabTasks");
     		$("#tabTasks").click();
         }
  /**
@@ -822,17 +980,17 @@ function endVacation()
             var chkFrom = document.getElementById(varFrom);
             var chkTo = document.getElementById(varTo);
             if (document.getElementById(varFrom).value == '') {
-                $("#warnDialog").html('<a style="font-family: verdana;font-size: 13px;">From date should not be empty</a>');
+                $("#warnDialog").html('<a >From date should not be empty</a>');
                 $("#warnDialog").dialog('open');
                 return false;
             }
             else if (document.getElementById(varTo).value == '') {
-                $("#warnDialog").html('<a style="font-family: verdana;font-size: 13px;">To date should not be empty</a>');
+                $("#warnDialog").html('<a >To date should not be empty</a>');
                 $("#warnDialog").dialog('open');
                 return false;
             }
             else if ($.trim(document.getElementById(desc).value)== '') {
-                $("#warnDialog").html('<a style="font-family: verdana;font-size: 13px;">Description should not be empty</a>');
+                $("#warnDialog").html('<a >Description should not be empty</a>');
                 $("#warnDialog").dialog('open');
                 return false;
             }
@@ -858,7 +1016,7 @@ function endVacation()
                     date2 = new Date(yr2, mon2, dt2);
  
                     if (date2 < date1) {
-                        $("#warnDialog").html('<a style="font-family: verdana;font-size: 13px;">To date Should be greater than From date</a>');
+                        $("#warnDialog").html('<a >To date Should be greater than From date</a>');
 						$("#warnDialog").dialog('open');
                         document.getElementById(varTo).value = '';
                         return false;
@@ -878,7 +1036,7 @@ function endVacation()
     var returnval = false
     if (!validformat.test(input.value))
     {
-		$("#warnDialog").html('<a style="font-family: verdana;font-size: 13px;">Invalid Date Format Please correct and submit again.</a>');
+		$("#warnDialog").html('<a >Invalid Date Format Please correct and submit again.</a>');
 		$("#warnDialog").dialog('open');
    } 
     else { //Detailed check for valid date ranges
@@ -888,7 +1046,7 @@ function endVacation()
         var dayobj = new Date(yearfield, monthfield - 1, dayfield)
         if ((dayobj.getMonth() + 1 != monthfield) || (dayobj.getDate() != dayfield) || (dayobj.getFullYear() != yearfield))
         {
-            $("#warnDialog").html('<a style="font-family: verdana;font-size: 13px;">Invalid Day, Month, or Year range detected Please correct and submit again</a>');
+            $("#warnDialog").html('<a >Invalid Day, Month, or Year range detected Please correct and submit again</a>');
 			$("#warnDialog").dialog('open');
 		}	
         else
@@ -1310,24 +1468,14 @@ function endVacation()
       $(this).hide();
     });
 
-    var offsetY = 10;
-    var offsetX = -340;
-
-    $('.footer').hide().appendTo('body');
-
-    $('img.imagepopupcontext').hover(function (e) {
-           //$('div.footer').hide().find('p').text($(this).data('message'));
-           $('div.footer').fadeIn(400);
-           $('div.footer').css('top', e.pageY + offsetY).css('left', e.pageX + offsetX);
-       }, function () {
-       $('div.footer').hide();
-    });
-
-    $('img.imagepopupcontext').mousemove(function (e) {
-         $('div.footer').css('top', e.pageY + offsetY).css('left', e.pageX + offsetX);
-    });
 		
     }); // end of document ready, which also means the custom jquery code
+
+    $.fn.filterNode = function(name) {
+      return this.find('*').filter(function() {
+        return this.nodeName === name;
+    });
+  };
     
     function setSearch(){
   	  
@@ -1335,7 +1483,7 @@ function endVacation()
   	  if(searchUser!="" && searchUser != 'null'){
   			  $('#q').val(searchUser);
   			  $("#qtype option[value='_userOwners']").attr("selected", "selected");
-  			  setTimeout(function() { $("#q").focus(); }, 200);
+  			  setTimeout(function() { $("#q").focus(); }, 100);
   			  //$("#q").focus();
   	  }
      }
@@ -1346,7 +1494,7 @@ function endVacation()
     	var k = location.search.indexOf("unid");
     	document.getElementById("currTab").value=current;
     	if(k>0){
-    	var queryString = location.search.substring(0, location.search.indexOf('?'));
+    	var queryString = location.search.substring(0, location.search.indexOf('?')-1);
 		location.search = queryString; // Causes page to reload
 	}
     }
@@ -1354,5 +1502,5 @@ function endVacation()
 
 </script>
 
- <body onload="calendarSetup();setSearch();">
+ <body onload="setSearch();">
 
