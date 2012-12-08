@@ -22,9 +22,9 @@
 
 <%
 	///////////////// RETRIEVE TOKEN
-	String wsdlURLa = "http://" + intalioURL
+	String wsdlURLa = intalioURL
 			+ "/axis2/services/TokenService.Service";
-	System.out.println(wsdlURLa);
+	
 	String actiona = "authenticateUser";
 	String cdataAdd = "";
 	String nFile = "";
@@ -56,9 +56,8 @@
 <%
 	////// RETRIEVE TASK LIST
 
-	String wsdlURL = "http://" + intalioURL
-			+ "/axis2/services/TaskManagementServices";
-	String action = "http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getAvailableTasks";
+String wsdlURL = intalioURL+ "/ode/processes/TaskManagementServices";
+String action = "http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getAvailableTasks";
 
 	SOAPClient ws = new SOAPClient(wsdlURL, action);
 	//ws.setDEBUG();
@@ -123,12 +122,12 @@
 		
 		String bpmsURL = ste.getChildContent("formUrl");
 		if (bpmsURL != null) {
-			if (!bpmsURL.contains("http://")) {
+			if (!bpmsURL.contains("http://") && !bpmsURL.contains("https://") ) {
 				if (bpmsURL.contains(".xform")){
 					bpmsURL = bpmsURL.substring(bpmsURL.indexOf(".xform")+6);
-					row.addElement("bpmsUrl").addText("http://" + intalioURL + "/" +  bmpsURL + bpmsURL);
+					row.addElement("bpmsUrl").addText(intalioURL + "/" +  bmpsURL + bpmsURL);
 				}else{
-					row.addElement("bpmsUrl").addText("http://" + intalioURL + bpmsURL);
+					row.addElement("bpmsUrl").addText(intalioURL + bpmsURL);
 					row.addElement("formUrl").addText(bpmsURL);
 				}
 			} else {
@@ -173,4 +172,3 @@
 
 	out.println(resultado);
 %>
-
