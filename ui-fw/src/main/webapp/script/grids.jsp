@@ -965,6 +965,7 @@ function endVacation()
         function clickViewAllTasks()
         {
     		document.getElementById('isViewTask').value="false";
+    		resetQueryString("tabTasks");
     		$("#tabTasks").click();
         }
  /**
@@ -1096,8 +1097,7 @@ function endVacation()
       usepager: true,
       searchitems : [{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description'},
                      {display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_userOwners"/>', name : '_userOwners'},
-                     {display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_roleOwners"/>', name : '_roleOwners'},
-                     {display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_view_tasks"/>', name : '_viewTasks'}
+                     {display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_roleOwners"/>', name : '_roleOwners'}                     
 
 				      <c:forEach items="${newColumnList}" var="newColumn">
 				             ,{display: '${newColumn}', name : '_customMetadata'}
@@ -1483,7 +1483,7 @@ function endVacation()
   	  if(searchUser!="" && searchUser != 'null'){
   			  $('#q').val(searchUser);
   			  $("#qtype option[value='_userOwners']").attr("selected", "selected");
-  			  setTimeout(function() { $("#q").focus(); }, 200);
+  			  setTimeout(function() { $("#q").focus(); }, 100);
   			  //$("#q").focus();
   	  }
      }
@@ -1494,7 +1494,7 @@ function endVacation()
     	var k = location.search.indexOf("unid");
     	document.getElementById("currTab").value=current;
     	if(k>0){
-    	var queryString = location.search.substring(0, location.search.indexOf('?'));
+    	var queryString = location.search.substring(0, location.search.indexOf('?')-1);
 		location.search = queryString; // Causes page to reload
 	}
     }
