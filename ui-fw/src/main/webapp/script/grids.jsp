@@ -966,6 +966,8 @@ function endVacation()
         {
     		document.getElementById('isViewTask').value="false";
     		resetQueryString("tabTasks");
+    		$("#q").val("");
+    		setTimeout(function() { $("#q").focus(); }, 200);	
     		$("#tabTasks").click();
         }
  /**
@@ -1483,7 +1485,7 @@ function endVacation()
   	  if(searchUser!="" && searchUser != 'null'){
   			  $('#q').val(searchUser);
   			  $("#qtype option[value='_userOwners']").attr("selected", "selected");
-  			  setTimeout(function() { $("#q").focus(); }, 100);
+  			  setTimeout(function() { $("#q").focus(); }, 200);
   			  //$("#q").focus();
   	  }
      }

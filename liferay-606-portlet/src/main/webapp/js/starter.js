@@ -179,11 +179,16 @@ Ext.onReady(function(){
     	  closeAction: 'hide',
     	  collapsible: true,
     	  bodyStyle: 'padding:3px;',
-    	  width:750,
-    	  height:600,
+    	  width:500,
+    	  height:500,
     	  modal : true,
     	  minimizable : true,
-    	  maximizable : true
+    	  maximizable : true,
+		 listeners: {
+		  'close': function(){
+		      window.location.reload(); 
+		  }
+		}
 	  }).show();
     
     }
