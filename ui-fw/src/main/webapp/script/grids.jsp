@@ -463,7 +463,7 @@
  
          // task delete
          var task = $('a.taskd',$(this));
-         if(task.html()!=null) {
+         if(task.html()!=null && task.attr('tid') != null) {
            var soapBody = new SOAPObject("delete");
            soapBody.ns = "http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/";
            soapBody.appendChild(new SOAPObject("taskId")).val(task.attr('tid'));
