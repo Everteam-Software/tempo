@@ -67,11 +67,14 @@ import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
 import org.intalio.tempo.workflow.tms.server.dao.VacationDAOConnection;
 import org.intalio.tempo.workflow.tms.server.permissions.TaskPermissions;
 import org.intalio.tempo.workflow.util.jpa.TaskFetcher;
+import org.jasypt.util.text.BasicTextEncryptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
+import com.intalio.bpms.common.AxisUtil;
 
 import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
 
