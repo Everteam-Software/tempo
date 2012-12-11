@@ -151,7 +151,7 @@ Ext.onReady(function(){
 			var taskId = record.get('id');
 			var tkn = record.get('token');
 			var usr = Ext.get('usr').dom.value;
-			addTab(true,bpmsurl, url,des,taskId,tkn,usr,typ);
+			openModal(true,bpmsurl, url,des,taskId,tkn,usr,typ);
 			
 		}
 		
@@ -167,14 +167,30 @@ Ext.onReady(function(){
 		}
     
 	
-     function addTab(closable,bpmsurl, url,des,taskId,tkn,usr,typ) {
-        tabs2.add({
-			id: 'puto',
-            title: des,
-            iconCls: 'tabs',
-            closable: !!closable,
-			html: "<iframe src='"+lfLocal+"/taskviewer/callerhtml.jsp?bpmsUrl="+bpmsurl+"&url="+url+"&id="+taskId+"&tkn="+tkn+"&usr="+usr+"&typ="+typ+"' width='100%' height='95%' frameborder='0'></iframe>"
-        }).show();
+     function openModal(closable,bpmsurl, url,des,taskId,tkn,usr,typ) {
+	
+       
+      Ext.create("Ext.Window",{
+    	  html: "<iframe src='"+lfLocal+"/taskviewer/callerhtml.jsp?bpmsUrl="+bpmsurl+"&url="+url+"&id="+taskId+"&tkn="+tkn+"&usr="+usr+"&typ="+typ+"' width='100%' height='95%' frameborder='0'></iframe>",
+    	  layout: 'fit',
+    	  title : des,
+    	  resizable: true,
+    	  closable: true,
+    	  closeAction: 'hide',
+    	  collapsible: true,
+    	  bodyStyle: 'padding:3px;',
+    	  width:500,
+    	  height:500,
+    	  modal : true,
+    	  minimizable : true,
+    	  maximizable : true,
+		 listeners: {
+		  'close': function(){
+		      window.location.reload(); 
+		  }
+		}
+	  }).show();
+    
     }
 	
 	function closeActiveTab() {
@@ -450,6 +466,7 @@ var smP = Ext.create('Ext.selection.CheckboxModel');
   
     // second tabs built from JS
     var tabs2 = Ext.createWidget('tabpanel', {
+	id: 'tabpanel',
         renderTo: 'tabs1',
         activeTab: 0,
        // width: 1080,
@@ -460,6 +477,7 @@ var smP = Ext.create('Ext.selection.CheckboxModel');
             bodyPadding: 10
         },
         items: [{
+        		id:'idTaskTab',
                 title: 'Tasks List',
                 listeners: {
                     activate: function(tab){
@@ -467,6 +485,7 @@ var smP = Ext.create('Ext.selection.CheckboxModel');
                     }},
 				items: gridTaskList
             },{
+            	id:'idNotifTab',
                 title: 'Notifications',
                 listeners: {
                     activate: function(tab){
@@ -475,7 +494,8 @@ var smP = Ext.create('Ext.selection.CheckboxModel');
                 },
                 items: gridNotificationList
             },{
-				    title: 'Start Processes',
+            	id:'idProcessTab',
+				title: 'Processes',
                 listeners: {
                     activate: function(tab){
                        eleList('INIT');
@@ -485,6 +505,18 @@ var smP = Ext.create('Ext.selection.CheckboxModel');
             }
         ]
     });
+    
+    function getTabId(typ){
+    	var tab = "";
+    	if(typ == 'PATask'){
+    		tab = 'idTaskTab';
+    	}else if(typ == 'Notification'){
+    		tab = 'idNotifTab';
+    	}else if(typ == 'PIPATask'){
+    		tab= 'idProcessTab'
+    	}
+    	return tab;
+    }
 	
 
 });

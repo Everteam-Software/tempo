@@ -463,7 +463,7 @@
  
          // task delete
          var task = $('a.taskd',$(this));
-         if(task.html()!=null) {
+         if(task.html()!=null && task.attr('tid') != null) {
            var soapBody = new SOAPObject("delete");
            soapBody.ns = "http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/";
            soapBody.appendChild(new SOAPObject("taskId")).val(task.attr('tid'));
@@ -966,6 +966,8 @@ function endVacation()
         {
     		document.getElementById('isViewTask').value="false";
     		resetQueryString("tabTasks");
+    		$("#q").val("");
+    		setTimeout(function() { $("#q").focus(); }, 200);	
     		$("#tabTasks").click();
         }
  /**
@@ -1483,7 +1485,7 @@ function endVacation()
   	  if(searchUser!="" && searchUser != 'null'){
   			  $('#q').val(searchUser);
   			  $("#qtype option[value='_userOwners']").attr("selected", "selected");
-  			  setTimeout(function() { $("#q").focus(); }, 100);
+  			  setTimeout(function() { $("#q").focus(); }, 200);
   			  //$("#q").focus();
   	  }
      }
