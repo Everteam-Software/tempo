@@ -18,36 +18,40 @@
     <title>
       <fmt:message key="com_intalio_bpms_workflow_pageTitle"/>
     </title>
-
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <style>
+		.ui-menu { position: absolute; width:180px;z-index:5000; }
+	</style>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
 
     <link rel="stylesheet" type="text/css" href="style.css" />
     <link rel="stylesheet" type="text/css" href="style/tabs.css"/>
     <link rel="stylesheet" type="text/css" href="style/flexigrid.css"/>
-    <link rel="stylesheet" type="text/css" href="style/jqueryui/ui.all.css"/>
-
+    <link class="include" rel="stylesheet" href="style/jqueryui/jquery-ui.css"/>
+    <link class="include" rel="stylesheet" href="style/jqueryui/jquery.ui.theme.css"/>
+    <link class="include" rel="stylesheet" href="style/jqueryui/jquery.qtip.css">
+    <link rel="stylesheet" type="text/css" href="style/jqueryui/jquery.alerts.css"/>
+    <link class="include" rel="stylesheet" href="style/jqueryui/ui.dialog.content.css">
     <link rel="alternate" type="application/atom+xml" title="Personal Task feed" href="/feeds/atom/tasks?token=${participantToken}"/>
     <link rel="alternate" type="application/atom+xml" title="Process feed" href="/feeds/atom/processes?token=${participantToken}"/>
 
-      <script type="text/javascript">var one_task_page = true /*Flag to safeguard changes */</script>
-
     <script type="text/javascript" src="script/ui-fw.js"></script>
-    <script type="text/javascript" src="script/jquery-1.3.2.min.js"></script>
-    <script type="text/javascript" src="script/jtabber.js"></script>
+    <script type="text/javascript" src="script/jquery.js"></script>
+    <!--<script type="text/javascript" src="script/jquery.cookie.js"></script>-->
+    <script type="text/javascript" src="script/jquery-ui.js"></script>
     <script type="text/javascript" src="script/jquery-timer.js"></script>
     <script type="text/javascript" src="script/jquery.jcorners.js"></script>
     <script type="text/javascript" src="script/jquery.demensions.js"></script>
+    <script type="text/javascript" src="script/jquery.ui.position.js"></script>
+    <script type="text/javascript" src="script/jtabber.js"></script>
+    <script type="text/javascript" src="script/jquery.qtip.js"></script>
     <script type="text/javascript" src="script/jquery.string.1.0.js"></script>
-    <script type="text/javascript" src="script/soap-1.4beta.js"></script>
-    <script type="text/javascript" src="script/ui/ui.core.js"></script>
-    <script type="text/javascript" src="script/ui/ui.draggable.js"></script>
-    <script type="text/javascript" src="script/ui/ui.resizable.js"></script>
-    <script type="text/javascript" src="script/ui/ui.dialog.js"></script>
-    <script type="text/javascript" src="script/ui/effects.core.js"></script>
-    <script type="text/javascript" src="script/ui/effects.highlight.js"></script>
-    <script type="text/javascript" src="script/ui/jquery.bgiframe.js"></script>
-    <script type="text/javascript" src="script/flexigrid.js"></script>
+    <script type="text/javascript" src="script/jqSoapClient.min.js"></script>
+    <script type="text/javascript" src="script/ui/jquery.ui.datepicker.js"></script>
     
+    
+    <script type="text/javascript" src="script/flexigrid.js"></script>
+    <script type="text/javascript" src="script/jquery.alerts.js"></script>
+    <script type="text/javascript">var one_task_page = true /*Flag to safeguard changes */</script>
     <%@ include file="/script/grids.jsp"%>
 
   </head>
@@ -65,17 +69,11 @@
 
     <iframe src="${taskform}" onLoad="resizeIframe" name="taskform" frameborder="0" id="taskform" scrolling="auto"></iframe>
 
-    <div id="footer" style="margin-left:20px">
-      <fmt:message key="com_intalio_bpms_workflow_pageFooter_poweredBy_label" />
-      <a href="http://www.intalio.com">
-        <span style="color: #3082A8">
-          <fmt:message key="com_intalio_bpms_workflow_pageFooter_poweredBy_value" />
-        </span>
-      </a>
-      <a href="http://bpms.intalio.com">
-        <span style="color: #3082A8"><fmt:message key="com_intalio_bpms_workflow_pageFooter_featureBugRequest"/></span>
-      </a>
-    </div>
+    <div id="versionInfo" class="siteFooter">
+	<span>&nbsp;&nbsp;<fmt:message key="com_intalio_bpms_workflow_pageFooter_poweredBy_label" />&nbsp;&nbsp;
+	<a ><span style="color: #000000"><fmt:message key="com_intalio_bpms_workflow_pageFooter_poweredBy_value" /></span></a>
+	</span>
+       </div>
 
     <script>
       document.getElementById('taskform').onload = resizeIframe;
