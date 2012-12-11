@@ -278,6 +278,7 @@ fieldset { padding:0; border:0; margin-top:25px; }
   margin-right:35px;
   margin-bottom:5px;
   height:30px;
+  cursor:pointer !important;
 }
 
 
@@ -312,3 +313,12 @@ a{
   font-size :14px;
 }
 
+.divider {
+  *width: 100%;
+  height: 1px;
+  margin: 1px 1px;
+  *margin: -5px 0 5px;
+  overflow: hidden;
+  background-color: #e5e5e5;
+  border-bottom: 1px solid #ffffff;
+}

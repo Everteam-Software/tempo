@@ -8,128 +8,56 @@
 <script type="text/javascript">
 
 
-    function toggleQtip(id) {
-	var div = $('#' + id);
-	hide(id);
-	show(id);
-    }
-
-    function hide(id){
-      var div = $('#' + id);
-      if (div.data('visible')) {
-	  div.qtip('hide');
-	  div.data('visible', false);
-      }
-    }
-    function show(id){
-	var div = $('#' + id);
-	var div1 = 'div1';
-	var div2 = 'div2';
-	if(id == div1){
-	  hide(div2); 
-	} else if(id == div2){
-	  hide(div1); 
-	}
-	if (!div.data('visible')) {
-	  div.qtip('show');
-	  div.data('visible', true); 
-	}
-      }
+    
     $(window).load(function(){
 	$('*').live('click', function(){
-	    hide('div1');
-	    hide('div2');
+	    $("#userData").css("display","none");
 	});
     });
+
+    /**
+ * @Function Name   : gotoDashboard 
+ * @Description     : Redirects to the dashboard page.
+ * @param           : 
+ * @returns         : 
+ * */
+
+function gotoDashboard() {
+   window.location.href = "../login.htm";
+}
     
     $(document).ready(function(){ 
 	/*changes 05/12/2012---- start*/
-	$("#userProfile")
-        .button({
-		icons: {
-		secondary: "ui-icon-triangle-1-s"
-	   }	
-	})
-	.click(function(){
-		toggleQtip('div1');
-		return false;
+	/*start----*/
+	$('.select').each(function () {
+		var id = ($(this).attr('id'));
+		$('#'+id).removeClass('select');
+		$('#'+id)
+			.button({
+				icons: {
+					secondary: "ui-icon-triangle-1-s"
+				}
+			})
+			.click(function() {				
+				var menu = $( this ).parent().next().show().position({
+					my: "left top",
+					at: "left bottom",
+					of: this
+				});
+				$( document ).one( "click", function() {
+					menu.hide();
+				});
+				return false;
+			})
+		.parent()
+		.buttonset()
+		.next()
+		.hide()
+		.menu();
 	});
-	$("#options")
-	    .button({
-		icons: {
-		    primary: "ui-icon-gear",
-		    secondary: "ui-icon-triangle-1-s"
-		},
-		text: false
-	    })
-	    .click(function () {
-	    toggleQtip('div2');
-	    return false;
-	});
-	
-	$('.io-footer').each(function () {
-	  showMyTT($(this).attr('id'));
-	});
+			
+    /*-----end*/
 
-	$('.io-footer-options').each(function () {
-	  showMyTT($(this).attr('id'));
-	});
-
-	$("#btnLogout")
-	  .button()
-	  .click(function () {
-	      submitActionToURL('login.htm', 'logOut');
-	      return false;
-	});
-	$("#btnHelp")
-	    .button()
-	    .click(function () {
-	    window.open("http://wiki.intalio.com", '_blank');
-	    window.focus();
-	    return false;
-	});
-
-	function showMyTT(id) {
-	  if(id == "div1")
-	  {
-		$('#' + id).qtip({
-		    content: $('.tooltipContent'),
-		    position: {
-		        my: 'top center',
-		        at: 'bottom right',
-		        adjust: {
-		            x: -65,
-			    y: 45
-		        
-		        },
-			viewport: $(window),
-		    },
-		    show: false,
-		    hide: false,
-		});
-	  }
-	  else if(id == "div2")
-	  {
-		$('#' + id).qtip({
-		    content: $('.optionContent'),
-		    position: {
-		        my: 'top center',
-		        at: 'bottom right',
-		        adjust: {
-		            x: -165,
-			    y:45
-		        
-		        },
-			viewport: $(window),
-
-		    },
-		    show: false,
-		    hide: false,
-		});
-	}
-      }
-
-	
 	/*changes 05/12/2012---- end*/
 	//added for new datepicker
 	
@@ -1099,12 +1027,8 @@ function endVacation()
       usepager: true,
       searchitems : [{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description'},
                      {display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_userOwners"/>', name : '_userOwners'},
-                     {display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_roleOwners"/>', name : '_roleOwners'}                     
-
-				      <c:forEach items="${newColumnList}" var="newColumn">
-				             ,{display: '${newColumn}', name : '_customMetadata'}
-				             
-				      </c:forEach>
+                     {display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_roleOwners"/>', name : '_roleOwners'}
+                     
    ]};		
 
     /*
@@ -1485,7 +1409,7 @@ function endVacation()
   	  if(searchUser!="" && searchUser != 'null'){
   			  $('#q').val(searchUser);
   			  $("#qtype option[value='_userOwners']").attr("selected", "selected");
-  			  setTimeout(function() { $("#q").focus(); }, 200);
+  			  setTimeout( function () { $("#q").focus(); }, 200);
   			  //$("#q").focus();
   	  }
      }

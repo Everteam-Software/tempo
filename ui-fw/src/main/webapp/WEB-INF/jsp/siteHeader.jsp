@@ -15,39 +15,22 @@ String mytoken = state.getCurrentUser().getToken();
 	<input type="hidden" id="searchUser" name="searchUser" value="<%=request.getParameter("unid")%>"/>
 	<input type="hidden" id="currTab" name="currTab" value=""/>
 	
-	<img src="images/logo.png" alt="Intalio Inc." class="io-header-logo">&nbsp;      
-	
-	<div id="div1" class="io-footer" style="float:right"></div>
-	<div id="div2" class="io-footer-options" style="float:right;"></div>
-	<div style="margin-top:13px;float:right;margin-right:8px;">
-		<button id="options" style="width:50px;">Options</button>                        
-		<button id="userProfile">${currentUser}</button>
+	<img src="images/logo.png" alt="Intalio Inc." class="io-header-logo" onclick="gotoDashboard();" title="Return to Home Page">&nbsp;      
+	<div id="userButton"  style="margin-top:13px;float:right;margin-right:8px;">
+	       <div>
+		<button class="select" id="userProfile">${currentUser}</button>
+	      </div>
+	      <ul id="userData">
+		<li><a href="#" onclick="window.location.href = '/ui-fw/ical'" >&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="com_intalio_bpms_workflow_pageHeader_ical_export"/></a></li>
+		<li><a href="#" onclick="window.location.href = '/ui-fw/atom/tasks?token=<%=mytoken%>'" >&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="org_intalio_uifw_siteHeader_tooltip_feed_tasks"/></a></li>
+		<li><a href="#" onclick="window.location.href = '/ui-fw/atom/processes?token=<%=mytoken%>'">&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="org_intalio_uifw_siteHeader_tooltip_feed_processes"/></a></li>
+		<!--<li><a href="#" onclick="window.location.href = '../monitoring'">&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="com_intalio_bpms_workflow_pageHeader_goto_monitoring"/></a></li>-->
+		<li class="divider"></li>
+		<li><a href="#" onclick="window.open('http://wiki.intalio.com', '_blank');window.focus();" >&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="com_intalio_bpms_workflow_pageHeader_help"/></a></li>
+		<li><a href="#" onclick="submitActionToURL('login.htm', 'logOut');" >&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="com_intalio_bpms_workflow_pageHeader_logout"/></a></li>
+	      </ul>
 	</div>
-	 <div class="tooltipContent" style="float:center;display:none;height:80px;width:85px;margin-left:8px;margin-top:5px;">
-               <button id="btnHelp" style="width:80px">
-                   <fmt:message key="com_intalio_bpms_workflow_pageHeader_help"/>
-               </button>
-               <br/><br/>
-               <button id="btnLogout" style="width:80px">
-                     <fmt:message key="com_intalio_bpms_workflow_pageHeader_logout"/>
-               </button>
-        </div>
-	<div class="optionContent" style="float:center;display:none;margin-left:-10px;margin-right:-10px;margin-top:-2px;margin-bottom:-2px;"> 
-	      <table id="optionTable" cellpadding="5">
-		    <tr class="headerlink" onClick="window.location.href = '/ui-fw/ical'"><td>
-		      &nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="com_intalio_bpms_workflow_pageHeader_ical_export"/>&nbsp;&nbsp;&nbsp;&nbsp;
-		    </td></tr>
-		    <tr class="headerlink" onClick="window.location.href = '/ui-fw/atom/tasks?token=<%=mytoken%>'"><td>
-		      &nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="org_intalio_uifw_siteHeader_tooltip_feed_tasks"/>&nbsp;&nbsp;&nbsp;&nbsp;
-		    </td></tr>
-		    <tr class="headerlink" onClick="window.location.href = '/ui-fw/atom/processes?token=<%=mytoken%>'"><td>
-		      &nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="org_intalio_uifw_siteHeader_tooltip_feed_processes"/>&nbsp;&nbsp;&nbsp;&nbsp;
-		    </td></tr>
-		    <tr class="headerlink" onClick="window.location.href = '../main.jsp'"><td>
-		      &nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="com_intalio_bpms_workflow_pageHeader_home"/>&nbsp;&nbsp;&nbsp;&nbsp;
-		    </td></tr>
-	    </table>
-	</div>
+		
 	<div class="siteHeaderIcons">
 	<span id="timer"></span>
 	</div>

@@ -18,7 +18,9 @@
     <title>
       <fmt:message key="com_intalio_bpms_workflow_pageTitle"/>
     </title>
-
+    <style>
+		.ui-menu { position: absolute; width:180px;z-index:5000; }
+	</style>
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
 
     <link rel="stylesheet" type="text/css" href="style.css" />
