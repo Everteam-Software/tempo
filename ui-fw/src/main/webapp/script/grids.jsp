@@ -299,7 +299,7 @@ function gotoDashboard() {
 	autoResize:true,
 	draggable:false,
         height: 350,
-        width:500,
+        width:355,
         modal: true,
         buttons: {'<fmt:message key="org_intalio_uifw_message.button.save"/>': function() {saveVacation();}},
         close: function() {
