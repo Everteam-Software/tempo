@@ -184,7 +184,7 @@
 	</div>
 
     
-    <iframe src="script/empty.jsp" onLoad="resizeIframe" name="taskform" frameborder="0" id="taskform" scrolling="auto"></iframe>
+    <iframe src="" onLoad="resizeIframe" name="taskform" frameborder="0" id="taskform" scrolling="auto"></iframe>
 
       <div id="versionInfo" class="siteFooter">
 	<span>&nbsp;&nbsp;<fmt:message key="com_intalio_bpms_workflow_pageFooter_poweredBy_label" />&nbsp;&nbsp;
