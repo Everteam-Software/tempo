@@ -15,6 +15,7 @@ If you are unsure which license is appropriate for your use, please contact the 
 
 
 var lfLocal = location.protocol + '//' + location.host
+var liferayModalwindow = "";
  
 ///////////////// MODEL   *************************
  Ext.define('taskListModel',{
@@ -168,32 +169,43 @@ Ext.onReady(function(){
     
 	
      function openModal(closable,bpmsurl, url,des,taskId,tkn,usr,typ) {
-	
        
-      Ext.create("Ext.Window",{
-    	  html: "<iframe src='"+lfLocal+"/taskviewer/callerhtml.jsp?bpmsUrl="+bpmsurl+"&url="+url+"&id="+taskId+"&tkn="+tkn+"&usr="+usr+"&typ="+typ+"' width='100%' height='95%' frameborder='0'></iframe>",
-    	  layout: 'fit',
-    	  title : des,
-    	  resizable: true,
-    	  closable: true,
-    	  closeAction: 'hide',
-    	  collapsible: true,
-    	  bodyStyle: 'padding:3px;',
-    	  width:500,
-    	  height:500,
-    	  modal : true,
-    	  minimizable : true,
-    	  maximizable : true,
-		 listeners: {
-		  'close': function(){
-		      window.location.reload(); 
-		  }
-		}
-	  }).show();
-    
-    }
+     	
+        // create the window on the first click and reuse on subsequent clicks
+     liferayModalwindow = new Ext.Window({
 	
-	function closeActiveTab() {
+     html: "<iframe name='liferayIframe' id='liferayIframe' src='"+lfLocal+"/taskviewer/callerhtml.jsp?bpmsUrl="+bpmsurl+"&url="+url+"&id="+taskId+"&tkn="+tkn+"&usr="+usr+"&typ="+typ+"&isIframe=true' width='100%' height='100%' frameborder='0'></iframe>",
+	 title : des,
+	 layout : 'fit',
+	 resizable: false,
+	 autoScroll:true,
+	 closable: true,
+	 closeAction: 'hide',
+	 collapsible: true,
+	 bodyStyle: 'padding:5px;',
+	 modal : true,
+	 maximizable : false,
+	 width:800,
+	 height:600,
+	 maxWidth:screen.width/1.5,
+	 maxHeight:screen.height/1.5,
+	 listeners: {
+	  'close': function(){
+	           Ext.QuickTips.destroy();  
+	           window.location.reload(); 
+	           },
+	  'render': function(c){
+	      Ext.tip.QuickTipManager.init();
+	      Ext.tip.QuickTipManager.register({
+	      target: c.tools['close'],
+	      text: 'Close'
+          });
+         }
+	}
+      }).show();    
+    }
+    
+  function closeActiveTab() {
 	var parent = Ext.get("tabpanel");
 	var activeTab = parent.getActiveTab();
 	var elems = parent.select("a.x-tab-close-btn").elements;
