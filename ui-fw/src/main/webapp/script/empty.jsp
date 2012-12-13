@@ -9,5 +9,6 @@ html,body {
 </style>
 </head>
 <body>
+<center>Kindly close the window</center>
 </body>
 </html>
