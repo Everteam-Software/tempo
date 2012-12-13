@@ -170,7 +170,7 @@ Ext.onReady(function(){
 	
      function openModal(closable,bpmsurl, url,des,taskId,tkn,usr,typ) {
        
-     	
+     var listType = getListType(typ);
         // create the window on the first click and reuse on subsequent clicks
      liferayModalwindow = new Ext.Window({
 	
@@ -190,9 +190,10 @@ Ext.onReady(function(){
 	 maxHeight:screen.height/1.5,
 	 listeners: {
 	  'close': function(){
-	           Ext.QuickTips.destroy();  
-	           window.location.reload(); 
-	           },
+	       Ext.QuickTips.destroy();  
+		   eleList(listType);
+	       tabs2.setActive();   
+	  	},
 	  'render': function(c){
 	      Ext.tip.QuickTipManager.init();
 	      Ext.tip.QuickTipManager.register({
@@ -229,7 +230,7 @@ Ext.onReady(function(){
 		taskListStore.load( { params: { 'user': usuario, 'pass': password, 'tipoList':'ACTIVITY' } });
 		return;
 	}
-
+	
 /*
 	Ext.createWidget('button', {
         renderTo: 'doButton',
@@ -517,16 +518,16 @@ var smP = Ext.create('Ext.selection.CheckboxModel');
         ]
     });
     
-    function getTabId(typ){
-    	var tab = "";
+    function getListType(typ){
+    	var type = "";
     	if(typ == 'PATask'){
-    		tab = 'idTaskTab';
+    		type = 'ACTIVITY';
     	}else if(typ == 'Notification'){
-    		tab = 'idNotifTab';
+    		type = 'NOTIFICATION';
     	}else if(typ == 'PIPATask'){
-    		tab= 'idProcessTab'
+    		type= 'INIT'
     	}
-    	return tab;
+    	return type;
     }
 	
 
