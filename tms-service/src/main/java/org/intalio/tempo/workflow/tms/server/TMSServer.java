@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.NoResultException;
 import javax.xml.transform.TransformerException;
 
 import org.apache.axiom.om.OMAbstractFactory;
@@ -814,8 +815,13 @@ public class TMSServer implements ITMSServer {
 
         if (decryptor.decrypt(participantToken).equalsIgnoreCase(internalPassword)) {
         	// In some cases internal applicatons like WDS will just send value defined in internalPassword so we need to be careful
-            dao.deletePipaTask(formUrl);
-            dao.commit();
+            try {
+                dao.deletePipaTask(formUrl);
+                dao.commit();
+            } catch (NoResultException nre) {
+                throw new UnavailableTaskException(nre.getMessage());
+            }
+
         } else {
             UserRoles credentials = _authProvider.authenticate(decryptor.decrypt(participantToken));
             String userID = credentials.getUserID();
