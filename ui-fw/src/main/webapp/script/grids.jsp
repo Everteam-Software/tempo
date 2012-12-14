@@ -134,7 +134,7 @@ function gotoDashboard() {
       if(navigator.appName != "Microsoft Internet Explorer") {
         var loc = window.frames['taskform'].location;
         try {
-          if(loc.toString().indexOf("blank.jsp")>0) {
+          if(loc.toString().indexOf("empty.jsp")>0) {
             location.href=location.href;
           } else {
             needResize = true;
@@ -152,14 +152,14 @@ function gotoDashboard() {
     function clearFrame() {
         var loc = window.frames['taskform'].location;
         try {
-            if(loc.toString().match("blank.jsp")!=null) return ;
+            if(loc.toString().match("empty.jsp")!=null) return ;
         } catch(err) {
             $('#taskform').animate({height:"0px"},speed);
-            window.open("/ui-fw/script/blank.jsp", "taskform");
+            window.open("/ui-fw/script/empty.jsp", "taskform");
         }
 
         $('#taskform').animate({height:"0px"},speed);
-        window.open("/ui-fw/script/blank.jsp", "taskform");
+        window.open("/ui-fw/script/empty.jsp", "taskform");
       }
 		
 	/*********************************************************************
@@ -1304,7 +1304,7 @@ function endVacation()
       //if(visible) {
         // TODO: let's find a clever way of checking for content independent of the form manager
         var content = (loc.toString().indexOf('type=PATask')!=-1) || (elo.html().substring(0,6).toLowerCase() == '<head>' && elo.html().length > 700);
-        if(!content  && ( loc.toString().indexOf('blank.jsp') > -1) ) {
+        if(!content  && ( loc.toString().indexOf('empty.jsp') > -1) ) {
           clearFrame();
           if(checkPATask){
         	  	  current = "tabTasks";
@@ -1380,7 +1380,7 @@ function endVacation()
     $("#tabTasks").click();
 
     if (!one_task_page)
-    window.open("/ui-fw/script/blank.jsp", "taskform");
+    window.open("/ui-fw/script/empty.jsp", "taskform");
 
     /*
     Ajax activity support call. Show the ajax loading icon
@@ -1429,4 +1429,3 @@ function endVacation()
 </script>
 
  <body onload="setSearch();">
-
