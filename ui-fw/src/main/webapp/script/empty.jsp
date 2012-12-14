@@ -9,6 +9,19 @@ html,body {
 </style>
 </head>
 <body>
-<center>Kindly close the window</center>
+<div id="message"></div>
 </body>
+<script>
+try
+{
+  var loc = window.parent.location.href;
+  if(loc.indexOf("ui-fw") > -1){
+  }else{
+  document.getElementById('message').innerHTML="<center>Kindly close the window</center>";
+  }
+}catch (e)
+{
+ document.getElementById('message').innerHTML="<center>Kindly close the window</center>";
+}
+</script>
 </html>
