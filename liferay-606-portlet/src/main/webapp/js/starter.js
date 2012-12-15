@@ -178,7 +178,7 @@ Ext.onReady(function(){
 	 title : des,
 	 layout : 'fit',
 	 resizable: true,
-	 autoScroll:true,
+	 autoScroll:false,
 	 closable: true,
 	 closeAction: 'hide',
 	 bodyStyle: 'padding:5px;',
