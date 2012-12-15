@@ -1024,12 +1024,9 @@ function endVacation()
       nomsg: '<fmt:message key="org_intalio_uifw_flexigrid_noitem"/>',
       errormsg: '<fmt:message key="org_intalio_uifw_flexigrid_error"/>',
       height: height2,
-      usepager: true,
-      searchitems : [{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description'},
-                     {display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_userOwners"/>', name : '_userOwners'},
-                     {display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_roleOwners"/>', name : '_roleOwners'}
+      usepager: true     
                      
-   ]};		
+ };		
 
     /*
     Table for activity tasks
@@ -1106,7 +1103,13 @@ function endVacation()
           </c:forEach>
           
           
-        ]
+        ],
+	searchitems : [{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description'},
+                     {display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_userOwners"/>', name : '_userOwners'},
+                     {display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_roleOwners"/>', name : '_roleOwners'}
+		     <c:forEach items="${newColumnList}" var="newColumn">
+			  ,{display: '${newColumn}', name : '_customMetadata'}
+		     </c:forEach>  ]
     },p));
 		
 	/*
@@ -1158,7 +1161,11 @@ function endVacation()
               width : width*0.12, 
               sortable : false, 
               align: 'center'}
-	]
+	],
+	searchitems : [{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description'},
+                     {display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_userOwners"/>', name : '_userOwners'},
+                     {display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_roleOwners"/>', name : '_roleOwners'}
+		    ]
 	},p));
 		
 	/*
@@ -1203,7 +1210,12 @@ function endVacation()
           width : width*0.2, 
           sortable : false, 
           align: 'center'},
-	]},p));		
+	],
+	searchitems : [{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description'},
+                     {display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_userOwners"/>', name : '_userOwners'},
+                     {display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_roleOwners"/>', name : '_roleOwners'}
+		      ]
+      },p));		
 		
 		
     /*********************************************************************
