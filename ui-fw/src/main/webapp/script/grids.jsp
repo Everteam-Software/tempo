@@ -1059,13 +1059,13 @@ function endVacation()
           name : '_creationDate', 
           width : width*0.15, 
           sortable : true, 
-          align: 'left'},
+          align: 'center'},
         {
           display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_dueDate"/>', 
           name : '_deadline', 
           width : width*0.15, 
           sortable : true, 
-          align: 'left'},
+          align: 'center'},
         {
           display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_priority"/>', 
           name : '_priority', 
@@ -1136,13 +1136,13 @@ function endVacation()
   name : '_priority', 
   width : width*0.2, 
   sortable : true, 
-  align: 'left'},
+  align: 'center'},
 	{
 	  display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_creationDateTime"/>', 
 	  name : '_creationDate', 
 	  width : width*0.2, 
 	  sortable : true, 
-	  align: 'left'},
+	  align: 'center'},
         {
           display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_userOwners"/>', 
           name : '_attachments', 
@@ -1191,7 +1191,7 @@ function endVacation()
 	  name : '_creationDate', 
 	  width : width*0.2, 
 	  sortable : true, 
-	  align: 'left'},
+	  align: 'center'},
     {
       display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_userOwners"/>', 
       name : '_attachments', 
