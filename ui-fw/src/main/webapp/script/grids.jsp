@@ -334,7 +334,7 @@ function gotoDashboard() {
         height: 190,
         width:600,
         buttons: {
-				 End_Vacation: function(){
+				 '<fmt:message key="org_intalio_uifw_message.button.endVacation"/>': function(){
 					 endVacation();
 			   	  }
        }
