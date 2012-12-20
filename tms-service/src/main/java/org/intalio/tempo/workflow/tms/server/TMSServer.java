@@ -26,9 +26,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.NoResultException;
 import javax.xml.transform.TransformerException;
-
-
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
@@ -39,6 +38,7 @@ import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.commons.lang.StringUtils;
+import org.apache.openjpa.persistence.RollbackException;
 import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.IAuthProvider;
@@ -76,6 +76,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.intalio.bpms.common.AxisUtil;
+
 import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
 
 public class TMSServer implements ITMSServer {
@@ -396,7 +397,12 @@ public class TMSServer implements ITMSServer {
                     //Change by Atul Ends
                     
                     dao.deleteTask(task.getInternalId(), taskID);
-                    dao.commit();
+                    try {
+                        dao.commit();
+                    } catch (RollbackException  e) {
+                        //TODO: Eating the exception here. As tempo-tms is running under ode context which implements its own transaction manager.
+                        // Thus explicitly calling commit causes exception. The new jira is created for this fix WF-1590.
+                    }
                     if (_logger.isDebugEnabled())
                         _logger.debug(userID + " has deleted Workflow Task " + task);
                 } else {
@@ -809,8 +815,13 @@ public class TMSServer implements ITMSServer {
 
         if (decryptor.decrypt(participantToken).equalsIgnoreCase(internalPassword)) {
         	// In some cases internal applicatons like WDS will just send value defined in internalPassword so we need to be careful
-            dao.deletePipaTask(formUrl);
-            dao.commit();
+            try {
+                dao.deletePipaTask(formUrl);
+                dao.commit();
+            } catch (NoResultException nre) {
+                throw new UnavailableTaskException(nre.getMessage());
+            }
+
         } else {
             UserRoles credentials = _authProvider.authenticate(decryptor.decrypt(participantToken));
             String userID = credentials.getUserID();

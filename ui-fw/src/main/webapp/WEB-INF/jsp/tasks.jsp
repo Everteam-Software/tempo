@@ -18,7 +18,9 @@
     <title>
       <fmt:message key="com_intalio_bpms_workflow_pageTitle"/>
     </title>
-
+    <style>
+		.ui-menu { position: absolute; width:180px;z-index:5000; }
+	</style>
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
 
     <link rel="stylesheet" type="text/css" href="style.css" />
@@ -182,7 +184,7 @@
 	</div>
 
     
-    <iframe src="script/empty.jsp" onLoad="resizeIframe" name="taskform" frameborder="0" id="taskform" scrolling="auto"></iframe>
+    <iframe src="" onLoad="resizeIframe" name="taskform" frameborder="0" id="taskform" scrolling="auto"></iframe>
 
       <div id="versionInfo" class="siteFooter">
 	<span>&nbsp;&nbsp;<fmt:message key="com_intalio_bpms_workflow_pageFooter_poweredBy_label" />&nbsp;&nbsp;

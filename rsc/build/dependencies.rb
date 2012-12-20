@@ -256,11 +256,11 @@ CAS_LIBS = [
 
 DEPLOY_API = "org.intalio.deploy:deploy-api:jar:6.3.02"
 REGISTRY = "org.intalio.deploy:deploy-registry:jar:6.3.02"
-SECURITY = group("security-api", :under=>"org.intalio.security", :version=>"6.5.01")
-SECURITY_WS_COMMON = group("security-ws-common", :under=>"org.intalio.security", :version=>"6.5.01")
-SECURITY_WS_CLIENT = group("security-api", "security-ws-client", "security-ws-common", :under=>"org.intalio.security", :version=>"6.5.01")
-SECURITY_WS_CLIENT_ONLY = group("security-api", "security-ws-client", :under=>"org.intalio.security", :version=>"6.5.01")
-WEB_NUTSNBOLTS = "org.intalio.security:security-web-nutsNbolts:jar:6.5.01"
+SECURITY = group("security-api", :under=>"org.intalio.security", :version=>"6.5.02")
+SECURITY_WS_COMMON = group("security-ws-common", :under=>"org.intalio.security", :version=>"6.5.02")
+SECURITY_WS_CLIENT = group("security-api", "security-ws-client", "security-ws-common", :under=>"org.intalio.security", :version=>"6.5.02")
+SECURITY_WS_CLIENT_ONLY = group("security-api", "security-ws-client", :under=>"org.intalio.security", :version=>"6.5.02")
+WEB_NUTSNBOLTS = "org.intalio.security:security-web-nutsNbolts:jar:6.5.02"
 SOJO = [ "net.sf.sojo:sojo:jar:1.0.5","net.sf:sojo-optional:jar:0.5.0" ]
 SPRING_JSON = ["net.sf.spring-json:spring-json:jar:1.3.1"]
 BPMS_COMMON = ["com.intalio.bpms.common:bpms-common:jar:1.1.0.003"]

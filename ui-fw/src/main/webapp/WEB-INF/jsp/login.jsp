@@ -14,7 +14,7 @@
 <html>
 <%
     ApplicationState obj = (ApplicationState) request.getSession().getAttribute("APPLICATION_STATE");
-    String prevAction = request.getRequestURL().toString();
+    String prevAction = "/ui-fw";
     if (obj != null) {
         if (obj.getPreviousAction() != null) {
             prevAction = obj.getPreviousAction();
