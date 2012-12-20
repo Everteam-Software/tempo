@@ -651,7 +651,15 @@
 					   tryCount : 0,
 					   retryLimit : 5,
                                            dataType: p.dataType,
-                                           success: function(data){g.addData(data);},
+                                           success: function(data){g.addData(data);
+					    var searchUser = document.getElementById('searchUser').value;
+					    if(searchUser!="" && searchUser != 'null'){
+  			                      $('#q').val(searchUser);
+  			                      $("#qtype option[value='_userOwners']").attr("selected", "selected");
+					      document.getElementById('searchUser').value="";
+  			                      g.doSearch();
+					    }   
+					  },
                                            error: function(XMLHttpRequest, textStatus, errorThrown) {
 					     this.tryCount++;
 					     if (this.tryCount <= this.retryLimit) {
