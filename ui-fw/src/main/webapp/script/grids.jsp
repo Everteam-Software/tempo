@@ -1288,8 +1288,8 @@ function endVacation()
       if(current == 'tabNotif' || current == 'tabPipa'){
     	  document.getElementById('isViewTask').value="false";
     	  document.getElementById('formURL').value="";
-		  document.getElementById('taskType').value="";
-		  //resetQueryString(current);
+          document.getElementById('taskType').value="";
+	  resetQueryString(current);
       }
       refresh(true);
     });
@@ -1414,19 +1414,8 @@ function endVacation()
         return this.nodeName === name;
     });
   };
-    
-    function setSearch(){
-  	  
-  	  var searchUser = document.getElementById('searchUser').value;
-  	  if(searchUser!="" && searchUser != 'null'){
-  			  $('#q').val(searchUser);
-  			  $("#qtype option[value='_userOwners']").attr("selected", "selected");
-  			  setTimeout( function () { $("#q").focus(); }, 200);
-  			  //$("#q").focus();
-  	  }
-     }
-    
-    /*This function will be used to resetQueryString in the browser address bar*/
+  
+   /*This function will be used to resetQueryString in the browser address bar*/
     
     function resetQueryString(current){
     	var k = location.search.indexOf("unid");
@@ -1440,4 +1429,3 @@ function endVacation()
 
 </script>
 
- <body onload="setSearch();">
