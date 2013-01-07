@@ -14,7 +14,7 @@
 # the License.
 
 
-require 'buildr/java'
+require 'buildr'
 require "rsc/build/dependencies.rb"
 
 module Buildr
