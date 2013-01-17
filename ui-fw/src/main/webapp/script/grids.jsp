@@ -541,9 +541,8 @@ function gotoDashboard() {
             SOAPClient.Proxy = proxy;
             SOAPClient.SOAPServer = tmsService;
             SOAPClient.SendRequest(sr, update);
-    	    $("#reassignDialog").dialog('close');
-            
         });
+        $("#reassignDialog").dialog('close');
     }
         
     /*
@@ -770,16 +769,16 @@ function endVacation()
     function clickReassign(com,grid) {
       if($('.trSelected',grid).length<=0)
       {
-                  $('#warnDialog').html('<a>Please select one task</a>');
+                  $('#warnDialog').html('<a>Please select atleast one task</a>');
                   $('#warnDialog').dialog('open');                
                   return false;
       }
-      else if($('.trSelected',grid).length>1)        
+      /*else if($('.trSelected',grid).length>1)
       {
                   $('#warnDialog').html('<a>Please select only one task</a>');
                   $('#warnDialog').dialog('open');                
                   return false;
-      }
+      }*/
       else if($('.trSelected',grid).length!=0) {
 
         $('#reassign_dyn_user').empty();
