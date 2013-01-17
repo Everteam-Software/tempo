@@ -367,13 +367,6 @@ function gotoDashboard() {
     */
     function deleteTask(com,grid)
     {
-	if($('.trSelected',grid).length<=0)
-	{
-             $('#warnDialog').html('<a>Please select atleast one task</a>');
-             $('#warnDialog').dialog('open');                
-             return false;
-	}
-       else if($('.trSelected',grid).length>0) {
         $('.trSelected',grid).each(function() {
           
           // pipa delete
@@ -403,7 +396,6 @@ function gotoDashboard() {
          } // end soap delete tasks
                     
         }); // end each
-      } // end delete
       $("#deleteDialog").dialog('close');
     }; // end delete function
   
@@ -823,8 +815,13 @@ function endVacation()
     Code for laoding the delete dialog after mouse click
     */
     function clickDelete(com,grid) {
-		
-      if($('.trSelected',grid).length!=0) {
+      if($('.trSelected',grid).length<=0)
+      {
+        $('#warnDialog').html('<a>Please select atleast one task</a>');
+        $('#warnDialog').dialog('open');
+        return false;
+      }
+      else {
 		  $("#deleteDialog").dialog({
           resizable:false,
           bgiframe: false,
