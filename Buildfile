@@ -8,12 +8,18 @@ require "buildr/xmlbeans"
 
 # This branch is a copy of Tempo 6.0.85
  
-
 VERSION_NUMBER = "6.5.0.005-SNAPSHOT"
- 
+DP_VERSION_NUMBER="1.0.0"
 
-require "rsc/build/dependencies.rb"
 require "rsc/build/repositories.rb"
+
+DEPENDENCIES = "#{ENV['HOME']}/.m2/repository/org/intalio/common/dependencies/#{DP_VERSION_NUMBER}/dependencies-#{DP_VERSION_NUMBER}.rb"
+unless ENV["M2_REPO"] != ''
+DEPENDENCIES = "#{ENV['M2_REPO']}/org/intalio/common/dependencies/#{DP_VERSION_NUMBER}/dependencies-#{DP_VERSION_NUMBER}.rb"
+end
+
+load DEPENDENCIES
+
 # leave this require after dependencies.rb so the same jpa version is used throughout the whole build
 require "rsc/buildr-tasks/openjpa" # slight change from buildr, version of openjpa
 
