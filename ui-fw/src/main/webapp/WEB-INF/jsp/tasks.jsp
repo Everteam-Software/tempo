@@ -10,8 +10,19 @@
 	Intalio inc. - initial API and implementation
 --%>
 <%@ page contentType="text/html;charset=UTF-8"%>
+<%@page import="org.intalio.tempo.uiframework.Configuration"%>
+<%@page import="org.intalio.tempo.web.ApplicationState"%>
+<%@page import="org.intalio.tempo.web.User"%>
+<%@page import="java.util.List"%>
+<%@page import="java.util.Arrays"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
+<%
+      User loginUser = ApplicationState.getCurrentInstance(request).getCurrentUser();
+      String[] userTabs =   Configuration.getInstance().getTabSetByRole(loginUser.getRoles());
+      List<String> tabsList = Arrays.asList(userTabs);  
+      pageContext.setAttribute("tabsList",tabsList, PageContext.REQUEST_SCOPE);
+ %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html lang="en" xml:lang="en">
   <head>
@@ -60,33 +71,57 @@
     <%@ include file="/WEB-INF/jsp/siteHeader.jsp"%>
     <div id="container">                        
       <ul id="tabnav">
-        <li >
+      <c:if test="${tabsList!=null}">
+      <c:forEach var="tab" items="${tabsList}">
+      <c:choose>
+      	<c:when test="${tab eq 'tasks'}">
+		<li >
           <a href="#" id="tabTasks" tabtitle="com_intalio_bpms_workflow_tab_tasks" style="width:80px;height:22px;" title="<fmt:message key="com_intalio_bpms_workflow_tab_tasks"/>">
             <fmt:message key="com_intalio_bpms_workflow_tab_tasks"/>
           </a>
         </li>
+        </c:when>
+        <c:when test="${tab eq 'notifications'}">
         <li>
           <a href="#" id="tabNotif" tabtitle="com_intalio_bpms_workflow_tab_notifications" style="width:80px;height:22px;" title="<fmt:message key="com_intalio_bpms_workflow_tab_notifications"/>">
             <fmt:message key="com_intalio_bpms_workflow_tab_notifications"/>
           </a>
         </li>
+        </c:when>
+        <c:when test="${tab eq 'processes'}">
         <li>
           <a href="#" id="tabPipa" tabtitle="com_intalio_bpms_workflow_tab_processes" style="width:80px;height:22px;" title="<fmt:message key="com_intalio_bpms_workflow_tab_processes"/>">
             <fmt:message key="com_intalio_bpms_workflow_tab_processes"/>
           </a>
         </li>
+        </c:when>
+        </c:choose>
+        </c:forEach>
+        </c:if>
       </ul>
 
       <div id ="tasktables">
+      <c:if test="${tabsList!=null}">
+      <c:forEach var="tab" items="${tabsList}">
+      	<c:choose>
+      	<c:when test="${tab eq 'tasks'}">
         <div class="hiddencontent" id="com_intalio_bpms_workflow_tab_tasks">
           <table id="table1" style="display:none"></table>
         </div>
+         </c:when>
+        <c:when test="${tab eq 'notifications'}">
         <div class="hiddencontent" id="com_intalio_bpms_workflow_tab_notifications">
           <table id="table2" style="display:none"></table>
         </div>
+         </c:when>
+        <c:when test="${tab eq 'processes'}">
         <div class="hiddencontent" id="com_intalio_bpms_workflow_tab_processes">
           <table id="table3" style="display:none"></table>
         </div>
+        </c:when>
+        </c:choose>
+        </c:forEach>
+        </c:if>
       </div>
       
     </div>

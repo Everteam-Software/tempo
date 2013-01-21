@@ -1389,7 +1389,7 @@ function endVacation()
     $("#reassignDialog").hide();
     $("#updateDialog").hide();
     $("#connectionLost").hide();
-    $("#tabTasks").click();
+    $("#tabnav li:first a:first").click();
 
     if (!one_task_page)
     window.open("/ui-fw/script/empty.jsp", "taskform");
