@@ -33,6 +33,7 @@ import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.PIPATask;
+import org.intalio.tempo.workflow.task.PIPATaskState;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.TaskState;
 import org.intalio.tempo.workflow.task.Vacation;
@@ -652,6 +653,33 @@ public class TMSRequestProcessor extends OMUnmarshaller {
         finally{
         	if(dao!=null)
         	dao.close();
+        }
+    }
+
+    public OMElement updatePipa(OMElement requestElement) throws AxisFault {
+        ITaskDAOConnection dao=null;
+        try {
+            dao=_taskDAOFactory.openConnection();
+            OMElementQueue rootQueue = new OMElementQueue(requestElement);
+            String pipaEndpoint = requireElementValue(rootQueue, "pipaEndpoint");
+            PIPATaskState pipaTaskState = null;
+            String state = requireElementValue(rootQueue, "state");
+            if(state !=null && !"".equals(state)) {
+                try {
+                    pipaTaskState = PIPATaskState.valueOf(state.toUpperCase());
+                } catch(IllegalArgumentException e) {
+                    throw new InvalidInputFormatException("Unknown task state: '" + state + "'");
+                }
+            }
+            String participantToken = requireElementValue(rootQueue, "participantToken");
+            _server.updatePipa(dao, pipaEndpoint, participantToken, pipaTaskState);
+            return createOkResponse();
+        } catch (Exception e) {
+            throw makeFault(e);
+        }
+        finally{
+            if(dao!=null)
+            dao.close();
         }
     }
 
