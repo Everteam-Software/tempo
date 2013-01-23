@@ -152,7 +152,7 @@
             <xsd:element name="updatePipaRequest">
                 <xsd:complexType>
                     <xsd:sequence>
-                        <xsd:element name="formUrl" type="xsd:string"/>                        
+                        <xsd:element name="pipaEndpoint" type="xsd:string"/>
                         <xsd:element name="state" type="xsd:boolean"/>
                         <xsd:element name="participantToken" type="xsd:string"/>
                     </xsd:sequence>
@@ -837,7 +837,10 @@
 		</wsdl:operation>
 		<wsdl:operation name="updatePipa">
             <wsdl:input message="tns:updatePipaRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/updatePipa"/>
-            <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/updatePipaResponse"/>                        
+            <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/updatePipaResponse"/>
+            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:updatePipainvalidParticipantTokenFault"/>
+            <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:updatePipaunavailableTaskFault"/>
+            <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:updatePipainvalidInputMessageFault"/>
         </wsdl:operation>
         <wsdl:operation name="clearCache">
             <wsdl:input message="tns:clearCacheRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/clearCache"/>                
@@ -1361,6 +1364,24 @@
             </wsdl:output>
              <wsdl:fault name="invalidInputMessageFault">
                 <soap:fault use="literal" name="invalidInputMessageFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updatePipa">
+            <soap:operation/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="invalidInputMessageFault">
+                <soap:fault name="invalidInputMessageFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="unavailableTaskFault">
+                <soap:fault name="unavailableTaskFault" use="literal"/>
+            </wsdl:fault>
+            <wsdl:fault name="invalidParticipantTokenFault">
+                <soap:fault name="invalidParticipantTokenFault" use="literal"/>
             </wsdl:fault>
         </wsdl:operation> 
     </wsdl:binding>
