@@ -40,8 +40,10 @@ public class AbstractJPAConnection {
 
 	public void close() {
 	    // commit();
+	    if (!entityManager.getTransaction().isActive()) {
 			entityManager.close();
 		_logger.debug(ACTION.CLOSE.toString());
+	    }
 	}
 	
 	public void checkTransactionIsActive() {
