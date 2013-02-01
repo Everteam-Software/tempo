@@ -17,7 +17,7 @@ public class FormDispatcherConfigurationTest extends TestCase {
         System.setProperty(FormDispatcherConfiguration.CONFIG_DIR_PROPERTY, "src/test/resources");
         FormDispatcherConfiguration fdc = FormDispatcherConfiguration.getInstance();
         String pxeBaseUrl = fdc.getPxeBaseUrl();
-        assertEquals(pxeBaseUrl,"http://localhost:8080/ode/processes");
+        assertEquals(pxeBaseUrl.trim(), "http://localhost:8080/ode/processes".trim());
         
         String fdsUrl = fdc.getFdsUrl();
         assertEquals(fdsUrl,"http://localhost:8080/fds/workflow/ib4p");
@@ -25,8 +25,8 @@ public class FormDispatcherConfigurationTest extends TestCase {
         String wfUrl = fdc.getWorkflowProcessesRelativeUrl();
         assertEquals(wfUrl, "/workflow/ib4p");
         
-        String tmsUrl = fdc.getTmsUrl();
-        assertEquals(tmsUrl,"http://localhost:8080/axis2/services/TaskManagementServices");
+        String tmsUrl = fdc.getTmsUrl();       
+        assertEquals(tmsUrl.trim(),"http://localhost:8080/axis2/services/TaskManagementServices".trim());
         
         int timeout = fdc.getHttpTimeout();
         assertEquals(timeout, 5000);
