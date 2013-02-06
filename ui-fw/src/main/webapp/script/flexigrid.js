@@ -848,6 +848,8 @@
                         for (i=0;i<p.colModel.length;i++)
                                 {
                                         var cm = p.colModel[i];
+                                        if (undefined === cm) 
+											break; 
                                         var th = document.createElement('th');
 
                                         th.innerHTML = cm.display;
