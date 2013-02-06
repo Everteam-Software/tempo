@@ -169,6 +169,10 @@
         <operation name="deleteVacation">
             <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
             <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/deleteVacation</actionMapping>
+        </operation>
+        <operation name="updatePipa">
+            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+            <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/updatePipa</actionMapping>
         </operation>        
     </service>
 </serviceGroup>
