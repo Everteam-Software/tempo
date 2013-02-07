@@ -29,6 +29,8 @@
       <bean id="loginValidator"
             class="org.intalio.tempo.web.controller.LoginController$LoginValidator"/>
     </property>
+    <!-- change "displayName" property value to attributes pattren like  {firstname} {lastname}-->
+    <property name="displayName" value="{name}"/>
   </bean>
 
   <!-- Tasks section -->

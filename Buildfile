@@ -8,12 +8,18 @@ require "buildr/xmlbeans"
 
 # This branch is a copy of Tempo 6.0.85
  
-
 VERSION_NUMBER = "6.5.0.005-SNAPSHOT"
- 
+DP_VERSION_NUMBER="1.0.0"
 
-require "rsc/build/dependencies.rb"
 require "rsc/build/repositories.rb"
+
+DEPENDENCIES = "#{ENV['HOME']}/.m2/repository/org/intalio/common/dependencies/#{DP_VERSION_NUMBER}/dependencies-#{DP_VERSION_NUMBER}.rb"
+unless ENV["M2_REPO"] != ''
+DEPENDENCIES = "#{ENV['M2_REPO']}/org/intalio/common/dependencies/#{DP_VERSION_NUMBER}/dependencies-#{DP_VERSION_NUMBER}.rb"
+end
+
+load DEPENDENCIES
+
 # leave this require after dependencies.rb so the same jpa version is used throughout the whole build
 require "rsc/buildr-tasks/openjpa" # slight change from buildr, version of openjpa
 
@@ -84,12 +90,12 @@ define "tempo" do
 
   desc "Task Management Services Common Library"
   define "tms-common" do |project|
-    compile.with projects("tms-axis"), SECURITY_WS_CLIENT_ONLY, APACHE_JPA, APACHE_COMMONS[:pool], APACHE_COMMONS[:collections], AXIS2, AXIOM, DOM4J, JAXEN, SLF4J, SPRING[:core], STAX_API, XERCES, XMLBEANS
+    compile.with projects("tms-axis"), SECURITY_WS_CLIENT_ONLY, APACHE_JPA, APACHE_COMMONS[:pool], APACHE_COMMONS[:collections], AXIS2, AXIOM, DOM4J, JAXEN, SLF4J, SPRING[:core], STAX_API, XERCES, XMLBEANS, JAXP_RI
     
     compile { open_jpa_enhance }
     task "package" => generate_sql([project], "workflow.tms")
     
-    test.with APACHE_DERBY, LOG4J, DB_CONNECTOR.values, XMLUNIT, WOODSTOX, INSTINCT, SECURITY_WS_COMMON, APACHE_COMMONS[:pool], APACHE_COMMONS[:collections], APACHE_COMMONS[:httpclient]
+    test.with APACHE_DERBY, LOG4J, DB_CONNECTOR.values, XMLUNIT, WOODSTOX, INSTINCT, SECURITY_WS_COMMON, APACHE_COMMONS[:pool], APACHE_COMMONS[:collections], APACHE_COMMONS[:httpclient],JAXP_RI
     test.exclude '*TestUtils*'
     unless ENV["LIVE"] == 'yes'
       test.exclude '*N3AuthProviderLiveTest*'

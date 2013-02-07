@@ -15,8 +15,6 @@
 
 package org.intalio.tempo.workflow.auth.n3;
 
-import java.util.Properties;
-
 import junit.framework.Assert;
 
 import org.intalio.tempo.security.Property;
@@ -64,11 +62,12 @@ public class N3AuthProviderTest {
         properties[2] = new Property("fullName", "Castor Workaholic");
         properties[3] = new Property("email", "castor@exolab.org");
         properties[4] = new Property("roles", "exolab\\committer,exolab\\participant");
-        
+                
         expect.that(new Expectations() {
             {
                 one(tc).getTokenProperties(SYSTEM_TEST_TOKEN); will(returnValue(properties));
-                one(tc).isWorkflowAdmin("exolab\\castor"); will(returnValue(false));
+                
+               
                
             }
         });
@@ -90,7 +89,7 @@ public class N3AuthProviderTest {
         expect.that(new Expectations() {
             {
                 one(tc).getTokenProperties(SYSTEM_TEST_TOKEN); will(returnValue(properties));
-                one(tc).isWorkflowAdmin("exolab\\castor"); will(returnValue(false));
+              
             }
         });
         ap.setWsEndpoint("http://localhost:8080/axis2/services/TokenService");
@@ -98,20 +97,20 @@ public class N3AuthProviderTest {
         Assert.assertEquals("exolab\\castor", user.getUserID());
         Assert.assertFalse(user.isWorkflowAdmin());
     }
-    
+         
     @Specification
     public void testN3AuthProviderForAdmin() throws Exception {
-        final Property[] properties = new Property[5];
+        final Property[] properties = new Property[6];
         properties[0] = new Property("issued", "1222330753605");
         properties[1] = new Property("user", "exolab\\castor");
         properties[2] = new Property("fullName", "Castor Workaholic");
         properties[3] = new Property("email", "castor@exolab.org");
         properties[4] = new Property("roles", "exolab\\committer,exolab\\participant");
+        properties[5] = new Property("isWorkflowAdmin", true);
         
         expect.that(new Expectations() {
             {
-                one(tc).getTokenProperties(SYSTEM_TEST_TOKEN); will(returnValue(properties));
-                one(tc).isWorkflowAdmin("exolab\\castor"); will(returnValue(true));
+            	one(tc).getTokenProperties(SYSTEM_TEST_TOKEN); will(returnValue(properties));
             }
         });
         ap.setWsEndpoint("http://localhost:8080/axis2/services/TokenService");
