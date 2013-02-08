@@ -848,6 +848,8 @@
                         for (i=0;i<p.colModel.length;i++)
                                 {
                                         var cm = p.colModel[i];
+                                        if (undefined === cm) 
+											break; 
                                         var th = document.createElement('th');
 
                                         th.innerHTML = cm.display;
@@ -1269,7 +1271,7 @@
                                 if (p.qtype=='') p.qtype = sitems[0].name;
                                 
 				$(g.sDiv).append("<div class='sDiv2'>"+p.findtext+" <input type='text' size='30' id='q' name='q' class='qsbox' /> <select id='qtype' name='qtype'>"+sopt+"</select> <input type='button' value='Clear' /></div>");
-				$('input[name=q]',g.sDiv).focus(function(){ g.doSearch();});
+				$('input[name=q]',g.sDiv).focus(function(){if($('input[name=q]',g.sDiv).val()!='') g.doSearch();});
 				$('input[name=q],select[name=qtype]',g.sDiv).keydown(function(e){if(e.keyCode==13) g.doSearch()});
 				$('input[name=q],select[name=qtype]',g.sDiv).keypress(function(){g.doSearch();});
 				$('input[value=Clear]',g.sDiv).click(function(){$('input[name=q]',g.sDiv).val(''); p.query = ''; g.doSearch(); });

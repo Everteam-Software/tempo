@@ -12,6 +12,8 @@ VERSION_NUMBER = "6.5.0.005-SNAPSHOT"
 DP_VERSION_NUMBER="1.0.7"
 
 require "rsc/build/repositories.rb"
+# We need to download the artifact before we load the same
+artifact("org.intalio.common:dependencies:rb:#{DP_VERSION_NUMBER}").invoke
 
 DEPENDENCIES = "#{ENV['HOME']}/.m2/repository/org/intalio/common/dependencies/#{DP_VERSION_NUMBER}/dependencies-#{DP_VERSION_NUMBER}.rb"
 unless ENV["M2_REPO"] != ''

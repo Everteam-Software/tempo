@@ -367,13 +367,6 @@ function gotoDashboard() {
     */
     function deleteTask(com,grid)
     {
-	if($('.trSelected',grid).length<=0)
-	{
-             $('#warnDialog').html('<a>Please select atleast one task</a>');
-             $('#warnDialog').dialog('open');                
-             return false;
-	}
-       else if($('.trSelected',grid).length>0) {
         $('.trSelected',grid).each(function() {
           
           // pipa delete
@@ -403,7 +396,6 @@ function gotoDashboard() {
          } // end soap delete tasks
                     
         }); // end each
-      } // end delete
       $("#deleteDialog").dialog('close');
     }; // end delete function
   
@@ -519,6 +511,7 @@ function gotoDashboard() {
             SOAPClient.Proxy = proxy;
             SOAPClient.SOAPServer = tmsService;
             SOAPClient.SendRequest(sr, update);
+			$("#updateDialog").dialog('close');          
         });
     }
         
@@ -536,22 +529,21 @@ function gotoDashboard() {
 	             return false;
             }
             
-            var soapBody     = new SOAPObject("reassign");
-            soapBody.ns      = "http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/";
+            var soapBody     = new SOAPObject("reassignTaskRequest");
+            soapBody.ns      = "http://www.intalio.com/bpms/workflow/ib4p_20051115";
             soapBody.appendChild(new SOAPObject("taskId")).val(task.attr('tid'));
             soapBody.appendChild(new SOAPObject("userOwner")).val($('#reassign_user').val());
             soapBody.appendChild(new SOAPObject("roleOwner")).val($('#reassign_roles').val());
-            soapBody.appendChild(new SOAPObject("taskState")).val('READY');
+            //soapBody.appendChild(new SOAPObject("taskState")).val('READY');
             soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
-			soapBody.appendChild(new SOAPObject("userAction")).val('REASSIGN');
+			//soapBody.appendChild(new SOAPObject("userAction")).val('REASSIGN');
             
-            var sr = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/reassign", soapBody);
+            var sr = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/reassignTask", soapBody);
             SOAPClient.Proxy = proxy;
-            SOAPClient.SOAPServer = tmsService;
+            SOAPClient.SOAPServer = tmpService;
             SOAPClient.SendRequest(sr, update);
-    	    $("#reassignDialog").dialog('close');
-            
         });
+        $("#reassignDialog").dialog('close');
     }
         
     /*
@@ -758,7 +750,8 @@ function endVacation()
       $("#updateDialog").dialog({
         bgiframe: false,
         autoOpen: false,
-        height: 200,
+        height: 250,
+        width:302,
         modal: true,
         resizable :false,
 	draggable:false,
@@ -766,8 +759,7 @@ function endVacation()
 	buttons: {
           Update: function() {updateTask(com,grid); $(this).dialog('close');}
         },
-        close: function() {$(this).dialog('close');} //updated line fix for WF-1460
-	
+        
       });
       $("#updateDialog").dialog('open');
 	}        
@@ -778,16 +770,16 @@ function endVacation()
     function clickReassign(com,grid) {
       if($('.trSelected',grid).length<=0)
       {
-                  $('#warnDialog').html('<a>Please select one task</a>');
+                  $('#warnDialog').html('<a>Please select atleast one task</a>');
                   $('#warnDialog').dialog('open');                
                   return false;
       }
-      else if($('.trSelected',grid).length>1)        
+      /*else if($('.trSelected',grid).length>1)
       {
                   $('#warnDialog').html('<a>Please select only one task</a>');
                   $('#warnDialog').dialog('open');                
                   return false;
-      }
+      }*/
       else if($('.trSelected',grid).length!=0) {
 
         $('#reassign_dyn_user').empty();
@@ -804,9 +796,9 @@ function endVacation()
 	  autoResize: true,
 	  draggable:false,
           buttons: {
-            Reassign: function() {reassignTask(com,grid);}
+            Reassign: function() {reassignTask(com,grid);$(this).dialog('close');},
           },
-          close: function() {$(this).dialog('close');}
+          
         });
         $("#reassignDialog").dialog('open');
       }
@@ -823,8 +815,13 @@ function endVacation()
     Code for laoding the delete dialog after mouse click
     */
     function clickDelete(com,grid) {
-		
-      if($('.trSelected',grid).length!=0) {
+      if($('.trSelected',grid).length<=0)
+      {
+        $('#warnDialog').html('<a>Please select atleast one task</a>');
+        $('#warnDialog').dialog('open');
+        return false;
+      }
+      else {
 		  $("#deleteDialog").dialog({
           resizable:false,
           bgiframe: false,
@@ -924,7 +921,7 @@ function endVacation()
                 $("#warnDialog").dialog('open');
                 return false;
             }
-            if (varFrom != null && document.getElementById(varFrom).value != '' && varTo != null && document.getElementById(varTo).value!= '') {
+            else if (varFrom != null && document.getElementById(varFrom).value != '' && varTo != null && document.getElementById(varTo).value!= '') {
                 if (checkdate(chkFrom) != true) {
                     document.getElementById(varFrom).value = '';
                     return false;
@@ -933,25 +930,8 @@ function endVacation()
                     document.getElementById(varTo).value = '';
                     return false;
                 }
-                else {
-                    fromdate = document.getElementById(varFrom).value;
-                    todate = document.getElementById(varTo).value;
-                    dt1 = parseInt(fromdate.substring(0, 2), 10);
-                    mon1 = parseInt(fromdate.substring(3, 5), 10);
-                    yr1 = parseInt(fromdate.substring(6, 10), 10);
-                    dt2 = parseInt(todate.substring(0, 2), 10);
-                    mon2 = parseInt(todate.substring(3, 5), 10);
-                    yr2 = parseInt(todate.substring(6, 10), 10);
-                    date1 = new Date(yr1, mon1, dt1);
-                    date2 = new Date(yr2, mon2, dt2);
- 
-                    if (date2 < date1) {
-                        $("#warnDialog").html('<a >To date Should be greater than From date</a>');
-						$("#warnDialog").dialog('open');
-                        document.getElementById(varTo).value = '';
-                        return false;
-                    }
-                }
+                else 
+                return true;
             }
             return true;
    }
@@ -1389,7 +1369,7 @@ function endVacation()
     $("#reassignDialog").hide();
     $("#updateDialog").hide();
     $("#connectionLost").hide();
-    $("#tabTasks").click();
+    $("#tabnav li:first a:first").click();
 
     if (!one_task_page)
     window.open("/ui-fw/script/empty.jsp", "taskform");
