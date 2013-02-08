@@ -18,7 +18,7 @@ String mytoken = state.getCurrentUser().getToken();
 	<img src="images/logo.png" alt="Intalio Inc." class="io-header-logo" onclick="gotoDashboard();" title="Return to Home Page">&nbsp;      
 	<div id="userButton"  style="margin-top:13px;float:right;margin-right:8px;">
 	       <div>
-		<button class="select" id="userProfile">${currentUser}</button>
+		<button class="select" id="userProfile">${currentUserName}</button>
 	      </div>
 	      <ul id="userData">
 		<li><a href="#" onclick="window.location.href = '/ui-fw/ical'" >&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="com_intalio_bpms_workflow_pageHeader_ical_export"/></a></li>
