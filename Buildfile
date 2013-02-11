@@ -9,7 +9,7 @@ require "buildr/xmlbeans"
 # This branch is a copy of Tempo 6.0.85
  
 VERSION_NUMBER = "6.5.0.005-SNAPSHOT"
-DP_VERSION_NUMBER="1.0.8"
+DP_VERSION_NUMBER="1.0.1"
 
 require "rsc/build/repositories.rb"
 # We need to download the artifact before we load the same
