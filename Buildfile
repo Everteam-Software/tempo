@@ -9,7 +9,7 @@ require "buildr/xmlbeans"
 # This branch is a copy of Tempo 6.0.85
  
 VERSION_NUMBER = "6.5.0.005-SNAPSHOT"
-DP_VERSION_NUMBER="1.0.0"
+DP_VERSION_NUMBER="1.0.1"
 
 require "rsc/build/repositories.rb"
 # We need to download the artifact before we load the same
@@ -38,7 +38,7 @@ define "tempo" do
   compile.options.target = "1.5"
 
   define "dao-nutsNbolts" do
-    compile.with WEB_NUTSNBOLTS, APACHE_JPA, SLF4J
+    compile.with SECURITY[:nutbolts], APACHE_JPA, JPA, SLF4J.values
     package :jar
   end
 
@@ -52,7 +52,7 @@ define "tempo" do
       end
     end
 
-    libs = [AXIS2, AXIOM, APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], DOM4J, JAXEN, LOG4J, SERVLET_API, SLF4J, STAX_API]
+    libs = [AXIS2.values, AXIOM, APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], DOM4J, JAXEN, LOG4J, SERVLET_API, SLF4J.values, STAX_API]
     compile.with libs 
     resources.filter.using "version" => VERSION_NUMBER
     test.with XMLUNIT, INSTINCT
@@ -65,9 +65,9 @@ define "tempo" do
 
   desc "Task Attachment Service"
   define "tas-service" do
-    compile.with APACHE_COMMONS[:httpclient], APACHE_COMMONS[:io], AXIOM, AXIS2, JAXEN, SLF4J, STAX_API, WEBDAV, SECURITY_WS_CLIENT_ONLY
+    compile.with APACHE_COMMONS[:httpclient], APACHE_COMMONS[:io], AXIOM, AXIS2.values, JAXEN, SLF4J.values, STAX_API, WEBDAV, SECURITY.values
 
-    test.with SECURITY_WS_COMMON, APACHE_COMMONS[:codec], LOG4J, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, INSTINCT
+    test.with SECURITY[:common], APACHE_COMMONS[:codec], LOG4J, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, INSTINCT
     test.exclude '*TestUtils*'
 
     # require live Axis2 instance
@@ -79,7 +79,7 @@ define "tempo" do
 
     package :jar
     package(:aar).with(:libs => [ 
-        SECURITY_WS_CLIENT, WEB_NUTSNBOLTS, APACHE_COMMONS[:httpclient],JASYPT, APACHE_COMMONS[:codec], JAXEN, SLF4J, SPRING[:core], WEBDAV])
+        SECURITY[:client], SECURITY[:nutbolts], APACHE_COMMONS[:httpclient],JASYPT, APACHE_COMMONS[:codec], JAXEN, SLF4J.values, SPRING[:core], WEBDAV])
   end
 
   desc "Xml Beans generation"
@@ -92,12 +92,12 @@ define "tempo" do
 
   desc "Task Management Services Common Library"
   define "tms-common" do |project|
-    compile.with projects("tms-axis"), SECURITY_WS_CLIENT_ONLY, APACHE_JPA, APACHE_COMMONS[:pool], APACHE_COMMONS[:collections], AXIS2, AXIOM, DOM4J, JAXEN, SLF4J, SPRING[:core], STAX_API, XERCES, XMLBEANS, JAXP_RI
+    compile.with projects("tms-axis"),  SECURITY.values, APACHE_JPA, APACHE_COMMONS[:pool], APACHE_COMMONS[:collections], AXIS2.values, AXIOM, DOM4J, JAXEN, SLF4J.values, SPRING[:core], STAX_API, XERCES[:impl],  XERCES[:parserapi], XMLBEANS.values, JAXP_RI
     
     compile { open_jpa_enhance }
     task "package" => generate_sql([project], "workflow.tms")
     
-    test.with APACHE_DERBY, LOG4J, DB_CONNECTOR.values, XMLUNIT, WOODSTOX, INSTINCT, SECURITY_WS_COMMON, APACHE_COMMONS[:pool], APACHE_COMMONS[:collections], APACHE_COMMONS[:httpclient],JAXP_RI
+    test.with APACHE_DERBY, LOG4J, DB_CONNECTOR.values, XMLUNIT, WOODSTOX, INSTINCT, SECURITY[:common], APACHE_COMMONS[:pool], APACHE_COMMONS[:collections], APACHE_COMMONS[:httpclient],JAXP_RI
     test.exclude '*TestUtils*'
     unless ENV["LIVE"] == 'yes'
       test.exclude '*N3AuthProviderLiveTest*'
@@ -109,9 +109,9 @@ define "tempo" do
   desc "Task Management Service Client"
   define "tms-client" do
     compile.with projects("tms-axis", "tms-common","tms-service"), APACHE_COMMONS[:httpclient],BPMS_COMMON,
-      APACHE_JPA, AXIOM, AXIS2, SLF4J, STAX_API, WSDL4J, WS_COMMONS_SCHEMA, XMLBEANS,SPRING[:core]
+      APACHE_JPA, AXIOM, AXIS2.values, SLF4J.values, STAX_API, WSDL4J, WS_COMMONS_SCHEMA, XMLBEANS.values,SPRING[:core]
 
-    test.with APACHE_COMMONS[:pool],projects("tms-service"), APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], LOG4J, WOODSTOX, SUNMAIL, SECURITY_WS_CLIENT, FREEMARKER, CASTOR, XERCES
+    test.with APACHE_COMMONS[:pool],projects("tms-service"), APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], LOG4J, WOODSTOX, SUNMAIL,SECURITY[:api], SECURITY[:client], FREEMARKER, CASTOR, XERCES[:impl],  XERCES[:parserapi]
 
     test.exclude '*TestUtils*'
 
@@ -128,10 +128,9 @@ define "tempo" do
   
   desc "Task Management Service"
   define "tms-service" do
-    libs = projects("tms-axis", "tms-common", "dao-nutsNbolts"),JASYPT,
-     APACHE_JPA, APACHE_COMMONS[:pool], AXIOM, AXIS2, JAXEN, SLF4J, SPRING[:core], STAX_API, XMLBEANS, DB_CONNECTOR.values, DEPLOY_API, SECURITY_WS_CLIENT_ONLY, WEB_NUTSNBOLTS,XALAN,JASYPT, BPMS_COMMON, ASPECTJ 
+    libs = projects("tms-axis", "tms-common", "dao-nutsNbolts"),JASYPT, APACHE_JPA, APACHE_COMMONS[:pool], AXIOM, AXIS2.values, JAXEN, SLF4J.values, SPRING[:core], STAX_API, XMLBEANS.values, DB_CONNECTOR.values, DEPLOY_API,  SECURITY.values,XALAN,JASYPT, BPMS_COMMON, ASPECTJ.values 
     compile.with libs
-    test.with libs + [REGISTRY, APACHE_DERBY, APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], CASTOR, EASY_B, LOG4J, DB_CONNECTOR.values, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES, XMLUNIT, INSTINCT]
+    test.with libs + [ APACHE_JPA, REGISTRY, APACHE_DERBY, APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], SECURITY.values, CASTOR, EASY_B, LOG4J, DB_CONNECTOR.values, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES[:impl],  XERCES[:parserapi], XMLUNIT, INSTINCT]
 
     test.using :properties => 
       { 
@@ -150,23 +149,25 @@ define "tempo" do
 
     package :jar
     package(:aar).with :libs => 
-        [ projects("tms-axis", "tms-common", "dao-nutsNbolts"), BPMS_COMMON,JASYPT,OPENSSO_CLIENT_SDK, CAS_CLIENT,CASTOR,APACHE_COMMONS[:pool], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], APACHE_JPA, SLF4J, SPRING[:core], DEPLOY_API, REGISTRY, SECURITY_WS_CLIENT, WEB_NUTSNBOLTS, ASPECTJ, SPRING[:aop] ] 
+        [ projects("tms-axis", "tms-common", "dao-nutsNbolts"),
+BPMS_COMMON,JASYPT,OPENSSO_CLIENT_SDK, CAS_CLIENT,CASTOR,APACHE_COMMONS[:pool],
+APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], APACHE_JPA, SERP, SLF4J.values,
+SPRING[:core], DEPLOY_API, REGISTRY,SECURITY.values,
+ASPECTJ.values, SPRING[:aop] ] 
   end
   
   desc "User-Interface Framework"
 
   define "ui-fw" do
     libs = projects("tms-axis", "tms-client", "tms-common","dao-nutsNbolts","tms-service"),
-           SECURITY_WS_CLIENT,
-           WEB_NUTSNBOLTS,
-           #BPMS_COMMON,
+           SECURITY.values,
            APACHE_ABDERA,
            APACHE_COMMONS[:io],
            APACHE_COMMONS[:httpclient],
            APACHE_COMMONS[:codec],
            APACHE_JPA,
            AXIOM, 
-           AXIS2, 
+           AXIS2.values, 
            CSV,
            CASTOR,
            DOM4J,
@@ -184,15 +185,16 @@ define "tempo" do
            SPRING[:core], 
            SPRING[:webmvc],
            SPRING[:webmvc_portlet],
-           SLF4J, 
+           SLF4J.values, 
            STAX_API, 
            TAGLIBS, 
            URLREWRITE,
            WOODSTOX, 
            WSDL4J,
            WS_COMMONS_SCHEMA,
-           XERCES, 
-           XMLBEANS,
+           XERCES[:impl], 
+           XERCES[:parserapi], 
+           XMLBEANS.values,
            SOJO,
            SPRING_JSON,
            BPMS_COMMON
@@ -207,7 +209,7 @@ define "tempo" do
     web_xml = _("src/main/webapp/WEB-INF/"+web_xml) 
     
     resources.filter.using "version" => VERSION_NUMBER
-    test.with JAXEN, XMLUNIT, INSTINCT, LOG4J, SPRING_MOCK
+    test.with JAXEN, XMLUNIT, INSTINCT, LOG4J, SPRING[:mock]
 	package(:jar)
     package(:war).include(web_xml, :as=>'WEB-INF/web.xml').with(:libs=>libs)
   end
@@ -215,7 +217,7 @@ define "tempo" do
   desc "Workflow Deployment Service"
   define "wds-service" do |project|
     libs = [ projects("dao-nutsNbolts", "tms-client", "tms-axis", "tms-common" ), 
-      AXIS2, AXIOM, APACHE_COMMONS[:io], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], APACHE_COMMONS[:pool], APACHE_JPA, DOM4J, JAXEN, SLF4J, SPRING[:core], STAX_API, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX, XERCES, XMLBEANS, DEPLOY_API, REGISTRY, SECURITY, WEB_NUTSNBOLTS ]
+      AXIS2.values, AXIOM, APACHE_COMMONS[:io], APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], APACHE_COMMONS[:pool], APACHE_JPA, DOM4J, JAXEN, SLF4J.values, SPRING[:core], STAX_API, WS_COMMONS_SCHEMA, WSDL4J, WOODSTOX, XERCES[:impl],  XERCES[:parserapi], XMLBEANS.values, DEPLOY_API, REGISTRY, SECURITY.values]
     test_libs = libs + [SERVLET_API, EASY_B, INSTINCT, DB_CONNECTOR.values]
 	compile.with(test_libs + projects("ui-fw"))
     compile { open_jpa_enhance }

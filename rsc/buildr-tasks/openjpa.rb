@@ -15,15 +15,6 @@
 
 
 require 'buildr'
-DP_VERSION_NUMBER="1.0.0"
-
-DEPENDENCIES = "#{ENV['HOME']}/.m2/repository/org/intalio/common/dependencies/#{DP_VERSION_NUMBER}/dependencies-#{DP_VERSION_NUMBER}.rb"
-unless ENV["M2_REPO"] != ''
-DEPENDENCIES = "#{ENV['M2_REPO']}/org/intalio/common/dependencies/#{DP_VERSION_NUMBER}/dependencies-#{DP_VERSION_NUMBER}.rb"
-end
-
-require DEPENDENCIES
-
 
 module Buildr
 
@@ -31,14 +22,14 @@ module Buildr
   module OpenJPA
     
     REQUIRES = [ 
-      "commons-collections:commons-collections:jar:3.1",
-      "commons-dbcp:commons-dbcp:jar:1.2.1", 
-      "commons-lang:commons-lang:jar:2.1",
-      "commons-pool:commons-pool:jar:1.2",
-      "javax.persistence:persistence-api:jar:1.0",
-      "org.apache.geronimo.specs:geronimo-j2ee-connector_1.5_spec:jar:1.0",
-      "org.apache.geronimo.specs:geronimo-jta_1.0.1B_spec:jar:1.0",
-      "net.sourceforge.serp:serp:jar:1.11.0" ]
+     APACHE_COMMONS[:collections],
+     APACHE_COMMONS[:dbcp],
+     APACHE_COMMONS[:lang],
+     APACHE_COMMONS[:pool],
+     JPA,
+     GERONIMO[:j2ee],
+     GERONIMO[:jta],
+     SERP ]
 
     Java.classpath << APACHE_JPA << REQUIRES << APACHE_DERBY
 
