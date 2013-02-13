@@ -78,6 +78,22 @@
 				</entry>
 			</map>
 		</property>
+		<property name="visibleTabs">
+			<map>
+				<entry key="administrator">
+					<set>
+						<value>tasks</value>
+						<value>notifications</value>
+						<value>processes</value>
+					</set>
+				</entry>
+				<entry key="employee">
+					<set>
+						<value>notifications</value>
+					</set>
+				</entry>
+			</map>
+		</property>
 		<property name="tmsFactory">
 			<ref bean="tmsfactory"/>
 		</property>

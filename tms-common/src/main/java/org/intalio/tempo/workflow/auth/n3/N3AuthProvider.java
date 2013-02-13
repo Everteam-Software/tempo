@@ -62,8 +62,11 @@ public class N3AuthProvider implements IAuthProvider {
             UserRoles userRoles=new UserRoles(invokerUser, invokerRoles);
 
             Property isWorkFlowAdmin = PropertyUtils.getProperty(properties, "isWorkflowAdmin");
+            if(isWorkFlowAdmin!=null)
             userRoles.setWorkflowAdmin(Boolean.parseBoolean(isWorkFlowAdmin.getValue().toString()));
-
+            else
+            	userRoles.setWorkflowAdmin(false);
+            
 			if (_logger.isDebugEnabled()){		
 				_logger.debug("isWorkflowAdmin :" + userRoles.isWorkflowAdmin());
 			}	

@@ -560,12 +560,24 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
             for (int j = 0 ; j < elements ; j++) {
 //                System.out.println("NodeName : " + list.item(j).getNodeName() + " NodeValue : " + list.item(j).getFirstChild().getNodeValue());
                 if(list.item(j).getFirstChild() != null)
-                    customMetadata.put(list.item(j).getNodeName().toLowerCase(), getTextNodeValue(list.item(j)));
+                    customMetadata.put(getTextNodeName(list.item(j)), getTextNodeValue(list.item(j)));
             }
             ((ITaskWithCustomMetadata) resultTask).setCustomMetadata(customMetadata);
         }
 
         return resultTask;
+    }
+
+    private String getTextNodeName(Node node) {
+        {
+            if(node.getChildNodes().getLength() > 0)
+            {
+                if(node.getFirstChild().getNodeType() != Node.TEXT_NODE) {
+                    return getTextNodeName(node.getFirstChild());
+                }
+        }
+        }
+        return node.getNodeName().toLowerCase();
     }
 
     private String getTextNodeValue(Node node) {

@@ -58,6 +58,7 @@ public class TasksAction extends Action {
         final UIFWApplicationState state = ApplicationState.getCurrentInstance(new HttpServletRequestWrapper(_request));
         final String token = state.getCurrentUser().getToken();
         final String user = state.getCurrentUser().getName();
+        final String userName = state.getCurrentUser().getDisplayName();
         try {
 	        if (Boolean.valueOf(_request.getParameter("update")).booleanValue()) {	
 		        	TasksCollector collector = getTaskCollector(user, token);
@@ -71,6 +72,7 @@ public class TasksAction extends Action {
 		
         model.put("participantToken", token);
         model.put("currentUser", user);
+        model.put("currentUserName", userName);
         model.put("userRoles", state.getCurrentUser().getRoles());
         model.put("refreshTime", Configuration.getInstance().getRefreshTime());
         model.put("sessionTimeout", Configuration.getInstance().getSessionTimeout());   
