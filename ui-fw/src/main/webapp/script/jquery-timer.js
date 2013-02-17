@@ -15,7 +15,7 @@ var interval = interval || options.reset;
 
 if(!callback) { return false; }
 
-timer = function(interval, callback) {
+var timer = function(interval, callback) {
 // Only used by internal code to call the callback
 this.internalCallback = function() { callback(self); };
 
