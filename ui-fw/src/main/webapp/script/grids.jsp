@@ -1209,7 +1209,7 @@ function endVacation()
           name : '_viewTasks', 
           width : width*0.2, 
           sortable : false, 
-          align: 'center'},
+          align: 'center'}
 	],
 	searchitems : [{display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_description"/>', name : '_description'},
                      {display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_userOwners"/>', name : '_userOwners'},
