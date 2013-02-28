@@ -1060,13 +1060,13 @@ function endVacation()
           align: 'center'},
         {
           display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_userOwners"/>', 
-          name : '_attachments', 
+          name : '_userOwners', 
           width : width*0.12, 
           sortable : false, 
           align: 'center'},
         {
           display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_roleOwners"/>', 
-          name : '_attachments', 
+          name : '_roleOwners', 
           width : width*0.12, 
           sortable : false, 
           align: 'center'}
@@ -1075,9 +1075,9 @@ function endVacation()
           
           ,{
               display: '${newColumn}', 
-              name : '_attachments', 
+              name : '_customMetadata', 
               width : width*0.12, 
-              sortable : false, 
+              sortable : true, 
               align: 'center'}
           
           </c:forEach>
@@ -1125,19 +1125,19 @@ function endVacation()
 	  align: 'center'},
         {
           display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_userOwners"/>', 
-          name : '_attachments', 
+          name : '_userOwners', 
           width : width*0.12, 
           sortable : false, 
           align: 'center'},
         {
           display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_roleOwners"/>', 
-          name : '_attachments', 
+          name : '_roleOwners', 
           width : width*0.12, 
           sortable : false, 
           align: 'center'}, 
           {
               display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_view_tasks"/>', 
-              name : '_attachments', 
+              name : '_viewTasks', 
               width : width*0.12, 
               sortable : false, 
               align: 'center'}
@@ -1174,13 +1174,13 @@ function endVacation()
 	  align: 'center'},
     {
       display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_userOwners"/>', 
-      name : '_attachments', 
+      name : '_userOwners', 
       width : width*0.2, 
       sortable : false, 
       align: 'center'},
     {
       display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_roleOwners"/>', 
-      name : '_attachments', 
+      name : '_roleOwners', 
       width : width*0.2, 
       sortable : false, 
       align: 'center'}, 
