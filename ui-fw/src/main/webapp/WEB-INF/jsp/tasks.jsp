@@ -47,7 +47,7 @@
 
     <script type="text/javascript" src="script/ui-fw.js"></script>
     <script type="text/javascript" src="script/jquery.js"></script>
-    <!--<script type="text/javascript" src="script/jquery.cookie.js"></script>-->
+    <script type="text/javascript" src="script/jquery.cookie.js"></script>
     <script type="text/javascript" src="script/jquery-ui.js"></script>
     <script type="text/javascript" src="script/jquery-timer.js"></script>
     <script type="text/javascript" src="script/jquery.jcorners.js"></script>
