@@ -511,6 +511,7 @@ function gotoDashboard() {
             SOAPClient.Proxy = proxy;
             SOAPClient.SOAPServer = tmsService;
             SOAPClient.SendRequest(sr, update);
+			$("#updateDialog").dialog('close');          
         });
     }
         
@@ -749,7 +750,8 @@ function endVacation()
       $("#updateDialog").dialog({
         bgiframe: false,
         autoOpen: false,
-        height: 200,
+        height: 250,
+        width:302,
         modal: true,
         resizable :false,
 	draggable:false,
@@ -757,8 +759,7 @@ function endVacation()
 	buttons: {
           Update: function() {updateTask(com,grid); $(this).dialog('close');}
         },
-        close: function() {$(this).dialog('close');} //updated line fix for WF-1460
-	
+        
       });
       $("#updateDialog").dialog('open');
 	}        
@@ -795,9 +796,9 @@ function endVacation()
 	  autoResize: true,
 	  draggable:false,
           buttons: {
-            Reassign: function() {reassignTask(com,grid);}
+            Reassign: function() {reassignTask(com,grid);$(this).dialog('close');},
           },
-          close: function() {$(this).dialog('close');}
+          
         });
         $("#reassignDialog").dialog('open');
       }
@@ -920,7 +921,7 @@ function endVacation()
                 $("#warnDialog").dialog('open');
                 return false;
             }
-            if (varFrom != null && document.getElementById(varFrom).value != '' && varTo != null && document.getElementById(varTo).value!= '') {
+            else if (varFrom != null && document.getElementById(varFrom).value != '' && varTo != null && document.getElementById(varTo).value!= '') {
                 if (checkdate(chkFrom) != true) {
                     document.getElementById(varFrom).value = '';
                     return false;
@@ -929,25 +930,8 @@ function endVacation()
                     document.getElementById(varTo).value = '';
                     return false;
                 }
-                else {
-                    fromdate = document.getElementById(varFrom).value;
-                    todate = document.getElementById(varTo).value;
-                    dt1 = parseInt(fromdate.substring(0, 2), 10);
-                    mon1 = parseInt(fromdate.substring(3, 5), 10);
-                    yr1 = parseInt(fromdate.substring(6, 10), 10);
-                    dt2 = parseInt(todate.substring(0, 2), 10);
-                    mon2 = parseInt(todate.substring(3, 5), 10);
-                    yr2 = parseInt(todate.substring(6, 10), 10);
-                    date1 = new Date(yr1, mon1, dt1);
-                    date2 = new Date(yr2, mon2, dt2);
- 
-                    if (date2 < date1) {
-                        $("#warnDialog").html('<a >To date Should be greater than From date</a>');
-						$("#warnDialog").dialog('open');
-                        document.getElementById(varTo).value = '';
-                        return false;
-                    }
-                }
+                else 
+                return true;
             }
             return true;
    }
@@ -1076,13 +1060,13 @@ function endVacation()
           align: 'center'},
         {
           display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_userOwners"/>', 
-          name : '_attachments', 
+          name : '_userOwners', 
           width : width*0.12, 
           sortable : false, 
           align: 'center'},
         {
           display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_roleOwners"/>', 
-          name : '_attachments', 
+          name : '_roleOwners', 
           width : width*0.12, 
           sortable : false, 
           align: 'center'}
@@ -1091,9 +1075,9 @@ function endVacation()
           
           ,{
               display: '${newColumn}', 
-              name : '_attachments', 
+              name : '_customMetadata', 
               width : width*0.12, 
-              sortable : false, 
+              sortable : true, 
               align: 'center'}
           
           </c:forEach>
@@ -1141,19 +1125,19 @@ function endVacation()
 	  align: 'center'},
         {
           display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_userOwners"/>', 
-          name : '_attachments', 
+          name : '_userOwners', 
           width : width*0.12, 
           sortable : false, 
           align: 'center'},
         {
           display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_roleOwners"/>', 
-          name : '_attachments', 
+          name : '_roleOwners', 
           width : width*0.12, 
           sortable : false, 
           align: 'center'}, 
           {
               display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_view_tasks"/>', 
-              name : '_attachments', 
+              name : '_viewTasks', 
               width : width*0.12, 
               sortable : false, 
               align: 'center'}
@@ -1190,13 +1174,13 @@ function endVacation()
 	  align: 'center'},
     {
       display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_userOwners"/>', 
-      name : '_attachments', 
+      name : '_userOwners', 
       width : width*0.2, 
       sortable : false, 
       align: 'center'},
     {
       display: '<fmt:message key="com_intalio_bpms_workflow_taskHolder_roleOwners"/>', 
-      name : '_attachments', 
+      name : '_roleOwners', 
       width : width*0.2, 
       sortable : false, 
       align: 'center'}, 
@@ -1385,7 +1369,7 @@ function endVacation()
     $("#reassignDialog").hide();
     $("#updateDialog").hide();
     $("#connectionLost").hide();
-    $("#tabTasks").click();
+    $("#tabnav li:first a:first").click();
 
     if (!one_task_page)
     window.open("/ui-fw/script/empty.jsp", "taskform");

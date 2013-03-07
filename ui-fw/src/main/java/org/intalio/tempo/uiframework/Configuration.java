@@ -15,6 +15,7 @@
 package org.intalio.tempo.uiframework;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -43,6 +44,7 @@ public class Configuration {
     private int _ajaxTimeout = 5000;
     private Map<String, Map<String, Set<String>>> _toolbarIconSets;
     private Map<String, Set<String>> _bindIconSetToRole;
+    private Map<String, Set<String>> _visibleTabs;
     private Logger _log = LoggerFactory.getLogger(Configuration.class);
     private ITaskManagementServiceFactory _tmsFactory;
 
@@ -52,6 +54,14 @@ public class Configuration {
 
     public ITaskManagementServiceFactory getTmsFactory() {
         return _tmsFactory;
+    }
+    
+    public Map<String, Set<String>> getVisibleTabs() {
+        return _visibleTabs;
+    }
+
+    public void setVisibleTabs(Map<String, Set<String>> _visibleTabs) {
+        this._visibleTabs = _visibleTabs;
     }
 
     public Map<String, Set<String>> getBindIconSetToRole() {
@@ -86,6 +96,24 @@ public class Configuration {
             }
         }
         return (String[]) taskIcons.toArray(new String[taskIcons.size()]);
+    }
+    
+    public String[] getTabSetByRole(String[] roles) {
+        if (_log.isDebugEnabled()) {
+            _log.debug("Get tab set by Roles:");
+            for (int i = 0; i < roles.length; i++) {
+                _log.debug(roles[i]);
+            }
+        }
+        LinkedHashSet<String> tabs = new LinkedHashSet<String>();
+        HashSet<String> roleSet = getKeysFromValues(_bindIconSetToRole, roles);
+        for (String rs : roleSet) {
+            for (int i = 0; i < roles.length; i++) {
+                Set<String> tabSetByRole = _visibleTabs.get(rs);
+                tabs.addAll(tabSetByRole);
+            }
+        }
+        return (String[]) tabs.toArray(new String[tabs.size()]);
     }
 
     public String[] getNotificationIconSetByRole(String[] roles) {
@@ -204,9 +232,11 @@ public class Configuration {
     private HashSet<String> getKeysFromValues(Map<String, Set<String>> hm, String[] values) {
         HashSet<String> list = new HashSet<String>();
         for (int i = 0; i < values.length; i++) {
-            for (String o : hm.keySet()) {
-                if (hm.get(o).contains(values[i])) {
-                    list.add(o);
+            for (String key : hm.keySet()) {
+                for(String role:hm.get(key)) {
+	                if (role.equalsIgnoreCase(values[i])) {
+	                    list.add(key);
+	                }
                 }
             }
         }

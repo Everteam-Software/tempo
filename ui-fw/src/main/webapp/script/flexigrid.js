@@ -51,7 +51,8 @@
                          onToggleCol: false,
                          onChangeSort: false,
                          onSuccess: false,
-                         onSubmit: false // using a custom populate function
+                         onSubmit: false, // using a custom populate function
+                         cookies: true
                   }, p);
                                
 
@@ -63,6 +64,24 @@
                
                 //create grid class
                 var g = {
+			prefs: {
+
+				cookie_name: $(t).attr('id'),
+				data: '',
+
+				load: function () {
+					var the_cookie = $.cookie(this.cookie_name);
+					if (the_cookie) {
+						this.data = JSON.parse(the_cookie);
+					}
+					return this.data;
+				},
+
+				save: function () {
+					$.cookie(this.cookie_name, JSON.stringify(this.data));
+				}
+
+			},
                         hset : {},
                         rePosDrag: function () {
 
@@ -285,6 +304,11 @@
                                                
                                                 $('.thMove',this.hDiv).removeClass('thMove');
                                                 $(this.cDrag).show();
+						// save column change info to cookie data
+						if(p.cookies){
+							g.prefs.data = this.hDiv.innerHTML;
+							g.prefs.save();
+						}
                                         }                                                                              
                                 $('body').css('cursor','default');
                                 $('body').noSelect(false);
@@ -848,6 +872,8 @@
                         for (i=0;i<p.colModel.length;i++)
                                 {
                                         var cm = p.colModel[i];
+                                        if (undefined === cm) 
+											break; 
                                         var th = document.createElement('th');
 
                                         th.innerHTML = cm.display;
@@ -976,7 +1002,11 @@
                         thead = null;
                
                 if (!p.colmodel) var ci = 0;
-
+		//read cookie data for column info
+		var columnInfo = g.prefs.load();
+		if (columnInfo!='') {
+			g.hDiv.innerHTML = columnInfo;
+		}
                 //setup thead                  
                         $('thead tr:first th',g.hDiv).each
                         (
@@ -1008,8 +1038,9 @@
                                                         }
                                                        
                                                         if (this.hide) $(this).hide();
-                                                       
-                                                        if (!p.colmodel)
+							//read cookie data for column info
+							var columnDiv = g.prefs.load();
+							if (!p.colmodel && columnDiv=='')
                                                         {
                                                                 $(this).attr('axis','col' + ci++);
                                                         }
@@ -1017,7 +1048,9 @@
                                                        
                                                  $(thdiv).css({textAlign:this.align, width: this.width + 'px'});
                                                  thdiv.innerHTML = this.innerHTML;
-                                                 
+						  if (columnDiv!='') {
+							  thdiv = this.innerHTML;
+						  }
                                                 $(this).empty().append(thdiv).removeAttr('width')
                                                 .mousedown(function (e)
                                                         {

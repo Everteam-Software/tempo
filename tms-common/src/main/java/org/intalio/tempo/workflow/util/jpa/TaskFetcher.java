@@ -50,7 +50,7 @@ public class TaskFetcher {
 	private final String QUERY_GENERIC_COUNT = "select COUNT(DISTINCT T) from ";
 //	private final String QUERY_GENERIC2 = " T where (T._userOwners = (?1) or T._roleOwners = (?2)) ";
 	private final String QUERY_GENERIC2_FOR_ADMIN = " T ";
-	private final String QUERY_GENERIC2 = " T where (T._userOwners in (?1) or T._roleOwners in (?2)) ";
+	private final String QUERY_GENERIC2 = " T where (T._userOwners in (?1) or T._roleOwners in (?2) or T._roleOwners = '*') ";
 	
 	// private final String DELETE_TASKS =
 	// "delete from Task m where m._userOwners in (?1) or m._roleOwners in (?2) "

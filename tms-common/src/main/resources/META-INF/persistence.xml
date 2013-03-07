@@ -39,6 +39,6 @@
         <class>org.intalio.tempo.workflow.task.PIPATaskOutput</class>
         <class>org.intalio.tempo.workflow.task.Vacation</class>
         <class>org.intalio.tempo.workflow.task.audit.Audit</class>
-        <properties></properties>
+        <properties><property name="jboss.as.jpa.providerModule" value="org.apache.openjpa" /></properties>
     </persistence-unit>
 </persistence>
