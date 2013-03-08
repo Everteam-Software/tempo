@@ -11,17 +11,16 @@ require "buildr/xmlbeans"
 VERSION_NUMBER = "6.5.0.005-SNAPSHOT"
 DP_VERSION_NUMBER="1.0.1"
 
-if ENV['DP_VERSION_NUMBER'] != ''
+if ENV['DP_VERSION_NUMBER']
 DP_VERSION_NUMBER = "#{ENV['DP_VERSION_NUMBER']}"
 end
-
 
 require "rsc/build/repositories.rb"
 # We need to download the artifact before we load the same
 artifact("org.intalio.common:dependencies:rb:#{DP_VERSION_NUMBER}").invoke
 
 DEPENDENCIES = "#{ENV['HOME']}/.m2/repository/org/intalio/common/dependencies/#{DP_VERSION_NUMBER}/dependencies-#{DP_VERSION_NUMBER}.rb"
-if ENV["M2_REPO"] != ''
+if ENV["M2_REPO"]
 DEPENDENCIES = "#{ENV['M2_REPO']}/org/intalio/common/dependencies/#{DP_VERSION_NUMBER}/dependencies-#{DP_VERSION_NUMBER}.rb"
 end
 
@@ -83,8 +82,7 @@ define "tempo" do
     end
 
     package :jar
-    package(:aar).with(:libs => [ 
-        SECURITY[:client], SECURITY[:nutbolts], APACHE_COMMONS[:httpclient],JASYPT, APACHE_COMMONS[:codec], JAXEN, SLF4J.values, SPRING[:core], WEBDAV])
+    package(:aar).with(:libs => [BPMS_COMMON,SECURITY[:client], SECURITY[:nutbolts], APACHE_COMMONS[:httpclient],JASYPT, APACHE_COMMONS[:codec], JAXEN, SLF4J.values, SPRING[:core], WEBDAV])
   end
 
   desc "Xml Beans generation"

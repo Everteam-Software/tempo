@@ -16,6 +16,7 @@
 package org.intalio.tempo.workflow.auth;
 
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
+import org.intalio.tempo.workflow.util.SecurityProviderProperty;
 
 public final class AuthIdentifierNormalizer {
 
@@ -32,7 +33,9 @@ public final class AuthIdentifierNormalizer {
             if ("/|:".indexOf(sourceId.charAt(i)) >=0 )
                 sourceId = sourceId.substring(0,i) + '\\' + sourceId.substring(i+1);
         }
-        //return sourceId.toLowerCase(); This change is for 6.5.x release in order to fix BPMS-986 issue.
+        if (!SecurityProviderProperty.isCaseSensitive()) {
+            sourceId = sourceId.toLowerCase();
+        }
         return sourceId;
     }
 
