@@ -28,7 +28,16 @@
                    </c:if>
 
 			<row id="no${status.index}"> <cell><![CDATA[
-					    <a class="taskd" href="${taskFullURL}" tid="${taskHolder.task.ID}" target="taskform" onclick='<c:out value="${showAlert}"/>'> 
+					    <a class="taskd" tid="${taskHolder.task.ID}" target="taskform" onclick='<c:out value="${showAlert}"/>'
+					    <c:choose>
+							<c:when test="${fn:contains(showAlert, 'showAlertForNotification')}">
+								href="#"
+							</c:when>
+							<c:otherwise>
+								href="${taskFullURL}"
+							</c:otherwise>
+						</c:choose>
+					    > 
 						<c:choose>
 							<c:when test="${taskHolder.task.description == ''}">
 								<i><fmt:message key="org_intalio_uifw_tasks_notitle"/></i>
@@ -40,7 +49,17 @@
 				<c:when test="${taskHolder.task.priority != '0'}">
     								${taskHolder.task.priority}
     							</c:when>
-			</c:choose> </cell> <cell><![CDATA[<a href="${taskFullURL}" title="${taskHolder.task.creationDate}" target="taskform" onclick='<c:out value="${showAlert}"/>' ><fmt:formatDate value="${taskHolder.task.creationDate}" type="both" timeStyle="short" dateStyle="short" /></a>]]></cell>									
+			</c:choose> </cell> <cell><![CDATA[<a title="${taskHolder.task.creationDate}" target="taskform" onclick='<c:out value="${showAlert}"/>' 
+							<c:choose>
+							<c:when test="${fn:contains(showAlert, 'showAlertForNotification')}">
+								href="#"
+							</c:when>
+							<c:otherwise>
+								href="${taskFullURL}"
+							</c:otherwise>
+						</c:choose>
+							>
+							<fmt:formatDate value="${taskHolder.task.creationDate}" type="both" timeStyle="short" dateStyle="short" /></a>]]></cell>									
 						<cell><![CDATA[<c:out value="${fn:substring(fn:escapeXml(users),1,usersLength-1)}" />]]></cell>
 						<cell><![CDATA[<c:out value="${fn:substring(fn:escapeXml(roles),1,rolesLength-1)}" />]]></cell>					
 			</row>
@@ -73,7 +92,16 @@
                   </c:if>
 
 			<row id="pi${status.index}"> <cell><![CDATA[
-						<a class="pipa" href="${taskFullURL}" endpoint="${taskHolder.task.processEndpoint}" url="${taskHolder.task.formURL}" id="${taskHolder.task.ID}" target="taskform" onclick='<c:out value="${showAlert}"/>' >
+						<a class="pipa" endpoint="${taskHolder.task.processEndpoint}" url="${taskHolder.task.formURL}" id="${taskHolder.task.ID}" target="taskform" onclick='<c:out value="${showAlert}"/>' 
+						<c:choose>
+							<c:when test="${fn:contains(showAlert, 'showAlertForProcess')}">
+								href="#"
+							</c:when>
+							<c:otherwise>
+								href="${taskFullURL}"
+							</c:otherwise>
+						</c:choose>
+						>
 						<c:choose>
 							<c:when test="${taskHolder.task.description == ''}">
 								<i><fmt:message key="org_intalio_uifw_tasks_notitle"/></i>
@@ -81,7 +109,17 @@
 							<c:otherwise>${taskHolder.task.description}</c:otherwise>
 						</c:choose>
 						</a>
-						]]></cell> <cell><![CDATA[<a href="${taskFullURL}" title="${taskHolder.task.creationDate}" target="taskform" onclick='<c:out value="${showAlert}"/>' ><fmt:formatDate value="${taskHolder.task.creationDate}" type="both" timeStyle="short" dateStyle="short" /></a>]]></cell>
+						]]></cell> <cell><![CDATA[<a title="${taskHolder.task.creationDate}" target="taskform" onclick='<c:out value="${showAlert}"/>' 
+						
+						<c:choose>
+							<c:when test="${fn:contains(showAlert, 'showAlertForProcess')}">
+								href="#"
+							</c:when>
+							<c:otherwise>
+								href="${taskFullURL}"
+							</c:otherwise>
+						</c:choose>
+						><fmt:formatDate value="${taskHolder.task.creationDate}" type="both" timeStyle="short" dateStyle="short" /></a>]]></cell>
 
 						<cell><![CDATA[<c:out value="${fn:substring(fn:escapeXml(users),1,usersLength-1)}" />]]></cell>
 						<cell><![CDATA[<c:out value="${fn:substring(fn:escapeXml(roles),1,rolesLength-1)}" />]]></cell>						
@@ -115,7 +153,16 @@
                         </c:if>
 			<row id="pa${status.index}"> <cell><![CDATA[
 					     
-					     <a class="taskd" state="${taskHolder.task.state}" href="${taskFullURL}" tid="${taskHolder.task.ID}" istaskowner="<c:out value='${isTaskOwner}'/>"  target="taskform" priority="${taskHolder.task.priority}" description="${taskHolder.task.description}" onclick='<c:out value="${showAlert}"/>' >
+					     <a class="taskd" state="${taskHolder.task.state}" tid="${taskHolder.task.ID}" istaskowner="<c:out value='${isTaskOwner}'/>"  target="taskform" priority="${taskHolder.task.priority}" description="${taskHolder.task.description}" onclick='<c:out value="${showAlert}"/>' 
+					     <c:choose>
+							<c:when test="${fn:contains(showAlert, 'showAlertForTask')}">
+								href="#"
+							</c:when>
+							<c:otherwise>
+								href="${taskFullURL}"
+							</c:otherwise>
+						</c:choose>
+					     >
 		       				<c:choose>
 								<c:when test="${taskHolder.task.description == ''}">
 									<i><fmt:message key="org_intalio_uifw_tasks_notitle"/></i>
@@ -133,7 +180,16 @@
 						</c:if>
 						<%--	</a> --%>
 						]]> </cell> 
-			<cell><![CDATA[<a href="${taskFullURL}" title="${taskHolder.task.creationDate}" target="taskform" onclick='<c:out value="${showAlert}"/>' ><fmt:formatDate value="${taskHolder.task.creationDate}" type="both" timeStyle="short" dateStyle="short" /></a>]]></cell>
+			<cell><![CDATA[<a title="${taskHolder.task.creationDate}" target="taskform" onclick='<c:out value="${showAlert}"/>' 
+			 <c:choose>
+							<c:when test="${fn:contains(showAlert, 'showAlertForTask')}">
+								href="#"
+							</c:when>
+							<c:otherwise>
+								href="${taskFullURL}"
+							</c:otherwise>
+						</c:choose>
+			><fmt:formatDate value="${taskHolder.task.creationDate}" type="both" timeStyle="short" dateStyle="short" /></a>]]></cell>
 <cell><![CDATA[<fmt:formatDate value="${taskHolder.task.deadline}" type="both" timeStyle="short" dateStyle="short" />]]></cell>
 			<!--<cell><![CDATA[<a href="${taskFullURL}" title="${taskHolder.task.deadline}" target="taskform"><fmt:formatDate value="${taskHolder.task.deadline}" type="both" timeStyle="short" dateStyle="short" /></a>]]></cell> -->
 			<cell> <c:choose>
