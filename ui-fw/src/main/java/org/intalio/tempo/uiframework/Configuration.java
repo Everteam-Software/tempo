@@ -204,9 +204,11 @@ public class Configuration {
     private HashSet<String> getKeysFromValues(Map<String, Set<String>> hm, String[] values) {
         HashSet<String> list = new HashSet<String>();
         for (int i = 0; i < values.length; i++) {
-            for (String o : hm.keySet()) {
-                if (hm.get(o).contains(values[i])) {
-                    list.add(o);
+            for (String key : hm.keySet()) {
+                for(String role:hm.get(key)) {
+	                if (role.equalsIgnoreCase(values[i])) {
+	                    list.add(key);
+	                }
                 }
             }
         }

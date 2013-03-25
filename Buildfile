@@ -9,7 +9,7 @@ require "buildr/xmlbeans"
 # This branch is a copy of Tempo 6.0.85
  
 
-VERSION_NUMBER = "6.5.0.005-SNAPSHOT"
+VERSION_NUMBER = "6.5.0.007-SNAPSHOT"
  
 
 require "rsc/build/dependencies.rb"
@@ -70,8 +70,7 @@ define "tempo" do
     end
 
     package :jar
-    package(:aar).with(:libs => [ 
-        SECURITY_WS_CLIENT, WEB_NUTSNBOLTS, APACHE_COMMONS[:httpclient],JASYPT, APACHE_COMMONS[:codec], JAXEN, SLF4J, SPRING[:core], WEBDAV])
+    package(:aar).with(:libs => [BPMS_COMMON,SECURITY_WS_CLIENT, WEB_NUTSNBOLTS, APACHE_COMMONS[:httpclient],JASYPT, APACHE_COMMONS[:codec], JAXEN, SLF4J, SPRING[:core], WEBDAV])
   end
 
   desc "Xml Beans generation"
