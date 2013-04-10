@@ -8,7 +8,7 @@
 
     <realm identifier="intalio">
         <user identifier="admin">
-            <name>Admininistrator</name>
+            <name>Administrator</name>
             <email>admin@example.com</email>
             <password>changeit</password>
             <assignRole>ProcessAdministrator</assignRole>
