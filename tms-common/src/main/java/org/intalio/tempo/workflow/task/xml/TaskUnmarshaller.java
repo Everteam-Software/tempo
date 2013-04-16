@@ -554,19 +554,30 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
         }
         
         if(resultTask instanceof ITaskWithCustomMetadata){     
-            NodeList list= xmlInput.getDomNode().getFirstChild().getChildNodes();
+            Node inputNode= xmlInput.getDomNode().getFirstChild();
             Map<String, String> customMetadata = new HashMap<String, String>();
-            int elements = list.getLength();
-            for (int j = 0 ; j < elements ; j++) {
-//                System.out.println("NodeName : " + list.item(j).getNodeName() + " NodeValue : " + list.item(j).getFirstChild().getNodeValue());
-                if(list.item(j).getFirstChild() != null)
-                    customMetadata.put(getTextNodeName(list.item(j)), getTextNodeValue(list.item(j)));
-            }
+            extractTextChildren(inputNode, customMetadata);
             ((ITaskWithCustomMetadata) resultTask).setCustomMetadata(customMetadata);
         }
 
         return resultTask;
     }
+    
+    private void extractTextChildren(Node parentNode, Map<String, String> textChildren) {
+    	
+    	NodeList childNodes = parentNode.getChildNodes();
+    	if(parentNode.hasChildNodes()){
+        for (int i = 0; i < childNodes.getLength(); i++) {
+          Node node = childNodes.item(i);
+          if(node.hasChildNodes()){
+        	  extractTextChildren(node, textChildren);
+          }
+          if (node.getNodeType() == Node.TEXT_NODE) {
+        	  textChildren.put(parentNode.getNodeName(), node.getNodeValue());
+          }
+        }
+    	}
+      }
 
     private String getTextNodeName(Node node) {
         {
