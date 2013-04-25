@@ -457,7 +457,21 @@
                         <xsd:element name="description" type="xsd:string"/>
                         <xsd:element name="userName" type="xsd:string"/>
                         <xsd:element name="participantToken" type="xsd:string"/>
+                        <xsd:element name="substitute" type="xsd:string"/>
                     </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="updateVacationRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                    	<xsd:element name="vacId"   type="xsd:int"/>
+                        <xsd:element name="fromDate" type="xsd:date"/>
+                        <xsd:element name="toDate" type="xsd:date"/>
+                        <xsd:element name="description" type="xsd:string"/>
+                        <xsd:element name="userName" type="xsd:string"/>
+                        <xsd:element name="participantToken" type="xsd:string"/>
+                        <xsd:element name="substitute" type="xsd:string"/>
+                   </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
             <xsd:element name="getUserVacationRequest">
@@ -504,6 +518,7 @@
                 	<xsd:element name="vacTo"   type="xsd:dateTime"/>
                 	<xsd:element name="vacDesc" type="xsd:string"/>
                 	<xsd:element name="vacUser" type="xsd:string"/>
+                	<xsd:element name="vacSubstitute" type="xsd:string"/>
                 </xsd:sequence>				
             </xsd:complexType>
         </xsd:schema>
@@ -640,6 +655,9 @@
     </wsdl:message>
 	 <wsdl:message name="insertVacationRequest">
         <wsdl:part name="insertVacationRequest" element="tns:insertVacationRequest"/>
+    </wsdl:message>
+    <wsdl:message name="updateVacationRequest">
+        <wsdl:part name="updateVacationRequest" element="tns:updateVacationRequest"/>
     </wsdl:message>
     <wsdl:message name="getUserVacationRequest">
         <wsdl:part name="getUserVacationRequest" element="tns:getUserVacationRequest"/>
@@ -849,6 +867,11 @@
             <wsdl:input message="tns:insertVacationRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/insertVacation"/>
             <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/insertVacationResponse"/>
             <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:insertVacationinvalidInputMessageFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="updateVacation">
+            <wsdl:input message="tns:updateVacationRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/updateVacation"/>
+            <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/updateVacationResponse"/>
+            <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:updateVacationinvalidInputMessageFault"/>
         </wsdl:operation>
           <wsdl:operation name="getUserVacation">
             <wsdl:input message="tns:getUserVacationRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getUserVacation"/>
@@ -1323,6 +1346,18 @@
         </wsdl:operation>
         <wsdl:operation name="insertVacation">
             <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/insertVacation" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="invalidInputMessageFault">
+                <soap:fault use="literal" name="invalidInputMessageFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateVacation">
+            <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/updateVacation" style="document"/>
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>

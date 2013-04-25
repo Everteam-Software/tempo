@@ -44,7 +44,8 @@
     <link class="include" rel="stylesheet" href="style/jqueryui/ui.dialog.content.css">
     <link rel="alternate" type="application/atom+xml" title="Personal Task feed" href="/feeds/atom/tasks?token=${participantToken}"/>
     <link rel="alternate" type="application/atom+xml" title="Process feed" href="/feeds/atom/processes?token=${participantToken}"/>
-
+    <link type="text/css" href="style/jqueryui/jquery.dataTables.css" rel="stylesheet" />
+    
     <script type="text/javascript" src="script/ui-fw.js"></script>
     <script type="text/javascript" src="script/jquery.js"></script>
     <script type="text/javascript" src="script/jquery.cookie.js"></script>
@@ -58,7 +59,9 @@
     <script type="text/javascript" src="script/jquery.string.1.0.js"></script>
     <script type="text/javascript" src="script/jqSoapClient.min.js"></script>
     <script type="text/javascript" src="script/ui/jquery.ui.datepicker.js"></script>
-    
+    <script type="text/javascript" src="script/jquery.dataTables.js"></script>
+    <script type="text/javascript" src="script/jquery-dateFormat.js"></script> 
+    <script type="text/javascript" src="script/vacation.js"></script> 
     
     <script type="text/javascript" src="script/flexigrid.js"></script>
     <script type="text/javascript" src="script/jquery.alerts.js"></script>
@@ -193,7 +196,12 @@
     </div>
 
 	<div id="vacation" title="<fmt:message key="org_intalio_uifw_vacation_title"/>">
+	<input type="hidden" name="vacationId" id="vacationId"/>
 	<table>
+		<tr>
+			<td>Substitute:</td>
+			<td style="align:left"><input type="text" size="12" maxlength="50" name="substitute" id="substitute"></td>
+		</tr>
 		<tr>
 			<td>From:</td>
 			<td style="align:left"><input type="text" size="10" maxlength="10" name="fromdate" id="fromdate"></td>
@@ -213,11 +221,30 @@
 	</div>
 	<div id="messageDialog" title="Message">
 	</div>
-    <div id="endVacDialog" title="Message">
+	<div id="endVacDialog" title="Message">
 	</div>
-    <div id="warnDialog" title="Message">
+	<div id="warnDialog" title="Message">
 	</div>
-
+	<div id="vacationDetails" style="height:auto;width:auto;" title="<fmt:message key="org_intalio_uifw_vacation_summary"/>">
+	    <table cellpadding="0" cellspacing="0"  id="vacationtable">
+	      <thead>
+		      <tr class="buttonth"><th colspan="6" align="left" >
+		      <span class="vcreate" style="padding-left: 20px;padding-right: 10px;" onclick="clickCreateVacation();"><fmt:message key="org_intalio_uifw_toolbar_button_vacation_create"/></span>
+		      <span class="vupdate" style="padding-left: 20px;padding-right: 10px;" onclick="clickUpdateVacation('#vacationtable');"><fmt:message key="org_intalio_uifw_toolbar_button_vacation_update"/></span>
+		      <span class="vdelete" style="padding-left: 20px;padding-right: 10px;" onclick="clickEndVacation('#vacationtable');"><fmt:message key="org_intalio_uifw_toolbar_button_vacation_delete"/></span>
+		      </th></tr>
+		      <tr>
+			      <th>Id</th>
+			      <th><fmt:message key="org_intalio_uifw_vacation_user"/></th>
+			      <th><fmt:message key="org_intalio_uifw_vacation_fromDate"/></th>
+			      <th><fmt:message key="org_intalio_uifw_vacation_toDate"/></th>
+			      <th><fmt:message key="org_intalio_uifw_vacation_substitute"/></th>
+			      <th><fmt:message key="org_intalio_uifw_vacation_description"/></th>
+		      </tr>
+	      </thead>
+	      <tbody><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr></tbody>	     <tfoot><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr></tfoot>
+	    </table>
+	</div>
     
     <iframe src="" onLoad="resizeIframe" name="taskform" frameborder="0" id="taskform" scrolling="auto"></iframe>
 

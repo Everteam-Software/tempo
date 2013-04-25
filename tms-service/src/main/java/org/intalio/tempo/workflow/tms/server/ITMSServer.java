@@ -102,6 +102,8 @@ public interface ITMSServer {
 			String token) throws Exception;
 	
 	void insertVacation(VacationDAOConnection dao,Vacation vac,String participantToken)throws TMSException;
+	
+	void updateVacation(VacationDAOConnection dao,Vacation vac,String participantToken)throws TMSException;
     
     List<Vacation> getUserVacation(VacationDAOConnection dao,String user,String participantToken)throws TMSException;
     
