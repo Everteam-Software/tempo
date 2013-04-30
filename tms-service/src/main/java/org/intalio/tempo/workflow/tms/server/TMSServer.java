@@ -1086,6 +1086,20 @@ public class TMSServer implements ITMSServer {
          }
      }
     
+    public void updateVacation(VacationDAOConnection dao,Vacation vac, String participantToken) throws TMSException {
+        try {
+     	   	dao.updateVacationDetails(vac);
+            dao.commit();
+             if (_logger.isDebugEnabled())
+                 _logger.debug("Vacation " + vac + " was updated");
+         } catch (Exception e) {
+             _logger.error("Cannot update vacation", e);
+             
+         } finally {
+            // dao.close();
+         }
+     }
+    
      public List<Vacation> getUserVacation(VacationDAOConnection dao,String user, String participantToken) throws TMSException {
      		 List<Vacation> vacationOfUser = dao.getVacationDetails(user);
      		 _logger.debug("vac="+vacationOfUser.size());
@@ -1109,5 +1123,11 @@ public class TMSServer implements ITMSServer {
           } finally {
              // dao.close();
           }
-      }     
+      }  
+     
+     public List<Vacation> getMatchedVacations(VacationDAOConnection dao,Date fromDate, Date toDate, String participantToken){
+    	 List<Vacation> vacationOfUser = dao.getMatchedVacations(fromDate, toDate);
+ 		 _logger.debug("vac="+vacationOfUser.size());
+ 		 return vacationOfUser;
+     }
 }

@@ -47,7 +47,9 @@ public class Configuration {
     private Map<String, Set<String>> _visibleTabs;
     private Logger _log = LoggerFactory.getLogger(Configuration.class);
     private ITaskManagementServiceFactory _tmsFactory;
-
+    private Boolean _substituteMandatory = Boolean.TRUE;
+    private Set<String> _absenceManagerRoles;
+    
     public void setTmsFactory(ITaskManagementServiceFactory tmsFactory) {
         this._tmsFactory = tmsFactory;
     }
@@ -242,4 +244,21 @@ public class Configuration {
         }
         return list;
     }
+
+	public Boolean isSubstituteMandatory() {
+		return _substituteMandatory;
+	}
+
+	public void setSubstituteMandatory(Boolean _substituteMandatory) {
+		this._substituteMandatory = _substituteMandatory;
+	}
+
+	public Set<String> getAbsenceManagerRoles() {
+		return _absenceManagerRoles;
+	}
+
+	public void setAbsenceManagerRoles(Set<String> _absenceManagerRoles) {
+		this._absenceManagerRoles = _absenceManagerRoles;
+	}
+
 }

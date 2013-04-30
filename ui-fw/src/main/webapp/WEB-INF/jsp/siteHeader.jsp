@@ -25,6 +25,10 @@ String mytoken = state.getCurrentUser().getToken();
 		<li><a href="#" onclick="window.location.href = '/ui-fw/atom/tasks?token=<%=mytoken%>'" >&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="org_intalio_uifw_siteHeader_tooltip_feed_tasks"/></a></li>
 		<li><a href="#" onclick="window.location.href = '/ui-fw/atom/processes?token=<%=mytoken%>'">&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="org_intalio_uifw_siteHeader_tooltip_feed_processes"/></a></li>
 		<!--<li><a href="#" onclick="window.location.href = '../monitoring'">&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="com_intalio_bpms_workflow_pageHeader_goto_monitoring"/></a></li>-->
+		<li>
+		  <a href="#" onclick="clickVacationDetails();" id="tabVacation" tabtitle="org_intalio_uifw_siteHeader_tooltip_vacations" title="<fmt:message key="org_intalio_uifw_siteHeader_tooltip_vacations"/>">
+		    &nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="org_intalio_uifw_siteHeader_tooltip_vacations"/></a>
+		</li>
 		<li class="divider"></li>
 		<li><a href="#" onclick="window.open('http://wiki.intalio.com', '_blank');window.focus();" >&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="com_intalio_bpms_workflow_pageHeader_help"/></a></li>
 		<li><a href="#" onclick="submitActionToURL('login.htm', 'logOut');" >&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="com_intalio_bpms_workflow_pageHeader_logout"/></a></li>
