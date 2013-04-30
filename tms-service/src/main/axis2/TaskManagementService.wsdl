@@ -457,7 +457,21 @@
                         <xsd:element name="description" type="xsd:string"/>
                         <xsd:element name="userName" type="xsd:string"/>
                         <xsd:element name="participantToken" type="xsd:string"/>
+                        <xsd:element name="substitute" type="xsd:string"/>
                     </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="updateVacationRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                    	<xsd:element name="vacId"   type="xsd:int"/>
+                        <xsd:element name="fromDate" type="xsd:date"/>
+                        <xsd:element name="toDate" type="xsd:date"/>
+                        <xsd:element name="description" type="xsd:string"/>
+                        <xsd:element name="userName" type="xsd:string"/>
+                        <xsd:element name="participantToken" type="xsd:string"/>
+                        <xsd:element name="substitute" type="xsd:string"/>
+                   </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
             <xsd:element name="getUserVacationRequest">
@@ -497,6 +511,15 @@
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
+            <xsd:element name="getMatchedVacations">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="fromDate" type="xsd:date"/>
+                        <xsd:element name="toDate" type="xsd:date"/>
+                        <xsd:element name="participantToken" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
              <xsd:complexType name="vacationMetadata">
                 <xsd:sequence>
                 	<xsd:element name="vacId"   type="xsd:int"/>
@@ -504,6 +527,7 @@
                 	<xsd:element name="vacTo"   type="xsd:dateTime"/>
                 	<xsd:element name="vacDesc" type="xsd:string"/>
                 	<xsd:element name="vacUser" type="xsd:string"/>
+                	<xsd:element name="vacSubstitute" type="xsd:string"/>
                 </xsd:sequence>				
             </xsd:complexType>
         </xsd:schema>
@@ -641,6 +665,9 @@
 	 <wsdl:message name="insertVacationRequest">
         <wsdl:part name="insertVacationRequest" element="tns:insertVacationRequest"/>
     </wsdl:message>
+    <wsdl:message name="updateVacationRequest">
+        <wsdl:part name="updateVacationRequest" element="tns:updateVacationRequest"/>
+    </wsdl:message>
     <wsdl:message name="getUserVacationRequest">
         <wsdl:part name="getUserVacationRequest" element="tns:getUserVacationRequest"/>
     </wsdl:message>
@@ -655,6 +682,9 @@
     </wsdl:message>
     <wsdl:message name="deleteVacationRequest">
         <wsdl:part name="deleteVacationRequest" element="tns:deleteVacationRequest"/>
+    </wsdl:message>
+    <wsdl:message name="getMatchedVacationsRequest">
+        <wsdl:part name="getMatchedVacationsRequest" element="tns:getMatchedVacationsRequest"/>
     </wsdl:message>
     
     <wsdl:portType name="TaskManagementServicesPortType">
@@ -850,6 +880,11 @@
             <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/insertVacationResponse"/>
             <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:insertVacationinvalidInputMessageFault"/>
         </wsdl:operation>
+        <wsdl:operation name="updateVacation">
+            <wsdl:input message="tns:updateVacationRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/updateVacation"/>
+            <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/updateVacationResponse"/>
+            <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:updateVacationinvalidInputMessageFault"/>
+        </wsdl:operation>
           <wsdl:operation name="getUserVacation">
             <wsdl:input message="tns:getUserVacationRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getUserVacation"/>
             <wsdl:output message="tns:getUserVacationResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/getUserVacationResponse"/>
@@ -863,6 +898,11 @@
             <wsdl:input message="tns:deleteVacationRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/deleteVacation"/>
             <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/deleteVacationResponse"/>
             <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:insertVacationinvalidInputMessageFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="getMatchedVacations">
+            <wsdl:input message="tns:getMatchedVacationsRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getMatchedVacations"/>
+            <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/getMatchedVacationsResponse"/>
+            <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:getMatchedVacationsinvalidInputMessageFault"/>
         </wsdl:operation>
 
     </wsdl:portType>
@@ -1333,6 +1373,18 @@
                 <soap:fault use="literal" name="invalidInputMessageFault"/>
             </wsdl:fault>
         </wsdl:operation>
+        <wsdl:operation name="updateVacation">
+            <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/updateVacation" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="invalidInputMessageFault">
+                <soap:fault use="literal" name="invalidInputMessageFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
         <wsdl:operation name="getUserVacation">
             <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getUserVacation" style="document"/>
             <wsdl:input>
@@ -1347,6 +1399,15 @@
         </wsdl:operation>
          <wsdl:operation name="getVacationList">
             <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getVacationList" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMatchedVacations">
+            <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getMatchedVacations" style="document"/>
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>

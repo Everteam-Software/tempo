@@ -158,6 +158,10 @@
             <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
             <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/insertVacation</actionMapping>
         </operation>
+        <operation name="updateVacation">
+            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+            <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/updateVacation</actionMapping>
+        </operation>
         <operation name="getUserVacation">
             <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
             <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getUserVacation</actionMapping>
@@ -173,6 +177,10 @@
         <operation name="updatePipa">
             <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
             <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/updatePipa</actionMapping>
+        </operation>
+        <operation name="getMatchedVacations">
+            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+            <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getMatchedVacations</actionMapping>
         </operation>        
     </service>
 </serviceGroup>

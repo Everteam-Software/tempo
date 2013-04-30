@@ -38,9 +38,10 @@ import org.intalio.tempo.workflow.util.RequiredArgumentException;
 @Table(name = "vacation")
 @TableGenerator(name = "tab", initialValue = 0, allocationSize = 50)
 @NamedQueries({
-        @NamedQuery(name = Vacation.GET_VACATION_DETAILS, query = "select vacation from Vacation vacation where vacation._user=(:user)"),
-        @NamedQuery(name = Vacation.FIND_VAC_BY_ID, query = "select vacation from Vacation vacation where vacation._id = ?1"),
-        @NamedQuery(name = Vacation.FETCH_VACATION_SUMMARY, query = "select vacation from Vacation vacation")
+        @NamedQuery(name = Vacation.GET_VACATION_DETAILS, query = "select vacation from Vacation vacation where vacation._user=(:user) and vacation._is_active = 1"),
+        @NamedQuery(name = Vacation.FIND_VAC_BY_ID, query = "select vacation from Vacation vacation where vacation._id = ?1 and vacation._is_active = 1"),
+        @NamedQuery(name = Vacation.FETCH_VACATION_SUMMARY, query = "select vacation from Vacation vacation where vacation._is_active = 1"),
+        @NamedQuery(name = Vacation.FETCH_MATCHED_VACATION, query = "select vacation from Vacation vacation where vacation._fromDate <=(:toDate) AND vacation._toDate >= (:fromDate) and vacation._is_active = 1")
         })
 public class Vacation {
 
@@ -49,6 +50,7 @@ public class Vacation {
     private EntityManager _entityManager;
     public static final String GET_VACATION_DETAILS = "get_vacation_details";
     public static final String FETCH_VACATION_SUMMARY = "fetch_vacation_summary";
+    public static final String FETCH_MATCHED_VACATION = "fetch_matched_vacation";
 
     // @GeneratedValue(strategy=GenerationType.AUTO)
     @GeneratedValue
@@ -72,6 +74,14 @@ public class Vacation {
     @Column(name = "user_name")
     @Persistent
     private String _user;
+    
+    @Column(name = "substitute")
+    @Persistent
+    private String _substitute;
+    
+    @Column(name = "is_active")
+    @Persistent
+    private int _is_active;
 
     public Vacation() {
     }
@@ -133,6 +143,22 @@ public class Vacation {
     public void setUser(String user) {
         this._user = user;
     }
+    
+    public String getSubstitute() {
+		return _substitute;
+	}
+
+	public void setSubstitute(String substitute) {
+		this._substitute = substitute;
+	}
+	
+	public int getIs_active() {
+		return _is_active;
+	}
+
+	public void setIs_active(int _is_active) {
+		this._is_active = _is_active;
+	}
 
     public Vacation fetchVacationByID(int id) {
         Query q = find_id.setParameter(1, id);

@@ -186,7 +186,7 @@ ASPECTJ.values, SPRING[:aop] ]
            XERCES[:impl], 
            XERCES[:parserapi], 
            XMLBEANS.values,
-           SOJO,
+           SOJO_OPTIONAL,
            SPRING_JSON,
            BPMS_COMMON
     
