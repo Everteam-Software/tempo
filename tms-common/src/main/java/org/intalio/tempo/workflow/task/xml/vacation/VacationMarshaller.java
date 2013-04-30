@@ -45,6 +45,7 @@ public class VacationMarshaller {
 		vacMetadataElement.setVacTo(cal);
 
 		vacMetadataElement.setVacUser(vac.getUser());
+		vacMetadataElement.setVacSubstitute(vac.getSubstitute());
 		return vacMetadataElement;
 	}
 }

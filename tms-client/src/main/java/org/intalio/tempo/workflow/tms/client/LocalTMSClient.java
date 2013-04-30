@@ -365,7 +365,7 @@ public class LocalTMSClient implements ITaskManagementService {
                 
     }
 
-	public void insertVacation(final String fromDate, final String toDate, final String Desc, final String user) {
+	public void insertVacation(final String fromDate, final String toDate, final String Desc, final String user, final String substitute) {
 		try {
 			Vacation vac = new Vacation();
 			DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
@@ -373,8 +373,20 @@ public class LocalTMSClient implements ITaskManagementService {
 			vac.setToDate(df.parse(toDate));
 			vac.setDescription(Desc);
 			vac.setUser(user);
+			vac.setSubstitute(substitute);
 			VacationDAOConnection dao = _VacationDAOFactory.openConnection();
 			server.insertVacation(dao, vac, participantToken);
+		} catch (TMSException e) {
+			logger.error("TMSException :: ", e);
+		} catch (Exception e) {
+			logger.error("Exception :: ", e);
+		}
+	}
+	
+	public void updateVacation(Vacation vacation) {
+		try {
+			VacationDAOConnection dao = _VacationDAOFactory.openConnection();
+			server.updateVacation(dao, vacation, participantToken);
 		} catch (TMSException e) {
 			logger.error("TMSException :: ", e);
 		} catch (Exception e) {
@@ -419,5 +431,18 @@ public class LocalTMSClient implements ITaskManagementService {
 		} catch (Exception e) {
 			logger.error("Exception :: ", e);
 		}
+	}
+	
+	public List<Vacation> getMatchedVacations(String fromDate, String toDate) {
+		List<Vacation> vac = null;
+		try {
+			DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+			VacationDAOConnection dao = _VacationDAOFactory.openConnection();
+			vac = server.getMatchedVacations(dao, df.parse(fromDate), df.parse(toDate), participantToken);
+
+		} catch (Exception e) {
+			logger.error("Exception :: ", e);
+		}
+		return vac;
 	}
 }

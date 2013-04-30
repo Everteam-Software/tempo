@@ -322,3 +322,19 @@ a{
   background-color: #e5e5e5;
   border-bottom: 1px solid #ffffff;
 }
+
+.vdelete
+{
+    padding-left: 50px;
+    background: url(images/icons/icon.delete.gif) no-repeat center left;
+}
+.vupdate
+{
+    padding-left: 50px;
+    background: url(images/icons/icon.edit.gif) no-repeat center left;
+}
+.vcreate
+{
+    padding-left: 50px;
+    background: url(images/icons/icon.vacation.gif) no-repeat center left;
+}

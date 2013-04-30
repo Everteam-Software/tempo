@@ -16,6 +16,8 @@
 package org.intalio.tempo.workflow.tms.client;
 
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -673,7 +675,7 @@ public class RemoteTMSClient implements ITaskManagementService {
         return null;
     }
     
-    public void insertVacation(final String fromDate, final String toDate, final String Desc, final String user) {
+    public void insertVacation(final String fromDate, final String toDate, final String Desc, final String user, final String substitute) {
 		OMElement request = new TMSMarshaller() {
 			public OMElement marshalRequest() {
 				OMElement request = createElement("insertVacationRequest");
@@ -682,10 +684,29 @@ public class RemoteTMSClient implements ITaskManagementService {
 				createElement(request, "description", Desc);
 				createElement(request, "userName", user);
 				createElement(request, "participantToken", _participantToken);
+				createElement(request, "substitute", substitute);
 				return request;
 			}
 		}.marshalRequest();
 		sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "insertVacation");
+	}
+    
+    public void updateVacation(final Vacation vacation) {
+		OMElement request = new TMSMarshaller() {
+			public OMElement marshalRequest() {
+				DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+				OMElement request = createElement("updateVacationRequest");
+				createElement(request, "vacId", String.valueOf(vacation.getId()));
+				createElement(request, "fromDate", df.format(vacation.getFromDate()));
+				createElement(request, "toDate", df.format(vacation.getToDate()));
+				createElement(request, "description", vacation.getDescription());
+				createElement(request, "userName", vacation.getUser());
+				createElement(request, "participantToken", _participantToken);
+				createElement(request, "substitute", vacation.getSubstitute());
+				return request;
+			}
+		}.marshalRequest();
+		sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "updateVacation");
 	}
 
 	public List<Vacation> getUserVacation(final String user) {
@@ -699,12 +720,20 @@ public class RemoteTMSClient implements ITaskManagementService {
 		}.marshalRequest();
 		List<Vacation> listVac = new ArrayList<Vacation>();
 		OMElement response = sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "getUserVacation");
-		OMElement taskElement = response.getFirstElement();
-		if(taskElement!=null)
-		{
-			Vacation vac = new VacationUnmarshaller().unmarshalVacation(taskElement);
-			listVac.add(vac);
-		}	
+		OMElementQueue rootQueue = new OMElementQueue(response);
+		while (true) {
+			OMElement taskElement = expectVacationElement(rootQueue);
+			if (taskElement == null)
+				break;
+			else {
+				try {
+					Vacation vac = new VacationUnmarshaller().unmarshalVacation(taskElement);
+					listVac.add(vac);
+				} catch (Exception e) {
+					_log.error("Error reading task: " + taskElement, e);
+				}
+			}
+		}
 		return listVac;
 	}
 
@@ -757,6 +786,36 @@ public class RemoteTMSClient implements ITaskManagementService {
 			}
 		}.marshalRequest();
 		sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "deleteVacation");
+	}
+	
+	
+	public List<Vacation> getMatchedVacations(final String fromDate, final String toDate) {
+		OMElement request = new TMSMarshaller() {
+			public OMElement marshalRequest() {
+				OMElement request = createElement("getMatchedVacationsRequest");
+				createElement(request, "fromDate", fromDate);
+				createElement(request, "toDate", toDate);
+				createElement(request, "participantToken", _participantToken);
+				return request;
+			}
+		}.marshalRequest();
+		List<Vacation> listVac = new ArrayList<Vacation>();
+		OMElement response = sendRequest(request, TaskXMLConstants.TASK_NAMESPACE + "getMatchedVacations");
+		OMElementQueue rootQueue = new OMElementQueue(response);
+		while (true) {
+			OMElement taskElement = expectVacationElement(rootQueue);
+			if (taskElement == null)
+				break;
+			else {
+				try {
+					Vacation vac = new VacationUnmarshaller().unmarshalVacation(taskElement);
+					listVac.add(vac);
+				} catch (Exception e) {
+					_log.error("Error reading task: " + taskElement, e);
+				}
+			}
+		}
+		return listVac;
 	}
     
 }
