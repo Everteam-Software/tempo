@@ -97,6 +97,16 @@
 		<property name="tmsFactory">
 			<ref bean="tmsfactory"/>
 		</property>
+		<!-- below properties for Absence Management JIRA WF-1606 -->
+		<property name="isSubstituteMandatory" value="true"/>
+		<property name="absenceManagerRoles">
+		    <set>
+			<value>intalio\ProcessManager</value>
+			<value>intalio\ProcessAdministrator</value>
+			<value>examples\manager</value>
+			<value>intalio\WorkflowAdministrator</value>
+		    </set>
+		</property>
 	</bean>
 	
 	<bean id="tokenClient" class="org.intalio.tempo.security.ws.TokenClient">

@@ -22,6 +22,8 @@
       String[] userTabs =   Configuration.getInstance().getTabSetByRole(loginUser.getRoles());
       List<String> tabsList = Arrays.asList(userTabs);  
       pageContext.setAttribute("tabsList",tabsList, PageContext.REQUEST_SCOPE);
+      String rolesarray = Arrays.toString(loginUser.getRoles()).replace(", ", "', '").replace("[", "['").replace("]", "']").replace("\\", "\\\\");
+      String tokenServiceUrl = Configuration.getInstance().getTokenClient().getEndpoint();
  %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html lang="en" xml:lang="en">
@@ -44,7 +46,8 @@
     <link class="include" rel="stylesheet" href="style/jqueryui/ui.dialog.content.css">
     <link rel="alternate" type="application/atom+xml" title="Personal Task feed" href="/feeds/atom/tasks?token=${participantToken}"/>
     <link rel="alternate" type="application/atom+xml" title="Process feed" href="/feeds/atom/processes?token=${participantToken}"/>
-
+    <link type="text/css" href="style/jqueryui/jquery.dataTables.css" rel="stylesheet" />
+    
     <script type="text/javascript" src="script/ui-fw.js"></script>
     <script type="text/javascript" src="script/jquery.js"></script>
     <script type="text/javascript" src="script/jquery.cookie.js"></script>
@@ -58,7 +61,9 @@
     <script type="text/javascript" src="script/jquery.string.1.0.js"></script>
     <script type="text/javascript" src="script/jqSoapClient.min.js"></script>
     <script type="text/javascript" src="script/ui/jquery.ui.datepicker.js"></script>
-    
+    <script type="text/javascript" src="script/jquery.dataTables.js"></script>
+    <script type="text/javascript" src="script/jquery-dateFormat.js"></script> 
+    <script type="text/javascript" src="script/vacation.js"></script> 
     
     <script type="text/javascript" src="script/flexigrid.js"></script>
     <script type="text/javascript" src="script/jquery.alerts.js"></script>
@@ -192,32 +197,62 @@
        <p><a href="/ui-fw"><fmt:message key="org_intalio_uifw_session_login_again"/></a></p>
     </div>
 
-	<div id="vacation" title="<fmt:message key="org_intalio_uifw_vacation_title"/>">
-	<table>
-		<tr>
-			<td>From:</td>
-			<td style="align:left"><input type="text" size="10" maxlength="10" name="fromdate" id="fromdate"></td>
-		</tr>
-		<tr>
-			<td>To:</td>
-			<td style="align:left"><input type="text" size="10" maxlength="10" name="todate" id="todate"></td>
-		</tr>
-		<tr>
-			<td>Description:</td>
-			<td style="align:left">
-				<textarea style="resize: none;" rows="3" cols="25" name="desc" id="desc">
-				</textarea>
-			</td>
-		</tr>
-	</table>
-	</div>
-	<div id="messageDialog" title="Message">
-	</div>
+    <div id="vacation" title="<fmt:message key="org_intalio_uifw_vacation_title"/>">
+      <input type="hidden" name="vacationId" id="vacationId"/>
+      <input type="hidden" name="substitute" id="substitute"/>
+      <table>
+	      <tr id="proxyUserId" style="display:none">
+		      <td>User:</td>
+		      <td style="align:left"><input type="text" size="10" maxlength="50" name="proxyuser" id="proxyuser"></td>
+	      </tr>
+	      <tr>
+		      <td>From:</td>
+		      <td style="align:left"><input type="text" size="10" maxlength="10" name="fromdate" id="fromdate"></td>
+	      </tr>
+	      <tr>
+		      <td>To:</td>
+		      <td style="align:left"><input type="text" size="10" maxlength="10" name="todate" id="todate" disabled="disabled"></td>
+	      </tr>
+	      <tr>
+		      <td>Substitute:</td>
+		      <td style="align:left"><select name="substitute_select" id="substitute_select" disabled="disabled" ></select></td>
+	      </tr>
+	      <tr>
+		      <td>Description:</td>
+		      <td style="align:left">
+			      <textarea style="resize: none;" rows="3" cols="25" name="desc" id="desc">
+			      </textarea>
+		      </td>
+	      </tr>
+      </table>
+    </div>
+    <div id="messageDialog" title="Message">
+    </div>
     <div id="endVacDialog" title="Message">
 	</div>
     <div id="warnDialog" title="Message">
+    </div>
+	<div id="vacationDetails" style="height:auto;width:auto;" title="<fmt:message key="org_intalio_uifw_vacation_summary"/>">
+	    <table cellpadding="0" cellspacing="0"  id="vacationtable">
+	      <thead>
+		      <tr><th colspan="6" align="left" >
+		      <span class="vcreate" style="padding-left: 20px;padding-right: 10px;" onclick="clickCreateVacation();"><fmt:message key="org_intalio_uifw_toolbar_button_vacation_create"/></span>
+		      <span class="vupdate" style="padding-left: 20px;padding-right: 10px;" onclick="clickUpdateVacation('#vacationtable');"><fmt:message key="org_intalio_uifw_toolbar_button_vacation_update"/></span>
+		      <span class="vdelete" style="padding-left: 20px;padding-right: 10px;" onclick="clickEndVacation('#vacationtable');"><fmt:message key="org_intalio_uifw_toolbar_button_vacation_delete"/></span>
+		      <span id="proxyUserButton" class="vcreate" style="padding-left: 20px;padding-right: 10px;display:none;" onclick="clickCreateProxyVacation();"><fmt:message key="org_intalio_uifw_toolbar_button_vacation_proxy"/></span>
+		      </th></tr>
+		      <tr>
+			      <th>Id</th>
+			      <th><fmt:message key="org_intalio_uifw_vacation_user"/></th>
+			      <th><fmt:message key="org_intalio_uifw_vacation_fromDate"/></th>
+			      <th><fmt:message key="org_intalio_uifw_vacation_toDate"/></th>
+			      <th><fmt:message key="org_intalio_uifw_vacation_substitute"/></th>
+			      <th><fmt:message key="org_intalio_uifw_vacation_description"/></th>
+		      </tr>
+	      </thead>
+	      <tbody><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr></tbody>	     <tfoot><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr></tfoot>
+	    </table>
 	</div>
-
     
     <iframe src="" onLoad="resizeIframe" name="taskform" frameborder="0" id="taskform" scrolling="auto"></iframe>
 
@@ -242,6 +277,11 @@
   <script>
     document.getElementById('taskform').onload = resizeIframe;
     window.onresize = resizeIframe;
+    var cUserRoles = <%= rolesarray %>;
+    var cuser = '<%= loginUser.getName().replace("\\", "\\\\") %>';
+    var tokenServiceUrl = '<%= tokenServiceUrl %>';
+    var rbacService = '<%= tokenServiceUrl.substring(0, tokenServiceUrl.indexOf("/TokenService"))+"/RBACQueryService" %>';
+    var proxy = '/ui-fw/script/proxy.jsp';
   </script>
 
   </body>
