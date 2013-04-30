@@ -24,6 +24,16 @@ public interface VacationDAOConnection {
 	 * @return
 	 */
 	public void insertVacationDetails(Vacation vacation);
+	
+	/**
+	 * Updates Vacation Details
+	 * 
+	 * @param Vacation
+	 *            Object
+	 * 
+	 * @return
+	 */
+	public void updateVacationDetails(Vacation vacation);
 
 	/**
 	 * Gets the vacation details of a particular user
