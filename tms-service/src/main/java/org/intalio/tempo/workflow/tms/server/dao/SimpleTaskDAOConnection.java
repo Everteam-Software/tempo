@@ -25,6 +25,7 @@ import org.intalio.tempo.workflow.task.CustomColumn;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.PIPATaskOutput;
 import org.intalio.tempo.workflow.task.Task;
+import org.intalio.tempo.workflow.task.TaskPrevOwners;
 import org.intalio.tempo.workflow.task.audit.Audit;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
@@ -231,4 +232,19 @@ public class SimpleTaskDAOConnection implements ITaskDAOConnection {
         
        
     }
+
+	@Override
+	public void storePreviousTaskOwners(TaskPrevOwners taskPrevOwners) {
+		 throw new RuntimeException("Not Implemented");
+	}
+
+	@Override
+	public TaskPrevOwners fetchTaskPreviousOwners(String taskID) {
+		 throw new RuntimeException("Not Implemented");
+	}
+
+	@Override
+	public void deleteTaskPreviousOwners(String taskID) {
+		 throw new RuntimeException("Not Implemented");
+	}
 }
