@@ -25,6 +25,7 @@ import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.PIPATaskOutput;
 import org.intalio.tempo.workflow.task.Task;
+import org.intalio.tempo.workflow.task.TaskPrevOwners;
 import org.intalio.tempo.workflow.task.audit.Audit;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
 import org.intalio.tempo.workflow.tms.UnavailableAttachmentException;
@@ -215,4 +216,19 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
         return taskCntForAllUsers;           
     }
     
+    @Override
+    public void storePreviousTaskOwners(TaskPrevOwners taskPrevOwners) {
+        entityManager.persist(taskPrevOwners);
+	}
+
+	@Override
+	public TaskPrevOwners fetchTaskPreviousOwners(String taskID) {
+		TaskPrevOwners taskPrevOwners = new TaskPrevOwners(entityManager);
+		return taskPrevOwners.fetchPrevOwnersByID(taskID);
+	}
+
+	@Override
+	public void deleteTaskPreviousOwners(String taskID) {
+		entityManager.remove(fetchTaskPreviousOwners(taskID));
+	}
 }

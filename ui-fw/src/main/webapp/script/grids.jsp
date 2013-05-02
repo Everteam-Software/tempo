@@ -416,33 +416,27 @@ function gotoDashboard() {
       var task = $('a.taskd',$(this));
 	  var istaskowner=task.attr('istaskowner');  
 	  if(istaskowner=="true"){
-      
-        if(task.attr('state') == "READY") {
-          // claim
-          var soapBody = new SOAPObject("claimTaskRequest");
-          soapBody.ns = "http://www.intalio.com/bpms/workflow/ib4p_20051115";
-          soapBody.appendChild(new SOAPObject("taskId")).val(task.attr('tid'));
-          soapBody.appendChild(new SOAPObject("claimerUser")).val(currentUser);
-          soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
-          var sr = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/claimTask", soapBody);
-          SOAPClient.Proxy = proxy;
-          SOAPClient.SOAPServer = tmpService;
-          SOAPClient.SendRequest(sr, update);
-          } 
-          else 
-          {
-          // revoke
-          var soapBody = new SOAPObject("revokeTaskRequest");
-          soapBody.ns = "http://www.intalio.com/bpms/workflow/ib4p_20051115";
-          soapBody.appendChild(new SOAPObject("taskId")).val(task.attr('tid'));
-          soapBody.appendChild(new SOAPObject("claimerUser")).val(currentUser);
-          soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
-          var sr = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/revokeTask", soapBody);
-          SOAPClient.Proxy = proxy;
-          SOAPClient.SOAPServer = tmpService;
-          SOAPClient.SendRequest(sr, update);
-        }
-	}//end if istaskowner
+	      var soapBody = new SOAPObject("reassign");
+	      soapBody.ns = "http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/";
+	      soapBody.appendChild(new SOAPObject("taskId")).val(task.attr('tid'));
+	      soapBody.appendChild(new SOAPObject("userOwner")).val(currentUser);
+	      //soapBody.appendChild(new SOAPObject("roleOwner")).val($('#reassign_roles').val());
+	      if(task.attr('state') == "READY") {
+		  soapBody.appendChild(new SOAPObject("taskState")).val('CLAIMED');
+	      }else {
+		  soapBody.appendChild(new SOAPObject("taskState")).val('READY');
+	      }
+	      soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
+	      if(task.attr('state') == "READY") {
+		  soapBody.appendChild(new SOAPObject("userAction")).val('CLAIMED');
+	      }else {
+		  soapBody.appendChild(new SOAPObject("userAction")).val('REVOKED');
+	      }
+	      var sr = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/reassign", soapBody);
+	      SOAPClient.Proxy = proxy;
+	      SOAPClient.SOAPServer = tmsService;
+	      SOAPClient.SendRequest(sr, update);
+ 	  }//end if istaskowner
 	else
 		count=count+1;
       }); // end each  
@@ -528,18 +522,18 @@ function gotoDashboard() {
 	             return false;
             }
             
-            var soapBody     = new SOAPObject("reassignTaskRequest");
-            soapBody.ns      = "http://www.intalio.com/bpms/workflow/ib4p_20051115";
+            var soapBody     = new SOAPObject("reassign");
+            soapBody.ns      = "http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/";
             soapBody.appendChild(new SOAPObject("taskId")).val(task.attr('tid'));
             soapBody.appendChild(new SOAPObject("userOwner")).val($('#reassign_user').val());
             soapBody.appendChild(new SOAPObject("roleOwner")).val($('#reassign_roles').val());
-            //soapBody.appendChild(new SOAPObject("taskState")).val('READY');
+            soapBody.appendChild(new SOAPObject("taskState")).val('READY');
             soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
-			//soapBody.appendChild(new SOAPObject("userAction")).val('REASSIGN');
+	    soapBody.appendChild(new SOAPObject("userAction")).val('REASSIGN');
             
-            var sr = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/reassignTask", soapBody);
+            var sr = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/reassign", soapBody);
             SOAPClient.Proxy = proxy;
-            SOAPClient.SOAPServer = tmpService;
+            SOAPClient.SOAPServer = tmsService;
             SOAPClient.SendRequest(sr, update);
         });
         $("#reassignDialog").dialog('close');
