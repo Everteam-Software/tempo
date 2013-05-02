@@ -50,6 +50,7 @@ import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.PIPATaskOutput;
 import org.intalio.tempo.workflow.task.PIPATaskState;
 import org.intalio.tempo.workflow.task.Task;
+import org.intalio.tempo.workflow.task.TaskPrevOwners;
 import org.intalio.tempo.workflow.task.TaskState;
 import org.intalio.tempo.workflow.task.Vacation;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
@@ -791,6 +792,28 @@ public class TMSServer implements ITMSServer {
             // ITaskWithState)) { // TODO: see above
             available = task instanceof ITaskWithState;
             if (available) {
+            	//save task previous owners when claimed
+            	if(((ITaskWithState) task).getState().equals(TaskState.READY) && state.equals(TaskState.CLAIMED)){
+					TaskPrevOwners taskPrevOwners = new TaskPrevOwners();
+					taskPrevOwners.setId(task.getID());
+					String prevUsers = StringUtils.join(task.getUserOwners().toArray(), ",");
+					String prevRoles = StringUtils.join(task.getRoleOwners().toArray(), ",");
+					taskPrevOwners.setPrevUsers(prevUsers);
+					taskPrevOwners.setPrevRoles(prevRoles);
+					try {
+						storePreviousTaskOwners(dao, taskPrevOwners, participantToken);
+					} catch (TMSException e) {
+						 _logger.error("Cannot stored Task ID ("+taskPrevOwners.getId()+") Previous owners", e);
+					}
+				}
+            	//read task previous owners when revoked
+            	if(((ITaskWithState) task).getState().equals(TaskState.CLAIMED) && state.equals(TaskState.READY)){
+					TaskPrevOwners taskPrevOwners = dao.fetchTaskPreviousOwners(taskID);
+					users = new AuthIdentifierSet(StringUtils.split(taskPrevOwners.getPrevUsers(),","));
+					roles = new AuthIdentifierSet(StringUtils.split(taskPrevOwners.getPrevRoles(),","));
+					dao.deleteTaskPreviousOwners(taskID);
+				}
+
                 ((ITaskWithState) task).setState(state);
                 task.setUserOwners(users);
                 task.setRoleOwners(roles);
@@ -1130,4 +1153,18 @@ public class TMSServer implements ITMSServer {
  		 _logger.debug("vac="+vacationOfUser.size());
  		 return vacationOfUser;
      }
+     
+     public void storePreviousTaskOwners(ITaskDAOConnection dao,TaskPrevOwners taskPrevOwners, String token) throws TMSException {
+         try {
+      	   		dao.storePreviousTaskOwners(taskPrevOwners);
+      	   		dao.commit();
+	              if (_logger.isDebugEnabled())
+	                  _logger.debug("Task ID ("+taskPrevOwners.getId()+") Previous owners stored");
+          } catch (Exception e) {
+              _logger.error("Cannot stored Task ID ("+taskPrevOwners.getId()+") Previous owners", e);
+              
+          } finally {
+             // dao.close();
+          }
+      }
 }
