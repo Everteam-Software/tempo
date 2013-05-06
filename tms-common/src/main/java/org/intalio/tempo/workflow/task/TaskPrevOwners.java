@@ -25,69 +25,124 @@ import javax.persistence.Table;
 
 import org.apache.openjpa.persistence.Persistent;
 
+/**
+ *
+ * @author bapiraju
+ *
+ */
 @Entity
 @Table(name = "tempo_prev_owners")
 @NamedQueries({
-    @NamedQuery(name = TaskPrevOwners.FIND_PREV_OWNERS_BY_ID, query = "select prevOwners from TaskPrevOwners prevOwners where prevOwners._id = ?1"),
+    @NamedQuery(name = TaskPrevOwners.FIND_PREV_OWNERS_BY_ID, query =
+    "select prevOwners from TaskPrevOwners prevOwners where prevOwners._id = ?1"
+       ),
     })
 public class TaskPrevOwners {
 	
-	private Query find_id;
-	public static final String FIND_PREV_OWNERS_BY_ID = "find_prev_owners_by_id";
-	private EntityManager _entityManager;
-	
-	public TaskPrevOwners(){
+    /**
+    * query to get TaskPrevOwners by Id.
+    */
+	private Query findId;
+
+	/**
+	 * Constant holds FIND_PREV_OWNERS_BY_ID.
+	 */
+	public static final String FIND_PREV_OWNERS_BY_ID
+	                        = "find_prev_owners_by_id";
+	/**
+	 * entityManager.
+	 */
+	private EntityManager entityManager;
+
+	/**
+	 * empty constructor.
+	 */
+	public TaskPrevOwners() {
 		
-	}
-	public TaskPrevOwners(EntityManager em) {
-		_entityManager = em;
-		find_id = _entityManager.createNamedQuery(TaskPrevOwners.FIND_PREV_OWNERS_BY_ID);
-	}
-	
-	@Id
-	@Column(name = "task_id")
-	@Persistent
-	private String _id;
-	
-	@Column(name = "prev_users")
-	@Persistent
-	private String _prevUsers;
-	
-	@Column(name = "prev_roles")
-	@Persistent
-	private String _prevRoles;
-
-	public String getId() {
-		return _id;
-	}
-
-	public void setId(String _id) {
-		this._id = _id;
-	}
-
-	public String getPrevUsers() {
-		return _prevUsers;
-	}
-
-	public void setPrevUsers(String _prev_users) {
-		this._prevUsers = _prev_users;
-	}
-
-	public String getPrevRoles() {
-		return _prevRoles;
-	}
-
-	public void setPrevRoles(String _prev_roles) {
-		this._prevRoles = _prev_roles;
 	}
 	
 	/**
-	 * to get task previous owners by id
-	 * @param id
-	 * @return
+	 * constructor with entityManager.
+	 * @param em EntityManager
 	 */
-	public TaskPrevOwners fetchPrevOwnersByID(String id) {
-        Query q = find_id.setParameter(1, id);
+	public TaskPrevOwners(final EntityManager em) {
+		entityManager = em;
+		findId = entityManager.createNamedQuery(
+		        TaskPrevOwners.FIND_PREV_OWNERS_BY_ID);
+	}
+
+	/**
+	 * task id.
+	 */
+	@Id
+	@Column(name = "task_id")
+	@Persistent
+	private String id;
+	/**
+	 * task previous users.
+	 */
+	@Column(name = "prev_users")
+	@Persistent
+	private String prevUsers;
+
+	/**
+	 * task previous roles.
+	 */
+	@Column(name = "prev_roles")
+	@Persistent
+	private String prevRoles;
+
+	/**
+	 * get task id.
+	 * @return String
+	 */
+	public final String getId() {
+		return id;
+	}
+
+	/**
+	 * Set task Id.
+	 * @param taskId String
+	 */
+	public final void setId(final String taskId) {
+		this.id = taskId;
+	}
+	/**
+	 * get task previous users.
+	 * @return String
+	 */
+	public final String getPrevUsers() {
+		return prevUsers;
+	}
+	/**
+	 * set task previous users.
+	 * @param taskPrevUsers String
+	 */
+	public final void setPrevUsers(final String taskPrevUsers) {
+		this.prevUsers = taskPrevUsers;
+	}
+	/**
+	 * get task previous roles.
+	 * @return String
+	 */
+	public final String getPrevRoles() {
+		return prevRoles;
+	}
+	/**
+	 * set task previous roles.
+	 * @param taskPrevRoles String
+	 */
+	public final void setPrevRoles(final String taskPrevRoles) {
+		this.prevRoles = taskPrevRoles;
+	}
+	
+	/**
+     * to get task previous owners by id.
+     * @param taskId String
+     * @return TaskPrevOwners
+     */
+	public final TaskPrevOwners fetchPrevOwnersByID(final String taskId) {
+        Query q = findId.setParameter(1, id);
         List<TaskPrevOwners> resultList = q.getResultList();
         return resultList.get(0);
     }
