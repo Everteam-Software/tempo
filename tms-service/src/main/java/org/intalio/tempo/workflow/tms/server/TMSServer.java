@@ -782,10 +782,13 @@ public class TMSServer implements ITMSServer {
 
         Task task = null;
         boolean available = false;
+        boolean isTaskReady = false;
 
             task = dao.fetchTaskIfExists(taskID);
-            if(userAction !=null && !(userAction.equals("ESCALATE") && participantToken.equals(""))){
-                UserRoles credentials = _authProvider.authenticate(participantToken);
+            if (userAction != null && !(userAction.equals("ESCALATE")
+                    && participantToken.equals(""))) {
+                UserRoles credentials =
+                        _authProvider.authenticate(participantToken);
                 checkIsAvailable(taskID, task, credentials);
             }
             // if (task.isAvailableTo(credentials) && (task instanceof
@@ -793,38 +796,58 @@ public class TMSServer implements ITMSServer {
             available = task instanceof ITaskWithState;
             if (available) {
             	//save task previous owners when claimed
-            	if(((ITaskWithState) task).getState().equals(TaskState.READY) && state.equals(TaskState.CLAIMED)){
+                if (((ITaskWithState) task).getState().equals(TaskState.READY)
+                            && state.equals(TaskState.CLAIMED)) {
 					TaskPrevOwners taskPrevOwners = new TaskPrevOwners();
 					taskPrevOwners.setId(task.getID());
-					String prevUsers = StringUtils.join(task.getUserOwners().toArray(), ",");
-					String prevRoles = StringUtils.join(task.getRoleOwners().toArray(), ",");
+					String prevUsers = StringUtils.join(
+					        task.getUserOwners().toArray(), ",");
+					String prevRoles = StringUtils.join(
+					        task.getRoleOwners().toArray(), ",");
 					taskPrevOwners.setPrevUsers(prevUsers);
 					taskPrevOwners.setPrevRoles(prevRoles);
 					try {
-						storePreviousTaskOwners(dao, taskPrevOwners, participantToken);
+						storePreviousTaskOwners(
+						        dao, taskPrevOwners, participantToken);
 					} catch (TMSException e) {
-						 _logger.error("Cannot stored Task ID ("+taskPrevOwners.getId()+") Previous owners", e);
+						 _logger.error("Cannot stored Task ID ("
+					+ taskPrevOwners.getId() + ") Previous owners", e);
 					}
 				}
-            	//read task previous owners when revoked
-            	if(((ITaskWithState) task).getState().equals(TaskState.CLAIMED) && state.equals(TaskState.READY)){
-					TaskPrevOwners taskPrevOwners = dao.fetchTaskPreviousOwners(taskID);
-					users = new AuthIdentifierSet(StringUtils.split(taskPrevOwners.getPrevUsers(),","));
-					roles = new AuthIdentifierSet(StringUtils.split(taskPrevOwners.getPrevRoles(),","));
-					dao.deleteTaskPreviousOwners(taskID);
-				}
+
+                if (((ITaskWithState) task).getState().equals(
+                        TaskState.CLAIMED) && state.equals(TaskState.READY)) {
+                    isTaskReady = true;
+                    //read task previous owners when revoked
+                    if (userAction != null && userAction.equals("REVOKED")) {
+                        TaskPrevOwners taskPrevOwners =
+                                dao.fetchTaskPreviousOwners(taskID);
+                        users = new AuthIdentifierSet(
+                                StringUtils.split(
+                                        taskPrevOwners.getPrevUsers() , ","));
+                        roles = new AuthIdentifierSet(
+                                StringUtils.split(
+                                        taskPrevOwners.getPrevRoles() , ","));
+                       }
+                }
 
                 ((ITaskWithState) task).setState(state);
                 task.setUserOwners(users);
                 task.setRoleOwners(roles);
 
                 dao.updateTask(task);
+                if (isTaskReady) {
+                    dao.deleteTaskPreviousOwners(taskID);
+                }
                 dao.commit();
-                if (_logger.isDebugEnabled())
-                    _logger.debug(" changed to user owners " + users + " and role owners " + roles);
+                if (_logger.isDebugEnabled()) {
+                    _logger.debug(" changed to user owners "
+                              + users + " and role owners " + roles);
+                }
             } 
         if (!available) {
-            throw new UnavailableTaskException("Error to ressign Workflow Task " + task);
+            throw new UnavailableTaskException(
+                    "Error to ressign Workflow Task " + task);
         }
     }
 
