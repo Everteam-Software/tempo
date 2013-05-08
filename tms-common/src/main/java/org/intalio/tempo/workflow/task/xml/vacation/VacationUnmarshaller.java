@@ -62,6 +62,10 @@ public class VacationUnmarshaller extends OMUnmarshaller {
 			if (user != null) {
 				vacation.setUser(user);
 			}
+			String substitute = this.expectElementValue(rootQueue, "vacSubstitute");
+			if (substitute != null) {
+				vacation.setSubstitute(substitute);
+			}
 		} catch (Exception e) {
 			LOG.error("Exception while unmarshalling vacation data", e);
 		}

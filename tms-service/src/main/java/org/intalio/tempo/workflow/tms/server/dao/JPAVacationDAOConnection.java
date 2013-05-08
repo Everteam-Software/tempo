@@ -11,6 +11,7 @@
  */
 package org.intalio.tempo.workflow.tms.server.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -31,13 +32,34 @@ public class JPAVacationDAOConnection extends AbstractJPAConnection implements V
 	}
 
 	public void insertVacationDetails(Vacation vacation) {
+		vacation.setIs_active(1);
 		checkTransactionIsActive();
 		entityManager.persist(vacation);
+	}
+	
+	public void updateVacationDetails(Vacation vacation) {
+		checkTransactionIsActive();
+		Vacation prevVacation = _vacation.fetchVacationByID(vacation.getId());
+		
+		//null check required
+		prevVacation.setFromDate(vacation.getFromDate());
+		prevVacation.setToDate(vacation.getToDate());
+		prevVacation.setDescription(vacation.getDescription());
+		prevVacation.setUser(vacation.getUser());
+		prevVacation.setSubstitute(vacation.getSubstitute());
+		entityManager.persist(prevVacation);
 	}
 
 	public List<Vacation> getVacationDetails(String user) {
 		Query query = entityManager.createNamedQuery(Vacation.GET_VACATION_DETAILS, Vacation.class).setParameter(
 				"user", user);
+		List<Vacation> result = query.getResultList();
+		return result;
+	}
+	
+	public List<Vacation> getMatchedVacations(Date fromDate, Date toDate) {
+		Query query = entityManager.createNamedQuery(Vacation.FETCH_MATCHED_VACATION, Vacation.class).setParameter(
+				"fromDate", fromDate).setParameter("toDate", toDate);
 		List<Vacation> result = query.getResultList();
 		return result;
 	}
@@ -51,7 +73,9 @@ public class JPAVacationDAOConnection extends AbstractJPAConnection implements V
 	public Boolean deleteVacationDetails(int id) {
 		checkTransactionIsActive();
 		LOG.debug("vacation details=" + _vacation.fetchVacationByID(id));
-		entityManager.remove(_vacation.fetchVacationByID(id));
+		Vacation prevVacation = _vacation.fetchVacationByID(id);
+		prevVacation.setIs_active(0);
+		entityManager.persist(prevVacation);
 		return true;
 	}
 }

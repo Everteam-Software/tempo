@@ -3,28 +3,15 @@ require "buildr"
 require "buildr/xmlbeans"
 # require "buildr/openjpa"
 # require "buildr/cobertura"
+require "install.rb"
+
 
 # Keep this structure to allow the build system to update version numbers.
 
 # This branch is a copy of Tempo 6.0.85
  
 VERSION_NUMBER = "6.5.0.005-SNAPSHOT"
-DP_VERSION_NUMBER="1.0.1"
 
-if ENV['DP_VERSION_NUMBER']
-DP_VERSION_NUMBER = "#{ENV['DP_VERSION_NUMBER']}"
-end
-
-require "rsc/build/repositories.rb"
-# We need to download the artifact before we load the same
-artifact("org.intalio.common:dependencies:rb:#{DP_VERSION_NUMBER}").invoke
-
-DEPENDENCIES = "#{ENV['HOME']}/.m2/repository/org/intalio/common/dependencies/#{DP_VERSION_NUMBER}/dependencies-#{DP_VERSION_NUMBER}.rb"
-if ENV["M2_REPO"]
-DEPENDENCIES = "#{ENV['M2_REPO']}/org/intalio/common/dependencies/#{DP_VERSION_NUMBER}/dependencies-#{DP_VERSION_NUMBER}.rb"
-end
-
-load DEPENDENCIES
 
 # leave this require after dependencies.rb so the same jpa version is used throughout the whole build
 require "rsc/buildr-tasks/openjpa" # slight change from buildr, version of openjpa
@@ -39,6 +26,7 @@ define "tempo" do
   project.version = VERSION_NUMBER
   project.group = "org.intalio.tempo"
   
+  compile.options.source = "1.5"
   compile.options.target = "1.5"
 
   define "dao-nutsNbolts" do
@@ -71,7 +59,7 @@ define "tempo" do
   define "tas-service" do
     compile.with APACHE_COMMONS[:httpclient], APACHE_COMMONS[:io], AXIOM, AXIS2.values, JAXEN, SLF4J.values, STAX_API, WEBDAV, SECURITY.values
 
-    test.with SECURITY[:common], APACHE_COMMONS[:codec], LOG4J, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, INSTINCT
+    test.with SECURITY.values, APACHE_COMMONS[:codec], LOG4J, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, INSTINCT
     test.exclude '*TestUtils*'
 
     # require live Axis2 instance
@@ -95,12 +83,12 @@ define "tempo" do
 
   desc "Task Management Services Common Library"
   define "tms-common" do |project|
-    compile.with projects("tms-axis"),  SECURITY.values, APACHE_JPA, APACHE_COMMONS[:pool], APACHE_COMMONS[:collections], AXIS2.values, AXIOM, DOM4J, JAXEN, SLF4J.values, SPRING[:core], STAX_API, XERCES[:impl],  XERCES[:parserapi], XMLBEANS.values, JAXP_RI
+    compile.with projects("tms-axis"),  SECURITY.values, APACHE_JPA, APACHE_COMMONS[:pool], APACHE_COMMONS[:collections], AXIS2.values, AXIOM, DOM4J, JAXEN, SLF4J.values, SPRING[:core], STAX_API, XERCES[:impl],  XERCES[:parserapi], XMLBEANS[:xmlbeans], JAXP_RI
     
     compile { open_jpa_enhance }
     task "package" => generate_sql([project], "workflow.tms")
     
-    test.with APACHE_DERBY, LOG4J, DB_CONNECTOR.values, XMLUNIT, WOODSTOX, INSTINCT, SECURITY[:common], APACHE_COMMONS[:pool], APACHE_COMMONS[:collections], APACHE_COMMONS[:httpclient],JAXP_RI
+    test.with APACHE_DERBY, LOG4J, DB_CONNECTOR.values, XMLUNIT, WOODSTOX, INSTINCT, SECURITY.values, APACHE_COMMONS[:pool], APACHE_COMMONS[:collections], APACHE_COMMONS[:httpclient],JAXP_RI
     test.exclude '*TestUtils*'
     unless ENV["LIVE"] == 'yes'
       test.exclude '*N3AuthProviderLiveTest*'
@@ -114,7 +102,7 @@ define "tempo" do
     compile.with projects("tms-axis", "tms-common","tms-service"), APACHE_COMMONS[:httpclient],BPMS_COMMON,
       APACHE_JPA, AXIOM, AXIS2.values, SLF4J.values, STAX_API, WSDL4J, WS_COMMONS_SCHEMA, XMLBEANS.values,SPRING[:core]
 
-    test.with APACHE_COMMONS[:pool],projects("tms-service"), APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], LOG4J, WOODSTOX, SUNMAIL,SECURITY[:api], SECURITY[:client], FREEMARKER, CASTOR, XERCES[:impl],  XERCES[:parserapi]
+    test.with APACHE_COMMONS[:pool],projects("tms-service"), APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], LOG4J, WOODSTOX, SUNMAIL,SECURITY.values, FREEMARKER, CASTOR, XERCES[:impl],  XERCES[:parserapi]
 
     test.exclude '*TestUtils*'
 
@@ -178,7 +166,7 @@ ASPECTJ.values, SPRING[:aop] ]
            ICAL,
            INTALIO_STATS, 
            # JODATIME,
-           JSON,
+           JSON_TAGLIB,
 	   JASYPT,
 	   ICU4J,
            JSON_NAGGIT,
@@ -198,7 +186,7 @@ ASPECTJ.values, SPRING[:aop] ]
            XERCES[:impl], 
            XERCES[:parserapi], 
            XMLBEANS.values,
-           SOJO,
+           SOJO_OPTIONAL,
            SPRING_JSON,
            BPMS_COMMON
     

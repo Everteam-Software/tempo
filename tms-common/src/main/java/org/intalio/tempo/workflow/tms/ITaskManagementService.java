@@ -75,11 +75,33 @@ public interface ITaskManagementService {
     
     List<String> getCustomColumns() throws AuthException;
     
-    void insertVacation(String fromDate, String toDate, String Desc, String user);
+    /**
+	 * Inserts Vacation Details
+	 */
+    void insertVacation(String fromDate, String toDate, String Desc, String user, String substitute);
+    
+    /**
+	 * Updates Vacation Details
+	 */
+    void updateVacation(Vacation vacation);
 
+    /**
+	 * delete Vacation Details of given id
+	 */
 	void deleteVacation(String vacId);
 
+	/**
+	 * Gets the vacation details of a particular user
+	 */
 	List<Vacation> getUserVacation(final String user);
-
+	
+	/**
+	 * Gets the vacation details of all users
+	 */
 	List<Vacation> getVacationList();
+	
+	/**
+	 * Gets the Matched vacation details of given dates
+	 */
+	List<Vacation> getMatchedVacations(final String fromDate, final String toDate);
 }

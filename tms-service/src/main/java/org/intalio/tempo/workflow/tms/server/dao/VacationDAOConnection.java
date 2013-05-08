@@ -1,5 +1,6 @@
 package org.intalio.tempo.workflow.tms.server.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import org.intalio.tempo.workflow.task.Vacation;
@@ -24,6 +25,26 @@ public interface VacationDAOConnection {
 	 * @return
 	 */
 	public void insertVacationDetails(Vacation vacation);
+	
+	/**
+	 * Updates Vacation Details
+	 * 
+	 * @param Vacation
+	 *            Object
+	 * 
+	 * @return
+	 */
+	public void updateVacationDetails(Vacation vacation);
+	
+	/**
+	 * get Matched or intersected vacations list
+	 * 
+	 * @param fromDate
+	 * @param toDate
+	 * 
+	 * @return
+	 */
+	public List<Vacation> getMatchedVacations(Date fromDate, Date toDate);
 
 	/**
 	 * Gets the vacation details of a particular user

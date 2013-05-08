@@ -50,6 +50,7 @@ import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.PIPATaskOutput;
 import org.intalio.tempo.workflow.task.PIPATaskState;
 import org.intalio.tempo.workflow.task.Task;
+import org.intalio.tempo.workflow.task.TaskPrevOwners;
 import org.intalio.tempo.workflow.task.TaskState;
 import org.intalio.tempo.workflow.task.Vacation;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
@@ -781,27 +782,72 @@ public class TMSServer implements ITMSServer {
 
         Task task = null;
         boolean available = false;
+        boolean isTaskReady = false;
 
             task = dao.fetchTaskIfExists(taskID);
-            if(userAction !=null && !(userAction.equals("ESCALATE") && participantToken.equals(""))){
-                UserRoles credentials = _authProvider.authenticate(participantToken);
+            if (userAction != null && !(userAction.equals("ESCALATE")
+                    && participantToken.equals(""))) {
+                UserRoles credentials =
+                        _authProvider.authenticate(participantToken);
                 checkIsAvailable(taskID, task, credentials);
             }
             // if (task.isAvailableTo(credentials) && (task instanceof
             // ITaskWithState)) { // TODO: see above
             available = task instanceof ITaskWithState;
             if (available) {
+            	//save task previous owners when claimed
+                if (((ITaskWithState) task).getState().equals(TaskState.READY)
+                            && state.equals(TaskState.CLAIMED)) {
+					TaskPrevOwners taskPrevOwners = new TaskPrevOwners();
+					taskPrevOwners.setId(task.getID());
+					String prevUsers = StringUtils.join(
+					        task.getUserOwners().toArray(), ",");
+					String prevRoles = StringUtils.join(
+					        task.getRoleOwners().toArray(), ",");
+					taskPrevOwners.setPrevUsers(prevUsers);
+					taskPrevOwners.setPrevRoles(prevRoles);
+					try {
+						storePreviousTaskOwners(
+						        dao, taskPrevOwners, participantToken);
+					} catch (TMSException e) {
+						 _logger.error("Cannot stored Task ID ("
+					+ taskPrevOwners.getId() + ") Previous owners", e);
+					}
+				}
+
+                if (((ITaskWithState) task).getState().equals(
+                        TaskState.CLAIMED) && state.equals(TaskState.READY)) {
+                    isTaskReady = true;
+                    //read task previous owners when revoked
+                    if (userAction != null && userAction.equals("REVOKED")) {
+                        TaskPrevOwners taskPrevOwners =
+                                dao.fetchTaskPreviousOwners(taskID);
+                        users = new AuthIdentifierSet(
+                                StringUtils.split(
+                                        taskPrevOwners.getPrevUsers() , ","));
+                        roles = new AuthIdentifierSet(
+                                StringUtils.split(
+                                        taskPrevOwners.getPrevRoles() , ","));
+                       }
+                }
+
                 ((ITaskWithState) task).setState(state);
                 task.setUserOwners(users);
                 task.setRoleOwners(roles);
 
                 dao.updateTask(task);
+                if (isTaskReady) {
+                    dao.deleteTaskPreviousOwners(taskID);
+                }
                 dao.commit();
-                if (_logger.isDebugEnabled())
-                    _logger.debug(" changed to user owners " + users + " and role owners " + roles);
+                if (_logger.isDebugEnabled()) {
+                    _logger.debug(" changed to user owners "
+                              + users + " and role owners " + roles);
+                }
             } 
         if (!available) {
-            throw new UnavailableTaskException("Error to ressign Workflow Task " + task);
+            throw new UnavailableTaskException(
+                    "Error to ressign Workflow Task " + task);
         }
     }
 
@@ -1086,6 +1132,20 @@ public class TMSServer implements ITMSServer {
          }
      }
     
+    public void updateVacation(VacationDAOConnection dao,Vacation vac, String participantToken) throws TMSException {
+        try {
+     	   	dao.updateVacationDetails(vac);
+            dao.commit();
+             if (_logger.isDebugEnabled())
+                 _logger.debug("Vacation " + vac + " was updated");
+         } catch (Exception e) {
+             _logger.error("Cannot update vacation", e);
+             
+         } finally {
+            // dao.close();
+         }
+     }
+    
      public List<Vacation> getUserVacation(VacationDAOConnection dao,String user, String participantToken) throws TMSException {
      		 List<Vacation> vacationOfUser = dao.getVacationDetails(user);
      		 _logger.debug("vac="+vacationOfUser.size());
@@ -1109,5 +1169,25 @@ public class TMSServer implements ITMSServer {
           } finally {
              // dao.close();
           }
-      }     
+      }  
+     
+     public List<Vacation> getMatchedVacations(VacationDAOConnection dao,Date fromDate, Date toDate, String participantToken){
+    	 List<Vacation> vacationOfUser = dao.getMatchedVacations(fromDate, toDate);
+ 		 _logger.debug("vac="+vacationOfUser.size());
+ 		 return vacationOfUser;
+     }
+     
+     public void storePreviousTaskOwners(ITaskDAOConnection dao,TaskPrevOwners taskPrevOwners, String token) throws TMSException {
+         try {
+      	   		dao.storePreviousTaskOwners(taskPrevOwners);
+      	   		dao.commit();
+	              if (_logger.isDebugEnabled())
+	                  _logger.debug("Task ID ("+taskPrevOwners.getId()+") Previous owners stored");
+          } catch (Exception e) {
+              _logger.error("Cannot stored Task ID ("+taskPrevOwners.getId()+") Previous owners", e);
+              
+          } finally {
+             // dao.close();
+          }
+      }
 }

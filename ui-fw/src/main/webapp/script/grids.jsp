@@ -58,16 +58,6 @@ function gotoDashboard() {
 			
     /*-----end*/
 
-	/*changes 05/12/2012---- end*/
-	//added for new datepicker
-	
-	$(function() {
-        $( "#fromdate" ).datepicker({minDate:0,dateFormat:'dd/mm/yy'});
-        $( "#todate" ).datepicker({minDate:0,dateFormat:'dd/mm/yy'});
-    });
-	//end of new datepicker
-	changeButtonText();		
-	
     /*********************************************************************
     Load the dynamic JSP code that contains variables defined on the server 
     **********************************************************************/
@@ -94,15 +84,11 @@ function gotoDashboard() {
     var width = $(window).width()*0.90;
     var height = 0;
     var current = null;
-    var vac_id;
     $.ajaxSetup({timeout: <%= conf.getAjaxTimeout() %>});
 	var taskIconSet = new Array(<%=taskIconSet.length%>)
 	<% for(int i=0;i<taskIconSet.length;i++) {%>
     	taskIconSet[<%=i%>] = '<%=taskIconSet[i]%>';
     <%}%>
-	
-	//For Vacation button
-	taskIconSet[taskIconSet.length] = "Vacation";
 	
 	//For View All Task Button
 	taskIconSet[taskIconSet.length] = "viewAllTask";
@@ -225,9 +211,6 @@ function gotoDashboard() {
 	        case "export":
 	        	iconsetCode[i] = {name: '<fmt:message key="org_intalio_uifw_toolbar_button_export"/>', bclass: 'export', onpress : clickExportTasks};
 	            break;
-	        case "Vacation":
-	        	iconsetCode[i] = {name: '<fmt:message key="org_intalio_uifw_toolbar_button_vacation"/>',  bclass: 'vacationDet', onpress : clickVacation};
-	            break; 
 	        case "viewAllTask":
 	        	iconsetCode[i] = {name: '<fmt:message key="org_intalio_uifw_toolbar_button_view_all_tasks"/>',  bclass: 'viewAllTask', onpress : clickViewAllTasks};
 	            break;      
@@ -298,7 +281,7 @@ function gotoDashboard() {
         resizable:false,
 	autoResize:true,
 	draggable:false,
-        height: 350,
+        height: 280,
         width:355,
         modal: true,
         buttons: {'<fmt:message key="org_intalio_uifw_message.button.save"/>': function() {saveVacation();}},
@@ -306,6 +289,21 @@ function gotoDashboard() {
 					$('#ui-datepicker-div').css("display","none");
 			 }
       });
+      /*
+    	Vacation details dialog
+      */
+      $("#vacationDetails").dialog({
+        bgiframe: false,
+        autoOpen: false,
+        resizable:false,
+	autoResize:false,
+	draggable:false,
+        width:992,
+        modal: true,
+        close: function() {
+					$('#vacationDetails').css("display","none");
+			 }
+	});
 	/*
 		Message Dialog
 	*/
@@ -333,6 +331,7 @@ function gotoDashboard() {
 	draggable:false,
         height: 190,
         width:600,
+        modal:true,
         buttons: {
 				 '<fmt:message key="org_intalio_uifw_message.button.endVacation"/>': function(){
 					 endVacation();
@@ -417,33 +416,27 @@ function gotoDashboard() {
       var task = $('a.taskd',$(this));
 	  var istaskowner=task.attr('istaskowner');  
 	  if(istaskowner=="true"){
-      
-        if(task.attr('state') == "READY") {
-          // claim
-          var soapBody = new SOAPObject("claimTaskRequest");
-          soapBody.ns = "http://www.intalio.com/bpms/workflow/ib4p_20051115";
-          soapBody.appendChild(new SOAPObject("taskId")).val(task.attr('tid'));
-          soapBody.appendChild(new SOAPObject("claimerUser")).val(currentUser);
-          soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
-          var sr = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/claimTask", soapBody);
-          SOAPClient.Proxy = proxy;
-          SOAPClient.SOAPServer = tmpService;
-          SOAPClient.SendRequest(sr, update);
-          } 
-          else 
-          {
-          // revoke
-          var soapBody = new SOAPObject("revokeTaskRequest");
-          soapBody.ns = "http://www.intalio.com/bpms/workflow/ib4p_20051115";
-          soapBody.appendChild(new SOAPObject("taskId")).val(task.attr('tid'));
-          soapBody.appendChild(new SOAPObject("claimerUser")).val(currentUser);
-          soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
-          var sr = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/revokeTask", soapBody);
-          SOAPClient.Proxy = proxy;
-          SOAPClient.SOAPServer = tmpService;
-          SOAPClient.SendRequest(sr, update);
-        }
-	}//end if istaskowner
+	      var soapBody = new SOAPObject("reassign");
+	      soapBody.ns = "http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/";
+	      soapBody.appendChild(new SOAPObject("taskId")).val(task.attr('tid'));
+	      soapBody.appendChild(new SOAPObject("userOwner")).val(currentUser);
+	      //soapBody.appendChild(new SOAPObject("roleOwner")).val($('#reassign_roles').val());
+	      if(task.attr('state') == "READY") {
+		  soapBody.appendChild(new SOAPObject("taskState")).val('CLAIMED');
+	      }else {
+		  soapBody.appendChild(new SOAPObject("taskState")).val('READY');
+	      }
+	      soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
+	      if(task.attr('state') == "READY") {
+		  soapBody.appendChild(new SOAPObject("userAction")).val('CLAIMED');
+	      }else {
+		  soapBody.appendChild(new SOAPObject("userAction")).val('REVOKED');
+	      }
+	      var sr = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/reassign", soapBody);
+	      SOAPClient.Proxy = proxy;
+	      SOAPClient.SOAPServer = tmsService;
+	      SOAPClient.SendRequest(sr, update);
+ 	  }//end if istaskowner
 	else
 		count=count+1;
       }); // end each  
@@ -529,18 +522,18 @@ function gotoDashboard() {
 	             return false;
             }
             
-            var soapBody     = new SOAPObject("reassignTaskRequest");
-            soapBody.ns      = "http://www.intalio.com/bpms/workflow/ib4p_20051115";
+            var soapBody     = new SOAPObject("reassign");
+            soapBody.ns      = "http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/";
             soapBody.appendChild(new SOAPObject("taskId")).val(task.attr('tid'));
             soapBody.appendChild(new SOAPObject("userOwner")).val($('#reassign_user').val());
             soapBody.appendChild(new SOAPObject("roleOwner")).val($('#reassign_roles').val());
-            //soapBody.appendChild(new SOAPObject("taskState")).val('READY');
+            soapBody.appendChild(new SOAPObject("taskState")).val('READY');
             soapBody.appendChild(new SOAPObject("participantToken")).val('${participantToken}');
-			//soapBody.appendChild(new SOAPObject("userAction")).val('REASSIGN');
+	    soapBody.appendChild(new SOAPObject("userAction")).val('REASSIGN');
             
-            var sr = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/reassignTask", soapBody);
+            var sr = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/reassign", soapBody);
             SOAPClient.Proxy = proxy;
-            SOAPClient.SOAPServer = tmpService;
+            SOAPClient.SOAPServer = tmsService;
             SOAPClient.SendRequest(sr, update);
         });
         $("#reassignDialog").dialog('close');
@@ -645,78 +638,6 @@ function gotoDashboard() {
       window.open(export_url,"_new");
     }
     
- /**
- * @Function Name   : saveVacation 
- * @Description     : This function will make an ajax call to save the data of vacation management
- * @param           : 
- * @returns         : 
- * */
-    function saveVacation()
-    {	
-		
-	  	if(isValidDate("fromdate","todate","desc"))
-    	{
-			var data = { action:"insertVacation",fromDate: $('#fromdate').val(), toDate: $('#todate').val(),desc: $('#desc').val()}
-			$.ajax({
-			url: 'vacation.htm',
-			type: 'POST',
-			dataType: 'json',
-			data: data,
-			cache: false,
-			async: true,
-			error: function (e) {
-			},
-			success: function (data) {
-				if(data.message.indexOf("Inserted")>=0)
-				{
-					
-					$('#vacation').dialog('close');
-					$('#messageDialog').html('<a >Vacation details are succesfully saved please make sure you also reassign your task before going on leave.</a>');
-					$(".vacationDet").text("End Your Vacation");
-				}
-				else
-				{
-					$('#messageDialog').html('<a>Exception occured while saving the Vacation details please see the error log for further details.</a>');
-										
-				}
-				 $('#messageDialog').dialog('open');
-		     }
-			});
-	   }	
-}
- /**
- * @Function Name   : saveVacation 
- * @Description     : This function will make an ajax call to end the vacation of a logged in user
- * @param           : 
- * @returns         : 
- * */
-function endVacation()
-{
-	var data = { action:"endVacation",id:vac_id}
-    	$.ajax({
-        url: './vacation.htm',
-        type: 'POST',
-        dataType: 'json',
-        data: data,
-        cache: false,
-        async: true,
-        error: function (e) {
-        },
-        success: function (data) 
-        {
-			if(data.message.indexOf("Deleted")>=0)
-			{
-				$('#endVacDialog').dialog('close');
-				$('#messageDialog').html('<a>Successfully ended your vacation</a>');
-				$(".vacationDet").text("Vacation");
-			}	
-			else
-			$('#messageDialog').html('<a>Exception occured while ending vacation please see the error log for further details.</a>');
-			
-			$('#messageDialog').dialog('open');
-		}
-	});
-}	
     /*********************************************************************
     Support for handling click from the flexigrid toolbars
     *********************************************************************/
@@ -842,45 +763,6 @@ function endVacation()
         $("#deleteDialog").dialog('open');
       }
     }
- /**
- * @Function Name   : clickVacation 
- * @Description     : This function will make an ajax call to Validate earlier user has applied leave / not 
- * @param           : 
- * @returns         : 
- * */
-    function clickVacation()
-    {
-		var data = { action:"Validate"}
-    	$.ajax({
-        url: 'vacation.htm',
-        type: 'POST',
-        dataType: 'json',
-        data: data,
-        cache: false,
-        async: true,
-        error: function (e) {
-        },
-        success: function (data) {
-			if(data.vacId !="undefined" && data.vacId!="" && data.vacId!=undefined)
-			{
-					vac_id = parseInt(data.vacId);
-					$('#endVacDialog').html('<a> Already applied for a leave <br>From &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' +data.vacFromdate+'<br>  To &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:  '+data.vacToDate+'<br> Description  :  ' +data.vacDesc+ '<br>If your vacation is completed please click on End Vacation</a>');
-					$('#endVacDialog').dialog('open');
-			}
-			else if(data.vacation =="undefined")
-			$('#vacation').dialog('close');
-			else
-			{
-				$('#fromdate').val("");
-				$('#todate').val("");
-				$('#desc').val("");
-				$('#vacation').dialog('open');
-			}	
-			  
-		}	
-		});	
-    }
- 
     /**
      * @Function Name   : clickViewAllTasks 
      * @Description     : This function will fetch all the tasks
@@ -895,99 +777,8 @@ function endVacation()
     		setTimeout(function() { $("#q").focus(); }, 200);	
     		$("#tabTasks").click();
         }
- /**
- * @Function Name   : isValidDate 
- * @Description     : This function will Validate to date,from date & description
- * @param           : Refrence of fromDate , toDate,Description field of vacation
- * @returns         : 
- * */
-    function isValidDate(varFrom, varTo,desc) 
-    {
-            var fromdate, todate, dt1, dt2, mon1, mon2, yr1, yr2, date1, date2;
-            var chkFrom = document.getElementById(varFrom);
-            var chkTo = document.getElementById(varTo);
-            if (document.getElementById(varFrom).value == '') {
-                $("#warnDialog").html('<a >From date should not be empty</a>');
-                $("#warnDialog").dialog('open');
-                return false;
-            }
-            else if (document.getElementById(varTo).value == '') {
-                $("#warnDialog").html('<a >To date should not be empty</a>');
-                $("#warnDialog").dialog('open');
-                return false;
-            }
-            else if ($.trim(document.getElementById(desc).value)== '') {
-                $("#warnDialog").html('<a >Description should not be empty</a>');
-                $("#warnDialog").dialog('open');
-                return false;
-            }
-            else if (varFrom != null && document.getElementById(varFrom).value != '' && varTo != null && document.getElementById(varTo).value!= '') {
-                if (checkdate(chkFrom) != true) {
-                    document.getElementById(varFrom).value = '';
-                    return false;
-                }
-                else if (checkdate(chkTo) != true) {
-                    document.getElementById(varTo).value = '';
-                    return false;
-                }
-                else 
-                return true;
-            }
-            return true;
-   }
- /**
- * @Function Name   : checkdate 
- * @Description     : This function will Validate for special characters in date field
- * @param           : Refrence of Date field
- * @returns         : boolean
- * */ 
-    function checkdate(input) {
-    var validformat = /^\d{2}\/\d{2}\/\d{4}$/ //Basic check for format validity
-    var returnval = false
-    if (!validformat.test(input.value))
-    {
-		$("#warnDialog").html('<a >Invalid Date Format Please correct and submit again.</a>');
-		$("#warnDialog").dialog('open');
-   } 
-    else { //Detailed check for valid date ranges
-        var monthfield = input.value.split("/")[1]
-        var dayfield = input.value.split("/")[0]
-        var yearfield = input.value.split("/")[2]
-        var dayobj = new Date(yearfield, monthfield - 1, dayfield)
-        if ((dayobj.getMonth() + 1 != monthfield) || (dayobj.getDate() != dayfield) || (dayobj.getFullYear() != yearfield))
-        {
-            $("#warnDialog").html('<a >Invalid Day, Month, or Year range detected Please correct and submit again</a>');
-			$("#warnDialog").dialog('open');
-		}	
-        else
-            returnval = true
-    }
-    return returnval
-}  	
-
-    function changeButtonText()
-    {
-
-		var data = { action:'Validate'}
-    	$.ajax({
-        url: 'vacation.htm',
-        type: 'POST',
-        dataType: 'json',
-        data: data,
-        cache: false,
-        async: true,
-        error: function (e) {
-        },
-        success: function (data) {
-		   if(data.vacId !="undefined" && data.vacId!="" && data.vacId!=undefined)
-		   $(".vacationDet").text("End Your Vacation");
-		   else 
-		   $('.vacationDet').text('Vacation');
-			  
-		}	
-		});	
-    }
-	/*********************************************************************
+        
+    /*********************************************************************
     Flexigrid tables handling
     *********************************************************************/
 		

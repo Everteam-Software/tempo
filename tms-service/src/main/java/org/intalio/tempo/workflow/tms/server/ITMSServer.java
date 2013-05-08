@@ -13,6 +13,7 @@
 package org.intalio.tempo.workflow.tms.server;
 
 import java.net.URL;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -101,11 +102,33 @@ public interface ITMSServer {
 	void deleteCustomColumn(ITaskDAOConnection dao, String processName,
 			String token) throws Exception;
 	
+	/**
+	 * Inserts Vacation Details
+	 */
 	void insertVacation(VacationDAOConnection dao,Vacation vac,String participantToken)throws TMSException;
+	
+	/**
+	 * Updates Vacation Details
+	 */
+	void updateVacation(VacationDAOConnection dao,Vacation vac,String participantToken)throws TMSException;
     
+	/**
+	 * Gets the vacation details of a particular user
+	 */
     List<Vacation> getUserVacation(VacationDAOConnection dao,String user,String participantToken)throws TMSException;
     
+    /**
+	 * Gets the vacation details of all users
+	 */
     List<Vacation> getVacationList(VacationDAOConnection dao,String participantToken)throws TMSException;
     
+    /**
+	 * delete Vacation Details of given id
+	 */
     void deleteVacation(VacationDAOConnection dao,int vacId,String participantToken)throws TMSException;
+    
+    /**
+	 * Gets matched vacation details of given dates
+	 */
+    List<Vacation> getMatchedVacations(VacationDAOConnection dao,Date fromDate, Date toDate, String participantToken)throws TMSException;
 }

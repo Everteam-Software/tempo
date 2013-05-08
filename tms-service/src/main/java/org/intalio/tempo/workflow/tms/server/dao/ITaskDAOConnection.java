@@ -23,6 +23,7 @@ import org.intalio.tempo.workflow.task.CustomColumn;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.PIPATaskOutput;
 import org.intalio.tempo.workflow.task.Task;
+import org.intalio.tempo.workflow.task.TaskPrevOwners;
 import org.intalio.tempo.workflow.task.audit.Audit;
 import org.intalio.tempo.workflow.tms.TaskIDConflictException;
 import org.intalio.tempo.workflow.tms.UnavailableAttachmentException;
@@ -109,4 +110,22 @@ public interface ITaskDAOConnection {
      * @return
      */
     public List<Object> getPendingClaimedTaskCountForAllUsers();
+    
+    /**
+     * save previous task owners
+     * @return
+     */
+    public void storePreviousTaskOwners(TaskPrevOwners taskPrevOwners);
+    
+    /**
+     * get previous task owners
+     * @return
+     */
+	public TaskPrevOwners fetchTaskPreviousOwners(String taskID);
+	
+	/**
+     * delete previous task owners
+     * @return
+     */
+	public void deleteTaskPreviousOwners(String taskID);
 }
