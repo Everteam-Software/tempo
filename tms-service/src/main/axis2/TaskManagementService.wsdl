@@ -511,12 +511,19 @@
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
-            <xsd:element name="getMatchedVacations">
+            <xsd:element name="getMatchedVacationsRequest">
                 <xsd:complexType>
                     <xsd:sequence>
                         <xsd:element name="fromDate" type="xsd:date"/>
                         <xsd:element name="toDate" type="xsd:date"/>
                         <xsd:element name="participantToken" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="getMatchedVacationsResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                       <xsd:element maxOccurs="unbounded" name="userVacation" type="tns:vacationMetadata"/>
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
@@ -685,6 +692,9 @@
     </wsdl:message>
     <wsdl:message name="getMatchedVacationsRequest">
         <wsdl:part name="getMatchedVacationsRequest" element="tns:getMatchedVacationsRequest"/>
+    </wsdl:message>
+    <wsdl:message name="getMatchedVacationsResponse">
+        <wsdl:part name="getMatchedVacationsResponse" element="tns:getMatchedVacationsResponse"/>
     </wsdl:message>
     
     <wsdl:portType name="TaskManagementServicesPortType">
@@ -901,8 +911,7 @@
         </wsdl:operation>
         <wsdl:operation name="getMatchedVacations">
             <wsdl:input message="tns:getMatchedVacationsRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getMatchedVacations"/>
-            <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/getMatchedVacationsResponse"/>
-            <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:getMatchedVacationsinvalidInputMessageFault"/>
+            <wsdl:output message="tns:getMatchedVacationsResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/getMatchedVacationsResponse"/>
         </wsdl:operation>
 
     </wsdl:portType>
