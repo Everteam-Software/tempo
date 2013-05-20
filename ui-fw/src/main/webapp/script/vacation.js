@@ -74,7 +74,22 @@
 	
 	/* Add a change handler to the substitute select */
 	$('#substitute_select').change(function() {
+	  if($('#substitute_select').val() == $('#proxyuser').val()){
+	    $('#substitute_select').val("");
+	    $('#warnDialog').html('<a>Please select different substitute. User and substitute can not be same.</a>');
+	    $('#warnDialog').dialog('open');
+	    return false;
+	  }
 	  $('#substitute').val($('#substitute_select').val());
+	});
+
+	$('#proxyuser').change(function() {
+	  if($('#substitute_select').val() == $('#proxyuser').val()){
+	    $('#proxyuser').val("");
+	    $('#warnDialog').html('<a>Please select different user. User and substitute can not be same.</a>');
+	    $('#warnDialog').dialog('open');
+	    return false;
+	  }
 	});
 	    
 	$('#fromdate').datepicker({
@@ -292,7 +307,7 @@
 	    $("#proxyUserId").css("display", "none");
 	    $('#proxyuser').val("");
 	  } else {
-	    $("#proxyUserId").css("display", "block");
+	    $("#proxyUserId").css("display", "");
 	    $('#proxyuser').val(cols[1]);
 	  }
 	  updateSubstituteUsers();
