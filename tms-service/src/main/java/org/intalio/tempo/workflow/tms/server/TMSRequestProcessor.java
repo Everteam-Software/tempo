@@ -769,7 +769,7 @@ public class TMSRequestProcessor extends OMUnmarshaller {
     }
 
     private AxisFault makeFault(Exception e) {
-        if (e instanceof TMSException) {
+        if (e instanceof TMSException || e instanceof InvalidInputFormatException) {
             if (_logger.isDebugEnabled())
                 _logger.debug(e.getMessage(), e);
             OMElement response = null;
