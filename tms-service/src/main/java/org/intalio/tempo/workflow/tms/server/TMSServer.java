@@ -69,6 +69,7 @@ import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
 import org.intalio.tempo.workflow.tms.server.dao.VacationDAOConnection;
 import org.intalio.tempo.workflow.tms.server.permissions.TaskPermissions;
 import org.intalio.tempo.workflow.util.jpa.TaskFetcher;
+import org.intalio.tempo.workflow.util.xml.InvalidInputFormatException;
 import org.jasypt.util.text.BasicTextEncryptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -949,6 +950,9 @@ public class TMSServer implements ITMSServer {
             if (klass != null)
                 parameters.put(TaskFetcher.FETCH_CLASS, TaskTypeMapper.getTaskClassFromStringName(klass));
             return dao.countAvailableTasks(parameters);
+        } catch (IllegalArgumentException e) {
+            _logger.error("Error while tasks count retrieval for user" + credentials.getUserID(), e);
+            throw new InvalidInputFormatException(e);
         } catch (Exception e) {
             _logger.error("Error while tasks list retrieval for user " + credentials.getUserID(), e);
             throw new RuntimeException(e);
@@ -972,7 +976,11 @@ public class TMSServer implements ITMSServer {
                 	
                 }
                 return tasks;
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
+            _logger.error("Error while tasks list retrieval for user " + credentials.getUserID(), e);
+            throw new InvalidInputFormatException(e);
+        }
+            catch (Exception e) {
             _logger.error("Error while tasks list retrieval for user " + credentials.getUserID(), e);
             throw new RuntimeException(e);
         }
