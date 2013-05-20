@@ -527,6 +527,22 @@
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
+            <xsd:element name="getSubstituteMatchedVacationsRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="substitute" type="xsd:date"/>
+                        <xsd:element name="fromDate" type="xsd:date"/>
+                        <xsd:element name="toDate" type="xsd:date"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="getSubstituteMatchedVacationsResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                       <xsd:element maxOccurs="unbounded" name="userVacation" type="tns:vacationMetadata"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
              <xsd:complexType name="vacationMetadata">
                 <xsd:sequence>
                 	<xsd:element name="vacId"   type="xsd:int"/>
@@ -695,6 +711,12 @@
     </wsdl:message>
     <wsdl:message name="getMatchedVacationsResponse">
         <wsdl:part name="getMatchedVacationsResponse" element="tns:getMatchedVacationsResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getSubstituteMatchedVacationsRequest">
+        <wsdl:part name="getSubstituteMatchedVacationsRequest" element="tns:getSubstituteMatchedVacationsRequest"/>
+    </wsdl:message>
+    <wsdl:message name="getSubstituteMatchedVacationsResponse">
+        <wsdl:part name="getSubstituteMatchedVacationsResponse" element="tns:getSubstituteMatchedVacationsResponse"/>
     </wsdl:message>
     
     <wsdl:portType name="TaskManagementServicesPortType">
@@ -912,6 +934,10 @@
         <wsdl:operation name="getMatchedVacations">
             <wsdl:input message="tns:getMatchedVacationsRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getMatchedVacations"/>
             <wsdl:output message="tns:getMatchedVacationsResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/getMatchedVacationsResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="getSubstituteMatchedVacations">
+            <wsdl:input message="tns:getSubstituteMatchedVacationsRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getSubstituteMatchedVacations"/>
+            <wsdl:output message="tns:getSubstituteMatchedVacationsResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/getSubstituteMatchedVacationsResponse"/>
         </wsdl:operation>
 
     </wsdl:portType>
@@ -1417,6 +1443,15 @@
         </wsdl:operation>
         <wsdl:operation name="getMatchedVacations">
             <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getMatchedVacations" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getSubstituteMatchedVacations">
+            <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getSubstituteMatchedVacations" style="document"/>
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>

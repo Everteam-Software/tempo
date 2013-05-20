@@ -41,7 +41,30 @@ import org.intalio.tempo.workflow.util.RequiredArgumentException;
         @NamedQuery(name = Vacation.GET_VACATION_DETAILS, query = "select vacation from Vacation vacation where vacation._user=(:user) and vacation._is_active = 1"),
         @NamedQuery(name = Vacation.FIND_VAC_BY_ID, query = "select vacation from Vacation vacation where vacation._id = ?1 and vacation._is_active = 1"),
         @NamedQuery(name = Vacation.FETCH_VACATION_SUMMARY, query = "select vacation from Vacation vacation where vacation._is_active = 1"),
-        @NamedQuery(name = Vacation.FETCH_MATCHED_VACATION, query = "select vacation from Vacation vacation where vacation._fromDate <=(:toDate) AND vacation._toDate >= (:fromDate) and vacation._is_active = 1")
+
+        @NamedQuery(name = Vacation.FETCH_SUBSTITUTE_MATCHED_VACATION,
+        query = "select vacation from Vacation vacation where "
+                + "vacation._fromDate <=(:toDate) "
+                + "AND vacation._toDate >= (:fromDate) "
+                + "AND vacation._user=(:user) "
+                + "AND vacation._is_active = 1"),
+
+        @NamedQuery(name = Vacation.FETCH_MATCHED_VACATION,
+        query = "select vacation from Vacation vacation where "
+                + "vacation._fromDate <=(:toDate) "
+                + "AND vacation._toDate >= (:fromDate) "
+                + "AND vacation._is_active = 1"),
+
+        @NamedQuery(name = Vacation.FETCH_START_VACATION,
+        query = "select vacation from Vacation vacation where "
+                + "vacation._fromDate <= (:fromDate) "
+                + "AND vacation._toDate >= (:fromDate) "
+                + "AND vacation._is_active = 1"),
+
+        @NamedQuery(name = Vacation.FETCH_END_VACATION,
+        query = "select vacation from Vacation vacation where "
+                + "vacation._toDate = (:toDate) "
+                + "AND vacation._is_active = 1")
         })
 public class Vacation {
 
@@ -51,6 +74,22 @@ public class Vacation {
     public static final String GET_VACATION_DETAILS = "get_vacation_details";
     public static final String FETCH_VACATION_SUMMARY = "fetch_vacation_summary";
     public static final String FETCH_MATCHED_VACATION = "fetch_matched_vacation";
+
+    /**
+     * query to fetch vacations matched to given dates for substitute.
+     */
+    public static final String FETCH_SUBSTITUTE_MATCHED_VACATION
+                            = "fetch_substitute_matched_vacation";
+
+    /**
+     * query to fetch vacations start with given date.
+     */
+    public static final String FETCH_START_VACATION = "fetch_start_vacation";
+
+    /**
+     * query to fetch vacations end with given date.
+     */
+    public static final String FETCH_END_VACATION = "fetch_end_vacation";
 
     // @GeneratedValue(strategy=GenerationType.AUTO)
     @GeneratedValue

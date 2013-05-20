@@ -34,6 +34,14 @@ public interface ITaskDAOConnection {
     public void close();
 
     public Task[] fetchAllAvailableTasks(UserRoles user);
+
+    /**
+     * get list of tasks available to users.
+     * @param users List<String>
+     * @return tasks List<String>
+     */
+    List<Task> fetchAllAvailableTasks(List<String> users);
+
     public Task[] fetchAvailableTasks(UserRoles user, Class className, String subQuery);
     public Task[] fetchAvailableTasks(HashMap parameters);
     public Long countAvailableTasks(HashMap parameters);

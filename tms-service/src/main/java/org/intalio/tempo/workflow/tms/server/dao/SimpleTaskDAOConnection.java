@@ -247,4 +247,14 @@ public class SimpleTaskDAOConnection implements ITaskDAOConnection {
 	public void deleteTaskPreviousOwners(String taskID) {
 		 throw new RuntimeException("Not Implemented");
 	}
+
+    /**
+     * get list of tasks available to users.
+     * @param users List<String>
+     * @return tasks List<String>
+     */
+    @Override
+    public final List<Task> fetchAllAvailableTasks(final List<String> users) {
+        throw new RuntimeException("Not Implemented");
+    }
 }

@@ -179,6 +179,18 @@ public class TMSServer implements ITMSServer {
 	    }
         return result;
     }
+
+    /**
+     * get list of tasks available to users.
+     * @param dao ITaskDAOConnection
+     * @param users List<String>
+     * @return tasks List<String>
+     */
+    public final List<Task> getTaskList(final ITaskDAOConnection dao,
+            final List<String> users) {
+        List<Task> result = dao.fetchAllAvailableTasks(users);
+        return result;
+    }
       
     public Task[] listTasksFromInstance(ITaskDAOConnection dao,
         String participantToken, String instanceId) throws AuthException, AccessDeniedException, UnavailableTaskException{
@@ -1190,4 +1202,55 @@ public class TMSServer implements ITMSServer {
              // dao.close();
           }
       }
+
+     /**
+     * Gets vacation details of given start date.
+     * @param dao VacationDAOConnection
+     * @param fromDate Date
+     * @return vacations list List<Vacation>
+     * @throws TMSException TMSException
+     */
+    @Override
+    public final List<Vacation> getVacationsByStartDate(
+            final VacationDAOConnection dao, final Date fromDate)
+            throws TMSException {
+        List<Vacation> vacationOfUser = dao.getVacationsByStartDate(fromDate);
+        _logger.debug("vac=" + vacationOfUser.size());
+        return vacationOfUser;
+    }
+
+    /**
+     * Gets vacation details of given end date.
+     * @param dao VacationDAOConnection
+     * @param toDate Date
+     * @return vacations list List<Vacation>
+     * @throws TMSException TMSException
+     */
+    @Override
+    public final List<Vacation> getVacationsByEndDate(
+            final VacationDAOConnection dao, final Date toDate)
+            throws TMSException {
+        List<Vacation> vacationOfUser = dao.getVacationsByEndDate(toDate);
+        _logger.debug("vac=" + vacationOfUser.size());
+        return vacationOfUser;
+    }
+
+    /**
+     * get Matched or intersected vacations list for substitute.
+     *
+     * @param dao VacationDAOConnection
+     * @param fromDate Date
+     * @param toDate   Date
+     * @param substitute String
+     * @return vacations List<Vacation>
+     */
+    @Override
+    public final List<Vacation> getSubstituteMatchedVacations(
+            final VacationDAOConnection dao, final String substitute,
+            final Date fromDate, final Date toDate) {
+        List<Vacation> vacationOfUser = dao.getSubstituteMatchedVacations(
+                substitute, fromDate, toDate);
+        _logger.debug("vac=" + vacationOfUser.size());
+        return vacationOfUser;
+    }
 }

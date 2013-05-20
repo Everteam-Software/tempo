@@ -62,6 +62,15 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
         return _fetcher.fetchAllAvailableTasks(user);
     }
 
+    /**
+     * get list of tasks available to users.
+     * @param users List<String>
+     * @return tasks List<String>
+     */
+    public final List<Task> fetchAllAvailableTasks(final List<String> users) {
+        return _fetcher.fetchAllAvailableTasks(users);
+    }
+
     public Task fetchTaskIfExists(String taskID) throws UnavailableTaskException {
         return _fetcher.fetchTaskIfExists(taskID);
     }
