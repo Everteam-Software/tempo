@@ -107,6 +107,8 @@
 			<value>intalio\WorkflowAdministrator</value>
 		    </set>
 		</property>
+		<property name="amSchedulerInterval" value="120000"/>
+		<property name="amSchedulerActive" value="true"/>
 	</bean>
 	
 	<bean id="tokenClient" class="org.intalio.tempo.security.ws.TokenClient">
@@ -173,5 +175,19 @@
 		</property>
 	</bean>
 
+	<bean id="tms.vacationDaoFactory" class="org.intalio.tempo.workflow.tms.server.dao.JPAVacationDAOConnectionFactory" parent="abs.AbstractJPAConnectionFactory">
+	</bean>
+
+	<bean id="amScheduler" class="org.intalio.tempo.uiframework.scheduler.AMScheduler">
+		<property name="taskDAOFactory">
+			<ref bean="tms.daoFactory"/>
+		</property>
+		<property name="vacationDAOFactory">
+			<ref bean="tms.vacationDaoFactory"/>
+		</property>
+		<property name="server">
+			<ref bean="tms.server"/>
+		</property>
+	</bean>
 	
 </beans>

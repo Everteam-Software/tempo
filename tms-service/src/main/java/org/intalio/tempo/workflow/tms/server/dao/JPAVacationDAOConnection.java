@@ -16,6 +16,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.persistence.TemporalType;
 
 import org.intalio.tempo.workflow.dao.AbstractJPAConnection;
 import org.intalio.tempo.workflow.task.Vacation;
@@ -78,4 +79,56 @@ public class JPAVacationDAOConnection extends AbstractJPAConnection implements V
 		entityManager.persist(prevVacation);
 		return true;
 	}
+
+    /**
+     * Gets vacation details of given start date.
+     * @param fromDate Date
+     * @return vacations list List<Vacation>
+     */
+    @Override
+    public final List<Vacation> getVacationsByStartDate(final Date fromDate) {
+        Query query = entityManager.createNamedQuery(
+                Vacation.FETCH_START_VACATION, Vacation.class).setParameter(
+                "fromDate", fromDate, TemporalType.DATE);
+        List<Vacation> result = query.getResultList();
+        return result;
+    }
+
+    /**
+     * Gets vacation details of given end date.
+     * @param toDate Date
+     * @return vacations list List<Vacation>
+     */
+    @Override
+    public final List<Vacation> getVacationsByEndDate(final Date toDate) {
+        Query query = entityManager.createNamedQuery(
+                Vacation.FETCH_END_VACATION, Vacation.class).setParameter(
+                "toDate", toDate, TemporalType.DATE);
+        List<Vacation> result = query.getResultList();
+        return result;
+    }
+
+    /**
+     * get Matched or intersected vacations list for substitute.
+     *
+     * @param fromDate
+     *            Date
+     * @param toDate
+     *            Date
+     * @param substitute
+     *            String
+     *
+     * @return vacations List<Vacation>
+     */
+    @Override
+    public final List<Vacation> getSubstituteMatchedVacations(
+            final String substitute, final Date fromDate, final Date toDate) {
+        Query query = entityManager
+                .createNamedQuery(Vacation.FETCH_SUBSTITUTE_MATCHED_VACATION,
+                        Vacation.class).setParameter("fromDate", fromDate)
+                .setParameter("toDate", toDate)
+                .setParameter("user", substitute);
+        List<Vacation> result = query.getResultList();
+        return result;
+    }
 }

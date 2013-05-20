@@ -46,6 +46,21 @@ public interface VacationDAOConnection {
 	 */
 	public List<Vacation> getMatchedVacations(Date fromDate, Date toDate);
 
+    /**
+     * get Matched or intersected vacations list for substitute.
+     *
+     * @param fromDate
+     *            Date
+     * @param toDate
+     *            Date
+     * @param substitute
+     *            String
+     *
+     * @return vacations List<Vacation>
+     */
+    List<Vacation> getSubstituteMatchedVacations(String substitute,
+            Date fromDate, Date toDate);
+
 	/**
 	 * Gets the vacation details of a particular user
 	 * 
@@ -76,4 +91,18 @@ public interface VacationDAOConnection {
      *closes the connection
      */
 	public void close();
+
+    /**
+     * Gets vacation details of given start date.
+     * @param fromDate Date
+     * @return vacations list List<Vacation>
+     */
+    List<Vacation> getVacationsByStartDate(Date fromDate);
+
+    /**
+     * Gets vacation details of given end date.
+     * @param toDate Date
+     * @return vacations list List<Vacation>
+     */
+    List<Vacation> getVacationsByEndDate(Date toDate);
 }

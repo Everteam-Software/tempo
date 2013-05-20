@@ -58,68 +58,125 @@ public class VacationController implements Controller {
 		this.json = json;
 	}
 
-	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		try {
-			String endpoint = URIUtils.resolveURI(request, _endpoint);
-			String pToken = getParticipantToken(request);
-			taskManager = Configuration.getInstance().getTmsFactory().getService(endpoint, pToken);
-			String name = null;
-			String[] userRoles = null;
-			String action = request.getParameter("action");
-			ApplicationState appState = ApplicationState.getCurrentInstance(request);
-			if (appState != null){
-				name = appState.getCurrentUser().getName();
-				userRoles = appState.getCurrentUser().getRoles();
-			}
-			model = new LinkedHashMap<String, Object>();
-			if(action != null && name!=null){
-				if (action.equalsIgnoreCase("Validate")) {
-						model = getVacationDetails(name);
-				}else if (action.equalsIgnoreCase("list")) {
-					model = getUserVacationDetails(name);
-					if(amRoles != null && CollectionUtils.containsAny(amRoles,Arrays.asList(userRoles))){
-						model.put("isAbsenceManager", "true");
-					}
-					model.put("isSubstituteMandatory", isSubstituteMandatory.booleanValue());
-				} else if (action.equalsIgnoreCase("match")) {
-					String fromDate = request.getParameter("fromDate");
-					String toDate = request.getParameter("toDate");
-					if (fromDate != null && toDate != null)
-						model = getMatchedVacations(fromDate, toDate);
-				} else if (action.equalsIgnoreCase("endVacation")) {
-					if (request.getParameter("id") != null)
-						model = deleteVacationDetails(request.getParameter("id"));
-				} else if (action.equalsIgnoreCase("insertVacation")) {
-					String fromDate = request.getParameter("fromDate");
-					String toDate = request.getParameter("toDate");
-					String desc = request.getParameter("desc");
-					String substitute = request.getParameter("substitute");
-					if (fromDate != null && toDate != null && desc != null && substitute != null)
-						model = insertVacationDetails(fromDate,toDate,desc.trim(), name, substitute);
-				}  else if (action.equalsIgnoreCase("insertProxyVacation")) {
-					String fromDate = request.getParameter("fromDate");
-					String toDate = request.getParameter("toDate");
-					String desc = request.getParameter("desc");
-					String substitute = request.getParameter("substitute");
-					String user = request.getParameter("user");
-					if (fromDate != null && toDate != null && desc != null && user != null && substitute != null)
-						model = insertVacationDetails(fromDate,toDate,desc.trim(), user, substitute);
-				} else if (action.equalsIgnoreCase("editVacation")) {
-					String id = request.getParameter("id");
-					String fromDate = request.getParameter("fromDate");
-					String toDate = request.getParameter("toDate");
-					String desc = request.getParameter("desc");
-					String substitute = request.getParameter("substitute");
-					if (id != null && fromDate != null && toDate != null && desc != null && substitute != null)
-						model = editVacationDetails(id, fromDate, toDate, desc.trim(), name, substitute);
-				}
-			}
-		} catch (Exception e) {
-			message = e.getMessage();
-			LOG.error("Failed to execute action. " + e.getMessage(), e);
-		}
-		return new ModelAndView(json, model);
+    /**
+     * vacation controller request handler.
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     * @return ModelAndView ModelAndView
+     * @throws ServletException ServletException
+     * @throws IOException IOException
+     */
+    public final ModelAndView handleRequest(final HttpServletRequest request,
+            final HttpServletResponse response) throws ServletException,
+            IOException {
+        try {
+            String endpoint = URIUtils.resolveURI(request, _endpoint);
+            String pToken = getParticipantToken(request);
+            taskManager = Configuration.getInstance().getTmsFactory()
+                    .getService(endpoint, pToken);
+            String name = null;
+            String[] userRoles = null;
+            String action = request.getParameter("action");
+            ApplicationState appState = ApplicationState
+                    .getCurrentInstance(request);
+            if (appState != null) {
+                name = appState.getCurrentUser().getName();
+                userRoles = appState.getCurrentUser().getRoles();
+            }
+            model = new LinkedHashMap<String, Object>();
+            if (action != null && name != null) {
+                if (action.equalsIgnoreCase("Validate")) {
+                    model = getVacationDetails(name);
+                } else if (action.equalsIgnoreCase("list")) {
+                    boolean isAbsenceManager = false;
+                    if (amRoles != null
+                            && CollectionUtils.containsAny(amRoles,
+                                    Arrays.asList(userRoles))) {
+                        isAbsenceManager = true;
+                    }
+                    if (isAbsenceManager) {
+                        model = getAllVacationDetails();
+                    } else {
+                        model = getUserVacationDetails(name);
+                    }
+                    model.put("isAbsenceManager", isAbsenceManager);
+                    model.put("isSubstituteMandatory",
+                            isSubstituteMandatory.booleanValue());
+                } else if (action.equalsIgnoreCase("match")) {
+                    String fromDate = request.getParameter("fromDate");
+                    String toDate = request.getParameter("toDate");
+                    if (fromDate != null && toDate != null) {
+                        model = getMatchedVacations(fromDate, toDate);
+                    }
+                } else if (action.equalsIgnoreCase("endVacation")) {
+                    if (request.getParameter("id") != null) {
+                        model = deleteVacationDetails(request
+                                .getParameter("id"));
+                    }
+                } else if (action.equalsIgnoreCase("insertVacation")) {
+                    String fromDate = request.getParameter("fromDate");
+                    String toDate = request.getParameter("toDate");
+                    String desc = request.getParameter("desc");
+                    String substitute = request.getParameter("substitute");
+                    if (fromDate != null && toDate != null && desc != null
+                            && substitute != null) {
+                        boolean isSubstituteValid = validateSubstitute(
+                                substitute, fromDate, toDate);
+                        if (isSubstituteValid) {
+                            model = insertVacationDetails(fromDate, toDate,
+                                    desc.trim(), name, substitute);
+                        } else {
+                            message = "Invalid Substitute";
+                            model.put("message", message);
+                        }
+                    }
+                } else if (action.equalsIgnoreCase("insertProxyVacation")) {
+                    String fromDate = request.getParameter("fromDate");
+                    String toDate = request.getParameter("toDate");
+                    String desc = request.getParameter("desc");
+                    String substitute = request.getParameter("substitute");
+                    String user = request.getParameter("user");
+                    if (fromDate != null && toDate != null && desc != null
+                            && user != null && substitute != null) {
+                        boolean isSubstituteValid = validateSubstitute(
+                                substitute, fromDate, toDate);
+                        if (isSubstituteValid) {
+                            model = insertVacationDetails(fromDate, toDate,
+                                    desc.trim(), user, substitute);
+                        } else {
+                            message = "Invalid Substitute";
+                            model.put("message", message);
+                        }
+                    }
+                } else if (action.equalsIgnoreCase("editVacation")) {
+                    String id = request.getParameter("id");
+                    String fromDate = request.getParameter("fromDate");
+                    String toDate = request.getParameter("toDate");
+                    String desc = request.getParameter("desc");
+                    String substitute = request.getParameter("substitute");
+                    String user = request.getParameter("user");
+                    if (user != null && !"".equals(user)) {
+                        name = user;
+                    }
+                    if (id != null && fromDate != null && toDate != null
+                            && desc != null && substitute != null) {
+                        boolean isSubstituteValid = validateSubstitute(
+                                substitute, fromDate, toDate);
+                        if (isSubstituteValid) {
+                            model = editVacationDetails(id, fromDate, toDate,
+                                    desc.trim(), name, substitute);
+                        } else {
+                            message = "Invalid Substitute";
+                            model.put("message", message);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            message = e.getMessage();
+            LOG.error("Failed to execute action. " + e.getMessage(), e);
+        }
+        return new ModelAndView(json, model);
 	}
 
 	public Map<String, Object> getVacationDetails(String user) {
@@ -154,6 +211,22 @@ public class VacationController implements Controller {
 		}
 		return model;
 	}
+
+    /**
+     * Gets the vacation details of all users.
+     * @return Map<String, Object> Vacations
+     */
+    public final Map<String, Object> getAllVacationDetails() {
+        try {
+            List<Vacation> vac = taskManager.getVacationList();
+            model.put("vacs", vac);
+        } catch (Exception e) {
+            LOG.error(
+                    "Exception while fetching vacation records. "
+                            + e.getMessage(), e);
+        }
+        return model;
+    }
 
 	public Map<String, Object> deleteVacationDetails(String id) {
 		taskManager.deleteVacation(id);
@@ -218,5 +291,29 @@ public class VacationController implements Controller {
 		}
 		return model;
 	}
+
+    /**
+     * gets matched Vacation Details for given dates.
+     * @param substitute String
+     * @param fromDate String
+     * @param toDate String
+     * @return isSubstituteValid boolean
+     */
+    protected final boolean validateSubstitute(final String substitute,
+            final String fromDate, final String toDate) {
+        boolean isSubstituteValid = true;
+        try {
+            List<Vacation> vac = taskManager.getSubstituteMatchedVacations(
+                    substitute, fromDate, toDate);
+            if (vac != null && vac.size() >= 1) {
+                isSubstituteValid = false;
+            }
+        } catch (Exception e) {
+            LOG.error(
+                    "Exception while fetching vacation records. "
+                            + e.getMessage(), e);
+        }
+        return isSubstituteValid;
+    }
 
 }

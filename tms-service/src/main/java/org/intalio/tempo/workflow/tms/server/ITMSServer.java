@@ -131,4 +131,44 @@ public interface ITMSServer {
 	 * Gets matched vacation details of given dates
 	 */
     List<Vacation> getMatchedVacations(VacationDAOConnection dao,Date fromDate, Date toDate, String participantToken)throws TMSException;
+
+    /**
+     * Gets vacation details of given start date.
+     * @param dao VacationDAOConnection
+     * @param fromDate Date
+     * @return vacations list List<Vacation>
+     * @throws TMSException TMSException
+     */
+    List<Vacation> getVacationsByStartDate(VacationDAOConnection dao,
+            Date fromDate) throws TMSException;
+
+    /**
+     * Gets vacation details of given end date.
+     * @param dao VacationDAOConnection
+     * @param toDate Date
+     * @return vacations list List<Vacation>
+     * @throws TMSException TMSException
+     */
+    List<Vacation> getVacationsByEndDate(VacationDAOConnection dao,
+            Date toDate) throws TMSException;
+
+    /**
+     * Gets task list available to users.
+     * @param dao ITaskDAOConnection
+     * @param users List<String>
+     * @return tasks List<Task>
+     */
+    List<Task> getTaskList(ITaskDAOConnection dao, List<String> users);
+
+    /**
+     * get Matched or intersected vacations list for substitute.
+     *
+     * @param dao VacationDAOConnection
+     * @param fromDate Date
+     * @param toDate   Date
+     * @param substitute String
+     * @return vacations List<Vacation>
+     */
+    List<Vacation> getSubstituteMatchedVacations(VacationDAOConnection dao,
+            String substitute, Date fromDate, Date toDate);
 }
