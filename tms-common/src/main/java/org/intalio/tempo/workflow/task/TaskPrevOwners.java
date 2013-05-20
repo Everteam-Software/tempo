@@ -34,11 +34,11 @@ import org.apache.openjpa.persistence.Persistent;
 @Table(name = "tempo_prev_owners")
 @NamedQueries({
     @NamedQuery(name = TaskPrevOwners.FIND_PREV_OWNERS_BY_ID, query =
-    "select prevOwners from TaskPrevOwners prevOwners where prevOwners._id = ?1"
+    "select prevOwners from TaskPrevOwners prevOwners where prevOwners.id = ?1"
        ),
     })
 public class TaskPrevOwners {
-	
+
     /**
     * query to get TaskPrevOwners by Id.
     */
@@ -58,9 +58,9 @@ public class TaskPrevOwners {
 	 * empty constructor.
 	 */
 	public TaskPrevOwners() {
-		
+
 	}
-	
+
 	/**
 	 * constructor with entityManager.
 	 * @param em EntityManager
@@ -135,14 +135,14 @@ public class TaskPrevOwners {
 	public final void setPrevRoles(final String taskPrevRoles) {
 		this.prevRoles = taskPrevRoles;
 	}
-	
+
 	/**
      * to get task previous owners by id.
      * @param taskId String
      * @return TaskPrevOwners
      */
 	public final TaskPrevOwners fetchPrevOwnersByID(final String taskId) {
-        Query q = findId.setParameter(1, id);
+        Query q = findId.setParameter(1, taskId);
         List<TaskPrevOwners> resultList = q.getResultList();
         return resultList.get(0);
     }
