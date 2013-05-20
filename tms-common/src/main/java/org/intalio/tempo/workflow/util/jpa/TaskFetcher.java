@@ -133,6 +133,19 @@ public class TaskFetcher {
 		return (Task[]) result.toArray(new Task[result.size()]);
 	}
 
+        /**
+         * Core method. retrieve all the tasks for the given <code>Users</code>
+         * @param users List<String>
+         * @return tasks List<Task>
+         */
+        public final List<Task> fetchAllAvailableTasks(
+                                final List<String> users) {
+            Query q = _entityManager.createNamedQuery(Task.FIND_BY_USER)
+                    .setParameter(1, users);
+            List<Task> result = q.getResultList();
+            return result;
+        }
+
 	/**
 	 * Core method. retrieve all the tasks for the given <code>UserRoles</code>
 	 * and task state, task type

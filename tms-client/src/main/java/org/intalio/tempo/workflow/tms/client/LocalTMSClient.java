@@ -445,4 +445,21 @@ public class LocalTMSClient implements ITaskManagementService {
 		}
 		return vac;
 	}
+
+    @Override
+    public final List<Vacation> getSubstituteMatchedVacations(
+            final String substitute, final String fromDate,
+            final String toDate) {
+        List<Vacation> vac = null;
+        try {
+            DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+            VacationDAOConnection dao = _VacationDAOFactory.openConnection();
+            vac = server.getSubstituteMatchedVacations(dao, substitute,
+                    df.parse(fromDate), df.parse(toDate));
+
+        } catch (Exception e) {
+            logger.error("Exception :: ", e);
+        }
+        return vac;
+    }
 }

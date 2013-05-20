@@ -30,11 +30,11 @@
 	    "bSearchable": true,
 	    "bInfo": true,
 	    "oLanguage": {
-		"sZeroRecords": "No vacations found",
+		"sZeroRecords": "Fetching vacations..",
 		"sInfo": "Showing _START_ to _END_ of _TOTAL_ vacations",
 		"sInfoEmpty": "Showing 0 to 0 of 0 vacations",
 		"sInfoFiltered": "(filtered from _MAX_ total vacations)",
-		"sEmptyTable": "Fetching vacations.."
+		"sEmptyTable": "No vacations found"
 	    },
 	    "aoColumns": [{
 		"bSortable": true,
@@ -74,7 +74,22 @@
 	
 	/* Add a change handler to the substitute select */
 	$('#substitute_select').change(function() {
+	  if($('#substitute_select').val() == $('#proxyuser').val()){
+	    $('#substitute_select').val("");
+	    $('#warnDialog').html('<a>Please select different substitute. User and substitute can not be same.</a>');
+	    $('#warnDialog').dialog('open');
+	    return false;
+	  }
 	  $('#substitute').val($('#substitute_select').val());
+	});
+
+	$('#proxyuser').change(function() {
+	  if($('#substitute_select').val() == $('#proxyuser').val()){
+	    $('#proxyuser').val("");
+	    $('#warnDialog').html('<a>Please select different user. User and substitute can not be same.</a>');
+	    $('#warnDialog').dialog('open');
+	    return false;
+	  }
 	});
 	    
 	$('#fromdate').datepicker({
@@ -288,8 +303,13 @@
 	  $('#desc').val(cols[5]);
 	  $('#substitute_select').attr('disabled', 'disabled');
 	  $('#todate').attr('disabled', 'disabled');
-	  $("#proxyUserId").css("display", "none");
-	  $('#proxyuser').val("");
+	  if(cols[1] == cuser){
+	    $("#proxyUserId").css("display", "none");
+	    $('#proxyuser').val("");
+	  } else {
+	    $("#proxyUserId").css("display", "");
+	    $('#proxyuser').val(cols[1]);
+	  }
 	  updateSubstituteUsers();
       	  $('#vacation').dialog('open');
 	}
@@ -348,10 +368,10 @@
 				    {
 					    getVacationData();
 					    $('#vacation').dialog('close');
-					    $('#messageDialog').html('<a >Vacation details are succesfully saved please make sure you also reassign your task before going on leave.</a>');
-				    }
-				    else
-				    {
+					    $('#messageDialog').html('<a >Vacation details are succesfully saved. please note your claimed task(s) will not be auto assigned to your substitute.</a>');
+				    } else if(data.message.indexOf("Invalid Substitute")>=0) {
+					    $('#messageDialog').html('<a>Substitute not avilable at selected time, Please change Sustitute.</a>');
+				    } else {
 					    $('#messageDialog').html('<a>Exception occured while saving the Vacation details please see the error log for further details.</a>');
 				    }
 				    $('#messageDialog').dialog('open');
@@ -385,12 +405,11 @@
 				    {
 					    getVacationData();
 					    $('#vacation').dialog('close');
-					    $('#messageDialog').html('<a >Vacation details are succesfully saved.</a>');
-				    }
-				    else
-				    {
+					    $('#messageDialog').html('<a >Vacation details are succesfully saved. please note user claimed task(s) will not be auto assigned to substitute.</a>');
+				    } else if(data.message.indexOf("Invalid Substitute")>=0) {
+					    $('#messageDialog').html('<a>Substitute not avilable at selected time, Please change Sustitute.</a>');
+				    } else {
 					    $('#messageDialog').html('<a>Exception occured while saving the Vacation details please see the error log for further details.</a>');
-										    
 				    }
 				    $('#messageDialog').dialog('open');
 			}
@@ -409,7 +428,7 @@
 		    
 	  if(isValidDate("fromdate","todate") && isValidSubstitute("substitute") && isValidDesc("desc"))
 	    {
-			    var data = { action:"editVacation",id:vac_id,fromDate: $('#fromdate').val(), toDate: $('#todate').val(),desc: $('#desc').val(),substitute: $('#substitute').val()}
+			    var data = { action:"editVacation",id:vac_id,fromDate: $('#fromdate').val(), toDate: $('#todate').val(),desc: $('#desc').val(),substitute: $('#substitute').val(),user: $('#proxyuser').val()}
 			    $.ajax({
 			    url: 'vacation.htm',
 			    type: 'POST',
@@ -424,13 +443,11 @@
 				    {
 					    getVacationData();
 					    $('#vacation').dialog('close');
-					    $('#messageDialog').html('<a >Vacation details are succesfully saved please make sure you also reassign your task before going on leave.</a>');
-					    $(".vacationDet").text("End Your Vacation");
-				    }
-				    else
-				    {
+					    $('#messageDialog').html('<a >Vacation details are succesfully saved. please note your claimed task(s) will not be auto assigned to your substitute.</a>');
+				    } else if(data.message.indexOf("Invalid Substitute")>=0) {
+					    $('#messageDialog').html('<a>Substitute not avilable at selected time, Please change Sustitute.</a>');
+				    } else {
 					    $('#messageDialog').html('<a>Exception occured while saving the Vacation details please see the error log for further details.</a>');
-										    
 				    }
 				    $('#messageDialog').dialog('open');
 			}
@@ -463,7 +480,6 @@
 				    getVacationData();
 				    $('#endVacDialog').dialog('close');
 				    $('#messageDialog').html('<a>Successfully ended your vacation</a>');
-				    $(".vacationDet").text("Vacation");
 			    }	
 			    else
 			    $('#messageDialog').html('<a>Exception occured while ending vacation please see the error log for further details.</a>');

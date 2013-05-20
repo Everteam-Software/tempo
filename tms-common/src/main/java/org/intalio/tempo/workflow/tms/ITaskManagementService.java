@@ -104,4 +104,18 @@ public interface ITaskManagementService {
 	 * Gets the Matched vacation details of given dates
 	 */
 	List<Vacation> getMatchedVacations(final String fromDate, final String toDate);
+
+    /**
+     * get Matched or intersected vacations list for substitute.
+     *
+     * @param fromDate
+     *            Date
+     * @param toDate
+     *            Date
+     * @param substitute
+     *            String
+     * @return vacations List<Vacation>
+     */
+    List<Vacation> getSubstituteMatchedVacations(final String substitute,
+            final String fromDate, final String toDate);
 }

@@ -203,7 +203,7 @@
       <table>
 	      <tr id="proxyUserId" style="display:none">
 		      <td>User:</td>
-		      <td style="align:left"><input type="text" size="10" maxlength="50" name="proxyuser" id="proxyuser"></td>
+		      <td style="align:left"><select name="proxyuser" id="proxyuser"><option value=''>Select user</option></select></td>
 	      </tr>
 	      <tr>
 		      <td>From:</td>

@@ -817,5 +817,41 @@ public class RemoteTMSClient implements ITaskManagementService {
 		}
 		return listVac;
 	}
+
+    @Override
+    public final List<Vacation> getSubstituteMatchedVacations(
+            final String substitute, final String fromDate,
+            final String toDate) {
+        OMElement request = new TMSMarshaller() {
+            public OMElement marshalRequest() {
+                OMElement request
+                = createElement("getSubstituteMatchedVacationsRequest");
+                createElement(request, "substitute", substitute);
+                createElement(request, "fromDate", fromDate);
+                createElement(request, "toDate", toDate);
+                return request;
+            }
+        } .marshalRequest();
+        List<Vacation> listVac = new ArrayList<Vacation>();
+        OMElement response = sendRequest(request,
+                TaskXMLConstants.TASK_NAMESPACE
+                        + "getSubstituteMatchedVacations");
+        OMElementQueue rootQueue = new OMElementQueue(response);
+        while (true) {
+            OMElement taskElement = expectVacationElement(rootQueue);
+            if (taskElement == null) {
+                break;
+            } else {
+                try {
+                    Vacation vac = new VacationUnmarshaller()
+                            .unmarshalVacation(taskElement);
+                    listVac.add(vac);
+                } catch (Exception e) {
+                    _log.error("Error reading task: " + taskElement, e);
+                }
+            }
+        }
+        return listVac;
+    }
     
 }
