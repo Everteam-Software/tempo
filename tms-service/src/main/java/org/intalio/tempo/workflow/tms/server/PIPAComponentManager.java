@@ -368,6 +368,7 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
     private CustomColumn[] loadCustomMetadata(File dir,String processName) {
         CustomColumn customColumn[]=null;
         File metadataFile=new File(dir.getAbsolutePath()+"//..//processes.ode/metadata.xml");
+        LOG.debug("Metadata file: " + metadataFile.getAbsolutePath() + " ,exists: " + metadataFile.exists());
         if (metadataFile.exists()){
             customColumn= parse(metadataFile,processName);	
         }
@@ -433,7 +434,7 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
                     InputStream input = new FileInputStream(f);
                     try {
                         if (f.getName().endsWith(".pipa")) {
-                            msg = processPipa(token, input, itemURL, urls,dir);
+                            msg = processPipa(token, input, itemURL, urls, base);
                         }
                         // TODO Call MetaData and do the needful
 
