@@ -485,7 +485,7 @@
             <xsd:element name="getUserVacationResponse">
                 <xsd:complexType>
                     <xsd:sequence>
-                       <xsd:element maxOccurs="unbounded" name="userVacation" type="tns:vacationMetadata"/>
+                       <xsd:element maxOccurs="unbounded" name="vacation" type="tns:vacationMetadata"/>
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
@@ -499,7 +499,7 @@
             <xsd:element name="getVacationListResponse">
                 <xsd:complexType>
                     <xsd:sequence>
-                       <xsd:element maxOccurs="unbounded" name="userVacation" type="tns:vacationMetadata"/>
+                       <xsd:element maxOccurs="unbounded" name="vacation" type="tns:vacationMetadata"/>
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
@@ -523,7 +523,7 @@
             <xsd:element name="getMatchedVacationsResponse">
                 <xsd:complexType>
                     <xsd:sequence>
-                       <xsd:element maxOccurs="unbounded" name="userVacation" type="tns:vacationMetadata"/>
+                       <xsd:element maxOccurs="unbounded" name="vacation" type="tns:vacationMetadata"/>
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
@@ -539,7 +539,7 @@
             <xsd:element name="getSubstituteMatchedVacationsResponse">
                 <xsd:complexType>
                     <xsd:sequence>
-                       <xsd:element maxOccurs="unbounded" name="userVacation" type="tns:vacationMetadata"/>
+                       <xsd:element maxOccurs="unbounded" name="vacation" type="tns:vacationMetadata"/>
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
