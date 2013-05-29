@@ -118,23 +118,6 @@ public class VacationController implements Controller {
                     String toDate = request.getParameter("toDate");
                     String desc = request.getParameter("desc");
                     String substitute = request.getParameter("substitute");
-                    if (fromDate != null && toDate != null && desc != null
-                            && substitute != null) {
-                        boolean isSubstituteValid = validateSubstitute(
-                                substitute, fromDate, toDate);
-                        if (isSubstituteValid) {
-                            model = insertVacationDetails(fromDate, toDate,
-                                    desc.trim(), name, substitute);
-                        } else {
-                            message = "Invalid Substitute";
-                            model.put("message", message);
-                        }
-                    }
-                } else if (action.equalsIgnoreCase("insertProxyVacation")) {
-                    String fromDate = request.getParameter("fromDate");
-                    String toDate = request.getParameter("toDate");
-                    String desc = request.getParameter("desc");
-                    String substitute = request.getParameter("substitute");
                     String user = request.getParameter("user");
                     if (fromDate != null && toDate != null && desc != null
                             && user != null && substitute != null) {
