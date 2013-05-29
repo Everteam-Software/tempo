@@ -47,7 +47,6 @@
     <link rel="alternate" type="application/atom+xml" title="Personal Task feed" href="/feeds/atom/tasks?token=${participantToken}"/>
     <link rel="alternate" type="application/atom+xml" title="Process feed" href="/feeds/atom/processes?token=${participantToken}"/>
     <link type="text/css" href="style/jqueryui/jquery.dataTables.css" rel="stylesheet" />
-    
     <script type="text/javascript" src="script/ui-fw.js"></script>
     <script type="text/javascript" src="script/jquery.js"></script>
     <script type="text/javascript" src="script/jquery.cookie.js"></script>
@@ -55,6 +54,7 @@
     <script type="text/javascript" src="script/jquery-timer.js"></script>
     <script type="text/javascript" src="script/jquery.jcorners.js"></script>
     <script type="text/javascript" src="script/jquery.demensions.js"></script>
+    <script type="text/javascript" src="script/jquery.ui.widget.js"></script>
     <script type="text/javascript" src="script/jquery.ui.position.js"></script>
     <script type="text/javascript" src="script/jtabber.js"></script>
     <script type="text/javascript" src="script/jquery.qtip.js"></script>
@@ -64,7 +64,6 @@
     <script type="text/javascript" src="script/jquery.dataTables.js"></script>
     <script type="text/javascript" src="script/jquery-dateFormat.js"></script> 
     <script type="text/javascript" src="script/vacation.js"></script> 
-    
     <script type="text/javascript" src="script/flexigrid.js"></script>
     <script type="text/javascript" src="script/jquery.alerts.js"></script>
     
@@ -199,28 +198,27 @@
 
     <div id="vacation" title="<fmt:message key="org_intalio_uifw_vacation_title"/>">
       <input type="hidden" name="vacationId" id="vacationId"/>
-      <input type="hidden" name="substitute" id="substitute"/>
       <table>
-	      <tr id="proxyUserId" style="display:none">
+	      <tr>
 		      <td>User:</td>
-		      <td style="align:left"><select name="proxyuser" id="proxyuser"><option value=''>Select user</option></select></td>
+		      <td style="align:left"><select name="user" id="user" style="width:220px;"><option value='<%= loginUser.getName()%>'><%= loginUser.getName()%></option></select></td>
 	      </tr>
 	      <tr>
-		      <td>From:</td>
-		      <td style="align:left"><input type="text" size="10" maxlength="10" name="fromdate" id="fromdate"></td>
+		      <td>From:<img src="images/ical.jpg" alt="Vacation start date"></td>
+		      <td style="align:left"><input type="text" style="width:220px;height:1.8em;" size="25" maxlength="10" name="fromdate" id="fromdate"></td>
 	      </tr>
 	      <tr>
-		      <td>To:</td>
-		      <td style="align:left"><input type="text" size="10" maxlength="10" name="todate" id="todate" disabled="disabled"></td>
+		      <td>To:<img src="images/ical.jpg" alt="Vacation end date"></td>
+		      <td style="align:left"><input type="text"  style="width:220px;height:1.8em;" size="25" maxlength="10" name="todate" id="todate" ></td>
 	      </tr>
 	      <tr>
 		      <td>Substitute:</td>
-		      <td style="align:left"><select name="substitute_select" id="substitute_select" disabled="disabled" ></select></td>
+		      <td style="align:left"><select name="substitute" id="substitute" style="width:220px" ><option value=''>select User</option></select></select></td>
 	      </tr>
 	      <tr>
 		      <td>Description:</td>
 		      <td style="align:left">
-			      <textarea style="resize: none;" rows="3" cols="25" name="desc" id="desc">
+			      <textarea style="resize: none;" style="width:220px" rows="3" cols="25" name="desc" id="desc">
 			      </textarea>
 		      </td>
 	      </tr>
@@ -239,7 +237,6 @@
 		      <span class="vcreate" style="padding-left: 20px;padding-right: 10px;" onclick="clickCreateVacation();"><fmt:message key="org_intalio_uifw_toolbar_button_vacation_create"/></span>
 		      <span class="vupdate" style="padding-left: 20px;padding-right: 10px;" onclick="clickUpdateVacation('#vacationtable');"><fmt:message key="org_intalio_uifw_toolbar_button_vacation_update"/></span>
 		      <span class="vdelete" style="padding-left: 20px;padding-right: 10px;" onclick="clickEndVacation('#vacationtable');"><fmt:message key="org_intalio_uifw_toolbar_button_vacation_delete"/></span>
-		      <span id="proxyUserButton" class="vcreate" style="padding-left: 20px;padding-right: 10px;display:none;" onclick="clickCreateProxyVacation();"><fmt:message key="org_intalio_uifw_toolbar_button_vacation_proxy"/></span>
 		      </th></tr>
 		      <tr>
 			      <th>Id</th>
@@ -283,6 +280,5 @@
     var rbacService = '<%= tokenServiceUrl.substring(0, tokenServiceUrl.indexOf("/TokenService"))+"/RBACQueryService" %>';
     var proxy = '/ui-fw/script/proxy.jsp';
   </script>
-
   </body>
 </html>

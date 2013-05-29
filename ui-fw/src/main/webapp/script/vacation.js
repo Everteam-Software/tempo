@@ -17,8 +17,9 @@
     var vac_id;
     var dayDiff = 0;
     var isSubstituteMandatory = '';
+    var isAbsenceManager = '';
     $(document).ready(function () {
-      
+
 	oTable = $('#vacationtable').dataTable({
 	    "bFilter": false,
 	    "bPaginate": false,
@@ -63,7 +64,7 @@
 	    }]
 
 	});
-	
+
 	/* Add a click handler to the rows - this could be used as a callback */
 	$("#vacationtable tbody").live("click",function(event) {
 		$(oTable.fnSettings().aoData).each(function (){
@@ -71,47 +72,24 @@
 		});
 		$(event.target.parentNode).addClass('row_selected');
 	});
-	
-	/* Add a change handler to the substitute select */
-	$('#substitute_select').change(function() {
-	  if($('#substitute_select').val() == $('#proxyuser').val()){
-	    $('#substitute_select').val("");
-	    $('#warnDialog').html('<a>Please select different substitute. User and substitute can not be same.</a>');
-	    $('#warnDialog').dialog('open');
-	    return false;
-	  }
-	  $('#substitute').val($('#substitute_select').val());
-	});
 
-	$('#proxyuser').change(function() {
-	  if($('#substitute_select').val() == $('#proxyuser').val()){
-	    $('#proxyuser').val("");
-	    $('#warnDialog').html('<a>Please select different user. User and substitute can not be same.</a>');
-	    $('#warnDialog').dialog('open');
-	    return false;
-	  }
-	});
-	    
 	$('#fromdate').datepicker({
 	  minDate:0,
 	  dateFormat:'dd/mm/yy',
-	  onSelect: function(dateText, inst) { 
-	    $('#substitute_select').attr('disabled', 'disabled');
+	  onSelect: function(dateText, inst) {
+	    updateUsers();
 	    var date = $('#fromdate').datepicker('getDate');
 	    var today = new Date();
 	    dayDiff = Math.ceil((date - today) / (1000 * 60 * 60 * 24));
 	    $('#todate').datepicker("option", "minDate", dayDiff);
-	    $('#todate').removeAttr('disabled');
 	}
 	});
-	    
+
 	$('#todate').datepicker({
 	  minDate:0,
 	  dateFormat:'dd/mm/yy',
 	  onSelect: function(dateText, inst) { 
-		  $('#substitute_select').attr('disabled', 'disabled');
-		  updateSubstituteUsers(); 
-		  $('#substitute_select').removeAttr('disabled');
+	  updateUsers();
 	  }
 	});
       });
@@ -120,28 +98,56 @@
 	  $('#vacationDetails').dialog('open');
 	  getVacationData();
       }
-    
+
       function getVacationData()
       {
-	
-	      var data = {
-		      action: "list"
-		  }
-			      var url = 'vacation.htm';
-			      $.ajax({
-				      url: url,
-				      cache: false,
-				      async: false,
-				      dataType: 'json',
-				      data: data,
-				      error: function (e) {
-				      },
-				      success: function (data) {
-						  showVacation(data);
-						}	
-			      });
-      } 
-      
+	  var data = { action: "list" }
+	  var url = 'vacation.htm';
+	  $.ajax({
+		  url: url,
+		  cache: false,
+		  async: false,
+		  dataType: 'json',
+		  data: data,
+		  error: function (e) {
+		  },
+		  success: function (data) {
+			      showVacation(data);
+			    }
+	  });
+      }
+
+      /* * @Function Name : showVacation
+      * @Description     : Displays the vacation sumamry to admin users.
+      * @param           : data : Response of AJAX call.
+      * @returns         :
+      * */
+      function showVacation(data)
+      {
+	      var vacationData = new Array(10);
+	      var oTable = $('#vacationtable').dataTable();
+	      oTable.fnClearTable();
+	      var i = 0;
+	      $.each(data.vacs, function (key, value) {
+
+		      vacationData[i++] = data.vacs[key].id;
+		      vacationData[i++] = data.vacs[key].user;
+		      vacationData[i++] = $.format.date(data.vacs[key].fromDate,"dd/MM/yyyy");
+		      vacationData[i++] = $.format.date(data.vacs[key].toDate,"dd/MM/yyyy");;
+		      vacationData[i++] = data.vacs[key].substitute;
+		      vacationData[i++] = data.vacs[key].description;
+
+		      oTable.fnAddData(vacationData, false);
+		      i = 0;
+		  });
+	      oTable.fnDraw(true);
+	      isSubstituteMandatory = data.isSubstituteMandatory;
+	      isAbsenceManager = data.isAbsenceManager;
+	      if(data.isAbsenceManager != undefined && data.isAbsenceManager != 'true'){
+		$('#user').combobox('disable', 'disabled');
+	      }
+      }
+
       function getMatchedVacationData()
       {
 	if($('#fromdate').val() != '' && $('#todate').val() != '')
@@ -176,52 +182,22 @@
 	      $.each(data.vacs, function (key, value) {
 		      var inValidUser = data.vacs[key].user;
 	      
-		      var isExist = !!$('#substitute_select option').filter(function() {
+		      var isExist = !!$('#substitute option').filter(function() {
 					return $(this).attr('value').toLowerCase() === inValidUser.toLowerCase();
 				    }).length;
 		      if (isExist){
-			
-			$('#substitute_select option').filter(function() {
+			var substituteVal = $('#substitute').combobox('getvalue');
+			if(substituteVal == inValidUser){
+			  $('#substitute').combobox('autocomplete', '');
+			  $('#substitute').val('');
+			}
+			$('#substitute option').filter(function() {
 						return $(this).attr('value').toLowerCase() === inValidUser.toLowerCase();
 					    }).remove();
 			}
 		});
 	} 
-	
-      /* * @Function Name : showVacation 
-      * @Description     : Displays the vacation sumamry to admin users.
-      * @param           : data : Response of AJAX call.
-      * @returns         :  
-      * */
-      function showVacation(data)
-      {
-	      var vacationData = new Array(10);
-	      var oTable = $('#vacationtable').dataTable();
-	      oTable.fnClearTable();
-	      var i = 0;
-	      $.each(data.vacs, function (key, value) {
-		      vacationData[i] = data.vacs[key].id;
-		      i++;
-		      vacationData[i] = data.vacs[key].user;
-		      i++;
-		      vacationData[i] = $.format.date(data.vacs[key].fromDate,"dd/MM/yyyy");
-		      i++;
-		      vacationData[i] = $.format.date(data.vacs[key].toDate,"dd/MM/yyyy");;
-		      i++;
-		      vacationData[i] = data.vacs[key].substitute;
-		      i++;
-		      vacationData[i] = data.vacs[key].description;
-		      
-		      oTable.fnAddData(vacationData, false);
-		      i = 0;
-		  });
-	      oTable.fnDraw(true);
-	      isSubstituteMandatory = data.isSubstituteMandatory;
-	      if(data.isAbsenceManager != undefined && data.isAbsenceManager == 'true'){
-		$('#proxyUserButton').show();
-	      }
-      }    
-      
+
      /**
       * @Function Name   : clickCreateVacation 
       * @Description     : This function will open vacation dailog 
@@ -230,91 +206,58 @@
       * */
     function clickCreateVacation()
     {
-      updateSubstituteUsers();
+      updateUsers();
       $('#vacationId').val("");
-      $('#proxyuser').val("");
       $('#substitute').val("");
+      $('#substitute').combobox('autocomplete', '');
+      $('#user').val(cuser);
+      $('#user').combobox('autocomplete', cuser);
       $('#fromdate').val("");
       $('#todate').val("");
       $('#desc').val("");
-      $('#substitute_select').attr('disabled', 'disabled');
-      $('#todate').attr('disabled', 'disabled');
-      $("#proxyUserId").css("display", "none");
       $('#vacation').dialog('open');
     }
-    
-    /**
-      * @Function Name   : clickCreateVacation 
-      * @Description     : This function will open vacation dailog 
-      * @param           : 
-      * @returns         : 
-      * */
-    function clickCreateProxyVacation()
+
+    function clickUpdateVacation( vacationTable )
     {
-      updateSubstituteUsers();
-      $('#vacationId').val("");
-      $('#substitute').val("");
-      $('#proxyuser').val("");
-      $('#fromdate').val("");
-      $('#todate').val("");
-      $('#desc').val("");
-      $('#substitute_select').attr('disabled', 'disabled');
-      $('#todate').attr('disabled', 'disabled');
-      $("#proxyUserId").css("display", "");
-      $('#vacation').dialog('open');
-    }
-    
-    function clickEndVacation(vacationTable)
-    {
-	var oTable = $(vacationTable).dataTable();
-	var cols = fnGetSelected(oTable);
-      
-    if(cols.length<=0)
-      {
-        $('#warnDialog').html('<a>Please select one vacation row to end vacation.</a>');
-        $('#warnDialog').dialog('open');
-        return false;
-      }else {
-	//functionality to end vacation.
-	vac_id = cols[0];
-	$('#endVacDialog').html('<a> Applied for leave <br>From &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' +cols[2]+'<br>  To &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:  '+cols[3]+'<br> Description  :  ' +cols[5]+ '<br>If your vacation is completed please click on End Vacation</a>');
-	$('#endVacDialog').dialog('open');
-    }
-    }
-    
-   function clickUpdateVacation(vacationTable)
-    {
+      updateUsers();
       var oTable = $(vacationTable).dataTable();
       var cols = fnGetSelected(oTable);
-    if(cols.length<=0)
-      {
-        $('#warnDialog').html('<a>Please select one row to update vacation.</a>');
-        $('#warnDialog').dialog('open');
-        return false;
-      }
-      else {
+      if(cols.length<=0) {
+	  $('#warnDialog').html('<a>Please select one row to update vacation.</a>');
+	  $('#warnDialog').dialog('open');
+	  return false;
+	} else {
 	  //functionality to update vacation.
 	  vac_id = cols[0];
 	  $('#vacationId').val(cols[0]);
 	  $('#fromdate').val(cols[2]);
 	  $('#todate').val(cols[3]);
 	  $('#substitute').val(cols[4]);
-	  $('#substitute_select').val(cols[4]);
+	  $('#substitute').combobox('autocomplete', cols[4]);
 	  $('#desc').val(cols[5]);
-	  $('#substitute_select').attr('disabled', 'disabled');
-	  $('#todate').attr('disabled', 'disabled');
-	  if(cols[1] == cuser){
-	    $("#proxyUserId").css("display", "none");
-	    $('#proxyuser').val("");
-	  } else {
-	    $("#proxyUserId").css("display", "");
-	    $('#proxyuser').val(cols[1]);
-	  }
-	  updateSubstituteUsers();
-      	  $('#vacation').dialog('open');
+	  $('#user').val(cols[1]);
+	  $('#user').combobox('autocomplete', cols[1]);
+	  $('#vacation').dialog('open');
+        }
+    }
+
+    function clickEndVacation( vacationTable )
+    {
+	var oTable = $(vacationTable).dataTable();
+	var cols = fnGetSelected(oTable);
+	if (cols.length<=0) {
+	    $('#warnDialog').html('<a>Please select one vacation row to end vacation.</a>');
+	    $('#warnDialog').dialog('open');
+	    return false;
+	  }else {
+	    //functionality to end vacation.
+	    vac_id = cols[0];
+	    $('#endVacDialog').html('<a> Applied for leave <br>From &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ' +cols[2]+'<br>  To &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:  '+cols[3]+'<br> Description  :  ' +cols[5]+ '<br>If your vacation is completed please click on End Vacation</a>');
+	    $('#endVacDialog').dialog('open');
 	}
     }
-    
+
     function fnGetSelected( oTableLocal )
     {
 	    var cols = new Array();
@@ -329,19 +272,21 @@
 	    }
 	    return cols;
     }
- 
-    function saveVacation()
-	{
-	  if($('#vacationId').val() == undefined || $('#vacationId').val().trim() == ''){
-	    if($('#proxyuser').val().trim() == '')
-	    insertVacation();
-	    else
-	    insertProxyVacation();  
-	  }else{
-	    updateVacation();
+
+    function saveVacation() {
+       if($('#substitute').val() == $('#user').val()){
+	    $('#warnDialog').html('<a>Please select different substitute. User and substitute can not be same.</a>');
+	    $('#warnDialog').dialog('open');
+	    return false;
+	  } else {
+	    if($('#vacationId').val() == undefined || $('#vacationId').val().trim() == ''){
+	      insertVacation();
+	    } else {
+	      updateVacation();
+	    }
 	  }
     }
-    
+
     /**
     * @Function Name   : insertVacation 
     * @Description     : This function will make an ajax call to save the data of vacation management
@@ -350,47 +295,9 @@
     * */
     function insertVacation()
 	{	
-		    
-	  if(isValidDate("fromdate","todate") && isValidSubstitute("substitute") && isValidDesc("desc"))
+	  if(isValidDate("fromdate","todate") && isValidUser("user") && isValidSubstitute("substitute") && isValidDesc("desc"))
 	    {
-			    var data = { action:"insertVacation",fromDate: $('#fromdate').val(), toDate: $('#todate').val(),desc: $('#desc').val(),substitute: $('#substitute').val()}
-			    $.ajax({
-			    url: 'vacation.htm',
-			    type: 'POST',
-			    dataType: 'json',
-			    data: data,
-			    cache: false,
-			    async: true,
-			    error: function (e) {
-			    },
-			    success: function (data) {
-				    if(data.message.indexOf("Inserted")>=0)
-				    {
-					    getVacationData();
-					    $('#vacation').dialog('close');
-					    $('#messageDialog').html('<a >Vacation details are succesfully saved. please note your claimed task(s) will not be auto assigned to your substitute.</a>');
-				    } else if(data.message.indexOf("Invalid Substitute")>=0) {
-					    $('#messageDialog').html('<a>Substitute not avilable at selected time, Please change Sustitute.</a>');
-				    } else {
-					    $('#messageDialog').html('<a>Exception occured while saving the Vacation details please see the error log for further details.</a>');
-				    }
-				    $('#messageDialog').dialog('open');
-			}
-			    });
-	      }	
-    }
-    
-    /**
-    * @Function Name   : insertProxyVacation 
-    * @Description     : This function will make an ajax call to save the data of vacation management
-    * @param           : 
-    * @returns         : 
-    * */
-    function insertProxyVacation()
-	{	
-	  if(isValidDate("fromdate","todate") && isValidUser("proxyuser") && isValidSubstitute("substitute") && isValidDesc("desc"))
-	    {
-			    var data = { action:"insertProxyVacation",fromDate: $('#fromdate').val(), toDate: $('#todate').val(),desc: $('#desc').val(),substitute: $('#substitute').val(),user: $('#proxyuser').val()}
+			    var data = { action:"insertVacation",fromDate: $('#fromdate').val(), toDate: $('#todate').val(),desc: $('#desc').val(),substitute: $('#substitute').val(),user: $('#user').val()}
 			    $.ajax({
 			    url: 'vacation.htm',
 			    type: 'POST',
@@ -425,10 +332,9 @@
     * */
 	function updateVacation()
 	{	
-		    
 	  if(isValidDate("fromdate","todate") && isValidSubstitute("substitute") && isValidDesc("desc"))
 	    {
-			    var data = { action:"editVacation",id:vac_id,fromDate: $('#fromdate').val(), toDate: $('#todate').val(),desc: $('#desc').val(),substitute: $('#substitute').val(),user: $('#proxyuser').val()}
+			    var data = { action:"editVacation",id:vac_id,fromDate: $('#fromdate').val(), toDate: $('#todate').val(),desc: $('#desc').val(),substitute: $('#substitute').val(),user: $('#user').val()}
 			    $.ajax({
 			    url: 'vacation.htm',
 			    type: 'POST',
@@ -488,7 +394,7 @@
 		    }
 	    });
     }
- 
+
     function isValidDesc(desc) 
     {
       if ($.trim(document.getElementById(desc).value)== '') {
@@ -498,7 +404,7 @@
        }
        return true;
     }
-    
+
     function isValidSubstitute(substitute) 
     {
       if ($.trim(document.getElementById(substitute).value)== '' && isSubstituteMandatory == 'true') {
@@ -508,7 +414,7 @@
        }
        return true;
     }
-    
+
     function isValidUser(user) 
     {
       if ($.trim(document.getElementById(user).value)== '') {
@@ -518,7 +424,7 @@
        }
        return true;
     }
-     
+
     /**
     * @Function Name   : isValidDate 
     * @Description     : This function will Validate to date,from date & description
@@ -548,13 +454,16 @@
                 else if (checkdate(chkTo) != true) {
                     document.getElementById(varTo).value = '';
                     return false;
+                } else if (validatedates(varFrom, varTo) != true) {
+                    document.getElementById(varTo).value = '';
+                    return false;
                 }
                 else 
                 return true;
             }
             return true;
    }
-   
+
     /**
     * @Function Name   : checkdate 
     * @Description     : This function will Validate for special characters in date field
@@ -580,14 +489,32 @@
 			      $("#warnDialog").dialog('open');
 	      }	
 	      else
-		  returnval = true
+		  returnval = true;
 	  }
       return returnval									
-    }  	
-    function updateSubstituteUsers() {
-      $('#substitute_select').empty();
-      var firstOption="<option value=''>Select user </option>";
-      $("#substitute_select").append(firstOption);      
+    }
+
+    /**
+    * @Function Name   : validatedates
+    * @Description     : This function will Validate for valid date range
+    * @param           : from date and to date Refrences
+    * @returns         : boolean
+    * */
+    function validatedates(varFrom, varTo) {
+	  var returnval = false
+	  var fromdate = $('#'+varFrom).datepicker('getDate');
+	  var todate = $('#'+varTo).datepicker('getDate');
+	  var diff = Math.ceil((todate - fromdate) / (1000 * 60 * 60 * 24));
+	  if (diff >= 0){
+	    returnval = true;
+	  } else {
+	    $("#warnDialog").html('<a >Invalid date range detected, Please correct and submit again</a>');
+	    $("#warnDialog").dialog('open');
+	  }
+      return returnval;
+    }
+
+    function updateUsers() {
       $.each(cUserRoles, function(i, value) {
 	      callGetAssignedUsers(value);
 	});
@@ -601,23 +528,166 @@
 		  var sr           = new SOAPRequest("http://tempo.intalio.org/security/RBACQueryService/getAssignedUsers", soapBody);
 		  SOAPClient.Proxy = proxy;
 		  SOAPClient.SOAPServer = rbacService;
-		  SOAPClient.SendRequest(sr, populateSubstituteUsers);
+		  SOAPClient.SendRequest(sr, populateUsers);
     }
 
-    function populateSubstituteUsers(data) {
-      $(data.responseXML).find('*').filterNode("rbac:user").each(function(){  
+    function populateUsers(data) {
+      $(data.responseXML).find('*').filterNode("rbac:user").each(function(){
 	var user = $(this).text();
-	var isExist = !!$('#substitute_select option').filter(function() {
+	var isExist = !!$('#substitute option').filter(function() {
 	    return $(this).attr('value').toLowerCase() === user.toLowerCase();
 	}).length;
 	if (!isExist && user != cuser){
 	      var option = "<option value=\""+user+"\">"+user+"</option>";
-	      $("#substitute_select").append(option);
+	      $("#substitute").append(option);
+	  }
+	var isExistUser = !!$('#user option').filter(function() {
+	return $(this).attr('value').toLowerCase() === user.toLowerCase();
+	}).length;
+	if (!isExistUser && user != cuser){
+	      var option = "<option value=\""+user+"\">"+user+"</option>";
+	      $("#user").append(option);
 	  }
 	});
       getMatchedVacationData();
-      $('#substitute_select option').filter(function() {
+      $('#substitute option').filter(function() {
 	    return $(this).attr('value').toLowerCase() === $('#substitute').val().toLowerCase();
 	}).attr("selected",true);
-      
     }
+
+    (function( $ ) {
+		$.widget( "custom.combobox", {
+			_create: function() {
+				this.wrapper = $( "<span>" )
+					.addClass( "custom-combobox" )
+					.insertAfter( this.element );
+
+				this.element.hide();
+				this._createAutocomplete();
+				this._createShowAllButton();
+			},
+
+			_createAutocomplete: function() {
+				var selected = this.element.children( ":selected" ),
+					value = selected.val() ? selected.text() : "";
+				this.input = $( "<input>" )
+					.appendTo( this.wrapper )
+					.val( value )
+					.attr( "title", "" )
+					.addClass( "custom-combobox-input ui-widget ui-widget-content ui-corner-left" )
+					.autocomplete({
+						delay: 0,
+						minLength: 0,
+						max:3,
+						source: $.proxy( this, "_source" )
+					});
+
+				this._on( this.input, {
+					autocompleteselect: function( event, ui ) {
+						ui.item.option.selected = true;
+						this._trigger( "select", event, {
+							item: ui.item.option
+						});
+					},
+
+					autocompletechange: "_removeIfInvalid"
+				});
+			},
+
+			_createShowAllButton: function() {
+				var input = this.input,
+					wasOpen = false;
+
+				$( "<a>" )
+					.attr( "id", 'a'+this.element.attr('id') )
+					.attr( "tabIndex", -1 )
+					.attr( "title", "Show All Items" )
+					.appendTo( this.wrapper )
+					.button({
+						icons: {
+							primary: "ui-icon-triangle-1-s"
+						},
+						text: false
+					})
+					.removeClass( "ui-corner-all" )
+					.addClass( "custom-combobox-toggle ui-corner-right" )
+					.mousedown(function() {
+						wasOpen = input.autocomplete( "widget" ).is( ":visible" );
+					})
+					.click(function() {
+						input.focus();
+
+						// Close if already visible
+						if ( wasOpen ) {
+							return;
+						}
+
+						// Pass empty string as value to search for, displaying all results
+						input.autocomplete( "search", "" );
+					});
+			},
+
+			_source: function( request, response ) {
+				var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
+				response( this.element.children( "option" ).map(function() {
+					var text = $( this ).text();
+					if ( this.value && ( !request.term || matcher.test(text) ) )
+						return {
+							label: text,
+							value: text,
+							option: this
+						};
+				}) );
+			},
+			_removeIfInvalid: function( event, ui ) {
+				// Selected an item, nothing to do
+				if ( ui.item ) {
+					return;
+				}
+				// Search for a match (case-insensitive)
+				var value = this.input.val(),
+					valueLowerCase = value.toLowerCase(),
+					valid = false;
+				this.element.children( "option" ).each(function() {
+					if ( $( this ).text().toLowerCase() === valueLowerCase ) {
+						this.selected = valid = true;
+						return false;
+					}
+				});
+
+				// Found a match, nothing to do
+				if ( valid ) {
+				  return;
+				}
+
+				// Remove invalid value
+				this.input.focus();
+				this.element.val( "" );
+				this.input.val( "" );
+				this.input.autocomplete( "instance" ).term = "";
+			},
+
+			_destroy: function() {
+				this.wrapper.remove();
+				this.element.show();
+			},
+			autocomplete : function(value) {
+			    this.element.val(value);
+			    this.input.val(value);
+			},
+			disable : function(value) {
+			  this.input.attr( "disabled", value );
+			  this.input.autocomplete({ disabled: true });
+			  this.input.autocomplete( "disable" );
+			  $('#a'+this.element.attr('id')).unbind();
+			},
+			getvalue : function() {
+			  return this.input.val();
+			}
+		});
+	})( jQuery );
+
+	$(function() {
+		$( "#substitute" ).combobox();
+		$( "#user" ).combobox();
+	});
