@@ -550,8 +550,9 @@
 	  }
 	});
       getMatchedVacationData();
+      var substituteVal = $('#substitute').combobox('getvalue');
       $('#substitute option').filter(function() {
-	    return $(this).attr('value').toLowerCase() === $('#substitute').val().toLowerCase();
+	    return $(this).attr('value').toLowerCase() === substituteVal.toLowerCase();
 	}).attr("selected",true);
     }
 
@@ -676,10 +677,12 @@
 			    this.input.val(value);
 			},
 			disable : function(value) {
-			  this.input.attr( "disabled", value );
-			  this.input.autocomplete({ disabled: true });
-			  this.input.autocomplete( "disable" );
-			  $('#a'+this.element.attr('id')).unbind();
+			  this.input.attr( "disabled", value )
+			  .autocomplete({ disabled: true })
+			  .autocomplete( "disable" );
+			  $('#a'+this.element.attr('id')).unbind()
+			  .css("cursor","default")
+			  .attr( "title", "" );
 			},
 			getvalue : function() {
 			  return this.input.val();
