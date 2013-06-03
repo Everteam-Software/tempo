@@ -550,8 +550,9 @@
 	  }
 	});
       getMatchedVacationData();
+      var substituteVal = $('#substitute').combobox('getvalue');
       $('#substitute option').filter(function() {
-	    return $(this).attr('value').toLowerCase() === $('#substitute').val().toLowerCase();
+	    return $(this).attr('value').toLowerCase() === substituteVal.toLowerCase();
 	}).attr("selected",true);
     }
 
