@@ -131,6 +131,9 @@ public class AMScheduler {
     public final void processSubstituteTasks() {
         try {
             Date todayDate = new SimpleDateFormat("dd/MM/yyyy").parse(today);
+            Calendar yesterday = Calendar.getInstance();
+            yesterday.add(Calendar.DATE, -1);
+            Date yesterdayDate = yesterday.getTime();
             List<Vacation> vacations = null;
             VacationDAOConnection vdao = null;
             try {
@@ -146,7 +149,6 @@ public class AMScheduler {
                     vdao.close();
                 }
             }
-            
             if (vacations == null) { vacations = Collections.emptyList(); }
             for (Vacation vacation : vacations) {
 
@@ -169,6 +171,56 @@ public class AMScheduler {
                             AuthIdentifierSet userSet = new AuthIdentifierSet(
                                     task.getUserOwners());
                             userSet.add(vacation.getSubstitute());
+                            task.setUserOwners(userSet);
+                            dao.updateTask(task);
+                            dao.commit();
+                        }
+                    }
+                } catch (Exception e) {
+                    logger.error(e.getMessage(), e);
+                } finally {
+                    if (dao != null) {
+                        dao.close();
+                    }
+                }
+            }
+            try {
+                if (vacationDAOFactory != null) {
+                    vdao = vacationDAOFactory.openConnection();
+                    vacations = tmsServer.getVacationsByEndDate(vdao,
+                            yesterdayDate);
+                }
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+            } finally {
+                if (vdao != null) {
+                    vdao.close();
+                }
+            }
+            if (vacations == null) { vacations = Collections.emptyList(); }
+            for (Vacation vacation : vacations) {
+
+                List<String> substitutes = new ArrayList<String>();
+                substitutes.add(vacation.getSubstitute());
+                ITaskDAOConnection dao = null;
+                List<Task> tasks = null;
+                try {
+                    if (taskDAOFactory != null) {
+                        dao = taskDAOFactory.openConnection();
+                        tasks = tmsServer.getTaskList(dao, substitutes);
+                    }
+                    if (tasks == null) { tasks = Collections.emptyList(); }
+                    for (Task task : tasks) {
+                        if (task instanceof PATask
+                                && ((ITaskWithState) task).getState().equals(
+                                        TaskState.READY)
+                                && task.getUserOwners().contains(
+                                        vacation.getSubstitute())
+                                && task.getUserOwners().contains(
+                                        vacation.getUser())) {
+                            AuthIdentifierSet userSet = new AuthIdentifierSet(
+                                    task.getUserOwners());
+                            userSet.remove(vacation.getSubstitute());
                             task.setUserOwners(userSet);
                             dao.updateTask(task);
                             dao.commit();
