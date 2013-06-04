@@ -40,6 +40,7 @@
         <class>org.intalio.tempo.workflow.task.Vacation</class>
         <class>org.intalio.tempo.workflow.task.TaskPrevOwners</class>
         <class>org.intalio.tempo.workflow.task.audit.Audit</class>
+        <class>org.intalio.tempo.workflow.task.audit.VacationAudit</class>
         <properties><property name="jboss.as.jpa.providerModule" value="org.apache.openjpa" /></properties>
     </persistence-unit>
 </persistence>
