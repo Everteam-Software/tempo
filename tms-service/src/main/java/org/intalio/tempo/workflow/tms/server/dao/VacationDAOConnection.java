@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.intalio.tempo.workflow.task.Vacation;
+import org.intalio.tempo.workflow.task.audit.VacationAudit;
 
 public interface VacationDAOConnection {
 
@@ -105,4 +106,10 @@ public interface VacationDAOConnection {
      * @return vacations list List<Vacation>
      */
     List<Vacation> getVacationsByEndDate(Date toDate);
+
+    /**
+     * persist vacation audit details.
+     * @param vacationAudit VacationAudit
+     */
+    void auditVacation(VacationAudit vacationAudit);
 }

@@ -20,6 +20,7 @@ import javax.persistence.TemporalType;
 
 import org.intalio.tempo.workflow.dao.AbstractJPAConnection;
 import org.intalio.tempo.workflow.task.Vacation;
+import org.intalio.tempo.workflow.task.audit.VacationAudit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,6 +49,7 @@ public class JPAVacationDAOConnection extends AbstractJPAConnection implements V
 		prevVacation.setDescription(vacation.getDescription());
 		prevVacation.setUser(vacation.getUser());
 		prevVacation.setSubstitute(vacation.getSubstitute());
+		vacation.setIs_active(1);
 		entityManager.persist(prevVacation);
 	}
 
@@ -131,4 +133,10 @@ public class JPAVacationDAOConnection extends AbstractJPAConnection implements V
         List<Vacation> result = query.getResultList();
         return result;
     }
+
+    @Override
+    public final void auditVacation(final VacationAudit vacationAudit) {
+      checkTransactionIsActive();
+      entityManager.persist(vacationAudit);
+      }
 }
