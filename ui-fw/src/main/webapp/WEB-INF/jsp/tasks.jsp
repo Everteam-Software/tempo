@@ -36,7 +36,6 @@
 	</style>
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
 
-    <link rel="stylesheet" type="text/css" href="style.css" />
     <link rel="stylesheet" type="text/css" href="style/tabs.css"/>
     <link rel="stylesheet" type="text/css" href="style/flexigrid.css"/>
     <link class="include" rel="stylesheet" href="style/jqueryui/jquery-ui.css"/>
@@ -47,6 +46,7 @@
     <link rel="alternate" type="application/atom+xml" title="Personal Task feed" href="/feeds/atom/tasks?token=${participantToken}"/>
     <link rel="alternate" type="application/atom+xml" title="Process feed" href="/feeds/atom/processes?token=${participantToken}"/>
     <link type="text/css" href="style/jqueryui/jquery.dataTables.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="style.css" />
     <script type="text/javascript" src="script/ui-fw.js"></script>
     <script type="text/javascript" src="script/jquery.js"></script>
     <script type="text/javascript" src="script/jquery.cookie.js"></script>
