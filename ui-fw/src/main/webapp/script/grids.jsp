@@ -281,7 +281,7 @@ function gotoDashboard() {
         resizable:false,
 	autoResize:true,
 	draggable:false,
-        height: 280,
+        height: 300,
         width:355,
         modal: true,
         buttons: {'<fmt:message key="org_intalio_uifw_message.button.save"/>': function() {saveVacation();}},
@@ -298,7 +298,7 @@ function gotoDashboard() {
         resizable:false,
 	autoResize:false,
 	draggable:false,
-        width:992,
+        width:'auto',
         modal: true,
         close: function() {
 					$('#vacationDetails').css("display","none");
