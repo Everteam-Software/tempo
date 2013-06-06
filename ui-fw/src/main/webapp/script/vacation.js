@@ -207,6 +207,9 @@
     function clickCreateVacation()
     {
       updateUsers();
+      $('#fromdate').removeAttr('disabled');
+      $('#user').combobox('enable');
+      $('#substitute').combobox('enable');
       $('#vacationId').val("");
       $('#substitute').val("");
       $('#substitute').combobox('autocomplete', '');
@@ -230,6 +233,9 @@
 	} else {
 	  //functionality to update vacation.
 	  vac_id = cols[0];
+	  $('#fromdate').removeAttr('disabled');
+	  $('#user').combobox('enable');
+	  $('#substitute').combobox('enable');
 	  $('#vacationId').val(cols[0]);
 	  $('#fromdate').val(cols[2]);
 	  $('#todate').val(cols[3]);
@@ -238,6 +244,14 @@
 	  $('#desc').val(cols[5]);
 	  $('#user').val(cols[1]);
 	  $('#user').combobox('autocomplete', cols[1]);
+	  var date = $('#fromdate').datepicker('getDate');
+	  var today = new Date();
+	  dayDiff = Math.ceil((date - today) / (1000 * 60 * 60 * 24));
+	  if(dayDiff <= 0){
+	    $('#fromdate').attr('disabled', 'disabled');
+	    $('#user').combobox('disable', 'disabled');
+	    $('#substitute').combobox('disable', 'disabled');
+	  }
 	  $('#vacation').dialog('open');
         }
     }
@@ -698,11 +712,22 @@
 			},
 			disable : function(value) {
 			  this.input.attr( "disabled", value )
+			  .addClass('ui-autocomplete-disabled')
 			  .autocomplete({ disabled: true })
 			  .autocomplete( "disable" );
 			  $('#a'+this.element.attr('id')).unbind()
 			  .css("cursor","default")
 			  .attr( "title", "" );
+			},
+			enable : function() {
+			  this.input.button("enable")
+			  .propAttr( "disabled", false )
+			  .removeClass('ui-autocomplete-disabled')
+			  .autocomplete("enable")
+			  .autocomplete({ disabled: false });
+			  $('#a'+this.element.attr('id')).bind()
+			  .css("cursor","auto")
+			  .attr( "title", "Show All Items" );
 			},
 			getvalue : function() {
 			  return this.input.val();
