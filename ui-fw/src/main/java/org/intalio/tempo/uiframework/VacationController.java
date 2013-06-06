@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.intalio.tempo.security.util.StringArrayUtils;
 import org.intalio.tempo.web.ApplicationState;
 import org.intalio.tempo.workflow.task.Vacation;
 import org.intalio.tempo.workflow.tms.ITaskManagementService;
@@ -89,10 +90,21 @@ public class VacationController implements Controller {
                     model = getVacationDetails(name);
                 } else if (action.equalsIgnoreCase("list")) {
                     boolean isAbsenceManager = false;
-                    if (amRoles != null
-                            && CollectionUtils.containsAny(amRoles,
-                                    Arrays.asList(userRoles))) {
-                        isAbsenceManager = true;
+                    if (userRoles != null && amRoles != null) {
+                        String strUserRoles = StringArrayUtils.toCommaDelimited(
+                                userRoles).toLowerCase();
+                        String strAmRoles = StringArrayUtils.toCommaDelimited(
+                                (String[]) amRoles.toArray(new String[amRoles
+                                        .size()])).toLowerCase();
+                        String[] arrUserRoles = StringArrayUtils
+                                .parseCommaDelimited(strUserRoles);
+                        String[] arrAmRoles = StringArrayUtils
+                                .parseCommaDelimited(strAmRoles);
+                        if (CollectionUtils.containsAny(
+                                        Arrays.asList(arrUserRoles),
+                                        Arrays.asList(arrAmRoles))) {
+                            isAbsenceManager = true;
+                        }
                     }
                     if (isAbsenceManager) {
                         model = getAllVacationDetails();
