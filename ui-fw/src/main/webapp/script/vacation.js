@@ -332,7 +332,7 @@
     * */
 	function updateVacation()
 	{	
-	  if(isValidDate("fromdate","todate") && isValidSubstitute("substitute") && isValidDesc("desc"))
+	  if(isValidDate("fromdate","todate") && isValidUser("user") && isValidSubstitute("substitute") && isValidDesc("desc"))
 	    {
 			    var data = { action:"editVacation",id:vac_id,fromDate: $('#fromdate').val(), toDate: $('#todate').val(),desc: $('#desc').val(),substitute: $('#substitute').val(),user: $('#user').val()}
 			    $.ajax({
@@ -407,8 +407,14 @@
 
     function isValidSubstitute(substitute) 
     {
-      if ($.trim(document.getElementById(substitute).value)== '' && isSubstituteMandatory == 'true') {
+      var substituteVal = $('#substitute').combobox('getvalue');
+      if (($.trim(document.getElementById(substitute).value)== '' || $.trim(substituteVal) == '' ) && isSubstituteMandatory == 'true' ) {
                 $("#warnDialog").html('<a >Please select substitute, should not be empty</a>');
+                $("#warnDialog").dialog('open');
+                return false;
+       }
+       if ($.trim(document.getElementById(substitute).value) != $.trim(substituteVal) && isSubstituteMandatory == 'true'  ) {
+                $("#warnDialog").html('<a >Please select valid substitute.</a>');
                 $("#warnDialog").dialog('open');
                 return false;
        }
@@ -417,8 +423,14 @@
 
     function isValidUser(user) 
     {
-      if ($.trim(document.getElementById(user).value)== '') {
+      var userVal = $('#user').combobox('getvalue');
+      if ($.trim(document.getElementById(user).value)== '' || $.trim(userVal) == '') {
                 $("#warnDialog").html('<a >Please select user, should not be empty</a>');
+                $("#warnDialog").dialog('open');
+                return false;
+       }
+       if ($.trim(document.getElementById(user).value) != $.trim(userVal) ) {
+                $("#warnDialog").html('<a >Please select valid user.</a>');
                 $("#warnDialog").dialog('open');
                 return false;
        }
@@ -553,6 +565,10 @@
       var substituteVal = $('#substitute').combobox('getvalue');
       $('#substitute option').filter(function() {
 	    return $(this).attr('value').toLowerCase() === substituteVal.toLowerCase();
+	}).attr("selected",true);
+      var userVal = $('#user').combobox('getvalue');
+      $('#user option').filter(function() {
+	    return $(this).attr('value').toLowerCase() === userVal.toLowerCase();
 	}).attr("selected",true);
     }
 
