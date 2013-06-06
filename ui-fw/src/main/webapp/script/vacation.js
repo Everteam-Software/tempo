@@ -313,6 +313,8 @@
 					    getVacationData();
 					    $('#vacation').dialog('close');
 					    $('#messageDialog').html('<a >Vacation details are succesfully saved. please note user claimed task(s) will not be auto assigned to substitute.</a>');
+				    } else if(data.message.indexOf("Invalid Vacation Dates")>=0) {
+					    $('#messageDialog').html('<a>Invalid vacation Dates , Please change Dates.</a>');
 				    } else if(data.message.indexOf("Invalid Substitute")>=0) {
 					    $('#messageDialog').html('<a>Substitute not avilable at selected time, Please change Sustitute.</a>');
 				    } else {
@@ -350,6 +352,8 @@
 					    getVacationData();
 					    $('#vacation').dialog('close');
 					    $('#messageDialog').html('<a >Vacation details are succesfully saved. please note your claimed task(s) will not be auto assigned to your substitute.</a>');
+				    } else if(data.message.indexOf("Invalid Vacation Dates")>=0) {
+					    $('#messageDialog').html('<a>Invalid vacation Dates , Please change Dates.</a>');
 				    } else if(data.message.indexOf("Invalid Substitute")>=0) {
 					    $('#messageDialog').html('<a>Substitute not avilable at selected time, Please change Sustitute.</a>');
 				    } else {

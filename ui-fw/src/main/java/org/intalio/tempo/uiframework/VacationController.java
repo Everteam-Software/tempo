@@ -133,14 +133,20 @@ public class VacationController implements Controller {
                     String user = request.getParameter("user");
                     if (fromDate != null && toDate != null && desc != null
                             && user != null && substitute != null) {
+                        boolean isUserValid = validateSubstitute(
+                                user, fromDate, toDate);
                         boolean isSubstituteValid = validateSubstitute(
                                 substitute, fromDate, toDate);
-                        if (isSubstituteValid) {
-                            model = insertVacationDetails(fromDate, toDate,
-                                    desc.trim(), user, substitute);
-                        } else {
+                        if (!isUserValid) {
+                            message = "Invalid Vacation Dates";
+                            model.put("message", message);
+                        } else if (!isSubstituteValid) {
                             message = "Invalid Substitute";
                             model.put("message", message);
+                        }
+                        if (isUserValid && isSubstituteValid) {
+                            model = insertVacationDetails(fromDate, toDate,
+                                    desc.trim(), user, substitute);
                         }
                     }
                 } else if (action.equalsIgnoreCase("editVacation")) {
@@ -155,14 +161,20 @@ public class VacationController implements Controller {
                     }
                     if (id != null && fromDate != null && toDate != null
                             && desc != null && substitute != null) {
+                        boolean isUserValid = validateUser(
+                                user, fromDate, toDate);
                         boolean isSubstituteValid = validateSubstitute(
                                 substitute, fromDate, toDate);
-                        if (isSubstituteValid) {
-                            model = editVacationDetails(id, fromDate, toDate,
-                                    desc.trim(), name, substitute);
-                        } else {
+                        if (!isUserValid) {
+                            message = "Invalid Vacation Dates";
+                            model.put("message", message);
+                        } else if (!isSubstituteValid) {
                             message = "Invalid Substitute";
                             model.put("message", message);
+                        }
+                        if (isUserValid && isSubstituteValid) {
+                            model = editVacationDetails(id, fromDate, toDate,
+                                    desc.trim(), name, substitute);
                         }
                     }
                 }
@@ -309,6 +321,30 @@ public class VacationController implements Controller {
                             + e.getMessage(), e);
         }
         return isSubstituteValid;
+    }
+
+    /**
+     * gets matched Vacation Details for given dates.
+     * @param user String
+     * @param fromDate String
+     * @param toDate String
+     * @return isUserValid boolean
+     */
+    protected final boolean validateUser(final String user,
+            final String fromDate, final String toDate) {
+        boolean isUserValid = true;
+        try {
+            List<Vacation> vac = taskManager.getSubstituteMatchedVacations(
+                    user, fromDate, toDate);
+            if (vac != null && vac.size() >= 2) {
+                isUserValid = false;
+            }
+        } catch (Exception e) {
+            LOG.error(
+                    "Exception while fetching vacation records. "
+                            + e.getMessage(), e);
+        }
+        return isUserValid;
     }
 
 }
