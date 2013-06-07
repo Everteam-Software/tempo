@@ -11,6 +11,7 @@
  */
 package org.intalio.tempo.workflow.tms.server.dao;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -53,12 +54,20 @@ public class JPAVacationDAOConnection extends AbstractJPAConnection implements V
 		entityManager.persist(prevVacation);
 	}
 
-	public List<Vacation> getVacationDetails(String user) {
-		Query query = entityManager.createNamedQuery(Vacation.GET_VACATION_DETAILS, Vacation.class).setParameter(
-				"user", user);
-		List<Vacation> result = query.getResultList();
-		return result;
-	}
+        /**
+         * get vacation details for selected user.
+         * @param user String
+         * @return vacation list List<Vacation>
+         */
+        public final List<Vacation> getVacationDetails(final String user) {
+            Query query = entityManager
+                    .createNamedQuery(Vacation.GET_VACATION_DETAILS, Vacation.class)
+                    .setParameter("user", user)
+                    .setParameter("toDate", Calendar.getInstance().getTime(),
+                            TemporalType.DATE);
+            List<Vacation> result = query.getResultList();
+            return result;
+        }
 	
 	public List<Vacation> getMatchedVacations(Date fromDate, Date toDate) {
 		Query query = entityManager.createNamedQuery(Vacation.FETCH_MATCHED_VACATION, Vacation.class).setParameter(
@@ -67,8 +76,14 @@ public class JPAVacationDAOConnection extends AbstractJPAConnection implements V
 		return result;
 	}
 
-	public List<Vacation> getVacationDetails() {
-		Query query = entityManager.createNamedQuery(Vacation.FETCH_VACATION_SUMMARY, Vacation.class);
+	/**
+	 * get vacation details for all users.
+	 * @return vacation list List<Vacation>
+	 */
+	public final List<Vacation> getVacationDetails() {
+        Query query = entityManager.createNamedQuery(
+                Vacation.FETCH_VACATION_SUMMARY, Vacation.class).setParameter(
+                "toDate", Calendar.getInstance().getTime(), TemporalType.DATE);
 		List<Vacation> resultList = query.getResultList();
 		return resultList;
 	}

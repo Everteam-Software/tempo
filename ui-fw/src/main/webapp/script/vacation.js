@@ -207,6 +207,9 @@
     function clickCreateVacation()
     {
       updateUsers();
+      $('#fromdate').removeAttr('disabled');
+      $('#user').combobox('enable');
+      $('#substitute').combobox('enable');
       $('#vacationId').val("");
       $('#substitute').val("");
       $('#substitute').combobox('autocomplete', '');
@@ -230,6 +233,9 @@
 	} else {
 	  //functionality to update vacation.
 	  vac_id = cols[0];
+	  $('#fromdate').removeAttr('disabled');
+	  $('#user').combobox('enable');
+	  $('#substitute').combobox('enable');
 	  $('#vacationId').val(cols[0]);
 	  $('#fromdate').val(cols[2]);
 	  $('#todate').val(cols[3]);
@@ -238,6 +244,14 @@
 	  $('#desc').val(cols[5]);
 	  $('#user').val(cols[1]);
 	  $('#user').combobox('autocomplete', cols[1]);
+	  var date = $('#fromdate').datepicker('getDate');
+	  var today = new Date();
+	  dayDiff = Math.ceil((date - today) / (1000 * 60 * 60 * 24));
+	  if(dayDiff <= 0){
+	    $('#fromdate').attr('disabled', 'disabled');
+	    $('#user').combobox('disable', 'disabled');
+	    $('#substitute').combobox('disable', 'disabled');
+	  }
 	  $('#vacation').dialog('open');
         }
     }
@@ -313,6 +327,8 @@
 					    getVacationData();
 					    $('#vacation').dialog('close');
 					    $('#messageDialog').html('<a >Vacation details are succesfully saved. please note user claimed task(s) will not be auto assigned to substitute.</a>');
+				    } else if(data.message.indexOf("Invalid Vacation Dates")>=0) {
+					    $('#messageDialog').html('<a>Invalid vacation Dates , Please change Dates.</a>');
 				    } else if(data.message.indexOf("Invalid Substitute")>=0) {
 					    $('#messageDialog').html('<a>Substitute not avilable at selected time, Please change Sustitute.</a>');
 				    } else {
@@ -332,7 +348,7 @@
     * */
 	function updateVacation()
 	{	
-	  if(isValidDate("fromdate","todate") && isValidSubstitute("substitute") && isValidDesc("desc"))
+	  if(isValidDate("fromdate","todate") && isValidUser("user") && isValidSubstitute("substitute") && isValidDesc("desc"))
 	    {
 			    var data = { action:"editVacation",id:vac_id,fromDate: $('#fromdate').val(), toDate: $('#todate').val(),desc: $('#desc').val(),substitute: $('#substitute').val(),user: $('#user').val()}
 			    $.ajax({
@@ -350,6 +366,8 @@
 					    getVacationData();
 					    $('#vacation').dialog('close');
 					    $('#messageDialog').html('<a >Vacation details are succesfully saved. please note your claimed task(s) will not be auto assigned to your substitute.</a>');
+				    } else if(data.message.indexOf("Invalid Vacation Dates")>=0) {
+					    $('#messageDialog').html('<a>Invalid vacation Dates , Please change Dates.</a>');
 				    } else if(data.message.indexOf("Invalid Substitute")>=0) {
 					    $('#messageDialog').html('<a>Substitute not avilable at selected time, Please change Sustitute.</a>');
 				    } else {
@@ -407,8 +425,14 @@
 
     function isValidSubstitute(substitute) 
     {
-      if ($.trim(document.getElementById(substitute).value)== '' && isSubstituteMandatory == 'true') {
+      var substituteVal = $('#substitute').combobox('getvalue');
+      if (($.trim(document.getElementById(substitute).value)== '' || $.trim(substituteVal) == '' ) && isSubstituteMandatory == 'true' ) {
                 $("#warnDialog").html('<a >Please select substitute, should not be empty</a>');
+                $("#warnDialog").dialog('open');
+                return false;
+       }
+       if ($.trim(document.getElementById(substitute).value) != $.trim(substituteVal) && isSubstituteMandatory == 'true'  ) {
+                $("#warnDialog").html('<a >Please select valid substitute.</a>');
                 $("#warnDialog").dialog('open');
                 return false;
        }
@@ -417,8 +441,14 @@
 
     function isValidUser(user) 
     {
-      if ($.trim(document.getElementById(user).value)== '') {
+      var userVal = $('#user').combobox('getvalue');
+      if ($.trim(document.getElementById(user).value)== '' || $.trim(userVal) == '') {
                 $("#warnDialog").html('<a >Please select user, should not be empty</a>');
+                $("#warnDialog").dialog('open');
+                return false;
+       }
+       if ($.trim(document.getElementById(user).value) != $.trim(userVal) ) {
+                $("#warnDialog").html('<a >Please select valid user.</a>');
                 $("#warnDialog").dialog('open');
                 return false;
        }
@@ -554,6 +584,10 @@
       $('#substitute option').filter(function() {
 	    return $(this).attr('value').toLowerCase() === substituteVal.toLowerCase();
 	}).attr("selected",true);
+      var userVal = $('#user').combobox('getvalue');
+      $('#user option').filter(function() {
+	    return $(this).attr('value').toLowerCase() === userVal.toLowerCase();
+	}).attr("selected",true);
     }
 
     (function( $ ) {
@@ -678,11 +712,22 @@
 			},
 			disable : function(value) {
 			  this.input.attr( "disabled", value )
+			  .addClass('ui-autocomplete-disabled')
 			  .autocomplete({ disabled: true })
 			  .autocomplete( "disable" );
 			  $('#a'+this.element.attr('id')).unbind()
 			  .css("cursor","default")
 			  .attr( "title", "" );
+			},
+			enable : function() {
+			  this.input.button("enable")
+			  .propAttr( "disabled", false )
+			  .removeClass('ui-autocomplete-disabled')
+			  .autocomplete("enable")
+			  .autocomplete({ disabled: false });
+			  $('#a'+this.element.attr('id')).bind()
+			  .css("cursor","auto")
+			  .attr( "title", "Show All Items" );
 			},
 			getvalue : function() {
 			  return this.input.val();

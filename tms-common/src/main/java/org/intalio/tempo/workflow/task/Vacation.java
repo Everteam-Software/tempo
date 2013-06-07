@@ -12,9 +12,6 @@
  * $Id: Vacation.java 5440 2006-06-09 08:58:15Z imemruk $
  * $Log:$
  */
-/**
- *  This class is a Persistence Class for  vacation management of table vacation.
- */
 package org.intalio.tempo.workflow.task;
 
 import java.util.Date;
@@ -34,13 +31,27 @@ import javax.persistence.TableGenerator;
 import org.apache.openjpa.persistence.Persistent;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
+/**
+ *  This class is a Persistence Class for vacation management
+ *  of table vacation.
+ */
 @Entity
 @Table(name = "vacation")
 @TableGenerator(name = "tab", initialValue = 0, allocationSize = 50)
 @NamedQueries({
-        @NamedQuery(name = Vacation.GET_VACATION_DETAILS, query = "select vacation from Vacation vacation where vacation._user=(:user) and vacation._is_active = 1"),
-        @NamedQuery(name = Vacation.FIND_VAC_BY_ID, query = "select vacation from Vacation vacation where vacation._id = ?1 and vacation._is_active = 1"),
-        @NamedQuery(name = Vacation.FETCH_VACATION_SUMMARY, query = "select vacation from Vacation vacation where vacation._is_active = 1"),
+        @NamedQuery(name = Vacation.GET_VACATION_DETAILS,
+        query = "select vacation from Vacation vacation where "
+                + "vacation._user=(:user) "
+                + "AND vacation._toDate >=(:toDate)  "
+                + "AND vacation._is_active = 1"),
+        @NamedQuery(name = Vacation.FIND_VAC_BY_ID,
+        query = "select vacation from Vacation vacation where "
+                + "vacation._id = ?1 "
+                + "AND vacation._is_active = 1"),
+        @NamedQuery(name = Vacation.FETCH_VACATION_SUMMARY,
+        query = "select vacation from Vacation vacation where "
+                + "vacation._toDate >=(:toDate)  "
+                + "AND vacation._is_active = 1"),
 
         @NamedQuery(name = Vacation.FETCH_SUBSTITUTE_MATCHED_VACATION,
         query = "select vacation from Vacation vacation where "
@@ -199,9 +210,18 @@ public class Vacation {
 		this._is_active = _is_active;
 	}
 
-    public Vacation fetchVacationByID(int id) {
+    /**
+     * fetch vacation by ID.
+     * @param id int
+     * @return vacation Vacation
+     */
+    public final Vacation fetchVacationByID(final int id) {
         Query q = find_id.setParameter(1, id);
         List<Vacation> resultList = q.getResultList();
-        return resultList.get(0);
+        Vacation vacation = null;
+        if (resultList != null && resultList.size() > 0) {
+            vacation = (Vacation) resultList.get(0);
+        }
+        return vacation;
     }
 }

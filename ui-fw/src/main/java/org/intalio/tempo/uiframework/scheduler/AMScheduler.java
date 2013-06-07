@@ -75,9 +75,17 @@ public class AMScheduler {
     private final Logger logger = LoggerFactory.getLogger(AMScheduler.class);
 
     /**
+     * minimum scheduler interval.
+     */
+    private static final int MIN_INTERVAL = 60 * 1000;
+
+    /**
      * Absence Management scheduler constructor.
      */
     public AMScheduler() {
+        if (schedulerInterval < MIN_INTERVAL) {
+            schedulerInterval = MIN_INTERVAL;
+        }
         if (schedulerActive) {
             scheduler.scheduleWithFixedDelay(new Runnable() {
                 public void run() {
