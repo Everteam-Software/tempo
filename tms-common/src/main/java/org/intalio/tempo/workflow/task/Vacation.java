@@ -27,6 +27,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Query;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.apache.openjpa.persistence.Persistent;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
@@ -74,7 +76,7 @@ import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
         @NamedQuery(name = Vacation.FETCH_END_VACATION,
         query = "select vacation from Vacation vacation where "
-                + "vacation._toDate = (:toDate) "
+                + "vacation._toDate <= (:toDate) "
                 + "AND vacation._is_active = 1")
         })
 public class Vacation {
@@ -111,10 +113,12 @@ public class Vacation {
 
     @Column(name = "from_date")
     @Persistent
+    @Temporal( TemporalType.DATE )
     private Date _fromDate;
 
     @Column(name = "to_date")
     @Persistent
+    @Temporal( TemporalType.DATE )
     private Date _toDate;
 
     @Column(name = "description")
