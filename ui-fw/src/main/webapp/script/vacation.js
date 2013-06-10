@@ -210,6 +210,9 @@
       $('#fromdate').removeAttr('disabled');
       $('#user').combobox('enable');
       $('#substitute').combobox('enable');
+      if(isAbsenceManager != undefined && isAbsenceManager != 'true'){
+	$('#user').combobox('disable', 'disabled');
+      }
       $('#vacationId').val("");
       $('#substitute').val("");
       $('#substitute').combobox('autocomplete', '');
@@ -231,11 +234,11 @@
 	  $('#warnDialog').dialog('open');
 	  return false;
 	} else {
+	    $('#fromdate').removeAttr('disabled');
+	    $('#user').combobox('enable');
+	    $('#substitute').combobox('enable');
 	  //functionality to update vacation.
 	  vac_id = cols[0];
-	  $('#fromdate').removeAttr('disabled');
-	  $('#user').combobox('enable');
-	  $('#substitute').combobox('enable');
 	  $('#vacationId').val(cols[0]);
 	  $('#fromdate').val(cols[2]);
 	  $('#todate').val(cols[3]);
@@ -251,6 +254,9 @@
 	    $('#fromdate').attr('disabled', 'disabled');
 	    $('#user').combobox('disable', 'disabled');
 	    $('#substitute').combobox('disable', 'disabled');
+	  }
+	  if(isAbsenceManager != undefined && isAbsenceManager != 'true'){
+	    $('#user').combobox('disable', 'disabled');
 	  }
 	  $('#vacation').dialog('open');
         }
@@ -720,14 +726,37 @@
 			  .attr( "title", "" );
 			},
 			enable : function() {
+			  var wasOpen = false;
+			  var input = this.input;
 			  this.input.button("enable")
 			  .propAttr( "disabled", false )
 			  .removeClass('ui-autocomplete-disabled')
 			  .autocomplete("enable")
 			  .autocomplete({ disabled: false });
-			  $('#a'+this.element.attr('id')).bind()
-			  .css("cursor","auto")
-			  .attr( "title", "Show All Items" );
+			  $('#a'+this.element.attr('id')).css("cursor","auto")
+			  .button({
+						icons: {
+							primary: "ui-icon-triangle-1-s"
+						},
+						text: false
+					})
+			  .addClass( "custom-combobox-toggle ui-corner-right" )
+			  .addClass( "custom-combobox" )
+			  .attr( "title", "Show All Items" )
+			  .mousedown(function() {
+						wasOpen = input.autocomplete( "widget" ).is( ":visible" );
+					})
+			  .click(function() {
+				  input.focus();
+
+				  // Close if already visible
+				  if ( wasOpen ) {
+					  return;
+				  }
+
+				  // Pass empty string as value to search for, displaying all results
+				  input.autocomplete( "search", "" );
+			  });
 			},
 			getvalue : function() {
 			  return this.input.val();
