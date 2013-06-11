@@ -941,21 +941,29 @@ public class TMSRequestProcessor extends OMUnmarshaller {
 	}
 
 	public OMElement deleteVacation(final OMElement requestElement) throws AxisFault {
-		VacationDAOConnection dao = null;
-		try {
-			dao = _VacationDAOFactory.openConnection();
-			OMElementQueue rootQueue = new OMElementQueue(requestElement);
-			int vacId = Integer.parseInt(requireElementValue(rootQueue, "vacId"));
-			String participantToken = requireElementValue(rootQueue, "participantToken");
-			_logger.debug("vacation=" + vacId);
-			_server.deleteVacation(dao, vacId, participantToken);
-			return createOkResponse();
-		} catch (Exception e) {
-			throw makeFault(e);
-		} finally {
-			if (dao != null)
-				dao.close();
-		}
+        VacationDAOConnection vdao = null;
+        ITaskDAOConnection tdao = null;
+        try {
+            vdao = _VacationDAOFactory.openConnection();
+            tdao = _taskDAOFactory.openConnection();
+            OMElementQueue rootQueue = new OMElementQueue(requestElement);
+            int vacId = Integer
+                    .parseInt(requireElementValue(rootQueue, "vacId"));
+            String participantToken = requireElementValue(rootQueue,
+                    "participantToken");
+            _logger.debug("vacation=" + vacId);
+            _server.deleteVacation(tdao, vdao, vacId, participantToken);
+            return createOkResponse();
+        } catch (Exception e) {
+            throw makeFault(e);
+        } finally {
+            if (vdao != null) {
+                vdao.close();
+            }
+            if (tdao != null) {
+                tdao.close();
+            }
+        }
 	}
 	
 	public OMElement getMatchedVacations(final OMElement requestElement) throws AxisFault {

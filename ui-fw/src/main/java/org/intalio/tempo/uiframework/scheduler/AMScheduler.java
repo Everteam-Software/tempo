@@ -18,6 +18,7 @@ import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.TaskState;
 import org.intalio.tempo.workflow.task.Vacation;
 import org.intalio.tempo.workflow.task.traits.ITaskWithState;
+import org.intalio.tempo.workflow.tms.TMSException;
 import org.intalio.tempo.workflow.tms.server.ITMSServer;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnectionFactory;
@@ -207,38 +208,20 @@ public class AMScheduler {
             }
             if (vacations == null) { vacations = Collections.emptyList(); }
             for (Vacation vacation : vacations) {
-
-                List<String> substitutes = new ArrayList<String>();
-                substitutes.add(vacation.getSubstitute());
-                ITaskDAOConnection dao = null;
-                List<Task> tasks = null;
+                ITaskDAOConnection tdao = null;
                 try {
-                    if (taskDAOFactory != null) {
-                        dao = taskDAOFactory.openConnection();
-                        tasks = tmsServer.getTaskList(dao, substitutes);
-                    }
-                    if (tasks == null) { tasks = Collections.emptyList(); }
-                    for (Task task : tasks) {
-                        if (task instanceof PATask
-                                && ((ITaskWithState) task).getState().equals(
-                                        TaskState.READY)
-                                && task.getUserOwners().contains(
-                                        vacation.getSubstitute())
-                                && task.getUserOwners().contains(
-                                        vacation.getUser())) {
-                            AuthIdentifierSet userSet = new AuthIdentifierSet(
-                                    task.getUserOwners());
-                            userSet.remove(vacation.getSubstitute());
-                            task.setUserOwners(userSet);
-                            dao.updateTask(task);
-                            dao.commit();
-                        }
-                    }
-                } catch (Exception e) {
+                    vdao = vacationDAOFactory.openConnection();
+                    tdao = taskDAOFactory.openConnection();
+                    tmsServer
+                            .deleteVacation(tdao, vdao, vacation.getId(), null);
+                } catch (TMSException e) {
                     logger.error(e.getMessage(), e);
                 } finally {
-                    if (dao != null) {
-                        dao.close();
+                    if (vdao != null) {
+                        vdao.close();
+                    }
+                    if (tdao != null) {
+                        tdao.close();
                     }
                 }
             }

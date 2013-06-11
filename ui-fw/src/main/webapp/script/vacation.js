@@ -733,7 +733,8 @@
 			  .removeClass('ui-autocomplete-disabled')
 			  .autocomplete("enable")
 			  .autocomplete({ disabled: false });
-			  $('#a'+this.element.attr('id')).css("cursor","auto")
+			  var id = '#a'+this.element.attr('id');
+			  $(id).css("cursor","auto")
 			  .button({
 						icons: {
 							primary: "ui-icon-triangle-1-s"
@@ -743,6 +744,12 @@
 			  .addClass( "custom-combobox-toggle ui-corner-right" )
 			  .addClass( "custom-combobox" )
 			  .attr( "title", "Show All Items" )
+			  .mouseover(function() {
+			    $(id).addClass( "ui-state-hover" );
+					})
+			  .mouseout(function() {
+			    $(id).removeClass( "ui-state-hover" );
+					})
 			  .mousedown(function() {
 						wasOpen = input.autocomplete( "widget" ).is( ":visible" );
 					})
