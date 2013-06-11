@@ -154,4 +154,10 @@ public class JPAVacationDAOConnection extends AbstractJPAConnection implements V
       checkTransactionIsActive();
       entityManager.persist(vacationAudit);
       }
+
+    @Override
+    public final Vacation getVacationsByID(final int id) {
+        checkTransactionIsActive();
+        return _vacation.fetchVacationByID(id);
+    }
 }

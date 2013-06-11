@@ -112,4 +112,11 @@ public interface VacationDAOConnection {
      * @param vacationAudit VacationAudit
      */
     void auditVacation(VacationAudit vacationAudit);
+
+    /**
+     * Gets vacation details of given id.
+     * @param id int
+     * @return vacation Vacation
+     */
+    Vacation getVacationsByID(int id);
 }

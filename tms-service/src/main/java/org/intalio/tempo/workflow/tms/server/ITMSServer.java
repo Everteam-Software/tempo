@@ -123,9 +123,15 @@ public interface ITMSServer {
     List<Vacation> getVacationList(VacationDAOConnection dao,String participantToken)throws TMSException;
     
     /**
-	 * delete Vacation Details of given id
-	 */
-    void deleteVacation(VacationDAOConnection dao,int vacId,String participantToken)throws TMSException;
+     * delete Vacation Details of given id.
+     * @param tdao ITaskDAOConnection
+     * @param vdao VacationDAOConnection
+     * @param vacId int
+     * @param participantToken String
+     * @throws TMSException exception
+     */
+    void deleteVacation(ITaskDAOConnection tdao, VacationDAOConnection vdao,
+            int vacId, String participantToken) throws TMSException;
     
     /**
 	 * Gets matched vacation details of given dates

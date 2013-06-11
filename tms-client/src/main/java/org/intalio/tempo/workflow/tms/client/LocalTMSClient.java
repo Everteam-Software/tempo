@@ -365,100 +365,151 @@ public class LocalTMSClient implements ITaskManagementService {
                 
     }
 
-	public void insertVacation(final String fromDate, final String toDate, final String Desc, final String user, final String substitute) {
-		try {
-			Vacation vac = new Vacation();
-			DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-			vac.setFromDate(df.parse(fromDate));
-			vac.setToDate(df.parse(toDate));
-			vac.setDescription(Desc);
-			vac.setUser(user);
-			vac.setSubstitute(substitute);
-			VacationDAOConnection dao = _VacationDAOFactory.openConnection();
-			server.insertVacation(dao, vac, participantToken);
-		} catch (TMSException e) {
-			logger.error("TMSException :: ", e);
-		} catch (Exception e) {
-			logger.error("Exception :: ", e);
-		}
-	}
-	
-	public void updateVacation(Vacation vacation) {
-		try {
-			VacationDAOConnection dao = _VacationDAOFactory.openConnection();
-			server.updateVacation(dao, vacation, participantToken);
-		} catch (TMSException e) {
-			logger.error("TMSException :: ", e);
-		} catch (Exception e) {
-			logger.error("Exception :: ", e);
-		}
-	}
+    @Override
+    public final void insertVacation(final String fromDate,
+            final String toDate, final String desc, final String user,
+            final String substitute) {
+        VacationDAOConnection dao = null;
+        try {
+            Vacation vac = new Vacation();
+            DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+            vac.setFromDate(df.parse(fromDate));
+            vac.setToDate(df.parse(toDate));
+            vac.setDescription(desc);
+            vac.setUser(user);
+            vac.setSubstitute(substitute);
+            dao = _VacationDAOFactory.openConnection();
+            server.insertVacation(dao, vac, participantToken);
+        } catch (TMSException e) {
+            logger.error("TMSException :: ", e);
+        } catch (Exception e) {
+            logger.error("Exception :: ", e);
+        } finally {
+            if (dao != null) {
+                dao.close();
+            }
+        }
+    }
 
-	public List<Vacation> getUserVacation(final String user) {
-		List<Vacation> vac = null;
-		try {
+    @Override
+    public final void updateVacation(final Vacation vacation) {
+        VacationDAOConnection dao = null;
+        try {
+            dao = _VacationDAOFactory.openConnection();
+            server.updateVacation(dao, vacation, participantToken);
+        } catch (TMSException e) {
+            logger.error("TMSException :: ", e);
+        } catch (Exception e) {
+            logger.error("Exception :: ", e);
+        } finally {
+            if (dao != null) {
+                dao.close();
+            }
+        }
+    }
 
-			VacationDAOConnection dao = _VacationDAOFactory.openConnection();
-			vac = server.getUserVacation(dao, user, participantToken);
+    @Override
+    public final List<Vacation> getUserVacation(final String user) {
+        List<Vacation> vac = null;
+        VacationDAOConnection dao = null;
+        try {
 
-		} catch (TMSException e) {
-			logger.error("TMSException :: ", e);
-		} catch (Exception e) {
-			logger.error("Exception :: ", e);
-		}
-		return vac;
-	}
+            dao = _VacationDAOFactory.openConnection();
+            vac = server.getUserVacation(dao, user, participantToken);
 
-	public List<Vacation> getVacationList() {
-		List<Vacation> vac = null;
-		try {
-			VacationDAOConnection dao = _VacationDAOFactory.openConnection();
-			vac = server.getVacationList(dao, participantToken);
-		} catch (TMSException e) {
-			logger.error("TMSException :: ", e);
-		} catch (Exception e) {
-			logger.error("Exception :: ", e);
-		}
-		return vac;
-	}
+        } catch (TMSException e) {
+            logger.error("TMSException :: ", e);
+        } catch (Exception e) {
+            logger.error("Exception :: ", e);
+        } finally {
+            if (dao != null) {
+                dao.close();
+            }
+        }
+        return vac;
+    }
 
-	public void deleteVacation(final String vacID) {
-		try {
-			VacationDAOConnection dao = _VacationDAOFactory.openConnection();
-			server.deleteVacation(dao, Integer.parseInt(vacID), participantToken);
-		} catch (TMSException e) {
-			logger.error("TMSException :: ", e);
-		} catch (Exception e) {
-			logger.error("Exception :: ", e);
-		}
-	}
-	
-	public List<Vacation> getMatchedVacations(String fromDate, String toDate) {
-		List<Vacation> vac = null;
-		try {
-			DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-			VacationDAOConnection dao = _VacationDAOFactory.openConnection();
-			vac = server.getMatchedVacations(dao, df.parse(fromDate), df.parse(toDate), participantToken);
+    @Override
+    public final List<Vacation> getVacationList() {
+        List<Vacation> vac = null;
+        VacationDAOConnection dao = null;
+        try {
+            dao = _VacationDAOFactory.openConnection();
+            vac = server.getVacationList(dao, participantToken);
+        } catch (TMSException e) {
+            logger.error("TMSException :: ", e);
+        } catch (Exception e) {
+            logger.error("Exception :: ", e);
+        } finally {
+            if (dao != null) {
+                dao.close();
+            }
+        }
+        return vac;
+    }
 
-		} catch (Exception e) {
-			logger.error("Exception :: ", e);
-		}
-		return vac;
-	}
+    @Override
+    public final void deleteVacation(final String vacID) {
+        VacationDAOConnection vdao = null;
+        ITaskDAOConnection tdao = taskDAOFactory.openConnection();
+        try {
+            vdao = _VacationDAOFactory.openConnection();
+            tdao = taskDAOFactory.openConnection();
+            server.deleteVacation(tdao, vdao, Integer.parseInt(vacID),
+                    participantToken);
+        } catch (TMSException e) {
+            logger.error("TMSException :: ", e);
+        } catch (Exception e) {
+            logger.error("Exception :: ", e);
+        } finally {
+            if (vdao != null) {
+                vdao.close();
+            }
+            if (tdao != null) {
+                tdao.close();
+            }
+        }
+    }
+
+    @Override
+    public final List<Vacation> getMatchedVacations(final String fromDate,
+            final String toDate) {
+        List<Vacation> vac = null;
+        VacationDAOConnection dao = null;
+        try {
+            DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+            dao = _VacationDAOFactory.openConnection();
+            vac = server.getMatchedVacations(dao, df.parse(fromDate),
+                    df.parse(toDate), participantToken);
+
+        } catch (Exception e) {
+            logger.error("Exception :: ", e);
+        } finally {
+            if (dao != null) {
+                dao.close();
+            }
+        }
+        return vac;
+    }
 
     @Override
     public final List<Vacation> getSubstituteMatchedVacations(
             final String substitute, final String fromDate,
             final String toDate) {
         List<Vacation> vac = null;
+        VacationDAOConnection dao = null;
         try {
             DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-            VacationDAOConnection dao = _VacationDAOFactory.openConnection();
+            dao = _VacationDAOFactory.openConnection();
             vac = server.getSubstituteMatchedVacations(dao, substitute,
                     df.parse(fromDate), df.parse(toDate));
 
         } catch (Exception e) {
             logger.error("Exception :: ", e);
+        } finally {
+            if (dao != null) {
+                dao.close();
+            }
         }
         return vac;
     }

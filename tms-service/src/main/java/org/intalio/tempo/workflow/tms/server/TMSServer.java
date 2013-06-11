@@ -19,6 +19,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1178,16 +1179,40 @@ public class TMSServer implements ITMSServer {
  		 return vacationOfUser;
      }
      
-     public void deleteVacation(VacationDAOConnection dao,int vacId, String participantToken) throws TMSException {
+    @Override
+    public final void deleteVacation(final ITaskDAOConnection tdao,
+            final VacationDAOConnection vdao, final int vacId,
+            final String participantToken) throws TMSException {
          try {
-         	 dao.deleteVacationDetails(vacId);
-             dao.commit();
-              if (_logger.isDebugEnabled())
+             Vacation vacation = vdao.getVacationsByID(vacId);
+             List<String> users = new ArrayList<String>();
+             users.add(vacation.getUser());
+             users.add(vacation.getSubstitute());
+             List<Task> tasks = this.getTaskList(tdao, users);
+             if (tasks == null) { tasks = Collections.emptyList(); }
+             for (Task task : tasks) {
+                 if (task instanceof PATask
+                         && ((ITaskWithState) task).getState().equals(
+                                 TaskState.READY)
+                         && task.getUserOwners().contains(
+                                 vacation.getSubstitute())
+                         && task.getUserOwners().contains(
+                                 vacation.getUser())) {
+                     AuthIdentifierSet userSet = new AuthIdentifierSet(
+                             task.getUserOwners());
+                     userSet.remove(vacation.getSubstitute());
+                     task.setUserOwners(userSet);
+                     tdao.updateTask(task);
+                     tdao.commit();
+                 }
+             }
+             vdao.deleteVacationDetails(vacId);
+             vdao.commit();
+              if (_logger.isDebugEnabled()) {
                   _logger.debug("Vacation " + vacId + " was deleted");
+              }
           } catch (Exception e) {
               _logger.error("Cannot delete vacation", e); // TODO :
-          } finally {
-             // dao.close();
           }
       }  
      
