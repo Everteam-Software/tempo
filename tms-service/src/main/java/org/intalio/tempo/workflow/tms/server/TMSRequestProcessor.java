@@ -646,6 +646,7 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             String subQuery = requireElementValue(rootQueue, "subQuery");
             String first = expectElementValue(rootQueue, "first");
             String max = expectElementValue(rootQueue, "max");
+            String fetchMetaData = expectElementValue(rootQueue, "fetchMetaData");
             HashMap map = new HashMap();
             map.put(TaskFetcher.FETCH_CLASS_NAME, taskType);
             map.put(TaskFetcher.FETCH_SUB_QUERY, subQuery);
@@ -653,7 +654,7 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             map.put(TaskFetcher.FETCH_MAX, max);
             final UserRoles user = _server.getUserRoles(participantToken);
             Task[] tasks = _server.getAvailableTasks(dao,participantToken, map);
-            return marshalTasksList(user, tasks, "getAvailableTasksResponse");
+            return marshalTasksList(user, tasks, "getAvailableTasksResponse", fetchMetaData);
         } catch (Exception e) {
             throw makeFault(e);
         }
@@ -700,12 +701,16 @@ public class TMSRequestProcessor extends OMUnmarshaller {
      * <code>getTaskList</code>
      */
     private OMElement marshalTasksList(final UserRoles user, final Task[] tasks, final String responseTag) {
+        return marshalTasksList(user, tasks, responseTag, null);
+    }
+
+    private OMElement marshalTasksList(final UserRoles user, final Task[] tasks, final String responseTag, final String fetchMetaData) {
         OMElement response = new TMSResponseMarshaller(OM_FACTORY) {
             public OMElement marshalResponse(Task[] tasks) {
                 OMElement response = createElement(responseTag);
                 for (Task task : tasks) {
                     try {
-                        response.addChild(new TaskMarshaller().marshalTaskMetadata(task, user));
+                        response.addChild(new TaskMarshaller().marshalTaskMetadata(task, user, fetchMetaData));
                     } catch (Exception e) {
                         // marshalling of that task failed.
                         // let's not fail fast, but provide info in the logs.
@@ -719,7 +724,6 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             _logger.debug(response.toString());
         return response;
     }
-
     private AxisFault makeFault(Exception e) {
         if (e instanceof TMSException) {
             if (_logger.isDebugEnabled())
