@@ -17,8 +17,10 @@ package org.intalio.tempo.workflow.tms.client;
 
 import java.net.URL;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
@@ -30,6 +32,7 @@ import org.apache.axis2.Constants;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
+import org.apache.axis2.databinding.utils.ConverterUtil;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.httpclient.HttpClient;
 import org.intalio.tempo.workflow.auth.AuthException;
@@ -679,8 +682,16 @@ public class RemoteTMSClient implements ITaskManagementService {
 		OMElement request = new TMSMarshaller() {
 			public OMElement marshalRequest() {
 				OMElement request = createElement("insertVacationRequest");
-				createElement(request, "fromDate", fromDate);
-				createElement(request, "toDate", toDate);
+				Calendar myCal = Calendar.getInstance();
+				DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+				try {
+				    myCal.setTime(df.parse(fromDate));
+				    createElement(request, "fromDate", ConverterUtil.convertToString(myCal));
+				    myCal.setTime(df.parse(toDate));
+				    createElement(request, "toDate", ConverterUtil.convertToString(myCal));
+				} catch (ParseException e) {
+				    _log.error("Error reading task: " + e);
+				}
 				createElement(request, "description", Desc);
 				createElement(request, "userName", user);
 				createElement(request, "participantToken", _participantToken);
@@ -694,11 +705,13 @@ public class RemoteTMSClient implements ITaskManagementService {
     public void updateVacation(final Vacation vacation) {
 		OMElement request = new TMSMarshaller() {
 			public OMElement marshalRequest() {
-				DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+				Calendar myCal = Calendar.getInstance();
 				OMElement request = createElement("updateVacationRequest");
 				createElement(request, "vacId", String.valueOf(vacation.getId()));
-				createElement(request, "fromDate", df.format(vacation.getFromDate()));
-				createElement(request, "toDate", df.format(vacation.getToDate()));
+				myCal.setTime(vacation.getFromDate());
+				createElement(request, "fromDate", ConverterUtil.convertToString(myCal));
+				myCal.setTime(vacation.getToDate());
+				createElement(request, "toDate", ConverterUtil.convertToString(myCal));
 				createElement(request, "description", vacation.getDescription());
 				createElement(request, "userName", vacation.getUser());
 				createElement(request, "participantToken", _participantToken);
@@ -793,8 +806,16 @@ public class RemoteTMSClient implements ITaskManagementService {
 		OMElement request = new TMSMarshaller() {
 			public OMElement marshalRequest() {
 				OMElement request = createElement("getMatchedVacationsRequest");
-				createElement(request, "fromDate", fromDate);
-				createElement(request, "toDate", toDate);
+				Calendar myCal = Calendar.getInstance();
+				DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+				try {
+				    myCal.setTime(df.parse(fromDate));
+				    createElement(request, "fromDate", ConverterUtil.convertToString(myCal));
+				    myCal.setTime(df.parse(toDate));
+				    createElement(request, "toDate", ConverterUtil.convertToString(myCal));
+				} catch (ParseException e) {
+				    _log.error("Error reading task: " + e);
+				}
 				createElement(request, "participantToken", _participantToken);
 				return request;
 			}
@@ -824,11 +845,19 @@ public class RemoteTMSClient implements ITaskManagementService {
             final String toDate) {
         OMElement request = new TMSMarshaller() {
             public OMElement marshalRequest() {
+                Calendar myCal = Calendar.getInstance();
                 OMElement request
                 = createElement("getSubstituteMatchedVacationsRequest");
                 createElement(request, "substitute", substitute);
-                createElement(request, "fromDate", fromDate);
-                createElement(request, "toDate", toDate);
+                DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+                try {
+                    myCal.setTime(df.parse(fromDate));
+                    createElement(request, "fromDate", ConverterUtil.convertToString(myCal));
+                    myCal.setTime(df.parse(toDate));
+                    createElement(request, "toDate", ConverterUtil.convertToString(myCal));
+                } catch (ParseException e) {
+                    _log.error("Error reading task: " + e);
+                }
                 return request;
             }
         } .marshalRequest();
