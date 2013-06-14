@@ -55,6 +55,7 @@ import org.intalio.tempo.workflow.util.xml.InvalidInputFormatException;
 import org.intalio.tempo.workflow.util.xml.OMElementQueue;
 import org.intalio.tempo.workflow.util.xml.OMMarshaller;
 import org.intalio.tempo.workflow.util.xml.OMUnmarshaller;
+import org.intalio.tempo.workflow.util.xml.XsdDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -863,88 +864,135 @@ public class TMSRequestProcessor extends OMUnmarshaller {
         destroyRegisterPipa();
         super.finalize();
     }
-    
-    public OMElement insertVacation(final OMElement requestElement) throws AxisFault {
+
+    /**
+     * insert vacation details.
+     * @param requestElement OMElement
+     * @return responseElement OMElement
+     * @throws AxisFault AxisFault
+     */
+    public final OMElement insertVacation(final OMElement requestElement)
+            throws AxisFault {
 		VacationDAOConnection dao = null;
 		try {
 			dao = _VacationDAOFactory.openConnection();
-			DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 			OMElementQueue rootQueue = new OMElementQueue(requestElement);
 			Vacation vac = new Vacation();
-			vac.setFromDate(df.parse(requireElementValue(rootQueue, "fromDate")));
-			vac.setToDate(df.parse(requireElementValue(rootQueue, "toDate")));
+			String fromDate = requireElementValue(rootQueue, "fromDate");
+			vac.setFromDate((new XsdDateTime(fromDate)).getTime());
+			String toDate = requireElementValue(rootQueue, "toDate");
+			vac.setToDate((new XsdDateTime(toDate)).getTime());
 			vac.setDescription(requireElementValue(rootQueue, "description"));
 			vac.setUser(requireElementValue(rootQueue, "userName"));
-			String participantToken = requireElementValue(rootQueue, "participantToken");
+			String participantToken = requireElementValue(rootQueue,
+			            "participantToken");
 			vac.setSubstitute(requireElementValue(rootQueue, "substitute"));
 			_server.insertVacation(dao, vac, participantToken);
 			return createOkResponse();
 		} catch (Exception e) {
 			throw makeFault(e);
 		} finally {
-			if (dao != null)
+			if (dao != null) {
 				dao.close();
+			}
 		}
 	}
-    
-    public OMElement updateVacation(final OMElement requestElement) throws AxisFault {
+
+    /**
+     * update vacation details.
+     * @param requestElement OMElement
+     * @return responseElement OMElement
+     * @throws AxisFault AxisFault
+     */
+    public final OMElement updateVacation(final OMElement requestElement)
+            throws AxisFault {
 		VacationDAOConnection dao = null;
 		try {
 			dao = _VacationDAOFactory.openConnection();
-			DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 			OMElementQueue rootQueue = new OMElementQueue(requestElement);
 			Vacation vac = new Vacation();
-			vac.setId(Integer.parseInt(requireElementValue(rootQueue, "vacId")));
-			vac.setFromDate(df.parse(requireElementValue(rootQueue, "fromDate")));
-			vac.setToDate(df.parse(requireElementValue(rootQueue, "toDate")));
+			vac.setId(Integer.parseInt(
+			            requireElementValue(rootQueue, "vacId")));
+			String fromDate = requireElementValue(rootQueue, "fromDate");
+			vac.setFromDate((new XsdDateTime(fromDate)).getTime());
+			String toDate = requireElementValue(rootQueue, "toDate");
+			vac.setToDate((new XsdDateTime(toDate)).getTime());
 			vac.setDescription(requireElementValue(rootQueue, "description"));
 			vac.setUser(requireElementValue(rootQueue, "userName"));
-			String participantToken = requireElementValue(rootQueue, "participantToken");
+			String participantToken = requireElementValue(rootQueue,
+                        "participantToken");
 			vac.setSubstitute(requireElementValue(rootQueue, "substitute"));
 			_server.updateVacation(dao, vac, participantToken);
 			return createOkResponse();
 		} catch (Exception e) {
 			throw makeFault(e);
 		} finally {
-			if (dao != null)
+			if (dao != null) {
 				dao.close();
+			}
 		}
 	}
 
-	public OMElement getUserVacation(final OMElement requestElement) throws AxisFault {
+    /**
+     * get user vacations list.
+     * @param requestElement OMElement
+     * @return responseElement OMElement
+     * @throws AxisFault AxisFault
+     */
+    public final OMElement getUserVacation(final OMElement requestElement)
+            throws AxisFault {
 		VacationDAOConnection dao = null;
 		try {
 			dao = _VacationDAOFactory.openConnection();
 			OMElementQueue rootQueue = new OMElementQueue(requestElement);
 			String user = requireElementValue(rootQueue, "user");
-			String participantToken = requireElementValue(rootQueue, "participantToken");
-			List<Vacation> vac = _server.getUserVacation(dao, user, participantToken);
+			String participantToken = requireElementValue(rootQueue,
+                        "participantToken");
+			List<Vacation> vac = _server.getUserVacation(dao, user,
+                        participantToken);
 			return marshalVacationList(vac, "getUserVacationResponse");
 		} catch (Exception e) {
 			throw makeFault(e);
 		} finally {
-			if (dao != null)
+			if (dao != null) {
 				dao.close();
+			}
 		}
 	}
 
-	public OMElement getVacationList(final OMElement requestElement) throws AxisFault {
+    /**
+     * get all vacations list.
+     * @param requestElement OMElement
+     * @return responseElement OMElement
+     * @throws AxisFault AxisFault
+     */
+    public final OMElement getVacationList(final OMElement requestElement)
+            throws AxisFault {
 		VacationDAOConnection dao = null;
 		try {
 			dao = _VacationDAOFactory.openConnection();
 			OMElementQueue rootQueue = new OMElementQueue(requestElement);
-			String participantToken = requireElementValue(rootQueue, "participantToken");
+			String participantToken = requireElementValue(rootQueue,
+                        "participantToken");
 			List<Vacation> vac = _server.getVacationList(dao, participantToken);
 			return marshalVacationList(vac, "getVacationListResponse");
 		} catch (Exception e) {
 			throw makeFault(e);
 		} finally {
-			if (dao != null)
+			if (dao != null) {
 				dao.close();
+			}
 		}
 	}
 
-	public OMElement deleteVacation(final OMElement requestElement) throws AxisFault {
+    /**
+     * delete vacation by vacation id.
+     * @param requestElement OMElement
+     * @return responseElement OMElement
+     * @throws AxisFault AxisFault
+     */
+    public final OMElement deleteVacation(final OMElement requestElement)
+            throws AxisFault {
         VacationDAOConnection vdao = null;
         ITaskDAOConnection tdao = null;
         try {
@@ -969,23 +1017,34 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             }
         }
 	}
-	
-	public OMElement getMatchedVacations(final OMElement requestElement) throws AxisFault {
+
+    /**
+     * get Matched or intersected vacations list.
+     * @param requestElement OMElement
+     * @return responseElement OMElement
+     * @throws AxisFault AxisFault
+     */
+    public final OMElement getMatchedVacations(final OMElement requestElement)
+            throws AxisFault {
 		VacationDAOConnection dao = null;
 		try {
-			DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 			dao = _VacationDAOFactory.openConnection();
 			OMElementQueue rootQueue = new OMElementQueue(requestElement);
-			Date fromDate = df.parse(requireElementValue(rootQueue, "fromDate"));
-			Date toDate = df.parse(requireElementValue(rootQueue, "toDate"));
-			String participantToken = requireElementValue(rootQueue, "participantToken");
-			List<Vacation> vac = _server.getMatchedVacations(dao, fromDate, toDate, participantToken);
+			Date fromDate = new XsdDateTime(requireElementValue(rootQueue,
+                            "fromDate")).getTime();
+			Date toDate = new XsdDateTime(requireElementValue(rootQueue,
+                            "toDate")).getTime();
+			String participantToken = requireElementValue(rootQueue,
+                            "participantToken");
+			List<Vacation> vac = _server.getMatchedVacations(dao, fromDate,
+                            toDate, participantToken);
 			return marshalVacationList(vac, "getMatchedVacationsResponse");
 		} catch (Exception e) {
 			throw makeFault(e);
 		} finally {
-			if (dao != null)
+			if (dao != null) {
 				dao.close();
+			}
 		}
 	}
 	
@@ -1000,13 +1059,13 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             final OMElement requestElement) throws AxisFault {
         VacationDAOConnection dao = null;
         try {
-            DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
             dao = _VacationDAOFactory.openConnection();
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
             String substitute = requireElementValue(rootQueue, "substitute");
-            Date fromDate = df
-                    .parse(requireElementValue(rootQueue, "fromDate"));
-            Date toDate = df.parse(requireElementValue(rootQueue, "toDate"));
+            Date fromDate = new XsdDateTime(requireElementValue(rootQueue,
+                    "fromDate")).getTime();
+            Date toDate = new XsdDateTime(requireElementValue(rootQueue,
+                    "toDate")).getTime();
             List<Vacation> vac = _server.getSubstituteMatchedVacations(dao,
                     substitute, fromDate, toDate);
             return marshalVacationList(vac,

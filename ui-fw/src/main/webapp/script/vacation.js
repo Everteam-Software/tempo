@@ -18,8 +18,9 @@
     var dayDiff = 0;
     var isSubstituteMandatory = '';
     var isAbsenceManager = '';
+    var substituteList = new Array();
+    var invalidSubstituteList = new Array();
     $(document).ready(function () {
-
 	oTable = $('#vacationtable').dataTable({
 	    "bFilter": false,
 	    "bPaginate": false,
@@ -65,6 +66,29 @@
 
 	});
 
+	if (!Array.prototype.indexOf)
+	  {
+	    Array.prototype.indexOf = function(elt /*, from*/)
+	    {
+	      var len = this.length >>> 0;
+
+	      var from = Number(arguments[1]) || 0;
+	      from = (from < 0)
+		  ? Math.ceil(from)
+		  : Math.floor(from);
+	      if (from < 0)
+		from += len;
+
+	      for (; from < len; from++)
+	      {
+		if (from in this &&
+		    this[from] === elt)
+		  return from;
+	      }
+	      return -1;
+	    };
+	  }
+
 	/* Add a click handler to the rows - this could be used as a callback */
 	$("#vacationtable tbody").live("click",function(event) {
 		$(oTable.fnSettings().aoData).each(function (){
@@ -73,30 +97,58 @@
 		$(event.target.parentNode).addClass('row_selected');
 	});
 
+	/* Add a change handler to the substitute select */
+	$('#user').select(function() {
+	  populateSubstitutes()
+	});
+
 	$('#fromdate').datepicker({
 	  minDate:0,
 	  dateFormat:'dd/mm/yy',
 	  onSelect: function(dateText, inst) {
-	    updateUsers();
+	    getMatchedVacationData();
 	    var date = $('#fromdate').datepicker('getDate');
 	    var today = new Date();
 	    dayDiff = Math.ceil((date - today) / (1000 * 60 * 60 * 24));
 	    $('#todate').datepicker("option", "minDate", dayDiff);
 	}
-	});
+	}).change(function() {
+	  getMatchedVacationData();
+	  populateSubstitutes();
+	  });
 
 	$('#todate').datepicker({
 	  minDate:0,
 	  dateFormat:'dd/mm/yy',
 	  onSelect: function(dateText, inst) { 
-	  updateUsers();
+	  getMatchedVacationData();
 	  }
-	});
+	}).change(function() {
+	  getMatchedVacationData();
+	  populateSubstitutes();
+	  });
       });
+
+      function populateSubstitutes() {
+	  var userVal = $('#user').combobox('getvalue');
+	  var selectedSubstituteVal = $('#substitute').combobox('getvalue');
+	  $('#substitute').empty();
+	  $.each(substituteList, function(index, value) {
+	    if(userVal != value && invalidSubstituteList.indexOf(value) < 0) {
+	    var option = "<option value=\""+value+"\">"+value+"</option>";
+	      $("#substitute").append(option);
+	    }
+	  });
+	  if(selectedSubstituteVal == userVal || invalidSubstituteList.indexOf(selectedSubstituteVal) >= 0){
+	    selectedSubstituteVal = "";
+	  }
+	  $('#substitute').combobox('autocomplete', selectedSubstituteVal);
+      }
 
       function clickVacationDetails() {
 	  $('#vacationDetails').dialog('open');
 	  getVacationData();
+	  updateUsers();
       }
 
       function getVacationData()
@@ -150,6 +202,7 @@
 
       function getMatchedVacationData()
       {
+	invalidSubstituteList.length = 0;
 	if($('#fromdate').val() != '' && $('#todate').val() != '')
 	  {
 	    var data = {
@@ -165,37 +218,25 @@
 		    error: function (e) {
 		    },
 		    success: function (data) {
-				populateValidSubstitutes(data);
+				invalidSubstitutes(data);
 			      }	
 	    });
 	  }
       } 
 
-      /* * @Function Name : populateValidSubstitutes 
+      /* * @Function Name : invalidSubstitutes
       * @Description      : populates only valid users(who are not on vacation in between selected dates) in substitute 	*		      select box.
       * @param            : data : Response of AJAX call.
       * @returns          :  
       * */
-      function populateValidSubstitutes(data)
+      function invalidSubstitutes(data)
       {
 	      var vacationData = new Array(10);
 	      $.each(data.vacs, function (key, value) {
 		      var inValidUser = data.vacs[key].user;
-	      
-		      var isExist = !!$('#substitute option').filter(function() {
-					return $(this).attr('value').toLowerCase() === inValidUser.toLowerCase();
-				    }).length;
-		      if (isExist){
-			var substituteVal = $('#substitute').combobox('getvalue');
-			if(substituteVal == inValidUser){
-			  $('#substitute').combobox('autocomplete', '');
-			  $('#substitute').val('');
-			}
-			$('#substitute option').filter(function() {
-						return $(this).attr('value').toLowerCase() === inValidUser.toLowerCase();
-					    }).remove();
-			}
+		      invalidSubstituteList[invalidSubstituteList.length] = inValidUser;
 		});
+	      populateSubstitutes();
 	} 
 
      /**
@@ -206,7 +247,7 @@
       * */
     function clickCreateVacation()
     {
-      updateUsers();
+      invalidSubstituteList.length = 0;
       $('#fromdate').removeAttr('disabled');
       $('#user').combobox('enable');
       $('#substitute').combobox('enable');
@@ -226,7 +267,6 @@
 
     function clickUpdateVacation( vacationTable )
     {
-      updateUsers();
       var oTable = $(vacationTable).dataTable();
       var cols = fnGetSelected(oTable);
       if(cols.length<=0) {
@@ -242,6 +282,7 @@
 	  $('#vacationId').val(cols[0]);
 	  $('#fromdate').val(cols[2]);
 	  $('#todate').val(cols[3]);
+	  getMatchedVacationData();
 	  $('#substitute').val(cols[4]);
 	  $('#substitute').combobox('autocomplete', cols[4]);
 	  $('#desc').val(cols[5]);
@@ -299,7 +340,7 @@
 	    $('#warnDialog').dialog('open');
 	    return false;
 	  } else {
-	    if($('#vacationId').val() == undefined || $('#vacationId').val().trim() == ''){
+	    if($('#vacationId').val() == undefined || $.trim($('#vacationId').val()) == ''){
 	      insertVacation();
 	    } else {
 	      updateVacation();
@@ -332,7 +373,7 @@
 				    {
 					    getVacationData();
 					    $('#vacation').dialog('close');
-					    $('#messageDialog').html('<a >Vacation details are succesfully saved. please note user claimed task(s) will not be auto assigned to substitute.</a>');
+					    $('#messageDialog').html('<a >Vacation details are succesfully saved. please note user claimed task(s) will not be </br>auto assigned to substitute.</a>');
 				    } else if(data.message.indexOf("Invalid Vacation Dates")>=0) {
 					    $('#messageDialog').html('<a>Invalid vacation Dates , Please change Dates.</a>');
 				    } else if(data.message.indexOf("Invalid Substitute")>=0) {
@@ -371,7 +412,7 @@
 				    {
 					    getVacationData();
 					    $('#vacation').dialog('close');
-					    $('#messageDialog').html('<a >Vacation details are succesfully saved. please note your claimed task(s) will not be auto assigned to your substitute.</a>');
+					    $('#messageDialog').html('<a >Vacation details are succesfully saved. please note your claimed task(s) will not be </br>auto assigned to your substitute.</a>');
 				    } else if(data.message.indexOf("Invalid Vacation Dates")>=0) {
 					    $('#messageDialog').html('<a>Invalid vacation Dates , Please change Dates.</a>');
 				    } else if(data.message.indexOf("Invalid Substitute")>=0) {
@@ -551,6 +592,8 @@
     }
 
     function updateUsers() {
+      substituteList.length = 0;
+      substituteList[substituteList.length] = cuser;
       $.each(cUserRoles, function(i, value) {
 	      callGetAssignedUsers(value);
 	});
@@ -570,12 +613,10 @@
     function populateUsers(data) {
       $(data.responseXML).find('*').filterNode("rbac:user").each(function(){
 	var user = $(this).text();
-	var isExist = !!$('#substitute option').filter(function() {
-	    return $(this).attr('value').toLowerCase() === user.toLowerCase();
-	}).length;
-	if (!isExist && user != cuser){
+	if (substituteList.indexOf(user) < 0){
 	      var option = "<option value=\""+user+"\">"+user+"</option>";
 	      $("#substitute").append(option);
+	      substituteList[substituteList.length] = user;
 	  }
 	var isExistUser = !!$('#user option').filter(function() {
 	return $(this).attr('value').toLowerCase() === user.toLowerCase();
@@ -585,7 +626,6 @@
 	      $("#user").append(option);
 	  }
 	});
-      getMatchedVacationData();
       var substituteVal = $('#substitute').combobox('getvalue');
       $('#substitute option').filter(function() {
 	    return $(this).attr('value').toLowerCase() === substituteVal.toLowerCase();
@@ -624,12 +664,7 @@
 					});
 
 				this._on( this.input, {
-					autocompleteselect: function( event, ui ) {
-						ui.item.option.selected = true;
-						this._trigger( "select", event, {
-							item: ui.item.option
-						});
-					},
+					autocompleteselect: "_removeIfInvalid",
 
 					autocompletechange: "_removeIfInvalid"
 				});
@@ -683,6 +718,14 @@
 			_removeIfInvalid: function( event, ui ) {
 				// Selected an item, nothing to do
 				if ( ui.item ) {
+					ui.item.option.selected = true;
+					this.input.val( ui.item.option.value );
+					this._trigger( "select", event, {
+							item: ui.item.option
+						});
+					if(event.type == "autocompleteselect"){
+					  $(this.element).trigger('select');
+					}
 					return;
 				}
 				// Search for a match (case-insensitive)
@@ -692,6 +735,7 @@
 				this.element.children( "option" ).each(function() {
 					if ( $( this ).text().toLowerCase() === valueLowerCase ) {
 						this.selected = valid = true;
+						$(this).trigger('select');
 						return false;
 					}
 				});
@@ -715,6 +759,7 @@
 			autocomplete : function(value) {
 			    this.element.val(value);
 			    this.input.val(value);
+			    $(this.element).trigger('select');
 			},
 			disable : function(value) {
 			  this.input.attr( "disabled", value )

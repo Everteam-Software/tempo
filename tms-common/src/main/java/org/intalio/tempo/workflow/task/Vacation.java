@@ -76,7 +76,7 @@ import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
         @NamedQuery(name = Vacation.FETCH_END_VACATION,
         query = "select vacation from Vacation vacation where "
-                + "vacation._toDate <= (:toDate) "
+                + "vacation._toDate = (:toDate) "
                 + "AND vacation._is_active = 1")
         })
 public class Vacation {
