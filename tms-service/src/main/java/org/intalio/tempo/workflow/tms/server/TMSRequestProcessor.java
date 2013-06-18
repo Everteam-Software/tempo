@@ -685,6 +685,8 @@ public class TMSRequestProcessor extends OMUnmarshaller {
     }
 
     public OMElement getAvailableTasks(final OMElement requestElement) throws AxisFault {
+        if(_logger.isDebugEnabled())
+            _logger.debug("Executing getAvailableTask got TMSRequestProcessor");
     	ITaskDAOConnection dao=null;
         try {
         	dao=_taskDAOFactory.openConnection();
@@ -700,15 +702,20 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             map.put(TaskFetcher.FETCH_SUB_QUERY, subQuery);
             map.put(TaskFetcher.FETCH_FIRST, first);
             map.put(TaskFetcher.FETCH_MAX, max);
+            if(_logger.isDebugEnabled())
+                _logger.debug("fetching UserRoles");
             final UserRoles user = _server.getUserRoles(participantToken);
+            map.put(TaskFetcher.FETCH_USER, user);
             Task[] tasks = _server.getAvailableTasks(dao,participantToken, map);
             return marshalTasksList(user, tasks, "getAvailableTasksResponse", fetchMetaData);
         } catch (Exception e) {
             throw makeFault(e);
         }
         finally{
-        	if(dao!=null)
-        	dao.close();
+            if (dao != null)
+                dao.close();
+            if(_logger.isDebugEnabled())
+                _logger.debug("Exiting getAvailableTask");
         }
         
     }
@@ -755,6 +762,8 @@ public class TMSRequestProcessor extends OMUnmarshaller {
     private OMElement marshalTasksList(final UserRoles user, final Task[] tasks, final String responseTag, final String fetchMetaData) {
         OMElement response = new TMSResponseMarshaller(OM_FACTORY) {
             public OMElement marshalResponse(Task[] tasks) {
+                if(_logger.isDebugEnabled())
+                    _logger.debug("Marshalling tasks");
                 OMElement response = createElement(responseTag);
                 for (Task task : tasks) {
                     try {
@@ -765,6 +774,8 @@ public class TMSRequestProcessor extends OMUnmarshaller {
                         _logger.error(task.getID() + "could not be serialized to xml", e);
                     }
                 }
+                if(_logger.isDebugEnabled())
+                    _logger.debug("Returning marshalled response");
                 return response;
             }
         }.marshalResponse(tasks);
