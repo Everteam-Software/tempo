@@ -106,7 +106,7 @@ public abstract class Task extends BaseRestrictedEntity {
         return _id;
     }
 
-    private void setID(String id) {
+    public void setID(String id) {
         if (id == null) {
             throw new RequiredArgumentException("id");
         }

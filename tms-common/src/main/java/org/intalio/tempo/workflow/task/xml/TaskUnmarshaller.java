@@ -87,6 +87,17 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
             return unmarshalTaskFromMetadata(unmarshalTaskMetadata(rootElement));  
     }
     
+    // for compatibility usage
+    public Task unmarshalTaskFromMetadata(OMElement rootElement, String fetchMetaData) throws InvalidInputFormatException {
+        Task task = null;
+        if ("false".equalsIgnoreCase(fetchMetaData)) {
+            task = unmarshalTaskWithMinMetaData(unmarshalTaskMetadata(rootElement));
+        } else {
+            task = unmarshalTaskFromMetadata(unmarshalTaskMetadata(rootElement));
+        }
+        return task;
+    }
+
     private TaskMetadata unmarshalTaskMetadata(OMElement rootElement) throws InvalidInputFormatException {
         try {
             XmlObject xmlObject = XmlObject.Factory.parse(rootElement.getXMLStreamReader());
@@ -105,6 +116,40 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
         } catch (XmlException e) {
             throw new InvalidInputFormatException(e);
         }
+    }
+
+    private Task unmarshalTaskWithMinMetaData(TaskMetadata taskMetadata) {
+        String taskID = taskMetadata.getTaskId();
+        if (taskID == null) {
+            throw new InvalidInputFormatException("No task id specified");
+        }
+        String taskStateStr = taskMetadata.getTaskState();
+        String taskTypeStr = taskMetadata.getTaskType();
+        String description = taskMetadata.getDescription();
+        Class<? extends Task> taskClass = TaskTypeMapper
+                .getTypeClassByName(taskTypeStr);
+
+        Task resultTask = null;
+        resultTask = TaskTypeMapper.getNewInstance(taskClass);
+        resultTask.setID(taskID);
+        resultTask.setDescription(description);
+
+        TaskState taskState = null;
+        try {
+            taskState = (taskStateStr == null) ? TaskState.READY : TaskState
+                    .valueOf(taskStateStr.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            _logger.error("Error in unmarshalling task from metadata", e);
+            throw new InvalidInputFormatException("Unknown task state: '"
+                    + taskStateStr + "'");
+        }
+
+        if (ITaskWithState.class.isAssignableFrom(taskClass)) {
+            ITaskWithState taskWithState = (ITaskWithState) resultTask;
+            taskWithState.setState(taskState);
+        }
+
+        return resultTask;
     }
 
     private Task unmarshalTaskFromMetadata(TaskMetadata taskMetadata) throws XmlValueOutOfRangeException {
