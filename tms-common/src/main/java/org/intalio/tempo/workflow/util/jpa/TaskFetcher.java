@@ -199,19 +199,40 @@ public class TaskFetcher {
 						QUERY_GENERIC2);
 				
 				String trim = subQuery.toLowerCase().trim();
-				int orderIndex = trim.indexOf("order");
-				if (orderIndex == -1) {
-					buffer.append(" and ").append(" ( ").append(subQuery).append(
-							" ) ");
-				} else {
-					if (!trim.startsWith("order"))
-						buffer.append(" and (").append(
-								subQuery.substring(0, orderIndex)).append(") ")
-								.append(subQuery.substring(orderIndex));
-					else {
-						buffer.append(subQuery);
-					}
-				}				
+                int orderIndex = trim.indexOf("order");
+                int groupIndex = trim.indexOf("group");
+                if (orderIndex == -1 && groupIndex == -1) {
+                    buffer.append(" and ").append(" ( ").append(subQuery)
+                            .append(" ) ");
+                } else if (groupIndex == -1) {
+                    if (!trim.startsWith("order"))
+                        buffer.append(" and (")
+                                .append(subQuery.substring(0, orderIndex))
+                                .append(") ")
+                                .append(subQuery.substring(orderIndex));
+                    else {
+                        buffer.append(subQuery);
+                    }
+                } else if (orderIndex == -1) {
+                    if (!trim.startsWith("group"))
+                        buffer.append(" and (")
+                                .append(subQuery.substring(0, groupIndex))
+                                .append(") ")
+                                .append(subQuery.substring(groupIndex));
+                    else {
+                        buffer.append(subQuery);
+                    }
+                } else {
+                    int index = (groupIndex < orderIndex) ? groupIndex
+                            : orderIndex;
+                    if (!(trim.startsWith("group") || trim.startsWith("order")))
+                        buffer.append(" and (")
+                                .append(subQuery.substring(0, index))
+                                .append(") ").append(subQuery.substring(index));
+                    else {
+                        buffer.append(subQuery);
+                    }
+                }
 			}	
 			
 			if (_logger.isDebugEnabled()){
@@ -301,7 +322,11 @@ public class TaskFetcher {
 			q.setMaxResults(max);
 		if (first >= 0)
 			q.setFirstResult(first);
+		if(_logger.isDebugEnabled())
+            _logger.debug("Executing query: "+q.toString());
 		List result = q.getResultList();
+		if(_logger.isDebugEnabled())
+            _logger.debug("Returning the resultSetList");
 		return (Task[]) result.toArray(new Task[result.size()]);
 	}
 
