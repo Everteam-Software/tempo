@@ -83,4 +83,12 @@ public final class TaskTypeMapper {
             throw new IllegalArgumentException("Cannot instanciate class type: " + taskClass.getName());
         }
     }
+
+    public static Task getNewInstance(Class<? extends Task> taskClass) {
+        try {
+            return (Task) taskClass.getConstructor().newInstance();
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Cannot instanciate class type: " + taskClass.getName());
+        }
+    }
 }
