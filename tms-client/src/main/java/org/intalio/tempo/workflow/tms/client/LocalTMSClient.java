@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+
+import javax.mail.MethodNotSupportedException;
+
 import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.UserRoles;
@@ -193,6 +196,14 @@ public class LocalTMSClient implements ITaskManagementService {
 		}
 		return tasks;
 	}
+
+    @Override
+    public Task[] getAvailableTasks(String taskType, String subQuery,
+            String first, String max, String fetchMetaData)
+            throws AuthException {
+        // TODO Auto-generated method stub
+         return null;
+    }
 
 	public Task[] getAvailableTasks(String taskType, String subQuery,
 			String first, String max) throws AuthException {
@@ -420,4 +431,5 @@ public class LocalTMSClient implements ITaskManagementService {
 			logger.error("Exception :: ", e);
 		}
 	}
+
 }

@@ -42,12 +42,12 @@ import org.w3c.dom.Document;
 
 public class RemoteTMSClientTest extends TestCase {
 
-    private static final String TMS_REMOTE_URL = "http://localhost:8080/axis2/services/TaskManagementServices";
+    private static final String TMS_REMOTE_URL = "http://localhost:8080/ode/processes/TaskManagementServices";
 
     static final Logger _logger = LoggerFactory.getLogger(RemoteTMSClientTest.class);
 
     private static final SecureRandom SECURE_RANDOM = new SecureRandom();
-    private static final String TOKEN = "VE9LRU4mJnVzZXI9PWludGFsaW9cYWRtaW4mJmlzc3VlZD09MTE5NzQ0ODYzNjIzNSYmcm9sZXM9PWludGFsaW9ccHJvY2Vzc2FkbWluaXN0cmF0b3IsZXhhbXBsZXNcZW1wbG95ZWUsaW50YWxpb1xwcm9jZXNzbWFuYWdlcixleGFtcGxlc1xtYW5hZ2VyJiZmdWxsTmFtZT09QWRtaW5pbmlzdHJhdG9yJiZlbWFpbD09YWRtaW5AZXhhbXBsZS5jb20mJm5vbmNlPT0tMjM1OTg5Mzc4MzQ0MDg3MTE5MCYmdGltZXN0YW1wPT0xMTk3NDQ4NjM2MjM2JiZkaWdlc3Q9PXdLNzJnTXhDWDhzS2ZoM29oOFJwcGVjYlV1ND0mJiYmVE9LRU4=";
+    private static final String TOKEN = "VE9LRU4mJnVzZXI9PWludGFsaW9cYWRtaW4mJmlzc3VlZD09MTM1NDk2MzU2OTEyOCYmaXNXb3JrZmxvd0FkbWluPT1mYWxzZSYmcm9sZXM9PWV4YW1wbGVzXG1hbmFnZXIsaW50YWxpb1xQcm9jZXNzTWFuYWdlcixleGFtcGxlc1xlbXBsb3llZSxpbnRhbGlvXFByb2Nlc3NBZG1pbmlzdHJhdG9yLGludGFsaW9cV29ya2Zsb3dBZG1pbmlzdHJhdG9yJiZuYW1lPT1BZG1pbmluaXN0cmF0b3ImJmVtYWlsPT1hZG1pbkBleGFtcGxlLmNvbSYmYXNzaWduUm9sZT09aW50YWxpb1xQcm9jZXNzQWRtaW5pc3RyYXRvcixleGFtcGxlc1xtYW5hZ2VyLGludGFsaW9cV29ya2Zsb3dBZG1pbmlzdHJhdG9yJiZub25jZT09LTcyNjI3OTExMzQ4ODAyMjkzOTAmJnRpbWVzdGFtcD09MTM1NDk2MzU2OTEyOCYmZGlnZXN0PT1acEFMYUIwRTJZWWFERXBBUWM5UWdwYW55ZkU9JiYmJlRPS0VO";
 
     public static void main(String[] args) {
         junit.textui.TestRunner.run(RemoteTMSClientTest.class);
@@ -233,5 +233,61 @@ public class RemoteTMSClientTest extends TestCase {
         TaskEquality.areTasksEquals(task1, task2);
         _logger.debug(task2.getRoleOwners().toString());
         tms.deletePipa(task1.getProcessEndpoint().toString());
+    }
+
+    public void testGetAvailableTaskWithMetaData() throws Exception {
+        try {
+            ITaskManagementService tms = new TMSFactory().configureRemote()
+                    .getService(TMS_REMOTE_URL, TOKEN);
+            Task[] tasks = tms.getAvailableTasks("PATask", "", "0", "1");
+            _logger.info("Total number of task retrived: " + tasks.length);
+            Assert.assertNotNull(tasks);
+            if (tasks.length == 1) {
+                PATask task = ((PATask) tasks[0]);
+                Assert.assertNotNull(task.getDescription());
+                Assert.assertNotNull(task.getCreationDate());
+                Assert.assertNotNull(task.getFormURL());
+                Assert.assertNotNull(task.getCustomMetadata());
+                Assert.assertNotNull(task.getState());
+                Assert.assertNotNull(task.getID());
+            }
+
+            tasks = tms.getAvailableTasks("PATask", "", "0", "1", "true");
+            _logger.info("Total number of task retrived: " + tasks.length);
+            Assert.assertNotNull(tasks);
+            if (tasks.length == 1) {
+                PATask task = ((PATask) tasks[0]);
+                Assert.assertNotNull(task.getDescription());
+                Assert.assertNotNull(task.getCreationDate());
+                Assert.assertNotNull(task.getFormURL());
+                Assert.assertNotNull(task.getCustomMetadata());
+                Assert.assertNotNull(task.getState());
+                Assert.assertNotNull(task.getID());
+            }
+        } catch (Exception e) {
+            assertTrue(false);
+        }
+    }
+
+    public void testGetAvailableTaskWithoutMetaData() {
+        try {
+            ITaskManagementService tms = new TMSFactory().configureRemote()
+                    .getService(TMS_REMOTE_URL, TOKEN);
+            Task[] tasks = tms.getAvailableTasks("PATask", "", "0", "1",
+                    "false");
+            _logger.info("Total number of task retrived: " + tasks.length);
+            Assert.assertNotNull(tasks);
+            if (tasks.length == 1) {
+                PATask task = ((PATask) tasks[0]);
+                Assert.assertNotNull(task.getDescription());
+                Assert.assertNotNull(task.getState());
+                Assert.assertNotNull(task.getID());
+                _logger.info("Tasks details: [description: "
+                        + task.getDescription() + ", state: " + task.getState()
+                        + ", id: " + task.getID() + "]");
+            }
+        } catch (Exception e) {
+            assertTrue(false);
+        }
     }
 }
