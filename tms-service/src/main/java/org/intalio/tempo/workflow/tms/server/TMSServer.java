@@ -973,13 +973,24 @@ public class TMSServer implements ITMSServer {
     }
 
     public Task[] getAvailableTasks(ITaskDAOConnection dao,String participantToken, HashMap parameters) throws AuthException {
-        UserRoles credentials = _authProvider.authenticate(participantToken);
+        if(_logger.isDebugEnabled())
+            _logger.debug("Executing getAvailableTasks in TMSServer");
+        UserRoles credentials = null;
         try {
-            parameters.put(TaskFetcher.FETCH_USER, credentials);
+            if(!parameters.containsKey(TaskFetcher.FETCH_USER)) {
+                credentials = _authProvider.authenticate(participantToken);
+                parameters.put(TaskFetcher.FETCH_USER, credentials);
+            } else {
+                credentials = (UserRoles) parameters.get(TaskFetcher.FETCH_USER);
+            }
             String klass = (String) parameters.get(TaskFetcher.FETCH_CLASS_NAME);
             if (klass != null)
                 parameters.put(TaskFetcher.FETCH_CLASS, TaskTypeMapper.getTaskClassFromStringName(klass));
+                if(_logger.isDebugEnabled())
+                    _logger.debug("Fetching tasks from DAO");
                 Task[] tasks = dao.fetchAvailableTasks(parameters);
+                if(_logger.isDebugEnabled())
+                    _logger.debug("Fetched all tasks from DAO");
                 if(tasks != null && tasks.length > 0 && tasks[0] instanceof PIPATask){
                 	for(Task task : tasks){
                 		if(task instanceof PIPATask){
