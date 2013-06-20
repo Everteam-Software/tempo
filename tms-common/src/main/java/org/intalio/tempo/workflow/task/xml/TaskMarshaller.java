@@ -65,14 +65,22 @@ public class TaskMarshaller {
     public TaskMarshaller() {
     }
 
-    public OMElement marshalTaskMetadata(Task task, UserRoles roles) {
-        OMElement om = XmlTooling.convertDocument(marshalXMLTaskMetadata(task, roles));
+    public OMElement marshalTaskMetadata(Task task, UserRoles roles, String fetchMetaData) {
+        boolean isfetchMetaData = true;
+        if("false".equalsIgnoreCase(fetchMetaData)){
+            isfetchMetaData = false;
+        }
+        OMElement om = XmlTooling.convertDocument(marshalXMLTaskMetadata(task, roles, isfetchMetaData));
         om.setLocalName(TaskXMLConstants.TASK_LOCAL_NAME);
         om.setNamespace(TaskXMLConstants.TASK_OM_NAMESPACE);
         return om;
     }
 
-    private XmlObject marshalXMLTaskMetadata(Task task, UserRoles roles) {
+    public OMElement marshalTaskMetadata(Task task, UserRoles roles) {
+        return marshalTaskMetadata(task, roles, null);
+    }
+
+    private XmlObject marshalXMLTaskMetadata(Task task, UserRoles roles, boolean fetchMetaData) {
         TaskMetadata taskMetadataElement = TaskMetadata.Factory.newInstance();
         taskMetadataElement.setTaskId(task.getID());
         if (task instanceof ITaskWithState) {
@@ -80,112 +88,131 @@ public class TaskMarshaller {
         }
         taskMetadataElement.setTaskType(TaskTypeMapper.getTypeClassName(task.getClass()));
         taskMetadataElement.setDescription(task.getDescription());
-
-        if (task instanceof IProcessBoundTask) {
-            taskMetadataElement.setProcessId(((IProcessBoundTask) task).getProcessID());
-        }
-        if (task instanceof IInstanceBoundTask) {
-            taskMetadataElement.setInstanceId(((IInstanceBoundTask) task).getInstanceId());
-        }
-        if (task instanceof InitTask) {
-            InitTask itask = (InitTask) task;
-            taskMetadataElement.setInitMessageNamespaceURI(itask.getInitMessageNamespaceURI().toString());
-            taskMetadataElement.setInitOperationSOAPAction(((InitTask) task).getInitOperationSOAPAction());
-            taskMetadataElement.setProcessEndpoint(((InitTask) task).getProcessEndpoint().toString());
-        }
-
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(task.getCreationDate());
-        taskMetadataElement.setCreationDate(cal);
-
-        for (String userOwner : task.getUserOwners()) {
-            XmlString XmlStrUserOwner = taskMetadataElement.addNewUserOwner();
-            XmlStrUserOwner.setStringValue(userOwner);
-        }
-        for (String roleOwner : task.getRoleOwners()) {
-            XmlString XmlStrRoleOwner = taskMetadataElement.addNewRoleOwner();
-            XmlStrRoleOwner.setStringValue(roleOwner);
-        }
-
-        
-        for (String action : ACTIONS)
-            createACL(action, task, roles, taskMetadataElement);
-
-        taskMetadataElement.setFormUrl(task.getFormURL().toString());
-
-        if (task instanceof ITaskWithState) {
-            ITaskWithState taskWithState = (ITaskWithState) task;
-            if (taskWithState.getState().equals(TaskState.FAILED)) {
-                taskMetadataElement.setFailureCode(taskWithState.getFailureCode());
-                taskMetadataElement.setFailureReason(taskWithState.getFailureReason());
+        if (fetchMetaData) {
+            if (task instanceof IProcessBoundTask) {
+                taskMetadataElement.setProcessId(((IProcessBoundTask) task)
+                        .getProcessID());
             }
-        }
-
-        if (task instanceof ITaskWithDeadline) {
-            ITaskWithDeadline crTask = (ITaskWithDeadline) task;
-            if (crTask.getDeadline() != null)
-                taskMetadataElement.setDeadline(new XsdDateTime(crTask.getDeadline()));
-        }
-        if (task instanceof ITaskWithPriority) {
-            ITaskWithPriority crTask = (ITaskWithPriority) task;
-            if (crTask.getPriority() != null)
-                taskMetadataElement.setPriority(crTask.getPriority());
-        }
-
-        if (task instanceof ICompleteReportingTask) {
-            ICompleteReportingTask crTask = (ICompleteReportingTask) task;
-            taskMetadataElement.setUserProcessCompleteSOAPAction(crTask.getCompleteSOAPAction());
-        }
-
-        if (task instanceof ITaskWithAttachments) {
-            ITaskWithAttachments taskWithAttachments = (ITaskWithAttachments) task;
-            Attachments xmlAttachments = taskMetadataElement.addNewAttachments();
-            for (Attachment attachment : taskWithAttachments.getAttachments()) {
-                com.intalio.bpms.workflow.taskManagementServices20051109.Attachment xmlAttachment = xmlAttachments
-                        .addNewAttachment();
-                com.intalio.bpms.workflow.taskManagementServices20051109.AttachmentMetadata xmlAttachmentMetadata = xmlAttachment
-                        .addNewAttachmentMetadata();
-
-                AttachmentMetadata metadata = attachment.getMetadata();
-                xmlAttachmentMetadata.setMimeType(metadata.getMimeType());
-                xmlAttachmentMetadata.setFileName(metadata.getFileName());
-                xmlAttachmentMetadata.setTitle(metadata.getTitle());
-                xmlAttachmentMetadata.setDescription(metadata.getDescription());
-                Calendar attachmentCreateDate = Calendar.getInstance();
-                attachmentCreateDate.setTime(metadata.getCreationDate());
-                xmlAttachmentMetadata.setCreationDate(attachmentCreateDate);
-
-                final URL payloadURL = attachment.getPayloadURL();
-                xmlAttachment.setPayloadUrl(payloadURL.toString());
+            if (task instanceof IInstanceBoundTask) {
+                taskMetadataElement.setInstanceId(((IInstanceBoundTask) task)
+                        .getInstanceId());
             }
-        }
-        
-        if(task instanceof ITaskWithCustomMetadata){
-            ITaskWithCustomMetadata customMetadataTask = (ITaskWithCustomMetadata) task;
-            CustomMetadataType customMetadataType = taskMetadataElement.addNewCustomMetadata();
-            
-            
-            Map<String, String> customMetadataMap = customMetadataTask.getCustomMetadata();
-            if(customMetadataMap != null){
-                Set<String> keySet = customMetadataMap.keySet();
-                for(String key: keySet){
-                    CustomMetadataKeyValueType xmlCustomMetadataKeyValueType = customMetadataType.addNewCustomMetadataKeyValue();
-                    xmlCustomMetadataKeyValueType.setKey(key);
-                    xmlCustomMetadataKeyValueType.setValue( customMetadataMap.get(key));
+            if (task instanceof InitTask) {
+                InitTask itask = (InitTask) task;
+                taskMetadataElement.setInitMessageNamespaceURI(itask
+                        .getInitMessageNamespaceURI().toString());
+                taskMetadataElement
+                        .setInitOperationSOAPAction(((InitTask) task)
+                                .getInitOperationSOAPAction());
+                taskMetadataElement.setProcessEndpoint(((InitTask) task)
+                        .getProcessEndpoint().toString());
+            }
+
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(task.getCreationDate());
+            taskMetadataElement.setCreationDate(cal);
+
+            for (String userOwner : task.getUserOwners()) {
+                XmlString XmlStrUserOwner = taskMetadataElement
+                        .addNewUserOwner();
+                XmlStrUserOwner.setStringValue(userOwner);
+            }
+            for (String roleOwner : task.getRoleOwners()) {
+                XmlString XmlStrRoleOwner = taskMetadataElement
+                        .addNewRoleOwner();
+                XmlStrRoleOwner.setStringValue(roleOwner);
+            }
+
+            for (String action : ACTIONS)
+                createACL(action, task, roles, taskMetadataElement);
+
+            taskMetadataElement.setFormUrl(task.getFormURL().toString());
+
+            if (task instanceof ITaskWithState) {
+                ITaskWithState taskWithState = (ITaskWithState) task;
+                if (taskWithState.getState().equals(TaskState.FAILED)) {
+                    taskMetadataElement.setFailureCode(taskWithState
+                            .getFailureCode());
+                    taskMetadataElement.setFailureReason(taskWithState
+                            .getFailureReason());
                 }
             }
-            taskMetadataElement.setCustomMetadata( customMetadataType);
-        }
 
-        if (task instanceof IChainableTask) {
-            IChainableTask chainableTask = (IChainableTask) task;
-            final boolean chainedBefore = chainableTask.isChainedBefore();
-            taskMetadataElement.setIsChainedBefore(Boolean.toString(chainedBefore));
-            if (chainedBefore) {
-                taskMetadataElement.setPreviousTaskId(chainableTask.getPreviousTaskID());
+            if (task instanceof ITaskWithDeadline) {
+                ITaskWithDeadline crTask = (ITaskWithDeadline) task;
+                if (crTask.getDeadline() != null)
+                    taskMetadataElement.setDeadline(new XsdDateTime(crTask
+                            .getDeadline()));
+            }
+            if (task instanceof ITaskWithPriority) {
+                ITaskWithPriority crTask = (ITaskWithPriority) task;
+                if (crTask.getPriority() != null)
+                    taskMetadataElement.setPriority(crTask.getPriority());
+            }
+
+            if (task instanceof ICompleteReportingTask) {
+                ICompleteReportingTask crTask = (ICompleteReportingTask) task;
+                taskMetadataElement.setUserProcessCompleteSOAPAction(crTask
+                        .getCompleteSOAPAction());
+            }
+
+            if (task instanceof ITaskWithAttachments) {
+                ITaskWithAttachments taskWithAttachments = (ITaskWithAttachments) task;
+                Attachments xmlAttachments = taskMetadataElement
+                        .addNewAttachments();
+                for (Attachment attachment : taskWithAttachments
+                        .getAttachments()) {
+                    com.intalio.bpms.workflow.taskManagementServices20051109.Attachment xmlAttachment = xmlAttachments
+                            .addNewAttachment();
+                    com.intalio.bpms.workflow.taskManagementServices20051109.AttachmentMetadata xmlAttachmentMetadata = xmlAttachment
+                            .addNewAttachmentMetadata();
+
+                    AttachmentMetadata metadata = attachment.getMetadata();
+                    xmlAttachmentMetadata.setMimeType(metadata.getMimeType());
+                    xmlAttachmentMetadata.setFileName(metadata.getFileName());
+                    xmlAttachmentMetadata.setTitle(metadata.getTitle());
+                    xmlAttachmentMetadata.setDescription(metadata
+                            .getDescription());
+                    Calendar attachmentCreateDate = Calendar.getInstance();
+                    attachmentCreateDate.setTime(metadata.getCreationDate());
+                    xmlAttachmentMetadata.setCreationDate(attachmentCreateDate);
+
+                    final URL payloadURL = attachment.getPayloadURL();
+                    xmlAttachment.setPayloadUrl(payloadURL.toString());
+                }
+            }
+
+            if (task instanceof ITaskWithCustomMetadata) {
+                ITaskWithCustomMetadata customMetadataTask = (ITaskWithCustomMetadata) task;
+                CustomMetadataType customMetadataType = taskMetadataElement
+                        .addNewCustomMetadata();
+
+                Map<String, String> customMetadataMap = customMetadataTask
+                        .getCustomMetadata();
+                if (customMetadataMap != null) {
+                    Set<String> keySet = customMetadataMap.keySet();
+                    for (String key : keySet) {
+                        CustomMetadataKeyValueType xmlCustomMetadataKeyValueType = customMetadataType
+                                .addNewCustomMetadataKeyValue();
+                        xmlCustomMetadataKeyValueType.setKey(key);
+                        xmlCustomMetadataKeyValueType
+                                .setValue(customMetadataMap.get(key));
+                    }
+                }
+                taskMetadataElement.setCustomMetadata(customMetadataType);
+            }
+
+            if (task instanceof IChainableTask) {
+                IChainableTask chainableTask = (IChainableTask) task;
+                final boolean chainedBefore = chainableTask.isChainedBefore();
+                taskMetadataElement.setIsChainedBefore(Boolean
+                        .toString(chainedBefore));
+                if (chainedBefore) {
+                    taskMetadataElement.setPreviousTaskId(chainableTask
+                            .getPreviousTaskID());
+                }
             }
         }
-
         return taskMetadataElement;
     }
 
@@ -330,7 +357,7 @@ public class TaskMarshaller {
     private void marshalFullTask(Task task, com.intalio.bpms.workflow.taskManagementServices20051109.Task parent,
             UserRoles user) {
 
-        XmlObject metadataElement = marshalXMLTaskMetadata(task, user);
+        XmlObject metadataElement = marshalXMLTaskMetadata(task, user,true);
         parent.setMetadata((TaskMetadata) metadataElement);
 
         if (task instanceof ITaskWithInput) {

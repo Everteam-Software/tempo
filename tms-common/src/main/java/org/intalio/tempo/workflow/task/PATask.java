@@ -130,7 +130,7 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
     private String _instanceId;
     
     @PersistentMap(keyCascade = CascadeType.ALL, elementCascade = CascadeType.ALL, keyType = String.class, 
-    		elementType=String.class, fetch=FetchType.EAGER)
+            elementType=String.class, fetch=FetchType.LAZY)
     @ContainerTable(name="tempo_generic")
     private Map<String, String> _customMetadata;
     

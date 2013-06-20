@@ -234,4 +234,60 @@ public class RemoteTMSClientTest extends TestCase {
         _logger.debug(task2.getRoleOwners().toString());
         tms.deletePipa(task1.getProcessEndpoint().toString());
     }
+
+    public void testGetAvailableTaskWithMetaData() throws Exception {
+        try {
+            ITaskManagementService tms = new TMSFactory().configureRemote()
+                    .getService(TMS_REMOTE_URL, TOKEN);
+            Task[] tasks = tms.getAvailableTasks("PATask", "", "0", "1");
+            _logger.info("Total number of task retrived: " + tasks.length);
+            Assert.assertNotNull(tasks);
+            if (tasks.length == 1) {
+                PATask task = ((PATask) tasks[0]);
+                Assert.assertNotNull(task.getDescription());
+                Assert.assertNotNull(task.getCreationDate());
+                Assert.assertNotNull(task.getFormURL());
+                Assert.assertNotNull(task.getCustomMetadata());
+                Assert.assertNotNull(task.getState());
+                Assert.assertNotNull(task.getID());
+            }
+
+            tasks = tms.getAvailableTasks("PATask", "", "0", "1", "true");
+            _logger.info("Total number of task retrived: " + tasks.length);
+            Assert.assertNotNull(tasks);
+            if (tasks.length == 1) {
+                PATask task = ((PATask) tasks[0]);
+                Assert.assertNotNull(task.getDescription());
+                Assert.assertNotNull(task.getCreationDate());
+                Assert.assertNotNull(task.getFormURL());
+                Assert.assertNotNull(task.getCustomMetadata());
+                Assert.assertNotNull(task.getState());
+                Assert.assertNotNull(task.getID());
+            }
+        } catch (Exception e) {
+            assertTrue(false);
+        }
+    }
+
+    public void testGetAvailableTaskWithoutMetaData() {
+        try {
+            ITaskManagementService tms = new TMSFactory().configureRemote()
+                    .getService(TMS_REMOTE_URL, TOKEN);
+            Task[] tasks = tms.getAvailableTasks("PATask", "", "0", "1",
+                    "false");
+            _logger.info("Total number of task retrived: " + tasks.length);
+            Assert.assertNotNull(tasks);
+            if (tasks.length == 1) {
+                PATask task = ((PATask) tasks[0]);
+                Assert.assertNotNull(task.getDescription());
+                Assert.assertNotNull(task.getState());
+                Assert.assertNotNull(task.getID());
+                _logger.info("Tasks details: [description: "
+                        + task.getDescription() + ", state: " + task.getState()
+                        + ", id: " + task.getID() + "]");
+            }
+        } catch (Exception e) {
+            assertTrue(false);
+        }
+    }
 }

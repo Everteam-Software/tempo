@@ -358,6 +358,7 @@
                         <xsd:element name="subQuery" type="xsd:string"/>
                         <xsd:element name="first" type="xsd:string" minOccurs="0"/>
                         <xsd:element name="max" type="xsd:string" minOccurs="0"/>
+                        <xsd:element name="fetchMetaData" type="xsd:string" minOccurs="0"/>
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
