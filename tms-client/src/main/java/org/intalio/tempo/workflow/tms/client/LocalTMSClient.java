@@ -354,4 +354,12 @@ public class LocalTMSClient implements ITaskManagementService {
                 
     }
 
+    @Override
+    public Task[] getAvailableTasks(String taskType, String subQuery,
+            String first, String max, String fetchMetaData)
+            throws AuthException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

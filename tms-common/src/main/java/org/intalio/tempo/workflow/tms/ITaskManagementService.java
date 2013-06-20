@@ -38,6 +38,8 @@ public interface ITaskManagementService {
     
     Task[] getAvailableTasks(final String taskType, final String subQuery, final String first, final String max) throws AuthException;
 
+    Task[] getAvailableTasks(final String taskType, final String subQuery, final String first, final String max, final String fetchMetaData) throws AuthException;
+
     Task getTask(String taskID) throws AuthException, UnavailableTaskException;
 
     void setOutput(String taskID, Document output) throws AuthException, UnavailableTaskException, InvalidTaskStateException;
