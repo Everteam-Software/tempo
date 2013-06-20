@@ -833,15 +833,19 @@ public class TMSServer implements ITMSServer {
                         TaskState.CLAIMED) && state.equals(TaskState.READY)) {
                     isTaskReady = true;
                     //read task previous owners when revoked
-                    if (userAction != null && userAction.equals("REVOKED")) {
+                    if (userAction != null && userAction.equals("REVOKE")) {
                         TaskPrevOwners taskPrevOwners =
                                 dao.fetchTaskPreviousOwners(taskID);
-                        users = new AuthIdentifierSet(
-                                StringUtils.split(
-                                        taskPrevOwners.getPrevUsers() , ","));
-                        roles = new AuthIdentifierSet(
-                                StringUtils.split(
-                                        taskPrevOwners.getPrevRoles() , ","));
+                        String[] prevUsers = StringUtils.split(
+                                taskPrevOwners.getPrevUsers() , ",");
+                        if(prevUsers != null) {
+                        users = new AuthIdentifierSet( prevUsers );
+                        }
+                        String[] prevRoles = StringUtils.split(
+                                taskPrevOwners.getPrevRoles(), ",");
+                        if(prevRoles != null) {
+                        roles = new AuthIdentifierSet( prevRoles );
+                        }
                        }
                 }
 

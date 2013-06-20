@@ -430,7 +430,7 @@ function gotoDashboard() {
 	      if(task.attr('state') == "READY") {
 		  soapBody.appendChild(new SOAPObject("userAction")).val('CLAIMED');
 	      }else {
-		  soapBody.appendChild(new SOAPObject("userAction")).val('REVOKED');
+		  soapBody.appendChild(new SOAPObject("userAction")).val('REVOKE');
 	      }
 	      var sr = new SOAPRequest("http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/reassign", soapBody);
 	      SOAPClient.Proxy = proxy;
