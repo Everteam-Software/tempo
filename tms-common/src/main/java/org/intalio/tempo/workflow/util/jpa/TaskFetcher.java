@@ -42,7 +42,7 @@ public class TaskFetcher {
 	final static Logger _logger = LoggerFactory.getLogger(TaskFetcher.class);
 	private EntityManager _entityManager;
 	private Query find_by_id;
-	private final String QUERY_GENERIC1 = "select DISTINCT T from ";
+	private final String QUERY_GENERIC1 = "select T from ";
 	private final String QUERY_GENERIC_COUNT = "select COUNT(DISTINCT T) from ";
 //	private final String QUERY_GENERIC2 = " T where (T._userOwners = (?1) or T._roleOwners = (?2)) ";
 	private final String QUERY_GENERIC2_FOR_ADMIN = " T ";
