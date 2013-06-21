@@ -29,6 +29,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.apache.openjpa.persistence.Persistent;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
@@ -213,6 +214,50 @@ public class Vacation {
 	public void setIs_active(int _is_active) {
 		this._is_active = _is_active;
 	}
+
+    /**
+     * user  display name.
+     */
+    @Transient
+    private String userName;
+
+    /**
+     * substitute display name.
+     */
+    @Transient
+    private String substituteName;
+
+    /**
+     * get User Name.
+     * @return userName String
+     */
+    public final String getUserName() {
+        return userName;
+    }
+
+    /**
+     * set user name.
+     * @param name String
+     */
+    public final void setUserName(final String name) {
+        this.userName = name;
+    }
+
+    /**
+     * get substitute name.
+     * @return substituteName String
+     */
+    public final String getSubstituteName() {
+        return substituteName;
+    }
+
+    /**
+     * set substitute name.
+     * @param name String
+     */
+    public final void setSubstituteName(final String name) {
+        this.substituteName = name;
+    }
 
     /**
      * fetch vacation by ID.

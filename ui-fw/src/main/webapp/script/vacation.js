@@ -107,6 +107,7 @@
 	  dateFormat:'dd/mm/yy',
 	  onSelect: function(dateText, inst) {
 	    getMatchedVacationData();
+	    populateSubstitutes();
 	    var date = $('#fromdate').datepicker('getDate');
 	    var today = new Date();
 	    dayDiff = Math.ceil((date - today) / (1000 * 60 * 60 * 24));
@@ -121,11 +122,16 @@
 	  minDate:0,
 	  dateFormat:'dd/mm/yy',
 	  onSelect: function(dateText, inst) { 
-	  getMatchedVacationData();
+	    if($('#fromdate').attr('disabled') != 'disabled') {
+	      getMatchedVacationData();
+	      populateSubstitutes();
+	    }
 	  }
 	}).change(function() {
-	  getMatchedVacationData();
-	  populateSubstitutes();
+	  if($('#fromdate').attr('disabled') != 'disabled') {
+	      getMatchedVacationData();
+	      populateSubstitutes();
+	    }
 	  });
       });
 
@@ -133,17 +139,20 @@
 	  var userVal = $('#user').combobox('getvalue');
 	  var selectedSubstituteVal = $('#substitute').combobox('getvalue');
 	  $('#substitute').empty();
-	  $.each(substituteList, function(index, value) {
-	    if(userVal != value && invalidSubstituteList.indexOf(value) < 0) {
-	    var option = "<option value=\""+value+"\">"+value+"</option>";
+	  $.each(substituteList, function(index, obj) {
+	    var userIndex = arrayObjectIndexOf(invalidSubstituteList, obj.value, "value");
+	    if(userVal != obj.name && userIndex < 0) {
+	      var option = "<option value=\""+obj.value+"\">"+obj.name+"</option>";
 	      $("#substitute").append(option);
 	    }
 	  });
-	  if(selectedSubstituteVal == userVal || invalidSubstituteList.indexOf(selectedSubstituteVal) >= 0){
+	  var subIndex = arrayObjectIndexOf(invalidSubstituteList, selectedSubstituteVal, "name");
+	  if(selectedSubstituteVal == userVal || subIndex >= 0){
 	    selectedSubstituteVal = "";
 	  }
 	  $('#substitute').combobox('autocomplete', selectedSubstituteVal);
-      }
+	  var substitute = $("#substitute option:selected").text();
+     }
 
       function clickVacationDetails() {
 	  $('#vacationDetails').dialog('open');
@@ -183,10 +192,10 @@
 	      $.each(data.vacs, function (key, value) {
 
 		      vacationData[i++] = data.vacs[key].id;
-		      vacationData[i++] = data.vacs[key].user;
+		      vacationData[i++] = data.vacs[key].userName;
 		      vacationData[i++] = $.format.date(data.vacs[key].fromDate,"dd/MM/yyyy");
 		      vacationData[i++] = $.format.date(data.vacs[key].toDate,"dd/MM/yyyy");;
-		      vacationData[i++] = data.vacs[key].substitute;
+		      vacationData[i++] = data.vacs[key].substituteName;
 		      vacationData[i++] = data.vacs[key].description;
 
 		      oTable.fnAddData(vacationData, false);
@@ -231,10 +240,13 @@
       * */
       function invalidSubstitutes(data)
       {
-	      var vacationData = new Array(10);
 	      $.each(data.vacs, function (key, value) {
 		      var inValidUser = data.vacs[key].user;
-		      invalidSubstituteList[invalidSubstituteList.length] = inValidUser;
+		      var inValidUserName = data.vacs[key].userName;
+		      invalidSubstituteList.push({
+			name: inValidUserName,
+			value: inValidUser,
+		      });
 		});
 	      populateSubstitutes();
 	} 
@@ -257,8 +269,8 @@
       $('#vacationId').val("");
       $('#substitute').val("");
       $('#substitute').combobox('autocomplete', '');
+      $('#user').combobox('autocomplete', cuserName);
       $('#user').val(cuser);
-      $('#user').combobox('autocomplete', cuser);
       $('#fromdate').val("");
       $('#todate').val("");
       $('#desc').val("");
@@ -270,7 +282,7 @@
       var oTable = $(vacationTable).dataTable();
       var cols = fnGetSelected(oTable);
       if(cols.length<=0) {
-	  $('#warnDialog').html('<a>Please select one row to update vacation.</a>');
+	  $('#warnDialog').html('<a>Please select a vacation to update.</a>');
 	  $('#warnDialog').dialog('open');
 	  return false;
 	} else {
@@ -283,11 +295,15 @@
 	  $('#fromdate').val(cols[2]);
 	  $('#todate').val(cols[3]);
 	  getMatchedVacationData();
-	  $('#substitute').val(cols[4]);
 	  $('#substitute').combobox('autocomplete', cols[4]);
 	  $('#desc').val(cols[5]);
-	  $('#user').val(cols[1]);
 	  $('#user').combobox('autocomplete', cols[1]);
+	  $('#substitute option').filter(function() {
+	    return $(this).text() === cols[4];
+	  }).attr("selected",true);
+	  $('#user option').filter(function() {
+		return $(this).text() === cols[1];
+	  }).attr("selected",true);
 	  var date = $('#fromdate').datepicker('getDate');
 	  var today = new Date();
 	  dayDiff = Math.ceil((date - today) / (1000 * 60 * 60 * 24));
@@ -300,6 +316,16 @@
 	    $('#user').combobox('disable', 'disabled');
 	  }
 	  $('#vacation').dialog('open');
+	  var subIndex = arrayObjectIndexOf(invalidSubstituteList, cols[4], "name");
+	  if(subIndex >= 0){
+	     var option = "<option value=\""+invalidSubstituteList[subIndex].value+"\" selected='selected'>"+invalidSubstituteList[subIndex].name+"</option>";
+	     //$(option).attr('selected', 'selected');
+	     $("#substitute").append(option);
+	     if(dayDiff > 0){
+	      $('#messageDialog').html('<a>Please change substitute. user vacation and substitute vacation dates are conflicting.</a>');
+	      $('#messageDialog').dialog('open');
+	     }
+	  }
         }
     }
 
@@ -308,7 +334,7 @@
 	var oTable = $(vacationTable).dataTable();
 	var cols = fnGetSelected(oTable);
 	if (cols.length<=0) {
-	    $('#warnDialog').html('<a>Please select one vacation row to end vacation.</a>');
+	    $('#warnDialog').html('<a>Please select a vacation to end.</a>');
 	    $('#warnDialog').dialog('open');
 	    return false;
 	  }else {
@@ -335,7 +361,7 @@
     }
 
     function saveVacation() {
-       if($('#substitute').val() == $('#user').val()){
+       if($('#substitute option:selected').val() == $('#user option:selected').val()){
 	    $('#warnDialog').html('<a>Please select different substitute. User and substitute can not be same.</a>');
 	    $('#warnDialog').dialog('open');
 	    return false;
@@ -358,7 +384,7 @@
 	{	
 	  if(isValidDate("fromdate","todate") && isValidUser("user") && isValidSubstitute("substitute") && isValidDesc("desc"))
 	    {
-			    var data = { action:"insertVacation",fromDate: $('#fromdate').val(), toDate: $('#todate').val(),desc: $('#desc').val(),substitute: $('#substitute').val(),user: $('#user').val()}
+			    var data = { action:"insertVacation",fromDate: $('#fromdate').val(), toDate: $('#todate').val(),desc: $('#desc').val(),substitute: $('#substitute option:selected').val(),user: $('#user option:selected').val()}
 			    $.ajax({
 			    url: 'vacation.htm',
 			    type: 'POST',
@@ -375,7 +401,7 @@
 					    $('#vacation').dialog('close');
 					    $('#messageDialog').html('<a >Vacation details are succesfully saved. please note user claimed task(s) will not be </br>auto assigned to substitute.</a>');
 				    } else if(data.message.indexOf("Invalid Vacation Dates")>=0) {
-					    $('#messageDialog').html('<a>Invalid vacation Dates , Please change Dates.</a>');
+					    $('#messageDialog').html('<a>Please change dates, Selected vacation dates conflicts with existing vacation.</a>');
 				    } else if(data.message.indexOf("Invalid Substitute")>=0) {
 					    $('#messageDialog').html('<a>Substitute not avilable at selected time, Please change Sustitute.</a>');
 				    } else {
@@ -397,7 +423,7 @@
 	{	
 	  if(isValidDate("fromdate","todate") && isValidUser("user") && isValidSubstitute("substitute") && isValidDesc("desc"))
 	    {
-			    var data = { action:"editVacation",id:vac_id,fromDate: $('#fromdate').val(), toDate: $('#todate').val(),desc: $('#desc').val(),substitute: $('#substitute').val(),user: $('#user').val()}
+			    var data = { action:"editVacation",id:vac_id,fromDate: $('#fromdate').val(), toDate: $('#todate').val(),desc: $('#desc').val(),substitute: $('#substitute option:selected').val(),user: $('#user option:selected').val()}
 			    $.ajax({
 			    url: 'vacation.htm',
 			    type: 'POST',
@@ -414,7 +440,7 @@
 					    $('#vacation').dialog('close');
 					    $('#messageDialog').html('<a >Vacation details are succesfully saved. please note your claimed task(s) will not be </br>auto assigned to your substitute.</a>');
 				    } else if(data.message.indexOf("Invalid Vacation Dates")>=0) {
-					    $('#messageDialog').html('<a>Invalid vacation Dates , Please change Dates.</a>');
+					    $('#messageDialog').html('<a>Please change dates, Selected vacation dates conflicts with existing vacation.</a>');
 				    } else if(data.message.indexOf("Invalid Substitute")>=0) {
 					    $('#messageDialog').html('<a>Substitute not avilable at selected time, Please change Sustitute.</a>');
 				    } else {
@@ -473,12 +499,13 @@
     function isValidSubstitute(substitute) 
     {
       var substituteVal = $('#substitute').combobox('getvalue');
-      if (($.trim(document.getElementById(substitute).value)== '' || $.trim(substituteVal) == '' ) && isSubstituteMandatory == 'true' ) {
+      var substitute = $("#substitute option:selected").text();
+      if (($.trim(substitute)== '' || $.trim(substituteVal) == '' ) && isSubstituteMandatory == 'true' ) {
                 $("#warnDialog").html('<a >Please select substitute, should not be empty</a>');
                 $("#warnDialog").dialog('open');
                 return false;
        }
-       if ($.trim(document.getElementById(substitute).value) != $.trim(substituteVal) && isSubstituteMandatory == 'true'  ) {
+       if ($.trim(substitute) != $.trim(substituteVal) && isSubstituteMandatory == 'true'  ) {
                 $("#warnDialog").html('<a >Please select valid substitute.</a>');
                 $("#warnDialog").dialog('open');
                 return false;
@@ -489,12 +516,13 @@
     function isValidUser(user) 
     {
       var userVal = $('#user').combobox('getvalue');
-      if ($.trim(document.getElementById(user).value)== '' || $.trim(userVal) == '') {
+      var user = $("#user option:selected").text();
+      if ($.trim(user)== '' || $.trim(userVal) == '') {
                 $("#warnDialog").html('<a >Please select user, should not be empty</a>');
                 $("#warnDialog").dialog('open');
                 return false;
        }
-       if ($.trim(document.getElementById(user).value) != $.trim(userVal) ) {
+       if ($.trim(user) != $.trim(userVal) ) {
                 $("#warnDialog").html('<a >Please select valid user.</a>');
                 $("#warnDialog").dialog('open');
                 return false;
@@ -593,47 +621,58 @@
 
     function updateUsers() {
       substituteList.length = 0;
-      substituteList[substituteList.length] = cuser;
-      $.each(cUserRoles, function(i, value) {
-	      callGetAssignedUsers(value);
-	});
+      var data = { action: "getUsers" }
+	  var url = 'vacation.htm';
+	  $.ajax({
+		  url: url,
+		  cache: false,
+		  async: false,
+		  dataType: 'json',
+		  data: data,
+		  error: function (e) {
+		  },
+		  success: function (data) {
+			      populateUsers(data);
+			    }
+	  });
     }
 
-    function callGetAssignedUsers(role) {
-      
-		  var soapBody     = new SOAPObject("getAssignedUsers");
-		  soapBody.ns      = "http://tempo.intalio.org/security/RBACQueryService/";
-		  soapBody.appendChild(new SOAPObject("role")).val(role);
-		  var sr           = new SOAPRequest("http://tempo.intalio.org/security/RBACQueryService/getAssignedUsers", soapBody);
-		  SOAPClient.Proxy = proxy;
-		  SOAPClient.SOAPServer = rbacService;
-		  SOAPClient.SendRequest(sr, populateUsers);
+    function arrayObjectIndexOf(myArray, searchTerm, property) {
+	for(var i = 0, len = myArray.length; i < len; i++) {
+	    if (myArray[i][property] === searchTerm) return i;
+	}
+	return -1;
     }
 
     function populateUsers(data) {
-      $(data.responseXML).find('*').filterNode("rbac:user").each(function(){
-	var user = $(this).text();
-	if (substituteList.indexOf(user) < 0){
-	      var option = "<option value=\""+user+"\">"+user+"</option>";
-	      $("#substitute").append(option);
-	      substituteList[substituteList.length] = user;
-	  }
-	var isExistUser = !!$('#user option').filter(function() {
-	return $(this).attr('value').toLowerCase() === user.toLowerCase();
-	}).length;
-	if (!isExistUser && user != cuser){
-	      var option = "<option value=\""+user+"\">"+user+"</option>";
-	      $("#user").append(option);
-	  }
+      $.each(data.users, function (key, value) {
+	      var user =  data.users[key].name;
+	      var userName =  data.users[key].value;
+	      var userIndex = arrayObjectIndexOf(substituteList, user, "value");
+	      if (userIndex == -1){
+		    var option = "<option value=\""+user+"\">"+userName+"</option>";
+		    $("#substitute").append(option);
+		    substituteList.push({
+		      name: userName,
+		      value: user,
+		    });
+		}
+	      var isExistUser = !!$('#user option').filter(function() {
+	      return $(this).attr('value').toLowerCase() === user.toLowerCase();
+	      }).length;
+	      if (!isExistUser && user != cuser){
+		    var option = "<option value=\""+user+"\">"+userName+"</option>";
+		    $("#user").append(option);
+		}
+	      var substituteVal = $('#substitute').combobox('getvalue');
+	      $('#substitute option').filter(function() {
+		    return $(this).attr('value').toLowerCase() === substituteVal.toLowerCase();
+		}).attr("selected",true);
+	      var userVal = $('#user').combobox('getvalue');
+	      $('#user option').filter(function() {
+		    return $(this).attr('value').toLowerCase() === userVal.toLowerCase();
+		}).attr("selected",true);
 	});
-      var substituteVal = $('#substitute').combobox('getvalue');
-      $('#substitute option').filter(function() {
-	    return $(this).attr('value').toLowerCase() === substituteVal.toLowerCase();
-	}).attr("selected",true);
-      var userVal = $('#user').combobox('getvalue');
-      $('#user option').filter(function() {
-	    return $(this).attr('value').toLowerCase() === userVal.toLowerCase();
-	}).attr("selected",true);
     }
 
     (function( $ ) {
@@ -707,7 +746,7 @@
 				var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
 				response( this.element.children( "option" ).map(function() {
 					var text = $( this ).text();
-					if ( this.value && ( !request.term || matcher.test(text) ) )
+					if ( this.value && ( !request.term || matcher.test(text) || matcher.test(this.value)) )
 						return {
 							label: text,
 							value: text,
@@ -719,7 +758,7 @@
 				// Selected an item, nothing to do
 				if ( ui.item ) {
 					ui.item.option.selected = true;
-					this.input.val( ui.item.option.value );
+					this.input.val( ui.item.option.text );
 					this._trigger( "select", event, {
 							item: ui.item.option
 						});
@@ -733,13 +772,14 @@
 					valueLowerCase = value.toLowerCase(),
 					valid = false;
 				this.element.children( "option" ).each(function() {
-					if ( $( this ).text().toLowerCase() === valueLowerCase ) {
+					if ( $( this ).text().toLowerCase() === valueLowerCase || $( this ).val().toLowerCase() === valueLowerCase) {
+						value = $( this ).text();
 						this.selected = valid = true;
 						$(this).trigger('select');
 						return false;
 					}
 				});
-
+				this.input.val(value);
 				// Found a match, nothing to do
 				if ( valid ) {
 				  return;

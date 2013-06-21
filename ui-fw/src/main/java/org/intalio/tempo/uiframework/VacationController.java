@@ -13,16 +13,16 @@
  * $Log:$
  */
 
-/**
- *  This java file acts as a controller to vacation management insert's ,selects & delete's the vacation details of a particular user  
- */
 package org.intalio.tempo.uiframework;
 
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,8 +33,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.intalio.tempo.security.Property;
 import org.intalio.tempo.security.util.StringArrayUtils;
+import org.intalio.tempo.security.ws.RBACAdminClient;
+import org.intalio.tempo.security.ws.RBACQueryClient;
 import org.intalio.tempo.web.ApplicationState;
+import org.intalio.tempo.web.controller.LoginController;
 import org.intalio.tempo.workflow.task.Vacation;
 import org.intalio.tempo.workflow.tms.ITaskManagementService;
 import org.slf4j.Logger;
@@ -43,6 +47,10 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 import org.springframework.web.servlet.view.json.JsonView;
 
+/**
+ * This java file acts as a controller to vacation management insert's ,selects
+ * & delete's the vacation details of a particular user.
+ */
 public class VacationController implements Controller {
 	private static final Logger LOG = LoggerFactory.getLogger(VacationController.class);
 	JsonView json = null;
@@ -55,8 +63,34 @@ public class VacationController implements Controller {
 	SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 	Boolean  isSubstituteMandatory = conf.isSubstituteMandatory();
 	Set<String> amRoles = conf.getAbsenceManagerRoles();
-	public VacationController(JsonView json) {
-		this.json = json;
+
+	/**
+	 * RBACAdmin service Client.
+	 */
+	private static RBACAdminClient rbacAdminClient;
+
+    /**
+     * RBACQuery service Client.
+     */
+	private static RBACQueryClient rbacQueryClient;
+
+    /**
+     * all users with properties.
+     */
+	private static Map<String, Property[]> users;
+
+	/**
+	 * constructor for VacationController.
+	 * @param jsonView JsonView
+	 * @param adminClient RBACAdminClient
+	 * @param queryClient RBACQueryClient
+	 */
+    public VacationController(final JsonView jsonView,
+                              final RBACAdminClient adminClient,
+                              final RBACQueryClient queryClient) {
+            this.json = jsonView;
+            rbacAdminClient = adminClient;
+            rbacQueryClient = queryClient;
 	}
 
     /**
@@ -71,6 +105,7 @@ public class VacationController implements Controller {
             final HttpServletResponse response) throws ServletException,
             IOException {
         try {
+            users = rbacAdminClient.getUsers();
             String endpoint = URIUtils.resolveURI(request, _endpoint);
             String pToken = getParticipantToken(request);
             taskManager = Configuration.getInstance().getTmsFactory()
@@ -163,8 +198,14 @@ public class VacationController implements Controller {
                             && desc != null && substitute != null) {
                         boolean isUserValid = validateUser(
                                 user, fromDate, toDate);
-                        boolean isSubstituteValid = validateSubstitute(
-                                substitute, fromDate, toDate);
+                        Date startDate = format.parse(fromDate);
+                        boolean isSubstituteValid = false;
+                        if(startDate.before(new Date())){
+                            isSubstituteValid = true;
+                        } else {
+                            isSubstituteValid = validateSubstitute(
+                                    substitute, fromDate, toDate);
+                        }
                         if (!isUserValid) {
                             message = "Invalid Vacation Dates";
                             model.put("message", message);
@@ -177,6 +218,9 @@ public class VacationController implements Controller {
                                     desc.trim(), name, substitute);
                         }
                     }
+                } else if (action.equalsIgnoreCase("getUsers")) {
+                    model.put("users",
+                            getAssignedUsers(Arrays.asList(userRoles)));
                 }
             }
         } catch (Exception e) {
@@ -212,6 +256,7 @@ public class VacationController implements Controller {
 	public Map<String, Object> getUserVacationDetails(String user) {
 		try {
 			List<Vacation> vac = taskManager.getUserVacation(user);
+			updateUserNames(vac);
 			model.put("vacs", vac);
 		} catch (Exception e) {
 			LOG.error("Exception while fetching vacation records. " + e.getMessage(), e);
@@ -226,6 +271,7 @@ public class VacationController implements Controller {
     public final Map<String, Object> getAllVacationDetails() {
         try {
             List<Vacation> vac = taskManager.getVacationList();
+            updateUserNames(vac);
             model.put("vacs", vac);
         } catch (Exception e) {
             LOG.error(
@@ -292,6 +338,7 @@ public class VacationController implements Controller {
 	protected Map<String, Object> getMatchedVacations(String fromDate, String toDate){
 		try {
 			List<Vacation> vac = taskManager.getMatchedVacations(fromDate, toDate);
+			updateUserNames(vac);
 			model.put("vacs", vac);
 		} catch (Exception e) {
 			LOG.error("Exception while fetching vacation records. " + e.getMessage(), e);
@@ -345,6 +392,53 @@ public class VacationController implements Controller {
                             + e.getMessage(), e);
         }
         return isUserValid;
+    }
+
+    /**
+     * get assigned user for login user roles.
+     * @param userRoles List<String>
+     * @return users List<Property>
+     */
+    private static List<Property> getAssignedUsers(
+            final List<String> userRoles) {
+        List<Property> assignedUsers = new ArrayList<Property>();
+        Set<String> matchedUsers = new HashSet<String>();
+        for (String role : userRoles) {
+           String[] usrs = null;
+                   try {
+                       usrs = rbacQueryClient.getAssignedUsers(role);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+           matchedUsers.addAll(Arrays.asList(usrs));
+        }
+        if (users != null) {
+            for (String user : matchedUsers) {
+                assignedUsers.add(new Property(user, LoginController
+                        .extractUserDisplayName(users.get(user))));
+            }
+        }
+        return assignedUsers;
+    }
+
+    /**
+     * update vacation list with users actual names.
+     * @param vacs List<Vacation>
+     */
+    private static void updateUserNames(final List<Vacation> vacs) {
+        if (vacs != null && users != null) {
+            for (Vacation v:vacs) {
+                if (!"".equals(v.getUser())) {
+                    v.setUserName(LoginController.extractUserDisplayName(users
+                            .get(v.getUser())));
+                }
+                if (!"".equals(v.getSubstitute())) {
+                    v.setSubstituteName(LoginController
+                            .extractUserDisplayName(users
+                            .get(v.getSubstitute())));
+                }
+            }
+         }
     }
 
 }

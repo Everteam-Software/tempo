@@ -202,7 +202,7 @@
       <table>
 	      <tr>
 		      <td>User:</td>
-		      <td style="align:left"><select name="user" id="user" style="width:220px;"><option value='<%= loginUser.getName()%>'><%= loginUser.getName()%></option></select></td>
+		      <td style="align:left"><select name="user" id="user" style="width:220px;"><option value='<%= loginUser.getName()%>'>${currentUserName}</option></select></td>
 	      </tr>
 	      <tr>
 		      <td>From:<img src="images/ical.jpg" alt="Vacation start date"></td>
@@ -277,6 +277,7 @@
     window.onresize = resizeIframe;
     var cUserRoles = <%= rolesarray %>;
     var cuser = '<%= loginUser.getName().replace("\\", "\\\\") %>';
+    var cuserName = '<%= loginUser.getDisplayName() %>';
     var tokenServiceUrl = '<%= tokenServiceUrl %>';
     var rbacService = '<%= tokenServiceUrl.substring(0, tokenServiceUrl.indexOf("/TokenService"))+"/RBACQueryService" %>';
     var proxy = '/ui-fw/script/proxy.jsp';
