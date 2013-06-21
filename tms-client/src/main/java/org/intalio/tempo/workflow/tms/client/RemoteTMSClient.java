@@ -596,6 +596,10 @@ public class RemoteTMSClient implements ITaskManagementService {
     }
 
     public Task[] getAvailableTasks(final String taskType, final String subQuery, final String first, final String max) throws AuthException {
+        return getAvailableTasks(taskType, subQuery, first, max, null);
+    }
+
+    public Task[] getAvailableTasks(final String taskType, final String subQuery, final String first, final String max, final String fetchMetaData) throws AuthException {
         OMElement request = new TMSMarshaller() {
             public OMElement marshalRequest() {
                 OMElement request = createElement("getTaskListRequest");
@@ -604,6 +608,7 @@ public class RemoteTMSClient implements ITaskManagementService {
                 createElement(request, "subQuery", subQuery);
                 if(first!=null) createElement(request, "first", first);
                 if(max!=null) createElement(request, "max", max);
+                if(fetchMetaData!=null) createElement(request, "fetchMetaData", fetchMetaData);
                 return request;
             }
         }.marshalRequest();
@@ -617,7 +622,7 @@ public class RemoteTMSClient implements ITaskManagementService {
                 break;
 
             try {
-                Task task = new TaskUnmarshaller().unmarshalTaskFromMetadata(taskElement);
+                Task task = new TaskUnmarshaller().unmarshalTaskFromMetadata(taskElement, fetchMetaData);
                 tasks.add(task);
             } catch (Exception e) {
                 _log.error("Error reading task: " + taskElement, e);
