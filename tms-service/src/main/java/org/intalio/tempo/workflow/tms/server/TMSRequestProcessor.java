@@ -893,6 +893,11 @@ public class TMSRequestProcessor extends OMUnmarshaller {
 			vac.setFromDate((new XsdDateTime(fromDate)).getTime());
 			String toDate = requireElementValue(rootQueue, "toDate");
 			vac.setToDate((new XsdDateTime(toDate)).getTime());
+			if (vac.getToDate().before(vac.getFromDate())) {
+                        throw new IllegalArgumentException(
+                        "Invalid date range : toDate = " + toDate
+                                + " fromDate = " + fromDate);
+			}
 			vac.setDescription(requireElementValue(rootQueue, "description"));
 			vac.setUser(requireElementValue(rootQueue, "userName"));
 			String participantToken = requireElementValue(rootQueue,
@@ -928,6 +933,11 @@ public class TMSRequestProcessor extends OMUnmarshaller {
 			vac.setFromDate((new XsdDateTime(fromDate)).getTime());
 			String toDate = requireElementValue(rootQueue, "toDate");
 			vac.setToDate((new XsdDateTime(toDate)).getTime());
+			if (vac.getToDate().before(vac.getFromDate())) {
+                        throw new IllegalArgumentException(
+                        "Invalid date range : toDate = " + toDate
+                                + " fromDate = " + fromDate);
+			}
 			vac.setDescription(requireElementValue(rootQueue, "description"));
 			vac.setUser(requireElementValue(rootQueue, "userName"));
 			String participantToken = requireElementValue(rootQueue,
