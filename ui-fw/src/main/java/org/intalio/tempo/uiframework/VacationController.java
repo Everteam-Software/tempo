@@ -408,7 +408,7 @@ public class VacationController implements Controller {
                    try {
                        usrs = rbacQueryClient.getAssignedUsers(role);
                 } catch (Exception e) {
-                    e.printStackTrace();
+		    LOG.error("Exception while getting getAssignedUsers:: ", e);	
                 }
            matchedUsers.addAll(Arrays.asList(usrs));
         }
