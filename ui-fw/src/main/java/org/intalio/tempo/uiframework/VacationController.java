@@ -200,7 +200,7 @@ public class VacationController implements Controller {
                                 user, fromDate, toDate);
                         Date startDate = format.parse(fromDate);
                         boolean isSubstituteValid = false;
-                        if(startDate.before(new Date())){
+                        if (startDate.before(new Date())) {
                             isSubstituteValid = true;
                         } else {
                             isSubstituteValid = validateSubstitute(
@@ -408,7 +408,9 @@ public class VacationController implements Controller {
                    try {
                        usrs = rbacQueryClient.getAssignedUsers(role);
                 } catch (Exception e) {
-		    LOG.error("Exception while getting getAssignedUsers:: ", e);	
+                    LOG.error(
+                            "Exception while getting Assigned Users "
+                                    + e.getMessage(), e);
                 }
            matchedUsers.addAll(Arrays.asList(usrs));
         }

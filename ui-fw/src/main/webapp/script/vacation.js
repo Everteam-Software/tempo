@@ -151,7 +151,6 @@
 	    selectedSubstituteVal = "";
 	  }
 	  $('#substitute').combobox('autocomplete', selectedSubstituteVal);
-	  var substitute = $("#substitute option:selected").text();
      }
 
       function clickVacationDetails() {
@@ -294,7 +293,6 @@
 	  $('#vacationId').val(cols[0]);
 	  $('#fromdate').val(cols[2]);
 	  $('#todate').val(cols[3]);
-	  getMatchedVacationData();
 	  $('#substitute').combobox('autocomplete', cols[4]);
 	  $('#desc').val(cols[5]);
 	  $('#user').combobox('autocomplete', cols[1]);
@@ -311,6 +309,8 @@
 	    $('#fromdate').attr('disabled', 'disabled');
 	    $('#user').combobox('disable', 'disabled');
 	    $('#substitute').combobox('disable', 'disabled');
+	  } else {
+	    getMatchedVacationData();
 	  }
 	  if(isAbsenceManager != undefined && isAbsenceManager != 'true'){
 	    $('#user').combobox('disable', 'disabled');
@@ -318,12 +318,12 @@
 	  $('#vacation').dialog('open');
 	  var subIndex = arrayObjectIndexOf(invalidSubstituteList, cols[4], "name");
 	  if(subIndex >= 0){
-	     var option = "<option value=\""+invalidSubstituteList[subIndex].value+"\" selected='selected'>"+invalidSubstituteList[subIndex].name+"</option>";
-	     //$(option).attr('selected', 'selected');
-	     $("#substitute").append(option);
 	     if(dayDiff > 0){
 	      $('#messageDialog').html('<a>Please change substitute. user vacation and substitute vacation dates are conflicting.</a>');
 	      $('#messageDialog').dialog('open');
+	     } else {
+	       var option = "<option value=\""+invalidSubstituteList[subIndex].value+"\" selected='selected'>"+invalidSubstituteList[subIndex].name+"</option>";
+	       $("#substitute").append(option);
 	     }
 	  }
         }
