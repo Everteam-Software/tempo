@@ -1284,20 +1284,20 @@ public class TMSServer implements ITMSServer {
     }
 
     /**
-     * get Matched or intersected vacations list for substitute.
+     * get Matched or intersected vacations list for user.
      *
      * @param dao VacationDAOConnection
      * @param fromDate Date
      * @param toDate   Date
-     * @param substitute String
+     * @param user String
      * @return vacations List<Vacation>
      */
     @Override
-    public final List<Vacation> getSubstituteMatchedVacations(
-            final VacationDAOConnection dao, final String substitute,
+    public final List<Vacation> getUserMatchedVacations(
+            final VacationDAOConnection dao, final String user,
             final Date fromDate, final Date toDate) {
-        List<Vacation> vacationOfUser = dao.getSubstituteMatchedVacations(
-                substitute, fromDate, toDate);
+        List<Vacation> vacationOfUser = dao.getUserMatchedVacations(
+                user, fromDate, toDate);
         _logger.debug("vac=" + vacationOfUser.size());
         return vacationOfUser;
     }

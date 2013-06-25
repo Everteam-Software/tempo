@@ -845,15 +845,15 @@ public class RemoteTMSClient implements ITaskManagementService {
 	}
 
     @Override
-    public final List<Vacation> getSubstituteMatchedVacations(
-            final String substitute, final String fromDate,
+    public final List<Vacation> getUserMatchedVacations(
+            final String user, final String fromDate,
             final String toDate) {
         OMElement request = new TMSMarshaller() {
             public OMElement marshalRequest() {
                 Calendar myCal = Calendar.getInstance();
                 OMElement request
-                = createElement("getSubstituteMatchedVacationsRequest");
-                createElement(request, "substitute", substitute);
+                = createElement("getUserMatchedVacationsRequest");
+                createElement(request, "user", user);
                 DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
                 try {
                     myCal.setTime(df.parse(fromDate));
@@ -869,7 +869,7 @@ public class RemoteTMSClient implements ITaskManagementService {
         List<Vacation> listVac = new ArrayList<Vacation>();
         OMElement response = sendRequest(request,
                 TaskXMLConstants.TASK_NAMESPACE
-                        + "getSubstituteMatchedVacations");
+                        + "getUserMatchedVacations");
         OMElementQueue rootQueue = new OMElementQueue(response);
         while (true) {
             OMElement taskElement = expectVacationElement(rootQueue);

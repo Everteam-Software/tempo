@@ -1070,27 +1070,27 @@ public class TMSRequestProcessor extends OMUnmarshaller {
 	}
 	
     /**
-     * get Matched or intersected vacations list for substitute.
+     * get Matched or intersected vacations list for user.
      *
      * @param requestElement OMElement
      * @return responseElement OMElement
      * @throws AxisFault AxisFault
      */
-    public final OMElement getSubstituteMatchedVacations(
+    public final OMElement getUserMatchedVacations(
             final OMElement requestElement) throws AxisFault {
         VacationDAOConnection dao = null;
         try {
             dao = _VacationDAOFactory.openConnection();
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
-            String substitute = requireElementValue(rootQueue, "substitute");
+            String user = requireElementValue(rootQueue, "user");
             Date fromDate = new XsdDateTime(requireElementValue(rootQueue,
                     "fromDate")).getTime();
             Date toDate = new XsdDateTime(requireElementValue(rootQueue,
                     "toDate")).getTime();
-            List<Vacation> vac = _server.getSubstituteMatchedVacations(dao,
-                    substitute, fromDate, toDate);
+            List<Vacation> vac = _server.getUserMatchedVacations(dao,
+                    user, fromDate, toDate);
             return marshalVacationList(vac,
-                    "getSubstituteMatchedVacationsResponse");
+                    "getUserMatchedVacationsResponse");
         } catch (Exception e) {
             throw makeFault(e);
         } finally {

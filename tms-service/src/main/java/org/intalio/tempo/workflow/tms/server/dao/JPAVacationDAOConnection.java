@@ -146,22 +146,22 @@ public class JPAVacationDAOConnection extends AbstractJPAConnection implements V
      *            Date
      * @param toDate
      *            Date
-     * @param substitute
+     * @param user
      *            String
      *
      * @return vacations List<Vacation>
      */
     @Override
-    public final List<Vacation> getSubstituteMatchedVacations(
-            final String substitute, final Date fromDate, final Date toDate) {
+    public final List<Vacation> getUserMatchedVacations(
+            final String user, final Date fromDate, final Date toDate) {
         Query query = entityManager
-                .createNamedQuery(Vacation.FETCH_SUBSTITUTE_MATCHED_VACATION,
+                .createNamedQuery(Vacation.FETCH_USER_MATCHED_VACATION,
                         Vacation.class)
                 .setParameter("fromDate", this.trimDate(fromDate),
                         TemporalType.DATE)
                 .setParameter("toDate", this.trimDate(toDate),
                         TemporalType.DATE)
-                .setParameter("user", substitute);
+                .setParameter("user", user);
         List<Vacation> result = query.getResultList();
         return result;
     }
