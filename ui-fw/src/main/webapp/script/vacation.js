@@ -322,6 +322,7 @@
 	      $('#messageDialog').html('<a>Please change substitute. user vacation and substitute vacation dates are conflicting.</a>');
 	      $('#messageDialog').dialog('open');
 	     } else {
+	       $('#substitute').combobox('autocomplete', invalidSubstituteList[subIndex].name);
 	       var option = "<option value=\""+invalidSubstituteList[subIndex].value+"\" selected='selected'>"+invalidSubstituteList[subIndex].name+"</option>";
 	       $("#substitute").append(option);
 	     }
@@ -401,7 +402,7 @@
 					    $('#vacation').dialog('close');
 					    $('#messageDialog').html('<a >Vacation details are succesfully saved. please note user claimed task(s) will not be </br>auto assigned to substitute.</a>');
 				    } else if(data.message.indexOf("Invalid Vacation Dates")>=0) {
-					    $('#messageDialog').html('<a>Please change dates, Selected vacation dates conflicts with existing vacation.</a>');
+					    $('#messageDialog').html('<a>Please change dates, Selected vacation dates conflicts with an existing vacation.</a>');
 				    } else if(data.message.indexOf("Invalid Substitute")>=0) {
 					    $('#messageDialog').html('<a>Substitute not avilable at selected time, Please change Sustitute.</a>');
 				    } else {
@@ -438,9 +439,9 @@
 				    {
 					    getVacationData();
 					    $('#vacation').dialog('close');
-					    $('#messageDialog').html('<a >Vacation details are succesfully saved. please note your claimed task(s) will not be </br>auto assigned to your substitute.</a>');
+					    $('#messageDialog').html('<a >Vacation details are succesfully saved. please note user claimed task(s) will not be </br>auto assigned to substitute.</a>');
 				    } else if(data.message.indexOf("Invalid Vacation Dates")>=0) {
-					    $('#messageDialog').html('<a>Please change dates, Selected vacation dates conflicts with existing vacation.</a>');
+					    $('#messageDialog').html('<a>Please change dates, Selected vacation dates conflicts with an existing vacation.</a>');
 				    } else if(data.message.indexOf("Invalid Substitute")>=0) {
 					    $('#messageDialog').html('<a>Substitute not avilable at selected time, Please change Sustitute.</a>');
 				    } else {
@@ -489,7 +490,7 @@
     function isValidDesc(desc) 
     {
       if ($.trim(document.getElementById(desc).value)== '') {
-                $("#warnDialog").html('<a >Description should not be empty</a>');
+                $("#warnDialog").html('<a >Please select Description, it should not be empty</a>');
                 $("#warnDialog").dialog('open');
                 return false;
        }
@@ -501,7 +502,7 @@
       var substituteVal = $('#substitute').combobox('getvalue');
       var substitute = $("#substitute option:selected").text();
       if (($.trim(substitute)== '' || $.trim(substituteVal) == '' ) && isSubstituteMandatory == 'true' ) {
-                $("#warnDialog").html('<a >Please select substitute, should not be empty</a>');
+                $("#warnDialog").html('<a >Please select substitute, it should not be empty</a>');
                 $("#warnDialog").dialog('open');
                 return false;
        }
@@ -518,7 +519,7 @@
       var userVal = $('#user').combobox('getvalue');
       var user = $("#user option:selected").text();
       if ($.trim(user)== '' || $.trim(userVal) == '') {
-                $("#warnDialog").html('<a >Please select user, should not be empty</a>');
+                $("#warnDialog").html('<a >Please select user, it should not be empty</a>');
                 $("#warnDialog").dialog('open');
                 return false;
        }
@@ -542,12 +543,12 @@
             var chkFrom = document.getElementById(varFrom);
             var chkTo = document.getElementById(varTo);
             if (document.getElementById(varFrom).value == '') {
-                $("#warnDialog").html('<a >From date should not be empty</a>');
+                $("#warnDialog").html('<a >Please select From date, it should not be empty</a>');
                 $("#warnDialog").dialog('open');
                 return false;
             }
             else if (document.getElementById(varTo).value == '') {
-                $("#warnDialog").html('<a >To date should not be empty</a>');
+                $("#warnDialog").html('<a >Please select To date, it should not be empty</a>');
                 $("#warnDialog").dialog('open');
                 return false;
             }
