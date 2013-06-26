@@ -56,7 +56,7 @@ import org.intalio.tempo.workflow.util.RequiredArgumentException;
                 + "vacation._toDate >=(:toDate)  "
                 + "AND vacation._is_active = 1"),
 
-        @NamedQuery(name = Vacation.FETCH_SUBSTITUTE_MATCHED_VACATION,
+        @NamedQuery(name = Vacation.FETCH_USER_MATCHED_VACATION,
         query = "select vacation from Vacation vacation where "
                 + "vacation._fromDate <=(:toDate) "
                 + "AND vacation._toDate >= (:fromDate) "
@@ -90,10 +90,10 @@ public class Vacation {
     public static final String FETCH_MATCHED_VACATION = "fetch_matched_vacation";
 
     /**
-     * query to fetch vacations matched to given dates for substitute.
+     * query to fetch vacations matched to given dates for user.
      */
-    public static final String FETCH_SUBSTITUTE_MATCHED_VACATION
-                            = "fetch_substitute_matched_vacation";
+    public static final String FETCH_USER_MATCHED_VACATION
+                            = "fetch_user_matched_vacation";
 
     /**
      * query to fetch vacations start with given date.

@@ -108,16 +108,16 @@ public interface ITaskManagementService {
 	List<Vacation> getMatchedVacations(final String fromDate, final String toDate);
 
     /**
-     * get Matched or intersected vacations list for substitute.
+     * get Matched or intersected vacations list for user.
      *
      * @param fromDate
      *            Date
      * @param toDate
      *            Date
-     * @param substitute
+     * @param user
      *            String
      * @return vacations List<Vacation>
      */
-    List<Vacation> getSubstituteMatchedVacations(final String substitute,
+    List<Vacation> getUserMatchedVacations(final String user,
             final String fromDate, final String toDate);
 }

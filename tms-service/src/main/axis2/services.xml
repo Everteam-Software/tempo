@@ -182,9 +182,9 @@
             <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
             <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getMatchedVacations</actionMapping>
         </operation>
-        <operation name="getSubstituteMatchedVacations">
+        <operation name="getUserMatchedVacations">
             <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
-            <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getSubstituteMatchedVacations</actionMapping>
+            <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getUserMatchedVacations</actionMapping>
         </operation>        
     </service>
 </serviceGroup>

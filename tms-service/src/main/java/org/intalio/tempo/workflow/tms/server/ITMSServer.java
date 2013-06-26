@@ -167,14 +167,14 @@ public interface ITMSServer {
     List<Task> getTaskList(ITaskDAOConnection dao, List<String> users);
 
     /**
-     * get Matched or intersected vacations list for substitute.
+     * get Matched or intersected vacations list for user.
      *
      * @param dao VacationDAOConnection
      * @param fromDate Date
      * @param toDate   Date
-     * @param substitute String
+     * @param user String
      * @return vacations List<Vacation>
      */
-    List<Vacation> getSubstituteMatchedVacations(VacationDAOConnection dao,
-            String substitute, Date fromDate, Date toDate);
+    List<Vacation> getUserMatchedVacations(VacationDAOConnection dao,
+            String user, Date fromDate, Date toDate);
 }

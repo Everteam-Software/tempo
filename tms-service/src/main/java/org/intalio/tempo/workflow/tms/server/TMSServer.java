@@ -1201,8 +1201,23 @@ public class TMSServer implements ITMSServer {
          try {
              Vacation vacation = vdao.getVacationsByID(vacId);
              List<String> users = new ArrayList<String>();
+             List<String> substitutes = new ArrayList<String>();
              users.add(vacation.getUser());
              users.add(vacation.getSubstitute());
+             substitutes.add(vacation.getSubstitute());
+             List<Vacation> subVacations = null;
+             String subSubstitute = vacation.getSubstitute();
+             do {
+                 subVacations = vdao.getUserMatchedVacations(subSubstitute, vacation.getFromDate(), vacation.getToDate()); 
+                 if(subVacations != null && subVacations.size() > 0){
+                      for (Vacation v : subVacations) {
+                         if (!vacation.getUser().equals(v.getSubstitute()) ) {
+                             substitutes.add(v.getSubstitute());
+                             subSubstitute = v.getSubstitute();
+                         }
+                     }
+                 }
+             } while(subVacations != null && subVacations.size() > 0);
              List<Task> tasks = this.getTaskList(tdao, users);
              if (tasks == null) { tasks = Collections.emptyList(); }
              for (Task task : tasks) {
@@ -1215,7 +1230,9 @@ public class TMSServer implements ITMSServer {
                                  vacation.getUser())) {
                      AuthIdentifierSet userSet = new AuthIdentifierSet(
                              task.getUserOwners());
-                     userSet.remove(vacation.getSubstitute());
+                     for(String substitute : substitutes) {
+                         userSet.remove(substitute);
+                     }
                      task.setUserOwners(userSet);
                      tdao.updateTask(task);
                      tdao.commit();
@@ -1284,20 +1301,20 @@ public class TMSServer implements ITMSServer {
     }
 
     /**
-     * get Matched or intersected vacations list for substitute.
+     * get Matched or intersected vacations list for user.
      *
      * @param dao VacationDAOConnection
      * @param fromDate Date
      * @param toDate   Date
-     * @param substitute String
+     * @param user String
      * @return vacations List<Vacation>
      */
     @Override
-    public final List<Vacation> getSubstituteMatchedVacations(
-            final VacationDAOConnection dao, final String substitute,
+    public final List<Vacation> getUserMatchedVacations(
+            final VacationDAOConnection dao, final String user,
             final Date fromDate, final Date toDate) {
-        List<Vacation> vacationOfUser = dao.getSubstituteMatchedVacations(
-                substitute, fromDate, toDate);
+        List<Vacation> vacationOfUser = dao.getUserMatchedVacations(
+                user, fromDate, toDate);
         _logger.debug("vac=" + vacationOfUser.size());
         return vacationOfUser;
     }

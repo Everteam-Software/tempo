@@ -357,9 +357,9 @@ public class VacationController implements Controller {
             final String fromDate, final String toDate) {
         boolean isSubstituteValid = true;
         try {
-            List<Vacation> vac = taskManager.getSubstituteMatchedVacations(
+            List<Vacation> vac = taskManager.getUserMatchedVacations(
                     substitute, fromDate, toDate);
-            if (vac != null && vac.size() >= 1) {
+            if (vac != null && vac.size() > 0) {
                 isSubstituteValid = false;
             }
         } catch (Exception e) {
@@ -381,9 +381,9 @@ public class VacationController implements Controller {
             final String fromDate, final String toDate) {
         boolean isUserValid = true;
         try {
-            List<Vacation> vac = taskManager.getSubstituteMatchedVacations(
+            List<Vacation> vac = taskManager.getUserMatchedVacations(
                     user, fromDate, toDate);
-            if (vac != null && vac.size() >= 2) {
+            if (vac != null && vac.size() > 1) {
                 isUserValid = false;
             }
         } catch (Exception e) {

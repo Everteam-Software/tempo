@@ -201,23 +201,23 @@
       <input type="hidden" name="vacationId" id="vacationId"/>
       <table>
 	      <tr>
-		      <td>User:</td>
+		      <td><fmt:message key="org_intalio_uifw_vacation_user"/>:</td>
 		      <td style="align:left"><select name="user" id="user" style="width:220px;"><option value='<%= loginUser.getName()%>'>${currentUserName}</option></select></td>
 	      </tr>
 	      <tr>
-		      <td>From:<img src="images/ical.jpg" alt="Vacation start date"></td>
+		      <td><fmt:message key="org_intalio_uifw_vacation_fromDate"/>:<img src="images/ical.jpg" alt="Vacation start date"></td>
 		      <td style="align:left"><input type="text" style="width:220px;height:1.8em;" size="25" maxlength="10" name="fromdate" id="fromdate"></td>
 	      </tr>
 	      <tr>
-		      <td>To:<img src="images/ical.jpg" alt="Vacation end date"></td>
+		      <td><fmt:message key="org_intalio_uifw_vacation_toDate"/>:<img src="images/ical.jpg" alt="Vacation end date"></td>
 		      <td style="align:left"><input type="text"  style="width:220px;height:1.8em;" size="25" maxlength="10" name="todate" id="todate" ></td>
 	      </tr>
 	      <tr>
-		      <td>Substitute:</td>
+		      <td><fmt:message key="org_intalio_uifw_vacation_substitute"/>:</td>
 		      <td style="align:left"><select name="substitute" id="substitute" style="width:220px" ><option value=''>select User</option></select></select></td>
 	      </tr>
 	      <tr>
-		      <td>Description:</td>
+		      <td><fmt:message key="org_intalio_uifw_vacation_description"/>:</td>
 		      <td style="align:left">
 			      <textarea style="resize: none;" style="width:220px" rows="3" cols="25" name="desc" id="desc">
 			      </textarea>

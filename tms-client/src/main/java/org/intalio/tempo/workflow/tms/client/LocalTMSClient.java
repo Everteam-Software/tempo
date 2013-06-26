@@ -493,15 +493,15 @@ public class LocalTMSClient implements ITaskManagementService {
     }
 
     @Override
-    public final List<Vacation> getSubstituteMatchedVacations(
-            final String substitute, final String fromDate,
+    public final List<Vacation> getUserMatchedVacations(
+            final String user, final String fromDate,
             final String toDate) {
         List<Vacation> vac = null;
         VacationDAOConnection dao = null;
         try {
             DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
             dao = _VacationDAOFactory.openConnection();
-            vac = server.getSubstituteMatchedVacations(dao, substitute,
+            vac = server.getUserMatchedVacations(dao, user,
                     df.parse(fromDate), df.parse(toDate));
 
         } catch (Exception e) {
