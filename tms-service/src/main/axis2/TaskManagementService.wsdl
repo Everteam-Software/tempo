@@ -446,7 +446,7 @@
 			<xsd:element name="getCustomColumnsResponse">
                 <xsd:complexType>
                     <xsd:sequence>
-                        <xsd:element name="customColumn" type="xsd:string"/>
+                        <xsd:element maxOccurs="unbounded" name="customColumn" type="xsd:string"/>
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
