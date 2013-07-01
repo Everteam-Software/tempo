@@ -139,6 +139,8 @@
 	  var userVal = $('#user').combobox('getvalue');
 	  var selectedSubstituteVal = $('#substitute').combobox('getvalue');
 	  $('#substitute').empty();
+	  var option = "<option value=''></option>";
+	  $("#substitute").append(option);
 	  $.each(substituteList, function(index, obj) {
 	    var userIndex = arrayObjectIndexOf(invalidSubstituteList, obj.value, "value");
 	    if(userVal != obj.name && userIndex < 0) {
@@ -193,12 +195,12 @@
 	      var i = 0;
 	      $.each(data.vacs, function (key, value) {
 
-		      vacationData[i++] = data.vacs[key].id;
-		      vacationData[i++] = data.vacs[key].userName;
-		      vacationData[i++] = $.format.date(data.vacs[key].fromDate,"dd/MM/yyyy");
-		      vacationData[i++] = $.format.date(data.vacs[key].toDate,"dd/MM/yyyy");;
-		      vacationData[i++] = data.vacs[key].substituteName;
-		      vacationData[i++] = data.vacs[key].description;
+		      vacationData[i++] = $.trim(data.vacs[key].id);
+		      vacationData[i++] = $.trim(data.vacs[key].userName);
+		      vacationData[i++] = $.trim($.format.date(data.vacs[key].fromDate,"dd/MM/yyyy"));
+		      vacationData[i++] = $.trim($.format.date(data.vacs[key].toDate,"dd/MM/yyyy"));
+		      vacationData[i++] = $.trim(data.vacs[key].substituteName);
+		      vacationData[i++] = $.trim(data.vacs[key].description);
 
 		      oTable.fnAddData(vacationData, false);
 		      i = 0;

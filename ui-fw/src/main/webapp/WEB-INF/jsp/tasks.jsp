@@ -219,7 +219,7 @@
 	      <tr>
 		      <td><fmt:message key="org_intalio_uifw_vacation_description"/>:</td>
 		      <td style="align:left">
-			      <textarea style="resize: none;" style="width:220px" rows="3" cols="25" name="desc" id="desc">
+			      <textarea style="resize: none;" style="width:220px" rows="3" cols="25" name="desc" id="desc" maxlength="225">
 			      </textarea>
 		      </td>
 	      </tr>
