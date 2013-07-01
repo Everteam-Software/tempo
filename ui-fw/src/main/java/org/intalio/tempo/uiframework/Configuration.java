@@ -14,11 +14,15 @@
  */
 package org.intalio.tempo.uiframework;
 
+import java.rmi.RemoteException;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
+import org.intalio.tempo.security.rbac.RBACException;
 import org.intalio.tempo.security.ws.TokenClient;
 import org.intalio.tempo.workflow.tms.ITaskManagementServiceFactory;
 import org.slf4j.Logger;
@@ -72,6 +76,11 @@ public class Configuration {
      * Absence Management scheduler active flag.
      */
     private Boolean amSchedulerActive = Boolean.TRUE;
+
+    /**
+     * Property to hold is user role case sensitive.
+     */
+    private static Boolean roleCaseSensitive;
 
     public void setTmsFactory(ITaskManagementServiceFactory tmsFactory) {
         this._tmsFactory = tmsFactory;
@@ -289,6 +298,25 @@ public class Configuration {
      * @return absenceManagerRoles Set<String>
      */
     public Set<String> getAbsenceManagerRoles() {
+        if (isRoleCaseSensitive() == null) {
+            boolean isCaseSensitive = false;
+            try {
+                isCaseSensitive = getTokenClient().isRoleCaseSensitive();
+                setRoleCaseSensitive(isCaseSensitive);
+            } catch (RemoteException e) {
+                _log.error(
+                        "RemoteException while getting AbsenceManagerRoles:",
+                        e);
+            } catch (RBACException e) {
+                _log.error("RBACException while getting AbsenceManagerRoles:",
+                        e);
+            }
+         }
+        if (isRoleCaseSensitive() != null
+                && !isRoleCaseSensitive().booleanValue()) {
+            absenceManagerRoles = convertSetToLowerCase(
+                    absenceManagerRoles);
+        }
         return absenceManagerRoles;
     }
 
@@ -330,5 +358,32 @@ public class Configuration {
      */
     public void setAmSchedulerActive(final Boolean schedulerActive) {
         this.amSchedulerActive = schedulerActive;
+    }
+
+    /**
+     * @return the caseSensitive
+     */
+    public static Boolean isRoleCaseSensitive() {
+       return roleCaseSensitive;
+    }
+
+    /**
+     * @param caseSensitive the caseSensitive to set
+     */
+    public static void setRoleCaseSensitive(final Boolean caseSensitive) {
+        Configuration.roleCaseSensitive = caseSensitive;
+    }
+
+    /**
+     * utility method to convert set to lower case.
+     * @param set Set<String>
+     * @return set Set<String>
+     */
+    public static Set<String> convertSetToLowerCase(Set<String> set) {
+        Set<String> loweredSet = new TreeSet<String>();
+        for (Iterator<String> iterator = set.iterator(); iterator.hasNext();) {
+            loweredSet.add(iterator.next().toLowerCase());
+        }
+        return loweredSet;
     }
 }

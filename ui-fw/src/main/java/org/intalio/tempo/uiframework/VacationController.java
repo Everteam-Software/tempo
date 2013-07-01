@@ -126,18 +126,9 @@ public class VacationController implements Controller {
                 } else if (action.equalsIgnoreCase("list")) {
                     boolean isAbsenceManager = false;
                     if (userRoles != null && amRoles != null) {
-                        String strUserRoles = StringArrayUtils.toCommaDelimited(
-                                userRoles).toLowerCase();
-                        String strAmRoles = StringArrayUtils.toCommaDelimited(
-                                (String[]) amRoles.toArray(new String[amRoles
-                                        .size()])).toLowerCase();
-                        String[] arrUserRoles = StringArrayUtils
-                                .parseCommaDelimited(strUserRoles);
-                        String[] arrAmRoles = StringArrayUtils
-                                .parseCommaDelimited(strAmRoles);
                         if (CollectionUtils.containsAny(
-                                        Arrays.asList(arrUserRoles),
-                                        Arrays.asList(arrAmRoles))) {
+                                        Arrays.asList(userRoles),
+                                        amRoles)) {
                             isAbsenceManager = true;
                         }
                     }
