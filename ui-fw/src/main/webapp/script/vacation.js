@@ -151,6 +151,9 @@
 	    selectedSubstituteVal = "";
 	  }
 	  $('#substitute').combobox('autocomplete', selectedSubstituteVal);
+	  $('#substitute option').filter(function() {
+	    return $(this).text() === selectedSubstituteVal;
+	  }).attr("selected",true);
      }
 
       function clickVacationDetails() {
@@ -659,7 +662,7 @@
 		    });
 		}
 	      var isExistUser = !!$('#user option').filter(function() {
-	      return $(this).attr('value').toLowerCase() === user.toLowerCase();
+	      return $(this).attr('value') === user;
 	      }).length;
 	      if (!isExistUser && user != cuser){
 		    var option = "<option value=\""+user+"\">"+userName+"</option>";
@@ -667,11 +670,11 @@
 		}
 	      var substituteVal = $('#substitute').combobox('getvalue');
 	      $('#substitute option').filter(function() {
-		    return $(this).attr('value').toLowerCase() === substituteVal.toLowerCase();
+		    return $(this).attr('value') === substituteVal;
 		}).attr("selected",true);
 	      var userVal = $('#user').combobox('getvalue');
 	      $('#user option').filter(function() {
-		    return $(this).attr('value').toLowerCase() === userVal.toLowerCase();
+		    return $(this).attr('value') === userVal;
 		}).attr("selected",true);
 	});
     }
@@ -770,10 +773,9 @@
 				}
 				// Search for a match (case-insensitive)
 				var value = this.input.val(),
-					valueLowerCase = value.toLowerCase(),
 					valid = false;
 				this.element.children( "option" ).each(function() {
-					if ( $( this ).text().toLowerCase() === valueLowerCase || $( this ).val().toLowerCase() === valueLowerCase) {
+					if ( $( this ).text() == value || $( this ).val() == value) {
 						value = $( this ).text();
 						this.selected = valid = true;
 						$(this).trigger('select');
