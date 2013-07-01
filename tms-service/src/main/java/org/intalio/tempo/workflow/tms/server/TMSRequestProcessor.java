@@ -20,6 +20,7 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -890,10 +891,14 @@ public class TMSRequestProcessor extends OMUnmarshaller {
 			OMElementQueue rootQueue = new OMElementQueue(requestElement);
 			Vacation vac = new Vacation();
 			String fromDate = requireElementValue(rootQueue, "fromDate");
-			vac.setFromDate((new XsdDateTime(fromDate)).getTime());
+			vac.setFromDate(removeTime(
+			        (new XsdDateTime(fromDate)).getTime()));
 			String toDate = requireElementValue(rootQueue, "toDate");
-			vac.setToDate((new XsdDateTime(toDate)).getTime());
-			if (vac.getToDate().before(vac.getFromDate())) {
+			vac.setToDate(removeTime(
+			        (new XsdDateTime(toDate)).getTime()));
+			Date today = removeTime(new Date());
+			if (vac.getToDate().before(today)
+			         || vac.getToDate().before(vac.getFromDate())) {
                         throw new IllegalArgumentException(
                         "Invalid date range : toDate = " + toDate
                                 + " fromDate = " + fromDate);
@@ -930,10 +935,14 @@ public class TMSRequestProcessor extends OMUnmarshaller {
 			vac.setId(Integer.parseInt(
 			            requireElementValue(rootQueue, "vacId")));
 			String fromDate = requireElementValue(rootQueue, "fromDate");
-			vac.setFromDate((new XsdDateTime(fromDate)).getTime());
+			vac.setFromDate(removeTime(
+			        (new XsdDateTime(fromDate)).getTime()));
 			String toDate = requireElementValue(rootQueue, "toDate");
-			vac.setToDate((new XsdDateTime(toDate)).getTime());
-			if (vac.getToDate().before(vac.getFromDate())) {
+			vac.setToDate(removeTime(
+			        (new XsdDateTime(toDate)).getTime()));
+			Date today = removeTime(new Date());
+			if (vac.getToDate().before(today)
+			        || vac.getToDate().before(vac.getFromDate())) {
                         throw new IllegalArgumentException(
                         "Invalid date range : toDate = " + toDate
                                 + " fromDate = " + fromDate);
@@ -1123,5 +1132,20 @@ public class TMSRequestProcessor extends OMUnmarshaller {
         public TMSResponseMarshaller(OMFactory omFactory) {
             super(omFactory, omFactory.createOMNamespace(TaskXMLConstants.TASK_NAMESPACE, TaskXMLConstants.TASK_NAMESPACE_PREFIX));
         }
+    }
+
+    /**
+     * function to truncate time from date.
+     * @param date with time
+     * @return date Date without time
+     */
+    private static Date removeTime(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
     }
 }
