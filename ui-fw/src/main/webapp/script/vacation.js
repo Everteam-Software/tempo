@@ -654,6 +654,9 @@
       $.each(data.users, function (key, value) {
 	      var user =  data.users[key].name;
 	      var userName =  data.users[key].value;
+	      if(userName == undefined) {
+		userName =  user;
+	      }
 	      var userIndex = arrayObjectIndexOf(substituteList, user, "value");
 	      if (userIndex == -1){
 		    var option = "<option value=\""+user+"\">"+userName+"</option>";

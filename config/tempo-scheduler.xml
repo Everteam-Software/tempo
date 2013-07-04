@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (c) 2005-2006 Intalio inc.
+
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the Eclipse Public License v1.0
+  which accompanies this distribution, and is available at
+  http://www.eclipse.org/legal/epl-v10.html
+
+  Contributors:
+  Intalio inc. - initial API and implementation
+ -->
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+    <import resource="file:${org.intalio.tempo.configDirectory}/tempo-ui-fw.xml"/>
+	<bean id="amScheduler" class="org.intalio.tempo.uiframework.scheduler.AMScheduler">
+		<property name="taskDAOFactory">
+			<ref bean="tms.daoFactory"/>
+		</property>
+		<property name="vacationDAOFactory">
+			<ref bean="tms.vacationDaoFactory"/>
+		</property>
+		<property name="server">
+			<ref bean="tms.server"/>
+		</property>
+	</bean>
+</beans>

@@ -34,7 +34,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.intalio.tempo.security.Property;
-import org.intalio.tempo.security.util.StringArrayUtils;
 import org.intalio.tempo.security.ws.RBACAdminClient;
 import org.intalio.tempo.security.ws.RBACQueryClient;
 import org.intalio.tempo.web.ApplicationState;
@@ -407,8 +406,8 @@ public class VacationController implements Controller {
         }
         if (users != null) {
             for (String user : matchedUsers) {
-                assignedUsers.add(new Property(user, LoginController
-                        .extractUserDisplayName(users.get(user))));
+                String name = getUserDisplayName(user);
+                assignedUsers.add(new Property(user, name));
             }
         }
         return assignedUsers;
@@ -419,19 +418,30 @@ public class VacationController implements Controller {
      * @param vacs List<Vacation>
      */
     private static void updateUserNames(final List<Vacation> vacs) {
-        if (vacs != null && users != null) {
+        if (vacs != null) {
             for (Vacation v:vacs) {
-                if (!"".equals(v.getUser())) {
-                    v.setUserName(LoginController.extractUserDisplayName(users
-                            .get(v.getUser())));
-                }
-                if (!"".equals(v.getSubstitute())) {
-                    v.setSubstituteName(LoginController
-                            .extractUserDisplayName(users
-                            .get(v.getSubstitute())));
-                }
+               v.setUserName(getUserDisplayName(v.getUser()));
+               v.setSubstituteName(getUserDisplayName(v.getSubstitute()));
             }
          }
+    }
+
+    /**
+     * get User Display Name.
+     * @param user String
+     * @return displayName String
+     */
+    private static String getUserDisplayName(final String user) {
+        String name = user;
+        if (users != null) {
+            Property[] props = users.get(user);
+            if (props != null) {
+                name = LoginController
+                        .extractUserDisplayName(users.get(user));
+            }
+        }
+        if (name == null || "".equals(name)) { name = user; }
+        return name;
     }
 
 }
