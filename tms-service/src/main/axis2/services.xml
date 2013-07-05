@@ -27,6 +27,7 @@
         -->
         <parameter name="LoadOnStartup">true</parameter>
 
+        <parameter name="modifyUserWSDLPortAddress">true</parameter>
         <operation name="getTaskList">
             <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
             <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getTaskList</actionMapping>
