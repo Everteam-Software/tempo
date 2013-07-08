@@ -421,6 +421,7 @@ public class TMSServer implements ITMSServer {
                     if (_logger.isDebugEnabled())
                         _logger.debug(userID + " has deleted Workflow Task " + task);
                 } else {
+                    _logger.error(userID + " cannot delete Workflow Tasks: " + taskID);
                     problemTasks.put(taskID, new AuthException(userID + " cannot delete" + taskID));
                 }
             } catch (Exception e) {
