@@ -838,14 +838,12 @@ public class TMSServer implements ITMSServer {
                                 dao.fetchTaskPreviousOwners(taskID);
                         String[] prevUsers = StringUtils.split(
                                 taskPrevOwners.getPrevUsers() , ",");
-                        if(prevUsers != null) {
+                        if(prevUsers == null) { prevUsers = new String[0]; }
                         users = new AuthIdentifierSet( prevUsers );
-                        }
                         String[] prevRoles = StringUtils.split(
                                 taskPrevOwners.getPrevRoles(), ",");
-                        if(prevRoles != null) {
+                        if(prevRoles == null) { prevRoles = new String[0]; }
                         roles = new AuthIdentifierSet( prevRoles );
-                        }
                        }
                 }
 
