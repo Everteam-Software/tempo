@@ -153,6 +153,7 @@ public class TasksCollector {
         }
         // keep this for counting total tasks
         String countQuery = query.toString();
+        query.append(" GROUP BY T._id");
         // set the order column
         if (params.isSet("sortname"))
             query.append(" ORDER BY T." + params.get("sortname"));
