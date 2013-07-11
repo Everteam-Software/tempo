@@ -88,6 +88,11 @@ public class TaskMarshaller {
         }
         taskMetadataElement.setTaskType(TaskTypeMapper.getTypeClassName(task.getClass()));
         taskMetadataElement.setDescription(task.getDescription());
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(task.getCreationDate());
+        taskMetadataElement.setCreationDate(cal);
+
         if (fetchMetaData) {
             if (task instanceof IProcessBoundTask) {
                 taskMetadataElement.setProcessId(((IProcessBoundTask) task)
@@ -107,10 +112,6 @@ public class TaskMarshaller {
                 taskMetadataElement.setProcessEndpoint(((InitTask) task)
                         .getProcessEndpoint().toString());
             }
-
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(task.getCreationDate());
-            taskMetadataElement.setCreationDate(cal);
 
             for (String userOwner : task.getUserOwners()) {
                 XmlString XmlStrUserOwner = taskMetadataElement
