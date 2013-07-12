@@ -144,6 +144,16 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
                     + taskStateStr + "'");
         }
 
+        try {
+            Calendar creationDate = taskMetadata.getCreationDate();
+            if (creationDate != null)
+                resultTask.setCreationDate(creationDate.getTime());
+            else
+                resultTask.setCreationDate(new Date());
+        } catch (XmlValueOutOfRangeException e) {
+            resultTask.setCreationDate(new Date());
+        }
+
         if (ITaskWithState.class.isAssignableFrom(taskClass)) {
             ITaskWithState taskWithState = (ITaskWithState) resultTask;
             taskWithState.setState(taskState);
