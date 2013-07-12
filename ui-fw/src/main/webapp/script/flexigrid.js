@@ -50,6 +50,9 @@
                          blockOpacity: 0.5,
                          onToggleCol: false,
                          onChangeSort: false,
+                         onCustomChangeSort: function(name, order) {
+					  sortGrid('#'+$(t).attr('id'), order);
+					} ,
                          onSuccess: false,
                          onSubmit: false, // using a custom populate function
                          cookies: true
@@ -683,6 +686,10 @@
 					      document.getElementById('searchUser').value="";
   			                      g.doSearch();
 					    }   
+					    if(p.sortname == '_customMetadata'){
+					      if (p.onCustomChangeSort)
+						p.onCustomChangeSort(p.sortname,p.sortorder);
+					    }
 					  },
                                            error: function(XMLHttpRequest, textStatus, errorThrown) {
 					     this.tryCount++;
@@ -1112,15 +1119,9 @@
                                                         },
                                                         function(){
                                                                 $(this).removeClass('thOver');
-                                                                if ($(this).attr('abbr')!=p.sortname) $('div',this).removeClass('s'+p.sortorder);
-                                                                else if ($(this).attr('abbr')==p.sortname)
-                                                                        {
-                                                                                var no = '';
-                                                                                if (p.sortorder=='asc') no = 'desc';
-                                                                                else no = 'asc';
-                                                                               
-                                                                                $('div',this).addClass('s'+p.sortorder).removeClass('s'+no);
-                                                                        }
+                                                                $('div',this).removeClass('sasc').removeClass('sdesc');
+                                                                if($(this).hasClass('sorted'))
+                                                                $('div',this).addClass('s'+p.sortorder);
                                                                 if (g.colCopy)
                                                                         {                                                              
                                                                         $(g.cdropleft).remove();
@@ -1129,6 +1130,8 @@
                                                                         }
                                                         })
                                                 ; //wrap content
+                                                $(this).removeClass('sorted');
+                                                $('div',this).removeClass('sasc').removeClass('sdesc');
                                         }
                         );
 
@@ -1574,5 +1577,59 @@
                 }
 
         }; //end noSelect
+
+  function sortGrid(table, order) {
+    // Remove all characters in c from s.
+    var stripChar = function(s, c) {
+      var r = "";
+      for(var i = 0; i < s.length; i++) {
+        r += c.indexOf(s.charAt(i))>=0 ? "" : s.charAt(i);
+      }
+      return r;
+    }
+
+    // Test for characters accepted in numeric values.
+    var isNumeric = function(s) {
+      var valid = "0123456789.,- ";
+      var result = true;
+      var c;
+      for(var i = 0; i < s.length && result; i++) {
+        c= s.charAt(i);
+        if(valid.indexOf(c) <= -1) {
+          result = false;
+        }
+      }
+      return result;
+    }
+
+    // Sort table rows.
+    var asc = order == "asc";
+    var rows = $(table).find("tbody > tr").get();
+    var column = $(table).parent(".bDiv").siblings(".hDiv").find("table tr th").index($("th.sorted", ".flexigrid:has(" + table +")"));
+    rows.sort(function(a, b) {
+      var keyA = $(asc? a : b).children("td").eq(column).text().toUpperCase();
+      var keyB = $(asc? b : a).children("td").eq(column).text().toUpperCase();
+      if((isNumeric(keyA)||keyA.length<1) && (isNumeric(keyB)|| keyB.length<1)) {
+        keyA = stripChar(keyA,", ");
+        keyB = stripChar(keyB,", ");
+        if(keyA.length < 1) keyA = 0;
+        if(keyB.length < 1) keyB = 0;
+        keyA = new Number(parseFloat(keyA));
+        keyB = new Number(parseFloat(keyB));
+      }
+      return keyA>keyB ? 1 : keyA<keyB ? -1 : 0;
+    });
+
+    // Rebuild the table body.
+    $.each(rows, function(index, row) {
+      $(table).children("tbody").append(row);
+    });
+    $(table).find("tr").removeClass("erow");
+    $(table).find("tr:odd").addClass("erow");
+    $(table).find("td.sorted").removeClass("sorted");
+    $(table).find("tr").each( function(){
+      $(this).find("td:nth(" + column + ")").addClass("sorted");
+    });
+  }
                
 })(jQuery);
