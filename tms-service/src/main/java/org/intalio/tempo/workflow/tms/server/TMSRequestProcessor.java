@@ -15,6 +15,8 @@
 
 package org.intalio.tempo.workflow.tms.server;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
@@ -30,6 +32,8 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNode;
 import org.apache.axis2.AxisFault;
+import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
 import org.intalio.deploy.deployment.utils.DeploymentServiceRegister;
 import org.intalio.tempo.workflow.auth.AuthException;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
@@ -67,6 +71,8 @@ import org.intalio.tempo.workflow.tms.server.dao.VacationDAOConnectionFactory;
 import org.jasypt.util.text.BasicTextEncryptor;
 
 
+import com.intalio.bpms.workflow.taskManagementServices20051109.CustomMetadataType;
+import com.intalio.bpms.workflow.taskManagementServices20051109.CustomTaskMetadataType;
 import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
 
 public class TMSRequestProcessor extends OMUnmarshaller {
@@ -192,6 +198,7 @@ public class TMSRequestProcessor extends OMUnmarshaller {
         	dao.close();
         }
     }
+
     
     //Fix for WF-1493 and WF-1490. To return only userOwners and taskState
     public OMElement getTaskOwnerAndState(OMElement requestElement) throws AxisFault {
@@ -849,6 +856,72 @@ public class TMSRequestProcessor extends OMUnmarshaller {
         finally{
             if(dao!=null)
             dao.close();
+        }
+    }
+
+    public OMElement getCustomTaskMetadata(OMElement requestElement)
+            throws AxisFault {
+        ITaskDAOConnection dao = null;
+        try {
+            dao = _taskDAOFactory.openConnection();
+            OMElementQueue rootQueue = new OMElementQueue(requestElement);
+            String taskID = requireElementValue(rootQueue, "taskId");
+            String participantToken = requireElementValue(rootQueue,
+                    "participantToken");
+            String ctm = _server.getCustomTaskMetadata(dao, taskID,
+                    participantToken);
+            OMElement response = new TMSResponseMarshaller(OM_FACTORY) {
+                public OMElement marshalResponse(String ctm)
+                        throws XmlException, IOException {
+                    OMElement response = createElement("getCustomTaskMetadataResponse");
+                    TaskMetadata taskMetadataElement = TaskMetadata.Factory
+                            .newInstance();
+                    CustomMetadataType customMetadataType = taskMetadataElement
+                            .addNewCustomMetadata();
+                    CustomTaskMetadataType customTaskMetadataType = customMetadataType
+                            .addNewCustomTaskMetadata();
+                    XmlObject xmlObject = null;
+                    if(ctm != null){
+                        xmlObject = XmlObject.Factory.parse(new ByteArrayInputStream(ctm.getBytes("UTF-8")));
+                    }
+                    customTaskMetadataType.set(xmlObject);
+                    taskMetadataElement.setCustomMetadata(customMetadataType);
+                    response.addChild(XmlTooling.convertDocument(
+                            taskMetadataElement).getFirstOMChild());
+                    return response;
+                }
+            }.marshalResponse(ctm);
+            return response;
+        } catch (Exception e) {
+            throw makeFault(e);
+        } finally {
+            if (dao != null)
+                dao.close();
+        }
+    }
+
+    public OMElement updateCustomTaskMetadata(OMElement requestElement)
+            throws AxisFault {
+        ITaskDAOConnection dao = null;
+        try {
+            dao = _taskDAOFactory.openConnection();
+            OMElementQueue rootQueue = new OMElementQueue(requestElement);
+            String taskID = requireElementValue(rootQueue, "taskId");
+            String participantToken = requireElementValue(rootQueue,
+                    "participantToken");
+            OMElement customTaskMetadata = requireElement(rootQueue,
+                    "customTaskMetadata");
+            XmlObject xmlObject = XmlObject.Factory.parse(customTaskMetadata
+                    .getXMLStreamReader());
+            String ctm = new TaskUnmarshaller().expectElement(xmlObject,
+                    "customTaskMetadata").xmlText();
+            _server.updateCustomTaskMetadata(dao, taskID, participantToken, ctm);
+            return createOkResponse();
+        } catch (Exception e) {
+            throw makeFault(e);
+        } finally {
+            if (dao != null)
+                dao.close();
         }
     }
     

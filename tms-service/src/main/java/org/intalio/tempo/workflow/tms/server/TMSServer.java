@@ -1144,6 +1144,41 @@ public class TMSServer implements ITMSServer {
 	    return dao.fetchCustomColumns();
 	}
 
+    public String getCustomTaskMetadata(ITaskDAOConnection dao, String taskID,
+            String participantToken) throws TMSException {
+        UserRoles credentials = _authProvider.authenticate(participantToken);
+        Task task = dao.fetchTaskIfExists(taskID);
+        if (task instanceof PATask) {
+            checkIsAvailable(taskID, task, credentials);
+            String ctm = ((PATask) task).getCustomTaskMetadata();
+            if (_logger.isDebugEnabled())
+                _logger.debug("CutomTaskMetadata of workflow task " + taskID
+                        + " for user " + credentials.getUserID() + " is: "
+                        + ctm);
+            return ctm;
+        } else {
+            throw new UnavailableTaskException("No PATask with" + taskID
+                    + " has been found");
+        }
+    }
+
+    public void updateCustomTaskMetadata(ITaskDAOConnection dao, String taskID,
+            String participantToken, String ctm) throws TMSException {
+        UserRoles credentials = _authProvider.authenticate(participantToken);
+        Task task = dao.fetchTaskIfExists(taskID);
+        if (task instanceof PATask) {
+            checkIsAvailable(taskID, task, credentials);
+            ((PATask) task).setCustomTaskMetadata(ctm);
+            dao.updateTask(task);
+            dao.commit();
+            if (_logger.isDebugEnabled())
+                _logger.debug("Workflow Task " + task + " was updated");
+        } else {
+            throw new UnavailableTaskException("No PATask with" + taskID
+                    + " has been found");
+        }
+    }
+
 
     private void setOutputPIPA(ITaskDAOConnection dao, Task task, String userOwner) {
 		PIPATaskOutput pipaTaskOutput = dao.fetchPIPATaskOutput(task.getID(), userOwner);

@@ -15,6 +15,7 @@
 
 package org.intalio.tempo.workflow.task.xml;
 
+import java.io.ByteArrayInputStream;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Calendar;
@@ -56,6 +57,7 @@ import com.intalio.bpms.workflow.taskManagementServices20051109.AccessControlTyp
 import com.intalio.bpms.workflow.taskManagementServices20051109.Attachments;
 import com.intalio.bpms.workflow.taskManagementServices20051109.CustomMetadataKeyValueType;
 import com.intalio.bpms.workflow.taskManagementServices20051109.CustomMetadataType;
+import com.intalio.bpms.workflow.taskManagementServices20051109.CustomTaskMetadataType;
 import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
 
 public class TaskMarshaller {
@@ -200,6 +202,15 @@ public class TaskMarshaller {
                                 .setValue(customMetadataMap.get(key));
                     }
                 }
+                String customTaskMetadata = customMetadataTask.getCustomTaskMetadata();
+                CustomTaskMetadataType customTaskMetadataType = customMetadataType.addNewCustomTaskMetadata();
+                try {
+                    if(customTaskMetadata != null)
+                        customTaskMetadataType.set(XmlObject.Factory.parse(new ByteArrayInputStream(customTaskMetadata.getBytes("UTF-8"))));
+                } catch (Exception e) {
+                    _log.warn("Not able to parse : " + customTaskMetadata + " in org.apache.xmlbeans.XmlObject.Factory" + e);
+                }
+
                 taskMetadataElement.setCustomMetadata(customMetadataType);
             }
 

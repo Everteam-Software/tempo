@@ -326,6 +326,10 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
             ITaskWithCustomMetadata taskWithCustomMetadata = (ITaskWithCustomMetadata)resultTask;
             Map<String, String> customMetadata = new HashMap<String, String>();
             if(customMetadataTypeElement !=null){
+                XmlObject customTaskMetadataTypeElement = customMetadataTypeElement.getCustomTaskMetadata();
+                if(customTaskMetadataTypeElement != null){
+                    taskWithCustomMetadata.setCustomTaskMetadata(customTaskMetadataTypeElement.xmlText());
+                }
                 for(int i=0; i < customMetadataTypeElement.sizeOfCustomMetadataKeyValueArray(); i ++){
                     CustomMetadataKeyValueType customMetadataKeyValueTypeElement = customMetadataTypeElement.getCustomMetadataKeyValueArray(i);
                     if(customMetadataKeyValueTypeElement !=null){

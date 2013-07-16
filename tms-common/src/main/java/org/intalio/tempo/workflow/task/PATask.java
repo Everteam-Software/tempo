@@ -153,7 +153,10 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
     private Map<String, String> _customMetadata;
     
     
-    
+    @Persistent(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+    @Lob
+    @Column(name = "ctm_xml")
+    private String _ctm;
     
     public PATask() {
         super();
@@ -380,6 +383,14 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
 		_instanceId=instanceId;
 	}
 	
+    public String getCustomTaskMetadata() {
+        return _ctm;
+    }
+
+    public void setCustomTaskMetadata(String ctm) {
+        this._ctm = ctm;
+    }
+
     @Override
 	public String toString() {
 		return "PATask [_attachments=" + _attachments

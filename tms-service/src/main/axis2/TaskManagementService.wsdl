@@ -325,9 +325,15 @@
             </xsd:complexType>
 			<xsd:complexType name="customMetadataType">
 				<xsd:sequence>
+					<xsd:element maxOccurs="1" minOccurs="0" name="customTaskMetadata" type="tns:customTaskMetadataType"/>
 					<xsd:element maxOccurs="unbounded" minOccurs="0" name="customMetadataKeyValue" type="tns:customMetadataKeyValueType"/>
 				</xsd:sequence>
 			</xsd:complexType>
+            <xsd:complexType name="customTaskMetadataType">
+                <xsd:sequence>
+                    <xsd:any maxOccurs="unbounded" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
 			<xsd:complexType name="customMetadataKeyValueType">
                 <xsd:sequence>
                     <xsd:element name="key" type="xsd:string"/>
@@ -554,6 +560,30 @@
                 	<xsd:element name="vacSubstitute" type="xsd:string"/>
                 </xsd:sequence>				
             </xsd:complexType>
+            <xsd:element name="getCustomTaskMetadataRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="taskId" type="xsd:string"/>
+                        <xsd:element name="participantToken" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="getCustomTaskMetadataResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element maxOccurs="1" minOccurs="0" name="customTaskMetadata" type="tns:customTaskMetadataType"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="updateCustomTaskMetadataRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="taskId" type="xsd:string"/>
+                        <xsd:element name="participantToken" type="xsd:string"/>
+                        <xsd:element maxOccurs="1" minOccurs="1" name="customTaskMetadata" type="tns:customTaskMetadataType"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
         </xsd:schema>
 		
     </wsdl:types>
@@ -718,6 +748,15 @@
     </wsdl:message>
     <wsdl:message name="getUserMatchedVacationsResponse">
         <wsdl:part name="getUserMatchedVacationsResponse" element="tns:getUserMatchedVacationsResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getCustomTaskMetadataRequest">
+        <wsdl:part name="getCustomTaskMetadataRequest" element="tns:getCustomTaskMetadataRequest"/>
+    </wsdl:message>
+    <wsdl:message name="getCustomTaskMetadataResponse">
+        <wsdl:part name="getCustomTaskMetadataResponse" element="tns:getCustomTaskMetadataResponse"/>
+    </wsdl:message>
+    <wsdl:message name="updateCustomTaskMetadataRequest">
+        <wsdl:part name="updateCustomTaskMetadataRequest" element="tns:updateCustomTaskMetadataRequest"/>
     </wsdl:message>
     
     <wsdl:portType name="TaskManagementServicesPortType">
@@ -939,6 +978,22 @@
         <wsdl:operation name="getUserMatchedVacations">
             <wsdl:input message="tns:getUserMatchedVacationsRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getUserMatchedVacations"/>
             <wsdl:output message="tns:getUserMatchedVacationsResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/getUserMatchedVacationsResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="getCustomTaskMetadata">
+            <wsdl:input message="tns:getCustomTaskMetadataRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getCustomTaskMetadata"/>
+            <wsdl:output message="tns:getCustomTaskMetadataResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/getCustomTaskMetadataResponse"/>
+            <wsdl:fault message="tns:accessDeniedFault" name="accessDeniedFault" wsaw:Action="urn:updateaccessDeniedFault"/>
+            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:getTaskinvalidParticipantTokenFault"/>
+            <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:getTaskunavailableTaskFault"/>
+            <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:getTaskinvalidInputMessageFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="updateCustomTaskMetadata">
+            <wsdl:input message="tns:updateCustomTaskMetadataRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/updateCustomTaskMetadata"/>
+            <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/updateCustomTaskMetadataResponse"/>
+            <wsdl:fault message="tns:accessDeniedFault" name="accessDeniedFault" wsaw:Action="urn:updateaccessDeniedFault"/>
+            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:getTaskinvalidParticipantTokenFault"/>
+            <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:getTaskunavailableTaskFault"/>
+            <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:getTaskinvalidInputMessageFault"/>
         </wsdl:operation>
 
     </wsdl:portType>
@@ -1490,6 +1545,48 @@
                 <soap:fault name="invalidParticipantTokenFault" use="literal"/>
             </wsdl:fault>
         </wsdl:operation> 
+        <wsdl:operation name="getCustomTaskMetadata">
+            <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getCustomTaskMetadata" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="accessDeniedFault">
+                <soap:fault use="literal" name="accessDeniedFault"/>
+            </wsdl:fault>
+            <wsdl:fault name="invalidInputMessageFault">
+                <soap:fault use="literal" name="invalidInputMessageFault"/>
+            </wsdl:fault>
+            <wsdl:fault name="unavailableTaskFault">
+                <soap:fault use="literal" name="unavailableTaskFault"/>
+            </wsdl:fault>
+            <wsdl:fault name="invalidParticipantTokenFault">
+                <soap:fault use="literal" name="invalidParticipantTokenFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateCustomTaskMetadata">
+            <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/updateCustomTaskMetadata" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="accessDeniedFault">
+                <soap:fault use="literal" name="accessDeniedFault"/>
+            </wsdl:fault>
+            <wsdl:fault name="invalidInputMessageFault">
+                <soap:fault use="literal" name="invalidInputMessageFault"/>
+            </wsdl:fault>
+            <wsdl:fault name="unavailableTaskFault">
+                <soap:fault use="literal" name="unavailableTaskFault"/>
+            </wsdl:fault>
+            <wsdl:fault name="invalidParticipantTokenFault">
+                <soap:fault use="literal" name="invalidParticipantTokenFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
     </wsdl:binding>
     <wsdl:service name="TaskManagementServices">
         <wsdl:port name="TaskManagementServicesSOAP" binding="tns:TaskManagementServicesSOAP">
