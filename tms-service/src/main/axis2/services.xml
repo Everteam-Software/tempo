@@ -186,6 +186,14 @@
         <operation name="getUserMatchedVacations">
             <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
             <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getUserMatchedVacations</actionMapping>
-        </operation>        
+        </operation>
+        <operation name="getCustomTaskMetadata">
+            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+            <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getCustomTaskMetadata</actionMapping>
+        </operation>
+        <operation name="updateCustomTaskMetadata">
+            <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+            <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/updateCustomTaskMetadata</actionMapping>
+        </operation>
     </service>
 </serviceGroup>

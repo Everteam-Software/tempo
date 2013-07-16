@@ -177,4 +177,28 @@ public interface ITMSServer {
      */
     List<Vacation> getUserMatchedVacations(VacationDAOConnection dao,
             String user, Date fromDate, Date toDate);
+
+    /**
+     * Retrieves customTaskMetadata, associated with a PATask.
+     *
+     * @param dao
+     * @param taskID
+     * @param participantToken
+     * @return customtaskMetadata
+     * @throws TMSException
+     */
+    String getCustomTaskMetadata(ITaskDAOConnection dao, String taskID,
+            String participantToken) throws TMSException;
+
+    /**
+     * Updates the customTaskMetaData, associated with the PATask.
+     *
+     * @param dao
+     * @param taskID
+     * @param participantToken
+     * @param ctm
+     * @throws TMSException
+     */
+    void updateCustomTaskMetadata(ITaskDAOConnection dao, String taskID,
+            String participantToken, String ctm) throws TMSException;
 }
