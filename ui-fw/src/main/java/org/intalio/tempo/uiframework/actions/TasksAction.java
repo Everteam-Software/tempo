@@ -95,11 +95,6 @@ public class TasksAction extends Action {
         } catch (AuthException e) {
             _log.debug( "Not a valid token" + e);
         }
-        List<String> customColumnsLowerCase = new ArrayList<String>();
-        for(String customColumn : customColumns){
-            customColumnsLowerCase.add(customColumn.toLowerCase());
-        }
-        
-        return customColumnsLowerCase;
+        return customColumns;
     }
 }
