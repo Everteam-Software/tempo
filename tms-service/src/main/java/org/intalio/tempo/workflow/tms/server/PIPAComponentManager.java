@@ -132,9 +132,7 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
         // only undeploy if this is the last version of this assembly
         String assembly = name.getAssemblyId().getAssemblyName();
         HashSet<AssemblyId> set = _versions.get(assembly);
-        if (set == null || set.size() < 1) {
-            // if set is equal to 1, we have one more version remaining.
-            // fix for WF-1324
+        String processName=getProcessName(path);
             ITaskDAOConnection dao=null;
             //ITaskDAOConnection is accessed here for fix of JIRA WF-1466
             try {
@@ -142,7 +140,15 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
                 for (String url : deployedResources) {
                     try {
                        if(LOG.isDebugEnabled()) LOG.debug("versions>> "+_versions.toString());
+                       // if set is equal to 1, we have one more version remaining.
+                       // fix for WF-1324
+                       if (set == null || set.size() < 1) {
                         _tms.deletePipa(dao,url,encrypt(internalPassword));
+                       }else if (active){
+                           //  retire the PIPA Task only if it's assembly is active and there is more than one version of it's assembly exist.
+                           retire(name, path, deployedResources);
+                       }
+                       _tms.deleteCustomColumn(dao,processName, encrypt(internalPassword));
                     } catch (UnavailableTaskException e) {
                         LOG.warn("Undeploy - PIPA not found: " + url);
                     } catch (AuthException e) {
@@ -151,6 +157,8 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
                     } catch (TMSException e) {
                         LOG.warn("Undeploy - TMSException: " + url, e);
                         break; // fail-fast
+                    } catch (Exception e) {
+                        LOG.warn("Undeploy - TMSException: " + url, e);
                     }
                 }
             }finally{
@@ -158,10 +166,6 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
                     dao.close();
             }
 
-          //  retire the PIPA Task only if it's assembly is active and there is more than one version of it's assembly exist.
-        }else if (active){
-            retire(name, path, deployedResources);
-          }
     }
 
     /*
@@ -330,7 +334,6 @@ public class PIPAComponentManager implements org.intalio.deploy.deployment.spi.C
     private String getProcessName(File dir) {
         File parentDir = dir.getParentFile();
         String processName=parentDir.getName();
-        processName = processName.replaceAll(".\\d*$", "");
         return processName;
     }
 

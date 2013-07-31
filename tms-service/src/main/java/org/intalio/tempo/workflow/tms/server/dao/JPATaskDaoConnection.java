@@ -146,6 +146,7 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
 	   try {
             checkTransactionIsActive();
            	entityManager.remove(toDeleteCustomColumn);
+            commit();
         } catch (Exception nre) {
             throw new NoResultException(nre.getMessage());
         }
