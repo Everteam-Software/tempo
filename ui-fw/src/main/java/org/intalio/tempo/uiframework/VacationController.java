@@ -319,6 +319,10 @@ public class VacationController implements Controller {
 
 	protected String getParticipantToken(HttpServletRequest request) {
 		ApplicationState state = ApplicationState.getCurrentInstance(request);
+		if (state == null) {
+		    LOG.error("Not able to get ParticipantToken, ApplicationState null.");
+		    return null;
+		}
 		return state.getCurrentUser().getToken();
 	}
 	
