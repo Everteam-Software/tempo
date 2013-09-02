@@ -163,8 +163,9 @@ public class TaskFetcher {
 
 		ArrayList userIdList = new ArrayList();
 		userIdList.add(user.getUserID());
-		String baseQuery = parameters.containsKey(FETCH_COUNT) ? QUERY_GENERIC_COUNT
-				: QUERY_GENERIC1;
+		boolean isCountQuery = parameters.containsKey(FETCH_COUNT);
+        String baseQuery = isCountQuery ? QUERY_GENERIC_COUNT
+                : QUERY_GENERIC1;
 		Query q;
 		boolean isWorkflowAdmin=user.isWorkflowAdmin();
 		if (StringUtils.isEmpty(subQuery)) {
@@ -186,11 +187,18 @@ public class TaskFetcher {
 					int orderIndex = trim.indexOf("order");
 					if (orderIndex == -1) {
 						buffer.append(" where ").append(subQuery);
+						if(!isCountQuery)
+                            buffer.append(" GROUP BY T._id ");
 					} else {
 						if (!trim.startsWith("order")){
-							buffer.append(" where ").append(subQuery);
+							buffer.append(" where ").append(subQuery.substring(0, orderIndex));
+							if(!isCountQuery)
+		                        buffer.append(" GROUP BY T._id ");
+		                    buffer.append(subQuery.substring(orderIndex));
 						}
 						else {
+						    if(!isCountQuery)
+		                        buffer.append(" GROUP BY T._id ");
 							buffer.append(subQuery);
 						}
 				}
@@ -204,13 +212,19 @@ public class TaskFetcher {
                 if (orderIndex == -1 && groupIndex == -1) {
                     buffer.append(" and ").append(" ( ").append(subQuery)
                             .append(" ) ");
+                    if(!isCountQuery)
+                        buffer.append(" GROUP BY T._id ");
                 } else if (groupIndex == -1) {
-                    if (!trim.startsWith("order"))
+                    if (!trim.startsWith("order")) {
                         buffer.append(" and (")
                                 .append(subQuery.substring(0, orderIndex))
-                                .append(") ")
-                                .append(subQuery.substring(orderIndex));
-                    else {
+                                .append(") ");
+                    if(!isCountQuery)
+                        buffer.append(" GROUP BY T._id ");
+                    buffer.append(subQuery.substring(orderIndex));
+                    } else {
+                        if(!isCountQuery)
+                            buffer.append(" GROUP BY T._id ");
                         buffer.append(subQuery);
                     }
                 } else if (orderIndex == -1) {
