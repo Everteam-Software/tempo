@@ -50,9 +50,9 @@
                          blockOpacity: 0.5,
                          onToggleCol: false,
                          onChangeSort: false,
-                         onCustomChangeSort: function(name, order) {
-					  sortGrid('#'+$(t).attr('id'), order);
-					} ,
+                         //onCustomChangeSort: function(name, order) {
+					  //sortGrid('#'+$(t).attr('id'), order);
+					//} ,
                          onSuccess: false,
                          onSubmit: false, // using a custom populate function
                          cookies: true

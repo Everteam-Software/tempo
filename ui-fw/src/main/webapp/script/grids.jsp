@@ -869,7 +869,7 @@ function gotoDashboard() {
           
           ,{
               display: '${newColumn}', 
-              name : '_customMetadata', 
+              name : '${newColumn}_customMetadata',
               width : width*0.12, 
               sortable : true, 
               align: 'center'}
