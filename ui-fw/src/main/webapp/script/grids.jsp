@@ -1079,9 +1079,9 @@ function endVacation()
           
           ,{
               display: '${newColumn}', 
-              name : '_customMetadata',
+              name : '${newColumn}_customMetadata',
               width : width*0.12, 
-              sortable : false, 
+              sortable : true,
               align: 'center'}
           
           </c:forEach>
