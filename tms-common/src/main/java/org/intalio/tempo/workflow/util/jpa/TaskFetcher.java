@@ -57,6 +57,11 @@ public class TaskFetcher {
 	// ;
 	private final String DELETE_ALL_TASK_WITH_ID = "delete from Task m where m._id = (?1) ";
 
+	private final String GET_CUSTOM_COL_SORT_PREFIX = "SELECT t1.id FROM tempo_pa t0 INNER JOIN tempo_task t1 ON t0.ID = t1.id LEFT OUTER JOIN tempo_generic t4 ON t0.ID = t4.PATASK_ID and t4.key0 = ";
+	private final String GET_CUSTOM_COL_SORT_POSTFIX = " (t0.state = 0 OR t0.state = 3) ORDER BY t4.value ";
+	private final String GET_CUSTOM_COL_SORT_ADMIN_USER_CONDITION = " LEFT OUTER JOIN tempo_user t2 ON t1.id = t2.TASK_ID LEFT OUTER JOIN tempo_role t3 ON t1.id = t3.TASK_ID WHERE ( t2.element IN (?1) ";
+	private final String GET_CUSTOM_COL_SORT_ADMIN_ROLE_CONDITION = " OR t3.element = ?";
+
 	public TaskFetcher(EntityManager em) {
 		this._entityManager = em;
 		this.find_by_id = _entityManager.createNamedQuery(Task.FIND_BY_ID);
@@ -160,13 +165,52 @@ public class TaskFetcher {
 		UserRoles user = (UserRoles) parameters.get(FETCH_USER);
 		Class taskClass = (Class) parameters.get(FETCH_CLASS);		
 		String subQuery = MapUtils.getString(parameters, FETCH_SUB_QUERY, "");
-
 		ArrayList userIdList = new ArrayList();
 		userIdList.add(user.getUserID());
 		String baseQuery = parameters.containsKey(FETCH_COUNT) ? QUERY_GENERIC_COUNT
 				: QUERY_GENERIC1;
 		Query q;
 		boolean isWorkflowAdmin=user.isWorkflowAdmin();
+		//Constructing native query for sorting on custom metadata column.
+		if (!parameters.containsKey(FETCH_COUNT)
+                && subQuery.indexOf("_customMetadata") > 0) {
+                String sortOrder = subQuery.toLowerCase().indexOf(
+                        "_custommetadata desc") > 0 ? "DESC" : "ASC";
+                String orderClause = "ORDER BY T.";
+                String sortCol = subQuery
+                        .substring(
+                                subQuery.indexOf(orderClause)
+                                        + orderClause.length(),
+                                subQuery.indexOf("_customMetadata"));
+                String[] roles = (String[]) user.getAssignedRoles().toArray(
+                        new String[user.getAssignedRoles().size()]);
+                String roleCondition = "";
+                if (!isWorkflowAdmin) {
+                    for (int i = 0; roles != null && i < roles.length; i++) {
+                        roleCondition += GET_CUSTOM_COL_SORT_ADMIN_ROLE_CONDITION
+                                + (i + 2);
+                    }
+                }
+                StringBuffer customQuery = new StringBuffer();
+                customQuery.append(GET_CUSTOM_COL_SORT_PREFIX).append(
+                        "'" + sortCol + "'");
+                if (!isWorkflowAdmin) {
+                    customQuery.append(GET_CUSTOM_COL_SORT_ADMIN_USER_CONDITION)
+                            .append(roleCondition).append(" ) AND");
+                } else {
+                    customQuery.append(" WHERE ");
+                }
+                customQuery.append(GET_CUSTOM_COL_SORT_POSTFIX).append(sortOrder);
+                q = _entityManager.createNativeQuery(customQuery.toString(),
+                        PATask.class);
+                if (!isWorkflowAdmin) {
+                    q.setParameter(1, user.getUserID());
+                    for (int i = 0; i < roles.length; i++) {
+                        q.setParameter(i + 2, roles[i]);
+                    }
+                }
+                return q;
+		}
 		if (StringUtils.isEmpty(subQuery)) {
 			if(isWorkflowAdmin) {
 				q = _entityManager.createQuery(
