@@ -701,6 +701,12 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             String subQuery = requireElementValue(rootQueue, "subQuery");
             String first = expectElementValue(rootQueue, "first");
             String max = expectElementValue(rootQueue, "max");
+            if(first != null && first.equals("")){
+                first = null;
+            }
+            if(max != null && max.equals("")){
+                max = null;
+            }
             HashMap map = new HashMap();
             map.put(TaskFetcher.FETCH_CLASS_NAME, taskType);
             map.put(TaskFetcher.FETCH_SUB_QUERY, subQuery);
