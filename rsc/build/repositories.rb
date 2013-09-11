@@ -7,7 +7,7 @@ repositories.remote = [
   "http://spring-json.sourceforge.net/repository/"
 ]
 
-repositories.release_to[:username] ||= "release"
-repositories.release_to[:password] ||= "intalio"
+repositories.release_to[:username] ||= "ubuntu"
+repositories.release_to[:password] ||= "ubuntu"
 repositories.release_to[:url] ||= "sftp://www.intalio.org/var/www-org/public/maven2"
 repositories.release_to[:permissions] ||= 0664
