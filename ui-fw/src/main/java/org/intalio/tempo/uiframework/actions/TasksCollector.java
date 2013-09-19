@@ -126,7 +126,7 @@ public class TasksCollector {
         if (type.equals(Notification.class.getSimpleName()) || type.equals(PATask.class.getSimpleName())) {
           StringBuffer baseQuery = null; 
             if(formURL != null && params.get("taskType") != null){
-            	baseQuery = new StringBuffer("(T._state = TaskState.READY and T._formURL like '%" + formURL+ "%')") ;
+            	baseQuery = new StringBuffer("(T._state = TaskState.READY or T._state = TaskState.CLAIMED) " + "and T._formURL like '%" + formURL+ "%'") ;
             }else{
             	baseQuery = new StringBuffer("(T._state = TaskState.READY OR T._state = TaskState.CLAIMED) ");
             }
