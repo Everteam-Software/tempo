@@ -1389,7 +1389,10 @@ function endVacation()
     .ajaxStop(function() {
       $(this).hide();
     });
-
+	if($.browser.msie && $.browser.version==='8.0')
+		return false;
+	else
+		$("#intalioLogo").attr("onclick","gotoDashboard()").attr("title","Return to Home Page");
 		
     }); // end of document ready, which also means the custom jquery code
 
