@@ -15,7 +15,7 @@ String mytoken = state.getCurrentUser().getToken();
 	<input type="hidden" id="searchUser" name="searchUser" value="<%=request.getParameter("unid")%>"/>
 	<input type="hidden" id="currTab" name="currTab" value=""/>
 	
-	<img src="images/logo.png" alt="Intalio Inc." class="io-header-logo" onclick="gotoDashboard();" title="Return to Home Page">&nbsp;      
+	<img src="images/logo.png" id="intalioLogo" alt="Intalio Inc." class="io-header-logo">&nbsp;      
 	<div id="userButton"  style="margin-top:13px;float:right;margin-right:8px;">
 	       <div>
 		<button class="select" id="userProfile">${currentUser}</button>
