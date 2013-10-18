@@ -295,7 +295,7 @@ public class AuditTask {
                 }
             }
         } catch (UnavailableTaskException e) {
-            _logger.warn("Task id: " + taskId + " is unvaliable. So, can't audit it's intance details.");
+            _logger.warn("Task id: " + taskId + " is unavailable. So, can't audit its instance details.");
         }
         return instanceId;
     }
