@@ -23,6 +23,7 @@ public class Constants {
     public static final String TASKS_UPDATE_VIEW = "updates";
 
     public static final String TASKS_URL = "tasks.htm";
+    public static final String JSON_VIEW = "jsonView";
 
     public static final ModelAndView REDIRECTION_TO_TASKS = new ModelAndView(new RedirectView(TASKS_URL));
 

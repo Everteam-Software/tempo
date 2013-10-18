@@ -22,7 +22,14 @@ public enum TaskState {
     CLAIMED,
     OBSOLETE;
     
+    private String stateName = this.getName(); 
     public String getName() {
         return this.name();
+    }
+    public String getStateName() {
+        return stateName;
+    }
+    public void setStateName(String stateName) {
+        this.stateName = stateName;
     }
 }
