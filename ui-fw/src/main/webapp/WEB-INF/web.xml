@@ -18,6 +18,20 @@
 		<param-name>contextConfigLocation</param-name>
 		<param-value>file:${org.intalio.tempo.configDirectory}/tempo-ui-fw.xml file:${org.intalio.tempo.configDirectory}/tempo-scheduler.xml</param-value>
 	</context-param>
+	
+		<filter>
+		<filter-name>webAuth</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+		<init-param>
+			<param-name>targetBeanName</param-name>
+			<param-value>webAuthFilter</param-value>
+		</init-param>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>webAuth</filter-name>
+		<url-pattern>*.htm</url-pattern>
+	</filter-mapping>
 
 	<filter>
 		<filter-name>SetCharacterEncodingFilter</filter-name>

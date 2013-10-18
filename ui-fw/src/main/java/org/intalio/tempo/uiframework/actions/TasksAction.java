@@ -41,7 +41,12 @@ public class TasksAction extends Action {
     public ModelAndView execute() {
         if (Boolean.valueOf(_request.getParameter("update")).booleanValue()) {
             return new ModelAndView(Constants.TASKS_UPDATE_VIEW, createModel());
-        } else {
+        }
+        //returns JSON Data for new UI
+        else if(Boolean.valueOf(_request.getParameter("updateData")).booleanValue()) {
+        return new ModelAndView(Constants.JSON_VIEW,createModel());
+        }
+        else {
             return new ModelAndView(Constants.TASKS_VIEW, createModel());
         }
     }
@@ -60,7 +65,7 @@ public class TasksAction extends Action {
         final String user = state.getCurrentUser().getName();
         final String userName = state.getCurrentUser().getDisplayName();
         try {
-	        if (Boolean.valueOf(_request.getParameter("update")).booleanValue()) {	
+	        if (Boolean.valueOf(_request.getParameter("update")).booleanValue() || Boolean.valueOf(_request.getParameter("updateData")).booleanValue()) {	
 		        	TasksCollector collector = getTaskCollector(user, token);
 		            model.put("tasks", collector.retrieveTasks());		        
 			}

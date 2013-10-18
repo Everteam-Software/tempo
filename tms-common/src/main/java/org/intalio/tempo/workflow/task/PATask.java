@@ -307,6 +307,14 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
         return _attachments.remove(attachmentURL.toExternalForm());
     }
 
+    public Map<String, Attachment> get_attachments() {
+        return _attachments;
+    }
+
+    public void set_attachments(Map<String, Attachment> _attachments) {
+        this._attachments = _attachments;
+    }
+
     public Collection<Attachment> getAttachments() {
     	/*
     	 * IF attachment is null then return null

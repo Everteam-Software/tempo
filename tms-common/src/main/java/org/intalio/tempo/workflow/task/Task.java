@@ -75,6 +75,14 @@ public abstract class Task extends BaseRestrictedEntity {
     @Column(name = "form_url")
     private String _formURL;
 
+    public String get_formURL() {
+        return _formURL;
+    }
+
+    public void set_formURL(String _formURL) {
+        this._formURL = _formURL;
+    }
+
     @PersistentMap(keyCascade = CascadeType.ALL, elementCascade = CascadeType.ALL)
     @ContainerTable(name="tempo_acl_map")
     @MapKey(name = "action")
