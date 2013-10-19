@@ -52,6 +52,7 @@ define "tempo" do
       test.exclude '*RemoteFDSTest*'
     end
     package :war
+    package :jar
     package :mar
   end
 
