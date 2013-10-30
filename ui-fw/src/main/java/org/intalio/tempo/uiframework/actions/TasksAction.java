@@ -81,7 +81,18 @@ public class TasksAction extends Action {
         model.put("userRoles", state.getCurrentUser().getRoles());
         model.put("refreshTime", Configuration.getInstance().getRefreshTime());
         model.put("sessionTimeout", Configuration.getInstance().getSessionTimeout());   
-        
+        if(Boolean.valueOf(_request.getParameter("updateData")).booleanValue()) {
+            Configuration configuration  = Configuration.getInstance(); 
+            model.put("toolbarIcons", configuration.isUseToolbarIcons());
+               if(state.getCurrentUser()!=null && state.getCurrentUser().getRoles()!=null && configuration.isUseToolbarIcons().booleanValue()) 
+               {
+                   model.put("taskIconSet", configuration.getTaskIconSetByRole(state.getCurrentUser().getRoles()));
+                   model.put("notificationIconSet", configuration.getNotificationIconSetByRole(state.getCurrentUser().getRoles()));
+                   model.put("bindIcons",configuration.getBindIconSetToRole());
+                   model.put("tmsService", configuration.getServiceEndpoint());
+                   model.put("tmpEndPoint", configuration.getTMPEndpoint());
+               }
+        }
 
         List<String> newColumnList=getCustomColumns(token); // Call the operation that returns the distinct list of custom column from DB.
 //        newColumnList.add("id");
