@@ -91,6 +91,8 @@ public class TasksAction extends Action {
                    model.put("bindIcons",configuration.getBindIconSetToRole());
                    model.put("tmsService", configuration.getServiceEndpoint());
                    model.put("tmpEndPoint", configuration.getTMPEndpoint());
+                   model.put("totalRecords", _request.getAttribute("totalPage"));
+                   model.put("currentPage", _request.getAttribute("currentPage"));
                }
         }
 
