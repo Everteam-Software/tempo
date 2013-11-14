@@ -196,6 +196,9 @@ function gotoDashboard() {
 	        case "delete":
 	            iconsetCode[i] = {name: '<fmt:message key="org_intalio_uifw_toolbar_button_delete"/>', bclass: 'delete', onpress : clickDelete};
 	            break;
+	        case "dismiss":
+	            iconsetCode[i] = {name: '<fmt:message key="org_intalio_uifw_toolbar_button_dismiss"/>', bclass: 'delete', onpress : clickDelete};
+	            break;
 	        case "claim":
 	            iconsetCode[i] = {name: '<fmt:message key="org_intalio_uifw_toolbar_button_claimrevoke"/>', bclass: 'claim', onpress : claimTask};
 	            break;
