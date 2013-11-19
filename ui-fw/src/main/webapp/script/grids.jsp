@@ -200,8 +200,11 @@ function gotoDashboard() {
 	            iconsetCode[i] = {name: '<fmt:message key="org_intalio_uifw_toolbar_button_dismiss"/>', bclass: 'delete', onpress : clickDelete};
 	            break;
 	        case "claim":
-	            iconsetCode[i] = {name: '<fmt:message key="org_intalio_uifw_toolbar_button_claimrevoke"/>', bclass: 'claim', onpress : claimTask};
+	            iconsetCode[i] = {name: '<fmt:message key="org_intalio_uifw_toolbar_button_claim"/>', bclass: 'claim', onpress : claimTask};
 	            break;
+	        case "release":
+	            iconsetCode[i] = {name: '<fmt:message key="org_intalio_uifw_toolbar_button_release"/>', bclass: 'claim', onpress : claimTask};
+	            break;   
 	        case "reassign":
 	        	iconsetCode[i] = {name: '<fmt:message key="org_intalio_uifw_toolbar_button_reassign"/>', bclass: 'reassign', onpress : clickReassign};
 	            break;
