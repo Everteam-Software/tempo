@@ -181,6 +181,7 @@ public class TaskFetcher {
 
 		ArrayList userIdList = new ArrayList();
 		userIdList.add(user.getUserID());
+		userIdList.addAll(user.getVacationUsers());
 		String baseQuery = parameters.containsKey(FETCH_COUNT) ? QUERY_GENERIC_COUNT
 				: QUERY_GENERIC1;
 		Query q;

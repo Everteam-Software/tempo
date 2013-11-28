@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.NoResultException;
@@ -38,6 +39,7 @@ import org.apache.axis2.AxisFault;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.openjpa.persistence.RollbackException;
 import org.intalio.tempo.workflow.auth.AuthException;
@@ -68,6 +70,7 @@ import org.intalio.tempo.workflow.tms.UnavailableAttachmentException;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
 import org.intalio.tempo.workflow.tms.server.dao.VacationDAOConnection;
+import org.intalio.tempo.workflow.tms.server.dao.VacationDAOConnectionFactory;
 import org.intalio.tempo.workflow.tms.server.permissions.TaskPermissions;
 import org.intalio.tempo.workflow.util.jpa.TaskFetcher;
 import org.intalio.tempo.workflow.util.xml.InvalidInputFormatException;
@@ -91,6 +94,7 @@ public class TMSServer implements ITMSServer {
     private String _tasEndPoint;
     private String httpChunking = "true";
     private String internalPassword = "verylongpassword";
+    private VacationDAOConnectionFactory vacationDAOFactory;
     
     public String getInternalPassword() {
 		return internalPassword;
@@ -112,6 +116,12 @@ public class TMSServer implements ITMSServer {
 		return Boolean.parseBoolean(httpChunking);
 	}
 	
+    /* For Vacation Management */
+      public void setVacationDAOFactory(VacationDAOConnectionFactory vacationDAOFactory) {
+          this.vacationDAOFactory = vacationDAOFactory;
+          _logger.info("VacationDAOConnectionFactory implementation : " + vacationDAOFactory.getClass());
+      }
+
 	private static final String TAS_NS= "http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/";
       
     //Added the property for deleting file upload widget attachments
@@ -170,7 +180,7 @@ public class TMSServer implements ITMSServer {
     }
 
     public Task[] getTaskList(ITaskDAOConnection dao,String participantToken) throws AuthException {
-        UserRoles credentials = _authProvider.authenticate(participantToken);
+        UserRoles credentials = this.getUserRoles(participantToken);
         Task[] result = dao.fetchAllAvailableTasks(credentials);
         if(result != null && result.length > 0 && result[0] instanceof PIPATask){
         	for(Task task : result){
@@ -196,7 +206,7 @@ public class TMSServer implements ITMSServer {
       
     public Task[] listTasksFromInstance(ITaskDAOConnection dao,
         String participantToken, String instanceId) throws AuthException, AccessDeniedException, UnavailableTaskException{
-        UserRoles credentials = _authProvider.authenticate( participantToken );
+        UserRoles credentials = this.getUserRoles( participantToken );
         String userID = credentials.getUserID();
         if (!_permissions.isAuthroized(TaskPermissions.ACTION_DELETE,  credentials))
         {
@@ -210,12 +220,14 @@ public class TMSServer implements ITMSServer {
     }
 
     public UserRoles getUserRoles(String participantToken) throws AuthException {
-        return _authProvider.authenticate(participantToken);
+        UserRoles user = _authProvider.authenticate(participantToken);
+        addVacationUsers(user);
+        return user;
     }
 
     public Task getTask(ITaskDAOConnection dao,String taskID, String participantToken) throws AuthException, UnavailableTaskException,
             AccessDeniedException {
-        UserRoles credentials = _authProvider.authenticate(participantToken);
+        UserRoles credentials = this.getUserRoles(participantToken);
         Task task = dao.fetchTaskIfExists(taskID);
         if(task instanceof PIPATask){
         	setOutputPIPA(dao, task, credentials.getUserID());
@@ -233,9 +245,15 @@ public class TMSServer implements ITMSServer {
     //Fix for WF-1493 and WF-1490. To return only userOwners and taskState
     public Task getTaskOwnerAndState(ITaskDAOConnection dao, String taskID,
             String participantToken) throws AuthException, UnavailableTaskException{
-        UserRoles credentials = _authProvider.authenticate(participantToken);
+        UserRoles credentials = this.getUserRoles(participantToken);
         Task task = dao.fetchTaskIfExists(taskID);
         if ((task != null)) {
+            if (CollectionUtils.containsAny(credentials.getVacationUsers(),
+                    task.getUserOwners())) {
+                if(!(task instanceof ITaskWithState && TaskState.CLAIMED.equals(((ITaskWithState) task).getState()))) {
+                    task.getUserOwners().add(credentials.getUserID());
+                }
+            }
 //            checkIsAvailable(taskID, task, credentials);
             if (_logger.isDebugEnabled())
                 _logger.debug("Workflow Task " + taskID + " for user " + credentials.getUserID());
@@ -266,7 +284,7 @@ public class TMSServer implements ITMSServer {
 
     public void setOutput(ITaskDAOConnection dao,String taskID, Document output, String participantToken) throws AuthException,
             UnavailableTaskException, AccessDeniedException {
-        UserRoles credentials = _authProvider.authenticate(participantToken);
+        UserRoles credentials = this.getUserRoles(participantToken);
         Task task = dao.fetchTaskIfExists(taskID);
         checkIsAvailable(taskID, task, credentials);
         if (task instanceof ITaskWithOutput) {
@@ -304,7 +322,7 @@ public class TMSServer implements ITMSServer {
 
     public void complete(ITaskDAOConnection dao,String taskID, String participantToken) throws AuthException, UnavailableTaskException,
             InvalidTaskStateException, AccessDeniedException {
-        UserRoles credentials = _authProvider.authenticate(participantToken);
+        UserRoles credentials = this.getUserRoles(participantToken);
         Task task = dao.fetchTaskIfExists(taskID);
         checkIsAvailable(taskID, task, credentials);
         if (task instanceof ITaskWithState) {
@@ -321,7 +339,7 @@ public class TMSServer implements ITMSServer {
 
     public void setOutputAndComplete(ITaskDAOConnection dao,String taskID, Document output, String participantToken) throws AuthException,
             UnavailableTaskException, InvalidTaskStateException, AccessDeniedException {
-        UserRoles credentials = _authProvider.authenticate(participantToken);
+        UserRoles credentials = this.getUserRoles(participantToken);
         Task task = dao.fetchTaskIfExists(taskID);
         checkIsAvailable(taskID, task, credentials);
         if (task instanceof ITaskWithOutput && task instanceof ITaskWithState) {
@@ -363,7 +381,7 @@ public class TMSServer implements ITMSServer {
 
     public void delete(ITaskDAOConnection dao,String[] taskIDs, String participantToken) throws AuthException, UnavailableTaskException {
         HashMap<String, Exception> problemTasks = new HashMap<String, Exception>();
-        UserRoles credentials = _authProvider.authenticate(participantToken);
+        UserRoles credentials = this.getUserRoles(participantToken);
 
         String userID = credentials.getUserID();
         for (String taskID : taskIDs) {
@@ -525,7 +543,7 @@ public class TMSServer implements ITMSServer {
     
     public void manageFromInstance(ITaskDAOConnection dao,String instanceid, String participantToken,boolean delete,TaskState state) throws AuthException, UnavailableTaskException,AccessDeniedException {
         
-        UserRoles credentials = _authProvider.authenticate(participantToken);  
+        UserRoles credentials = this.getUserRoles(participantToken);
         String userID=credentials.getUserID();
         if (!_permissions.isAuthroized(TaskPermissions.ACTION_DELETE,  credentials))
         {
@@ -591,7 +609,7 @@ public class TMSServer implements ITMSServer {
                 PATask paPrevious = (PATask) previous;
 
                 // security ?
-                UserRoles credentials = _authProvider.authenticate(participantToken);
+                UserRoles credentials = this.getUserRoles(participantToken);
                 // checkIsAvailable(id, previous, credentials);
                 
 				if(task.isSetDeadline() && !"<xml-fragment/>".equals(task.xgetDeadline().toString())){
@@ -694,7 +712,7 @@ public class TMSServer implements ITMSServer {
 
     public Document initProcess(ITaskDAOConnection dao ,String taskID, String user, String formUrl, Document input, String participantToken)
             throws AuthException, UnavailableTaskException, AccessDeniedException, AxisFault {
-        UserRoles credentials = _authProvider.authenticate(participantToken);
+        UserRoles credentials = this.getUserRoles(participantToken);
         Task task = dao.fetchTaskIfExists(taskID);
         checkIsAvailable(taskID, task, credentials);
         PIPATaskOutput output = dao.fetchPIPATaskOutput(taskID, credentials.getUserID());
@@ -718,7 +736,7 @@ public class TMSServer implements ITMSServer {
     public Attachment[] getAttachments(ITaskDAOConnection dao,String taskID, String participantToken) throws AuthException,
             UnavailableTaskException, AccessDeniedException {
     	_logger.debug("Calling "+this.getClass()+":getAttachments");
-    	UserRoles credentials = _authProvider.authenticate(participantToken);
+        UserRoles credentials = this.getUserRoles(participantToken);
        Task task = dao.fetchTaskIfExists(taskID);
         checkIsAvailable(taskID, task, credentials);
         if (task instanceof ITaskWithAttachments) {
@@ -732,7 +750,7 @@ public class TMSServer implements ITMSServer {
     public void addAttachment(ITaskDAOConnection dao,String taskID, Attachment attachment, String participantToken) throws AuthException,
             UnavailableTaskException, AccessDeniedException {
     	_logger.debug("Calling "+this.getClass()+":addAttachment");
-        UserRoles credentials = _authProvider.authenticate(participantToken);
+        UserRoles credentials = this.getUserRoles(participantToken);
         Task task = dao.fetchTaskIfExists(taskID);
         checkIsAvailable(taskID, task, credentials);
         if (task instanceof ITaskWithAttachments == false) {
@@ -756,7 +774,7 @@ public class TMSServer implements ITMSServer {
         boolean availableTask = false;
         boolean availableAttachment = false;
 
-        UserRoles credentials = _authProvider.authenticate(participantToken);
+        UserRoles credentials = this.getUserRoles(participantToken);
         try {
             task = dao.fetchTaskIfExists(taskID);
             availableTask = task instanceof ITaskWithAttachments && task.isAvailableTo(credentials);
@@ -803,7 +821,7 @@ public class TMSServer implements ITMSServer {
             if (userAction != null && !(userAction.equals("ESCALATE")
                     && participantToken.equals(""))) {
                 UserRoles credentials =
-                        _authProvider.authenticate(participantToken);
+                        this.getUserRoles(participantToken);
                 checkIsAvailable(taskID, task, credentials);
             }
             // if (task.isAvailableTo(credentials) && (task instanceof
@@ -886,7 +904,7 @@ public class TMSServer implements ITMSServer {
             }
 
         } else {
-            UserRoles credentials = _authProvider.authenticate(decryptor.decrypt(participantToken));
+            UserRoles credentials = this.getUserRoles(decryptor.decrypt(participantToken));
             String userID = credentials.getUserID();
             try {
                 Task task = dao.fetchPipa(formUrl);
@@ -959,9 +977,14 @@ public class TMSServer implements ITMSServer {
     }
 
     public Long countAvailableTasks(ITaskDAOConnection dao,String participantToken, HashMap parameters) throws AuthException {
-        UserRoles credentials = _authProvider.authenticate(participantToken);
+        UserRoles credentials = null;
         try {
-            parameters.put(TaskFetcher.FETCH_USER, credentials);
+            if(!parameters.containsKey(TaskFetcher.FETCH_USER)) {
+                credentials = this.getUserRoles(participantToken);
+                parameters.put(TaskFetcher.FETCH_USER, credentials);
+            } else {
+                credentials = (UserRoles) parameters.get(TaskFetcher.FETCH_USER);
+            }
             String klass = (String) parameters.get(TaskFetcher.FETCH_CLASS_NAME);
             if (klass != null)
                 parameters.put(TaskFetcher.FETCH_CLASS, TaskTypeMapper.getTaskClassFromStringName(klass));
@@ -981,7 +1004,7 @@ public class TMSServer implements ITMSServer {
         UserRoles credentials = null;
         try {
             if(!parameters.containsKey(TaskFetcher.FETCH_USER)) {
-                credentials = _authProvider.authenticate(participantToken);
+                credentials = this.getUserRoles(participantToken);
                 parameters.put(TaskFetcher.FETCH_USER, credentials);
             } else {
                 credentials = (UserRoles) parameters.get(TaskFetcher.FETCH_USER);
@@ -1042,7 +1065,7 @@ public class TMSServer implements ITMSServer {
 
     public void skip(ITaskDAOConnection dao,String taskID, String participantToken) throws AuthException, UnavailableTaskException,
             InvalidTaskStateException, AccessDeniedException {
-        UserRoles credentials = _authProvider.authenticate(participantToken);
+        UserRoles credentials = this.getUserRoles(participantToken);
         Task task = dao.fetchTaskIfExists(taskID);
         checkIsAvailable(taskID, task, credentials);
         if (task instanceof ITaskWithState) {
@@ -1141,13 +1164,12 @@ public class TMSServer implements ITMSServer {
 	}
 	
 	public List<String> getCustomColumns(ITaskDAOConnection dao, String token) throws AuthException{
-	    UserRoles credentials = _authProvider.authenticate(token);
 	    return dao.fetchCustomColumns();
 	}
 
     public String getCustomTaskMetadata(ITaskDAOConnection dao, String taskID,
             String participantToken) throws TMSException {
-        UserRoles credentials = _authProvider.authenticate(participantToken);
+        UserRoles credentials = this.getUserRoles(participantToken);
         Task task = dao.fetchTaskIfExists(taskID);
         if (task instanceof PATask) {
             checkIsAvailable(taskID, task, credentials);
@@ -1165,7 +1187,7 @@ public class TMSServer implements ITMSServer {
 
     public void updateCustomTaskMetadata(ITaskDAOConnection dao, String taskID,
             String participantToken, String ctm) throws TMSException {
-        UserRoles credentials = _authProvider.authenticate(participantToken);
+        UserRoles credentials = this.getUserRoles(participantToken);
         Task task = dao.fetchTaskIfExists(taskID);
         if (task instanceof PATask) {
             checkIsAvailable(taskID, task, credentials);
@@ -1351,5 +1373,85 @@ public class TMSServer implements ITMSServer {
                 user, fromDate, toDate);
         _logger.debug("vac=" + vacationOfUser.size());
         return vacationOfUser;
+    }
+
+    /**
+     * get Matched or intersected vacation users list for substitute.
+     *
+     * @param dao VacationDAOConnection
+     * @param fromDate Date
+     * @param toDate   Date
+     * @param substitute String
+     * @return users List<String>
+     */
+    private final List<String> getSubstituteMatchedVacationUsers(
+            final VacationDAOConnection dao, final String substitute,
+            final Date fromDate, final Date toDate) {
+        List<Vacation> vacations = dao.getMatchedVacations(
+                fromDate, toDate);
+        List<String> users = new ArrayList<String>();
+        Map<String,List<Vacation>> vacationsMap = new HashMap<String,List<Vacation>>();
+        List<Vacation> userVacations = null;
+        if(vacations != null) {
+            for(Vacation v:vacations) {
+                userVacations = vacationsMap.get(v.getSubstitute());
+                if(userVacations == null) {
+                    userVacations = new ArrayList<Vacation>();
+                }
+                userVacations.add(v);
+                vacationsMap.put(v.getSubstitute(), userVacations);
+            }
+            userVacations = vacationsMap.get(substitute);
+            List<Vacation> vacationsList = new ArrayList<Vacation>();
+            if(userVacations != null) {
+                vacationsList.addAll(userVacations);
+                this.getVacationUsers(vacationsList, userVacations, vacationsMap);
+                for(Vacation v:vacationsList) {
+                    if (!users.contains(v.getUser())) users.add(v.getUser());
+                }
+            }
+
+        }
+       _logger.debug("vac users=" + users);
+        return users;
+    }
+
+    /**
+     * add vacation users to user object.
+     * @param vacations all related vacation to user
+     * @param userVacations all vacation where user is substitute
+     * @param vacationsMap vacations map
+     */
+    private void getVacationUsers(List<Vacation> vacations, List<Vacation> userVacations, Map<String, List<Vacation>> vacationsMap) {
+        if(vacations != null && userVacations != null){
+            for(Vacation v:userVacations) {
+                List<Vacation> vacationList = vacationsMap.get(v.getUser());
+                if(vacationList != null)
+                {
+                    vacations.addAll(vacationList);
+                    getVacationUsers(vacations,vacationList, vacationsMap);
+                }
+            }
+        }
+    }
+
+    /**
+     * add vacation users to user object.
+     * @param UserRoles user
+     */
+    private void addVacationUsers(UserRoles user) {
+        VacationDAOConnection vdao = null;
+        try {
+            vdao = vacationDAOFactory.openConnection();
+            user.setVacationUsers(this.getSubstituteMatchedVacationUsers(
+                    vdao, user.getUserID(), new Date(), new Date()));
+        } catch (Exception e) {
+            _logger.debug("Exiting addVacationUsers");
+        } finally {
+            if (vdao != null)
+                vdao.close();
+            if (_logger.isDebugEnabled())
+                _logger.debug("Exiting addVacationUsers");
+        }
     }
 }

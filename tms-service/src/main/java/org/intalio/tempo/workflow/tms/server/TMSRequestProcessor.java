@@ -743,6 +743,7 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             map.put(TaskFetcher.FETCH_CLASS_NAME, taskType);
             map.put(TaskFetcher.FETCH_SUB_QUERY, subQuery);
             final UserRoles user = _server.getUserRoles(participantToken);
+            map.put(TaskFetcher.FETCH_USER, user);
             final Long taskCount = _server.countAvailableTasks(dao,participantToken, map);
             return new TMSResponseMarshaller(OM_FACTORY) {
                 public OMElement createOkResponse() {
