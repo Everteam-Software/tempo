@@ -376,7 +376,12 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
     
     public boolean isAvailableTo(UserRoles credentials) {
 		if(_state.equals(TaskState.CLAIMED)) {
-			for (String userOwner : this.getUserOwners()) if (credentials.getUserID().equals(userOwner)) return true;
+                for (String userOwner : this.getUserOwners()){
+                    if (credentials.getUserID().equals(userOwner)
+                            || credentials.getVacationUsers().contains(userOwner)) {
+                        return true;
+                    }
+                }
 			return false;
 		} else {
 			return super.isAvailableTo(credentials);

@@ -15,12 +15,16 @@
 
 package org.intalio.tempo.workflow.auth;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
 public class UserRoles {
     private String _userID;
     private AuthIdentifierSet _assignedRoles;
     private boolean isWorkflowAdmin;
+    private List<String> vacationUsers;
     
     public boolean isWorkflowAdmin() {
 		return isWorkflowAdmin;
@@ -50,6 +54,15 @@ public class UserRoles {
         return _assignedRoles;
     }
     
+    public List<String> getVacationUsers() {
+        if(vacationUsers == null) vacationUsers = Collections.emptyList();
+        return vacationUsers;
+    }
+
+    public void setVacationUsers(List<String> vacationUsers) {
+        this.vacationUsers = vacationUsers;
+    }
+
     @Override
     public String toString() {
         return "UserRoles{user="+_userID+",roles="+_assignedRoles+"}";
