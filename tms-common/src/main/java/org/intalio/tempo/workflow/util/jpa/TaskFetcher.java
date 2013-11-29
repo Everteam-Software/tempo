@@ -1,5 +1,7 @@
 package org.intalio.tempo.workflow.util.jpa;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -12,6 +14,7 @@ import javax.persistence.Query;
 
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.openjpa.persistence.OpenJPAEntityManagerSPI;
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.CustomColumn;
 import org.intalio.tempo.workflow.task.PATask;
@@ -47,6 +50,8 @@ public class TaskFetcher {
 	private Query find_by_id;
 	private Query find_pipa_task_output_by_task_id;
 	private final String QUERY_GENERIC1 = "select T from ";
+	private final String QUERY_GENERIC_DISTINCT = "select DISTINCT T from ";
+	private final String QUERY_GENERIC_GROUPBY = " GROUP BY T._id ";
 	private final String QUERY_GENERIC_COUNT = "select COUNT(DISTINCT T) from ";
 //	private final String QUERY_GENERIC2 = " T where (T._userOwners = (?1) or T._roleOwners = (?2)) ";
 	private final String QUERY_GENERIC2_FOR_ADMIN = " T ";
@@ -57,15 +62,35 @@ public class TaskFetcher {
 	// ;
 	private final String DELETE_ALL_TASK_WITH_ID = "delete from Task m where m._id = (?1) ";
 
-	private final String GET_CUSTOM_COL_SORT_PREFIX = "SELECT t1.id FROM tempo_pa t0 INNER JOIN tempo_task t1 ON t0.ID = t1.id LEFT OUTER JOIN tempo_generic t4 ON t0.ID = t4.PATASK_ID and t4.key0 = ";
+	private final String GET_CUSTOM_COL_SORT_PREFIX = "SELECT DISTINCT(t1.id),t4.value FROM tempo_pa t0 INNER JOIN tempo_task t1 ON t0.ID = t1.id LEFT OUTER JOIN tempo_generic t4 ON t0.ID = t4.PATASK_ID and t4.key0 = ";
 	private final String GET_CUSTOM_COL_SORT_POSTFIX = " (t0.state = 0 OR t0.state = 3) ORDER BY t4.value ";
 	private final String GET_CUSTOM_COL_SORT_ADMIN_USER_CONDITION = " LEFT OUTER JOIN tempo_user t2 ON t1.id = t2.TASK_ID LEFT OUTER JOIN tempo_role t3 ON t1.id = t3.TASK_ID WHERE ( t2.element IN (?1) ";
 	private final String GET_CUSTOM_COL_SORT_ADMIN_ROLE_CONDITION = " OR t3.element = ?";
+	private static String DATABASE_PRODUCT_NAME = "";
+	private static String DATABASE_MYSQL = "MySQL";
 
 	public TaskFetcher(EntityManager em) {
 		this._entityManager = em;
 		this.find_by_id = _entityManager.createNamedQuery(Task.FIND_BY_ID);
 		this.find_pipa_task_output_by_task_id = _entityManager.createNamedQuery(PIPATaskOutput.FIND_BY_TASK_ID_AND_USER);
+		if("".equals(DATABASE_PRODUCT_NAME)) {
+		    Connection conn = null;
+		    try {
+		        OpenJPAEntityManagerSPI oem = (OpenJPAEntityManagerSPI)_entityManager.getDelegate();
+		        conn = (Connection)oem.getConnection();
+		        java.sql.DatabaseMetaData dbmd = conn.getMetaData();
+		        DATABASE_PRODUCT_NAME = dbmd.getDatabaseProductName();
+		    }catch (Exception e) {
+		        _logger.error("Error while getting Database name ", e);
+		    }finally{
+		        if(conn != null)
+                    try {
+                        conn.close();
+                    } catch (SQLException e) {
+                        _logger.error("Error while closing connection ", e);
+                    }
+		    }
+		}
 	}
 
 	/**
@@ -182,8 +207,16 @@ public class TaskFetcher {
 		ArrayList userIdList = new ArrayList();
 		userIdList.add(user.getUserID());
 		userIdList.addAll(user.getVacationUsers());
-		String baseQuery = parameters.containsKey(FETCH_COUNT) ? QUERY_GENERIC_COUNT
-				: QUERY_GENERIC1;
+		String baseQuery = null;
+		boolean isGroupByRequired = false;
+		if(parameters.containsKey(FETCH_COUNT)){
+		    baseQuery =  QUERY_GENERIC_COUNT;
+		}else if(DATABASE_MYSQL.equalsIgnoreCase(DATABASE_PRODUCT_NAME)) {
+		    baseQuery = QUERY_GENERIC1;
+		    isGroupByRequired = true;
+		}else {
+		    baseQuery = QUERY_GENERIC_DISTINCT;
+		}
 		Query q;
 		boolean isWorkflowAdmin=user.isWorkflowAdmin();
 		//Constructing native query for sorting on custom metadata column.
@@ -263,13 +296,23 @@ public class TaskFetcher {
                 if (orderIndex == -1 && groupIndex == -1) {
                     buffer.append(" and ").append(" ( ").append(subQuery)
                             .append(" ) ");
+                    if(isGroupByRequired) {
+                        buffer.append(QUERY_GENERIC_GROUPBY);
+                    }
                 } else if (groupIndex == -1) {
-                    if (!trim.startsWith("order"))
+                    if (!trim.startsWith("order")) {
                         buffer.append(" and (")
                                 .append(subQuery.substring(0, orderIndex))
-                                .append(") ")
-                                .append(subQuery.substring(orderIndex));
+                                .append(") ");
+                        if(isGroupByRequired) {
+                            buffer.append(QUERY_GENERIC_GROUPBY);
+                        }
+                        buffer.append(subQuery.substring(orderIndex));
+                    }
                     else {
+                        if(isGroupByRequired) {
+                            buffer.append(QUERY_GENERIC_GROUPBY);
+                        }
                         buffer.append(subQuery);
                     }
                 } else if (orderIndex == -1) {
