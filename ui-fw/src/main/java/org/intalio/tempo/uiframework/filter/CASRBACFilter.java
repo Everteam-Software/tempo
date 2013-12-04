@@ -9,6 +9,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
@@ -51,29 +52,35 @@ public class CASRBACFilter implements Filter {
 
     private static final String SESSION_APPLICATION_STATE = "APPLICATION_STATE";
 
+    //single login cookie name
+    private static final String SINGLE_LOGIN_ID = "singleLogin";
+
     private FilterConfig _filterConfig;
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         LOG.debug(">> CAS Filter");
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         HttpSession session = httpServletRequest.getSession();
 
         if (LOGOUT_PATH.equalsIgnoreCase(httpServletRequest.getServletPath()) && LOGOUT_METHOD.equalsIgnoreCase(httpServletRequest.getMethod())
                         && LOGOUT_ACTION_VALUE.equalsIgnoreCase(httpServletRequest.getParameter(LOGOUT_ACTION_NAME))) {
 
-            doSignOut(session, (HttpServletResponse) response);
+            doSignOut(session, httpServletResponse);
 
         } else {
 
             if (null == httpServletRequest.getSession().getAttribute(SESSION_APPLICATION_STATE)) {
-                doSignIn(httpServletRequest, session);
+                doSignIn(httpServletRequest, httpServletResponse, session);
             }
             chain.doFilter(request, response);
         }
 
     }
 
-    private void doSignIn(HttpServletRequest httpServletRequest, HttpSession session) throws RemoteException {
+    private void doSignIn(HttpServletRequest httpServletRequest,
+            HttpServletResponse httpServletResponse, HttpSession session)
+            throws RemoteException {
         LOG.info("signing in with CAS....");
         String serviceURL = _filterConfig.getInitParameter(SERVICE_URL);
         TokenService tokenService = Configuration.getInstance().getTokenClient();
@@ -95,8 +102,8 @@ public class CASRBACFilter implements Filter {
                         e.printStackTrace();
                     }
                 }
+                String token = null;
                 if (state.getCurrentUser() == null) {
-                    String token;
                     try {
                         token = tokenService.getTokenFromTicket(proxyTicket, serviceURL);
                     } catch (AuthenticationException e) {
@@ -107,6 +114,9 @@ public class CASRBACFilter implements Filter {
                     String[] grantedRoles = new String[0];
                     User currentUser = authenticate(tokenService, token, grantedRoles);
                     state.setCurrentUser(currentUser);
+                }
+                if(token != null){
+                    setSingleLoginCookie(httpServletResponse, token);
                 }
                 ApplicationState.setCurrentInstance(requestWrapper, state);
             } catch (IOException e) {
@@ -122,6 +132,7 @@ public class CASRBACFilter implements Filter {
     private void doSignOut(HttpSession session, HttpServletResponse httpServletResponse) throws IOException {
         LOG.info("signing out from CAS..");
         session.invalidate();
+        clearSingleLogin(httpServletResponse);
         String logoutURL = _filterConfig.getInitParameter(LOGOUT_URL);
         httpServletResponse.sendRedirect(logoutURL);
         LOG.info("user has been signed out successfully from Intalio");
@@ -173,6 +184,7 @@ public class CASRBACFilter implements Filter {
             String name = extractUser(props);
             String[] roles = extractRoles(props);
             User user = new User(name, roles, token);
+            user.setDisplayName(name);
             if (grantedRoles.length > 0 && !user.hasOneRoleOf(grantedRoles)) {
                 throw new SecurityException("User does not have one of the following role: " + StringArrayUtils.toCommaDelimited(grantedRoles));
             }
@@ -183,5 +195,37 @@ public class CASRBACFilter implements Filter {
         } catch (RemoteException ex) {
             throw new SecurityException(ex);
         }
+    }
+
+    /**
+     * Set single login cookie.
+     * @param response HttpServletResponse
+     * @param token intalio generated token
+     */
+    public static void setSingleLoginCookie(HttpServletResponse response, String token) {
+        Cookie cookie = new Cookie(SINGLE_LOGIN_ID, token);
+        cookie.setMaxAge(-1); // not persistent, kept until web browser exits
+        cookie.setPath("/");
+        response.addCookie(cookie);
+    }
+
+    /**
+     * Clear single login cookie.
+     * @param response HttpServletResponse
+     */
+    public static void clearSingleLogin(HttpServletResponse response) {
+        clearCookie(SINGLE_LOGIN_ID, response);
+    }
+
+    /**
+     * generic clear cookie
+     * @param cookieName name
+     * @param response HttpServletResponse
+     */
+    public static void clearCookie(String cookieName, HttpServletResponse response) {
+        Cookie newCookie = new Cookie(cookieName, null);
+        newCookie.setMaxAge(0);
+        newCookie.setPath("/");
+        response.addCookie(newCookie);
     }
 }
