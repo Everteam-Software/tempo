@@ -573,7 +573,7 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
         	  extractTextChildren(node, textChildren);
           }
           if (node.getNodeType() == Node.TEXT_NODE) {
-        	  textChildren.put(parentNode.getNodeName(), node.getNodeValue());
+              textChildren.put(parentNode.getNodeName().toLowerCase(), node.getNodeValue());
           }
         }
     	}
