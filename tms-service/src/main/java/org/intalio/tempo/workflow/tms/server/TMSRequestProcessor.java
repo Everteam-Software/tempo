@@ -1098,26 +1098,21 @@ public class TMSRequestProcessor extends OMUnmarshaller {
     public final OMElement deleteVacation(final OMElement requestElement)
             throws AxisFault {
         VacationDAOConnection vdao = null;
-        ITaskDAOConnection tdao = null;
         try {
             vdao = _VacationDAOFactory.openConnection();
-            tdao = _taskDAOFactory.openConnection();
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
             int vacId = Integer
                     .parseInt(requireElementValue(rootQueue, "vacId"));
             String participantToken = requireElementValue(rootQueue,
                     "participantToken");
             _logger.debug("vacation=" + vacId);
-            _server.deleteVacation(tdao, vdao, vacId, participantToken);
+            _server.deleteVacation(vdao, vacId, participantToken);
             return createOkResponse();
         } catch (Exception e) {
             throw makeFault(e);
         } finally {
             if (vdao != null) {
                 vdao.close();
-            }
-            if (tdao != null) {
-                tdao.close();
             }
         }
 	}

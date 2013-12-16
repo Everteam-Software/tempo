@@ -451,11 +451,9 @@ public class LocalTMSClient implements ITaskManagementService {
     @Override
     public final void deleteVacation(final String vacID) {
         VacationDAOConnection vdao = null;
-        ITaskDAOConnection tdao = taskDAOFactory.openConnection();
         try {
             vdao = _VacationDAOFactory.openConnection();
-            tdao = taskDAOFactory.openConnection();
-            server.deleteVacation(tdao, vdao, Integer.parseInt(vacID),
+            server.deleteVacation(vdao, Integer.parseInt(vacID),
                     participantToken);
         } catch (TMSException e) {
             logger.error("TMSException :: ", e);
@@ -464,9 +462,6 @@ public class LocalTMSClient implements ITaskManagementService {
         } finally {
             if (vdao != null) {
                 vdao.close();
-            }
-            if (tdao != null) {
-                tdao.close();
             }
         }
     }

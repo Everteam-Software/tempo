@@ -63,21 +63,6 @@ public class Configuration {
     private Set<String> absenceManagerRoles;
 
     /**
-     * Absence Management scheduler default interval in milliseconds.
-     */
-    public static final int DEFAULT_AM_SCHEDULER_INTERVAL = 120000;
-
-    /**
-     * Absence Management scheduler interval in milliseconds.
-     */
-    private int amSchedulerInterval = DEFAULT_AM_SCHEDULER_INTERVAL;
-
-    /**
-     * Absence Management scheduler active flag.
-     */
-    private Boolean amSchedulerActive = Boolean.TRUE;
-
-    /**
      * Property to hold is user role case sensitive.
      */
     private static Boolean roleCaseSensitive;
@@ -326,38 +311,6 @@ public class Configuration {
      */
     public void setAbsenceManagerRoles(final Set<String> amRoles) {
         this.absenceManagerRoles = amRoles;
-    }
-
-    /**
-     * get Absence Management scheduler interval in milliseconds.
-     * @return schedulerInterval
-     */
-    public int getAmSchedulerInterval() {
-        return amSchedulerInterval;
-    }
-
-    /**
-     * set Absence Management scheduler interval in milliseconds.
-     * @param schedulerInterval int
-     */
-    public void setAmSchedulerInterval(final int schedulerInterval) {
-        this.amSchedulerInterval = schedulerInterval;
-    }
-
-    /**
-     * get amSchedulerActive flag.
-     * @return amSchedulerActive Boolean
-     */
-    public Boolean isAmSchedulerActive() {
-        return amSchedulerActive;
-    }
-
-    /**
-     * set amSchedulerActive flag.
-     * @param schedulerActive Boolean
-     */
-    public void setAmSchedulerActive(final Boolean schedulerActive) {
-        this.amSchedulerActive = schedulerActive;
     }
 
     /**
