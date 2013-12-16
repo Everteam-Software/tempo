@@ -21,6 +21,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -61,7 +62,7 @@ public class VacationController implements Controller {
 	SimpleDateFormat df = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
 	SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 	Boolean  isSubstituteMandatory = conf.isSubstituteMandatory();
-	Set<String> amRoles = conf.getAbsenceManagerRoles();
+	Set<String> amRoles = null;
 
 	/**
 	 * RBACAdmin service Client.
@@ -104,6 +105,7 @@ public class VacationController implements Controller {
             final HttpServletResponse response) throws ServletException,
             IOException {
         try {
+            amRoles = conf.getAbsenceManagerRoles();
             users = rbacAdminClient.getUsers();
             String endpoint = URIUtils.resolveURI(request, _endpoint);
             String pToken = getParticipantToken(request);
@@ -158,18 +160,7 @@ public class VacationController implements Controller {
                     String user = request.getParameter("user");
                     if (fromDate != null && toDate != null && desc != null
                             && user != null && substitute != null) {
-                        boolean isUserValid = validateSubstitute(
-                                user, fromDate, toDate);
-                        boolean isSubstituteValid = validateSubstitute(
-                                substitute, fromDate, toDate);
-                        if (!isUserValid) {
-                            message = "Invalid Vacation Dates";
-                            model.put("message", message);
-                        } else if (!isSubstituteValid) {
-                            message = "Invalid Substitute";
-                            model.put("message", message);
-                        }
-                        if (isUserValid && isSubstituteValid) {
+                        if (isVacationDetailsValid(user, substitute, fromDate, toDate, false)) {
                             model = insertVacationDetails(fromDate, toDate,
                                     desc.trim(), user, substitute);
                         }
@@ -186,24 +177,7 @@ public class VacationController implements Controller {
                     }
                     if (id != null && fromDate != null && toDate != null
                             && desc != null && substitute != null) {
-                        boolean isUserValid = validateUser(
-                                user, fromDate, toDate);
-                        Date startDate = format.parse(fromDate);
-                        boolean isSubstituteValid = false;
-                        if (startDate.before(new Date())) {
-                            isSubstituteValid = true;
-                        } else {
-                            isSubstituteValid = validateSubstitute(
-                                    substitute, fromDate, toDate);
-                        }
-                        if (!isUserValid) {
-                            message = "Invalid Vacation Dates";
-                            model.put("message", message);
-                        } else if (!isSubstituteValid) {
-                            message = "Invalid Substitute";
-                            model.put("message", message);
-                        }
-                        if (isUserValid && isSubstituteValid) {
+                        if (isVacationDetailsValid(user, substitute, fromDate, toDate, true)) {
                             model = editVacationDetails(id, fromDate, toDate,
                                     desc.trim(), name, substitute);
                         }
@@ -372,12 +346,14 @@ public class VacationController implements Controller {
      * @return isUserValid boolean
      */
     protected final boolean validateUser(final String user,
-            final String fromDate, final String toDate) {
+            final String fromDate, final String toDate, final boolean isUpdate) {
         boolean isUserValid = true;
         try {
             List<Vacation> vac = taskManager.getUserMatchedVacations(
                     user, fromDate, toDate);
-            if (vac != null && vac.size() > 1) {
+            if (vac != null
+                    && ((isUpdate && vac.size() > 1) || (!isUpdate && vac
+                            .size() > 0))) {
                 isUserValid = false;
             }
         } catch (Exception e) {
@@ -386,6 +362,63 @@ public class VacationController implements Controller {
                             + e.getMessage(), e);
         }
         return isUserValid;
+    }
+
+    /**
+     * to validate given dates.
+     * @param fromDate String
+     * @param toDate String
+     * @return isDatesValid boolean
+     */
+    protected final boolean validateDates(final String fromDate,
+            final String toDate) {
+        boolean isDatesValid = true;
+        try {
+            Date startDate = format.parse(fromDate);
+            Date endDate = format.parse(toDate);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(new Date());
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+            Date today = cal.getTime();
+            if (endDate.before(today) || endDate.before(startDate)) {
+                isDatesValid = false;
+            }
+        } catch (ParseException e) {
+            LOG.error("Exception while parsing dates. " + e.getMessage(), e);
+        }
+        return isDatesValid;
+    }
+
+    /**
+     * to validate given dates.
+     * @param fromDate String
+     * @param toDate String
+     * @return isDatesValid boolean
+     */
+    protected final boolean isVacationDetailsValid(final String user,
+            final String substitute, final String fromDate, final String toDate, final boolean isUpdate) {
+        boolean isVacationValid = false;
+        boolean isDatesValid = true;
+        boolean isUserValid = true;
+        boolean isSubstituteValid = true;
+        if (!validateDates(fromDate, toDate)) {
+            message = "Invalid Date Range";
+            isDatesValid = false;
+        } else if (!validateUser(user, fromDate, toDate, isUpdate)) {
+            message = "Invalid Vacation Dates";
+            isUserValid = false;
+        } else if (!validateSubstitute(substitute, fromDate, toDate)) {
+            message = "Invalid Substitute";
+            isSubstituteValid = false;
+        }
+        model.put("message", message);
+        if (isDatesValid && isUserValid && isSubstituteValid) {
+            isVacationValid = true;
+        }
+        return isVacationValid;
     }
 
     /**

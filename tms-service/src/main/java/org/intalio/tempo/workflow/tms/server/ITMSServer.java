@@ -124,13 +124,12 @@ public interface ITMSServer {
     
     /**
      * delete Vacation Details of given id.
-     * @param tdao ITaskDAOConnection
      * @param vdao VacationDAOConnection
      * @param vacId int
      * @param participantToken String
      * @throws TMSException exception
      */
-    void deleteVacation(ITaskDAOConnection tdao, VacationDAOConnection vdao,
+    void deleteVacation(VacationDAOConnection vdao,
             int vacId, String participantToken) throws TMSException;
     
     /**

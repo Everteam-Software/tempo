@@ -124,9 +124,9 @@ public class AuditVacation {
     public final void auditDeleteVacation(final JoinPoint joinPoint)
             throws AuthException {
         Object[] createArgs = joinPoint.getArgs();
-        VacationDAOConnection dao = (VacationDAOConnection) createArgs[1];
-        int vacationId = (Integer) createArgs[2];
-        String participantToken = (String) createArgs[3];
+        VacationDAOConnection dao = (VacationDAOConnection) createArgs[0];
+        int vacationId = (Integer) createArgs[1];
+        String participantToken = (String) createArgs[2];
         UserRoles credentials = authProvider.authenticate(participantToken);
         String userOwner = credentials.getUserID();
         String actionPerformed = joinPoint.getSignature().getName();
