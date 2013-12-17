@@ -18,6 +18,7 @@ package org.intalio.tempo.workflow.tms.server;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -1251,16 +1252,16 @@ public class TMSServer implements ITMSServer {
      }
      
     @Override
-    public final void deleteVacation(final VacationDAOConnection vdao, final int vacId,
+    public final void deleteVacation(final VacationDAOConnection vdao, final String[] vacIds,
             final String participantToken) throws TMSException {
          try {
-             vdao.deleteVacationDetails(vacId);
+             vdao.endVacationDetails(vacIds);
              vdao.commit();
               if (_logger.isDebugEnabled()) {
-                  _logger.debug("Vacation " + vacId + " was deleted");
+                  _logger.debug("Vacation " + vacIds + " was deleted");
               }
           } catch (Exception e) {
-              _logger.error("Cannot delete vacation", e); // TODO :
+              _logger.error("Cannot delete vacation", e);
           }
       }  
      

@@ -125,20 +125,22 @@ public class AuditVacation {
             throws AuthException {
         Object[] createArgs = joinPoint.getArgs();
         VacationDAOConnection dao = (VacationDAOConnection) createArgs[0];
-        int vacationId = (Integer) createArgs[1];
+        String[] vacationIds = (String[]) createArgs[1];
         String participantToken = (String) createArgs[2];
         UserRoles credentials = authProvider.authenticate(participantToken);
         String userOwner = credentials.getUserID();
         String actionPerformed = joinPoint.getSignature().getName();
         LOGGER.debug("intercepting action : " + actionPerformed);
-        LOGGER.debug("vacation id: " + vacationId);
-        VacationAudit vacationAudit = new VacationAudit();
-        vacationAudit.setActionPerformed(actionPerformed);
-        vacationAudit.setAuditDate(new Timestamp(new Date().getTime()));
-        vacationAudit.setVacationId(vacationId);
-        vacationAudit.setAuditUserName(userOwner);
-        vacationAudit.setUpdatedIsActive((short) 0);
-        dao.auditVacation(vacationAudit);
+        LOGGER.debug("vacation ids: " + vacationIds);
+        for(String id : vacationIds) {
+            VacationAudit vacationAudit = new VacationAudit();
+            vacationAudit.setActionPerformed(actionPerformed);
+            vacationAudit.setAuditDate(new Timestamp(new Date().getTime()));
+            vacationAudit.setVacationId(Integer.parseInt(id));
+            vacationAudit.setAuditUserName(userOwner);
+            vacationAudit.setUpdatedIsActive((short) 0);
+            dao.auditVacation(vacationAudit);
+        }
         dao.commit();
     }
 }

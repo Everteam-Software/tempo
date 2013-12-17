@@ -449,11 +449,11 @@ public class LocalTMSClient implements ITaskManagementService {
     }
 
     @Override
-    public final void deleteVacation(final String vacID) {
+    public final void deleteVacation(final String[] vacIDs) {
         VacationDAOConnection vdao = null;
         try {
             vdao = _VacationDAOFactory.openConnection();
-            server.deleteVacation(vdao, Integer.parseInt(vacID),
+            server.deleteVacation(vdao, vacIDs,
                     participantToken);
         } catch (TMSException e) {
             logger.error("TMSException :: ", e);

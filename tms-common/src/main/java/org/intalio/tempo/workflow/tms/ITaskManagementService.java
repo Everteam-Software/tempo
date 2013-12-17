@@ -88,9 +88,9 @@ public interface ITaskManagementService {
     void updateVacation(Vacation vacation);
 
     /**
-	 * delete Vacation Details of given id
+	 * delete Vacation Details of given ids
 	 */
-	void deleteVacation(String vacId);
+	void deleteVacation(String[] vacIds);
 
 	/**
 	 * Gets the vacation details of a particular user
