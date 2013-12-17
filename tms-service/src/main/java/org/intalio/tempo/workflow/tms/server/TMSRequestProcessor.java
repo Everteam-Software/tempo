@@ -1101,12 +1101,21 @@ public class TMSRequestProcessor extends OMUnmarshaller {
         try {
             vdao = _VacationDAOFactory.openConnection();
             OMElementQueue rootQueue = new OMElementQueue(requestElement);
-            int vacId = Integer
-                    .parseInt(requireElementValue(rootQueue, "vacId"));
+            List<String> vacIDs = new ArrayList<String>();
+            while (true) {
+                String vacID = expectElementValue(rootQueue, "vacId");
+                if (vacID != null)
+                    vacIDs.add(vacID);
+                else
+                    break;
+            }
+            if (vacIDs.isEmpty()) {
+                throw new InvalidInputFormatException("At least one vacation Id element must be present");
+            }
             String participantToken = requireElementValue(rootQueue,
                     "participantToken");
-            _logger.debug("vacation=" + vacId);
-            _server.deleteVacation(vdao, vacId, participantToken);
+            _logger.debug("delete vacation ID'd = " + vacIDs.toArray(new String[] {}));
+            _server.deleteVacation(vdao, vacIDs.toArray(new String[] {}), participantToken);
             return createOkResponse();
         } catch (Exception e) {
             throw makeFault(e);

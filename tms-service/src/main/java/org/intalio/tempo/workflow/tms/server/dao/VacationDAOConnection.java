@@ -80,14 +80,12 @@ public interface VacationDAOConnection {
     public List<Vacation> getVacationDetails();
 
 	/**
-	 * Gets the vacation details of a particular user
-	 * 
-	 * @param logged
-	 *            in user
-	 * 
-	 * @return Object Vacation of logged in user
+	 * end vacation details
+     * @param id  int vacation id
+     * @return result Boolean
 	 */
-	public Boolean deleteVacationDetails(int id);
+	public Boolean endVacationDetails(String[] id);
+
 	/**
      *closes the connection
      */

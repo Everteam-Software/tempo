@@ -149,8 +149,10 @@ public class VacationController implements Controller {
                     }
                 } else if (action.equalsIgnoreCase("endVacation")) {
                     if (request.getParameter("id") != null) {
-                        model = deleteVacationDetails(request
-                                .getParameter("id"));
+                        String[] vacIds = request.getParameter("id").split(",");
+                        if(vacIds != null && vacIds.length > 0) {
+                            model = deleteVacationDetails(vacIds);
+                        }
                     }
                 } else if (action.equalsIgnoreCase("insertVacation")) {
                     String fromDate = request.getParameter("fromDate");
@@ -160,7 +162,7 @@ public class VacationController implements Controller {
                     String user = request.getParameter("user");
                     if (fromDate != null && toDate != null && desc != null
                             && user != null && substitute != null) {
-                        if (isVacationDetailsValid(user, substitute, fromDate, toDate, false)) {
+                        if (isVacationDetailsValid(user, substitute, fromDate, toDate, false, "")) {
                             model = insertVacationDetails(fromDate, toDate,
                                     desc.trim(), user, substitute);
                         }
@@ -177,7 +179,7 @@ public class VacationController implements Controller {
                     }
                     if (id != null && fromDate != null && toDate != null
                             && desc != null && substitute != null) {
-                        if (isVacationDetailsValid(user, substitute, fromDate, toDate, true)) {
+                        if (isVacationDetailsValid(user, substitute, fromDate, toDate, true, id)) {
                             model = editVacationDetails(id, fromDate, toDate,
                                     desc.trim(), name, substitute);
                         }
@@ -245,8 +247,8 @@ public class VacationController implements Controller {
         return model;
     }
 
-	public Map<String, Object> deleteVacationDetails(String id) {
-		taskManager.deleteVacation(id);
+	public Map<String, Object> deleteVacationDetails(String[] ids) {
+		taskManager.deleteVacation(ids);
 		message = "Deleted";
 		model.put("message", message);
 		return model;
@@ -346,14 +348,20 @@ public class VacationController implements Controller {
      * @return isUserValid boolean
      */
     protected final boolean validateUser(final String user,
-            final String fromDate, final String toDate, final boolean isUpdate) {
+            final String fromDate, final String toDate, final boolean isUpdate,
+            final String vacId) {
         boolean isUserValid = true;
         try {
             List<Vacation> vac = taskManager.getUserMatchedVacations(
                     user, fromDate, toDate);
-            if (vac != null
-                    && ((isUpdate && vac.size() > 1) || (!isUpdate && vac
-                            .size() > 0))) {
+            if (vac != null && isUpdate) {
+                for(Vacation v : vac) {
+                    if(vacId.equals(v.getId())) {
+                        vac.remove(v);
+                    }
+                }
+            }
+            if (vac != null && vac.size() > 0) {
                 isUserValid = false;
             }
         } catch (Exception e) {
@@ -399,7 +407,8 @@ public class VacationController implements Controller {
      * @return isDatesValid boolean
      */
     protected final boolean isVacationDetailsValid(final String user,
-            final String substitute, final String fromDate, final String toDate, final boolean isUpdate) {
+            final String substitute, final String fromDate,
+            final String toDate, final boolean isUpdate, final String vacId) {
         boolean isVacationValid = false;
         boolean isDatesValid = true;
         boolean isUserValid = true;
@@ -407,7 +416,7 @@ public class VacationController implements Controller {
         if (!validateDates(fromDate, toDate)) {
             message = "Invalid Date Range";
             isDatesValid = false;
-        } else if (!validateUser(user, fromDate, toDate, isUpdate)) {
+        } else if (!validateUser(user, fromDate, toDate, isUpdate, vacId)) {
             message = "Invalid Vacation Dates";
             isUserValid = false;
         } else if (!validateSubstitute(substitute, fromDate, toDate)) {

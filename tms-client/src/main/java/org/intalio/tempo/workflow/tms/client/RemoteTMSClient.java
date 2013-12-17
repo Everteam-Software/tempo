@@ -794,11 +794,22 @@ public class RemoteTMSClient implements ITaskManagementService {
 			return null;
 	}
 	
-	public void deleteVacation(final String vacID) {
+	public void deleteVacation(final String[] vacIDs) {
+        if (vacIDs == null) {
+            throw new RequiredArgumentException("vacIDs");
+        }
+        if (vacIDs.length == 0) {
+            throw new IllegalArgumentException("Vacation ID array is empty");
+        }
 		OMElement request = new TMSMarshaller() {
 			public OMElement marshalRequest() {
 				OMElement request = createElement("deleteVacationRequest");
-				createElement(request, "vacId", vacID);
+				for (String vacID : vacIDs) {
+                    if (vacID == null) {
+                        throw new RequiredArgumentException("One of the given vacation ID's is null");
+                    }
+                    createElement(request, "vacId", vacID);
+                }
 				createElement(request, "participantToken", _participantToken);
 				return request;
 			}

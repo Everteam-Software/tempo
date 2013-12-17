@@ -102,12 +102,23 @@ public class JPAVacationDAOConnection extends AbstractJPAConnection implements V
 	}
 
 	@Override
-	public final Boolean deleteVacationDetails(final int id) {
+	public final Boolean endVacationDetails(final String[] ids) {
 		checkTransactionIsActive();
-		LOG.debug("vacation details=" + _vacation.fetchVacationByID(id));
-		Vacation prevVacation = _vacation.fetchVacationByID(id);
-		prevVacation.setIs_active(0);
-		entityManager.persist(prevVacation);
+		Calendar cal = Calendar.getInstance();
+		LOG.debug("End Vacation Details = " + ids);
+		Date today = trimDate(cal.getTime());
+		for(String id : ids) {
+	        Vacation prevVacation = _vacation.fetchVacationByID(Integer.parseInt(id));
+            if (prevVacation != null
+                    && (prevVacation.getFromDate().before(today) || prevVacation
+                            .getFromDate().equals(today))) {
+                    prevVacation.setToDate(new Date());
+                    prevVacation.setIs_active(0);
+                    entityManager.persist(prevVacation);
+	            } else {
+                    entityManager.remove(prevVacation);
+	            }
+		}
 		return true;
 	}
 
