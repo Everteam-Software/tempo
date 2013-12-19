@@ -354,14 +354,16 @@ public class VacationController implements Controller {
         try {
             List<Vacation> vac = taskManager.getUserMatchedVacations(
                     user, fromDate, toDate);
+            int count = 0;
             if (vac != null && isUpdate) {
                 for(Vacation v : vac) {
-                    if(vacId.equals(v.getId())) {
-                        vac.remove(v);
+                    if (vacId.equals(String.valueOf(v.getId()))) {
+                        count = 1;
+                        break;
                     }
                 }
             }
-            if (vac != null && vac.size() > 0) {
+            if (vac != null && vac.size() > count) {
                 isUserValid = false;
             }
         } catch (Exception e) {
