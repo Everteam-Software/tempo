@@ -381,7 +381,7 @@ public class VacationController implements Controller {
      * @return isDatesValid boolean
      */
     protected final boolean validateDates(final String fromDate,
-            final String toDate) {
+            final String toDate, final boolean isUpdate) {
         boolean isDatesValid = true;
         try {
             Date startDate = format.parse(fromDate);
@@ -394,6 +394,8 @@ public class VacationController implements Controller {
             cal.set(Calendar.MILLISECOND, 0);
             Date today = cal.getTime();
             if (endDate.before(today) || endDate.before(startDate)) {
+                isDatesValid = false;
+            } else if (!isUpdate && startDate.before(today)) {
                 isDatesValid = false;
             }
         } catch (ParseException e) {
@@ -415,7 +417,7 @@ public class VacationController implements Controller {
         boolean isDatesValid = true;
         boolean isUserValid = true;
         boolean isSubstituteValid = true;
-        if (!validateDates(fromDate, toDate)) {
+        if (!validateDates(fromDate, toDate, isUpdate)) {
             message = "Invalid Date Range";
             isDatesValid = false;
         } else if (!validateUser(user, fromDate, toDate, isUpdate, vacId)) {
