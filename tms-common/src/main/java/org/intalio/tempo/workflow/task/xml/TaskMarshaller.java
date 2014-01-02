@@ -149,8 +149,11 @@ public class TaskMarshaller {
             }
             if (task instanceof ITaskWithPriority) {
                 ITaskWithPriority crTask = (ITaskWithPriority) task;
-                if (crTask.getPriority() != null)
+                if (crTask.getPriority() != null){
                     taskMetadataElement.setPriority(crTask.getPriority());
+                }else{
+                    taskMetadataElement.setPriority(ITaskWithPriority.NORMAL_PRIORITY);
+                }
             }
 
             if (task instanceof ICompleteReportingTask) {
