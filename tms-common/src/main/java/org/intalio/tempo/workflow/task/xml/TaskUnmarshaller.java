@@ -183,6 +183,8 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
         Integer priority = null;
         if (taskMetadata.xgetPriority() != null && taskMetadata.xgetPriority().validate()) {
             priority = taskMetadata.getPriority();
+        }else{
+            priority = ITaskWithPriority.NORMAL_PRIORITY;
         }
 
         String formURLStr = taskMetadata.getFormUrl();
