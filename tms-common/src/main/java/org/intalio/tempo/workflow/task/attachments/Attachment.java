@@ -97,4 +97,14 @@ public class Attachment {
     public String toString() {
         return payloadURLAsString;
     }
+
+    /*get PayloadURL as string*/
+    public String getPayloadURLAsString() {
+        return payloadURLAsString;
+    }
+
+    /*set PayloadURL as string*/
+    public void setPayloadURLAsString(String payloadURLAsString) {
+        this.payloadURLAsString = payloadURLAsString;
+    }
 }

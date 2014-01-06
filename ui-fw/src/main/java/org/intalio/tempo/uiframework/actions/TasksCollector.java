@@ -12,8 +12,10 @@
 package org.intalio.tempo.uiframework.actions;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequestWrapper;
 
@@ -27,6 +29,8 @@ import org.intalio.tempo.workflow.task.Notification;
 import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
+import org.intalio.tempo.workflow.task.attachments.Attachment;
+import org.intalio.tempo.workflow.task.traits.ITaskWithAttachments;
 import org.intalio.tempo.workflow.tms.ITaskManagementService;
 import org.intalio.tempo.workflow.tms.client.TMSFactory;
 import org.slf4j.Logger;
@@ -42,6 +46,8 @@ import org.slf4j.LoggerFactory;
 public class TasksCollector {
 
     final String[] parameters = new String[] { "page", "rp", "sortname", "sortorder", "query", "qtype", "type" , "formURL", "taskType"};
+
+    final String CLASS_KEYWORD = "class";
     /**
      * Parameters that can come from the user interface
      */
@@ -191,6 +197,19 @@ public class TasksCollector {
             if(task instanceof PATask){
                 PATask paTask = (PATask) task;
             _log.debug("Task State="+paTask.getState()+" Task Description="+paTask.getDescription()+"Tasks length ="+tasks.length+"\n");
+            ITaskWithAttachments taskWithAttachments = (ITaskWithAttachments)task;
+            Collection<Attachment> attachments = taskWithAttachments.getAttachments();
+            if ( attachments != null && attachments.size() > 0 ) {
+                Map<String,Attachment> attachmentsMap = new HashMap<String,Attachment>();
+                for (Attachment attachment : attachments) {
+                    String key = attachment.getPayloadURL().toExternalForm();
+                    if (key.contains(CLASS_KEYWORD)) {
+                        key = key.replaceAll(CLASS_KEYWORD, "");
+                    }
+                    attachmentsMap.put(key,attachment);
+                }
+                paTask.set_attachments(attachmentsMap);
+            }
             }
             tasksHolder.add(new TaskHolder<Task>(task, URIUtils.getResolvedTaskURLAsString(_request, fmanager, task, token, user)));
         }
