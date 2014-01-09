@@ -16,6 +16,7 @@
 package org.intalio.tempo.workflow.tms.server.dao;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -256,5 +257,12 @@ public class SimpleTaskDAOConnection implements ITaskDAOConnection {
     @Override
     public final List<Task> fetchAllAvailableTasks(final List<String> users) {
         throw new RuntimeException("Not Implemented");
+    }
+
+    @Override
+    public List<Object> getPendingClaimedTaskCount(Date since,
+            List<String> users) {
+        // TODO Auto-generated method stub
+        return new ArrayList<Object>();
     }
 }
