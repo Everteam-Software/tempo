@@ -15,6 +15,7 @@
 
 package org.intalio.tempo.workflow.tms.server.dao;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -113,12 +114,19 @@ public interface ITaskDAOConnection {
      * @param audit
      */
     public void auditTask(Audit audit);
+
     /**
      * Gives pa task count which are in ready or claimed state available for all users.
      * @return
      */
     public List<Object> getPendingClaimedTaskCountForAllUsers();
     
+    /**
+     * Gives pa task count which are in ready or claimed state available for given users.
+     * @return
+     */
+    public List<Object> getPendingClaimedTaskCount(Date since, List<String> users);
+
     /**
      * save previous task owners
      * @return

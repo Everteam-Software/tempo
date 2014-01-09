@@ -3,6 +3,7 @@ package org.intalio.tempo.workflow.util.jpa;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -518,6 +519,37 @@ public class TaskFetcher {
             resultSet.add(rowData);
         }
         
+        return resultSet;
+    }
+
+    /**
+     * Fetch the pending and claimed task count for all users.
+     */
+    public List<Object> fetchPendingClaimTaskCount(Date since, List<String> users) {
+        Query q = null;
+
+        if(users != null) {
+            q = _entityManager.createNamedQuery(PATask.GET_PENDING_CLAIMED_TASK_COUNT_FOR_USERS_BASED_ON_TIME);
+            q.setParameter("creationDate", since).setParameter("userOwners", users);
+        } else {
+            q = _entityManager.createNamedQuery(PATask.GET_PENDING_CLAIMED_TASK_COUNT_BASED_ON_TIME);
+            q.setParameter("creationDate", since);
+        }
+
+        List result = q.getResultList();
+        List <Object>resultSet = new ArrayList<Object>();
+
+        Iterator<Object> iterator = result.iterator();
+        while(iterator.hasNext())
+        {
+            Object[] row = (Object[]) iterator.next();
+            HashMap <String,Object>rowData = new HashMap<String,Object>();
+            rowData.put("Count",row[0]);
+            rowData.put("State",((TaskState)row[1]).getName());
+            rowData.put("User",row[2]);
+            resultSet.add(rowData);
+        }
+
         return resultSet;
     }
 }

@@ -76,7 +76,17 @@ import org.w3c.dom.Document;
 		/*get pending or claimed task counts for all users*/
 		@NamedQuery(name=PATask.GET_PENDING_CLAIMED_TASK_COUNT_FOR_ALL_USERS,
 		    query="select count(pa._id) as total,pa._state as State , user from PATask pa, IN (pa._userOwners) as user where (pa._state = TaskState.READY or pa._state =TaskState.CLAIMED )" +
-		    		"group by pa._state, user ")
+		        "group by pa._state, user "),
+
+		/*get pending or claimed task counts for users*/
+        @NamedQuery(name=PATask.GET_PENDING_CLAIMED_TASK_COUNT_FOR_USERS_BASED_ON_TIME,
+            query="select count(pa._id) as total,pa._state as State , user from PATask pa, IN (pa._userOwners) as user where (pa._state = TaskState.READY or pa._state =TaskState.CLAIMED )" + 
+                    "and pa._creationDate >= (:creationDate) and pa._userOwners in (:userOwners) group by pa._state, user "),
+
+        /*get pending or claimed task counts for all users based on time*/
+        @NamedQuery(name=PATask.GET_PENDING_CLAIMED_TASK_COUNT_BASED_ON_TIME,
+            query="select count(pa._id) as total,pa._state as State , user from PATask pa, IN (pa._userOwners) as user where (pa._state = TaskState.READY or pa._state =TaskState.CLAIMED )" + 
+                    "and pa._creationDate >= (:creationDate) group by pa._state, user ")
 })
 public class PATask extends Task implements ITaskWithState, IProcessBoundTask, ITaskWithInput, ITaskWithOutput,
         ICompleteReportingTask, ITaskWithAttachments, IChainableTask, ITaskWithPriority, ITaskWithDeadline ,IInstanceBoundTask,ITaskWithCustomMetadata{
@@ -90,8 +100,9 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
     public static final String GET_COMPLETED_TASK_COUNT_BY_USER_ASSIGNED_ROLES="get_completed_task_count_by_user_assigned_roles";
     public static final String GET_CLAIMED_TASK_COUNT="get_claimed_task_count";
     public static final String GET_PENDING_CLAIMED_TASK_COUNT_FOR_ALL_USERS="get_pending_claimed_task_count_for_all_users";
+    public static final String GET_PENDING_CLAIMED_TASK_COUNT_FOR_USERS_BASED_ON_TIME="get_pending_claimed_task_count_for_users_based_on_time";
+    public static final String GET_PENDING_CLAIMED_TASK_COUNT_BASED_ON_TIME="get_pending_claimed_task_count_based_on_time";
 
-    
     @Persistent
     @Column(name = "state")
     private TaskState _state = TaskState.READY;
