@@ -261,8 +261,22 @@ public class SimpleTaskDAOConnection implements ITaskDAOConnection {
 
     @Override
     public List<Object> getPendingClaimedTaskCount(Date since,
-            List<String> users) {
-        // TODO Auto-generated method stub
-        return new ArrayList<Object>();
+            List<String> users, List<String> statusList) {
+        throw new RuntimeException("Not Implemented");
+    }
+
+    @Override
+    public List<Object> getTaskCountByStatus(Date since) {
+        throw new RuntimeException("Not Implemented");
+    }
+
+    @Override
+    public List<Object> getTaskCountByPriority(Date since) {
+        throw new RuntimeException("Not Implemented");
+    }
+
+    @Override
+    public Map<Integer, Integer> getTaskCountByCreationDate(Date since) {
+        throw new RuntimeException("Not Implemented");
     }
 }

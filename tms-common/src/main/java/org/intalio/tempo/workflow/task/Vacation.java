@@ -47,6 +47,15 @@ import org.intalio.tempo.workflow.util.RequiredArgumentException;
                 + "vacation._user=(:user) "
                 + "AND vacation._toDate >=(:toDate)  "
                 + "AND vacation._is_active = 1"),
+        @NamedQuery(name = Vacation.GET_VACATION_DETAILS_BY_USERS_TIME,
+        query = "select vacation from Vacation vacation where "
+                + "vacation._user in (:users) "
+                + "AND vacation._fromDate >=(:fromDate)  "
+                + "AND vacation._is_active = 1"),
+        @NamedQuery(name = Vacation.GET_VACATION_DETAILS_BY_TIME,
+        query = "select vacation from Vacation vacation where "
+                + "vacation._fromDate >=(:fromDate)  "
+                + "AND vacation._is_active = 1"),
         @NamedQuery(name = Vacation.FIND_VAC_BY_ID,
         query = "select vacation from Vacation vacation where "
                 + "vacation._id = ?1 "
@@ -86,6 +95,8 @@ public class Vacation {
     public static final String FIND_VAC_BY_ID = "find_vac_by_id";
     private EntityManager _entityManager;
     public static final String GET_VACATION_DETAILS = "get_vacation_details";
+    public static final String GET_VACATION_DETAILS_BY_TIME = "get_vacation_details_by_time";
+    public static final String GET_VACATION_DETAILS_BY_USERS_TIME = "get_vacation_details_by_users_time";
     public static final String FETCH_VACATION_SUMMARY = "fetch_vacation_summary";
     public static final String FETCH_MATCHED_VACATION = "fetch_matched_vacation";
 

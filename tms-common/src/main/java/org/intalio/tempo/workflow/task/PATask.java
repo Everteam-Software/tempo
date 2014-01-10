@@ -80,13 +80,24 @@ import org.w3c.dom.Document;
 
 		/*get pending or claimed task counts for users*/
         @NamedQuery(name=PATask.GET_PENDING_CLAIMED_TASK_COUNT_FOR_USERS_BASED_ON_TIME,
-            query="select count(pa._id) as total,pa._state as State , user from PATask pa, IN (pa._userOwners) as user where (pa._state = TaskState.READY or pa._state =TaskState.CLAIMED )" + 
+            query="select count(pa._id) as total,pa._state as State , user from PATask pa, IN (pa._userOwners) as user where pa._state IN (:states)" +
                     "and pa._creationDate >= (:creationDate) and pa._userOwners in (:userOwners) group by pa._state, user "),
 
         /*get pending or claimed task counts for all users based on time*/
         @NamedQuery(name=PATask.GET_PENDING_CLAIMED_TASK_COUNT_BASED_ON_TIME,
-            query="select count(pa._id) as total,pa._state as State , user from PATask pa, IN (pa._userOwners) as user where (pa._state = TaskState.READY or pa._state =TaskState.CLAIMED )" + 
-                    "and pa._creationDate >= (:creationDate) group by pa._state, user ")
+            query="select count(pa._id) as total,pa._state as State , user from PATask pa, IN (pa._userOwners) as user where pa._state IN (:states) " +
+                    "and pa._creationDate >= (:creationDate) group by pa._state, user "),
+
+        @NamedQuery(name=PATask.GET_TASK_COUNT_BY_STATUS,
+            query="select count(pa._id) as total, pa._state as State from PATask pa where (pa._state = TaskState.READY or pa._state =TaskState.CLAIMED or pa._state = TaskState.COMPLETED " +
+                "or pa._state = TaskState.FAILED) and  pa._creationDate >= (:creationDate) group by pa._state"),
+
+        @NamedQuery(name=PATask.GET_TASK_COUNT_BY_PRIORITY,
+            query="select count(pa._id) as total, pa._priority as Priority from PATask pa where (pa._state = TaskState.READY or pa._state = TaskState.CLAIMED or pa._state = TaskState.FAILED) " +
+                "and pa._creationDate >= (:creationDate) group by pa._priority"),
+
+        @NamedQuery(name=PATask.GET_TASK_COUNT_BY_CREATION_DATE,
+            query="select pa._creationDate from PATask pa where pa._creationDate >= (:creationDate)")
 })
 public class PATask extends Task implements ITaskWithState, IProcessBoundTask, ITaskWithInput, ITaskWithOutput,
         ICompleteReportingTask, ITaskWithAttachments, IChainableTask, ITaskWithPriority, ITaskWithDeadline ,IInstanceBoundTask,ITaskWithCustomMetadata{
@@ -102,6 +113,9 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
     public static final String GET_PENDING_CLAIMED_TASK_COUNT_FOR_ALL_USERS="get_pending_claimed_task_count_for_all_users";
     public static final String GET_PENDING_CLAIMED_TASK_COUNT_FOR_USERS_BASED_ON_TIME="get_pending_claimed_task_count_for_users_based_on_time";
     public static final String GET_PENDING_CLAIMED_TASK_COUNT_BASED_ON_TIME="get_pending_claimed_task_count_based_on_time";
+    public static final String GET_TASK_COUNT_BY_STATUS="get_task_count_by_status";
+    public static final String GET_TASK_COUNT_BY_PRIORITY="get_task_count_by_priority";
+    public static final String GET_TASK_COUNT_BY_CREATION_DATE="get_task_count_by_creation_date";
 
     @Persistent
     @Column(name = "state")

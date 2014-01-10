@@ -18,6 +18,7 @@ package org.intalio.tempo.workflow.tms.server.dao;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.CustomColumn;
@@ -125,7 +126,25 @@ public interface ITaskDAOConnection {
      * Gives pa task count which are in ready or claimed state available for given users.
      * @return
      */
-    public List<Object> getPendingClaimedTaskCount(Date since, List<String> users);
+    public List<Object> getPendingClaimedTaskCount(Date since, List<String> users, List<String> statusList);
+
+    /**
+     * Gives pa task count based on Task Status.
+     * @return
+     */
+    public List<Object> getTaskCountByStatus(Date since);
+
+    /**
+     * Gives pa task count based on Task Priority.
+     * @return
+     */
+    public List<Object> getTaskCountByPriority(Date since);
+
+    /**
+     * Gives pa task count based on Task Creation Date.
+     * @return
+     */
+    public Map<Integer, Integer> getTaskCountByCreationDate(Date since);
 
     /**
      * save previous task owners
