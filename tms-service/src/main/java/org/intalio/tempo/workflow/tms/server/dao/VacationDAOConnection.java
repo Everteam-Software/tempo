@@ -79,6 +79,13 @@ public interface VacationDAOConnection {
      */
     public List<Vacation> getVacationDetails();
 
+    /**
+     * Gets the vacation details of all users
+     * 
+     * @return Object Vacation
+     */
+    public List<Vacation> getVacationDetails(Date since, List<String> users);
+
 	/**
 	 * end vacation details
      * @param id  int vacation id

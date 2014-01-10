@@ -3,6 +3,7 @@ package org.intalio.tempo.workflow.util.jpa;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -525,16 +526,57 @@ public class TaskFetcher {
     /**
      * Fetch the pending and claimed task count for all users.
      */
-    public List<Object> fetchPendingClaimTaskCount(Date since, List<String> users) {
+    public List<Object> fetchPendingClaimTaskCount(Date since,
+            List<String> users, List<String> statusList) {
+        List<TaskState> taskStatusList = new ArrayList<TaskState>();
+
+        if (statusList == null) {
+            taskStatusList.add(TaskState.READY);
+            taskStatusList.add(TaskState.CLAIMED);
+            taskStatusList.add(TaskState.COMPLETED);
+        } else {
+            for (String status : statusList) {
+                taskStatusList.add(TaskState.valueOf(status));
+            }
+        }
+
         Query q = null;
 
-        if(users != null) {
-            q = _entityManager.createNamedQuery(PATask.GET_PENDING_CLAIMED_TASK_COUNT_FOR_USERS_BASED_ON_TIME);
-            q.setParameter("creationDate", since).setParameter("userOwners", users);
+        if (users != null) {
+            q = _entityManager
+                    .createNamedQuery(PATask.GET_PENDING_CLAIMED_TASK_COUNT_FOR_USERS_BASED_ON_TIME);
+            q.setParameter("creationDate", since)
+                    .setParameter("userOwners", users)
+                    .setParameter("states", taskStatusList);
         } else {
-            q = _entityManager.createNamedQuery(PATask.GET_PENDING_CLAIMED_TASK_COUNT_BASED_ON_TIME);
-            q.setParameter("creationDate", since);
+            q = _entityManager
+                    .createNamedQuery(PATask.GET_PENDING_CLAIMED_TASK_COUNT_BASED_ON_TIME);
+            q.setParameter("creationDate", since).setParameter("states",
+                    taskStatusList);
         }
+
+        List result = q.getResultList();
+        List<Object> resultSet = new ArrayList<Object>();
+
+        Iterator<Object> iterator = result.iterator();
+        while (iterator.hasNext()) {
+            Object[] row = (Object[]) iterator.next();
+            HashMap<String, Object> rowData = new HashMap<String, Object>();
+            rowData.put("Count", row[0]);
+            rowData.put("State", ((TaskState) row[1]).getName());
+            rowData.put("User", row[2]);
+            resultSet.add(rowData);
+        }
+
+        return resultSet;
+    }
+
+    /**
+     * Fetch the task count for all states.
+     */
+    public List<Object> fetchTaskCountByStatus(Date since) {
+        Query q = _entityManager.createNamedQuery(PATask.GET_TASK_COUNT_BY_STATUS);
+        q.setParameter("creationDate", since);
 
         List result = q.getResultList();
         List <Object>resultSet = new ArrayList<Object>();
@@ -546,10 +588,63 @@ public class TaskFetcher {
             HashMap <String,Object>rowData = new HashMap<String,Object>();
             rowData.put("Count",row[0]);
             rowData.put("State",((TaskState)row[1]).getName());
-            rowData.put("User",row[2]);
             resultSet.add(rowData);
         }
 
         return resultSet;
+    }
+
+    /**
+     * Fetch the task count for all priorities.
+     */
+    public List<Object> fetchTaskCountByPriority(Date since) {
+        Query q = _entityManager.createNamedQuery(PATask.GET_TASK_COUNT_BY_PRIORITY);
+        q.setParameter("creationDate", since);
+
+        List result = q.getResultList();
+        List <Object>resultSet = new ArrayList<Object>();
+
+        Iterator<Object> iterator = result.iterator();
+        while(iterator.hasNext())
+        {
+            Object[] row = (Object[]) iterator.next();
+            HashMap <String,Object>rowData = new HashMap<String,Object>();
+            rowData.put("Count",row[0]);
+            rowData.put("Priority",row[1]);
+            resultSet.add(rowData);
+        }
+
+        return resultSet;
+    }
+
+    /**
+     * Fetch the task count by creation date.
+     */
+    public Map<Integer, Integer> fetchTaskCountByCreationDate(Date since) {
+        Query q = _entityManager
+                .createNamedQuery(PATask.GET_TASK_COUNT_BY_CREATION_DATE);
+        q.setParameter("creationDate", since);
+
+        Map<Integer, Integer> taskData = new HashMap<Integer, Integer>();
+
+        List result = q.getResultList();
+        Iterator<Date> iterator = result.iterator();
+
+        while (iterator.hasNext()) {
+            Date date = iterator.next();
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+
+            int hours = calendar.get(Calendar.HOUR_OF_DAY);
+
+            if (taskData.containsKey(hours)) {
+                taskData.put(hours, taskData.get(hours) + 1);
+            } else {
+                taskData.put(hours, 1);
+            }
+        }
+
+        return taskData;
     }
 }

@@ -74,6 +74,34 @@ public class JPAVacationDAOConnection extends AbstractJPAConnection implements V
         return result;
     }
 
+    /**
+     * get vacation details for selected user.
+     * @param user String
+     * @return vacation list List<Vacation>
+     */
+    public final List<Vacation> getVacationDetails(Date since,
+            List<String> users) {
+        Query query = null;
+
+        if (users != null) {
+            query = entityManager
+                    .createNamedQuery(
+                            Vacation.GET_VACATION_DETAILS_BY_USERS_TIME,
+                            Vacation.class)
+                    .setParameter("users", users)
+                    .setParameter("fromDate", this.trimDate(since),
+                            TemporalType.DATE);
+        } else {
+            query = entityManager.createNamedQuery(
+                    Vacation.GET_VACATION_DETAILS_BY_TIME, Vacation.class)
+                    .setParameter("fromDate", this.trimDate(since),
+                            TemporalType.DATE);
+        }
+
+        List<Vacation> result = query.getResultList();
+        return result;
+    }
+
     @Override
     public final List<Vacation> getMatchedVacations(final Date fromDate,
             final Date toDate) {

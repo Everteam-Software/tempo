@@ -13,6 +13,7 @@ package org.intalio.tempo.workflow.tms.server.dao;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -227,9 +228,24 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
         return taskCntForAllUsers;           
     }
 
-    public List<Object> getPendingClaimedTaskCount(Date since, List<String> users) {
-        List<Object> taskCntForAllUsers = _fetcher.fetchPendingClaimTaskCount(since, users);
-        return taskCntForAllUsers;
+    public List<Object> getPendingClaimedTaskCount(Date since, List<String> users, List<String> statusList) {
+        List<Object> taskCnt = _fetcher.fetchPendingClaimTaskCount(since, users, statusList);
+        return taskCnt;
+    }
+
+    public List<Object> getTaskCountByStatus(Date since) {
+        List<Object> taskCntByStatus = _fetcher.fetchTaskCountByStatus(since);
+        return taskCntByStatus;
+    }
+
+    public List<Object> getTaskCountByPriority(Date since) {
+        List<Object> taskCntByPriority = _fetcher.fetchTaskCountByPriority(since);
+        return taskCntByPriority;
+    }
+
+    public Map<Integer, Integer> getTaskCountByCreationDate(Date since) {
+        Map<Integer, Integer> taskCntByCreationDate = _fetcher.fetchTaskCountByCreationDate(since);
+        return taskCntByCreationDate;
     }
 
     @Override
