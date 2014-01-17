@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import com.googlecode.instinct.expect.ExpectThat;
 import com.googlecode.instinct.expect.ExpectThatImpl;
+import com.googlecode.instinct.expect.behaviour.Mocker;
 import com.googlecode.instinct.integrate.junit4.InstinctRunner;
 import com.googlecode.instinct.marker.annotate.Mock;
 import com.googlecode.instinct.marker.annotate.Specification;
@@ -23,14 +24,21 @@ import com.googlecode.instinct.marker.annotate.Subject;
 public class CSVServletTest extends TestCase {
 	  protected transient Logger _log = LoggerFactory.getLogger(getClass());
 	    final static ExpectThat expect = new ExpectThatImpl();
-	    
+
 	   @Subject CSVServlet servlet;
-	   @Mock HttpServletRequest req;
-	   @Mock HttpServletResponse resp;
-	   @Mock FormManager fmanager;
-	   @Mock ServletOutputStream stream;
+	   HttpServletRequest req;
+	   HttpServletResponse resp;
+	   FormManager fmanager;
+	   ServletOutputStream stream;
+
 	   @Specification
 	   public void test() throws Exception{
+
+	       req = Mocker.mock(HttpServletRequest.class);
+	       resp = Mocker.mock(HttpServletResponse.class);
+	       fmanager = Mocker.mock(FormManager.class);
+	       stream = Mocker.mock(ServletOutputStream.class);
+
 		   expect.that(new Expectations(){{
 			  one(resp).getOutputStream();will(returnValue(stream));
 			  ignoring(stream);
@@ -40,5 +48,7 @@ public class CSVServletTest extends TestCase {
 		   servlet.generateFile(req, "token", "user", stream1);
 		   assertTrue(servlet.getFileExt().equals(".csv"));
 		   assertTrue(servlet.getFileMimeType().equals("application/csv"));
+
+		   Mocker.reset();
 	   }
 }

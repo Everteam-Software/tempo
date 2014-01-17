@@ -8,6 +8,11 @@ public class ACLTest extends TestCase {
         junit.textui.TestRunner.run(ACLTest.class);
     }
     
+    public void setUp() {
+        System.setProperty("org.intalio.tempo.configDirectory",
+                "src/test/resources/");
+    }
+
     public void testACL() {
         ACL acl = new ACL();
         acl.setAction("testAction");        

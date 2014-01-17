@@ -12,8 +12,8 @@ import org.slf4j.LoggerFactory;
 
 import com.googlecode.instinct.expect.ExpectThat;
 import com.googlecode.instinct.expect.ExpectThatImpl;
+import com.googlecode.instinct.expect.behaviour.Mocker;
 import com.googlecode.instinct.integrate.junit4.InstinctRunner;
-import com.googlecode.instinct.marker.annotate.Mock;
 import com.googlecode.instinct.marker.annotate.Specification;
 import com.googlecode.instinct.marker.annotate.Stub;
 import com.googlecode.instinct.marker.annotate.Subject;
@@ -73,26 +73,30 @@ public class TaskAttachmentServiceImplTest extends TestCase {
 
 	}
 
-	@Mock
 	AuthCredentials ac;
-	@Mock
 	AttachmentMetadata am;
-	@Mock AuthStrategy as;
+	AuthStrategy as;
+	HttpClient c;
+
 	@Stub Property[] prop;
-	@Mock HttpClient c;
+
 	@Specification
 	public void test() throws Exception {
 		prop = new  Property[1];
 		prop[0] = new Property("a", "a");
 		byte[] payload = new String("hello").getBytes();
+
+		ac= Mocker.mock(AuthCredentials.class);
+		am= Mocker.mock(AttachmentMetadata.class);
+		as= Mocker.mock(AuthStrategy.class);
+		c= Mocker.mock(HttpClient.class);
+
 		expect.that(new Expectations(){{
 			atLeast(1).of(am).getFilename();will(returnValue("abc"));
 			atLeast(1).of(am).getMimeType();will(returnValue("text/html"));
 			ignoring(c);will(returnValue(200));
-			
-			
-			
 		}});
+
 		service = new TaskAttachmentServiceImpl(new DummyAuthStrategy(),
 				new WDSStorageStrategy(){
 			protected HttpClient getClient(){
@@ -103,7 +107,7 @@ public class TaskAttachmentServiceImplTest extends TestCase {
 		_log.info(service.add(ac, am, payload));
 		_log.info(service.add(ac, am, "http://www.intalio.org/"));
 		service.delete(ac, "http://www.intalio.org/");
-		
 
+		Mocker.reset();
 	}
 }

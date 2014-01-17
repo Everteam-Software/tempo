@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import com.googlecode.instinct.expect.ExpectThat;
 import com.googlecode.instinct.expect.ExpectThatImpl;
+import com.googlecode.instinct.expect.behaviour.Mocker;
 import com.googlecode.instinct.integrate.junit4.InstinctRunner;
 import com.googlecode.instinct.marker.annotate.Mock;
 import com.googlecode.instinct.marker.annotate.Specification;
@@ -24,13 +25,21 @@ public class DeleteAllTasksActionTest extends TestCase {
     final static ExpectThat expect = new ExpectThatImpl();
     
     @Subject DeleteAllTasksAction act;
-    @Mock PortletRequestWrapper request;
-    @Mock HttpSession s;
-    @Mock ApplicationState st;
-    @Mock User user;
+
+    PortletRequestWrapper request;
+    HttpSession s;
+    ApplicationState st;
+    User user;
+
     @Specification
     public void testExecute(){
         act = new DeleteAllTasksAction();
+
+        request = Mocker.mock(PortletRequestWrapper.class);
+        s = Mocker.mock(HttpSession.class);
+        st = Mocker.mock(ApplicationState.class);
+        user = Mocker.mock(User.class);
+
         expect.that(new Expectations(){{
             atLeast(1).of(request).getSession();will(returnValue(s));
             atLeast(1).of(s).getAttribute("APPLICATION_STATE");will(returnValue(st));
@@ -44,5 +53,4 @@ public class DeleteAllTasksActionTest extends TestCase {
         assertNotNull(act.execute());
         assertNull(act.getErrorView());
     }
-   
 }

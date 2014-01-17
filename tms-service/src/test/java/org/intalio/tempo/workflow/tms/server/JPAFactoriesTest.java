@@ -28,6 +28,7 @@ import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
 import org.intalio.tempo.workflow.tms.server.dao.JPATaskDaoConnectionFactory;
 import org.intalio.tempo.workflow.util.TaskEquality;
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +60,12 @@ public class JPAFactoriesTest {
 		connection = jtdcf.openConnection();
 		return new JUnit4TestAdapter(JPAFactoriesTest.class);
 	}
+
+	@Before
+	public void setUp() {
+        System.setProperty("org.intalio.tempo.configDirectory",
+                "src/test/resources/");
+    }
 
 	@Test
 	public void userTaskListShouldBeEmpty() throws Exception {

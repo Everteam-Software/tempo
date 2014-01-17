@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import com.googlecode.instinct.expect.ExpectThat;
 import com.googlecode.instinct.expect.ExpectThatImpl;
+import com.googlecode.instinct.expect.behaviour.Mocker;
 import com.googlecode.instinct.integrate.junit4.InstinctRunner;
 import com.googlecode.instinct.marker.annotate.Mock;
 import com.googlecode.instinct.marker.annotate.Specification;
@@ -37,17 +38,28 @@ public class iCalServletTest extends TestCase {
 	    final static ExpectThat expect = new ExpectThatImpl();
 	    
 	   @Subject iCalServlet servlet;
-	   @Mock HttpServletRequest req;
-	   @Mock HttpServletResponse resp;
-	   @Mock TokenClient tc;
+
+	   HttpServletRequest req;
+	   HttpServletResponse resp;
+	   TokenClient tc;
+
 	   @Stub String token = "token1";
 	   @Stub Property[] prop = new Property[1];
-	   @Mock ITaskManagementService tms;
-	   
-	   @Mock ServletOutputStream stream;
-	   @Mock FormManager fmanager;
+
+	   ITaskManagementService tms;
+	   ServletOutputStream stream;
+	   FormManager fmanager;
+
 	   @Specification
 	   public void test() throws Exception{
+
+	       req = Mocker.mock(HttpServletRequest.class);
+	       resp = Mocker.mock(HttpServletResponse.class);
+	       tc = Mocker.mock(TokenClient.class);
+	       tms = Mocker.mock(ITaskManagementService.class);
+	       stream = Mocker.mock(ServletOutputStream.class);
+	       fmanager = Mocker.mock(FormManager.class);
+
 		   prop[0] = new Property("user", "user1");
 		   final Task[] tasks = new Task[1];
 		   tasks[0] = new PATask("taskid1", new URI("http://www.intalio.org/form"));		
@@ -55,6 +67,7 @@ public class iCalServletTest extends TestCase {
 //		   tasks[0].setFormURLFromString("http://www.intalio.org/form");
 		   expect.that(new Expectations(){{
 			  one(req).getParameter("token");will(returnValue(token));
+			  one(tc);
 			  one(req).getParameter("page");
 			  one(req).getParameter("rp");
 			  one(req).getParameter("sortname");
@@ -72,18 +85,16 @@ public class iCalServletTest extends TestCase {
 			  one(req).getServerName();will(returnValue("localhost"));
 			  one(req).getServerPort();will(returnValue(80));
 		   }});
+
 		   servlet = new iCalServlet();
 		   FormManagerBroker.getInstance().setFormManager(fmanager);
 		   Configuration.getInstance().setTokenClient(tc);
 		   Configuration.getInstance().setServiceEndpoint("http://www.intalio.org");
+
 		   try{
 			   servlet.doGet(req, resp);
-		   }catch(Exception e){
-//			   e.printStackTrace();
-//			   System.out.println("-------------\r\n");
-//			   e.getCause().printStackTrace();
-			   
-		   }
-		   
+		   }catch(Exception e){}
+
+		   Mocker.reset();
 	   }
 }

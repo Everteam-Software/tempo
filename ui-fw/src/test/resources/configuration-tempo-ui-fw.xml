@@ -93,27 +93,10 @@
 	
 	<bean id="tmsfactory" class="org.intalio.tempo.workflow.tms.client.TMSFactory">
 		<property name="local" value="false"/>
-		<property name="taskDAOFactory">
-			<ref bean="tms.daoFactory"/>
-		</property>
 		<property name="server">
 			<ref bean="tms.server" />
 		</property>
 		<property name="httpTimeOut" value="120000"/>
-	</bean>
-	
-	<bean id="tms.daoFactory" class="org.intalio.tempo.workflow.tms.server.dao.JPATaskDaoConnectionFactory">
-		<constructor-arg>
-			<map>
-        		<!--    <entry><key><value>openjpa.jdbc.SynchronizeMappings</value></key><value>buildSchema</value></entry> -->
-				<entry><key><value>openjpa.Log</value></key><value>log4j</value></entry>
-				<entry><key><value>openjpa.ConnectionFactoryMode</value></key><value>local</value></entry>
-				<entry><key><value>tempo.datasourceURL</value></key><value>jdbc:hsqldb:mem:test</value></entry>
-				<entry><key><value>openjpa.DataCache</value></key><value>false</value></entry>
-                                <entry><key><value>openjpa.QueryCache</value></key><value>true(cacheSize=20000)</value></entry>
-                                <entry><key><value>openjpa.RemoteCommitProvider</value></key><value>sjvm</value></entry>
-			</map>
-		</constructor-arg>
 	</bean>
 	
 	<bean id="tms.server" class="org.intalio.tempo.workflow.tms.server.TMSServer">

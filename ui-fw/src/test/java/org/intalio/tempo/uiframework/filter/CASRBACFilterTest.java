@@ -16,6 +16,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -30,11 +31,13 @@ import org.intalio.tempo.security.ws.TokenClient;
 import org.intalio.tempo.uiframework.Configuration;
 import org.intalio.tempo.uiframework.UIFWApplicationState;
 import org.jmock.Expectations;
+import org.jmock.Mockery;
 import org.junit.runner.RunWith;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.googlecode.instinct.expect.ExpectThat;
 import com.googlecode.instinct.expect.ExpectThatImpl;
+import com.googlecode.instinct.expect.behaviour.Mocker;
 import com.googlecode.instinct.integrate.junit4.InstinctRunner;
 import com.googlecode.instinct.marker.annotate.BeforeSpecification;
 import com.googlecode.instinct.marker.annotate.Mock;
@@ -326,13 +329,8 @@ public class CASRBACFilterTest {
     @Subject
     CASRBACFilter filter;
 
-    @Mock
     HttpServletRequest request;
-
-    @Mock
     HttpServletResponse response;
-
-    @Mock
     WebApplicationContext context;
 
     @BeforeSpecification
@@ -350,6 +348,10 @@ public class CASRBACFilterTest {
 
     @Specification
     public void testDoFilterSignOut() throws Exception {
+        request = Mocker.mock(HttpServletRequest.class);
+        response = Mocker.mock(HttpServletResponse.class);
+        context = Mocker.mock(WebApplicationContext.class);
+
         expect.that(new Expectations() {
             {
                 atLeast(1).of(request).getSession();
@@ -364,15 +366,23 @@ public class CASRBACFilterTest {
                 atLeast(1).of(request).getParameter("actionName");
                 will(returnValue("logOut"));
 
+                oneOf(response);
                 atLeast(1).of(response).sendRedirect("/login.htm");
             }
         });
+
         filter.doFilter(request, response, chain);
         Assert.assertTrue(true);
+
+        Mocker.reset();
     }
 
     @Specification
     public void testDoFilterSignIn() throws Exception {
+        request = Mocker.mock(HttpServletRequest.class);
+        response = Mocker.mock(HttpServletResponse.class);
+        context = Mocker.mock(WebApplicationContext.class);
+
         expect.that(new Expectations() {
             {
                 atLeast(1).of(request).getSession();
@@ -387,6 +397,8 @@ public class CASRBACFilterTest {
         });
         filter.doFilter(request, response, chain);
         Assert.assertTrue(true);
+
+        Mocker.reset();
     }
 
 }

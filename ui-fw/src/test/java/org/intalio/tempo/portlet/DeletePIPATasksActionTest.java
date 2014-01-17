@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import com.googlecode.instinct.expect.ExpectThat;
 import com.googlecode.instinct.expect.ExpectThatImpl;
+import com.googlecode.instinct.expect.behaviour.Mocker;
 import com.googlecode.instinct.integrate.junit4.InstinctRunner;
 import com.googlecode.instinct.marker.annotate.Mock;
 import com.googlecode.instinct.marker.annotate.Specification;
@@ -26,17 +27,20 @@ public class DeletePIPATasksActionTest extends TestCase {
 
     @Subject
     DeletePIPATasksAction act;
-    @Mock
+
     PortletRequestWrapper request;
-    @Mock
     HttpSession s;
-    @Mock
     ApplicationState st;
-    @Mock
     User user;
 
     @Specification
     public void testExecute() {
+
+        request = Mocker.mock(PortletRequestWrapper.class);
+        s = Mocker.mock(HttpSession.class);
+        st = Mocker.mock(ApplicationState.class);
+        user = Mocker.mock(User.class);
+
         act = new DeletePIPATasksAction();
         expect.that(new Expectations() {
             {
