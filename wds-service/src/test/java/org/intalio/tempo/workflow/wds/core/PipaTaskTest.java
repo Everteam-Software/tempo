@@ -27,6 +27,11 @@ import com.googlecode.instinct.marker.annotate.Specification;
 @RunWith(InstinctRunner.class)
 public class PipaTaskTest {
 
+    static{
+        System.setProperty("org.intalio.tempo.configDirectory",
+                "src/test/resources/");
+    }
+
     final static ExpectThat expect = new ExpectThatImpl();
 	
 	@Specification

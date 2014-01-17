@@ -51,6 +51,10 @@ define "tempo" do
     unless ENV["LIVE"] == 'yes'
       test.exclude '*RemoteFDSTest*'
     end
+
+    test.exclude '*FDSAxisHanderHelperTest*'
+    test.exclude '*FormDispatcherConfigurationTest*'
+
     package :war
     package :jar
     package :mar
@@ -122,7 +126,7 @@ define "tempo" do
   define "tms-service" do
     libs = projects("tms-axis", "tms-common", "dao-nutsNbolts"),JASYPT, APACHE_JPA, APACHE_COMMONS[:pool], AXIOM, AXIS2.values, JAXEN, SLF4J.values, SPRING[:core], STAX_API, XMLBEANS.values, DB_CONNECTOR.values, DEPLOY_API,  SECURITY.values,XALAN,JASYPT, BPMS_COMMON, ASPECTJ.values 
     compile.with libs
-    test.with libs + [ APACHE_JPA, REGISTRY, APACHE_DERBY, APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], SECURITY.values, CASTOR, EASY_B, LOG4J, DB_CONNECTOR.values, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES[:impl],  XERCES[:parserapi], XMLUNIT, INSTINCT]
+    test.with libs + [ APACHE_JPA, REGISTRY, APACHE_DERBY, APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], SECURITY.values, CASTOR, EASY_B, LOG4J, DB_CONNECTOR.values, SUNMAIL, WSDL4J, WS_COMMONS_SCHEMA, WOODSTOX, XERCES[:impl],  XERCES[:parserapi], XMLUNIT, INSTINCT, DOM4J]
 
     test.using :properties => 
       { 
@@ -201,6 +205,8 @@ ASPECTJ.values, SPRING[:aop] ]
     web_xml = _("src/main/webapp/WEB-INF/"+web_xml) 
     
     resources.filter.using "version" => VERSION_NUMBER
+
+    test.exclude '*TasksActionTest*'
     test.with JAXEN, XMLUNIT, INSTINCT, LOG4J, SPRING[:mock]
 	package(:jar)
     package(:war).include(web_xml, :as=>'WEB-INF/web.xml').with(:libs=>libs)

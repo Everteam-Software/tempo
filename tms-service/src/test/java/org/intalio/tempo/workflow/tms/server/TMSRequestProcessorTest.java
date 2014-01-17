@@ -34,6 +34,7 @@ import org.intalio.tempo.workflow.tms.server.dao.JPATaskDaoConnectionFactory;
 import org.intalio.tempo.workflow.tms.server.dao.SimpleTaskDAOConnectionFactory;
 import org.intalio.tempo.workflow.tms.server.permissions.TaskPermissions;
 import org.junit.Assert;
+import org.junit.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,6 +59,11 @@ public class TMSRequestProcessorTest extends TestCase {
   
   public static void main(String[] args) {
     junit.textui.TestRunner.run(TMSRequestProcessorTest.class);
+  }
+
+  public void setUp() {
+      System.setProperty("org.intalio.tempo.configDirectory",
+              "src/test/resources/");
   }
 
   public void testCreateAndGetTaskList() throws Exception {
@@ -88,7 +94,7 @@ public class TMSRequestProcessorTest extends TestCase {
     OMElement getTaskListResponse = requestProcessor.getAvailableTasks(getAvailableTasksRequest);
     _logger.debug(Utils.toPrettyXML(getTaskListResponse));
   }
-  
+
   public void testClearCache() throws Exception{
 	  TMSRequestProcessor requestProcessor = this.createRequestProcessorJPA();	  
 	  //Creating task
@@ -107,8 +113,7 @@ public class TMSRequestProcessorTest extends TestCase {
 	  stmt.execute("update tempo_task set description='I am a Good Test Task I Updated' where taskid='001_Create_Good_Test_Task'");
 	  stmt.close();
 	  conn.close();
-	  
-	  
+
 	  OMElement getTaskResponse2 = requestProcessor.getTask(getTaskRequest);
 	  _logger.debug(Utils.toPrettyXML(getTaskResponse2));
 	  //It'll not show the updated description due to cache.
@@ -288,24 +293,24 @@ public class TMSRequestProcessorTest extends TestCase {
     _logger.debug(Utils.toPrettyXML(getAttachmentsResponse1));
   }
   
-  public void testInitProcess() throws Exception{
-	    TMSRequestProcessor requestProcessor = this.createRequestProcessorJPA();
-	    _logger.info("================================");
-	    OMElement createTaskRequest = Utils.loadElementFromResource("/createPipaRequest.xml");
-	    OMElement createTaskResponse = requestProcessor.storePipa(createTaskRequest);
-	    _logger.debug(Utils.toPrettyXML(createTaskResponse));
-	    _logger.info("================================");
-	  
-	    //requestProcessor = this.createRequestProcessor();
-	  //OMElement createTaskRequest = Utils.loadElementFromResource("/createTaskRequest1.xml");
-	   createTaskRequest = Utils.loadElementFromResource("/initProcess.xml");
-	  _logger.debug(createTaskRequest.getText());
-	  //createTaskRequest = (OMElement)createTaskRequest.getChildrenWithLocalName("taskId").next();
-	  //createTaskRequest = createTaskRequest.getFirstElement().getFirstElement();
-	  _logger.debug("ele="+createTaskRequest.getLocalName());
-	  OMElement ret = requestProcessor.initProcess(createTaskRequest);
-	  _logger.debug(ret.getText());
-  }
+//  public void testInitProcess() throws Exception{
+//	    TMSRequestProcessor requestProcessor = this.createRequestProcessorJPA();
+//	    _logger.info("================================");
+//	    OMElement createTaskRequest = Utils.loadElementFromResource("/createPipaRequest.xml");
+//	    OMElement createTaskResponse = requestProcessor.storePipa(createTaskRequest);
+//	    _logger.debug(Utils.toPrettyXML(createTaskResponse));
+//	    _logger.info("================================");
+
+//	    //requestProcessor = this.createRequestProcessor();
+//	  //OMElement createTaskRequest = Utils.loadElementFromResource("/createTaskRequest1.xml");
+//	   createTaskRequest = Utils.loadElementFromResource("/initProcess.xml");
+//	  _logger.debug(createTaskRequest.getText());
+//	  //createTaskRequest = (OMElement)createTaskRequest.getChildrenWithLocalName("taskId").next();
+//	  //createTaskRequest = createTaskRequest.getFirstElement().getFirstElement();
+//	  _logger.debug("ele="+createTaskRequest.getLocalName());
+//	  OMElement ret = requestProcessor.initProcess(createTaskRequest);
+//	  _logger.debug(ret.getText());
+//  }
   
   public void testGetAndDeletePipa() throws Exception{
       TMSRequestProcessor requestProcessor = this.createRequestProcessorJPA();

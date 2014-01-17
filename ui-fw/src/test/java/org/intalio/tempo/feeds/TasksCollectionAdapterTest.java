@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import com.googlecode.instinct.expect.ExpectThat;
 import com.googlecode.instinct.expect.ExpectThatImpl;
+import com.googlecode.instinct.expect.behaviour.Mocker;
 import com.googlecode.instinct.integrate.junit4.InstinctRunner;
 import com.googlecode.instinct.marker.annotate.BeforeSpecification;
 import com.googlecode.instinct.marker.annotate.Mock;
@@ -44,37 +45,42 @@ public class TasksCollectionAdapterTest extends TestCase {
 
 	@Subject
 	TasksCollectionAdapter tca;
-	@Mock
+
 	ITaskManagementService client;
-	@Mock
+
 	ServletRequestContext request;
-	@Mock
+
 	Target target;
 	IRI iri;
 	Abdera abdera;
 
-	@BeforeSpecification
-	void before() throws Exception {
-		FormManagerBroker.getInstance().setFormManager(fm);
-		iri = new IRI("IntalioFEEDID/taskid1");
-		abdera = new Abdera();
-		tca = new TasksCollectionAdapter() {
-			protected ITaskManagementService getClient(String token) {
-				return client;
-			}
-		};
-	}
-
-	@Mock
 	TokenClient tc;
-	@Mock GenericFormManager fm;
+	GenericFormManager fm;
 
 	@Specification
 	public void testNormal() throws Exception {
-		final Property[] prop = new Property[1];
+
+	    FormManagerBroker.getInstance().setFormManager(fm);
+        iri = new IRI("IntalioFEEDID/taskid1");
+        abdera = new Abdera();
+
+	    request = Mocker.mock(ServletRequestContext.class);
+        target = Mocker.mock(Target.class);
+        tc = Mocker.mock(TokenClient.class);
+        client = Mocker.mock(ITaskManagementService.class);
+        fm = Mocker.mock(GenericFormManager.class);
+
+        tca = new TasksCollectionAdapter() {
+            protected ITaskManagementService getClient(String token) {
+                return client;
+            }
+        };
+
+	    final Property[] prop = new Property[1];
 		prop[0] = new Property("user", "user1");
 		final Task[] tasks = new Task[1];
 		tasks[0] = new PATask("taskid1", new URI("http://www.intalio.org/form"));
+
 		expect.that(new Expectations() {
 			{
 				atLeast(1).of(request).getTarget();
@@ -120,15 +126,33 @@ public class TasksCollectionAdapterTest extends TestCase {
 		expect.that(tca.getFeed(request) != null);
 		expect.that(tca.postEntry(request) != null);// not supported
 		expect.that(tca.putEntry(request) != null);// not supported
+
+		Mocker.reset();
 	}
 
-	
 	   @Specification
 	    public void testBranch() throws Exception {
 	        final Property[] prop = new Property[1];
 	        prop[0] = new Property("user", "user1");
 	        final Task[] tasks = new Task[1];
 	        tasks[0] = new PATask("taskid1", new URI("http://www.intalio.org/form"));
+
+	        FormManagerBroker.getInstance().setFormManager(fm);
+	        iri = new IRI("IntalioFEEDID/taskid1");
+	        abdera = new Abdera();
+
+	        request = Mocker.mock(ServletRequestContext.class);
+	        target = Mocker.mock(Target.class);
+	        tc = Mocker.mock(TokenClient.class);
+	        client = Mocker.mock(ITaskManagementService.class);
+	        fm = Mocker.mock(GenericFormManager.class);
+
+	        tca = new TasksCollectionAdapter() {
+	            protected ITaskManagementService getClient(String token) {
+	                return client;
+	            }
+	        };
+
 	        expect.that(new Expectations() {
 	            {
 	                atLeast(1).of(request).getTarget();
@@ -152,7 +176,7 @@ public class TasksCollectionAdapterTest extends TestCase {
 	                one(fm).getURL(tasks[0]);will(returnValue("http://www.intalio.org"));
 	                one(target).getType();will(returnValue(TargetType.TYPE_ENTRY));
 	                one(request).getUri();will(returnValue(iri));
-	                
+
 	                // second call for collection ==  "tasks"
 	                one(target).getParameter("collection");
                     will(returnValue("tasks"));
@@ -166,7 +190,7 @@ public class TasksCollectionAdapterTest extends TestCase {
                     one(fm).getURL(tasks[0]);will(returnValue("http://www.intalio.org"));
                     one(target).getType();will(returnValue(TargetType.TYPE_ENTRY));
                     one(request).getUri();will(returnValue(new IRI("IntalioFEEDID/taskid2")));
-	                
+
                     // third call
                     one(target).getParameter("collection");
                     will(returnValue("tasks"));
@@ -181,7 +205,7 @@ public class TasksCollectionAdapterTest extends TestCase {
                     one(fm).getURL(tasks[0]);will(returnValue("http://www.intalio.org"));
                     one(target).getType();will(returnValue(TargetType.TYPE_ENTRY));
                     one(request).getUri();will(returnValue(new IRI("IntalioFEEDID/taskid2")));
-                    
+
                     // fourth call
                     one(target).getParameter("collection");
                     will(returnValue("tasks"));
@@ -200,9 +224,9 @@ public class TasksCollectionAdapterTest extends TestCase {
 //                    one(fm).getURL(tasks[0]);will(returnValue("http://www.intalio.org"));
 //                    one(target).getType();will(returnValue(TargetType.TYPE_ENTRY));
 //                    one(request).getUri();will(returnValue(new IRI("IntalioFEEDID/taskid2")));
-                    
+
 	            }});
-	        
+
 	        Configuration.getInstance().setTokenClient(tc);
 	        Configuration.getInstance()
 	                .setServiceEndpoint("http://www.intalio.org");
@@ -214,7 +238,9 @@ public class TasksCollectionAdapterTest extends TestCase {
 	        try{
 	            tca.getEntry(request).writeTo(System.out);
 	        }catch(Exception e){
-	            
+
 	        }
+
+	        Mocker.reset();
 	    }
 }

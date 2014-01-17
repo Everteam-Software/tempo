@@ -8,12 +8,17 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 
-@ContextConfiguration(locations={"/tempo-ui-fw.xml"})
+@ContextConfiguration(locations={"/configuration-tempo-ui-fw.xml"})
 
 public class ConfigurationMockTest {
+    static {
+        System.setProperty("org.intalio.tempo.configDirectory",
+                "src/test/resources/");
+    }
+
     @Autowired  
     private Configuration _configuration;
-    
+
     @Test
     public void testToolbarIconSets(){
         System.out.println("start...");
