@@ -71,6 +71,14 @@ public abstract class Task extends BaseRestrictedEntity {
     @Basic
     private Date _creationDate = new Date();
 
+    @Column(name = "last_active_date")
+    @Basic
+    private Date _lastActiveDate = new Date();
+
+    @Column(name = "last_assigned_date")
+    @Basic
+    private Date _lastAssignedDate;
+
     @Basic
     @Column(name = "form_url")
     private String _formURL;
@@ -149,6 +157,25 @@ public abstract class Task extends BaseRestrictedEntity {
             throw new RequiredArgumentException("date");
         }
         _creationDate = date;
+    }
+
+    public Date getLastActiveDate() {
+        return _lastActiveDate;
+    }
+
+    public void setLastActiveDate(Date date) {
+        if (date == null) {
+            throw new RequiredArgumentException("date");
+        }
+        _lastActiveDate = date;
+    }
+
+    public Date getLastAssignedDate() {
+        return _lastAssignedDate;
+    }
+
+    public void setLastAssignedDate(Date date) {
+        _lastAssignedDate = date;
     }
 
     public URI getFormURL() {
