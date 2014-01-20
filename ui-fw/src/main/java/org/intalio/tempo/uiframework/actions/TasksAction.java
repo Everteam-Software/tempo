@@ -84,15 +84,15 @@ public class TasksAction extends Action {
         if(Boolean.valueOf(_request.getParameter("updateData")).booleanValue()) {
             Configuration configuration  = Configuration.getInstance(); 
             model.put("toolbarIcons", configuration.isUseToolbarIcons());
-               if(state.getCurrentUser()!=null && state.getCurrentUser().getRoles()!=null && configuration.isUseToolbarIcons().booleanValue()) 
+            model.put("tmsService", configuration.getServiceEndpoint());
+            model.put("tmpEndPoint", configuration.getTMPEndpoint());
+            model.put("totalRecords", _request.getAttribute("totalPage"));
+            model.put("currentPage", _request.getAttribute("currentPage"));
+            if(state.getCurrentUser()!=null && state.getCurrentUser().getRoles()!=null && configuration.isUseToolbarIcons().booleanValue()) 
                {
                    model.put("taskIconSet", configuration.getTaskIconSetByRole(state.getCurrentUser().getRoles()));
                    model.put("notificationIconSet", configuration.getNotificationIconSetByRole(state.getCurrentUser().getRoles()));
                    model.put("bindIcons",configuration.getBindIconSetToRole());
-                   model.put("tmsService", configuration.getServiceEndpoint());
-                   model.put("tmpEndPoint", configuration.getTMPEndpoint());
-                   model.put("totalRecords", _request.getAttribute("totalPage"));
-                   model.put("currentPage", _request.getAttribute("currentPage"));
                }
         }
 
