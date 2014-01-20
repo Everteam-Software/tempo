@@ -329,6 +329,13 @@ public class TMSServer implements ITMSServer {
         if (task instanceof ITaskWithState) {
             ITaskWithState taskWithState = (ITaskWithState) task;
             taskWithState.setState(TaskState.COMPLETED);
+
+            List<String> users = new ArrayList<String>();
+            users.add(credentials.getUserID());
+            task.setUserOwners(users);
+
+            task.setRoleOwners(new ArrayList<String>());
+
             dao.updateTask(task);
             dao.commit();
             if (_logger.isDebugEnabled())
@@ -346,6 +353,13 @@ public class TMSServer implements ITMSServer {
         if (task instanceof ITaskWithOutput && task instanceof ITaskWithState) {
             ((ITaskWithOutput) task).setOutput(output);
             ((ITaskWithState) task).setState(TaskState.COMPLETED);
+
+            List<String> users = new ArrayList<String>();
+            users.add(credentials.getUserID());
+            task.setUserOwners(users);
+
+            task.setRoleOwners(new ArrayList<String>());
+
             dao.updateTask(task);
             dao.commit();
             if (_logger.isDebugEnabled())
