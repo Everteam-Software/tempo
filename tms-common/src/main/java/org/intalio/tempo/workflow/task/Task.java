@@ -77,7 +77,7 @@ public abstract class Task extends BaseRestrictedEntity {
 
     @Column(name = "last_assigned_date")
     @Basic
-    private Date _lastAssignedDate = new Date();
+    private Date _lastAssignedDate;
 
     @Basic
     @Column(name = "form_url")
@@ -175,9 +175,6 @@ public abstract class Task extends BaseRestrictedEntity {
     }
 
     public void setLastAssignedDate(Date date) {
-        if (date == null) {
-            throw new RequiredArgumentException("date");
-        }
         _lastAssignedDate = date;
     }
 
