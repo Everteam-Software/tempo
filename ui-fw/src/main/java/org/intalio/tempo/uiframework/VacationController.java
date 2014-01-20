@@ -444,7 +444,7 @@ public class VacationController implements Controller {
         List<Property> assignedUsers = new ArrayList<Property>();
         Set<String> matchedUsers = new HashSet<String>();
         for (String role : userRoles) {
-           String[] usrs = null;
+           String[] usrs = {};
                    try {
                        usrs = rbacQueryClient.getAssignedUsers(role);
                 } catch (Exception e) {
