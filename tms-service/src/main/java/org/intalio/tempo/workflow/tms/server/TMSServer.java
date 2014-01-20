@@ -330,6 +330,8 @@ public class TMSServer implements ITMSServer {
             ITaskWithState taskWithState = (ITaskWithState) task;
             taskWithState.setState(TaskState.COMPLETED);
 
+            task.setLastActiveDate(new Date());
+
             List<String> users = new ArrayList<String>();
             users.add(credentials.getUserID());
             task.setUserOwners(users);
@@ -353,6 +355,8 @@ public class TMSServer implements ITMSServer {
         if (task instanceof ITaskWithOutput && task instanceof ITaskWithState) {
             ((ITaskWithOutput) task).setOutput(output);
             ((ITaskWithState) task).setState(TaskState.COMPLETED);
+
+            task.setLastActiveDate(new Date());
 
             List<String> users = new ArrayList<String>();
             users.add(credentials.getUserID());
@@ -383,6 +387,9 @@ public class TMSServer implements ITMSServer {
             taskWithState.setState(TaskState.FAILED);
             taskWithState.setFailureCode(failureCode);
             taskWithState.setFailureReason(failureReason);
+
+            task.setLastActiveDate(new Date());
+
             dao.updateTask(task);
             dao.commit();
             _logger.debug(
@@ -601,6 +608,11 @@ public class TMSServer implements ITMSServer {
         // issue
 
         try {
+            if((task.getUserOwners() != null && task.getUserOwners().size() > 0) ||
+                    (task.getRoleOwners() != null && task.getRoleOwners().size() > 0)) {
+                task.setLastAssignedDate(new Date());
+            }
+
             dao.createTask(task);
             dao.commit();
             if (_logger.isDebugEnabled())
@@ -884,6 +896,9 @@ public class TMSServer implements ITMSServer {
                 ((ITaskWithState) task).setState(state);
                 task.setUserOwners(users);
                 task.setRoleOwners(roles);
+
+                task.setLastActiveDate(new Date());
+                task.setLastAssignedDate(new Date());
 
                 dao.updateTask(task);
                 if (isTaskReady) {
