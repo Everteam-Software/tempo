@@ -15,6 +15,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -72,6 +74,11 @@ public class Audit {
     @Persistent
     @Column(name = "instance_id")
     private Long instanceId;
+
+    @Persistent
+    @Enumerated(EnumType.STRING)
+    @Column(name = "audit_type")
+    private AuditType auditType = AuditType.WORKFLOW;
 
     public long getId() {
         return id;
@@ -159,6 +166,14 @@ public class Audit {
 
     public void setInstanceId(Long instanceId) {
         this.instanceId = instanceId;
+    }
+
+    public AuditType getAuditType() {
+        return auditType;
+    }
+
+    public void setAuditType(AuditType auditType) {
+        this.auditType = auditType;
     }
 
 }

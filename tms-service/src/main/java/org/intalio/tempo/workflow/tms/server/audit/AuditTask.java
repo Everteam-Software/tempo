@@ -22,6 +22,7 @@ import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.Task;
 import org.intalio.tempo.workflow.task.TaskState;
 import org.intalio.tempo.workflow.task.audit.Audit;
+import org.intalio.tempo.workflow.task.audit.AuditType;
 import org.intalio.tempo.workflow.tms.UnavailableTaskException;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
 import org.slf4j.Logger;
@@ -240,6 +241,7 @@ public class AuditTask {
         audit.setTaskId(taskId);
         audit.setUser(user);
         audit.setInstanceId(instanceId);
+        audit.setAuditType(AuditType.WORKFLOW);
         return audit;
     }
 
