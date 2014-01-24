@@ -186,34 +186,64 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
 	}
 
 	@Override
-	public long getPendingNotificationCount(Object filter, String user, List<String> userRolesList) {
-		Query query = entityManager.createNamedQuery(Notification.GET_PENDING_NOTIFICATION_COUNT).setParameter("creationDate", filter).setParameter("userOwner", user).setParameter("roleOwners", userRolesList);
+    public long getPendingNotificationCount(Object since, String user, List<String> userRolesList) {
+        Query query = entityManager.createNamedQuery(Notification.GET_PENDING_NOTIFICATION_COUNT).setParameter("since", since).setParameter("userOwner", user).setParameter("roleOwners", userRolesList);
+        return (Long) query.getSingleResult();
+    }
+
+	@Override
+	public long getPendingNotificationCount(Object since, Object until, String user, List<String> userRolesList) {
+		Query query = entityManager.createNamedQuery(Notification.GET_PENDING_NOTIFICATION_COUNT).setParameter("since", since).setParameter("until", until).setParameter("userOwner", user).setParameter("roleOwners", userRolesList);
 		return (Long) query.getSingleResult();
 	}
 
+	@Override
+    public long getPendingTaskCount(Object since, String user, List<String> userRolesList) {
+        Query query = entityManager.createNamedQuery(PATask.GET_PENDING_TASK_COUNT).setParameter("since", since).setParameter("userOwner", user).setParameter("roleOwners", userRolesList);
+        return (Long) query.getSingleResult();
+    }
 
 	@Override
-	public long getPendingTaskCount(Object filter, String user, List<String> userRolesList) {
-		Query query = entityManager.createNamedQuery(PATask.GET_PENDING_TASK_COUNT).setParameter("creationDate", filter).setParameter("userOwner", user).setParameter("roleOwners", userRolesList);
+	public long getPendingTaskCount(Object since, Object until, String user, List<String> userRolesList) {
+		Query query = entityManager.createNamedQuery(PATask.GET_PENDING_TASK_COUNT).setParameter("since", since).setParameter("until", until).setParameter("userOwner", user).setParameter("roleOwners", userRolesList);
 		return (Long) query.getSingleResult();
 	}
 
 	@Override
-	public long getCompletedTaskCountByUser(Object filter, String user) {
-		Query query = entityManager.createNamedQuery(PATask.GET_COMPLETED_TASK_COUNT_BY_USER).setParameter("creationDate", filter).setParameter("userOwner", user);
+    public long getCompletedTaskCountByUser(Object since, String user) {
+        Query query = entityManager.createNamedQuery(PATask.GET_COMPLETED_TASK_COUNT_BY_USER).setParameter("since", since).setParameter("userOwner", user);
+        return (Long) query.getSingleResult();
+    }
+
+	@Override
+	public long getCompletedTaskCountByUser(Object since, Object until, String user) {
+		Query query = entityManager.createNamedQuery(PATask.GET_COMPLETED_TASK_COUNT_BY_USER).setParameter("since", since).setParameter("until", until).setParameter("userOwner", user);
 		return (Long) query.getSingleResult();
 	}
-	
+
 	@Override
-	public long getCompletedTaskCountByUserAssignedRoles(Object filter,
+    public long getCompletedTaskCountByUserAssignedRoles(Object since,
+            List<String> userRolesList) {
+        Query query = entityManager.createNamedQuery(PATask.GET_COMPLETED_TASK_COUNT_BY_USER_ASSIGNED_ROLES).setParameter("since", since).setParameter("roleOwners", userRolesList);
+        return (Long) query.getSingleResult();
+    }
+
+	@Override
+	public long getCompletedTaskCountByUserAssignedRoles(Object since, Object until,
 			List<String> userRolesList) {
-		Query query = entityManager.createNamedQuery(PATask.GET_COMPLETED_TASK_COUNT_BY_USER_ASSIGNED_ROLES).setParameter("creationDate", filter).setParameter("roleOwners", userRolesList);
+		Query query = entityManager.createNamedQuery(PATask.GET_COMPLETED_TASK_COUNT_BY_USER_ASSIGNED_ROLES).setParameter("since", since).setParameter("until", until).setParameter("roleOwners", userRolesList);
 		return (Long) query.getSingleResult();
 	}
 
 	@Override
-	public long getClaimedTaskCount(Object filter, String user) {
-		Query query = entityManager.createNamedQuery(PATask.GET_CLAIMED_TASK_COUNT).setParameter("creationDate", filter).setParameter("userOwner", user);
+    public long getClaimedTaskCount(Object since, String user) {
+        Query query = entityManager.createNamedQuery(PATask.GET_CLAIMED_TASK_COUNT).setParameter("since", since).setParameter("userOwner", user);
+        return (Long) query.getSingleResult();
+    }
+
+	@Override
+	public long getClaimedTaskCount(Object since, Object until, String user) {
+		Query query = entityManager.createNamedQuery(PATask.GET_CLAIMED_TASK_COUNT).setParameter("since", since).setParameter("until", until).setParameter("userOwner", user);
 		return (Long) query.getSingleResult();
 	}
 
@@ -222,29 +252,45 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
         checkTransactionIsActive();
         entityManager.persist(audit);
     }
-    
+
     public List<Object> getPendingClaimedTaskCountForAllUsers() {
         List<Object> taskCntForAllUsers = _fetcher.fetchTaskCountForUsers();
         return taskCntForAllUsers;           
     }
 
-    public List<Object> getPendingClaimedTaskCount(Date since, List<String> users, List<String> statusList) {
-        List<Object> taskCnt = _fetcher.fetchPendingClaimTaskCount(since, users, statusList);
+    public List<Object> getTaskDistributionByUsers(Date since, Date until,
+            List<String> users, List<String> statusList) {
+        List<Object> taskCnt = _fetcher
+                .fetchTaskDistributionByUserStatusAndTime(since, until, users,
+                        statusList);
         return taskCnt;
     }
 
-    public List<Object> getTaskCountByStatus(Date since) {
-        List<Object> taskCntByStatus = _fetcher.fetchTaskCountByStatus(since);
+    public List<Object> getTaskDistributionByRoles(Date since, Date until,
+            List<String> roles, List<String> statusList) {
+        List<Object> taskCnt = _fetcher
+                .fetchTaskDistributionByRoleStatusAndTime(since, until, roles,
+                        statusList);
+        return taskCnt;
+    }
+
+    public List<Object> getAverageTaskCompletionSummary(Date since, Date until, List<String> users) {
+        List<Object> taskCnt = _fetcher.fetchAverageTaskCompletionTime(since, until, users);
+        return taskCnt;
+    }
+
+    public List<Object> getTaskCountByStatus(Date since, Date until) {
+        List<Object> taskCntByStatus = _fetcher.fetchTaskCountByStatus(since, until);
         return taskCntByStatus;
     }
 
-    public List<Object> getTaskCountByPriority(Date since) {
-        List<Object> taskCntByPriority = _fetcher.fetchTaskCountByPriority(since);
+    public List<Object> getTaskCountByPriority(Date since, Date until) {
+        List<Object> taskCntByPriority = _fetcher.fetchTaskCountByPriority(since, until);
         return taskCntByPriority;
     }
 
-    public Map<Integer, Integer> getTaskCountByCreationDate(Date since) {
-        Map<Integer, Integer> taskCntByCreationDate = _fetcher.fetchTaskCountByCreationDate(since);
+    public Map<Integer, Integer> getTaskCountByCreationDate(Date since, Date until) {
+        Map<Integer, Integer> taskCntByCreationDate = _fetcher.fetchTaskCountByCreationDate(since, until);
         return taskCntByCreationDate;
     }
 
@@ -263,4 +309,11 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
 	public void deleteTaskPreviousOwners(String taskID) {
 		entityManager.remove(fetchTaskPreviousOwners(taskID));
 	}
+
+    @Override
+    public Map<String, Long> getMaxTaskCompletionForUsers(Date since,
+            Date until) {
+        Map<String, Long> taskSummary = _fetcher.getMaxTaskCompletionForUsers(since, until);
+        return taskSummary;
+    }
 }

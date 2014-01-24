@@ -66,38 +66,52 @@ import org.w3c.dom.Document;
         @NamedQuery(name = PATask.FIND_BY_STATES, query = "select m from PATask m where m._state=?1", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }),
         @NamedQuery(name= PATask.FIND_BY_INSTANCEID, query= "select m from PATask m where m._instanceId= ?1"),
         @NamedQuery(name=PATask.GET_PENDING_TASK_COUNT,
-			query="select count(pa._id) from PATask pa where pa._creationDate >= (:creationDate) and pa._state = TaskState.READY and (:userOwner MEMBER OF pa._userOwners or pa._roleOwners in (:roleOwners))"),
+			query="select count(pa._id) from PATask pa where pa._lastAssignedDate >= (:since) and pa._lastAssignedDate <= (:until) and pa._state = TaskState.READY and (:userOwner MEMBER OF pa._userOwners or pa._roleOwners in (:roleOwners))"),
 		@NamedQuery(name=PATask.GET_COMPLETED_TASK_COUNT_BY_USER,
-            query="select count(pa._id) from PATask pa where pa._creationDate >= (:creationDate) and pa._state = TaskState.COMPLETED and :userOwner MEMBER OF pa._userOwners"),
+            query="select count(pa._id) from PATask pa where pa._lastActiveDate >= (:since) and pa._lastActiveDate <= (:until) and pa._state = TaskState.COMPLETED and :userOwner MEMBER OF pa._userOwners"),
 		@NamedQuery(name=PATask.GET_COMPLETED_TASK_COUNT_BY_USER_ASSIGNED_ROLES,
-			query="select count(pa._id) from PATask pa where pa._creationDate >= (:creationDate) and pa._state = TaskState.COMPLETED and pa._roleOwners in (:roleOwners)"),
+			query="select count(pa._id) from PATask pa where pa._lastActiveDate >= (:since) and pa._lastActiveDate <= (:until) and pa._state = TaskState.COMPLETED and pa._roleOwners in (:roleOwners)"),
 		@NamedQuery(name=PATask.GET_CLAIMED_TASK_COUNT,
-			query="select count(pa._id) from PATask pa where pa._creationDate >= (:creationDate) and pa._state = TaskState.CLAIMED and :userOwner MEMBER OF pa._userOwners"),
+			query="select count(pa._id) from PATask pa where pa._lastAssignedDate >= (:since) and pa._lastAssignedDate <= (:until) and pa._state = TaskState.CLAIMED and :userOwner MEMBER OF pa._userOwners"),
 		/*get pending or claimed task counts for all users*/
 		@NamedQuery(name=PATask.GET_PENDING_CLAIMED_TASK_COUNT_FOR_ALL_USERS,
 		    query="select count(pa._id) as total,pa._state as State , user from PATask pa, IN (pa._userOwners) as user where (pa._state = TaskState.READY or pa._state =TaskState.CLAIMED )" +
 		        "group by pa._state, user "),
 
 		/*get pending or claimed task counts for users*/
-        @NamedQuery(name=PATask.GET_PENDING_CLAIMED_TASK_COUNT_FOR_USERS_BASED_ON_TIME,
+        @NamedQuery(name=PATask.GET_TASK_DISTRIBUTION_FOR_USERS_BASED_ON_TIME,
             query="select count(pa._id) as total,pa._state as State , user from PATask pa, IN (pa._userOwners) as user where pa._state IN (:states)" +
-                    "and pa._creationDate >= (:creationDate) and pa._userOwners in (:userOwners) group by pa._state, user "),
+                    "and pa._lastAssignedDate >= (:since) and pa._lastAssignedDate <= (:until) and pa._userOwners in (:userOwners) group by pa._state, user "),
 
         /*get pending or claimed task counts for all users based on time*/
-        @NamedQuery(name=PATask.GET_PENDING_CLAIMED_TASK_COUNT_BASED_ON_TIME,
+        @NamedQuery(name=PATask.GET_TASK_DISTRIBUTION_BY_USERS_BASED_ON_TIME,
             query="select count(pa._id) as total,pa._state as State , user from PATask pa, IN (pa._userOwners) as user where pa._state IN (:states) " +
-                    "and pa._creationDate >= (:creationDate) group by pa._state, user "),
+                    "and pa._lastAssignedDate >= (:since) and pa._lastAssignedDate <= (:until) group by pa._state, user "),
+
+        /* get pending or claimed task counts for all users based on time */
+        @NamedQuery(name = PATask.GET_TASK_DISTRIBUTION_BY_ROLES_BASED_ON_TIME, query = "select count(pa._id) as total,pa._state as State , role from PATask pa, IN (pa._roleOwners) as role where pa._state IN (:states) "
+                + "and pa._lastAssignedDate >= (:since) and pa._lastAssignedDate <= (:until) group by pa._state, role "),
+
+        /* get pending or claimed task counts for users */
+        @NamedQuery(name = PATask.GET_TASK_DISTRIBUTION_FOR_ROLES_BASED_ON_TIME, query = "select count(pa._id) as total, pa._state as State, role from PATask pa, IN (pa._roleOwners) as role where pa._state IN (:states)"
+                + "and pa._lastAssignedDate >= (:since) and pa._lastAssignedDate <= (:until) and pa._roleOwners in (:roleOwners) group by pa._state, role "),
 
         @NamedQuery(name=PATask.GET_TASK_COUNT_BY_STATUS,
             query="select count(pa._id) as total, pa._state as State from PATask pa where (pa._state = TaskState.READY or pa._state =TaskState.CLAIMED or pa._state = TaskState.COMPLETED " +
-                "or pa._state = TaskState.FAILED) and  pa._creationDate >= (:creationDate) group by pa._state"),
+                "or pa._state = TaskState.FAILED) and  pa._creationDate >= (:since) and pa._creationDate <= (:until) group by pa._state"),
 
         @NamedQuery(name=PATask.GET_TASK_COUNT_BY_PRIORITY,
             query="select count(pa._id) as total, pa._priority as Priority from PATask pa where (pa._state = TaskState.READY or pa._state = TaskState.CLAIMED or pa._state = TaskState.FAILED) " +
-                "and pa._creationDate >= (:creationDate) group by pa._priority"),
+                "and pa._creationDate >= (:since) and pa._creationDate <= (:until) group by pa._priority"),
 
         @NamedQuery(name=PATask.GET_TASK_COUNT_BY_CREATION_DATE,
-            query="select pa._creationDate from PATask pa where pa._creationDate >= (:creationDate)")
+            query="select pa._creationDate from PATask pa where pa._creationDate >= (:since) and pa._creationDate <= (:until) "),
+
+        @NamedQuery(name=PATask.GET_AVERAGE_COMPLETION_TIME_BY_USER,
+            query="select pa._lastActiveDate, pa._lastAssignedDate, user from PATask pa, IN (pa._userOwners) as user where pa._creationDate >= (:since) and pa._creationDate <= (:until) " + 
+                "and pa._state = TaskState.COMPLETED and pa._userOwners in (:userOwners)"),
+
+        @NamedQuery(name = PATask.GET_COMPLETED_TASK_COUNT_FOR_USERS, query = "select count(pa._id), user from PATask pa, IN (pa._userOwners) as user where pa._lastActiveDate >= (:since) and pa._lastActiveDate <= (:until) and pa._state = TaskState.COMPLETED"),
 })
 public class PATask extends Task implements ITaskWithState, IProcessBoundTask, ITaskWithInput, ITaskWithOutput,
         ICompleteReportingTask, ITaskWithAttachments, IChainableTask, ITaskWithPriority, ITaskWithDeadline ,IInstanceBoundTask,ITaskWithCustomMetadata{
@@ -111,11 +125,15 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
     public static final String GET_COMPLETED_TASK_COUNT_BY_USER_ASSIGNED_ROLES="get_completed_task_count_by_user_assigned_roles";
     public static final String GET_CLAIMED_TASK_COUNT="get_claimed_task_count";
     public static final String GET_PENDING_CLAIMED_TASK_COUNT_FOR_ALL_USERS="get_pending_claimed_task_count_for_all_users";
-    public static final String GET_PENDING_CLAIMED_TASK_COUNT_FOR_USERS_BASED_ON_TIME="get_pending_claimed_task_count_for_users_based_on_time";
-    public static final String GET_PENDING_CLAIMED_TASK_COUNT_BASED_ON_TIME="get_pending_claimed_task_count_based_on_time";
+    public static final String GET_TASK_DISTRIBUTION_FOR_USERS_BASED_ON_TIME="get_task_distribution_task_for_users_based_on_time";
+    public static final String GET_TASK_DISTRIBUTION_BY_USERS_BASED_ON_TIME="get_task_distribution_task_by_users_based_on_time";
     public static final String GET_TASK_COUNT_BY_STATUS="get_task_count_by_status";
     public static final String GET_TASK_COUNT_BY_PRIORITY="get_task_count_by_priority";
     public static final String GET_TASK_COUNT_BY_CREATION_DATE="get_task_count_by_creation_date";
+    public static final String GET_AVERAGE_COMPLETION_TIME_BY_USER="get_average_completion_time_by_user";
+    public static final String GET_COMPLETED_TASK_COUNT_FOR_USERS="get_completed_task_count_for_users";
+    public static final String GET_TASK_DISTRIBUTION_FOR_ROLES_BASED_ON_TIME="get_task_distribution_for_roles_based_on_time";
+    public static final String GET_TASK_DISTRIBUTION_BY_ROLES_BASED_ON_TIME="get_task_distribution_by_roles_based_on_time";
 
     @Persistent
     @Column(name = "state")

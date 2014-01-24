@@ -70,45 +70,100 @@ public interface ITaskDAOConnection {
 	
 	/**
 	 * Gives notification count which are in ready state available for logged in user and it's assigned roles.
-	 * @param filter
+	 * @param since
 	 * @param user
 	 * @param userRolesList
 	 * @return
 	 */
-	public long getPendingNotificationCount(Object filter, String user, List<String> userRolesList);
-	
+	public long getPendingNotificationCount(Object since, String user, List<String> userRolesList);
+
+	/**
+     * Gives notification count which are in ready state available for logged in user and it's assigned roles.
+     * @param since
+     * @param until
+     * @param user
+     * @param userRolesList
+     * @return
+     */
+    public long getPendingNotificationCount(Object since, Object until, String user, List<String> userRolesList);
+
 	/**
 	 * Gives pa task count which are in ready state available for logged-in user and it's assigned roles.
-	 * @param filter
+	 * @param since
 	 * @param user
 	 * @param userRolesList
 	 * @return
 	 */
-	public long getPendingTaskCount(Object filter, String user, List<String> userRolesList);
-	
+	public long getPendingTaskCount(Object since, String user, List<String> userRolesList);
+
+	/**
+     * Gives pa task count which are in ready state available for logged-in user and it's assigned roles.
+     * @param since
+     * @param until
+     * @param user
+     * @param userRolesList
+     * @return
+     */
+    public long getPendingTaskCount(Object since, Object until, String user, List<String> userRolesList);
+
 	/**
 	 * Gives pa task count which are in completed state available for logged-in user.
-	 * @param filter
+	 * @param since
 	 * @param user
 	 * @return
 	 */
-	public long getCompletedTaskCountByUser(Object filter, String user);
-	
+	public long getCompletedTaskCountByUser(Object since, String user);
+
+	/**
+	 * Gives pa task count which are in completed state available for all user based on given limit.
+	 * @param since
+	 * @param until
+	 * @return
+	 */
+	public Map<String, Long> getMaxTaskCompletionForUsers(Date since, Date until);
+
+	/**
+     * Gives pa task count which are in completed state available for logged-in user.
+     * @param since
+     * @param until
+     * @param user
+     * @return
+     */
+    public long getCompletedTaskCountByUser(Object since, Object until, String user);
+
 	/**
 	 * Gives pa task count which are in completed state available for logged-in user's assigned roles. 
-	 * @param filter
+	 * @param since
 	 * @param userRolesList
 	 * @return
 	 */
-	public long getCompletedTaskCountByUserAssignedRoles(Object filter, List<String> userRolesList);
-	
+	public long getCompletedTaskCountByUserAssignedRoles(Object since, List<String> userRolesList);
+
+	/**
+     * Gives pa task count which are in completed state available for logged-in user's assigned roles. 
+     * @param since
+     * @param until
+     * @param userRolesList
+     * @return
+     */
+    public long getCompletedTaskCountByUserAssignedRoles(Object since, Object until, List<String> userRolesList);
+
 	/**
 	 * Gives pa task count which are in claimed state available for logged-in user.
-	 * @param filter
+	 * @param since
 	 * @param user
 	 * @return
 	 */
-	public long getClaimedTaskCount(Object filter, String user);
+	public long getClaimedTaskCount(Object since, String user);
+
+	/**
+     * Gives pa task count which are in claimed state available for logged-in user.
+     * @param since
+     * @param until
+     * @param user
+     * @return
+     */
+    public long getClaimedTaskCount(Object since, Object until, String user);
 
     /**
      * WF-1574: Audit's the task
@@ -121,43 +176,59 @@ public interface ITaskDAOConnection {
      * @return
      */
     public List<Object> getPendingClaimedTaskCountForAllUsers();
-    
+
     /**
-     * Gives pa task count which are in ready or claimed state available for given users.
+     * Gives pa task distribution available for given users.
+     * 
      * @return
      */
-    public List<Object> getPendingClaimedTaskCount(Date since, List<String> users, List<String> statusList);
+    public List<Object> getTaskDistributionByUsers(Date since, Date until,
+            List<String> users, List<String> statusList);
+
+    /**
+     * Gives pa task distribution available for given users.
+     * 
+     * @return
+     */
+    public List<Object> getTaskDistributionByRoles(Date since, Date until,
+            List<String> roles, List<String> statusList);
+
+    /**
+     * Gives average completion time summary for tasks assigned to given users.
+     * @return
+     */
+    public List<Object> getAverageTaskCompletionSummary(Date since, Date until, List<String> users);
 
     /**
      * Gives pa task count based on Task Status.
      * @return
      */
-    public List<Object> getTaskCountByStatus(Date since);
+    public List<Object> getTaskCountByStatus(Date since, Date until);
 
     /**
      * Gives pa task count based on Task Priority.
      * @return
      */
-    public List<Object> getTaskCountByPriority(Date since);
+    public List<Object> getTaskCountByPriority(Date since, Date until);
 
     /**
      * Gives pa task count based on Task Creation Date.
      * @return
      */
-    public Map<Integer, Integer> getTaskCountByCreationDate(Date since);
+    public Map<Integer, Integer> getTaskCountByCreationDate(Date since, Date until);
 
     /**
      * save previous task owners
      * @return
      */
     public void storePreviousTaskOwners(TaskPrevOwners taskPrevOwners);
-    
+
     /**
      * get previous task owners
      * @return
      */
 	public TaskPrevOwners fetchTaskPreviousOwners(String taskID);
-	
+
 	/**
      * delete previous task owners
      * @return

@@ -76,10 +76,12 @@ public class JPAVacationDAOConnection extends AbstractJPAConnection implements V
 
     /**
      * get vacation details for selected user.
-     * @param user String
+     * 
+     * @param user
+     *            String
      * @return vacation list List<Vacation>
      */
-    public final List<Vacation> getVacationDetails(Date since,
+    public final List<Vacation> getVacationDetails(Date since, Date until,
             List<String> users) {
         Query query = null;
 
@@ -90,11 +92,16 @@ public class JPAVacationDAOConnection extends AbstractJPAConnection implements V
                             Vacation.class)
                     .setParameter("users", users)
                     .setParameter("fromDate", this.trimDate(since),
+                            TemporalType.DATE)
+                    .setParameter("toDate", this.trimDate(until),
                             TemporalType.DATE);
         } else {
-            query = entityManager.createNamedQuery(
-                    Vacation.GET_VACATION_DETAILS_BY_TIME, Vacation.class)
+            query = entityManager
+                    .createNamedQuery(Vacation.GET_VACATION_DETAILS_BY_TIME,
+                            Vacation.class)
                     .setParameter("fromDate", this.trimDate(since),
+                            TemporalType.DATE)
+                    .setParameter("toDate", this.trimDate(until),
                             TemporalType.DATE);
         }
 

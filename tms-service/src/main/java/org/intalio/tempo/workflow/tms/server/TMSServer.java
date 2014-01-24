@@ -276,7 +276,7 @@ public class TMSServer implements ITMSServer {
         // some workflow admin access user has been defined in the security configuration file
         else if (credentials.isWorkflowAdmin())
             return;       
-        
+
         // fire the exception, this user cannot read this task
         else
             throw new AccessDeniedException(credentials.getUserID() + " cannot access task:" + taskID);      
@@ -330,6 +330,9 @@ public class TMSServer implements ITMSServer {
             ITaskWithState taskWithState = (ITaskWithState) task;
             taskWithState.setState(TaskState.COMPLETED);
 
+            if(task.getLastAssignedDate() == null) {
+                task.setLastAssignedDate(new Date());
+            }
             task.setLastActiveDate(new Date());
 
             List<String> users = new ArrayList<String>();

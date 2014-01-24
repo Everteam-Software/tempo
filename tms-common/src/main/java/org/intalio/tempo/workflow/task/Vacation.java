@@ -51,10 +51,12 @@ import org.intalio.tempo.workflow.util.RequiredArgumentException;
         query = "select vacation from Vacation vacation where "
                 + "vacation._user in (:users) "
                 + "AND vacation._fromDate >=(:fromDate)  "
+                + "AND vacation._toDate >=(:toDate)  "
                 + "AND vacation._is_active = 1"),
         @NamedQuery(name = Vacation.GET_VACATION_DETAILS_BY_TIME,
         query = "select vacation from Vacation vacation where "
                 + "vacation._fromDate >=(:fromDate)  "
+                + "AND vacation._toDate >=(:toDate)  "
                 + "AND vacation._is_active = 1"),
         @NamedQuery(name = Vacation.FIND_VAC_BY_ID,
         query = "select vacation from Vacation vacation where "
