@@ -44,6 +44,11 @@ public class TMSServerTest extends TestCase {
         junit.textui.TestRunner.run(TMSServerTest.class);
     }
 
+    public void setUp() throws Exception {
+        System.setProperty("org.intalio.tempo.configDirectory",
+                "src/test/resources/");
+    }
+
     public void testPATaskLifecycle() throws Exception {
         ITMSServer server = Utils.createTMSServer();
 
@@ -83,7 +88,7 @@ public class TMSServerTest extends TestCase {
 
         Document newOutput2 = Utils.createXMLDocument();
         server.setOutputAndComplete(dao,"taskID", newOutput2, "token2");
-        PATask completedTask = (PATask) server.getTask(dao,"taskID", "token1");
+        PATask completedTask = (PATask) server.getTask(dao,"taskID", "token2");
         Assert.assertTrue(XmlTooling.equals(newOutput2, completedTask.getOutput()));
         Assert.assertEquals(TaskState.COMPLETED, completedTask.getState());
 
@@ -203,7 +208,7 @@ public class TMSServerTest extends TestCase {
         Assert.assertEquals(0, server.getTaskList(dao,"token3").length);
 
         server.complete(dao,"taskID", "token2");
-        Notification completedTask = (Notification) server.getTask(dao,"taskID", "token1");
+        Notification completedTask = (Notification) server.getTask(dao,"taskID", "token2");
         Assert.assertEquals(TaskState.COMPLETED, completedTask.getState());
 
         String failureCode = "failure-code";

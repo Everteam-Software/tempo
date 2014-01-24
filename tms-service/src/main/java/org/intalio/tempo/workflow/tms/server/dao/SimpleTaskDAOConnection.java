@@ -195,7 +195,6 @@ public class SimpleTaskDAOConnection implements ITaskDAOConnection {
 		return 0;
 	}
 
-
 	@Override
 	public long getPendingTaskCount(Object filter, String user, List<String> userRolesList) {
 		// TODO Auto-generated method stub
@@ -260,23 +259,70 @@ public class SimpleTaskDAOConnection implements ITaskDAOConnection {
     }
 
     @Override
-    public List<Object> getPendingClaimedTaskCount(Date since,
+    public long getPendingNotificationCount(Object since, Object until,
+            String user, List<String> userRolesList) {
+        throw new RuntimeException("Not Implemented");
+    }
+
+    @Override
+    public long getPendingTaskCount(Object since, Object until, String user,
+            List<String> userRolesList) {
+        throw new RuntimeException("Not Implemented");
+    }
+
+    @Override
+    public long getCompletedTaskCountByUser(Object since, Object until,
+            String user) {
+        throw new RuntimeException("Not Implemented");
+    }
+
+    @Override
+    public long getCompletedTaskCountByUserAssignedRoles(Object since,
+            Object until, List<String> userRolesList) {
+        throw new RuntimeException("Not Implemented");
+    }
+
+    @Override
+    public long getClaimedTaskCount(Object since, Object until, String user) {
+        throw new RuntimeException("Not Implemented");
+    }
+
+    @Override
+    public List<Object> getTaskCountByStatus(Date since, Date until) {
+        throw new RuntimeException("Not Implemented");
+    }
+
+    @Override
+    public List<Object> getTaskCountByPriority(Date since, Date until) {
+        throw new RuntimeException("Not Implemented");
+    }
+
+    @Override
+    public Map<Integer, Integer> getTaskCountByCreationDate(Date since,
+            Date until) {
+        throw new RuntimeException("Not Implemented");
+    }
+
+    @Override
+    public List<Object> getAverageTaskCompletionSummary(Date since, Date until,
+            List<String> users) {
+        throw new RuntimeException("Not Implemented");
+    }
+
+    @Override
+    public List<Object> getTaskDistributionByUsers(Date since, Date until,
             List<String> users, List<String> statusList) {
         throw new RuntimeException("Not Implemented");
     }
 
     @Override
-    public List<Object> getTaskCountByStatus(Date since) {
+    public List<Object> getTaskDistributionByRoles(Date since, Date until,
+            List<String> roles, List<String> statusList) {
         throw new RuntimeException("Not Implemented");
     }
 
     @Override
-    public List<Object> getTaskCountByPriority(Date since) {
-        throw new RuntimeException("Not Implemented");
-    }
-
-    @Override
-    public Map<Integer, Integer> getTaskCountByCreationDate(Date since) {
+    public Map<String, Long> getMaxTaskCompletionForUsers(Date since, Date until) {
         throw new RuntimeException("Not Implemented");
     }
 }

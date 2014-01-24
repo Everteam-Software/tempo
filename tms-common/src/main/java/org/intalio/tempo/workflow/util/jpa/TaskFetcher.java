@@ -526,7 +526,7 @@ public class TaskFetcher {
     /**
      * Fetch the pending and claimed task count for all users.
      */
-    public List<Object> fetchPendingClaimTaskCount(Date since,
+    public List<Object> fetchTaskDistributionByUserStatusAndTime(Date since, Date until,
             List<String> users, List<String> statusList) {
         List<TaskState> taskStatusList = new ArrayList<TaskState>();
 
@@ -544,14 +544,13 @@ public class TaskFetcher {
 
         if (users != null) {
             q = _entityManager
-                    .createNamedQuery(PATask.GET_PENDING_CLAIMED_TASK_COUNT_FOR_USERS_BASED_ON_TIME);
-            q.setParameter("creationDate", since)
-                    .setParameter("userOwners", users)
+                    .createNamedQuery(PATask.GET_TASK_DISTRIBUTION_FOR_USERS_BASED_ON_TIME);
+            q.setParameter("since", since).setParameter("until", until).setParameter("userOwners", users)
                     .setParameter("states", taskStatusList);
         } else {
             q = _entityManager
-                    .createNamedQuery(PATask.GET_PENDING_CLAIMED_TASK_COUNT_BASED_ON_TIME);
-            q.setParameter("creationDate", since).setParameter("states",
+                    .createNamedQuery(PATask.GET_TASK_DISTRIBUTION_BY_USERS_BASED_ON_TIME);
+            q.setParameter("since", since).setParameter("until", until).setParameter("states",
                     taskStatusList);
         }
 
@@ -572,11 +571,88 @@ public class TaskFetcher {
     }
 
     /**
+     * Fetch the pending and claimed task count for all users.
+     */
+    public List<Object> fetchTaskDistributionByRoleStatusAndTime(Date since, Date until,
+            List<String> roles, List<String> statusList) {
+        List<TaskState> taskStatusList = new ArrayList<TaskState>();
+
+        if (statusList == null) {
+            taskStatusList.add(TaskState.READY);
+            taskStatusList.add(TaskState.CLAIMED);
+            taskStatusList.add(TaskState.COMPLETED);
+        } else {
+            for (String status : statusList) {
+                taskStatusList.add(TaskState.valueOf(status));
+            }
+        }
+
+        Query q = null;
+
+        if (roles != null) {
+            q = _entityManager
+                    .createNamedQuery(PATask.GET_TASK_DISTRIBUTION_FOR_ROLES_BASED_ON_TIME);
+            q.setParameter("since", since).setParameter("until", until).setParameter("roleOwners", roles)
+                    .setParameter("states", taskStatusList);
+        } else {
+            q = _entityManager
+                    .createNamedQuery(PATask.GET_TASK_DISTRIBUTION_BY_ROLES_BASED_ON_TIME);
+            q.setParameter("since", since).setParameter("until", until).setParameter("states",
+                    taskStatusList);
+        }
+
+        List result = q.getResultList();
+        List<Object> resultSet = new ArrayList<Object>();
+
+        Iterator<Object> iterator = result.iterator();
+        while (iterator.hasNext()) {
+            Object[] row = (Object[]) iterator.next();
+            HashMap<String, Object> rowData = new HashMap<String, Object>();
+            rowData.put("Count", row[0]);
+            rowData.put("State", ((TaskState) row[1]).getName());
+            rowData.put("Role", row[2]);
+            resultSet.add(rowData);
+        }
+
+        return resultSet;
+    }
+
+    /**
+     * Fetch the average completion time for tasks assigned to given users.
+     */
+    public List<Object> fetchAverageTaskCompletionTime(Date since, Date until,
+            List<String> users) {
+
+        Query q = null;
+
+        q = _entityManager
+                .createNamedQuery(PATask.GET_AVERAGE_COMPLETION_TIME_BY_USER);
+        q.setParameter("since", since).setParameter("until", until)
+                .setParameter("userOwners", users);
+
+        List result = q.getResultList();
+        List<Object> resultSet = new ArrayList<Object>();
+
+        Iterator<Object> iterator = result.iterator();
+        while (iterator.hasNext()) {
+            Object[] row = (Object[]) iterator.next();
+            HashMap<String, Object> rowData = new HashMap<String, Object>();
+            rowData.put("EndDate", row[0]);
+            rowData.put("StartDate", row[1]);
+            rowData.put("User", row[2]);
+            resultSet.add(rowData);
+        }
+
+        return resultSet;
+    }
+
+    /**
      * Fetch the task count for all states.
      */
-    public List<Object> fetchTaskCountByStatus(Date since) {
+    public List<Object> fetchTaskCountByStatus(Date since, Date until) {
         Query q = _entityManager.createNamedQuery(PATask.GET_TASK_COUNT_BY_STATUS);
-        q.setParameter("creationDate", since);
+        q.setParameter("since", since);
+        q.setParameter("until", until);
 
         List result = q.getResultList();
         List <Object>resultSet = new ArrayList<Object>();
@@ -597,9 +673,10 @@ public class TaskFetcher {
     /**
      * Fetch the task count for all priorities.
      */
-    public List<Object> fetchTaskCountByPriority(Date since) {
+    public List<Object> fetchTaskCountByPriority(Date since, Date until) {
         Query q = _entityManager.createNamedQuery(PATask.GET_TASK_COUNT_BY_PRIORITY);
-        q.setParameter("creationDate", since);
+        q.setParameter("since", since);
+        q.setParameter("until", until);
 
         List result = q.getResultList();
         List <Object>resultSet = new ArrayList<Object>();
@@ -620,10 +697,11 @@ public class TaskFetcher {
     /**
      * Fetch the task count by creation date.
      */
-    public Map<Integer, Integer> fetchTaskCountByCreationDate(Date since) {
+    public Map<Integer, Integer> fetchTaskCountByCreationDate(Date since, Date until) {
         Query q = _entityManager
                 .createNamedQuery(PATask.GET_TASK_COUNT_BY_CREATION_DATE);
-        q.setParameter("creationDate", since);
+        q.setParameter("since", since);
+        q.setParameter("until", until);
 
         Map<Integer, Integer> taskData = new HashMap<Integer, Integer>();
 
@@ -646,5 +724,26 @@ public class TaskFetcher {
         }
 
         return taskData;
+    }
+
+    public Map<String, Long> getMaxTaskCompletionForUsers(Date since,
+            Date until) {
+
+        Map<String, Long> taskSummary = new HashMap<String, Long>();
+        Query q = null;
+
+        q = _entityManager
+                .createNamedQuery(PATask.GET_COMPLETED_TASK_COUNT_FOR_USERS);
+        q.setParameter("since", since).setParameter("until", until);
+
+        List result = q.getResultList();
+
+        Iterator<Object> iterator = result.iterator();
+        while (iterator.hasNext()) {
+            Object[] row = (Object[]) iterator.next();
+            taskSummary.put((String) row[1], (Long)row[0]);
+        }
+
+        return taskSummary;
     }
 }
