@@ -885,8 +885,11 @@ public class TMSServer implements ITMSServer {
                     if (userAction != null && userAction.equals("REVOKE")) {
                         TaskPrevOwners taskPrevOwners =
                                 dao.fetchTaskPreviousOwners(taskID);
-                        String[] prevUsers = StringUtils.split(
+                        String[] prevUsers = null;
+                        if(taskPrevOwners != null) {
+                            prevUsers = StringUtils.split(
                                 taskPrevOwners.getPrevUsers() , ",");
+                        }
                         if(prevUsers == null) { prevUsers = new String[0]; }
                         users = new AuthIdentifierSet( prevUsers );
                         String[] prevRoles = StringUtils.split(
