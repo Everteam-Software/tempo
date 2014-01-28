@@ -111,7 +111,8 @@ import org.w3c.dom.Document;
             query="select pa._lastActiveDate, pa._lastAssignedDate, user from PATask pa, IN (pa._userOwners) as user where pa._creationDate >= (:since) and pa._creationDate <= (:until) " + 
                 "and pa._state = TaskState.COMPLETED and pa._userOwners in (:userOwners)"),
 
-        @NamedQuery(name = PATask.GET_COMPLETED_TASK_COUNT_FOR_USERS, query = "select count(pa._id), user from PATask pa, IN (pa._userOwners) as user where pa._lastActiveDate >= (:since) and pa._lastActiveDate <= (:until) and pa._state = TaskState.COMPLETED"),
+        @NamedQuery(name = PATask.GET_COMPLETED_TASK_COUNT_FOR_USERS, query = "select count(pa._id), user from PATask pa, IN (pa._userOwners) as user where pa._lastActiveDate >= (:since)"
+                + " and pa._lastActiveDate <= (:until) and pa._state = TaskState.COMPLETED group by user"),
 })
 public class PATask extends Task implements ITaskWithState, IProcessBoundTask, ITaskWithInput, ITaskWithOutput,
         ICompleteReportingTask, ITaskWithAttachments, IChainableTask, ITaskWithPriority, ITaskWithDeadline ,IInstanceBoundTask,ITaskWithCustomMetadata{
