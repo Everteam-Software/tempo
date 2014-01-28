@@ -306,9 +306,11 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
 	}
 
 	@Override
-	public void deleteTaskPreviousOwners(String taskID) {
-		entityManager.remove(fetchTaskPreviousOwners(taskID));
-	}
+    public void deleteTaskPreviousOwners(String taskID) {
+        TaskPrevOwners prevOwners = fetchTaskPreviousOwners(taskID);
+        if (prevOwners != null)
+            entityManager.remove(prevOwners);
+    }
 
     @Override
     public Map<String, Long> getMaxTaskCompletionForUsers(Date since,
@@ -316,4 +318,5 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
         Map<String, Long> taskSummary = _fetcher.getMaxTaskCompletionForUsers(since, until);
         return taskSummary;
     }
+
 }

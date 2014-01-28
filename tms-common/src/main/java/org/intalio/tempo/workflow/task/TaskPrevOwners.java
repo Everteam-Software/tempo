@@ -141,10 +141,13 @@ public class TaskPrevOwners {
      * @param taskId String
      * @return TaskPrevOwners
      */
-	public final TaskPrevOwners fetchPrevOwnersByID(final String taskId) {
+    public final TaskPrevOwners fetchPrevOwnersByID(final String taskId) {
         Query q = findId.setParameter(1, taskId);
         List<TaskPrevOwners> resultList = q.getResultList();
-        return resultList.get(0);
+        if (resultList.size() > 0)
+            return resultList.get(0);
+        else
+            return null;
     }
 
 }

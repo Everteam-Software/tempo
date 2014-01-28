@@ -12,6 +12,7 @@ package org.intalio.tempo.workflow.dao;
 
 import javax.persistence.EntityManager;
 
+import org.apache.openjpa.persistence.RollbackException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,11 +54,32 @@ public class AbstractJPAConnection {
 		}
 	}
 
-	public void commit() {
-		if (entityManager.getTransaction().isActive()) {
-			_logger.debug(ACTION.COMMIT.toString());
-			entityManager.getTransaction().commit();
-		}
-	}
+    public void commit() {
+        if (entityManager.getTransaction().isActive()) {
+            _logger.debug(ACTION.COMMIT.toString());
+            try {
+                entityManager.getTransaction().commit();
+            } catch (RollbackException e) {
+                _logger.debug("Going to retry transaction after exception ", e);
+                if (entityManager.getTransaction().isActive()) {
+                    retryCommit(1);
+                } else {
+                    throw e;
+                }
+            }
+        }
+    }
 
+    private void retryCommit(int retry) {
+        try {
+            entityManager.getTransaction().commit();
+        } catch (RollbackException e) {
+            if (retry < 1 && entityManager.getTransaction().isActive()) {
+                _logger.debug("Going to retry transaction after exception ", e);
+                retryCommit(++retry);
+            } else {
+                throw e;
+            }
+        }
+    }
 }
