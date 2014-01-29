@@ -22,7 +22,7 @@ import org.intalio.tempo.security.rbac.RBACException;
 import org.intalio.tempo.security.token.TokenService;
 import org.intalio.tempo.security.util.PropertyUtils;
 import org.intalio.tempo.security.util.StringArrayUtils;
-import org.intalio.tempo.uiframework.Configuration;
+import org.intalio.tempo.security.ws.TokenClient;
 import org.intalio.tempo.web.ApplicationState;
 import org.intalio.tempo.web.User;
 import org.slf4j.Logger;
@@ -42,6 +42,7 @@ public class CASRBACFilter implements Filter {
     private static final String CAS_RECEIPT = "edu.yale.its.tp.cas.client.filter.receipt";
     private static final String SERVICE_URL = "edu.yale.its.tp.cas.client.filter.serviceUrl";
     private static final String LOGOUT_URL = "edu.yale.its.tp.cas.client.filter.logoutUrl";
+    private static final String TOKEN_SERVICE_ENDPOINT = "org.intalio.tempo.security.tokenServiceUrl";
 
     private static final String APPLICATION_STATE = "applicationState";
 
@@ -83,7 +84,8 @@ public class CASRBACFilter implements Filter {
             throws RemoteException {
         LOG.info("signing in with CAS....");
         String serviceURL = _filterConfig.getInitParameter(SERVICE_URL);
-        TokenService tokenService = Configuration.getInstance().getTokenClient();
+        String endpointUrl = _filterConfig.getInitParameter(TOKEN_SERVICE_ENDPOINT);
+        TokenService tokenService = new TokenClient(endpointUrl);
         String pgtIou = null;
         CASReceipt CASreceipt = (CASReceipt) session.getAttribute(CAS_RECEIPT);
         if (CASreceipt != null)
