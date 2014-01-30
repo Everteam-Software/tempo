@@ -30,6 +30,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.QueryHint;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.apache.openjpa.persistence.PersistentMap;
 import org.apache.openjpa.persistence.jdbc.ContainerTable;
@@ -95,6 +96,12 @@ public abstract class Task extends BaseRestrictedEntity {
     @ContainerTable(name="tempo_acl_map")
     @MapKey(name = "action")
     private Map<String, ACL> _actionACLs = new HashMap<String, ACL>();
+
+    /**
+     * Holds a flag to indicate is this task available to action.
+     */
+    @Transient
+    private boolean isTaskAvailable = false;
 
     public Task() {
         super();
@@ -270,5 +277,13 @@ public abstract class Task extends BaseRestrictedEntity {
 				+ ", _formURL=" + _formURL + ", _id=" + _id + ", _internalId="
 				+ _internalId + "]";
 	}
+
+    public boolean getIsTaskAvailable() {
+        return isTaskAvailable;
+    }
+
+    public void setIsTaskAvailable(boolean isAvailable) {
+        this.isTaskAvailable = isAvailable;
+    }
 
 }

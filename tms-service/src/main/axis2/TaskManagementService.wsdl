@@ -320,7 +320,8 @@
                     <xsd:element minOccurs="0" name="dismissAction" type="tns:accessControlType"/>
                     <xsd:element minOccurs="0" name="completeAction" type="tns:accessControlType"/>
                     <xsd:element minOccurs="0" name="attachments" type="tns:attachments"/>
-					<xsd:element minOccurs="0" maxOccurs="1" name="customMetadata" type="tns:customMetadataType"/>
+                    <xsd:element minOccurs="0" maxOccurs="1" name="customMetadata" type="tns:customMetadataType"/>
+                    <xsd:element minOccurs="0" name="isTaskAvailable" type="xsd:boolean"/>
                 </xsd:sequence>				
             </xsd:complexType>
 			<xsd:complexType name="customMetadataType">

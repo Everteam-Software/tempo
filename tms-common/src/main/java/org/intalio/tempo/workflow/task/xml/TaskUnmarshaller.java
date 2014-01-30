@@ -459,7 +459,7 @@ public class TaskUnmarshaller extends XmlBeanUnmarshaller {
             ITaskWithPriority taskWithDeadline = (ITaskWithPriority) resultTask;
             taskWithDeadline.setPriority(priority);
         }
-
+        resultTask.setIsTaskAvailable(taskMetadata.getIsTaskAvailable());
         return resultTask;
     }
 
