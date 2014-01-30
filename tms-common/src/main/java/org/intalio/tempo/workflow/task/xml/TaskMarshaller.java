@@ -227,6 +227,7 @@ public class TaskMarshaller {
                             .getPreviousTaskID());
                 }
             }
+            taskMetadataElement.setIsTaskAvailable(task.isAvailableTo(roles));
         }
         return taskMetadataElement;
     }
