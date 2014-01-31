@@ -106,7 +106,17 @@ public class VacationController implements Controller {
             IOException {
         try {
             amRoles = conf.getAbsenceManagerRoles();
-            users = rbacAdminClient.getUsers();
+            if(users == null){
+                synchronized( this ) {
+                     if(users == null){
+                         try {
+                            users = rbacAdminClient.getUsers();
+                        } catch (Exception e) {
+                            LOG.debug("Exception while getting Users " + e.getMessage());
+                        }
+                     }
+                }
+            }
             String endpoint = URIUtils.resolveURI(request, _endpoint);
             String pToken = getParticipantToken(request);
             taskManager = Configuration.getInstance().getTmsFactory()
@@ -141,6 +151,9 @@ public class VacationController implements Controller {
                     model.put("isAbsenceManager", isAbsenceManager);
                     model.put("isSubstituteMandatory",
                             isSubstituteMandatory.booleanValue());
+                    if(users == null) {
+                        model.put("error_message", "error_fetch_users");
+                    }
                 } else if (action.equalsIgnoreCase("match")) {
                     String fromDate = request.getParameter("fromDate");
                     String toDate = request.getParameter("toDate");
