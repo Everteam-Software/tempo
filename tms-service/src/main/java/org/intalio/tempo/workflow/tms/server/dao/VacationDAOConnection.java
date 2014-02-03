@@ -84,8 +84,8 @@ public interface VacationDAOConnection {
      * 
      * @return Object Vacation
      */
-    public List<Vacation> getVacationDetails(Date since, Date until,
-            List<String> users);
+    public List<Vacation> getVacationDetails(Date startSince, Date startUntil,
+            Date endSince, Date endUntil, List<String> users);
 
 	/**
 	 * end vacation details

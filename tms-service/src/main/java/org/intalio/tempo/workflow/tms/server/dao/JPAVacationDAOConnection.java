@@ -18,6 +18,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TemporalType;
+import javax.persistence.TypedQuery;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.intalio.tempo.workflow.dao.AbstractJPAConnection;
@@ -74,39 +75,37 @@ public class JPAVacationDAOConnection extends AbstractJPAConnection implements V
         return result;
     }
 
-    /**
-     * get vacation details for selected user.
-     * 
-     * @param user
-     *            String
-     * @return vacation list List<Vacation>
-     */
-    public final List<Vacation> getVacationDetails(Date since, Date until,
-            List<String> users) {
-        Query query = null;
+    @Override
+    public final List<Vacation> getVacationDetails(Date startSince,
+            Date startUntil, Date endSince, Date endUntil, List<String> users) {
 
-        if (users != null) {
-            query = entityManager
-                    .createNamedQuery(
-                            Vacation.GET_VACATION_DETAILS_BY_USERS_TIME,
-                            Vacation.class)
-                    .setParameter("users", users)
-                    .setParameter("fromDate", this.trimDate(since),
-                            TemporalType.DATE)
-                    .setParameter("toDate", this.trimDate(until),
-                            TemporalType.DATE);
-        } else {
-            query = entityManager
-                    .createNamedQuery(Vacation.GET_VACATION_DETAILS_BY_TIME,
-                            Vacation.class)
-                    .setParameter("fromDate", this.trimDate(since),
-                            TemporalType.DATE)
-                    .setParameter("toDate", this.trimDate(until),
-                            TemporalType.DATE);
+        String vacationQuery = Vacation.buildVacationQuery(users, startSince,
+                startUntil, endSince, endUntil);
+
+        TypedQuery<Vacation> query = entityManager.createQuery(vacationQuery,
+                Vacation.class);
+
+        if (startSince != null) {
+            query.setParameter("startSince", startSince);
         }
 
-        List<Vacation> result = query.getResultList();
-        return result;
+        if (startUntil != null) {
+            query.setParameter("startUntil", startUntil);
+        }
+
+        if (endSince != null) {
+            query.setParameter("endSince", endSince);
+        }
+
+        if (endUntil != null) {
+            query.setParameter("endUntil", endUntil);
+        }
+
+        if (users != null && users.size() > 0) {
+            query.setParameter("users", users);
+        }
+
+        return query.getResultList();
     }
 
     @Override
