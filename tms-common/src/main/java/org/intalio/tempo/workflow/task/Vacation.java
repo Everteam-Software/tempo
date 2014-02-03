@@ -14,6 +14,7 @@
  */
 package org.intalio.tempo.workflow.task;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -101,6 +102,20 @@ public class Vacation {
     public static final String GET_VACATION_DETAILS_BY_USERS_TIME = "get_vacation_details_by_users_time";
     public static final String FETCH_VACATION_SUMMARY = "fetch_vacation_summary";
     public static final String FETCH_MATCHED_VACATION = "fetch_matched_vacation";
+
+    /**
+     * Query building constants
+     */
+    public static final String SELECT = "select vacation from Vacation vacation";
+    public static final String WHERE = "where";
+    public static final String USERS = "vacation._user in (:users)";
+    public static final String START_DATE_LE = "vacation._fromDate <=(:startUntil)";
+    public static final String START_DATE_GE = "vacation._fromDate >=(:startSince)";
+    public static final String END_DATE_LE = "vacation._toDate <=(:endUntil)";
+    public static final String END_DATE_GE = "vacation._toDate >=(:endSince)";
+    public static final String IS_ACTIVE = "vacation._is_active = 1";
+    public static final String AND = "and";
+    public static final String SEPARATOR = " ";
 
     /**
      * query to fetch vacations matched to given dates for user.
@@ -285,5 +300,65 @@ public class Vacation {
             vacation = (Vacation) resultList.get(0);
         }
         return vacation;
+    }
+
+    /**
+     * Creates a select query for Vacation based on provided inputs.
+     * 
+     * @param users
+     *            list of users
+     * @param startSince
+     *            fromDate >= startSince
+     * @param startUntil
+     *            fromDate <= startUntil
+     * @param endSince
+     *            toDate >= endSince
+     * @param endUntil
+     *            toDate <= endUntil
+     * @return select query
+     */
+    public static final String buildVacationQuery(List<String> users,
+            Date startSince, Date startUntil, Date endSince, Date endUntil) {
+
+        StringBuilder queryBuilder = new StringBuilder();
+        queryBuilder.append(SELECT).append(SEPARATOR);
+
+        List<String> whereClauses = new ArrayList<String>();
+
+        if (users != null && users.size() > 0) {
+            whereClauses.add(USERS + SEPARATOR);
+        }
+
+        if (startSince != null) {
+            whereClauses.add(START_DATE_GE + SEPARATOR);
+        }
+
+        if (startUntil != null) {
+            whereClauses.add(START_DATE_LE + SEPARATOR);
+        }
+
+        if (endSince != null) {
+            whereClauses.add(END_DATE_GE + SEPARATOR);
+        }
+
+        if (endUntil != null) {
+            whereClauses.add(END_DATE_LE + SEPARATOR);
+        }
+
+        whereClauses.add(IS_ACTIVE + SEPARATOR);
+
+        if (whereClauses.size() > 0) {
+            queryBuilder.append(WHERE).append(SEPARATOR);
+
+            for (int i = 0; i < whereClauses.size(); i++) {
+                queryBuilder.append(whereClauses.get(i));
+
+                if (i < whereClauses.size() - 1) {
+                    queryBuilder.append(AND).append(SEPARATOR);
+                }
+            }
+        }
+
+        return queryBuilder.toString();
     }
 }
