@@ -215,7 +215,7 @@ public interface ITaskDAOConnection {
      * Gives pa task count based on Task Creation Date.
      * @return
      */
-    public Map<Integer, Integer> getTaskCountByCreationDate(Date since, Date until);
+    public Map<String, Date> getTaskCountByCreationDate(Date since, Date until);
 
     /**
      * save previous task owners

@@ -298,7 +298,7 @@ public class SimpleTaskDAOConnection implements ITaskDAOConnection {
     }
 
     @Override
-    public Map<Integer, Integer> getTaskCountByCreationDate(Date since,
+    public Map<String, Date> getTaskCountByCreationDate(Date since,
             Date until) {
         throw new RuntimeException("Not Implemented");
     }
