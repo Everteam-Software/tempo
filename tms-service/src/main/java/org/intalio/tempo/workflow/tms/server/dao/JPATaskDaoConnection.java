@@ -289,8 +289,8 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
         return taskCntByPriority;
     }
 
-    public Map<Integer, Integer> getTaskCountByCreationDate(Date since, Date until) {
-        Map<Integer, Integer> taskCntByCreationDate = _fetcher.fetchTaskCountByCreationDate(since, until);
+    public Map<String, Date> getTaskCountByCreationDate(Date since, Date until) {
+        Map<String, Date> taskCntByCreationDate = _fetcher.fetchTaskCountByCreationDate(since, until);
         return taskCntByCreationDate;
     }
 

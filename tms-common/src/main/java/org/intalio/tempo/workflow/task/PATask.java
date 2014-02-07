@@ -105,7 +105,7 @@ import org.w3c.dom.Document;
                 "and pa._creationDate >= (:since) and pa._creationDate <= (:until) group by pa._priority"),
 
         @NamedQuery(name=PATask.GET_TASK_COUNT_BY_CREATION_DATE,
-            query="select pa._creationDate from PATask pa where pa._creationDate >= (:since) and pa._creationDate <= (:until) "),
+            query="select pa._id, pa._creationDate from PATask pa where pa._creationDate >= (:since) and pa._creationDate <= (:until) "),
 
         @NamedQuery(name=PATask.GET_AVERAGE_COMPLETION_TIME_BY_USER,
             query="select pa._lastActiveDate, pa._lastAssignedDate, user from PATask pa, IN (pa._userOwners) as user where pa._creationDate >= (:since) and pa._creationDate <= (:until) " + 

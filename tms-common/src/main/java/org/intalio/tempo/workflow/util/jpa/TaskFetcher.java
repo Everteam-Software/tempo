@@ -697,33 +697,25 @@ public class TaskFetcher {
     /**
      * Fetch the task count by creation date.
      */
-    public Map<Integer, Integer> fetchTaskCountByCreationDate(Date since, Date until) {
+    public Map<String, Date> fetchTaskCountByCreationDate(Date since, Date until) {
         Query q = _entityManager
                 .createNamedQuery(PATask.GET_TASK_COUNT_BY_CREATION_DATE);
         q.setParameter("since", since);
         q.setParameter("until", until);
 
-        Map<Integer, Integer> taskData = new HashMap<Integer, Integer>();
+        Map<String, Date> taskCreationMap = new HashMap<String, Date>();
 
         List result = q.getResultList();
-        Iterator<Date> iterator = result.iterator();
+        Iterator<Object> iterator = result.iterator();
 
         while (iterator.hasNext()) {
-            Date date = iterator.next();
-
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-
-            int hours = calendar.get(Calendar.HOUR_OF_DAY);
-
-            if (taskData.containsKey(hours)) {
-                taskData.put(hours, taskData.get(hours) + 1);
-            } else {
-                taskData.put(hours, 1);
-            }
+            Object[] row = (Object[]) iterator.next();
+            String taskId = (String) row[0];
+            Date taskCreationDate = (Date) row[1];
+            taskCreationMap.put(taskId, taskCreationDate);
         }
 
-        return taskData;
+        return taskCreationMap;
     }
 
     public Map<String, Long> getMaxTaskCompletionForUsers(Date since,
