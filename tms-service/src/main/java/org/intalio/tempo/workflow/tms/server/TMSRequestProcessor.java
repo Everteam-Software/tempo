@@ -703,8 +703,8 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             String participantToken = requireElementValue(rootQueue, "participantToken");
             String taskType = requireElementValue(rootQueue, "taskType");
             String subQuery = requireElementValue(rootQueue, "subQuery");
-            String first = expectElementValue(rootQueue, "first");
-            String max = expectElementValue(rootQueue, "max");
+            String first = checkForEmptyString(expectElementValue(rootQueue, "first"));
+            String max = checkForEmptyString(expectElementValue(rootQueue, "max"));
             String fetchMetaData = expectElementValue(rootQueue, "fetchMetaData");
             HashMap map = new HashMap();
             map.put(TaskFetcher.FETCH_CLASS_NAME, taskType);
@@ -1226,4 +1226,12 @@ public class TMSRequestProcessor extends OMUnmarshaller {
         cal.set(Calendar.MILLISECOND, 0);
         return cal.getTime();
     }
+
+    public String checkForEmptyString(String val) {
+        if (val != null && val.equals("")) {
+            return null;
+        }
+        return val;
+    }
+
 }
