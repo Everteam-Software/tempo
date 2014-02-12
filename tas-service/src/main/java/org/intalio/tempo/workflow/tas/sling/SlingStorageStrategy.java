@@ -74,7 +74,8 @@ public class SlingStorageStrategy implements StorageStrategy {
 
         MkColMethod col = new MkColMethod(getUploadFolder());
         int ret = httpclient.executeMethod(col);
-        log.debug(MessageFormatter.format("Created folder {0} in sling: {1}", getUploadFolder(), ret));
+        log.debug(MessageFormatter.format("Created folder {0} in sling: {1}",
+                getUploadFolder(), ret).getMessage());
     }
 
     private String getUploadFolder() {
