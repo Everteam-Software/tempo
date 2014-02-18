@@ -1228,10 +1228,7 @@ public class TMSRequestProcessor extends OMUnmarshaller {
     }
 
     public String checkForEmptyString(String val) {
-        if (val != null && val.equals("")) {
-            return null;
-        }
-        return val;
+        return "".equals(val) ? null : val;
     }
 
 }
