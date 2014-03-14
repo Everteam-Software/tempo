@@ -57,7 +57,8 @@ public class TaskFetcher {
 	private final String QUERY_GENERIC_COUNT = "select COUNT(DISTINCT T) from ";
 //	private final String QUERY_GENERIC2 = " T where (T._userOwners = (?1) or T._roleOwners = (?2)) ";
 	private final String QUERY_GENERIC2_FOR_ADMIN = " T ";
-	private final String QUERY_GENERIC2 = " T where (T._userOwners in (?1) or T._roleOwners in (?2) or T._roleOwners = '*') ";
+	private final String QUERY_GENERIC2_FOR_CUSTOM_COLUMN_SEARCH = " T JOIN T._customMetadata C ";
+	private final String QUERY_GENERIC2 = " where (T._userOwners in (?1) or T._roleOwners in (?2) or T._roleOwners = '*') ";
 	
 	// private final String DELETE_TASKS =
 	// "delete from Task m where m._userOwners in (?1) or m._roleOwners in (?2) "
@@ -228,16 +229,14 @@ public class TaskFetcher {
 		Query q;
 		boolean isWorkflowAdmin=user.isWorkflowAdmin();
 		//Constructing native query for sorting on custom metadata column.
+		String orderClause = "order by t.";
+		int customMetaDataIndex = subQuery.indexOf("_customMetadata");
+		int OrderByIndex = subQuery.toLowerCase().indexOf(orderClause);
 		if (!parameters.containsKey(FETCH_COUNT)
-                    && subQuery.indexOf("_customMetadata") > 0) {
+                    &&  customMetaDataIndex > 0 && OrderByIndex > 0 && customMetaDataIndex > OrderByIndex ) {
                     String sortOrder = subQuery.toLowerCase().indexOf(
                             "_custommetadata desc") > 0 ? "DESC" : "ASC";
-                    String orderClause = "ORDER BY T.";
-                    String sortCol = subQuery
-                            .substring(
-                                    subQuery.indexOf(orderClause)
-                                            + orderClause.length(),
-                                    subQuery.indexOf("_customMetadata"));
+                    String sortCol = subQuery.substring(OrderByIndex + orderClause.length(), customMetaDataIndex);
                     String[] roles = (String[]) user.getAssignedRoles().toArray(
                             new String[user.getAssignedRoles().size()]);
                     String roleCondition = "";
@@ -273,7 +272,7 @@ public class TaskFetcher {
 					baseQuery + taskClass.getSimpleName() + QUERY_GENERIC2_FOR_ADMIN);
 			}else{
 				q = _entityManager.createQuery(
-						baseQuery + taskClass.getSimpleName() + QUERY_GENERIC2).setParameter(1, userIdList).setParameter(2,user.getAssignedRoles());
+						baseQuery + taskClass.getSimpleName() + QUERY_GENERIC2_FOR_ADMIN + QUERY_GENERIC2).setParameter(1, userIdList).setParameter(2,user.getAssignedRoles());
 				
 			}
 				
@@ -281,7 +280,12 @@ public class TaskFetcher {
 				StringBuffer buffer = new StringBuffer();
 				
 				if(isWorkflowAdmin){
-					buffer.append(baseQuery).append(taskClass.getSimpleName()).append(QUERY_GENERIC2_FOR_ADMIN);
+					buffer.append(baseQuery).append(taskClass.getSimpleName());
+					if (subQuery.toLowerCase().indexOf("key(c)") >= 0 || subQuery.toLowerCase().indexOf("value(c)") >= 0) {
+					    buffer.append(QUERY_GENERIC2_FOR_CUSTOM_COLUMN_SEARCH);
+					} else {
+					    buffer.append(QUERY_GENERIC2_FOR_ADMIN);
+					}
 					String trim = subQuery.toLowerCase().trim();
 					int orderIndex = trim.indexOf("order");
 					if (orderIndex == -1) {
@@ -295,9 +299,13 @@ public class TaskFetcher {
 						}
 				}
 			}else{
-				buffer.append(baseQuery).append(taskClass.getSimpleName()).append(
-						QUERY_GENERIC2);
-				
+				buffer.append(baseQuery).append(taskClass.getSimpleName());
+				if (subQuery.toLowerCase().indexOf("key(c)") >= 0 || subQuery.toLowerCase().indexOf("value(c)") >= 0) {
+				    buffer.append(QUERY_GENERIC2_FOR_CUSTOM_COLUMN_SEARCH);
+				} else {
+				    buffer.append(QUERY_GENERIC2_FOR_ADMIN);
+				}
+				buffer.append(QUERY_GENERIC2);
 				String trim = subQuery.toLowerCase().trim();
                 int orderIndex = trim.indexOf("order");
                 int groupIndex = trim.indexOf("group");

@@ -32,12 +32,12 @@ import org.apache.openjpa.persistence.jdbc.ContainerTable;
 public abstract class BaseRestrictedEntity implements IRestrictedEntity {
     
     /** Note: do not access this field directly, otherwise JPA cannot load them */
-    @PersistentCollection(elementType=String.class, elementCascade=CascadeType.ALL, elementEmbedded = false, fetch=FetchType.EAGER)
+    @PersistentCollection(elementType=String.class, elementCascade=CascadeType.ALL, elementEmbedded = false, fetch=FetchType.LAZY)
     @ContainerTable(name="tempo_user")
     private Collection<String> _userOwners;
 
     /** Note: do not access this field directly, otherwise JPA cannot load them */
-    @PersistentCollection(elementType=String.class, elementCascade=CascadeType.ALL, elementEmbedded = false, fetch=FetchType.EAGER)
+    @PersistentCollection(elementType=String.class, elementCascade=CascadeType.ALL, elementEmbedded = false, fetch=FetchType.LAZY)
     @ContainerTable(name="tempo_role")
     private Collection<String> _roleOwners;
 
