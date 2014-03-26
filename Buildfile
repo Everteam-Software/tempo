@@ -10,7 +10,7 @@ require "install.rb"
 
 # This branch is a copy of Tempo 6.0.85
  
-VERSION_NUMBER = "7.0.0-SNAPSHOT"
+VERSION_NUMBER = "7.0.0"
 
 
 # leave this require after dependencies.rb so the same jpa version is used throughout the whole build
