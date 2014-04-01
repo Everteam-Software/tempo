@@ -28,6 +28,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -111,6 +112,9 @@ public class VacationController implements Controller {
                      if(users == null){
                          try {
                             users = rbacAdminClient.getUsers();
+                            Map<String, Property[]> usersList = new TreeMap<String, Property[]>(String.CASE_INSENSITIVE_ORDER);
+                            usersList.putAll(users);
+                            users = usersList;
                         } catch (Exception e) {
                             LOG.debug("Exception while getting Users " + e.getMessage());
                         }
