@@ -90,6 +90,7 @@ public class TasksAction extends Action {
             model.put("currentPage", _request.getAttribute("currentPage"));
             if(state.getCurrentUser()!=null && state.getCurrentUser().getRoles()!=null && configuration.isUseToolbarIcons().booleanValue()) 
                {
+                   model.put("processIconSet", configuration.getProcessIconSetByRole(state.getCurrentUser().getRoles()));
                    model.put("taskIconSet", configuration.getTaskIconSetByRole(state.getCurrentUser().getRoles()));
                    model.put("notificationIconSet", configuration.getNotificationIconSetByRole(state.getCurrentUser().getRoles()));
                    model.put("bindIcons",configuration.getBindIconSetToRole());

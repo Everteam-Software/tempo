@@ -101,6 +101,11 @@ public interface ITMSServer {
 
 	void deleteCustomColumn(ITaskDAOConnection dao, String processName,
 			String token) throws Exception;
+
+	/**
+     * Reassign the process
+     */
+	void reassignProcess(ITaskDAOConnection dao,String taskID, AuthIdentifierSet users, AuthIdentifierSet roles, String participantToken) throws TMSException;
 	
 	/**
 	 * Inserts Vacation Details

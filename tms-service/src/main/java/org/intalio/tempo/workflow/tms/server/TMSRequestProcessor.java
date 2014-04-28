@@ -596,6 +596,27 @@ public class TMSRequestProcessor extends OMUnmarshaller {
         
     }
 
+    public OMElement reassignProcess(OMElement requestElement) throws AxisFault {
+        ITaskDAOConnection dao=null;
+        try {
+        dao=_taskDAOFactory.openConnection();
+        OMElementQueue rootQueue = new OMElementQueue(requestElement);
+        String taskID = requireElementValue(rootQueue, "taskId");
+        AuthIdentifierSet users = expectAuthIdentifiers(rootQueue, "userOwner");
+        AuthIdentifierSet roles = expectAuthIdentifiers(rootQueue, "roleOwner");
+        String participantToken = requireElementValue(rootQueue, "participantToken");
+        _server.reassignProcess(dao, taskID, users, roles, participantToken);
+        return createOkResponse();
+    } catch (Exception e) {
+        throw makeFault(e);
+    }
+    finally{
+        if(dao!=null)
+        dao.close();
+    }
+    
+}
+
     public OMElement getPipa(OMElement requestElement) throws AxisFault {
     	 ITaskDAOConnection dao=null;
      	try {

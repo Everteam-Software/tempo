@@ -1450,4 +1450,33 @@ public class TMSServer implements ITMSServer {
                 _logger.debug("Exiting addVacationUsers");
         }
     }
+
+    public void reassignProcess(ITaskDAOConnection dao,String taskID, AuthIdentifierSet users, AuthIdentifierSet roles,
+            String participantToken) throws AuthException, UnavailableTaskException, AccessDeniedException {
+
+        Task task = null;
+        boolean available = false;
+        boolean isTaskReady = false;
+        task = dao.fetchTaskIfExists(taskID);
+        available = task instanceof PIPATask;
+        if(available){
+            task.setUserOwners(users);
+            task.setRoleOwners(roles);
+            task.setLastActiveDate(new Date());
+            task.setLastAssignedDate(new Date());
+            dao.updatePipaTask((PIPATask) task);
+            if (isTaskReady) {
+                dao.deleteTaskPreviousOwners(taskID);
+            }
+            dao.commit();
+            if (_logger.isDebugEnabled()) {
+                _logger.debug(" changed to user owners "
+                          + users + " and role owners " + roles);
+            }
+        }
+        if (!available) {
+            throw new UnavailableTaskException(
+                    "Error to ressign workflow Process " + task);
+        }
+    }
 }
