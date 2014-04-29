@@ -406,6 +406,16 @@
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
+            <xsd:element name="reassignProcessRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="taskId" type="xsd:string"/>
+                        <xsd:element maxOccurs="unbounded" minOccurs="0" name="userOwner" type="xsd:string"/>
+                        <xsd:element maxOccurs="unbounded" minOccurs="0" name="roleOwner" type="xsd:string"/>
+                        <xsd:element name="participantToken" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
             <xsd:element name="unavailableTaskFault">
                 <xsd:complexType mixed="true">
                     <xsd:sequence>
@@ -654,6 +664,9 @@
     <wsdl:message name="reassignRequest">
         <wsdl:part name="reassignRequest" element="tns:reassignRequest"/>
     </wsdl:message>
+    <wsdl:message name="reassignProcessRequest">
+        <wsdl:part name="reassignProcessRequest" element="tns:reassignProcessRequest"/>
+    </wsdl:message>
     <wsdl:message name="completeRequest">
         <wsdl:part name="completeRequest" element="tns:completeRequest"/>
     </wsdl:message>
@@ -833,6 +846,13 @@
         <wsdl:operation name="reassign">
             <wsdl:input message="tns:reassignRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/reassign"/>
             <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/reassignResponse"/>
+            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:reassigninvalidParticipantTokenFault"/>
+            <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:reassignunavailableTaskFault"/>
+            <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:reassigninvalidInputMessageFault"/>
+        </wsdl:operation>
+	<wsdl:operation name="reassignProcess">
+            <wsdl:input message="tns:reassignProcessRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/reassignProcess"/>
+            <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/reassignProcessResponse"/>
             <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:reassigninvalidParticipantTokenFault"/>
             <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:reassignunavailableTaskFault"/>
             <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:reassigninvalidInputMessageFault"/>
@@ -1179,6 +1199,24 @@
         </wsdl:operation>
         <wsdl:operation name="reassign">
             <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/reassign" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="invalidInputMessageFault">
+                <soap:fault use="literal" name="invalidInputMessageFault"/>
+            </wsdl:fault>
+            <wsdl:fault name="unavailableTaskFault">
+                <soap:fault use="literal" name="unavailableTaskFault"/>
+            </wsdl:fault>
+            <wsdl:fault name="invalidParticipantTokenFault">
+                <soap:fault use="literal" name="invalidParticipantTokenFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="reassignProcess">
+            <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/reassignProcess" style="document"/>
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>

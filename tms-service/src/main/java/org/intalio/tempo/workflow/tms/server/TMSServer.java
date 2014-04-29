@@ -18,9 +18,7 @@ package org.intalio.tempo.workflow.tms.server;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -83,7 +81,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.intalio.bpms.common.AxisUtil;
-
 import com.intalio.bpms.workflow.taskManagementServices20051109.TaskMetadata;
 
 public class TMSServer implements ITMSServer {
@@ -1448,6 +1445,30 @@ public class TMSServer implements ITMSServer {
                 vdao.close();
             if (_logger.isDebugEnabled())
                 _logger.debug("Exiting addVacationUsers");
+        }
+    }
+
+    public void reassignProcess(ITaskDAOConnection dao,String taskID, AuthIdentifierSet users, AuthIdentifierSet roles,
+            String participantToken) throws AuthException, UnavailableTaskException, AccessDeniedException {
+
+        Task task = null;
+        task = dao.fetchTaskIfExists(taskID);
+        UserRoles credentials = this.getUserRoles(participantToken);
+        checkIsAvailable(taskID, task, credentials);
+        if(task instanceof PIPATask && ((PIPATask) task).getProcessState() == PIPATaskState.READY){
+            task.setUserOwners(users);
+            task.setRoleOwners(roles);
+            task.setLastActiveDate(new Date());
+            task.setLastAssignedDate(new Date());
+            dao.updatePipaTask((PIPATask) task);
+            dao.commit();
+            if (_logger.isDebugEnabled()) {
+                _logger.debug(" changed to user owners "
+                          + users + " and role owners " + roles);
+            }
+        }else {
+            throw new UnavailableTaskException(
+                    "Error to ressign workflow Process " + task);
         }
     }
 }

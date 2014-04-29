@@ -34,6 +34,7 @@ public class Configuration {
 
     private static String TASK_TAB = "task";
     private static String NOTIFICATION_TAB = "notification";
+    private static String PROCESS_TAB = "process";
 
     private String _serviceEndpoint;
     private String _tmpEndpoint = "http://localhost:8080/ode/processes/completeTask";
@@ -116,7 +117,25 @@ public class Configuration {
         }
         return (String[]) taskIcons.toArray(new String[taskIcons.size()]);
     }
-    
+
+    public String[] getProcessIconSetByRole(String[] roles) {
+        if (_log.isDebugEnabled()) {
+            _log.debug("Get process iconset by Roles:");
+            for (int i = 0; i < roles.length; i++) {
+                _log.debug(roles[i]);
+            }
+        }
+        HashSet<String> processIcons = new HashSet<String>();
+        HashSet<String> iconSet = getKeysFromValues(_bindIconSetToRole, roles);
+        for (String is : iconSet) {
+            for (int i = 0; i < roles.length; i++) {
+                Map<String, Set<String>> iconSetByRole = _toolbarIconSets.get(is);
+                processIcons.addAll(iconSetByRole.get(PROCESS_TAB));
+            }
+        }
+        return (String[]) processIcons.toArray(new String[processIcons.size()]);
+    }
+
     public String[] getTabSetByRole(String[] roles) {
         if (_log.isDebugEnabled()) {
             _log.debug("Get tab set by Roles:");
