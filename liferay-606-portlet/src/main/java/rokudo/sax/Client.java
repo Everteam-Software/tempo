@@ -52,7 +52,7 @@ public class Client {
 			System.out.println();
 
 			// Send
-			String urlval = "http://localhost:8080/ode/processes/TestWS/Diagram/MyBPM/MyExec/MyPool";
+			String urlval = "http://localhost:8080/intalio/ode/processes/TestWS/Diagram/MyBPM/MyExec/MyPool";
 
 			SOAPMessage rp = conn.call(msg, urlval);
 

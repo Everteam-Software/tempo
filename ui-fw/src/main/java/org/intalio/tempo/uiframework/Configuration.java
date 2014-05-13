@@ -37,7 +37,7 @@ public class Configuration {
     private static String PROCESS_TAB = "process";
 
     private String _serviceEndpoint;
-    private String _tmpEndpoint = "http://localhost:8080/ode/processes/completeTask";
+    private String _tmpEndpoint = "http://localhost:8080/intalio/ode/processes/completeTask";
     private int _pagingLength;
     private int _refreshTime = 5;
     private int _sessionTimeout = 10;

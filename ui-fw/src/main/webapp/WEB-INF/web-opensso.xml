@@ -98,7 +98,7 @@
             <param-name>TaskManagementServices</param-name>
             <!-- Changing value of TaskManagementServices in migrated to ode. -->
             <!-- <param-value>http://localhost:8080/axis2/services/TaskManagementServices</param-value> -->
-            <param-value>http://localhost:8080/ode/processes/TaskManagementServices</param-value>
+            <param-value>http://localhost:8080/intalio/ode/processes/TaskManagementServices</param-value>
         </init-param>
 	</servlet>
 	
