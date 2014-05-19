@@ -18,7 +18,7 @@
 		</property>
 
 		<property name="tmsEndpoint">
-			<value>http://localhost:8080/axis2/services/TaskManagementServices</value>
+			<value>http://localhost:8080/intalio/ode/processes/TaskManagementServices</value>
 		</property>
 		
 		<property name="wdsEndpoint">

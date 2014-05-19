@@ -18,7 +18,7 @@
         <property name="feedItemBaseUrl" value="http://127.0.0.1:8080"/>
 		<property name="TMPEndpoint" value="http://localhost:8080/intalio/ode/processes/completeTask"/>
         <property name="feedUrl" value="http://tempo.intalio.org"/>
-        <property name="serviceEndpoint" value="http://localhost:8080/axis2/services/TaskManagementServices"/>
+        <property name="serviceEndpoint" value="http://localhost:8080/intalio/ode/processes/TaskManagementServices"/>
         <property name="pagingLength" value="10"/>
         <property name="refreshTime" value="180"/>
         <property name="claimTaskOnOpen" value="false"/>
@@ -112,7 +112,7 @@
 	</bean>
 	
 	<bean id="tokenClient" class="org.intalio.tempo.security.ws.TokenClient">
-        <constructor-arg value="http://localhost:8080/axis2/services/TokenService"/>
+        <constructor-arg value="http://localhost:8080/intalio/ode/processes/TokenService"/>
     </bean>
 
     <bean id="applicationState" class="org.intalio.tempo.uiframework.UIFWApplicationState"/>
@@ -152,7 +152,7 @@
 			<ref bean="tms.permissionsHandler"/>
 		</property>
 		<property name="httpTimeout" value="120000"/>
-		<property name="tasEndPoint" value="http://localhost:8080/axis2/services/tas"/>
+		<property name="tasEndPoint" value="http://localhost:8080/intalio/ode/processes/tas"/>
 	</bean>
 	
 	<bean id="tms.permissionsHandler" class="org.intalio.tempo.workflow.tms.server.permissions.TaskPermissions">
@@ -163,7 +163,7 @@
 
 	<!--bean id="tms.authProvider" class="org.intalio.tempo.workflow.auth.n3.N3AuthProvider">
 		<property name="wsEndpoint">
-			<value>http://localhost:8080/axis2/services/TokenService</value>
+			<value>http://localhost:8080/intalio/ode/processes/TokenService</value>
 		</property>
 	</bean--> 
 

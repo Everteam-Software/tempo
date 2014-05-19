@@ -47,7 +47,7 @@
 
 	<!-- <bean id="tms.authProvider" class="org.intalio.tempo.workflow.auth.n3.N3AuthProvider">
 		<property name="wsEndpoint">
-			<value>http://localhost:8080/axis2/services/TokenService</value>
+			<value>http://localhost:8080/intalio/ode/processes/TokenService</value>
 		</property>
 	</bean> -->
 	

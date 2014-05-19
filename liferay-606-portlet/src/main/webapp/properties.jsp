@@ -5,7 +5,7 @@
 String intalioBpmsURL = "https://localhost:8443";
 String intalioAxisURL = "http://localhost:8080";
 //url to access axis2 services.
-String wsdlURLa = intalioAxisURL+ "/axis2/services/TokenService.Service";
+String wsdlURLa = intalioAxisURL+ "/intalio/ode/processes/TokenService.Service";
 //url to access ode services
 String wsdlURL = intalioBpmsURL+ "/intalio/ode/processes/TaskManagementServices";
 //Action endpoint to fetch tasks from Task Management services

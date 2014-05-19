@@ -3,6 +3,6 @@
 <config>
     <pxeBaseUrl>http://localhost:8080/intalio/ode/processes</pxeBaseUrl>
     <workflowProcessesRelativeUrl>/workflow/ib4p</workflowProcessesRelativeUrl>
-    <tmsUrl>http://localhost:8080/axis2/services/TaskManagementServices</tmsUrl>
+    <tmsUrl>http://localhost:8080/intalio/ode/processes/TaskManagementServices</tmsUrl>
     <fdsUrl>http://localhost:8080/fds/workflow/ib4p</fdsUrl>
 </config>
