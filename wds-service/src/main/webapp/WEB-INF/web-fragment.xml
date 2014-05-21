@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-fragment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" 
+	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xmlns:webfragment="http://java.sun.com/xml/ns/javaee/web-fragment_3_0.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	    http://java.sun.com/xml/ns/javaee/web-fragment_3_0.xsd"
+	id="wds" version="3.0">
+  <name>wds</name>
+  <servlet>
+    <servlet-name>WorkflowDeploymentService</servlet-name>
+    <servlet-class>org.intalio.tempo.workflow.wds.servlets.WDSServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>file:${org.intalio.tempo.configDirectory}/tempo-wds.xml</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>WorkflowDeploymentService</servlet-name>
+    <url-pattern>/wds/*</url-pattern>
+  </servlet-mapping>
+</web-fragment>
