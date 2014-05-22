@@ -22,6 +22,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -32,7 +33,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
-import org.apache.openjpa.persistence.Persistent;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
 /**
@@ -41,7 +41,6 @@ import org.intalio.tempo.workflow.util.RequiredArgumentException;
  */
 @Entity
 @Table(name = "vacation")
-@TableGenerator(name = "tab", initialValue = 0, allocationSize = 50)
 @NamedQueries({
         @NamedQuery(name = Vacation.GET_VACATION_DETAILS,
         query = "select vacation from Vacation vacation where "
@@ -94,8 +93,10 @@ import org.intalio.tempo.workflow.util.RequiredArgumentException;
         })
 public class Vacation {
 
+    @Transient
     private Query find_id;
     public static final String FIND_VAC_BY_ID = "find_vac_by_id";
+    @Transient
     private EntityManager _entityManager;
     public static final String GET_VACATION_DETAILS = "get_vacation_details";
     public static final String GET_VACATION_DETAILS_BY_TIME = "get_vacation_details_by_time";
@@ -134,36 +135,30 @@ public class Vacation {
     public static final String FETCH_END_VACATION = "fetch_end_vacation";
 
     // @GeneratedValue(strategy=GenerationType.AUTO)
-    @GeneratedValue
     @Id
     @Column(name = "id")
-    @Persistent
+    @TableGenerator(name="vac" , table="OPENJPA_SEQUENCE_TABLE", pkColumnName="ID" , valueColumnName="SEQUENCE_VALUE" , pkColumnValue = "0", allocationSize=10)
+    @GeneratedValue(strategy=GenerationType.TABLE , generator="vac")
     private int _id;
 
     @Column(name = "from_date")
-    @Persistent
     @Temporal( TemporalType.DATE )
     private Date _fromDate;
 
     @Column(name = "to_date")
-    @Persistent
     @Temporal( TemporalType.DATE )
     private Date _toDate;
 
     @Column(name = "description")
-    @Persistent
     private String _description;
 
     @Column(name = "user_name")
-    @Persistent
     private String _user;
     
     @Column(name = "substitute")
-    @Persistent
     private String _substitute;
     
     @Column(name = "is_active")
-    @Persistent
     private int _is_active;
 
     public Vacation() {

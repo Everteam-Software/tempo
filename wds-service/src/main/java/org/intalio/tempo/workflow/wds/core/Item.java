@@ -14,15 +14,18 @@ package org.intalio.tempo.workflow.wds.core;
 import java.util.Arrays;
 import java.util.Date;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.QueryHint;
 import javax.persistence.Table;
-
-import org.apache.openjpa.persistence.Persistent;
+import javax.persistence.TableGenerator;
 
 /**
  * A WDS item is a byte stream which is stored on WDS at a specific URI.
@@ -36,11 +39,11 @@ import org.apache.openjpa.persistence.Persistent;
     @NamedQuery(
             name=Item.FIND_BY_URI, 
             query="select m from Item m where m._uri=?1", 
-            hints={ @QueryHint  (name="openjpa.hint.OptimizeResultCount", value="1")}),
+            hints={ @QueryHint  (name="org.hibernate.fetchSize", value="1")}),
     @NamedQuery(
              name=Item.COUNT_FOR_URI, 
              query="select COUNT(m) from Item m where m._uri=?1", 
-             hints={ @QueryHint  (name="openjpa.hint.OptimizeResultCount", value="1")})       
+             hints={ @QueryHint  (name="org.hibernate.fetchSize", value="1")})
     })
 public class Item {
 
@@ -51,20 +54,16 @@ public class Item {
         
     }
     
-    @Persistent
     @Column(name="uri")
     private String _uri;
     
-    @Persistent
     @Column(name="content_type")
     private String _contentType;
     
-    @Persistent
     @Column(name="payload", length=4096)
     @Lob
     private byte[] _payload;
     
-    @Persistent
     @Column(name="lastmodified")
     private Date _lastmodified;
     
@@ -133,5 +132,20 @@ public class Item {
         && Arrays.equals(item._payload,_payload)
         && _uri.equals(_uri);
     }
-    
+
+    @Column(name = "ID")
+    @Basic
+    @Id
+    @TableGenerator(name="item" , table="OPENJPA_SEQUENCE_TABLE", pkColumnName="ID" , valueColumnName="SEQUENCE_VALUE" , pkColumnValue = "0", allocationSize=10)
+    @GeneratedValue(strategy=GenerationType.TABLE , generator="item")
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
 }

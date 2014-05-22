@@ -23,59 +23,47 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
-import org.apache.openjpa.persistence.Persistent;
 
 @Entity
-@TableGenerator(name = "auditGenerator", initialValue = 0, allocationSize = 1)
 @Table(name = "tempo_audit")
 public class Audit {
 
-    @GeneratedValue
     @Id
     @Column(name = "id")
+    @TableGenerator(name="tg1" , table="OPENJPA_SEQUENCE_TABLE", pkColumnName="ID" , valueColumnName="SEQUENCE_VALUE" , pkColumnValue = "0", allocationSize=10)
+    @GeneratedValue(strategy=GenerationType.TABLE , generator="tg1")
     private long id;
 
-    @Persistent
     @Column(name = "action_performed")
     private String actionPerformed;
 
-    @Persistent
     @Column(name = "audit_date")
     private Date auditDate;
 
-    @Persistent
     @Column(name = "task_id")
     private String taskId;
 
-    @Persistent
     @Column(name = "user_name")
     private String user;
 
-    @Persistent
     @Column(name = "updated_description")
     private String updatedDescription;
 
-    @Persistent
     @Column(name = "updated_priority")
     private String updatedPriority;
 
-    @Persistent
     @Column(name = "assigned_users")
     private String assignedUsers;
 
-    @Persistent
     @Column(name = "assigned_roles")
     private String assignedRoles;
 
-    @Persistent
     @Column(name = "updated_state")
     private String updatedState;
 
-    @Persistent
     @Column(name = "instance_id")
     private Long instanceId;
 
-    @Persistent
     @Enumerated(EnumType.STRING)
     @Column(name = "audit_type")
     private AuditType auditType = AuditType.WORKFLOW;

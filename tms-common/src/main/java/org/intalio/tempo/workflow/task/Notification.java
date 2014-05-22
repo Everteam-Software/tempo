@@ -16,17 +16,19 @@ package org.intalio.tempo.workflow.task;
 
 import java.net.URI;
 
-import javax.persistence.CascadeType;
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
-import org.apache.openjpa.persistence.Persistent;
 import org.intalio.tempo.workflow.task.traits.IInstanceBoundTask;
 import org.intalio.tempo.workflow.task.traits.IProcessBoundTask;
 import org.intalio.tempo.workflow.task.traits.ITaskWithInput;
@@ -44,38 +46,35 @@ import org.w3c.dom.Document;
 @PrimaryKeyJoinColumn(name="ID", referencedColumnName="ID")
 @NamedQueries({
     @NamedQuery(name=Notification.GET_PENDING_NOTIFICATION_COUNT,
-                query="select count(notification._id) from Notification notification where notification._creationDate >= (:since) and notification._creationDate <= (:until) and notification._state = TaskState.READY and (:userOwner MEMBER OF notification._userOwners or notification._roleOwners in (:roleOwners))")
+                query="select count(notification._id) from Notification notification LEFT JOIN notification._userOwners UO LEFT JOIN notification._roleOwners RO where notification._creationDate >= (:since) and notification._creationDate <= (:until) and notification._state = org.intalio.tempo.workflow.task.TaskState.READY and ( UO in (:userOwner) or RO in (:roleOwners))")
 })
 public class Notification extends Task implements ITaskWithState, ITaskWithInput, IProcessBoundTask, IInstanceBoundTask, ITaskWithPriority{
 	
 	public static final String GET_PENDING_NOTIFICATION_COUNT = "get_pending_notification_count";
 	
     @Column(name = "state")
-    @Persistent
+    @Enumerated(EnumType.ORDINAL)
     private TaskState _state = TaskState.READY;
 
+    @Basic(fetch = FetchType.LAZY)
     @Column(name = "failure_code")
-    @Persistent(fetch = FetchType.LAZY)
     private String _failureCode;
 
+    @Basic(fetch = FetchType.LAZY)
     @Column(name = "failure_reason")
-    @Persistent(fetch = FetchType.LAZY)
     private String _failureReason;
 
-    @Persistent(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Basic(fetch = FetchType.LAZY)
     @Column(name = "input_xml")
     @Lob
     private String _input;
 
-    @Persistent
     @Column(name = "priority")
     private Integer _priority;
 
-    @Persistent
     @Column(name = "instanceId")
     private String _instanceId;
     
-    @Persistent
     @Column(name = "process_id")
     private String _processID;
     

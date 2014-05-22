@@ -16,12 +16,12 @@ import java.util.Properties;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.sql.DataSource;
 
-import org.apache.openjpa.persistence.OpenJPAEntityManager;
-import org.apache.openjpa.persistence.OpenJPAPersistence;
+import org.hibernate.Session;
 import org.intalio.tempo.web.SysPropApplicationContextLoader;
 import org.intalio.tempo.workflow.SpringInit;
 import org.slf4j.Logger;
@@ -85,16 +85,15 @@ public abstract class AbstractJPAConnectionFactory {
     private void initEM(String entityManagerFactoryName, Map properties) {
         log.info("Factory:" + this.getClass().getName() + ": Using the following JPA properties:" + properties);
         factory = Persistence.createEntityManagerFactory(entityManagerFactoryName, properties);
-
         // the factory created can sometimes be null. Check against that
         if (factory == null)
             throw new RuntimeException("Factory not properly created");
     }
     
     public Connection getUnderlyingJDBCConnectionFromEntityManager() {
-        OpenJPAEntityManager kem = OpenJPAPersistence.cast(factory.createEntityManager());
-        Connection conn = (Connection) kem.getConnection();
-        //conn.close();
+        EntityManager em = factory.createEntityManager();
+        Session session = em.unwrap(Session.class);
+        Connection conn = session.connection();
         return conn;
     }
     
@@ -105,7 +104,7 @@ public abstract class AbstractJPAConnectionFactory {
     public void clearCache(){
     	if(factory != null){
     		// evict everything from the cache 
-    		factory.getCache().evictAll();  
+            factory.getCache().evictAll();
     		log.debug("Cache cleared");    	
     	}
     }
@@ -117,7 +116,7 @@ public abstract class AbstractJPAConnectionFactory {
                 String jndiPath = (String)properties.get("tempo.datasourceURL");
                 if(log.isDebugEnabled()) log.debug("About to get hook for DataSource " + jndiPath);
                 DataSource _dataSource = (DataSource) initialContext.lookup(jndiPath);
-                properties.put("openjpa.ConnectionFactory", _dataSource);
+                properties.put("hibernate.connection.datasource", _dataSource);
             }    
         } catch (NamingException ne) {
             throw new IllegalStateException("Couldn't find datasource through jndi");

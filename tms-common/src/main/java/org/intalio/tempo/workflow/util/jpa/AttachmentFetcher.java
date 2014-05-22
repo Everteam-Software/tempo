@@ -12,7 +12,8 @@ package org.intalio.tempo.workflow.util.jpa;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
+import org.hibernate.Query;
+import org.hibernate.Session;
 
 import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.tms.UnavailableAttachmentException;
@@ -28,12 +29,12 @@ public class AttachmentFetcher {
     
     public AttachmentFetcher(EntityManager em){
         _entityManager = em;
-        find_by_attachment_url = _entityManager.createNamedQuery(Attachment.FIND_BY_URL);
+        find_by_attachment_url = em.unwrap(Session.class).getNamedQuery(Attachment.FIND_BY_URL);
     }
     
     public Attachment fetchAttachmentIfExists(String url) throws UnavailableAttachmentException{
         Query q = find_by_attachment_url.setParameter(1, url);
-        List<Attachment> resultList = q.getResultList();
+        List<Attachment> resultList = q.list();
         if (resultList.size() < 1)
             throw new UnavailableAttachmentException("Attachment does not exist"
                     + url);

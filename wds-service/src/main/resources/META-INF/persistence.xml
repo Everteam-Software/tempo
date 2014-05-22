@@ -24,6 +24,7 @@
     <persistence-unit
         name="org.intalio.tempo.wds"
         transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.ejb.HibernatePersistence</provider>
         <class>org.intalio.tempo.workflow.wds.core.Item</class>
         <properties></properties>
     </persistence-unit>

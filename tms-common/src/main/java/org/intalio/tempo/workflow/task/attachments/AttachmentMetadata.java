@@ -13,11 +13,15 @@ package org.intalio.tempo.workflow.task.attachments;
 
 import java.util.Date;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 
-import org.apache.openjpa.persistence.Persistent;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
 /**
@@ -34,27 +38,21 @@ public class AttachmentMetadata {
     /**
      * MIME type of the atachment.
      */
-    @Persistent
     @Column(name="mime_type")
     private String _mimeType = DEFAULT_MIME_TYPE;
 
-    @Persistent
     @Column(name="widget")
     private String _widget = "";
 
-    @Persistent
     @Column(name="file_name")
     private String _fileName = "attachment";
 
-    @Persistent
     @Column(name="title")
     private String _title = "(untitled)";
 
-    @Persistent
     @Column(name="description")
     private String _description = "";
 
-    @Persistent
     @Column(name="creation_date")
     private Date _creationDate = new Date();
 
@@ -169,4 +167,20 @@ public class AttachmentMetadata {
         }
         _creationDate = creationDate;
     }
+
+    @Column(name = "ID")
+    @Basic
+    @Id
+    @TableGenerator(name="attachmeta" , table="OPENJPA_SEQUENCE_TABLE", pkColumnName="ID" , valueColumnName="SEQUENCE_VALUE" , pkColumnValue = "0", allocationSize=10)
+    @GeneratedValue(strategy=GenerationType.TABLE , generator="attachmeta")
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
 }

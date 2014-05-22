@@ -16,24 +16,38 @@ import java.net.URI;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.MapKey;
+import javax.persistence.MapKeyColumn;
+import javax.persistence.MapKeyJoinColumn;
+import javax.persistence.MapsId;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.QueryHint;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 
-import org.apache.openjpa.persistence.PersistentMap;
-import org.apache.openjpa.persistence.jdbc.ContainerTable;
 import org.intalio.tempo.workflow.auth.ACL;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.auth.BaseRestrictedEntity;
@@ -43,10 +57,10 @@ import org.intalio.tempo.workflow.util.RequiredArgumentException;
 @Entity
 @Table(name = "tempo_task")
 @Inheritance(strategy = InheritanceType.JOINED)
-@NamedQueries( { @NamedQuery(name = Task.FIND_BY_ID, query = "select m from Task m where m._id=?1", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }),
-                 @NamedQuery(name = Task.FIND_BY_ROLE_USER, query = "select DISTINCT m from Task m where m._userOwners in (?1) or m._roleOwners in (?2)"),
-                 @NamedQuery(name = Task.FIND_BY_USER, query = "select DISTINCT m from Task m where m._userOwners in (?1)"),
-                 @NamedQuery(name = Task.FIND_BY_ROLE, query = "select DISTINCT m from Task m where m._roleOwners in (?1)")
+@NamedQueries( { @NamedQuery(name = Task.FIND_BY_ID, query = "select m from Task m where m._id=?", hints = { @QueryHint(name = "org.hibernate.fetchSize", value = "1") }),
+                 @NamedQuery(name = Task.FIND_BY_ROLE_USER, query = "select DISTINCT m from Task m where m._userOwners in (?) or m._roleOwners in (?)"),
+                 @NamedQuery(name = Task.FIND_BY_USER, query = "select DISTINCT m from Task m where m._userOwners in (?)"),
+                 @NamedQuery(name = Task.FIND_BY_ROLE, query = "select DISTINCT m from Task m where m._roleOwners in (?)")
   })
 public abstract class Task extends BaseRestrictedEntity {
 
@@ -92,8 +106,8 @@ public abstract class Task extends BaseRestrictedEntity {
         this._formURL = _formURL;
     }
 
-    @PersistentMap(keyCascade = CascadeType.ALL, elementCascade = CascadeType.ALL)
-    @ContainerTable(name="tempo_acl_map")
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name="tempo_acl_map", joinColumns={@JoinColumn(name="TASK_ID", referencedColumnName="ID")}, inverseJoinColumns = { @JoinColumn(name = "ELEMENT_ID") })
     @MapKey(name = "action")
     private Map<String, ACL> _actionACLs = new HashMap<String, ACL>();
 
@@ -284,6 +298,21 @@ public abstract class Task extends BaseRestrictedEntity {
 
     public void setIsTaskAvailable(boolean isAvailable) {
         this.isTaskAvailable = isAvailable;
+    }
+
+    @Column(name = "ID")
+    @Basic
+    @Id
+    @TableGenerator(name="tg" , table="OPENJPA_SEQUENCE_TABLE", pkColumnName="ID" , valueColumnName="SEQUENCE_VALUE" , pkColumnValue = "0", allocationSize=10)
+    @GeneratedValue(strategy=GenerationType.TABLE , generator="tg")
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
 }

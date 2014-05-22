@@ -17,28 +17,33 @@ package org.intalio.tempo.workflow.auth;
 
 import java.util.Collection;
 
-import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ElementCollection;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.MappedSuperclass;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.openjpa.persistence.PersistentCollection;
-import org.apache.openjpa.persistence.jdbc.ContainerTable;
 
 @MappedSuperclass
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Embeddable
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class BaseRestrictedEntity implements IRestrictedEntity {
     
     /** Note: do not access this field directly, otherwise JPA cannot load them */
-    @PersistentCollection(elementType=String.class, elementCascade=CascadeType.ALL, elementEmbedded = false, fetch=FetchType.LAZY)
-    @ContainerTable(name="tempo_user")
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name="tempo_user", joinColumns={@JoinColumn(name="TASK_ID", referencedColumnName="ID")})
+    @Column(name="element")
     private Collection<String> _userOwners;
 
     /** Note: do not access this field directly, otherwise JPA cannot load them */
-    @PersistentCollection(elementType=String.class, elementCascade=CascadeType.ALL, elementEmbedded = false, fetch=FetchType.LAZY)
-    @ContainerTable(name="tempo_role")
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name="tempo_role", joinColumns={@JoinColumn(name="TASK_ID", referencedColumnName="ID")})
+    @Column(name="element")
     private Collection<String> _roleOwners;
 
     public BaseRestrictedEntity() {

@@ -19,14 +19,19 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 
-import org.apache.openjpa.persistence.Persistent;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
 
 @Entity
@@ -38,10 +43,9 @@ public class Attachment {
 
     public static final String FIND_BY_URL = "find_by_attachment_url";
     
-    @Persistent(cascade = { CascadeType.ALL })
+    @OneToOne(cascade = CascadeType.ALL)
     private AttachmentMetadata metadata;
 
-    @Persistent
     @Column(name = "payload_url") 
     private String payloadURLAsString;
 
@@ -107,4 +111,21 @@ public class Attachment {
     public void setPayloadURLAsString(String payloadURLAsString) {
         this.payloadURLAsString = payloadURLAsString;
     }
+    
+    
+    @Column(name = "ID")
+    @Basic
+    @Id
+    @TableGenerator(name="attach" , table="OPENJPA_SEQUENCE_TABLE", pkColumnName="ID" , valueColumnName="SEQUENCE_VALUE" , pkColumnValue = "0", allocationSize=10)
+    @GeneratedValue(strategy=GenerationType.TABLE , generator="attach")
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    
 }

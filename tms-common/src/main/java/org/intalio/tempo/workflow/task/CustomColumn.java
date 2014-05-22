@@ -2,14 +2,16 @@ package org.intalio.tempo.workflow.task;
 
 import java.util.Date;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-
-import org.apache.openjpa.persistence.Persistent;
-
+import javax.persistence.TableGenerator;
 
 @Entity
 @Table(name="tempo_custom_column")
@@ -21,15 +23,12 @@ public class CustomColumn {
     public static final String FIND_BY_PROCESS_NAME = "find_by_process_name";
     public static final String FIND_ALL_CUSTOM_COLUMNS= "find_all_custom_columns";
     
-    @Persistent
     @Column(name = "custom_column_name")
     private String customColumnName;
     
-    @Persistent
     @Column(name = "project_name")
     private String _projectName;
     
-    @Persistent
     @Column(name = "project_namespace")
     private Date _projectNamespace;
 
@@ -56,4 +55,20 @@ public class CustomColumn {
     public Date getProjectNamespace() {
         return _projectNamespace;
     }
+
+    @Column(name = "ID")
+    @Basic
+    @Id
+    @TableGenerator(name="customcol" , table="OPENJPA_SEQUENCE_TABLE", pkColumnName="ID" , valueColumnName="SEQUENCE_VALUE" , pkColumnValue = "0", allocationSize=10)
+    @GeneratedValue(strategy=GenerationType.TABLE , generator="customcol")
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
 }
