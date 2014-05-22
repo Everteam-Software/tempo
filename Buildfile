@@ -75,7 +75,7 @@ define "tempo" do
     end
 
     package :jar
-    package(:aar).with(:libs => [BPMS_COMMON,SECURITY[:client], SECURITY[:nutbolts], APACHE_COMMONS[:httpclient],JASYPT, APACHE_COMMONS[:codec], JAXEN, SLF4J.values, SPRING[:core], WEBDAV])
+    package(:aar).with :libs => [  ]
   end
 
   desc "Xml Beans generation"
@@ -145,11 +145,7 @@ define "tempo" do
 
     package :jar
     package(:aar).with :libs => 
-        [ projects("tms-axis", "tms-common", "dao-nutsNbolts"),
-BPMS_COMMON,JASYPT,OPENSSO_CLIENT_SDK, CAS_CLIENT,CASTOR,APACHE_COMMONS[:pool],
-APACHE_COMMONS[:httpclient], APACHE_COMMONS[:codec], APACHE_JPA, SERP, SLF4J.values,
-SPRING[:core], DEPLOY_API, REGISTRY,SECURITY.values,
-ASPECTJ.values, SPRING[:aop] ] 
+        [  ]
   end
   
   desc "User-Interface Framework"

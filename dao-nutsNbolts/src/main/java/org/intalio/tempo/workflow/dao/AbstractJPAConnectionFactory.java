@@ -60,7 +60,8 @@ public abstract class AbstractJPAConnectionFactory {
     public AbstractJPAConnectionFactory(String entityManagerFactoryName, Map<String, Object> properties) {
         Thread thread = Thread.currentThread();
         ClassLoader oldClassLoader = thread.getContextClassLoader();
-        SysPropApplicationContextLoader context = SpringInit.CONTEXT;
+        String serviceName = (String) properties.get("serviceName");
+        SysPropApplicationContextLoader context = SpringInit.CONTEXT_MAP.get(serviceName);
         try {
             // check if we are loading from spring, and if so, apply the workaround for
             // Axis and Spring class loading otherwise classes needed for dynamic loading are not found
