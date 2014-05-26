@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Copyright (c) 2005-2007 Intalio inc.
+
+	All rights reserved. This program and the accompanying materials
+	are made available under the terms of the Eclipse Public License v1.0
+	which accompanies this distribution, and is available at
+	http://www.eclipse.org/legal/epl-v10.html
+
+	Contributors:
+	Intalio inc. - initial API and implementation
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop-2.5.xsd ">
+
+	<import resource="classpath:workflow/tempo-ui-fw-template-beans.xml"/>
+
+	<bean id="auditTask" class="org.intalio.tempo.workflow.tms.server.audit.AuditTask">
+		<property name="authProvider">
+			<ref bean="tms.authProvider" />
+		</property>
+	</bean>
+
+	<bean id="auditVacation" class="org.intalio.tempo.workflow.tms.server.audit.AuditVacation">
+	  <property name="authProvider">
+			<ref bean="tms.authProvider"/>
+	  </property>
+	</bean>
+	<!-- Comment below to disable workflow audit trail -->
+	<aop:config>
+		<aop:pointcut id="pointCutCreate"
+			expression="execution(* org.intalio.tempo.workflow.tms.server.ITMSServer.create(..))" />
+		<aop:pointcut id="pointCutComplete"
+			expression="execution(* org.intalio.tempo.workflow.tms.server.ITMSServer.complete(..))" />
+		<aop:pointcut id="pointCutReassign"
+			expression="execution(* org.intalio.tempo.workflow.tms.server.ITMSServer.reassign(..))" />
+		<aop:pointcut id="pointCutSkip"
+			expression="execution(* org.intalio.tempo.workflow.tms.server.ITMSServer.skip(..))" />
+		<aop:pointcut id="pointCutUpdate"
+			expression="execution(* org.intalio.tempo.workflow.tms.server.ITMSServer.update(..))" />
+		<aop:pointcut id="pointCutDelete"
+			expression="execution(* org.intalio.tempo.workflow.tms.server.ITMSServer.delete(..))" />
+		<aop:pointcut id="pointCutSetOutputAndComplete"
+			expression="execution(* org.intalio.tempo.workflow.tms.server.ITMSServer.setOutputAndComplete(..))" />
+		<aop:pointcut id="pointCutStorePipa"
+			expression="execution(* org.intalio.tempo.workflow.tms.server.ITMSServer.storePipa(..))" />
+		<aop:pointcut id="pointCutInsertVacation"
+		expression="execution(* org.intalio.tempo.workflow.tms.server.ITMSServer.insertVacation(..))" />
+		<aop:pointcut id="pointCutUpdateVacation"
+		expression="execution(* org.intalio.tempo.workflow.tms.server.ITMSServer.updateVacation(..))" />
+		<aop:pointcut id="pointCutDeleteVacation"
+		expression="execution(* org.intalio.tempo.workflow.tms.server.ITMSServer.deleteVacation(..))" />
+		<aop:aspect id="auditCreate" ref="auditTask">
+			<aop:after method="auditCreate" pointcut-ref="pointCutCreate" />
+			<aop:after method="auditComplete" pointcut-ref="pointCutComplete" />
+			<aop:after method="auditReassign" pointcut-ref="pointCutReassign" />
+			<aop:after method="auditSkip" pointcut-ref="pointCutSkip" />
+			<aop:after method="auditUpdate" pointcut-ref="pointCutUpdate" />
+			<aop:after method="auditDelete" pointcut-ref="pointCutDelete" />
+			<aop:after method="auditSetOutputAndComplete" pointcut-ref="pointCutSetOutputAndComplete" />
+			<aop:after method="auditStorePipa" pointcut-ref="pointCutStorePipa" />
+		</aop:aspect>
+		<aop:aspect id="auditCreateVacation" ref="auditVacation">
+		      <aop:after method="auditCreateVacation" pointcut-ref="pointCutInsertVacation" />
+		      <aop:after method="auditUpdateVacation" pointcut-ref="pointCutUpdateVacation" />
+		      <aop:after method="auditDeleteVacation" pointcut-ref="pointCutDeleteVacation" />
+		</aop:aspect>
+	</aop:config>
+
+	<bean id="tms.serviceImplementation" class="org.intalio.tempo.workflow.tms.server.TMSRequestProcessor">
+		<constructor-arg>
+			<ref bean="tms.daoFactory"/>
+		</constructor-arg>
+		<property name="server">
+			<ref bean="tms.server"/>
+		</property>
+		<property name="vacationDAOFactory">
+			<ref bean="tms.vacationDaoFactory"/>
+		</property>
+	</bean>
+
+	<bean id="tms.server" class="org.intalio.tempo.workflow.tms.server.TMSServer">
+		<property name="authProvider">
+			<ref bean="tms.authProvider"/>
+		</property>
+		<property name="permissions">
+			<ref bean="tms.permissionsHandler"/>
+		</property>
+		<property name="httpTimeout" value="120000"/>
+
+		<property name= "tasStorageStrategyEndPoint" value="http://127.0.0.1:8080/intalio/wds/" />
+		<property name="tasEndPoint" value="http://localhost:8080/intalio/ode/processes/tas"/>
+
+		<!-- This should be set to false when using proxy which doesnt support HTTP chunk e.g. Lighttpd -->
+		<property name="httpChunking" value="false"/>
+		<!-- Enter the url where ODE server is running -->
+		<property name="odeServerURL" value="http://localhost:8080/" />
+		<property name="vacationDAOFactory">
+			<ref bean="tms.vacationDaoFactory"/>
+		</property>
+	</bean>
+
+	<bean id="tms.vacationDaoFactory" class="org.intalio.tempo.workflow.tms.server.dao.JPAVacationDAOConnectionFactory" parent="abs.AbstractJPAConnectionFactory" />
+
+	<!--bean id="tms.tmsclient" class="org.intalio.tempo.workflow.tms.client.LocalTMSClient">
+		<property name="taskDAOFactory">
+			<ref bean="tms.daoFactory"/>
+		</property>
+		<property name="server">
+			<ref bean="tms.server"/>
+		</property>
+	</bean-->
+	<bean id="tms.permissionsHandler" class="org.intalio.tempo.workflow.tms.server.permissions.TaskPermissions">
+		<constructor-arg><map>
+			<entry key="delete"><set><value>intalio\admin</value></set></entry>
+		</map></constructor-arg>
+	</bean>
+
+	<bean id="tms.authProvider" class="org.intalio.tempo.workflow.auth.n3.N3AuthProvider">
+		<property name="wsEndpoint">
+			<value>http://localhost:8080/intalio/ode/processes/TokenService</value>
+		</property>
+	</bean>
+
+	<!-- It's completely experimental so never enable it.
+	We are bypassing going for tokenservice via HTTP and directly instantiating a bean, in case we want to put tokenservices on different server then 		we should comment this line and use the  above bean -->	
+	<!--<import resource="file:${org.intalio.tempo.configDirectory}/securityConfig.xml"/>
+	<bean id="tms.authProvider" class="org.intalio.tempo.workflow.auth.LocalAuthProvider">
+		<property name="tokenService">
+			<ref bean="tokenService"/>
+		</property>
+
+	</bean>
+	-->
+
+	<!-- Use the tms.tmscall bean either through LocalTMSCall or RemoteTMSCall (from gi application)-->
+	<!-- Local TMS Call is experimental -->
+	<!--
+	<bean id="tms.tmscall" class="com.intalio.bpms.gi.LocalTMSCall">
+		<property name="taskDAOFactory">
+			<ref bean="tms.daoFactory"/>
+		</property>
+		<property name="server">
+			<ref bean="tms.server"/>
+		</property>
+	</bean>
+	-->
+
+	<!--Uncomment the below bean tms.tmscall and comment the above bean to switch between Remote and Local TMS Call from gi application -->
+	<!--<bean id="tms.tmscall" class="com.intalio.bpms.gi.RemoteTMSCall">
+	</bean>-->
+
+	<bean id="tms.daoFactory" class="org.intalio.tempo.workflow.tms.server.dao.JPATaskDaoConnectionFactory">
+		<constructor-arg>
+			<map>
+				<entry><key><value>hibernate.connection.datasource</value></key><value>java:comp/env/jdbc/BPMSDB</value></entry>
+			</map>
+		</constructor-arg>
+	</bean>
+
+</beans>

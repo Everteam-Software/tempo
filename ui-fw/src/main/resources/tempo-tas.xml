@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (c) 2005-2008 Intalio inc.
+
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the Eclipse Public License v1.0
+  which accompanies this distribution, and is available at
+  http://www.eclipse.org/legal/epl-v10.html
+
+  Contributors:
+  Intalio inc. - initial API and implementation
+ -->
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+    <bean id="tas.serviceImplementation" class="org.intalio.tempo.workflow.tas.axis2.TASAxis2SingleInstanceFacade">
+        <property name="axis2TASBridge">
+            <ref bean="tas.axis2bridge"/>
+        </property>
+    </bean>
+    <bean id="tas.axis2bridge" class="org.intalio.tempo.workflow.tas.axis2.TASAxis2Bridge">
+        <constructor-arg ref="tas.server"/>
+    </bean>
+    <bean id="tas.server" class="org.intalio.tempo.workflow.tas.core.TaskAttachmentServiceImpl">
+		<property name="authStrategy">
+			<ref bean="tas.authStrategy"/>
+		</property>
+		<property name="storageStrategy">
+			<ref bean="tas.storageStrategy"/>
+		</property>
+	</bean>
+	<bean id="tas.authStrategy" class="org.intalio.tempo.workflow.tas.core.N3AuthStrategy">
+        <property name="wsEndpoint">
+            <value>http://127.0.0.1:8080/intalio/ode/processes/TokenService</value>
+        </property>
+    </bean>
+	<bean id="tas.storageStrategy" class="org.intalio.tempo.workflow.tas.core.WDSStorageStrategy">
+		<property name="endpoint">
+			<value>http://127.0.0.1:8080/intalio/wds/</value>
+		</property>
+	</bean>
+    <!-- Uncomment the below, and comment the above to get alfresco configuration -->
+	<!-- <bean id="tas.storageStrategy" class="com.intalio.tempo.workflow.tas.alfresco.AlfrescoStorageStrategy">
+		<property name="url"><value>http://127.0.0.1:8180/alfresco</value></property>
+		<property name="username"><value>admin</value></property>
+		<property name="password"><value>admin</value></property>
+		<property name="folderName"><value>Intalio</value></property>
+		<property name="illegalCharacters"><value>\:+.</value></property>
+	</bean>  -->
+
+	<!-- Uncomment the below, and comment the above to get sling configuration -->
+	<!-- <bean id="tas.storageStrategy" class="org.intalio.tempo.workflow.tas.sling.SlingStorageStrategy">
+	<property name="baseFolder" value="/sling-test"/>
+	<property name="userName" value="admin"/>
+	<property name="password" value="admin"/>
+	<property name="slingUrl" value="http://127.0.0.1:8080/sling"/>
+    </bean>  -->
+
+</beans>

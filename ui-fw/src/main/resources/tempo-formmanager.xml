@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (c) 2005-2006 Intalio inc.
+
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the Eclipse Public License v1.0
+  which accompanies this distribution, and is available at
+  http://www.eclipse.org/legal/epl-v10.html
+
+  Contributors:
+  Intalio inc. - initial API and implementation
+ -->
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<bean id="formManagerBroker" class="org.intalio.tempo.uiframework.forms.FormManagerBroker" factory-method="getInstance">
+		<property name="formManager">
+			<ref bean="formManager"/>
+		</property>
+	</bean>
+
+	<bean id="formManager" class="org.intalio.tempo.uiframework.forms.GenericFormManager">
+		<property name="mappings">
+			<map>
+				<entry key="PIPATask">
+					<map>
+						<entry key=".*xform" value="/xFormsManager/init"/>
+					</map>
+				</entry>
+				<entry key="PATask">
+					<map>
+						<entry key=".*xform" value="/xFormsManager/act"/>
+					</map>
+				</entry>
+				<entry key="Notification">
+					<map>
+						<entry key=".*xform" value="/xFormsManager/notification"/>
+					</map>
+				</entry>
+			</map>
+		</property>
+	</bean>
+</beans>
