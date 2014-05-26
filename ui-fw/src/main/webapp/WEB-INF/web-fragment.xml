@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-fragment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xmlns:webfragment="http://java.sun.com/xml/ns/javaee/web-fragment_3_0.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+	    http://java.sun.com/xml/ns/javaee/web-fragment_3_0.xsd"
+	id="workflow" version="3.0">
+
+	<name>workflow</name>
+
+	<filter>
+		<filter-name>webAuth</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+		<init-param>
+			<param-name>targetBeanName</param-name>
+			<param-value>webAuthFilter</param-value>
+		</init-param>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>webAuth</filter-name>
+		<url-pattern>/ui-fw/*</url-pattern>
+	</filter-mapping>
+
+	<filter>
+		<filter-name>UrlRewriteFilter</filter-name>
+		<filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>UrlRewriteFilter</filter-name>
+		<url-pattern>/ui-fw/*</url-pattern>
+	</filter-mapping>
+
+	<servlet id="abdera">
+		<servlet-name>Abdera</servlet-name>
+		<servlet-class>org.apache.abdera.protocol.server.servlet.AbderaServlet</servlet-class>
+		<init-param>
+			<param-name>org.apache.abdera.protocol.server.Provider</param-name>
+			<param-value>org.intalio.tempo.feeds.TasksProvider</param-value>
+		</init-param>
+		<init-param>
+			<param-name>org.apache.abdera.protocol.server.ServiceContext</param-name>
+			<param-value>org.apache.abdera.examples.appserver.SimpleServiceContext</param-value>
+		</init-param>
+	</servlet>
+
+	<servlet-mapping id="abdera-mapping">
+		<servlet-name>Abdera</servlet-name>
+		<url-pattern>/ui-fw/atom/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>JsonUpdate</servlet-name>
+		<servlet-class>org.intalio.tempo.uiframework.service.JsonUpdate</servlet-class>
+		<init-param>
+			<param-name>TaskManagementServices</param-name>
+			<!-- Changing value of TaskManagementServices in migrated to ode. -->
+			<!-- <param-value>http://localhost:8080/axis2/services/TaskManagementServices</param-value> -->
+			<param-value>http://localhost:8080/intalio/ode/processes/TaskManagementServices</param-value>
+		</init-param>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>JsonUpdate</servlet-name>
+		<url-pattern>/ui-fw/json/update</url-pattern>
+	</servlet-mapping>
+	<!-- servlet -->
+
+	<servlet>
+		<servlet-name>tempo-spring-servlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:workflow/tempo-ui-fw.xml, classpath:workflow/tempo-ui-fw-servlet.xml</param-value>
+		</init-param>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>tempo-spring-servlet</servlet-name>
+		<url-pattern>/ui-fw/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>versionsServlet</servlet-name>
+		<servlet-class>org.intalio.tempo.uiframework.versions.BpmsVersionsServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>versionsServlet</servlet-name>
+		<url-pattern>/ui-fw/versions</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>iCalServlet</servlet-name>
+		<servlet-class>org.intalio.tempo.uiframework.export.iCalServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>iCalServlet</servlet-name>
+		<url-pattern>/ui-fw/ical</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>CSVServlet</servlet-name>
+		<servlet-class>org.intalio.tempo.uiframework.export.CSVServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>CSVServlet</servlet-name>
+		<url-pattern>/ui-fw/csv</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>PDFServlet</servlet-name>
+		<servlet-class>org.intalio.tempo.uiframework.export.PDFServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>PDFServlet</servlet-name>
+		<url-pattern>/ui-fw/pdf</url-pattern>
+	</servlet-mapping>
+
+</web-app>
