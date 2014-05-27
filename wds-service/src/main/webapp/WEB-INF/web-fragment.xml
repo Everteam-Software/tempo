@@ -12,7 +12,7 @@
     <servlet-class>org.intalio.tempo.workflow.wds.servlets.WDSServlet</servlet-class>
     <init-param>
       <param-name>contextConfigLocation</param-name>
-      <param-value>file:${org.intalio.tempo.configDirectory}/tempo-wds.xml</param-value>
+      <param-value>classpath:workflow/tempo-wds.xml</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
