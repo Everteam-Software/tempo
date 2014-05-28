@@ -132,13 +132,13 @@ public class TasksCollector {
         if (type.equals(Notification.class.getSimpleName()) || type.equals(PATask.class.getSimpleName())) {
           StringBuffer baseQuery = null; 
             if(formURL != null && params.get("taskType") != null){
-            	baseQuery = new StringBuffer("(T._state = TaskState.READY or T._state = TaskState.CLAIMED) " + "and T._formURL like '%" + formURL+ "%'") ;
+                baseQuery = new StringBuffer("(T._state = org.intalio.tempo.workflow.task.TaskState.READY or T._state = org.intalio.tempo.workflow.task.TaskState.CLAIMED) " + "and T._formURL like '%" + formURL+ "%'") ;
             }else{
-            	baseQuery = new StringBuffer("(T._state = TaskState.READY OR T._state = TaskState.CLAIMED) ");
+                baseQuery = new StringBuffer("(T._state = org.intalio.tempo.workflow.task.TaskState.READY OR T._state = org.intalio.tempo.workflow.task.TaskState.CLAIMED) ");
             }
             collect(fmanager, _tasks, taskManager, params, type, baseQuery);
         } else if (type.equals(PIPATask.class.getSimpleName())) {
-            StringBuffer baseQuery = new StringBuffer("(T._processState = PIPATaskState.READY)");
+            StringBuffer baseQuery = new StringBuffer("(T._processState = org.intalio.tempo.workflow.task.PIPATaskState.READY)");
             collect(fmanager, _tasks, taskManager, params, type, baseQuery);
         } else {
             _log.error("Cannot collect task of type:" + type);

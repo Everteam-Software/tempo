@@ -16,18 +16,18 @@
 package org.intalio.tempo.workflow.task;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.apache.openjpa.persistence.Externalizer;
-import org.apache.openjpa.persistence.Factory;
-import org.apache.openjpa.persistence.Persistent;
 import org.intalio.tempo.workflow.auth.AuthIdentifierSet;
 import org.intalio.tempo.workflow.task.traits.ITaskWithOutput;
 import org.intalio.tempo.workflow.task.traits.InitTask;
@@ -42,27 +42,22 @@ import org.w3c.dom.Document;
 @Entity
 @Table(name = "tempo_pipa")
 @PrimaryKeyJoinColumn(name = "id", referencedColumnName = "id")
-@NamedQueries( { @NamedQuery(name = PIPATask.FIND_BY_URL, query = "select DISTINCT T FROM PIPATask T where T._processEndpoint=(?1)") })
+@NamedQueries( { @NamedQuery(name = PIPATask.FIND_BY_URL, query = "select DISTINCT T FROM PIPATask T where T._processEndpoint=(?)") })
 public class PIPATask extends Task implements InitTask, ITaskWithOutput {
 
     public static final String FIND_BY_URL = "find_by_url";
 
-    @Persistent
-    @Factory("URI.create")
-    @Externalizer("toString")
     @Column(name = "init_message")
-    private URI _initMessageNamespaceURI;
+    private String _initMessageNamespaceURI;
 
-    @Persistent
     @Column(name = "init_soap")
     private String _initOperationSOAPAction;
 
-    @Persistent
     @Column(name = "process_endpoint")
     private String _processEndpoint;
     
-    @Persistent
     @Column(name = "process_state")
+    @Enumerated(EnumType.ORDINAL)
     private PIPATaskState _processState=PIPATaskState.READY;  
 
     @Transient
@@ -83,7 +78,7 @@ public class PIPATask extends Task implements InitTask, ITaskWithOutput {
     public PIPATask(String id, URI formURL, URI processEndpoint, URI initMessageNamespaceURI, String initOperationSOAPAction) {
         super(id, formURL);
         setProcessEndpoint(processEndpoint);
-        _initMessageNamespaceURI = initMessageNamespaceURI;
+        _initMessageNamespaceURI = initMessageNamespaceURI.toString();
         _initOperationSOAPAction = initOperationSOAPAction;
     }
 
@@ -91,14 +86,15 @@ public class PIPATask extends Task implements InitTask, ITaskWithOutput {
         if (this._initMessageNamespaceURI == null) {
             throw new IllegalStateException("The required property initMessageNamespaceURI is not set.");
         }
-        return _initMessageNamespaceURI;
+        URI initMessageNamespaceURI = URI.create(_initMessageNamespaceURI);
+        return initMessageNamespaceURI;
     }
 
     public void setInitMessageNamespaceURI(URI initMessageNamespaceURI) {
         if (initMessageNamespaceURI == null) {
             throw new RequiredArgumentException("initMessageNamespaceURI");
         }
-        _initMessageNamespaceURI = initMessageNamespaceURI;
+        _initMessageNamespaceURI = initMessageNamespaceURI.toString();
     }
 
     public String getInitOperationSOAPAction() {

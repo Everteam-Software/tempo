@@ -11,8 +11,9 @@
 package org.intalio.tempo.workflow.dao;
 
 import javax.persistence.EntityManager;
+import javax.persistence.RollbackException;
 
-import org.apache.openjpa.persistence.RollbackException;
+import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,11 +33,13 @@ public class AbstractJPAConnection {
 
 	protected Logger _logger;
 	protected EntityManager entityManager;
+	protected Session session;
 
 	public AbstractJPAConnection(EntityManager createEntityManager) {
 		_logger = LoggerFactory.getLogger(this.getClass());
 		_logger.debug(ACTION.LOAD.toString());
 		entityManager = createEntityManager;
+		session = entityManager.unwrap(Session.class);
 	}
 
 	public void close() {

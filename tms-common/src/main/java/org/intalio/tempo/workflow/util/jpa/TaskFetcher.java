@@ -3,7 +3,6 @@ package org.intalio.tempo.workflow.util.jpa;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -12,11 +11,12 @@ import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.Query;
+import org.hibernate.Query;
+import org.hibernate.SQLQuery;
+import org.hibernate.Session;
 
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.openjpa.persistence.OpenJPAEntityManagerSPI;
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.CustomColumn;
 import org.intalio.tempo.workflow.task.PATask;
@@ -49,33 +49,35 @@ public class TaskFetcher {
 
 	final static Logger _logger = LoggerFactory.getLogger(TaskFetcher.class);
 	private EntityManager _entityManager;
+	private Session session;
 	private Query find_by_id;
 	private Query find_pipa_task_output_by_task_id;
 	private final String QUERY_GENERIC1 = "select T from ";
-	private final String QUERY_GENERIC_DISTINCT = "select DISTINCT T from ";
+	private final String QUERY_GENERIC_DISTINCT = "select T from ";
 	private final String QUERY_GENERIC_GROUPBY = " GROUP BY T._id ";
 	private final String QUERY_GENERIC_COUNT = "select COUNT(DISTINCT T) from ";
 //	private final String QUERY_GENERIC2 = " T where (T._userOwners = (?1) or T._roleOwners = (?2)) ";
 	private final String QUERY_GENERIC2_FOR_ADMIN = " T ";
 	private final String QUERY_GENERIC2_FOR_CUSTOM_COLUMN_SEARCH = " T JOIN T._customMetadata C ";
-	private final String QUERY_GENERIC2 = " where (T._userOwners in (?1) or T._roleOwners in (?2) or T._roleOwners = '*') ";
+	private final String QUERY_GENERIC2 = " LEFT JOIN T._userOwners UO LEFT JOIN T._roleOwners RO where (UO in (:users) or RO in (:roles) or RO in ('*')) ";
 	
 	// private final String DELETE_TASKS =
 	// "delete from Task m where m._userOwners in (?1) or m._roleOwners in (?2) "
 	// ;
-	private final String DELETE_ALL_TASK_WITH_ID = "delete from Task m where m._id = (?1) ";
+	private final String DELETE_ALL_TASK_WITH_ID = "delete from Task m where m._id = (?) ";
 
-	private final String GET_CUSTOM_COL_SORT_PREFIX = "SELECT DISTINCT(t1.id),t4.value FROM tempo_pa t0 INNER JOIN tempo_task t1 ON t0.ID = t1.id LEFT OUTER JOIN tempo_generic t4 ON t0.ID = t4.PATASK_ID and t4.key0 = ";
+	private final String GET_CUSTOM_COL_SORT_PREFIX = "SELECT t0.*, t1.*, t4.value FROM tempo_pa t0 INNER JOIN tempo_task t1 ON t0.ID = t1.id LEFT OUTER JOIN tempo_generic t4 ON t0.ID = t4.PATASK_ID and t4.key0 = ";
 	private final String GET_CUSTOM_COL_SORT_POSTFIX = " (t0.state = 0 OR t0.state = 3) ORDER BY t4.value ";
-	private final String GET_CUSTOM_COL_SORT_ADMIN_USER_CONDITION = " LEFT OUTER JOIN tempo_user t2 ON t1.id = t2.TASK_ID LEFT OUTER JOIN tempo_role t3 ON t1.id = t3.TASK_ID WHERE ( t2.element IN (?1) ";
+	private final String GET_CUSTOM_COL_SORT_ADMIN_USER_CONDITION = " LEFT OUTER JOIN tempo_user t2 ON t1.id = t2.TASK_ID LEFT OUTER JOIN tempo_role t3 ON t1.id = t3.TASK_ID WHERE ( t2.element IN (?) ";
 	private final String GET_CUSTOM_COL_SORT_ADMIN_ROLE_CONDITION = " OR t3.element = ?";
 	private static String DATABASE_PRODUCT_NAME = "";
 	private static String DATABASE_MYSQL = "MySQL";
 
 	public TaskFetcher(EntityManager em) {
 		this._entityManager = em;
-		this.find_by_id = _entityManager.createNamedQuery(Task.FIND_BY_ID);
-		this.find_pipa_task_output_by_task_id = _entityManager.createNamedQuery(PIPATaskOutput.FIND_BY_TASK_ID_AND_USER);
+		this.session = em.unwrap(Session.class);
+		this.find_by_id = session.getNamedQuery(Task.FIND_BY_ID);
+		this.find_pipa_task_output_by_task_id = session.getNamedQuery(PIPATaskOutput.FIND_BY_TASK_ID_AND_USER);
 		/*
 		 * Fix for CON-794
 		 * Getting database name from JPA Entity Manager.
@@ -84,8 +86,7 @@ public class TaskFetcher {
 		if("".equals(DATABASE_PRODUCT_NAME)) {
 		    Connection conn = null;
 		    try {
-		        OpenJPAEntityManagerSPI oem = (OpenJPAEntityManagerSPI)_entityManager.getDelegate();
-		        conn = (Connection)oem.getConnection();
+		        conn = session.connection();
 		        java.sql.DatabaseMetaData dbmd = conn.getMetaData();
 		        DATABASE_PRODUCT_NAME = dbmd.getDatabaseProductName();
 		    }catch (Exception e) {
@@ -109,8 +110,8 @@ public class TaskFetcher {
 	public Task fetchTaskIfExists(String taskID)
 			throws UnavailableTaskException {
 		try {
-			Query q = find_by_id.setParameter(1, taskID);
-			List resultList = q.getResultList();
+			Query q = find_by_id.setParameter(0, taskID);
+			List resultList = q.list();
 			if (resultList.size() < 1)
 				throw new UnavailableTaskException("Task does not exist"
 						+ taskID);
@@ -123,9 +124,9 @@ public class TaskFetcher {
 	   public List<Task> fetchTaskIfExistsfrominstanceID(String instanceid)
        throws UnavailableTaskException {
 	       try {
-       Query q = _entityManager.createNamedQuery(PATask.FIND_BY_INSTANCEID);
-       q.setParameter(1, instanceid);
-       List<Task> resultList = q.getResultList();
+       Query q = session.getNamedQuery(PATask.FIND_BY_INSTANCEID);
+       q.setParameter(0, instanceid);
+       List<Task> resultList = q.list();
        if (resultList.size() < 1)
            throw new UnavailableTaskException("Task does not exist with InstanceID"
                    + instanceid);
@@ -136,8 +137,8 @@ public class TaskFetcher {
 }
 
 	public int deleteTasksWithID(String taskID) {
-		Query q = _entityManager.createQuery(DELETE_ALL_TASK_WITH_ID);
-		q.setParameter(1, taskID);
+		Query q = session.createQuery(DELETE_ALL_TASK_WITH_ID);
+		q.setParameter(0, taskID);
 		return q.executeUpdate();
 	}
 
@@ -148,10 +149,10 @@ public class TaskFetcher {
 	 */
 	public PIPATask fetchPipaFromUrl(String formUrl)
 			throws UnavailableTaskException {
-		Query q = _entityManager.createNamedQuery(PIPATask.FIND_BY_URL)
-				.setParameter(1, formUrl);
+		Query q = session.getNamedQuery(PIPATask.FIND_BY_URL)
+				.setParameter(0, formUrl);
 		try {
-			return (PIPATask) q.getSingleResult();
+			return (PIPATask) q.uniqueResult();
 		} catch (NoResultException nre) {
 			throw new UnavailableTaskException(
 					"Task with following endpoint does not exist:" + formUrl);
@@ -164,10 +165,10 @@ public class TaskFetcher {
 	public Task[] fetchAllAvailableTasks(UserRoles user) {
 		ArrayList userIdList = new ArrayList();
 		userIdList.add(user.getUserID());
-		Query q = _entityManager.createNamedQuery(Task.FIND_BY_ROLE_USER)
-				.setParameter(1, userIdList).setParameter(2,
-						user.getAssignedRoles());
-		List result = q.getResultList();
+		Query q = session.getNamedQuery(Task.FIND_BY_ROLE_USER)
+				.setParameter(0, userIdList).setParameter(1,
+				                user.getAssignedRoles());
+		List result = q.list();
 		return (Task[]) result.toArray(new Task[result.size()]);
 	}
 
@@ -178,9 +179,9 @@ public class TaskFetcher {
          */
         public final List<Task> fetchAllAvailableTasks(
                                 final List<String> users) {
-            Query q = _entityManager.createNamedQuery(Task.FIND_BY_USER)
-                    .setParameter(1, users);
-            List<Task> result = q.getResultList();
+            Query q = session.getNamedQuery(Task.FIND_BY_USER)
+                    .setParameter(0, users);
+            List<Task> result = q.list();
             return result;
         }
 
@@ -203,7 +204,7 @@ public class TaskFetcher {
 //		return count;
 	    parameters.put(TaskFetcher.FETCH_COUNT, StringUtils.EMPTY);
 	    Query q = buildQuery(parameters);
-	    return (Long) q.getSingleResult();
+	    return (Long) q.uniqueResult();
 	}
 
 	private Query buildQuery(Map parameters) {
@@ -211,7 +212,6 @@ public class TaskFetcher {
 		UserRoles user = (UserRoles) parameters.get(FETCH_USER);
 		Class taskClass = (Class) parameters.get(FETCH_CLASS);		
 		String subQuery = MapUtils.getString(parameters, FETCH_SUB_QUERY, "");
-
 		ArrayList userIdList = new ArrayList();
 		userIdList.add(user.getUserID());
 		userIdList.addAll(user.getVacationUsers());
@@ -242,8 +242,7 @@ public class TaskFetcher {
                     String roleCondition = "";
                     if (!isWorkflowAdmin) {
                         for (int i = 0; roles != null && i < roles.length; i++) {
-                            roleCondition += GET_CUSTOM_COL_SORT_ADMIN_ROLE_CONDITION
-                                    + (i + 2);
+                            roleCondition += GET_CUSTOM_COL_SORT_ADMIN_ROLE_CONDITION;
                         }
                     }
                     StringBuffer customQuery = new StringBuffer();
@@ -256,23 +255,23 @@ public class TaskFetcher {
                         customQuery.append(" WHERE ");
                     }
                     customQuery.append(GET_CUSTOM_COL_SORT_POSTFIX).append(sortOrder);
-                    q = _entityManager.createNativeQuery(customQuery.toString(),
-                            PATask.class);
+                    SQLQuery q1 = session.createSQLQuery(customQuery.toString());
+                    q1.addEntity(PATask.class);
                     if (!isWorkflowAdmin) {
-                        q.setParameter(1, user.getUserID());
+                        q1.setParameter(0, user.getUserID());
                         for (int i = 0; i < roles.length; i++) {
-                            q.setParameter(i + 2, roles[i]);
+                            q1.setParameter(i + 1, roles[i]);
                         }
                     }
-                    return q;
+                    return q1;
                    }
 		if (StringUtils.isEmpty(subQuery)) {
 			if(isWorkflowAdmin) {
-				q = _entityManager.createQuery(
+				q = session.createQuery(
 					baseQuery + taskClass.getSimpleName() + QUERY_GENERIC2_FOR_ADMIN);
 			}else{
-				q = _entityManager.createQuery(
-						baseQuery + taskClass.getSimpleName() + QUERY_GENERIC2_FOR_ADMIN + QUERY_GENERIC2).setParameter(1, userIdList).setParameter(2,user.getAssignedRoles());
+				q = session.createQuery(
+						baseQuery + taskClass.getSimpleName() + QUERY_GENERIC2_FOR_ADMIN + QUERY_GENERIC2).setParameterList("users", userIdList).setParameterList("roles",user.getAssignedRoles());
 				
 			}
 				
@@ -361,12 +360,11 @@ public class TaskFetcher {
 				_logger.debug("isWorkflowAdmin" + isWorkflowAdmin);
 			}			
 		
-
-			if(isWorkflowAdmin)
-				q = _entityManager.createQuery(buffer.toString());
-			else
-				q = _entityManager.createQuery(buffer.toString()).setParameter(1,userIdList).setParameter(2, user.getAssignedRoles());
-				
+			if(isWorkflowAdmin) {
+				q = session.createQuery(buffer.toString());
+			} else {
+				q = session.createQuery(buffer.toString()).setParameterList("users",userIdList).setParameterList("roles", user.getAssignedRoles());
+			}
 		}
 		return q;
 	}
@@ -443,7 +441,7 @@ public class TaskFetcher {
 			q.setFirstResult(first);
 		if(_logger.isDebugEnabled())
             _logger.debug("Executing query: "+q.toString());
-		List result = q.getResultList();
+		List result = q.list();
 		if(_logger.isDebugEnabled())
             _logger.debug("Returning the resultSetList");
 		return (Task[]) result.toArray(new Task[result.size()]);
@@ -455,9 +453,9 @@ public class TaskFetcher {
 	public Task[] fetchTasksForUser(String user) {
 		List<String> params = new ArrayList<String>();
 		params.add(user);
-		Query q = _entityManager.createNamedQuery(Task.FIND_BY_USER)
-				.setParameter(1, params);
-		List result = q.getResultList();
+		Query q = session.getNamedQuery(Task.FIND_BY_USER)
+				.setParameter(0, params);
+		List result = q.list();
 		return (Task[]) result.toArray(new Task[result.size()]);
 	}
 
@@ -467,9 +465,9 @@ public class TaskFetcher {
 	public Object[] fetchTasksForRole(String role) {
 		List<String> params = new ArrayList<String>();
 		params.add(role);
-		Query q = _entityManager.createNamedQuery(Task.FIND_BY_ROLE)
-				.setParameter(1, params);
-		List result = q.getResultList();
+		Query q = session.getNamedQuery(Task.FIND_BY_ROLE)
+				.setParameter(0, params);
+		List result = q.list();
 		return (Task[]) result.toArray(new Task[result.size()]);
 	}
 
@@ -481,9 +479,9 @@ public class TaskFetcher {
 	public List<CustomColumn> fetchCustomColumnIfExistsfromprocessname(
 			String processName) throws UnavailableTaskException {
        try {
-           Query q = _entityManager.createNamedQuery(CustomColumn.FIND_BY_PROCESS_NAME);
-           q.setParameter(1, processName);
-           List<CustomColumn> resultList = q.getResultList();
+           Query q = session.getNamedQuery(CustomColumn.FIND_BY_PROCESS_NAME);
+           q.setParameter(0, processName);
+           List<CustomColumn> resultList = q.list();
 //           if (resultList.size() < 1)
 //               throw new UnavailableTaskException("Custom Column does not exist with ProcessName"
 //                       + processName);
@@ -494,14 +492,14 @@ public class TaskFetcher {
 	}
 	
 	public List<String> fetchCustomColumns(){
-	        Query q = _entityManager.createNamedQuery( CustomColumn.FIND_ALL_CUSTOM_COLUMNS);
-	        List<String> resultList = q.getResultList();
+	        Query q = session.getNamedQuery( CustomColumn.FIND_ALL_CUSTOM_COLUMNS);
+	        List<String> resultList = q.list();
 	        return resultList;
 	}
 	
 	public PIPATaskOutput fetchPIPATaskOutput(String taskId, String userOwner) {
-		   Query query = find_pipa_task_output_by_task_id.setParameter(1, taskId).setParameter(2, userOwner);
-		   List resultList = query.getResultList();
+		   Query query = find_pipa_task_output_by_task_id.setParameter(0, taskId).setParameter(1, userOwner);
+		   List resultList = query.list();
 		   PIPATaskOutput pipaTaskOutput=null;
 		   if(resultList!= null && !resultList.isEmpty()){
 			   pipaTaskOutput = (PIPATaskOutput) resultList.get(0);
@@ -513,8 +511,8 @@ public class TaskFetcher {
      * Fetch the pending and claimed task count for all users.
      */
     public List<Object> fetchTaskCountForUsers() {
-        Query q = _entityManager.createNamedQuery(PATask.GET_PENDING_CLAIMED_TASK_COUNT_FOR_ALL_USERS);
-        List result = q.getResultList();
+        Query q = session.getNamedQuery(PATask.GET_PENDING_CLAIMED_TASK_COUNT_FOR_ALL_USERS);
+        List result = q.list();
         List <Object>resultSet = new ArrayList<Object>();
         
         Iterator<Object> iterator = result.iterator();
@@ -551,18 +549,16 @@ public class TaskFetcher {
         Query q = null;
 
         if (users != null) {
-            q = _entityManager
-                    .createNamedQuery(PATask.GET_TASK_DISTRIBUTION_FOR_USERS_BASED_ON_TIME);
-            q.setParameter("since", since).setParameter("until", until).setParameter("userOwners", users)
-                    .setParameter("states", taskStatusList);
+            q = session.getNamedQuery(PATask.GET_TASK_DISTRIBUTION_FOR_USERS_BASED_ON_TIME);
+            q.setParameter("since", since).setParameter("until", until).setParameterList("userOwners", users)
+                    .setParameterList("states", taskStatusList);
         } else {
-            q = _entityManager
-                    .createNamedQuery(PATask.GET_TASK_DISTRIBUTION_BY_USERS_BASED_ON_TIME);
-            q.setParameter("since", since).setParameter("until", until).setParameter("states",
+            q = session.getNamedQuery(PATask.GET_TASK_DISTRIBUTION_BY_USERS_BASED_ON_TIME);
+            q.setParameter("since", since).setParameter("until", until).setParameterList("states",
                     taskStatusList);
         }
 
-        List result = q.getResultList();
+        List result = q.list();
         List<Object> resultSet = new ArrayList<Object>();
 
         Iterator<Object> iterator = result.iterator();
@@ -598,18 +594,16 @@ public class TaskFetcher {
         Query q = null;
 
         if (roles != null) {
-            q = _entityManager
-                    .createNamedQuery(PATask.GET_TASK_DISTRIBUTION_FOR_ROLES_BASED_ON_TIME);
-            q.setParameter("since", since).setParameter("until", until).setParameter("roleOwners", roles)
-                    .setParameter("states", taskStatusList);
+            q = session.getNamedQuery(PATask.GET_TASK_DISTRIBUTION_FOR_ROLES_BASED_ON_TIME);
+            q.setParameter("since", since).setParameter("until", until).setParameterList("roleOwners", roles)
+                    .setParameterList("states", taskStatusList);
         } else {
-            q = _entityManager
-                    .createNamedQuery(PATask.GET_TASK_DISTRIBUTION_BY_ROLES_BASED_ON_TIME);
-            q.setParameter("since", since).setParameter("until", until).setParameter("states",
+            q = session.getNamedQuery(PATask.GET_TASK_DISTRIBUTION_BY_ROLES_BASED_ON_TIME);
+            q.setParameter("since", since).setParameter("until", until).setParameterList("states",
                     taskStatusList);
         }
 
-        List result = q.getResultList();
+        List result = q.list();
         List<Object> resultSet = new ArrayList<Object>();
 
         Iterator<Object> iterator = result.iterator();
@@ -633,12 +627,11 @@ public class TaskFetcher {
 
         Query q = null;
 
-        q = _entityManager
-                .createNamedQuery(PATask.GET_AVERAGE_COMPLETION_TIME_BY_USER);
+        q = session.getNamedQuery(PATask.GET_AVERAGE_COMPLETION_TIME_BY_USER);
         q.setParameter("since", since).setParameter("until", until)
-                .setParameter("userOwners", users);
+                .setParameterList("userOwners", users);
 
-        List result = q.getResultList();
+        List result = q.list();
         List<Object> resultSet = new ArrayList<Object>();
 
         Iterator<Object> iterator = result.iterator();
@@ -658,11 +651,11 @@ public class TaskFetcher {
      * Fetch the task count for all states.
      */
     public List<Object> fetchTaskCountByStatus(Date since, Date until) {
-        Query q = _entityManager.createNamedQuery(PATask.GET_TASK_COUNT_BY_STATUS);
+        Query q = session.getNamedQuery(PATask.GET_TASK_COUNT_BY_STATUS);
         q.setParameter("since", since);
         q.setParameter("until", until);
 
-        List result = q.getResultList();
+        List result = q.list();
         List <Object>resultSet = new ArrayList<Object>();
 
         Iterator<Object> iterator = result.iterator();
@@ -682,11 +675,11 @@ public class TaskFetcher {
      * Fetch the task count for all priorities.
      */
     public List<Object> fetchTaskCountByPriority(Date since, Date until) {
-        Query q = _entityManager.createNamedQuery(PATask.GET_TASK_COUNT_BY_PRIORITY);
+        Query q = session.getNamedQuery(PATask.GET_TASK_COUNT_BY_PRIORITY);
         q.setParameter("since", since);
         q.setParameter("until", until);
 
-        List result = q.getResultList();
+        List result = q.list();
         List <Object>resultSet = new ArrayList<Object>();
 
         Iterator<Object> iterator = result.iterator();
@@ -706,14 +699,13 @@ public class TaskFetcher {
      * Fetch the task count by creation date.
      */
     public Map<String, Date> fetchTaskCountByCreationDate(Date since, Date until) {
-        Query q = _entityManager
-                .createNamedQuery(PATask.GET_TASK_COUNT_BY_CREATION_DATE);
+        Query q = session.getNamedQuery(PATask.GET_TASK_COUNT_BY_CREATION_DATE);
         q.setParameter("since", since);
         q.setParameter("until", until);
 
         Map<String, Date> taskCreationMap = new HashMap<String, Date>();
 
-        List result = q.getResultList();
+        List result = q.list();
         Iterator<Object> iterator = result.iterator();
 
         while (iterator.hasNext()) {
@@ -732,11 +724,10 @@ public class TaskFetcher {
         Map<String, Long> taskSummary = new HashMap<String, Long>();
         Query q = null;
 
-        q = _entityManager
-                .createNamedQuery(PATask.GET_COMPLETED_TASK_COUNT_FOR_USERS);
+        q = session.getNamedQuery(PATask.GET_COMPLETED_TASK_COUNT_FOR_USERS);
         q.setParameter("since", since).setParameter("until", until);
 
-        List result = q.getResultList();
+        List result = q.list();
 
         Iterator<Object> iterator = result.iterator();
         while (iterator.hasNext()) {

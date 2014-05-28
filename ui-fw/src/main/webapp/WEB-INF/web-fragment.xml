@@ -1,25 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app id="bpms-ui-fw" version="2.4"
-	xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+<web-fragment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xmlns:webfragment="http://java.sun.com/xml/ns/javaee/web-fragment_3_0.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+	    http://java.sun.com/xml/ns/javaee/web-fragment_3_0.xsd"
+	id="workflow" version="3.0">
 
-	<display-name>Intalio|BPMS User Interface Framework</display-name>
+	<name>workflow</name>
 
-	<listener>
-		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-	</listener>
-
-	<context-param>
-		<param-name>contextClass</param-name>
-		<param-value>org.intalio.tempo.web.SysPropWebApplicationContext</param-value>
-	</context-param>
-
-	<context-param>
-		<param-name>contextConfigLocation</param-name>
-		<param-value>file:${org.intalio.tempo.configDirectory}/tempo-ui-fw.xml</param-value>
-	</context-param>
-	
-		<filter>
+	<filter>
 		<filter-name>webAuth</filter-name>
 		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
 		<init-param>
@@ -30,37 +20,17 @@
 
 	<filter-mapping>
 		<filter-name>webAuth</filter-name>
-		<url-pattern>*.htm</url-pattern>
+		<url-pattern>/ui-fw/*</url-pattern>
 	</filter-mapping>
 
 	<filter>
-		<filter-name>SetCharacterEncodingFilter</filter-name>
-		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
-		<init-param>
-			<param-name>encoding</param-name>
-			<param-value>UTF8</param-value>
-		</init-param>
-		<init-param>
-			<param-name>forceEncoding</param-name>
-			<param-value>true</param-value>
-		</init-param>
-	</filter>
-	
-	<filter-mapping>
-		<filter-name>SetCharacterEncodingFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-	<filter>
 		<filter-name>UrlRewriteFilter</filter-name>
 		<filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
-		<init-param>
-			<param-name>confReloadCheckInterval</param-name>
-			<param-value>30</param-value>
-		</init-param>
 	</filter>
+
 	<filter-mapping>
 		<filter-name>UrlRewriteFilter</filter-name>
-		<url-pattern>/*</url-pattern>
+		<url-pattern>/ui-fw/*</url-pattern>
 	</filter-mapping>
 
 	<servlet id="abdera">
@@ -75,16 +45,11 @@
 			<param-value>org.apache.abdera.examples.appserver.SimpleServiceContext</param-value>
 		</init-param>
 	</servlet>
+
 	<servlet-mapping id="abdera-mapping">
 		<servlet-name>Abdera</servlet-name>
-		<url-pattern>/atom/*</url-pattern>
+		<url-pattern>/ui-fw/atom/*</url-pattern>
 	</servlet-mapping>
-
-	<servlet>
-		<servlet-name>ViewRendererServlet</servlet-name>
-		<servlet-class>org.springframework.web.servlet.ViewRendererServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
 
 	<servlet>
 		<servlet-name>JsonUpdate</servlet-name>
@@ -98,28 +63,23 @@
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>ViewRendererServlet</servlet-name>
-		<url-pattern>/WEB-INF/servlet/view</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
 		<servlet-name>JsonUpdate</servlet-name>
-		<url-pattern>/json/update</url-pattern>
+		<url-pattern>/ui-fw/json/update</url-pattern>
 	</servlet-mapping>
 	<!-- servlet -->
 
 	<servlet>
-		<servlet-name>springapp</servlet-name>
+		<servlet-name>tempo-spring-servlet</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
-			<param-value>file:${org.intalio.tempo.configDirectory}/tempo-ui-fw-servlet.xml</param-value>
+			<param-value>classpath:workflow/tempo-ui-fw.xml, classpath:workflow/tempo-ui-fw-servlet.xml</param-value>
 		</init-param>
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>springapp</servlet-name>
-		<url-pattern>*.htm</url-pattern>
+		<servlet-name>tempo-spring-servlet</servlet-name>
+		<url-pattern>/ui-fw/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet>
@@ -129,7 +89,7 @@
 
 	<servlet-mapping>
 		<servlet-name>versionsServlet</servlet-name>
-		<url-pattern>/versions</url-pattern>
+		<url-pattern>/ui-fw/versions</url-pattern>
 	</servlet-mapping>
 
 	<servlet>
@@ -139,7 +99,7 @@
 
 	<servlet-mapping>
 		<servlet-name>iCalServlet</servlet-name>
-		<url-pattern>/ical</url-pattern>
+		<url-pattern>/ui-fw/ical</url-pattern>
 	</servlet-mapping>
 
 	<servlet>
@@ -149,7 +109,7 @@
 
 	<servlet-mapping>
 		<servlet-name>CSVServlet</servlet-name>
-		<url-pattern>/csv</url-pattern>
+		<url-pattern>/ui-fw/csv</url-pattern>
 	</servlet-mapping>
 
 	<servlet>
@@ -159,38 +119,7 @@
 
 	<servlet-mapping>
 		<servlet-name>PDFServlet</servlet-name>
-		<url-pattern>/pdf</url-pattern>
+		<url-pattern>/ui-fw/pdf</url-pattern>
 	</servlet-mapping>
 
-
-	<!-- Welcome File List -->
-
-	<welcome-file-list>
-		<welcome-file>index.jsp</welcome-file>
-	</welcome-file-list>
-
-	<error-page>
-		<exception-type>java.lang.Throwable</exception-type>
-		<location>/genError.jsp</location>
-	</error-page>
-
-	<jsp-config>
-		<jsp-property-group>
-			<url-pattern>/WEB-INF/jsp/*</url-pattern>
-			<el-ignored>false</el-ignored>
-			<trim-directive-whitespaces>true</trim-directive-whitespaces>
-		</jsp-property-group>
-	</jsp-config>
-
-	<locale-encoding-mapping-list>
-		<locale-encoding-mapping>
-			<locale>en</locale>
-			<encoding>iso-8859-1</encoding>
-		</locale-encoding-mapping>
-
-		<locale-encoding-mapping>
-			<locale>ua</locale>
-			<encoding>cp1251</encoding>
-		</locale-encoding-mapping>
-	</locale-encoding-mapping-list>
 </web-app>

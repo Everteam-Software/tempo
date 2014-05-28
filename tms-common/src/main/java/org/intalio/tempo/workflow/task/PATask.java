@@ -24,21 +24,29 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.MapKey;
+import javax.persistence.MapKeyColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.QueryHint;
 import javax.persistence.Table;
 
-import org.apache.openjpa.persistence.Persistent;
-import org.apache.openjpa.persistence.PersistentMap;
-import org.apache.openjpa.persistence.jdbc.ContainerTable;
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.task.attachments.Attachment;
 import org.intalio.tempo.workflow.task.traits.IChainableTask;
@@ -63,25 +71,25 @@ import org.w3c.dom.Document;
 @Table(name = "tempo_pa")
 @PrimaryKeyJoinColumn(name="ID", referencedColumnName="ID")
 @NamedQueries( {
-        @NamedQuery(name = PATask.FIND_BY_STATES, query = "select m from PATask m where m._state=?1", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") }),
-        @NamedQuery(name= PATask.FIND_BY_INSTANCEID, query= "select m from PATask m where m._instanceId= ?1"),
+        @NamedQuery(name = PATask.FIND_BY_STATES, query = "select m from PATask m where m._state=?", hints = { @QueryHint(name = "org.hibernate.fetchSize", value = "1") }),
+        @NamedQuery(name= PATask.FIND_BY_INSTANCEID, query= "select m from PATask m where m._instanceId= ?"),
         @NamedQuery(name=PATask.GET_PENDING_TASK_COUNT,
-			query="select count(pa._id) from PATask pa where pa._lastAssignedDate >= (:since) and pa._lastAssignedDate <= (:until) and pa._state = TaskState.READY and (:userOwner MEMBER OF pa._userOwners or pa._roleOwners in (:roleOwners))"),
-		@NamedQuery(name=PATask.GET_COMPLETED_TASK_COUNT_BY_USER,
-            query="select count(pa._id) from PATask pa where pa._lastActiveDate >= (:since) and pa._lastActiveDate <= (:until) and pa._state = TaskState.COMPLETED and :userOwner MEMBER OF pa._userOwners"),
-		@NamedQuery(name=PATask.GET_COMPLETED_TASK_COUNT_BY_USER_ASSIGNED_ROLES,
-			query="select count(pa._id) from PATask pa where pa._lastActiveDate >= (:since) and pa._lastActiveDate <= (:until) and pa._state = TaskState.COMPLETED and pa._roleOwners in (:roleOwners)"),
-		@NamedQuery(name=PATask.GET_CLAIMED_TASK_COUNT,
-			query="select count(pa._id) from PATask pa where pa._lastAssignedDate >= (:since) and pa._lastAssignedDate <= (:until) and pa._state = TaskState.CLAIMED and :userOwner MEMBER OF pa._userOwners"),
-		/*get pending or claimed task counts for all users*/
-		@NamedQuery(name=PATask.GET_PENDING_CLAIMED_TASK_COUNT_FOR_ALL_USERS,
-		    query="select count(pa._id) as total,pa._state as State , user from PATask pa, IN (pa._userOwners) as user where (pa._state = TaskState.READY or pa._state =TaskState.CLAIMED )" +
-		        "group by pa._state, user "),
+            query="select count(pa._id) from PATask pa LEFT JOIN pa._userOwners UO LEFT JOIN pa._roleOwners RO where pa._lastAssignedDate >= (:since) and pa._lastAssignedDate <= (:until) and pa._state = org.intalio.tempo.workflow.task.TaskState.READY and (UO in (:userOwner) or RO in (:roleOwners))"),
+        @NamedQuery(name=PATask.GET_COMPLETED_TASK_COUNT_BY_USER,
+            query="select count(pa._id) from PATask pa LEFT JOIN pa._userOwners UO where pa._lastActiveDate >= (:since) and pa._lastActiveDate <= (:until) and pa._state = org.intalio.tempo.workflow.task.TaskState.COMPLETED and UO in (:userOwner)"),
+        @NamedQuery(name=PATask.GET_COMPLETED_TASK_COUNT_BY_USER_ASSIGNED_ROLES,
+            query="select count(pa._id) from PATask pa LEFT JOIN pa._roleOwners RO where pa._lastActiveDate >= (:since) and pa._lastActiveDate <= (:until) and pa._state = org.intalio.tempo.workflow.task.TaskState.COMPLETED and RO in (:roleOwners)"),
+        @NamedQuery(name=PATask.GET_CLAIMED_TASK_COUNT,
+            query="select count(pa._id) from PATask pa LEFT JOIN pa._userOwners UO where pa._lastAssignedDate >= (:since) and pa._lastAssignedDate <= (:until) and pa._state = org.intalio.tempo.workflow.task.TaskState.CLAIMED and UO in (:userOwner)"),
+        /*get pending or claimed task counts for all users*/
+        @NamedQuery(name=PATask.GET_PENDING_CLAIMED_TASK_COUNT_FOR_ALL_USERS,
+            query="select count(pa._id) as total,pa._state as State , user from PATask pa, IN (pa._userOwners) as user where (pa._state = org.intalio.tempo.workflow.task.TaskState.READY or pa._state =org.intalio.tempo.workflow.task.TaskState.CLAIMED )" +
+                "group by pa._state, user "),
 
-		/*get pending or claimed task counts for users*/
+        /*get pending or claimed task counts for users*/
         @NamedQuery(name=PATask.GET_TASK_DISTRIBUTION_FOR_USERS_BASED_ON_TIME,
             query="select count(pa._id) as total,pa._state as State , user from PATask pa, IN (pa._userOwners) as user where pa._state IN (:states)" +
-                    "and pa._lastAssignedDate >= (:since) and pa._lastAssignedDate <= (:until) and pa._userOwners in (:userOwners) group by pa._state, user "),
+                    "and pa._lastAssignedDate >= (:since) and pa._lastAssignedDate <= (:until) and user in (:userOwners) group by pa._state, user "),
 
         /*get pending or claimed task counts for all users based on time*/
         @NamedQuery(name=PATask.GET_TASK_DISTRIBUTION_BY_USERS_BASED_ON_TIME,
@@ -94,14 +102,14 @@ import org.w3c.dom.Document;
 
         /* get pending or claimed task counts for users */
         @NamedQuery(name = PATask.GET_TASK_DISTRIBUTION_FOR_ROLES_BASED_ON_TIME, query = "select count(pa._id) as total, pa._state as State, role from PATask pa, IN (pa._roleOwners) as role where pa._state IN (:states)"
-                + "and pa._lastAssignedDate >= (:since) and pa._lastAssignedDate <= (:until) and pa._roleOwners in (:roleOwners) group by pa._state, role "),
+                + "and pa._lastAssignedDate >= (:since) and pa._lastAssignedDate <= (:until) and role in (:roleOwners) group by pa._state, role "),
 
         @NamedQuery(name=PATask.GET_TASK_COUNT_BY_STATUS,
-            query="select count(pa._id) as total, pa._state as State from PATask pa where (pa._state = TaskState.READY or pa._state =TaskState.CLAIMED or pa._state = TaskState.COMPLETED " +
-                "or pa._state = TaskState.FAILED) and  pa._creationDate >= (:since) and pa._creationDate <= (:until) group by pa._state"),
+            query="select count(pa._id) as total, pa._state as State from PATask pa where (pa._state = org.intalio.tempo.workflow.task.TaskState.READY or pa._state =org.intalio.tempo.workflow.task.TaskState.CLAIMED or pa._state = org.intalio.tempo.workflow.task.TaskState.COMPLETED " +
+                "or pa._state = org.intalio.tempo.workflow.task.TaskState.FAILED) and  pa._creationDate >= (:since) and pa._creationDate <= (:until) group by pa._state"),
 
         @NamedQuery(name=PATask.GET_TASK_COUNT_BY_PRIORITY,
-            query="select count(pa._id) as total, pa._priority as Priority from PATask pa where (pa._state = TaskState.READY or pa._state = TaskState.CLAIMED or pa._state = TaskState.FAILED) " +
+            query="select count(pa._id) as total, pa._priority as Priority from PATask pa where (pa._state = org.intalio.tempo.workflow.task.TaskState.READY or pa._state = org.intalio.tempo.workflow.task.TaskState.CLAIMED or pa._state = org.intalio.tempo.workflow.task.TaskState.FAILED) " +
                 "and pa._creationDate >= (:since) and pa._creationDate <= (:until) group by pa._priority"),
 
         @NamedQuery(name=PATask.GET_TASK_COUNT_BY_CREATION_DATE,
@@ -109,10 +117,10 @@ import org.w3c.dom.Document;
 
         @NamedQuery(name=PATask.GET_AVERAGE_COMPLETION_TIME_BY_USER,
             query="select pa._lastActiveDate, pa._lastAssignedDate, user from PATask pa, IN (pa._userOwners) as user where pa._creationDate >= (:since) and pa._creationDate <= (:until) " + 
-                "and pa._state = TaskState.COMPLETED and pa._userOwners in (:userOwners)"),
+                "and pa._state = org.intalio.tempo.workflow.task.TaskState.COMPLETED and user in (:userOwners)"),
 
         @NamedQuery(name = PATask.GET_COMPLETED_TASK_COUNT_FOR_USERS, query = "select count(pa._id), user from PATask pa, IN (pa._userOwners) as user where pa._lastActiveDate >= (:since)"
-                + " and pa._lastActiveDate <= (:until) and pa._state = TaskState.COMPLETED group by user"),
+                + " and pa._lastActiveDate <= (:until) and pa._state = org.intalio.tempo.workflow.task.TaskState.COMPLETED group by user")
 })
 public class PATask extends Task implements ITaskWithState, IProcessBoundTask, ITaskWithInput, ITaskWithOutput,
         ICompleteReportingTask, ITaskWithAttachments, IChainableTask, ITaskWithPriority, ITaskWithDeadline ,IInstanceBoundTask,ITaskWithCustomMetadata{
@@ -136,68 +144,65 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
     public static final String GET_TASK_DISTRIBUTION_FOR_ROLES_BASED_ON_TIME="get_task_distribution_for_roles_based_on_time";
     public static final String GET_TASK_DISTRIBUTION_BY_ROLES_BASED_ON_TIME="get_task_distribution_by_roles_based_on_time";
 
-    @Persistent
     @Column(name = "state")
+    @Enumerated(EnumType.ORDINAL)
     private TaskState _state = TaskState.READY;
 
-    @Persistent(fetch=FetchType.LAZY)
+    @Basic(fetch = FetchType.LAZY)
     @Column(name = "failure_code")
     private String _failureCode = "";
 
-    @Persistent(fetch=FetchType.LAZY)
+    @Basic(fetch = FetchType.LAZY)
     @Column(name = "failure_reason")
     private String _failureReason = "";
 
-    @Persistent
     @Column(name = "complete_soap_action")
     private String _completeSOAPAction;
 
-    @Persistent(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+    @Basic(fetch = FetchType.LAZY)
     @Lob
     @Column(name = "input_xml")
     private String _input;
 
-    @Persistent(cascade = CascadeType.ALL, fetch= FetchType.LAZY)
+    @Basic(fetch = FetchType.LAZY)
     @Column(name = "output_xml")
     @Lob
     private String _output;
 
-    @PersistentMap(keyCascade = CascadeType.ALL, elementCascade = CascadeType.ALL, keyType = String.class, elementType = Attachment.class)
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(name="tempo_attachment_map", joinColumns=@JoinColumn(name="PATASK_ID", referencedColumnName="ID"), inverseJoinColumns = { @JoinColumn(name = "ELEMENT_ID") })
     @MapKey(name = "payloadURLAsString")
-    @ContainerTable(name = "tempo_attachment_map")
     private Map<String, Attachment> _attachments = new HashMap<String, Attachment>();
 
-    @Persistent(fetch= FetchType.LAZY)
+    @Basic(fetch = FetchType.LAZY)
     @Column(name = "is_chained_before")
     private Boolean _isChainedBefore = false;
 
-    @Persistent(fetch= FetchType.LAZY)
+    @Basic(fetch = FetchType.LAZY)
     @Column(name = "previous_task_id")
     private String _previousTaskID = null;
 
-    @Persistent
     @Column(name = "deadline")
     private Date _deadline;
 
-    @Persistent
     @Column(name = "priority")
     private Integer _priority;
     
-    @Persistent
     @Column(name = "process_id")
     private String _processID;
 
-    @Persistent
     @Column(name = "instance_id")
     private String _instanceId;
     
-    @PersistentMap(keyCascade = CascadeType.ALL, elementCascade = CascadeType.ALL, keyType = String.class, 
-            elementType=String.class, fetch=FetchType.LAZY)
-    @ContainerTable(name="tempo_generic")
+    
+
+    @ElementCollection(fetch = FetchType.LAZY)
+    @MapKeyColumn(name="key0")
+    @Column(name="value")
+    @CollectionTable(name="tempo_generic", joinColumns=@JoinColumn(name="PATASK_ID", referencedColumnName="ID"))
     private Map<String, String> _customMetadata;
     
-    
-    @Persistent(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+    @Basic(fetch = FetchType.LAZY)
     @Lob
     @Column(name = "ctm_xml")
     private String _ctm;
@@ -460,6 +465,5 @@ public class PATask extends Task implements ITaskWithState, IProcessBoundTask, I
 				+ _priority + ", _processID=" + _processID + ", _state="
 				+ _state + "]";
 	}
-
 
 }

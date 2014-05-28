@@ -16,7 +16,7 @@
     <service name="TaskManagementServices" class="org.intalio.tempo.workflow.SpringInit">
         <description>Intalio|BPMS Task Management Services</description>
 
-        <parameter name="SpringContextFile">file:${org.intalio.tempo.configDirectory}/tempo-tms.xml</parameter>
+        <parameter name="SpringContextFile">classpath:workflow/tempo-tms.xml</parameter>
         <parameter name="ServiceObjectSupplier">org.intalio.tempo.workflow.ServiceObjectSupplier</parameter>
         <parameter name="SpringBeanName">tms.serviceImplementation</parameter>
         <!-- Needed so that it can initialize the bean for audit also. Created for WF-1574-->

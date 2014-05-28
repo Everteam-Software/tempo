@@ -79,7 +79,7 @@ public final class FormDispatcherConfiguration {
     /**
      * Endpoint for the Task Management Service
      */
-    private String _tmsUrl = "http://localhost:8080/ode/processes/TaskManagementServices";
+    private String _tmsUrl = "http://localhost:8080/intalio/ode/processes/TaskManagementServices";
 
     /**
      * Timeout when sending messages

@@ -17,7 +17,8 @@ import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.Query;
+
+import org.hibernate.Query;
 
 import org.intalio.tempo.workflow.auth.UserRoles;
 import org.intalio.tempo.workflow.dao.AbstractJPAConnection;
@@ -51,12 +52,12 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
 
     public void createTask(Task task) throws TaskIDConflictException {
         checkTransactionIsActive();
-        entityManager.persist(task);
+        session.persist(task);
     }
 
     public boolean deleteTask(int internalTaskId, String taskID) throws UnavailableTaskException {
         checkTransactionIsActive();
-        entityManager.remove(_fetcher.fetchTaskIfExists(taskID));
+        session.delete(_fetcher.fetchTaskIfExists(taskID));
         return true;
     }
 
@@ -79,11 +80,11 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
 
     public void updateTask(Task task) {
         checkTransactionIsActive();
-        entityManager.persist(task);
+        session.persist(task);
     }
     public void updatePipaTask(PIPATask pipaTask){
     	checkTransactionIsActive();
-        entityManager.persist(pipaTask);    	
+        session.persist(pipaTask);
     }
     
     
@@ -97,7 +98,7 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
         try {
             PIPATask toDelete = _fetcher.fetchPipaFromUrl(formUrl);
             checkTransactionIsActive();
-            entityManager.remove(toDelete);
+            session.delete(toDelete);
         } catch (Exception nre) {
             throw new NoResultException(nre.getMessage());
         }
@@ -106,14 +107,14 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
     //Fix for WF-1479
     public boolean deleteAttachment(String attachmentUrl) throws UnavailableAttachmentException{
         checkTransactionIsActive();
-        entityManager.remove(_attachmentFetcher.fetchAttachmentIfExists(attachmentUrl));
+        session.delete(_attachmentFetcher.fetchAttachmentIfExists(attachmentUrl));
         return true;
     }
 
     public void storePipaTask(PIPATask task) {
         _logger.info("store pipa task:" + task.getFormURL());
         checkTransactionIsActive();
-        entityManager.persist(task);
+        session.persist(task);
     }
 
     public PIPATask fetchPipa(String formUrl) throws UnavailableTaskException {
@@ -147,7 +148,7 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
 	public void deleteCustomColumn(CustomColumn toDeleteCustomColumn) {
 	   try {
             checkTransactionIsActive();
-           	entityManager.remove(toDeleteCustomColumn);
+            session.delete(toDeleteCustomColumn);
             commit();
         } catch (Exception nre) {
             throw new NoResultException(nre.getMessage());
@@ -158,13 +159,13 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
 	@Override
 	public void storeCustomColumn(CustomColumn customColumn) {
         checkTransactionIsActive();
-        entityManager.persist(customColumn);
+        session.persist(customColumn);
 	}
 
 	@Override
 	public void insertPipaOutput(PIPATaskOutput pipaTaskOutput) {
 	    checkTransactionIsActive();
-	    entityManager.persist(pipaTaskOutput);	
+	    session.persist(pipaTaskOutput);
 	}
 
 	@Override
@@ -175,82 +176,82 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
 	@Override
 	public void updatePipaOutput(PIPATaskOutput pipaTaskOutput) {
 		checkTransactionIsActive();
-	    entityManager.persist(pipaTaskOutput);	
+		session.persist(pipaTaskOutput);
 	}
 
 	@Override
 	public void deletePIPATaskOutput(PIPATaskOutput output) {
 		checkTransactionIsActive();
-		entityManager.remove(output);
+		session.delete(output);
 
 	}
 
 	@Override
     public long getPendingNotificationCount(Object since, String user, List<String> userRolesList) {
-        Query query = entityManager.createNamedQuery(Notification.GET_PENDING_NOTIFICATION_COUNT).setParameter("since", since).setParameter("userOwner", user).setParameter("roleOwners", userRolesList);
-        return (Long) query.getSingleResult();
+        Query query = session.getNamedQuery(Notification.GET_PENDING_NOTIFICATION_COUNT).setParameter("since", since).setParameter("userOwner", user).setParameterList("roleOwners", userRolesList);
+        return (Long) query.uniqueResult();
     }
 
 	@Override
 	public long getPendingNotificationCount(Object since, Object until, String user, List<String> userRolesList) {
-		Query query = entityManager.createNamedQuery(Notification.GET_PENDING_NOTIFICATION_COUNT).setParameter("since", since).setParameter("until", until).setParameter("userOwner", user).setParameter("roleOwners", userRolesList);
-		return (Long) query.getSingleResult();
+		Query query = session.getNamedQuery(Notification.GET_PENDING_NOTIFICATION_COUNT).setParameter("since", since).setParameter("until", until).setParameter("userOwner", user).setParameterList("roleOwners", userRolesList);
+		return (Long) query.uniqueResult();
 	}
 
 	@Override
     public long getPendingTaskCount(Object since, String user, List<String> userRolesList) {
-        Query query = entityManager.createNamedQuery(PATask.GET_PENDING_TASK_COUNT).setParameter("since", since).setParameter("userOwner", user).setParameter("roleOwners", userRolesList);
-        return (Long) query.getSingleResult();
+        Query query = session.getNamedQuery(PATask.GET_PENDING_TASK_COUNT).setParameter("since", since).setParameter("userOwner", user).setParameterList("roleOwners", userRolesList);
+        return (Long) query.uniqueResult();
     }
 
 	@Override
 	public long getPendingTaskCount(Object since, Object until, String user, List<String> userRolesList) {
-		Query query = entityManager.createNamedQuery(PATask.GET_PENDING_TASK_COUNT).setParameter("since", since).setParameter("until", until).setParameter("userOwner", user).setParameter("roleOwners", userRolesList);
-		return (Long) query.getSingleResult();
+		Query query = session.getNamedQuery(PATask.GET_PENDING_TASK_COUNT).setParameter("since", since).setParameter("until", until).setParameter("userOwner", user).setParameterList("roleOwners", userRolesList);
+		return (Long) query.uniqueResult();
 	}
 
 	@Override
     public long getCompletedTaskCountByUser(Object since, String user) {
-        Query query = entityManager.createNamedQuery(PATask.GET_COMPLETED_TASK_COUNT_BY_USER).setParameter("since", since).setParameter("userOwner", user);
-        return (Long) query.getSingleResult();
+        Query query = session.getNamedQuery(PATask.GET_COMPLETED_TASK_COUNT_BY_USER).setParameter("since", since).setParameter("userOwner", user);
+        return (Long) query.uniqueResult();
     }
 
 	@Override
 	public long getCompletedTaskCountByUser(Object since, Object until, String user) {
-		Query query = entityManager.createNamedQuery(PATask.GET_COMPLETED_TASK_COUNT_BY_USER).setParameter("since", since).setParameter("until", until).setParameter("userOwner", user);
-		return (Long) query.getSingleResult();
+		Query query = session.getNamedQuery(PATask.GET_COMPLETED_TASK_COUNT_BY_USER).setParameter("since", since).setParameter("until", until).setParameter("userOwner", user);
+		return (Long) query.uniqueResult();
 	}
 
 	@Override
     public long getCompletedTaskCountByUserAssignedRoles(Object since,
             List<String> userRolesList) {
-        Query query = entityManager.createNamedQuery(PATask.GET_COMPLETED_TASK_COUNT_BY_USER_ASSIGNED_ROLES).setParameter("since", since).setParameter("roleOwners", userRolesList);
-        return (Long) query.getSingleResult();
+        Query query = session.getNamedQuery(PATask.GET_COMPLETED_TASK_COUNT_BY_USER_ASSIGNED_ROLES).setParameter("since", since).setParameterList("roleOwners", userRolesList);
+        return (Long) query.uniqueResult();
     }
 
 	@Override
 	public long getCompletedTaskCountByUserAssignedRoles(Object since, Object until,
 			List<String> userRolesList) {
-		Query query = entityManager.createNamedQuery(PATask.GET_COMPLETED_TASK_COUNT_BY_USER_ASSIGNED_ROLES).setParameter("since", since).setParameter("until", until).setParameter("roleOwners", userRolesList);
-		return (Long) query.getSingleResult();
+		Query query = session.getNamedQuery(PATask.GET_COMPLETED_TASK_COUNT_BY_USER_ASSIGNED_ROLES).setParameter("since", since).setParameter("until", until).setParameterList("roleOwners", userRolesList);
+		return (Long) query.uniqueResult();
 	}
 
 	@Override
     public long getClaimedTaskCount(Object since, String user) {
-        Query query = entityManager.createNamedQuery(PATask.GET_CLAIMED_TASK_COUNT).setParameter("since", since).setParameter("userOwner", user);
-        return (Long) query.getSingleResult();
+        Query query = session.getNamedQuery(PATask.GET_CLAIMED_TASK_COUNT).setParameter("since", since).setParameter("userOwner", user);
+        return (Long) query.uniqueResult();
     }
 
 	@Override
 	public long getClaimedTaskCount(Object since, Object until, String user) {
-		Query query = entityManager.createNamedQuery(PATask.GET_CLAIMED_TASK_COUNT).setParameter("since", since).setParameter("until", until).setParameter("userOwner", user);
-		return (Long) query.getSingleResult();
+		Query query = session.getNamedQuery(PATask.GET_CLAIMED_TASK_COUNT).setParameter("since", since).setParameter("until", until).setParameter("userOwner", user);
+		return (Long) query.uniqueResult();
 	}
 
     @Override
     public void auditTask(Audit audit) {
         checkTransactionIsActive();
-        entityManager.persist(audit);
+        session.persist(audit);
     }
 
     public List<Object> getPendingClaimedTaskCountForAllUsers() {
@@ -296,7 +297,7 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
 
     @Override
     public void storePreviousTaskOwners(TaskPrevOwners taskPrevOwners) {
-        entityManager.persist(taskPrevOwners);
+        session.persist(taskPrevOwners);
 	}
 
 	@Override
@@ -309,7 +310,7 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
     public void deleteTaskPreviousOwners(String taskID) {
         TaskPrevOwners prevOwners = fetchTaskPreviousOwners(taskID);
         if (prevOwners != null)
-            entityManager.remove(prevOwners);
+            session.delete(prevOwners);
     }
 
     @Override

@@ -16,7 +16,7 @@
       <description>
           Intalio|BPMS Task Attachment Service
       </description>
-      <parameter name="SpringContextFile">file:${org.intalio.tempo.configDirectory}/tempo-tas.xml</parameter>
+      <parameter name="SpringContextFile">classpath:workflow/tempo-tas.xml</parameter>
       <parameter name="ServiceObjectSupplier">org.intalio.tempo.workflow.ServiceObjectSupplier</parameter>
       <parameter name="SpringBeanName" locked="false">tas.serviceImplementation</parameter>
       <operation name="add">
@@ -28,4 +28,4 @@
           <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/delete</actionMapping>
       </operation>
    </service>
-</serviceGroup>   
+</serviceGroup>

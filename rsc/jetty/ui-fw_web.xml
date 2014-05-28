@@ -60,7 +60,7 @@
 		<servlet-class>org.intalio.tempo.uiframework.service.JsonUpdate</servlet-class>
 		<init-param>
             <param-name>TaskManagementServices</param-name>
-            <param-value>http://localhost:8080/axis2/services/TaskManagementServices</param-value>
+            <param-value>http://localhost:8080/intalio/ode/processes/TaskManagementServices</param-value>
         </init-param>
 	</servlet>
 	

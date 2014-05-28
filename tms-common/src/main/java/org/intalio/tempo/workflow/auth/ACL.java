@@ -1,17 +1,17 @@
 package org.intalio.tempo.workflow.auth;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.openjpa.persistence.Persistent;
 
 @Entity
 @Table(name="tempo_acl")
 public class ACL extends BaseRestrictedEntity {
     
-    @Persistent
     @Column(name="action")
     public String action; 
     
@@ -39,6 +39,19 @@ public class ACL extends BaseRestrictedEntity {
         else if (getUserOwners().contains(user.getUserID()))
             return true;
         else return (CollectionUtils.containsAny(getRoleOwners(),user.getAssignedRoles()));
+    }
+
+    @Column(name = "ID")
+    @Basic
+    @Id
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
 }

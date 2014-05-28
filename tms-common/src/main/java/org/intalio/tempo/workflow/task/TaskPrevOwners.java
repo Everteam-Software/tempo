@@ -22,8 +22,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Query;
 import javax.persistence.Table;
-
-import org.apache.openjpa.persistence.Persistent;
+import javax.persistence.Transient;
 
 /**
  *
@@ -42,6 +41,7 @@ public class TaskPrevOwners {
     /**
     * query to get TaskPrevOwners by Id.
     */
+    @Transient
 	private Query findId;
 
 	/**
@@ -52,6 +52,7 @@ public class TaskPrevOwners {
 	/**
 	 * entityManager.
 	 */
+	@Transient
 	private EntityManager entityManager;
 
 	/**
@@ -76,20 +77,17 @@ public class TaskPrevOwners {
 	 */
 	@Id
 	@Column(name = "task_id")
-	@Persistent
 	private String id;
 	/**
 	 * task previous users.
 	 */
 	@Column(name = "prev_users")
-	@Persistent
 	private String prevUsers;
 
 	/**
 	 * task previous roles.
 	 */
 	@Column(name = "prev_roles")
-	@Persistent
 	private String prevRoles;
 
 	/**

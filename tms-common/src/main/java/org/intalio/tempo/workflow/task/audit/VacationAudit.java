@@ -17,64 +17,58 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.apache.openjpa.persistence.Persistent;
 
 /**
  * The persistent class for the VACATION_AUDIT database table.
  * 
  */
 @Entity
-@TableGenerator(name = "tab", initialValue = 0, allocationSize = 1)
 @Table(name = "vacation_audit")
 public class VacationAudit {
 
     /**
      * id.
      */
-    @GeneratedValue
     @Id
     @Column(name = "id")
-    @Persistent
+    @TableGenerator(name="vacAudit" , table="OPENJPA_SEQUENCE_TABLE", pkColumnName="ID" , valueColumnName="SEQUENCE_VALUE" , pkColumnValue = "0", allocationSize=10)
+    @GeneratedValue(strategy=GenerationType.TABLE , generator="vacAudit")
     private long id;
 
     /**
      * vacation id.
      */
-    @Persistent
     @Column(name = "vacation_id")
     private long vacationId;
 
     /**
      * actionPerformed.
      */
-    @Persistent
     @Column(name = "action_performed")
     private String actionPerformed;
 
     /**
      * auditDate.
      */
-    @Persistent
     @Column(name = "audit_date")
     private Timestamp auditDate;
 
     /**
      * auditUserName.
      */
-    @Persistent
     @Column(name = "audit_user_name")
     private String auditUserName;
 
     /**
      * updatedDescription.
      */
-    @Persistent
     @Column(name = "updated_description")
     private String updatedDescription;
 
@@ -82,21 +76,18 @@ public class VacationAudit {
      * updatedFromDate.
      */
     @Temporal(TemporalType.DATE)
-    @Persistent
     @Column(name = "updated_from_date")
     private Date updatedFromDate;
 
     /**
      * updatedIsActive.
      */
-    @Persistent
     @Column(name = "updated_is_active")
     private short updatedIsActive;
 
     /**
      * updatedSubstitute.
      */
-    @Persistent
     @Column(name = "updated_substitute")
     private String updatedSubstitute;
 
@@ -104,14 +95,12 @@ public class VacationAudit {
      * updatedToDate.
      */
     @Temporal(TemporalType.DATE)
-    @Persistent
     @Column(name = "updated_to_date")
     private Date updatedToDate;
 
     /**
      * updatedUserName.
      */
-    @Persistent
     @Column(name = "updated_user_name")
     private String updatedUserName;
 

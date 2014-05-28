@@ -1,14 +1,13 @@
 package org.intalio.tempo.workflow.task;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.NamedQueries;
+import javax.persistence.Id;
 import javax.persistence.NamedQuery;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.QueryHint;
 import javax.persistence.Table;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.intalio.tempo.workflow.task.traits.ITaskWithOutput;
 import org.intalio.tempo.workflow.task.xml.XmlTooling;
 import org.intalio.tempo.workflow.util.RequiredArgumentException;
@@ -17,7 +16,7 @@ import org.w3c.dom.Document;
 @Entity
 @Table(name="tempo_pipa_output")
 //@PrimaryKeyJoinColumn(name = "id", referencedColumnName = "id")
-@NamedQuery(name = PIPATaskOutput.FIND_BY_TASK_ID_AND_USER, query = "select m from PIPATaskOutput m where m.pipaTaskId=?1 and m.userOwner=?2", hints = { @QueryHint(name = "openjpa.hint.OptimizeResultCount", value = "1") })
+@NamedQuery(name = PIPATaskOutput.FIND_BY_TASK_ID_AND_USER, query = "select m from PIPATaskOutput m where m.pipaTaskId=? and m.userOwner=?", hints = { @QueryHint(name = "org.hibernate.fetchSize", value = "1") })
                    
 public class PIPATaskOutput implements ITaskWithOutput{
 	
@@ -89,4 +88,17 @@ public class PIPATaskOutput implements ITaskWithOutput{
 		return XmlTooling.deserializeDocument(output);
 	}
 	
+    @Column(name = "ID")
+    @Basic
+    @Id
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
 }

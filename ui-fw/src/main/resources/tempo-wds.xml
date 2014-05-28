@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<bean id="wds.servicefactory" class="org.intalio.tempo.workflow.wds.core.WDSServiceFactory">
+		<property name="daoFactory">
+			<ref bean="wds.itemConnectionFactory"/>
+		</property>
+
+		<property name="tmsEndpoint">
+		  <!-- Changing tmsEndpoint as TaskManagementServices in migrated to ode. -->
+		  <!--<value>http://localhost:8080/intalio/ode/processes/TaskManagementServices</value>-->
+		  <value>http://localhost:8080/intalio/ode/processes/TaskManagementServices</value>
+		</property>
+
+		<property name="wdsEndpoint">
+			<value>http://localhost:8080/intalio/wds/</value>
+		</property>
+	</bean>
+
+	<bean id="wds.itemConnectionFactory" class="org.intalio.tempo.workflow.wds.core.JPAItemDaoConnectionFactory">
+		<constructor-arg>
+			<map>
+				<entry><key><value>hibernate.connection.datasource</value></key><value>java:comp/env/jdbc/BPMSDB</value></entry>
+			</map>
+		</constructor-arg>
+	</bean>
+</beans>

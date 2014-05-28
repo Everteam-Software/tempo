@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright (c) 2005-2007 Intalio inc.
+  Copyright (c) 2005-2008 Intalio inc.
 
   All rights reserved. This program and the accompanying materials
   are made available under the terms of the Eclipse Public License v1.0
@@ -30,33 +30,29 @@
 	</bean>
 	<bean id="tas.authStrategy" class="org.intalio.tempo.workflow.tas.core.N3AuthStrategy">
         <property name="wsEndpoint">
-            <value>http://localhost:8080/intalio/ode/processes/TokenService</value>
+            <value>http://127.0.0.1:8080/intalio/ode/processes/TokenService</value>
         </property>
     </bean>
 	<bean id="tas.storageStrategy" class="org.intalio.tempo.workflow.tas.core.WDSStorageStrategy">
 		<property name="endpoint">
-			<value>http://localhost:8080/wds/</value>
+			<value>http://127.0.0.1:8080/intalio/wds/</value>
 		</property>
 	</bean>
-	
+    <!-- Uncomment the below, and comment the above to get alfresco configuration -->
+	<!-- <bean id="tas.storageStrategy" class="com.intalio.tempo.workflow.tas.alfresco.AlfrescoStorageStrategy">
+		<property name="url"><value>http://127.0.0.1:8180/alfresco</value></property>
+		<property name="username"><value>admin</value></property>
+		<property name="password"><value>admin</value></property>
+		<property name="folderName"><value>Intalio</value></property>
+		<property name="illegalCharacters"><value>\:+.</value></property>
+	</bean>  -->
+
+	<!-- Uncomment the below, and comment the above to get sling configuration -->
 	<!-- <bean id="tas.storageStrategy" class="org.intalio.tempo.workflow.tas.sling.SlingStorageStrategy">
-			<property name="baseFolder" value="/tempo"/>
-			<property name="userName" value="admin"/>
-			<property name="password" value="admin"/>
-			<property name="slingUrl" value="http://localhost:8080/sling"/>
-		</bean> -->
-		
-    <!-- <bean id="tas.storageStrategy" class="org.intalio.tempo.workflow.tas.nuxeo.NuxeoStorageStrategy">
-      <property name="repoName" value="nuxeo"/>
-      <property name="userName" value="Administrator"/>
-      <property name="password" value="Administrator"/>
-      <property name="nuxeoBaseUrl" value="http://localhost:9080/"/>
-    </bean> -->
-    
-    <!--
-    <bean id="tas.storageStrategy" class="org.intalio.tempo.workflow.tas.sling.FileSystemStorageStrategy">
-      <property name="path" value="/tmp"/>
-      <property name="publicPath" value="http://localhost/~home"/>
-    </bean>
-    -->
+	<property name="baseFolder" value="/sling-test"/>
+	<property name="userName" value="admin"/>
+	<property name="password" value="admin"/>
+	<property name="slingUrl" value="http://127.0.0.1:8080/sling"/>
+    </bean>  -->
+
 </beans>
