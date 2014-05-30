@@ -10,24 +10,41 @@
   Contributors:
   Intalio inc. - initial API and implementation
  -->
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
-<beans>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+    http://www.springframework.org/schema/mvc
+    http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+    <context:property-placeholder location="file:${org.intalio.tempo.configDirectory}/common/base-config.properties" order="1" ignore-unresolvable="false" />
+
     <import resource="classpath:workflow/tempo-ui-fw-template-beans.xml"/>
     <import resource="classpath:workflow/tempo-formmanager.xml"/>
 
     <bean id="configuration" class="org.intalio.tempo.uiframework.Configuration" factory-method="getInstance">
-        <property name="feedItemBaseUrl" value="http://localhost:8080"/>
-		<property name="TMPEndpoint" value="http://localhost:8080/intalio/ode/processes/completeTask"/>
+        <property name="feedItemBaseUrl" value="http://${com.intalio.bpms.server.baseUrl}"/>
+		<property name="TMPEndpoint" value="http://${com.intalio.bpms.server.baseUrl}/${com.intalio.bpms.endpoint.complete-task-service}"/>
         <property name="feedUrl" value="http://tempo.intalio.org"/>
 	<!-- Changing tmsEndpoint as TaskManagementServices in migrated to ode. -->
 	<!-- <property name="serviceEndpoint" value="http://localhost:8080/axis2/services/TaskManagementServices"/>-->
 
-	<property name="serviceEndpoint" value="http://localhost:8080/intalio/ode/processes/TaskManagementServices"/>
+	<property name="serviceEndpoint" value="http://${com.intalio.bpms.server.baseUrl}/${com.intalio.bpms.endpoint.task-management-service}"/>
         <property name="pagingLength" value="10"/>
         <property name="ajaxTimeout" value="30000"/>
         <property name="refreshTime" value="180"/>
-        <property name="claimTaskOnOpen" value="false"/>
-        <property name="sessionTimeout" value="60"/>
+        <property name="claimTaskOnOpen" value="${com.intalio.bpms.workflow.claim-task-on-open}"/>
+        <property name="sessionTimeout" value="${com.intalio.bpms.timeout.session}"/>
 		<property name="useToolbarIcons" value="true"/>
         <property name="tokenClient"><ref bean="tokenService"/></property>
 		<property name="toolbarIconSets">
@@ -141,7 +158,7 @@
 			<ref bean="tmsfactory"/>
 		</property>
 		<!-- below properties for Absence Management JIRA WF-1606 -->
-		<property name="substituteMandatory" value="true"/>
+		<property name="substituteMandatory" value="${com.intalio.bpms.vacation.substitute-mandatory}"/>
 		<property name="absenceManagerRoles">
 		    <set>
 			<value>intalio\ProcessManager</value>
@@ -164,7 +181,7 @@
 		<property name="server">
 			<ref bean="tms.server" />
 		</property>
-		<property name="httpTimeOut" value="120000"/>
+		<property name="httpTimeOut" value="${com.intalio.bpms.timeout.tms}"/>
 	</bean>
 
 	<bean id="tms.daoFactory" class="org.intalio.tempo.workflow.tms.server.dao.JPATaskDaoConnectionFactory" parent="abs.AbstractJPAConnectionFactory" />
@@ -173,14 +190,14 @@
 		<property name="authProvider">
 			<ref bean="tms.authProvider"/>
 		</property>
-		<property name="httpTimeout" value="120000"/>
-		<property name="tasEndPoint" value="http://localhost:8080/intalio/ode/processes/tas"/>
+		<property name="httpTimeout" value="${com.intalio.bpms.timeout.tms}"/>
+		<property name="tasEndPoint" value="http://${com.intalio.bpms.server.baseUrl}/${com.intalio.bpms.endpoint.tas}"/>
 		<property name="httpChunking" value="false"/>
 	</bean>
 
 	<bean id="tms.authProvider" class="org.intalio.tempo.workflow.auth.n3.N3AuthProvider">
 		<property name="wsEndpoint">
-			<value>http://localhost:8080/intalio/ode/processes/TokenService</value>
+			<value>http://${com.intalio.bpms.server.baseUrl}/${com.intalio.bpms.endpoint.token-service}</value>
 		</property>
 	</bean>
 
