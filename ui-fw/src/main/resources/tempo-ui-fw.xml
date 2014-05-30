@@ -31,14 +31,12 @@
 
     <import resource="classpath:workflow/tempo-ui-fw-template-beans.xml"/>
     <import resource="classpath:workflow/tempo-formmanager.xml"/>
+    <import resource="file:${org.intalio.tempo.configDirectory}/workflow/workflow-access-control.xml" />
 
     <bean id="configuration" class="org.intalio.tempo.uiframework.Configuration" factory-method="getInstance">
         <property name="feedItemBaseUrl" value="http://${com.intalio.bpms.server.baseUrl}"/>
 		<property name="TMPEndpoint" value="http://${com.intalio.bpms.server.baseUrl}/${com.intalio.bpms.endpoint.complete-task-service}"/>
         <property name="feedUrl" value="http://tempo.intalio.org"/>
-	<!-- Changing tmsEndpoint as TaskManagementServices in migrated to ode. -->
-	<!-- <property name="serviceEndpoint" value="http://localhost:8080/axis2/services/TaskManagementServices"/>-->
-
 	<property name="serviceEndpoint" value="http://${com.intalio.bpms.server.baseUrl}/${com.intalio.bpms.endpoint.task-management-service}"/>
         <property name="pagingLength" value="10"/>
         <property name="ajaxTimeout" value="30000"/>
@@ -47,126 +45,14 @@
         <property name="sessionTimeout" value="${com.intalio.bpms.timeout.session}"/>
 		<property name="useToolbarIcons" value="true"/>
         <property name="tokenClient"><ref bean="tokenService"/></property>
-		<property name="toolbarIconSets">
-			<map>
-				<entry key="administrator">
-					<map>
-						<entry key="process">
-							<set>
-								<value>reassign</value>
-								<value>delete</value>
-							</set>
-						</entry>
-						<entry key="task">
-							<set>
-								<value>delete</value>
-								<value>claim</value>
-								<value>release</value>
-								<value>reassign</value>
-								<value>update</value>
-								<value>skip</value>
-								<value>export</value>
-							</set>
-						</entry>
-						<entry key="notification">
-							<set>
-								<value>delete</value>
-							</set>
-						</entry>
-					</map>
-				</entry>
-				<entry key="manager">
-					<map>
-						<entry key="process">
-							<set></set>
-						</entry>
-						<entry key="task">
-							<set>
-								<value>claim</value>
-								<value>release</value>
-								<value>reassign</value>
-								<value>update</value>
-								<value>skip</value>
-								<value>export</value>
-							</set>
-						</entry>
-						<entry key="notification">
-							<set></set>
-						</entry>
-					</map>
-				</entry>
-				<entry key="employee">
-					<map>
-						<entry key="process">
-							<set></set>
-						</entry>
-						<entry key="task">
-							<set>
-								<value>claim</value>
-								<value>release</value>
-								<value>export</value>
-							</set>
-						</entry>
-						<entry key="notification">
-							<set></set>
-						</entry>
-					</map>
-				</entry>
-			</map>
-		</property>
-		<property name="bindIconSetToRole">
-			<map>
-				<entry key="administrator">
-					<set>
-						<value>intalio\ProcessManager</value>
-						<value>intalio\ProcessAdministrator</value>
-						<value>intalio\WorkflowAdministrator</value>
-					</set>
-				</entry>
-				<entry key="manager">
-					<set>
-						<value>examples\manager</value>
-					</set>
-				</entry>
-				<entry key="employee">
-					<set>
-
-						<value>examples\employee</value>
-					</set>
-				</entry>
-			</map>
-		</property>
-		<property name="visibleTabs">
-			<map>
-				<entry key="administrator">
-					<set>
-						<value>tasks</value>
-						<value>notifications</value>
-						<value>processes</value>
-					</set>
-				</entry>
-				<entry key="employee">
-					<set>
-						<value>tasks</value>
-						<value>notifications</value>
-						<value>processes</value>
-					</set>
-				</entry>
-			</map>
-		</property>
+		<property name="toolbarIconSets" ref="toolbarIconSets" />
+		<property name="bindIconSetToRole" ref="bindIconSetToRole" />
+		<property name="visibleTabs" ref="visibleTabs" />
 		<property name="tmsFactory">
 			<ref bean="tmsfactory"/>
 		</property>
-		<!-- below properties for Absence Management JIRA WF-1606 -->
 		<property name="substituteMandatory" value="${com.intalio.bpms.vacation.substitute-mandatory}"/>
-		<property name="absenceManagerRoles">
-		    <set>
-			<value>intalio\ProcessManager</value>
-			<value>intalio\ProcessAdministrator</value>
-			<value>examples\manager</value>
-			<value>intalio\WorkflowAdministrator</value>
-		    </set>
-		</property>
+		<property name="absenceManagerRoles" ref="absenceManagerRoles" />
 	</bean>
 
 	<bean id="remote.tmsclient" class="org.intalio.tempo.workflow.tms.client.RemoteTMSClient" >
