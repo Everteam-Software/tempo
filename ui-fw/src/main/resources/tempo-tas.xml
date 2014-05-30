@@ -10,8 +10,22 @@
   Contributors:
   Intalio inc. - initial API and implementation
  -->
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
-<beans>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+    http://www.springframework.org/schema/mvc
+    http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+    http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx.xsd
+    http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+    <context:property-placeholder location="file:${org.intalio.tempo.configDirectory}/common/base-config.properties" order="1" ignore-unresolvable="false" />
+
     <bean id="tas.serviceImplementation" class="org.intalio.tempo.workflow.tas.axis2.TASAxis2SingleInstanceFacade">
         <property name="axis2TASBridge">
             <ref bean="tas.axis2bridge"/>
@@ -30,12 +44,12 @@
 	</bean>
 	<bean id="tas.authStrategy" class="org.intalio.tempo.workflow.tas.core.N3AuthStrategy">
         <property name="wsEndpoint">
-            <value>http://127.0.0.1:8080/intalio/ode/processes/TokenService</value>
+            <value>http://${com.intalio.bpms.server.baseUrl}/${com.intalio.bpms.endpoint.token-service}</value>
         </property>
     </bean>
 	<bean id="tas.storageStrategy" class="org.intalio.tempo.workflow.tas.core.WDSStorageStrategy">
 		<property name="endpoint">
-			<value>http://127.0.0.1:8080/intalio/wds/</value>
+			<value>http://${com.intalio.bpms.server.baseUrl}/${com.intalio.bpms.endpoint.wds}</value>
 		</property>
 	</bean>
     <!-- Uncomment the below, and comment the above to get alfresco configuration -->

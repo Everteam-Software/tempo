@@ -13,10 +13,21 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
-	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-	http://www.springframework.org/schema/aop
-	http://www.springframework.org/schema/aop/spring-aop-2.5.xsd ">
+    http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+    http://www.springframework.org/schema/mvc
+    http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+	<context:property-placeholder location="file:${org.intalio.tempo.configDirectory}/common/base-config.properties" order="1" ignore-unresolvable="false" />
 
 	<import resource="classpath:workflow/tempo-ui-fw-template-beans.xml"/>
 
@@ -91,15 +102,15 @@
 		<property name="permissions">
 			<ref bean="tms.permissionsHandler"/>
 		</property>
-		<property name="httpTimeout" value="120000"/>
+		<property name="httpTimeout" value="${com.intalio.bpms.timeout.tms}"/>
 
-		<property name= "tasStorageStrategyEndPoint" value="http://127.0.0.1:8080/intalio/wds/" />
-		<property name="tasEndPoint" value="http://localhost:8080/intalio/ode/processes/tas"/>
+		<property name= "tasStorageStrategyEndPoint" value="http://${com.intalio.bpms.server.baseUrl}/${com.intalio.bpms.endpoint.wds}" />
+		<property name="tasEndPoint" value="http://${com.intalio.bpms.server.baseUrl}/${com.intalio.bpms.endpoint.tas}"/>
 
 		<!-- This should be set to false when using proxy which doesnt support HTTP chunk e.g. Lighttpd -->
 		<property name="httpChunking" value="false"/>
 		<!-- Enter the url where ODE server is running -->
-		<property name="odeServerURL" value="http://localhost:8080/" />
+		<property name="odeServerURL" value="http://${com.intalio.bpms.server.baseUrl}/" />
 		<property name="vacationDAOFactory">
 			<ref bean="tms.vacationDaoFactory"/>
 		</property>
@@ -123,7 +134,7 @@
 
 	<bean id="tms.authProvider" class="org.intalio.tempo.workflow.auth.n3.N3AuthProvider">
 		<property name="wsEndpoint">
-			<value>http://localhost:8080/intalio/ode/processes/TokenService</value>
+			<value>http://${com.intalio.bpms.server.baseUrl}/${com.intalio.bpms.endpoint.token-service}</value>
 		</property>
 	</bean>
 
@@ -158,7 +169,7 @@
 	<bean id="tms.daoFactory" class="org.intalio.tempo.workflow.tms.server.dao.JPATaskDaoConnectionFactory">
 		<constructor-arg>
 			<map>
-				<entry><key><value>hibernate.connection.datasource</value></key><value>java:comp/env/jdbc/BPMSDB</value></entry>
+				<entry><key><value>hibernate.connection.datasource</value></key><value>${com.intalio.bpms.jndi.bpmsdb}</value></entry>
 			</map>
 		</constructor-arg>
 	</bean>

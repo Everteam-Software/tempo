@@ -7,7 +7,7 @@
 	 </constructor-arg>
 	  <constructor-arg index="1" type="java.util.Map">
 		<map>
-			<entry><key><value>hibernate.connection.datasource</value></key><value>java:comp/env/jdbc/BPMSDB</value></entry>
+			<entry><key><value>hibernate.connection.datasource</value></key><value>${com.intalio.bpms.jndi.bpmsdb}</value></entry>
 		</map>
 	</constructor-arg>
  </bean>
