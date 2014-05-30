@@ -149,6 +149,7 @@ public class TaskFetcher {
 	 */
 	public PIPATask fetchPipaFromUrl(String formUrl)
 			throws UnavailableTaskException {
+        if(formUrl == null) throw new UnavailableTaskException();
 		Query q = session.getNamedQuery(PIPATask.FIND_BY_URL)
 				.setParameter(0, formUrl);
 		try {
