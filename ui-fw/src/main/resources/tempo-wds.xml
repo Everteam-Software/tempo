@@ -37,7 +37,7 @@
 	<bean id="wds.itemConnectionFactory" class="org.intalio.tempo.workflow.wds.core.JPAItemDaoConnectionFactory">
 		<constructor-arg>
 			<map>
-				<entry><key><value>hibernate.connection.datasource</value></key><value>${com.intalio.bpms.jndi.bpmsdb}</value></entry>
+				<entry><key><value>hibernate.connection.datasource</value></key><value>java:comp/env/jdbc/BPMSDB</value></entry>
 			</map>
 		</constructor-arg>
 	</bean>
