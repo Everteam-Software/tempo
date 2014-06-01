@@ -71,8 +71,8 @@ public class WDSServlet extends HttpServlet {
         }
         LOG.debug("Loading WDS configuration...");
         try {
-            loader = new SysPropApplicationContextLoader(configFile);
-        } catch (IOException except) {
+            loader = new SysPropApplicationContextLoader(configFile, true);
+        } catch (Exception except) {
             throw new ServletException(except);
         }
         
