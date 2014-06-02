@@ -37,7 +37,7 @@ import org.intalio.tempo.workflow.util.RequiredArgumentException;
 @Entity
 @Table(name="tempo_attachment")
 @NamedQueries({
-    @NamedQuery(name= Attachment.FIND_BY_URL, query= "select m from Attachment m where m.payloadURLAsString = ?1")
+    @NamedQuery(name= Attachment.FIND_BY_URL, query= "select m from Attachment m where m.payloadURLAsString = ?")
 })
 public class Attachment {
 

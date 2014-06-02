@@ -33,7 +33,7 @@ public class AttachmentFetcher {
     }
     
     public Attachment fetchAttachmentIfExists(String url) throws UnavailableAttachmentException{
-        Query q = find_by_attachment_url.setParameter(1, url);
+        Query q = find_by_attachment_url.setParameter(0, url);
         List<Attachment> resultList = q.list();
         if (resultList.size() < 1)
             throw new UnavailableAttachmentException("Attachment does not exist"
