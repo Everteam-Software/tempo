@@ -19,6 +19,7 @@
       <parameter name="SpringContextFile">classpath:workflow/tempo-tas.xml</parameter>
       <parameter name="ServiceObjectSupplier">org.intalio.tempo.workflow.ServiceObjectSupplier</parameter>
       <parameter name="SpringBeanName" locked="false">tas.serviceImplementation</parameter>
+      <parameter name="LoadAllBeansOnStartup">true</parameter>
       <operation name="add">
           <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
           <actionMapping>http://www.intalio.com/BPMS/Workflow/TaskAttachmentService/add</actionMapping>
