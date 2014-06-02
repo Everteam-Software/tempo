@@ -3,6 +3,7 @@ require "buildr"
 require "buildr/xmlbeans"
 # require "buildr/cobertura"
 require "install.rb"
+require "rsc/buildr-tasks/hibernate_enhance"
 
 
 # Keep this structure to allow the build system to update version numbers.
@@ -82,6 +83,7 @@ define "tempo" do
   desc "Task Management Services Common Library"
   define "tms-common" do |project|
     compile.with projects("tms-axis"),  SECURITY.values, HIBERNATE_3_X, APACHE_COMMONS[:pool], APACHE_COMMONS[:collections], APACHE_COMMONS[:lang], AXIS2.values, AXIOM, DOM4J, JAXEN, SLF4J.values, SPRING[:core], STAX_API, XERCES[:impl],  XERCES[:parserapi], XMLBEANS[:xmlbeans], JAXP_RI
+    compile { hibernate_jpa_enhance }
     test.with APACHE_DERBY, LOG4J, DB_CONNECTOR.values, XMLUNIT, WOODSTOX, INSTINCT, SECURITY.values, APACHE_COMMONS[:pool], APACHE_COMMONS[:collections], APACHE_COMMONS[:lang], APACHE_COMMONS[:httpclient],JAXP_RI
     test.exclude '*TestUtils*'
     unless ENV["LIVE"] == 'yes'

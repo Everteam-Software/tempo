@@ -53,7 +53,7 @@ public class TaskFetcher {
 	private Query find_by_id;
 	private Query find_pipa_task_output_by_task_id;
 	private final String QUERY_GENERIC1 = "select T from ";
-	private final String QUERY_GENERIC_DISTINCT = "select T from ";
+	private final String QUERY_GENERIC_DISTINCT = "select DISTINCT T from ";
 	private final String QUERY_GENERIC_GROUPBY = " GROUP BY T._id ";
 	private final String QUERY_GENERIC_COUNT = "select COUNT(DISTINCT T) from ";
 //	private final String QUERY_GENERIC2 = " T where (T._userOwners = (?1) or T._roleOwners = (?2)) ";
@@ -66,7 +66,7 @@ public class TaskFetcher {
 	// ;
 	private final String DELETE_ALL_TASK_WITH_ID = "delete from Task m where m._id = (?) ";
 
-	private final String GET_CUSTOM_COL_SORT_PREFIX = "SELECT t0.*, t1.*, t4.value FROM tempo_pa t0 INNER JOIN tempo_task t1 ON t0.ID = t1.id LEFT OUTER JOIN tempo_generic t4 ON t0.ID = t4.PATASK_ID and t4.key0 = ";
+	private final String GET_CUSTOM_COL_SORT_PREFIX = "SELECT DISTINCT t0.ID,t0.complete_soap_action,t0.deadline,t0.instance_id,t0.priority,t0.process_id,t0.state,t1.creation_date,t1.description,t1.form_url,t1.taskid,t1.internal_id,t1.last_active_date,t1.last_assigned_date, t4.value FROM tempo_pa t0 INNER JOIN tempo_task t1 ON t0.ID = t1.id LEFT OUTER JOIN tempo_generic t4 ON t0.ID = t4.PATASK_ID and t4.key0 = ";
 	private final String GET_CUSTOM_COL_SORT_POSTFIX = " (t0.state = 0 OR t0.state = 3) ORDER BY t4.value ";
 	private final String GET_CUSTOM_COL_SORT_ADMIN_USER_CONDITION = " LEFT OUTER JOIN tempo_user t2 ON t1.id = t2.TASK_ID LEFT OUTER JOIN tempo_role t3 ON t1.id = t3.TASK_ID WHERE ( t2.element IN (?) ";
 	private final String GET_CUSTOM_COL_SORT_ADMIN_ROLE_CONDITION = " OR t3.element = ?";
