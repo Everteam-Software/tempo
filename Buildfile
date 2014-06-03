@@ -135,7 +135,7 @@ define "tempo" do
     test.exclude '*TestUtils*'
 
     package :jar
-    package(:aar)
+    package(:aar).with :libs => [  ]
   end
   
   desc "User-Interface Framework"
