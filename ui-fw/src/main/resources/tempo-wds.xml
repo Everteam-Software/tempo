@@ -16,7 +16,8 @@
     http://www.springframework.org/schema/context
     http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 
-	<context:property-placeholder location="file:${org.intalio.tempo.configDirectory}/common/base-config.properties" order="1" ignore-unresolvable="false" />
+	<context:property-placeholder
+		location="file:${INTALIO_CONF}/common/base-config.properties" order="2" ignore-unresolvable="false" />
 
 	<bean id="wds.servicefactory" class="org.intalio.tempo.workflow.wds.core.WDSServiceFactory">
 		<property name="daoFactory">

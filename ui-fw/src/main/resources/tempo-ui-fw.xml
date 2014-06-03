@@ -27,11 +27,12 @@
     http://www.springframework.org/schema/context
     http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 
-    <context:property-placeholder location="file:${org.intalio.tempo.configDirectory}/common/base-config.properties" order="1" ignore-unresolvable="false" />
+    <context:property-placeholder
+	location="file:${INTALIO_CONF}/common/base-config.properties" order="1" ignore-unresolvable="false" />
 
     <import resource="classpath:workflow/tempo-ui-fw-template-beans.xml"/>
     <import resource="classpath:workflow/tempo-formmanager.xml"/>
-    <import resource="file:${org.intalio.tempo.configDirectory}/workflow/workflow-access-control.xml" />
+    <import resource="file:${INTALIO_CONF}/workflow/workflow-access-control.xml" />
 
     <bean id="configuration" class="org.intalio.tempo.uiframework.Configuration" factory-method="getInstance">
         <property name="feedItemBaseUrl" value="http://${com.intalio.bpms.server.baseUrl}"/>
