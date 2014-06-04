@@ -738,4 +738,14 @@ public class TaskFetcher {
 
         return taskSummary;
     }
+
+    public void beginTransaction() {
+        this.session.beginTransaction();
+    }
+
+    public void commitTransaction() {
+        if(this.session.getTransaction().isActive()) {
+            this.session.getTransaction().commit();
+        }
+    }
 }
