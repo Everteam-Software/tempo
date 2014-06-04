@@ -64,8 +64,7 @@ public class WDSStorageStrategy implements StorageStrategy {
         if (endpoint == null) {
             throw new IllegalArgumentException("WDS endpoint may not be null");
         }
-        _wdsEndpoint = TASUtil.filterLocalhost(endpoint);
-
+        _wdsEndpoint = endpoint;
     }
 
     protected HttpClient getClient(){
