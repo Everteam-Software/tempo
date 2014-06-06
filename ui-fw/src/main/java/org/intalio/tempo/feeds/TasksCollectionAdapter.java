@@ -42,6 +42,7 @@ import org.intalio.tempo.workflow.task.Notification;
 import org.intalio.tempo.workflow.task.PATask;
 import org.intalio.tempo.workflow.task.PIPATask;
 import org.intalio.tempo.workflow.task.Task;
+import org.intalio.tempo.workflow.task.TaskState;
 import org.intalio.tempo.workflow.tms.ITaskManagementService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +51,7 @@ public class TasksCollectionAdapter extends AbstractCollectionAdapter {
 
     private static Logger LOG = LoggerFactory.getLogger(TasksCollectionAdapter.class);
     private GenericFormManager _manager;
+    private static String TASK_STATUS_CONDITION = "T._state <> "+TaskState.class.getName()+".COMPLETED";
 
     public TasksCollectionAdapter() {
         super();
@@ -158,8 +160,8 @@ public class TasksCollectionAdapter extends AbstractCollectionAdapter {
                 addTasksToFeed(context, feed, client.getAvailableTasks(PIPATask.class.getSimpleName(), null), token, user);
             } else if (collection.equalsIgnoreCase(IntalioFeeds.TASKS.name())) {
                 feed.setTitle("Intalio Tasks");
-                addTasksToFeed(context, feed, client.getAvailableTasks(PATask.class.getSimpleName(), "T._state <> TaskState.COMPLETED"), token, user);
-                addTasksToFeed(context, feed, client.getAvailableTasks(Notification.class.getSimpleName(), "T._state <> TaskState.COMPLETED"), token, user);
+                addTasksToFeed(context, feed, client.getAvailableTasks(PATask.class.getSimpleName(), TASK_STATUS_CONDITION), token, user);
+                addTasksToFeed(context, feed, client.getAvailableTasks(Notification.class.getSimpleName(), TASK_STATUS_CONDITION), token, user);
             } else if (collection.equalsIgnoreCase(IntalioFeeds.ALL.name())) {
                 feed.setTitle("Full Intalio Feeds");
                 addTasksToFeed(context, feed, client.getTaskList(), token, user);

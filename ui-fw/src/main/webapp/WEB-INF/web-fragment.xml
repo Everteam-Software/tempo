@@ -48,7 +48,7 @@
 
 	<servlet-mapping id="abdera-mapping">
 		<servlet-name>Abdera</servlet-name>
-		<url-pattern>/ui-fw/atom/*</url-pattern>
+		<url-pattern>/atom/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet>
