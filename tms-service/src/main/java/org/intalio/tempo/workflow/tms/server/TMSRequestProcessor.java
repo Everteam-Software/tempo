@@ -66,6 +66,7 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnection;
 import org.intalio.tempo.workflow.tms.server.dao.ITaskDAOConnectionFactory;
+import org.intalio.tempo.workflow.tms.server.dao.JPATaskDaoConnection;
 import org.intalio.tempo.workflow.tms.server.dao.VacationDAOConnection;
 import org.intalio.tempo.workflow.tms.server.dao.VacationDAOConnectionFactory;
 import org.jasypt.util.text.BasicTextEncryptor;
@@ -181,6 +182,7 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             String taskID = requireElementValue(rootQueue, "taskId");
             String participantToken = requireElementValue(rootQueue, "participantToken");
             final UserRoles user = _server.getUserRoles(participantToken);
+            ((JPATaskDaoConnection)dao).beginTransaction();
             Task task = _server.getTask(dao,taskID, participantToken);
             OMElement response = new TMSResponseMarshaller(OM_FACTORY) {
                 public OMElement marshalResponse(Task task) {
@@ -194,8 +196,10 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             throw makeFault(e);
         }
         finally{
-        	if(dao!=null)
-        	dao.close();
+            if(dao!=null) {
+                ((JPATaskDaoConnection)dao).commitTransaction();
+                dao.close();
+                }
         }
     }
 
@@ -293,14 +297,17 @@ public class TMSRequestProcessor extends OMUnmarshaller {
                 throw new InvalidInputFormatException("At least one taskId element must be present");
             }
             String participantToken = requireElementValue(rootQueue, "participantToken");
+            ((JPATaskDaoConnection)dao).beginTransaction();
             _server.delete(dao,taskIDs.toArray(new String[] {}), participantToken);
             return createOkResponse();
         } catch (Exception e) {
             throw makeFault(e);
         }
         finally{
-        	if(dao!=null)
-        	dao.close();
+            if(dao!=null) {
+                ((JPATaskDaoConnection)dao).commitTransaction();
+                dao.close();
+                }
         }
     }
     
@@ -340,6 +347,7 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             //The call can be made using SOAP UI hence providing this option to user if he wants to get 
             //fault for no tasks associated with instance id
             throwFaultIfNoTask=Boolean.valueOf(requireElementValue(rootQueue, "throwFaultIfNoTask"));
+            ((JPATaskDaoConnection)dao).beginTransaction();
             _server.manageFromInstance(dao,instanceid, participantToken,delete,taskState);
             return createOkResponse();
         }
@@ -355,8 +363,10 @@ public class TMSRequestProcessor extends OMUnmarshaller {
             throw makeFault(e);
         }
         finally{
-            if(dao!=null)
-            dao.close();
+            if(dao!=null) {
+                ((JPATaskDaoConnection)dao).commitTransaction();
+                dao.close();
+            }
         }
     }
     
@@ -417,14 +427,17 @@ public class TMSRequestProcessor extends OMUnmarshaller {
                 domOutput = new TaskUnmarshaller().unmarshalTaskOutput(omOutputContainer);
             }
             String participantToken = requireElementValue(rootQueue, "participantToken");
+            ((JPATaskDaoConnection)dao).beginTransaction();
             _server.setOutputAndComplete(dao,taskID, domOutput, participantToken);
             return createOkResponse();
         } catch (Exception e) {
             throw makeFault(e);
         }
         finally{
-        	if(dao!=null)
-        	dao.close();
+            if(dao!=null) {
+                ((JPATaskDaoConnection)dao).commitTransaction();
+                dao.close();
+                }
         }
     }
 
@@ -736,14 +749,17 @@ public class TMSRequestProcessor extends OMUnmarshaller {
                 _logger.debug("fetching UserRoles");
             final UserRoles user = _server.getUserRoles(participantToken);
             map.put(TaskFetcher.FETCH_USER, user);
+            ((JPATaskDaoConnection)dao).beginTransaction();
             Task[] tasks = _server.getAvailableTasks(dao,participantToken, map);
             return marshalTasksList(user, tasks, "getAvailableTasksResponse", fetchMetaData);
         } catch (Exception e) {
             throw makeFault(e);
         }
         finally{
-            if (dao != null)
+            if (dao != null) {
+                ((JPATaskDaoConnection)dao).commitTransaction();
                 dao.close();
+            }
             if(_logger.isDebugEnabled())
                 _logger.debug("Exiting getAvailableTask");
         }

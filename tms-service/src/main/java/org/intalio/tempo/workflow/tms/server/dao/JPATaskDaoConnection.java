@@ -320,4 +320,11 @@ public class JPATaskDaoConnection extends AbstractJPAConnection implements ITask
         return taskSummary;
     }
 
+    public void beginTransaction() {
+        _fetcher.beginTransaction();
+    }
+
+    public void commitTransaction() {
+        _fetcher.commitTransaction();
+    }
 }
